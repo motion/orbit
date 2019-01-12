@@ -13,7 +13,6 @@ import { ResolvableModel } from '../sources/types'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { Icon } from './Icon'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export const OrbitCard = observer(
   ({
@@ -47,8 +46,7 @@ export const OrbitCard = observer(
     subtitle,
     ...props
   }: OrbitItemProps<ResolvableModel>) => {
-    const stores = useStoresSafe()
-    const store = useStore(OrbitItemStore, { ...props, ...stores })
+    const store = useStore(OrbitItemStore, props)
     // allow either custom subtitle or resolved one
     const { isSelected } = store
     const showChildren = typeof children !== 'undefined' && !(hide && hide.body)

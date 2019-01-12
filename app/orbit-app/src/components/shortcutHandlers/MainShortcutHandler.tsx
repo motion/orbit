@@ -46,7 +46,6 @@ export const MainShortcutHandler = observer(({ children }: Props) => {
 
   const movePaneOrSelection = direction => () => {
     const { activeSelectionStore } = shortcutStore
-    console.log('move pane or selection', direction, activeSelectionStore)
     const leftOrRight = direction === Direction.left || direction === Direction.right
     if (leftOrRight) {
       if (paneManagerStore) {

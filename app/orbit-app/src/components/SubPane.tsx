@@ -5,11 +5,10 @@ import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { gloss } from '@mcro/gloss'
 
 export type SubPaneProps = CSSPropertySetStrict & {
-  id: string
+  id: number
   type?: AppType
   fullHeight?: boolean
   preventScroll?: boolean
@@ -28,10 +27,7 @@ type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = observer((props: Props) => {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
-  const { paneManagerStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
   const subPaneStore = useStore(SubPaneStore, {
-    paneManagerStore,
-    selectionStore,
     ...props,
     transition,
   })

@@ -170,6 +170,8 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
   const { cache, width, height } = store
   const { items } = props
 
+  console.warn('RENDER VIRTUAL LIST')
+
   React.useEffect(() => {
     if (!store.listRef) {
       return
@@ -203,7 +205,7 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
             {...getSeparatorProps(items, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
-            {...item}
+            item={item}
             index={index}
             realIndex={index}
           />

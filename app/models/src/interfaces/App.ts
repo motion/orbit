@@ -50,8 +50,17 @@ export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
 export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
 export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
 export type ListsApp = BaseApp & { type: 'lists'; data: ListsAppData }
-export type MemoryApp = BaseApp & { type: 'memory'; data: {} }
+export type MemoryApp = BaseApp & { type: 'memory'; data: any }
+export type SourcesApp = BaseApp & { type: 'sources'; data: any }
+export type SettingsApp = BaseApp & { type: 'settings'; data: any }
 
 // App
 
-export type App = SearchApp | PeopleApp | TopicsApp | ListsApp | MemoryApp
+export type App =
+  | SearchApp
+  | PeopleApp
+  | TopicsApp
+  | ListsApp
+  | MemoryApp
+  | SourcesApp
+  | SettingsApp

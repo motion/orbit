@@ -3,12 +3,10 @@ import { Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 
-type PaneID = string | number
-
 export class PaneManagerStore {
   props: {
     disabled?: boolean
-    panes: (PaneID)[]
+    panes: number[]
     onPaneChange: Function
   }
 
@@ -59,8 +57,8 @@ export class PaneManagerStore {
     }
   }
 
-  setActivePane = (name: PaneID) => {
-    const nextIndex = this.panes.findIndex(val => val === name)
+  setActivePane = (id: number) => {
+    const nextIndex = this.panes.findIndex(val => val === id)
     if (nextIndex === -1) {
       console.error(`no pane found! this.props.panes: ${this.panes}`)
       return
@@ -68,7 +66,7 @@ export class PaneManagerStore {
     this.setPaneIndex(nextIndex)
   }
 
-  activePaneSetter = memoize((name: string) => () => this.setActivePane(name))
+  activePaneSetter = memoize((id: number) => () => this.setActivePane(id))
 
   activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
 
@@ -91,8 +89,8 @@ export class PaneManagerStore {
     }
   }
 
-  indexOfPane = (name: string) => {
-    return this.panes.indexOf(name)
+  indexOfPane = (id: number) => {
+    return this.panes.indexOf(id)
   }
 
   setActivePaneToPrevious = () => {

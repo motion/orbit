@@ -16,7 +16,7 @@ export const SearchAppIndex = observer((props: AppProps<AppType.search>) => {
   const searchStore = useStore(SearchStore, props)
   // TODO bad
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
-
+  return null
   return (
     <MergeContext Context={StoreContext} value={{ searchStore }}>
       {!shouldHideNav && (

@@ -3,7 +3,6 @@ import { AppProps } from '../AppProps'
 import { SourceModel } from '@mcro/models'
 import { useObserveOne } from '@mcro/model-bridge/_/useModel'
 import { AppInfoStore } from '../../components/AppInfoStore'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useStore } from '@mcro/use-store'
 
 export const SourcesAppMain = (props: AppProps<any>) => {
@@ -11,7 +10,7 @@ export const SourcesAppMain = (props: AppProps<any>) => {
     return <div>no item selected</div>
   }
 
-  const appInfoStore = useStore(AppInfoStore, useStoresSafe())
+  const appInfoStore = useStore(AppInfoStore)
   const source = useObserveOne(SourceModel, {
     where: { id: +props.appConfig.id },
   })

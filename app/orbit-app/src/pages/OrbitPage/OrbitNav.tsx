@@ -1,6 +1,5 @@
 import { Text, View, Tooltip } from '@mcro/ui'
 import * as React from 'react'
-import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
@@ -11,16 +10,17 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 
 export const OrbitNav = observer(() => {
   const { paneManagerStore } = useStoresSafe()
-  const apps = useObserveActiveApps()
+  const activeApps = useObserveActiveApps()
+  const sourcesId = activeApps.findIndex(x => x.type === 'sources')
 
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
-        {apps.map((app, index) => {
-          const isLast = index !== AppPanes.length - 1
+        {activeApps.map((app, index) => {
+          const isLast = index !== activeApps.length
           const isActive = paneManagerStore.activePane === app.id
           const nextIsActive =
-            AppPanes[index + 1] && paneManagerStore.activePane === AppPanes[index + 1].id
+            activeApps[index + 1] && paneManagerStore.activePane === activeApps[index + 1].id
           return (
             <NavButton
               key={app.id}
@@ -39,8 +39,8 @@ export const OrbitNav = observer(() => {
         </NavButton>
         <View flex={1} minWidth={10} />
         <NavButton
-          isActive={paneManagerStore.activePane === 'sources'}
-          onClick={paneManagerStore.activePaneSetter('sources')}
+          isActive={paneManagerStore.activePane === sourcesId}
+          onClick={paneManagerStore.activePaneSetter(sourcesId)}
           label="Sources"
         />
       </OrbitNavChrome>

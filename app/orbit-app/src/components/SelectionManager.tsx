@@ -7,7 +7,7 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { StoreContext } from '../contexts'
 
 export type SelectionManagerProps = {
-  pane?: string
+  paneId?: number
   onClearSelection?: Function
 }
 
@@ -15,12 +15,11 @@ export const SelectionManager = observer(
   (props: SelectionManagerProps & { children: React.ReactNode }) => {
     const { paneManagerStore, shortcutStore } = useStoresSafe()
     const selectionStore = useStore(SelectionStore, props)
-    const isActive = useComputed(() => paneManagerStore.activePane === props.pane)
+    const isActive = useComputed(() => paneManagerStore.activePane === props.paneId)
 
     useEffect(
       () => {
         if (isActive) {
-          console.log('setting active selection pane', props.pane)
           shortcutStore.setActiveSelectionStore(selectionStore)
         }
       },

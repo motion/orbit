@@ -8,11 +8,9 @@ import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import * as Views from '../../views'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
-import { SourcesStore } from '../../stores/SourcesStore'
 import { generalSettingQuery } from '../../helpers/queries'
 import { AppProps } from '../AppProps'
 import { gloss } from '@mcro/gloss'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useStore } from '@mcro/use-store'
 
 const eventCharsToNiceChars = {
@@ -49,14 +47,7 @@ const electronToNiceChars = (charString: string) => {
   return final
 }
 
-type Props = {
-  store?: SettingAppStore
-  sourcesStore?: SourcesStore
-}
-
 class SettingAppStore {
-  props: Props
-
   generalSetting: SettingModel = {}
 
   generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {
@@ -108,8 +99,7 @@ const Section = gloss(View, {
 })
 
 export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
-  const stores = useStoresSafe()
-  const store = useStore(SettingAppStore, { ...props, ...stores })
+  const store = useStore(SettingAppStore, props)
 
   const handleClearAllData = () => {
     if (

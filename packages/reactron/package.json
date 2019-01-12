@@ -21,7 +21,7 @@
     "react-reconciler": "0.18.0-alpha.2"
   },
   "devDependencies": {
-    "electron-devtools-installer": "^2.2.4"
+    "electron-devtools-installer": "2.2.4"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

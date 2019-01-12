@@ -14,11 +14,12 @@ import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { trace } from 'mobx'
 
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
-  const stores = useStoresSafe()
-  const store = useStore(OrbitItemStore, { ...props, ...stores })
+  console.log('render me', props)
+  trace()
+  const store = useStore(OrbitItemStore, props)
   const {
     createdAt,
     icon,

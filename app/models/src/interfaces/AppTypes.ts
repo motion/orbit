@@ -7,11 +7,11 @@ export enum AppType {
   sources = 'sources',
   bit = 'bit',
   settings = 'settings',
-  message = 'message'
+  message = 'message',
 }
 
 export type AppConfig = {
-  title: string
+  title?: string
   type: AppType
   id: string
   data?: any

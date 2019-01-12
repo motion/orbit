@@ -19,7 +19,7 @@ export function useStoresSafe(options?: UseStoresOptions) {
         return val
       }
       if (typeof key === 'string') {
-        if (key.indexOf('isMobX') === 0) {
+        if (key.indexOf('isMobX') === 0 || key === '__IS_DEEP' || key === 'IS_AUTO_RUN') {
           return
         }
         if (options && options.optional && options.optional.find(x => x === key)) {

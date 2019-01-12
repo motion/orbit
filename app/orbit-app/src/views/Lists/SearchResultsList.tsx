@@ -18,11 +18,15 @@ type SearchResultsListProps = VirtualListProps & {
 
 const getItemAppConfig = (items: any[]): GetItemProps => (index: number) => {
   // normalize bits if handed in directly
-  const target = items[index].target
+  const item = items[index]
+  const target = item.target
   switch (target) {
     case 'person-bit':
     case 'bit':
-      return normalizeItem(items[index])
+      return {
+        ...normalizeItem(item),
+        group: item.group,
+      }
   }
   return null
 }
@@ -36,31 +40,36 @@ export const SearchResultsList = ({
   ...props
 }: SearchResultsListProps) => {
   const { appStore } = useStoresSafe()
-  const isRowLoaded = React.useCallback(find => find.index < items.length, [
-    items.map(x => x.id).join(' '),
-  ])
+  const itemsKey = items.map(x => `${x.id || x.email || x.key}`).join(' ')
+  const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKey])
 
-  return (
-    <ProvideHighlightsContextWithDefaults
-      value={{
-        words: props.query.split(' '),
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }}
-    >
-      <VirtualList
-        items={items}
-        getItemProps={getItemAppConfig(items)}
-        ItemView={SearchResultListItem}
-        maxHeight={appStore.maxHeight - offsetY}
-        isRowLoaded={isRowLoaded}
-        itemProps={{
-          ...itemProps,
-          onSelect,
-          onOpen,
+  const list = React.useMemo(
+    () => (
+      <ProvideHighlightsContextWithDefaults
+        value={{
+          words: props.query.split(' '),
+          maxChars: 500,
+          maxSurroundChars: 80,
         }}
-        {...props}
-      />
-    </ProvideHighlightsContextWithDefaults>
+      >
+        <VirtualList
+          key={itemsKey}
+          items={items}
+          getItemProps={getItemAppConfig(items)}
+          ItemView={SearchResultListItem}
+          maxHeight={appStore.maxHeight - offsetY}
+          isRowLoaded={isRowLoaded}
+          itemProps={{
+            ...itemProps,
+            onSelect,
+            onOpen,
+          }}
+          {...props}
+        />
+      </ProvideHighlightsContextWithDefaults>
+    ),
+    [itemsKey],
   )
+
+  return list
 }

@@ -1,7 +1,7 @@
-import { view } from '@mcro/black'
 import { View } from '@mcro/ui'
+import { gloss } from '@mcro/gloss'
 
-export const Input = view(View, {
+export const Input = gloss(View, {
   position: 'relative',
   flexFlow: 'row',
   borderRadius: 7,

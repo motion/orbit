@@ -112,7 +112,11 @@ export const OrbitWindow = observer(() => {
   const [show, setShow] = React.useState(false)
   const url = Config.urls.server
 
-  log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered} ${store.size}`)
+  log.info(
+    `---- render OrbitWindow show ${show} ${url} hovered? ${Desktop.hoverState.orbitHovered} ${
+      store.size
+    }`,
+  )
 
   if (!store.size || !store.size[0]) {
     return null

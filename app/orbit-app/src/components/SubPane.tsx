@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { SubPaneStore } from './SubPaneStore'
 import { AppType } from '@mcro/models'
@@ -7,6 +6,7 @@ import { CSSPropertySetStrict } from '@mcro/css'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { gloss } from '@mcro/gloss'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: string
@@ -28,7 +28,7 @@ type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = observer((props: Props) => {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
-  const { paneManagerStore, selectionStore } = useStoresSafe()
+  const { paneManagerStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
   const subPaneStore = useStore(SubPaneStore, {
     paneManagerStore,
     selectionStore,
@@ -65,7 +65,7 @@ export const SubPane = observer((props: Props) => {
 // we cant animate out as of yet because we are changing the height
 // so it would show overflowing content as the main pane got smaller
 // changing opacity here will be instant so avoid that bug
-const SubPaneFrame = view(UI.FullScreen, {
+const SubPaneFrame = gloss(UI.FullScreen, {
   pointerEvents: 'none',
   opacity: 0,
   isActive: {
@@ -73,7 +73,7 @@ const SubPaneFrame = view(UI.FullScreen, {
   },
 })
 
-const Pane = view(UI.View, {
+const Pane = gloss(UI.View, {
   position: 'absolute',
   top: 0,
   right: 0,
@@ -93,13 +93,13 @@ const Pane = view(UI.View, {
   },
 }))
 
-const SubPaneInner = view(UI.View, {
+const SubPaneInner = gloss(UI.View, {
   position: 'relative',
   flex: 1,
   pointerEvents: 'none',
 })
 
-const PaneContentInner = view({
+const PaneContentInner = gloss({
   position: 'relative',
   flex: 1,
 })

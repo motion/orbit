@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { AppStore } from './AppStore'
 import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../types'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { MergeContext } from '../views/MergeContext'
+import { StoreContext } from '../contexts'
 
 type Props = Pick<
   AppProps<any>,
@@ -25,7 +26,7 @@ type Props = Pick<
 }
 
 export const AppView = React.memo((props: Props) => {
-  const stores = useStoresSafe()
+  const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(
@@ -67,7 +68,11 @@ export const AppView = React.memo((props: Props) => {
     />
   )
   if (shouldProvideAppStore) {
-    return <StoreContext.Provider value={{ ...stores, appStore }}>{appView}</StoreContext.Provider>
+    return (
+      <MergeContext Context={StoreContext} value={{ appStore }}>
+        {appView}
+      </MergeContext>
+    )
   }
   return appView
 })

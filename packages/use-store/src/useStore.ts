@@ -1,5 +1,5 @@
 import { automagicClass } from '@mcro/automagical'
-import { isValidElement, useRef, createContext } from 'react'
+import { isValidElement, useRef, createContext, useEffect } from 'react'
 import { observable, transaction } from 'mobx'
 import isEqual from 'react-fast-compare'
 
@@ -135,6 +135,18 @@ export function useStore<P, A extends { props?: P } | any>(
   const proxyStore = useRef(null)
   const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
   const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
+
+  // stores can use didMount and willUnmount
+  useEffect(() => {
+    if (store.didMount) {
+      store.didMount()
+    }
+    return () => {
+      if (store.willUnmount) {
+        store.willUnmount()
+      }
+    }
+  }, [])
 
   // setup store once or if changed
   if (!proxyStore.current || hasChangedSource) {

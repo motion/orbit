@@ -141,19 +141,6 @@ export const OrbitSwitch = observer((props: Props) => {
           overflow="hidden"
           flex={1}
         >
-          <Theme name="light">
-            <View padding={5}>
-              <Row background="#eee">
-                <Icon name="search" size={12} />
-                <Views.InputRow
-                  label="Search..."
-                  value={store.query}
-                  onChange={value => (store.query = value)}
-                />
-                <View tagName="input" placeholder="Search..." />
-              </Row>
-            </View>
-          </Theme>
           <View overflowY="auto" maxHeight={300}>
             {activeSpace ? (
               <RowItem

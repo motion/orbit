@@ -22,7 +22,7 @@ const ContentInner = gloss(UI.Col, {
 })
 
 export const ScrollableContent = observer((props: { scrollTo?: string; children: any }) => {
-  const { appPageStore } = useStoresSafe()
+  const { appPageStore } = useStoresSafe({ optional: ['appPageStore'] })
 
   React.useEffect(() => {
     if (props.scrollTo && appPageStore) {

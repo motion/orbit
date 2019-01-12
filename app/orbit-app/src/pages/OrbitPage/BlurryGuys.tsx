@@ -4,6 +4,7 @@ import { now } from 'mobx-utils'
 import { View } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 class BlurryStore {
   guys = [[-40, -40], [50, -20], [0, 60]]
@@ -45,9 +46,13 @@ const Blur = gloss(View, {
   }
 })
 
-export const BlurryGuys = () => {
+export const BlurryGuys = observer(() => {
   const store = useStore(BlurryStore)
-  return store.guys.map((guy, index) => {
-    return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
-  })
-}
+  return (
+    <>
+      {store.guys.map((guy, index) => {
+        return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
+      })}
+    </>
+  )
+})

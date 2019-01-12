@@ -102,14 +102,13 @@ class PeopleAppStore {
 const PersonHeader = gloss()
 
 export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
-  const { appPageStore } = useStoresSafe()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
   }
   return (
     <Frame>
-      <PersonHeader draggable onDragStart={appPageStore ? appPageStore.onDragStart : null}>
+      <PersonHeader draggable /*  onDragStart={appPageStore ? appPageStore.onDragStart : null} */>
         <CardContent>
           <Avatar src={person.photo} />
           <Info>

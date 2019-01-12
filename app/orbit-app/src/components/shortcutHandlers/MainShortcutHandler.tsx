@@ -7,11 +7,11 @@ import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { observer } from 'mobx-react-lite'
-import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { MergeContext } from '../../views/MergeContext'
 import { ShortcutStore } from '../../stores/ShortcutStore'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { StoreContext } from '../../contexts'
 
 type Props = {
   paneManagerStore?: PaneManagerStore

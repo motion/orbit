@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../stores/SelectionStore'
-import { StoreContext } from '@mcro/black'
 import { MergeContext } from '../views/MergeContext'
 import { useComputed, observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { StoreContext } from '../contexts'
 
 export type SelectionManagerProps = {
   pane?: string

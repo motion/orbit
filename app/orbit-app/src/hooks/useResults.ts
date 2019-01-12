@@ -3,10 +3,7 @@ import { useComputed } from 'mobx-react-lite'
 import { useStoresSafe } from './useStoresSafe'
 
 export function useResults(results: any[], isActiveOverride?: boolean) {
-  const { appStore, selectionStore } = useStoresSafe()
-  if (!appStore) {
-    throw new Error('No appstore')
-  }
+  const { appStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
   const isActive = useComputed(() =>
     typeof isActiveOverride === 'boolean' ? isActiveOverride : !!appStore.isActive,
   )

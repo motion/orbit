@@ -8,9 +8,9 @@ import { observer } from 'mobx-react-lite'
 import { View } from '@mcro/ui'
 import { SearchResultsList } from '../../views/Lists/SearchResultsList'
 import { MergeContext } from '../../views/MergeContext'
-import { StoreContext } from '@mcro/black'
 import { Selectable } from '../../components/Selectable'
 import { AppType } from '@mcro/models'
+import { StoreContext } from '../../contexts'
 
 export const SearchAppIndex = observer((props: AppProps<AppType.search>) => {
   const searchStore = useStore(SearchStore, props)

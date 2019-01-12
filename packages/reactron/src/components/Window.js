@@ -61,7 +61,6 @@ export class Window extends BaseComponent {
         }
       },
       show: propVal => {
-        console.log('calling show')
         if (propVal) {
           // ensure it happens after positioning
           setTimeout(() => {
@@ -172,7 +171,6 @@ function configureFile({ file }) {
 }
 
 function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
-  console.log('confguring size', oSize)
   if (this.unmounted) {
     return
   }
@@ -225,12 +223,12 @@ function configurePosition({ position, onMove, onMoved, defaultPosition, animate
       throw new Error(`position ${position} ended with error of: ${m}`)
     }
     this.handleEvent(this.window, 'move', onMove, rawHandler => {
-      const position = this.window.getPosition()
-      rawHandler(position)
+      const nextPosition = this.window.getPosition()
+      rawHandler(nextPosition)
     })
     this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
-      const position = this.window.getPosition()
-      rawHandler(position)
+      const nextPosition = this.window.getPosition()
+      rawHandler(nextPosition)
     })
     if (!position && defaultPosition) {
       this.window.setPosition(...defaultPosition)

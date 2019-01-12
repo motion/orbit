@@ -5,12 +5,12 @@ import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
 import { devTools } from '../helpers/devTools'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
+// import { observer } from 'mobx-react-lite'
 import { ShortcutsManager } from './ShortcutsManager'
 import { Electron } from '@mcro/stores'
 import { clipboard, app } from 'electron'
 
-export const OrbitRoot = observer(() => {
+export const OrbitRoot = () => {
   const electronStore = useStore(ElectronStore)
 
   React.useEffect(() => {
@@ -51,4 +51,4 @@ export const OrbitRoot = observer(() => {
       <OrbitWindow />
     </App>
   )
-})
+}

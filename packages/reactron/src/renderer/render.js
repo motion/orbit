@@ -11,6 +11,5 @@ export async function render(element) {
     })
   }
   const node = Renderer.createContainer(container)
-  console.log('render2', element)
   Renderer.updateContainer(element, node, null)
 }

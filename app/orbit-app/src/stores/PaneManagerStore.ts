@@ -89,8 +89,8 @@ export class PaneManagerStore {
     }
   }
 
-  indexOfPane = (name: string) => {
-    return this.panes.indexOf(name)
+  indexOfPane = (id: number) => {
+    return this.panes.indexOf(id)
   }
 
   setActivePaneToPrevious = () => {

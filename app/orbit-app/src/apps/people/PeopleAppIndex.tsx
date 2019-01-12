@@ -26,11 +26,18 @@ export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
   )
 
   // filter and group
-  const filteredPeople = fuzzyQueryFilter(activeQuery, people, {
-    key: 'name',
-  })
-  const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
-  const results = sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
+  const results = React.useMemo(
+    () => {
+      const filteredPeople = fuzzyQueryFilter(activeQuery, people, {
+        key: 'name',
+      })
+      const sortedPeople = sortBy(filteredPeople.filter(x => !!x.name), x => x.name.toLowerCase())
+      const groupedPeople =
+        sortedPeople.length < 10 ? sortedPeople : groupByFirstLetter(sortedPeople)
+      return groupedPeople.slice(0, 1)
+    },
+    [activeQuery, people.length],
+  )
 
   if (!results.length) {
     return <NoResultsDialog subName="the directory" />

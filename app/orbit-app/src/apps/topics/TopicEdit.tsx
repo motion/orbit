@@ -6,10 +6,11 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { Input, Button, Row } from '@mcro/ui'
 import { IS_MINIMAL } from '../../constants'
 import { useStore } from '@mcro/use-store'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class TopicEditStore {
+  stores = useStoresSafe()
   name: string = ''
 
   handleNameChange = e => {
@@ -22,7 +23,7 @@ class TopicEditStore {
     let topicsApp: TopicsApp = await loadOne(AppModel, {
       args: {
         type: 'topics' as AppType,
-        spaceId: this.props.spaceStore.activeSpace.id,
+        spaceId: this.stores.spaceStore.activeSpace.id,
       },
     })
 
@@ -30,7 +31,7 @@ class TopicEditStore {
       topicsApp = {
         type: 'topics',
         name: 'topics',
-        spaceId: this.props.spaceStore.activeSpace.id,
+        spaceId: this.stores.spaceStore.activeSpace.id,
         data: {
           topics: [],
         },
@@ -49,7 +50,7 @@ class TopicEditStore {
 
 export const TopicEdit = observer(
   (props: { type: 'term' | 'topic'; store?: TopicEditStore; spaceStore?: SpaceStore }) => {
-    const store = useStore(TopicEditStore, { ...props, ...useStoresSafe() })
+    const store = useStore(TopicEditStore, props)
     return (
       <Row tagName="form" onSubmit={store.save} alignItems="center">
         <Input

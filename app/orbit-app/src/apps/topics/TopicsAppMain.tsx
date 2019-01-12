@@ -9,12 +9,14 @@ import { loadMany } from '@mcro/model-bridge'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class TopicsMainStore {
   props: AppProps<AppType.topics>
+  stores = useStoresSafe()
 
   get appConfig() {
-    return this.props.appStore.appConfig
+    return this.stores.appStore.appConfig
   }
 
   results = react(

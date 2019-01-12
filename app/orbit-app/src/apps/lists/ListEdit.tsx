@@ -9,6 +9,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class ListEditStore {
   props: { spaceStore: SpaceStore }
+  stores = useStoresSafe()
 
   name: string = ''
 
@@ -19,14 +20,14 @@ class ListEditStore {
     let listsApp: ListsApp = await loadOne(AppModel, {
       args: {
         type: 'lists',
-        spaceId: this.props.spaceStore.activeSpace.id,
+        spaceId: this.stores.spaceStore.activeSpace.id,
       },
     })
     if (!listsApp) {
       listsApp = {
         type: 'lists',
         name: 'lists',
-        spaceId: this.props.spaceStore.activeSpace.id,
+        spaceId: this.stores.spaceStore.activeSpace.id,
         data: {
           lists: [],
         },
@@ -41,8 +42,7 @@ class ListEditStore {
 }
 
 export const ListEdit = observer(() => {
-  const { spaceStore } = useStoresSafe()
-  const store = useStore(ListEditStore, { spaceStore })
+  const store = useStore(ListEditStore)
 
   return (
     <Row tagName="form" onSubmit={store.handleSubmit} padding={10} alignItems="center">

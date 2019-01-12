@@ -3,15 +3,12 @@ import { throttle, debounce } from 'lodash'
 import { SubPaneProps } from './SubPane'
 import { App } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { SelectionStore } from '../stores/SelectionStore'
 import { createRef } from 'react'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export class SubPaneStore {
-  props: SubPaneProps & {
-    paneManagerStore: PaneManagerStore
-    selectionStore: SelectionStore
-  }
+  props: SubPaneProps
+  stores = useStoresSafe({ optional: ['selectionStore'] })
 
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
@@ -33,8 +30,8 @@ export class SubPaneStore {
   }
 
   get isLeft() {
-    const thisIndex = this.props.paneManagerStore.indexOfPane(this.props.id)
-    return thisIndex < this.props.paneManagerStore.paneIndex
+    const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
+    return thisIndex < this.stores.paneManagerStore.paneIndex
   }
 
   get isActive() {
@@ -43,7 +40,8 @@ export class SubPaneStore {
 
   positionState = react(
     () => {
-      const { extraCondition, id, paneManagerStore } = this.props
+      const { extraCondition, id } = this.props
+      const { paneManagerStore } = this.stores
       const isActive =
         id === paneManagerStore.activePane && (extraCondition ? extraCondition() : true)
       return {
@@ -138,7 +136,7 @@ export class SubPaneStore {
   onPaneScroll = () => {
     this.onPaneNearEdges()
     if (App.peekState.target) {
-      if (Date.now() - this.props.selectionStore.lastSelectAt > 200) {
+      if (Date.now() - this.stores.selectionStore.lastSelectAt > 200) {
         AppActions.clearPeek()
       }
     }

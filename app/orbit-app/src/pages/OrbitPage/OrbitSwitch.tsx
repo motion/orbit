@@ -1,29 +1,25 @@
 import * as React from 'react'
 import { ensure, react } from '@mcro/black'
-import { Popover, View, Col, Row } from '@mcro/ui'
+import { Popover, View, Col } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import * as Views from '../../views'
 import { NavButton } from '../../views/NavButton'
-import { CSSPropertySet, Theme } from '@mcro/gloss'
+import { CSSPropertySet } from '@mcro/gloss'
 import { RowItem } from '../../views/RowItem'
 import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
 import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
-import { SpaceStore } from '../../stores/SpaceStore'
 import { OrbitOrb } from '../../views/OrbitOrb'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import { StoreContext } from '../../contexts'
 
 type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
 
 class SpaceSwitchStore {
-  props: Props & {
-    spaceStore: SpaceStore
-    paneManagerStore: PaneManagerStore
-  }
+  props: Props
+  stores = React.useContext(StoreContext)
   popoverContentRef = React.createRef<HTMLDivElement>()
   selectedIndex = 0
   open = false
@@ -38,11 +34,11 @@ class SpaceSwitchStore {
   }
 
   get filteredSpaces() {
-    return fuzzyQueryFilter(this.query, this.props.spaceStore.inactiveSpaces)
+    return fuzzyQueryFilter(this.query, this.stores.spaceStore.inactiveSpaces)
   }
 
   get spaces() {
-    return this.props.spaceStore.spaces
+    return this.stores.spaceStore.spaces
   }
 
   down = e => {
@@ -87,7 +83,7 @@ const createNewSpace = () => {
 
 export const OrbitSwitch = observer((props: Props) => {
   const stores = useStoresSafe()
-  const store = useStore(SpaceSwitchStore, { ...props, ...stores })
+  const store = useStore(SpaceSwitchStore, props)
 
   const handlers = {
     select: () => {

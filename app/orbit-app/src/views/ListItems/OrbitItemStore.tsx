@@ -1,6 +1,8 @@
 import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
 import { Logger } from '@mcro/logger'
+import { StoreContext } from '../../contexts'
+import { useContext } from 'react'
 
 const log = new Logger('OrbitItemStore')
 
@@ -11,6 +13,7 @@ export const OrbitItemSingleton = {
 
 export class OrbitItemStore {
   props: OrbitItemProps<any>
+  stores = useContext(StoreContext)
 
   isSelected = false
   cardWrapRef = null
@@ -22,7 +25,7 @@ export class OrbitItemStore {
     hoverSelect => {
       ensure('hoverSelect', !!hoverSelect)
       ensure('!hoverSettler', !this.hoverSettler)
-      this.hoverSettler = this.props.appStore.getHoverSettler()
+      this.hoverSettler = this.stores.appStore.getHoverSettler()
       this.hoverSettler.setItem({
         index: this.props.index,
       })
@@ -57,7 +60,7 @@ export class OrbitItemStore {
       this.props.onClick(e, this.cardWrapRef)
       return
     }
-    this.props.appStore.toggleSelected(this.index, 'click')
+    this.stores.appStore.toggleSelected(this.index, 'click')
   }
 
   lastClickLocation = Date.now()

@@ -10,10 +10,7 @@ import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 export const MenuApp = observer((props: MenuAppProps) => {
   const stores = useStoresSafe()
-  const appStore = useStore(AppStore, {
-    ...props,
-    ...stores,
-  })
+  const appStore = useStore(AppStore, props)
   return (
     <StoreContext.Provider value={{ ...stores, appStore }}>
       <MenuAppInner {...props} />

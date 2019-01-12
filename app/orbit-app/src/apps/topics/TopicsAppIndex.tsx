@@ -93,6 +93,7 @@ const size = IS_MINIMAL ? 0.9 : 0.95
 
 export const TopicsAppIndex = observer(
   (props: AppProps<AppType.topics> & { store?: TopicsIndexStore }) => {
+    return null
     const store = useStore(TopicsIndexStore, props)
     return (
       <>

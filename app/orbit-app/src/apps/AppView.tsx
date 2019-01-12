@@ -29,11 +29,7 @@ export const AppView = React.memo((props: Props) => {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
-  const appStore = useStore(
-    AppStore,
-    { ...props, ...stores },
-    { conditionalUse: shouldProvideAppStore },
-  )
+  const appStore = useStore(AppStore, props, { conditionalUse: shouldProvideAppStore })
 
   React.useEffect(() => {
     if (props.onAppStore) {

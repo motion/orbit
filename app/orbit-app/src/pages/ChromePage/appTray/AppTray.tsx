@@ -45,7 +45,7 @@ export function AppTray() {
     return null
   }
   const stores = useStoresSafe()
-  const store = useStore(AppTrayStore, stores)
+  const store = useStore(AppTrayStore)
   const activeApps = useObserveActiveApps()
   console.log('------render --- Apptray', stores)
   return (

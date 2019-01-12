@@ -24,18 +24,14 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  props: {
-    paneManagerStore: PaneManagerStore
-    queryStore: QueryStore
-    selectionStore: SelectionStore
-  }
+  stores = useStoresSafe()
 
   mouseUpAt = 0
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false
 
   get highlightWords() {
-    const { activeMarks } = this.props.queryStore.queryFilters
+    const { activeMarks } = this.stores.queryStore.queryFilters
     if (!activeMarks) {
       return null
     }
@@ -47,7 +43,7 @@ export class HeaderStore {
     if (!this.inputRef.current) {
       return
     }
-    this.props.queryStore.onChangeQuery(this.inputRef.current.innerText)
+    this.stores.queryStore.onChangeQuery(this.inputRef.current.innerText)
   }
 
   focus = () => {
@@ -80,7 +76,7 @@ export class HeaderStore {
   )
 
   focusInputOnClearQuery = react(
-    () => this.props.queryStore.hasQuery,
+    () => this.stores.queryStore.hasQuery,
     query => {
       ensure('no query', !query)
       this.focus()
@@ -104,11 +100,11 @@ export class HeaderStore {
   }
 
   goHome = () => {
-    const activePane = this.props.paneManagerStore.activePane
+    const activePane = this.stores.paneManagerStore.activePane
     if (activePane === 'home' || activePane === 'search') {
       AppActions.setOrbitDocked(false)
     } else {
-      this.props.paneManagerStore.setActivePane('home')
+      this.stores.paneManagerStore.setActivePane('home')
     }
   }
 
@@ -123,7 +119,7 @@ export class HeaderStore {
 
 export const OrbitHeader = observer(() => {
   const stores = useStoresSafe()
-  const headerStore = useStore(HeaderStore, stores)
+  const headerStore = useStore(HeaderStore)
   return (
     <OrbitHeaderContainer
       opacity={stores.paneManagerStore.activePane === 'onboard' ? 0 : 1}

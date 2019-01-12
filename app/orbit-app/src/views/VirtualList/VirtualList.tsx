@@ -15,6 +15,7 @@ import { OrbitItemProps } from '../ListItems/OrbitItemProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
+import { trace } from 'mobx'
 
 export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>> | null
 
@@ -169,6 +170,8 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
   const { items } = props
+
+  console.warn('RENDER VIRTUAL LIST')
 
   React.useEffect(() => {
     if (!store.listRef) {

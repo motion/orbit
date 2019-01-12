@@ -15,7 +15,6 @@ export * from './proxySetters'
 export const WebSocket = WS
 export const ReconnectingWebSocket = RWebSocket
 
-const MESSAGE_SPLIT_VAL = '**|**'
 const stringifyObject = obj =>
   stringify(obj, {
     indent: '  ',
@@ -178,6 +177,7 @@ export class BridgeManager {
         onMessage: this.handleMessage,
       },
     })
+
     await this.socketManager.start()
   }
 
@@ -187,15 +187,12 @@ export class BridgeManager {
         console.log('No data received over socket')
         return
       }
-      if (data[0] === '-') {
-        this.handleMessage(data.slice(1))
-        return
-      }
       try {
         const msg = JSON.parse(data)
 
-        if (!msg || typeof msg !== 'object') {
-          throw new Error('Non-object received')
+        if (msg.message) {
+          this.handleMessage(msg)
+          return
         }
 
         // receive the current state once we connect to master
@@ -297,20 +294,6 @@ export class BridgeManager {
     // get initial state
     log.verbose('socket opened, requesting initial state...')
     this.socket.send(JSON.stringify({ action: 'getInitialState', source: this.source }))
-  }
-
-  handleMessage = data => {
-    const getMessage = str => str.split(MESSAGE_SPLIT_VAL)
-    const [message, value] = getMessage(data)
-    // orbit so we can time between other things in the app...
-    log.timer('orbit', `${this.source}.message`, `${message}`, value)
-    for (const { type, listener } of this.messageListeners) {
-      if (!type) {
-        listener(message, value)
-      } else if (message === type) {
-        listener(value)
-      }
-    }
   }
 
   onOpenSocket = () => {
@@ -444,11 +427,22 @@ export class BridgeManager {
     return changed
   }
 
-  onMessage = (type, listener?): Disposer => {
-    let subscription = { type, listener }
-    if (!listener) {
-      subscription = { type: null, listener: type }
+  handleMessage = ({ message, value }) => {
+    // orbit so we can time between other things in the app...
+    log.verbose('Bridge.handleMessage', this.source, message, value)
+    for (const { type, listener } of this.messageListeners) {
+      if (!type) {
+        listener(message, value)
+      } else if (message === type) {
+        listener(value)
+      }
     }
+  }
+
+  onMessage = (a, b?): Disposer => {
+    let listener = b || a
+    let type = b ? a : null
+    let subscription = { type, listener }
     this.messageListeners.add(subscription)
     // return disposable
     return () => {
@@ -456,19 +450,22 @@ export class BridgeManager {
     }
   }
 
-  sendMessage = async (Store: any, ogMessage: string, value?: string) => {
+  sendMessage = async (Store: any, message: string, value?: string | Object) => {
     if (!this.started) {
       throw new Error('Not started, can only call sendMessage on the app that starts it.')
     }
-    if (!Store || !ogMessage) {
-      throw new Error(`no store || message ${Store} ${ogMessage} ${value}`)
+    if (!Store || !message) {
+      throw new Error(`no store || message ${Store} ${message} ${value}`)
     }
     if (typeof Store.source !== 'string') {
       throw new Error(`Bad store.source, store: ${Store}`)
     }
-    const message = value ? `${ogMessage}${MESSAGE_SPLIT_VAL}${value}` : ogMessage
+
+    const packet = JSON.stringify({ message, value })
+    this.lastMessage = { message: message, at: Date.now() }
+
     if (this.options.master) {
-      this.socketManager.sendMessage(Store.source, message)
+      this.socketManager.sendMessage(Store.source, packet)
     } else {
       if (!this.isSocketOpen) {
         log.info('\n\n\nWaiting for open socket....\n\n\n')
@@ -479,11 +476,7 @@ export class BridgeManager {
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
       nextCycleCb(() => {
-        if (process.env.NODE_ENV === 'development') {
-          log.trace.verbose(`sendMessage ${message} value ${JSON.stringify(value || null)}`)
-        }
-        this.lastMessage = { message, at: Date.now() }
-        this.socket.send(JSON.stringify({ message, to: Store.source }))
+        this.socket.send(JSON.stringify({ message: packet, to: Store.source }))
       })
     }
   }

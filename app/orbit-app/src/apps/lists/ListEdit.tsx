@@ -3,9 +3,9 @@ import { AppModel, ListsApp } from '@mcro/models'
 import * as React from 'react'
 import { Input, Button, Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { StoreContext } from '@mcro/black'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class ListEditStore {
   props: { spaceStore: SpaceStore }
@@ -41,7 +41,7 @@ class ListEditStore {
 }
 
 export const ListEdit = observer(() => {
-  const { spaceStore } = React.useContext(StoreContext)
+  const { spaceStore } = useStoresSafe()
   const store = useStore(ListEditStore, { spaceStore })
 
   return (

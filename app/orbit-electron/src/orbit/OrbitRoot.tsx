@@ -1,46 +1,54 @@
 import { App } from '@mcro/reactron'
-import { view, provide } from '@mcro/black'
 import * as React from 'react'
 import { MenuItems } from './MenuItems'
 import { OrbitWindow } from './OrbitWindow'
 import { ElectronStore } from '../stores/ElectronStore'
-import { OrbitStore } from './OrbitStore'
 import { devTools } from '../helpers/devTools'
+import { useStore } from '@mcro/use-store'
+// import { observer } from 'mobx-react-lite'
+import { ShortcutsManager } from './ShortcutsManager'
+import { Electron } from '@mcro/stores'
+import { clipboard, app } from 'electron'
 
-@provide({
-  electronStore: ElectronStore,
-  spaceStore: OrbitStore,
-})
-@view
-export class OrbitRoot extends React.Component {
-  props: {
-    electronStore?: ElectronStore
-  }
+export const OrbitRoot = () => {
+  const electronStore = useStore(ElectronStore)
 
-  componentDidCatch(error) {
-    this.props.electronStore.error = error
-    console.log('electron error', error)
-  }
+  React.useEffect(() => {
+    new ShortcutsManager()
+  }, [])
 
-  render() {
-    const { electronStore } = this.props
-    if (electronStore.error) {
-      if (electronStore.error) {
-        console.log('error is', electronStore.error)
+  React.useEffect(() => {
+    Electron.onMessage(msg => {
+      switch (msg) {
+        case Electron.messages.COPY:
+          clipboard.writeText(msg)
+          return
+        case Electron.messages.RESTART:
+          app.relaunch()
+          app.exit()
+          return
       }
-      return null
+    })
+  }, [])
+
+  if (electronStore.error) {
+    if (electronStore.error) {
+      console.log('error is', electronStore.error)
     }
-    console.log('electron success, rendering...')
-    return (
-      <App
-        onBeforeQuit={electronStore.handleBeforeQuit}
-        onWillQuit={electronStore.handleQuit}
-        ref={electronStore.handleAppRef}
-        devTools={devTools}
-      >
-        <MenuItems />
-        <OrbitWindow />
-      </App>
-    )
+    return null
   }
+
+  console.log('electron success, rendering...')
+
+  return (
+    <App
+      onBeforeQuit={electronStore.handleBeforeQuit}
+      onWillQuit={electronStore.handleQuit}
+      ref={electronStore.handleAppRef}
+      devTools={devTools}
+    >
+      <MenuItems electronStore={electronStore} />
+      <OrbitWindow />
+    </App>
+  )
 }

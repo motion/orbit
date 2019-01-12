@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { HotKeys } from 'react-hotkeys'
 
-type ShortcutSequence = string
+type ShortcutSequence = string | string[]
 
 type Props = {
   shortcuts: { [name: string]: ShortcutSequence }

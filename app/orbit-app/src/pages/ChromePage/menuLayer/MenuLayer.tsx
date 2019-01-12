@@ -3,7 +3,6 @@ import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
-import { App } from '@mcro/stores'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
 import { MenuApp } from './MenuApp'
@@ -18,11 +17,15 @@ import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainSh
 import { animated, interpolate } from 'react-spring'
 import { useSpring } from 'react-spring/hooks'
 import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
-export type MenuAppProps = AppProps<any> & { menuStore: MenuStore; menuId: number }
+export type MenuAppProps = Partial<AppProps<any>> & {
+  menuStore: MenuStore
+  menuId: number
+}
 
 export const MenuLayer = observer(() => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const selectionStore = useStore(SelectionStore, {
     queryStore,
@@ -68,10 +71,6 @@ export const MenuLayer = observer(() => {
     }
   }, [])
 
-  React.useEffect(() => {
-    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
-  }, [])
-
   return (
     <BrowserDebugTray menuStore={menuStore}>
       <StoreContext.Provider value={allStores}>
@@ -102,6 +101,7 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 
   const pad = menuStore.menuPad
   const left = menuCenter - MENU_WIDTH / 2
+  console.log('menu left', left)
   const { open, repositioning } = openState
   const config = repositioning ? noAnimationConfig : springyConfig
   const { x, y, opacity } = useSpring({
@@ -180,7 +180,6 @@ const MenuLayerContent = React.memo(
           }}
         >
           {menuApps.map((app, index) => (
-            // TODO
             <MenuApp
               id={app}
               key={index}

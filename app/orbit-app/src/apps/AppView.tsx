@@ -1,13 +1,24 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { AppStore } from './AppStore'
 import { apps } from './apps'
 import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
+import { GenericComponent } from '../types'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { MergeContext } from '../views/MergeContext'
+import { StoreContext } from '../contexts'
 
 type Props = Pick<
   AppProps<any>,
-  'id' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
+  | 'id'
+  | 'title'
+  | 'viewType'
+  | 'type'
+  | 'isActive'
+  | 'itemProps'
+  | 'appConfig'
+  | 'onSelectItem'
+  | 'onOpenItem'
 > & {
   title?: string
   appStore?: AppStore<any>
@@ -15,7 +26,7 @@ type Props = Pick<
 }
 
 export const AppView = React.memo((props: Props) => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   const shouldProvideAppStore = !stores.appStore && !props.appStore
   const appStore = useStore(
@@ -34,7 +45,7 @@ export const AppView = React.memo((props: Props) => {
     console.error('NO APP OF TYPE', props.type, props)
     return null
   }
-  const AppView = apps[props.type][props.viewType]
+  const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
   if (!AppView) {
     return (
       <div>
@@ -44,7 +55,6 @@ export const AppView = React.memo((props: Props) => {
   }
   const appView = (
     <AppView
-      {...props}
       appStore={props.appStore || stores.appStore || appStore}
       sourcesStore={stores.sourcesStore}
       settingStore={stores.settingStore}
@@ -52,10 +62,17 @@ export const AppView = React.memo((props: Props) => {
       queryStore={stores.queryStore}
       spaceStore={stores.spaceStore}
       paneManagerStore={stores.paneManagerStore}
+      data={{}}
+      updateData={_ => _}
+      {...props}
     />
   )
   if (shouldProvideAppStore) {
-    return <StoreContext.Provider value={{ ...stores, appStore }}>{appView}</StoreContext.Provider>
+    return (
+      <MergeContext Context={StoreContext} value={{ appStore }}>
+        {appView}
+      </MergeContext>
+    )
   }
   return appView
 })

@@ -3,7 +3,6 @@ import { setTrayFocused } from './helpers'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { react, ensure, always } from '@mcro/black'
 import { AppActions } from '../../../actions/AppActions'
-import { TrayActions } from '../../../actions/Actions'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { AppType } from '@mcro/models'
@@ -11,7 +10,7 @@ import { memoize, debounce } from 'lodash'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { createRef } from 'react'
 
-export const menuApps = ['search', 'lists', 'topics', 'people'] as AppType[]
+export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
 export class MenuStore {
   props: {
@@ -26,9 +25,14 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringID = -1
   didRenderState = { at: Date.now(), open: false }
+  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, a => this.handleTrayEvent(a))
 
   // see how this interacts with isOpen
   activeMenuID = App.openMenu ? App.openMenu.id : -1
+
+  willUnmount() {
+    this.trayEventListener()
+  }
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuID].size[1]
@@ -96,12 +100,12 @@ export class MenuStore {
     activeID => {
       const id = activeID === -1 ? 0 : activeID
       const maxItems = 3
-      const trayBounds = Desktop.state.operatingSystem.trayBounds
+      const trayPositionX = Desktop.state.operatingSystem.trayBounds.position[0]
       const leftSpacing = 47
       const xOffset = maxItems - id
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
-      const bounds = trayBounds[0] + offset
+      const bounds = trayPositionX + offset
       return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
     },
     {
@@ -147,38 +151,53 @@ export class MenuStore {
     }
   }
 
-  handleTrayEvent = async (key: keyof TrayActions) => {
-    switch (key) {
-      case 'TrayToggle0':
-        // special case: switch us over to the main orbit app
-        // sync query over to search
-        App.setState({ query: this.props.queryStore.query })
-        // then open the main window to show it there instead
-        AppActions.setOrbitDocked(!App.state.orbitState.docked)
-        // and close this menu
-        this.closeMenu()
-        break
-      case 'TrayToggle1':
-      case 'TrayToggle2':
-      case 'TrayToggle3':
-        this.togglePinnedOpen(+key.replace('TrayToggle', ''))
-        break
-      case 'TrayHover0':
-      case 'TrayHover1':
-      case 'TrayHover2':
-      case 'TrayHover3':
-        const id = +key.replace('TrayHover', '')
-        this.updateTrayHover(id)
-        break
-      case 'TrayHoverOut':
-        this.updateTrayHover(-1)
-        break
+  async handleTrayEvent({
+    type,
+    value,
+  }: {
+    type: 'trayHovered' | 'trayClicked'
+    value: '0' | '1' | '2' | '3' | 'Out'
+  }) {
+    console.log('handleTrayEvent', type, value)
+    if (type === 'trayHovered') {
+      switch (value) {
+        case 'Out':
+          this.updateTrayHover(-1)
+          break
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+          this.updateTrayHover(+value)
+          break
+      }
+      return
+    }
+
+    if (type === 'trayClicked') {
+      switch (value) {
+        case '0':
+          // special case: switch us over to the main orbit app
+          // sync query over to search
+          App.setState({ query: this.props.queryStore.query })
+          // then open the main window to show it there instead
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // and close this menu
+          this.closeMenu()
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.togglePinnedOpen(+value)
+          break
+      }
     }
   }
 
   private updateHoverTm = null
 
   updateTrayHover = (id: number) => {
+    console.log('update tray hover', id)
     clearTimeout(this.updateHoverTm)
     const update = () => {
       this.activeMenuID = id

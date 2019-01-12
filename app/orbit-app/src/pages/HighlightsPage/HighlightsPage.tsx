@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import { Desktop } from '@mcro/stores'
 import { OCRWord } from './OcrWord'
@@ -7,6 +7,8 @@ import { OCRLine } from './OcrLine'
 import * as UI from '@mcro/ui'
 import { wordKey } from '../../helpers'
 import { gloss } from '@mcro/gloss'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 const Frame = gloss(UI.Col, {
   width: '100%',
@@ -122,22 +124,16 @@ class HighlightsStore {
   }
 }
 
-@attach({
-  store: HighlightsStore,
+export const HighlightsPage = observer(() => {
+  const store = useStore(HighlightsStore)
+  return (
+    <Frame>
+      {(store.ocrWords || []).map(item => (
+        <OCRWord key={wordKey(item)} item={item} store={store} />
+      ))}
+      {(Desktop.ocrState.lines || []).map(item => (
+        <OCRLine key={wordKey(item)} item={item} store={store} />
+      ))}
+    </Frame>
+  )
 })
-@view
-export class HighlightsPage extends React.Component<{ store?: HighlightsStore }> {
-  render() {
-    const { store } = this.props
-    return (
-      <Frame>
-        {(store.ocrWords || []).map(item => (
-          <OCRWord key={wordKey(item)} item={item} store={store} />
-        ))}
-        {(Desktop.ocrState.lines || []).map(item => (
-          <OCRLine key={wordKey(item)} item={item} store={store} />
-        ))}
-      </Frame>
-    )
-  }
-}

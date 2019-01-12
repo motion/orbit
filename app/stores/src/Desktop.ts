@@ -22,7 +22,6 @@ export type AppFocusState = {
   [key: number]: { focused: number | false; exited: boolean } | null
 }
 
-// @ts-ignore
 @store
 class DesktopStore {
   // TODO have the store decorator auto-define these types
@@ -96,7 +95,10 @@ class DesktopStore {
       foundIntegrations: {},
     },
     operatingSystem: {
-      trayBounds: [0, 0],
+      trayBounds: {
+        size: [0, 0],
+        position: [0, 0],
+      },
       accessibilityPermission: false,
       macVersion: null,
       supportsTransparency: false,

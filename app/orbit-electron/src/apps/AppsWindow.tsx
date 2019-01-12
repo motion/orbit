@@ -1,9 +1,11 @@
 import * as React from 'react'
-import { view, compose, react, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import { AppWindow } from './AppWindow'
 import { BrowserWindow } from 'electron'
+import { observer } from 'mobx-react-lite'
+import { useStore } from '@mcro/use-store'
 
 const log = new Logger('electron')
 
@@ -20,13 +22,8 @@ class AppWindowsStore {
   )
 }
 
-const decorator = compose(
-  attach({
-    store: AppWindowsStore,
-  }),
-  view,
-)
-export const AppsWindow = decorator(({ store }: { store: AppWindowsStore }) => {
+export const AppsWindow = observer(() => {
+  const store = useStore(AppWindowsStore)
   const appsState = store.appsStateDebounced
   if (!appsState) {
     return null

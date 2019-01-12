@@ -1,14 +1,9 @@
 import * as React from 'react'
 import { Menu, SubMenu, MenuItem, MenuItemsExtra } from '@mcro/reactron'
-import { view, attach } from '@mcro/black'
 import { Electron, App, Desktop } from '@mcro/stores'
 import { ElectronStore } from '../stores/ElectronStore'
 
-@attach('electronStore')
-@view
-export class MenuItems extends React.Component<{
-  electronStore?: ElectronStore
-}> {
+export class MenuItems extends React.Component<{ electronStore: ElectronStore }> {
   isClosing = false
 
   toggleDevTools = (id = Electron.state.focusedAppId) => () => {

@@ -1,20 +1,12 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { useStore } from '@mcro/use-store'
 import { AppView } from '../AppView'
 import { SearchAppIndex } from './SearchAppIndex'
 import { observer } from 'mobx-react-lite'
+import { AppType } from '@mcro/models'
 
-class SearchAppStore {
-  props: AppProps<'search'>
-
-  get appConfig() {
-    return this.props.appStore.appConfig
-  }
-}
-
-export const SearchAppMain = observer((props: AppProps<'search'>) => {
-  const { appConfig } = useStore(SearchAppStore, props)
+export const SearchAppMain = observer((props: AppProps<AppType.search>) => {
+  const appConfig = props.appConfig
 
   if (!appConfig) {
     return null

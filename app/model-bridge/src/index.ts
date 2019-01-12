@@ -20,6 +20,7 @@ if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
     ),
   )
 }
+
 if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
   transports.push(
     new WebSocketClientTransport(

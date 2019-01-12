@@ -7,16 +7,21 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { OrbitItemProps } from '../views/ListItems/OrbitItemProps'
+import { OrbitItemProps, HandleSelection } from '../views/ListItems/OrbitItemProps'
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AppProps<Type extends AppType> = {
   id: string
   viewType: 'index' | 'main' | 'setup'
-  title: string
   type: Type
-  data: AppData[Type]
-  updateData: (values: Partial<AppData[Type]>) => void
+  title?: string
+  onSelectItem?: HandleSelection
+  onOpenItem?: HandleSelection
+
+  // TODO this is all confused, were moving this onto AppEntity/AppModel
+  data?: AppData[Type]
+  updateData?: (values: Partial<AppData[Type]>) => void
+
   sourceType?: IntegrationType
   appStore: AppStore<Type>
   spaceStore: SpaceStore
@@ -28,6 +33,5 @@ export type AppProps<Type extends AppType> = {
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
   itemProps?: Partial<OrbitItemProps<any>>
-  onSelectItem?: OrbitItemProps<any>['onSelect']
   appConfig?: AppConfig
 }

@@ -16,7 +16,7 @@ import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
 
-export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>>
+export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>> | null
 
 export type VirtualListProps = {
   getRef?: (a: VirtualListStore, b: any) => any

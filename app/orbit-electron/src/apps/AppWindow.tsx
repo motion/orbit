@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, compose, react, ensure, attach } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
@@ -7,6 +7,8 @@ import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
 import { BrowserWindow } from 'electron'
 import global from 'global'
+import { observer } from 'mobx-react-lite'
+import { useStore } from '@mcro/use-store'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -106,13 +108,9 @@ class AppWindowStore {
   }
 }
 
-const decorator = compose(
-  attach({
-    store: AppWindowStore,
-  }),
-  view,
-)
-export const AppWindow = decorator(({ id, store, isPeek }: Props & { store?: AppWindowStore }) => {
+export const AppWindow = observer((props: Props) => {
+  const store = useStore(AppWindowStore, props)
+  const { id, isPeek } = props
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
   log.info(`Rendering app window ${id} at url ${store.url} ignore mouse? ${ignoreMouseEvents}`)
   return (

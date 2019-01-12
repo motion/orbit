@@ -1,4 +1,6 @@
-import { viewEmitter } from '../view'
+import { Emitter } from 'event-kit'
+
+export const debugEmit = new Emitter()
 
 const simpleObject = storeSet => {
   const res = {}
@@ -49,10 +51,10 @@ export function debugState(callback) {
     update()
   }
 
-  viewEmitter.on('store.mount', mount(stores))
-  viewEmitter.on('store.unmount', unmount(stores))
-  viewEmitter.on('view.mount', mount(views))
-  viewEmitter.on('view.unmount', unmount(views))
+  debugEmit.on('store.mount', mount(stores))
+  debugEmit.on('store.unmount', unmount(stores))
+  debugEmit.on('view.mount', mount(views))
+  debugEmit.on('view.unmount', unmount(views))
 
   // send first one right away
   sendUpdate()

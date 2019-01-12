@@ -10,6 +10,7 @@ import { SliderPane, Slider } from '../../views/Slider'
 import { IS_MINIMAL } from '../../constants'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { AppType } from '@mcro/models'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -18,7 +19,7 @@ const icons = {
 }
 
 class TopicsIndexStore {
-  props: AppProps<'topics'>
+  props: AppProps<AppType.topics>
   activeTab = 'trend'
   tabs = ['trend', 'topics', 'terms']
 
@@ -91,7 +92,7 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
 const size = IS_MINIMAL ? 0.9 : 0.95
 
 export const TopicsAppIndex = observer(
-  (props: AppProps<'topics'> & { store?: TopicsIndexStore }) => {
+  (props: AppProps<AppType.topics> & { store?: TopicsIndexStore }) => {
     const store = useStore(TopicsIndexStore, props)
     return (
       <>

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { Row, Button } from '@mcro/ui'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { observer } from 'mobx-react-lite'
 import { Icon } from '../../../views/Icon'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 type Props = {
   queryStore?: QueryStore
@@ -16,7 +16,7 @@ export const FilterButton = props => (
 )
 
 export const SearchFilters = observer((props: Props) => {
-  const { queryStore } = React.useContext(StoreContext)
+  const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   if (!queryFilters.integrationFilters.length) {
     return null

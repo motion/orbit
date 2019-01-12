@@ -1,4 +1,3 @@
-import { attach, view } from '@mcro/black'
 import { save } from '@mcro/model-bridge'
 import { loadOne } from '@mcro/model-bridge'
 import { AppType, AppModel, TopicsApp } from '@mcro/models'
@@ -6,6 +5,9 @@ import * as React from 'react'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Input, Button, Row } from '@mcro/ui'
 import { IS_MINIMAL } from '../../constants'
+import { useStore } from '@mcro/use-store'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { observer } from 'mobx-react-lite'
 
 class TopicEditStore {
   name: string = ''
@@ -35,7 +37,7 @@ class TopicEditStore {
       }
     }
 
-    topicsApp.data.watching.push({ name: this.props.store.name, order: 0, pinned: false, bits: [] })
+    topicsApp.data.watching.push({ name: this.name, order: 0, pinned: false, bits: [] })
 
     // create a space
     await save(AppModel, topicsApp)
@@ -45,24 +47,16 @@ class TopicEditStore {
   }
 }
 
-@attach('spaceStore')
-@attach({
-  store: TopicEditStore,
-})
-@view
-export class TopicEdit extends React.Component<{
-  type: 'term' | 'topic'
-  store?: TopicEditStore
-  spaceStore?: SpaceStore
-}> {
-  render() {
+export const TopicEdit = observer(
+  (props: { type: 'term' | 'topic'; store?: TopicEditStore; spaceStore?: SpaceStore }) => {
+    const store = useStore(TopicEditStore, { ...props, ...useStoresSafe() })
     return (
-      <Row tagName="form" onSubmit={this.props.store.save} alignItems="center">
+      <Row tagName="form" onSubmit={store.save} alignItems="center">
         <Input
-          value={this.props.store.name}
-          onChange={this.props.store.handleNameChange}
+          value={store.name}
+          onChange={store.handleNameChange}
           flex={1}
-          placeholder={`New ${this.props.type}...`}
+          placeholder={`New ${props.type}...`}
         />
         <div style={{ width: 10 }} />
         <Button type="submit" icon="add">
@@ -70,5 +64,5 @@ export class TopicEdit extends React.Component<{
         </Button>
       </Row>
     )
-  }
-}
+  },
+)

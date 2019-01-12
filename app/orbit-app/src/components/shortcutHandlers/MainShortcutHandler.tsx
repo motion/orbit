@@ -7,9 +7,11 @@ import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { observer } from 'mobx-react-lite'
-import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { MergeContext } from '../../views/MergeContext'
+import { ShortcutStore } from '../../stores/ShortcutStore'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { StoreContext } from '../../contexts'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -19,8 +21,8 @@ type Props = {
 }
 
 const rootShortcuts = {
+  select: ['tab', 'enter'],
   switchSpaces: 'command+k',
-  openCurrent: 'enter',
   copyLink: 'command+shift+c',
   escape: 'esc',
   down: 'down',
@@ -38,30 +40,22 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-class ShortcutStore {
-  activeSelectionStore: SelectionStore = null
-
-  setActiveSelectionStore(store: SelectionStore) {
-    this.activeSelectionStore = store
-  }
-}
-
 export const MainShortcutHandler = observer(({ children }: Props) => {
-  const { queryStore, paneManagerStore } = React.useContext(StoreContext)
+  const { queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   const movePaneOrSelection = direction => () => {
     const { activeSelectionStore } = shortcutStore
     console.log('move pane or selection', direction, activeSelectionStore)
-    if (
-      activeSelectionStore.activeIndex === -1 &&
-      (direction === Direction.left || direction === Direction.right)
-    ) {
+    const leftOrRight = direction === Direction.left || direction === Direction.right
+    if (leftOrRight) {
       if (paneManagerStore) {
         paneManagerStore.move(direction)
       }
     } else {
-      activeSelectionStore.move(direction)
+      if (activeSelectionStore) {
+        activeSelectionStore.move(direction)
+      }
     }
   }
 
@@ -69,8 +63,9 @@ export const MainShortcutHandler = observer(({ children }: Props) => {
     switchSpaces: () => {
       AppActions.showSpaceSwitcher()
     },
-    openCurrent: () => {
+    select: () => {
       console.log('openCurrent')
+      shortcutStore.activeSelectionStore
       // Actions.openSelectedItem()
       // Actions.openItem(searchStore.selectedItem)
     },

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { useObserveMany } from '@mcro/model-bridge'
-import { BitModel } from '@mcro/models'
+import { BitModel, AppType } from '@mcro/models'
 import { VirtualList } from '../../views/VirtualList/VirtualList'
 
-export const ListsAppMain = React.memo((props: AppProps<'lists'>) => {
+export const ListsAppMain = React.memo((props: AppProps<AppType.lists>) => {
   const items = useObserveMany(BitModel, {
     take: 10,
   })

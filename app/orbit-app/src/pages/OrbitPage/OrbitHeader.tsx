@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { View, Row, Icon, Button } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
@@ -15,6 +14,7 @@ import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { OrbitNav } from './OrbitNav'
 import { OrbitSwitch } from './OrbitSwitch'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -25,9 +25,9 @@ const selectTextarea = el => {
 
 export class HeaderStore {
   props: {
-    paneManagerStore?: PaneManagerStore
-    queryStore?: QueryStore
-    selectionStore?: SelectionStore
+    paneManagerStore: PaneManagerStore
+    queryStore: QueryStore
+    selectionStore: SelectionStore
   }
 
   mouseUpAt = 0
@@ -122,7 +122,7 @@ export class HeaderStore {
 }
 
 export const OrbitHeader = observer(() => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   const headerStore = useStore(HeaderStore, stores)
   return (
     <OrbitHeaderContainer

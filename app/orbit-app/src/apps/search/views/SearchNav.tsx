@@ -2,15 +2,15 @@ import './calendar.css' // theme css file
 import * as React from 'react'
 import { Row, View, Popover, Icon } from '@mcro/ui'
 import { NavButton } from '../../../views/NavButton'
-import { StoreContext } from '@mcro/black'
 import { OrbitSuggestionBar } from './OrbitSuggestionBar'
 import { DateRangePicker } from 'react-date-range'
 import { SearchFilters } from './SearchFilters'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 export const SearchNav = observer(() => {
-  const { queryStore } = React.useContext(StoreContext)
+  const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
 
   return (

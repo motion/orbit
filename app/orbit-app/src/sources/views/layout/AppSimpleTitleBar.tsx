@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Text } from '@mcro/ui'
-import { StoreContext } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 
 type Props = {
@@ -18,9 +17,9 @@ const TitleBar = gloss({
 })
 
 export const AppSimpleTitleBar = ({ title }: Props) => {
-  const { appPageStore } = React.useContext(StoreContext)
+  // const { appPageStore } = useStoresSafe()
   return (
-    <TitleBar draggable onDragStart={appPageStore.onDragStart}>
+    <TitleBar draggable /*  onDragStart={appPageStore.onDragStart} */>
       <Text
         ellipse
         maxWidth="100%"

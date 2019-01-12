@@ -1,10 +1,8 @@
 import * as React from 'react'
-import { view, attach } from '@mcro/black'
-import { ThemeObject, gloss } from '@mcro/gloss'
-import { memoize } from 'lodash'
+import { gloss } from '@mcro/gloss'
 import { ClearButton, Icon } from '@mcro/ui'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { observer } from 'mobx-react-lite'
 
 const Section = gloss('section', {
   width: '100%',
@@ -21,12 +19,6 @@ const Section = gloss('section', {
   },
 })
 
-type Props = {
-  queryStore?: QueryStore
-  paneManagerStore?: PaneManagerStore
-  theme?: ThemeObject
-}
-
 const Interactive = gloss({
   flexFlow: 'row',
   alignItems: 'center',
@@ -38,35 +30,31 @@ const Interactive = gloss({
   },
 })
 
-@attach('queryStore', 'paneManagerStore')
-@view
-export class OrbitHeaderButtons extends React.Component<Props> {
-  paneSetter = memoize(name => () => {
-    this.props.paneManagerStore.setActivePane(name)
-  })
+export const OrbitHeaderButtons = observer(() => {
+  const { paneManagerStore, queryStore } = useStoresSafe()
 
-  clearSearch = () => {
-    this.props.queryStore.clearQuery()
+  // const paneSetter = memoize(name => () => {
+  //   paneManagerStore.setActivePane(name)
+  // })
+  const clearSearch = () => {
+    queryStore.clearQuery()
   }
 
-  render() {
-    const { paneManagerStore, queryStore } = this.props
-    return (
-      <>
-        <Section invisible={paneManagerStore.activePane === 'onboard'}>
-          <Interactive enabled={paneManagerStore.activePane === 'settings' || queryStore.hasQuery}>
-            <ClearButton
-              onClick={
-                paneManagerStore.activePane === 'settings'
-                  ? paneManagerStore.setActivePaneToPrevious
-                  : this.clearSearch
-              }
-            >
-              <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
-            </ClearButton>
-          </Interactive>
-        </Section>
-      </>
-    )
-  }
-}
+  return (
+    <>
+      <Section invisible={paneManagerStore.activePane === 'onboard'}>
+        <Interactive enabled={paneManagerStore.activePane === 'settings' || queryStore.hasQuery}>
+          <ClearButton
+            onClick={
+              paneManagerStore.activePane === 'settings'
+                ? paneManagerStore.setActivePaneToPrevious
+                : clearSearch
+            }
+          >
+            <Icon name="arrow-min-left" size={8} opacity={0.8} margin="auto" />
+          </ClearButton>
+        </Interactive>
+      </Section>
+    </>
+  )
+})

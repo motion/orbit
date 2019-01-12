@@ -23,7 +23,6 @@ export type MovesMap = {
 export class SelectionStore {
   props: SelectionManagerProps
 
-  highlightIndex = -1
   selectEvent = ''
   leaveIndex = -1
   lastSelectAt = 0
@@ -49,6 +48,10 @@ export class SelectionStore {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
+  }
+
+  setActiveIndex = (val: number) => {
+    this.activeIndex = val
   }
 
   get hasActiveIndex() {
@@ -273,9 +276,5 @@ export class SelectionStore {
       throw new Error('Calling index before')
     }
     return this.movesMap.findIndex(x => x.index === index)
-  }
-
-  setHighlightIndex = index => {
-    this.highlightIndex = index
   }
 }

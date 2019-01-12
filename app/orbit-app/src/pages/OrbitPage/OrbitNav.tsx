@@ -1,18 +1,17 @@
-import { StoreContext } from '@mcro/black'
 import { Text, View, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { AppPanes } from '../../stores/SpaceStore'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
-import { useObserveMany } from '@mcro/model-bridge'
-import { AppModel } from '@mcro/models'
+import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
 export const OrbitNav = observer(() => {
-  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
-  const apps = useObserveMany(AppModel, { where: { spaceId: spaceStore.activeSpace.id } })
+  const { paneManagerStore } = useStoresSafe()
+  const apps = useObserveActiveApps()
 
   return (
     <OrbitNavClip>

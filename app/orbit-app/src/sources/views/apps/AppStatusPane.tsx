@@ -3,7 +3,6 @@ import { Setting } from '@mcro/models'
 import { View, Row } from '@mcro/ui'
 import { SubTitle, VerticalSpace } from '../../../views'
 import { Message } from '../../../views/Message'
-import { view, attach } from '@mcro/black'
 import { Icon } from '../../../views/Icon'
 
 type Props = {
@@ -11,12 +10,6 @@ type Props = {
   extraMessage?: React.ReactNode
 }
 
-class ViewStore {}
-
-@attach({
-  store: ViewStore,
-})
-@view
 export class AppStatusPane extends React.Component<Props> {
   render() {
     const { setting, extraMessage } = this.props

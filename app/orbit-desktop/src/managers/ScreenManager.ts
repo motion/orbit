@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
 import { store, on } from '@mcro/black'
-import { Desktop, App } from '@mcro/stores'
+import { Desktop } from '@mcro/stores'
 
 // handles the screen blur window as well as any information relating to the current
 // OS screen state like spaces.
@@ -17,18 +17,6 @@ export class ScreenManager {
 
   start = () => {
     this.isStarted = true
-
-    this.screen.onTrayState(state => {
-      console.log('on app state...', state)
-      if (typeof state === 'string') {
-        Desktop.sendMessage(App, App.messages.TRAY_EVENT, state)
-        return
-      }
-      if (state.trayBounds) {
-        Desktop.setState({ operatingSystem: { trayBounds: state.trayBounds } })
-        return
-      }
-    })
 
     // space move
     let mvtm = null

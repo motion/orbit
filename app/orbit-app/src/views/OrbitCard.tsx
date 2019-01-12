@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeopleRow } from '../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
@@ -14,6 +13,7 @@ import { ResolvableModel } from '../sources/types'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { Icon } from './Icon'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export const OrbitCard = observer(
   ({
@@ -47,7 +47,7 @@ export const OrbitCard = observer(
     subtitle,
     ...props
   }: OrbitItemProps<ResolvableModel>) => {
-    const stores = React.useContext(StoreContext)
+    const stores = useStoresSafe()
     const store = useStore(OrbitItemStore, { ...props, ...stores })
     // allow either custom subtitle or resolved one
     const { isSelected } = store

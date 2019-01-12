@@ -227,7 +227,6 @@ const Pitch = ({ isLarge, scrollTo }) => (
   </>
 )
 
-@view
 class HomeHeader extends React.Component {
   render() {
     const { scrollTo, sectionHeight } = this.props
@@ -307,7 +306,6 @@ const IntIcon = view({
   padding: 20,
 })
 
-@view
 class SectionSearch extends React.Component {
   render() {
     const { isTall, isLarge, sectionHeight } = this.props
@@ -407,7 +405,6 @@ class SectionSearch extends React.Component {
   }
 }
 
-@view
 class SectionProfiles extends React.Component {
   render() {
     const { isLarge } = this.props
@@ -509,7 +506,6 @@ const Card = ({ title, children, icon }) => (
   </UI.View>
 )
 
-@view
 class SectionNoCloud extends React.Component {
   render() {
     const { homeStore, isLarge } = this.props
@@ -721,11 +717,11 @@ class OrbitStore {
   }
 }
 
-@attach('homeStore')
-@attach({
-  spaceStore: OrbitStore,
-})
-@view
+// attach('homeStore')
+// attach({
+//   spaceStore: OrbitStore,
+// })
+// view
 class Orbit extends React.Component {
   render() {
     const { homeStore, spaceStore } = this.props
@@ -760,63 +756,62 @@ const lockedPosition = (node, pct = 0.6) => {
 
 const notNeg = x => (x < 0 ? 0 : x)
 
-@provide({
-  homeStore: class HomeStore {
-    nodes = []
-    nodeOffsets = []
-    locked = []
-    scrollTop = document.documentElement.scrollTop
+// provide({
+//   homeStore: class HomeStore {
+//     nodes = []
+//     nodeOffsets = []
+//     locked = []
+//     scrollTop = document.documentElement.scrollTop
 
-    get sectionHeight() {
-      return this.props.sectionHeight
-    }
+//     get sectionHeight() {
+//       return this.props.sectionHeight
+//     }
 
-    orbitStopAfter = null
+//     orbitStopAfter = null
 
-    get lastLockedIndex() {
-      return notNeg(_.lastIndexOf(this.locked, 1)) || notNeg(_.lastIndexOf(this.locked, 2)) || 0
-    }
+//     get lastLockedIndex() {
+//       return notNeg(_.lastIndexOf(this.locked, 1)) || notNeg(_.lastIndexOf(this.locked, 2)) || 0
+//     }
 
-    get lockedIndex() {
-      return this.locked.indexOf(1) || 0
-    }
+//     get lockedIndex() {
+//       return this.locked.indexOf(1) || 0
+//     }
 
-    get video() {
-      return document.querySelector('video')
-    }
+//     get video() {
+//       return document.querySelector('video')
+//     }
 
-    didMount() {
-      window.Root = this
-      setTimeout(() => {
-        this.nodes = [
-          document.querySelector('#home-header'),
-          document.querySelector('#home-search'),
-          document.querySelector('#home-profiles'),
-        ]
-        this.nodeOffsets = this.nodes.map(node => {
-          return document.documentElement.scrollTop + node.getBoundingClientRect().y
-        })
-        const { offsetTop } = document.querySelector('#home-profiles').parentNode
-        this.orbitStopAfter = offsetTop
-        this.updatePosition()
-      })
-    }
+//     didMount() {
+//       window.Root = this
+//       setTimeout(() => {
+//         this.nodes = [
+//           document.querySelector('#home-header'),
+//           document.querySelector('#home-search'),
+//           document.querySelector('#home-profiles'),
+//         ]
+//         this.nodeOffsets = this.nodes.map(node => {
+//           return document.documentElement.scrollTop + node.getBoundingClientRect().y
+//         })
+//         const { offsetTop } = document.querySelector('#home-profiles').parentNode
+//         this.orbitStopAfter = offsetTop
+//         this.updatePosition()
+//       })
+//     }
 
-    onScroll = () => {
-      this.update()
-    }
+//     onScroll = () => {
+//       this.update()
+//     }
 
-    update = _.throttle(() => {
-      this.updatePosition()
-    }, 64)
+//     update = _.throttle(() => {
+//       this.updatePosition()
+//     }, 64)
 
-    updatePosition = () => {
-      this.scrollTop = document.documentElement.scrollTop
-      this.locked = this.nodes.map(x => lockedPosition(x))
-    }
-  },
-})
-@view
+//     updatePosition = () => {
+//       this.scrollTop = document.documentElement.scrollTop
+//       this.locked = this.nodes.map(x => lockedPosition(x))
+//     }
+//   },
+// })
 export class HomeWrapper extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll)

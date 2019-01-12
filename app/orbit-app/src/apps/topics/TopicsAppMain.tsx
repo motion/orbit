@@ -4,14 +4,14 @@ import { Title } from '../../views'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
-import { BitsNearTopicModel } from '@mcro/models'
+import { BitsNearTopicModel, AppType } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
 import { observer } from 'mobx-react-lite'
 
 class TopicsMainStore {
-  props: AppProps<'topics'>
+  props: AppProps<AppType.topics>
 
   get appConfig() {
     return this.props.appStore.appConfig
@@ -32,7 +32,7 @@ class TopicsMainStore {
   )
 }
 
-export const TopicsAppMain = observer((props: AppProps<'topics'>) => {
+export const TopicsAppMain = observer((props: AppProps<AppType.topics>) => {
   const store = useStore(TopicsMainStore, props)
 
   return (

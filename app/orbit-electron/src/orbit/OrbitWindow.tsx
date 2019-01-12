@@ -1,24 +1,19 @@
 import * as React from 'react'
-import { view, react, ensure, provide } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop, App } from '@mcro/stores'
-import { ElectronStore } from '../stores/ElectronStore'
 import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Menu, BrowserWindow } from 'electron'
 import root from 'global'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
 
-type Props = {
-  store?: OrbitWindowStore
-  electronStore?: ElectronStore
-}
-
 class OrbitWindowStore {
-  props: Props
-  orbitRef: BrowserWindow = null
+  orbitRef: BrowserWindow
   disposeShow = null
   alwaysOnTop = true
   hasMoved = false
@@ -112,46 +107,39 @@ class OrbitWindowStore {
   }
 }
 
-@provide({
-  store: OrbitWindowStore,
+export const OrbitWindow = observer(() => {
+  const store = useStore(OrbitWindowStore)
+  const [show, setShow] = React.useState(false)
+  const url = Config.urls.server
+
+  log.info(
+    `---- render OrbitWindow show ${show} ${url} hovered? ${Desktop.hoverState.orbitHovered} ${
+      store.size
+    }`,
+  )
+
+  if (!store.size || !store.size[0]) {
+    return null
+  }
+
+  return (
+    <Window
+      show={show ? App.orbitState.docked : false}
+      focus
+      onReadyToShow={() => setShow(true)}
+      alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
+      ref={store.handleRef}
+      file={url}
+      position={store.position.slice()}
+      size={store.size.slice()}
+      onResize={store.setSize}
+      onMove={store.setPosition}
+      onFocus={store.handleElectronFocus}
+      showDevTools={Electron.state.showDevTools.app}
+      transparent
+      background="#00000000"
+      vibrancy={App.state.darkTheme ? 'dark' : 'light'}
+      hasShadow
+    />
+  )
 })
-@view
-export class OrbitWindow extends React.Component<Props> {
-  state = {
-    show: false,
-  }
-
-  render() {
-    const { store } = this.props
-    const url = Config.urls.server
-
-    log.info(`render OrbitWindow ${url} hovered? ${Desktop.hoverState.orbitHovered} ${store.size}`)
-
-    if (!store.size || !store.size[0]) {
-      return null
-    }
-
-    const show = this.state.show ? App.orbitState.docked : false
-
-    return (
-      <Window
-        show={show}
-        focus
-        onReadyToShow={() => this.setState({ show: true })}
-        alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
-        ref={store.handleRef}
-        file={url}
-        position={store.position.slice()}
-        size={store.size.slice()}
-        onResize={store.setSize}
-        onMove={store.setPosition}
-        onFocus={store.handleElectronFocus}
-        showDevTools={Electron.state.showDevTools.app}
-        transparent
-        background="#00000000"
-        vibrancy={App.state.darkTheme ? 'dark' : 'light'}
-        hasShadow
-      />
-    )
-  }
-}

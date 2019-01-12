@@ -1,10 +1,8 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
 import { format, formatDistance } from 'date-fns'
 import { Bit } from '@mcro/models'
 
-@view
 export class Bits extends React.Component<{ bits: Bit[] }> {
   getTask = task => {
     const { title, id } = task.data
@@ -14,8 +12,7 @@ export class Bits extends React.Component<{ bits: Bit[] }> {
       children: [
         <UI.Row>
           <UI.Text>
-            {formatDistance(task.data.created_at, Date.now())}{' '}
-            {task.data.body.slice(0, 140)}
+            {formatDistance(task.data.created_at, Date.now())} {task.data.body.slice(0, 140)}
           </UI.Text>
         </UI.Row>,
       ],

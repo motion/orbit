@@ -103,7 +103,7 @@ class TrayManager {
     }
 
     func handleTrayHover(id: String) {
-        Socket.send(.trayClicked(id: id))
+        Socket.send(.trayHovered(id: id))
     }
     
     func getTrayLocation(mouseLocation: NSPoint, trayRect: NSRect) -> String {

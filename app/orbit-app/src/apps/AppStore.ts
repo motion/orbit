@@ -2,7 +2,7 @@ import { react, ensure, always } from '@mcro/black'
 import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
-import { AppType, AppConfig } from '@mcro/models'
+import { AppType } from '@mcro/models'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type> & {
@@ -38,20 +38,6 @@ export class AppStore<Type extends AppType> {
       return paneManagerStore.activePane === id
     }
     return false
-  }
-
-  get appConfig(): AppConfig {
-    if (this.props.appPageStore) {
-      return this.props.appPageStore.state.appConfig
-    }
-    return this.props.appConfig
-  }
-
-  get appType(): AppType {
-    if (this.props.appPageStore) {
-      return this.props.appPageStore.state.appConfig.type
-    }
-    return null
   }
 
   activeQuery = react(

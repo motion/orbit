@@ -5,7 +5,7 @@ import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { pullAll, difference } from 'lodash'
-import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit } from '@mcro/models'
+import { PersonBitModel, BitModel, SourceModel, Bit, PersonBit, AppType } from '@mcro/models'
 import { allIntegrations } from '../../sources'
 import { OrbitCarouselSection } from '../../components/OrbitCarouselSection'
 import { AppProps } from '../AppProps'
@@ -17,7 +17,7 @@ const models = {
   app: SourceModel,
 }
 
-type Props = AppProps<'home'> & {
+type Props = AppProps<AppType.home> & {
   store?: RecentAppStore
 }
 
@@ -179,10 +179,10 @@ class RecentAppStore {
   }
 }
 
-@attach({
-  store: RecentAppStore,
-})
-@view
+// attach({
+//   store: RecentAppStore,
+// })
+// view
 export class RecentApp extends React.Component<Props> {
   render() {
     const { store } = this.props

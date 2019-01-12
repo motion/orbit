@@ -1,4 +1,4 @@
-import { react, view, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
   SourceSaveCommand,
@@ -9,9 +9,11 @@ import {
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'
-import { SpaceStore } from '../../../stores/SpaceStore'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 type Props = {
   type: string
@@ -65,102 +67,92 @@ class AtlassianSettingLoginStore {
   )
 }
 
-@attach({
-  store: AtlassianSettingLoginStore,
-  spaceStore: SpaceStore,
-})
-@view
-export class AtlassianSettingLogin extends React.Component<
-  Props & { store?: AtlassianSettingLoginStore, spaceStore?: SpaceStore }
-> {
-  // if (!values.username || !values.password || !values.domain)
-  // if (values.domain.indexOf('http') !== 0)
+export const AtlassianSettingLogin = observer((props: Props) => {
+  const { spaceStore } = useStoresSafe()
+  const store = useStore(AtlassianSettingLoginStore, { ...props, spaceStore })
 
-  addIntegration = async e => {
+  const addIntegration = async e => {
     e.preventDefault()
-    const { source } = this.props.store
-    source.values = { ...source.values, credentials: this.props.store.values }
+    const { source } = store
+    source.values = { ...source.values, credentials: store.values }
     if (!source.spaces) source.spaces = []
-    if (!source.spaces.find(space => space.id === this.props.spaceStore.activeSpace.id)) {
-      source.spaces.push(this.props.spaceStore.activeSpace)
+    if (!source.spaces.find(space => space.id === spaceStore.activeSpace.id)) {
+      source.spaces.push(spaceStore.activeSpace)
     }
     console.log(`adding integration!`, source)
 
     // send command to the desktop
-    this.props.store.status = Statuses.LOADING
+    store.status = Statuses.LOADING
     const result = await command(SourceSaveCommand, {
       source,
     })
 
     // update status on success of fail
     if (result.success) {
-      this.props.store.status = Statuses.SUCCESS
-      this.props.store.error = null
+      store.status = Statuses.SUCCESS
+      store.error = null
       AppActions.clearPeek()
     } else {
-      this.props.store.status = Statuses.FAIL
-      this.props.store.error = result.error
+      store.status = Statuses.FAIL
+      store.error = result.error
     }
   }
 
-  handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
+  const handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
     val: AtlassianSourceValuesCredentials[typeof prop],
   ) => {
-    this.props.store.values = {
-      ...this.props.store.values,
+    store.values = {
+      ...store.values,
       [prop]: val,
     }
   }
 
-  render() {
-    const { values, status, error } = this.props.store
-    return (
-      <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
-        <Message>
-          Atlassian requires username and password as their OAuth requires administrator
-          permissions. As always with Orbit, this information is <strong>completely private</strong>{' '}
-          to you.
-        </Message>
-        <Views.VerticalSpace />
-        <UI.Col margin="auto" width={370}>
-          <UI.Col padding={[0, 10]}>
-            <Views.Table>
-              <Views.InputRow
-                label="Domain"
-                value={values.domain}
-                onChange={this.handleChange('domain')}
-              />
-              <Views.InputRow
-                label="Username"
-                value={values.username}
-                onChange={this.handleChange('username')}
-              />
-              <Views.InputRow
-                label="Password"
-                type="password"
-                value={values.password}
-                onChange={this.handleChange('password')}
-              />
-            </Views.Table>
-            <Views.VerticalSpace />
-            <UI.Theme
-              theme={{
-                color: '#fff',
-                background: buttonThemes[status] || '#4C36C4',
-              }}
-            >
-              {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
-              {status !== Statuses.LOADING && (
-                <UI.Button type="submit" onClick={this.addIntegration}>
-                  Save
-                </UI.Button>
-              )}
-            </UI.Theme>
-            <Views.VerticalSpace />
-            {error && <Message>{error}</Message>}
-          </UI.Col>
+  const { values, status, error } = store
+  return (
+    <UI.Col tagName="form" onSubmit={addIntegration} padding={20}>
+      <Message>
+        Atlassian requires username and password as their OAuth requires administrator permissions.
+        As always with Orbit, this information is <strong>completely private</strong> to you.
+      </Message>
+      <Views.VerticalSpace />
+      <UI.Col margin="auto" width={370}>
+        <UI.Col padding={[0, 10]}>
+          <Views.Table>
+            <Views.InputRow
+              label="Domain"
+              value={values.domain}
+              onChange={handleChange('domain')}
+            />
+            <Views.InputRow
+              label="Username"
+              value={values.username}
+              onChange={handleChange('username')}
+            />
+            <Views.InputRow
+              label="Password"
+              type="password"
+              value={values.password}
+              onChange={handleChange('password')}
+            />
+          </Views.Table>
+          <Views.VerticalSpace />
+          <UI.Theme
+            theme={{
+              color: '#fff',
+              background: buttonThemes[status] || '#4C36C4',
+            }}
+          >
+            {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
+            {status !== Statuses.LOADING && (
+              <UI.Button type="submit" onClick={this.addIntegration}>
+                Save
+              </UI.Button>
+            )}
+          </UI.Theme>
+          <Views.VerticalSpace />
+          {error && <Message>{error}</Message>}
         </UI.Col>
       </UI.Col>
-    )
-  }
-}
+    </UI.Col>
+  )
+})

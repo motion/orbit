@@ -76,8 +76,6 @@ const Contact = view('a', {
   },
 })
 
-// @attachTheme
-@view
 export class Footer extends React.Component {
   render() {
     const { theme, noCallToAction } = this.props

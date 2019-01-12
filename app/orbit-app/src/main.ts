@@ -1,10 +1,10 @@
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import 'react-hot-loader' // must be imported before react
-import { setGlobalConfig, getGlobalConfig } from '@mcro/config'
+import { setGlobalConfig, getGlobalConfig, GlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'
-import { viewEmitter } from '@mcro/black'
+import { debugEmit } from '@mcro/black'
 import { CompositeDisposable } from 'event-kit'
 import { sleep } from './helpers'
 import { setupTestApp } from './helpers/setupTestApp'
@@ -22,20 +22,20 @@ configureUseStore({
   onMount: store => {
     store.subscriptions = new CompositeDisposable()
     if (process.env.NODE_ENV === 'development') {
-      viewEmitter.emit('store.mount', { name: store.constructor.name, thing: store })
+      debugEmit.emit('store.mount', { name: store.constructor.name, thing: store })
     }
   },
   onUnmount: store => {
     store.subscriptions.dispose()
     if (process.env.NODE_ENV === 'development') {
-      viewEmitter.emit('store.unmount', { name: store.constructor.name, thing: store })
+      debugEmit.emit('store.unmount', { name: store.constructor.name, thing: store })
     }
   },
 })
 
 async function fetchInitialConfig() {
   // set config before app starts...
-  let config
+  let config: GlobalConfig
   while (!config) {
     try {
       config = await fetch('/config').then(res => res.json())

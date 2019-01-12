@@ -1,10 +1,12 @@
-import { react, view, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { InputRow, Table, VerticalSpace } from '../../../../views'
 import { Message } from '../../../../views/Message'
+import { observer } from 'mobx-react-lite'
+import { useStore } from '@mcro/use-store'
 
 /**
  * Crawled website data.
@@ -47,67 +49,61 @@ class WebsiteSetupStore {
   )
 }
 
-@attach({
-  store: WebsiteSetupStore,
-})
-@view
-export class WebsiteSetupPane extends React.Component<Props & { store?: WebsiteSetupStore }> {
-  // if (!values.username || !values.password || !values.domain)
-  // if (values.domain.indexOf('http') !== 0)
+export const WebsiteSetupPane = observer((props: Props) => {
+  const store = useStore(WebsiteSetupStore, props)
 
-  addIntegration = async e => {
-    e.preventDefault()
-    const { source, values } = this.props.store
-    source.values = { ...source.values, ...values }
-    source.name = values.url
-    console.log(`adding integration!`, source)
-    const result = await command(SourceSaveCommand, {
-      source,
-    })
+  const addIntegration = React.useCallback(
+    async e => {
+      e.preventDefault()
+      const { source, values } = store
+      source.values = { ...source.values, ...values }
+      source.name = values.url
+      console.log(`adding integration!`, source)
+      const result = await command(SourceSaveCommand, {
+        source,
+      })
 
-    // update status on success of fail
-    if (result.success) {
-      // this.props.store.status = Statuses.SUCCESS
-      // this.props.store.error = null
-      // Actions.clearPeek()
-    } else {
-      // this.props.store.status = Statuses.FAIL
-      // this.props.store.error = result.error
-    }
-  }
+      // update status on success of fail
+      if (result.success) {
+        // store.status = Statuses.SUCCESS
+        // store.error = null
+        // Actions.clearPeek()
+      } else {
+        // store.status = Statuses.FAIL
+        // store.error = result.error
+      }
+    },
+    [store],
+  )
 
-  handleChange = (prop: keyof WebsiteCrawledData) => (val: WebsiteCrawledData[typeof prop]) => {
-    this.props.store.values = {
-      ...this.props.store.values,
-      [prop]: val,
-    }
-  }
+  const handleChange = React.useCallback(
+    (prop: keyof WebsiteCrawledData) => (val: WebsiteCrawledData[typeof prop]) => {
+      store.values = {
+        ...store.values,
+        [prop]: val,
+      }
+    },
+    [store],
+  )
 
-  render() {
-    const { values } = this.props.store
-    return (
-      <UI.Col tagName="form" onSubmit={this.addIntegration} padding={20}>
-        <Message>Enter website URL</Message>
-        <VerticalSpace />
-        <UI.Col margin="auto" width={370}>
-          <UI.Col padding={[0, 10]}>
-            <Table>
-              <InputRow
-                label="Website URL"
-                value={values.url}
-                onChange={this.handleChange('url')}
-              />
-            </Table>
-            <VerticalSpace />
-            <UI.Theme>
-              <UI.Button type="submit" onClick={this.addIntegration}>
-                Save
-              </UI.Button>
-            </UI.Theme>
-            <VerticalSpace />
-          </UI.Col>
+  return (
+    <UI.Col tagName="form" onSubmit={addIntegration} padding={20}>
+      <Message>Enter website URL</Message>
+      <VerticalSpace />
+      <UI.Col margin="auto" width={370}>
+        <UI.Col padding={[0, 10]}>
+          <Table>
+            <InputRow label="Website URL" value={store.values.url} onChange={handleChange('url')} />
+          </Table>
+          <VerticalSpace />
+          <UI.Theme>
+            <UI.Button type="submit" onClick={addIntegration}>
+              Save
+            </UI.Button>
+          </UI.Theme>
+          <VerticalSpace />
         </UI.Col>
       </UI.Col>
-    )
-  }
-}
+    </UI.Col>
+  )
+})

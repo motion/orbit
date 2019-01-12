@@ -1,19 +1,22 @@
-export type AppType =
-  | 'home'
-  | 'search'
-  | 'people'
-  | 'topics'
-  | 'lists'
-  | 'sources'
-  | 'bit'
-  | 'settings'
+export enum AppType {
+  home = 'home',
+  search = 'search',
+  people = 'people',
+  topics = 'topics',
+  lists = 'lists',
+  sources = 'sources',
+  bit = 'bit',
+  settings = 'settings',
+  message = 'message'
+}
 
 export type AppConfig = {
+  title: string
   type: AppType
   id: string
+  data?: any
   icon?: string
   iconLight?: string
-  title: string
   integration?: string
   subType?: string
   viewType?: 'main' | 'index' | 'setup'

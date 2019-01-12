@@ -8,7 +8,8 @@ import { Syncer } from '../core/Syncer'
 
 const log = new Logger('command:setting-force-sync')
 
-export const SourceForceSyncResolver = resolveCommand(
+// TODO types got wierd here, remove :any
+export const SourceForceSyncResolver: any = resolveCommand(
   SourceForceSyncCommand,
   async ({ sourceId }) => {
     const setting = await getRepository(SourceEntity).findOne({ id: sourceId })

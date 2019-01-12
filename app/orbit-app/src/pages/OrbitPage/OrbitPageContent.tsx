@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
-import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
+import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType } from '@mcro/models'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
@@ -13,6 +12,7 @@ import { AppStore } from '../../apps/AppStore'
 import { observer } from 'mobx-react-lite'
 import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class OrbitStore {
   props: { paneManagerStore: PaneManagerStore }
@@ -22,17 +22,18 @@ class OrbitStore {
   }
 
   activeConfig: { [key: string]: AppConfig } = {
-    search: { id: '', type: 'search', title: '' },
+    search: { id: '', type: AppType.search, title: '' },
   }
 
-  handleSelectItem: OrbitItemProps<any>['onSelect'] = (_index, config) => {
-    if (!config) {
+  handleSelectItem: HandleSelection = (index, appConfig) => {
+    if (!appConfig) {
+      console.warn('no app config', index)
       return
     }
-    const type = config.type === 'bit' ? 'search' : config.type
+    const type = appConfig.type === 'bit' ? AppType.search : appConfig.type
     this.activeConfig = {
       ...this.activeConfig,
-      [type]: config,
+      [type]: appConfig,
     }
   }
 
@@ -47,17 +48,8 @@ class OrbitStore {
 }
 
 export const OrbitPageContent = observer(() => {
-  const { spaceStore, paneManagerStore } = React.useContext(StoreContext)
+  const { spaceStore, paneManagerStore } = useStoresSafe()
   const store = useStore(OrbitStore, { paneManagerStore })
-
-  // sidebar
-  // const [sidebarWidth, setSidebarWidth] = React.useState(300)
-  // const handleResizeSidebar: ResizeCallback = (_a, direction, _c, diff) => {
-  //   if (direction === 'right' || direction === 'left') {
-  //     console.log('got', diff)
-  //     setSidebarWidth(sidebarWidth + +diff)
-  //   }
-  // }
 
   if (!store.activePane) {
     return null
@@ -114,7 +106,7 @@ export const OrbitPageContent = observer(() => {
                     viewType="index"
                     id={app.id}
                     type={app.type}
-                    itemProps={{ onSelect: store.handleSelectItem }}
+                    onSelectItem={store.handleSelectItem}
                     onAppStore={store.setAppStore(app.type)}
                   />
                 </SelectionManager>

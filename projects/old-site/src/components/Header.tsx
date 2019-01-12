@@ -34,8 +34,6 @@ const Nav = gloss('nav', {
   fontWeight: 400,
 })
 
-@attachTheme
-@view
 export class Header extends React.Component {
   render() {
     const { linkProps, theme, scrollTo } = this.props

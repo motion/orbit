@@ -2,12 +2,10 @@ import { Header, Footer, PostTemplate } from '../components'
 import { P2, Section, SubTitle } from '../views'
 import { SectionContent } from '../views/sectionContent'
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../constants'
 import { Bauhaus } from '../views/Bauhaus'
 
-@view
 export class AboutPage extends React.Component {
   render() {
     return (

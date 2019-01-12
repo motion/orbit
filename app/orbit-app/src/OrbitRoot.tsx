@@ -96,10 +96,8 @@ export const OrbitRoot = hot(module)(() => {
   })
 
   return (
-    <div style={{ pointerEvents: 'auto' }}>
-      <ThemeProvide themes={themes}>
-        <OrbitBrowser />
-      </ThemeProvide>
-    </div>
+    <ThemeProvide themes={themes}>
+      <OrbitBrowser />
+    </ThemeProvide>
   )
 })

@@ -8,9 +8,10 @@ import {
   CosalTopicsModel,
   Bit,
   SlackBitData,
+  AppType,
 } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import { react, ensure, StoreContext } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
@@ -20,6 +21,8 @@ import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { Icon } from '../../views/Icon'
+import { normalizeItem } from '../../helpers/normalizeItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -34,10 +37,10 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppProps<'people'>
+  props: AppProps<AppType.people>
 
   get appConfig() {
-    return this.props.appStore.appConfig
+    return this.props.appConfig
   }
 
   person = react(
@@ -98,15 +101,14 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export const PeopleAppMain = observer((props: AppProps<'people'>) => {
-  const { appPageStore } = React.useContext(StoreContext)
+export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
   }
   return (
     <Frame>
-      <PersonHeader draggable onDragStart={appPageStore ? appPageStore.onDragStart : null}>
+      <PersonHeader draggable /*  onDragStart={appPageStore ? appPageStore.onDragStart : null} */>
         <CardContent>
           <Avatar src={person.photo} />
           <Info>
@@ -175,7 +177,7 @@ export const PeopleAppMain = observer((props: AppProps<'people'>) => {
                 return (
                   <OrbitListItem
                     key={bit.id}
-                    model={bit}
+                    {...normalizeItem(bit)}
                     margin={0}
                     padding={15}
                     extraProps={{

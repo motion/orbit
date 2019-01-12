@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { StoreContext } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { PeopleRow } from '../../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
@@ -15,9 +14,10 @@ import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
-  const stores = React.useContext(StoreContext)
+  const stores = useStoresSafe()
   const store = useStore(OrbitItemStore, { ...props, ...stores })
   const {
     createdAt,
@@ -114,7 +114,7 @@ export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [9, 10]}
+          padding={padding || [9, 11]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
@@ -328,7 +328,7 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 8,
+  minWidth: 10,
   shouldFlex: {
     flex: 1,
   },

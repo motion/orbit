@@ -20,7 +20,10 @@ type GlossViewProps<Props> = Props &
     theme?: ThemeObject
   }
 
-type GlossThemeFn<Props> = ((props: GlossViewProps<Props>, theme: ThemeObject) => CSSPropertySet)
+type GlossThemeFn<Props> = ((
+  props: GlossViewProps<Props>,
+  theme: ThemeObject,
+) => CSSPropertySet | null)
 
 type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
   ignoreAttrs?: Object

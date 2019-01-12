@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { useContext } from 'react'
-import { StoreContext } from '../../../contexts'
 import { AppPanes } from '../../../stores/SpaceStore'
 import { Text, Surface, Row } from '@mcro/ui'
 import { SubTitle } from '../../../views/SubTitle'
 import { Desktop } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
+import { IS_ELECTRON } from '../../../constants'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 const TRAY_VERT_PAD = 12
 const TRAY_HEIGHT = 60
@@ -14,12 +14,12 @@ const CARD_WIDTH = 120
 const CARD_SPACE = 6
 
 export class AppTrayStore {
-  get trayBounds() {
-    return Desktop.state.operatingSystem.trayBounds
+  get trayPosition() {
+    return Desktop.state.operatingSystem.trayBounds.position
   }
 
   get trayCenter() {
-    return (this.trayBounds[0] + this.trayBounds[1]) / 2
+    return (this.trayPosition[0] + this.trayPosition[1]) / 2
   }
 
   get appsWidth() {
@@ -41,8 +41,10 @@ const TrayCard = gloss({
 })
 
 export function AppTray() {
-  return null
-  const stores = useContext(StoreContext)
+  if (IS_ELECTRON) {
+    return null
+  }
+  const stores = useStoresSafe()
   const store = useStore(AppTrayStore, stores)
   console.log('------render --- Apptray', stores)
   return (

@@ -1,6 +1,6 @@
-import { ensure, react, view, attach } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel } from '@mcro/models'
+import { SettingModel, AppType } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
 import * as React from 'react'
@@ -12,6 +12,8 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { generalSettingQuery } from '../../helpers/queries'
 import { AppProps } from '../AppProps'
 import { gloss } from '@mcro/gloss'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStore } from '@mcro/use-store'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -55,7 +57,8 @@ type Props = {
 class SettingAppStore {
   props: Props
 
-  generalSetting = null
+  generalSetting: SettingModel = {}
+
   generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {
     this.generalSetting = value
   })
@@ -104,15 +107,11 @@ const Section = gloss(View, {
   padding: [0, 0, 20],
 })
 
-@attach('sourcesStore')
-@attach({
-  store: SettingAppStore,
-})
-@view
-export class SettingsAppMain extends React.Component<
-  AppProps<'settings'> & { store: SettingAppStore }
-> {
-  handleClearAllData = () => {
+export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
+  const stores = useStoresSafe()
+  const store = useStore(SettingAppStore, { ...props, ...stores })
+
+  const handleClearAllData = () => {
     if (
       showConfirmDialog({
         title: 'Delete all Orbit local data?',
@@ -123,52 +122,49 @@ export class SettingsAppMain extends React.Component<
     }
   }
 
-  render() {
-    const { store } = this.props
-    if (store.generalSetting && !store.generalSetting.values) {
-      console.error('weird error')
-      return null
-    }
-    return (
-      <View padding={20}>
-        <Views.Title>Settings</Views.Title>
-        {!!store.generalSetting && (
-          <Section maxWidth={450}>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.autoLaunch}
-              onChange={store.generalChange('autoLaunch')}
-            >
-              Start on Login
-            </Views.CheckBoxRow>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.autoUpdate}
-              onChange={store.generalChange('autoUpdate')}
-            >
-              Auto Update
-            </Views.CheckBoxRow>
-            <Views.CheckBoxRow
-              checked={store.generalSetting.values.darkTheme}
-              onChange={store.changeTheme}
-            >
-              Dark Theme
-            </Views.CheckBoxRow>
-            <Views.FormRow label="Open shortcut">
-              <ShortcutCapture
-                defaultValue={electronToNiceChars(store.generalSetting.values.openShortcut)}
-                onUpdate={store.shortcutChange}
-                modifierChars={eventCharsToNiceChars}
-                element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
-              />
-            </Views.FormRow>
-
-            <Views.FormRow label="Account">
-              <Theme name="selected">
-                <Button onClick={this.handleClearAllData}>Clear all data</Button>
-              </Theme>
-            </Views.FormRow>
-          </Section>
-        )}
-      </View>
-    )
+  if (store.generalSetting && !store.generalSetting.values) {
+    console.error('weird error')
+    return null
   }
+  return (
+    <View padding={20}>
+      <Views.Title>Settings</Views.Title>
+      {!!store.generalSetting && (
+        <Section maxWidth={450}>
+          <Views.CheckBoxRow
+            checked={store.generalSetting.values.autoLaunch}
+            onChange={store.generalChange('autoLaunch')}
+          >
+            Start on Login
+          </Views.CheckBoxRow>
+          <Views.CheckBoxRow
+            checked={store.generalSetting.values.autoUpdate}
+            onChange={store.generalChange('autoUpdate')}
+          >
+            Auto Update
+          </Views.CheckBoxRow>
+          <Views.CheckBoxRow
+            checked={store.generalSetting.values.darkTheme}
+            onChange={store.changeTheme}
+          >
+            Dark Theme
+          </Views.CheckBoxRow>
+          <Views.FormRow label="Open shortcut">
+            <ShortcutCapture
+              defaultValue={electronToNiceChars(store.generalSetting.values.openShortcut)}
+              onUpdate={store.shortcutChange}
+              modifierChars={eventCharsToNiceChars}
+              element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
+            />
+          </Views.FormRow>
+
+          <Views.FormRow label="Account">
+            <Theme name="selected">
+              <Button onClick={handleClearAllData}>Clear all data</Button>
+            </Theme>
+          </Views.FormRow>
+        </Section>
+      )}
+    </View>
+  )
 }

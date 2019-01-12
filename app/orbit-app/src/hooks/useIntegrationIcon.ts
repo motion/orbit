@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import { StoreContext } from '@mcro/black'
 import { ThemeContext } from '@mcro/ui'
+import { useStoresSafe } from './useStoresSafe'
 
 export function useIntegrationIcon({ icon }) {
-  const { sourcesStore } = useContext(StoreContext)
+  const { sourcesStore } = useStoresSafe()
   const { activeTheme } = useContext(ThemeContext)
   const extImg = icon && (icon[0] === '/' || icon.indexOf('http') === 0) ? icon : null
   const allSourcesMap = sourcesStore.allSourcesMap

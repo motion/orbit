@@ -1,6 +1,6 @@
 import { react, always } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
-import { App, AppModel, ListsApp } from '@mcro/models'
+import { App, AppModel, ListsApp, AppType } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
@@ -12,14 +12,14 @@ import { View, Button } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 
 class ListsIndexStore {
-  props: AppProps<'lists'>
+  props: AppProps<AppType.lists>
   state = Math.random()
 
   // todo: this probably should be in some AppStore but there are multiple AppStores already
   apps: App[] = []
 
-  get listsApp(): ListsApp {
-    return this.apps.find(app => app.type === 'lists')
+  get listsApp() {
+    return this.apps.find(app => app.type === AppType.lists) as ListsApp
   }
 
   willUnmount() {
@@ -76,7 +76,7 @@ class ListsIndexStore {
   )
 }
 
-export const ListsAppIndex = observer((props: AppProps<'lists'>) => {
+export const ListsAppIndex = observer((props: AppProps<AppType.lists>) => {
   const { results } = useStore(ListsIndexStore, props)
   const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (
@@ -95,7 +95,7 @@ export const ListsAppIndex = observer((props: AppProps<'lists'>) => {
             appConfig: {
               id: `${result.id}`,
               title: result.title,
-              type: 'lists',
+              type: AppType.lists,
               index: result.index,
             },
           }

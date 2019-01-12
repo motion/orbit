@@ -2,51 +2,49 @@ import decor from '@mcro/decor'
 import { subscribable, emittable } from '@mcro/decor-classes'
 import automagic from '@mcro/automagical'
 import { CompositeDisposable } from 'event-kit'
-import { StoreContext } from '@mcro/decor-react'
 
 export const storeDecorator: any = decor([emittable, subscribable, automagic])
 
 export const storeOptions = {
-  context: StoreContext,
   storeDecorator,
-  onStoreMount(store, props) {
+  onStoreMount(storeI, props) {
     // TODO make automagical idempotent
-    if (!store._decorated) {
-      Object.defineProperty(store, '_decorated', {
+    if (!storeI._decorated) {
+      Object.defineProperty(storeI, '_decorated', {
         enumerable: false,
         writable: false,
         value: true,
       })
-      if (store.automagic) {
-        store.automagic({
+      if (storeI.automagic) {
+        storeI.automagic({
           isSubscribable: x => x && typeof x.subscribe === 'function',
         })
       }
     }
-    if (store.setupSubscribables) {
-      store.setupSubscribables()
+    if (storeI.setupSubscribables) {
+      storeI.setupSubscribables()
     }
-    if (store.willMount) {
-      store.willMount.call(store, props)
-    }
-  },
-  onStoreDidMount(store, props) {
-    if (store.didMount && !store.__didMounted) {
-      store.didMount.call(store, props)
-      store.__didMounted = true
+    if (storeI.willMount) {
+      storeI.willMount.call(storeI, props)
     }
   },
-  onStoreUnmount(store) {
-    if (store.willUnmount) {
-      store.willUnmount(store)
+  onStoreDidMount(storeI, props) {
+    if (storeI.didMount && !storeI.__didMounted) {
+      storeI.didMount.call(storeI, props)
+      storeI.__didMounted = true
     }
-    if (store.subscriptions) {
-      store.subscriptions.dispose()
+  },
+  onStoreUnmount(storeI) {
+    if (storeI.willUnmount) {
+      storeI.willUnmount(storeI)
+    }
+    if (storeI.subscriptions) {
+      storeI.subscriptions.dispose()
     }
     // unmount stores attached to root of stores
-    for (const key of Object.keys(store)) {
-      if (store[key] && store[key].subscriptions instanceof CompositeDisposable) {
-        store[key].subscriptions.dispose()
+    for (const key of Object.keys(storeI)) {
+      if (storeI[key] && storeI[key].subscriptions instanceof CompositeDisposable) {
+        storeI[key].subscriptions.dispose()
       }
     }
   },
@@ -56,9 +54,9 @@ export function store<T>(Store: T): any {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     // console.log('on store mount', this, args)
-    const store = new DecoratedStore(...args)
-    storeOptions.onStoreMount(store, args[0])
-    return store
+    const storeI = new DecoratedStore(...args)
+    storeOptions.onStoreMount(storeI, args[0])
+    return storeI
   }
   // copy statics
   const statics = Object.keys(Store)

@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Logo } from '../views/logo'
 import * as UI from '@mcro/ui'
 import Router from '../router'
 import * as Constants from '../constants'
 import Media from 'react-media'
 
-@view
 export class BrandLogo extends React.Component<{ white?: boolean }> {
   state = { hovered: false }
   leave = () => this.setState({ hovered: false })

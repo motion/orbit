@@ -83,6 +83,20 @@ export type PopoverProps = CSSPropertySet & {
   noPortal?: boolean
 }
 
+const defaultProps = {
+  edgePadding: 5,
+  distance: 14,
+  arrowSize: 14,
+  forgiveness: 14,
+  towards: 'auto',
+  openAnimation: 'slide 300ms',
+  closeAnimation: 'bounce 300ms',
+  adjust: [0, 0],
+  delay: 16,
+}
+
+type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps
+
 type DebouncedFn = Cancelable & (() => void)
 type PopoverDirection = 'top' | 'bottom' | 'left' | 'right' | 'auto'
 type PositionStateX = { arrowLeft: number; left: number }
@@ -105,7 +119,11 @@ const getIsManuallyPositioned = ({ top, left }: { top?: number; left?: number })
   return isNumber(top) && isNumber(left)
 }
 
-const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBounds?: Bounds) => {
+const getPositionState = (
+  props: PopoverPropsWithDefaults,
+  popoverBounds: Bounds,
+  targetBounds?: Bounds,
+) => {
   const direction = getDirection(props, popoverBounds, targetBounds)
   return {
     ...positionStateX(props, popoverBounds, direction, targetBounds),
@@ -115,12 +133,12 @@ const getPositionState = (props: PopoverProps, popoverBounds: Bounds, targetBoun
 }
 
 const getDirection = (
-  props: PopoverProps,
+  props: PopoverPropsWithDefaults,
   popoverBounds: Bounds,
   targetBounds?: Bounds,
 ): PopoverDirection => {
   if (!targetBounds || props.towards !== 'auto') {
-    return props.towards
+    return props.towards || 'top'
   }
   const popoverY = popoverBounds.height + props.forgiveness
   const targetY = targetBounds.top + targetBounds.height
@@ -129,7 +147,7 @@ const getDirection = (
 }
 
 const getEdgePadding = (
-  props: PopoverProps,
+  props: PopoverPropsWithDefaults,
   currentPosition: number,
   windowSize: number,
   popoverBounds: number,
@@ -143,7 +161,7 @@ const getEdgePadding = (
 }
 
 const positionStateY = (
-  props: PopoverProps,
+  props: PopoverPropsWithDefaults,
   popoverBounds: Bounds,
   direction: PopoverDirection,
   targetBounds?: Bounds,
@@ -201,7 +219,7 @@ const positionStateY = (
 }
 
 const positionStateX = (
-  props: PopoverProps,
+  props: PopoverPropsWithDefaults,
   popoverBounds: Bounds,
   direction: PopoverDirection,
   targetBounds?: Bounds,
@@ -257,7 +275,7 @@ const positionStateX = (
   // adjust arrow for alignment
   if (props.alignPopover === 'left') {
     // move it back to the left the amount we move popover right
-    arrowLeft += targetCenter - targetBounds.left
+    arrowLeft += targetCenter - (targetBounds ? targetBounds.left : 0)
   }
 
   return { arrowLeft: Math.round(arrowLeft), left: Math.round(left) }
@@ -289,6 +307,9 @@ const getShadow = (elevation: PopoverProps['elevation']) => {
 }
 
 const initialState = {
+  maxHeight: null,
+  targetBounds: null,
+  popoverBounds: null,
   showPopover: false,
   targetHovered: 0,
   menuHovered: 0,
@@ -299,18 +320,20 @@ const initialState = {
   arrowInnerTop: 0,
   isPinnedOpen: 0,
   isOpen: false,
-  direction: null as PopoverDirection,
+  direction: 'auto' as PopoverDirection,
   delay: 16,
   props: {} as PopoverProps,
   shouldSetPosition: false,
   closing: false,
-  maxHeight: null,
-  targetBounds: null,
-  popoverBounds: null,
   finishedMount: false,
 }
 
-type State = typeof initialState
+type State = typeof initialState & {
+  // TODO make these types real
+  targetBounds: any
+  popoverBounds: any
+  maxHeight: any
+}
 
 const isHovered = (props: PopoverProps, state: State) => {
   const { targetHovered, menuHovered } = state
@@ -334,25 +357,15 @@ const showPopover = (props: PopoverProps, state: State) => {
 
 export class Popover extends React.PureComponent<PopoverProps, State> {
   static acceptsHovered = 'open'
-  static defaultProps = {
-    edgePadding: 5,
-    distance: 14,
-    arrowSize: 14,
-    forgiveness: 14,
-    towards: 'auto',
-    openAnimation: 'slide 300ms',
-    closeAnimation: 'bounce 300ms',
-    adjust: [0, 0],
-    delay: 16,
-  }
+  static defaultProps = defaultProps
 
-  target = null
   targetRef = React.createRef<HTMLDivElement>()
-  popoverRef = null
+  target: HTMLElement
+  popoverRef: HTMLElement
   state = initialState
 
   static getDerivedStateFromProps(props, state) {
-    let nextState: Partial<Popover['state']> = {}
+    let nextState: Partial<State> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
 
     if (isManuallyPositioned) {
@@ -443,7 +456,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       on(this, this.target, 'click', this.handleTargetClick)
       if (closeOnEsc) {
         const parentNode = this.domNode.parentNode as HTMLDivElement
-        on(this, parentNode.querySelector('.popover-portal'), 'keyup', e => {
+        const parentPortalNode = parentNode.querySelector('.popover-portal') as HTMLDivElement
+        on(this, parentPortalNode, 'keyup', e => {
           if (e.keyCode === 27) {
             e.preventDefault()
             e.stopPropagation()
@@ -491,6 +505,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
+    if (getIsManuallyPositioned(this.props)) {
+      return
+    }
     if (!this.popoverRef || !this.target) {
       throw new Error('missing popvoer ref or target')
     }
@@ -555,7 +572,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  targetClickOff = null
+  targetClickOff: any = null
 
   listenForClick = () => {
     if (!this.props.openOnClick) {
@@ -645,7 +662,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     this.close()
   }
 
-  listeners = []
+  listeners: any[] = []
 
   listenForHover() {
     if (!this.props.openOnHover) {
@@ -664,14 +681,16 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
   removeListeners() {
     for (const listener of this.listeners) {
-      listener()
+      if (typeof listener === 'function') {
+        listener()
+      }
     }
     this.listeners = []
   }
 
-  delayOpenIfHover = {
-    target: null as DebouncedFn,
-    menu: null as DebouncedFn,
+  delayOpenIfHover: { [key: string]: DebouncedFn | null } = {
+    target: null,
+    menu: null,
   }
 
   private cancelIfWillOpen() {
@@ -702,7 +721,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
     this.cancelIfWillOpen()
     this.delayOpenIfHover[name] = debounce(openIfOver, isTarget ? delay : 0)
-    let retryOutTm = null
+    let retryOutTm: any = null
 
     const unhover = () => {
       if (!this.isNodeHovered(node)) {

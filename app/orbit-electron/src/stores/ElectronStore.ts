@@ -18,6 +18,7 @@ export class ElectronStore {
   apps = new Set()
 
   async didMount() {
+    console.log('Electron Store did mount')
     root.Root = this
     root.restart = this.restart
     debugState(({ stores, views }) => {
@@ -28,7 +29,7 @@ export class ElectronStore {
     this.setScreenSize()
     this.reset()
 
-    screen.on('display-metrics-changed', async (_event, _display) => {
+    screen.on('display-metrics-changed', async () => {
       log.info('got display metrics changed event')
       // give it a bit to adjust
       await sleep(100)

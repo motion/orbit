@@ -12,16 +12,16 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in ui npm run build) &
     (bin/in reactron npm run build) &
     wait
-    (cd app && tsc --build $ARGS) &
+    (cd app && npx tsc --build $ARGS) &
     wait
   fi
   # build --watch
   if [ "$1" = "--watch" ]; then
     ARGS=${@:2}
-    (bin/in reactron npm run build --watch) &
+    (bin/in reactron npm run watch) &
     (bin/in ui npm run watch) &
-    (bin/in store-hmr npm run build --watch) &
-    (cd app && tsc --build --watch --preserveWatchOutput $ARGS) &
+    (bin/in store-hmr npm run watch) &
+    (cd app && npx tsc --build --watch --preserveWatchOutput $ARGS) &
     wait
   fi
   exit 0

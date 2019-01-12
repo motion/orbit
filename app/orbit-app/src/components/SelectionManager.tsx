@@ -1,37 +1,36 @@
 import React, { useEffect } from 'react'
 import { useStore } from '@mcro/use-store'
 import { SelectionStore } from '../stores/SelectionStore'
-import { useContext } from 'react'
-import { StoreContext } from '@mcro/black'
 import { MergeContext } from '../views/MergeContext'
+import { useComputed, observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { StoreContext } from '../contexts'
 
 export type SelectionManagerProps = {
-  pane: string
+  pane?: string
   onClearSelection?: Function
 }
 
-export const SelectionManager = (props: SelectionManagerProps & { children: React.ReactNode }) => {
-  const { queryStore } = useContext(StoreContext)
-  const selectionStore = useStore(SelectionStore, {
-    onClearSelection: props.onClearSelection,
-    queryStore,
-  })
+export const SelectionManager = observer(
+  (props: SelectionManagerProps & { children: React.ReactNode }) => {
+    const { paneManagerStore, shortcutStore } = useStoresSafe()
+    const selectionStore = useStore(SelectionStore, props)
+    const isActive = useComputed(() => paneManagerStore.activePane === props.pane)
 
-  //  update shortcutStore active selectionStore
-  const { paneManagerStore, shortcutStore } = React.useContext(StoreContext)
-  useEffect(
-    () => {
-      if (paneManagerStore.activePane === props.pane) {
-        console.log('setting active selection pane', props.pane)
-        shortcutStore.setActiveSelectionStore(selectionStore)
-      }
-    },
-    [props.pane],
-  )
+    useEffect(
+      () => {
+        if (isActive) {
+          console.log('setting active selection pane', props.pane)
+          shortcutStore.setActiveSelectionStore(selectionStore)
+        }
+      },
+      [isActive],
+    )
 
-  return (
-    <MergeContext Context={StoreContext} value={{ selectionStore }}>
-      {props.children}
-    </MergeContext>
-  )
-}
+    return (
+      <MergeContext Context={StoreContext} value={{ selectionStore }}>
+        {props.children}
+      </MergeContext>
+    )
+  },
+)

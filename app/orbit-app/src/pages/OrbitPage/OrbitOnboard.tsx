@@ -1,4 +1,4 @@
-import { attach, compose, sleep } from '@mcro/black'
+import { compose, sleep } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
@@ -15,13 +15,10 @@ import { BlurryGuys } from './BlurryGuys'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { SetupProxyCommand, CheckProxyCommand } from '@mcro/models'
 import { gloss } from '@mcro/gloss'
-
-type Props = {
-  settingStore?: SettingStore
-  sourcesStore?: SourcesStore
-  paneManagerStore?: PaneManagerStore
-  store?: OnboardStore
-}
+import { observer } from 'mobx-react-lite'
+import { AllStores } from '../../contexts'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStore } from '@mcro/use-store'
 
 const framePad = 30
 export const numFrames = 3
@@ -49,7 +46,7 @@ const AddButton = ({ disabled, ...props }) =>
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
-  props: Props
+  props: AllStores
 
   acceptedMessage = ''
   accepted = null
@@ -108,15 +105,11 @@ class OnboardStore {
 const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
-const decorator = compose(
-  attach('settingStore', 'sourcesStore', 'paneManagerStore'),
-  attach({
-    store: OnboardStore,
-  }),
-  gloss,
-)
-export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }: Props) => {
-  if (paneManagerStore.activePane !== 'onboard') {
+export const OrbitOnboard = observer(() => {
+  const stores = useStoresSafe()
+  const store = useStore(OnboardStore, stores)
+
+  if (stores.paneManagerStore.activePane !== 'onboard') {
     return null
   }
   // for smart finding integrations...
@@ -130,14 +123,14 @@ export const OrbitOnboard = decorator(({ store, paneManagerStore, sourcesStore }
   // if (atlassian) {
   //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
   // }
-  const allAppsSorted = sourcesStore.allSources
+  const allAppsSorted = stores.sourcesStore.allSources
     .filter(filterApps)
     .sort((a, b) => a.integration.localeCompare(b.integration))
 
   return (
     <>
       <BlurryGuys />
-      <Slider curFrame={store.curFrame} framePad={30} frameWidth={ORBIT_WIDTH} verticalPad={50}>
+      <Slider curFrame={store.curFrame} framePad={30} verticalPad={50}>
         <SliderPane>
           {store.accepted === null && (
             <Centered>

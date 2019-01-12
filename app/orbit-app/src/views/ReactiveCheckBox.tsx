@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
+import { observer } from 'mobx-react-lite'
 
 type Props = {
   isActive?: () => boolean
@@ -22,23 +22,22 @@ const preventClick = e => {
   e.stopPropagation()
 }
 
-@view
-export class ReactiveCheckBox extends React.Component<Props> {
-  onChange = e => {
-    this.props.onChange(!this.props.isActive, e)
-  }
-
-  render() {
-    const { isActive, onChange, ...props } = this.props
-    return (
-      <input
-        style={{ margin: 'auto' }}
-        type="checkbox"
-        onChange={this.onChange}
-        defaultChecked={isActive()}
-        onMouseDown={preventClick}
-        {...props}
-      />
-    )
-  }
-}
+export const ReactiveCheckBox = observer((props: Props) => {
+  const { isActive, onChange, ...rest } = props
+  const handleOnChange = React.useCallback(
+    e => {
+      onChange(!props.isActive, e)
+    },
+    [props.isActive],
+  )
+  return (
+    <input
+      style={{ margin: 'auto' }}
+      type="checkbox"
+      onChange={handleOnChange}
+      defaultChecked={isActive()}
+      onMouseDown={preventClick}
+      {...rest}
+    />
+  )
+})

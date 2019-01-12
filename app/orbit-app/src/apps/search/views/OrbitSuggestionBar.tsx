@@ -1,11 +1,11 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { view, compose, attach } from '@mcro/black'
 import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { ButtonProps } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 const dateBg = UI.color('#ffb049')
 
@@ -76,18 +76,11 @@ const SuggestionButton = (props: ButtonProps) => (
   />
 )
 
-type Props = {
-  queryStore?: QueryStore
-}
-
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-const decorator = compose(
-  attach('queryStore'),
-  view,
-)
-export const OrbitSuggestionBar = decorator(({ queryStore }: Props) => {
+export const OrbitSuggestionBar = observer(() => {
+  const { queryStore } = useStoresSafe()
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length

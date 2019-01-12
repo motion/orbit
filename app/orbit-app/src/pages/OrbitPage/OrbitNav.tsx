@@ -17,7 +17,7 @@ export const OrbitNav = observer(() => {
     <OrbitNavClip>
       <OrbitNavChrome>
         {activeApps.map((app, index) => {
-          const isLast = index !== activeApps.length - 2
+          const isLast = index !== activeApps.length
           const isActive = paneManagerStore.activePane === app.id
           const nextIsActive =
             activeApps[index + 1] && paneManagerStore.activePane === activeApps[index + 1].id

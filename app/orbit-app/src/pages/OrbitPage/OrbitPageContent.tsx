@@ -59,7 +59,7 @@ export const OrbitPageContent = observer(() => {
   React.useEffect(() => {
     return AppGlobalStore.onMessage(AppGlobalStore.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
-      paneManagerStore.setActivePane('settings')
+      paneManagerStore.setActivePane(101)
     })
   }, [])
 
@@ -128,7 +128,7 @@ export const OrbitPageContent = observer(() => {
 })
 
 const ToolbarChrome = gloss({
-  // minHeight: 5,
+  minHeight: 3,
   maxHeight: 50,
 }).theme((_, theme) => ({
   // borderBottom: [1, theme.borderColor.alpha(0.25)],

@@ -1,18 +1,16 @@
 import * as React from 'react'
-import { view, compose, attach } from '@mcro/black'
 import { SectionContent } from './sectionContent'
 import { ParallaxLayer } from '../components/Parallax'
 
-const decorate = compose(
-  attach('homeStore'),
-  view,
-)
+// const decorate = compose(
+//   attach('homeStore'),
+//   view,
+// )
 const NormalLayer = decorate(({ homeStore, ...props }) => {
   console.log('homeStore.sectionHeight', homeStore.sectionHeight)
   return <SectionContent height={homeStore.sectionHeight} {...props} />
 })
 
-@view
 export class Page extends React.Component<{ offset: number; zIndex?: number }> {
   render() {
     const { offset, children, zIndex = 0 } = this.props

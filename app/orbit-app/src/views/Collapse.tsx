@@ -1,8 +1,6 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-@view
 export class Body extends React.Component {
   state = {
     height: 0,
@@ -45,7 +43,6 @@ export class Body extends React.Component {
   // }
 }
 
-@view
 export class Arrow extends React.Component {
   render() {
     const { color, open, height, width, size } = this.props

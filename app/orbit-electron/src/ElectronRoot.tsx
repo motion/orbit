@@ -2,7 +2,7 @@ import { App } from '@mcro/reactron'
 import * as React from 'react'
 import { ElectronStore } from './stores/ElectronStore'
 import { devTools } from './helpers/devTools'
-import { useStore } from '../../../packages/use-store/_/useStore'
+import { useStore } from '@mcro/use-store'
 
 export const ElectronRoot = (props: { children: any }) => {
   const electronStore = useStore(ElectronStore)

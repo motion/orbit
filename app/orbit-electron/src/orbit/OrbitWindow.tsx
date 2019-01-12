@@ -6,7 +6,7 @@ import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
 import { Menu, BrowserWindow } from 'electron'
 import root from 'global'
-import { useStore } from '../../../../packages/use-store/_/useStore'
+import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 
 const log = new Logger('electron')

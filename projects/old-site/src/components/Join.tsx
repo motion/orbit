@@ -4,7 +4,6 @@ import * as UI from '@mcro/ui'
 import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
 import * as Constants from '../constants'
-import { attachTheme } from '@mcro/gloss'
 
 const queryString = query => {
   const esc = encodeURIComponent
@@ -43,8 +42,6 @@ const Message = view({
   },
 })
 
-@attachTheme
-@view
 export class Join extends React.Component {
   state = {
     error: null,

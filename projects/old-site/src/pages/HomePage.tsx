@@ -227,7 +227,6 @@ const Pitch = ({ isLarge, scrollTo }) => (
   </>
 )
 
-@view
 class HomeHeader extends React.Component {
   render() {
     const { scrollTo, sectionHeight } = this.props
@@ -307,7 +306,6 @@ const IntIcon = view({
   padding: 20,
 })
 
-@view
 class SectionSearch extends React.Component {
   render() {
     const { isTall, isLarge, sectionHeight } = this.props
@@ -407,7 +405,6 @@ class SectionSearch extends React.Component {
   }
 }
 
-@view
 class SectionProfiles extends React.Component {
   render() {
     const { isLarge } = this.props
@@ -509,7 +506,6 @@ const Card = ({ title, children, icon }) => (
   </UI.View>
 )
 
-@view
 class SectionNoCloud extends React.Component {
   render() {
     const { homeStore, isLarge } = this.props
@@ -816,7 +812,6 @@ const notNeg = x => (x < 0 ? 0 : x)
 //     }
 //   },
 // })
-// @view
 export class HomeWrapper extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll)

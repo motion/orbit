@@ -1,37 +1,31 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import { Window } from '@mcro/reactron'
 import { Electron, Desktop } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'
 import { WEB_PREFERENCES } from '../constants'
+import { observer } from 'mobx-react-lite'
 
 const Config = getGlobalConfig()
 
-@view
-export class MenuWindow extends React.Component {
-  state = {
-    show: false
-  }
-
-  render() {
-    return (
-      <Window
-        alwaysOnTop={[true, 'floating', 2]}
-        show={this.state.show}
-        onReadyToShow={() => this.setState({ show: true })}
-        size={Electron.state.screenSize.slice()}
-        focus={false}
-        ignoreMouseEvents={!Desktop.hoverState.menuHovered}
-        focusable
-        file={`${Config.urls.server}/chrome`}
-        frame={false}
-        hasShadow={false}
-        showDevTools={Electron.state.showDevTools[`menu`] || false}
-        transparent
-        background="#00000000"
-        webPreferences={WEB_PREFERENCES}
-        position={[0, 0]}
-      />
-    )
-  }
-}
+export const MenuWindow = observer(() => {
+  const [show, setShow] = React.useState(false)
+  return (
+    <Window
+      alwaysOnTop={[true, 'floating', 2]}
+      show={show}
+      onReadyToShow={() => setShow(true)}
+      size={Electron.state.screenSize.slice()}
+      focus={false}
+      ignoreMouseEvents={!Desktop.hoverState.menuHovered}
+      focusable
+      file={`${Config.urls.server}/chrome`}
+      frame={false}
+      hasShadow={false}
+      showDevTools={Electron.state.showDevTools[`menu`] || false}
+      transparent
+      background="#00000000"
+      webPreferences={WEB_PREFERENCES}
+      position={[0, 0]}
+    />
+  )
+})

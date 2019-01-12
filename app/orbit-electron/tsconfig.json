@@ -10,6 +10,7 @@
     { "path": "../stores" },
     { "path": "../model-bridge" },
     { "path": "../../packages/black" },
+    { "path": "../../packages/use-store" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/r2" },

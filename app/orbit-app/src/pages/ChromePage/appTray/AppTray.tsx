@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { AppPanes } from '../../../stores/SpaceStore'
 import { Text, Surface, Row } from '@mcro/ui'
 import { SubTitle } from '../../../views/SubTitle'
 import { Desktop } from '@mcro/stores'
@@ -7,6 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { IS_ELECTRON } from '../../../constants'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useObserveActiveApps } from '../../../hooks/useObserveActiveApps'
 
 const TRAY_VERT_PAD = 12
 const TRAY_HEIGHT = 60
@@ -23,7 +23,7 @@ export class AppTrayStore {
   }
 
   get appsWidth() {
-    return AppPanes.length * CARD_WIDTH
+    return 3 * CARD_WIDTH
   }
 
   get open() {
@@ -46,6 +46,7 @@ export function AppTray() {
   }
   const stores = useStoresSafe()
   const store = useStore(AppTrayStore, stores)
+  const activeApps = useObserveActiveApps()
   console.log('------render --- Apptray', stores)
   return (
     <Surface
@@ -60,11 +61,11 @@ export function AppTray() {
       }}
     >
       <Row width={store.appsWidth} transform={{ x: store.trayCenter - store.appsWidth / 2 }}>
-        {AppPanes.map(pane => {
+        {activeApps.map(app => {
           return (
-            <TrayCard key={pane.id}>
+            <TrayCard key={app.id}>
               <Text size={1.1} fontWeight={600} sizeLineHeight={0.5} margin={0} padding={[2, 0]}>
-                {pane.title}
+                {app.name}
               </Text>
               <SubTitle margin={0} padding={0}>
                 Some subtitle

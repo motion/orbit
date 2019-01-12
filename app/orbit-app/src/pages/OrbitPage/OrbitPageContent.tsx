@@ -67,7 +67,6 @@ export const OrbitPageContent = observer(() => {
   const activeApps = useObserveActiveApps()
 
   const allPanes: App[] = [
-    // TODO move away from AppConfig to just App model
     ...activeApps,
     {
       target: 'app',

@@ -232,7 +232,7 @@ function doesReturnJSX(body) {
     const lastBlock = block.slice(0).pop()
 
     if (lastBlock.type === 'ReturnStatement') {
-      return lastBlock.argument.type === 'JSXElement'
+      return lastBlock.argument.type === 'JSXElement' || lastBlock.argument.type === 'JSXFragment'
     }
   }
 

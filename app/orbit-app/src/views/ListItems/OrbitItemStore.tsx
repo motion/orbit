@@ -106,11 +106,13 @@ export class OrbitItemStore {
 
   updateIsSelected = react(
     this.shouldSelect,
-    async isSelected => {
+    async (isSelected, { sleep }) => {
       const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
       this.isSelected = isSelected
       if (isSelected) {
+        // give it a little delay to allow fast keyboard movement down lists
+        await sleep(10)
         if (onSelect) {
           onSelect(this.index, this.props.appConfig)
         } else {

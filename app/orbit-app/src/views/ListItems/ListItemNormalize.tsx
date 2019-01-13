@@ -22,11 +22,22 @@ export const getNormalPropsForListItem = (normalized: NormalItem): OrbitItemProp
   after: normalized.after,
 })
 
-export const ListItemNormalize = ({ item, ...rest }: ListItemProps) => {
+export const isEqualDeep = (a: Object, b: Object) => {
+  const res = JSON.stringify(a) === JSON.stringify(b)
+  console.log('isequal', a, b, res)
+  return res
+}
+
+export const ListItemNormalize = React.memo(({ item, ...rest }: ListItemProps) => {
+  console.log('render normalized...')
   const { sourcesStore } = useStoresSafe()
   const normalized = normalizeItem(item)
-  const ItemView =
-    item.target === 'bit' ? sourcesStore.getView(normalized.integration, 'item') : ListItemPerson
+  let ItemView = null
+  if (item.target === 'bit') {
+    ItemView = sourcesStore.getView(normalized.integration, 'item')
+  } else if (item.target === 'person-bit') {
+    ItemView = ListItemPerson
+  }
   return (
     <OrbitListItem
       index={rest.realIndex}
@@ -36,18 +47,20 @@ export const ListItemNormalize = ({ item, ...rest }: ListItemProps) => {
       {...getNormalPropsForListItem(normalized)}
       {...rest}
     >
-      <ItemView
-        item={item}
-        bit={item}
-        shownLimit={10}
-        renderText={renderHighlightedText}
-        extraProps={{
-          condensed: true,
-          preventSelect: true,
-        }}
-        normalizedItem={normalized}
-        {...ItemView.itemProps}
-      />
+      {!!ItemView && (
+        <ItemView
+          item={item}
+          bit={item}
+          shownLimit={10}
+          renderText={renderHighlightedText}
+          extraProps={{
+            condensed: true,
+            preventSelect: true,
+          }}
+          normalizedItem={normalized}
+          {...ItemView.itemProps}
+        />
+      )}
     </OrbitListItem>
   )
-}
+}, isEqualDeep)

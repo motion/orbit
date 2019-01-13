@@ -41,9 +41,11 @@ class OrbitStore {
   appStores: { [key: string]: AppStore<any> } = {}
 
   setAppStore = (id: number) => (store: AppStore<any>) => {
-    this.appStores = {
-      ...this.appStores,
-      [id]: store,
+    if (this.appStores[id] !== store) {
+      this.appStores = {
+        ...this.appStores,
+        [id]: store,
+      }
     }
   }
 }

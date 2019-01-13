@@ -143,7 +143,6 @@ module.exports = function({ types }) {
         if (shouldSetDisplayNameForFuncExpr(path)) {
           const id = findCandidateNameForExpression(path)
           if (id) {
-            console.log('arrow func', id)
             setDisplayNameAfter(path, id)
           }
         }

@@ -14,15 +14,11 @@ import { StoreContext } from '../../contexts'
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const searchStore = useStore(SearchStore, props)
-  // TODO bad
-  const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (
     <MergeContext Context={StoreContext} value={{ searchStore }}>
-      {!shouldHideNav && (
-        <Toolbar>
-          <SearchNav />
-        </Toolbar>
-      )}
+      <Toolbar>
+        <SearchNav />
+      </Toolbar>
       <View position="relative" flex={1} opacity={searchStore.isChanging ? 0.7 : 1}>
         <Selectable items={searchStore.searchState.results}>
           <SearchResultsList

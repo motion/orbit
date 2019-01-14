@@ -31,7 +31,7 @@ const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] =
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
-      ...normalizeItem(bit),
+      ...bit,
       group,
     }))
     const showMore =
@@ -71,42 +71,6 @@ export class SearchStore {
     return this.searchState.results[this.props.appStore.activeIndex]
   }
 
-  /**
-   * Virtual list has its own format of data representation, so convert our data to that format here.
-   * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
-   */
-  // get resultsForVirtualList(): SearchResult[] {
-  //   // convert our search results into something this components expects
-  //   const items: { [group: string]: [any[], any[]] } = {}
-  //   for (let result of this.searchState.results) {
-  //     if (result.bits.length) {
-  //       if (!items[result.group]) {
-  //         items[result.group] = [[], []]
-  //       }
-  //       items[result.group][0].push(
-  //         ...result.bits.map(bit => {
-  //           return { ...bit, group: result.group }
-  //         }),
-  //       )
-  //       items[result.group][1].push({
-  //         target: 'search-group',
-  //         id: result.id,
-  //         title: result.title,
-  //         text: result.text,
-  //         group: result.group,
-  //         count: result.bitsTotalCount,
-  //       })
-  //     }
-  //   }
-
-  //   return Object.keys(items).reduce((all, group) => {
-  //     const [bits, subGroups] = items[group]
-  //     all.push(...bits)
-  //     all.push(...subGroups)
-  //     return all
-  //   }, [])
-  // }
-
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
@@ -129,23 +93,6 @@ export class SearchStore {
       })
     },
   )
-
-  // setSelection = react(
-  //   () => always(this.searchState),
-  //   () => {
-  //     const searchBits = this.searchState.results.reduce(
-  //       (bits, result) => [...bits, ...result.bits],
-  //       [],
-  //     )
-  //     this.props.appStore.setResults([
-  //       {
-  //         type: 'column',
-  //         // shouldAutoSelect: true,
-  //         indices: searchBits.map((_, index) => index),
-  //       },
-  //     ])
-  //   },
-  // )
 
   get isChanging() {
     return this.searchState.query !== this.activeQuery

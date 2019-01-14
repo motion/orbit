@@ -58,7 +58,7 @@ const SuggestionBar = gloss(UI.Row, {
 const SuggestionButton = (props: ButtonProps) => (
   <UI.Button
     glint={false}
-    size={1.2}
+    size={1}
     sizeRadius={0}
     sizeHeight={0.7}
     sizePadding={0.5}

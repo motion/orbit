@@ -85,7 +85,9 @@ export class AppStore<Type extends AppType> {
   }
 
   get toggleSelected() {
-    return this.stores.selectionStore.toggleSelected
+    if (this.stores.selectionStore) {
+      return this.stores.selectionStore.toggleSelected
+    }
   }
 
   get maxHeight() {

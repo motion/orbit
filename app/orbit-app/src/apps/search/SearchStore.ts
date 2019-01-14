@@ -14,7 +14,7 @@ import { fuzzyQueryFilter } from '../../helpers'
 import { ListItemProps } from '../../views/ListItems/ListItemProps'
 
 type SearchState = {
-  results: ListItemProps<any>[]
+  results: ListItemProps[]
   finished?: boolean
   query: string
 }
@@ -26,7 +26,7 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]): ListItemProps<any>[] => {
+const searchGroupsToResults = (results: SearchResult[]): ListItemProps[] => {
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
@@ -120,7 +120,7 @@ export class SearchStore {
       }
 
       // RESULTS
-      let results: ListItemProps<any>[] = []
+      let results: ListItemProps[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query

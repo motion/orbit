@@ -1,6 +1,6 @@
 import { react, ensure } from '@mcro/black'
-import { ListItemProps } from './ListItemProps'
 import { Logger } from '@mcro/logger'
+import { ListItemProps } from './ListItem'
 
 const log = new Logger('OrbitItemStore')
 
@@ -10,24 +10,12 @@ export const OrbitItemSingleton = {
 }
 
 export class ListItemStore {
-  props: ListItemProps<any>
+  props: ListItemProps
 
   isSelected = false
   cardWrapRef = null
   clickAt = 0
   hoverSettler = null
-
-  // setHoverSettler = react(
-  //   () => this.props.hoverToSelect,
-  //   hoverSelect => {
-  //     ensure('hoverSelect', !!hoverSelect)
-  //     ensure('!hoverSettler', !this.hoverSettler)
-  //     this.hoverSettler = this.stores.appStore.getHoverSettler()
-  //     this.hoverSettler.setItem({
-  //       index: this.props.index,
-  //     })
-  //   },
-  // )
 
   get didClick() {
     return Date.now() - this.clickAt < 50
@@ -44,7 +32,7 @@ export class ListItemStore {
         return
       }
       if (this.props.onOpen) {
-        this.props.onOpen(this.index, this.props.appConfig)
+        this.props.onOpen(this.index)
       } else {
         console.log('no open event for item', this.props)
       }
@@ -57,7 +45,7 @@ export class ListItemStore {
       this.props.onClick(e, this.cardWrapRef)
       return
     }
-    this.props.onSelect(this.index, this.props.appConfig)
+    this.props.onSelect(this.index)
   }
 
   lastClickLocation = Date.now()
@@ -79,10 +67,8 @@ export class ListItemStore {
   }
 
   getIsSelected = () => {
-    const { ignoreSelection, isSelected } = this.props
-    if (ignoreSelection) {
-      return false
-    }
+    const { isSelected } = this.props
+    console.log('running...', isSelected)
     if (typeof isSelected === 'boolean') {
       return isSelected
     }
@@ -97,12 +83,13 @@ export class ListItemStore {
     async (isSelected, { sleep }) => {
       const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
+      // set this before doing callbacks to allow for instant update
       this.isSelected = isSelected
       if (isSelected) {
-        // give it a little delay to allow fast keyboard movement down lists
-        await sleep(10)
+        // delay to allow fast keyboard movement down lists
+        await sleep(30)
         if (onSelect) {
-          onSelect(this.index, this.props.appConfig)
+          onSelect(this.index)
         } else {
           log.info('no preview event for', this.index)
         }

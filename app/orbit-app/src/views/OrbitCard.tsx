@@ -4,15 +4,14 @@ import PeopleRow from '../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
-import { ListItemProps } from './ListItems/ListItemProps'
 import { ListItemStore } from './ListItems/ListItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
-import { ResolvableModel } from '../sources/types'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { Icon } from './Icon'
+import { ListItemProps } from './ListItems/ListItem'
 
 export const OrbitCard = observer(
   ({
@@ -45,7 +44,7 @@ export const OrbitCard = observer(
     activeStyle,
     subtitle,
     ...props
-  }: ListItemProps<ResolvableModel>) => {
+  }: ListItemProps) => {
     const store = useStore(ListItemStore, props)
     // allow either custom subtitle or resolved one
     const { isSelected } = store

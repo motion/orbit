@@ -11,17 +11,17 @@ import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { Banner } from '../Banner'
 import VirtualListItem from './VirtualListItem'
-import { ListItemProps } from '../ListItems/ListItemProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
+import { ListItemProps } from '../ListItems/ListItem'
 
-export type GetItemProps = (index: number) => Partial<ListItemProps<any>> | null
+export type GetItemProps = (index: number) => Partial<ListItemProps> | null
 
 export type VirtualListProps = {
   getRef?: (a: VirtualListStore, b: any) => any
   items: any[]
-  itemProps?: ListItemProps<any>
+  itemProps?: ListItemProps
   getItemProps?: GetItemProps
   ItemView?: GenericComponent<any>
   infinite?: boolean

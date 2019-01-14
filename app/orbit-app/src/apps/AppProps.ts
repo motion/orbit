@@ -7,8 +7,8 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { ListItemProps, HandleSelection } from '../views/ListItems/ListItemProps'
 import { SpaceStore } from '../stores/SpaceStore'
+import { HandleSelection, ListItemProps } from '../views/ListItems/ListItem'
 
 export type AppProps<Type extends AppType> = {
   id: number
@@ -32,6 +32,6 @@ export type AppProps<Type extends AppType> = {
   isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
-  itemProps?: Partial<ListItemProps<any>>
+  itemProps?: Partial<ListItemProps>
   appConfig?: AppConfig
 }

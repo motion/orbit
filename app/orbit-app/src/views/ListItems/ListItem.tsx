@@ -5,7 +5,6 @@ import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from '../RoundButtonSmall'
 import { DateFormat } from '../DateFormat'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { ListItemProps } from './ListItemProps'
 import { ListItemStore } from './ListItemStore'
 import { HighlightText } from '../HighlightText'
 import { Row, Text, View } from '@mcro/ui'
@@ -14,8 +13,61 @@ import { Separator } from '../Separator'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
+import { NormalItem } from '../../helpers/normalizeItem'
+import { ThemeObject } from '@mcro/gloss'
+import { GenericItemProps } from '../../sources/types'
+import { CSSPropertySetStrict } from '@mcro/css'
 
-export default observer(function ListItem(props: ListItemProps<any>) {
+export type ItemRenderText = ((text: string) => JSX.Element)
+export type HandleSelection = (index?: number, element?: HTMLElement) => any
+
+export type ListItemProps = CSSPropertySetStrict &
+  Partial<NormalItem> & {
+    activeStyle?: Object
+    before?: React.ReactNode
+    chromeless?: boolean
+    theme?: Partial<ThemeObject>
+    listItem?: boolean
+    subtitle?: React.ReactNode
+    date?: React.ReactNode
+    icon?: React.ReactNode
+    index?: number
+    isExpanded?: boolean
+    style?: any
+    afterTitle?: React.ReactNode
+    after?: React.ReactNode
+    titleProps?: Object
+    iconProps?: Object
+    hide?: GenericItemProps<any>['hide']
+    extraProps?: Partial<GenericItemProps<any>['extraProps']>
+    className?: string
+    inGrid?: boolean
+    pane?: string
+    subPane?: string
+    renderText?: ItemRenderText
+    children?: React.ReactNode
+    onClick?: Function
+    // single click / keyboard select
+    onSelect?: HandleSelection
+    // double click / keyboard enter
+    onOpen?: HandleSelection
+    borderRadius?: number
+    nextUpStyle?: Object
+    isSelected?: boolean | ((index: number) => boolean)
+    cardProps?: Object
+    disableShadow?: boolean
+    padding?: number | number[]
+    titleFlex?: number
+    subtitleProps?: Object
+    getIndex?: (id: T) => number
+    subtitleSpaceBetween?: React.ReactNode
+    searchTerm?: string
+    onClickLocation?: (item: NormalItem, e?: Event) => any
+    separator?: React.ReactNode
+    group?: string
+  }
+
+export default observer(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
   const {
     createdAt,
@@ -31,7 +83,6 @@ export default observer(function ListItem(props: ListItemProps<any>) {
     cardProps,
     children,
     disableShadow,
-    hoverToSelect,
     iconProps,
     onClick,
     titleProps,
@@ -101,12 +152,7 @@ export default observer(function ListItem(props: ListItemProps<any>) {
           </UI.Theme>
         )}
       </>
-      <ListFrame
-        isExpanded={isExpanded}
-        {...hoverToSelect && store.hoverSettler && store.hoverSettler.props}
-        forwardRef={store.setCardWrapRef}
-        {...restProps}
-      >
+      <ListFrame isExpanded={isExpanded} forwardRef={store.setCardWrapRef} {...restProps}>
         <ListItemChrome
           isSelected={isSelected}
           borderRadius={borderRadius}

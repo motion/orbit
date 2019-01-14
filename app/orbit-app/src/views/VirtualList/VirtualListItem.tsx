@@ -1,16 +1,13 @@
 import * as React from 'react'
-import ListItem from '../ListItems/ListItem'
+import ListItem, { ListItemProps } from '../ListItems/ListItem'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
-import { ListItemProps } from '../ListItems/ListItemProps'
-import { ResolvableModel } from '../../sources/types'
 
-export type VirtualListItemProps = Partial<ListItemProps<ResolvableModel>> & {
+export type VirtualListItemProps = ListItemProps & {
   query?: string
   style?: Object
   width?: number
   realIndex: number
-  ignoreSelection?: boolean
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />

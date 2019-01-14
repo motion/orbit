@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useStore, useHook } from '@mcro/use-store'
-import { HandleSelection } from '../../views/ListItems/ListItemProps'
 import { AppConfig, AppType, App } from '@mcro/models'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
 import AppView from '../../apps/AppView'
@@ -15,6 +14,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { memoize } from 'lodash'
 import { isEqual } from '@mcro/black'
+import { OrbitOnSelectItem } from '../../views/ListItems/OrbitListItem'
 
 class OrbitStore {
   stores = useHook(useStoresSafe)
@@ -27,7 +27,7 @@ class OrbitStore {
     search: { id: '', type: AppType.search, title: '' },
   }
 
-  handleSelectItem: HandleSelection = (index, appConfig) => {
+  handleSelectItem: OrbitOnSelectItem = (index, appConfig) => {
     if (!appConfig) {
       console.warn('no app config', index)
       return

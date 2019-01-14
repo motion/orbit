@@ -23,9 +23,7 @@ export const getNormalPropsForListItem = (normalized: NormalItem): OrbitItemProp
 })
 
 export const isEqualDeep = (a: Object, b: Object) => {
-  const res = JSON.stringify(a) === JSON.stringify(b)
-  console.log('isequal', a, b, res)
-  return res
+  return JSON.stringify(a) === JSON.stringify(b)
 }
 
 export const ListItemNormalize = React.memo(({ item, ...rest }: ListItemProps) => {

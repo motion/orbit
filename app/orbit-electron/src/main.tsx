@@ -30,7 +30,6 @@ export async function main() {
     if (!process.env.SUB_PROCESS) {
       // only in main electron process...
       require('./helpers/monitorResourceUsage')
-      require('./helpers/watchForAppRestarts').watchForAppRestarts()
     }
   }
 

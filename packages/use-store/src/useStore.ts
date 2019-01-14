@@ -132,7 +132,7 @@ export function useStore<P, A extends { props?: P } | any>(
     return null as any
   }
 
-  const proxyStore = useRef(null)
+  const proxyStore = useRef<A>(null)
   const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
   const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
 
@@ -153,7 +153,7 @@ export function useStore<P, A extends { props?: P } | any>(
     proxyStore.current = store
   }
 
-  return (proxyStore.current as unknown) as A
+  return proxyStore.current
 }
 
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {

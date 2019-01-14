@@ -3,7 +3,6 @@ import { useStore } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType, App } from '@mcro/models'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
 import { SubPane } from '../../components/SubPane'
 import { App as AppGlobalStore } from '@mcro/stores'
@@ -14,12 +13,14 @@ import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
+import { memoize } from 'lodash'
+import { isEqual } from '@mcro/black'
 
 class OrbitStore {
-  props: { paneManagerStore: PaneManagerStore }
+  stores = useStoresSafe()
 
   get activePane() {
-    return this.props.paneManagerStore.activePane
+    return this.stores.paneManagerStore.activePane
   }
 
   activeConfig: { [key: string]: AppConfig } = {
@@ -32,27 +33,29 @@ class OrbitStore {
       return
     }
     const type = appConfig.type === 'bit' ? AppType.search : appConfig.type
-    this.activeConfig = {
-      ...this.activeConfig,
-      [type]: appConfig,
+    if (!isEqual(this.activeConfig[type], appConfig)) {
+      this.activeConfig = {
+        ...this.activeConfig,
+        [type]: appConfig,
+      }
     }
   }
 
   appStores: { [key: string]: AppStore<any> } = {}
 
-  setAppStore = (id: number) => (store: AppStore<any>) => {
+  setAppStore = memoize((id: number) => (store: AppStore<any>) => {
     if (this.appStores[id] !== store) {
       this.appStores = {
         ...this.appStores,
         [id]: store,
       }
     }
-  }
+  })
 }
 
 export const OrbitPageContent = observer(() => {
   const { paneManagerStore } = useStoresSafe()
-  const store = useStore(OrbitStore, { paneManagerStore })
+  const store = useStore(OrbitStore)
 
   if (!store.activePane) {
     return null

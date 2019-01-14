@@ -119,6 +119,7 @@ export class HeaderStore {
 
 export const OrbitHeader = observer(() => {
   const stores = useStoresSafe()
+  console.log('ORBITHEADER')
   const headerStore = useStore(HeaderStore)
   return (
     <OrbitHeaderContainer

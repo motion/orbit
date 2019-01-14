@@ -43,7 +43,7 @@
     "keycode": "^2.1.9",
     "kill-port": "1.3.2",
     "latinize": "0.4.0",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.10",
     "mobx-react": "5.4.3",
     "mobx-react-lite": "0.3.5",
     "mobx-utils": "5.0.2",

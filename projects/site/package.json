@@ -17,7 +17,7 @@
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "jsonp": "^0.2.1",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.10",
     "mobx": "5.8.0",
     "mobx-react-lite": "0.3.4",
     "query-string": "6.2.0",

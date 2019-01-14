@@ -7,7 +7,7 @@ import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { WindowCloseButton } from '../../views/WindowControls'
 import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
+import { useStore, useHook } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { OrbitNav } from './OrbitNav'
 import { OrbitSwitch } from './OrbitSwitch'
@@ -21,8 +21,7 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  stores = useStoresSafe()
-
+  stores = useHook(useStoresSafe)
   mouseUpAt = 0
   inputRef = React.createRef<HTMLDivElement>()
   iconHovered = false

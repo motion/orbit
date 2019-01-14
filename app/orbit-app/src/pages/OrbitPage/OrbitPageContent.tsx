@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useStore } from '@mcro/use-store'
+import { useStore, useHook } from '@mcro/use-store'
 import { AppView } from '../../apps/AppView'
 import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType, App } from '@mcro/models'
@@ -17,7 +17,7 @@ import { memoize } from 'lodash'
 import { isEqual } from '@mcro/black'
 
 class OrbitStore {
-  stores = useStoresSafe()
+  stores = useHook(useStoresSafe)
 
   get activePane() {
     return this.stores.paneManagerStore.activePane

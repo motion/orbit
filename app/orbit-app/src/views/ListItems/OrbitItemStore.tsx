@@ -2,6 +2,7 @@ import { react, ensure } from '@mcro/black'
 import { OrbitItemProps } from './OrbitItemProps'
 import { Logger } from '@mcro/logger'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useHook } from '@mcro/use-store'
 
 const log = new Logger('OrbitItemStore')
 
@@ -12,7 +13,7 @@ export const OrbitItemSingleton = {
 
 export class OrbitItemStore {
   props: OrbitItemProps<any>
-  stores = useStoresSafe()
+  stores = useHook(useStoresSafe)
 
   isSelected = false
   cardWrapRef = null

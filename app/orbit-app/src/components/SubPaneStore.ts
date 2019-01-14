@@ -5,10 +5,11 @@ import { App } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { createRef } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useHook } from '@mcro/use-store'
 
 export class SubPaneStore {
   props: SubPaneProps
-  stores = useStoresSafe({ optional: ['selectionStore'] })
+  stores = useHook(() => useStoresSafe({ optional: ['selectionStore'] }))
 
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()

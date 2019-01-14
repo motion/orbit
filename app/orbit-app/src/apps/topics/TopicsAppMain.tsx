@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { Title } from '../../views'
 import { View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useStore, useHook } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
 import { BitsNearTopicModel, AppType } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
@@ -13,7 +13,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class TopicsMainStore {
   props: AppProps<AppType.topics>
-  stores = useStoresSafe()
+  stores = useHook(useStoresSafe)
 
   get appConfig() {
     return this.stores.appStore.appConfig

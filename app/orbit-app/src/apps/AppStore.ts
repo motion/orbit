@@ -3,10 +3,11 @@ import { SelectionGroup } from './SelectionResults'
 import { AppProps } from './AppProps'
 import { AppType } from '@mcro/models'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useHook } from '@mcro/use-store'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type>
-  stores = useStoresSafe({ optional: ['selectionStore', 'subPaneStore'] })
+  stores = useHook(() => useStoresSafe({ optional: ['selectionStore', 'subPaneStore'] }))
 
   toolbar = null
   selectionResults = null

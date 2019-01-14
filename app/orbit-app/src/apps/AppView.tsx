@@ -27,10 +27,10 @@ type Props = Pick<
 
 export const AppView = React.memo((props: Props) => {
   console.log('rendering app view 123', props)
-  // const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
+  const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // const shouldProvideAppStore = !stores.appStore && !props.appStore
-  const appStore = useStore(AppStore, props, { conditionalUse: true })
+  const appStore = useStore(AppStore, props)
 
   React.useEffect(() => {
     if (props.onAppStore) {
@@ -53,12 +53,12 @@ export const AppView = React.memo((props: Props) => {
   const appView = (
     <AppView
       appStore={props.appStore || appStore}
-      // sourcesStore={stores.sourcesStore}
-      // settingStore={stores.settingStore}
-      // subPaneStore={stores.subPaneStore}
-      // queryStore={stores.queryStore}
-      // spaceStore={stores.spaceStore}
-      // paneManagerStore={stores.paneManagerStore}
+      sourcesStore={stores.sourcesStore}
+      settingStore={stores.settingStore}
+      subPaneStore={stores.subPaneStore}
+      queryStore={stores.queryStore}
+      spaceStore={stores.spaceStore}
+      paneManagerStore={stores.paneManagerStore}
       data={{}}
       updateData={_ => _}
       {...props}

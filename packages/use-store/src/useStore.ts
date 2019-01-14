@@ -128,10 +128,6 @@ export function useStore<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  if (options && options.conditionalUse === false) {
-    return null as any
-  }
-
   const proxyStore = useRef<A>(null)
   const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
   const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
@@ -147,6 +143,10 @@ export function useStore<P, A extends { props?: P } | any>(
       }
     }
   }, [])
+
+  if (options && options.conditionalUse === false) {
+    return null as any
+  }
 
   // setup store once or if changed
   if (!proxyStore.current || hasChangedSource) {

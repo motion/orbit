@@ -207,10 +207,11 @@ const config = {
         analyzerMode: 'static',
       }),
 
-    new DuplicatesPlugin({
-      emitErrors: false,
-      verbose: true,
-    }),
+    !!process.env['ANALYZE_BUNDLE'] &&
+      new DuplicatesPlugin({
+        emitErrors: false,
+        verbose: true,
+      }),
 
     !isProd && new webpack.NamedModulesPlugin(),
 

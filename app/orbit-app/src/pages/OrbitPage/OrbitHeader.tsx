@@ -4,9 +4,6 @@ import { View, Row, Icon, Button } from '@mcro/ui'
 import { OrbitHeaderButtons } from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { AppActions } from '../../actions/AppActions'
 import { WindowCloseButton } from '../../views/WindowControls'
 import { observer } from 'mobx-react-lite'
@@ -119,7 +116,6 @@ export class HeaderStore {
 
 export const OrbitHeader = observer(() => {
   const stores = useStoresSafe()
-  console.log('ORBITHEADER')
   const headerStore = useStore(HeaderStore)
   return (
     <OrbitHeaderContainer

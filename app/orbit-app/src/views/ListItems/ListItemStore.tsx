@@ -69,7 +69,6 @@ export class ListItemStore {
 
   getIsSelected = () => {
     const { isSelected, onSelect } = this.props
-    console.log('running...', isSelected)
     if (onSelect === false) {
       return false
     }

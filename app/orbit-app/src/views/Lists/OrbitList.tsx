@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { default as VirtualList, VirtualListProps, GetItemProps } from '../VirtualList/VirtualList'
+import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 import { PersonBit, Bit } from '@mcro/models'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
-import { normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HandleSelection } from '../ListItems/ListItem'
 
@@ -14,21 +13,6 @@ type SearchResultsListProps = VirtualListProps & {
   onOpen: HandleSelection
   query: string
   offsetY?: number
-}
-
-const getItemAppConfig = (items: any[]): GetItemProps => (index: number) => {
-  // normalize bits if handed in directly
-  const item = items[index]
-  const target = item.target
-  switch (target) {
-    case 'person-bit':
-    case 'bit':
-      return {
-        ...normalizeItem(item),
-        group: item.group,
-      }
-  }
-  return null
 }
 
 export const OrbitList = ({
@@ -55,14 +39,13 @@ export const OrbitList = ({
         <VirtualList
           key={itemsKey}
           items={items}
-          getItemProps={getItemAppConfig(items)}
           ItemView={OrbitListItem}
           maxHeight={appStore.maxHeight - offsetY}
           isRowLoaded={isRowLoaded}
           itemProps={{
-            ...itemProps,
             onSelect,
             onOpen,
+            ...itemProps,
           }}
           {...props}
         />

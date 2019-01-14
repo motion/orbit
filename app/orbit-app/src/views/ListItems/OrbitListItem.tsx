@@ -46,15 +46,9 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
           index={props.realIndex}
           searchTerm={props.query}
           subtitleSpaceBetween={spaceBetween}
-          onSelect={index => {
-            console.log('selecting....', index, normalized)
-            if (appStore) {
-              appStore.toggleSelected(index, normalized.appConfig)
-            }
-            if (props.onSelect) {
-              props.onSelect(index, normalized.appConfig)
-            }
-          }}
+          {...ItemView && ItemView.itemProps}
+          {...itemProps}
+          {...props}
           isSelected={index => {
             const appStoreActive = appStore ? appStore.isActive : true
             const isSelected = selectionStore
@@ -62,9 +56,14 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
               : props.isSelected
             return appStoreActive && isSelected
           }}
-          {...ItemView && ItemView.itemProps}
-          {...itemProps}
-          {...props}
+          onSelect={index => {
+            if (appStore) {
+              appStore.toggleSelected(index, normalized.appConfig)
+            }
+            if (props.onSelect) {
+              props.onSelect(index, normalized.appConfig)
+            }
+          }}
         >
           {!!ItemView && (
             <ItemView

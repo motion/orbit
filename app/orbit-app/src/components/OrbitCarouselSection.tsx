@@ -2,7 +2,6 @@ import * as React from 'react'
 import { default as SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
 import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
-import { handleClickLocation } from '../helpers/handleClickLocation'
 import { SubPaneStore } from './SubPaneStore'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { observer } from 'mobx-react-lite'
@@ -37,13 +36,11 @@ export const OrbitCarouselSection = observer(
             resetOnInactive
             cardProps={{
               titleFlex: 1,
-              onClickLocation: handleClickLocation,
+              // TODO restore...
+              // onClickLocation: handleClickLocation,
               ...cardProps,
-              hide: {
-                body: true,
-                icon: isPeople,
-                ...(cardProps ? cardProps.hide : null),
-              },
+              hideBody: true,
+              hideIcon: isPeople,
               titleProps: {
                 ellipse: true,
                 maxWidth: isPeople ? 'calc(100% - 44px)' : null,

@@ -27,7 +27,7 @@ export class ListItemStore {
       // allow double click of location
       if (Date.now() - this.lastClickLocation < 280) {
         if (this.props.onClickLocation) {
-          this.props.onClickLocation(this.props.item)
+          this.props.onClickLocation(this.index)
         }
         return
       }
@@ -43,9 +43,10 @@ export class ListItemStore {
       e.stopPropagation()
       e.preventDefault()
       this.props.onClick(e, this.cardWrapRef)
-      return
     }
-    this.props.onSelect(this.index)
+    if (this.props.onSelect) {
+      this.props.onSelect(this.index)
+    }
   }
 
   lastClickLocation = Date.now()
@@ -62,13 +63,16 @@ export class ListItemStore {
   }
 
   get index() {
-    const { item, getIndex, index } = this.props
-    return getIndex ? getIndex(item) : index
+    const { getIndex, index } = this.props
+    return getIndex ? getIndex(index) : index
   }
 
   getIsSelected = () => {
-    const { isSelected } = this.props
+    const { isSelected, onSelect } = this.props
     console.log('running...', isSelected)
+    if (onSelect === false) {
+      return false
+    }
     if (typeof isSelected === 'boolean') {
       return isSelected
     }

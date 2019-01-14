@@ -54,7 +54,5 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
 }
 
 SlackItem.itemProps = {
-  hide: {
-    title: true,
-  },
+  hideTitle: true,
 }

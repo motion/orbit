@@ -6,8 +6,8 @@ import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
-import { ItemRenderText } from '../views/ListItems/ListItemProps'
 import { GenericComponent } from '../types'
+import { ListItemHide, ItemRenderText } from '../views/ListItems/ListItem'
 
 type AppTypeToModelType = {
   slack: Bit
@@ -31,16 +31,7 @@ export type GenericItemProps<T extends ResolvableModel> = {
   shownLimit?: number
   searchTerm?: string
   renderText?: ItemRenderText
-  hide?: {
-    people?: boolean
-    title?: boolean
-    icon?: boolean
-    subtitle?: boolean
-    body?: boolean
-    itemDate?: boolean
-    date?: boolean
-    meta?: boolean
-  }
+  hide?: ListItemHide
   extraProps?: {
     beforeTitle?: React.ReactNode
     oneLine?: boolean

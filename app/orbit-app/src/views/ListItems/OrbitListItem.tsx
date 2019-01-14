@@ -22,7 +22,6 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
       let ItemView = null
       let itemProps: Partial<ListItemProps> = null
       let normalized: NormalItem = null
-      let appConfig: AppConfig
 
       const { item } = props
       if (item && item.target) {
@@ -48,11 +47,12 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
           searchTerm={props.query}
           subtitleSpaceBetween={spaceBetween}
           onSelect={index => {
+            console.log('selecting....', index, normalized)
             if (appStore) {
-              appStore.toggleSelected(index, appConfig)
+              appStore.toggleSelected(index, normalized.appConfig)
             }
             if (props.onSelect) {
-              props.onSelect(index, appConfig)
+              props.onSelect(index, normalized.appConfig)
             }
           }}
           isSelected={index => {

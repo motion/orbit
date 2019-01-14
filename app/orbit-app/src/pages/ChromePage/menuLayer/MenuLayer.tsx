@@ -158,14 +158,10 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 })
 
 const itemProps = {
-  extraProps: {
-    oneLine: false,
-    condensed: true,
-    preventSelect: true,
-  },
-  hide: {
-    subtitle: true,
-  },
+  oneLine: false,
+  condensed: true,
+  onSelect: false,
+  hideSubtitle: true,
 }
 
 const MenuLayerContent = React.memo(

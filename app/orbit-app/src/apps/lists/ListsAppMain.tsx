@@ -14,10 +14,8 @@ export default React.memo(function ListsAppMain(props: AppProps<AppType.lists>) 
         maxHeight={props.appStore.maxHeight}
         items={items}
         itemProps={{
-          hide: {
-            body: true,
-            subtitle: true,
-          },
+          hideBody: true,
+          hideSubtitle: true,
         }}
       />
     </>

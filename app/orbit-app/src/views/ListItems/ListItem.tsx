@@ -15,14 +15,31 @@ import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
 import { NormalItem } from '../../helpers/normalizeItem'
 import { ThemeObject } from '@mcro/gloss'
-import { GenericItemProps } from '../../sources/types'
 import { CSSPropertySetStrict } from '@mcro/css'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = (index?: number, element?: HTMLElement) => any
+export type HandleSelection = false | ((index?: number, element?: HTMLElement) => any)
+
+export type ListItemHide = {
+  hidePeople?: boolean
+  hideTitle?: boolean
+  hideIcon?: boolean
+  hideSubtitle?: boolean
+  hideBody?: boolean
+  hideItemDate?: boolean
+  hideDate?: boolean
+  hideMeta?: boolean
+}
+
+export type ListItemDisplayProps = {
+  oneLine?: boolean
+  condensed?: boolean
+}
 
 export type ListItemProps = CSSPropertySetStrict &
-  Partial<NormalItem> & {
+  Partial<NormalItem> &
+  ListItemHide &
+  ListItemDisplayProps & {
     activeStyle?: Object
     before?: React.ReactNode
     chromeless?: boolean
@@ -38,8 +55,6 @@ export type ListItemProps = CSSPropertySetStrict &
     after?: React.ReactNode
     titleProps?: Object
     iconProps?: Object
-    hide?: GenericItemProps<any>['hide']
-    extraProps?: Partial<GenericItemProps<any>['extraProps']>
     className?: string
     inGrid?: boolean
     pane?: string
@@ -62,7 +77,7 @@ export type ListItemProps = CSSPropertySetStrict &
     getIndex?: (id: T) => number
     subtitleSpaceBetween?: React.ReactNode
     searchTerm?: string
-    onClickLocation?: (item: NormalItem, e?: Event) => any
+    onClickLocation?: (index: number, e?: Event) => any
     separator?: React.ReactNode
     group?: string
   }
@@ -93,26 +108,19 @@ export default observer(function ListItem(props: ListItemProps) {
     onClickLocation,
     renderText,
     separator,
-    extraProps,
+    oneLine,
     isExpanded,
     before,
-    hide,
     ...restProps
   } = props
   const { isSelected } = store
-  const showChildren = !(hide && hide.body)
-  const showSubtitle = (!!subtitle || !!location) && !(hide && hide.subtitle)
-  const showDate = !!createdAt && !(hide && hide.date)
-  const showIcon = !!icon && !(hide && hide.icon)
-  const showTitle = !(hide && hide.title)
-  const showPeople = !!(
-    !(hide && hide.people) &&
-    people &&
-    people.length &&
-    people[0].data['profile']
-  )
-  const showPreview = !!preview && !children && !(hide && hide.body)
-  const oneLine = extraProps && extraProps.oneLine
+  const showChildren = !props.hideBody
+  const showSubtitle = (!!subtitle || !!location) && !props.hideSubtitle
+  const showDate = !!createdAt && !props.hideDate
+  const showIcon = !!icon && !props.hideIcon
+  const showTitle = !props.hideTitle
+  const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
+  const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const renderedChildren = showChildren && children
   const { activeThemeName } = React.useContext(UI.ThemeContext)

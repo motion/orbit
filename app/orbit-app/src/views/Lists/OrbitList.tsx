@@ -3,9 +3,9 @@ import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/Hig
 import { default as VirtualList, VirtualListProps, GetItemProps } from '../VirtualList/VirtualList'
 import { PersonBit, Bit } from '@mcro/models'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
-import { HandleSelection } from '../ListItems/ListItemProps'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HandleSelection } from '../ListItems/ListItem'
 
 export type SearchableItem = (Bit | PersonBit)[]
 

@@ -22,7 +22,6 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { Icon } from '../../views/Icon'
 import { normalizeItem } from '../../helpers/normalizeItem'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits

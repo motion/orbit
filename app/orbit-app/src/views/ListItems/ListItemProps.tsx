@@ -8,14 +8,13 @@ export type ItemRenderText = ((text: string) => JSX.Element)
 
 export type HandleSelection = (index?: number, config?: AppConfig, element?: HTMLElement) => any
 
-export type OrbitItemProps<T extends any> = CSSPropertySetStrict &
+export type ListItemProps<T extends any> = CSSPropertySetStrict &
   Partial<NormalItem> & {
     // for setting the view
     appConfig?: AppConfig
 
     // whether to avoid model resolving and just use props
     activeStyle?: Object
-    activeCondition?: () => boolean
     before?: React.ReactNode
     ignoreSelection?: boolean
     chromeless?: boolean

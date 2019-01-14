@@ -10,18 +10,18 @@ import { ensure, react, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { Banner } from '../Banner'
-import { VirtualListItem } from './VirtualListItem'
-import { OrbitItemProps } from '../ListItems/OrbitItemProps'
+import VirtualListItem from './VirtualListItem'
+import { ListItemProps } from '../ListItems/ListItemProps'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
 
-export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>> | null
+export type GetItemProps = (index: number) => Partial<ListItemProps<any>> | null
 
 export type VirtualListProps = {
   getRef?: (a: VirtualListStore, b: any) => any
   items: any[]
-  itemProps?: OrbitItemProps<any>
+  itemProps?: ListItemProps<any>
   getItemProps?: GetItemProps
   ItemView?: GenericComponent<any>
   infinite?: boolean

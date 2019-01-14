@@ -1,8 +1,6 @@
 import { react, ensure } from '@mcro/black'
-import { OrbitItemProps } from './OrbitItemProps'
+import { ListItemProps } from './ListItemProps'
 import { Logger } from '@mcro/logger'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useHook } from '@mcro/use-store'
 
 const log = new Logger('OrbitItemStore')
 
@@ -11,26 +9,25 @@ export const OrbitItemSingleton = {
   lastClick: Date.now(),
 }
 
-export class OrbitItemStore {
-  props: OrbitItemProps<any>
-  stores = useHook(useStoresSafe)
+export class ListItemStore {
+  props: ListItemProps<any>
 
   isSelected = false
   cardWrapRef = null
   clickAt = 0
   hoverSettler = null
 
-  setHoverSettler = react(
-    () => this.props.hoverToSelect,
-    hoverSelect => {
-      ensure('hoverSelect', !!hoverSelect)
-      ensure('!hoverSettler', !this.hoverSettler)
-      this.hoverSettler = this.stores.appStore.getHoverSettler()
-      this.hoverSettler.setItem({
-        index: this.props.index,
-      })
-    },
-  )
+  // setHoverSettler = react(
+  //   () => this.props.hoverToSelect,
+  //   hoverSelect => {
+  //     ensure('hoverSelect', !!hoverSelect)
+  //     ensure('!hoverSettler', !this.hoverSettler)
+  //     this.hoverSettler = this.stores.appStore.getHoverSettler()
+  //     this.hoverSettler.setItem({
+  //       index: this.props.index,
+  //     })
+  //   },
+  // )
 
   get didClick() {
     return Date.now() - this.clickAt < 50
@@ -60,7 +57,7 @@ export class OrbitItemStore {
       this.props.onClick(e, this.cardWrapRef)
       return
     }
-    this.stores.appStore.toggleSelected(this.index, 'click')
+    this.props.onSelect(this.index, this.props.appConfig)
   }
 
   lastClickLocation = Date.now()
@@ -81,32 +78,22 @@ export class OrbitItemStore {
     return getIndex ? getIndex(item) : index
   }
 
-  shouldSelect = () => {
-    const { activeCondition, ignoreSelection, isSelected } = this.props
-    const { appStore } = this.stores
-    if (typeof isSelected === 'undefined') {
-      if (ignoreSelection) {
-        return false
-      }
-      if (typeof activeCondition === 'function' && activeCondition() === false) {
-        return false
-      }
-      if (!appStore || !appStore.isActive) {
-        return false
-      }
+  getIsSelected = () => {
+    const { ignoreSelection, isSelected } = this.props
+    if (ignoreSelection) {
+      return false
     }
-    const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
-    let next = false
-    if (typeof forceSelected === 'boolean') {
-      next = forceSelected
-    } else {
-      next = appStore && appStore.activeIndex === this.index
+    if (typeof isSelected === 'boolean') {
+      return isSelected
     }
-    return next
+    if (typeof isSelected === 'function') {
+      return isSelected(this.index)
+    }
+    return false
   }
 
   updateIsSelected = react(
-    this.shouldSelect,
+    this.getIsSelected,
     async (isSelected, { sleep }) => {
       const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)

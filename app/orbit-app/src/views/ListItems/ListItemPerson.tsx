@@ -3,7 +3,7 @@ import { PersonBit } from '@mcro/models'
 import { Avatar } from '../Avatar'
 import { Text } from '@mcro/ui'
 
-// TODO basically just use a regular OrbitListItem and make it support this
+// TODO basically just use a regular ListItem and make it support this
 
 export const ListItemPerson = ({ item }: { item: PersonBit }) => {
   return (

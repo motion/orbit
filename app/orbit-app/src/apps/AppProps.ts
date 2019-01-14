@@ -7,7 +7,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { OrbitItemProps, HandleSelection } from '../views/ListItems/OrbitItemProps'
+import { ListItemProps, HandleSelection } from '../views/ListItems/ListItemProps'
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AppProps<Type extends AppType> = {
@@ -32,6 +32,6 @@ export type AppProps<Type extends AppType> = {
   isActive?: boolean | (() => boolean)
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
-  itemProps?: Partial<OrbitItemProps<any>>
+  itemProps?: Partial<ListItemProps<any>>
   appConfig?: AppConfig
 }

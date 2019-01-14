@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useStore, useHook } from '@mcro/use-store'
-import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
+import { HandleSelection } from '../../views/ListItems/ListItemProps'
 import { AppConfig, AppType, App } from '@mcro/models'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
 import AppView from '../../apps/AppView'

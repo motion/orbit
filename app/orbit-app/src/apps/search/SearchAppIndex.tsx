@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { Toolbar } from '../../components/Toolbar'
 import { observer } from 'mobx-react-lite'
 import { View } from '@mcro/ui'
-import { SearchResultsList } from '../../views/Lists/SearchResultsList'
+import { OrbitList } from '../../views/Lists/OrbitList'
 import { MergeContext } from '../../views/MergeContext'
 import { Selectable } from '../../components/Selectable'
 import { AppType } from '@mcro/models'
@@ -21,7 +21,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       </Toolbar>
       <View position="relative" flex={1} opacity={searchStore.isChanging ? 0.7 : 1}>
         <Selectable items={searchStore.searchState.results}>
-          <SearchResultsList
+          <OrbitList
             items={searchStore.searchState.results}
             query={props.appStore.activeQuery}
             onSelect={props.onSelectItem}

@@ -15,7 +15,7 @@ import { react, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
-import OrbitListItem from '../../views/ListItems/OrbitListItem'
+import ListItem from '../../views/ListItems/ListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
@@ -174,7 +174,7 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
             <Unpad>
               {recentBits.map(bit => {
                 return (
-                  <OrbitListItem
+                  <ListItem
                     key={bit.id}
                     {...normalizeItem(bit)}
                     margin={0}

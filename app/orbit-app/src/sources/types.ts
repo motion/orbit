@@ -6,7 +6,7 @@ import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
 import { AppInfoStore } from '../components/AppInfoStore'
-import { ItemRenderText } from '../views/ListItems/OrbitItemProps'
+import { ItemRenderText } from '../views/ListItems/ListItemProps'
 import { GenericComponent } from '../types'
 
 type AppTypeToModelType = {

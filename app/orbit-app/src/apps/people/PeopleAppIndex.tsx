@@ -5,7 +5,7 @@ import { PersonBitModel, AppType } from '@mcro/models'
 import NoResultsDialog from '../../components/NoResultsDialog'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
-import { SearchResultsList } from '../../views/Lists/SearchResultsList'
+import { OrbitList } from '../../views/Lists/OrbitList'
 import { observer, useComputed } from 'mobx-react-lite'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { groupByFirstLetter } from '../../helpers/groupByFirstLetter'
@@ -44,7 +44,7 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
 
   return (
     <Selectable items={results}>
-      <SearchResultsList
+      <OrbitList
         items={results}
         query={activeQuery}
         itemProps={props.itemProps}

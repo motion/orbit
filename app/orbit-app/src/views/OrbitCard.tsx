@@ -1,11 +1,11 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { PeopleRow } from '../components/PeopleRow'
+import PeopleRow from '../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from './RoundButtonSmall'
 import { DateFormat } from './DateFormat'
-import { OrbitItemProps } from './ListItems/OrbitItemProps'
-import { OrbitItemStore } from './ListItems/OrbitItemStore'
+import { ListItemProps } from './ListItems/ListItemProps'
+import { ListItemStore } from './ListItems/ListItemStore'
 import { HighlightText } from './HighlightText'
 import { Glint, Row } from '@mcro/ui'
 import { HorizontalSpace } from '.'
@@ -45,8 +45,8 @@ export const OrbitCard = observer(
     activeStyle,
     subtitle,
     ...props
-  }: OrbitItemProps<ResolvableModel>) => {
-    const store = useStore(OrbitItemStore, props)
+  }: ListItemProps<ResolvableModel>) => {
+    const store = useStore(ListItemStore, props)
     // allow either custom subtitle or resolved one
     const { isSelected } = store
     const showChildren = typeof children !== 'undefined' && !(hide && hide.body)

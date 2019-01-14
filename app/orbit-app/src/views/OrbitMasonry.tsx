@@ -6,7 +6,7 @@ import {
   Masonry,
 } from 'react-virtualized'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitItemProps } from './ListItems/OrbitItemProps'
+import { ListItemProps } from './ListItems/ListItemProps'
 import { OrbitCard } from './OrbitCard'
 
 const middleSpace = 3
@@ -20,7 +20,7 @@ type Props = {
   sidePad?: number
   height?: number
   offset?: number
-  cardProps?: OrbitItemProps<any>
+  cardProps?: ListItemProps<any>
   CardView: any
   direct?: boolean
 }

@@ -11,11 +11,10 @@ import { uniq, flatten } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
-import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
-import { normalizeItem } from '../../helpers/normalizeItem'
+import { ListItemProps } from '../../views/ListItems/ListItemProps'
 
 type SearchState = {
-  results: OrbitItemProps<any>[]
+  results: ListItemProps<any>[]
   finished?: boolean
   query: string
 }
@@ -27,7 +26,7 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] => {
+const searchGroupsToResults = (results: SearchResult[]): ListItemProps<any>[] => {
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
@@ -121,7 +120,7 @@ export class SearchStore {
       }
 
       // RESULTS
-      let results: OrbitItemProps<any>[] = []
+      let results: ListItemProps<any>[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query

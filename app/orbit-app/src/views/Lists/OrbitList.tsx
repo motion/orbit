@@ -1,13 +1,9 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import {
-  default as VirtualList,
-  VirtualListProps,
-  GetItemProps,
-} from '../../views/VirtualList/VirtualList'
+import { default as VirtualList, VirtualListProps, GetItemProps } from '../VirtualList/VirtualList'
 import { PersonBit, Bit } from '@mcro/models'
-import { SearchResultListItem } from '../ListItems/SearchResultListItem'
-import { HandleSelection } from '../ListItems/OrbitItemProps'
+import { OrbitListItem } from '../ListItems/OrbitListItem'
+import { HandleSelection } from '../ListItems/ListItemProps'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
@@ -35,7 +31,7 @@ const getItemAppConfig = (items: any[]): GetItemProps => (index: number) => {
   return null
 }
 
-export const SearchResultsList = ({
+export const OrbitList = ({
   items,
   offsetY = 0,
   itemProps,
@@ -60,7 +56,7 @@ export const SearchResultsList = ({
           key={itemsKey}
           items={items}
           getItemProps={getItemAppConfig(items)}
-          ItemView={SearchResultListItem}
+          ItemView={OrbitListItem}
           maxHeight={appStore.maxHeight - offsetY}
           isRowLoaded={isRowLoaded}
           itemProps={{

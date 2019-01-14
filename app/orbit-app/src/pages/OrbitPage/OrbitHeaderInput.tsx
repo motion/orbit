@@ -35,7 +35,7 @@ function useActivePaneName() {
   return pane === 'Search' ? 'Orbit' : capitalize(pane)
 }
 
-export const OrbitHeaderInput = observer(({ headerStore }: Props) => {
+export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const { orbitWindowStore, queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const placeholder = useActivePaneName()

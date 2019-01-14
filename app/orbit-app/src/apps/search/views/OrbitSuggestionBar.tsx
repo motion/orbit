@@ -79,7 +79,7 @@ const SuggestionButton = (props: ButtonProps) => (
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export const OrbitSuggestionBar = observer(() => {
+export default observer(function OrbitSuggestionBar() {
   const { queryStore } = useStoresSafe()
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)

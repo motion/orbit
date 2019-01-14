@@ -12,7 +12,7 @@ class TestStore {
   }
 }
 
-export const TestHMRInner = observer(() => {
+export default observer(function TestHMRInner() {
   const store = useStore(TestStore)
   return (
     <div>

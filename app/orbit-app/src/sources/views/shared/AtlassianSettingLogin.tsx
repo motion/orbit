@@ -67,7 +67,7 @@ class AtlassianSettingLoginStore {
   )
 }
 
-export const AtlassianSettingLogin = observer((props: Props) => {
+export default observer(function AtlassianSettingLogin(props: Props) {
   const { spaceStore } = useStoresSafe()
   const store = useStore(AtlassianSettingLoginStore, { ...props, spaceStore })
 

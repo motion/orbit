@@ -5,9 +5,9 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
-import { VirtualList } from '../../views/VirtualList/VirtualList'
+import VirtualList from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
-import { ListEdit } from './ListEdit'
+import ListEdit from './ListEdit'
 import { View, Button } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 
@@ -76,7 +76,7 @@ class ListsIndexStore {
   )
 }
 
-export const ListsAppIndex = observer((props: AppProps<AppType.lists>) => {
+export default observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const { results } = useStore(ListsIndexStore, props)
   const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
   return (

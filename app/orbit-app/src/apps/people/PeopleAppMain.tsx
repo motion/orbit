@@ -15,7 +15,7 @@ import { react, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
-import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
+import OrbitListItem from '../../views/ListItems/OrbitListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
@@ -100,7 +100,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
+export default observer(function PeopleAppMain(props: AppProps<AppType.people>) {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>

@@ -23,7 +23,7 @@ type ThemeProps = {
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-export const Theme = React.memo(({ theme, name, select, children }: ThemeProps) => {
+export default React.memo(function Theme({ theme, name, select, children }: ThemeProps) {
   if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }

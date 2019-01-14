@@ -1,14 +1,14 @@
 import * as React from 'react'
-import { AppView } from '../../../apps/AppView'
+import AppView from '../../../apps/AppView'
 import { MenuAppProps } from './MenuLayer'
 import { useStore } from '@mcro/use-store'
 import { AppStore } from '../../../apps/AppStore'
-import { SubPane } from '../../../components/SubPane'
+import SubPane from '../../../components/SubPane'
 import { observer } from 'mobx-react-lite'
 import { StoreContext } from '../../../contexts'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
-export const MenuApp = observer((props: MenuAppProps) => {
+export default observer(function MenuApp(props: MenuAppProps) {
   const stores = useStoresSafe()
   const appStore = useStore(AppStore, props)
   return (
@@ -18,7 +18,7 @@ export const MenuApp = observer((props: MenuAppProps) => {
   )
 })
 
-export const MenuAppInner = React.memo((props: MenuAppProps) => {
+const MenuAppInner = React.memo(function MenuAppInner(props: MenuAppProps) {
   const id = `${props.id}`
   return (
     <SubPane

@@ -13,7 +13,7 @@ import { observer } from 'mobx-react-lite'
 // where the longest line is fit, and then the rest just use that font size
 // for the sub-paragraph
 
-export const HomePage = observer(() => {
+function HomePage() {
   const [measured, setMeasured] = React.useState(false)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
 
@@ -58,10 +58,12 @@ export const HomePage = observer(() => {
       </ParallaxLayer>
     </Parallax>
   )
-})
+}
 
 HomePage.path = ''
 HomePage.navigationOptions = {
   title: 'Home',
   linkName: 'Home Page',
 }
+
+export default observer(HomePage)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { AppWrapper } from '../../views'
-import { MenuLayer } from './menuLayer/MenuLayer'
+import MenuLayer from './menuLayer/MenuLayer'
 import { Theme, FullScreen } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'

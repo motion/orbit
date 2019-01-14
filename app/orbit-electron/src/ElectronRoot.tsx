@@ -5,7 +5,7 @@ import { devTools } from './helpers/devTools'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 
-export const ElectronRoot = observer((props: { children: any }) => {
+export default observer(function ElectronRoot(props: { children: any }) {
   const electronStore = useStore(ElectronStore)
   if (electronStore.error) {
     if (electronStore.error) {

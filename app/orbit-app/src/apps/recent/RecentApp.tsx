@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view, react, ensure, attach } from '@mcro/black'
+import { react, ensure } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { List } from 'react-virtualized'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'

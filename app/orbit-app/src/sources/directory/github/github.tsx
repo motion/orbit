@@ -1,5 +1,5 @@
 import { GithubApp } from './views/GithubApp'
-import { GithubSettings } from './views/GithubSettings'
+import GithubSettings from './views/GithubSettings'
 import { Source } from '@mcro/models'
 import icon from '../../../../public/icons/github.svg'
 import iconLight from '../../../../public/icons/github-white.svg'

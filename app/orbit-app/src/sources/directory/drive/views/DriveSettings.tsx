@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSource } from '@mcro/models'
 import { OrbitSourceSettingProps } from '../../../types'
@@ -45,7 +45,7 @@ class DriveSettingsStore {
   }
 }
 
-export const DriveSettings = observer((props: Props) => {
+export default observer(function DriveSettings(props: Props) {
   const store = useStore(DriveSettingsStore)
   const folders = store.popularFolders
 

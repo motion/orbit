@@ -12,7 +12,7 @@ type SliderProps = {
   transition?: string
 }
 
-export const Slider = React.memo((props: SliderProps) => {
+export default React.memo(function Slider(props: SliderProps) {
   const {
     curFrame = 0,
     children,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
+import { default as SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
 import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
 import { handleClickLocation } from '../helpers/handleClickLocation'

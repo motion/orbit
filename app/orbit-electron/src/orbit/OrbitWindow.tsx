@@ -107,7 +107,7 @@ class OrbitWindowStore {
   }
 }
 
-export const OrbitWindow = observer(() => {
+export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   const [show, setShow] = React.useState(false)
   const url = Config.urls.server

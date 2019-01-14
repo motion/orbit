@@ -4,7 +4,7 @@ import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { OrbitSourceSettingProps } from '../../../types'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
@@ -47,7 +47,7 @@ class GithubSettingStore {
   }
 }
 
-export const GithubSettings = observer((props: Props) => {
+export default observer(function GithubSettings(props: Props) {
   const store = useStore(GithubSettingStore, props)
   return (
     <>

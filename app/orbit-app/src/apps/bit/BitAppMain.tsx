@@ -14,7 +14,7 @@ class BitAppStore {
   props: AppProps<AppType.bit>
 
   get appConfig() {
-    return this.props.appStore.appConfig
+    return this.props.appConfig
   }
 
   model = react(
@@ -22,13 +22,13 @@ class BitAppStore {
     ({ id }) =>
       loadOne(BitModel, {
         args: {
-          where: { id },
+          where: { id: +id },
         },
       }),
   )
 }
 
-export const BitAppMain = observer((props: AppProps<AppType.bit>) => {
+export default observer(function BitAppMain(props: AppProps<AppType.bit>) {
   const { model } = useStore(BitAppStore, props)
   if (!model) {
     return null

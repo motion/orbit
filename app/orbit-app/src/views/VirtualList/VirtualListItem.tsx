@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitListItem } from '../ListItems/OrbitListItem'
+import OrbitListItem from '../ListItems/OrbitListItem'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
 import { OrbitItemProps } from '../ListItems/OrbitItemProps'

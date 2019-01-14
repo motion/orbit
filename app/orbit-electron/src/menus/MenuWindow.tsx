@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite'
 
 const Config = getGlobalConfig()
 
-export const MenuWindow = observer(() => {
+export default observer(function MenuWindow() {
   const [show, setShow] = React.useState(false)
   return (
     <Window

@@ -15,7 +15,7 @@ export const FilterButton = props => (
   <Button circular chromeless size={0.9} sizePadding={0.8} {...props} />
 )
 
-export const SearchFilters = observer((props: Props) => {
+export default observer(function SearchFilters(props: Props) {
   const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   if (!queryFilters.integrationFilters.length) {

@@ -4,7 +4,7 @@ import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
 import { GmailApp } from './views/GmailApp'
 import { GmailItem } from './views/GmailItem'
-import { GmailSettings } from './views/GmailSettings'
+import GmailSettings from './views/GmailSettings'
 
 export const gmail: GetOrbitIntegration<'gmail'> = (source?: Source) => ({
   modelType: 'bit',

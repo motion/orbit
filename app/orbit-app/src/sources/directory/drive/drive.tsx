@@ -1,5 +1,5 @@
 import { DriveApp } from './views/DriveApp'
-import { DriveSettings } from './views/DriveSettings'
+import DriveSettings from './views/DriveSettings'
 import { Source } from '@mcro/models'
 import icon from '../../../../public/icons/drive.svg'
 import { GetOrbitIntegration, OrbitIntegration } from '../../types'

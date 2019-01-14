@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { attachTheme } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { AppActions } from '../actions/AppActions'
 import { PersonBit } from '@mcro/models'
@@ -24,7 +23,8 @@ const Person = props => (
   </UI.Inline>
 )
 
-export const PeopleRow = attachTheme(({ people, theme }) => {
+export default function PeopleRow({ people }) {
+  const { activeTheme } = React.useContext(UI.ThemeContext)
   const total = (people || []).length
   if (total === 0) {
     return null
@@ -40,7 +40,7 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
             height={13}
             marginRight={-10}
             borderRadius={100}
-            border={[1, theme.background.lighten(2)]}
+            border={[1, activeTheme.background.lighten(2)]}
             transform={{
               rotate: `${(i + half - total / total) * 12}deg`,
               x: 1,
@@ -64,4 +64,4 @@ export const PeopleRow = attachTheme(({ people, theme }) => {
       </UI.Row>
     </UI.Row>
   )
-})
+}

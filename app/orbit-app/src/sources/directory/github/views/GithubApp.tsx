@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
-import { ScrollableContent } from '../../../views/layout/ScrollableContent'
+import ScrollableContent from '../../../views/layout/ScrollableContent'
 import { View } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { Task } from '../../../views/bits/task/Task'

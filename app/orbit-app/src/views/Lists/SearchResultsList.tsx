@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { VirtualList, VirtualListProps, GetItemProps } from '../../views/VirtualList/VirtualList'
+import {
+  default as VirtualList,
+  VirtualListProps,
+  GetItemProps,
+} from '../../views/VirtualList/VirtualList'
 import { PersonBit, Bit } from '@mcro/models'
 import { SearchResultListItem } from '../ListItems/SearchResultListItem'
 import { HandleSelection } from '../ListItems/OrbitItemProps'

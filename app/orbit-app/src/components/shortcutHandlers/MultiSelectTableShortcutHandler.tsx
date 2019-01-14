@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
+import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 
 export const MultiSelectTableShortcutHandler = ({
   shortcuts = null,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitListItem } from './OrbitListItem'
+import OrbitListItem from './OrbitListItem'
 import { Row, Col, Text } from '@mcro/ui'
 import { HighlightText } from '../HighlightText'
 import { gloss } from '@mcro/gloss'

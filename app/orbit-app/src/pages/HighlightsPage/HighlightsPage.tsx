@@ -2,8 +2,8 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import quadtree from 'simple-quadtree'
 import { Desktop } from '@mcro/stores'
-import { OCRWord } from './OcrWord'
-import { OCRLine } from './OcrLine'
+import OCRWord from './OcrWord'
+import OCRLine from './OcrLine'
 import * as UI from '@mcro/ui'
 import { wordKey } from '../../helpers'
 import { gloss } from '@mcro/gloss'
@@ -124,7 +124,7 @@ class HighlightsStore {
   }
 }
 
-export const HighlightsPage = observer(() => {
+export default observer(function HighlightsPage() {
   const store = useStore(HighlightsStore)
   return (
     <Frame>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SearchStore } from './SearchStore'
-import { SearchNav } from './views/SearchNav'
+import SearchNav from './views/SearchNav'
 import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Toolbar } from '../../components/Toolbar'
@@ -12,11 +12,10 @@ import { Selectable } from '../../components/Selectable'
 import { AppType } from '@mcro/models'
 import { StoreContext } from '../../contexts'
 
-export const SearchAppIndex = observer((props: AppProps<AppType.search>) => {
+export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const searchStore = useStore(SearchStore, props)
   // TODO bad
   const shouldHideNav = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
-  return null
   return (
     <MergeContext Context={StoreContext} value={{ searchStore }}>
       {!shouldHideNav && (

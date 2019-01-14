@@ -6,8 +6,8 @@ import { useStore, useHook } from '@mcro/use-store'
 import { react, ensure } from '@mcro/black'
 import { BitsNearTopicModel, AppType } from '@mcro/models'
 import { loadMany } from '@mcro/model-bridge'
-import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
-import { ScrollableContent } from '../../sources/views/layout/ScrollableContent'
+import OrbitListItem from '../../views/ListItems/OrbitListItem'
+import ScrollableContent from '../../sources/views/layout/ScrollableContent'
 import { observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
@@ -34,7 +34,7 @@ class TopicsMainStore {
   )
 }
 
-export const TopicsAppMain = observer((props: AppProps<AppType.topics>) => {
+export default observer(function TopicsAppMain(props: AppProps<AppType.topics>) {
   const store = useStore(TopicsMainStore, props)
 
   return (
@@ -44,7 +44,7 @@ export const TopicsAppMain = observer((props: AppProps<AppType.topics>) => {
         {store.results.map(bit => (
           <OrbitListItem
             key={bit.id}
-            model={bit}
+            // item={bit}
             margin={0}
             padding={15}
             theme={{

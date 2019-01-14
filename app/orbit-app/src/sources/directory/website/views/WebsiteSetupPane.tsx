@@ -49,7 +49,7 @@ class WebsiteSetupStore {
   )
 }
 
-export const WebsiteSetupPane = observer((props: Props) => {
+export default observer(function WebsiteSetupPane(props: Props) {
   const store = useStore(WebsiteSetupStore, props)
 
   const addIntegration = React.useCallback(

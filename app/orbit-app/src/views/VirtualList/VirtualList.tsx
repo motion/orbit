@@ -164,7 +164,7 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
   return { ...b, ...a }
 }
 
-export const VirtualList = observer((rawProps: VirtualListProps) => {
+export default observer(function VirtualList(rawProps: VirtualListProps) {
   const props = useDefaultProps(rawProps, { estimatedRowHeight: 60 })
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store

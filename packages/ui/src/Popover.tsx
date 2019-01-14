@@ -572,7 +572,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
   close = async () => {
     await this.startClosing()
-    this.setState({ closing: false, isOpen: false })
+    this.setState({ closing: false, showPopover: false })
     if (this.props.onDidClose) {
       this.props.onDidClose()
     }

@@ -1,20 +1,17 @@
 import * as React from 'react'
-import { view, compose, react, ensure, attach, on, provide } from '@mcro/black'
+import { react, ensure, on } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
 import Resizable, { ResizeCallback } from 're-resizable'
-import { attachTheme, ThemeObject, gloss } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 import { debounce } from 'lodash'
 import { AppActions } from '../../actions/AppActions'
 import { AppPageStore } from './AppPageStore'
-import { AppFrameArrow } from './AppFrameArrow'
+import AppFrameArrow from './AppFrameArrow'
 import { App } from '@mcro/stores'
-
-type AppFrameProps = {
-  appPageStore?: AppPageStore
-  children: any
-  theme?: ThemeObject
-}
+import { observer } from 'mobx-react-lite'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStore, useHook } from '@mcro/use-store'
 
 const SHADOW_PAD = 70
 
@@ -52,7 +49,7 @@ const arrToObj = size => {
 const initialAppState = App.getAppState(Constants.APP_ID)
 
 export class AppFrameStore {
-  props: AppFrameProps
+  stores = useHook(useStoresSafe)
 
   // frame position and size
   ogSize = arrToObj(initialAppState.size)
@@ -85,7 +82,7 @@ export class AppFrameStore {
   }
 
   get framePosition() {
-    const { willShow, willStayShown, willHide } = this.props.appPageStore
+    const { willShow, willStayShown, willHide } = this.stores.appPageStore
     // determine x adjustments
     const animationAdjust = (willShow && !willStayShown) || willHide ? -6 : 0
     let x = this.position[0]
@@ -99,7 +96,7 @@ export class AppFrameStore {
   }
 
   showSidebarOnTear = react(
-    () => this.props.appPageStore.isTorn,
+    () => this.stores.appPageStore.isTorn,
     torn => {
       ensure('torn', torn)
       this.showSidebar = true
@@ -107,10 +104,10 @@ export class AppFrameStore {
   )
 
   syncFromAppState = react(
-    () => [this.props.appPageStore.appState.size, this.props.appPageStore.appState.position],
+    () => [this.stores.appPageStore.appState.size, this.stores.appPageStore.appState.position],
     ([size, position]) => {
       ensure('size', !!size)
-      ensure('not torn', !this.props.appPageStore.isTorn)
+      ensure('not torn', !this.stores.appPageStore.isTorn)
       this.ogSize = arrToObj(size)
       this.ogPosition = position
     },
@@ -157,7 +154,7 @@ export class AppFrameStore {
   }
 
   tearOnFinishResize = debounce(() => {
-    if (this.props.appPageStore.isPeek) {
+    if (this.stores.appPageStore.isPeek) {
       AppActions.tearPeek()
     }
   }, 100)
@@ -165,7 +162,7 @@ export class AppFrameStore {
   onDragStart = e => {
     console.log('drag titlebar...')
     e.preventDefault()
-    this.props.appPageStore.tearPeek()
+    this.stores.appPageStore.tearPeek()
     this.clearDragHandlers()
     this.initMouseDown = {
       x: e.clientX,
@@ -239,72 +236,60 @@ const PeekFrameContainer = gloss(UI.View, {
   zIndex: 2,
 })
 
-const decorator = compose(
-  attachTheme,
-  attach('appPageStore'),
-  provide({
-    appFrameStore: AppFrameStore,
-  }),
-  view,
-)
-export const AppFrame = decorator(
-  ({
-    appPageStore,
-    appFrameStore,
-    children,
-    theme,
-  }: AppFrameProps & { appFrameStore?: AppFrameStore }) => {
-    const { isShown, willShow, willHide, state, willStayShown } = appPageStore
-    const borderShadow = ['inset', 0, 0, 0, 0.5, theme.frameBorderColor]
-    const isHidden = !state
-    const onRight = state && !state.peekOnLeft
-    const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
-    const margin = padding.map(x => -x)
-    const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.25]]]
-    const transition = transitions(appPageStore)
-    return (
-      <Resizable
-        size={appFrameStore.size}
-        minWidth={100}
-        minHeight={100}
-        maxWidth={window.innerWidth}
-        maxHeight={window.innerHeight}
-        onResize={appFrameStore.handleResize}
-        onResizeStop={appFrameStore.handleResizeStop}
-        className="resizable"
-        style={{
-          zIndex: 2,
-          // keep size/positionX linked to be fast...
-          // dont put this in transform so it doesnt animate
-          // it needs to move quickly because the frame itself resizes
-          // and so it has to update the width + left at same time
-          left: appFrameStore.framePosition[0],
-          // ...but have the positionY animate nicely
-          transform: `translateX(0px) translateY(${appFrameStore.framePosition[1]}px)`,
-          transition,
-          opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
-        }}
+export default observer(function AppFrame({ children }: { children: any }) {
+  const { activeTheme } = React.useContext(UI.ThemeContext)
+  const { appPageStore } = useStoresSafe()
+  const appFrameStore = useStore(AppFrameStore)
+  const { isShown, willShow, willHide, state, willStayShown } = appPageStore
+  const borderShadow = ['inset', 0, 0, 0, 0.5, activeTheme.frameBorderColor]
+  const isHidden = !state
+  const onRight = state && !state.peekOnLeft
+  const padding = [SHADOW_PAD, onRight ? SHADOW_PAD : 0, SHADOW_PAD, !onRight ? SHADOW_PAD : 0]
+  const margin = padding.map(x => -x)
+  const boxShadow = [[onRight ? 8 : -8, 8, SHADOW_PAD, [0, 0, 0, 0.25]]]
+  const transition = transitions(appPageStore)
+  return (
+    <Resizable
+      size={appFrameStore.size}
+      minWidth={100}
+      minHeight={100}
+      maxWidth={window.innerWidth}
+      maxHeight={window.innerHeight}
+      onResize={appFrameStore.handleResize}
+      onResizeStop={appFrameStore.handleResizeStop}
+      className="resizable"
+      style={{
+        zIndex: 2,
+        // keep size/positionX linked to be fast...
+        // dont put this in transform so it doesnt animate
+        // it needs to move quickly because the frame itself resizes
+        // and so it has to update the width + left at same time
+        left: appFrameStore.framePosition[0],
+        // ...but have the positionY animate nicely
+        transform: `translateX(0px) translateY(${appFrameStore.framePosition[1]}px)`,
+        transition,
+        opacity: isHidden || (willShow && !willStayShown) || willHide ? 0 : 1,
+      }}
+    >
+      <PeekFrameContainer
+        width={appFrameStore.size.width}
+        height={appFrameStore.size.height}
+        pointerEvents={isShown ? 'auto' : 'none'}
       >
-        <PeekFrameContainer
-          width={appFrameStore.size.width}
-          height={appFrameStore.size.height}
-          pointerEvents={isShown ? 'auto' : 'none'}
-        >
-          <AppFrameArrow appPageStore={appPageStore} borderShadow={borderShadow} />
-          <UI.Col flex={1} padding={padding} margin={margin}>
-            <UI.Col position="relative" flex={1}>
-              <AppFrameBorder boxShadow={[borderShadow]} />
-              <AppMainContent
-                background={theme.background}
-                boxShadow={boxShadow}
-                borderRadius={Constants.PEEK_BORDER_RADIUS}
-              >
-                {children}
-              </AppMainContent>
-            </UI.Col>
+        <AppFrameArrow borderShadow={borderShadow} />
+        <UI.Col flex={1} padding={padding} margin={margin}>
+          <UI.Col position="relative" flex={1}>
+            <AppFrameBorder boxShadow={[borderShadow]} />
+            <AppMainContent
+              background={activeTheme.background}
+              boxShadow={boxShadow}
+              borderRadius={Constants.PEEK_BORDER_RADIUS}
+            >
+              {children}
+            </AppMainContent>
           </UI.Col>
-        </PeekFrameContainer>
-      </Resizable>
-    )
-  },
-)
+        </UI.Col>
+      </PeekFrameContainer>
+    </Resizable>
+  )
+})

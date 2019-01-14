@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ListItem } from '../VirtualList/VirtualListItem'
-import { OrbitListItem } from './OrbitListItem'
+import OrbitListItem from './OrbitListItem'
 import { normalizeItem, NormalItem } from '../../helpers/normalizeItem'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { ListItemPerson } from './ListItemPerson'

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useStore, useHook } from '@mcro/use-store'
-import { AppView } from '../../apps/AppView'
 import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
 import { AppConfig, AppType, App } from '@mcro/models'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
-import { SubPane } from '../../components/SubPane'
+import AppView from '../../apps/AppView'
+import SubPane from '../../components/SubPane'
 import { App as AppGlobalStore } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
@@ -53,7 +53,7 @@ class OrbitStore {
   })
 }
 
-export const OrbitPageContent = observer(() => {
+export default observer(function OrbitPageContent() {
   const { paneManagerStore } = useStoresSafe()
   const store = useStore(OrbitStore)
 

@@ -41,7 +41,7 @@ class ListEditStore {
   }
 }
 
-export const ListEdit = observer(() => {
+export default observer(function ListEdit() {
   const store = useStore(ListEditStore)
 
   return (

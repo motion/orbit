@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
-import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
+import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
 import { SelectionStore, Direction } from '../../stores/SelectionStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
@@ -40,7 +40,7 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-export const MainShortcutHandler = observer(({ children }: Props) => {
+export default observer(function MainShortcutHandler({ children }: Props) {
   const { queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 

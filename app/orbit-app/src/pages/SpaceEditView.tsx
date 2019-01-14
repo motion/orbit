@@ -1,4 +1,4 @@
-import { attach, react, view } from '@mcro/black'
+import { react } from '@mcro/black'
 import { save } from '@mcro/model-bridge'
 import { AppModel, ListsApp, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
@@ -38,7 +38,7 @@ class SpaceEditViewStore {
   )
 }
 
-export const SpaceEditView = observer((props: Props) => {
+export default observer(function SpaceEditView(props: Props) {
   const store = useStore(SpaceEditViewStore, props)
 
   const handleSave = async e => {
@@ -54,16 +54,17 @@ export const SpaceEditView = observer((props: Props) => {
 
     // create a list app for the created space
     const listsApp: ListsApp = {
+      target: 'app',
       name: 'Lists',
       type: 'lists',
       spaceId: savedSpace.id,
-      data: {
-        lists: [
-          { name: 'list #1', order: 0, pinned: false },
-          { name: 'list #2', order: 0, pinned: false },
-          { name: 'list #3', order: 0, pinned: false },
-        ],
-      },
+      // data: {
+      //   lists: [
+      //     { name: 'list #1', order: 0, pinned: false },
+      //     { name: 'list #2', order: 0, pinned: false },
+      //     { name: 'list #3', order: 0, pinned: false },
+      //   ],
+      // },
     }
     await save(AppModel, listsApp)
 

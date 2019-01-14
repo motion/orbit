@@ -11,6 +11,10 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const FocusableShortcutHandler = React.memo(({ shortcuts, handlers, ...props }: Props) => {
+export default React.memo(function FocusableShortcutHandler({
+  shortcuts,
+  handlers,
+  ...props
+}: Props) {
   return <HotKeys keyMap={shortcuts} handlers={handlers} {...props} />
 })

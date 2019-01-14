@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Surface, SurfaceProps } from './Surface'
+import { default as Surface, SurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 28
 

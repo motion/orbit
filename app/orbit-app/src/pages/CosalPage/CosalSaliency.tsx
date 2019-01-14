@@ -31,7 +31,7 @@ class SaliencyStore {
   )
 }
 
-export const CosalSaliency = observer((props: Props) => {
+export default observer(function CosalSaliency(props: Props) {
   const store = useStore(SaliencyStore, props)
   return (
     <div style={{ padding: 10 }}>

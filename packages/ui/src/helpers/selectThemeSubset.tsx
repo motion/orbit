@@ -1,7 +1,7 @@
 import memoize from 'memoize-weak'
 import { ThemeObject } from '@mcro/css'
 
-export const selectThemeSubset = memoize((prefix: string, theme: ThemeObject) => {
+export default memoize(function selectThemeSubset(prefix: string, theme: ThemeObject) {
   const len = prefix.length
   const o1 = { ...theme }
   for (const key in theme) {

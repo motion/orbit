@@ -1,5 +1,5 @@
-import { SlackApp } from './views/SlackApp'
-import { SlackSettings } from './views/SlackSettings'
+import SlackApp from './views/SlackApp'
+import SlackSettings from './views/SlackSettings'
 import { Source } from '@mcro/models'
 import iconSlack from '../../../../public/icons/slack.svg'
 import { GetOrbitIntegration } from '../../types'

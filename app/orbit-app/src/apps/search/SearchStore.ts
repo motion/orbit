@@ -1,10 +1,9 @@
 import { ensure, react, always } from '@mcro/black'
-import { loadMany, observeMany } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import {
   SearchResultModel,
   SearchQuery,
   IntegrationType,
-  AppModel,
   SearchResult,
   AppType,
 } from '@mcro/models'

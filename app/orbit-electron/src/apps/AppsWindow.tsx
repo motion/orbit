@@ -22,7 +22,7 @@ class AppWindowsStore {
   )
 }
 
-export const AppsWindow = observer(() => {
+export default observer(function AppsWindow() {
   const store = useStore(AppWindowsStore)
   const appsState = store.appsStateDebounced
   if (!appsState) {

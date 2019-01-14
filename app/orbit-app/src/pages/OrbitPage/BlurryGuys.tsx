@@ -46,7 +46,7 @@ const Blur = gloss(View, {
   }
 })
 
-export const BlurryGuys = observer(() => {
+export default observer(function BlurryGuys() {
   const store = useStore(BlurryStore)
   return (
     <>

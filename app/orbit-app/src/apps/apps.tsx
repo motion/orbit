@@ -26,4 +26,8 @@ export const apps: AppsIndex = {
   settings,
   bit,
   home,
+  message: {
+    main: () => <div>empty main</div>,
+    index: () => <div>empty main</div>,
+  },
 }

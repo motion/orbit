@@ -1,5 +1,5 @@
-import { PeopleAppIndex } from './PeopleAppIndex'
-import { PeopleAppMain } from './PeopleAppMain'
+import PeopleAppIndex from './PeopleAppIndex'
+import PeopleAppMain from './PeopleAppMain'
 
 export const people = {
   index: PeopleAppIndex,

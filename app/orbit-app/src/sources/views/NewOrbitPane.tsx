@@ -38,7 +38,7 @@ class CreateSpaceStore {
   }
 }
 
-export const NewOrbitPane = observer(() => {
+export default observer(function NewOrbitPane() {
   const stores = useStoresSafe()
   const store = useStore(CreateSpaceStore, stores)
   const { values, status, error } = store

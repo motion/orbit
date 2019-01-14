@@ -68,7 +68,7 @@ const ButtonInner = ({
   )
 }
 
-export const Button = React.forwardRef((props: ButtonProps, ref) => {
+export default React.forwardRef(function Button(props: ButtonProps, ref) {
   const uiContext = React.useContext(UIContext)
 
   if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {

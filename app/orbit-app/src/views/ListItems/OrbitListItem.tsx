@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import { PeopleRow } from '../../components/PeopleRow'
+import PeopleRow from '../../components/PeopleRow'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { RoundButtonSmall } from '../RoundButtonSmall'
 import { DateFormat } from '../DateFormat'
@@ -15,7 +15,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { Icon } from '../Icon'
 
-export const OrbitListItem = observer((props: OrbitItemProps<any>) => {
+export default observer(function OrbitListItem(props: OrbitItemProps<any>) {
   const store = useStore(OrbitItemStore, props)
   const {
     createdAt,

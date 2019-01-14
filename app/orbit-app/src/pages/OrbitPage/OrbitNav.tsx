@@ -8,7 +8,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-export const OrbitNav = observer(() => {
+export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
   const activeApps = useObserveActiveApps()
   const sourcesId = activeApps.findIndex(x => x.type === 'sources')

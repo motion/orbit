@@ -3,13 +3,13 @@ import { AppProps } from '../AppProps'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
 import { observer, useComputed } from 'mobx-react-lite'
-import { VirtualList } from '../../views/VirtualList/VirtualList'
+import VirtualList from '../../views/VirtualList/VirtualList'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import { useResults } from '../../hooks/useResults'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { AppType } from '@mcro/models'
 
-export const SourcesAppIndex = observer((props: AppProps<AppType.sources>) => {
+export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const results = useComputed(() => {
     const { activeSources, allSources } = props.sourcesStore
     return [

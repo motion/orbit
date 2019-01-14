@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
-import { CosalSaliency } from './CosalSaliency'
+import CosalSaliency from './CosalSaliency'
 import { loadMany } from '@mcro/model-bridge'
 import { SearchByTopicModel, CosalTopWordsModel, CosalTopicsModel, BitUtils } from '@mcro/models'
 
@@ -34,7 +34,7 @@ class SearchStore {
   })
 }
 
-export const CosalSearch = observer(() => {
+export default observer(function CosalSearch() {
   const store = useStore(SearchStore)
   return (
     <div style={{ padding: 50 }}>

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { OrbitHeaderInput } from './OrbitHeaderInput'
+import OrbitHeaderInput from './OrbitHeaderInput'
 import { View, Row, Icon, Button } from '@mcro/ui'
-import { OrbitHeaderButtons } from './OrbitHeaderButtons'
+import OrbitHeaderButtons from './OrbitHeaderButtons'
 import { react, ensure } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
@@ -9,8 +9,8 @@ import { WindowCloseButton } from '../../views/WindowControls'
 import { observer } from 'mobx-react-lite'
 import { useStore, useHook } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
-import { OrbitNav } from './OrbitNav'
-import { OrbitSwitch } from './OrbitSwitch'
+import OrbitNav from './OrbitNav'
+import OrbitSwitch from './OrbitSwitch'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const moveCursorToEndOfTextarea = el => {
@@ -113,7 +113,7 @@ export class HeaderStore {
   }
 }
 
-export const OrbitHeader = observer(() => {
+export default observer(function OrbitHeader() {
   const stores = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   return (

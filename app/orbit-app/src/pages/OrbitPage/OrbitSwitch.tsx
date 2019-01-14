@@ -109,8 +109,8 @@ export const OrbitSwitch = observer((props: Props) => {
         delay={100}
         openOnClick
         openOnHover
-        // closeOnClick
-        // closeOnClickAway
+        closeOnClick
+        closeOnClickAway
         theme="light"
         width={300}
         background

@@ -29,6 +29,7 @@ export default observer(() => {
     panes: [
       ...spaceStore.apps,
       ...[
+        { name: 'Lists', type: 'lists' },
         { name: 'Settings', type: 'settings' },
         { name: 'Sources', type: 'sources' },
         { name: 'Onboard', type: 'onboard' },

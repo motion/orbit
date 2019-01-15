@@ -10,6 +10,7 @@ import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 import { View, Button } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import { OrbitList } from '../../views/Lists/OrbitList'
 
 class ListsIndexStore {
   props: AppProps<AppType.lists>
@@ -78,16 +79,14 @@ class ListsIndexStore {
 
 export default observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const { results } = useStore(ListsIndexStore, props)
-  const isSmall = props.itemProps && props.itemProps.hide && props.itemProps.hide.subtitle
+  const isSmall = props.itemProps && props.itemProps.hideSubtitle
   return (
     <>
-      <VirtualList
-        maxHeight={400}
+      <OrbitList
         items={results}
         itemProps={{
-          direct: true,
-          titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
           ...props.itemProps,
+          titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
         }}
         getItemProps={index => {
           const result = results[index]

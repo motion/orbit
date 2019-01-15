@@ -12,7 +12,7 @@ export type OrbitHandleSelect = ((index: number, appConfig: AppConfig) => any)
 export type OrbitListProps = VirtualListProps & {
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
-  query: string
+  query?: string
   offsetY?: number
 }
 
@@ -27,7 +27,7 @@ export const OrbitList = ({ items, offsetY = 0, ...props }: OrbitListProps) => {
     () => (
       <ProvideHighlightsContextWithDefaults
         value={{
-          words: props.query.split(' '),
+          words: (props.query || appStore.activeQuery).split(' '),
           maxChars: 500,
           maxSurroundChars: 80,
         }}

@@ -127,17 +127,16 @@ class VirtualListStore {
         defaultHeight: this.props.estimatedRowHeight,
         defaultWidth: this.width,
         fixedWidth: true,
-        // keyMapper: rowIndex => {
-        //   if (typeof rowIndex === 'undefined') {
-        //     return 0
-        //   }
-        //   const id = this.props.items[rowIndex].id
-        //   if (typeof id === 'undefined') {
-        //     console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-        //     throw new Error('No valid id found for mapping results')
-        //   }
-        //   return id
-        // },
+        keyMapper: (rowIndex: number) => {
+          if (typeof rowIndex === 'undefined') {
+            return 0
+          }
+          const id = this.props.items[rowIndex].id
+          if (typeof id === 'undefined') {
+            return `index${rowIndex}`
+          }
+          return id
+        },
       })
     }
   }
@@ -172,7 +171,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
 
-  console.warn('RENDER VIRTUAL LIST')
+  console.warn('RENDER VIRTUAL LIST', width, height)
   trace()
 
   React.useEffect(() => {
@@ -277,7 +276,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
           {!props.infinite && getList()}
         </>
       )}
-      {!width && <div>No width!</div>}
     </div>
   )
 })

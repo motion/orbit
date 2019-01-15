@@ -55,7 +55,7 @@ export class GarbageCollector {
   }
 
   // component has been mounted so make sure it's being depended on
-  registerClassUse(name: string) {
+  registerClassUse = (name: string) => {
     const count = this.usedClasses.get(name) || 0
     this.usedClasses.set(name, count + 1)
     if (this.classRemovalQueue.has(name)) {
@@ -67,7 +67,7 @@ export class GarbageCollector {
   }
 
   // component has been unmounted so remove it's dependencies
-  deregisterClassUse(name: string) {
+  deregisterClassUse = (name: string) => {
     let count = this.usedClasses.get(name)
     if (count == null) {
       return
@@ -80,7 +80,7 @@ export class GarbageCollector {
     }
   }
 
-  scheduleGarbage() {
+  scheduleGarbage = () => {
     if (this.garbageTimer != null) {
       return
     }

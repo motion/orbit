@@ -117,18 +117,28 @@ export default observer(function OrbitPageContent() {
         <OrbitMainView>
           {allPanes.map(app => (
             <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight preventScroll>
-              <AppView
-                isActive
-                viewType="main"
-                id={app.id}
-                type={app.type}
-                appConfig={store.activeConfig[app.type]}
-              />
+              <OrbitPageMainView store={store} app={app} />
             </SubPane>
           ))}
         </OrbitMainView>
       </Row>
     </Col>
+  )
+})
+
+// separate view prevents big re-renders
+const OrbitPageMainView = observer(function OrbitPageMainView(props: {
+  store: OrbitStore
+  app: App
+}) {
+  return (
+    <AppView
+      isActive
+      viewType="main"
+      id={props.app.id}
+      type={props.app.type}
+      appConfig={props.store.activeConfig[props.app.type]}
+    />
   )
 })
 

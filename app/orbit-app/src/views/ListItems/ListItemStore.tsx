@@ -85,12 +85,14 @@ export class ListItemStore {
     this.getIsSelected,
     async (isSelected, { sleep }) => {
       const { onSelect } = this.props
+      console.log('next selection, isSelected', isSelected, this.isSelected, this)
       ensure('new index', isSelected !== this.isSelected)
       // set this before doing callbacks to allow for instant update
       this.isSelected = isSelected
       if (isSelected) {
         // delay to allow fast keyboard movement down lists
         await sleep(30)
+        console.log('call on select due t reaction.....', JSON.stringify(this.props))
         if (onSelect) {
           onSelect(this.index)
         } else {

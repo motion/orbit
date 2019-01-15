@@ -127,7 +127,7 @@ const useReactiveStore = <A extends any>(
 ): A => {
   const storeHooks = useRef<Function[] | null>(null)
   const storeRef = useRef<A>(null)
-  const hasChangedSource = !storeRef.current ? false : !isSourceEqual(storeRef.current, Store)
+  const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
     const { store, hooks } = setupStoreReactiveProps(Store, props)
@@ -161,7 +161,13 @@ export function useStore<P, A extends { props?: P } | any>(
   // stores can use didMount and willUnmount
   useEffect(() => {
     store.didMount && store.didMount()
-    return () => store.willUnmount && store.willUnmount()
+    return () => {
+      store.willUnmount && store.willUnmount()
+      // TODO need to hook into reactions better/clearly with this...
+      if (store.subscriptions) {
+        store.subscriptions.dispose()
+      }
+    }
   }, [])
 
   if (options && options.conditionalUse === false) {

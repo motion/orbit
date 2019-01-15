@@ -47,21 +47,26 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
           subtitleSpaceBetween={spaceBetween}
           {...ItemView && ItemView.itemProps}
           {...itemProps}
-          {...props}
           isSelected={index => {
-            const appStoreActive = appStore ? appStore.isActive : true
+            const appActive = appStore ? appStore.isActive : true
             const isSelected = selectionStore
               ? selectionStore.activeIndex === index
               : props.isSelected
-            return appStoreActive && isSelected
+            return appActive && isSelected
           }}
+          // allow props to override isSelected but not onSelect
+          // onSelect merges
+          {...props}
           onSelect={index => {
-            console.log('selecting...', props)
+            console.log('selecting...', selectionStore.activeIndex, index, props)
             if (selectionStore) {
+              if (selectionStore.activeIndex === index) {
+                return
+              }
               selectionStore.toggleSelected(index)
             }
             if (props.onSelect) {
-              props.onSelect(index, normalized.appConfig)
+              props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)
             }
           }}
         >

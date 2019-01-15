@@ -1,12 +1,28 @@
+sorting by prepping to split out work as best possible:
+
+- finish some app management stuff:
+
+  - create new app pane with pick name/etc
+  - customizable search app
+
+- figure out account management
+  - need some way to sync
+
 work to split out:
 
 - make it much easier to create apps / have them in their own area
   - with their own data they can easily hook into
 - syncers bugfixing and improving performance and data storage
 - memory as a source
-- topics as a source
 - const [key, setKey] = useSetting('key')
-  - - easy way to be able to have a new UI-related query/update on setting
+  - easy way to be able to have a new UI-related query/update on setting
+
+for me once split out:
+
+- search interaction with other apps
+- people with topics
+- memory app or some idea of how to make it work
+- topics as a source / topics apps generally
 
 next steps:
 

@@ -2,7 +2,7 @@ export { store } from './storeDecorator'
 export * from './helpers/log'
 export * from './helpers/mobx'
 export { deep } from './helpers/deep'
-export { on, compose } from '@mcro/helpers'
+export { on } from '@mcro/helpers'
 import * as Constants_ from './constants'
 export const Constants = Constants_
 export { debugEmit, debugState } from './helpers/debugState'

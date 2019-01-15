@@ -1,5 +1,4 @@
 import * as EventKit from 'event-kit'
-export * from './ref'
 export * from './on'
 
 export { Helpers } from './types'
@@ -12,6 +11,4 @@ import { comparer, toJS } from 'mobx'
 export const isEqual = comparer.structural
 export const stringify = x => JSON.stringify(toJS(x), null, 2)
 
-export * from './watchModel'
-export * from './compose'
 export * from './highlightText'

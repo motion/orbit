@@ -95,7 +95,7 @@ export default observer(function OrbitSwitch(props: Props) {
   }
 
   const goToTeamSettings = () => {
-    stores.paneManagerStore.setActivePane('settings')
+    stores.paneManagerStore.setActivePaneByType('settings')
   }
 
   const { activeSpace } = stores.spaceStore

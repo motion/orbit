@@ -18,20 +18,11 @@ type SortableTabProps = {
   stretch?: boolean
   onClick?: Function
   children?: React.ReactNode
+  sidePad?: number
 }
 
 const SortableTab = SortableElement((props: SortableTabProps) => {
-  return (
-    <NavButton
-      isActive={props.isActive}
-      label={props.label}
-      stretch={props.stretch}
-      separator={props.separator}
-      onClick={props.onClick}
-    >
-      {props.children}
-    </NavButton>
-  )
+  return <NavButton {...props} />
 })
 
 const SortableTabs = SortableContainer((props: { items: SortableTabProps[] }) => {
@@ -57,7 +48,7 @@ export default observer(function OrbitNav() {
     return null
   }
 
-  const appItems = sort.map((id, index) => {
+  const items = sort.map((id, index) => {
     const app = activeApps.find(x => x.id === id)
     const isLast = index !== activeApps.length
     const isActive = paneManagerStore.activePane.id === app.id
@@ -70,17 +61,11 @@ export default observer(function OrbitNav() {
       isActive,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
+      sidePad: isPinned ? 20 : buttonSidePad,
       onClick: paneManagerStore.activePaneSetter(app.id),
       children: <Icon name={`${app.type}`} size={14} opacity={isActive ? 1 : 0.8} />,
     }
   })
-
-  const items = [
-    ...appItems,
-    {
-      children: <Icon name="simpleadd" size={12} opacity={0.35} />,
-    },
-  ]
 
   return (
     <>
@@ -96,11 +81,16 @@ export default observer(function OrbitNav() {
             }}
           />
           <View flex={1} minWidth={10} />
+          <NavButton tooltip="Add app">
+            <Icon name="simpleadd" size={12} opacity={0.35} />
+          </NavButton>
           <NavButton
             isActive={paneManagerStore.activePane.name === 'Sources'}
             onClick={paneManagerStore.activePaneByNameSetter('Sources')}
-            label="Sources"
-          />
+            tooltip="Sources"
+          >
+            <Icon name="design_app" size={12} opacity={0.35} />
+          </NavButton>
         </OrbitNavChrome>
       </OrbitNavClip>
     </>
@@ -123,7 +113,7 @@ const OrbitNavChrome = gloss({
 
 const buttonSidePad = 14
 
-const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
+const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
   position: 'relative',
   flexFlow: 'row',
   alignItems: 'center',
@@ -131,12 +121,12 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
   height: 26,
   maxWidth: 180,
   borderTopRadius: 3,
-}).theme(({ isActive, stretch }, theme) => {
+}).theme(({ isActive, stretch, sidePad }, theme) => {
   const background = isActive
     ? theme.tabBackgroundActive || theme.background
     : theme.tabBackground || theme.background
   return {
-    padding: [5, stretch ? buttonSidePad : buttonSidePad * 1.33],
+    padding: [5, sidePad],
     flex: stretch ? 1 : 'none',
     minWidth: stretch ? 90 : 0,
     background: isActive ? background : 'transparent',
@@ -158,12 +148,18 @@ const NavButton = ({
   label = null,
   isActive = false,
   separator = false,
+  sidePad = buttonSidePad,
   textProps = null,
   className = '',
   ...props
 }) => {
   const button = (
-    <NavButtonChrome className={`undraggable ${className}`} isActive={isActive} {...props}>
+    <NavButtonChrome
+      className={`undraggable ${className}`}
+      isActive={isActive}
+      sidePad={sidePad}
+      {...props}
+    >
       {children}
       {!!label && (
         <Text

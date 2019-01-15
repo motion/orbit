@@ -99,8 +99,7 @@ export default observer(function OrbitPageContent() {
       <Row flex={1}>
         <Sidebar width={300} minWidth={100} maxWidth={500}>
           <OrbitIndexView isHidden={false}>
-            {/* TODO REMOVE SLICE */}
-            {allPanes.slice(0, 1).map(app => (
+            {allPanes.map(app => (
               <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight>
                 <SelectionManager paneId={app.id}>
                   <AppView

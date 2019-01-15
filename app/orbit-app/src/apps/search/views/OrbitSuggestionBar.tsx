@@ -58,7 +58,7 @@ const SuggestionBar = gloss(UI.Row, {
 const SuggestionButton = (props: ButtonProps) => (
   <UI.Button
     glint={false}
-    size={1.2}
+    size={1}
     sizeRadius={0}
     sizeHeight={0.7}
     sizePadding={0.5}
@@ -79,7 +79,7 @@ const SuggestionButton = (props: ButtonProps) => (
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export const OrbitSuggestionBar = observer(() => {
+export default observer(function OrbitSuggestionBar() {
   const { queryStore } = useStoresSafe()
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)

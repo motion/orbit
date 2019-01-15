@@ -5,8 +5,8 @@ import { AppProps } from '../AppProps'
 import { useStore } from '@mcro/use-store'
 import { Separator } from '../../views/Separator'
 import { TopicEdit } from './TopicEdit'
-import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
-import { SliderPane, Slider } from '../../views/Slider'
+import ListItem from '../../views/ListItems/ListItem'
+import { SliderPane, default as Slider } from '../../views/Slider'
 import { IS_MINIMAL } from '../../constants'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
@@ -48,7 +48,7 @@ function TopicList({ results, offset = 0, ...props }) {
   return (
     <>
       {results.map((res, index) => (
-        <OrbitListItem
+        <ListItem
           key={res.title}
           padding={[IS_MINIMAL ? 5 : 7, 11]}
           {...{ '&:hover': activeStyle }}
@@ -71,7 +71,7 @@ function TopicList({ results, offset = 0, ...props }) {
               </Text>
             </View>
           </Row>
-        </OrbitListItem>
+        </ListItem>
       ))}
     </>
   )

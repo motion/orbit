@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AtlassianSource } from '@mcro/models'
 import { OrbitSourceSettingProps } from '../../../types'
-import { AtlassianSettingLogin } from '../../../views/shared/AtlassianSettingLogin'
+import AtlassianSettingLogin from '../../../views/shared/AtlassianSettingLogin'
 
 type Props = OrbitSourceSettingProps<AtlassianSource>
 

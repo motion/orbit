@@ -1,10 +1,9 @@
 import { ensure, react, always } from '@mcro/black'
-import { loadMany, observeMany } from '@mcro/model-bridge'
+import { loadMany } from '@mcro/model-bridge'
 import {
   SearchResultModel,
   SearchQuery,
   IntegrationType,
-  AppModel,
   SearchResult,
   AppType,
 } from '@mcro/models'
@@ -12,11 +11,12 @@ import { uniq, flatten } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
-import { OrbitItemProps } from '../../views/ListItems/OrbitItemProps'
-import { normalizeItem } from '../../helpers/normalizeItem'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useHook } from '@mcro/use-store'
 
 type SearchState = {
-  results: OrbitItemProps<any>[]
+  results: OrbitListItemProps[]
   finished?: boolean
   query: string
 }
@@ -28,11 +28,11 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] => {
+const searchGroupsToResults = (results: SearchResult[]) => {
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
-      ...normalizeItem(bit),
+      item: bit,
       group,
     }))
     const showMore =
@@ -52,68 +52,33 @@ const searchGroupsToResults = (results: SearchResult[]): OrbitItemProps<any>[] =
 
 export class SearchStore {
   props: AppProps<AppType.search>
+  stores = useHook(useStoresSafe)
 
   get activeQuery() {
-    return this.props.appStore.activeQuery
+    return this.stores.appStore.activeQuery
   }
 
   get isActive() {
-    return this.props.appStore.isActive
+    return this.stores.appStore.isActive
   }
 
   get queryFilters() {
-    return this.props.appStore.queryFilters
+    return this.stores.appStore.queryFilters
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
 
   get selectedItem() {
-    return this.searchState.results[this.props.appStore.activeIndex]
+    return this.searchState.results[this.stores.appStore.activeIndex]
   }
-
-  /**
-   * Virtual list has its own format of data representation, so convert our data to that format here.
-   * Ideally we need to use our format in there, but if it is generic component we can use transformation as well.
-   */
-  // get resultsForVirtualList(): SearchResult[] {
-  //   // convert our search results into something this components expects
-  //   const items: { [group: string]: [any[], any[]] } = {}
-  //   for (let result of this.searchState.results) {
-  //     if (result.bits.length) {
-  //       if (!items[result.group]) {
-  //         items[result.group] = [[], []]
-  //       }
-  //       items[result.group][0].push(
-  //         ...result.bits.map(bit => {
-  //           return { ...bit, group: result.group }
-  //         }),
-  //       )
-  //       items[result.group][1].push({
-  //         target: 'search-group',
-  //         id: result.id,
-  //         title: result.title,
-  //         text: result.text,
-  //         group: result.group,
-  //         count: result.bitsTotalCount,
-  //       })
-  //     }
-  //   }
-
-  //   return Object.keys(items).reduce((all, group) => {
-  //     const [bits, subGroups] = items[group]
-  //     all.push(...bits)
-  //     all.push(...subGroups)
-  //     return all
-  //   }, [])
-  // }
 
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
     async (query, { sleep }) => {
       ensure('has query', !!query)
       await sleep(2000)
-      const { settingStore } = this.props
+      const { settingStore } = this.stores
       // init
       if (!settingStore.values) {
         return
@@ -131,23 +96,6 @@ export class SearchStore {
     },
   )
 
-  // setSelection = react(
-  //   () => always(this.searchState),
-  //   () => {
-  //     const searchBits = this.searchState.results.reduce(
-  //       (bits, result) => [...bits, ...result.bits],
-  //       [],
-  //     )
-  //     this.props.appStore.setResults([
-  //       {
-  //         type: 'column',
-  //         // shouldAutoSelect: true,
-  //         indices: searchBits.map((_, index) => index),
-  //       },
-  //     ])
-  //   },
-  // )
-
   get isChanging() {
     return this.searchState.query !== this.activeQuery
   }
@@ -160,12 +108,12 @@ export class SearchStore {
 
   searchState = react(
     () => [
-      this.props.appStore.activeQuery,
+      this.stores.appStore.activeQuery,
       this.queryFilters.activeFilters,
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
-      always(this.props.spaceStore.apps),
+      always(this.stores.spaceStore.apps),
     ],
     async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
@@ -175,7 +123,7 @@ export class SearchStore {
       }
 
       // RESULTS
-      let results: OrbitItemProps<any>[] = []
+      let results: OrbitListItemProps[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
@@ -183,7 +131,7 @@ export class SearchStore {
         // if no query, we dont need to debounce or wait for nlp
         if (query) {
           // wait for nlp to give us results
-          await when(() => this.props.appStore.nlp.query === query)
+          await when(() => this.stores.appStore.nlp.query === query)
         }
       }
 
@@ -252,7 +200,7 @@ export class SearchStore {
       results = [
         ...fuzzyQueryFilter(
           activeQuery,
-          this.props.spaceStore.apps.filter(x => x.type !== AppType.search),
+          this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
           {
             key: 'name',
           },
@@ -267,7 +215,7 @@ export class SearchStore {
           },
           onOpen: () => {
             console.log('selecting app...', app.type, app.id)
-            this.props.paneManagerStore.setActivePane(app.id)
+            this.stores.paneManagerStore.setActivePane(app.id)
           },
         })),
       ]

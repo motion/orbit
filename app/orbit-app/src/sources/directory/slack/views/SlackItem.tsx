@@ -16,8 +16,8 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
-  const { bit, searchTerm, shownLimit, extraProps, renderText, hide } = props
-  const { data, people } = bit
+  const { item, searchTerm, shownLimit, extraProps, renderText, hide } = props
+  const { data, people } = item
   if (!data || !data.messages) {
     return null
   }
@@ -54,7 +54,5 @@ export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
 }
 
 SlackItem.itemProps = {
-  hide: {
-    title: true,
-  },
+  hideTitle: true,
 }

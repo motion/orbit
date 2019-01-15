@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { react, compose, view, attach, ensure } from '@mcro/black'
-import { Saliency } from './Saliency'
+import { react, ensure } from '@mcro/black'
+import Saliency from './Saliency'
 
-class SearchStore {
+export class SearchStore {
   query = 'blast off'
 
   querySetter = val => () => {
@@ -39,13 +39,13 @@ class SearchStore {
   })
 }
 
-const decorate = compose(
-  attach({
-    store: SearchStore,
-  }),
-  view,
-)
-export const Search = decorate(({ store }) => {
+// const decorate = compose(
+//   attach({
+//     store: SearchStore,
+//   }),
+//   view,
+// )
+export default (function Search({ store }) {
   window['store'] = store
   return (
     <div style={{ padding: 50 }}>

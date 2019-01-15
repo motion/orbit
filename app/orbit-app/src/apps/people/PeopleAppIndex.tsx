@@ -2,16 +2,17 @@ import * as React from 'react'
 import { useObserveMany } from '@mcro/model-bridge'
 import { sortBy } from 'lodash'
 import { PersonBitModel, AppType } from '@mcro/models'
-import { NoResultsDialog } from '../../components/NoResultsDialog'
+import NoResultsDialog from '../../components/NoResultsDialog'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
-import { SearchResultsList } from '../../views/Lists/SearchResultsList'
+import { OrbitList } from '../../views/Lists/OrbitList'
 import { observer, useComputed } from 'mobx-react-lite'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { groupByFirstLetter } from '../../helpers/groupByFirstLetter'
 import { Selectable } from '../../components/Selectable'
 
-export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
+// export default observer(function PeopleAppIndex(props: AppProps<AppType.people>) {
+export default observer(function PeopleAppIndex(props: AppProps<AppType.people>) {
   // people and query
   const people = useObserveMany(PersonBitModel, { take: 10000 })
   const [activeQuery, setActiveQuery] = React.useState('')
@@ -43,7 +44,7 @@ export const PeopleAppIndex = observer((props: AppProps<AppType.people>) => {
 
   return (
     <Selectable items={results}>
-      <SearchResultsList
+      <OrbitList
         items={results}
         query={activeQuery}
         itemProps={props.itemProps}

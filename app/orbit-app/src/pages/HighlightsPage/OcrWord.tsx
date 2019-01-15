@@ -28,7 +28,7 @@ const WordInner = gloss({
   whiteSpace: 'pre',
 })
 
-export const OCRWord = gloss(({ item, store: { hoveredWord } }) => {
+export default gloss(function OCRWord({ item, store: { hoveredWord } }) {
   const [x, y, width, height, word /* index */, , color] = item
   const key = `wordKey(item)`
   const highlighted = App.state.highlightWords[word]

@@ -15,14 +15,13 @@ import { react, ensure } from '@mcro/black'
 import { RoundButton } from '../../views'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { SubTitle } from '../../views/SubTitle'
-import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
+import ListItem from '../../views/ListItems/ListItem'
 import { Button, Row } from '@mcro/ui'
 import { App } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { Icon } from '../../views/Icon'
 import { normalizeItem } from '../../helpers/normalizeItem'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -101,7 +100,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
+export default observer(function PeopleAppMain(props: AppProps<AppType.people>) {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
@@ -175,7 +174,7 @@ export const PeopleAppMain = observer((props: AppProps<AppType.people>) => {
             <Unpad>
               {recentBits.map(bit => {
                 return (
-                  <OrbitListItem
+                  <ListItem
                     key={bit.id}
                     {...normalizeItem(bit)}
                     margin={0}

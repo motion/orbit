@@ -1,11 +1,9 @@
 import * as React from 'react'
-import { useStore } from '@mcro/use-store'
-import { AppView } from '../../apps/AppView'
-import { HandleSelection } from '../../views/ListItems/OrbitItemProps'
+import { useStore, useHook } from '@mcro/use-store'
 import { AppConfig, AppType, App } from '@mcro/models'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
-import { SubPane } from '../../components/SubPane'
+import AppView from '../../apps/AppView'
+import SubPane from '../../components/SubPane'
 import { App as AppGlobalStore } from '@mcro/stores'
 import { AppActions } from '../../actions/AppActions'
 import { AppStore } from '../../apps/AppStore'
@@ -14,43 +12,50 @@ import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
+import { memoize } from 'lodash'
+import { isEqual } from '@mcro/black'
+import { OrbitOnSelectItem } from '../../views/ListItems/OrbitListItem'
 
 class OrbitStore {
-  props: { paneManagerStore: PaneManagerStore }
+  stores = useHook(useStoresSafe)
 
   get activePane() {
-    return this.props.paneManagerStore.activePane
+    return this.stores.paneManagerStore.activePane
   }
 
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
   }
 
-  handleSelectItem: HandleSelection = (index, appConfig) => {
+  handleSelectItem: OrbitOnSelectItem = (index, appConfig) => {
     if (!appConfig) {
       console.warn('no app config', index)
       return
     }
     const type = appConfig.type === 'bit' ? AppType.search : appConfig.type
-    this.activeConfig = {
-      ...this.activeConfig,
-      [type]: appConfig,
+    if (!isEqual(this.activeConfig[type], appConfig)) {
+      this.activeConfig = {
+        ...this.activeConfig,
+        [type]: appConfig,
+      }
     }
   }
 
   appStores: { [key: string]: AppStore<any> } = {}
 
-  setAppStore = (id: number) => (store: AppStore<any>) => {
-    this.appStores = {
-      ...this.appStores,
-      [id]: store,
+  setAppStore = memoize((id: number) => (store: AppStore<any>) => {
+    if (this.appStores[id] !== store) {
+      this.appStores = {
+        ...this.appStores,
+        [id]: store,
+      }
     }
-  }
+  })
 }
 
-export const OrbitPageContent = observer(() => {
+export default observer(function OrbitPageContent() {
   const { paneManagerStore } = useStoresSafe()
-  const store = useStore(OrbitStore, { paneManagerStore })
+  const store = useStore(OrbitStore)
 
   if (!store.activePane) {
     return null

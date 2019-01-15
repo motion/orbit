@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { App, Desktop } from '@mcro/stores'
 import * as Constants from '../constants'
+import { gloss } from '@mcro/gloss'
+import { observer } from 'mobx-react-lite'
 
 const { SHADOW_PAD } = Constants
 const iWidth = 4
 
-const OrbitIndicatorContainer = view(UI.View, {
+const OrbitIndicatorContainer = gloss(UI.View, {
   width: iWidth * 1.5,
   height: iWidth * 6,
   top: 0,
@@ -16,7 +17,7 @@ const OrbitIndicatorContainer = view(UI.View, {
   transition: `opacity ease-in 70ms 100`,
 })
 
-export const OrbitIndicator = view(({ orbitOnLeft }) => {
+export default observer(function OrbitIndicator({ orbitOnLeft }: { orbitOnLeft: boolean }) {
   if (Date.now() - Desktop.state.lastAppChange < 100) {
     return null
   }

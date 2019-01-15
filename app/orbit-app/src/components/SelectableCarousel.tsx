@@ -68,7 +68,7 @@ class CarouselStore {
   )
 }
 
-export const SelectableCarousel = observer((props: SelectableCarouselProps) => {
+export default observer(function SelectableCarousel(props: SelectableCarouselProps) {
   const { selectionStore } = useStoresSafe()
   const store = useStore(CarouselStore, { ...props, selectionStore })
   const { cardWidth = 180, cardHeight = 95, afterSpace = true, ...rest } = props

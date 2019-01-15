@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { OrbitSourceSettingProps } from '../../../types'
 import { GmailSource } from '@mcro/models'
@@ -30,7 +30,7 @@ class GmailSettingStore {
   }
 }
 
-export const GmailSettings = observer((props: Props) => {
+export default observer(function GmailSettings(props: Props) {
   const store = useStore(GmailSettingStore, props)
   const { source } = props
   return (

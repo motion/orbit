@@ -5,12 +5,12 @@ import * as React from 'react'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { Input, Button, Row } from '@mcro/ui'
 import { IS_MINIMAL } from '../../constants'
-import { useStore } from '@mcro/use-store'
+import { useStore, useHook } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class TopicEditStore {
-  stores = useStoresSafe()
+  stores = useHook(useStoresSafe)
   name: string = ''
 
   handleNameChange = e => {

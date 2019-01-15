@@ -80,10 +80,10 @@ min-document@^2.19.0:
   dependencies:
     dom-walk "^0.1.0"
 
-mobx-react-lite@0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-0.3.4.tgz#9b086c98c536a0b4a4f14fe373d80cb8d00de0fd"
-  integrity sha512-8rW3Bk0HLp8rFqtJh5jM63PH5TVXsfNh1EE0zahmhjov1A1QqW1TbtP0GvdtUaDV3WTnCM3hThxsVP8FI5vG0w==
+mobx-react-lite@0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-0.3.5.tgz#da4d5fd2f4c21f010beca3c9726fcad47d9b9d6c"
+  integrity sha512-/mvWsDBqdwKtw3mGXZczsWVp0c3LCWQGAhwDMcmgKorB1ldMjG4s5wIVif2BccQ5jq9AiGLi7wen+66cjt4b1A==
 
 object-assign@^4.1.1:
   version "4.1.1"

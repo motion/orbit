@@ -1,17 +1,14 @@
 import * as React from 'react'
-import { view, compose, react, ensure, attach } from '@mcro/black'
-import { attachTheme } from '@mcro/gloss'
+import { react, ensure } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '../../constants'
-import { ThemeObject } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { AppPageStore } from './AppPageStore'
+import { observer } from 'mobx-react-lite'
+import { useStore, useHook } from '@mcro/use-store'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 type Props = {
-  store?: AppArrowStore
-  appPageStore: AppPageStore
   borderShadow: any
-  theme: ThemeObject
 }
 
 const maxTopOffset = 32
@@ -20,8 +17,9 @@ const peekOnRight = false
 
 class AppArrowStore {
   props: Props
+  stores = useHook(useStoresSafe)
 
-  hide = react(() => this.props.appPageStore.isTorn, _ => _)
+  hide = react(() => this.stores.appPageStore.isTorn, _ => _)
 
   arrowY = react(
     () => App.peekState,
@@ -39,12 +37,9 @@ class AppArrowStore {
   )
 }
 
-const decorate = compose(
-  attachTheme,
-  attach({ store: AppArrowStore }),
-  view,
-)
-export const AppFrameArrow = decorate(({ store, theme, borderShadow }: Props) => {
+export default observer(function AppFrameArrow({ borderShadow }: Props) {
+  const { activeTheme } = React.useContext(UI.ThemeContext)
+  const store = useStore(AppArrowStore)
   if (store.hide) {
     return null
   }
@@ -56,7 +51,7 @@ export const AppFrameArrow = decorate(({ store, theme, borderShadow }: Props) =>
       transition="transform ease 80ms"
       size={arrowSize}
       towards={peekOnRight ? 'left' : 'right'}
-      background={theme.background}
+      background={activeTheme.background}
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.05]], borderShadow]}
       transform={{
         y: store.arrowY,

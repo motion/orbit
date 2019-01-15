@@ -30,7 +30,7 @@ const Interactive = gloss({
   },
 })
 
-export const OrbitHeaderButtons = observer(() => {
+export default observer(function OrbitHeaderButtons() {
   const { paneManagerStore, queryStore } = useStoresSafe()
 
   // const paneSetter = memoize(name => () => {

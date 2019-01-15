@@ -1,7 +1,6 @@
 import { react, ensure } from '@mcro/black'
-import { OrbitItemProps } from './OrbitItemProps'
 import { Logger } from '@mcro/logger'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { ListItemProps } from './ListItem'
 
 const log = new Logger('OrbitItemStore')
 
@@ -10,26 +9,13 @@ export const OrbitItemSingleton = {
   lastClick: Date.now(),
 }
 
-export class OrbitItemStore {
-  props: OrbitItemProps<any>
-  stores = useStoresSafe()
+export class ListItemStore {
+  props: ListItemProps
 
   isSelected = false
   cardWrapRef = null
   clickAt = 0
   hoverSettler = null
-
-  setHoverSettler = react(
-    () => this.props.hoverToSelect,
-    hoverSelect => {
-      ensure('hoverSelect', !!hoverSelect)
-      ensure('!hoverSettler', !this.hoverSettler)
-      this.hoverSettler = this.stores.appStore.getHoverSettler()
-      this.hoverSettler.setItem({
-        index: this.props.index,
-      })
-    },
-  )
 
   get didClick() {
     return Date.now() - this.clickAt < 50
@@ -41,12 +27,12 @@ export class OrbitItemStore {
       // allow double click of location
       if (Date.now() - this.lastClickLocation < 280) {
         if (this.props.onClickLocation) {
-          this.props.onClickLocation(this.props.item)
+          this.props.onClickLocation(this.index)
         }
         return
       }
       if (this.props.onOpen) {
-        this.props.onOpen(this.index, this.props.appConfig)
+        this.props.onOpen(this.index)
       } else {
         console.log('no open event for item', this.props)
       }
@@ -57,9 +43,10 @@ export class OrbitItemStore {
       e.stopPropagation()
       e.preventDefault()
       this.props.onClick(e, this.cardWrapRef)
-      return
     }
-    this.stores.appStore.toggleSelected(this.index, 'click')
+    if (this.props.onSelect) {
+      this.props.onSelect(this.index)
+    }
   }
 
   lastClickLocation = Date.now()
@@ -76,43 +63,36 @@ export class OrbitItemStore {
   }
 
   get index() {
-    const { item, getIndex, index } = this.props
-    return getIndex ? getIndex(item) : index
+    const { getIndex, index } = this.props
+    return getIndex ? getIndex(index) : index
   }
 
-  shouldSelect = () => {
-    const { activeCondition, ignoreSelection, isSelected } = this.props
-    const { appStore } = this.stores
-    if (typeof isSelected === 'undefined') {
-      if (ignoreSelection) {
-        return false
-      }
-      if (typeof activeCondition === 'function' && activeCondition() === false) {
-        return false
-      }
-      if (!appStore || !appStore.isActive) {
-        return false
-      }
+  getIsSelected = () => {
+    const { isSelected, onSelect } = this.props
+    if (onSelect === false) {
+      return false
     }
-    const forceSelected = typeof isSelected === 'function' ? isSelected(this.index) : isSelected
-    let next = false
-    if (typeof forceSelected === 'boolean') {
-      next = forceSelected
-    } else {
-      next = appStore && appStore.activeIndex === this.index
+    if (typeof isSelected === 'boolean') {
+      return isSelected
     }
-    return next
+    if (typeof isSelected === 'function') {
+      return isSelected(this.index)
+    }
+    return false
   }
 
   updateIsSelected = react(
-    this.shouldSelect,
-    async isSelected => {
+    this.getIsSelected,
+    async (isSelected, { sleep }) => {
       const { onSelect } = this.props
       ensure('new index', isSelected !== this.isSelected)
+      // set this before doing callbacks to allow for instant update
       this.isSelected = isSelected
       if (isSelected) {
+        // delay to allow fast keyboard movement down lists
+        await sleep(30)
         if (onSelect) {
-          onSelect(this.index, this.props.appConfig)
+          onSelect(this.index)
         } else {
           log.info('no preview event for', this.index)
         }

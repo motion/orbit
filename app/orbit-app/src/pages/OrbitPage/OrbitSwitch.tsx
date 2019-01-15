@@ -6,7 +6,7 @@ import { AppActions } from '../../actions/AppActions'
 import { NavButton } from '../../views/NavButton'
 import { CSSPropertySet } from '@mcro/gloss'
 import { RowItem } from '../../views/RowItem'
-import { FocusableShortcutHandler } from '../../views/FocusableShortcutHandler'
+import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
 import { OrbitOrb } from '../../views/OrbitOrb'
@@ -81,7 +81,7 @@ const createNewSpace = () => {
   })
 }
 
-export const OrbitSwitch = observer((props: Props) => {
+export default observer(function OrbitSwitch(props: Props) {
   const stores = useStoresSafe()
   const store = useStore(SpaceSwitchStore, props)
 
@@ -109,8 +109,8 @@ export const OrbitSwitch = observer((props: Props) => {
         delay={100}
         openOnClick
         openOnHover
-        // closeOnClick
-        // closeOnClickAway
+        closeOnClick
+        closeOnClickAway
         theme="light"
         width={300}
         background

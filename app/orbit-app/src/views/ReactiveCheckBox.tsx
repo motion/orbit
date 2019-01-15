@@ -22,7 +22,7 @@ const preventClick = e => {
   e.stopPropagation()
 }
 
-export const ReactiveCheckBox = observer((props: Props) => {
+export default observer(function ReactiveCheckBox(props: Props) {
   const { isActive, onChange, ...rest } = props
   const handleOnChange = React.useCallback(
     e => {

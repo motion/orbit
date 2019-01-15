@@ -1,32 +1,31 @@
 import * as React from 'react'
-import { OrbitListItem } from '../ListItems/OrbitListItem'
+import ListItem, { ListItemProps } from '../ListItems/ListItem'
 import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
-import { OrbitItemProps } from '../ListItems/OrbitItemProps'
-import { ResolvableModel } from '../../sources/types'
 
-export type ListItemProps = Partial<OrbitItemProps<ResolvableModel>> & {
+export type VirtualListItemProps<Item> = ListItemProps & {
+  item: Item
   query?: string
   style?: Object
   width?: number
-  realIndex: number
-  ignoreSelection?: boolean
+  realIndex?: number
 }
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export class ListItem extends React.PureComponent<ListItemProps> {
+class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>> {
   render() {
-    const { realIndex, style, ...rest } = this.props
+    const { realIndex, style, item, ...rest } = this.props
     return (
-      <OrbitListItem
+      <ListItem
         index={realIndex}
         subtitleSpaceBetween={spaceBetween}
         renderText={renderHighlightedText}
+        {...item}
         {...rest}
       />
     )
   }
 }
 
-export const VirtualListItem = SortableElement(ListItem)
+export default SortableElement(VirtualListItemInner)

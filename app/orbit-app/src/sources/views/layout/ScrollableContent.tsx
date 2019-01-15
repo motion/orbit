@@ -21,7 +21,7 @@ const ContentInner = gloss(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export const ScrollableContent = observer((props: { scrollTo?: string; children: any }) => {
+export default observer(function ScrollableContent(props: { scrollTo?: string; children: any }) {
   const { appPageStore } = useStoresSafe({ optional: ['appPageStore'] })
 
   React.useEffect(() => {

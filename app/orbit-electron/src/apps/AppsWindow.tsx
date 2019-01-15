@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
-import { AppWindow } from './AppWindow'
+import AppWindow from './AppWindow'
 import { BrowserWindow } from 'electron'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
@@ -22,7 +22,7 @@ class AppWindowsStore {
   )
 }
 
-export const AppsWindow = observer(() => {
+export default observer(function AppsWindow() {
   const store = useStore(AppWindowsStore)
   const appsState = store.appsStateDebounced
   if (!appsState) {

@@ -8,7 +8,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
-export const OrbitNav = observer(() => {
+export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
   const activeApps = useObserveActiveApps()
   const sourcesId = activeApps.findIndex(x => x.type === 'sources')
@@ -70,7 +70,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean }>({
   alignItems: 'center',
   justifyContent: 'center',
   padding: [5, buttonSidePad],
-  height: 28,
+  height: 26,
   maxWidth: 180,
   borderTopRadius: 3,
 }).theme(({ isActive, stretch }, theme) => {

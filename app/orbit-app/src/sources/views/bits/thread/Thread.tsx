@@ -4,19 +4,19 @@ import { ThreadMessage } from './ThreadMessage'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitIntegrationProps } from '../../../types'
 
-export const Thread = ({ bit, renderText, extraProps }: OrbitIntegrationProps<any>) => {
-  if (!bit) {
+export const Thread = ({ item, renderText, extraProps }: OrbitIntegrationProps<any>) => {
+  if (!item) {
     return null
   }
-  const { messages } = bit.data as GmailBitData
+  const { messages } = item.data as GmailBitData
   if (!messages) {
     return null
   }
   if (renderText) {
-    return renderText(bit.body)
+    return renderText(item.body)
   }
   if (extraProps && extraProps.oneLine) {
-    return <HighlightTextItem>{bit.body.slice(0, 200)}</HighlightTextItem>
+    return <HighlightTextItem>{item.body.slice(0, 200)}</HighlightTextItem>
   }
   return (
     <div>

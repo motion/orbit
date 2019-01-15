@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { OrbitListItem } from './OrbitListItem'
+import ListItem from './ListItem'
 import { Row, Col, Text } from '@mcro/ui'
 import { HighlightText } from '../HighlightText'
 import { gloss } from '@mcro/gloss'
@@ -7,7 +7,7 @@ import { gloss } from '@mcro/gloss'
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   const num = abbreviateNumber(item.count)
   return (
-    <OrbitListItem
+    <ListItem
       padding={[9, 11]}
       {...props}
       appConfig={{ id: `${Math.random()}`, type: 'search', subType: 'group', title: item.title }}
@@ -23,7 +23,7 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
           </HighlightText>
         </Col>
       </Row>
-    </OrbitListItem>
+    </ListItem>
   )
 }
 

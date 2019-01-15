@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { OrbitSourceMainProps } from '../../../types'
-import { ScrollableContent } from '../../../views/layout/ScrollableContent'
+import ScrollableContent from '../../../views/layout/ScrollableContent'
 import { SegmentedRow, Button, Theme, Row, ThemeContext, color } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { useObserveMany } from '@mcro/model-bridge'
@@ -30,7 +30,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-export const SlackApp = React.memo((props: Props) => {
+export default React.memo(function SlackApp(props: Props) {
   const { bit } = props
 
   const nextConvos = useObserveMany(BitModel, {

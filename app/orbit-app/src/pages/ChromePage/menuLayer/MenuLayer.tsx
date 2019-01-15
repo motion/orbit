@@ -5,15 +5,15 @@ import { SelectionStore } from '../../../stores/SelectionStore'
 import { StoreContext } from '../../../contexts'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
-import { MenuApp } from './MenuApp'
+import MenuApp from './MenuApp'
 import { Popover, View } from '@mcro/ui'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
-import { Searchable } from '../../../components/Searchable'
-import { BrowserDebugTray } from './BrowserDebugTray'
+import Searchable from '../../../components/Searchable'
+import BrowserDebugTray from './BrowserDebugTray'
 import { MENU_WIDTH } from '../../../constants'
 import { throttle } from 'lodash'
 import { MenuStore, menuApps } from './MenuStore'
-import { MainShortcutHandler } from '../../../components/shortcutHandlers/MainShortcutHandler'
+import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { animated, interpolate } from 'react-spring'
 import { useSpring } from 'react-spring/hooks'
 import { observer } from 'mobx-react-lite'
@@ -24,7 +24,7 @@ export type MenuAppProps = Partial<AppProps<any>> & {
   menuId: number
 }
 
-export const MenuLayer = observer(() => {
+export default observer(function MenuLayer() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const selectionStore = useStore(SelectionStore, {
@@ -158,14 +158,10 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 })
 
 const itemProps = {
-  extraProps: {
-    oneLine: false,
-    condensed: true,
-    preventSelect: true,
-  },
-  hide: {
-    subtitle: true,
-  },
+  oneLine: false,
+  condensed: true,
+  onSelect: false,
+  hideSubtitle: true,
 }
 
 const MenuLayerContent = React.memo(

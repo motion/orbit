@@ -10,7 +10,7 @@ export type SearchableProps = {
   inputProps?: Object
 }
 
-export const Searchable = React.memo((props: SearchableProps) => {
+export default React.memo(function Searchable(props: SearchableProps) {
   return (
     <>
       <Row padding={6} paddingBottom={10}>

@@ -10,20 +10,23 @@ import { ensure, react, always } from '@mcro/black'
 import { View } from '@mcro/ui'
 import { SortableContainer } from 'react-sortable-hoc'
 import { Banner } from '../Banner'
-import { VirtualListItem } from './VirtualListItem'
-import { OrbitItemProps } from '../ListItems/OrbitItemProps'
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
+import { trace } from 'mobx'
+import { HandleSelection } from '../ListItems/ListItem'
 
-export type GetItemProps = (index: number) => Partial<OrbitItemProps<any>> | null
+export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
 
 export type VirtualListProps = {
+  onSelect?: HandleSelection
+  onOpen?: HandleSelection
   getRef?: (a: VirtualListStore, b: any) => any
   items: any[]
-  itemProps?: OrbitItemProps<any>
+  itemProps?: Partial<VirtualListItemProps<any>>
   getItemProps?: GetItemProps
-  ItemView?: GenericComponent<any>
+  ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function
   rowCount?: number
@@ -164,13 +167,13 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
   return { ...b, ...a }
 }
 
-export const VirtualList = observer((rawProps: VirtualListProps) => {
+export default observer(function VirtualList(rawProps: VirtualListProps) {
   const props = useDefaultProps(rawProps, { estimatedRowHeight: 60 })
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
-  const { items } = props
 
   console.warn('RENDER VIRTUAL LIST')
+  trace()
 
   React.useEffect(() => {
     if (!store.listRef) {
@@ -187,7 +190,7 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
     }
   })
 
-  if (!items.length) {
+  if (!props.items.length) {
     return (
       <View margin={[10, 0]}>
         <Banner>No results</Banner>
@@ -196,16 +199,18 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
   }
 
   const rowRenderer = ({ key, index, parent, style }) => {
-    const item = items[index]
+    const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
       <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
-            {...getSeparatorProps(items, index)}
+            onSelect={props.onSelect}
+            onOpen={props.onOpen}
+            {...getSeparatorProps(props.items, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
-            item={item}
+            {...item}
             index={index}
             realIndex={index}
           />
@@ -232,13 +237,13 @@ export const VirtualList = observer((rawProps: VirtualListProps) => {
             }
           }
         }}
-        items={items}
+        items={props.items}
         deferredMeasurementCache={cache}
         height={height}
         width={width}
         rowHeight={cache.rowHeight}
         overscanRowCount={20}
-        rowCount={items.length}
+        rowCount={props.items.length}
         estimatedRowSize={props.estimatedRowHeight}
         rowRenderer={rowRenderer}
         distance={10}

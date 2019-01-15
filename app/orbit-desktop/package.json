@@ -50,7 +50,7 @@
     "isomorphic-fetch": "2.2.1",
     "jsdom": "^11.12.0",
     "kill-port": "^1.1.0",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.10",
     "macos-version": "4.1.0",
     "morgan": "1.9.0",
     "node-osascript": "~2.0.0",

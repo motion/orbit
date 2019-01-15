@@ -9,6 +9,7 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
+import { DuplicatesPlugin } from 'inspectpack/plugin'
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -70,14 +71,28 @@ const optimization = {
     ],
   },
   dev: {
-    removeAvailableModules: false,
-    removeEmptyChunks: false,
+    // removeAvailableModules: false,
+    // removeEmptyChunks: false,
     namedModules: true,
-    ...optimizeSplit,
+    // ...optimizeSplit,
   },
 }
 
 console.log('buildNodeModules', buildNodeModules)
+
+const alias = {
+  // if you want to profile in production...
+  // 'react-dom': 'react-dom/profiling',
+  // 'schedule/tracking': 'schedule/tracking-profiling',
+  '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
+  'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
+  react: Path.resolve(cwd, 'node_modules', 'react'),
+  'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+  'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
+  lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
+}
+
+// console.log('alias', alias)
 
 const config = {
   target,
@@ -95,7 +110,7 @@ const config = {
     filename: 'bundle.js',
     publicPath: '/',
     // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
-    globalObject: '(typeof self !== \'undefined\' ? self : this)',
+    globalObject: "(typeof self !== 'undefined' ? self : this)",
   },
   devServer: {
     historyApiFallback: true,
@@ -113,16 +128,7 @@ const config = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
-    alias: {
-      // if you want to profile in production...
-      // 'react-dom': 'react-dom/profiling',
-      // 'schedule/tracking': 'schedule/tracking-profiling',
-      '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
-      'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
-      react: Path.resolve(cwd, 'node_modules', 'react'),
-      'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
-      'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
-    },
+    alias,
   },
   resolveLoader: {
     modules: [buildNodeModules],
@@ -196,9 +202,15 @@ const config = {
       template: 'index.html',
     }),
 
-    process.argv.indexOf('--report') > 0 &&
+    !!process.env['ANALYZE_BUNDLE'] &&
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
+      }),
+
+    !!process.env['ANALYZE_BUNDLE'] &&
+      new DuplicatesPlugin({
+        emitErrors: false,
+        verbose: true,
       }),
 
     !isProd && new webpack.NamedModulesPlugin(),

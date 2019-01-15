@@ -17,7 +17,7 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const AppHeaderContent = observer((props: Props) => {
+export default observer(function AppHeaderContent(props: Props) {
   const { appPageStore } = useStoresSafe()
   const { before, after, children, ...rest } = props
   let hideTitleBar = false

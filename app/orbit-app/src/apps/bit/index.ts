@@ -1,5 +1,5 @@
 import { BitAppIndex } from './BitAppIndex'
-import { BitAppMain } from './BitAppMain'
+import BitAppMain from './BitAppMain'
 
 export const bit = {
   index: BitAppIndex,

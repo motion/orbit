@@ -108,7 +108,7 @@ class AppWindowStore {
   }
 }
 
-export const AppWindow = observer((props: Props) => {
+export default observer(function AppWindow(props: Props) {
   const store = useStore(AppWindowStore, props)
   const { id, isPeek } = props
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]

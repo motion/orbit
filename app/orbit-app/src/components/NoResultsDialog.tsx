@@ -11,7 +11,7 @@ type Props = {
   subName: string
 }
 
-export const NoResultsDialog = observer((props: Props) => {
+export default observer(function NoResultsDialog(props: Props) {
   const { paneManagerStore } = useStoresSafe()
   return (
     <>

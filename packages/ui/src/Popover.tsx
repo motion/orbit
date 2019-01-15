@@ -60,8 +60,6 @@ export type PopoverProps = CSSPropertySet & {
   adjust?: number[]
   // hide arrow
   noArrow?: boolean
-  // DEBUG: helps you see forgiveness zone
-  showForgiveness?: boolean
   // padding from edge of window
   edgePadding?: number
   // pretty much what it says, for use with closeOnClick
@@ -81,6 +79,8 @@ export type PopoverProps = CSSPropertySet & {
   ignoreSegment?: boolean
   onChangeVisibility?: (visibility: boolean) => any
   noPortal?: boolean
+  // helps you see forgiveness zone
+  showForgiveness?: boolean
 }
 
 const defaultProps = {
@@ -319,7 +319,6 @@ const initialState = {
   arrowLeft: 0,
   arrowInnerTop: 0,
   isPinnedOpen: 0,
-  isOpen: false,
   direction: 'auto' as PopoverDirection,
   delay: 16,
   props: {} as PopoverProps,
@@ -344,9 +343,9 @@ const isHovered = (props: PopoverProps, state: State) => {
 }
 
 const showPopover = (props: PopoverProps, state: State) => {
-  const { isOpen, isPinnedOpen } = state
+  const { isPinnedOpen } = state
   const { openOnHover, open } = props
-  if (open || isOpen || isPinnedOpen) {
+  if (open || isPinnedOpen) {
     return true
   }
   if (typeof open === 'undefined') {
@@ -367,6 +366,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   static getDerivedStateFromProps(props, state) {
     let nextState: Partial<State> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
+
+    if (props.open === false) {
+      console.log('popover', props, state)
+    }
 
     if (isManuallyPositioned) {
       nextState = {
@@ -482,7 +485,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   get showPopover() {
-    return this.props.open || this.state.showPopover
+    if (typeof this.props.open === 'boolean') {
+      return this.props.open
+    }
+    return this.state.showPopover
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -534,7 +540,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()
     await this.startClosing()
-    this.setState({ closing: false, isPinnedOpen: 0, isOpen: false })
+    this.setState({ closing: false, isPinnedOpen: 0, showPopover: false })
   }
 
   toggleOpen = () => {
@@ -546,7 +552,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   open = () => {
-    this.setState({ isOpen: true }, () => {
+    this.setState({ showPopover: true }, () => {
       if (this.props.onOpen) {
         this.props.onOpen()
       }
@@ -566,7 +572,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
   close = async () => {
     await this.startClosing()
-    this.setState({ closing: false, isOpen: false })
+    this.setState({ closing: false, showPopover: false })
     if (this.props.onDidClose) {
       this.props.onDidClose()
     }
@@ -860,6 +866,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
+  get isMeasuring() {
+    return this.state.shouldSetPosition || !this.state.finishedMount
+  }
+
   render() {
     const {
       adjust,
@@ -910,10 +920,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       maxHeight,
       direction,
     } = this.state
-    const { showPopover } = this
+    const { isMeasuring, showPopover } = this
     const backgroundProp =
       !background || background === true ? null : { background: `${background}` }
-    const isMeasuring = this.state.shouldSetPosition || !this.state.finishedMount
     const isOpen = !isMeasuring && showPopover
 
     const popoverContent = (

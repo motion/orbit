@@ -25,7 +25,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export const SubPane = observer((props: Props) => {
+export default observer(function SubPane(props: Props) {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const subPaneStore = useStore(SubPaneStore, {
     ...props,

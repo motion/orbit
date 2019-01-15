@@ -2,14 +2,14 @@ import { loadOne, save } from '@mcro/model-bridge'
 import { AppModel, ListsApp } from '@mcro/models'
 import * as React from 'react'
 import { Input, Button, Row } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useStore, useHook } from '@mcro/use-store'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { observer } from 'mobx-react-lite'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 class ListEditStore {
   props: { spaceStore: SpaceStore }
-  stores = useStoresSafe()
+  stores = useHook(useStoresSafe)
 
   name: string = ''
 
@@ -41,7 +41,7 @@ class ListEditStore {
   }
 }
 
-export const ListEdit = observer(() => {
+export default observer(function ListEdit() {
   const store = useStore(ListEditStore)
 
   return (

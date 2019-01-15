@@ -5,7 +5,7 @@ import { loadMany } from '@mcro/model-bridge'
 import { Text, View, SearchableTable } from '@mcro/ui'
 import * as React from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
-import { ReactiveCheckBox } from '../../../../views/ReactiveCheckBox'
+import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 import { OrbitIntegrationProps, OrbitSourceSettingProps } from '../../../types'
@@ -68,7 +68,7 @@ class SlackSettingStore {
   }
 }
 
-export const SlackSettings = observer((props: OrbitIntegrationProps<'slack'> & Props) => {
+export default observer(function SlackSettings(props: OrbitIntegrationProps<'slack'> & Props) {
   const store = useStore(SlackSettingStore, props)
   const { source } = props
   return (

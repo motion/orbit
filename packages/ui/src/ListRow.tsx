@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { attachTheme, gloss } from '@mcro/gloss'
-import { Button } from './Button'
+import Button from './Button'
 import { Row } from './blocks/Row'
 import { MergeUIContext } from './helpers/contexts'
 import { Color } from '@mcro/css'

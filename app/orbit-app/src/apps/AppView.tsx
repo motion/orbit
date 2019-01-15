@@ -25,11 +25,11 @@ type Props = Pick<
   onAppStore?: Function
 }
 
-export const AppView = React.memo((props: Props) => {
+export default React.memo(function AppView(props: Props) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
-  const shouldProvideAppStore = !stores.appStore && !props.appStore
-  const appStore = useStore(AppStore, props, { conditionalUse: shouldProvideAppStore })
+  // warning should never change it if you pass in a prop
+  const appStore = props.appStore || useStore(AppStore, props)
 
   React.useEffect(() => {
     if (props.onAppStore) {
@@ -51,7 +51,7 @@ export const AppView = React.memo((props: Props) => {
   }
   const appView = (
     <AppView
-      appStore={props.appStore || stores.appStore || appStore}
+      appStore={props.appStore || appStore}
       sourcesStore={stores.sourcesStore}
       settingStore={stores.settingStore}
       subPaneStore={stores.subPaneStore}
@@ -63,7 +63,7 @@ export const AppView = React.memo((props: Props) => {
       {...props}
     />
   )
-  if (shouldProvideAppStore) {
+  if (!props.appStore) {
     return (
       <MergeContext Context={StoreContext} value={{ appStore }}>
         {appView}

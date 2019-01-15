@@ -1,5 +1,5 @@
 import { TopicsAppIndex } from './TopicsAppIndex'
-import { TopicsAppMain } from './TopicsAppMain'
+import TopicsAppMain from './TopicsAppMain'
 
 export const topics = {
   index: TopicsAppIndex,

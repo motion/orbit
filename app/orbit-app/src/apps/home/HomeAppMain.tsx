@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Row } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
 
-export const HomeAppMain = React.memo(() => {
+export default React.memo(function HomeAppMain() {
   return (
     <Row flex={1} padding={20} overflowX="auto">
       <FakeSection />

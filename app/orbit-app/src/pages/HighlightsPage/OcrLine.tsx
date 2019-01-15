@@ -12,7 +12,7 @@ const OcrLine = gloss({
   },
 })
 
-export const OCRLine = gloss(({ item, store: { hoveredLine } }) => {
+export default gloss(function OCRLine({ item, store: { hoveredLine } }) {
   const [x, y, width, height] = item
   const key = `${Math.random()}` // TODO
   // const key = wordKey(item)

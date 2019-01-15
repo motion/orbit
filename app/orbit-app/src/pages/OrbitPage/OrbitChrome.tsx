@@ -11,7 +11,7 @@ const SHADOW_PAD = 100 + extraShadow
 
 // this view has two halves so it can animate smoothly without causing layout reflows
 
-export const OrbitChrome = observer(() => {
+export default observer(function OrbitChrome() {
   const { orbitWindowStore, queryStore } = useStoresSafe()
   return (
     <>

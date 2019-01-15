@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { AppView } from '../AppView'
-import { SearchAppIndex } from './SearchAppIndex'
+import AppView from '../AppView'
+import SearchAppIndex from './SearchAppIndex'
 import { observer } from 'mobx-react-lite'
 import { AppType } from '@mcro/models'
 
-export const SearchAppMain = observer((props: AppProps<AppType.search>) => {
+export default observer(function SearchAppMain(props: AppProps<AppType.search>) {
   const appConfig = props.appConfig
 
   if (!appConfig) {

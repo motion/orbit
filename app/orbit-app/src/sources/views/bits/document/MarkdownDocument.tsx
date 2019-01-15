@@ -3,14 +3,14 @@ import { Title } from '../../../../views'
 import { OrbitIntegrationProps } from '../../../types'
 import { Markdown } from '../../../../views/Markdown'
 
-export const MarkdownDocument = ({ bit, renderText }: OrbitIntegrationProps<any>) => {
+export const MarkdownDocument = ({ item, renderText }: OrbitIntegrationProps<any>) => {
   if (renderText) {
-    return renderText(bit.body)
+    return renderText(item.body)
   }
   return (
     <>
-      <Title>{bit.title}</Title>
-      <Markdown source={bit.body} />
+      <Title>{item.title}</Title>
+      <Markdown source={item.body} />
     </>
   )
 }

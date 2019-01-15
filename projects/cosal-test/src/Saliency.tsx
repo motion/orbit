@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { react, compose, view, attach } from '@mcro/black'
+import { react } from '@mcro/black'
 
 type Props = { query?: string }
 
@@ -29,13 +29,13 @@ class SaliencyStore {
   )
 }
 
-const decorate = compose(
-  attach({
-    store: SaliencyStore,
-  }),
-  view,
-)
-export const Saliency = decorate(({ query, store }: Props & { store: SaliencyStore }) => {
+// const decorate = compose(
+//   attach({
+//     store: SaliencyStore,
+//   }),
+//   view,
+// )
+export default (function Saliency({ query, store }: Props & { store: SaliencyStore }) {
   return (
     <div style={{ padding: 10 }}>
       {typeof query === 'undefined' && (
@@ -73,27 +73,27 @@ export const Saliency = decorate(({ query, store }: Props & { store: SaliencySto
   )
 })
 
-const Word = view({
-  flexFlow: 'row',
-  alignItems: 'center',
-  marginRight: 14,
-})
+// const Word = gloss({
+//   flexFlow: 'row',
+//   alignItems: 'center',
+//   marginRight: 14,
+// })
 
-const Bar = view({
-  width: 6,
-  border: [1, '#ccc'],
-  background: '#fff',
-  height: 22,
-  display: 'inline-block',
-  position: 'relative',
-  marginRight: 4,
-})
+// const Bar = glos({
+//   width: 6,
+//   border: [1, '#ccc'],
+//   background: '#fff',
+//   height: 22,
+//   display: 'inline-block',
+//   position: 'relative',
+//   marginRight: 4,
+// })
 
-const Pct = view({
-  width: '100%',
-  background: 'blue',
-  display: 'inline-block',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-})
+// const Pct = glos({
+//   width: '100%',
+//   background: 'blue',
+//   display: 'inline-block',
+//   position: 'absolute',
+//   bottom: 0,
+//   left: 0,
+// })

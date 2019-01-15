@@ -73,10 +73,21 @@ const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions
   })
 }
 
-const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
+let currentHooks = null
+
+export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<A> {
+  currentHooks = currentHooks || []
+  currentHooks.push(cb)
+  return cb()
+}
+
+const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
   Store.prototype.automagic = automagicClass
 
   let storeInstance: A
+
+  // capture hooks for this store
+  currentHooks = null
 
   if (!props) {
     storeInstance = new Store()
@@ -103,24 +114,41 @@ const setupStoreWithReactiveProps = <A>(Store: new () => A, props?: Object) => {
     isSubscribable: x => x && typeof x.subscribe === 'function',
   })
 
-  return storeInstance
+  return {
+    store: storeInstance,
+    hooks: currentHooks,
+  }
 }
 
-const useStoreWithReactiveProps = (
-  Store: any,
+const useReactiveStore = <A extends any>(
+  Store: new () => A,
   props: any,
-  hasChangedSource = false,
   options?: UseStoreOptions,
-) => {
-  let store = useRef(null)
-  if (!store.current || hasChangedSource) {
-    store.current = setupStoreWithReactiveProps(Store, props)
+): A => {
+  const storeHooks = useRef<Function[] | null>(null)
+  const storeRef = useRef<A>(null)
+  const hasChangedSource = !storeRef.current ? false : !isSourceEqual(storeRef.current, Store)
+
+  if (!storeRef.current || hasChangedSource) {
+    const { store, hooks } = setupStoreReactiveProps(Store, props)
+    storeRef.current = store
+    storeHooks.current = hooks
+  } else {
+    // ensure we dont have different number of hooks by re-running them
+    if (storeHooks.current) {
+      // TODO this wont actually update them :/
+      for (const hook of storeHooks.current) {
+        hook()
+      }
+    }
   }
+
   // update props after first run
-  if (props && !!store.current) {
-    store.current.__updateProps(store.current.props, props, options)
+  if (props && !!storeRef.current) {
+    storeRef.current.__updateProps(storeRef.current.props, props, options)
   }
-  return store.current
+
+  return storeRef.current
 }
 
 export function useStore<P, A extends { props?: P } | any>(
@@ -128,32 +156,19 @@ export function useStore<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  if (options && options.conditionalUse === false) {
-    return null as any
-  }
-
-  const proxyStore = useRef(null)
-  const hasChangedSource = !proxyStore.current ? false : !isSourceEqual(proxyStore.current, Store)
-  const store = useStoreWithReactiveProps(Store, props, hasChangedSource, options)
+  const store = useReactiveStore(Store, props, options)
 
   // stores can use didMount and willUnmount
   useEffect(() => {
-    if (store.didMount) {
-      store.didMount()
-    }
-    return () => {
-      if (store.willUnmount) {
-        store.willUnmount()
-      }
-    }
+    store.didMount && store.didMount()
+    return () => store.willUnmount && store.willUnmount()
   }, [])
 
-  // setup store once or if changed
-  if (!proxyStore.current || hasChangedSource) {
-    proxyStore.current = store
+  if (options && options.conditionalUse === false) {
+    return null
   }
 
-  return (proxyStore.current as unknown) as A
+  return store
 }
 
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {

@@ -1,18 +1,14 @@
-import { compose, sleep } from '@mcro/black'
+import { sleep } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import * as React from 'react'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { ItemType, OrbitIntegration } from '../../sources/types'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SourcesStore } from '../../stores/SourcesStore'
 import { Title, VerticalSpace } from '../../views'
 import { BottomControls } from '../../views/BottomControls'
 import { SimpleItem } from '../../views/SimpleItem'
-import { Slider, SliderPane } from '../../views/Slider'
-import { BlurryGuys } from './BlurryGuys'
-import { ORBIT_WIDTH } from '@mcro/constants'
+import { default as Slider, SliderPane } from '../../views/Slider'
+import BlurryGuys from './BlurryGuys'
 import { SetupProxyCommand, CheckProxyCommand } from '@mcro/models'
 import { gloss } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
@@ -105,7 +101,7 @@ class OnboardStore {
 const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
-export const OrbitOnboard = observer(() => {
+export default observer(function OrbitOnboard() {
   const stores = useStoresSafe()
   const store = useStore(OnboardStore, stores)
 

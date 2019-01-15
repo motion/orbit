@@ -5,7 +5,6 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
 import { Icon } from '../../views/Icon'
-import VirtualList from '../../views/VirtualList/VirtualList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 import { View, Button } from '@mcro/ui'
@@ -14,7 +13,6 @@ import { OrbitList } from '../../views/Lists/OrbitList'
 
 class ListsIndexStore {
   props: AppProps<AppType.lists>
-  state = Math.random()
 
   // todo: this probably should be in some AppStore but there are multiple AppStores already
   apps: App[] = []

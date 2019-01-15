@@ -3,8 +3,6 @@ import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { View, ThemeContext } from '@mcro/ui'
 import { HeaderStore } from './OrbitHeader'
 import { observer } from 'mobx-react-lite'
-import { capitalize } from 'lodash'
-import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const handleKeyDown = e => {
@@ -21,18 +19,7 @@ type Props = {
 
 function useActivePaneName() {
   const { paneManagerStore } = useStoresSafe()
-  const apps = useObserveActiveApps()
-  if (!apps.length) {
-    return 'Orbit'
-  }
-  let pane = paneManagerStore.activePane
-  if (typeof pane === 'number') {
-    const activeApp = apps.find(x => x.id === pane)
-    if (activeApp) {
-      pane = activeApp.id
-    }
-  }
-  return capitalize(activeA)
+  return paneManagerStore.activePane.name
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {

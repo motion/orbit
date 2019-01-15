@@ -143,7 +143,7 @@ const OrbitPageMainView = observer(function OrbitPageMainView(props: {
 })
 
 const ToolbarChrome = gloss({
-  minHeight: 3,
+  // minHeight: 3,
   maxHeight: 50,
 }).theme((_, theme) => ({
   // borderBottom: [1, theme.borderColor.alpha(0.25)],

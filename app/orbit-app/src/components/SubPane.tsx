@@ -74,11 +74,7 @@ const Pane = gloss(UI.View, {
   top: 0,
   right: 0,
   left: 0,
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  preventScroll: {
-    overflowY: 'hidden',
-  },
+  overflow: 'hidden',
   isActive: {
     pointerEvents: 'auto',
   },

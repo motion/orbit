@@ -7,11 +7,11 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
-export type OrbitHandleSelect = false | ((index: number, appConfig: AppConfig) => any)
+export type OrbitHandleSelect = ((index: number, appConfig: AppConfig) => any)
 
 export type OrbitListProps = VirtualListProps & {
-  onSelect: OrbitHandleSelect
-  onOpen: OrbitHandleSelect
+  onSelect?: OrbitHandleSelect
+  onOpen?: OrbitHandleSelect
   query: string
   offsetY?: number
 }

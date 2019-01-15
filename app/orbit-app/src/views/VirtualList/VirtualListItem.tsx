@@ -4,7 +4,7 @@ import { SortableElement } from 'react-sortable-hoc'
 import { renderHighlightedText } from './renderHighlightedText'
 
 export type VirtualListItemProps<Item> = ListItemProps & {
-  item: Item
+  item?: Item
   query?: string
   style?: Object
   width?: number

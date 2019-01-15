@@ -58,7 +58,6 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
           // onSelect merges
           {...props}
           onSelect={index => {
-            console.log('selecting...', selectionStore.activeIndex, index, props)
             if (selectionStore) {
               if (selectionStore.activeIndex === index) {
                 return

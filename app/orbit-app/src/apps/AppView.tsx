@@ -38,8 +38,7 @@ export default React.memo(function AppView(props: Props) {
   }, [])
 
   if (!apps[props.type]) {
-    console.error('NO APP OF TYPE', props.type, props)
-    return null
+    return <div>noo app of type {props.type}</div>
   }
   const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
   if (!AppView) {

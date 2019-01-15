@@ -123,7 +123,8 @@ const config = {
   //   eval-source-map (causes errors to not show stack trace in react development...)
   //   cheap-source-map (no line numbers...)
   //   cheap-module-eval-source-map (no line numbers...)
-  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
+  //   cheap-module-source-map (works well in electron, no line numbers in browser...)
+  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

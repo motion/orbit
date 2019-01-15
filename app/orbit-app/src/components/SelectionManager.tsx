@@ -9,6 +9,7 @@ import { StoreContext } from '../contexts'
 export type SelectionManagerProps = {
   paneId?: number
   onClearSelection?: Function
+  defaultSelected?: number
 }
 
 export const SelectionManager = observer(

@@ -130,7 +130,6 @@ const useReactiveStore = <A extends any>(
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
-    console.log('setting up store...', Store, props)
     const { store, hooks } = setupStoreReactiveProps(Store, props)
     storeRef.current = store
     storeHooks.current = hooks

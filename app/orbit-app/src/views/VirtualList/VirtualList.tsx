@@ -127,17 +127,16 @@ class VirtualListStore {
         defaultHeight: this.props.estimatedRowHeight,
         defaultWidth: this.width,
         fixedWidth: true,
-        // keyMapper: rowIndex => {
-        //   if (typeof rowIndex === 'undefined') {
-        //     return 0
-        //   }
-        //   const id = this.props.items[rowIndex].id
-        //   if (typeof id === 'undefined') {
-        //     console.log('index', rowIndex, this.props.items[rowIndex], this.props.items)
-        //     throw new Error('No valid id found for mapping results')
-        //   }
-        //   return id
-        // },
+        keyMapper: (rowIndex: number) => {
+          if (typeof rowIndex === 'undefined') {
+            return 0
+          }
+          const id = this.props.items[rowIndex].id
+          if (typeof id === 'undefined') {
+            return `index${rowIndex}`
+          }
+          return id
+        },
       })
     }
   }
@@ -201,8 +200,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const rowRenderer = ({ key, index, parent, style }) => {
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
-    console.log('ok', key, index, item)
-
     return (
       <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>

@@ -1,19 +1,28 @@
 next steps:
 
-- focus on a release that really hammers in the differences:
+- release
 
-- syncs a lot of stuff
-- search works well
-- memory starts to work
-- need to start on New App pane and custom search/list panes
-- need to get topic source working
+  - focus on a release that really hammers in the differences:
+    - syncs a lot of stuff
+    - search works well
+    - memory starts to work
+    - need to start on New App pane and custom search/list panes
+    - need to get topic source working
+  - do a simple website that focuses on the blog
+    - like https://fibery.io/
+    - start writing on blog about development progress next month
 
-- do a simple website that focuses on the blog
+- apps
+  - search
+    - can adjust filters
+    - we need more flexible filter adding system...
+  - list
+    - lets you add/sort eventually group
+  - autolist
+    - just takes items from a source
+  - list-group
 
-  - like https://fibery.io/
-  - start writing on blog about development progress next month
-
-- reply to gwern:
+* reply to gwern:
 
   - finish a nice search demo
   - cleanup people a bit
@@ -23,7 +32,7 @@ next steps:
   - cleanup the orbit dropbox doc
   - send over to him short video and explanation
 
-- tasks for new person (umed, mohamed or similar):
+* tasks for new person (umed, mohamed or similar):
 
   - get the shared/saved data layer working nicely
     - search app save the varius UI states:
@@ -34,7 +43,7 @@ next steps:
     - topics app
       - adding, editing topics etc
 
-- get to value
+* get to value
   - get tray working
   - get slide in search over app
   - get basic lists app in place again

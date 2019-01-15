@@ -1,10 +1,8 @@
 import * as React from 'react'
-import { observer } from 'mobx-react-lite'
-import { OrbitList } from '../../views/Lists/OrbitList'
-import { Selectable } from '../../components/Selectable'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
+import SelectableList from '../../views/Lists/SelectableList'
 
-export default observer(function SourcesAppIndex() {
+export default function SourcesAppIndex() {
   const results = useOrbitFilterableResults({
     items: [
       { id: 0, title: 'General', icon: 'gear', subtitle: 'General Settings' },
@@ -12,9 +10,5 @@ export default observer(function SourcesAppIndex() {
     ],
   })
 
-  return (
-    <Selectable items={results}>
-      <OrbitList items={results} />
-    </Selectable>
-  )
-})
+  return <SelectableList items={results} />
+}

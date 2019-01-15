@@ -3,9 +3,7 @@ import { AppActions } from '../../actions/AppActions'
 import { App } from '@mcro/stores'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { PopoverState } from '@mcro/ui'
-import { SelectionStore, Direction } from '../../stores/SelectionStore'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { Direction } from '../../stores/SelectionStore'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import { MergeContext } from '../../views/MergeContext'
@@ -13,15 +11,8 @@ import { ShortcutStore } from '../../stores/ShortcutStore'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { StoreContext } from '../../contexts'
 
-type Props = {
-  paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
-  queryStore?: QueryStore
-  children?: React.ReactNode
-}
-
 const rootShortcuts = {
-  select: ['tab', 'enter'],
+  open: ['tab', 'enter'],
   switchSpaces: 'command+k',
   copyLink: 'command+shift+c',
   escape: 'esc',
@@ -40,21 +31,18 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-export default observer(function MainShortcutHandler({ children }: Props) {
+export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
   const { queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
-  const movePaneOrSelection = direction => () => {
-    const { activeSelectionStore } = shortcutStore
+  const movePaneOrSelection = (direction: Direction) => () => {
     const leftOrRight = direction === Direction.left || direction === Direction.right
     if (leftOrRight) {
       if (paneManagerStore) {
         paneManagerStore.move(direction)
       }
     } else {
-      if (activeSelectionStore) {
-        activeSelectionStore.move(direction)
-      }
+      shortcutStore.emit(direction)
     }
   }
 
@@ -62,11 +50,8 @@ export default observer(function MainShortcutHandler({ children }: Props) {
     switchSpaces: () => {
       AppActions.showSpaceSwitcher()
     },
-    select: () => {
-      console.log('openCurrent')
-      shortcutStore.activeSelectionStore
-      // Actions.openSelectedItem()
-      // Actions.openItem(searchStore.selectedItem)
+    open: () => {
+      shortcutStore.emit('open')
     },
     copyLink: async () => {
       console.log('copyLink')

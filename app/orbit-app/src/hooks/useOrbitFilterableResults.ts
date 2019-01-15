@@ -9,7 +9,11 @@ export function useOrbitFilterableResults(props: FilterableProps<any>) {
   const { appStore } = useStoresSafe()
   const [activeQuery, setActiveQuery] = useState('')
 
-  useComputed(() => setActiveQuery(appStore.activeQuery), [])
+  useComputed(() => {
+    if (appStore.activeQuery !== activeQuery) {
+      setActiveQuery(appStore.activeQuery)
+    }
+  }, [])
 
   return useFilterableResults({
     query: activeQuery,

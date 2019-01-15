@@ -16,7 +16,7 @@ export type OrbitListProps = VirtualListProps & {
   offsetY?: number
 }
 
-export const OrbitList = ({ items, offsetY = 0, ...props }: OrbitListProps) => {
+export function OrbitList({ items, offsetY = 0, ...props }: OrbitListProps) {
   const { appStore } = useStoresSafe()
   const itemsKey = items
     .map(x => (x.item ? x.item.id || x.item.email : `${x.id || x.email || x.key}`))

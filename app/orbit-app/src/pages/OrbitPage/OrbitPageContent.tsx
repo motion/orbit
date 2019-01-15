@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useStore, useHook } from '@mcro/use-store'
-import { AppConfig, AppType, App } from '@mcro/models'
+import { AppConfig, AppType } from '@mcro/models'
 import { Col, Row, Sidebar, View } from '@mcro/ui'
 import AppView from '../../apps/AppView'
 import SubPane from '../../components/SubPane'
@@ -11,11 +11,10 @@ import { observer } from 'mobx-react-lite'
 import { SelectionManager } from '../../components/SelectionManager'
 import { gloss } from '@mcro/gloss'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { memoize } from 'lodash'
 import { isEqual } from '@mcro/black'
-import { OrbitOnSelectItem } from '../../views/ListItems/OrbitListItem'
 import { Pane } from '../../stores/PaneManagerStore'
+import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
 class OrbitStore {
   stores = useHook(useStoresSafe)
@@ -28,7 +27,7 @@ class OrbitStore {
     search: { id: '', type: AppType.search, title: '' },
   }
 
-  handleSelectItem: OrbitOnSelectItem = (index, appConfig) => {
+  handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
     if (!appConfig) {
       console.warn('no app config', index)
       return

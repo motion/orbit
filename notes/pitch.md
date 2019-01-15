@@ -1,18 +1,38 @@
 # Orbit
 
-The big pitch it presents is this: nothing works directly for you, the person, to help you manage your digital life.
+There are a lot of productivity tools, especially for managing your team or personal knowledge.
 
-Orbit is a PIM that upgrades your entire operating system.
+The companies that make them come and go. More often than not, they get acquired or shut down and your years-long investment into them is completely lost.
 
-The big fundamental change it presents is adding context to your OS, as well as a whole new way to build contextual fluid apps that dont get in your way and help you stay on top of your life.
+Orbit wants to re-negotiate our relationship with apps.
 
-The first three apps are People, Terms, and Memory.
+What if you could try a new notes app, and if you don't like it, switch right back to your old one?
 
-You can view contextually relevant people, terms and items from your memory.
+Orbit is a productivity platform. It the best building blocks in the world for building apps. It has a model that de-couples the data from the app and lets apps use the power of SQL with simple reactive queries.
 
----
+It has an app and component store for building and trying out amazing apps. And you can build new apps inside Orbit itself, with no extra tooling required.
 
-Orbit is much more heavily invested in "up front" than most any startup, even the newest ones it competes against. This is mostly technology, we can discuss the various pieces but basically:
+Think of it as a new app platform for your computer.
+
+Using Orbit's incredible UI Kit and reactivity, you get much faster and more efficient apps that feel better than native.
+
+Orbit itself just focuses on providing helpful syncers for your various data types, a beautiful, powerful and easy to extend platform that feels better than native, and smart APIs that power the apps.
+
+We've built some amazing abilities into every app already:
+
+- Natural Language Analysis
+- Topic Modeling
+- Inline Augmented Highlights
+- Unified Profiles
+
+But most importantly, Orbit gets the model right from the start. We believe the future of apps will be selling intelligent upgrades that augment your current data.
+
+But you should always control the data, and be able to move it wherever you'd like.
+
+- You get complete privacy guaranteed (and provable)
+- You have fine-grained permissions control over which apps see which data
+- There's never lock in, you can move your data around with ease
+- You can extend your data with new apps, without worry
 
 ## Technology
 

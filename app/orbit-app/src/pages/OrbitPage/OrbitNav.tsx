@@ -59,6 +59,7 @@ export default observer(function OrbitNav() {
       app,
       separator: !isActive && isLast && !nextIsActive,
       isActive,
+      disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
       sidePad: isPinned ? 20 : buttonSidePad,

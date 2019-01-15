@@ -18,7 +18,7 @@ export default observer(function NoResultsDialog(props: Props) {
       <View alignItems="center" justifyContent="center" padding={25}>
         <Views.SubTitle>You're searching {props.subName} & no results found.</Views.SubTitle>
         <VerticalSpace />
-        <Button onClick={() => paneManagerStore.setActivePane('home')} size={1.2}>
+        <Button onClick={() => paneManagerStore.setActivePaneByType('search')} size={1.2}>
           Search Orbit Instead
         </Button>
       </View>

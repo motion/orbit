@@ -33,20 +33,19 @@ const Interactive = gloss({
 export default observer(function OrbitHeaderButtons() {
   const { paneManagerStore, queryStore } = useStoresSafe()
 
-  // const paneSetter = memoize(name => () => {
-  //   paneManagerStore.setActivePane(name)
-  // })
   const clearSearch = () => {
     queryStore.clearQuery()
   }
 
   return (
     <>
-      <Section invisible={paneManagerStore.activePane === 'onboard'}>
-        <Interactive enabled={paneManagerStore.activePane === 'settings' || queryStore.hasQuery}>
+      <Section invisible={paneManagerStore.activePane.type === 'onboard'}>
+        <Interactive
+          enabled={paneManagerStore.activePane.type === 'settings' || queryStore.hasQuery}
+        >
           <ClearButton
             onClick={
-              paneManagerStore.activePane === 'settings'
+              paneManagerStore.activePane.type === 'settings'
                 ? paneManagerStore.setActivePaneToPrevious
                 : clearSearch
             }

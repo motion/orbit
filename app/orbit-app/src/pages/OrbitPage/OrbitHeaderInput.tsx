@@ -29,10 +29,10 @@ function useActivePaneName() {
   if (typeof pane === 'number') {
     const activeApp = apps.find(x => x.id === pane)
     if (activeApp) {
-      pane = activeApp.name
+      pane = activeApp.id
     }
   }
-  return pane === 'Search' ? 'Orbit' : capitalize(pane)
+  return capitalize(activeA)
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {

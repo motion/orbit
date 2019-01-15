@@ -26,7 +26,14 @@ export default observer(() => {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const paneManagerStore = useStore(PaneManagerStore, {
-    panes: [...spaceStore.apps.map(p => p.id), 'settings', 'sources', 'onboard'],
+    panes: [
+      ...spaceStore.apps,
+      ...[
+        { name: 'Settings', type: 'settings' },
+        { name: 'Sources', type: 'sources' },
+        { name: 'Onboard', type: 'onboard' },
+      ].map((pane, id) => ({ ...pane, id })),
+    ],
   })
 
   const stores = {

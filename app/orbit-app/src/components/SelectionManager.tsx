@@ -16,7 +16,7 @@ export const SelectionManager = observer(
   (props: SelectionManagerProps & { children: React.ReactNode }) => {
     const { paneManagerStore, shortcutStore } = useStoresSafe()
     const selectionStore = useStore(SelectionStore, props)
-    const isActive = useComputed(() => paneManagerStore.activePane === props.paneId)
+    const isActive = useComputed(() => paneManagerStore.activePane.id === props.paneId)
 
     useEffect(
       () => {

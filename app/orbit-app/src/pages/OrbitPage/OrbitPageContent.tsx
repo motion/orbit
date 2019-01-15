@@ -68,7 +68,7 @@ export default observer(function OrbitPageContent() {
     })
   }, [])
 
-  const activeAppStore = store.appStores[store.activePane]
+  const activeAppStore = store.appStores[store.activePane.id]
   const activeApps = useObserveActiveApps()
 
   const allPanes: App[] = [

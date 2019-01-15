@@ -31,17 +31,17 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 }
 
 export default React.memo(function SlackApp(props: Props) {
-  const { bit } = props
+  const { item } = props
 
   const nextConvos = useObserveMany(BitModel, {
     where: {
-      integration: bit.integration,
-      type: bit.type,
+      integration: item.integration,
+      type: item.type,
       location: {
-        name: bit.location.name,
+        name: item.location.name,
       },
       bitCreatedAt: {
-        $moreThan: bit.bitCreatedAt,
+        $moreThan: item.bitCreatedAt,
       },
     },
     relations: ['people'],
@@ -53,13 +53,13 @@ export default React.memo(function SlackApp(props: Props) {
 
   const prevConvos = useObserveMany(BitModel, {
     where: {
-      integration: bit.integration,
-      type: bit.type,
+      integration: item.integration,
+      type: item.type,
       location: {
-        name: bit.location.name,
+        name: item.location.name,
       },
       bitCreatedAt: {
-        $lessThan: bit.bitCreatedAt,
+        $lessThan: item.bitCreatedAt,
       },
     },
     relations: ['people'],
@@ -100,7 +100,7 @@ export default React.memo(function SlackApp(props: Props) {
       <Pane isShown={activePane === 0}>
         <ScrollableContent key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-            {!!props.bit && <ChatMessages bit={props.bit} />}
+            {!!props.item && <ChatMessages bit={props.item} />}
           </div>
         </ScrollableContent>
       </Pane>

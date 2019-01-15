@@ -11,16 +11,15 @@ export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'no
 export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
   const activeApps = useObserveActiveApps()
-  const sourcesId = activeApps.findIndex(x => x.type === 'sources')
 
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
         {activeApps.map((app, index) => {
           const isLast = index !== activeApps.length
-          const isActive = paneManagerStore.activePane === app.id
+          const isActive = paneManagerStore.activePane.id === app.id
           const nextIsActive =
-            activeApps[index + 1] && paneManagerStore.activePane === activeApps[index + 1].id
+            activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
           return (
             <NavButton
               key={app.id}
@@ -39,8 +38,8 @@ export default observer(function OrbitNav() {
         </NavButton>
         <View flex={1} minWidth={10} />
         <NavButton
-          isActive={paneManagerStore.activePane === sourcesId}
-          onClick={paneManagerStore.activePaneSetter(sourcesId)}
+          isActive={paneManagerStore.activePane.name === 'Sources'}
+          onClick={paneManagerStore.activePaneByNameSetter('Sources')}
           label="Sources"
         />
       </OrbitNavChrome>

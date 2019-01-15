@@ -348,8 +348,8 @@ export class MenuStore {
     () => this.activeOrLastActiveMenuID,
     id => {
       if (typeof id === 'number') {
-        const pane = menuApps[id]
-        this.props.paneManagerStore.setActivePane(pane)
+        const paneType = menuApps[id]
+        this.props.paneManagerStore.setActivePaneByType(paneType)
       }
     },
   )

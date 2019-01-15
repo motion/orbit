@@ -154,7 +154,7 @@ export default observer(function OrbitSwitch(props: Props) {
               return (
                 <RowItem
                   onClick={() => (stores.spaceStore.activeIndex = index)}
-                  key={space.name}
+                  key={space.id}
                   selected={selectedIndex === index + 1}
                   orb={space.color}
                   title={space.name}

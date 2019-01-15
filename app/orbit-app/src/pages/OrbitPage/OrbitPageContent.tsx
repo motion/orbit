@@ -78,7 +78,7 @@ export default observer(function OrbitPageContent() {
         <Sidebar width={300} minWidth={100} maxWidth={500}>
           <OrbitIndexView isHidden={false}>
             {paneManagerStore.panes.map(pane => (
-              <SubPane key={pane.type} id={pane.id} type={AppType[pane.type]} fullHeight>
+              <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
                 <SelectionManager paneId={pane.id} defaultSelected={0}>
                   <AppView
                     viewType="index"

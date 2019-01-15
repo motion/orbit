@@ -1,5 +1,18 @@
 next steps:
 
+- focus on a release that really hammers in the differences:
+
+- syncs a lot of stuff
+- search works well
+- memory starts to work
+- need to start on New App pane and custom search/list panes
+- need to get topic source working
+
+- do a simple website that focuses on the blog
+
+  - like https://fibery.io/
+  - start writing on blog about development progress next month
+
 - reply to gwern:
 
   - finish a nice search demo

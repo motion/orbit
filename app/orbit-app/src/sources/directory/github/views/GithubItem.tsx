@@ -4,13 +4,13 @@ import { Task } from '../../../views/bits/task/Task'
 
 export class GithubItem extends React.Component<OrbitIntegrationProps<'github'>> {
   render() {
-    const { bit } = this.props
-    if (!bit) {
+    const { item } = this.props
+    if (!item) {
       return null
     }
     return (
       <>
-        <Task {...this.props} body={bit.body} comments={bit.data.comments} />
+        <Task {...this.props} body={item.body} comments={item.data.comments} />
       </>
     )
   }

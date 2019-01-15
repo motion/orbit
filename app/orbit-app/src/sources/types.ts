@@ -47,7 +47,7 @@ export type OrbitGenericSourceProps<A extends ItemType> = GenericItemProps<Model
 // much more common / external facing
 // so give it the nicer name
 export type OrbitIntegrationProps<A extends ItemType> = GenericItemProps<ModelFromType<A>> & {
-  bit: GenericBit<any>
+  item: GenericBit<any>
   normalizedItem: Partial<NormalItem>
 }
 

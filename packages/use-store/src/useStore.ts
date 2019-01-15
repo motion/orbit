@@ -75,7 +75,7 @@ const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions
 
 let currentHooks = null
 
-export function useHook(cb: Function) {
+export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<A> {
   currentHooks = currentHooks || []
   currentHooks.push(cb)
   return cb()

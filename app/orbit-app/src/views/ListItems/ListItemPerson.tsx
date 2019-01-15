@@ -19,7 +19,5 @@ export const ListItemPerson = ({ item }: { item: PersonBit }) => {
 }
 
 ListItemPerson.itemProps = {
-  hide: {
-    icon: true,
-  },
+  hideIcon: true,
 }

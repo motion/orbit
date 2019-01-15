@@ -11,10 +11,12 @@ import { uniq, flatten } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
-import { ListItemProps } from '../../views/ListItems/ListItemProps'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useHook } from '@mcro/use-store'
 
 type SearchState = {
-  results: ListItemProps[]
+  results: OrbitListItemProps[]
   finished?: boolean
   query: string
 }
@@ -26,11 +28,11 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]): ListItemProps[] => {
+const searchGroupsToResults = (results: SearchResult[]) => {
   const res = results.map(result => {
     const group = groupToName[result.group]
     const firstFew = result.bits.slice(0, 4).map(bit => ({
-      ...bit,
+      item: bit,
       group,
     }))
     const showMore =
@@ -50,24 +52,25 @@ const searchGroupsToResults = (results: SearchResult[]): ListItemProps[] => {
 
 export class SearchStore {
   props: AppProps<AppType.search>
+  stores = useHook(useStoresSafe)
 
   get activeQuery() {
-    return this.props.appStore.activeQuery
+    return this.stores.appStore.activeQuery
   }
 
   get isActive() {
-    return this.props.appStore.isActive
+    return this.stores.appStore.isActive
   }
 
   get queryFilters() {
-    return this.props.appStore.queryFilters
+    return this.stores.appStore.queryFilters
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
 
   get selectedItem() {
-    return this.searchState.results[this.props.appStore.activeIndex]
+    return this.searchState.results[this.stores.appStore.activeIndex]
   }
 
   updateSearchHistoryOnSearch = react(
@@ -75,7 +78,7 @@ export class SearchStore {
     async (query, { sleep }) => {
       ensure('has query', !!query)
       await sleep(2000)
-      const { settingStore } = this.props
+      const { settingStore } = this.stores
       // init
       if (!settingStore.values) {
         return
@@ -105,12 +108,12 @@ export class SearchStore {
 
   searchState = react(
     () => [
-      this.props.appStore.activeQuery,
+      this.stores.appStore.activeQuery,
       this.queryFilters.activeFilters,
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
-      always(this.props.spaceStore.apps),
+      always(this.stores.spaceStore.apps),
     ],
     async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
@@ -120,7 +123,7 @@ export class SearchStore {
       }
 
       // RESULTS
-      let results: ListItemProps[] = []
+      let results: OrbitListItemProps[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
@@ -128,7 +131,7 @@ export class SearchStore {
         // if no query, we dont need to debounce or wait for nlp
         if (query) {
           // wait for nlp to give us results
-          await when(() => this.props.appStore.nlp.query === query)
+          await when(() => this.stores.appStore.nlp.query === query)
         }
       }
 
@@ -197,7 +200,7 @@ export class SearchStore {
       results = [
         ...fuzzyQueryFilter(
           activeQuery,
-          this.props.spaceStore.apps.filter(x => x.type !== AppType.search),
+          this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
           {
             key: 'name',
           },
@@ -212,7 +215,7 @@ export class SearchStore {
           },
           onOpen: () => {
             console.log('selecting app...', app.type, app.id)
-            this.props.paneManagerStore.setActivePane(app.id)
+            this.stores.paneManagerStore.setActivePane(app.id)
           },
         })),
       ]

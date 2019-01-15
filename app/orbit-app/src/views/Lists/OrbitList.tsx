@@ -1,30 +1,26 @@
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
 import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
-import { PersonBit, Bit } from '@mcro/models'
+import { PersonBit, Bit, AppConfig } from '@mcro/models'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HandleSelection } from '../ListItems/ListItem'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
-type SearchResultsListProps = VirtualListProps & {
-  onSelect: HandleSelection
-  onOpen: HandleSelection
+export type OrbitHandleSelect = false | ((index: number, appConfig: AppConfig) => any)
+
+export type OrbitListProps = VirtualListProps & {
+  onSelect: OrbitHandleSelect
+  onOpen: OrbitHandleSelect
   query: string
   offsetY?: number
 }
 
-export const OrbitList = ({
-  items,
-  offsetY = 0,
-  itemProps,
-  onSelect,
-  onOpen,
-  ...props
-}: SearchResultsListProps) => {
+export const OrbitList = ({ items, offsetY = 0, ...props }: OrbitListProps) => {
   const { appStore } = useStoresSafe()
-  const itemsKey = items.map(x => `${x.id || x.email || x.key}`).join(' ')
+  const itemsKey = items
+    .map(x => (x.item ? x.item.id || x.item.email : `${x.id || x.email || x.key}`))
+    .join(' ')
   const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKey])
 
   const list = React.useMemo(
@@ -42,11 +38,6 @@ export const OrbitList = ({
           ItemView={OrbitListItem}
           maxHeight={appStore.maxHeight - offsetY}
           isRowLoaded={isRowLoaded}
-          itemProps={{
-            onSelect,
-            onOpen,
-            ...itemProps,
-          }}
           {...props}
         />
       </ProvideHighlightsContextWithDefaults>

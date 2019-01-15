@@ -9,31 +9,30 @@ import { AppConfig, PersonBit, Bit } from '@mcro/models'
 
 export type OrbitOnSelectItem = (index: number, appConfig: AppConfig) => any
 
-export type OrbitListItemProps = VirtualListItemProps & {
-  item: Bit | PersonBit
-  onSelect: OrbitOnSelectItem
+export type OrbitListItemProps = VirtualListItemProps<Bit | PersonBit> & {
+  onSelect?: OrbitOnSelectItem
 }
 
 export const OrbitListItem = (props: OrbitListItemProps) => {
-  const { appStore, selectionStore, sourcesStore } = useStoresSafe()
+  const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })
 
   return React.useMemo(
     () => {
+      // this is the view from sources, each bit type can have its own display
       let ItemView = null
       let itemProps: Partial<ListItemProps> = null
       let normalized: NormalItem = null
 
-      const { item } = props
-      if (item && item.target) {
-        switch (item.target) {
+      if (props.item && props.item.target) {
+        switch (props.item.target) {
           case 'bit':
           case 'person-bit':
-            normalized = normalizeItem(item)
+            normalized = normalizeItem(props.item)
             itemProps = getNormalPropsForListItem(normalized)
 
-            if (item.target === 'bit') {
+            if (props.item.target === 'bit') {
               ItemView = sourcesStore.getView(normalized.integration, 'item')
-            } else if (item.target === 'person-bit') {
+            } else if (props.item.target === 'person-bit') {
               ItemView = ListItemPerson
             }
             break
@@ -57,8 +56,9 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
             return appStoreActive && isSelected
           }}
           onSelect={index => {
-            if (appStore) {
-              appStore.toggleSelected(index, normalized.appConfig)
+            console.log('selecting...', props)
+            if (selectionStore) {
+              selectionStore.toggleSelected(index)
             }
             if (props.onSelect) {
               props.onSelect(index, normalized.appConfig)
@@ -67,9 +67,8 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
         >
           {!!ItemView && (
             <ItemView
-              item={item}
-              bit={item}
-              shownLimit={10}
+              item={props.item}
+              shownLimit={3}
               renderText={renderHighlightedText}
               extraProps={extraProps}
               normalizedItem={normalized}

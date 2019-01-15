@@ -11,9 +11,9 @@ import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-ho
 export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
 
 type SortableTabProps = {
-  app: App
-  separator: boolean
-  isActive: boolean
+  app?: App
+  separator?: boolean
+  isActive?: boolean
   label?: string
   stretch?: boolean
   onClick?: Function
@@ -89,6 +89,7 @@ export default observer(function OrbitNav() {
           <SortableTabs
             axis="x"
             lockAxis="x"
+            pressDelay={50}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
               setSort(arrayMove(sort, oldIndex, newIndex))

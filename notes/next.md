@@ -1,4 +1,16 @@
+work to split out:
+
+- make it much easier to create apps / have them in their own area
+  - with their own data they can easily hook into
+- syncers bugfixing and improving performance and data storage
+- memory as a source
+- topics as a source
+- const [key, setKey] = useSetting('key')
+  - - easy way to be able to have a new UI-related query/update on setting
+
 next steps:
+
+- move search into an overlay style pane that can be toggled...
 
 - release
 

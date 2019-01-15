@@ -1,11 +1,11 @@
-import { FilterableProps, useFilterableResults } from './pureHooks/useFilterable'
+import { FilterableProps, useFilterableResults } from './pureHooks/useFilterableResults'
 import { useComputed } from 'mobx-react-lite'
 import { useStoresSafe } from './useStoresSafe'
 import { useState } from 'react'
 
 // defaults to using the appstore active query
 
-export default function OrbitFilterable(props: FilterableProps<any>) {
+export function useOrbitFilterableResults(props: FilterableProps<any>) {
   const { appStore } = useStoresSafe()
   const [activeQuery, setActiveQuery] = useState('')
 

@@ -122,7 +122,7 @@ const config = {
   // for a faster dev mode you can do:
   //   eval-source-map (causes errors to not show stack trace in react development...)
   //   cheap-source-map (no line numbers...)
-  //   cheap-module-eval-source-map (no line numbers...)
+  //   cheap-module-eval-source-map (line numbers in browser, no line numbers in electron potentially...)
   //   cheap-module-source-map (works well in electron, no line numbers in browser...)
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {

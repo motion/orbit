@@ -3,6 +3,7 @@ import { Searchable, SearchBarType } from '@mcro/ui'
 import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
 import { SelectionStore } from '../../../stores/SelectionStore'
 import { AppStore } from '../../../apps/AppStore'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 type SearchChildProps = {
   searchBar: SearchBarType
@@ -16,10 +17,10 @@ type Props = {
 }
 
 export const AppSearchable = (props: Props) => {
-  const { appStore, children } = props
+  const { queryStore } = useStoresSafe()
   return (
     <Searchable
-      defaultValue={appStore.props.queryStore.query}
+      defaultValue={queryStore ? queryStore.query : ''}
       placeholder="Filter..."
       // focusOnMount
       // onEnter={peekStore.goToNextHighlight}
@@ -33,7 +34,7 @@ export const AppSearchable = (props: Props) => {
         return (
           // dont searchTerm by spaces, its used for searching the whole term here
           <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
-            {children({ searchBar, searchTerm })}
+            {props.children({ searchBar, searchTerm })}
           </ProvideHighlightsContextWithDefaults>
         )
       }}

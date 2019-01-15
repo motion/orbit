@@ -15,6 +15,7 @@ import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { memoize } from 'lodash'
 import { isEqual } from '@mcro/black'
 import { OrbitOnSelectItem } from '../../views/ListItems/OrbitListItem'
+import { Pane } from '../../stores/PaneManagerStore'
 
 class OrbitStore {
   stores = useHook(useStoresSafe)
@@ -69,29 +70,6 @@ export default observer(function OrbitPageContent() {
   }, [])
 
   const activeAppStore = store.appStores[store.activePane.id]
-  const activeApps = useObserveActiveApps()
-
-  const allPanes: App[] = [
-    ...activeApps,
-    {
-      target: 'app',
-      id: 100,
-      type: 'sources',
-      name: 'Sources',
-      data: {
-        icon: 'box',
-      },
-    },
-    {
-      target: 'app',
-      id: 101,
-      type: 'settings',
-      name: 'Settings',
-      data: {
-        icon: 'gear',
-      },
-    },
-  ]
 
   return (
     <Col flex={1}>
@@ -99,15 +77,15 @@ export default observer(function OrbitPageContent() {
       <Row flex={1}>
         <Sidebar width={300} minWidth={100} maxWidth={500}>
           <OrbitIndexView isHidden={false}>
-            {allPanes.map(app => (
-              <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight>
-                <SelectionManager paneId={app.id} defaultSelected={0}>
+            {paneManagerStore.panes.map(pane => (
+              <SubPane key={pane.type} id={pane.id} type={AppType[pane.type]} fullHeight>
+                <SelectionManager paneId={pane.id} defaultSelected={0}>
                   <AppView
                     viewType="index"
-                    id={app.id}
-                    type={app.type}
+                    id={pane.id}
+                    type={pane.type}
                     onSelectItem={store.handleSelectItem}
-                    onAppStore={store.setAppStore(app.id)}
+                    onAppStore={store.setAppStore(pane.id)}
                   />
                 </SelectionManager>
               </SubPane>
@@ -115,9 +93,15 @@ export default observer(function OrbitPageContent() {
           </OrbitIndexView>
         </Sidebar>
         <OrbitMainView>
-          {allPanes.map(app => (
-            <SubPane key={app.type} id={app.id} type={AppType[app.type]} fullHeight preventScroll>
-              <OrbitPageMainView store={store} app={app} />
+          {paneManagerStore.panes.map(pane => (
+            <SubPane
+              key={pane.type}
+              id={pane.id}
+              type={AppType[pane.type]}
+              fullHeight
+              preventScroll
+            >
+              <OrbitPageMainView store={store} pane={pane} />
             </SubPane>
           ))}
         </OrbitMainView>
@@ -129,15 +113,15 @@ export default observer(function OrbitPageContent() {
 // separate view prevents big re-renders
 const OrbitPageMainView = observer(function OrbitPageMainView(props: {
   store: OrbitStore
-  app: App
+  pane: Pane
 }) {
   return (
     <AppView
       isActive
       viewType="main"
-      id={props.app.id}
-      type={props.app.type}
-      appConfig={props.store.activeConfig[props.app.type]}
+      id={props.pane.id}
+      type={props.pane.type}
+      appConfig={props.store.activeConfig[props.pane.type]}
     />
   )
 })

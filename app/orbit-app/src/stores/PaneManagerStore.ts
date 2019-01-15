@@ -26,6 +26,10 @@ export class PaneManagerStore {
       await sleep(50)
       return val
     },
+    {
+      deferFirstRun: true,
+      defaultValue: this.props.panes[this.paneIndex],
+    },
   )
 
   lastActivePane = react(() => this.activePane, _ => _, {

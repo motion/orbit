@@ -172,7 +172,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
 
-  console.warn('RENDER VIRTUAL LIST')
+  console.warn('RENDER VIRTUAL LIST', width, height)
   trace()
 
   React.useEffect(() => {
@@ -201,6 +201,8 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const rowRenderer = ({ key, index, parent, style }) => {
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
+    console.log('ok', key, index, item)
+
     return (
       <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
@@ -277,7 +279,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
           {!props.infinite && getList()}
         </>
       )}
-      {!width && <div>No width!</div>}
     </div>
   )
 })

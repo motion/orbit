@@ -7,12 +7,12 @@ import { Task } from '../../../views/bits/task/Task'
 
 export class GithubApp extends React.Component<OrbitSourceMainProps<'github'>> {
   render() {
-    const { bit } = this.props
+    const { item } = this.props
     return (
       <View padding={16} flex={1}>
         <ScrollableContent>
           <View padding={[16, 0]}>
-            <Task {...this.props} body={bit.body} comments={bit.data.comments} />
+            <Task {...this.props} body={item.body} comments={item.data.comments} />
           </View>
         </ScrollableContent>
         <BitStatusBar {...this.props} />

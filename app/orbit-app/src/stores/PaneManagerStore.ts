@@ -69,6 +69,7 @@ export class PaneManagerStore {
   setActivePaneByType = (type: string) => this.setPaneBy('type', type)
   activePaneSetter = memoize((id: number) => () => this.setActivePane(id))
   activePaneByNameSetter = memoize((name: string) => () => this.setActivePaneByName(name))
+  activePaneByTypeSetter = memoize((type: string) => () => this.setActivePaneByType(type))
   activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
 
   hasPaneIndex = (index: number) => {

@@ -8,7 +8,7 @@ import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { OrbitIntegrationProps, OrbitSourceSettingProps } from '../../../types'
+import { OrbitItemViewProps, OrbitSourceSettingProps } from '../../../types'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 
@@ -68,7 +68,7 @@ class SlackSettingStore {
   }
 }
 
-export default observer(function SlackSettings(props: OrbitIntegrationProps<'slack'> & Props) {
+export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'> & Props) {
   const store = useStore(SlackSettingStore, props)
   const { source } = props
   return (

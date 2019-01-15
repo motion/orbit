@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { View, Row, Text } from '@mcro/ui'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
 import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
@@ -9,7 +9,7 @@ import { HighlightText } from '../../../../views/HighlightText'
 import { Markdown } from '../../../../views/Markdown'
 import { gloss } from '@mcro/gloss'
 
-type SlackMessageProps = OrbitIntegrationProps<'slack'> & {
+type SlackMessageProps = OrbitItemViewProps<'slack'> & {
   message: SlackBitDataMessage
   previousMessage?: SlackBitDataMessage
   highlight?: Object

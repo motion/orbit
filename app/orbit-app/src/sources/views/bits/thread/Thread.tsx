@@ -2,9 +2,9 @@ import { GmailBitData } from '@mcro/models'
 import * as React from 'react'
 import { ThreadMessage } from './ThreadMessage'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 
-export const Thread = ({ item, renderText, extraProps }: OrbitIntegrationProps<any>) => {
+export const Thread = ({ item, renderText, extraProps }: OrbitItemViewProps<any>) => {
   if (!item) {
     return null
   }

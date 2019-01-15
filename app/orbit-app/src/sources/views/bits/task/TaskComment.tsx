@@ -13,8 +13,8 @@ export type TaskCommentLike = {
     login: string
     email: string
   }
-  createdAt: Date
-  children: string
+  createdAt: string
+  children?: string
 }
 
 export const TaskComment = ({ author, createdAt, children }: TaskCommentLike) => {

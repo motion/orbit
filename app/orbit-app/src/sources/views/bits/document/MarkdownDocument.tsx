@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Title } from '../../../../views'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { Markdown } from '../../../../views/Markdown'
 
-export const MarkdownDocument = ({ item, renderText }: OrbitIntegrationProps<any>) => {
+export const MarkdownDocument = ({ item, renderText }: OrbitItemViewProps<any>) => {
   if (renderText) {
     return renderText(item.body)
   }

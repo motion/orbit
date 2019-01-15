@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SlackBitDataMessage } from '@mcro/models'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 
@@ -15,7 +15,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
   return res
 }
 
-export function SlackItem(props: OrbitIntegrationProps<'slack'>) {
+export function SlackItem(props: OrbitItemViewProps<'slack'>) {
   const { item, searchTerm, shownLimit, extraProps, renderText, hide } = props
   const { data, people } = item
   if (!data || !data.messages) {

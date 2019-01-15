@@ -7,9 +7,9 @@ import * as React from 'react'
 import { render } from '@mcro/reactron'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
-import { ElectronRoot } from './ElectronRoot'
-import { MenuWindow } from './menus/MenuWindow'
-import { AppsWindow } from './apps/AppsWindow'
+import ElectronRoot from './ElectronRoot'
+import MenuWindow from './menus/MenuWindow'
+import AppsWindow from './apps/AppsWindow'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 

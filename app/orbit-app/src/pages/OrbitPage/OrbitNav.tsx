@@ -43,12 +43,17 @@ export default observer(function OrbitNav() {
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
 
+  console.log('OrbitNav', space, appIds)
+
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
   //       but we should refactor useObserve/useModel first so it re-uses
   //       identical queries using a WeakMap so we dont have tons of observes...
   React.useEffect(
     () => {
+      if (!space) {
+        return
+      }
       if (!space.paneSort) {
         updateSpace({ paneSort: activeApps.map(x => x.id) })
         return
@@ -58,7 +63,7 @@ export default observer(function OrbitNav() {
         return
       }
     },
-    [appIds.join('')],
+    [space && space.id, appIds.join('')],
   )
 
   if (!activeApps.length || !space.paneSort) {

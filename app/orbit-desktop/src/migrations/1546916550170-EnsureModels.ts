@@ -1,5 +1,5 @@
 import { MigrationInterface, getRepository } from 'typeorm'
-import { UserEntity } from '@mcro/models'
+import { UserEntity, SpaceEntity } from '@mcro/models'
 
 export class EnsureModels1546916550169 implements MigrationInterface {
   public async up(): Promise<any> {
@@ -8,9 +8,12 @@ export class EnsureModels1546916550169 implements MigrationInterface {
 
   private async ensureDefaultUser() {
     const user = await getRepository(UserEntity).findOne()
+    const firstSpace = await getRepository(SpaceEntity).findOne()
 
     if (!user) {
-      await getRepository(UserEntity).save({})
+      await getRepository(UserEntity).save({
+        activeSpace: firstSpace.id,
+      })
     }
   }
 

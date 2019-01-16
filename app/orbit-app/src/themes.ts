@@ -74,6 +74,8 @@ const light = {
     cardBackground: [250, 250, 250],
     cardBorderColor: [0, 0, 0, 0.1],
     background: '#fff',
+    backgroundActive: '#eee',
+    backgroundHover: '#eee',
     color: '#444',
     borderColor: '#ccc',
   }),
@@ -137,6 +139,7 @@ export const themes = {
     ...Theme.fromStyles({
       background: orbitColor,
       backgroundHover: orbitColor,
+      backgroundActive: orbitColor,
       color: '#fff',
       borderColor: orbitActiveBg,
     }),

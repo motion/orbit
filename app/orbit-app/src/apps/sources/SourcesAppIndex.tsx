@@ -16,7 +16,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       ...props.itemProps,
       id: app.source.id,
       title: `${app.appName} · ${app.display.name}`,
-      subtitle: <OrbitAppInfo sourceId={app.source.id} app={app} />,
+      subtitle: <OrbitAppInfo key={app.source.id} sourceId={app.source.id} app={app} />,
       icon: app.integration,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),

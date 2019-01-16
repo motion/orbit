@@ -10,6 +10,7 @@ import { SyncerRepository } from '../../utils/SyncerRepository'
 import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs Slack messages.
@@ -104,6 +105,8 @@ export class SlackSyncer implements IntegrationSyncer {
       dbBits: Bit[] = []
 
     for (let channel of activeChannels) {
+      await checkCancelled(this.source.id)
+
       // to load messages using pagination we use "oldest" message we got last time when we synced
       // BUT we also need to support edit and remove last x messages
       // (since we can't have up-to-date edit and remove of all messages)
@@ -140,23 +143,22 @@ export class SlackSyncer implements IntegrationSyncer {
 
         // create bits from conversations
         const conversationBits = await Promise.all(
-          conversations.map(messages => this.bitFactory.createConversation(channel, messages, allDbPeople)),
+          conversations.map(messages =>
+            this.bitFactory.createConversation(channel, messages, allDbPeople),
+          ),
         )
         apiBits.push(...conversationBits)
 
         // create bits from links inside messages
         const linkBits: Bit[] = []
         for (let message of filteredMessages) {
-          if (!message.attachments || !message.attachments.length)
-            continue
+          if (!message.attachments || !message.attachments.length) continue
 
           for (let attachment of message.attachments) {
             if (attachment.title && attachment.text && attachment.original_url) {
-
               // we use try-catch block to prevent fails on link craw since if it fail for some reason
               // we can afford to stop slack syncing process
               try {
-
                 // open browser if it wasn't opened yet
                 if (this.crawler.isOpened() === false) {
                   await this.crawler.start()
@@ -167,15 +169,21 @@ export class SlackSyncer implements IntegrationSyncer {
                   url: attachment.original_url,
                   deep: false,
                   handler: async data => {
-                    linkBits.push(this.bitFactory.createWebsite(channel, message, attachment, data, allDbPeople))
+                    linkBits.push(
+                      this.bitFactory.createWebsite(
+                        channel,
+                        message,
+                        attachment,
+                        data,
+                        allDbPeople,
+                      ),
+                    )
                     return true
-                  }
+                  },
                 })
-
               } catch (error) {
                 this.log.warning(`failed to craw a slack link's website`, attachment, error)
               }
-
             }
           }
         }

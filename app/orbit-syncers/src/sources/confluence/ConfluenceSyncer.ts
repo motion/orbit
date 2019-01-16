@@ -7,6 +7,8 @@ import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
 import { ConfluenceBitFactory } from './ConfluenceBitFactory'
 import { ConfluencePersonFactory } from './ConfluencePersonFactory'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
+import { sleep } from '@mcro/utils'
 
 /**
  * Syncs Confluence pages and blogs.
@@ -55,7 +57,7 @@ export class ConfluenceSyncer {
 
     // we don't need some confluence users, like system or bot users
     // so we are filtering them out
-    this.log.info('filter out users we don\'t need')
+    this.log.info("filter out users we don't need")
     const filteredUsers = allUsers.filter(member => this.checkUser(member))
     this.log.info('updated users after filtering', filteredUsers)
 
@@ -83,9 +85,9 @@ export class ConfluenceSyncer {
           loadedCount,
           isLast,
           lastSyncInfo: pageLastSync,
-          allDbPeople
+          allDbPeople,
         })
-      }
+      },
     )
     this.log.timer('sync API pages')
 
@@ -102,9 +104,9 @@ export class ConfluenceSyncer {
           loadedCount,
           isLast,
           lastSyncInfo: blogLastSync,
-          allDbPeople
+          allDbPeople,
         })
-      }
+      },
     )
     this.log.timer('sync API blogs')
   }
@@ -113,20 +115,27 @@ export class ConfluenceSyncer {
    * Handles a content (blog or page) from loaded confluence content stream.
    */
   private async handleContent(options: {
-    lastSyncInfo: ConfluenceLastSyncInfo,
-    content: ConfluenceContent,
-    cursor: number,
-    loadedCount: number,
-    isLast: boolean,
+    lastSyncInfo: ConfluenceLastSyncInfo
+    content: ConfluenceContent
+    cursor: number
+    loadedCount: number
+    isLast: boolean
     allDbPeople: Person[]
   }) {
+    await checkCancelled(this.source.id)
+    await sleep(2)
+
     const { lastSyncInfo, content, cursor, loadedCount, isLast, allDbPeople } = options
     const updatedAt = new Date(content.history.lastUpdated.when).getTime()
 
     // if we have synced stuff previously already, we need to prevent same content syncing
     // check if content's updated date is newer than our last synced date
     if (lastSyncInfo.lastSyncedDate && updatedAt <= lastSyncInfo.lastSyncedDate) {
-      this.log.info('reached last synced date, stop syncing...', { content, updatedAt, lastSync: lastSyncInfo })
+      this.log.info('reached last synced date, stop syncing...', {
+        content,
+        updatedAt,
+        lastSync: lastSyncInfo,
+      })
 
       // if its actually older we don't need to sync this content and all next ones (since they are sorted by updated date)
       if (lastSyncInfo.lastCursorSyncedDate) {

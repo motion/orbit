@@ -29,9 +29,9 @@ export const OrbitAppInfo = (props: Props) => {
           <Text size={0.9} alpha={0.8}>
             Syncing...
           </Text>
-          <View flex={1} />
         </>
       )}
+      <View flex={1} />
       <Text size={0.9} fontWeight={500}>
         {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
       </Text>

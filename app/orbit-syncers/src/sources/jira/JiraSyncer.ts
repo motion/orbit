@@ -8,6 +8,8 @@ import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
 import { JiraBitFactory } from './JiraBitFactory'
 import { JiraPersonFactory } from './JiraPersonFactory'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
+import { sleep } from '@mcro/utils'
 
 /**
  * Syncs Jira issues.
@@ -51,7 +53,7 @@ export class JiraSyncer implements IntegrationSyncer {
 
     // we don't need some jira users, like system or bot users
     // so we are filtering them out
-    this.log.info('filter out users we don\'t need')
+    this.log.info("filter out users we don't need")
     const filteredUsers = apiUsers.filter(user => this.checkUser(user))
     this.log.info('updated users after filtering', filteredUsers)
 
@@ -68,61 +70,68 @@ export class JiraSyncer implements IntegrationSyncer {
 
     // load users from API
     this.log.timer('load issues from API')
-    const files = await this.loader.loadIssues(lastSync.lastCursor || 0, lastSync.lastCursorLoadedCount || 0, async (issue, cursor, loadedCount, isLast) => {
-      const updatedAt = new Date(issue.fields.updated).getTime()
+    const files = await this.loader.loadIssues(
+      lastSync.lastCursor || 0,
+      lastSync.lastCursorLoadedCount || 0,
+      async (issue, cursor, loadedCount, isLast) => {
+        await checkCancelled(this.source.id)
+        await sleep(2)
 
-      // if we have synced stuff previously already, we need to prevent same issues syncing
-      // check if issue's updated date is newer than our last synced date
-      if (lastSync.lastSyncedDate && updatedAt <= lastSync.lastSyncedDate) {
-        this.log.info('reached last synced date, stop syncing...', { issue, updatedAt, lastSync })
+        const updatedAt = new Date(issue.fields.updated).getTime()
 
-        // if its actually older we don't need to sync this issue and all next ones (since they are sorted by updated date)
-        if (lastSync.lastCursorSyncedDate) {
-          // important check, because we can be in this block without loading by cursor
-          lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
+        // if we have synced stuff previously already, we need to prevent same issues syncing
+        // check if issue's updated date is newer than our last synced date
+        if (lastSync.lastSyncedDate && updatedAt <= lastSync.lastSyncedDate) {
+          this.log.info('reached last synced date, stop syncing...', { issue, updatedAt, lastSync })
+
+          // if its actually older we don't need to sync this issue and all next ones (since they are sorted by updated date)
+          if (lastSync.lastCursorSyncedDate) {
+            // important check, because we can be in this block without loading by cursor
+            lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
+          }
+          lastSync.lastCursor = undefined
+          lastSync.lastCursorSyncedDate = undefined
+          await getRepository(SourceEntity).save(this.source)
+
+          return false // this tells from the callback to stop file proceeding
         }
-        lastSync.lastCursor = undefined
-        lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SourceEntity).save(this.source)
 
-        return false // this tells from the callback to stop file proceeding
-      }
+        // for the first ever synced issue we store its updated date, and once sync is done,
+        // next time we make sync again we don't want to sync issues less then this date
+        if (!lastSync.lastCursorSyncedDate) {
+          lastSync.lastCursorSyncedDate = updatedAt
+          this.log.info('looks like its the first syncing issue, set last synced date', lastSync)
+          await getRepository(SourceEntity).save(this.source)
+        }
 
-      // for the first ever synced issue we store its updated date, and once sync is done,
-      // next time we make sync again we don't want to sync issues less then this date
-      if (!lastSync.lastCursorSyncedDate) {
-        lastSync.lastCursorSyncedDate = updatedAt
-        this.log.info('looks like its the first syncing issue, set last synced date', lastSync)
-        await getRepository(SourceEntity).save(this.source)
-      }
+        const bit = this.bitFactory.create(issue, allDbPeople)
+        this.log.verbose('syncing', { issue, bit, people: bit.people })
+        await getRepository(BitEntity).save(bit, { listeners: false })
 
-      const bit = this.bitFactory.create(issue, allDbPeople)
-      this.log.verbose('syncing', { issue, bit, people: bit.people })
-      await getRepository(BitEntity).save(bit, { listeners: false })
+        // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
+        if (isLast) {
+          this.log.info(
+            'looks like its the last issue in this sync, removing last cursor and source last sync date',
+            lastSync,
+          )
+          lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
+          lastSync.lastCursor = undefined
+          lastSync.lastCursorSyncedDate = undefined
+          await getRepository(SourceEntity).save(this.source)
+          return true
+        }
 
-      // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
-      if (isLast) {
-        this.log.info(
-          'looks like its the last issue in this sync, removing last cursor and source last sync date',
-          lastSync,
-        )
-        lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
-        lastSync.lastCursor = undefined
-        lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SourceEntity).save(this.source)
+        // update last sync settings to make sure we continue from the last point in the case if application will stop
+        if (lastSync.lastCursor !== cursor) {
+          this.log.info('updating last cursor in settings', { cursor })
+          lastSync.lastCursor = cursor
+          lastSync.lastCursorLoadedCount = loadedCount
+          await getRepository(SourceEntity).save(this.source)
+        }
+
         return true
-      }
-
-      // update last sync settings to make sure we continue from the last point in the case if application will stop
-      if (lastSync.lastCursor !== cursor) {
-        this.log.info('updating last cursor in settings', { cursor })
-        lastSync.lastCursor = cursor
-        lastSync.lastCursorLoadedCount = loadedCount
-        await getRepository(SourceEntity).save(this.source)
-      }
-
-      return true
-    })
+      },
+    )
     this.log.timer('load issues from API', files)
   }
 

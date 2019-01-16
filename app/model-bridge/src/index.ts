@@ -4,13 +4,12 @@ import { ClientTransport } from '@mcro/mediator'
 import { randomString } from '@mcro/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const name = randomString(5)
 const transports: ClientTransport[] = []
 
 if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
   transports.push(
     new WebSocketClientTransport(
-      name,
+      randomString(5),
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
@@ -22,7 +21,7 @@ if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
 if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
   transports.push(
     new WebSocketClientTransport(
-      name,
+      randomString(5),
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,

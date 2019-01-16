@@ -26,7 +26,6 @@ export class GeneralSettingManager {
         console.error(err)
       }
     }
-    log.info('move me to migration plz')
   }
 
   async start() {

@@ -1,9 +1,16 @@
-import { SelectionStore } from './SelectionStore'
-
 export class ShortcutStore {
-  activeSelectionStore?: SelectionStore
+  shortcutListeners = new Set()
 
-  setActiveSelectionStore(store: SelectionStore) {
-    this.activeSelectionStore = store
+  onShortcut(cb: (a: string) => any) {
+    this.shortcutListeners.add(cb)
+    return () => {
+      this.shortcutListeners.delete(cb)
+    }
+  }
+
+  emit(shortcut: string) {
+    for (const cb of [...this.shortcutListeners]) {
+      cb(shortcut)
+    }
   }
 }

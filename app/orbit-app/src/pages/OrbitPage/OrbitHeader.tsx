@@ -97,10 +97,10 @@ export class HeaderStore {
 
   goHome = () => {
     const activePane = this.stores.paneManagerStore.activePane
-    if (activePane === 'home' || activePane === 'search') {
+    if (activePane.type === 'home' || activePane.type === 'search') {
       AppActions.setOrbitDocked(false)
     } else {
-      this.stores.paneManagerStore.setActivePane('home')
+      this.stores.paneManagerStore.setActivePaneByType('home')
     }
   }
 
@@ -118,7 +118,7 @@ export default observer(function OrbitHeader() {
   const headerStore = useStore(HeaderStore)
   return (
     <OrbitHeaderContainer
-      opacity={stores.paneManagerStore.activePane === 'onboard' ? 0 : 1}
+      opacity={stores.paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
@@ -138,8 +138,8 @@ export default observer(function OrbitHeader() {
           </FakeInput>
           <Button
             chromeless
-            isActive={stores.paneManagerStore.activePane === 'settings'}
-            onClick={stores.paneManagerStore.activePaneSetter('settings')}
+            isActive={stores.paneManagerStore.activePane.type === 'settings'}
+            onClick={stores.paneManagerStore.activePaneByTypeSetter('settings')}
             tooltip="Settings"
           >
             <Icon name="gear" size={14} opacity={0.5} />
@@ -159,7 +159,7 @@ const OrbitHeaderContainer = gloss(View, {
 })
 
 const HeaderTop = gloss({
-  padding: [6, 10],
+  padding: [5, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
 })

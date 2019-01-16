@@ -28,6 +28,7 @@ export type GlobalConfig = {
     mediator: number
     auth: number
     authProxy: number
+    syncersBridge: number
     apps: number[]
   }
 }

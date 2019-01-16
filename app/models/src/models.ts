@@ -11,6 +11,7 @@ import { Setting } from './interfaces/Setting'
 import { Space } from './interfaces/Space'
 import { IntegrationType } from './interfaces/IntegrationType'
 import { App } from './interfaces/App'
+import { User } from './interfaces/User';
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -36,6 +37,10 @@ export const AppModel = new Model<App, FindOptions<App>, FindOptionsWhere<App>>(
 
 export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(
   'Source',
+)
+
+export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>(
+  'User',
 )
 
 export const GithubRepositoryModel = new Model<any, { sourceId: number }>('GithubRepository')

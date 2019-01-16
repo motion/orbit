@@ -5,12 +5,12 @@ import * as Path from 'path'
 import { GlobalConfig } from '@mcro/config'
 import execa = require('execa')
 
-export async function getInitialConfig() {
+export async function getInitialConfig(): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
 
   // find a bunch of ports for us to use
   const ports = await findContiguousPorts(14, isProd ? 3333 : 3001)
-  let config: GlobalConfig
+  let config
 
   if (!ports) {
     throw new Error('no ports found!')
@@ -41,6 +41,7 @@ export async function getInitialConfig() {
     ocrBridge,
     auth,
     authProxy,
+    syncersBridge,
     ...apps
   ] = ports
 
@@ -73,6 +74,7 @@ export async function getInitialConfig() {
       auth,
       authProxy,
       apps,
+      syncersBridge,
     },
   }
 

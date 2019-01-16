@@ -38,9 +38,9 @@ export default React.memo(function AppView(props: Props) {
   }, [])
 
   if (!apps[props.type]) {
-    console.error('NO APP OF TYPE', props.type, props)
-    return null
+    return <div>noo app of type {props.type}</div>
   }
+
   const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
   if (!AppView) {
     return (
@@ -49,6 +49,7 @@ export default React.memo(function AppView(props: Props) {
       </div>
     )
   }
+
   const appView = (
     <AppView
       appStore={props.appStore || appStore}
@@ -63,6 +64,7 @@ export default React.memo(function AppView(props: Props) {
       {...props}
     />
   )
+
   if (!props.appStore) {
     return (
       <MergeContext Context={StoreContext} value={{ appStore }}>
@@ -70,5 +72,6 @@ export default React.memo(function AppView(props: Props) {
       </MergeContext>
     )
   }
+
   return appView
 })

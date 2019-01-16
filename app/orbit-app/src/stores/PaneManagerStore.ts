@@ -3,10 +3,12 @@ import { Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 
+export type Pane = { id: number; name?: string; type?: string }
+
 export class PaneManagerStore {
   props: {
     disabled?: boolean
-    panes: number[]
+    panes: Pane[]
     onPaneChange: Function
   }
 
@@ -23,6 +25,10 @@ export class PaneManagerStore {
       // keyboard nav people may hold it down to move fast, this makes it more smooth
       await sleep(50)
       return val
+    },
+    {
+      deferFirstRun: true,
+      defaultValue: this.props.panes[this.paneIndex],
     },
   )
 
@@ -57,17 +63,17 @@ export class PaneManagerStore {
     }
   }
 
-  setActivePane = (id: number) => {
-    const nextIndex = this.panes.findIndex(val => val === id)
-    if (nextIndex === -1) {
-      console.error(`no pane found! this.props.panes: ${this.panes}`)
-      return
-    }
-    this.setPaneIndex(nextIndex)
+  private setPaneBy<A extends keyof Pane>(attr: A, val: Pane[A]) {
+    this.setPaneIndex(this.panes.findIndex(pane => pane[attr] === val))
   }
 
+  // set pane functions
+  setActivePane = (id: number) => this.setPaneBy('id', id)
+  setActivePaneByName = (name: string) => this.setPaneBy('name', name)
+  setActivePaneByType = (type: string) => this.setPaneBy('type', type)
   activePaneSetter = memoize((id: number) => () => this.setActivePane(id))
-
+  activePaneByNameSetter = memoize((name: string) => () => this.setActivePaneByName(name))
+  activePaneByTypeSetter = memoize((type: string) => () => this.setActivePaneByType(type))
   activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
 
   hasPaneIndex = (index: number) => {
@@ -82,6 +88,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
+      console.error(`no pane found! this.props.panes: ${this.panes}`)
       return
     }
     if (index !== this.paneIndex) {
@@ -90,11 +97,11 @@ export class PaneManagerStore {
   }
 
   indexOfPane = (id: number) => {
-    return this.panes.indexOf(id)
+    return this.panes.findIndex(x => x.id === id)
   }
 
   setActivePaneToPrevious = () => {
-    this.setActivePane(this.lastActivePane)
+    this.setActivePane(this.lastActivePane.id)
   }
 
   handleOnPaneChange = react(

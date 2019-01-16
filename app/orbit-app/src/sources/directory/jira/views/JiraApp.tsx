@@ -7,12 +7,12 @@ import { Document } from '../../../views/bits/document/Document'
 
 export class JiraApp extends React.Component<OrbitSourceMainProps<'jira'>> {
   render() {
-    const { bit } = this.props
+    const { item } = this.props
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
         <ScrollableContent>
           <View padding={[16, 0]}>
-            <Document {...this.props}>{bit.body}</Document>
+            <Document {...this.props}>{item.body}</Document>
           </View>
         </ScrollableContent>
         <BitStatusBar {...this.props} />

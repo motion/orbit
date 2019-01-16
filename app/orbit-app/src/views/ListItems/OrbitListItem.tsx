@@ -5,12 +5,12 @@ import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { ListItemPerson } from './ListItemPerson'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { ListItemProps } from './ListItem'
-import { AppConfig, PersonBit, Bit } from '@mcro/models'
-
-export type OrbitOnSelectItem = (index: number, appConfig: AppConfig) => any
+import { PersonBit, Bit } from '@mcro/models'
+import { OrbitHandleSelect } from '../Lists/OrbitList'
 
 export type OrbitListItemProps = VirtualListItemProps<Bit | PersonBit> & {
-  onSelect?: OrbitOnSelectItem
+  onSelect?: OrbitHandleSelect
+  onOpen?: OrbitHandleSelect
 }
 
 export const OrbitListItem = (props: OrbitListItemProps) => {
@@ -58,7 +58,6 @@ export const OrbitListItem = (props: OrbitListItemProps) => {
           // onSelect merges
           {...props}
           onSelect={index => {
-            console.log('selecting...', selectionStore.activeIndex, index, props)
             if (selectionStore) {
               if (selectionStore.activeIndex === index) {
                 return

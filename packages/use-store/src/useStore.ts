@@ -105,10 +105,6 @@ const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
     storeInstance['__updateProps'] = updateProps
   }
 
-  if (globalOptions.onMount) {
-    globalOptions.onMount(storeInstance)
-  }
-
   // @ts-ignore
   storeInstance.automagic({
     isSubscribable: x => x && typeof x.subscribe === 'function',
@@ -158,12 +154,19 @@ export function useStore<P, A extends { props?: P } | any>(
 ): A {
   const store = useReactiveStore(Store, props, options)
 
+  // TODO this can be refactored so it just does the global options probably
   // stores can use didMount and willUnmount
   useEffect(() => {
     store.didMount && store.didMount()
+    if (globalOptions.onMount) {
+      globalOptions.onMount(store)
+    }
     return () => {
+      store.unmounted = true
       store.willUnmount && store.willUnmount()
-      // TODO need to hook into reactions better/clearly with this...
+      if (globalOptions.onUnmount) {
+        globalOptions.onUnmount(store)
+      }
       if (store.subscriptions) {
         store.subscriptions.dispose()
       }

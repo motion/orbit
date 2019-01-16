@@ -4,7 +4,7 @@ import { useJobs } from '../hooks/useJobs'
 import { Text, Row, View } from '@mcro/ui'
 import { OrbitIntegration } from '../sources/types'
 import pluralize from 'pluralize'
-import { useObserveCount } from '@mcro/model-bridge/_/useModel'
+import { useObserveCount } from '@mcro/model-bridge'
 import { BitModel } from '@mcro/models'
 
 type Props = AppInfoProps & {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
-import { IntegrationType, Bit, PersonBit, Source, GenericBit, SearchResult } from '@mcro/models'
+import { IntegrationType, Bit, PersonBit, Source, SearchResult, GenericBit } from '@mcro/models'
 import { AppConfig } from '@mcro/models'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalItem } from '../helpers/normalizeItem'
@@ -25,8 +25,9 @@ export type ItemType = IntegrationType | 'person'
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 
-export type GenericItemProps<T extends ResolvableModel> = {
-  model?: T
+export type OrbitItemViewProps<A extends ItemType> = {
+  item?: A extends IntegrationType ? GenericBit<A> : any
+  normalizedItem?: Partial<NormalItem>
   isExpanded?: boolean
   shownLimit?: number
   searchTerm?: string
@@ -40,18 +41,7 @@ export type GenericItemProps<T extends ResolvableModel> = {
   }
 }
 
-// for all apps, including non-bit apps
-export type OrbitGenericSourceProps<A extends ItemType> = GenericItemProps<ModelFromType<A>>
-
-// for just "bit" apps
-// much more common / external facing
-// so give it the nicer name
-export type OrbitIntegrationProps<A extends ItemType> = GenericItemProps<ModelFromType<A>> & {
-  item: GenericBit<any>
-  normalizedItem: Partial<NormalItem>
-}
-
-export type OrbitSourceMainProps<A extends ItemType> = OrbitIntegrationProps<A> & {
+export type OrbitSourceMainProps<A extends ItemType> = OrbitItemViewProps<A> & {
   appPageStore: AppPageStore
   searchBar: SearchBarType
   searchTerm: string
@@ -79,7 +69,7 @@ export type OrbitIntegration<A extends ItemType> = {
   viewConfig?: AppConfig['viewConfig']
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>
-    item: GenericComponent<OrbitIntegrationProps<A>>
+    item: GenericComponent<OrbitItemViewProps<A>>
     setting?: GenericComponent<OrbitSourceSettingProps<Source>>
     setup?: GenericComponent<any>
   }

@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { MarkdownDocument } from '../../../views/bits/document/MarkdownDocument'
 
-export function DriveItem(props: OrbitIntegrationProps<'drive'>) {
+export function DriveItem(props: OrbitItemViewProps<'drive'>) {
   return <MarkdownDocument {...props} />
 }

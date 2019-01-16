@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
 import { useEffect, useState, useRef } from 'react'
-import { observeMany, observeOne, observeCount, observeManyAndCount } from '.'
+import { observeMany, observeOne, observeCount, observeManyAndCount, loadOne, save } from '.'
 
 function useObserve<ModelType, Args>(
   model: Model<ModelType, Args, any>,
@@ -63,4 +63,43 @@ export function useObserveManyAndCount<ModelType, Args>(
   defaultValue: any = 0,
 ) {
   return useObserve(model, query, defaultValue, observeManyAndCount)
+}
+
+// allows fetching a model and then updating it easily
+export function useModel<ModelType, Args>(
+  model: Model<ModelType, Args, any>,
+  query: Args | false,
+  defaultValue: ModelType = null,
+): [ModelType, ((next: Partial<ModelType>) => any)] {
+  const [value, setValue] = useState(defaultValue)
+
+  useEffect(
+    () => {
+      if (query == false) {
+        return
+      }
+      let cancelled = false
+      loadOne(model, { args: query }).then(nextValue => {
+        if (!cancelled) {
+          setValue(nextValue)
+        }
+      })
+      return () => {
+        cancelled = true
+      }
+    },
+    [JSON.stringify(query)],
+  )
+
+  const update = (next: Partial<ModelType>) => {
+    const nextValue = {
+      ...value,
+      ...next,
+    }
+    setValue(nextValue)
+    // save async after update
+    save(model, nextValue)
+  }
+
+  return [value, update]
 }

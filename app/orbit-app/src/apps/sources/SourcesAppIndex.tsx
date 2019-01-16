@@ -3,11 +3,10 @@ import { AppProps } from '../AppProps'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Button } from '@mcro/ui'
 import { observer, useComputed } from 'mobx-react-lite'
-import VirtualList from '../../views/VirtualList/VirtualList'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
-import { useResults } from '../../hooks/useResults'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { AppType } from '@mcro/models'
+import SelectableList from '../../views/Lists/SelectableList'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const results = useComputed(() => {
@@ -36,11 +35,5 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     ]
   })
 
-  useResults(results)
-
-  return (
-    <>
-      <VirtualList items={results} />
-    </>
-  )
+  return <SelectableList items={results} />
 })

@@ -3,9 +3,9 @@ import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
 import { OrbitCard } from '../views/OrbitCard'
 import { AppInfoProps, AppInfoStore } from './AppInfoStore'
-import { GenericItemProps } from '../sources/types'
+import { OrbitItemViewProps } from '../sources/types'
 
-type Props = GenericItemProps<any> &
+type Props = OrbitItemViewProps<any> &
   AppInfoProps & {
     store: AppInfoStore
     isActive?: boolean

@@ -18,7 +18,7 @@ import { ThemeObject } from '@mcro/gloss'
 import { CSSPropertySetStrict } from '@mcro/css'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = false | ((index?: number, element?: HTMLElement) => any)
+export type HandleSelection = ((index?: number, element?: HTMLElement) => any)
 
 export type ListItemHide = {
   hidePeople?: boolean

@@ -39,6 +39,7 @@ type TabSizes = {
 
 const OrderableContainer = gloss({
   position: 'relative',
+  display: 'inline-block',
 })
 
 const OrderableItemContainer = gloss({}).theme(({ orientation }) => ({

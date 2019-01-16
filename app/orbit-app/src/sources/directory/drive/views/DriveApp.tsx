@@ -7,12 +7,12 @@ import { Markdown } from '../../../../views/Markdown'
 
 export class DriveApp extends React.Component<OrbitSourceMainProps<'drive'>> {
   render() {
-    const { bit } = this.props
+    const { item } = this.props
     return (
       <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
         <ScrollableContent>
           <View padding={[16, 0]}>
-            <Markdown source={bit.body} />
+            <Markdown source={item.body} />
           </View>
         </ScrollableContent>
         <BitStatusBar {...this.props} />

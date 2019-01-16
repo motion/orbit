@@ -73,27 +73,31 @@ export default async function connectModels(models) {
       })
 
       // reset source last sync settings, since we are going to start it from scratch
-      const sources: Source[] = await connection.getRepository(SourceEntity).find()
-      for (let source of sources) {
-        if (source.type === 'confluence') {
-          source.values.blogLastSync = {}
-          source.values.pageLastSync = {}
-        } else if (source.type === 'github') {
-          source.values.lastSyncIssues = {}
-          source.values.lastSyncPullRequests = {}
-        } else if (source.type === 'drive') {
-          source.values.lastSync = {}
-        } else if (source.type === 'gmail') {
-          // source.values.lastSync = {} // todo: do after my another PR merge
-        } else if (source.type === 'jira') {
-          source.values.lastSync = {}
-        } else if (source.type === 'slack') {
-          source.values.lastMessageSync = {}
-          source.values.lastAttachmentSync = {}
+      try {
+        const sources: Source[] = await connection.getRepository(SourceEntity).find()
+        for (let source of sources) {
+          if (source.type === 'confluence') {
+            source.values.blogLastSync = {}
+            source.values.pageLastSync = {}
+          } else if (source.type === 'github') {
+            source.values.lastSyncIssues = {}
+            source.values.lastSyncPullRequests = {}
+          } else if (source.type === 'drive') {
+            source.values.lastSync = {}
+          } else if (source.type === 'gmail') {
+            // source.values.lastSync = {} // todo: do after my another PR merge
+          } else if (source.type === 'jira') {
+            source.values.lastSync = {}
+          } else if (source.type === 'slack') {
+            source.values.lastMessageSync = {}
+            source.values.lastAttachmentSync = {}
+          }
         }
-      }
 
-      await connection.getRepository(SourceEntity).save(sources)
+        await connection.getRepository(SourceEntity).save(sources)
+      } catch {
+        console.log('failed with method 2')
+      }
 
       // close connection
       await connection.close()

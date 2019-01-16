@@ -1,6 +1,56 @@
+sorting by prepping to split out work as best possible:
+
+- finish some app management stuff:
+
+  - create new app pane with pick name/etc
+  - customizable search app
+
+- figure out account management
+  - need some way to sync
+
+work to split out:
+
+- make it much easier to create apps / have them in their own area
+  - with their own data they can easily hook into
+- syncers bugfixing and improving performance and data storage
+- memory as a source
+- const [key, setKey] = useSetting('key')
+  - easy way to be able to have a new UI-related query/update on setting
+
+for me once split out:
+
+- search interaction with other apps
+- people with topics
+- memory app or some idea of how to make it work
+- topics as a source / topics apps generally
+
 next steps:
 
-- reply to gwern:
+- move search into an overlay style pane that can be toggled...
+
+- release
+
+  - focus on a release that really hammers in the differences:
+    - syncs a lot of stuff
+    - search works well
+    - memory starts to work
+    - need to start on New App pane and custom search/list panes
+    - need to get topic source working
+  - do a simple website that focuses on the blog
+    - like https://fibery.io/
+    - start writing on blog about development progress next month
+
+- apps
+  - search
+    - can adjust filters
+    - we need more flexible filter adding system...
+  - list
+    - lets you add/sort eventually group
+  - autolist
+    - just takes items from a source
+  - list-group
+
+* reply to gwern:
 
   - finish a nice search demo
   - cleanup people a bit
@@ -10,7 +60,7 @@ next steps:
   - cleanup the orbit dropbox doc
   - send over to him short video and explanation
 
-- tasks for new person (umed, mohamed or similar):
+* tasks for new person (umed, mohamed or similar):
 
   - get the shared/saved data layer working nicely
     - search app save the varius UI states:
@@ -21,7 +71,7 @@ next steps:
     - topics app
       - adding, editing topics etc
 
-- get to value
+* get to value
   - get tray working
   - get slide in search over app
   - get basic lists app in place again

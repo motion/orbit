@@ -35,7 +35,7 @@ export class AppStore<Type extends AppType> {
       return isActive()
     }
     if (this.stores.paneManagerStore) {
-      return this.stores.paneManagerStore.activePane === id
+      return this.stores.paneManagerStore.activePane.id === id
     }
     return false
   }

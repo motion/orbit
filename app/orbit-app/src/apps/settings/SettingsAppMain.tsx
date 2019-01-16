@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel, AppType } from '@mcro/models'
+import { SettingModel, AppType, Setting } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
 import * as React from 'react'
@@ -48,7 +48,7 @@ const electronToNiceChars = (charString: string) => {
 }
 
 class SettingAppStore {
-  generalSetting: SettingModel = {}
+  generalSetting: Setting = null
 
   generalSetting$ = observeOne(SettingModel, generalSettingQuery).subscribe(value => {
     this.generalSetting = value
@@ -112,8 +112,7 @@ export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
     }
   }
 
-  if (store.generalSetting && !store.generalSetting.values) {
-    console.error('weird error')
+  if (!store.generalSetting) {
     return null
   }
   return (

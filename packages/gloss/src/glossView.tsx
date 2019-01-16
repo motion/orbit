@@ -16,7 +16,7 @@ type GlossViewProps<Props> = Props &
   React.HTMLProps<any> & {
     className?: string
     tagName?: string
-    children?: React.ReactElement<any>
+    children?: any
     theme?: ThemeObject
   }
 

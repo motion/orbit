@@ -1,5 +1,4 @@
 export interface Space {
-
   /**
    * Space id.
    */
@@ -14,4 +13,9 @@ export interface Space {
    * Colors selected for the space icon.
    */
   colors?: string[]
+
+  /**
+   * Pane sort order.
+   */
+  paneSort?: number[]
 }

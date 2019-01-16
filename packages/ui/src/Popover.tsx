@@ -84,7 +84,7 @@ export type PopoverProps = CSSPropertySet & {
 }
 
 const defaultProps = {
-  edgePadding: 5,
+  edgePadding: 10,
   distance: 14,
   arrowSize: 14,
   forgiveness: 14,

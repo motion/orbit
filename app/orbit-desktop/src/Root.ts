@@ -10,8 +10,10 @@ import {
   SettingEntity,
   SourceEntity,
   SpaceEntity,
+  UserEntity,
   CosalSaliencyModel,
   OpenCommand,
+  UserModel,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -257,6 +259,7 @@ export class Root {
         JobModel,
         PersonModel,
         PersonBitModel,
+        UserModel,
         GithubRepositoryModel,
         SlackChannelModel,
         SearchResultModel,
@@ -295,6 +298,7 @@ export class Root {
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
+          { entity: UserEntity, models: [UserModel] },
         ]),
         SourceRemoveResolver,
         SourceSaveResolver,

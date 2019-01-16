@@ -9,6 +9,8 @@ import {
   SettingEntity,
   SourceEntity,
   SpaceEntity,
+  UserModel,
+  UserEntity,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -104,10 +106,11 @@ export class OrbitSyncersRoot {
         PersonModel,
         PersonBitModel,
         SpaceModel,
+        UserModel,
       ],
       commands: [SourceForceSyncCommand],
       transport: new WebSocketServerTransport({
-        port: 40001, // todo: use config?
+        port: getGlobalConfig().ports.syncersBridge, // todo: use config?
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
@@ -119,6 +122,7 @@ export class OrbitSyncersRoot {
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
+          { entity: UserEntity, models: [UserModel] },
         ]),
         SourceForceSyncResolver,
       ],

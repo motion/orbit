@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Markdown } from '../../../../views/Markdown'
 import { TaskComment, TaskCommentLike } from './TaskComment'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 
 export type TaskLike = {
@@ -14,7 +14,7 @@ export const Task = ({
   comments,
   renderText,
   extraProps,
-}: OrbitIntegrationProps<any> & TaskLike) => {
+}: OrbitItemViewProps<any> & TaskLike) => {
   if (renderText) {
     return renderText(body)
   }

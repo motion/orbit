@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Title } from '../../../../views'
-import { OrbitIntegrationProps } from '../../../types'
+import { OrbitItemViewProps } from '../../../types'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 
-export const Document = ({ bit, renderText, extraProps }: OrbitIntegrationProps<any>) => {
+export const Document = ({ bit, renderText, extraProps }: OrbitItemViewProps<any>) => {
   if (renderText) {
     return renderText(bit.body)
   }

@@ -171,9 +171,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
 
-  console.warn('RENDER VIRTUAL LIST', width, height)
-  trace()
-
   React.useEffect(() => {
     if (!store.listRef) {
       return

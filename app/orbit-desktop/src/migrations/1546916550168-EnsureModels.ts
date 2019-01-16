@@ -32,14 +32,17 @@ export class EnsureModels1546916550168 implements MigrationInterface {
       await getRepository(SpaceEntity).save([
         {
           name: 'Orbit',
+          paneSort: [],
           colors: ['blue', 'green'],
         },
         {
           name: 'Me',
+          paneSort: [],
           colors: ['red', 'gray'],
         },
         {
           name: 'Discussions',
+          paneSort: [],
           colors: ['blue', 'red'],
         },
       ])

@@ -26,7 +26,7 @@ if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
     new WebSocketClientTransport(
       name,
       new ReconnectingWebSocket(
-        'ws://localhost:40001', // todo: someone would like to extract it into config
+        `ws://localhost:${getGlobalConfig().ports.syncersBridge}`, // todo: someone would like to extract it into config
         [],
         { WebSocket, minReconnectionDelay: 1 },
       ),
@@ -50,4 +50,4 @@ export const loadOne: MediatorClient['loadOne'] = Mediator.loadOne.bind(Mediator
 export const save: MediatorClient['save'] = Mediator.save.bind(Mediator)
 export const remove: MediatorClient['remove'] = Mediator.remove.bind(Mediator)
 
-export { useObserveMany } from './useModel'
+export * from './useModel'

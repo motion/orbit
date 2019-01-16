@@ -29,4 +29,6 @@ const ToolbarChrome = gloss({
   flexFlow: 'row',
   alignItems: 'center',
   padding: [3, '10%'],
-})
+}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.2)],
+}))

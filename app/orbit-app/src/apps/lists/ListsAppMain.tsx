@@ -6,6 +6,7 @@ import VirtualList from '../../views/VirtualList/VirtualList'
 
 export default React.memo(function ListsAppMain(props: AppProps<AppType.lists>) {
   const items = useObserveMany(BitModel, {
+    where: {},
     take: 10,
   })
   return (

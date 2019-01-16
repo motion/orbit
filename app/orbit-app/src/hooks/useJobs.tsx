@@ -8,7 +8,7 @@ export const useJobs = (sourceId: number | false) => {
     hasSource && {
       where: {
         status: 'PROCESSING',
-        sourceId: sourceId,
+        sourceId,
       },
     },
   )

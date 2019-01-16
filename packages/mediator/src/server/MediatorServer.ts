@@ -117,7 +117,13 @@ export class MediatorServer {
     }
 
     // resolve a value
-    const result = resolver.resolve(data.args)
+    let result = null
+    try {
+      result = resolver.resolve(data.args)
+    } catch (error) {
+      console.error('error executing resolver', error)
+      throw error
+    }
 
     // additionally resolve properties
 

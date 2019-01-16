@@ -7,8 +7,8 @@ export class EnsureModels1546916550169 implements MigrationInterface {
   }
 
   private async ensureDefaultUser() {
-    const user = await getRepository(UserEntity).findOne()
-    const firstSpace = await getRepository(SpaceEntity).findOne()
+    const user = await getRepository(UserEntity).findOne({})
+    const firstSpace = await getRepository(SpaceEntity).findOne({})
 
     if (!user) {
       await getRepository(UserEntity).save({

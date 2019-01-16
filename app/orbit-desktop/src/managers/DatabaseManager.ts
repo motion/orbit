@@ -21,6 +21,7 @@ export class DatabaseManager {
     // connect models next
     log.info('Connecting models...')
     await connectModels(Entities)
+    log.info('Connected models...')
 
     // TODO typeorm needs a patch
     // sql errors happened here if i didnt wait... @nate

@@ -10,6 +10,7 @@ import {
   SettingEntity,
   SourceEntity,
   SpaceEntity,
+  UserEntity,
   CosalSaliencyModel,
   OpenCommand,
   UserModel,
@@ -83,7 +84,6 @@ import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { OracleManager } from './managers/OracleManager'
 import { TopicsManager } from './managers/TopicsManager'
-import { UserEntity } from '@mcro/models/_/entities/UserEntity'
 
 export class Root {
   // public

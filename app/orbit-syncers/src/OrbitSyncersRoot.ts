@@ -10,6 +10,7 @@ import {
   SourceEntity,
   SpaceEntity,
   UserModel,
+  UserEntity,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -30,7 +31,6 @@ import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
 import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
-import { UserEntity } from '@mcro/models/_/entities/UserEntity'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()

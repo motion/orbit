@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { SourceModel } from '@mcro/models'
-import { useObserveOne } from '@mcro/model-bridge/_/useModel'
+import { useObserveOne } from '@mcro/model-bridge'
 import { AppInfoStore } from '../../components/AppInfoStore'
 import { useStore } from '@mcro/use-store'
 

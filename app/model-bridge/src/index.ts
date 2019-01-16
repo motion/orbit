@@ -6,6 +6,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 const transports: ClientTransport[] = []
 
+// want this to be a single name for this client (no matter how many transports)
+const name = randomString(5)
 const isWebApp = !process.env.SUB_PROCESS
 const shouldConnectToSyncers = process.env.SUB_PROCESS === 'desktop' || isWebApp
 const shouldConnectToDesktop = process.env.SUB_PROCESS === 'syncers' || isWebApp
@@ -13,7 +15,7 @@ const shouldConnectToDesktop = process.env.SUB_PROCESS === 'syncers' || isWebApp
 if (shouldConnectToSyncers) {
   transports.push(
     new WebSocketClientTransport(
-      randomString(5),
+      name,
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
@@ -25,7 +27,7 @@ if (shouldConnectToSyncers) {
 if (shouldConnectToDesktop) {
   transports.push(
     new WebSocketClientTransport(
-      randomString(5),
+      name,
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,

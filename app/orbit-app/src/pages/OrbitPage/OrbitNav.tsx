@@ -226,11 +226,10 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   maxWidth: 180,
   borderTopRadius: 3,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
-  const background = isActive
-    ? theme.tabBackgroundActive || theme.background
-    : theme.tabBackground || theme.background
+  // const background = theme.tabBackground || theme.background
+  const background = theme.tabBackground || theme.background
   const glowStyle = {
-    background: isActive ? background : [0, 0, 0, 0.05],
+    background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
   }
   return {

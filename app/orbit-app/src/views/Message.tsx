@@ -10,12 +10,13 @@ export const Message = gloss(Text, {
   display: 'block',
   width: '100%',
   borderRadius: 8,
-  border: [1, [0, 0, 0, 0.035]],
-  background: '#fff',
   padding: [10, 10],
   margin: [0, 0, 20],
-  color: '#666',
-})
+}).theme((_, theme) => ({
+  background: theme.background,
+  color: theme.color,
+}))
+
 Message.defaultProps = {
   className: 'text',
 }

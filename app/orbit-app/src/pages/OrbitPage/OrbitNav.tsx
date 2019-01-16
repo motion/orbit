@@ -65,7 +65,11 @@ export default observer(function OrbitNav() {
   )
 
   if (!activeApps.length || !space || !space.paneSort) {
-    return null
+    return (
+      <OrbitNavClip>
+        <OrbitNavChrome />
+      </OrbitNavClip>
+    )
   }
 
   const items: TabProps[] = space.paneSort.map((id, index) => {
@@ -116,7 +120,7 @@ export default observer(function OrbitNav() {
         </OrbitNavChrome>
       </OrbitNavClip>
       {items
-        .filter(x => x.stretch)
+        .filter(x => x.showDropdown)
         .map(item => (
           <Popover
             key={item.app.id}
@@ -211,6 +215,7 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  height,
   flexFlow: 'row',
   position: 'relative',
   zIndex: 1000,

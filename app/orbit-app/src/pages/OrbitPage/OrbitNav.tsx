@@ -10,6 +10,7 @@ import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-ho
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 
 const height = 26
+const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -20,6 +21,7 @@ type TabProps = React.HTMLAttributes<'div'> & {
   sidePad?: number
   tooltip?: string
   textProps?: any
+  showDropdown?: boolean
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
@@ -41,8 +43,6 @@ export default observer(function OrbitNav() {
   const activeApps = useObserveActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-
-  console.log('OrbitNav', space, appIds)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -66,7 +66,11 @@ export default observer(function OrbitNav() {
   )
 
   if (!activeApps.length || !space || !space.paneSort) {
-    return null
+    return (
+      <OrbitNavClip>
+        <OrbitNavChrome />
+      </OrbitNavClip>
+    )
   }
 
   const items: TabProps[] = space.paneSort.map((id, index) => {
@@ -83,9 +87,16 @@ export default observer(function OrbitNav() {
       disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
+      showDropdown: !isPinned,
       sidePad: isPinned ? 20 : buttonSidePad,
       onClick: paneManagerStore.activePaneSetter(app.id),
-      children: <Icon name={`${app.type}`} size={14} opacity={isActive ? 1 : 0.8} />,
+      children: (
+        <Icon
+          name={`${app.type}`}
+          size={isPinned ? 14 : 12}
+          opacity={isActive ? 1 : inactiveOpacity - 0.15}
+        />
+      ),
     }
   })
 
@@ -104,19 +115,19 @@ export default observer(function OrbitNav() {
           />
           <View flex={1} minWidth={10} />
           <Tab tooltip="Add app">
-            <Icon name="simpleadd" size={12} opacity={0.35} />
+            <Icon name="simpleadd" size={12} opacity={0.5} />
           </Tab>
           <Tab
             isActive={paneManagerStore.activePane.name === 'Sources'}
             onClick={paneManagerStore.activePaneByNameSetter('Sources')}
             tooltip="Sources"
           >
-            <Icon name="design_app" size={12} opacity={0.35} />
+            <Icon name="design_app" size={12} opacity={0.5} />
           </Tab>
         </OrbitNavChrome>
       </OrbitNavClip>
       {items
-        .filter(x => x.stretch)
+        .filter(x => x.showDropdown)
         .map(item => (
           <Popover
             key={item.app.id}
@@ -144,6 +155,7 @@ const Tab = ({
   label,
   isActive = false,
   separator = false,
+  showDropdown = false,
   sidePad = buttonSidePad,
   textProps,
   className = '',
@@ -164,7 +176,7 @@ const Tab = ({
         <Text
           size={0.95}
           marginLeft={!!children ? buttonSidePad * 0.75 : 0}
-          alpha={isActive ? 1 : 0.85}
+          alpha={isActive ? 1 : inactiveOpacity}
           fontWeight={500}
           {...textProps}
         >
@@ -173,10 +185,12 @@ const Tab = ({
       )}
       {separator && <Separator />}
 
-      <DropdownArrow
-        className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-        style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
-      />
+      {showDropdown && (
+        <DropdownArrow
+          className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
+          style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
+        />
+      )}
     </NavButtonChrome>
   )
   if (tooltip) {
@@ -208,6 +222,7 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  height,
   flexFlow: 'row',
   position: 'relative',
   zIndex: 1000,
@@ -226,11 +241,10 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   maxWidth: 180,
   borderTopRadius: 3,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
-  const background = isActive
-    ? theme.tabBackgroundActive || theme.background
-    : theme.tabBackground || theme.background
+  // const background = theme.tabBackground || theme.background
+  const background = theme.tabBackground || theme.background
   const glowStyle = {
-    background: isActive ? background : [0, 0, 0, 0.05],
+    background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
   }
   return {

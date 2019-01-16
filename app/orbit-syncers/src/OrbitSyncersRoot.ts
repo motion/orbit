@@ -38,13 +38,12 @@ export class OrbitSyncersRoot {
   mediatorServer: MediatorServer
 
   async start() {
-    // @umed tihs may be...
-    // console.log('path', path.join(app.getAppPath(), '..', '..') + '/Frameworks/Electron Framework.framework/Versions/A')
-    setTimeout(async () => {
-      await this.createDbConnection()
-      this.setupMediatorServer()
-      this.registerREPLGlobals()
-      await this.startSyncers()
+    this.registerREPLGlobals()
+    await this.createDbConnection()
+    this.setupMediatorServer()
+
+    setTimeout(() => {
+      this.startSyncers()
     }, 10000)
   }
 

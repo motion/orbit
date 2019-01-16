@@ -1,32 +1,55 @@
 #!/usr/bin/env node
 
-let devcert = require('devcert')
+let devcert = require('@mcro/devcert')
 let httpProxy = require('http-proxy')
 let exec = require('execa')
 let killPort = require('kill-port')
+let fs = require('fs')
+let path = require('path')
 
 console.log('starting https proxy server')
+const silentRm = path => {
+  try {
+    fs.unlinkSync(path)
+    console.log('removed', path)
+    return true
+  } catch {
+    return false
+  }
+}
+
+const getArg = (prefix: string) => {
+  const arg = process.argv.find(x => x.indexOf(prefix) === 0)
+  return arg.replace(prefix, '')
+}
 
 async function setupPortForwarding() {
-  const getArg = prefix => {
-    const arg = process.argv.find(x => x.indexOf(prefix) === 0)
-    return arg.replace(prefix, '')
-  }
-  const [host, port] = getArg('--authUrl=').split(':')
+  const homeDir = getArg('--homeDir=')
+  const [authHost, authPort] = getArg('--authUrl=').split(':')
   const proxyPort = getArg('--proxyTo=')
 
   // kill an existing/stuck server on that port
   try {
-    await killPort(port)
+    await killPort(authPort)
   } catch (err) {
     console.log('err killing port', err.message)
   }
 
-  console.log('proxy run on', host, port, proxyPort)
+  // remove old cert, because it expires quickly https://github.com/davewasmer/devcert/issues/22
+  // TODO only mac
+  const devCertDir = path.join(homeDir, 'Library', 'Application Support', 'devcert')
+  if (fs.existsSync(devCertDir)) {
+    silentRm(devCertDir)
+  }
+
+  console.log('proxy run on', authHost, 'from', authPort, 'to', proxyPort)
 
   try {
     console.log('getting certificate...')
-    let ssl = await devcert.certificateFor(host)
+    let ssl = await devcert.certificateFor(authHost, {
+      skipFirefox: true,
+    })
+    console.log('got certificate, creating server...', authPort)
     httpProxy
       .createServer({
         ssl,
@@ -35,20 +58,18 @@ async function setupPortForwarding() {
           port: proxyPort,
         },
       })
-      .listen(port)
+      .listen(authPort)
   } catch (err) {
     console.log('certificate fetch error', err)
     return false
   }
 
-  console.log('got certificate')
-
-  const pfEntry = `rdr pass inet proto tcp from any to any port 443 -> ${host} port ${port}`
+  const pfEntry = `rdr pass inet proto tcp from any to any port 443 -> ${authHost} port ${authPort}`
 
   // check if we already modified the pfctl
   const pfExisting = (await exec.shell(`pfctl -s nat`)).stdout
 
-  if (pfExisting.indexOf(pfEntry)) {
+  if (pfExisting.indexOf(pfEntry) >= 0) {
     console.log('has existing entry for port forwarding, done')
     return true
   }
@@ -79,7 +100,7 @@ async function main() {
   if (!success) {
     process.exit(1)
   } else {
-    console.log('done! proxying...')
+    console.log('SUCCESS! proxying...')
   }
 }
 

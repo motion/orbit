@@ -7,9 +7,9 @@ import { Icon } from './Icon'
 const RowItemFrame = gloss(Row, {
   padding: [4, 8],
   alignItems: 'center',
-}).theme(({ selected }, theme) => ({
+}).theme(({ selected, hover }, theme) => ({
   background: selected ? theme.backgroundHover : 'transparent',
-  '&:hover': {
+  '&:hover': hover !== false && {
     background: theme.backgroundHover,
   },
 }))

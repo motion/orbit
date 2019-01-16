@@ -68,7 +68,10 @@ export class ListItemStore {
   }
 
   getIsSelected = () => {
-    const { isSelected } = this.props
+    const { isSelected, disableSelect } = this.props
+    if (disableSelect === true) {
+      return false
+    }
     if (typeof isSelected === 'boolean') {
       return isSelected
     }

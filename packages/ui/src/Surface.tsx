@@ -237,7 +237,7 @@ const SurfaceFrame = gloss(View, {
   const hoverStyle = props.active
     ? null
     : {
-        ...themeStyles['&:hover'],
+        ...(!props.chromeless && themeStyles['&:hover']),
         ...propStyles['&:hover'],
         ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
       }

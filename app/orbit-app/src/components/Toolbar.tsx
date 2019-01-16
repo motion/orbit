@@ -28,5 +28,7 @@ export const Toolbar = props => {
 const ToolbarChrome = gloss({
   flexFlow: 'row',
   alignItems: 'center',
-  padding: [4, '10%'],
-})
+  padding: [3, '10%'],
+}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.2)],
+}))

@@ -170,7 +170,7 @@ const After = gloss({
 })
 
 const FakeInput = gloss({
-  height: 34,
+  height: 32,
   padding: [0, 10],
   alignItems: 'center',
   justifyContent: 'center',
@@ -183,7 +183,7 @@ const FakeInput = gloss({
   transition: 'none',
   '&:active': {
     background: [0, 0, 0, 0.025],
-    transition: 'all ease-out 250ms 150ms',
+    transition: 'all ease-out 350ms 350ms',
   },
 })
 

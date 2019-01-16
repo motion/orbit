@@ -62,6 +62,8 @@ export type ListItemProps = CSSPropertySetStrict &
     renderText?: ItemRenderText
     children?: React.ReactNode
     onClick?: Function
+    // its helpful to have a separate disableSelect for various JS-object/intuitiveness reasons
+    disableSelect?: boolean
     // single click / keyboard select
     onSelect?: HandleSelection
     // double click / keyboard enter
@@ -180,13 +182,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       <TitleSpace />
                     </>
                   )}
-                  <HighlightText
-                    fontSize={15}
-                    sizeLineHeight={0.85}
-                    ellipse
-                    fontWeight={700}
-                    {...titleProps}
-                  >
+                  <HighlightText sizeLineHeight={0.85} ellipse fontWeight={600} {...titleProps}>
                     {title}
                   </HighlightText>
                   <TitleSpace />

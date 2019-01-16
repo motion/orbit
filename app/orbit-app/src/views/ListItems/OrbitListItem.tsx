@@ -13,78 +13,72 @@ export type OrbitListItemProps = VirtualListItemProps<Bit | PersonBit> & {
   onOpen?: OrbitHandleSelect
 }
 
-export const OrbitListItem = (props: OrbitListItemProps) => {
+export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
   const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })
 
-  return React.useMemo(
-    () => {
-      // this is the view from sources, each bit type can have its own display
-      let ItemView = null
-      let itemProps: Partial<ListItemProps> = null
-      let normalized: NormalItem = null
+  // this is the view from sources, each bit type can have its own display
+  let ItemView = null
+  let itemProps: Partial<ListItemProps> = null
+  let normalized: NormalItem = null
 
-      if (props.item && props.item.target) {
-        switch (props.item.target) {
-          case 'bit':
-          case 'person-bit':
-            normalized = normalizeItem(props.item)
-            itemProps = getNormalPropsForListItem(normalized)
+  if (props.item && props.item.target) {
+    switch (props.item.target) {
+      case 'bit':
+      case 'person-bit':
+        normalized = normalizeItem(props.item)
+        itemProps = getNormalPropsForListItem(normalized)
 
-            if (props.item.target === 'bit') {
-              ItemView = sourcesStore.getView(normalized.integration, 'item')
-            } else if (props.item.target === 'person-bit') {
-              ItemView = ListItemPerson
-            }
-            break
-          default:
-            return <div>SearchResultListItem no result</div>
+        if (props.item.target === 'bit') {
+          ItemView = sourcesStore.getView(normalized.integration, 'item')
+        } else if (props.item.target === 'person-bit') {
+          ItemView = ListItemPerson
         }
-      }
-      return (
-        <VirtualListItem
-          index={props.realIndex}
-          searchTerm={props.query}
-          subtitleSpaceBetween={spaceBetween}
-          {...ItemView && ItemView.itemProps}
-          {...itemProps}
-          isSelected={index => {
-            const appActive = appStore ? appStore.isActive : true
-            const isSelected = selectionStore
-              ? selectionStore.activeIndex === index
-              : props.isSelected
-            return appActive && isSelected
-          }}
-          // allow props to override isSelected but not onSelect
-          // onSelect merges
-          {...props}
-          onSelect={index => {
-            if (selectionStore) {
-              if (selectionStore.activeIndex === index) {
-                return
-              }
-              selectionStore.toggleSelected(index)
-            }
-            if (props.onSelect) {
-              props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)
-            }
-          }}
-        >
-          {!!ItemView && (
-            <ItemView
-              item={props.item}
-              shownLimit={3}
-              renderText={renderHighlightedText}
-              extraProps={extraProps}
-              normalizedItem={normalized}
-              {...ItemView.itemProps}
-            />
-          )}
-        </VirtualListItem>
-      )
-    },
-    [JSON.stringify(props)],
+        break
+      default:
+        return <div>SearchResultListItem no result</div>
+    }
+  }
+
+  return (
+    <VirtualListItem
+      index={props.realIndex}
+      searchTerm={props.query}
+      subtitleSpaceBetween={spaceBetween}
+      {...ItemView && ItemView.itemProps}
+      {...itemProps}
+      isSelected={index => {
+        const appActive = appStore ? appStore.isActive : true
+        const isSelected = selectionStore ? selectionStore.activeIndex === index : props.isSelected
+        return appActive && isSelected
+      }}
+      // allow props to override isSelected but not onSelect
+      // onSelect merges
+      {...props}
+      onSelect={index => {
+        if (selectionStore) {
+          if (selectionStore.activeIndex === index) {
+            return
+          }
+          selectionStore.toggleSelected(index)
+        }
+        if (props.onSelect) {
+          props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)
+        }
+      }}
+    >
+      {!!ItemView && (
+        <ItemView
+          item={props.item}
+          shownLimit={3}
+          renderText={renderHighlightedText}
+          extraProps={extraProps}
+          normalizedItem={normalized}
+          {...ItemView.itemProps}
+        />
+      )}
+    </VirtualListItem>
   )
-}
+})
 
 const extraProps = {
   condensed: true,

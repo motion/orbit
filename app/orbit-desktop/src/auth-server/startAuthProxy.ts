@@ -4,6 +4,7 @@ import { getGlobalConfig } from '@mcro/config'
 import Sudoer from '@mcro/electron-sudo'
 import { checkAuthProxy } from './checkAuthProxy'
 import { existsSync } from 'fs'
+import { userInfo } from 'os'
 
 const log = new Logger('startAuthProxy')
 const Config = getGlobalConfig()
@@ -16,11 +17,22 @@ export function startAuthProxy() {
   const host = Config.urls.authHost
   const port = Config.ports.authProxy
   const sudoer = new Sudoer({ name: 'Orbit Private Proxy' })
-  const command = `${authProxyScript} --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
+  const command = `${authProxyScript} --homeDir=${
+    userInfo().homedir
+  } --authUrl=${host}:${port} --proxyTo=${Config.ports.auth}`
 
   log.info(`Running proxy script: ${Config.paths.nodeBinary} ${command}`)
 
   return new Promise<boolean>(resolve => {
+    let failTimeout
+    let checkInterval
+
+    function finish(success: boolean) {
+      clearInterval(checkInterval)
+      clearTimeout(failTimeout)
+      resolve(success)
+    }
+
     // run proxy server in secure sub-process
     sudoer
       .spawn(Config.paths.nodeBinary, command.split(' '), {
@@ -31,33 +43,28 @@ export function startAuthProxy() {
       })
       .then(proc => {
         proc.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
-        proc.stderr.on('data', x => {
-          console.log(`OrbitProxyErr: ${x}`)
-          // TODO handle error and report to interface...
-          resolve(false)
-        })
+        // DONT resolve or fail here, for some reason sometimes stdout comes as stderr
+        // but thats fine, we have a fail timeout anyways...
+        proc.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
       })
       .catch(err => {
         log.error('error spawning', err)
-        resolve(false)
+        finish(false)
       })
-
-    let failTimeout
-    let checkInterval
 
     const checkAndFinish = async () => {
       if (await checkAuthProxy()) {
         log.info('Successfully ran proxy')
         clearTimeout(failTimeout)
         clearInterval(checkInterval)
-        resolve(true)
+        finish(true)
       }
     }
 
     // fail after a bit
     failTimeout = setTimeout(() => {
       log.info('timed out setting up proxy')
-      resolve(false)
+      finish(false)
     }, 8000)
     checkInterval = setInterval(checkAndFinish, 100)
     checkAndFinish()

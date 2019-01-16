@@ -9,7 +9,6 @@ import { OrbitWindowStore } from './stores/OrbitWindowStore'
 import { AppStore } from './apps/AppStore'
 import { AppPageStore } from './pages/AppPage/AppPageStore'
 import { ShortcutStore } from './stores/ShortcutStore'
-import { AppInfoStore } from './components/AppInfoStore'
 import { SubPaneStore } from './components/SubPaneStore'
 import { AppFrameStore } from './pages/AppPage/AppFrame'
 
@@ -24,7 +23,6 @@ export type AllStores = {
   appStore?: AppStore<any>
   appPageStore?: AppPageStore
   shortcutStore?: ShortcutStore
-  appInfoStore?: AppInfoStore
   subPaneStore?: SubPaneStore
   appFrameStore?: AppFrameStore
 }

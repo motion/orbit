@@ -33,6 +33,8 @@ export default class MacOSPlatform implements Platform {
       `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain -p ssl -p basic "${certificatePath}"`,
     )
 
+    console.log('options', options)
+
     if (!options.skipFirefox) {
       if (this.isFirefoxInstalled()) {
         // Try to use certutil to install the cert automatically

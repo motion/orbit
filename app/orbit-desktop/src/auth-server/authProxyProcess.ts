@@ -35,16 +35,11 @@ async function setupPortForwarding() {
     console.log('err killing port', err.message)
   }
 
-  // remove old cert, because it expires quickly
-  // https://github.com/davewasmer/devcert/issues/22
+  // remove old cert, because it expires quickly https://github.com/davewasmer/devcert/issues/22
   // TODO only mac
   const devCertDir = path.join(homeDir, 'Library', 'Application Support', 'devcert')
   if (fs.existsSync(devCertDir)) {
-    console.log('see existing dev cert dir, clearing...')
-    silentRm(path.join(devCertDir, 'certificate-authority', 'private-key.key'))
-    silentRm(path.join(devCertDir, 'certificate-authority', 'certificate.cert'))
-    silentRm(path.join(devCertDir, 'certificate-authority', 'index.txt'))
-    silentRm(path.join(devCertDir, 'domains'))
+    silentRm(devCertDir)
   }
 
   console.log('proxy run on', authHost, 'from', authPort, 'to', proxyPort)

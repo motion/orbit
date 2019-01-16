@@ -22,13 +22,13 @@ export type GlobalConfig = {
     server: number
     bridge: number
     swift: number
-    dbBridge: number
     screenBridge: number
     ocrBridge: number
     mediator: number
+    desktopMediator: number
+    syncersMediator: number
     auth: number
     authProxy: number
-    syncersBridge: number
     apps: number[]
   }
 }

@@ -11,12 +11,10 @@ if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
   transports.push(
     new WebSocketClientTransport(
       name,
-      new ReconnectingWebSocket(
-        // todo: rename dbBridge to desktopMediator or something since its not only does work with db
-        `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
-        [],
-        { WebSocket, minReconnectionDelay: 1 },
-      ),
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      }),
     ),
   )
 }
@@ -25,11 +23,10 @@ if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
   transports.push(
     new WebSocketClientTransport(
       name,
-      new ReconnectingWebSocket(
-        `ws://localhost:${getGlobalConfig().ports.syncersBridge}`, // todo: someone would like to extract it into config
-        [],
-        { WebSocket, minReconnectionDelay: 1 },
-      ),
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      }),
     ),
   )
 }

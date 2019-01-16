@@ -111,7 +111,7 @@ export class OrbitSyncersRoot {
       ],
       commands: [SourceForceSyncCommand, SourceForceCancelCommand],
       transport: new WebSocketServerTransport({
-        port: getGlobalConfig().ports.syncersBridge,
+        port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [

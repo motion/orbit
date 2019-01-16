@@ -286,7 +286,7 @@ export class Root {
         OpenCommand,
       ],
       transport: new WebSocketServerTransport({
-        port: this.config.ports.dbBridge,
+        port: this.config.ports.desktopMediator,
       }),
       resolvers: [
         ...typeormResolvers(getConnection(), [

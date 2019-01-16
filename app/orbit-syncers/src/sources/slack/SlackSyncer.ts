@@ -11,21 +11,7 @@ import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
-
-const runWithTimeout = (cb, time = 1000) => {
-  return new Promise((resolve, reject) => {
-    let failTm = setTimeout(() => {
-      this.log.warning('Failed to crawl, timed out....')
-      reject()
-    }, time)
-    cb()
-      .then(val => {
-        clearTimeout(failTm)
-        resolve(val)
-      })
-      .catch(reject)
-  })
-}
+import { runWithTimeout } from '@mcro/utils'
 
 /**
  * Syncs Slack messages.

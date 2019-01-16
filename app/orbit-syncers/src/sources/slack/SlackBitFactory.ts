@@ -60,6 +60,7 @@ export class SlackBitFactory {
     const flatBody = data.messages.map(x => x.text).join(' ')
     // gets the most interesting 10 for title
 
+    console.log('load cosal top words...')
     const title = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
       ' ',
     )

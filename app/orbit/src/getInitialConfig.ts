@@ -35,13 +35,13 @@ export async function getInitialConfig(): Promise<GlobalConfig> {
     server,
     bridge,
     swift,
-    dbBridge,
+    desktopMediator,
     screenBridge,
     mediator,
     ocrBridge,
     auth,
     authProxy,
-    syncersBridge,
+    syncersMediator,
     ...apps
   ] = ports
 
@@ -67,14 +67,14 @@ export async function getInitialConfig(): Promise<GlobalConfig> {
       server,
       bridge,
       swift,
-      dbBridge,
+      desktopMediator,
       screenBridge,
       mediator,
       ocrBridge,
       auth,
       authProxy,
       apps,
-      syncersBridge,
+      syncersMediator,
     },
   }
 

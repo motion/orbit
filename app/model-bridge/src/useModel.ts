@@ -68,13 +68,16 @@ export function useObserveManyAndCount<ModelType, Args>(
 // allows fetching a model and then updating it easily
 export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
+  query: Args | false,
   defaultValue: ModelType = null,
 ): [ModelType, ((next: Partial<ModelType>) => any)] {
   const [value, setValue] = useState(defaultValue)
 
   useEffect(
     () => {
+      if (query == false) {
+        return
+      }
       let cancelled = false
       loadOne(model, { args: query }).then(nextValue => {
         if (!cancelled) {
@@ -88,7 +91,7 @@ export function useModel<ModelType, Args>(
     [JSON.stringify(query)],
   )
 
-  const update = useCallback((next: Partial<ModelType>) => {
+  const update = (next: Partial<ModelType>) => {
     const nextValue = {
       ...value,
       ...next,
@@ -96,7 +99,7 @@ export function useModel<ModelType, Args>(
     setValue(nextValue)
     // save async after update
     save(model, nextValue)
-  }, [])
+  }
 
   return [value, update]
 }

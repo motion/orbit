@@ -33,7 +33,7 @@ export default observer(() => {
         { name: 'Settings', type: 'settings' },
         { name: 'Sources', type: 'sources' },
         { name: 'Onboard', type: 'onboard' },
-      ].map((pane, id) => ({ ...pane, id })),
+      ].map((pane, id) => ({ ...pane, id: `app-${id}` })),
     ],
   })
 

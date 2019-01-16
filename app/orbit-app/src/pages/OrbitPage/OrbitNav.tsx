@@ -5,9 +5,8 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { App, SpaceModel } from '@mcro/models'
+import { App } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
-import { useModel } from '@mcro/model-bridge'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 
 const height = 26
@@ -100,7 +99,7 @@ export default observer(function OrbitNav() {
             pressDelay={50}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
-              setSort(arrayMove(sort, oldIndex, newIndex))
+              updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })
             }}
           />
           <View flex={1} minWidth={10} />

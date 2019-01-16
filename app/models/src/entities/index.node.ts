@@ -7,6 +7,9 @@ import { SettingEntity } from './SettingEntity.node'
 import { SearchIndexEntity } from './SearchIndexEntity.node'
 import { SourceEntity } from './SourceEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
+import { UserEntity } from './UserEntity.node'
+
+// ADD to both blocks when exporting
 
 export * from './AppEntity.node'
 export * from './BitEntity.node'
@@ -18,6 +21,7 @@ export * from './SearchIndexEntity.node'
 export * from './SettingEntity.node'
 export * from './SourceEntity.node'
 export * from './SpaceEntity.node'
+export * from './UserEntity.node'
 
 export const Entities = [
   AppEntity,
@@ -29,4 +33,5 @@ export const Entities = [
   SearchIndexEntity,
   SourceEntity,
   SpaceEntity,
+  UserEntity,
 ]

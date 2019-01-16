@@ -18,6 +18,9 @@ export class SpaceEntity implements Space {
   @ManyToMany(() => SourceEntity, source => source.spaces)
   sources: Source[]
 
+  @Column({ type: 'simple-json' })
+  paneSort: number[]
+
   @OneToMany(() => AppEntity, app => app.space)
   apps: Source[]
 }

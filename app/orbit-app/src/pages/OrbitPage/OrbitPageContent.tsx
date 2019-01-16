@@ -93,13 +93,7 @@ export default observer(function OrbitPageContent() {
         </Sidebar>
         <OrbitMainView>
           {paneManagerStore.panes.map(pane => (
-            <SubPane
-              key={pane.type}
-              id={pane.id}
-              type={AppType[pane.type]}
-              fullHeight
-              preventScroll
-            >
+            <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
               <OrbitPageMainView store={store} pane={pane} />
             </SubPane>
           ))}

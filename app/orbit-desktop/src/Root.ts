@@ -12,6 +12,7 @@ import {
   SpaceEntity,
   CosalSaliencyModel,
   OpenCommand,
+  UserModel,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -82,6 +83,7 @@ import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { OracleManager } from './managers/OracleManager'
 import { TopicsManager } from './managers/TopicsManager'
+import { UserEntity } from '@mcro/models/_/entities/UserEntity'
 
 export class Root {
   // public
@@ -257,6 +259,7 @@ export class Root {
         JobModel,
         PersonModel,
         PersonBitModel,
+        UserModel,
         GithubRepositoryModel,
         SlackChannelModel,
         SearchResultModel,
@@ -295,6 +298,7 @@ export class Root {
           { entity: PersonEntity, models: [PersonModel] },
           { entity: PersonBitEntity, models: [PersonBitModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
+          { entity: UserEntity, models: [UserModel] },
         ]),
         SourceRemoveResolver,
         SourceSaveResolver,

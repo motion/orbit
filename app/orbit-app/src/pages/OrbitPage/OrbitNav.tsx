@@ -20,6 +20,7 @@ type TabProps = React.HTMLAttributes<'div'> & {
   sidePad?: number
   tooltip?: string
   textProps?: any
+  showDropdown?: boolean
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
@@ -41,8 +42,6 @@ export default observer(function OrbitNav() {
   const activeApps = useObserveActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-
-  console.log('OrbitNav', space, appIds)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -83,6 +82,7 @@ export default observer(function OrbitNav() {
       disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
+      showDropdown: !isPinned,
       sidePad: isPinned ? 20 : buttonSidePad,
       onClick: paneManagerStore.activePaneSetter(app.id),
       children: <Icon name={`${app.type}`} size={14} opacity={isActive ? 1 : 0.8} />,
@@ -144,6 +144,7 @@ const Tab = ({
   label,
   isActive = false,
   separator = false,
+  showDropdown = false,
   sidePad = buttonSidePad,
   textProps,
   className = '',
@@ -173,10 +174,12 @@ const Tab = ({
       )}
       {separator && <Separator />}
 
-      <DropdownArrow
-        className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-        style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
-      />
+      {showDropdown && (
+        <DropdownArrow
+          className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
+          style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
+        />
+      )}
     </NavButtonChrome>
   )
   if (tooltip) {

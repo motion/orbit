@@ -12,6 +12,21 @@ import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
+const runWithTimeout = (cb, time = 1000) => {
+  return new Promise((resolve, reject) => {
+    let failTm = setTimeout(() => {
+      this.log.warning('Failed to crawl, timed out....')
+      reject()
+    }, time)
+    cb()
+      .then(val => {
+        clearTimeout(failTm)
+        resolve(val)
+      })
+      .catch(reject)
+  })
+}
+
 /**
  * Syncs Slack messages.
  */
@@ -139,7 +154,7 @@ export class SlackSyncer implements IntegrationSyncer {
 
         // group messages into special "conversations" to avoid insertion of multiple bits for each message
         const conversations = this.createConversation(filteredMessages)
-        this.log.info(`created ${conversations.length} conversations`, conversations)
+        this.log.info(`created conversations: ${conversations.length}`, conversations)
 
         // create bits from conversations
         const conversationBits = await Promise.all(
@@ -147,6 +162,7 @@ export class SlackSyncer implements IntegrationSyncer {
             this.bitFactory.createConversation(channel, messages, allDbPeople),
           ),
         )
+
         apiBits.push(...conversationBits)
 
         // create bits from links inside messages
@@ -156,31 +172,32 @@ export class SlackSyncer implements IntegrationSyncer {
 
           for (let attachment of message.attachments) {
             if (attachment.title && attachment.text && attachment.original_url) {
+              this.log.info(`crawling attachment url: ${attachment.original_url}`)
               // we use try-catch block to prevent fails on link craw since if it fail for some reason
               // we can afford to stop slack syncing process
               try {
-                // open browser if it wasn't opened yet
                 if (this.crawler.isOpened() === false) {
-                  await this.crawler.start()
+                  await runWithTimeout(() => this.crawler.start())
                 }
 
-                // crawl website
-                await this.crawler.run({
-                  url: attachment.original_url,
-                  deep: false,
-                  handler: async data => {
-                    linkBits.push(
-                      this.bitFactory.createWebsite(
-                        channel,
-                        message,
-                        attachment,
-                        data,
-                        allDbPeople,
-                      ),
-                    )
-                    return true
-                  },
-                })
+                await runWithTimeout(() =>
+                  this.crawler.run({
+                    url: attachment.original_url,
+                    deep: false,
+                    handler: async data => {
+                      linkBits.push(
+                        this.bitFactory.createWebsite(
+                          channel,
+                          message,
+                          attachment,
+                          data,
+                          allDbPeople,
+                        ),
+                      )
+                      return true
+                    },
+                  }),
+                )
               } catch (error) {
                 this.log.warning(`failed to craw a slack link's website`, attachment, error)
               }

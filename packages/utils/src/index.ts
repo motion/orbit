@@ -1,5 +1,20 @@
 import stringHash from 'string-hash'
 
+export function runWithTimeout<A>(cb: () => Promise<A>, time = 1000): Promise<A> {
+  return new Promise((resolve, reject) => {
+    let failTm = setTimeout(() => {
+      this.log.warning('Failed to crawl, timed out....')
+      reject()
+    }, time)
+    cb()
+      .then(val => {
+        clearTimeout(failTm)
+        resolve(val)
+      })
+      .catch(reject)
+  })
+}
+
 /**
  * Runs given callback that returns promise for each item in the given collection in order.
  * Operations executed after each other, right after previous promise being resolved.

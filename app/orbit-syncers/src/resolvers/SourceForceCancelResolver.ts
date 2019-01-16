@@ -1,6 +1,6 @@
 import { resolveCommand } from '@mcro/mediator'
 import { SourceForceCancelCommand, JobEntity } from '@mcro/models'
-import { getRepository } from '@mcro/mediator/node_modules/typeorm'
+import { getRepository } from 'typeorm'
 
 const cancelCommands = new Set()
 

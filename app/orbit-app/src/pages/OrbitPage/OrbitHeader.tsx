@@ -142,7 +142,7 @@ export default observer(function OrbitHeader() {
             onClick={stores.paneManagerStore.activePaneByTypeSetter('settings')}
             tooltip="Settings"
           >
-            <Icon name="gear" size={14} opacity={0.5} />
+            <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
           </Button>
           <Row flex={1} />
         </Row>

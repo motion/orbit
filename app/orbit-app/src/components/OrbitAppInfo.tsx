@@ -23,7 +23,7 @@ export const OrbitAppInfo = (props: Props) => {
   const countSubtitle = shortNumber(bitsCount)
 
   return (
-    <Row alignItems="center">
+    <Row alignItems="center" flex={1}>
       {!!isSyncing && (
         <>
           <Text size={0.9} alpha={0.8}>
@@ -32,7 +32,7 @@ export const OrbitAppInfo = (props: Props) => {
           <View flex={1} />
         </>
       )}
-      <Text size={0.9}>
+      <Text size={0.9} fontWeight={500}>
         {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
       </Text>
     </Row>

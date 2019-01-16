@@ -123,7 +123,7 @@ const ToolbarChrome = gloss({
   // minHeight: 3,
   maxHeight: 50,
 }).theme((_, theme) => ({
-  borderTop: [2, theme.tabBackground],
+  borderTop: [1, theme.tabBackground],
   background: theme.background,
 }))
 

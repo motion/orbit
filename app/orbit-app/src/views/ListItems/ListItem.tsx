@@ -62,6 +62,8 @@ export type ListItemProps = CSSPropertySetStrict &
     renderText?: ItemRenderText
     children?: React.ReactNode
     onClick?: Function
+    // its helpful to have a separate disableSelect for various JS-object/intuitiveness reasons
+    disableSelect?: boolean
     // single click / keyboard select
     onSelect?: HandleSelection
     // double click / keyboard enter

@@ -28,7 +28,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       title: app.appName,
       icon: app.integration,
       onClick: !app.views.setup && addSourceClickHandler(app),
-      isSelected: !app.views.setup,
+      disableSelect: !app.views.setup,
       after: app.views.setup ? null : <Icon size={12} opacity={0.5} name="uilink6" />,
       appConfig: app.views.setup
         ? {

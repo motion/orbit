@@ -6,7 +6,11 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 
 const transports: ClientTransport[] = []
 
-if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
+const isWebApp = !process.env.SUB_PROCESS
+const shouldConnectToSyncers = process.env.SUB_PROCESS === 'desktop' || isWebApp
+const shouldConnectToDesktop = process.env.SUB_PROCESS === 'syncers' || isWebApp
+
+if (shouldConnectToSyncers) {
   transports.push(
     new WebSocketClientTransport(
       randomString(5),
@@ -18,7 +22,7 @@ if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
   )
 }
 
-if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
+if (shouldConnectToDesktop) {
   transports.push(
     new WebSocketClientTransport(
       randomString(5),

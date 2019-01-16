@@ -1,9 +1,12 @@
-export function startDevelopment(appRoot) {
+import { OrbitSyncersRoot } from '../OrbitSyncersRoot'
+
+export function startDevelopment(appRoot: OrbitSyncersRoot) {
   Error.stackTraceLimit = Infinity
 
   console.log(`$ NODE_ENV=${process.env.NODE_ENV} run syncers`)
 
   require('source-map-support/register')
+  require('./installGlobals').installGlobals(appRoot)
 
   const exitHandler = async (code?: any) => {
     console.log('handling exit', code)

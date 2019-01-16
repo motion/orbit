@@ -85,7 +85,7 @@ import { startAuthProxy } from './auth-server/startAuthProxy'
 import { OracleManager } from './managers/OracleManager'
 import { TopicsManager } from './managers/TopicsManager'
 
-export class Root {
+export class OrbitDesktopRoot {
   // public
   stores = null
 

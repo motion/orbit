@@ -1,7 +1,8 @@
 import { COSAL_DB } from '../constants'
 import { removeSync } from 'fs-extra'
+import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
-export function startDevelopment(appRoot) {
+export function startDevelopment(appRoot: OrbitDesktopRoot) {
   Error.stackTraceLimit = Infinity
   console.log(`$ NODE_ENV=${process.env.NODE_ENV} run desktop`)
 

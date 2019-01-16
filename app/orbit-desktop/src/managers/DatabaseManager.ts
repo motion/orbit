@@ -1,11 +1,11 @@
-import { getConnection } from 'typeorm'
+import { getConnection, getRepository } from 'typeorm'
 import { DATABASE_PATH, COSAL_DB } from '../constants'
 import { Logger } from '@mcro/logger'
 import { Desktop, Electron, App } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
 import connectModels from '../helpers/connectModels'
-import { Entities } from '@mcro/models'
+import { Entities, SettingEntity } from '@mcro/models'
 import { sleep } from '@mcro/helpers'
 
 const log = new Logger('database')
@@ -22,8 +22,24 @@ export class DatabaseManager {
     log.info('Connecting models...')
     await connectModels(Entities)
 
-    // TODO bugfix: sql errors happened here if i didnt wait... @nate
-    await sleep(250)
+    // TODO typeorm needs a patch
+    // sql errors happened here if i didnt wait... @nate
+    let connected = false
+    let tries = 0
+    while (!connected) {
+      if (tries > 10) {
+        throw new Error('Tried ten times to connect to models, no dice...')
+      }
+      try {
+        tries++
+        await getRepository(SettingEntity).findOne({})
+        connected = true
+      } catch (err) {
+        console.log('got err, migrations may not be done yet...', err)
+      } finally {
+        await sleep(100)
+      }
+    }
 
     log.info('Ensure search indices...')
     await this.createSearchIndices()

@@ -5,8 +5,10 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { App } from '@mcro/models'
+import { App, SpaceModel } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
+import { useModel } from '@mcro/model-bridge'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 
 const height = 26
 
@@ -39,16 +41,31 @@ export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
   const activeApps = useObserveActiveApps()
   const appIds = activeApps.map(x => x.id)
-  const [sort, setSort] = React.useState([])
+  const [space, updateSpace] = useActiveSpace()
 
-  // default sort
-  React.useEffect(() => setSort(appIds), [appIds.join('')])
+  // keep apps in sync with paneSort
+  // TODO: this can be refactored into useSyncSpacePaneOrderEffect
+  //       but we should refactor useObserve/useModel first so it re-uses
+  //       identical queries using a WeakMap so we dont have tons of observes...
+  React.useEffect(
+    () => {
+      if (!space.paneSort) {
+        updateSpace({ paneSort: activeApps.map(x => x.id) })
+        return
+      }
+      if (activeApps.length && activeApps.length !== space.paneSort.length) {
+        updateSpace({ paneSort: activeApps.map(x => x.id) })
+        return
+      }
+    },
+    [appIds.join('')],
+  )
 
-  if (!activeApps.length) {
+  if (!activeApps.length || !space.paneSort) {
     return null
   }
 
-  const items: TabProps[] = sort.map((id, index) => {
+  const items: TabProps[] = space.paneSort.map((id, index) => {
     const app = activeApps.find(x => x.id === id)
     const isLast = index !== activeApps.length
     const isActive = paneManagerStore.activePane.id === app.id

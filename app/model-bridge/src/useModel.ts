@@ -70,7 +70,7 @@ export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args,
   defaultValue: ModelType = null,
-) {
+): [ModelType, ((next: Partial<ModelType>) => any)] {
   const [value, setValue] = useState(defaultValue)
 
   useEffect(

@@ -1,11 +1,11 @@
 export interface User {
   /**
-   * Space id.
+   * User id.
    */
   id?: number
 
   /**
-   * Space name.
+   * User name.
    */
   name?: string
 

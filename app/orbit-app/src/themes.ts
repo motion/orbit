@@ -61,8 +61,8 @@ const light = {
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   sidebarBorderColor: '#eee',
   ...Theme.fromStyles({
-    tabBackground: '#e0e0e0',
-    tabBackgroundActive: '#ddd',
+    tabBackground: [250, 250, 250, 0.99],
+    // tabBackgroundActive: [255, 255, 255, 0.8],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],

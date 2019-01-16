@@ -48,7 +48,7 @@ export default observer(() => {
 
   return (
     <StoreContext.Provider value={stores}>
-      <MainShortcutHandler queryStore={queryStore}>
+      <MainShortcutHandler>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <Chrome>
@@ -78,5 +78,5 @@ const InnerChrome = gloss({
   flex: 1,
   overflow: 'hidden',
 }).theme(() => ({
-  boxShadow: [[0, 0, 20, [0, 0, 0, 0.05]]],
+  boxShadow: [[0, 0, 40, [0, 0, 0, 0.05]]],
 }))

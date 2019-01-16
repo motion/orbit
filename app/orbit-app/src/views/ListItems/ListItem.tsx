@@ -182,13 +182,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       <TitleSpace />
                     </>
                   )}
-                  <HighlightText
-                    fontSize={15}
-                    sizeLineHeight={0.85}
-                    ellipse
-                    fontWeight={700}
-                    {...titleProps}
-                  >
+                  <HighlightText sizeLineHeight={0.85} ellipse fontWeight={600} {...titleProps}>
                     {title}
                   </HighlightText>
                   <TitleSpace />

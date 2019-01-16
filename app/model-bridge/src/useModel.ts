@@ -1,5 +1,5 @@
 import { Model } from '@mcro/mediator'
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { observeMany, observeOne, observeCount, observeManyAndCount, loadOne, save } from '.'
 
 function useObserve<ModelType, Args>(

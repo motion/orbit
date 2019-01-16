@@ -2,17 +2,14 @@ import * as React from 'react'
 import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
 import { OrbitCard } from '../views/OrbitCard'
-import { AppInfoProps, AppInfoStore } from './AppInfoStore'
 import { OrbitItemViewProps } from '../sources/types'
 
-type Props = OrbitItemViewProps<any> &
-  AppInfoProps & {
-    store: AppInfoStore
-    isActive?: boolean
-    hideTitle?: boolean
-    model?: any
-    style?: any
-  }
+type Props = OrbitItemViewProps<any> & {
+  isActive?: boolean
+  hideTitle?: boolean
+  model?: any
+  style?: any
+}
 
 const Centered = gloss({
   flex: 1,
@@ -21,7 +18,7 @@ const Centered = gloss({
 })
 
 export const OrbitAppIconCard = (props: Props) => {
-  const { store, hideTitle, model, isActive, style, ...restProps } = props
+  const { hideTitle, model, isActive, style, ...restProps } = props
   return (
     <Col
       marginRight={14}

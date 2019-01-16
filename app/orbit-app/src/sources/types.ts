@@ -5,7 +5,6 @@ import { AppConfig } from '@mcro/models'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalItem } from '../helpers/normalizeItem'
 import { SearchBarType } from '@mcro/ui'
-import { AppInfoStore } from '../components/AppInfoStore'
 import { GenericComponent } from '../types'
 import { ListItemHide, ItemRenderText } from '../views/ListItems/ListItem'
 
@@ -49,7 +48,6 @@ export type OrbitSourceMainProps<A extends ItemType> = OrbitItemViewProps<A> & {
 
 export type OrbitSourceSettingProps<T extends Source> = {
   appConfig: AppConfig
-  appInfoStore: AppInfoStore
   source: T
   appPageStore: AppPageStore
 }

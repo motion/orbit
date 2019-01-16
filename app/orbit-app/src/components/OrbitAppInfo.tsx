@@ -1,33 +1,30 @@
 import * as React from 'react'
-import { AppInfoProps } from './AppInfoStore'
+import { useSourceInfo } from '../hooks/useSourceInfo'
 import { useJobs } from '../hooks/useJobs'
 import { Text, Row, View } from '@mcro/ui'
 import { OrbitIntegration } from '../sources/types'
 import pluralize from 'pluralize'
-import { useObserveCount } from '@mcro/model-bridge'
-import { BitModel } from '@mcro/models'
 
-type Props = AppInfoProps & {
+type Props = {
+  sourceId: number
   app?: OrbitIntegration<any>
 }
 
 export const OrbitAppInfo = (props: Props) => {
-  const sourceId = props.app.source ? props.app.source.id : null
+  const sourceId = props.app.source ? props.app.source.id : false
+  const { bitsCount } = useSourceInfo(sourceId)
+  const allJobs = useJobs(sourceId)
+  const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
+
   if (!sourceId) {
     return null
   }
 
-  const bitsCount = useObserveCount(BitModel, {
-    where: {
-      sourceId,
-    },
-  })
   const countSubtitle = shortNumber(bitsCount)
-  const isSyncing = !!useJobs(sourceId).activeJobs.length
 
   return (
     <Row alignItems="center">
-      {isSyncing && (
+      {!!isSyncing && (
         <>
           <Text size={0.9} alpha={0.8}>
             Syncing...

@@ -10,7 +10,7 @@ import { useJobs } from '../../../hooks/useJobs'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { getAppFromSource } from '../../../stores/SourcesStore'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useSourceInfo } from '../../../hooks/useSourceInfo'
 
 const handleRefresh = async (sourceId: number) => {
   command(SourceForceSyncCommand, {
@@ -33,7 +33,7 @@ const removeIntegration = async (source: Source) => {
 }
 
 export const SettingManageRow = (props: { source: Source; whitelist: WhitelistManager<any> }) => {
-  const { appInfoStore } = useStoresSafe()
+  const { bitsCount } = useSourceInfo(props.source.id)
   const { activeJobs, removeJobs } = useJobs(props.source.id)
 
   return (
@@ -53,7 +53,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
         </>
       )}
       <Text size={0.9} fontWeight={400} alpha={0.6}>
-        {(+(appInfoStore.bitsCount || 0)).toLocaleString()} total
+        {(bitsCount || 0).toLocaleString()} total
       </Text>
       <TitleBarSpace />
       <SegmentedRow>

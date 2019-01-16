@@ -1,4 +1,4 @@
-import { Text, View, Tooltip, Row } from '@mcro/ui'
+import { Text, View, Tooltip, Row, Popover } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
@@ -8,24 +8,24 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { App } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 
-export const SpaceNavHeight = () => <div style={{ height: 42, pointerEvents: 'none' }} />
+const height = 26
 
-type SortableTabProps = {
+type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
   separator?: boolean
   isActive?: boolean
   label?: string
   stretch?: boolean
-  onClick?: Function
-  children?: React.ReactNode
   sidePad?: number
+  tooltip?: string
+  textProps?: any
 }
 
-const SortableTab = SortableElement((props: SortableTabProps) => {
-  return <NavButton {...props} />
+const SortableTab = SortableElement((props: TabProps) => {
+  return <Tab {...props} />
 })
 
-const SortableTabs = SortableContainer((props: { items: SortableTabProps[] }) => {
+const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
   return (
     <Row flex={10}>
       {props.items.map((item, index) => (
@@ -48,7 +48,7 @@ export default observer(function OrbitNav() {
     return null
   }
 
-  const items = sort.map((id, index) => {
+  const items: TabProps[] = sort.map((id, index) => {
     const app = activeApps.find(x => x.id === id)
     const isLast = index !== activeApps.length
     const isActive = paneManagerStore.activePane.id === app.id
@@ -82,21 +82,103 @@ export default observer(function OrbitNav() {
             }}
           />
           <View flex={1} minWidth={10} />
-          <NavButton tooltip="Add app">
+          <Tab tooltip="Add app">
             <Icon name="simpleadd" size={12} opacity={0.35} />
-          </NavButton>
-          <NavButton
+          </Tab>
+          <Tab
             isActive={paneManagerStore.activePane.name === 'Sources'}
             onClick={paneManagerStore.activePaneByNameSetter('Sources')}
             tooltip="Sources"
           >
             <Icon name="design_app" size={12} opacity={0.35} />
-          </NavButton>
+          </Tab>
         </OrbitNavChrome>
       </OrbitNavClip>
+      {items
+        .filter(x => x.stretch)
+        .map(item => (
+          <Popover
+            key={item.app.id}
+            openOnClick
+            closeOnClick
+            closeOnClickAway
+            theme="light"
+            width={300}
+            background
+            borderRadius={8}
+            elevation={7}
+            target={`.appDropdown-${item.app.id}`}
+          >
+            test me out
+          </Popover>
+        ))}
     </>
   )
 })
+
+const Tab = ({
+  app,
+  children,
+  tooltip,
+  label,
+  isActive = false,
+  separator = false,
+  sidePad = buttonSidePad,
+  textProps,
+  className = '',
+  ...props
+}: TabProps) => {
+  const [hovered, setHovered] = React.useState(false)
+  const button = (
+    <NavButtonChrome
+      className={`undraggable ${className}`}
+      isActive={isActive}
+      sidePad={sidePad}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      {...props}
+    >
+      {children}
+      {!!label && (
+        <Text
+          size={0.95}
+          marginLeft={!!children ? buttonSidePad * 0.75 : 0}
+          alpha={isActive ? 1 : 0.85}
+          fontWeight={500}
+          {...textProps}
+        >
+          {label}
+        </Text>
+      )}
+      {separator && <Separator />}
+
+      <DropdownArrow
+        className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
+        style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
+      />
+    </NavButtonChrome>
+  )
+  if (tooltip) {
+    return <Tooltip label={tooltip}>{button}</Tooltip>
+  }
+  return button
+}
+
+function DropdownArrow({ style, ...props }) {
+  return (
+    <Icon
+      name="downArrow"
+      size={8}
+      style={{
+        transition: 'all ease 200ms 200ms',
+        position: 'absolute',
+        top: height / 2 - 8 / 2,
+        ...style,
+      }}
+      {...props}
+    />
+  )
+}
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',
@@ -119,7 +201,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  height: 26,
+  height,
   maxWidth: 180,
   borderTopRadius: 3,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
@@ -128,7 +210,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     : theme.tabBackground || theme.background
   return {
     padding: [5, sidePad],
-    flex: stretch ? 1 : 'none',
+    flexGrow: stretch ? 1 : 0,
     minWidth: stretch ? 90 : 0,
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
@@ -142,45 +224,6 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     },
   }
 })
-
-const NavButton = ({
-  children = null,
-  tooltip = null,
-  label = null,
-  isActive = false,
-  separator = false,
-  sidePad = buttonSidePad,
-  textProps = null,
-  className = '',
-  ...props
-}) => {
-  const button = (
-    <NavButtonChrome
-      className={`undraggable ${className}`}
-      isActive={isActive}
-      sidePad={sidePad}
-      {...props}
-    >
-      {children}
-      {!!label && (
-        <Text
-          size={0.95}
-          marginLeft={!!children ? buttonSidePad * 0.75 : 0}
-          alpha={isActive ? 1 : 0.85}
-          fontWeight={500}
-          {...textProps}
-        >
-          {label}
-        </Text>
-      )}
-      {separator && <Separator />}
-    </NavButtonChrome>
-  )
-  if (tooltip) {
-    return <Tooltip label={tooltip}>{button}</Tooltip>
-  }
-  return button
-}
 
 const Separator = gloss({
   position: 'absolute',

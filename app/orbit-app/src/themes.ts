@@ -136,6 +136,7 @@ export const themes = {
   selected: {
     ...Theme.fromStyles({
       background: orbitColor,
+      backgroundHover: orbitColor,
       color: '#fff',
       borderColor: orbitActiveBg,
     }),

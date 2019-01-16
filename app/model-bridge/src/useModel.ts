@@ -76,7 +76,7 @@ export function useModel<ModelType, Args>(
   useEffect(
     () => {
       let cancelled = false
-      loadOne(model, query).then(nextValue => {
+      loadOne(model, { args: query }).then(nextValue => {
         if (!cancelled) {
           setValue(nextValue)
         }

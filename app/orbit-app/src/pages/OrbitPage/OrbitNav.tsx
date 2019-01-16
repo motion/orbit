@@ -66,7 +66,7 @@ export default observer(function OrbitNav() {
     [space && space.id, appIds.join('')],
   )
 
-  if (!activeApps.length || !space.paneSort) {
+  if (!activeApps.length || !space || !space.paneSort) {
     return null
   }
 

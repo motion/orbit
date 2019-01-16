@@ -12,6 +12,7 @@ export class EnsureModels1546916550169 implements MigrationInterface {
 
     if (!user) {
       await getRepository(UserEntity).save({
+        name: 'Me',
         activeSpace: firstSpace.id,
       })
     }

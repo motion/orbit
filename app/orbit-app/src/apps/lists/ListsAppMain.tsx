@@ -1,16 +1,18 @@
-import * as React from 'react'
-import { AppProps } from '../AppProps'
 import { useObserveMany } from '@mcro/model-bridge'
-import { BitModel, AppType } from '@mcro/models'
+import { AppType, BitModel } from '@mcro/models'
+import * as React from 'react'
+import { Title } from '../../views'
 import VirtualList from '../../views/VirtualList/VirtualList'
+import { AppProps } from '../AppProps'
 
-export default React.memo(function ListsAppMain(props: AppProps<AppType.lists>) {
+export const ListsAppMain = React.memo(function ListsAppMain(props: AppProps<AppType.lists>) {
   const items = useObserveMany(BitModel, {
     where: {},
     take: 10,
   })
   return (
     <>
+      <Title>{props.appConfig && props.appConfig.title}</Title>
       <VirtualList
         maxHeight={props.appStore.maxHeight}
         items={items}

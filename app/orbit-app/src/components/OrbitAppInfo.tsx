@@ -24,17 +24,15 @@ export const OrbitAppInfo = (props: Props) => {
 
   return (
     <Row alignItems="center" flex={1}>
-      {!!isSyncing && (
-        <>
-          <Text size={0.9} alpha={0.8}>
-            Syncing...
-          </Text>
-        </>
-      )}
-      <View flex={1} />
-      <Text size={0.9} fontWeight={500}>
+      <Text size={0.9}>
         {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
       </Text>
+      <View flex={1} />
+      {!!isSyncing && (
+        <Text size={0.9} alpha={0.8}>
+          Syncing...
+        </Text>
+      )}
     </Row>
   )
 }

@@ -18,7 +18,6 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
   getAll: Options<T>['getAll']
 
   constructor({ source, getAll }: Options<T>) {
-    console.log('source', source)
     this.source = source
     this.getAll = getAll
     // copy it onto the store so we get instant mutations in views

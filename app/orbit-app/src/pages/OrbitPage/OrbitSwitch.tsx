@@ -158,6 +158,7 @@ export default observer(function OrbitSwitch(props: Props) {
                   selected={selectedIndex === index + 1}
                   orb={space.color}
                   title={space.name}
+                  titleProps={{ fontWeight: 400, size: 0.95, alpha: 0.8 }}
                   {...space.props}
                 />
               )
@@ -166,7 +167,7 @@ export default observer(function OrbitSwitch(props: Props) {
               onClick={createNewSpace}
               key="new-space"
               title="Create new space..."
-              titleProps={{ fontWeight: 400, size: 1, alpha: 0.8 }}
+              titleProps={{ fontWeight: 300, size: 0.9, alpha: 0.8 }}
               after={<Icon name="addcircle" size={14} fill="#444" />}
             />
           </View>

@@ -107,7 +107,7 @@ export default observer(function OrbitNav() {
           <SortableTabs
             axis="x"
             lockAxis="x"
-            distance={15}
+            distance={8}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
               updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })
@@ -255,7 +255,9 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: 'none',
-    boxShadow: isActive ? [[0, 3, 8, [0, 0, 0, 0.05]]] : null,
+    boxShadow: isActive
+      ? [[0, 1, 8, [0, 0, 0, 0.05]], ['inset', 0, 0.5, 0, theme.background]]
+      : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,
     '&:active': glowStyle,

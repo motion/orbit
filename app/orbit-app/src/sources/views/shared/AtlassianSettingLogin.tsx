@@ -144,7 +144,7 @@ export default observer(function AtlassianSettingLogin(props: Props) {
           >
             {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
             {status !== Statuses.LOADING && (
-              <UI.Button type="submit" onClick={this.addIntegration}>
+              <UI.Button type="submit" onClick={addIntegration}>
                 Save
               </UI.Button>
             )}

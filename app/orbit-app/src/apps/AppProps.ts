@@ -1,5 +1,4 @@
 import { AppType, AppConfig, AppData } from '@mcro/models'
-import { IntegrationType } from '@mcro/models'
 import { AppStore } from './AppStore'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SettingStore } from '../stores/SettingStore'
@@ -23,7 +22,6 @@ export type AppProps<Type extends AppType> = {
   data?: AppData[Type]
   updateData?: (values: Partial<AppData[Type]>) => void
 
-  sourceType?: IntegrationType
   appStore: AppStore<Type>
   spaceStore: SpaceStore
   sourcesStore: SourcesStore

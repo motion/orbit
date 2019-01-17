@@ -35,6 +35,8 @@ sorting by prepping to split out work as best possible:
 work to split out:
 
 - syncers
+  - github syncer and drive syncer not showing anything in their setting pane
+  - syncers arent running after first adding them
   - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
     - perhaps we need better checks for that
   - syncers arent streaming or something weird is happening

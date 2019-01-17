@@ -27,7 +27,6 @@ export default observer(() => {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted({ spaceStore })
-  console.log('activeApps', activeApps)
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: [
       ...activeApps.map(app => ({

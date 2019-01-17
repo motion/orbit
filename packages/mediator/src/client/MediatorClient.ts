@@ -268,7 +268,6 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     } = {},
   ): Observable<number> {
-    console.log('observeCount', qm, options)
     return new Observable(subscriptionObserver => {
       const subscriptions = this.options.transports.map(transport => {
         return transport

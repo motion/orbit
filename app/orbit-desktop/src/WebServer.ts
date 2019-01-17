@@ -51,8 +51,6 @@ export class WebServer {
     this.app.listen(Config.ports.server, () => {
       log.info('Server listening', Config.ports.server)
     })
-
-    return Config.ports.server
   }
 
   private cors() {

@@ -147,7 +147,8 @@ export class OrbitDesktopRoot {
     this.topicsManager = new TopicsManager({ cosal: this.cosal })
     await this.topicsManager.start()
 
-    // start server a bit early so other apps can start
+    // the electron app wont start until this runs
+    // start server a bit early so it lets them start
     this.webServer = new WebServer()
     await this.webServer.start()
 

@@ -83,10 +83,10 @@ export async function main() {
     }
 
     // wait for server...
-    // console.log('waiting for desktop')
     const desktopServerUrl = `http://localhost:${config.ports.server}`
     await waitOn({ resources: [desktopServerUrl] })
-    // console.log('desktop is here')
+
+    console.log('Desktop has started, continuing starting electron processes...')
 
     if (IGNORE_ELECTRON !== 'true') {
       // start main electron process inside this thread (no forking)
@@ -95,7 +95,7 @@ export async function main() {
       // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
       // see: https://github.com/electron/electron/issues/7246
 
-      await new Promise(res => setTimeout(res, 1000))
+      await new Promise(res => setTimeout(res, 500))
 
       if (!process.env.IGNORE_MENU) {
         setupProcess({
@@ -104,7 +104,7 @@ export async function main() {
           inspectPortRemote: 9007,
         })
 
-        await new Promise(res => setTimeout(res, 1000))
+        await new Promise(res => setTimeout(res, 500))
 
         setupProcess({
           name: 'electron-apps',

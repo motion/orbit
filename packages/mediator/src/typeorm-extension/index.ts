@@ -27,27 +27,27 @@ export function typeormResolvers(
   for (let entityResolver of entityResolvers) {
     for (let model of entityResolver.models) {
       resolvers.push(
-        resolveOne(model, args => {
+        resolveOne(model, async args => {
           return connection.getRepository(entityResolver.entity).findOne(args)
         }),
       )
       resolvers.push(
-        resolveMany(model, args => {
+        resolveMany(model, async args => {
           return connection.getRepository(entityResolver.entity).find(args)
         }),
       )
       resolvers.push(
-        resolveManyAndCount(model, args => {
+        resolveManyAndCount(model, async args => {
           return connection.getRepository(entityResolver.entity).findAndCount(args)
         }),
       )
       resolvers.push(
-        resolveCount(model, args => {
+        resolveCount(model, async args => {
           return connection.getRepository(entityResolver.entity).count(args['where'])
         }),
       )
       resolvers.push(
-        resolveSave(model, args => {
+        resolveSave(model, async args => {
           return connection.getRepository(entityResolver.entity).save(args)
         }),
       )

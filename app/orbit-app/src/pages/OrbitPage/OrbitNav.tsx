@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
-import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
+import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { App } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
@@ -40,7 +40,7 @@ const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
 
 export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
-  const activeApps = useObserveActiveApps()
+  const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
 
@@ -50,7 +50,7 @@ export default observer(function OrbitNav() {
   //       identical queries using a WeakMap so we dont have tons of observes...
   React.useEffect(
     () => {
-      if (!space) {
+      if (!space || !activeApps.length) {
         return
       }
       if (!space.paneSort) {
@@ -107,7 +107,7 @@ export default observer(function OrbitNav() {
           <SortableTabs
             axis="x"
             lockAxis="x"
-            pressDelay={50}
+            distance={15}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
               updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })
@@ -255,7 +255,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: 'none',
-    boxShadow: isActive ? [[0, 0, 15, [0, 0, 0, 0.025]]] : null,
+    boxShadow: isActive ? [[0, 3, 8, [0, 0, 0, 0.05]]] : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,
     '&:active': glowStyle,

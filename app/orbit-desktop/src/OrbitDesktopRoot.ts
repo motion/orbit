@@ -85,7 +85,7 @@ import { startAuthProxy } from './auth-server/startAuthProxy'
 import { OracleManager } from './managers/OracleManager'
 import { TopicsManager } from './managers/TopicsManager'
 
-export class Root {
+export class OrbitDesktopRoot {
   // public
   stores = null
 
@@ -286,7 +286,7 @@ export class Root {
         OpenCommand,
       ],
       transport: new WebSocketServerTransport({
-        port: this.config.ports.dbBridge,
+        port: this.config.ports.desktopMediator,
       }),
       resolvers: [
         ...typeormResolvers(getConnection(), [

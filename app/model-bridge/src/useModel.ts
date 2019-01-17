@@ -2,80 +2,123 @@ import { Model } from '@mcro/mediator'
 import { useEffect, useState, useRef } from 'react'
 import { observeMany, observeOne, observeCount, observeManyAndCount, loadOne, save } from '.'
 
-function useObserve<ModelType, Args>(
+type UseModelOptions = {
+  defaultValue?: any
+  observe?: true
+}
+
+type ObserveModelOptions = {
+  defaultValue?: any
+  onChange?: (val: any) => any
+}
+
+function useObserveModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
-  defaultValue: any,
+  query: Args | false,
+  options: ObserveModelOptions = {},
   queryRunner: Function,
 ) {
   const subscription = useRef(null)
   const curQuery = useRef(null)
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState(options.defaultValue)
   const dispose = () => subscription.current && subscription.current.unsubscribe()
 
   // unmount
   useEffect(() => dispose, [])
 
   // on new query: subscribe, update
-  useEffect(() => {
-    const hasNewQuery = JSON.stringify(curQuery.current) !== JSON.stringify(query)
-    if (hasNewQuery) {
-      curQuery.current = query
+  useEffect(
+    () => {
+      if (query === false) {
+        return
+      }
+      const hasNewQuery = JSON.stringify(curQuery.current) !== JSON.stringify(query)
+      if (hasNewQuery) {
+        curQuery.current = query
 
-      // unsubscribe last
-      dispose()
+        // unsubscribe last
+        dispose()
 
-      // subscribe new
-      subscription.current = queryRunner(model, { args: query }).subscribe(setValue)
-    }
-  })
+        // subscribe new and update
+        subscription.current = queryRunner(model, { args: query }).subscribe(nextValue => {
+          if (options.onChange) {
+            options.onChange(nextValue)
+          }
+          if (JSON.stringify(value) !== JSON.stringify(nextValue)) {
+            setValue(nextValue)
+          }
+        })
+      }
+    },
+    [JSON.stringify(query), options.onChange],
+  )
 
   return value
 }
 
+const defaultsMany = { defaultValue: [] }
+const defaultsOne = { defaultValue: null }
+const defaultsCount = { defaultValue: 0 }
+
 export function useObserveMany<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
-  defaultValue: any = [],
+  query: Args | false,
+  options: ObserveModelOptions = {},
 ): ModelType[] {
-  return useObserve(model, query, defaultValue, observeMany)
+  return useObserveModel(model, query, { ...defaultsMany, ...options }, observeMany)
 }
 
 export function useObserveOne<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
-  defaultValue: any = null,
+  query: Args | false,
+  options: ObserveModelOptions = {},
 ): ModelType {
-  return useObserve(model, query, defaultValue, observeOne)
+  return useObserveModel(model, query, { ...defaultsOne, ...options }, observeOne)
 }
 
 export function useObserveCount<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
-  defaultValue: any = 0,
+  query: Args | false,
+  options: ObserveModelOptions = {},
 ) {
-  return useObserve(model, query, defaultValue, observeCount)
+  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeCount)
 }
 
 export function useObserveManyAndCount<ModelType, Args>(
   model: Model<ModelType, Args, any>,
-  query: Args,
-  defaultValue: any = 0,
+  query: Args | false,
+  options: ObserveModelOptions = {},
 ) {
-  return useObserve(model, query, defaultValue, observeManyAndCount)
+  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeManyAndCount)
 }
+
+// TODO we can now de-dupe and just re-use the same queries from useModel
 
 // allows fetching a model and then updating it easily
 export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
-  defaultValue: ModelType = null,
+  options: UseModelOptions = {},
 ): [ModelType, ((next: Partial<ModelType>) => any)] {
+  // store most recent value
+  const defaultValue = options.defaultValue || null
   const [value, setValue] = useState(defaultValue)
+
+  const updateIfNew = (nextValue: any) => {
+    if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
+      setValue(nextValue)
+    }
+  }
+
+  // we observe and update if necessary
+  useObserveOne(model, !!options.observe && query, {
+    defaultValue,
+    onChange: updateIfNew,
+  })
 
   useEffect(
     () => {
-      if (query == false) {
+      if (query == false || options.observe) {
         return
       }
       let cancelled = false
@@ -88,7 +131,7 @@ export function useModel<ModelType, Args>(
         cancelled = true
       }
     },
-    [JSON.stringify(query)],
+    [JSON.stringify(query), !!options.observe],
   )
 
   const update = (next: Partial<ModelType>) => {
@@ -96,7 +139,7 @@ export function useModel<ModelType, Args>(
       ...value,
       ...next,
     }
-    setValue(nextValue)
+    updateIfNew(nextValue)
     // save async after update
     save(model, nextValue)
   }

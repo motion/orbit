@@ -31,7 +31,7 @@ class OrbitWindowStore {
       w = Math.min(h * 1.45, w)
       this.size = [w, h].map(x => Math.round(x))
       // centered
-      this.position = [w / 4, h / 4].map(x => Math.round(x))
+      this.position = [screenSize[0] / 2 - w / 2, screenSize[1] / 2 - h / 2].map(x => Math.round(x))
     },
   )
 

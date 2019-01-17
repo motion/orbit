@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { gloss } from '@mcro/gloss'
 import { IS_ELECTRON } from '../../../constants'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
-import { useObserveActiveApps } from '../../../hooks/useObserveActiveApps'
+import { useActiveApps } from '../../../hooks/useActiveApps'
 
 const TRAY_VERT_PAD = 12
 const TRAY_HEIGHT = 60
@@ -46,7 +46,7 @@ export function AppTray() {
   }
   const stores = useStoresSafe()
   const store = useStore(AppTrayStore)
-  const activeApps = useObserveActiveApps()
+  const activeApps = useActiveApps()
   console.log('------render --- Apptray', stores)
   return (
     <Surface

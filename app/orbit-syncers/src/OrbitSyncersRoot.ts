@@ -11,6 +11,7 @@ import {
   SpaceEntity,
   UserModel,
   UserEntity,
+  SourceForceCancelCommand,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
@@ -31,6 +32,7 @@ import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
 import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
+import { SourceForceCancelResolver } from './resolvers/SourceForceCancelResolver'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -107,9 +109,9 @@ export class OrbitSyncersRoot {
         SpaceModel,
         UserModel,
       ],
-      commands: [SourceForceSyncCommand],
+      commands: [SourceForceSyncCommand, SourceForceCancelCommand],
       transport: new WebSocketServerTransport({
-        port: getGlobalConfig().ports.syncersBridge, // todo: use config?
+        port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
@@ -124,6 +126,7 @@ export class OrbitSyncersRoot {
           { entity: UserEntity, models: [UserModel] },
         ]),
         SourceForceSyncResolver,
+        SourceForceCancelResolver,
       ],
     })
     this.mediatorServer.bootstrap()

@@ -4,13 +4,14 @@ import { PersonBitUtils } from '@mcro/models'
 import { BitUtils } from '@mcro/models'
 import { GmailBitDataParticipant, GmailSource } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
-import { hash } from '@mcro/utils'
+import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { GMailBitFactory } from './GMailBitFactory'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GMailPersonFactory } from './GMailPersonFactory'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs GMail.
@@ -36,12 +37,9 @@ export class GMailSyncer implements IntegrationSyncer {
     this.log.info('sync gmail based on settings', this.source.values)
 
     // setup default source configuration values
-    if (!this.source.values.lastSync)
-      this.source.values.lastSync = {}
-    if (!this.source.values.max)
-      this.source.values.max = 10000
-    if (!this.source.values.daysLimit)
-      this.source.values.daysLimit = 330
+    if (!this.source.values.lastSync) this.source.values.lastSync = {}
+    if (!this.source.values.max) this.source.values.max = 10000
+    if (!this.source.values.daysLimit) this.source.values.daysLimit = 330
 
     // setup some local variables we are gonna work with
     const queryFilter = this.source.values.filter || `newer_than:${this.source.values.daysLimit}d`
@@ -59,9 +57,12 @@ export class GMailSyncer implements IntegrationSyncer {
     if (
       (lastSync.usedMax !== undefined && this.source.values.max !== lastSync.usedMax) ||
       (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
-      (lastSync.usedDaysLimit !== undefined && this.source.values.daysLimit !== lastSync.usedDaysLimit)
+      (lastSync.usedDaysLimit !== undefined &&
+        this.source.values.daysLimit !== lastSync.usedDaysLimit)
     ) {
-      this.log.info('last syncronization configuration mismatch, dropping bits and start sync from scratch')
+      this.log.info(
+        'last syncronization configuration mismatch, dropping bits and start sync from scratch',
+      )
       await getRepository(BitEntity).delete({ sourceId: this.source.id }) // todo: drop people as well
       this.source.values.lastSync = lastSync = {}
     }
@@ -69,7 +70,6 @@ export class GMailSyncer implements IntegrationSyncer {
     // we if we have last history id it means we already did a complete sync and now we are using
     // gmail's history api to get email events information and sync based on this information
     if (lastSync.historyId) {
-
       // load history
       const history = await this.loader.loadHistory(lastSync.historyId)
 
@@ -78,16 +78,21 @@ export class GMailSyncer implements IntegrationSyncer {
         this.log.timer('found added/changed messages in history', history.addedThreadIds)
 
         // convert added thread ids into thread objects and load their messages
-        const addedThreads = await Promise.all(history.addedThreadIds.map(async threadId => {
-          return {
-            id: threadId,
-            historyId: history.historyId,
-          } as GMailThread
-        }))
+        const addedThreads = await Promise.all(
+          history.addedThreadIds.map(async threadId => {
+            return {
+              id: threadId,
+              historyId: history.historyId,
+            } as GMailThread
+          }),
+        )
         await this.loader.loadMessages(addedThreads)
 
         // sync threads
         for (let thread of addedThreads) {
+          await checkCancelled(this.source.id)
+          // prevent burning too much CPU
+          await sleep(10)
           await this.syncThread(thread)
         }
 
@@ -111,9 +116,7 @@ export class GMailSyncer implements IntegrationSyncer {
 
       lastSync.historyId = history.historyId
       await getRepository(SourceEntity).save(this.source, { listeners: false })
-
     } else {
-
       // else this is a first time sync, load all threads
       this.log.timer('sync all threads')
 
@@ -122,7 +125,7 @@ export class GMailSyncer implements IntegrationSyncer {
         queryFilter: queryFilter,
         pageToken: lastSync.lastCursor,
         loadedCount: lastSync.lastCursorLoadedCount || 0,
-        handler: this.handleThread.bind(this)
+        handler: this.handleThread.bind(this),
       })
       this.log.timer('sync all threads')
     }
@@ -146,7 +149,7 @@ export class GMailSyncer implements IntegrationSyncer {
             count: this.source.values.max,
             queryFilter: whitelistFilter,
             loadedCount: 0,
-            handler: this.syncThread.bind(this)
+            handler: this.syncThread.bind(this),
           })
         }
         this.log.timer('load threads from whitelisted people')
@@ -163,7 +166,7 @@ export class GMailSyncer implements IntegrationSyncer {
     thread: GMailThread,
     cursor?: string,
     loadedCount?: number,
-    isLast?: boolean
+    isLast?: boolean,
   ) {
     const lastSync = this.source.values.lastSync
 
@@ -207,13 +210,11 @@ export class GMailSyncer implements IntegrationSyncer {
    * Syncs a given thread.
    */
   private async syncThread(thread: GMailThread) {
-
     const participants = this.extractThreadParticipants(thread)
     const bit = this.bitFactory.create(thread)
 
     // if email doesn't have body messages we don't need to sync it
-    if (!bit)
-      return
+    if (!bit) return
 
     bit.people = participants.map(participant => this.personFactory.create(participant))
 

@@ -31,7 +31,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
     // load person because we need emails that we want to whitelist
     this.log.info('loading general settings')
     const setting = await getRepository(SettingEntity).findOne({
-      name: 'general'
+      name: 'general',
     })
     this.log.info('general settings were loaded', setting)
 
@@ -56,7 +56,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
         handler: async data => {
           apiBits.push(this.bitFactory.create(data))
           return true
-        }
+        },
       })
     }
     this.log.timer('crawl pinned urls', apiBits)
@@ -66,7 +66,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
 
     // sync bits
     const dbBits = await getRepository(BitEntity).find({
-      integration: 'pinned'
+      integration: 'pinned',
     })
     await this.bitSyncer.sync({ apiBits, dbBits })
   }

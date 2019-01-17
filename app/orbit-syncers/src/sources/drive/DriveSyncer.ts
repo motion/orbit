@@ -1,6 +1,7 @@
 import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { PersonBitUtils } from '@mcro/models'
+import { sleep } from '@mcro/utils'
 import { DriveSource } from '@mcro/models'
 import { DriveLoader } from '@mcro/services'
 import { hash } from '@mcro/utils'
@@ -8,6 +9,7 @@ import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { DriveBitFactory } from './DriveBitFactory'
 import { DrivePersonFactory } from './DrivePersonFactory'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs Google Drive files.
@@ -39,6 +41,9 @@ export class DriveSyncer implements IntegrationSyncer {
     // load users from API
     this.log.timer('load files and people from API')
     const files = await this.loader.loadFiles(undefined, async (file, cursor, isLast) => {
+      await checkCancelled(this.source.id)
+      await sleep(2)
+
       const updatedAt = new Date(file.file.modifiedByMeTime || file.file.modifiedTime).getTime()
 
       // if we have synced stuff previously already, we need to prevent same files syncing

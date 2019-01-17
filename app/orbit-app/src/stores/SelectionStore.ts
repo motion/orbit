@@ -138,7 +138,7 @@ export class SelectionStore {
       this.clearSelected()
     } else {
       if (typeof index !== 'number') {
-        console.error('index is not a number')
+        console.error('index is not a number', index)
       } else {
         this.activeIndex = index
       }
@@ -174,6 +174,9 @@ export class SelectionStore {
     }
     const maxIndex = this.movesMap.length - 1
     const curResult = this.movesMap[curIndex]
+    if (!curResult) {
+      throw new Error(`No result at index ${curIndex}`)
+    }
     const nowInRow = isInRow(curResult)
     if (!nowInRow) {
       // move to begining of previous row if going up into it

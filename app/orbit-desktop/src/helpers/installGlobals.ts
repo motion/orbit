@@ -6,9 +6,9 @@ import { App, Desktop, Electron } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'
 import { stringify } from '@mcro/helpers'
 import * as Cosal from '@mcro/cosal'
-import { Root } from '../Root'
+import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
-export function installGlobals(AppRoot: Root) {
+export function installGlobals(AppRoot: OrbitDesktopRoot) {
   root['Root'] = AppRoot
   root['restart'] = AppRoot.restart
   root['require'] = require
@@ -24,6 +24,8 @@ export function installGlobals(AppRoot: Root) {
   root['stringify'] = stringify
   root['toJS'] = Mobx.toJS
   root['Cosal'] = Cosal
+  root['Models'] = require('@mcro/models')
+  root['Bridge'] = require('@mcro/model-bridge')
 
   for (const model of Entities) {
     root[`${model.name}`] = model

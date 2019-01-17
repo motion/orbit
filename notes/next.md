@@ -10,6 +10,8 @@ sorting by prepping to split out work as best possible:
 
 work to split out:
 
+- loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
+  - this should just go from client => desktop right?
 - make it much easier to create apps / have them in their own area
   - with their own data they can easily hook into
 - syncers bugfixing and improving performance and data storage

@@ -1,7 +1,12 @@
 import * as React from 'react'
 import { Row, View, Text, SegmentedRow } from '@mcro/ui'
 import { ManageSmartSync } from './ManageSmartSync'
-import { SourceForceSyncCommand, SourceRemoveCommand, Source } from '@mcro/models'
+import {
+  SourceForceSyncCommand,
+  SourceRemoveCommand,
+  Source,
+  SourceForceCancelCommand,
+} from '@mcro/models'
 import { command } from '@mcro/model-bridge'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
@@ -46,9 +51,17 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
       <View flex={1} />
       {!!(activeJobs.length || removeJobs.length) && (
         <>
-          <Text size={0.9} fontWeight={400} alpha={0.6}>
+          <Text size={0.9} fontWeight={400}>
             {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
           </Text>
+          <TitleBarSpace />
+          <TitleBarButton
+            onClick={() => command(SourceForceCancelCommand, { sourceId: props.source.id })}
+            size={0.8}
+          >
+            Cancel
+          </TitleBarButton>
+          <TitleBarSpace />
           <TitleBarSpace />
         </>
       )}

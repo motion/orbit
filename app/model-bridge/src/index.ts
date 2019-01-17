@@ -4,32 +4,34 @@ import { ClientTransport } from '@mcro/mediator'
 import { randomString } from '@mcro/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const name = randomString(5)
 const transports: ClientTransport[] = []
 
-if (process.env.SUB_PROCESS === 'syncers' || !process.env.SUB_PROCESS) {
+// want this to be a single name for this client (no matter how many transports)
+const name = randomString(5)
+const isWebApp = !process.env.SUB_PROCESS
+const shouldConnectToSyncers = process.env.SUB_PROCESS === 'desktop' || isWebApp
+const shouldConnectToDesktop = process.env.SUB_PROCESS === 'syncers' || isWebApp
+
+if (shouldConnectToSyncers) {
   transports.push(
     new WebSocketClientTransport(
       name,
-      new ReconnectingWebSocket(
-        // todo: rename dbBridge to desktopMediator or something since its not only does work with db
-        `ws://localhost:${getGlobalConfig().ports.dbBridge}`,
-        [],
-        { WebSocket, minReconnectionDelay: 1 },
-      ),
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      }),
     ),
   )
 }
 
-if (process.env.SUB_PROCESS === 'desktop' || !process.env.SUB_PROCESS) {
+if (shouldConnectToDesktop) {
   transports.push(
     new WebSocketClientTransport(
       name,
-      new ReconnectingWebSocket(
-        `ws://localhost:${getGlobalConfig().ports.syncersBridge}`, // todo: someone would like to extract it into config
-        [],
-        { WebSocket, minReconnectionDelay: 1 },
-      ),
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      }),
     ),
   )
 }

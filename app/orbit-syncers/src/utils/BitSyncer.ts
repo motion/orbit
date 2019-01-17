@@ -2,9 +2,10 @@ import { BitEntity, PersonEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Bit, GithubSource, Source } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
-import { hash } from '@mcro/utils'
+import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getManager, getRepository } from 'typeorm'
+import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 
 /**
  * Sync Bits options.
@@ -23,7 +24,7 @@ export class BitSyncer {
   private source: Source
   private log: Logger
 
-  constructor(source: Source|undefined, log: Logger) {
+  constructor(source: Source | undefined, log: Logger) {
     this.source = source
     this.log = log
   }
@@ -90,13 +91,19 @@ export class BitSyncer {
     try {
       await getManager().transaction(async manager => {
         // drop all exist bits if such option was specified
-        if (options.dropAllBits && this.source) await manager.delete(BitEntity, { sourceId: this.source.id })
+        if (options.dropAllBits && this.source)
+          await manager.delete(BitEntity, { sourceId: this.source.id })
 
         // insert new bits
         if (insertedBits.length > 0) {
           const insertedBitChunks = chunk(insertedBits, 50)
           for (let bits of insertedBitChunks) {
+            if (this.source) {
+              await checkCancelled(this.source.id)
+            }
             await manager.insert(BitEntity, bits)
+            // Add some small throttle
+            await sleep(20)
           }
           for (let bit of insertedBits) {
             await manager
@@ -109,6 +116,9 @@ export class BitSyncer {
 
         // update changed bits
         for (let bit of updatedBits) {
+          if (this.source) {
+            await checkCancelled(this.source.id)
+          }
           await manager.update(BitEntity, { id: bit.id }, bit)
 
           const dbPeople = await manager.getRepository(PersonEntity).find({

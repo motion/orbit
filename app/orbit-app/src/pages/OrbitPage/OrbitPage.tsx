@@ -17,6 +17,7 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { invertLightness } from '@mcro/color'
 import { StoreContext } from '../../contexts'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 
 export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
@@ -25,11 +26,14 @@ export default observer(() => {
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
+  const activeApps = useActiveAppsSorted({ spaceStore })
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: [
-      ...spaceStore.apps,
+      ...activeApps.map(app => ({
+        ...app,
+        keyable: true,
+      })),
       ...[
-        { name: 'Lists', type: 'lists' },
         { name: 'Settings', type: 'settings' },
         { name: 'Sources', type: 'sources' },
         { name: 'Onboard', type: 'onboard' },
@@ -48,7 +52,7 @@ export default observer(() => {
 
   return (
     <StoreContext.Provider value={stores}>
-      <MainShortcutHandler queryStore={queryStore}>
+      <MainShortcutHandler>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <Chrome>
@@ -78,5 +82,5 @@ const InnerChrome = gloss({
   flex: 1,
   overflow: 'hidden',
 }).theme(() => ({
-  boxShadow: [[0, 0, 20, [0, 0, 0, 0.05]]],
+  boxShadow: [[0, 0, 40, [0, 0, 0, 0.05]]],
 }))

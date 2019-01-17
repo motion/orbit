@@ -29,21 +29,21 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       appConfig: sourceToAppConfig(app),
       group: 'Sources',
     })),
-    ...allSources.map((app, index) => ({
+    ...allSources.map((source, index) => ({
       // ...these have their own onClick
-      id: `${app.integration}${index}`,
-      title: app.appName,
-      icon: app.integration,
-      onClick: !app.views.setup && addSourceClickHandler(app),
-      disableSelect: !app.views.setup,
-      after: app.views.setup ? null : (
+      id: `${source.integration}${index}`,
+      title: source.appName,
+      icon: source.integration,
+      onClick: !source.views.setup && addSourceClickHandler(source),
+      disableSelect: !source.views.setup,
+      after: source.views.setup ? null : (
         <View marginTop={4}>
           <Icon size={12} opacity={0.5} name="uilink6" />
         </View>
       ),
-      appConfig: app.views.setup
+      appConfig: source.views.setup
         ? {
-            ...sourceToAppConfig(app, { target: 'source' }),
+            ...sourceToAppConfig(source, { target: 'source' }),
             viewType: 'setup',
           }
         : null,

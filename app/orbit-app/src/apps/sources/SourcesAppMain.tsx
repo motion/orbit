@@ -17,7 +17,8 @@ export const SourcesAppMain = (props: AppProps<any>) => {
   if (!View) {
     return (
       <div>
-        no view type {type}, for source {JSON.stringify(source)}
+        no view type {type}, for source <br />
+        appConfig: <pre>{JSON.stringify(props.appConfig, 0, 2)}</pre>
       </div>
     )
   }

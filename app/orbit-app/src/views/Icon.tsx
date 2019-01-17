@@ -10,6 +10,7 @@ const icons = {
   orbitTopics: require('!raw-loader!../../public/icons/icon-topics.svg'),
   orbitPeople: require('!raw-loader!../../public/icons/icon-people.svg'),
   orbitMemory: require('!raw-loader!../../public/icons/icon-memory.svg'),
+  orbitLists: require('!raw-loader!../../public/icons/icon-lists.svg'),
 
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
   sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),

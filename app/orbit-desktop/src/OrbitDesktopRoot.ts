@@ -1,52 +1,55 @@
 import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
+import { Logger } from '@mcro/logger'
+import {
+  MediatorServer,
+  resolveCommand,
+  resolveMany,
+  typeormResolvers,
+  WebSocketServerTransport,
+} from '@mcro/mediator'
 import {
   AppEntity,
-  BitEntity,
-  JobEntity,
-  PersonBitEntity,
-  PersonEntity,
-  SettingEntity,
-  SourceEntity,
-  SpaceEntity,
-  UserEntity,
-  CosalSaliencyModel,
-  OpenCommand,
-  UserModel,
-} from '@mcro/models'
-import { Logger } from '@mcro/logger'
-import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
-import { resolveCommand, resolveMany } from '@mcro/mediator'
-import {
   AppModel,
+  BitEntity,
   BitModel,
+  BitsNearTopicModel,
+  CheckProxyCommand,
+  CosalSaliencyModel,
+  CosalTopicsModel,
   CosalTopWordsModel,
   GithubRepositoryModel,
   GithubSourceBlacklistCommand,
+  JobEntity,
   JobModel,
+  OpenCommand,
+  PeopleNearTopicModel,
+  PersonBitEntity,
   PersonBitModel,
+  PersonEntity,
   PersonModel,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
   SearchPinnedResultModel,
   SearchResultModel,
+  SettingEntity,
   SettingModel,
+  SetupProxyCommand,
   SlackChannelModel,
   SlackSourceBlacklistCommand,
+  SourceEntity,
   SourceModel,
   SourceRemoveCommand,
   SourceSaveCommand,
+  SpaceEntity,
   SpaceModel,
-  TrendingTopicsModel,
   TrendingTermsModel,
-  PeopleNearTopicModel,
-  BitsNearTopicModel,
-  CosalTopicsModel,
-  CheckProxyCommand,
+  TrendingTopicsModel,
+  UserEntity,
+  UserModel,
 } from '@mcro/models'
-import { SetupProxyCommand } from '@mcro/models'
 import { Screen } from '@mcro/screen'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
@@ -56,20 +59,26 @@ import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { getConnection } from 'typeorm'
+import { AuthServer } from './auth-server/AuthServer'
+import { checkAuthProxy } from './auth-server/checkAuthProxy'
+import { startAuthProxy } from './auth-server/startAuthProxy'
 import { COSAL_DB, screenOptions } from './constants'
 import { AppWindowsManager } from './managers/AppWindowsManager'
 import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
-import { AuthServer } from './auth-server/AuthServer'
 import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
 import { OnboardManager } from './managers/OnboardManager'
+import { OracleManager } from './managers/OracleManager'
 import { ScreenManager } from './managers/ScreenManager'
+import { TopicsManager } from './managers/TopicsManager'
+import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
+import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
@@ -78,12 +87,6 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { WebServer } from './WebServer'
-import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
-import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
-import { checkAuthProxy } from './auth-server/checkAuthProxy'
-import { startAuthProxy } from './auth-server/startAuthProxy'
-import { OracleManager } from './managers/OracleManager'
-import { TopicsManager } from './managers/TopicsManager'
 
 export class OrbitDesktopRoot {
   // public
@@ -309,7 +312,8 @@ export class OrbitDesktopRoot {
         getBitNearTopicsResolver(this.cosal),
         getPeopleNearTopicsResolver(this.cosal),
         resolveMany(SearchResultModel, async args => {
-          return new SearchResultResolver(this.cosal, args).resolve()
+          console.log('ok resolve', await new SearchResultResolver(this.cosal, args).resolve())
+          return await new SearchResultResolver(this.cosal, args).resolve()
         }),
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,

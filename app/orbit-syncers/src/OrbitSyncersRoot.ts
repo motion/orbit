@@ -1,38 +1,36 @@
 import { getGlobalConfig } from '@mcro/config'
-import {
-  Entities,
-  UserModel,
-  AppEntity,
-  BitEntity,
-  JobEntity,
-  PersonBitEntity,
-  PersonEntity,
-  SettingEntity,
-  SourceEntity,
-  SpaceEntity,
-  UserEntity,
-  SourceForceCancelCommand,
-} from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { MediatorServer, WebSocketServerTransport, typeormResolvers } from '@mcro/mediator'
+import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
+  AppEntity,
   AppModel,
+  BitEntity,
   BitModel,
+  Entities,
+  JobEntity,
   JobModel,
+  PersonBitEntity,
   PersonBitModel,
+  PersonEntity,
   PersonModel,
+  SettingEntity,
   SettingModel,
+  SourceEntity,
+  SourceForceCancelCommand,
   SourceForceSyncCommand,
   SourceModel,
+  SpaceEntity,
   SpaceModel,
+  UserEntity,
+  UserModel,
 } from '@mcro/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
-import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
 import { SourceForceCancelResolver } from './resolvers/SourceForceCancelResolver'
+import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()

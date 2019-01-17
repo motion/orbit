@@ -49,6 +49,7 @@ tasks:
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
 - syncers
+  - on process exit it should clear all processing Jobs
   - github syncer and drive syncer not showing anything in their setting pane
   - syncers arent running after first adding them
   - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing

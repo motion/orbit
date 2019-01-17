@@ -54,22 +54,26 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
           <Text size={0.9} fontWeight={400}>
             {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
           </Text>
-          <TitleBarSpace />
-          <TitleBarButton
-            onClick={() => command(SourceForceCancelCommand, { sourceId: props.source.id })}
-            size={0.8}
-          >
-            Cancel
-          </TitleBarButton>
-          <TitleBarSpace />
-          <TitleBarSpace />
+          {!removeJobs.length && (
+            <>
+              <TitleBarSpace />
+              <TitleBarButton
+                onClick={() => command(SourceForceCancelCommand, { sourceId: props.source.id })}
+                size={0.8}
+              >
+                Cancel
+              </TitleBarButton>
+              <TitleBarSpace />
+              <TitleBarSpace />
+            </>
+          )}
         </>
       )}
       <Text size={0.9} fontWeight={400} alpha={0.6}>
         {(bitsCount || 0).toLocaleString()} total
       </Text>
       <TitleBarSpace />
-      <SegmentedRow>
+      <SegmentedRow spaced>
         <TitleBarButton
           disabled={removeJobs.length > 0 || activeJobs.length > 0}
           icon="remove"

@@ -302,7 +302,7 @@ const Divider = gloss({
   left: 10,
   right: 10,
 }).theme((_, theme) => ({
-  background: theme.color.alpha(0.017),
+  background: theme.borderColor.alpha(0.1),
 }))
 
 const ListItemChrome = gloss({

@@ -107,7 +107,7 @@ export default observer(function OrbitNav() {
           <SortableTabs
             axis="x"
             lockAxis="x"
-            distance={15}
+            distance={8}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
               updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })

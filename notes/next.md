@@ -7,9 +7,20 @@ sorting by prepping to split out work as best possible:
 
 - figure out account management
   - need some way to sync
+  - have to beat this:
+    - you get your own account via just email
+    - once you enter email and add ONE integration, we can link them
+    - perhaps just limit to slack/google first
+    - that way we can store email + integration for next time you sign in
+    - then we can provide a way to invite your teammates down the road
+  - allow teammates option from your master to "join" the space automatically
+  - give an invite code to the first person
 
 work to split out:
 
+- beta stuff:
+  - signup with your email on the website
+  - invite generation + validation in the app
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
 - make it much easier to create apps / have them in their own area

@@ -58,6 +58,14 @@ tasks:
   - github smart sync shouldn't sync everything, just recent stuff
   - got an out of memory issue during multiple syncs:
     - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
+  - compression:
+    - needs to just do a sweep like a garbage collector:
+      - have concept of "full" vs "compressed" sync state for bits
+      - if an integration is taking more space, move from full => compressed
+    - needs concept of "hydrate" endpoint
+      - this can be shared between the syncers and the frontend (command)
+      - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
+      - these endpoints would need some rate limit logic (later)
 - issue with reporting errors in observable queries, they are unhandled/not sent upwards
   - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)

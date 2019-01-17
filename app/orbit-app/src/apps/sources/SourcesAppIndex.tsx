@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
-import { Icon, Text, View } from '@mcro/ui'
+import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
@@ -15,14 +15,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       // only apply the click events to the active sources...
       ...props.itemProps,
       id: app.source.id,
-      title: (
-        <>
-          {app.appName}&nbsp;·&nbsp;
-          <Text fontWeight={300} alpha={0.7}>
-            {app.display.name}
-          </Text>
-        </>
-      ),
+      title: app.display.name,
       subtitle: <OrbitAppInfo sourceId={app.source.id} app={app} />,
       icon: app.integration,
       total: activeSources.length,

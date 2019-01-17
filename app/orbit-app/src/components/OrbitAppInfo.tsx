@@ -24,7 +24,8 @@ export const OrbitAppInfo = (props: Props) => {
 
   return (
     <Row alignItems="center" flex={1}>
-      <Text size={0.9}>
+      <Text size={0.9} alpha={0.5}>
+        {props.app.appName}&nbsp;·&nbsp;
         {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
       </Text>
       <View flex={1} />

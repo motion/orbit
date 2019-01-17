@@ -1,33 +1,27 @@
-import { react, always } from '@mcro/black'
-import { observeMany } from '@mcro/model-bridge'
-import { App, AppModel, ListsApp, AppType } from '@mcro/models'
-import { useStore } from '@mcro/use-store'
+import { always, react } from '@mcro/black'
+import { AppType, ListsApp } from '@mcro/models'
+import { Button, View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
+import { OrbitList } from '../../views/Lists/OrbitList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
-import { View, Button } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import { OrbitList } from '../../views/Lists/OrbitList'
 
 class ListsIndexStore {
   props: AppProps<AppType.lists>
+  stores = useHook(useStoresSafe)
 
-  // todo: this probably should be in some AppStore but there are multiple AppStores already
-  apps: App[] = []
+  get apps() {
+    return this.stores.spaceStore.apps
+  }
 
   get listsApp() {
     return this.apps.find(app => app.type === AppType.lists) as ListsApp
   }
-
-  willUnmount() {
-    this.apps$.unsubscribe()
-  }
-
-  private apps$ = observeMany(AppModel, { args: {} }).subscribe(apps => {
-    this.apps = apps
-  })
 
   get allLists() {
     if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) {

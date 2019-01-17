@@ -108,6 +108,7 @@ export class SearchStore {
 
   searchState = react(
     () => [
+      this.stores.spaceStore.activeSpace.id,
       this.stores.appStore.activeQuery,
       this.queryFilters.activeFilters,
       this.queryFilters.exclusiveFilters,
@@ -115,7 +116,7 @@ export class SearchStore {
       this.queryFilters.dateState,
       always(this.stores.spaceStore.apps),
     ],
-    async ([query], { when, setValue, idle, sleep }): Promise<SearchState> => {
+    async ([spaceId, query], { when, setValue, idle, sleep }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
       if (!this.isActive) {
         await sleep(750)
@@ -164,7 +165,7 @@ export class SearchStore {
 
       const { startDate, endDate } = dateState
       const baseFindOptions = {
-        spaceId: 1, // todo: how do we can space id from store here?
+        spaceId, // todo: how do we can space id from store here?
         query: activeQuery,
         searchBy,
         sortBy,
@@ -210,8 +211,11 @@ export class SearchStore {
           icon: app.type,
           appConfig: {
             id: '0',
-            title: '',
+            title: `Open app: ${app.name}`,
             type: AppType.message,
+            data: {
+              icon: app.type,
+            },
           },
           onOpen: () => {
             console.log('selecting app...', app.type, app.id)

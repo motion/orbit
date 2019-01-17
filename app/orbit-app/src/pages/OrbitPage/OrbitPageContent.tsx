@@ -28,15 +28,16 @@ class OrbitStore {
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
+    console.log('select', index, appConfig, this.activePane)
     if (!appConfig) {
       console.warn('no app config', index)
       return
     }
-    const type = appConfig.type === 'bit' ? AppType.search : appConfig.type
-    if (!isEqual(this.activeConfig[type], appConfig)) {
+    const paneType = this.activePane.type
+    if (!isEqual(this.activeConfig[paneType], appConfig)) {
       this.activeConfig = {
         ...this.activeConfig,
-        [type]: appConfig,
+        [paneType]: appConfig,
       }
     }
   }

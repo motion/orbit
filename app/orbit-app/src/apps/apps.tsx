@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { AppType } from '@mcro/models'
 import { AppProps } from './AppProps'
 import { GenericComponent } from '../types'
@@ -9,6 +10,9 @@ import { bit } from './bit'
 import { home } from './home'
 import { sources } from './sources'
 import { settings } from './settings'
+import { Center } from '../views/Center'
+import { Title, VerticalSpace } from '../views'
+import { Icon } from '../views/Icon'
 
 type App = {
   index?: GenericComponent<AppProps<any>>
@@ -27,7 +31,13 @@ export const apps: AppsIndex = {
   bit,
   home,
   message: {
-    main: () => <div>empty main</div>,
+    main: props => (
+      <Center>
+        {props.appConfig.data.icon ? <Icon name={props.appConfig.data.icon} size={32} /> : null}
+        <VerticalSpace />
+        <Title>{props.appConfig.title}</Title>
+      </Center>
+    ),
     index: () => <div>empty main</div>,
   },
 }

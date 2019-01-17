@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 
-export const Centered = gloss({
+export const HorizontalCenter = gloss({
   position: 'absolute',
   top: 0,
   left: 150,

@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import * as Constants from '../../../constants'
 import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { Glint, Row, Text } from '@mcro/ui'
-import { Centered } from '../../../views/Centered'
+import { HorizontalCenter } from '../../../views/HorizontalCenter'
 import { AppPageStore } from '../../../pages/AppPage/AppPageStore'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { observer } from 'mobx-react-lite'
@@ -17,7 +17,7 @@ type Props = {
   children?: React.ReactNode
 }
 
-export default observer(function AppHeaderContent(props: Props) {
+const AppHeaderContent = observer(function AppHeaderContent(props: Props) {
   const { appPageStore } = useStoresSafe()
   const { before, after, children, ...rest } = props
   let hideTitleBar = false
@@ -40,14 +40,14 @@ export default observer(function AppHeaderContent(props: Props) {
             {typeof before === 'string' ? <TitleBarText>{before}</TitleBarText> : before}
           </HeaderSection>
         )}
-        {!!children && <Centered>{children}</Centered>}
+        {!!children && <HorizontalCenter>{children}</HorizontalCenter>}
         {!!after && <HeaderSection>{after}</HeaderSection>}
       </MainHead>
     </AppHeaderContain>
   )
 })
 
-export const AppHeader = props => (
+export const AppHeader = (props: Props) => (
   <UI.Theme select={theme => theme.titleBar || theme}>
     <AppHeaderContent {...props} />
   </UI.Theme>

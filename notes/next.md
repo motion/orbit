@@ -34,6 +34,11 @@ sorting by prepping to split out work as best possible:
 
 work to split out:
 
+- syncers
+  - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
+    - perhaps we need better checks for that
+  - syncers arent streaming or something weird is happening
+  - github smart sync shouldn't sync everything, just recent stuff
 - issue with reporting errors in observable queries, they are unhandled/not sent upwards
   - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)

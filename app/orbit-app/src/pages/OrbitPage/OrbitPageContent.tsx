@@ -79,7 +79,7 @@ export default observer(function OrbitPageContent() {
           <OrbitIndexView isHidden={false}>
             {paneManagerStore.panes.map(pane => (
               <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-                <SelectionManager paneId={pane.id} defaultSelected={0}>
+                <SelectionManager paneId={pane.id}>
                   <AppView
                     viewType="index"
                     id={pane.id}

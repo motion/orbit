@@ -1,16 +1,15 @@
-import * as React from 'react'
-import { View, Row, Text, SegmentedRow, Button } from '@mcro/ui'
-import { Icon } from '../../views/Icon'
-import { AppProps } from '../AppProps'
-import { useStore } from '@mcro/use-store'
-import { Separator } from '../../views/Separator'
-import { TopicEdit } from './TopicEdit'
-import ListItem from '../../views/ListItems/ListItem'
-import { SliderPane, default as Slider } from '../../views/Slider'
-import { IS_MINIMAL } from '../../constants'
-import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
+import { Button, Row, SegmentedRow, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { IS_MINIMAL } from '../../constants'
+import { Icon } from '../../views/Icon'
+import ListItem from '../../views/ListItems/ListItem'
+import { default as Slider, SliderPane } from '../../views/Slider'
+import { AppProps } from '../AppProps'
+import { TopicEdit } from './TopicEdit'
 
 const icons = {
   0: ['neutral', 'rgba(180,180,180,0.75)'],
@@ -104,7 +103,6 @@ export const TopicsAppIndex = observer(
           <Button {...buttonProps(store, 'topics')}>Topics</Button>
           <Button {...buttonProps(store, 'terms')}>Terms</Button>
         </SegmentedRow>
-
         <Slider fixHeightToTallest curFrame={store.tabs.indexOf(store.activeTab)} transition="none">
           <SliderPane>
             <ScrollableContent>

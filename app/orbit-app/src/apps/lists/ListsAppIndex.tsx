@@ -69,17 +69,13 @@ class ListsIndexStore {
   )
 }
 
-export default observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
+export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const { results } = useStore(ListsIndexStore, props)
-  const isSmall = props.itemProps && props.itemProps.hideSubtitle
   return (
     <>
       <OrbitList
         items={results}
-        itemProps={{
-          ...props.itemProps,
-          titleProps: { fontSize: isSmall ? 18 : 20, fontWeight: 300 },
-        }}
+        itemProps={props.itemProps}
         getItemProps={index => {
           const result = results[index]
           return {
@@ -92,6 +88,7 @@ export default observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
           }
         }}
       />
+      <View flex={1} />
       <ListEdit />
     </>
   )

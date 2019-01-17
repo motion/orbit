@@ -32,7 +32,17 @@ sorting by prepping to split out work as best possible:
   - allow teammates option from your master to "join" the space automatically
   - give an invite code to the first person
 
-work to split out:
+# employee
+
+message:
+
+lets do one month test period. changes in how we work:
+
+- less interruption and less need for sync in schedule, dont stretch your hours too much
+- open a PR when you start, commit every 30-90 minutes so we can track time
+-
+
+tasks:
 
 - syncers
   - github syncer and drive syncer not showing anything in their setting pane
@@ -41,6 +51,8 @@ work to split out:
     - perhaps we need better checks for that
   - syncers arent streaming or something weird is happening
   - github smart sync shouldn't sync everything, just recent stuff
+  - got an out of memory issue during multiple syncs:
+    - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
 - issue with reporting errors in observable queries, they are unhandled/not sent upwards
   - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)

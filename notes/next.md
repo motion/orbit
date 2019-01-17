@@ -44,6 +44,8 @@ lets do one month test period. changes in how we work:
 
 tasks:
 
+- loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
+  - this should just go from client => desktop right?
 - syncers
   - github syncer and drive syncer not showing anything in their setting pane
   - syncers arent running after first adding them
@@ -61,8 +63,6 @@ tasks:
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app
-- loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
-  - this should just go from client => desktop right?
 - make it much easier to create apps / have them in their own area
   - with their own data they can easily hook into
 - syncers bugfixing and improving performance and data storage

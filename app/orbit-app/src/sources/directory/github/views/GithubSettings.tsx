@@ -1,6 +1,6 @@
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import { Text, View, SearchableTable } from '@mcro/ui'
+import { Text, View, SearchableTable, Tabs, Tab } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
@@ -52,6 +52,10 @@ export default observer(function GithubSettings(props: Props) {
   const store = useStore(GithubSettingStore, props)
   return (
     <>
+      <Tabs active={0}>
+        <Tab key={0} label="ok" />
+        <Tab key={1} label="two" />
+      </Tabs>
       <SettingManageRow source={props.source} whitelist={store.whitelist} />
       <View
         flex={1}

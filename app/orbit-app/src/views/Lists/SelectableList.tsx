@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { OrbitListProps, OrbitList } from './OrbitList'
 import { useSelectableResults } from '../../hooks/useSelectableResults'
+import { OrbitList, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   defaultSelected?: number

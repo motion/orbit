@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { Surface, Text } from '@mcro/ui'
+import * as React from 'react'
 
 export const Banner = props => (
   <Surface background="transparent" alignItems="center" justifyContent="center" padding={[6, 10]}>

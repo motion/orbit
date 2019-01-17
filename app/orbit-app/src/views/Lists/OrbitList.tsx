@@ -1,9 +1,9 @@
+import { AppConfig, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
-import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
-import { PersonBit, Bit, AppConfig } from '@mcro/models'
-import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { OrbitListItem } from '../ListItems/OrbitListItem'
+import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
 export type SearchableItem = (Bit | PersonBit)[]
 

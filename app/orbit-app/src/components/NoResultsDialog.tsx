@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { VerticalSpace } from '../views'
 import { Button, View } from '@mcro/ui'
-import * as Views from '../views'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { PaneManagerStore } from '../stores/PaneManagerStore'
+import * as Views from '../views'
+import { VerticalSpace } from '../views'
 
 type Props = {
   paneManagerStore?: PaneManagerStore

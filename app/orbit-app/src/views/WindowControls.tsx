@@ -1,6 +1,6 @@
+import { Row, View } from '@mcro/ui'
 import * as React from 'react'
 import { ControlButton } from './ControlButton'
-import { View, Row } from '@mcro/ui'
 
 export const WindowCloseButton = props => <ControlButton icon="x" background="#FF6159" {...props} />
 

@@ -1,6 +1,6 @@
+import { View } from '@mcro/ui'
 import * as React from 'react'
 import { generateOrbital } from './generateOrbital'
-import { View } from '@mcro/ui'
 
 type Props = {
   start?: boolean

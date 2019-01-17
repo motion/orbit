@@ -1,6 +1,6 @@
 import * as React from 'react'
-import ListItem, { ListItemProps } from '../ListItems/ListItem'
 import { SortableElement } from 'react-sortable-hoc'
+import ListItem, { ListItemProps } from '../ListItems/ListItem'
 import { renderHighlightedText } from './renderHighlightedText'
 
 export type VirtualListItemProps<Item> = ListItemProps & {

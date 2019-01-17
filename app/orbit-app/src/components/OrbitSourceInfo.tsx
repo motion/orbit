@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { useSourceInfo } from '../hooks/useSourceInfo'
-import { useJobs } from '../hooks/useJobs'
-import { Text, Row, View } from '@mcro/ui'
-import { OrbitIntegration } from '../sources/types'
+import { Row, Text, View } from '@mcro/ui'
 import pluralize from 'pluralize'
+import * as React from 'react'
+import { useJobs } from '../hooks/useJobs'
+import { useSourceInfo } from '../hooks/useSourceInfo'
+import { OrbitIntegration } from '../sources/types'
 
 type Props = {
   sourceId: number

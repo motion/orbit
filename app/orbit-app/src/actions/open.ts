@@ -1,5 +1,5 @@
-import { App, Desktop, Electron } from '@mcro/stores'
 import { Bit, PersonBit } from '@mcro/models'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { AppActions } from './AppActions'
 
 export async function open(url) {

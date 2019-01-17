@@ -1,12 +1,12 @@
-import * as React from 'react'
-import { AppStore } from './AppStore'
-import { apps } from './apps'
-import { AppProps } from './AppProps'
 import { useStore } from '@mcro/use-store'
-import { GenericComponent } from '../types'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { MergeContext } from '../views/MergeContext'
+import * as React from 'react'
 import { StoreContext } from '../contexts'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { GenericComponent } from '../types'
+import { MergeContext } from '../views/MergeContext'
+import { AppProps } from './AppProps'
+import { apps } from './apps'
+import { AppStore } from './AppStore'
 
 type Props = Pick<
   AppProps<any>,

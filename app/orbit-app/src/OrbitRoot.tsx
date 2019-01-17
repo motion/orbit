@@ -1,17 +1,16 @@
 // import dev helpers
-import './helpers/installDevelopmentHelpers'
-
-import * as React from 'react'
-import { createNavigator, SwitchRouter, SceneView } from '@react-navigation/core'
-import { createBrowserApp } from '@react-navigation/web'
-import { hot } from 'react-hot-loader'
-import { ThemeProvide } from '@mcro/ui'
-import { themes } from './themes'
-import { throttle, isEqual } from 'lodash'
-import { App } from '@mcro/stores'
-import OrbitPage from './pages/OrbitPage/OrbitPage'
 import { command } from '@mcro/model-bridge'
 import { OpenCommand } from '@mcro/models'
+import { App } from '@mcro/stores'
+import { ThemeProvide } from '@mcro/ui'
+import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
+import { createBrowserApp } from '@react-navigation/web'
+import { isEqual, throttle } from 'lodash'
+import * as React from 'react'
+import { hot } from 'react-hot-loader'
+import './helpers/installDevelopmentHelpers'
+import OrbitPage from './pages/OrbitPage/OrbitPage'
+import { themes } from './themes'
 
 // pages
 

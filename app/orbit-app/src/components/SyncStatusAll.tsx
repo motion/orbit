@@ -1,6 +1,6 @@
-import * as React from 'react'
 import { useObserveMany } from '@mcro/model-bridge'
 import { JobModel } from '@mcro/models'
+import * as React from 'react'
 import { SubTitle } from '../views/SubTitle'
 
 export const SyncStatusAll = () => {

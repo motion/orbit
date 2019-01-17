@@ -1,7 +1,7 @@
+import { CSSPropertySet } from '@mcro/gloss'
+import { View } from '@mcro/ui'
 import * as React from 'react'
 import { SectionTitle } from './SectionTitle'
-import { View } from '@mcro/ui'
-import { CSSPropertySet } from '@mcro/gloss'
 
 type SectionProps = CSSPropertySet & {
   title: string

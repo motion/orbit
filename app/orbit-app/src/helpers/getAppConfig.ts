@@ -1,7 +1,7 @@
+import { AppConfig } from '@mcro/models'
 import { allIntegrations } from '../sources'
 import { ResolvableModel } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
-import { AppConfig } from '@mcro/models'
 
 export const getAppConfig = (model: ResolvableModel): AppConfig => {
   let type: string = ''

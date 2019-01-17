@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Col, SizedSurface, Theme, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
-import { OrbitCard } from '../views/OrbitCard'
+import { Col, SizedSurface, Text, Theme } from '@mcro/ui'
+import * as React from 'react'
 import { OrbitItemViewProps } from '../sources/types'
+import { OrbitCard } from '../views/OrbitCard'
 
 type Props = OrbitItemViewProps<any> & {
   isActive?: boolean

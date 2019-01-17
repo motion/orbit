@@ -1,17 +1,17 @@
 import { ensure, react } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel, AppType, Setting } from '@mcro/models'
+import { AppType, Setting, SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
+import { generalSettingQuery } from '../../helpers/queries'
 import * as Views from '../../views'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
-import { generalSettingQuery } from '../../helpers/queries'
 import { AppProps } from '../AppProps'
-import { gloss } from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

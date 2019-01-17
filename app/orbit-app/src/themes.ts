@@ -1,4 +1,4 @@
-import { ThemeMaker, color } from '@mcro/gloss'
+import { color, ThemeMaker } from '@mcro/gloss'
 
 const Theme = new ThemeMaker()
 

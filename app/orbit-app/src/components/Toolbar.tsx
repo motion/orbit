@@ -1,7 +1,7 @@
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { gloss } from '@mcro/gloss'
 
 export const Toolbar = props => {
   const stores = useStoresSafe()

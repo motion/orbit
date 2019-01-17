@@ -1,20 +1,20 @@
-import * as React from 'react'
-import {
-  WindowScroller,
-  List,
-  CellMeasurerCache,
-  CellMeasurer,
-  InfiniteLoader,
-} from 'react-virtualized'
-import { ensure, react, always } from '@mcro/black'
+import { always, ensure, react } from '@mcro/black'
 import { View } from '@mcro/ui'
-import { SortableContainer } from 'react-sortable-hoc'
-import { Banner } from '../Banner'
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 import { useStore } from '@mcro/use-store'
-import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { SortableContainer } from 'react-sortable-hoc'
+import {
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+  List,
+  WindowScroller,
+} from 'react-virtualized'
+import { GenericComponent } from '../../types'
+import { Banner } from '../Banner'
 import { HandleSelection } from '../ListItems/ListItem'
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 
 export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
 

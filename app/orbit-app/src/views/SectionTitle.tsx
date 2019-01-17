@@ -1,8 +1,8 @@
+import { gloss } from '@mcro/gloss'
+import { Row } from '@mcro/ui'
 import * as React from 'react'
 import { SubTitle } from '.'
 import { RoundButtonSmall } from './RoundButtonSmall'
-import { Row } from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
 
 const SectionRow = gloss(Row, {}).theme((_, theme) => ({
   background: theme.background,

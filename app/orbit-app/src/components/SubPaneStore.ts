@@ -1,11 +1,11 @@
-import { on, react, ensure } from '@mcro/black'
-import { throttle, debounce } from 'lodash'
-import { SubPaneProps } from './SubPane'
+import { ensure, on, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { AppActions } from '../actions/AppActions'
-import { createRef } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { useHook } from '@mcro/use-store'
+import { debounce, throttle } from 'lodash'
+import { createRef } from 'react'
+import { AppActions } from '../actions/AppActions'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { SubPaneProps } from './SubPane'
 
 export class SubPaneStore {
   props: SubPaneProps

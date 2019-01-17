@@ -1,11 +1,11 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { SubPaneStore } from './SubPaneStore'
-import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { gloss } from '@mcro/gloss'
+import { AppType } from '@mcro/models'
+import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
-import { gloss } from '@mcro/gloss'
+import * as React from 'react'
+import { SubPaneStore } from './SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: number

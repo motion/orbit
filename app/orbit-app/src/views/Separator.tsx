@@ -1,5 +1,5 @@
-import { Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { Text } from '@mcro/ui'
 
 export const Separator = gloss(Text, {
   padding: [10, 10, 2],

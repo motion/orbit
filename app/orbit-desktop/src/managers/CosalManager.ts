@@ -1,17 +1,12 @@
-import { BitEntity, SettingEntity, Bit, BitUtils } from '@mcro/models'
-import { getRepository } from 'typeorm'
-import { Logger } from '@mcro/logger'
 import { Cosal } from '@mcro/cosal'
-import { chunk, zip, flatten, last } from 'lodash'
-import { remove } from 'fs-extra'
-import { COSAL_DB } from '../constants'
+import { Logger } from '@mcro/logger'
+import { Bit, BitEntity, BitUtils } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import {
-  getSetting,
-  getSettingValue,
-  updateSetting,
-  ensureSetting,
-} from '../helpers/settingModelHelpers'
+import { remove } from 'fs-extra'
+import { chunk, last } from 'lodash'
+import { getRepository } from 'typeorm'
+import { COSAL_DB } from '../constants'
+import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
 const log = new Logger('CosalManager')
 
@@ -41,7 +36,6 @@ export class CosalManager {
     // TODO make this a bit better so its controlled above
     await sleep(2000)
     this.updateSearchIndexWithNewBits()
-    this.scanTopics()
   }
 
   dispose() {
@@ -106,40 +100,5 @@ export class CosalManager {
     }
 
     log.info('Done scanning new bits')
-  }
-
-  scanTopics = () => {
-    this.scanTopicsInt = setInterval(this.doScanTopics, 1000 * 60 * 15)
-    this.doScanTopics()
-  }
-
-  doScanTopics = async () => {
-    console.log('Scanning topics')
-    console.time('doScanTopics')
-    const topTopics = await this.getGlobalTopTopics()
-    const setting = await getSetting()
-    setting.values.topTopics = topTopics
-    await getRepository(SettingEntity).save(setting)
-    console.timeEnd('doScanTopics')
-  }
-
-  getGlobalTopTopics = async () => {
-    console.log('SCANNING ALL BITS MAY BE SUPER SLOW...')
-    const totalBits = await getRepository(BitEntity).count()
-    if (!totalBits) {
-      return []
-    }
-    const maxPerGroup = 50
-    const numScans = Math.ceil(totalBits / maxPerGroup)
-    let allTopics: string[][] = []
-    for (let i = 0; i < numScans; i++) {
-      const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
-      const bodies = bits.map(BitUtils.getSearchableText).join(' ')
-      const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
-      // dont flatten
-      allTopics = [...allTopics, topics]
-    }
-    const topTopics = flatten(flatten(zip(allTopics)))
-    return topTopics
   }
 }

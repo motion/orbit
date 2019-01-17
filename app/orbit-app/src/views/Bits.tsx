@@ -1,7 +1,7 @@
-import * as React from 'react'
+import { Bit } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { format, formatDistance } from 'date-fns'
-import { Bit } from '@mcro/models'
+import * as React from 'react'
 
 export class Bits extends React.Component<{ bits: Bit[] }> {
   getTask = task => {

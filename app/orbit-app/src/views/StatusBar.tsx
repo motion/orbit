@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Row, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { Row, Text } from '@mcro/ui'
+import * as React from 'react'
 import { RoundButtonSmall } from './RoundButtonSmall'
 
 export const StatusBar = gloss({

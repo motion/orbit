@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { View } from '@mcro/ui'
-import { useResizeObserver } from '../hooks/useResizeObserver'
 import { gloss } from '@mcro/gloss'
+import { View } from '@mcro/ui'
+import * as React from 'react'
+import { useResizeObserver } from '../hooks/useResizeObserver'
 
 type SliderProps = {
   curFrame: number

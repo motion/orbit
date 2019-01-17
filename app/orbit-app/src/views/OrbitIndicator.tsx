@@ -1,9 +1,9 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { App, Desktop } from '@mcro/stores'
-import * as Constants from '../constants'
 import { gloss } from '@mcro/gloss'
+import { App, Desktop } from '@mcro/stores'
+import * as UI from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import * as Constants from '../constants'
 
 const { SHADOW_PAD } = Constants
 const iWidth = 4

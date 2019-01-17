@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { SVG } from './SVG'
-import { ThemeContext, IconProps, View, Image } from '@mcro/ui'
 import * as UI from '@mcro/ui'
+import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
+import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
+import { SVG } from './SVG'
 
 const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),

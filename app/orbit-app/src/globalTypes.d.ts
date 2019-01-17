@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 declare const electronRequire: (a: string) => any
 
 declare module '*.svg' {

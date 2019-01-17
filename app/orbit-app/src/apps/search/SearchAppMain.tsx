@@ -1,9 +1,9 @@
+import { AppType } from '@mcro/models'
 import * as React from 'react'
+import { Message } from '../../views/Message'
 import { AppProps } from '../AppProps'
 import AppView from '../AppView'
 import SearchAppIndex from './SearchAppIndex'
-import { AppType } from '@mcro/models'
-import { Message } from '../../views/Message'
 
 export default function SearchAppMain(props: AppProps<AppType.search>) {
   const appConfig = props.appConfig

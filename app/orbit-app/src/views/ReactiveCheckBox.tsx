@@ -1,6 +1,6 @@
-import * as React from 'react'
 import { gloss } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 
 type Props = {
   isActive?: () => boolean

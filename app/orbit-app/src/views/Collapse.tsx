@@ -1,5 +1,5 @@
-import * as React from 'react'
 import * as UI from '@mcro/ui'
+import * as React from 'react'
 
 export class Body extends React.Component {
   state = {

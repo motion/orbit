@@ -1,9 +1,9 @@
-import React from 'react'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import React from 'react'
+import { StoreContext } from '../contexts'
 import { SelectionStore } from '../stores/SelectionStore'
 import { MergeContext } from '../views/MergeContext'
-import { observer } from 'mobx-react-lite'
-import { StoreContext } from '../contexts'
 
 export type SelectionManagerProps = {
   paneId?: number

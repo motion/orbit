@@ -1,6 +1,6 @@
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { SubTitle } from './SubTitle'
-import { gloss } from '@mcro/gloss'
 
 const Separator = gloss({
   padding: [2, 16],

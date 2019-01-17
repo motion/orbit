@@ -1,5 +1,5 @@
-import { View } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { View } from '@mcro/ui'
 
 export const Pane = gloss(View, {
   height: 0,

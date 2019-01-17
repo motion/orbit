@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { Button } from '@mcro/ui'
+import * as React from 'react'
 
 export const NavButton = props => (
   <Button

@@ -1,5 +1,5 @@
-import { NormalItem } from './normalizeItem'
 import { AppActions } from '../actions/AppActions'
+import { NormalItem } from './normalizeItem'
 
 export function handleClickLocation(item: NormalItem, e?: Event) {
   if (e) {

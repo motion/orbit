@@ -10,7 +10,7 @@ type Props = {
   app?: OrbitIntegration<any>
 }
 
-export const OrbitAppInfo = (props: Props) => {
+export const OrbitSourceInfo = (props: Props) => {
   const sourceId = props.app.source ? props.app.source.id : false
   const { bitsCount } = useSourceInfo(sourceId)
   const allJobs = useJobs(sourceId)
@@ -24,7 +24,7 @@ export const OrbitAppInfo = (props: Props) => {
 
   return (
     <Row alignItems="center" flex={1}>
-      <Text size={0.9} alpha={0.5}>
+      <Text size={0.9} alpha={0.5} ellipse>
         {props.app.appName}&nbsp;·&nbsp;
         {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
       </Text>

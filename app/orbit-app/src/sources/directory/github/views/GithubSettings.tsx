@@ -52,10 +52,6 @@ export default observer(function GithubSettings(props: Props) {
   const store = useStore(GithubSettingStore, props)
   return (
     <>
-      <Tabs active={0}>
-        <Tab key={0} label="ok" />
-        <Tab key={1} label="two" />
-      </Tabs>
       <SettingManageRow source={props.source} whitelist={store.whitelist} />
       <View
         flex={1}

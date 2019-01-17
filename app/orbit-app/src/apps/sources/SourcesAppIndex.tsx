@@ -4,7 +4,7 @@ import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
 import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
-import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { AppType } from '@mcro/models'
 import SelectableList from '../../views/Lists/SelectableList'
 
@@ -16,7 +16,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       ...props.itemProps,
       id: app.source.id,
       title: app.display.name,
-      subtitle: <OrbitAppInfo sourceId={app.source.id} app={app} />,
+      subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
       icon: app.integration,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),

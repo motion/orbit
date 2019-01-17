@@ -100,7 +100,9 @@ export class PaneManagerStore {
   }
 
   setActivePaneToPrevious = () => {
-    this.setActivePane(this.lastActivePane.id)
+    if (this.lastActivePane) {
+      this.setActivePane(this.lastActivePane.id)
+    }
   }
 
   handleOnPaneChange = react(

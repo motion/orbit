@@ -124,8 +124,10 @@ const ToolbarChrome = gloss({
   // minHeight: 3,
   maxHeight: 50,
 }).theme((_, theme) => ({
-  borderTop: [1, theme.tabBackground],
+  // borderTop: [2, theme.tabBackground],
   background: theme.background,
+  borderBottom: [1, theme.borderColor.alpha(0.35)],
+  // background: theme.background,
 }))
 
 const OrbitIndexView = gloss(View, {

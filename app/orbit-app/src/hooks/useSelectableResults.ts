@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useComputed } from 'mobx-react-lite'
 import { useStoresSafe } from './useStoresSafe'
-import { OrbitListProps } from '../views/Lists/OrbitList'
 import { Direction } from '../stores/SelectionStore'
+import { SelectableListProps } from '../views/Lists/SelectableList'
 
-export function useSelectableResults(props: Partial<OrbitListProps> & { isActive?: boolean }) {
+export function useSelectableResults(props: SelectableListProps) {
   const { appStore, shortcutStore, selectionStore } = useStoresSafe()
-  const isActive = useComputed(() =>
-    typeof props.isActive === 'boolean' ? props.isActive : !!appStore.isActive,
+  const isActive = useComputed(
+    () => (typeof props.isSelectable === 'boolean' ? props.isSelectable : !!appStore.isActive),
+    [props.isSelectable],
   )
 
   useEffect(
@@ -15,6 +16,10 @@ export function useSelectableResults(props: Partial<OrbitListProps> & { isActive
       if (isActive) {
         if (props.items) {
           appStore.setResults([{ type: 'column', indices: props.items.map((_, index) => index) }])
+        }
+
+        if (typeof props.defaultSelected === 'number' && selectionStore.activeIndex === -1) {
+          selectionStore.setActiveIndex(props.defaultSelected)
         }
 
         return shortcutStore.onShortcut(shortcut => {

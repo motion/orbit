@@ -48,17 +48,15 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
       {...itemProps}
       isSelected={index => {
         const appActive = appStore ? appStore.isActive : true
-        const isSelected = selectionStore ? selectionStore.activeIndex === index : props.isSelected
+        const isSelected =
+          props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
         return appActive && isSelected
       }}
       // allow props to override isSelected but not onSelect
       // onSelect merges
       {...props}
       onSelect={index => {
-        if (selectionStore) {
-          if (selectionStore.activeIndex === index) {
-            return
-          }
+        if (selectionStore && selectionStore.activeIndex !== index) {
           selectionStore.toggleSelected(index)
         }
         if (props.onSelect) {

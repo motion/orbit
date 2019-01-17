@@ -14,7 +14,6 @@ import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 import { useStore } from '@mcro/use-store'
 import { GenericComponent } from '../../types'
 import { observer } from 'mobx-react-lite'
-import { trace } from 'mobx'
 import { HandleSelection } from '../ListItems/ListItem'
 
 export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null

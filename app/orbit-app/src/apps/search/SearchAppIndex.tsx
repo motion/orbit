@@ -16,6 +16,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         <SearchNav />
       </Toolbar>
       <SelectableList
+        defaultSelected={0}
         items={searchStore.searchState.results}
         query={props.appStore.activeQuery}
         onSelect={props.onSelectItem}

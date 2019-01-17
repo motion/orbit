@@ -7,7 +7,7 @@ import {
   SearchResult,
   AppType,
 } from '@mcro/models'
-import { uniq, flatten } from 'lodash'
+import { uniq, flatten, capitalize } from 'lodash'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppProps } from '../AppProps'
 import { fuzzyQueryFilter } from '../../helpers'
@@ -205,23 +205,26 @@ export class SearchStore {
           {
             key: 'name',
           },
-        ).map(app => ({
-          group: 'Apps',
-          title: app.name,
-          icon: app.type,
-          appConfig: {
-            id: '0',
-            title: `Open app: ${app.name}`,
-            type: AppType.message,
-            data: {
-              icon: app.type,
+        ).map(app => {
+          const icon = `orbit${capitalize(app.type)}`
+          return {
+            group: 'Apps',
+            title: app.name,
+            icon,
+            appConfig: {
+              id: '0',
+              title: `Open app: ${app.name}`,
+              type: AppType.message,
+              data: {
+                icon,
+              },
             },
-          },
-          onOpen: () => {
-            console.log('selecting app...', app.type, app.id)
-            this.stores.paneManagerStore.setActivePane(app.id)
-          },
-        })),
+            onOpen: () => {
+              console.log('selecting app...', app.type, app.id)
+              this.stores.paneManagerStore.setActivePane(app.id)
+            },
+          }
+        }),
       ]
       setValue({ results, query, finished: false })
 

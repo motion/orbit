@@ -17,6 +17,7 @@ import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
 import { invertLightness } from '@mcro/color'
 import { StoreContext } from '../../contexts'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 
 export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
@@ -25,11 +26,15 @@ export default observer(() => {
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
+  const activeApps = useActiveAppsSorted({ spaceStore })
+  console.log('activeApps', activeApps)
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: [
-      ...spaceStore.apps,
+      ...activeApps.map(app => ({
+        ...app,
+        keyable: true,
+      })),
       ...[
-        { name: 'Lists', type: 'lists' },
         { name: 'Settings', type: 'settings' },
         { name: 'Sources', type: 'sources' },
         { name: 'Onboard', type: 'onboard' },

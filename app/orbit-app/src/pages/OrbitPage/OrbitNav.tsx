@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Icon } from '../../views/Icon'
 import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
-import { useObserveActiveApps } from '../../hooks/useObserveActiveApps'
+import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { App } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
@@ -40,7 +40,7 @@ const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
 
 export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
-  const activeApps = useObserveActiveApps()
+  const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
 

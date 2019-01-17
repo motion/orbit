@@ -3,7 +3,7 @@ import { Direction } from './SelectionStore'
 import { autoTrack } from '../helpers/Track'
 import { memoize } from 'lodash'
 
-export type Pane = { id: number; name?: string; type?: string }
+export type Pane = { id: number; name?: string; type?: string; keyable?: boolean }
 
 export class PaneManagerStore {
   props: {
@@ -16,7 +16,6 @@ export class PaneManagerStore {
     return this.props.panes
   }
 
-  keyablePanes = [0, 3]
   paneIndex = 0
 
   activePane = react(
@@ -47,11 +46,11 @@ export class PaneManagerStore {
     }
     try {
       if (direction === Direction.right) {
-        ensure('within keyable range', this.paneIndex < this.keyablePanes[1])
+        ensure('within keyable range', this.panes[this.paneIndex + 1].keyable)
         this.setPaneIndex(this.paneIndex + 1)
       }
       if (direction === Direction.left) {
-        ensure('within keyable range', this.paneIndex > this.keyablePanes[0])
+        ensure('within keyable range', this.panes[this.paneIndex - 1].keyable)
         this.setPaneIndex(this.paneIndex - 1)
       }
     } catch (e) {

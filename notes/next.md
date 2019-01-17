@@ -3,13 +3,16 @@ until end of jan:
 1. fixes for sources/sync, fix searching within apps, maybe restore lists app
 2. fixes for search, selection, tabs, settingsIndexpane
 3. lists app icon, show in apps, cleanups, add button => search overlay design
-4. people app search/select fixes
-5. new app pane, command to pop out app into own window / multi apps
-6. restore menus a bit just actions dropdown + search
-7. get ocr hooked into menu enable/disable and output results
-8. get ocr => memory simple list
-9. work through lists apps a bit
-10.
+4. hunting down odd bugs and organizing code
+5. people app search/select fixes
+6. new app pane, command to pop out app into own window / multi apps
+7. restore menus a bit just actions dropdown + search
+8. hunting down odd bugs and organizing code
+9. get ocr hooked into menu enable/disable and output results
+10. get ocr => memory simple list
+11. work through lists apps a bit
+12. hunting down odd bugs and organizing code
+13.
 
 sorting by prepping to split out work as best possible:
 

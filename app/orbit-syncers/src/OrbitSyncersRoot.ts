@@ -1,20 +1,20 @@
 import { getGlobalConfig } from '@mcro/config'
 import {
-  AppEntity,
-  BitEntity,
   Entities,
-  JobEntity,
-  PersonBitEntity,
-  PersonEntity,
-  SettingEntity,
-  SourceEntity,
-  SpaceEntity,
   UserModel,
-  UserEntity,
+  // AppEntity,
+  // BitEntity,
+  // JobEntity,
+  // PersonBitEntity,
+  // PersonEntity,
+  // SettingEntity,
+  // SourceEntity,
+  // SpaceEntity,
+  // UserEntity,
   SourceForceCancelCommand,
 } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
 import {
   AppModel,
   BitModel,
@@ -114,17 +114,17 @@ export class OrbitSyncersRoot {
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
-        ...typeormResolvers(this.connection, [
-          { entity: AppEntity, models: [AppModel] },
-          { entity: SettingEntity, models: [SettingModel] },
-          { entity: SourceEntity, models: [SourceModel] },
-          { entity: BitEntity, models: [BitModel] },
-          { entity: JobEntity, models: [JobModel] },
-          { entity: PersonEntity, models: [PersonModel] },
-          { entity: PersonBitEntity, models: [PersonBitModel] },
-          { entity: SpaceEntity, models: [SpaceModel] },
-          { entity: UserEntity, models: [UserModel] },
-        ]),
+        // ...typeormResolvers(this.connection, [
+        //   { entity: AppEntity, models: [AppModel] },
+        //   { entity: SettingEntity, models: [SettingModel] },
+        //   { entity: SourceEntity, models: [SourceModel] },
+        //   { entity: BitEntity, models: [BitModel] },
+        //   { entity: JobEntity, models: [JobModel] },
+        //   { entity: PersonEntity, models: [PersonModel] },
+        //   { entity: PersonBitEntity, models: [PersonBitModel] },
+        //   { entity: SpaceEntity, models: [SpaceModel] },
+        //   { entity: UserEntity, models: [UserModel] },
+        // ]),
         SourceForceSyncResolver,
         SourceForceCancelResolver,
       ],

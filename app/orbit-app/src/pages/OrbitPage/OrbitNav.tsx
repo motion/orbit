@@ -45,6 +45,8 @@ export default observer(function OrbitNav() {
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
 
+  console.log('space', space, 'apps', activeApps)
+
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
   //       but we should refactor useObserve/useModel first so it re-uses

@@ -164,7 +164,7 @@ export class MediatorClient {
         return transport
           .observe('observeOne', {
             model: qm instanceof Query ? qm.model.name : qm.name,
-            args: qm instanceof Query ? qm.args : options.args,
+            args: qm instanceof Query ? qm.args : options.args || {},
             resolvers: qm instanceof Query ? qm.args : options.resolvers,
           })
           .subscribe(

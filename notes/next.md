@@ -34,6 +34,11 @@ sorting by prepping to split out work as best possible:
 
 work to split out:
 
+- issue with reporting errors in observable queries, they are unhandled/not sent upwards
+  - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
+  - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
+    at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
+    at new Subscription"
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app

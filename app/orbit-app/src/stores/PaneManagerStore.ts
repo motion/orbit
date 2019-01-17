@@ -46,11 +46,11 @@ export class PaneManagerStore {
     }
     try {
       if (direction === Direction.right) {
-        ensure('within keyable range', this.panes[this.paneIndex + 1].keyable)
+        ensure('keyable', this.panes[this.paneIndex + 1] && this.panes[this.paneIndex + 1].keyable)
         this.setPaneIndex(this.paneIndex + 1)
       }
       if (direction === Direction.left) {
-        ensure('within keyable range', this.panes[this.paneIndex - 1].keyable)
+        ensure('keyable', this.panes[this.paneIndex - 1] && this.panes[this.paneIndex - 1].keyable)
         this.setPaneIndex(this.paneIndex - 1)
       }
     } catch (e) {
@@ -87,7 +87,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.error(`no pane found! this.props.panes: ${this.panes}`)
+      console.error(`no pane found! this.props.panes`, this.panes)
       return
     }
     if (index !== this.paneIndex) {

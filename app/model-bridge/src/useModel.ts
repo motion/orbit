@@ -15,12 +15,12 @@ type ObserveModelOptions = {
 function useObserveModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
-  defaultValue: any,
+  options: ObserveModelOptions = {},
   queryRunner: Function,
 ) {
   const subscription = useRef(null)
   const curQuery = useRef(null)
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState(options.defaultValue)
   const dispose = () => subscription.current && subscription.current.unsubscribe()
 
   // unmount
@@ -39,22 +39,33 @@ function useObserveModel<ModelType, Args>(
         // unsubscribe last
         dispose()
 
-        // subscribe new
-        subscription.current = queryRunner(model, { args: query }).subscribe(setValue)
+        // subscribe new and update
+        subscription.current = queryRunner(model, { args: query }).subscribe(nextValue => {
+          if (options.onChange) {
+            options.onChange(nextValue)
+          }
+          if (JSON.stringify(value) !== JSON.stringify(nextValue)) {
+            setValue(nextValue)
+          }
+        })
       }
     },
-    [JSON.stringify(query)],
+    [JSON.stringify(query), options.onChange],
   )
 
   return value
 }
+
+const defaultsMany = { defaultValue: [] }
+const defaultsOne = { defaultValue: null }
+const defaultsCount = { defaultValue: 0 }
 
 export function useObserveMany<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: ObserveModelOptions = {},
 ): ModelType[] {
-  return useObserveModel(model, query, options.defaultValue || [], observeMany)
+  return useObserveModel(model, query, { ...defaultsMany, ...options }, observeMany)
 }
 
 export function useObserveOne<ModelType, Args>(
@@ -62,7 +73,7 @@ export function useObserveOne<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ): ModelType {
-  return useObserveModel(model, query, options.defaultValue || null, observeOne)
+  return useObserveModel(model, query, { ...defaultsOne, ...options }, observeOne)
 }
 
 export function useObserveCount<ModelType, Args>(
@@ -70,7 +81,7 @@ export function useObserveCount<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ) {
-  return useObserveModel(model, query, options.defaultValue || 0, observeCount)
+  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeCount)
 }
 
 export function useObserveManyAndCount<ModelType, Args>(
@@ -78,7 +89,7 @@ export function useObserveManyAndCount<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ) {
-  return useObserveModel(model, query, options.defaultValue || 0, observeManyAndCount)
+  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeManyAndCount)
 }
 
 // TODO we can now de-dupe and just re-use the same queries from useModel
@@ -93,19 +104,21 @@ export function useModel<ModelType, Args>(
   const defaultValue = options.defaultValue || null
   const [value, setValue] = useState(defaultValue)
 
+  const updateIfNew = (nextValue: any) => {
+    if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
+      setValue(nextValue)
+    }
+  }
+
   // we observe and update if necessary
-  useObserveOne(model, options.observe && query, {
+  useObserveOne(model, !!options.observe && query, {
     defaultValue,
-    onChange: nextValue => {
-      if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
-        setValue(nextValue)
-      }
-    },
+    onChange: updateIfNew,
   })
 
   useEffect(
     () => {
-      if (query == false) {
+      if (query == false || options.observe) {
         return
       }
       let cancelled = false
@@ -118,7 +131,7 @@ export function useModel<ModelType, Args>(
         cancelled = true
       }
     },
-    [JSON.stringify(query)],
+    [JSON.stringify(query), !!options.observe],
   )
 
   const update = (next: Partial<ModelType>) => {
@@ -126,7 +139,7 @@ export function useModel<ModelType, Args>(
       ...value,
       ...next,
     }
-    setValue(nextValue)
+    updateIfNew(nextValue)
     // save async after update
     save(model, nextValue)
   }

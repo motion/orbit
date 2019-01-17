@@ -50,7 +50,7 @@ export default observer(function OrbitNav() {
   //       identical queries using a WeakMap so we dont have tons of observes...
   React.useEffect(
     () => {
-      if (!space) {
+      if (!space || !activeApps.length) {
         return
       }
       if (!space.paneSort) {

@@ -3,7 +3,7 @@ import { SpaceModel, UserModel } from '@mcro/models'
 
 export function useActiveSpace() {
   const user = useObserveOne(UserModel, {})
-  const args = user ? { where: { id: user.activeSpace } } : false
+  const args = user && { where: { id: user.activeSpace } }
   return useModel(SpaceModel, args, {
     observe: true,
   })

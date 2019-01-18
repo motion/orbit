@@ -1,13 +1,13 @@
 import * as Mobx from 'mobx'
-import { Reaction } from './constants'
 import { automagicReact } from './automagicReact'
+import { Reaction } from './constants'
 import { MagicalObject } from './types'
 
 // export @react decorator
-export { react } from './react'
-export { ensure } from './ensure'
 export { cancel } from './cancel'
 export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './constants'
+export { ensure } from './ensure'
+export { react } from './react'
 export * from './types'
 
 // this lets you "always" react to any values you give as arguments without bugs
@@ -17,7 +17,7 @@ export const always = ((() => Math.random()) as unknown) as (...args: any[]) => 
 // so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
 
 const isFunction = val => typeof val === 'function'
-const isWatch = (val: any) => val && val.IS_AUTO_RUN
+const isWatch = (val: any) => val && val.__IS_AUTO_RUN
 
 export type AutomagicOptions = {
   isSubscribable?: (a: any) => boolean
@@ -72,7 +72,7 @@ function collectGetterPropertyDescriptors(proto) {
 function getAutoRunDescriptors(obj) {
   const protoDescriptors = collectGetterPropertyDescriptors(Object.getPrototypeOf(obj))
   const keys = Object.keys(protoDescriptors).filter(
-    key => protoDescriptors[key].get && protoDescriptors[key].get.IS_AUTO_RUN,
+    key => protoDescriptors[key].get && protoDescriptors[key].get.__IS_AUTO_RUN,
   )
   const res = {}
   for (const key of keys) {
@@ -138,7 +138,7 @@ function decorateMethodWithAutomagic(
       target,
       method,
       value,
-      typeof value.IS_AUTO_RUN === 'object' ? value.IS_AUTO_RUN : undefined,
+      typeof value.__IS_AUTO_RUN === 'object' ? value.__IS_AUTO_RUN : undefined,
       options,
     )
     return

@@ -46,6 +46,7 @@ one month test period. changes in how we work:
 
 tasks:
 
+- add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
 - syncers

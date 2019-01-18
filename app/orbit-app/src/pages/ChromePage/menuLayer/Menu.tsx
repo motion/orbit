@@ -349,7 +349,6 @@ export class MenuStore {
     () => {
       const towards = Electron.state.pinKey.name
       const inverse = towards === 'left' ? 'right' : 'left'
-      console.log('inverse it', inverse)
       const direction = Direction[inverse]
       if (direction) {
         this.props.paneManagerStore.move(direction)
@@ -497,8 +496,10 @@ export const Menu = observer(function Menu() {
     paneManagerStore,
     queryStore,
     onMenuHover(index) {
-      const id = menuApps[index].id
-      paneManagerStore.setActivePane(id)
+      if (menuApps.length) {
+        const id = menuApps[index].id
+        paneManagerStore.setActivePane(id)
+      }
     },
   })
   const newStores = {

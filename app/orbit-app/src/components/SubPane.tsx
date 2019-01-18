@@ -30,7 +30,6 @@ export const SubPane = observer(function SubPane(props: Props) {
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
   const height = props.fullHeight ? 'auto' : subPaneStore.contentHeight
-  console.log('siubpane', props.id, 'isActive', isActive, height)
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof props.before === 'function' ? props.before(isActive) : props.before}

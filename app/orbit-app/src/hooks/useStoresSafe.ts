@@ -1,5 +1,5 @@
-import { AllStores, StoreContext } from '../contexts'
 import { useContext, useMemo } from 'react'
+import { AllStores, StoreContext } from '../contexts'
 
 type GuaranteedAllStores = { [P in keyof AllStores]-?: AllStores[P] }
 
@@ -30,8 +30,11 @@ export function useStoresSafe(options?: UseStoresOptions) {
           if (options && options.optional && options.optional.find(x => x === key)) {
             return
           }
-          if (process.env.NODE_ENV === 'develoopment') {
-            console.debug(`Attempted to get store ${String(key)} which is not in context`)
+          if (key.indexOf('isMobX') === 0 || key.indexOf('_') === 0) {
+            return
+          }
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Attempted to get store ${String(key)} which is not in context`)
           }
         }
       },

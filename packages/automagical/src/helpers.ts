@@ -1,25 +1,24 @@
-import * as Mobx from 'mobx'
 import { Logger } from '@mcro/logger'
+import * as Mobx from 'mobx'
 import { MagicalObject, ReactionOptions } from './types'
-
-const PREFIX = '=>'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
 
 export const logState = new Logger('react')
 export const log = new Logger('react')
 
+// returns array because we can "spread it to nothing"
 export const logRes = (res: any) => {
   if (typeof res === 'undefined') {
     return []
   }
   if (res instanceof Promise) {
-    return [PREFIX, 'Promise']
+    return ['Promise']
   }
   if (Mobx.isArrayLike(res)) {
-    return [PREFIX, res.map(x => Mobx.toJS(x))]
+    return [res.map(x => Mobx.toJS(x))]
   }
-  return [PREFIX, Mobx.toJS(res)]
+  return [Mobx.toJS(res)]
 }
 
 export const getReactionName = (obj: MagicalObject) => {
@@ -87,5 +86,52 @@ export const toJSDeep = obj => {
   } catch (err) {
     console.warn(err)
     return obj
+  }
+}
+
+const COLOR_WHEEL = [
+  '#DB0A5B',
+  '#3455DB',
+  '#008040',
+  '#005555',
+  '#007FAA',
+  '#0000E0',
+  '#9B59B6',
+  '#7462E0',
+  '#8B008B',
+  '#8B008B',
+  '#483D8B',
+  '#8D6708',
+  '#D43900',
+  '#802200',
+  '#AA2E00',
+  '#870C25',
+]
+
+let seenNames = new Set()
+
+export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) => {
+  const hasChanges = !!changed
+  if (hasChanges) {
+    const shortName = name.slice(0, 8)
+    seenNames.add(shortName)
+    const color = COLOR_WHEEL[[...seenNames].indexOf(shortName) % COLOR_WHEEL.length]
+    let [storeName, args, methodName] = [].concat(...name.split('(').map(x => x.split('.')))
+    if (!methodName) {
+      methodName = args
+      args = null
+    }
+    console.log(
+      `%c${storeName}${args ? `%c(${args}` : ''}.%c${methodName}`,
+      `color: ${color}; font-weight: bold;`,
+      `color: ${color};`,
+      `font-weight: bold;`,
+      changed.length > 90 ? `${changed.slice(0, 90)}...` : changed,
+      ...(timings ? [timings] : []),
+    )
+    console.debug('  ⮑ %cargs', 'color: orange;', toJSDeep(reactionArgs))
+    console.debug('  ⮑ %cresp', 'color: orange;', ...logRes(result))
+  } else {
+    console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
   }
 }

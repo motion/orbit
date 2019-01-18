@@ -38,14 +38,9 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringIndex = -1
   didRenderState = { at: Date.now(), open: false }
-  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, a => this.handleTrayEvent(a))
   searchInput: HTMLInputElement = null
   // see how this interacts with isOpen
   activeMenuIndex = App.openMenu ? App.openMenu.id : -1
-
-  willUnmount() {
-    this.trayEventListener()
-  }
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuIndex].size[1]
@@ -129,7 +124,7 @@ export class MenuStore {
 
   get isRepositioning() {
     // if its "staying open"
-    if (this.lastActiveMenuID !== -1) {
+    if (this.lastActiveMenuIndex !== -1) {
       return false
     }
     return this.lastMenuCenter !== this.menuCenter
@@ -162,49 +157,6 @@ export class MenuStore {
     // when you unpin, clear the hover state too
     if (!this.isPinnedOpen) {
       this.hoveringIndex = -1
-    }
-  }
-
-  async handleTrayEvent({
-    type,
-    value,
-  }: {
-    type: 'trayHovered' | 'trayClicked'
-    value: '0' | '1' | '2' | '3' | 'Out'
-  }) {
-    console.log('handleTrayEvent', type, value)
-    if (type === 'trayHovered') {
-      switch (value) {
-        case 'Out':
-          this.setHoveringIndex(-1)
-          break
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-          this.setHoveringIndex(+value)
-          break
-      }
-      return
-    }
-
-    if (type === 'trayClicked') {
-      switch (value) {
-        case '0':
-          // special case: switch us over to the main orbit app
-          // sync query over to search
-          App.setState({ query: this.props.queryStore.query })
-          // then open the main window to show it there instead
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
-          // and close this menu
-          this.closeMenu()
-          break
-        case '1':
-        case '2':
-        case '3':
-          this.togglePinnedOpen(+value)
-          break
-      }
     }
   }
 
@@ -247,7 +199,7 @@ export class MenuStore {
     },
   )
 
-  lastActiveMenuID = react(() => this.activeMenuIndex, _ => _, {
+  lastActiveMenuIndex = react(() => this.activeMenuIndex, _ => _, {
     delayValue: true,
     defaultValue: -1,
   })
@@ -259,7 +211,7 @@ export class MenuStore {
         App.setState({
           trayState: {
             menuState: {
-              [this.lastActiveMenuID]: { open: false },
+              [this.lastActiveMenuIndex]: { open: false },
             },
           },
         })
@@ -271,7 +223,7 @@ export class MenuStore {
               [+activeMenuID]: {
                 open: true,
               },
-              [this.lastActiveMenuID]: {
+              [this.lastActiveMenuIndex]: {
                 open: false,
               },
             },
@@ -418,6 +370,51 @@ export class MenuStore {
     },
   )
 
+  handleTrayEvent = async (event: {
+    type: 'trayHovered' | 'trayClicked'
+    value: '0' | '1' | '2' | '3' | 'Out'
+  }) => {
+    console.log('handleTrayEvent', event)
+
+    // the indexing is right to left in terms of the tray
+    // where 0 is the rightmost (the orbit O)
+    // and 3 is the leftmost (the down arrow)
+
+    if (event.type === 'trayHovered') {
+      switch (event.value) {
+        // treat hovering ORBIT O as hover out since we dont show anything there
+        case '0':
+        case 'Out':
+          this.setHoveringIndex(-1)
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.setHoveringIndex(+event.value)
+          break
+      }
+      return
+    }
+    if (event.type === 'trayClicked') {
+      switch (event.value) {
+        case '0':
+          // special case: switch us over to the main orbit app
+          // sync query over to search
+          App.setState({ query: this.props.queryStore.query })
+          // then open the main window to show it there instead
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // and close this menu
+          this.closeMenu()
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.togglePinnedOpen(+event.value)
+          break
+      }
+    }
+  }
+
   mouseEvent: 'enter' | 'leave' | null = null
 
   handleMouseEvent = react(
@@ -477,39 +474,48 @@ export class MenuStore {
   )
 }
 
+const appIndices = {
+  search: 1,
+  lists: 2,
+  actions: 3,
+}
+
 function useMenuApps() {
   const apps = useActiveApps()
-  return apps.filter(x => x.type === 'search' || x.type === 'lists')
+  return apps
+    .filter(x => x.type === 'search' || x.type === 'lists')
+    .map(app => ({
+      ...app,
+      index: appIndices[app.type],
+    }))
 }
 
 export const Menu = observer(function Menu() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const menuApps = useMenuApps()
+
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
     onPaneChange: () => {
       AppActions.clearPeek()
     },
   })
+
   const menuStore = useStore(MenuStore, {
     paneManagerStore,
     queryStore,
     onMenuHover(index) {
       if (menuApps.length) {
-        const id = menuApps[index].id
-        paneManagerStore.setActivePane(id)
+        const app = menuApps[index]
+        console.log('hover menu', index, 'set active pane', app)
+        paneManagerStore.setActivePane(app.id)
       }
     },
   })
-  const newStores = {
-    queryStore,
-    menuStore,
-    paneManagerStore,
-  }
 
+  // Handle mouse enter/leave events
   React.useEffect(() => {
-    // watch for mouse enter and leave
     const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
@@ -528,9 +534,21 @@ export const Menu = observer(function Menu() {
     }
   }, [])
 
+  // Handle tray enter/leave/click events
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
+  })
+
   return (
     <BrowserDebugTray menuStore={menuStore}>
-      <MergeContext Context={StoreContext} value={newStores}>
+      <MergeContext
+        Context={StoreContext}
+        value={{
+          queryStore,
+          menuStore,
+          paneManagerStore,
+        }}
+      >
         <MainShortcutHandler>
           <MenuChrome>
             <MenuLayerContent />
@@ -560,11 +578,11 @@ const MenuLayerContent = React.memo(() => {
           onChange: queryStore.onChangeQuery,
         }}
       >
-        {menuApps.map((app, index) => (
+        {menuApps.map(app => (
           <MenuApp
             id={app.id}
-            key={index}
-            menuId={index}
+            key={app.id}
+            menuId={app.index}
             viewType="index"
             title={app.name}
             type={app.type}

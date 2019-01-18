@@ -190,7 +190,7 @@ export class MenuStore {
     () => this.activeMenuIndex,
     val => {
       ensure('is active', val !== -1)
-      return +val
+      return val
     },
     {
       defaultValue: 0,
@@ -473,20 +473,21 @@ export class MenuStore {
   )
 }
 
-const appIndices = {
-  search: 1,
-  lists: 2,
-  actions: 3,
-}
-
 function useMenuApps() {
-  const apps = useActiveApps()
-  return apps
-    .filter(x => x.type === 'search' || x.type === 'lists')
-    .map(app => ({
-      ...app,
-      index: appIndices[app.type],
-    }))
+  const allApps = useActiveApps()
+  const searchApp = allApps.find(x => x.type === 'search')
+  const listsApp = allApps.find(x => x.type === 'lists')
+  return [
+    // indices start at 1 because 0 = orbit O
+    { ...searchApp, index: 1 },
+    { ...listsApp, index: 2 },
+    {
+      id: 100,
+      index: 3,
+      type: 'actions',
+      name: 'Actions',
+    },
+  ]
 }
 
 export function Menu() {
@@ -504,8 +505,8 @@ export function Menu() {
   const onMenuHover = React.useCallback(
     index => {
       console.log('ON MENU HOVER', menuApps, index)
-      if (menuApps.length) {
-        const app = menuApps[index]
+      const app = menuApps.find(x => x.index === index)
+      if (app) {
         paneManagerStore.setActivePane(app.id)
       }
     },

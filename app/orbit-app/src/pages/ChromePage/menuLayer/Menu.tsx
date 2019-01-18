@@ -25,7 +25,7 @@ import { MenuChrome } from './MenuChrome'
 
 export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
-class MenuStore {
+export class MenuStore {
   props: {
     paneManagerStore: PaneManagerStore
     queryStore: QueryStore

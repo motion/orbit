@@ -2,6 +2,7 @@ import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { useSelectableResults } from '../../hooks/useSelectableResults'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { SelectEvent } from '../../stores/SelectionStore'
 import { OrbitList, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
@@ -22,9 +23,12 @@ export default function SelectableList(props: SelectableListProps) {
     if (appStore && !appStore.isActive) {
       return
     }
-    const index = selectionStore.activeIndex
-    if (ref.list && typeof index === 'number' && index >= 0) {
-      ref.list.scrollToRow(index)
+    const { activeIndex, selectEvent } = selectionStore
+    if (selectEvent === SelectEvent.click) {
+      return
+    }
+    if (ref.list && typeof activeIndex === 'number' && activeIndex >= 0) {
+      ref.list.scrollToRow(activeIndex)
     }
   })
 

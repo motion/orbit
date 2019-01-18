@@ -1,13 +1,12 @@
-import './calendar.css' // theme css file
-import * as React from 'react'
-import { Row, View, Popover, Icon } from '@mcro/ui'
-import { NavButton } from '../../../views/NavButton'
-import OrbitSuggestionBar from './OrbitSuggestionBar'
-import { DateRangePicker } from 'react-date-range'
-import SearchFilters from './SearchFilters'
-import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
+import { Popover, Row, View } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { DateRangePicker } from 'react-date-range'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { NavButton } from '../../../views/NavButton'
+import './calendar.css' // theme css file
+import OrbitSuggestionBar from './OrbitSuggestionBar'
 
 export default observer(function SearchNav() {
   const { queryStore } = useStoresSafe()
@@ -42,11 +41,6 @@ export default observer(function SearchNav() {
 
       <ScrollableRow flex={10}>
         <OrbitSuggestionBar />
-      </ScrollableRow>
-
-      <ScrollableRow maxWidth="33%">
-        <Icon name="funnel" size={10} opacity={0.65} color="#999" marginRight={10} />
-        <SearchFilters />
       </ScrollableRow>
     </>
   )

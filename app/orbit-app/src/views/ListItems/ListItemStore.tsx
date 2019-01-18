@@ -1,4 +1,4 @@
-import { react, ensure } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { Logger } from '@mcro/logger'
 import { ListItemProps } from './ListItem'
 
@@ -32,7 +32,7 @@ export class ListItemStore {
         return
       }
       if (this.props.onOpen) {
-        this.props.onOpen(this.index)
+        this.props.onOpen(this.index, 'click')
       } else {
         console.log('no open event for item', this.props)
       }
@@ -45,7 +45,7 @@ export class ListItemStore {
       this.props.onClick(e, this.cardWrapRef)
     }
     if (this.props.onSelect) {
-      this.props.onSelect(this.index)
+      this.props.onSelect(this.index, 'click')
     }
   }
 

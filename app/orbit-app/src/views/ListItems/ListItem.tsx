@@ -1,24 +1,27 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import PeopleRow from '../../components/PeopleRow'
-import { CSSPropertySet, gloss } from '@mcro/gloss'
-import { RoundButtonSmall } from '../RoundButtonSmall'
-import { DateFormat } from '../DateFormat'
-import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { ListItemStore } from './ListItemStore'
-import { HighlightText } from '../HighlightText'
-import { Row, Text, View } from '@mcro/ui'
-import { HorizontalSpace } from '..'
-import { Separator } from '../Separator'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
-import { Icon } from '../Icon'
-import { NormalItem } from '../../helpers/normalizeItem'
-import { ThemeObject } from '@mcro/gloss'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import { Row, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { differenceInCalendarDays } from 'date-fns/esm/fp'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { HorizontalSpace } from '..'
+import PeopleRow from '../../components/PeopleRow'
+import { NormalItem } from '../../helpers/normalizeItem'
+import { DateFormat } from '../DateFormat'
+import { HighlightText } from '../HighlightText'
+import { Icon } from '../Icon'
+import { RoundButtonSmall } from '../RoundButtonSmall'
+import { Separator } from '../Separator'
+import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = ((index?: number, element?: HTMLElement) => any)
+export type HandleSelection = ((
+  index: number,
+  eventType: 'click' | 'key',
+  element?: HTMLElement,
+) => any)
 
 export type ListItemHide = {
   hidePeople?: boolean

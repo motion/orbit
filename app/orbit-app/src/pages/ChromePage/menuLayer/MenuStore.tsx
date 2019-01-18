@@ -198,7 +198,6 @@ export class MenuStore {
   private updateHoverTm = null
 
   updateTrayHover = (id: number) => {
-    console.log('update tray hover', id)
     clearTimeout(this.updateHoverTm)
     const update = () => {
       this.activeMenuID = id

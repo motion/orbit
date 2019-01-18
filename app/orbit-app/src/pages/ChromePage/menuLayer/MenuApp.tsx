@@ -1,9 +1,10 @@
 import * as React from 'react'
 import AppView from '../../../apps/AppView'
-import SubPane from '../../../components/SubPane'
+import { SubPane } from '../../../components/SubPane'
 import { MenuAppProps } from './MenuLayer'
 
 function MenuApp(props: MenuAppProps) {
+  console.log('MenuApp', props)
   return (
     <SubPane
       id={props.id}

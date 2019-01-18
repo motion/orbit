@@ -9,7 +9,6 @@ class DebugTrayStore {
   props: { id: number }
 
   targetSetter = id => () => {
-    console.log('chrome set tray hover id', id)
     App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: id })
   }
 

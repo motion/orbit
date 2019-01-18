@@ -6,7 +6,7 @@ import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
-import MenuLayer from './menuLayer/MenuLayer'
+import Menu from './menuLayer/Menu'
 
 export default function ChomePage() {
   const settingStore = useStore(SettingStore)
@@ -17,7 +17,7 @@ export default function ChomePage() {
       <Theme name="dark">
         <AppWrapper>
           <FullScreen>
-            <MenuLayer />
+            <Menu />
           </FullScreen>
         </AppWrapper>
       </Theme>

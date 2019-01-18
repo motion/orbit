@@ -15,7 +15,7 @@ class DebugTrayStore {
   onLeave = this.targetSetter('Out')
 }
 
-export default observer(function BrowserDebugTray({ children, menuStore }: any) {
+const BrowserDebugTray = observer(function BrowserDebugTray({ children, menuStore }: any) {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children
@@ -42,6 +42,8 @@ export default observer(function BrowserDebugTray({ children, menuStore }: any) 
     </FullScreen>
   )
 })
+
+export default BrowserDebugTray
 
 const Target = ({ id, store, menuStore }) => {
   return (

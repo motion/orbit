@@ -8,7 +8,6 @@ export class OracleManager {
   private oracle: Oracle
 
   constructor() {
-    if (process.env.IGNORE_MENU) return
     this.oracle = new Oracle({
       port: getGlobalConfig().ports.ocrBridge,
       onMessage: this.handleMessage,
@@ -16,7 +15,6 @@ export class OracleManager {
   }
 
   async start() {
-    if (process.env.IGNORE_MENU) return
     await this.oracle.start()
   }
 

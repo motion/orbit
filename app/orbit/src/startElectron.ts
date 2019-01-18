@@ -3,9 +3,6 @@ import { app, dialog } from 'electron'
 import { handleExit } from './helpers/handleExit'
 
 export function startElectron({ mainProcess }) {
-  console.warn('DISABLING HARDWARE ACCELL BECAUSE TIRED OF WHITE BG BUG')
-  app.disableHardwareAcceleration()
-
   if (mainProcess) {
     // this works in prod
     app.on('before-quit', handleExit)

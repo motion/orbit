@@ -1,8 +1,8 @@
-import { setGlobalConfig, GlobalConfig } from '@mcro/config'
+import { GlobalConfig, setGlobalConfig } from '@mcro/config'
 import { ChildProcess } from 'child_process'
-import WebSocket from 'ws'
 import root from 'global'
 import waitOn from 'wait-on'
+import WebSocket from 'ws'
 import { startChildProcess } from './helpers/startChildProcess'
 
 // this is the entry for every process

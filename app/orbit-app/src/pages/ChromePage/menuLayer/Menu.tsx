@@ -493,7 +493,6 @@ export function Menu() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const menuApps = useMenuApps()
-  console.log('menuApps1', menuApps)
 
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
@@ -574,7 +573,6 @@ const itemProps = {
 const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStoresSafe()
   const menuApps = useMenuApps()
-  console.log('menuApps2', menuApps)
   return (
     <View className="app-parent-bounds" pointerEvents="auto">
       <Searchable

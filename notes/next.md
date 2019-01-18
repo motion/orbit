@@ -74,6 +74,10 @@ tasks:
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
     at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
     at new Subscription"
+- search
+  - we should test search quite a bit more
+    - have it do exact full searches first and then work down
+    - so "full name" matches something with both words closer than "full" and "name"
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app

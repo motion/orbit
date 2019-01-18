@@ -30,14 +30,12 @@ export const SubPane = observer(function SubPane(props: Props) {
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
   const height = props.fullHeight ? 'auto' : subPaneStore.contentHeight
-  console.log('siubpane', props.id, 'isActive', isActive, height)
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof props.before === 'function' ? props.before(isActive) : props.before}
       {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
         <Pane
-          key={Math.random()}
           isActive={isActive}
           isLeft={isLeft}
           style={props.style}

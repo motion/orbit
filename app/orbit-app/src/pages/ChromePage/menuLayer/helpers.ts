@@ -3,7 +3,6 @@ import { IS_ELECTRON } from '../../../constants'
 // will focus or return focus to previous app
 export const setTrayFocused = (show = true) => {
   if (!IS_ELECTRON) {
-    console.log('not in electron')
     return
   }
   const req = window['electronRequire']

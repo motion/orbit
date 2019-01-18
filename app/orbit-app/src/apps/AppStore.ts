@@ -7,7 +7,9 @@ import { SelectionGroup } from './SelectionResults'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type>
-  stores = useHook(() => useStoresSafe({ optional: ['selectionStore', 'subPaneStore'] }))
+  stores = useHook(() =>
+    useStoresSafe({ optional: ['selectionStore', 'subPaneStore', 'paneManagerStore'] }),
+  )
 
   toolbar = null
   selectionResults = null
@@ -34,10 +36,11 @@ export class AppStore<Type extends AppType> {
     if (typeof isActive === 'function') {
       return isActive()
     }
-    if (this.stores.paneManagerStore && this.stores.paneManagerStore.activePane) {
-      return this.stores.paneManagerStore.activePane.id === id
+    const { paneManagerStore } = this.stores
+    if (paneManagerStore) {
+      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
     }
-    console.warn('no active prop or paneManagerStore')
+    console.warn('no active prop or paneManagerStore', this.stores, this.props)
     return false
   }
 

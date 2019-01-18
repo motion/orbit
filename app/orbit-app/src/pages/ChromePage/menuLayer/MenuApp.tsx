@@ -22,7 +22,7 @@ function MenuApp(props: MenuAppProps) {
       onChangeHeight={menuStore.menuHeightSetter(props.menuId)}
       transition="opacity ease 100ms"
     >
-      <AppView id={props.id} type={props.type} viewType="index" {...props} />
+      <AppView key={props.id} id={props.id} type={props.type} viewType="index" {...props} />
     </SubPane>
   )
 }

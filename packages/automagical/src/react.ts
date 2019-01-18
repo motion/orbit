@@ -1,6 +1,6 @@
-import { Reaction } from './constants'
-import { ReactionOptions, ReactionHelpers } from './types'
 import Observable from 'zen-observable'
+import { Reaction } from './constants'
+import { ReactionHelpers, ReactionOptions } from './types'
 
 // decorator to do reactions
 
@@ -9,14 +9,14 @@ function validWatch(val) {
 }
 
 function attachWatch(val, userOptions) {
-  val.IS_AUTO_RUN = userOptions || true
+  val.__IS_AUTO_RUN = userOptions || true
   return val
 }
 
 function tsWatch(options) {
   const autorungetter = () => {}
   // @ts-ignore
-  autorungetter.IS_AUTO_RUN = true
+  autorungetter.__IS_AUTO_RUN = true
   // @ts-ignore
   autorungetter.options = options
   return {

@@ -19,14 +19,7 @@ export function automagicReact(
   userOptions,
   automagicOptions: AutomagicOptions,
 ) {
-  const {
-    delayValue,
-    defaultValue,
-    onlyUpdateIfChanged,
-    deferFirstRun,
-    trace,
-    ...options
-  } = getReactionOptions({
+  const { delayValue, defaultValue, deferFirstRun, trace, ...options } = getReactionOptions({
     name: method,
     ...userOptions,
   })

@@ -52,7 +52,6 @@ export class SubPaneStore {
     },
     _ => _,
     {
-      onlyUpdateIfChanged: true,
       defaultValue: {
         isActive: false,
         isLeft: this.isLeft,

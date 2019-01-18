@@ -83,14 +83,8 @@ Or wait for some things to be true?
 ```js
 class MyStore {
   query = ''
-  serverResults = react(
-    () => this.query,
-    query => ({ query, answer: (await fetch(query)) })
-  )
-  localResults = react(
-    () => this.query,
-    query => ({ query, answer: (await someLocalQuery(query)) })
-  )
+  serverResults = react(() => this.query, query => ({ query, answer: await fetch(query) }))
+  localResults = react(() => this.query, query => ({ query, answer: await someLocalQuery(query) }))
   allResults = react(
     () => this.query,
     async (query, { when, sleep }) => {
@@ -98,7 +92,7 @@ class MyStore {
       await when(() => this.serverResults.query === query, 200)
       await sleep(100)
       return [...this.localResults.answer, ...this.serverResults.answer]
-    }
+    },
   )
 }
 ```
@@ -141,11 +135,3 @@ class MyStore {
 Note: you can't mix `setValue` and using `return` to return a value. Automagical will throw an error if it detects this.
 
 Similarly, `getValue` exists which helps out when abstracting react functions. Otherwise you can get the current value usually by just referencing the variable name within the reaction.
-
-### todo
-
-Document:
-
-- ReactionOptions
-  - delayValue
-  - onlyUpdateIfChanged

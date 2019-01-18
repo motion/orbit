@@ -27,9 +27,7 @@ export class AppPageStore {
   history = []
   contentFrame = React.createRef<HTMLDivElement>()
 
-  isPeek = react(() => !this.appState.torn, _ => _, {
-    onlyUpdateIfChanged: true,
-  })
+  isPeek = react(() => !this.appState.torn, _ => _)
 
   // appConfig given the id
   appState = react(
@@ -50,7 +48,6 @@ export class AppPageStore {
     },
     {
       defaultValue: App.getAppState(APP_ID),
-      onlyUpdateIfChanged: true,
     },
   )
 
@@ -71,7 +68,6 @@ export class AppPageStore {
       } as AppPageState
     },
     {
-      onlyUpdateIfChanged: true,
       defaultValue: {
         torn: false,
         lastState: null,
@@ -92,9 +88,6 @@ export class AppPageStore {
       return curState
     },
     _ => _,
-    {
-      onlyUpdateIfChanged: true,
-    },
   )
 
   isShown = react(() => this.internalState.isShown, _ => _)

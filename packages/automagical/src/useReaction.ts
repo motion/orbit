@@ -49,7 +49,6 @@
 //   const {
 //     delayValue,
 //     defaultValue,
-//     onlyUpdateIfChanged,
 //     deferFirstRun,
 //     trace,
 //     ...options

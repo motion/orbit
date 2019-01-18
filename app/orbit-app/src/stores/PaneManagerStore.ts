@@ -33,7 +33,6 @@ export class PaneManagerStore {
 
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
-    onlyUpdateIfChanged: true,
   })
 
   didMount() {

@@ -1,23 +1,23 @@
-import * as React from 'react'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { AppWrapper } from '../../views'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SpaceStore } from '../../stores/SpaceStore'
+import { invertLightness } from '@mcro/color'
+import { gloss } from '@mcro/gloss'
+import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { App } from '@mcro/stores'
-import OrbitOnboard from './OrbitOnboard'
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
-import OrbitHeader from './OrbitHeader'
-import OrbitPageContent from './OrbitPageContent'
 import { observer } from 'mobx-react-lite'
-import { gloss } from '@mcro/gloss'
-import { invertLightness } from '@mcro/color'
+import * as React from 'react'
+import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SettingStore } from '../../stores/SettingStore'
+import { SourcesStore } from '../../stores/SourcesStore'
+import { SpaceStore } from '../../stores/SpaceStore'
+import { AppWrapper } from '../../views'
+import OrbitHeader from './OrbitHeader'
+import OrbitOnboard from './OrbitOnboard'
+import OrbitPageContent from './OrbitPageContent'
 
 export default observer(() => {
   const theme = App.state.darkTheme ? 'dark' : 'light'
@@ -82,5 +82,5 @@ const InnerChrome = gloss({
   flex: 1,
   overflow: 'hidden',
 }).theme(() => ({
-  boxShadow: [[0, 0, 30, [0, 0, 0, 0.05]]],
+  boxShadow: [[0, 0, 80, [0, 0, 0, 0.045]]],
 }))

@@ -104,8 +104,6 @@ for me once split out:
 
 next steps:
 
-- move search into an overlay style pane that can be toggled...
-
 - release
 
   - focus on a release that really hammers in the differences:
@@ -138,20 +136,8 @@ next steps:
   - cleanup the orbit dropbox doc
   - send over to him short video and explanation
 
-* tasks for new person (umed, mohamed or similar):
-
-  - get the shared/saved data layer working nicely
-    - search app save the varius UI states:
-      - active filters/sorts in the toggle bar
-    - people app
-      - add a toolbar for filtering by integration
-      - save the filters set in that
-    - topics app
-      - adding, editing topics etc
-
 * get to value
   - get tray working
-  - get slide in search over app
   - get basic lists app in place again
   - get tray actions menu
   - get ocr integrated with memory (memory app?)

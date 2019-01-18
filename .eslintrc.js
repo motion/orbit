@@ -39,7 +39,6 @@ module.exports = {
     Reflect: true,
     Proxy: true,
     Symbol: true,
-    ResizeObserver: true,
     electronRequire: true,
   },
 }

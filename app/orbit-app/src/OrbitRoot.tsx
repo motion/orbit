@@ -9,6 +9,7 @@ import { isEqual, throttle } from 'lodash'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import './helpers/installDevelopmentHelpers'
+import ChromePage from './pages/ChromePage/ChromePage'
 import OrbitPage from './pages/OrbitPage/OrbitPage'
 import { themes } from './themes'
 
@@ -43,9 +44,10 @@ function getOrbitBrowser() {
       // in development mode we could have a switch here to always import all
       Home: OrbitPage,
       App: props => <AsyncPage page={() => import('./pages/AppPage/AppPage')} {...props} />,
-      Chrome: props => (
-        <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
-      ),
+      Chrome: ChromePage,
+      // Chrome: props => (
+      //   <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
+      // ),
       Cosal: props => <AsyncPage page={() => import('./pages/CosalPage/CosalPage')} {...props} />,
     }),
     {},

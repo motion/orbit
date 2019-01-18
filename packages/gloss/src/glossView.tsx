@@ -1,12 +1,11 @@
+import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
 import * as React from 'react'
-import { ThemeContext } from './theme/ThemeContext'
-import { CSSPropertySet, validCSSAttr, ThemeObject } from '@mcro/css'
+import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
-import { validProp } from './helpers/validProp'
-import { css } from '@mcro/css'
+import { ThemeContext } from './theme/ThemeContext'
 
 export type BaseRules = {
   [key: string]: string | number
@@ -255,7 +254,7 @@ export function glossView<Props = GlossViewProps<any>>(
     let finalProps = {} as any
     for (const key in props) {
       if (key === 'forwardRef') {
-        if (isDOMElement) {
+        if (isDOMElement || isSimpleView) {
           finalProps.ref = props[key]
         } else {
           finalProps[key] = props[key]

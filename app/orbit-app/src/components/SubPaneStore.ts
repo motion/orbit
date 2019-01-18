@@ -10,10 +10,8 @@ import { SubPaneProps } from './SubPane'
 export class SubPaneStore {
   props: SubPaneProps
   stores = useHook(() => useStoresSafe({ optional: ['selectionStore'] }))
-
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
-
   aboveContentHeight = 0
   contentHeight = 0
   isAtBottom = false
@@ -27,7 +25,7 @@ export class SubPaneStore {
     if (!this.paneNode) {
       return null
     }
-    return this.paneNode.firstChild as HTMLDivElement
+    return this.paneNode.firstChild.firstChild as HTMLDivElement
   }
 
   get isLeft() {
@@ -127,6 +125,7 @@ export class SubPaneStore {
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
+    console.log('update height', this.paneInnerNode, height)
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

@@ -29,17 +29,19 @@ export const SubPane = observer(function SubPane(props: Props) {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
-  console.log('siubpane', props.id, 'isActive', isActive)
+  const height = props.fullHeight ? 'auto' : subPaneStore.contentHeight
+  console.log('siubpane', props.id, 'isActive', isActive, height)
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof props.before === 'function' ? props.before(isActive) : props.before}
       {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
         <Pane
+          key={Math.random()}
           isActive={isActive}
           isLeft={isLeft}
           style={props.style}
-          height={200}
+          height={height}
           forwardRef={subPaneStore.paneRef}
           preventScroll={props.preventScroll}
           transition={transition}

@@ -127,7 +127,11 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  const renderedChildren = showChildren && children
+  const renderedChildren = showChildren && (
+    <Text size={0.9} alpha={0.8}>
+      {children}
+    </Text>
+  )
   const { activeThemeName } = React.useContext(UI.ThemeContext)
 
   const afterHeader = (
@@ -221,7 +225,7 @@ export default observer(function ListItem(props: ListItemProps) {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.8} ellipse {...subtitleProps}>
+                      <UI.Text alpha={0.8} size={0.9} ellipse {...subtitleProps}>
                         {subtitle}
                       </UI.Text>
                     ) : (
@@ -259,7 +263,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 <Preview>
                   {typeof preview !== 'string' && preview}
                   {typeof preview === 'string' && (
-                    <HighlightText alpha={0.8} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                    <HighlightText alpha={0.8} size={1} sizeLineHeight={0.9} ellipse={5}>
                       {preview}
                     </HighlightText>
                   )}

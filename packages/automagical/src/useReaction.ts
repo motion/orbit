@@ -15,6 +15,7 @@
 // // but without that will have to "update" them every render...
 // // and doing memoKeys differently than every other hook is a weird option (auto-memo)
 // // so have to figure out
+// // nevermind... see mobx-lite useDisposable, it does this
 
 // export function useReaction<A extends ReactVal, B>(
 //   a: () => A,

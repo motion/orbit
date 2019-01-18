@@ -22,7 +22,7 @@ export type VirtualListProps = {
   onChangeHeight?: (height: number) => any
   onSelect?: HandleSelection
   onOpen?: HandleSelection
-  getRef?: (a: VirtualListStore, b: any) => any
+  forwardRef?: (a: any, b: VirtualListStore) => any
   items: any[]
   itemProps?: Partial<VirtualListItemProps<any>>
   getItemProps?: GetItemProps
@@ -34,7 +34,7 @@ export type VirtualListProps = {
   maxHeight?: number
   estimatedRowHeight?: number
   scrollToAlignment?: 'auto' | 'start' | 'end' | 'center'
-  scrollToIndex?: boolean
+  scrollToIndex?: number
 }
 
 class SortableList extends React.Component<any> {
@@ -67,16 +67,6 @@ class VirtualListStore {
       deferFirstRun: true,
     },
   )
-
-  // scrollToRow = react(
-  //   () => this.props.getActiveIndex,
-  //   index => {
-  //     ensure('not clicked', Date.now() - OrbitItemSingleton.lastClick > 50)
-  //     ensure('valid index', index > -1)
-  //     ensure('has list', !!this.listRef)
-  //     this.listRef.scrollToRow(index)
-  //   },
-  // )
 
   setRootRef = (ref: HTMLDivElement) => {
     if (this.rootRef || !ref) {
@@ -229,8 +219,8 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
       <SortableListContainer
         forwardRef={ref => {
           if (ref) {
-            if (props.getRef) {
-              props.getRef(store, ref)
+            if (props.forwardRef) {
+              props.forwardRef(ref, store)
             }
             store.listRef = ref
             if (infiniteProps && infiniteProps.registerChild) {
@@ -251,6 +241,8 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
         lockAxis="y"
         helperClass="sortableHelper"
         shouldCancelStart={isRightClick}
+        scrollToAlignment={props.scrollToAlignment}
+        scrollToIndex={props.scrollToIndex}
         {...extraProps}
       />
     )

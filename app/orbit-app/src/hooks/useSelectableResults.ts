@@ -1,4 +1,4 @@
-import { useComputed } from 'mobx-react-lite'
+import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { Direction } from '../stores/SelectionStore'
 import { SelectableListProps } from '../views/Lists/SelectableList'
@@ -8,9 +8,8 @@ export function useSelectableResults(props: SelectableListProps) {
   const { appStore, shortcutStore, selectionStore } = useStoresSafe({
     optional: ['selectionStore'],
   })
-  const isActive = useComputed(
-    () => (typeof props.isSelectable === 'boolean' ? props.isSelectable : !!appStore.isActive),
-    [props.isSelectable],
+  const isActive = useObserver(() =>
+    typeof props.isSelectable === 'boolean' ? props.isSelectable : !!appStore.isActive,
   )
 
   useEffect(

@@ -33,6 +33,8 @@ export type VirtualListProps = {
   isRowLoaded?: Function
   maxHeight?: number
   estimatedRowHeight?: number
+  scrollToAlignment?: 'auto' | 'start' | 'end' | 'center'
+  scrollToIndex?: boolean
 }
 
 class SortableList extends React.Component<any> {

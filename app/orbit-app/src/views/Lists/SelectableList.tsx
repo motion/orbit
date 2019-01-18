@@ -11,5 +11,5 @@ export type SelectableListProps = OrbitListProps & {
 
 export default function SelectableList(props: SelectableListProps) {
   useSelectableResults(props)
-  return <OrbitList {...props} />
+  return <OrbitList scrollToAlignment="center" scrollToIndex {...props} />
 }

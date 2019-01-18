@@ -16,6 +16,8 @@ export type OrbitListProps = VirtualListProps & {
   offsetY?: number
 }
 
+// fairly sloppy componenent, could be split more cleanly
+
 export function OrbitList({ items, offsetY = 0, ...props }: OrbitListProps) {
   const { appStore } = useStoresSafe()
   const itemsKey = items

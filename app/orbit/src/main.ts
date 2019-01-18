@@ -106,11 +106,13 @@ export async function main() {
 
         await new Promise(res => setTimeout(res, 500))
 
-        setupProcess({
-          name: 'electron-apps',
-          inspectPort: 9004,
-          inspectPortRemote: 9005,
-        })
+        if (!process.env.IGNORE_APPS) {
+          setupProcess({
+            name: 'electron-apps',
+            inspectPort: 9004,
+            inspectPortRemote: 9005,
+          })
+        }
       }
     }
 

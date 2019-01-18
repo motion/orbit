@@ -60,26 +60,51 @@ export class SubPaneStore {
     },
   )
 
-  didGetPaneNode = react(
-    () => !!this.paneNode,
-    hasNode => {
-      ensure('hasNode', hasNode)
+  watchParentNode = react(
+    () => this.paneNode,
+    node => {
+      ensure('hasNode', !!node)
       ensure('not fullHeight', !this.props.fullHeight)
-      on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
-      this.addObserver(this.paneNode, this.handlePaneChange)
+      if (this.watchParentNode) {
+        this.watchParentNode.forEach(disconnect => disconnect())
+      }
 
-      // watch resizes
-      // @ts-ignore
-      const resizeObserver = new ResizeObserver(this.handlePaneChange)
-      resizeObserver.observe(this.paneNode)
-      resizeObserver.observe(this.paneInnerNode)
-      // @ts-ignore
-      this.subscriptions.add({
-        dispose: () => resizeObserver.disconnect(),
+      const scrollO = on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
+      const mutationO = this.useMutationObserver(
+        this.paneNode,
+        { childList: true, subtree: true },
+        this.handlePaneChange,
+      )
+      const resizeO = this.useResizeObserver(node, () => {
+        console.log('resize i see you', this.paneInnerNode, this.paneInnerNode.clientHeight)
+        this.handlePaneChange()
       })
 
       this.handlePaneChange()
-      this.updateHeight()
+
+      return [scrollO, mutationO, resizeO]
+    },
+  )
+
+  watchInnerNode = react(
+    () => this.paneInnerNode,
+    node => {
+      ensure('hasNode', !!node)
+      ensure('not fullHeight', !this.props.fullHeight)
+      if (this.watchInnerNode) {
+        this.watchInnerNode.forEach(disconnect => disconnect())
+      }
+
+      const resizeO = this.useResizeObserver(node, () => {
+        console.log('resize i see you', this.paneInnerNode.clientHeight)
+        this.handlePaneChange()
+      })
+      const mutationO = this.useMutationObserver(this.paneInnerNode, { attributes: true }, () => {
+        console.log('ok mutate...')
+        this.handlePaneChange()
+      })
+
+      return [resizeO, mutationO]
     },
   )
 
@@ -107,25 +132,37 @@ export class SubPaneStore {
     },
   )
 
-  addObserver = (node, cb) => {
+  useResizeObserver = (node, cb) => {
+    // watch resizes
+    // @ts-ignore
+    const observer = new ResizeObserver(cb)
+    observer.observe(node)
+    const off = () => observer.disconnect()
+    on(this, { unsubscribe: off })
+    return off
+  }
+
+  useMutationObserver = (node, options, cb) => {
     const observer = new MutationObserver(cb)
-    observer.observe(node, { childList: true, subtree: true })
-    on(this, observer)
-    return () => observer.disconnect()
+    observer.observe(node, options)
+    const off = () => observer.disconnect()
+    on(this, { unsubscribe: off })
+    return off
   }
 
   handlePaneChange = debounce(() => {
     this.updateHeight()
     this.onPaneNearEdges()
-  }, 16)
+  })
 
   updateHeight = async () => {
     if (!this.paneInnerNode) {
+      console.warn('no pane inner node...')
       return
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
-    console.log('update height', this.paneInnerNode, height)
+    console.log('i see a node of height', this.paneInnerNode, height)
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

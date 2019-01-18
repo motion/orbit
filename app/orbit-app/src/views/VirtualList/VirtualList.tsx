@@ -19,6 +19,7 @@ import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
 
 export type VirtualListProps = {
+  onChangeHeight?: (height: number) => any
   onSelect?: HandleSelection
   onOpen?: HandleSelection
   getRef?: (a: VirtualListStore, b: any) => any
@@ -110,6 +111,9 @@ class VirtualListStore {
       return
     }
     this.height = Math.min(this.props.maxHeight || Infinity, height)
+    if (this.props.onChangeHeight) {
+      this.props.onChangeHeight(this.height)
+    }
   }
 
   measure() {

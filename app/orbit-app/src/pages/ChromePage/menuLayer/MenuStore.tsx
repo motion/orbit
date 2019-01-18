@@ -1,14 +1,14 @@
+import { always, ensure, react } from '@mcro/black'
+import { AppType } from '@mcro/models'
+import { App, Desktop, Electron } from '@mcro/stores'
+import { debounce, memoize } from 'lodash'
+import { createRef } from 'react'
+import { AppActions } from '../../../actions/AppActions'
+import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { Direction } from '../../../stores/SelectionStore'
 import { setTrayFocused } from './helpers'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { react, ensure, always } from '@mcro/black'
-import { AppActions } from '../../../actions/AppActions'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
-import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
-import { AppType } from '@mcro/models'
-import { memoize, debounce } from 'lodash'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { createRef } from 'react'
 
 export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
@@ -100,13 +100,14 @@ export class MenuStore {
     activeID => {
       const id = activeID === -1 ? 0 : activeID
       const maxItems = 3
-      const trayPositionX = Desktop.state.operatingSystem.trayBounds.position[0]
+      const trayPositionX = IS_ELECTRON
+        ? Desktop.state.operatingSystem.trayBounds.position[0]
+        : window.innerWidth / 2
       const leftSpacing = 47
       const xOffset = maxItems - id
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
-      const bounds = trayPositionX + offset
-      return IS_ELECTRON ? bounds : bounds + window.innerWidth / 2
+      return trayPositionX + offset
     },
     {
       defaultValue: 0,

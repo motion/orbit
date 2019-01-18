@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { Row, FullScreen, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
 import { App } from '@mcro/stores'
-import { IS_ELECTRON } from '../../../constants'
+import { FullScreen, Row, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { IS_ELECTRON } from '../../../constants'
 
 class DebugTrayStore {
   props: { id: number }

@@ -124,7 +124,7 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
     console.log(
       `%c${storeName}${args ? `%c(${args}` : ''}.%c${methodName}`,
       `color: ${color}; font-weight: bold;`,
-      `color: ${color};`,
+      ...(args ? [`color: ${color};`] : []),
       `font-weight: bold;`,
       changed.length > 90 ? `${changed.slice(0, 90)}...` : changed,
       ...(timings ? [timings] : []),

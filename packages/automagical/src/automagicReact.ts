@@ -11,16 +11,6 @@ const voidFn = () => void 0
 type Subscription = { unsubscribe: Function }
 type SubscribableLike = { subscribe: (a: any) => Subscription }
 
-let lastStoreLogName = ''
-
-const whiteSpaceOfLen = (number: number) => {
-  let str = ''
-  for (let i = 0; i < number; i++) {
-    str += ' '
-  }
-  return str
-}
-
 // watches values in an autorun, and resolves their results
 export function automagicReact(
   obj: MagicalObject,
@@ -71,14 +61,7 @@ export function automagicReact(
           return `${storeName}(${res}).${methodName}`
         }
       }
-      const name = `${storeName}.${methodName}`
-      // fancy log that doesn't show the name if multiple logs in a row
-      if (storeName === lastStoreLogName) {
-        return `${whiteSpaceOfLen(storeName.length)}.${methodName}`
-      } else {
-        lastStoreLogName = storeName
-        return name
-      }
+      return `${storeName}.${methodName}`
     },
   }
 

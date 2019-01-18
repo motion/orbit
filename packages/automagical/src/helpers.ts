@@ -111,6 +111,9 @@ const COLOR_WHEEL = [
 let seenNames = new Set()
 
 export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) => {
+  if (window['enableLog'] === 0) {
+    return
+  }
   const hasChanges = !!changed
   if (hasChanges) {
     const shortName = name.slice(0, 8)

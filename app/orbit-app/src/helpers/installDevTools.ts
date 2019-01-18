@@ -3,11 +3,14 @@ import { enableLogging } from '@mcro/mobx-logger'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
 
-window['enableLog'] = false
+// TODO we already have a log helper called `log`
+// we can just make it a proxy where `log.enabled = true/false` sets localStorage and persists
+// instead of this global
+window['enableLog'] = localStorage.getItem('enableLog')
 
 enableLogging({
   predicate: ({ name }) => {
-    if (!window['enableLog']) {
+    if (!window['enableLog'] || window['enableLog'] === 1) {
       return false
     }
     if (!name) {

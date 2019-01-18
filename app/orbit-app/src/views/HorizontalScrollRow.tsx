@@ -1,6 +1,6 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import * as React from 'react'
 
 export type HorizontalScrollRowProps = {
   height?: number

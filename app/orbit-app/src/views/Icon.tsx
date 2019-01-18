@@ -1,9 +1,8 @@
-import * as React from 'react'
-import fuzzy from 'fuzzysort'
-import { SVG } from './SVG'
-import { ThemeContext, IconProps, View, Image } from '@mcro/ui'
 import * as UI from '@mcro/ui'
+import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
+import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
+import { SVG } from './SVG'
 
 const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
@@ -11,6 +10,7 @@ const icons = {
   orbitTopics: require('!raw-loader!../../public/icons/icon-topics.svg'),
   orbitPeople: require('!raw-loader!../../public/icons/icon-people.svg'),
   orbitMemory: require('!raw-loader!../../public/icons/icon-memory.svg'),
+  orbitLists: require('!raw-loader!../../public/icons/icon-lists.svg'),
 
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),
   sidebar: require('!raw-loader!../../public/streamline/sidebar.svg'),
@@ -146,22 +146,6 @@ const icons = {
   downArrow: require('!raw-loader!../../public/icons/down-arrow.svg'),
 }
 
-const iconNames = Object.keys(icons)
-const cache = {}
-const findIconName = name => {
-  if (cache[name]) {
-    return cache[name]
-  }
-  if (iconNames[name]) {
-    return iconNames[name]
-  }
-  const matches = fuzzy.go(name, iconNames)
-  if (matches.length) {
-    return matches[0].target
-  }
-  return false
-}
-
 type Props = React.HTMLProps<SVGElement> &
   IconProps & {
     ref: any
@@ -200,16 +184,14 @@ export const Icon = React.memo(
     }
 
     // find our custom streamline icons...
-    const iconName = findIconName(name)
+    const icon = icons[name]
 
     // ...or fallback to @mcro/ui icon
-    if (!iconName) {
+    if (!icon) {
       return (
         <UI.Icon name={name} color={fill} size={size} style={style} opacity={opacity} {...props} />
       )
     }
-
-    const icon = icons[iconName]
 
     return (
       <SVG

@@ -77,7 +77,7 @@ export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'
       <View
         flex={1}
         opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
+        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
           virtual

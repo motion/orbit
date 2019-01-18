@@ -32,17 +32,16 @@ export const RoundButtonPerson = ({ person, hideAvatar, ...props }: PersonButton
   return (
     <RoundButton size={0.95} sizeHeight={0.8} onClick={handleClickPerson(person.email)} {...props}>
       <UI.Row alignItems="center">
-        {!!avatar &&
-          !hideAvatar && (
-            <UI.Image
-              src={avatar}
-              borderRadius={100}
-              width={14}
-              height={14}
-              marginRight={6}
-              marginLeft={-1}
-            />
-          )}
+        {!!avatar && !hideAvatar && (
+          <UI.Image
+            src={avatar}
+            borderRadius={100}
+            width={14}
+            height={14}
+            marginRight={6}
+            marginLeft={-1}
+          />
+        )}
         <UI.Text size={0.95} fontWeight={600} alpha={0.9} alignItems="center">
           {person.name}
         </UI.Text>

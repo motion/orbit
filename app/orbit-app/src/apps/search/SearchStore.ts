@@ -1,19 +1,19 @@
-import { ensure, react, always } from '@mcro/black'
+import { always, ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import {
-  SearchResultModel,
-  SearchQuery,
-  IntegrationType,
-  SearchResult,
   AppType,
+  IntegrationType,
+  SearchQuery,
+  SearchResult,
+  SearchResultModel,
 } from '@mcro/models'
-import { uniq, flatten } from 'lodash'
-import { MarkType } from '../../stores/QueryStore/types'
-import { AppProps } from '../AppProps'
-import { fuzzyQueryFilter } from '../../helpers'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useHook } from '@mcro/use-store'
+import { capitalize, flatten, uniq } from 'lodash'
+import { fuzzyQueryFilter } from '../../helpers'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { MarkType } from '../../stores/QueryStore/types'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import { AppProps } from '../AppProps'
 
 type SearchState = {
   results: OrbitListItemProps[]
@@ -205,23 +205,26 @@ export class SearchStore {
           {
             key: 'name',
           },
-        ).map(app => ({
-          group: 'Apps',
-          title: app.name,
-          icon: app.type,
-          appConfig: {
-            id: '0',
-            title: `Open app: ${app.name}`,
-            type: AppType.message,
-            data: {
-              icon: app.type,
+        ).map(app => {
+          const icon = `orbit${capitalize(app.type)}`
+          return {
+            group: 'Apps',
+            title: app.name,
+            icon,
+            appConfig: {
+              id: '0',
+              title: `Open app: ${app.name}`,
+              type: AppType.message,
+              data: {
+                icon,
+              },
             },
-          },
-          onOpen: () => {
-            console.log('selecting app...', app.type, app.id)
-            this.stores.paneManagerStore.setActivePane(app.id)
-          },
-        })),
+            onOpen: () => {
+              console.log('selecting app...', app.type, app.id)
+              this.stores.paneManagerStore.setActivePane(app.id)
+            },
+          }
+        }),
       ]
       setValue({ results, query, finished: false })
 

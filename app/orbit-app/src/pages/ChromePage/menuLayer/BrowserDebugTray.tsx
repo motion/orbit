@@ -1,22 +1,21 @@
-import * as React from 'react'
-import { Row, FullScreen, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
 import { App } from '@mcro/stores'
-import { IS_ELECTRON } from '../../../constants'
+import { FullScreen, Row, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { IS_ELECTRON } from '../../../constants'
 
 class DebugTrayStore {
   props: { id: number }
 
   targetSetter = id => () => {
-    console.log('chrome set tray hover id', id)
     App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: id })
   }
 
   onLeave = this.targetSetter('Out')
 }
 
-export default observer(function BrowserDebugTray({ children, menuStore }: any) {
+const BrowserDebugTray = observer(function BrowserDebugTray({ children, menuStore }: any) {
   const store = useStore(DebugTrayStore)
   if (IS_ELECTRON) {
     return children
@@ -43,6 +42,8 @@ export default observer(function BrowserDebugTray({ children, menuStore }: any) 
     </FullScreen>
   )
 })
+
+export default BrowserDebugTray
 
 const Target = ({ id, store, menuStore }) => {
   return (

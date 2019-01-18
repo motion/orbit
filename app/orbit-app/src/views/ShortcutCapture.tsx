@@ -1,5 +1,5 @@
-import { Component, cloneElement } from 'react'
 import EventStringifier from 'key-event-to-string'
+import { cloneElement, Component } from 'react'
 
 type Props = {
   defaultValue?: string

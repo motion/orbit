@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { react, cancel, ensure } from '@mcro/black'
-import { Carousel, CarouselProps } from '../views/Carousel'
+import { cancel, ensure, react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
-import { SelectionStore } from '../stores/SelectionStore'
-import { observer } from 'mobx-react-lite'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { SelectionStore } from '../stores/SelectionStore'
+import { Carousel, CarouselProps } from '../views/Carousel'
 
 export type SelectableCarouselProps = CarouselProps & {
   isActiveStore?: { isActive?: boolean }

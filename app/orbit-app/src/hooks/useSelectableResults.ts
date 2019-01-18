@@ -1,13 +1,16 @@
-import { useEffect } from 'react'
 import { useComputed } from 'mobx-react-lite'
-import { useStoresSafe } from './useStoresSafe'
-import { OrbitListProps } from '../views/Lists/OrbitList'
+import { useEffect } from 'react'
 import { Direction } from '../stores/SelectionStore'
+import { SelectableListProps } from '../views/Lists/SelectableList'
+import { useStoresSafe } from './useStoresSafe'
 
-export function useSelectableResults(props: Partial<OrbitListProps> & { isActive?: boolean }) {
-  const { appStore, shortcutStore, selectionStore } = useStoresSafe()
-  const isActive = useComputed(() =>
-    typeof props.isActive === 'boolean' ? props.isActive : !!appStore.isActive,
+export function useSelectableResults(props: SelectableListProps) {
+  const { appStore, shortcutStore, selectionStore } = useStoresSafe({
+    optional: ['selectionStore'],
+  })
+  const isActive = useComputed(
+    () => (typeof props.isSelectable === 'boolean' ? props.isSelectable : !!appStore.isActive),
+    [props.isSelectable],
   )
 
   useEffect(
@@ -17,19 +20,32 @@ export function useSelectableResults(props: Partial<OrbitListProps> & { isActive
           appStore.setResults([{ type: 'column', indices: props.items.map((_, index) => index) }])
         }
 
+        if (
+          typeof props.defaultSelected === 'number' &&
+          selectionStore &&
+          selectionStore.activeIndex === -1
+        ) {
+          selectionStore.setActiveIndex(props.defaultSelected)
+        }
+
         return shortcutStore.onShortcut(shortcut => {
           console.log('shortcut handle', shortcut)
           switch (shortcut) {
             case 'open':
               if (props.onOpen) {
-                props.onOpen(
-                  selectionStore.activeIndex /* TODO have appStore.getAppConfig(index) */,
-                )
+                if (selectionStore) {
+                  props.onOpen(
+                    selectionStore.activeIndex /* TODO have appStore.getAppConfig(index) */,
+                  )
+                }
               }
               break
             case 'up':
             case 'down':
-              selectionStore.move(Direction[shortcut])
+              if (selectionStore) {
+                selectionStore.move(Direction[shortcut])
+              }
+              break
           }
         })
       }

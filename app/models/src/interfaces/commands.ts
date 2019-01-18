@@ -1,10 +1,10 @@
 import { Command } from '@mcro/mediator'
 import { Source } from './Source'
 
-export const SourceRemoveCommand = new Command<void, { sourceId: number }>('setting-remove')
-export const SourceForceSyncCommand = new Command<void, { sourceId: number }>('setting-force-sync')
+export const SourceRemoveCommand = new Command<void, { sourceId: number }>('source-remove')
+export const SourceForceSyncCommand = new Command<void, { sourceId: number }>('source-force-sync')
 export const SourceForceCancelCommand = new Command<void, { sourceId: number }>(
-  'setting-force-cancel',
+  'source-force-cancel',
 )
 export const SourceSaveCommand = new Command<
   { success: boolean; error?: string },

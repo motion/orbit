@@ -26,7 +26,7 @@ export class SelectionStore {
   selectEvent = ''
   leaveIndex = -1
   lastSelectAt = 0
-  _activeIndex = this.props.defaultSelected || -1
+  _activeIndex = -1
   movesMap: MovesMap[] | null = null
   clearOff: any
 
@@ -51,7 +51,6 @@ export class SelectionStore {
   }
 
   setActiveIndex = (val: number) => {
-    console.trace('set active index', val)
     this.activeIndex = val
   }
 

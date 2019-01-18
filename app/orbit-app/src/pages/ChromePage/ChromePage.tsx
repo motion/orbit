@@ -1,37 +1,26 @@
-import * as React from 'react'
-import { AppWrapper } from '../../views'
-import MenuLayer from './menuLayer/MenuLayer'
-import { Theme, FullScreen } from '@mcro/ui'
-import { App } from '@mcro/stores'
+import { FullScreen, Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
+import * as React from 'react'
+import { StoreContext } from '../../contexts'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
-import { observer } from 'mobx-react-lite'
-import { AppTray } from './appTray/AppTray'
-import { StoreContext } from '../../contexts'
+import { AppWrapper } from '../../views'
+import Menu from './menuLayer/Menu'
 
-class ChromePageStore {
-  get theme() {
-    return App.state.darkTheme ? 'dark' : 'light'
-  }
-}
-
-export default observer(() => {
-  const store = useStore(ChromePageStore)
+export default function ChomePage() {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
   return (
     <StoreContext.Provider value={{ settingStore, sourcesStore, spaceStore }}>
-      <Theme name={store.theme}>
+      <Theme name="dark">
         <AppWrapper>
           <FullScreen>
-            <AppTray />
-            <MenuLayer />
+            <Menu />
           </FullScreen>
         </AppWrapper>
       </Theme>
     </StoreContext.Provider>
   )
-})
+}

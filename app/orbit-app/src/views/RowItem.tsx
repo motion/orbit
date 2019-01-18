@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Row, Col, Text, View } from '@mcro/ui'
-import { OrbitOrb } from './OrbitOrb'
 import { gloss } from '@mcro/gloss'
+import { Col, Row, Text, View } from '@mcro/ui'
+import * as React from 'react'
 import { Icon } from './Icon'
+import { OrbitOrb } from './OrbitOrb'
 
 const RowItemFrame = gloss(Row, {
   padding: [4, 8],

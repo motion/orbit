@@ -1,11 +1,11 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { SubPaneStore } from './SubPaneStore'
-import { AppType } from '@mcro/models'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { gloss } from '@mcro/gloss'
+import { AppType } from '@mcro/models'
+import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
-import { gloss } from '@mcro/gloss'
+import * as React from 'react'
+import { SubPaneStore } from './SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: number
@@ -25,23 +25,23 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export default observer(function SubPane(props: Props) {
+export const SubPane = observer(function SubPane(props: Props) {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
-  const subPaneStore = useStore(SubPaneStore, {
-    ...props,
-    transition,
-  })
+  const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
+  const height = props.fullHeight ? 'auto' : subPaneStore.contentHeight
+  console.log('siubpane', props.id, 'isActive', isActive, height)
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof props.before === 'function' ? props.before(isActive) : props.before}
       {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
         <Pane
+          key={Math.random()}
           isActive={isActive}
           isLeft={isLeft}
           style={props.style}
-          height={props.fullHeight ? 'auto' : subPaneStore.contentHeight}
+          height={height}
           forwardRef={subPaneStore.paneRef}
           preventScroll={props.preventScroll}
           transition={transition}
@@ -75,11 +75,9 @@ const Pane = gloss(UI.View, {
   right: 0,
   left: 0,
   overflow: 'hidden',
-  isActive: {
-    pointerEvents: 'auto',
-  },
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
+  pointerEvents: isActive ? 'auto' : 'inherit',
   transform: {
     x: isActive ? 0 : isLeft ? -10 : 10,
   },

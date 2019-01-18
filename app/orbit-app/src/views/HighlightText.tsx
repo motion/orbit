@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { Text, TextProps } from '@mcro/ui'
-import { HighlightsContext } from '../helpers/contexts/HighlightsContext'
 import { HighlightOptions } from '@mcro/helpers'
+import { Text, TextProps } from '@mcro/ui'
+import * as React from 'react'
+import { HighlightsContext } from '../helpers/contexts/HighlightsContext'
 
 type Props = TextProps & {
   options?: Partial<HighlightOptions>

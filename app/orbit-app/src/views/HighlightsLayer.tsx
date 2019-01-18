@@ -1,7 +1,7 @@
+import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import * as UI from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
 
 type Props = {
   term: string

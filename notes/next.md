@@ -1,3 +1,19 @@
+until end of jan:
+
+1. fixes for sources/sync, fix searching within apps, maybe restore lists app
+2. fixes for search, selection, tabs, settingsIndexpane
+3. lists app icon, show in apps, cleanups, add button => search overlay design
+4. hunting down odd bugs and organizing code
+5. people app search/select fixes
+6. new app pane, command to pop out app into own window / multi apps
+7. restore menus a bit just actions dropdown + search
+8. hunting down odd bugs and organizing code
+9. get ocr hooked into menu enable/disable and output results
+10. get ocr => memory simple list
+11. work through lists apps a bit
+12. hunting down odd bugs and organizing code
+13.
+
 sorting by prepping to split out work as best possible:
 
 - finish some app management stuff:
@@ -16,13 +32,50 @@ sorting by prepping to split out work as best possible:
   - allow teammates option from your master to "join" the space automatically
   - give an invite code to the first person
 
-work to split out:
+# employee
 
+message:
+
+one month test period. changes in how we work:
+
+- less interruption and less need for sync in schedule, dont stretch your hours too much
+- open a PR when you start, commit every 30-90 minutes so i can track time
+- post in #status in the morning with days plan
+- we need reduced boilerplate and optimize for speed and less code, its a startup
+- for example focus on merging a pr first that works ok, then note for later improvements
+
+tasks:
+
+- loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
+  - this should just go from client => desktop right?
+- syncers
+  - on process exit it should clear all processing Jobs
+  - github syncer and drive syncer not showing anything in their setting pane
+  - syncers arent running after first adding them
+  - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
+    - perhaps we need better checks for that
+  - syncers arent streaming or something weird is happening
+  - github smart sync shouldn't sync everything, just recent stuff
+  - got an out of memory issue during multiple syncs:
+    - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
+  - compression:
+    - needs to just do a sweep like a garbage collector:
+      - have concept of "full" vs "compressed" sync state for bits
+      - if an integration is taking more space, move from full => compressed
+    - needs concept of "hydrate" endpoint
+      - this can be shared between the syncers and the frontend (command)
+      - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
+      - these endpoints would need some rate limit logic (later)
+- debug why gdrive syncer items show "empty" in frontend and clean that view up
+- gmail syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
+- issue with reporting errors in observable queries, they are unhandled/not sent upwards
+  - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
+  - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
+    at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
+    at new Subscription"
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app
-- loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
-  - this should just go from client => desktop right?
 - make it much easier to create apps / have them in their own area
   - with their own data they can easily hook into
 - syncers bugfixing and improving performance and data storage

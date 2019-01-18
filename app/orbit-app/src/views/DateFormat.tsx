@@ -1,6 +1,6 @@
+import { differenceInCalendarYears } from 'date-fns/esm/fp'
 import * as React from 'react'
 import { TimeAgo } from './TimeAgo'
-import { differenceInCalendarYears } from 'date-fns/esm/fp'
 
 const defaultOptions = {
   weekday: 'short',

@@ -1,8 +1,9 @@
-import { BitEntity, BitUtils } from '@mcro/models'
-import { getRepository } from 'typeorm'
 import { Cosal } from '@mcro/cosal'
-import { zip, flatten } from 'lodash'
-import { updateSetting, ensureSetting, getSettingValue } from '../helpers/settingModelHelpers'
+import { BitEntity, BitUtils } from '@mcro/models'
+import { flatten, zip } from 'lodash'
+import { getRepository } from 'typeorm'
+
+import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
 
 export class TopicsManager {
   cosal: Cosal

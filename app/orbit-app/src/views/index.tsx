@@ -1,8 +1,8 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { View, Row, Text, InputProps } from '@mcro/ui'
-import { Input } from './Input'
 import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import { InputProps, Row, Text, View } from '@mcro/ui'
+import * as React from 'react'
+import { Input } from './Input'
 
 export * from './RoundButton'
 

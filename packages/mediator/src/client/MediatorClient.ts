@@ -164,7 +164,7 @@ export class MediatorClient {
         return transport
           .observe('observeOne', {
             model: qm instanceof Query ? qm.model.name : qm.name,
-            args: qm instanceof Query ? qm.args : options.args,
+            args: qm instanceof Query ? qm.args : options.args || {},
             resolvers: qm instanceof Query ? qm.args : options.resolvers,
           })
           .subscribe(
@@ -263,12 +263,11 @@ export class MediatorClient {
   ): Observable<number>
   observeCount<ModelType, Args, CountArgs>(
     qm: Query<ModelType, CountArgs> | Model<ModelType, Args, CountArgs>,
-    options?: {
+    options: {
       args?: CountArgs
       resolvers?: QueryOptions<ModelType>
-    },
+    } = {},
   ): Observable<number> {
-    if (!options) options = {}
     return new Observable(subscriptionObserver => {
       const subscriptions = this.options.transports.map(transport => {
         return transport

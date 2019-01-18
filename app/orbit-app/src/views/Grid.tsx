@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { View } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { View } from '@mcro/ui'
+import * as React from 'react'
 
 const GridFrame = gloss(View, {
   display: 'grid',

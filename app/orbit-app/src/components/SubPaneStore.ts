@@ -1,19 +1,17 @@
-import { on, react, ensure } from '@mcro/black'
-import { throttle, debounce } from 'lodash'
-import { SubPaneProps } from './SubPane'
+import { ensure, on, react } from '@mcro/black'
 import { App } from '@mcro/stores'
-import { AppActions } from '../actions/AppActions'
-import { createRef } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { useHook } from '@mcro/use-store'
+import { debounce, throttle } from 'lodash'
+import { createRef } from 'react'
+import { AppActions } from '../actions/AppActions'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { SubPaneProps } from './SubPane'
 
 export class SubPaneStore {
   props: SubPaneProps
   stores = useHook(() => useStoresSafe({ optional: ['selectionStore'] }))
-
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
-
   aboveContentHeight = 0
   contentHeight = 0
   isAtBottom = false
@@ -27,7 +25,7 @@ export class SubPaneStore {
     if (!this.paneNode) {
       return null
     }
-    return this.paneNode.firstChild as HTMLDivElement
+    return this.paneNode.firstChild.firstChild as HTMLDivElement
   }
 
   get isLeft() {
@@ -44,7 +42,9 @@ export class SubPaneStore {
       const { extraCondition, id } = this.props
       const { paneManagerStore } = this.stores
       const isActive =
-        id === paneManagerStore.activePane.id && (extraCondition ? extraCondition() : true)
+        paneManagerStore.activePane &&
+        id === paneManagerStore.activePane.id &&
+        (extraCondition ? extraCondition() : true)
       return {
         isActive,
         isLeft: this.isLeft,
@@ -125,6 +125,7 @@ export class SubPaneStore {
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
+    console.log('update height', this.paneInnerNode, height)
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

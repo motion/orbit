@@ -1,6 +1,6 @@
 import { automagicClass } from '@mcro/automagical'
-import { isValidElement, useRef, createContext, useEffect } from 'react'
 import { observable, transaction } from 'mobx'
+import { createContext, isValidElement, useEffect, useRef } from 'react'
 import isEqual from 'react-fast-compare'
 
 type UseGlobalStoreOptions = {
@@ -126,6 +126,9 @@ const useReactiveStore = <A extends any>(
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
+    if (hasChangedSource) {
+      console.log('HMR replacing store', Store.constructor.name)
+    }
     const { store, hooks } = setupStoreReactiveProps(Store, props)
     storeRef.current = store
     storeHooks.current = hooks

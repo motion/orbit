@@ -1,6 +1,6 @@
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { HighlightText } from '../HighlightText'
-import { gloss } from '@mcro/gloss'
 
 const HighlightTextFrame = gloss({
   padding: [2, 0],

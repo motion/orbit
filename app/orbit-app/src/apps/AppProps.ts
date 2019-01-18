@@ -1,15 +1,14 @@
-import { AppType, AppConfig, AppData } from '@mcro/models'
-import { IntegrationType } from '@mcro/models'
-import { AppStore } from './AppStore'
-import { SourcesStore } from '../stores/SourcesStore'
-import { SettingStore } from '../stores/SettingStore'
+import { AppConfig, AppData, AppType } from '@mcro/models'
 import { SubPaneStore } from '../components/SubPaneStore'
+import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../stores/SelectionStore'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
+import { SettingStore } from '../stores/SettingStore'
+import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { OrbitHandleSelect } from '../views/Lists/OrbitList'
+import { AppStore } from './AppStore'
 
 export type AppProps<Type extends AppType> = {
   id: number
@@ -23,7 +22,6 @@ export type AppProps<Type extends AppType> = {
   data?: AppData[Type]
   updateData?: (values: Partial<AppData[Type]>) => void
 
-  sourceType?: IntegrationType
   appStore: AppStore<Type>
   spaceStore: SpaceStore
   sourcesStore: SourcesStore

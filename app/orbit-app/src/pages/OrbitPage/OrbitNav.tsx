@@ -8,6 +8,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { App } from '@mcro/models'
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { capitalize } from 'lodash'
 
 const height = 26
 const inactiveOpacity = 0.8
@@ -43,6 +44,8 @@ export default observer(function OrbitNav() {
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
+
+  console.log('space', space, 'apps', activeApps)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -92,7 +95,7 @@ export default observer(function OrbitNav() {
       onClick: paneManagerStore.activePaneSetter(app.id),
       children: (
         <Icon
-          name={`${app.type}`}
+          name={`orbit${capitalize(app.type)}`}
           size={isPinned ? 14 : 12}
           opacity={isActive ? 1 : inactiveOpacity - 0.15}
         />
@@ -115,14 +118,14 @@ export default observer(function OrbitNav() {
           />
           <View flex={1} minWidth={10} />
           <Tab tooltip="Add app">
-            <Icon name="simpleadd" size={12} opacity={0.5} />
+            <Icon name="grid48" size={10} opacity={0.5} />
           </Tab>
           <Tab
             isActive={paneManagerStore.activePane.name === 'Sources'}
             onClick={paneManagerStore.activePaneByNameSetter('Sources')}
             tooltip="Sources"
           >
-            <Icon name="design_app" size={12} opacity={0.5} />
+            <Icon name="design_app" size={11} opacity={0.5} />
           </Tab>
         </OrbitNavChrome>
       </OrbitNavClip>

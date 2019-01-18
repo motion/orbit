@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { gloss } from '@mcro/gloss'
+import * as React from 'react'
 
 export const DividerContainer = gloss({
   pointerEvents: 'all',

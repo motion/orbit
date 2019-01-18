@@ -1,7 +1,9 @@
+import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { SourceForceCancelCommand, JobEntity } from '@mcro/models'
+import { JobEntity, SourceForceCancelCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
 
+const log = new Logger('SourceForceCancelResolver')
 const cancelCommands = new Set()
 
 export class SyncerCancelError extends Error {}
@@ -13,9 +15,10 @@ export function checkCancelled(sourceId: number) {
   }
 }
 
-export const SourceForceCancelResolver = resolveCommand(
+export const SourceForceCancelResolver: any = resolveCommand(
   SourceForceCancelCommand,
   async ({ sourceId }) => {
+    log.info('canceling', sourceId)
     const lastJob = await getRepository(JobEntity).findOne({
       where: {
         type: 'INTEGRATION_SYNC',

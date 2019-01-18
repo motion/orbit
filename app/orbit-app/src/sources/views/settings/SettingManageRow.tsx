@@ -76,15 +76,15 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
       <SegmentedRow spaced>
         <TitleBarButton
           disabled={removeJobs.length > 0 || activeJobs.length > 0}
-          icon="remove"
-          tooltip="Remove integration"
-          onClick={() => removeIntegration(props.source)}
-        />
-        <TitleBarButton
-          disabled={removeJobs.length > 0 || activeJobs.length > 0}
           tooltip="Sync"
           icon="refresh"
           onClick={() => handleRefresh(props.source.id)}
+        />
+        <TitleBarButton
+          disabled={removeJobs.length > 0 || activeJobs.length > 0}
+          icon="remove"
+          tooltip={`Remove ${props.source.name}`}
+          onClick={() => removeIntegration(props.source)}
         />
       </SegmentedRow>
     </Row>

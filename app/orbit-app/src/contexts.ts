@@ -1,16 +1,17 @@
 import { createContext } from 'react'
-import { QueryStore } from './stores/QueryStore/QueryStore'
-import { PaneManagerStore } from './stores/PaneManagerStore'
-import { SelectionStore } from './stores/SelectionStore'
-import { SourcesStore } from './stores/SourcesStore'
-import { SpaceStore } from './stores/SpaceStore'
-import { SettingStore } from './stores/SettingStore'
-import { OrbitWindowStore } from './stores/OrbitWindowStore'
 import { AppStore } from './apps/AppStore'
-import { AppPageStore } from './pages/AppPage/AppPageStore'
-import { ShortcutStore } from './stores/ShortcutStore'
 import { SubPaneStore } from './components/SubPaneStore'
 import { AppFrameStore } from './pages/AppPage/AppFrame'
+import { AppPageStore } from './pages/AppPage/AppPageStore'
+import { MenuStore } from './pages/ChromePage/menuLayer/Menu'
+import { OrbitWindowStore } from './stores/OrbitWindowStore'
+import { PaneManagerStore } from './stores/PaneManagerStore'
+import { QueryStore } from './stores/QueryStore/QueryStore'
+import { SelectionStore } from './stores/SelectionStore'
+import { SettingStore } from './stores/SettingStore'
+import { ShortcutStore } from './stores/ShortcutStore'
+import { SourcesStore } from './stores/SourcesStore'
+import { SpaceStore } from './stores/SpaceStore'
 
 export type AllStores = {
   queryStore?: QueryStore
@@ -25,6 +26,7 @@ export type AllStores = {
   shortcutStore?: ShortcutStore
   subPaneStore?: SubPaneStore
   appFrameStore?: AppFrameStore
+  menuStore?: MenuStore
 }
 
 export const StoreContext = createContext({} as AllStores)

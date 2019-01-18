@@ -15,8 +15,7 @@ type ObserveModelOptions = {
 function useObserveModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
-  options: ObserveModelOptions = {},
-  queryRunner: Function,
+  options: ObserveModelOptions & { observeFn: Function },
 ) {
   const subscription = useRef(null)
   const curQuery = useRef(null)
@@ -40,7 +39,7 @@ function useObserveModel<ModelType, Args>(
         dispose()
 
         // subscribe new and update
-        subscription.current = queryRunner(model, { args: query }).subscribe(nextValue => {
+        subscription.current = options.observeFn(model, { args: query }).subscribe(nextValue => {
           if (options.onChange) {
             options.onChange(nextValue)
           }
@@ -65,7 +64,7 @@ export function useObserveMany<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ): ModelType[] {
-  return useObserveModel(model, query, { ...defaultsMany, ...options }, observeMany)
+  return useObserveModel(model, query, { ...defaultsMany, ...options, observeFn: observeMany })
 }
 
 export function useObserveOne<ModelType, Args>(
@@ -73,7 +72,7 @@ export function useObserveOne<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ): ModelType {
-  return useObserveModel(model, query, { ...defaultsOne, ...options }, observeOne)
+  return useObserveModel(model, query, { ...defaultsOne, ...options, observeFn: observeOne })
 }
 
 export function useObserveCount<ModelType, Args>(
@@ -81,7 +80,7 @@ export function useObserveCount<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ) {
-  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeCount)
+  return useObserveModel(model, query, { ...defaultsCount, ...options, observeFn: observeCount })
 }
 
 export function useObserveManyAndCount<ModelType, Args>(
@@ -89,7 +88,11 @@ export function useObserveManyAndCount<ModelType, Args>(
   query: Args | false,
   options: ObserveModelOptions = {},
 ) {
-  return useObserveModel(model, query, { ...defaultsCount, ...options }, observeManyAndCount)
+  return useObserveModel(model, query, {
+    ...defaultsCount,
+    ...options,
+    observeFn: observeManyAndCount,
+  })
 }
 
 // TODO we can now de-dupe and just re-use the same queries from useModel

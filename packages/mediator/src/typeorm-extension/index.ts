@@ -43,8 +43,7 @@ export function typeormResolvers(
       )
       resolvers.push(
         resolveCount(model, async args => {
-          // todo: not sure but probably we would need to use args.where
-          return connection.getRepository(entityResolver.entity).count(args)
+          return connection.getRepository(entityResolver.entity).count(args['where'])
         }),
       )
       resolvers.push(
@@ -70,13 +69,13 @@ export function typeormResolvers(
       )
       resolvers.push(
         resolveObserveManyAndCount(model, args => {
+          // todo may have to do args['where'] like below as well
           return connection.getRepository(entityResolver.entity).observeManyAndCount(args)
         }),
       )
       resolvers.push(
         resolveObserveCount(model, args => {
-          // todo: not sure but probably we would need to use args.where
-          return connection.getRepository(entityResolver.entity).observeCount(args)
+          return connection.getRepository(entityResolver.entity).observeCount(args['where'])
         }),
       )
     }

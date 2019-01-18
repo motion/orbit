@@ -1,5 +1,5 @@
-import { Component } from 'react'
 import { differenceInSeconds, formatRelative } from 'date-fns'
+import { Component } from 'react'
 
 type TimeAgoProps = {
   date?: number | Date

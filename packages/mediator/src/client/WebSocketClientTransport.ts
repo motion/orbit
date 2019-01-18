@@ -1,7 +1,7 @@
-import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
-import { ClientTransport } from './ClientTransport'
-import { log } from '../common/logger'
 import Observable from 'zen-observable'
+import { TransportRequestType, TransportRequestValues, TransportResponse } from '../common'
+import { log } from '../common/logger'
+import { ClientTransport } from './ClientTransport'
 
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
@@ -188,7 +188,10 @@ export class WebSocketClientTransport implements ClientTransport {
     const subscription = this.subscriptions.find(x => x.id === +id)
 
     if (!subscription) {
-      log.warning(`no subscription found in the client ${this.name}`, data)
+      log.verbose(
+        `observe has been disposed, no subscription found in the client ${this.name}`,
+        data,
+      )
       return
     }
 

@@ -1,14 +1,13 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { SourceForceSyncCommand } from '@mcro/models'
+import { SourceEntity, SourceForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceEntity } from '@mcro/models'
-import { Syncers } from '../core/Syncers'
 import { Syncer } from '../core/Syncer'
+import { Syncers } from '../core/Syncers'
 
 const log = new Logger('command:setting-force-sync')
 
-export const SourceForceSyncResolver = resolveCommand(
+export const SourceForceSyncResolver: any = resolveCommand(
   SourceForceSyncCommand,
   async ({ sourceId }) => {
     const setting = await getRepository(SourceEntity).findOne({ where: { id: sourceId } })

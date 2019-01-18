@@ -71,8 +71,8 @@ const optimization = {
     ],
   },
   dev: {
-    // removeAvailableModules: false,
-    // removeEmptyChunks: false,
+    noEmitOnErrors: true,
+    removeAvailableModules: false,
     namedModules: true,
     // ...optimizeSplit,
   },

@@ -1,15 +1,15 @@
-import '../public/styles/base.css'
-import '../public/styles/nucleo.css'
-import 'react-hot-loader' // must be imported before react
-import { setGlobalConfig, getGlobalConfig, GlobalConfig } from '@mcro/config'
+import { debugEmit } from '@mcro/black'
+import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
 import { configureUseStore } from '@mcro/use-store'
-import { debugEmit } from '@mcro/black'
 import { CompositeDisposable } from 'event-kit'
-import { sleep } from './helpers'
-import { setupTestApp } from './helpers/setupTestApp'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
+import 'react-hot-loader' // must be imported before react
+import '../public/styles/base.css'
+import '../public/styles/nucleo.css'
+import { sleep } from './helpers'
+import { setupTestApp } from './helpers/setupTestApp'
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly

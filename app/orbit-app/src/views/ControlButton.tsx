@@ -1,9 +1,9 @@
+import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
 import * as React from 'react'
 import controlX from '../../public/images/control-x.png'
 import controlY from '../../public/images/control-y.png'
 import controlZ from '../../public/images/control-z.png'
-import * as UI from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
 
 const icons = {
   x: controlX,

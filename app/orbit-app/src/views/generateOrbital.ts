@@ -921,7 +921,7 @@ export function generateOrbital({ type, canvas, canvasWidth, canvasHeight, w, h,
       var sideTilt = Math.asin(capSagitta / faceHeight)
       var sideHeight = Math.sqrt(faceHeight * faceHeight - capSagitta * capSagitta)
 
-      // var colorWheel = [ violet, magenta, orange, gold, yellow ];
+        // var colorWheel = [ violet, magenta, orange, gold, yellow ];
       ;[-1, 1].forEach(function(ySide) {
         var capColors = {
           '-1': [yellow, gold, orange, magenta, gold],

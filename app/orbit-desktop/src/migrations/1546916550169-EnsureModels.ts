@@ -38,9 +38,11 @@ export class EnsureModels1546916550169 implements MigrationInterface {
             {
               target: 'app',
               name: 'Memory',
-              type: 'memory',
+              type: 'lists',
               spaceId: space.id,
-              data: {},
+              data: {
+                lists: [],
+              },
             },
           ]
           await Promise.all(

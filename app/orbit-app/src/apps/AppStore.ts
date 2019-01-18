@@ -1,9 +1,9 @@
-import { react, ensure, always } from '@mcro/black'
-import { SelectionGroup } from './SelectionResults'
-import { AppProps } from './AppProps'
+import { always, ensure, react } from '@mcro/black'
 import { AppType } from '@mcro/models'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { useHook } from '@mcro/use-store'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { AppProps } from './AppProps'
+import { SelectionGroup } from './SelectionResults'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type>
@@ -34,9 +34,10 @@ export class AppStore<Type extends AppType> {
     if (typeof isActive === 'function') {
       return isActive()
     }
-    if (this.stores.paneManagerStore) {
+    if (this.stores.paneManagerStore && this.stores.paneManagerStore.activePane) {
       return this.stores.paneManagerStore.activePane.id === id
     }
+    console.warn('no active prop or paneManagerStore')
     return false
   }
 

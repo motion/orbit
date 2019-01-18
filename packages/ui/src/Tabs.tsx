@@ -11,7 +11,7 @@ import { Row } from './blocks/Row'
 import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
 import { Tab } from './Tab'
-import { Theme, gloss } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 
 export type TabsProps = {
   // Callback for when the active tab has changed.
@@ -40,7 +40,7 @@ export type TabsProps = {
   after?: Array<any>
 }
 
-function TabsInner(props: TabsProps) {
+export function Tabs(props: TabsProps) {
   const { onActive } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
@@ -160,14 +160,6 @@ function TabsInner(props: TabsProps) {
       {tabContents}
       {tabSiblings}
     </TabContainer>
-  )
-}
-
-export function Tabs(props) {
-  return (
-    <Theme select={theme => theme.titleBar || theme}>
-      <TabsInner {...props} />
-    </Theme>
   )
 }
 

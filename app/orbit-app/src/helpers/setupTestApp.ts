@@ -1,6 +1,6 @@
-import { IS_ELECTRON } from '../constants'
+import { AppConfig, BitModel, PersonBitModel } from '@mcro/models'
 import { AppActions } from '../actions/AppActions'
-import { BitModel, AppConfig, PersonBitModel } from '@mcro/models'
+import { IS_ELECTRON } from '../constants'
 
 // test page for loading in browser to isolate
 export async function setupTestApp() {

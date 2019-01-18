@@ -1,5 +1,5 @@
-import { HighlightText } from './HighlightText'
 import { gloss } from '@mcro/gloss'
+import { HighlightText } from './HighlightText'
 
 export const HighlightTextItem = gloss(HighlightText)
 

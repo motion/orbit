@@ -6,12 +6,11 @@
  */
 
 import * as React from 'react'
-import { Filter } from './types'
-import { TableBodyRow } from './types'
+import deepEqual from 'react-fast-compare'
+import textContent from '../helpers/textContent'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
-import textContent from '../helpers/textContent'
-import deepEqual from 'react-fast-compare'
+import { Filter, TableBodyRow } from './types'
 
 type Props = ManagedTableProps &
   SearchableProps & {
@@ -76,6 +75,7 @@ class SearchableManagedTable extends React.PureComponent<Props, State> {
         filters: props.filters,
       }
     }
+    return null
   }
 
   render() {

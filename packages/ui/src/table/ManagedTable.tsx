@@ -143,6 +143,7 @@ export type ManagedTableProps = {
 
   sortOrder?: TableRowSortOrder
   onCreatePaste?: Function
+  bodyPlaceholder?: React.ReactNode
 }
 
 type ManagedTableState = {
@@ -540,6 +541,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           onSort={this.onSort}
         />
         <Container>
+          {(!sortedRows.length && this.props.bodyPlaceholder) || null}
           {this.props.autoHeight ? (
             sortedRows.map((_, index) => this.getRow({ index, style: {} }))
           ) : (

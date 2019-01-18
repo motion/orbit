@@ -1,5 +1,5 @@
-import { View, Text } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { Text, View } from '@mcro/ui'
 
 // @ts-ignore
 export const Message = gloss(Text, {

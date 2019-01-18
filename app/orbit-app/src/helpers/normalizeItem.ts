@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Person, Bit, PersonBit, IntegrationType, Source, AppConfig } from '@mcro/models'
+import { AppConfig, Bit, IntegrationType, Person, PersonBit, Source } from '@mcro/models'
 import { last } from 'lodash'
+import * as React from 'react'
 import { ResolvableModel } from '../sources/types'
 import { getAppConfig } from './getAppConfig'
 

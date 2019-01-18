@@ -1,6 +1,6 @@
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import { Text, View, SearchableTable } from '@mcro/ui'
+import { Text, View, SearchableTable, Tabs, Tab } from '@mcro/ui'
 import * as React from 'react'
 import { loadMany } from '@mcro/model-bridge'
 import { DateFormat } from '../../../../views/DateFormat'
@@ -15,7 +15,7 @@ type Props = OrbitSourceSettingProps<GithubSource>
 
 class GithubSettingStore {
   props: Props
-  repositories: GithubRepository[] = []
+  repositories: GithubRepository[] = null
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
@@ -27,11 +27,12 @@ class GithubSettingStore {
   })
 
   async didMount() {
-    this.repositories = await loadMany(GithubRepositoryModel, {
-      args: {
-        sourceId: this.props.source.id,
-      },
-    })
+    this.repositories =
+      (await loadMany(GithubRepositoryModel, {
+        args: {
+          sourceId: this.props.source.id,
+        },
+      })) || []
   }
 
   willUnmount() {
@@ -43,7 +44,7 @@ class GithubSettingStore {
   }
 
   private getAllFilterIds() {
-    return this.repositories.map(repository => repository.nameWithOwner)
+    return (this.repositories || []).map(repository => repository.nameWithOwner)
   }
 }
 
@@ -55,7 +56,7 @@ export default observer(function GithubSettings(props: Props) {
       <View
         flex={1}
         opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'auto'}
+        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
           virtual
@@ -98,7 +99,7 @@ export default observer(function GithubSettings(props: Props) {
           sortOrder={store.sortOrder}
           onSort={store.onSortOrder}
           multiHighlight
-          rows={store.repositories.map(repository => {
+          rows={(store.repositories || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             const lastCommit = new Date(repository.pushedAt)
             const isActive = store.whitelist.whilistStatusGetter(repository.nameWithOwner)
@@ -141,7 +142,7 @@ export default observer(function GithubSettings(props: Props) {
           })}
           bodyPlaceholder={
             <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>Loading...</Text>
+              <Text size={1.2}>{store.repositories ? 'No repositories found' : 'Loading...'}</Text>
             </div>
           }
         />

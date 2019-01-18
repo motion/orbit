@@ -52,7 +52,7 @@ export default observer(function DriveSettings(props: Props) {
   return (
     <>
       <SettingManageRow source={props.source} whitelist={null} />
-      <View flex={1} opacity={1} pointerEvents={'auto'}>
+      <View flex={1} opacity={1}>
         <SearchableTable
           virtual
           rowLineHeight={28}

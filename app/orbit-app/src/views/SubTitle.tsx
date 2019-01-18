@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { Text } from '@mcro/ui'
+import * as React from 'react'
 
 export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
   <Text

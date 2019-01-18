@@ -1,7 +1,7 @@
-import { react, on, ensure, ReactionRejectionError } from '@mcro/black'
-import { Direction } from './SelectionStore'
-import { autoTrack } from '../helpers/Track'
+import { ensure, on, react, ReactionRejectionError } from '@mcro/black'
 import { memoize } from 'lodash'
+import { autoTrack } from '../helpers/Track'
+import { Direction } from './SelectionStore'
 
 export type Pane = { id: number; name?: string; type?: string; keyable?: boolean }
 
@@ -87,7 +87,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.error(`no pane found! this.props.panes`, this.panes)
+      console.error(`no pane found! this.props.panes`, this.panes, index)
       return
     }
     if (index !== this.paneIndex) {
@@ -100,7 +100,9 @@ export class PaneManagerStore {
   }
 
   setActivePaneToPrevious = () => {
-    this.setActivePane(this.lastActivePane.id)
+    if (this.lastActivePane) {
+      this.setActivePane(this.lastActivePane.id)
+    }
   }
 
   handleOnPaneChange = react(

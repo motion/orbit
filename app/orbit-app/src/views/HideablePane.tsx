@@ -1,5 +1,5 @@
-import * as UI from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
 
 export const HideablePane = gloss(UI.FullScreen, {
   opacity: 1,

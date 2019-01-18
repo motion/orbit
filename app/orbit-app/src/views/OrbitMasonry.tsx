@@ -1,3 +1,4 @@
+import { ORBIT_WIDTH } from '@mcro/constants'
 import * as React from 'react'
 import {
   CellMeasurer,
@@ -5,9 +6,8 @@ import {
   createMasonryCellPositioner,
   Masonry,
 } from 'react-virtualized'
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { OrbitCard } from './OrbitCard'
 import { ListItemProps } from './ListItems/ListItem'
+import { OrbitCard } from './OrbitCard'
 
 const middleSpace = 3
 const width = ORBIT_WIDTH

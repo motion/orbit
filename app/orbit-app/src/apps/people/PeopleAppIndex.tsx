@@ -24,6 +24,7 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
 
   return (
     <SelectableList
+      defaultSelected={0}
       items={results}
       query={removePrefixIfExists(props.appStore.activeQuery, '@')}
       itemProps={props.itemProps}

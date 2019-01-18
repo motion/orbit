@@ -1,8 +1,8 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import { AppActions } from '../actions/AppActions'
 import { PersonBit } from '@mcro/models'
+import * as UI from '@mcro/ui'
 import { memoize } from 'lodash'
+import * as React from 'react'
+import { AppActions } from '../actions/AppActions'
 
 const shortName = name => {
   const names = name.split(' ')

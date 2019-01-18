@@ -18,12 +18,12 @@ export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
 
 const modelTargetToAppType = (model: ResolvableModel): AppType => {
   if (model.target === 'person-bit') {
-    return 'people'
+    return AppType.people
   }
   if (model.target === 'search-group') {
-    return 'search'
+    return AppType.search
   }
-  return model.target
+  return AppType[model.target]
 }
 
 export const sourceToAppConfig = (
@@ -38,7 +38,7 @@ export const sourceToAppConfig = (
     icon: app.display.icon,
     iconLight: app.display.iconLight,
     title: app.display.name,
-    type: model ? modelTargetToAppType(model) : 'sources',
+    type: model ? modelTargetToAppType(model) : AppType.sources,
     integration: app.integration,
     viewConfig: app.viewConfig,
   }

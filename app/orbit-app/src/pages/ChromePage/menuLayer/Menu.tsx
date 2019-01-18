@@ -4,7 +4,6 @@ import { App, Desktop, Electron } from '@mcro/stores'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { debounce, memoize, throttle } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
@@ -191,7 +190,7 @@ export class MenuStore {
     () => this.activeMenuIndex,
     val => {
       ensure('is active', val !== -1)
-      return val
+      return +val
     },
     {
       defaultValue: 0,
@@ -490,10 +489,11 @@ function useMenuApps() {
     }))
 }
 
-export const Menu = observer(function Menu() {
+export function Menu() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const menuApps = useMenuApps()
+  console.log('menuApps1', menuApps)
 
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
@@ -502,16 +502,21 @@ export const Menu = observer(function Menu() {
     },
   })
 
-  const menuStore = useStore(MenuStore, {
-    paneManagerStore,
-    queryStore,
-    onMenuHover(index) {
+  const onMenuHover = React.useCallback(
+    index => {
+      console.log('ON MENU HOVER', menuApps, index)
       if (menuApps.length) {
         const app = menuApps[index]
-        console.log('hover menu', index, 'set active pane', app)
         paneManagerStore.setActivePane(app.id)
       }
     },
+    [JSON.stringify(menuApps)],
+  )
+
+  const menuStore = useStore(MenuStore, {
+    paneManagerStore,
+    queryStore,
+    onMenuHover,
   })
 
   // Handle mouse enter/leave events
@@ -537,7 +542,7 @@ export const Menu = observer(function Menu() {
   // Handle tray enter/leave/click events
   React.useEffect(() => {
     return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
-  })
+  }, [])
 
   return (
     <BrowserDebugTray menuStore={menuStore}>
@@ -557,7 +562,7 @@ export const Menu = observer(function Menu() {
       </MergeContext>
     </BrowserDebugTray>
   )
-})
+}
 
 const itemProps = {
   oneLine: false,
@@ -569,6 +574,7 @@ const itemProps = {
 const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStoresSafe()
   const menuApps = useMenuApps()
+  console.log('menuApps2', menuApps)
   return (
     <View className="app-parent-bounds" pointerEvents="auto">
       <Searchable

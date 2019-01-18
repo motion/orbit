@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
-import { useEffect, useState, useRef } from 'react'
-import { observeMany, observeOne, observeCount, observeManyAndCount, loadOne, save } from '.'
+import { useEffect, useRef, useState } from 'react'
+import { loadOne, observeCount, observeMany, observeManyAndCount, observeOne, save } from '.'
 
 type UseModelOptions = {
   defaultValue?: any
@@ -28,6 +28,7 @@ function useObserveModel<ModelType, Args>(
   // on new query: subscribe, update
   useEffect(
     () => {
+      console.log('running effect', query)
       if (query === false) {
         return
       }
@@ -39,11 +40,14 @@ function useObserveModel<ModelType, Args>(
         dispose()
 
         // subscribe new and update
+        console.log('subscribing to query', query)
         subscription.current = options.observeFn(model, { args: query }).subscribe(nextValue => {
+          console.log('res', value, nextValue)
           if (options.onChange) {
             options.onChange(nextValue)
           }
           if (JSON.stringify(value) !== JSON.stringify(nextValue)) {
+            console.log('set next val', nextValue)
             setValue(nextValue)
           }
         })

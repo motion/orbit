@@ -122,16 +122,18 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
     let [storeName, args, methodName] = [].concat(...name.split('(').map(x => x.split('.')))
     if (!methodName) {
       methodName = args
-      args = null
+      args = ''
     }
-    const formattedName = `${storeName}`.padStart(16, ' ')
+    // aim to make the "." align
+    const padAmt = Math.max(0, 22 - args.length)
+    const formattedName = `${storeName}`.padStart(padAmt, ' ')
     console.log(
       `%cᐧ %c${formattedName}${args ? `%c(${args}` : ''}.%c${methodName}`,
       `color: #999`,
-      `color: ${color}; font-weight: bold;`,
+      `color: ${color};`,
       ...(args ? [`color: ${color};`] : []),
       `font-weight: bold;`,
-      changed.length > 90 ? `${changed.slice(0, 90)}...` : changed,
+      changed.length > 50 ? `${changed.slice(0, 50)}...` : changed,
       ...(timings ? [timings] : []),
     )
     console.debug('  ⮑ %cargs', 'color: orange;', toJSDeep(reactionArgs))

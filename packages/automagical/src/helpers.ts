@@ -121,7 +121,7 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
       methodName = args
       args = null
     }
-    const formattedName = `${storeName}`.padStart(30, ' ')
+    const formattedName = `${storeName}`.padStart(20, ' ')
     console.log(
       `%c${formattedName}${args ? `%c(${args}` : ''}.%c${methodName}`,
       `color: ${color}; font-weight: bold;`,

@@ -36,7 +36,6 @@ export const SubPane = observer(function SubPane(props: Props) {
       {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
         <Pane
-          key={Math.random()}
           isActive={isActive}
           isLeft={isLeft}
           style={props.style}

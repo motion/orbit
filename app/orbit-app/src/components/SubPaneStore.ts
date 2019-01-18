@@ -60,25 +60,23 @@ export class SubPaneStore {
     },
   )
 
+  triggerRewatch = 0
   watchParentNode = react(
-    () => this.paneNode,
-    node => {
+    () => [this.paneNode, this.triggerRewatch],
+    ([node]) => {
       ensure('hasNode', !!node)
       ensure('not fullHeight', !this.props.fullHeight)
       if (this.watchParentNode) {
         this.watchParentNode.forEach(disconnect => disconnect())
       }
 
-      const scrollO = on(this, this.paneNode, 'scroll', throttle(this.onPaneScroll, 16 * 3))
-      const mutationO = this.useMutationObserver(
-        this.paneNode,
-        { childList: true, subtree: true },
-        this.handlePaneChange,
-      )
-      const resizeO = this.useResizeObserver(node, () => {
-        console.log('resize i see you', this.paneInnerNode, this.paneInnerNode.clientHeight)
-        this.handlePaneChange()
+      const scrollO = on(this, node, 'scroll', throttle(this.onPaneScroll, 16 * 3))
+
+      // re-run this watch when we see a mutation
+      const mutationO = this.useMutationObserver(node, { childList: true, subtree: true }, () => {
+        this.triggerRewatch = Math.random()
       })
+      const resizeO = this.useResizeObserver(node, this.handlePaneChange)
 
       this.handlePaneChange()
 
@@ -95,28 +93,27 @@ export class SubPaneStore {
         this.watchInnerNode.forEach(disconnect => disconnect())
       }
 
-      const resizeO = this.useResizeObserver(node, () => {
-        console.log('resize i see you', this.paneInnerNode.clientHeight)
-        this.handlePaneChange()
-      })
-      const mutationO = this.useMutationObserver(this.paneInnerNode, { attributes: true }, () => {
-        console.log('ok mutate...')
-        this.handlePaneChange()
-      })
+      const resizeO = this.useResizeObserver(node, this.handlePaneChange)
+      const mutationO = this.useMutationObserver(
+        this.paneInnerNode,
+        { attributes: true },
+        this.handlePaneChange,
+      )
 
       return [resizeO, mutationO]
     },
   )
 
   get maxHeight() {
-    return window.innerHeight - this.aboveContentHeight
+    // just leave a little extra padding
+    return window.innerHeight - this.aboveContentHeight - 20
   }
 
   get fullHeight() {
     const fullHeight = this.contentHeight + this.aboveContentHeight
     const minHeight = 90
     // never go all the way to bottom, cap min and max
-    return Math.max(minHeight, fullHeight)
+    return Math.min(this.maxHeight, Math.max(minHeight, fullHeight))
   }
 
   lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })

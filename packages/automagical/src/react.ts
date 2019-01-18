@@ -28,9 +28,9 @@ function tsWatch(options) {
   }
 }
 
-type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
+export type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
 
-type ReactVal =
+export type ReactVal =
   | undefined
   | null
   | number
@@ -48,17 +48,13 @@ type ReactVal =
 export function react<A extends ReactVal, B>(
   a: () => A,
   b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
-  c?: ReactionOptions,
+  c: ReactionOptions = null,
   opts?: ReactionOptions,
 ): UnwrapObservable<B> {
   if (typeof a === 'function') {
-    if (typeof b === 'function') {
+    if (typeof b === 'function' || typeof b === 'object' || !b) {
       // @ts-ignore
       return new Reaction(a, b, c)
-    }
-    if (typeof b === 'object' || !b) {
-      // @ts-ignore
-      return new Reaction(a, b, null)
     }
   }
   // passing options

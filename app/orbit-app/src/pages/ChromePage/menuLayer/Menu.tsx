@@ -15,7 +15,6 @@ import { useActiveApps } from '../../../hooks/useActiveApps'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { Direction } from '../../../stores/SelectionStore'
 import { MergeContext } from '../../../views/MergeContext'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
@@ -26,8 +25,8 @@ export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
 export class MenuStore {
   props: {
-    paneManagerStore: PaneManagerStore
     queryStore: QueryStore
+    menuItems: ({ id: number; index: number })[]
     onMenuHover?: (index: number) => any
   }
   menuRef = createRef<any>()
@@ -103,15 +102,18 @@ export class MenuStore {
   )
 
   menuCenter = react(
-    () => this.activeOrLastActiveMenuIndex,
-    activeID => {
-      const id = activeID === -1 ? 0 : activeID
-      const maxItems = 3
+    () => {
+      const id = this.activeOrLastActiveMenuIndex
+      return id === -1 ? 0 : id
+    },
+    id => {
       const trayPositionX = IS_ELECTRON
         ? Desktop.state.operatingSystem.trayBounds.position[0]
         : window.innerWidth / 2
       const leftSpacing = 47
-      const xOffset = maxItems - id
+      const maxIndex = 3
+      const xOffset = maxIndex - id
+      console.log('xoff', xOffset, id)
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
       return trayPositionX + offset
@@ -161,30 +163,19 @@ export class MenuStore {
 
   private updateHoverTm = null
 
-  setHoveringIndex = (id: number) => {
+  setHoveringIndex = (index: number) => {
     clearTimeout(this.updateHoverTm)
     const update = () => {
-      this.activeMenuIndex = id
-      this.hoveringIndex = id
+      this.activeMenuIndex = index
+      this.hoveringIndex = index
     }
-    if (id === -1) {
+    if (index === -1) {
       update()
     } else {
       // some debounce
       setTimeout(update, 80)
     }
   }
-
-  setActiveMenuFromPaneChange = react(
-    () => this.props.paneManagerStore.paneIndex,
-    index => {
-      ensure('changed', index !== this.activeMenuIndex)
-      this.activeMenuIndex = index
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   activeOrLastActiveMenuIndex = react(
     () => this.activeMenuIndex,
@@ -194,7 +185,6 @@ export class MenuStore {
     },
     {
       defaultValue: 0,
-      deferFirstRun: true,
     },
   )
 
@@ -236,11 +226,11 @@ export class MenuStore {
     () => this.menuCenter,
     menuCenter => {
       ensure('valid menu', this.activeMenuIndex !== -1)
-      const id = +this.activeMenuIndex
+      const index = +this.activeMenuIndex
       App.setState({
         trayState: {
           menuState: {
-            [id]: {
+            [index]: {
               open: true,
               position: [menuCenter - MENU_WIDTH / 2, 0],
             },
@@ -250,11 +240,11 @@ export class MenuStore {
     },
   )
 
-  menuHeightSetter = memoize((menuId: number) => (height: number) => {
+  menuHeightSetter = memoize((index: number) => (height: number) => {
     App.setState({
       trayState: {
         menuState: {
-          [menuId]: {
+          [index]: {
             size: [MENU_WIDTH, height],
           },
         },
@@ -295,19 +285,7 @@ export class MenuStore {
     this.hoveringIndex = -1
   }
 
-  setActiveMenuFromPinMove = react(
-    () => always(Electron.state.pinKey.at),
-    () => {
-      const towards = Electron.state.pinKey.name
-      const inverse = towards === 'left' ? 'right' : 'left'
-      const direction = Direction[inverse]
-      if (direction) {
-        this.props.paneManagerStore.move(direction)
-      }
-    },
-  )
-
-  setActivePane = react(
+  callOnMenuHover = react(
     () => this.activeOrLastActiveMenuIndex,
     index => {
       if (typeof index === 'number') {
@@ -333,8 +311,6 @@ export class MenuStore {
       }
     },
   )
-
-  isMenuFullyHidden = false
 
   isFocused = react(
     () => this.isOpenOutsideAnimation,
@@ -502,21 +478,17 @@ export function Menu() {
     },
   })
 
-  const onMenuHover = React.useCallback(
-    index => {
+  const menuStore = useStore(MenuStore, {
+    paneManagerStore,
+    queryStore,
+    menuItems: menuApps,
+    onMenuHover: index => {
       console.log('ON MENU HOVER', menuApps, index)
       const app = menuApps.find(x => x.index === index)
       if (app) {
         paneManagerStore.setActivePane(app.id)
       }
     },
-    [JSON.stringify(menuApps)],
-  )
-
-  const menuStore = useStore(MenuStore, {
-    paneManagerStore,
-    queryStore,
-    onMenuHover,
   })
 
   // Handle mouse enter/leave events
@@ -538,6 +510,19 @@ export function Menu() {
       document.removeEventListener('mousemove', onMove)
     }
   }, [])
+
+  // Handle pin key events
+  // react(
+  //   () => always(Electron.state.pinKey.at),
+  //   () => {
+  //     const towards = Electron.state.pinKey.name
+  //     const inverse = towards === 'left' ? 'right' : 'left'
+  //     const direction = Direction[inverse]
+  //     if (direction) {
+  //       this.props.paneManagerStore.move(direction)
+  //     }
+  //   }
+  // )
 
   // Handle tray enter/leave/click events
   React.useEffect(() => {

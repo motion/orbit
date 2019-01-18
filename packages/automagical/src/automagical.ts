@@ -9,6 +9,7 @@ export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './consta
 export { ensure } from './ensure'
 export { react } from './react'
 export * from './types'
+export { useReaction } from './useReaction'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number

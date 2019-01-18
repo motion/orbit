@@ -38,6 +38,7 @@ const Target = (props: { id: number }) => {
   return (
     <View
       onMouseEnter={() => {
+        console.log('send hover....', props.id)
         App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: `${props.id}` })
       }}
       onClick={() => {

@@ -176,8 +176,10 @@ export class OrbitDesktopRoot {
 
     // start managers...
 
-    this.oracleManager = new OracleManager()
-    await this.oracleManager.start()
+    if (!process.env.IGNORE_MENU) {
+      this.oracleManager = new OracleManager()
+      await this.oracleManager.start()
+    }
 
     this.ocrManager = new OCRManager({ cosal: this.cosal })
     this.screenManager = new ScreenManager({ screen: this.screen })

@@ -34,9 +34,10 @@ export class AppStore<Type extends AppType> {
     if (typeof isActive === 'function') {
       return isActive()
     }
-    if (this.stores.paneManagerStore) {
+    if (this.stores.paneManagerStore && this.stores.paneManagerStore.activePane) {
       return this.stores.paneManagerStore.activePane.id === id
     }
+    console.warn('no active prop or paneManagerStore')
     return false
   }
 

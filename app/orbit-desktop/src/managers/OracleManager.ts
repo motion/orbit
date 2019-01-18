@@ -1,6 +1,6 @@
-import { Oracle, OracleMessageHandler } from '@mcro/oracle'
 import { getGlobalConfig } from '@mcro/config'
-import { Desktop, App } from '@mcro/stores'
+import { Oracle, OracleMessageHandler } from '@mcro/oracle'
+import { App, Desktop } from '@mcro/stores'
 
 // handles the oracle, which includes OCR and screen watching
 
@@ -8,6 +8,7 @@ export class OracleManager {
   private oracle: Oracle
 
   constructor() {
+    if (process.env.IGNORE_MENU) return
     this.oracle = new Oracle({
       port: getGlobalConfig().ports.ocrBridge,
       onMessage: this.handleMessage,
@@ -15,6 +16,7 @@ export class OracleManager {
   }
 
   async start() {
+    if (process.env.IGNORE_MENU) return
     await this.oracle.start()
   }
 

@@ -44,7 +44,9 @@ export class SubPaneStore {
       const { extraCondition, id } = this.props
       const { paneManagerStore } = this.stores
       const isActive =
-        id === paneManagerStore.activePane.id && (extraCondition ? extraCondition() : true)
+        paneManagerStore.activePane &&
+        id === paneManagerStore.activePane.id &&
+        (extraCondition ? extraCondition() : true)
       return {
         isActive,
         isLeft: this.isLeft,

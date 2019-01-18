@@ -1,20 +1,22 @@
-import * as React from 'react'
-import { Window } from '@mcro/reactron'
-import { Electron, Desktop } from '@mcro/stores'
 import { getGlobalConfig } from '@mcro/config'
-import { WEB_PREFERENCES } from '../constants'
+import { Window } from '@mcro/reactron'
+import { Desktop, Electron } from '@mcro/stores'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { WEB_PREFERENCES } from '../constants'
 
 const Config = getGlobalConfig()
 
 export default observer(function MenuWindow() {
   const [show, setShow] = React.useState(false)
+  const size = Electron.state.screenSize.slice()
   return (
     <Window
       alwaysOnTop={[true, 'floating', 2]}
       show={show}
       onReadyToShow={() => setShow(true)}
-      size={Electron.state.screenSize.slice()}
+      // half height for now to help when we get white background bugs...
+      size={[size[0], size[1] / 2]}
       focus={false}
       ignoreMouseEvents={!Desktop.hoverState.menuHovered}
       focusable

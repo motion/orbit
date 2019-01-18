@@ -1,52 +1,47 @@
-import * as React from 'react'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { Popover, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { SelectionStore } from '../../../stores/SelectionStore'
-import { StoreContext } from '../../../contexts'
+import { throttle } from 'lodash'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { animated, interpolate, useSpring } from 'react-spring/hooks'
 import { AppActions } from '../../../actions/AppActions'
 import { AppProps } from '../../../apps/AppProps'
-import MenuApp from './MenuApp'
-import { Popover, View } from '@mcro/ui'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import Searchable from '../../../components/Searchable'
-import BrowserDebugTray from './BrowserDebugTray'
-import { MENU_WIDTH } from '../../../constants'
-import { throttle } from 'lodash'
-import { MenuStore, menuApps } from './MenuStore'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
-import { animated, interpolate } from 'react-spring'
-import { useSpring } from 'react-spring/hooks'
-import { observer } from 'mobx-react-lite'
+import { MENU_WIDTH } from '../../../constants'
+import { StoreContext } from '../../../contexts'
+import { useActiveApps } from '../../../hooks/useActiveApps'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { PaneManagerStore } from '../../../stores/PaneManagerStore'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { MergeContext } from '../../../views/MergeContext'
+import BrowserDebugTray from './BrowserDebugTray'
+import MenuApp from './MenuApp'
+import { MenuStore } from './MenuStore'
 
 export type MenuAppProps = Partial<AppProps<any>> & {
   menuStore: MenuStore
   menuId: number
 }
 
-export default observer(function MenuLayer() {
+function useMenuApps() {
+  const apps = useActiveApps()
+  return apps.filter(x => x.type === 'search' || x.type === 'lists')
+}
+
+export const MenuLayer = observer(function MenuLayer() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
-  const selectionStore = useStore(SelectionStore, {
-    queryStore,
-    onClearSelection: () => {
-      AppActions.clearPeek()
-    },
-  })
+  const menuApps = useMenuApps()
   const paneManagerStore = useStore(PaneManagerStore, {
-    disabled: selectionStore.activeIndex !== -1,
     panes: menuApps,
     onPaneChange: () => {
-      // clear selection results on change pane
-      selectionStore.setResults(null)
       AppActions.clearPeek()
     },
   })
   const menuStore = useStore(MenuStore, { paneManagerStore, queryStore })
-  const allStores = {
-    ...stores,
+  const newStores = {
     queryStore,
-    selectionStore,
     menuStore,
     paneManagerStore,
   }
@@ -73,13 +68,13 @@ export default observer(function MenuLayer() {
 
   return (
     <BrowserDebugTray menuStore={menuStore}>
-      <StoreContext.Provider value={allStores}>
+      <MergeContext Context={StoreContext} value={newStores}>
         <MainShortcutHandler>
           <MenuChrome menuStore={menuStore}>
             <MenuLayerContent queryStore={queryStore} menuStore={menuStore} />
           </MenuChrome>
         </MainShortcutHandler>
-      </StoreContext.Provider>
+      </MergeContext>
     </BrowserDebugTray>
   )
 })
@@ -101,7 +96,6 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 
   const pad = menuStore.menuPad
   const left = menuCenter - MENU_WIDTH / 2
-  console.log('menu left', left)
   const { open, repositioning } = openState
   const config = repositioning ? noAnimationConfig : springyConfig
   const { x, y, opacity } = useSpring({
@@ -160,12 +154,13 @@ const MenuChrome = observer(({ menuStore, children }: { menuStore: MenuStore; ch
 const itemProps = {
   oneLine: false,
   condensed: true,
-  onSelect: false,
-  hideSubtitle: true,
+  onSelectItem: false,
+  // hideSubtitle: true,
 }
 
 const MenuLayerContent = React.memo(
   ({ menuStore, queryStore }: { menuStore: MenuStore; queryStore: QueryStore }) => {
+    const menuApps = useMenuApps()
     return (
       <View className="app-parent-bounds" pointerEvents="auto">
         <Searchable
@@ -177,12 +172,12 @@ const MenuLayerContent = React.memo(
         >
           {menuApps.map((app, index) => (
             <MenuApp
-              id={app}
+              id={app.id}
               key={index}
               menuId={index}
               viewType="index"
-              title={app}
-              type={app}
+              title={app.name}
+              type={app.type}
               menuStore={menuStore}
               itemProps={itemProps}
             />
@@ -192,3 +187,5 @@ const MenuLayerContent = React.memo(
     )
   },
 )
+
+export default MenuLayer

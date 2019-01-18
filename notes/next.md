@@ -80,6 +80,11 @@ tasks:
   - we should test search quite a bit more
     - have it do exact full searches first and then work down
     - so "full name" matches something with both words closer than "full" and "name"
+- app store:
+  - make it so we have servers to host them
+  - make it so you can search them and install new ones
+  - make it so you can deploy new ones to our servers
+    - needs some interface inside the app to help manage it
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app

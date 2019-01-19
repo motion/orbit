@@ -1,13 +1,14 @@
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { View } from '../blocks/View'
 import { Icon } from '../Icon'
-import { gloss } from '@mcro/gloss'
 
 const ClearClickableArea = gloss(View, {
   padding: 5,
-  '&:hover > *': {
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    color: [255, 255, 255],
+  opacity: 0,
+  transition: 'all ease 250ms 100ms',
+  '&:hover': {
+    opacity: 1,
   },
 })
 
@@ -21,8 +22,6 @@ const ClearFrame = gloss(View, {
   textAlign: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'rgba(0,0,0,0.1)',
-  color: [255, 255, 255, 0.8],
   cursor: 'default',
 })
 
@@ -34,13 +33,11 @@ export const ClearButton = ({
   onMouseEnter = null,
   onMouseLeave = null,
   children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
-  opacity = null,
   hover = null,
   ...props
 }) => (
   <ClearClickableArea
     {...{
-      opacity,
       '&:hover': hover,
       onClick,
       onHover,

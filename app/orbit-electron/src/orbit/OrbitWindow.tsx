@@ -1,13 +1,13 @@
-import * as React from 'react'
-import { react, ensure } from '@mcro/black'
-import { Window } from '@mcro/reactron'
-import { Electron, Desktop, App } from '@mcro/stores'
-import { Logger } from '@mcro/logger'
+import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow } from 'electron'
-import root from 'global'
+import { Logger } from '@mcro/logger'
+import { Window } from '@mcro/reactron'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
+import { BrowserWindow, Menu } from 'electron'
+import root from 'global'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -105,6 +105,14 @@ class OrbitWindowStore {
   handleElectronFocus = () => {
     Electron.setState({ focusedAppId: 'app' })
   }
+
+  handleBlur = () => {
+    if (process.env.NODE_ENV === 'development') {
+      // avoid in development so we can debug things
+      return
+    }
+    Electron.sendMessage(App, App.messages.HIDE)
+  }
 }
 
 export default observer(function OrbitWindow() {
@@ -135,6 +143,7 @@ export default observer(function OrbitWindow() {
       onResize={store.setSize}
       onMove={store.setPosition}
       onFocus={store.handleElectronFocus}
+      onBlur={store.handleBlur}
       showDevTools={Electron.state.showDevTools.app}
       transparent
       background="#00000000"

@@ -1,13 +1,17 @@
 import { invertLightness } from '@mcro/color'
 import { gloss } from '@mcro/gloss'
+import { AppConfig, AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useHook, useStore } from '@mcro/use-store'
+import { isEqual, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { AppStore } from '../../apps/AppStore'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -15,12 +19,83 @@ import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
+import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
+import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
 import OrbitOnboard from './OrbitOnboard'
 import OrbitPageContent from './OrbitPageContent'
 
-export default observer(() => {
+export class OrbitStore {
+  stores = useHook(useStoresSafe)
+
+  get activePane() {
+    return this.stores.paneManagerStore.activePane
+  }
+
+  activeConfig: { [key: string]: AppConfig } = {
+    search: { id: '', type: AppType.search, title: '' },
+  }
+
+  handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
+    console.log('select', index, appConfig, this.activePane)
+    if (!appConfig) {
+      console.warn('no app config', index)
+      return
+    }
+    const paneType = this.activePane.type
+    if (!isEqual(this.activeConfig[paneType], appConfig)) {
+      this.activeConfig = {
+        ...this.activeConfig,
+        [paneType]: appConfig,
+      }
+    }
+  }
+
+  appStores: { [key: string]: AppStore<any> } = {}
+
+  setAppStore = memoize((id: number) => (store: AppStore<any>) => {
+    if (this.appStores[id] !== store) {
+      this.appStores = {
+        ...this.appStores,
+        [id]: store,
+      }
+    }
+  })
+}
+
+export default observer(function OrbitPage() {
+  return (
+    <OrbitPageProvideStores>
+      <OrbitPageInner />
+    </OrbitPageProvideStores>
+  )
+})
+
+const OrbitPageInner = observer(function OrbitPageInner() {
+  const orbitStore = useStore(OrbitStore)
   const theme = App.state.darkTheme ? 'dark' : 'light'
+  return (
+    <MergeContext Context={StoreContext} value={{ orbitStore }}>
+      <MainShortcutHandler>
+        <Theme name={theme}>
+          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+            <Chrome>
+              <OrbitHeader />
+
+              <InnerChrome>
+                <OrbitPageContent />
+              </InnerChrome>
+
+              <OrbitOnboard />
+            </Chrome>
+          </AppWrapper>
+        </Theme>
+      </MainShortcutHandler>
+    </MergeContext>
+  )
+})
+
+function OrbitPageProvideStores(props: { children: any }) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -50,26 +125,8 @@ export default observer(() => {
     paneManagerStore,
   }
 
-  return (
-    <StoreContext.Provider value={stores}>
-      <MainShortcutHandler>
-        <Theme name={theme}>
-          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <Chrome>
-              <OrbitHeader />
-
-              <InnerChrome>
-                <OrbitPageContent />
-              </InnerChrome>
-
-              <OrbitOnboard />
-            </Chrome>
-          </AppWrapper>
-        </Theme>
-      </MainShortcutHandler>
-    </StoreContext.Provider>
-  )
-})
+  return <StoreContext.Provider value={stores}>{props.children}</StoreContext.Provider>
+}
 
 const Chrome = gloss({
   flex: 1,

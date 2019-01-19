@@ -4,14 +4,12 @@ import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
-import { Toolbar } from '../../components/Toolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
 import { SearchStore } from './SearchStore'
 import SearchFilters from './views/SearchFilters'
-import SearchNav from './views/SearchNav'
 
 const ToolButton = props => (
   <Button
@@ -30,9 +28,9 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const { queryStore } = useStoresSafe()
   return (
     <>
-      <Toolbar>
-        <SearchNav />
-      </Toolbar>
+      {/* <Toolbar>
+        <OrbitSuggestionBar />
+      </Toolbar> */}
 
       <Absolute top={8} right={16} left={16} zIndex={1000}>
         <Row>

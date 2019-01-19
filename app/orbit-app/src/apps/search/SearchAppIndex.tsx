@@ -19,6 +19,7 @@ const ToolButton = props => (
     fontWeight={500}
     size={0.95}
     sizeRadius={3}
+    opacity={0.8}
     {...props}
   />
 )

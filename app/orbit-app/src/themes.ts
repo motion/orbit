@@ -144,24 +144,24 @@ export const themes = {
       borderColor: orbitActiveBg,
     }),
   },
-  'light-selected': {
-    ...Theme.fromStyles({
-      background: [0, 0, 0, 0.015],
-      backgroundHover: [0, 0, 0, 0.015],
-      backgroundActive: [0, 0, 0, 0.015],
-      color: light.color,
-      borderColor: orbitActiveBg,
-    }),
-  },
-  'dark-selected': {
-    ...Theme.fromStyles({
-      background: [255, 255, 255, 0.05],
-      backgroundHover: [255, 255, 255, 0.05],
-      backgroundActive: [255, 255, 255, 0.05],
-      color: dark.color,
-      borderColor: orbitActiveBg,
-    }),
-  },
+  // 'light-selected': {
+  //   ...Theme.fromStyles({
+  //     background: [0, 0, 0, 0.015],
+  //     backgroundHover: [0, 0, 0, 0.015],
+  //     backgroundActive: [0, 0, 0, 0.015],
+  //     color: light.color,
+  //     borderColor: orbitActiveBg,
+  //   }),
+  // },
+  // 'dark-selected': {
+  //   ...Theme.fromStyles({
+  //     background: [255, 255, 255, 0.05],
+  //     backgroundHover: [255, 255, 255, 0.05],
+  //     backgroundActive: [255, 255, 255, 0.05],
+  //     color: dark.color,
+  //     borderColor: orbitActiveBg,
+  //   }),
+  // },
   tooltip: {
     background: 'rgba(20,20,20,0.94)',
     color: '#fff',

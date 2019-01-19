@@ -161,7 +161,7 @@ export default observer(function ListItem(props: ListItemProps) {
   )
 
   return (
-    <UI.Theme name={isSelected ? `selected` : null}>
+    <UI.Theme name={isSelected ? 'selected' : null}>
       <>
         {above}
         {!!separator && (
@@ -190,7 +190,11 @@ export default observer(function ListItem(props: ListItemProps) {
                 <Title>
                   {showIcon && (
                     <>
-                      <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
+                      {React.isValidElement(icon) ? (
+                        icon
+                      ) : (
+                        <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
+                      )}
                       <TitleSpace />
                     </>
                   )}
@@ -302,7 +306,7 @@ const ListFrame = gloss(UI.View, {
 }).theme(({ borderRadius }, theme) => {
   return {
     color: theme.color,
-    background: theme.listItemBackground || theme.background,
+    background: theme.listItemBackground || theme.background.alpha(0.5),
     borderRadius: borderRadius || 0,
   }
 })
@@ -339,7 +343,7 @@ const ListItemChrome = gloss({
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      background: theme.listItemBackgroundSelected || theme.background.alpha(0.15),
     }
   } else {
     listStyle = {

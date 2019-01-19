@@ -161,7 +161,7 @@ export default observer(function ListItem(props: ListItemProps) {
   )
 
   return (
-    <UI.Theme name={isSelected ? 'selected' : null}>
+    <UI.Theme name={isSelected ? `selected` : null}>
       <>
         {above}
         {!!separator && (
@@ -180,7 +180,7 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [9, 11]}
+          padding={padding || [8, 11]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
@@ -302,7 +302,7 @@ const ListFrame = gloss(UI.View, {
 }).theme(({ borderRadius }, theme) => {
   return {
     color: theme.color,
-    background: theme.listItemBackground || theme.background.alpha(0.5),
+    background: theme.listItemBackground || theme.background,
     borderRadius: borderRadius || 0,
   }
 })

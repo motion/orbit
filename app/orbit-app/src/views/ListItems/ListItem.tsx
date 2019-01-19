@@ -43,6 +43,7 @@ export type ListItemProps = CSSPropertySetStrict &
   Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    above?: React.ReactNode
     activeStyle?: Object
     before?: React.ReactNode
     chromeless?: boolean
@@ -58,6 +59,7 @@ export type ListItemProps = CSSPropertySetStrict &
     after?: React.ReactNode
     titleProps?: Object
     iconProps?: Object
+    separatorProps?: Object
     className?: string
     inGrid?: boolean
     pane?: string
@@ -116,6 +118,8 @@ export default observer(function ListItem(props: ListItemProps) {
     oneLine,
     isExpanded,
     before,
+    separatorProps,
+    above,
     ...restProps
   } = props
   const { isSelected } = store
@@ -159,9 +163,10 @@ export default observer(function ListItem(props: ListItemProps) {
   return (
     <UI.Theme name={isSelected ? 'selected' : null}>
       <>
+        {above}
         {!!separator && (
           <UI.Theme name={activeThemeName}>
-            <Separator>
+            <Separator {...separatorProps}>
               <Text size={0.9} fontWeight={500}>
                 {separator}
               </Text>

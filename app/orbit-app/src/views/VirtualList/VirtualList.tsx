@@ -35,6 +35,7 @@ export type VirtualListProps = {
   estimatedRowHeight?: number
   scrollToAlignment?: 'auto' | 'start' | 'end' | 'center'
   scrollToIndex?: number
+  padTop?: number
 }
 
 class SortableList extends React.Component<any> {
@@ -146,7 +147,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = (items: any[], index: number) => {
+const getSeparatorProps = ({ items }: VirtualListProps, index: number) => {
   const model = items[index]
   if (!model.group) {
     return null
@@ -155,6 +156,23 @@ const getSeparatorProps = (items: any[], index: number) => {
     return { separator: model.group }
   }
   return null
+}
+
+const itemProps = (props: VirtualListProps, index: number) => {
+  const separatorProps = getSeparatorProps(props, index)
+  const padTopProps =
+    index === 0 && props.padTop
+      ? {
+          above: <div style={{ height: props.padTop }} />,
+        }
+      : null
+  if (!separatorProps && !padTopProps) {
+    return null
+  }
+  return {
+    ...separatorProps,
+    ...padTopProps,
+  }
 }
 
 function useDefaultProps<A>(a: A, b: Partial<A>): A {
@@ -198,7 +216,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
           <ItemView
             onSelect={props.onSelect}
             onOpen={props.onOpen}
-            {...getSeparatorProps(props.items, index)}
+            {...itemProps(props, index)}
             {...props.itemProps}
             {...props.getItemProps && props.getItemProps(index)}
             {...item}

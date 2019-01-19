@@ -43,11 +43,11 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
             group="filters"
             target={<ToolButton icon="calendar" />}
             background
-            borderRadius={6}
+            borderRadius={10}
             elevation={4}
             theme="light"
           >
-            <View width={440} height={300} className="calendar-dom theme-light" padding={10}>
+            <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
               <DateRangePicker
                 onChange={queryStore.queryFilters.onChangeDate}
                 ranges={[queryStore.queryFilters.dateState]}

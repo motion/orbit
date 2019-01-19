@@ -3,18 +3,17 @@ until end of jan:
 1. fixes for sources/sync, fix searching within apps, maybe restore lists app
 2. fixes for search, selection, tabs, settingsIndexpane
 3. lists app icon, show in apps, cleanups, add button => search overlay design
-4. hunting down odd bugs and organizing code
+4. new app pane, command+enter to pop out app into own window / multi apps
 5. actions menu
 6. people app search/select fixes, fixing tray/menu display and interaction
-7. new app pane, command to pop out app into own window / multi apps
-8. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-9. restore menus a bit just actions dropdown + search
-10. hunting down odd bugs and organizing code
-11. get ocr hooked into menu enable/disable and output results
-12. get ocr => memory simple list
-13. work through lists apps a bit
-14. hunting down odd bugs and organizing code
-15.
+7. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+8. restore menus a bit just actions dropdown + search
+9. hunting down odd bugs and organizing code
+10. get ocr hooked into menu enable/disable and output results
+11. get ocr => memory simple list
+12. work through lists apps a bit
+13. hunting down odd bugs and organizing code
+14.
 
 sorting by prepping to split out work as best possible:
 

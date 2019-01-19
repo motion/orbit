@@ -4,15 +4,17 @@ until end of jan:
 2. fixes for search, selection, tabs, settingsIndexpane
 3. lists app icon, show in apps, cleanups, add button => search overlay design
 4. hunting down odd bugs and organizing code
-5. people app search/select fixes
-6. new app pane, command to pop out app into own window / multi apps
-7. restore menus a bit just actions dropdown + search
-8. hunting down odd bugs and organizing code
-9. get ocr hooked into menu enable/disable and output results
-10. get ocr => memory simple list
-11. work through lists apps a bit
-12. hunting down odd bugs and organizing code
-13.
+5. actions menu
+6. people app search/select fixes, fixing tray/menu display and interaction
+7. new app pane, command to pop out app into own window / multi apps
+8. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+9. restore menus a bit just actions dropdown + search
+10. hunting down odd bugs and organizing code
+11. get ocr hooked into menu enable/disable and output results
+12. get ocr => memory simple list
+13. work through lists apps a bit
+14. hunting down odd bugs and organizing code
+15.
 
 sorting by prepping to split out work as best possible:
 
@@ -74,6 +76,15 @@ tasks:
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
     at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
     at new Subscription"
+- search
+  - we should test search quite a bit more
+    - have it do exact full searches first and then work down
+    - so "full name" matches something with both words closer than "full" and "name"
+- app store:
+  - make it so we have servers to host them
+  - make it so you can search them and install new ones
+  - make it so you can deploy new ones to our servers
+    - needs some interface inside the app to help manage it
 - beta stuff:
   - signup with your email on the website
   - invite generation + validation in the app
@@ -92,8 +103,6 @@ for me once split out:
 - topics as a source / topics apps generally
 
 next steps:
-
-- move search into an overlay style pane that can be toggled...
 
 - release
 
@@ -127,20 +136,8 @@ next steps:
   - cleanup the orbit dropbox doc
   - send over to him short video and explanation
 
-* tasks for new person (umed, mohamed or similar):
-
-  - get the shared/saved data layer working nicely
-    - search app save the varius UI states:
-      - active filters/sorts in the toggle bar
-    - people app
-      - add a toolbar for filtering by integration
-      - save the filters set in that
-    - topics app
-      - adding, editing topics etc
-
 * get to value
   - get tray working
-  - get slide in search over app
   - get basic lists app in place again
   - get tray actions menu
   - get ocr integrated with memory (memory app?)

@@ -25,7 +25,6 @@ export type ReactionOptions = {
   delay?: number
   delayValue?: boolean
   isIf?: boolean
-  onlyUpdateIfChanged?: boolean
   defaultValue?: any
   deferFirstRun?: boolean
 }

@@ -1,24 +1,27 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
-import PeopleRow from '../../components/PeopleRow'
-import { CSSPropertySet, gloss } from '@mcro/gloss'
-import { RoundButtonSmall } from '../RoundButtonSmall'
-import { DateFormat } from '../DateFormat'
-import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { ListItemStore } from './ListItemStore'
-import { HighlightText } from '../HighlightText'
-import { Row, Text, View } from '@mcro/ui'
-import { HorizontalSpace } from '..'
-import { Separator } from '../Separator'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
-import { Icon } from '../Icon'
-import { NormalItem } from '../../helpers/normalizeItem'
-import { ThemeObject } from '@mcro/gloss'
 import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import { Row, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { differenceInCalendarDays } from 'date-fns/esm/fp'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { HorizontalSpace } from '..'
+import PeopleRow from '../../components/PeopleRow'
+import { NormalItem } from '../../helpers/normalizeItem'
+import { DateFormat } from '../DateFormat'
+import { HighlightText } from '../HighlightText'
+import { Icon } from '../Icon'
+import { RoundButtonSmall } from '../RoundButtonSmall'
+import { Separator } from '../Separator'
+import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = ((index?: number, element?: HTMLElement) => any)
+export type HandleSelection = ((
+  index: number,
+  eventType: 'click' | 'key',
+  element?: HTMLElement,
+) => any)
 
 export type ListItemHide = {
   hidePeople?: boolean
@@ -40,6 +43,7 @@ export type ListItemProps = CSSPropertySetStrict &
   Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    above?: React.ReactNode
     activeStyle?: Object
     before?: React.ReactNode
     chromeless?: boolean
@@ -55,6 +59,7 @@ export type ListItemProps = CSSPropertySetStrict &
     after?: React.ReactNode
     titleProps?: Object
     iconProps?: Object
+    separatorProps?: Object
     className?: string
     inGrid?: boolean
     pane?: string
@@ -113,6 +118,8 @@ export default observer(function ListItem(props: ListItemProps) {
     oneLine,
     isExpanded,
     before,
+    separatorProps,
+    above,
     ...restProps
   } = props
   const { isSelected } = store
@@ -124,7 +131,11 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  const renderedChildren = showChildren && children
+  const renderedChildren = showChildren && (
+    <Text size={0.9} alpha={0.8}>
+      {children}
+    </Text>
+  )
   const { activeThemeName } = React.useContext(UI.ThemeContext)
 
   const afterHeader = (
@@ -152,9 +163,10 @@ export default observer(function ListItem(props: ListItemProps) {
   return (
     <UI.Theme name={isSelected ? 'selected' : null}>
       <>
+        {above}
         {!!separator && (
           <UI.Theme name={activeThemeName}>
-            <Separator>
+            <Separator {...separatorProps}>
               <Text size={0.9} fontWeight={500}>
                 {separator}
               </Text>
@@ -218,7 +230,7 @@ export default observer(function ListItem(props: ListItemProps) {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.8} ellipse {...subtitleProps}>
+                      <UI.Text alpha={0.8} size={0.9} ellipse {...subtitleProps}>
                         {subtitle}
                       </UI.Text>
                     ) : (
@@ -256,7 +268,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 <Preview>
                   {typeof preview !== 'string' && preview}
                   {typeof preview === 'string' && (
-                    <HighlightText alpha={0.8} size={1.1} sizeLineHeight={0.9} ellipse={5}>
+                    <HighlightText alpha={0.8} size={1} sizeLineHeight={0.9} ellipse={5}>
                       {preview}
                     </HighlightText>
                   )}

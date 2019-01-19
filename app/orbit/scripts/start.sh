@@ -22,6 +22,11 @@ if [[ "$FLAGS" =~ "--ignore-menu" ]]; then
   export IGNORE_MENU="true"
 fi
 
+if [[ "$FLAGS" =~ "--ignore-apps" ]]; then
+  echo "DISABLE APPS"
+  export IGNORE_APPS="true"
+fi
+
 #
 # START repl debugger
 #

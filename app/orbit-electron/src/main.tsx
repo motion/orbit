@@ -1,15 +1,15 @@
-import 'raf/polyfill'
 import { Logger } from '@mcro/logger'
-import waitPort from 'wait-port'
-import { Electron } from '@mcro/stores'
-import { OrbitRoot } from './orbit/OrbitRoot'
-import * as React from 'react'
 import { render } from '@mcro/reactron'
+import { Electron } from '@mcro/stores'
 import electronContextMenu from 'electron-context-menu'
 import electronDebug from 'electron-debug'
+import 'raf/polyfill'
+import * as React from 'react'
+import waitPort from 'wait-port'
+import AppsWindow from './apps/AppsWindow'
 import ElectronRoot from './ElectronRoot'
 import MenuWindow from './menus/MenuWindow'
-import AppsWindow from './apps/AppsWindow'
+import { OrbitRoot } from './orbit/OrbitRoot'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -18,16 +18,16 @@ export async function main() {
 
   // handle our own separate process in development
   if (process.env.NODE_ENV === 'development') {
-    // if you want to hide dock icon in dev mode (its hidden by default in prod)
-    // require('electron').app.dock.hide()
-
     // in any electron process...
     require('source-map-support/register')
     require('./helpers/installGlobals')
     console.log('Waiting for dev ports')
     await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
 
-    if (!process.env.SUB_PROCESS) {
+    if (process.env.SUB_PROCESS) {
+      // hide sub-process docks
+      require('electron').app.dock.hide()
+    } else {
       // only in main electron process...
       require('./helpers/monitorResourceUsage')
     }

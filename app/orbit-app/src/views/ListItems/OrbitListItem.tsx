@@ -1,12 +1,12 @@
+import { Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
-import VirtualListItem, { VirtualListItemProps } from '../VirtualList/VirtualListItem'
-import { normalizeItem, NormalItem } from '../../helpers/normalizeItem'
-import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
-import { ListItemPerson } from './ListItemPerson'
+import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { ListItemProps } from './ListItem'
-import { PersonBit, Bit } from '@mcro/models'
 import { OrbitHandleSelect } from '../Lists/OrbitList'
+import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
+import VirtualListItem, { VirtualListItemProps } from '../VirtualList/VirtualListItem'
+import { ListItemProps } from './ListItem'
+import { ListItemPerson } from './ListItemPerson'
 
 export type OrbitListItemProps = VirtualListItemProps<Bit | PersonBit> & {
   onSelect?: OrbitHandleSelect
@@ -55,9 +55,9 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
       // allow props to override isSelected but not onSelect
       // onSelect merges
       {...props}
-      onSelect={index => {
+      onSelect={(index, eventType) => {
         if (selectionStore && selectionStore.activeIndex !== index) {
-          selectionStore.toggleSelected(index)
+          selectionStore.toggleSelected(index, eventType)
         }
         if (props.onSelect) {
           props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)

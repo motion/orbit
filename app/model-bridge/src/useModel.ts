@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
-import { useEffect, useState, useRef } from 'react'
-import { observeMany, observeOne, observeCount, observeManyAndCount, loadOne, save } from '.'
+import { useEffect, useRef, useState } from 'react'
+import { loadOne, observeCount, observeMany, observeManyAndCount, observeOne, save } from '.'
 
 type UseModelOptions = {
   defaultValue?: any

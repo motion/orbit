@@ -4,7 +4,6 @@ import { App, Desktop, Electron } from '@mcro/stores'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { debounce, memoize, throttle } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
@@ -16,7 +15,6 @@ import { useActiveApps } from '../../../hooks/useActiveApps'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { Direction } from '../../../stores/SelectionStore'
 import { MergeContext } from '../../../views/MergeContext'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
@@ -27,8 +25,8 @@ export const menuApps = ['search', 'topics', 'people'] as AppType[]
 
 export class MenuStore {
   props: {
-    paneManagerStore: PaneManagerStore
     queryStore: QueryStore
+    menuItems: ({ id: number; index: number })[]
     onMenuHover?: (index: number) => any
   }
   menuRef = createRef<any>()
@@ -38,14 +36,9 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringIndex = -1
   didRenderState = { at: Date.now(), open: false }
-  trayEventListener = App.onMessage(App.messages.TRAY_EVENT, a => this.handleTrayEvent(a))
   searchInput: HTMLInputElement = null
   // see how this interacts with isOpen
   activeMenuIndex = App.openMenu ? App.openMenu.id : -1
-
-  willUnmount() {
-    this.trayEventListener()
-  }
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuIndex].size[1]
@@ -109,15 +102,18 @@ export class MenuStore {
   )
 
   menuCenter = react(
-    () => this.activeOrLastActiveMenuIndex,
-    activeID => {
-      const id = activeID === -1 ? 0 : activeID
-      const maxItems = 3
+    () => {
+      const id = this.activeOrLastActiveMenuIndex
+      return id === -1 ? 0 : id
+    },
+    id => {
       const trayPositionX = IS_ELECTRON
         ? Desktop.state.operatingSystem.trayBounds.position[0]
         : window.innerWidth / 2
       const leftSpacing = 47
-      const xOffset = maxItems - id
+      const maxIndex = 3
+      const xOffset = maxIndex - id
+      console.log('xoff', xOffset, id)
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
       return trayPositionX + offset
@@ -129,7 +125,7 @@ export class MenuStore {
 
   get isRepositioning() {
     // if its "staying open"
-    if (this.lastActiveMenuID !== -1) {
+    if (this.lastActiveMenuIndex !== -1) {
       return false
     }
     return this.lastMenuCenter !== this.menuCenter
@@ -165,75 +161,21 @@ export class MenuStore {
     }
   }
 
-  async handleTrayEvent({
-    type,
-    value,
-  }: {
-    type: 'trayHovered' | 'trayClicked'
-    value: '0' | '1' | '2' | '3' | 'Out'
-  }) {
-    console.log('handleTrayEvent', type, value)
-    if (type === 'trayHovered') {
-      switch (value) {
-        case 'Out':
-          this.setHoveringIndex(-1)
-          break
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-          this.setHoveringIndex(+value)
-          break
-      }
-      return
-    }
-
-    if (type === 'trayClicked') {
-      switch (value) {
-        case '0':
-          // special case: switch us over to the main orbit app
-          // sync query over to search
-          App.setState({ query: this.props.queryStore.query })
-          // then open the main window to show it there instead
-          AppActions.setOrbitDocked(!App.state.orbitState.docked)
-          // and close this menu
-          this.closeMenu()
-          break
-        case '1':
-        case '2':
-        case '3':
-          this.togglePinnedOpen(+value)
-          break
-      }
-    }
-  }
-
   private updateHoverTm = null
 
-  setHoveringIndex = (id: number) => {
+  setHoveringIndex = (index: number) => {
     clearTimeout(this.updateHoverTm)
     const update = () => {
-      this.activeMenuIndex = id
-      this.hoveringIndex = id
+      this.activeMenuIndex = index
+      this.hoveringIndex = index
     }
-    if (id === -1) {
+    if (index === -1) {
       update()
     } else {
       // some debounce
       setTimeout(update, 80)
     }
   }
-
-  setActiveMenuFromPaneChange = react(
-    () => this.props.paneManagerStore.paneIndex,
-    index => {
-      ensure('changed', index !== this.activeMenuIndex)
-      this.activeMenuIndex = index
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   activeOrLastActiveMenuIndex = react(
     () => this.activeMenuIndex,
@@ -243,11 +185,10 @@ export class MenuStore {
     },
     {
       defaultValue: 0,
-      deferFirstRun: true,
     },
   )
 
-  lastActiveMenuID = react(() => this.activeMenuIndex, _ => _, {
+  lastActiveMenuIndex = react(() => this.activeMenuIndex, _ => _, {
     delayValue: true,
     defaultValue: -1,
   })
@@ -259,7 +200,7 @@ export class MenuStore {
         App.setState({
           trayState: {
             menuState: {
-              [this.lastActiveMenuID]: { open: false },
+              [this.lastActiveMenuIndex]: { open: false },
             },
           },
         })
@@ -271,7 +212,7 @@ export class MenuStore {
               [+activeMenuID]: {
                 open: true,
               },
-              [this.lastActiveMenuID]: {
+              [this.lastActiveMenuIndex]: {
                 open: false,
               },
             },
@@ -285,11 +226,11 @@ export class MenuStore {
     () => this.menuCenter,
     menuCenter => {
       ensure('valid menu', this.activeMenuIndex !== -1)
-      const id = +this.activeMenuIndex
+      const index = +this.activeMenuIndex
       App.setState({
         trayState: {
           menuState: {
-            [id]: {
+            [index]: {
               open: true,
               position: [menuCenter - MENU_WIDTH / 2, 0],
             },
@@ -299,11 +240,11 @@ export class MenuStore {
     },
   )
 
-  menuHeightSetter = memoize((menuId: number) => (height: number) => {
+  menuHeightSetter = memoize((index: number) => (height: number) => {
     App.setState({
       trayState: {
         menuState: {
-          [menuId]: {
+          [index]: {
             size: [MENU_WIDTH, height],
           },
         },
@@ -344,19 +285,7 @@ export class MenuStore {
     this.hoveringIndex = -1
   }
 
-  setActiveMenuFromPinMove = react(
-    () => always(Electron.state.pinKey.at),
-    () => {
-      const towards = Electron.state.pinKey.name
-      const inverse = towards === 'left' ? 'right' : 'left'
-      const direction = Direction[inverse]
-      if (direction) {
-        this.props.paneManagerStore.move(direction)
-      }
-    },
-  )
-
-  setActivePane = react(
+  callOnMenuHover = react(
     () => this.activeOrLastActiveMenuIndex,
     index => {
       if (typeof index === 'number') {
@@ -382,8 +311,6 @@ export class MenuStore {
       }
     },
   )
-
-  isMenuFullyHidden = false
 
   isFocused = react(
     () => this.isOpenOutsideAnimation,
@@ -417,6 +344,51 @@ export class MenuStore {
       deferFirstRun: true,
     },
   )
+
+  handleTrayEvent = async (event: {
+    type: 'trayHovered' | 'trayClicked'
+    value: '0' | '1' | '2' | '3' | 'Out'
+  }) => {
+    console.log('handleTrayEvent', event)
+
+    // the indexing is right to left in terms of the tray
+    // where 0 is the rightmost (the orbit O)
+    // and 3 is the leftmost (the down arrow)
+
+    if (event.type === 'trayHovered') {
+      switch (event.value) {
+        // treat hovering ORBIT O as hover out since we dont show anything there
+        case '0':
+        case 'Out':
+          this.setHoveringIndex(-1)
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.setHoveringIndex(+event.value)
+          break
+      }
+      return
+    }
+    if (event.type === 'trayClicked') {
+      switch (event.value) {
+        case '0':
+          // special case: switch us over to the main orbit app
+          // sync query over to search
+          App.setState({ query: this.props.queryStore.query })
+          // then open the main window to show it there instead
+          AppActions.setOrbitDocked(!App.state.orbitState.docked)
+          // and close this menu
+          this.closeMenu()
+          break
+        case '1':
+        case '2':
+        case '3':
+          this.togglePinnedOpen(+event.value)
+          break
+      }
+    }
+  }
 
   mouseEvent: 'enter' | 'leave' | null = null
 
@@ -478,38 +450,49 @@ export class MenuStore {
 }
 
 function useMenuApps() {
-  const apps = useActiveApps()
-  return apps.filter(x => x.type === 'search' || x.type === 'lists')
+  const allApps = useActiveApps()
+  const searchApp = allApps.find(x => x.type === 'search')
+  const listsApp = allApps.find(x => x.type === 'lists')
+  return [
+    // indices start at 1 because 0 = orbit O
+    { ...searchApp, index: 1 },
+    { ...listsApp, index: 2 },
+    {
+      id: 100,
+      index: 3,
+      type: 'actions',
+      name: 'Actions',
+    },
+  ]
 }
 
-export const Menu = observer(function Menu() {
+export function Menu() {
   const stores = useStoresSafe()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const menuApps = useMenuApps()
+
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
     onPaneChange: () => {
       AppActions.clearPeek()
     },
   })
+
   const menuStore = useStore(MenuStore, {
     paneManagerStore,
     queryStore,
-    onMenuHover(index) {
-      if (menuApps.length) {
-        const id = menuApps[index].id
-        paneManagerStore.setActivePane(id)
+    menuItems: menuApps,
+    onMenuHover: index => {
+      console.log('ON MENU HOVER', menuApps, index)
+      const app = menuApps.find(x => x.index === index)
+      if (app) {
+        paneManagerStore.setActivePane(app.id)
       }
     },
   })
-  const newStores = {
-    queryStore,
-    menuStore,
-    paneManagerStore,
-  }
 
+  // Handle mouse enter/leave events
   React.useEffect(() => {
-    // watch for mouse enter and leave
     const onMove = throttle(e => {
       const hoverOut = e.target === document.documentElement
       if (hoverOut) {
@@ -528,9 +511,34 @@ export const Menu = observer(function Menu() {
     }
   }, [])
 
+  // Handle pin key events
+  // react(
+  //   () => always(Electron.state.pinKey.at),
+  //   () => {
+  //     const towards = Electron.state.pinKey.name
+  //     const inverse = towards === 'left' ? 'right' : 'left'
+  //     const direction = Direction[inverse]
+  //     if (direction) {
+  //       this.props.paneManagerStore.move(direction)
+  //     }
+  //   }
+  // )
+
+  // Handle tray enter/leave/click events
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
+  }, [])
+
   return (
     <BrowserDebugTray menuStore={menuStore}>
-      <MergeContext Context={StoreContext} value={newStores}>
+      <MergeContext
+        Context={StoreContext}
+        value={{
+          queryStore,
+          menuStore,
+          paneManagerStore,
+        }}
+      >
         <MainShortcutHandler>
           <MenuChrome>
             <MenuLayerContent />
@@ -539,7 +547,7 @@ export const Menu = observer(function Menu() {
       </MergeContext>
     </BrowserDebugTray>
   )
-})
+}
 
 const itemProps = {
   oneLine: false,
@@ -560,11 +568,11 @@ const MenuLayerContent = React.memo(() => {
           onChange: queryStore.onChangeQuery,
         }}
       >
-        {menuApps.map((app, index) => (
+        {menuApps.map(app => (
           <MenuApp
             id={app.id}
-            key={index}
-            menuId={index}
+            key={app.id}
+            menuId={app.index}
             viewType="index"
             title={app.name}
             type={app.type}

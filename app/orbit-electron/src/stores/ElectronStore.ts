@@ -1,9 +1,9 @@
-import { Electron } from '@mcro/stores'
-import { store, debugState, sleep } from '@mcro/black'
-import root from 'global'
+import { debugState, sleep, store } from '@mcro/black'
 import { Logger } from '@mcro/logger'
-import { getScreenSize } from '../helpers/getScreenSize'
+import { Electron } from '@mcro/stores'
 import { screen } from 'electron'
+import root from 'global'
+import { getScreenSize } from '../helpers/getScreenSize'
 
 const log = new Logger('ElectronStore')
 
@@ -58,6 +58,7 @@ export class ElectronStore {
   handleAppRef = ref => {
     if (!ref) return
     this.appRef = ref.app
+
     // this.appRef.dock.hide()
   }
 

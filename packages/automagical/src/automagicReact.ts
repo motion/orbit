@@ -1,16 +1,8 @@
 import * as Mobx from 'mobx'
-import { ReactionHelpers, MagicalObject, EffectCallback } from './types'
-import { ReactionRejectionError, ReactionTimeoutError } from './constants'
-import {
-  getReactionOptions,
-  getReactionName,
-  log,
-  logRes,
-  Root,
-  diffLog,
-  toJSDeep,
-} from './helpers'
 import { AutomagicOptions } from './automagical'
+import { ReactionRejectionError, ReactionTimeoutError } from './constants'
+import { diffLog, getReactionName, getReactionOptions, log, logGroup, toJSDeep } from './helpers'
+import { EffectCallback, MagicalObject, ReactionHelpers } from './types'
 
 const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
@@ -18,76 +10,6 @@ const voidFn = () => void 0
 
 type Subscription = { unsubscribe: Function }
 type SubscribableLike = { subscribe: (a: any) => Subscription }
-
-// hacky for now
-Root.__trackStateChanges = {}
-
-let logBatch = new Set<[string, Function]>()
-let logBatchTm = null
-const logBatchFlush = () => {
-  const groups = [...logBatch]
-  if (groups.length > 1) {
-    const groupTitles = groups
-      .map(x =>
-        x[0]
-          // collapse extra whitespace in repeating items
-          .replace(/✅[\s]+/, '')
-          .trim()
-          // remove the extra info
-          .replace(/\..*$/, ''),
-      )
-      .filter(Boolean)
-    console.groupCollapsed(`  (${groups.length}): ${groupTitles.join(', ')}`)
-    for (const [, logger] of logBatch) {
-      logger()
-    }
-    console.groupEnd()
-  }
-  if (groups.length === 1) {
-    // just log the one directly
-    groups[0][1]()
-  }
-  logBatch = new Set()
-}
-
-const logGroup = (name: string, result, changed: string, reactionArgs, globalChanged?) => {
-  const groupLog = () => {
-    const hasGlobalChanges = globalChanged && !!Object.keys(globalChanged).length
-    const hasChanges = !!changed
-    if (hasChanges || hasGlobalChanges) {
-      if (hasChanges) {
-        const dotdot = changed.length > 90 ? '...' : ''
-        console.groupCollapsed(`${name} ${changed.slice(0, 90)}${dotdot}`)
-      } else {
-        console.groupCollapsed(`${name} (no change)`)
-      }
-      console.log('  reaction args:', toJSDeep(reactionArgs))
-      console.log('         return: ', changed)
-      if (hasGlobalChanges) {
-        console.log('  global changed:', ...logRes(result))
-        console.log('  store changed', globalChanged)
-      }
-      console.groupEnd()
-    } else {
-      console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
-    }
-  }
-
-  // only logs every tick
-  logBatch.add([name, groupLog])
-  clearTimeout(logBatchTm)
-  logBatchTm = setTimeout(logBatchFlush)
-}
-
-let lastStoreLogName = ''
-
-const whiteSpaceOfLen = (number: number) => {
-  let str = ''
-  for (let i = 0; i < number; i++) {
-    str += ' '
-  }
-  return str
-}
 
 // watches values in an autorun, and resolves their results
 export function automagicReact(
@@ -97,14 +19,7 @@ export function automagicReact(
   userOptions,
   automagicOptions: AutomagicOptions,
 ) {
-  const {
-    delayValue,
-    defaultValue,
-    onlyUpdateIfChanged,
-    deferFirstRun,
-    trace,
-    ...options
-  } = getReactionOptions({
+  const { delayValue, defaultValue, deferFirstRun, trace, ...options } = getReactionOptions({
     name: method,
     ...userOptions,
   })
@@ -139,14 +54,7 @@ export function automagicReact(
           return `${storeName}(${res}).${methodName}`
         }
       }
-      const name = `${storeName}.${methodName}`
-      // fancy log that doesn't show the name if multiple logs in a row
-      if (storeName === lastStoreLogName) {
-        return `${whiteSpaceOfLen(storeName.length)}.${methodName}`
-      } else {
-        lastStoreLogName = storeName
-        return name
-      }
+      return `${storeName}.${methodName}`
     },
   }
 
@@ -199,7 +107,7 @@ export function automagicReact(
         if (!obj.subscriptions) {
           console.error('store', obj, obj.subscriptions)
           throw new Error(
-            'Detected a subscribable but store doesn\'t have a .subscriptions CompositeDisposable',
+            "Detected a subscribable but store doesn't have a .subscriptions CompositeDisposable",
           )
         }
         subscriber = newSubscriber.subscribe(value => {
@@ -223,9 +131,6 @@ export function automagicReact(
     if (process.env.NODE_ENV === 'development') {
       currentValueUnreactive = nextValue
       changed = diffLog(toJSDeep(previousValue), toJSDeep(nextValue))
-      if (delayValue) {
-        changed = `(delayValue) => ${changed}`
-      }
     }
 
     current.set(nextValue)
@@ -413,7 +318,6 @@ export function automagicReact(
       reactionID = id
       let curID = reactionID
       const start = Date.now()
-      Root.__trackStateChanges.isActive = true
 
       let result
 
@@ -430,13 +334,15 @@ export function automagicReact(
         if (process.env.NODE_ENV === 'development') {
           // async updates log with an indicator of their delay time and if they cancelled
           if (log && !preventLog) {
-            const delayLog = `..${Date.now() - start}ms`
-            logGroup(
-              `${isValid ? '✅' : '🚫'} ${name.full}`,
-              val,
-              `${delayLog} ${changed}`,
-              isReaction ? reactValArg : null,
-            )
+            const timedLog = `..${Date.now() - start}ms`
+            const delayValLog = delayValue ? ` [delayValue]` : ''
+            logGroup({
+              name: name.full,
+              result: val,
+              changed,
+              timings: `   [${timedLog}]${delayValLog} ${isValid ? '✅' : '🚫'}`,
+              reactionArgs: isReaction ? reactValArg : null,
+            })
           }
         }
       }
@@ -464,9 +370,6 @@ export function automagicReact(
         console.error(err)
         return
       }
-
-      const globalChanged = Root.__trackStateChanges.changed
-      Root.__trackStateChanges = {}
 
       // handle promises
       if (result instanceof Promise) {
@@ -502,7 +405,12 @@ export function automagicReact(
       if (reactionID > 1) {
         if (!IS_PROD && !preventLog) {
           if (changed) {
-            logGroup(name.full, result, `${changed}`, reactValArg, globalChanged)
+            logGroup({
+              name: name.full,
+              result,
+              changed: `${changed}`,
+              reactionArgs: reactValArg,
+            })
           }
         }
       }

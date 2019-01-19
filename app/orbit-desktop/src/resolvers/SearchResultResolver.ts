@@ -1,9 +1,15 @@
 import { Cosal } from '@mcro/cosal'
-import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { Bit, BitContentTypes, SearchQuery, SearchResult, Source } from '@mcro/models'
-import { BitContentType } from '@mcro/models'
-import { uniqBy, uniq } from 'lodash'
+import {
+  Bit,
+  BitContentType,
+  BitContentTypes,
+  SearchQuery,
+  SearchResult,
+  Source,
+  SourceEntity,
+} from '@mcro/models'
+import { uniq, uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
 import { SearchResultUtils } from '../search/SearchResultUtils'
@@ -119,7 +125,7 @@ export class SearchResultResolver {
       // this.log.timer('loading ' + contentType)
     }
 
-    this.log.timer('search', searchResults)
+    this.log.timer('search results length', searchResults.length)
     return searchResults
   }
 

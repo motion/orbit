@@ -3,7 +3,7 @@
     "module": "CommonJS",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2015",
+    "target": "es2016",
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -15,7 +15,7 @@
     "jsx": "react",
     "allowJs": true,
     "sourceMap": true,
-    "lib": ["es7", "dom"]
+    "lib": ["es2017", "es2018", "dom"]
   },
   "typeAcquisition": {
     "enable": true

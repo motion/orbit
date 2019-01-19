@@ -1,14 +1,14 @@
-import { Text, View, Tooltip, Row, Popover } from '@mcro/ui'
-import * as React from 'react'
-import { Icon } from '../../views/Icon'
-import { observer } from 'mobx-react-lite'
 import { gloss } from '@mcro/gloss'
-import { useActiveApps } from '../../hooks/useActiveApps'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { App } from '@mcro/models'
-import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { Popover, Row, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Icon } from '../../views/Icon'
 
 const height = 26
 const inactiveOpacity = 0.8
@@ -117,7 +117,7 @@ export default observer(function OrbitNav() {
             }}
           />
           <View flex={1} minWidth={10} />
-          <Tab tooltip="Add app">
+          <Tab tooltip="Apps">
             <Icon name="grid48" size={10} opacity={0.5} />
           </Tab>
           <Tab

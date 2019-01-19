@@ -1,4 +1,4 @@
-import { react, ensure } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { SelectionGroup } from '../apps/SelectionResults'
@@ -20,10 +20,15 @@ export type MovesMap = {
   moves?: Direction[]
 }
 
+export enum SelectEvent {
+  key = 'key',
+  click = 'click',
+}
+
 export class SelectionStore {
   props: SelectionManagerProps
 
-  selectEvent = ''
+  selectEvent: SelectEvent = SelectEvent.click
   leaveIndex = -1
   lastSelectAt = 0
   _activeIndex = -1
@@ -123,9 +128,9 @@ export class SelectionStore {
     },
   )
 
-  toggleSelected = (index, eventType?: string) => {
+  toggleSelected = (index, eventType?: 'key' | 'click') => {
     if (eventType) {
-      this.setSelectEvent(eventType)
+      this.setSelectEvent(SelectEvent[eventType])
     }
     const isSame = this.activeIndex === index && this.activeIndex > -1
     if (isSame && App.peekState && App.peekState.target) {
@@ -144,14 +149,12 @@ export class SelectionStore {
     }
   }
 
-  move = (direction: Direction, selectEvent?: 'key') => {
+  move = (direction: Direction, selectEvent = SelectEvent.key) => {
     if (!this.movesMap) {
       console.log('no SelectionStore.movesMap')
       return
     }
-    if (selectEvent) {
-      this.setSelectEvent(selectEvent)
-    }
+    this.setSelectEvent(selectEvent)
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
     if (activeIndex !== this.activeIndex) {
       this.toggleSelected(activeIndex)
@@ -226,7 +229,7 @@ export class SelectionStore {
     return movesToNextRow
   }
 
-  setSelectEvent = (val: string) => {
+  setSelectEvent = (val: SelectEvent) => {
     this.selectEvent = val
   }
 

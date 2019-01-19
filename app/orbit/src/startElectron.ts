@@ -1,5 +1,5 @@
-import { app, dialog } from 'electron'
 import { getGlobalConfig } from '@mcro/config'
+import { app, dialog } from 'electron'
 import { handleExit } from './helpers/handleExit'
 
 export function startElectron({ mainProcess }) {

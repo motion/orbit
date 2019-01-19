@@ -1,28 +1,36 @@
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { AppProps } from '../../../apps/AppProps'
-import AppView from '../../../apps/AppView'
+import AppView, { AppViewProps } from '../../../apps/AppView'
 import { SubPane } from '../../../components/SubPane'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
-type MenuAppProps = Partial<AppProps<any>> & {
+type MenuAppProps = AppViewProps & {
   menuId: number
 }
 
-function MenuApp(props: MenuAppProps) {
+function MenuApp({ menuId, ...appProps }: MenuAppProps) {
   const { menuStore } = useStoresSafe()
-  console.log('MenuApp', props)
+  console.log('MenuApp', menuId, appProps)
+
+  // memo to prevent expensive renders on height changes
+  const menuApp = React.useMemo(
+    () => {
+      return <AppView viewType="index" {...appProps} />
+    },
+    [JSON.stringify(appProps)],
+  )
+
   return (
     <SubPane
-      id={props.id}
-      type={props.type}
+      id={appProps.id}
+      type={appProps.type}
       paddingLeft={0}
       paddingRight={0}
       offsetY={menuStore.aboveHeight}
-      onChangeHeight={menuStore.menuHeightSetter(props.menuId)}
+      onChangeHeight={menuStore.menuHeightSetter(menuId)}
       transition="opacity ease 100ms"
     >
-      <AppView key={props.id} id={props.id} type={props.type} viewType="index" {...props} />
+      {menuApp}
     </SubPane>
   )
 }

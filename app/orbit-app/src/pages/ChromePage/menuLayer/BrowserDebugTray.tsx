@@ -1,22 +1,10 @@
 import { App } from '@mcro/stores'
 import { FullScreen, Row, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
-class DebugTrayStore {
-  props: { id: number }
-
-  targetSetter = id => () => {
-    App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: id })
-  }
-
-  onLeave = this.targetSetter('Out')
-}
-
-const BrowserDebugTray = observer(function BrowserDebugTray({ children, menuStore }: any) {
-  const store = useStore(DebugTrayStore)
+export default function BrowserDebugTray({ children }: any) {
   if (IS_ELECTRON) {
     return children
   }
@@ -24,16 +12,18 @@ const BrowserDebugTray = observer(function BrowserDebugTray({ children, menuStor
     <FullScreen>
       <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
         <View
-          onMouseLeave={store.onLeave}
+          onMouseLeave={() =>
+            App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: 'Out' })
+          }
           flexFlow="row"
           height={28}
           alignItems="center"
           pointerEvents="auto"
         >
-          <Target id="3" store={store} menuStore={menuStore} />
-          <Target id="2" store={store} menuStore={menuStore} />
-          <Target id="1" store={store} menuStore={menuStore} />
-          <Target id="0" store={store} menuStore={menuStore} />
+          <Target id={3} />
+          <Target id={2} />
+          <Target id={1} />
+          <Target id={0} />
         </View>
       </Row>
       <View position="relative" flex={1}>
@@ -41,17 +31,19 @@ const BrowserDebugTray = observer(function BrowserDebugTray({ children, menuStor
       </View>
     </FullScreen>
   )
-})
+}
 
-export default BrowserDebugTray
-
-const Target = ({ id, store, menuStore }) => {
+const Target = (props: { id: number }) => {
+  const { menuStore } = useStoresSafe()
   return (
     <View
-      onMouseEnter={store.targetSetter(id)}
+      onMouseEnter={() => {
+        console.log('send hover....', props.id)
+        App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: `${props.id}` })
+      }}
       onClick={() => {
-        console.log('pin', id)
-        menuStore.togglePinnedOpen(id)
+        console.log('pin', props.id)
+        menuStore.togglePinnedOpen(props.id)
       }}
       width={16}
       height={16}

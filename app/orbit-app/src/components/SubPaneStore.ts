@@ -52,7 +52,6 @@ export class SubPaneStore {
     },
     _ => _,
     {
-      onlyUpdateIfChanged: true,
       defaultValue: {
         isActive: false,
         isLeft: this.isLeft,
@@ -159,7 +158,6 @@ export class SubPaneStore {
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
-    console.log('i see a node of height', this.paneInnerNode, height)
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

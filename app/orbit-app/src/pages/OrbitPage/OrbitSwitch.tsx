@@ -1,19 +1,19 @@
-import * as React from 'react'
 import { ensure, react } from '@mcro/black'
-import { Popover, View, Col } from '@mcro/ui'
-import { App } from '@mcro/stores'
-import { AppActions } from '../../actions/AppActions'
-import { NavButton } from '../../views/NavButton'
 import { CSSPropertySet } from '@mcro/gloss'
-import { RowItem } from '../../views/RowItem'
-import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
-import { fuzzyQueryFilter } from '../../helpers'
-import { Icon } from '../../views/Icon'
-import { OrbitOrb } from '../../views/OrbitOrb'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { App } from '@mcro/stores'
+import { Col, Popover, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
+import { fuzzyQueryFilter } from '../../helpers'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
+import { Icon } from '../../views/Icon'
+import { NavButton } from '../../views/NavButton'
+import { OrbitOrb } from '../../views/OrbitOrb'
+import { RowItem } from '../../views/RowItem'
 
 type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
 
@@ -108,8 +108,6 @@ export default observer(function OrbitSwitch(props: Props) {
         ref={store.spaceSwitcherRef}
         delay={100}
         openOnClick
-        openOnHover
-        closeOnClick
         closeOnClickAway
         theme="light"
         width={300}

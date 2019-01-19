@@ -16,34 +16,30 @@ export type OrbitListProps = VirtualListProps & {
   offsetY?: number
 }
 
+// fairly sloppy componenent, could be split more cleanly
+
+export const orbitItemsKey = items =>
+  items.map(x => (x.item ? x.item.id || x.item.email : `${x.id || x.email || x.key}`)).join(' ')
+
 export function OrbitList({ items, offsetY = 0, ...props }: OrbitListProps) {
   const { appStore } = useStoresSafe()
-  const itemsKey = items
-    .map(x => (x.item ? x.item.id || x.item.email : `${x.id || x.email || x.key}`))
-    .join(' ')
+  const itemsKey = orbitItemsKey(items)
   const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKey])
-
-  const list = React.useMemo(
-    () => (
-      <ProvideHighlightsContextWithDefaults
-        value={{
-          words: (props.query || appStore.activeQuery).split(' '),
-          maxChars: 500,
-          maxSurroundChars: 80,
-        }}
-      >
-        <VirtualList
-          key={itemsKey}
-          items={items}
-          ItemView={OrbitListItem}
-          maxHeight={appStore.maxHeight - offsetY}
-          isRowLoaded={isRowLoaded}
-          {...props}
-        />
-      </ProvideHighlightsContextWithDefaults>
-    ),
-    [itemsKey],
+  return (
+    <ProvideHighlightsContextWithDefaults
+      value={{
+        words: (props.query || appStore.activeQuery).split(' '),
+        maxChars: 500,
+        maxSurroundChars: 80,
+      }}
+    >
+      <VirtualList
+        items={items}
+        ItemView={OrbitListItem}
+        maxHeight={appStore.maxHeight - offsetY}
+        isRowLoaded={isRowLoaded}
+        {...props}
+      />
+    </ProvideHighlightsContextWithDefaults>
   )
-
-  return list
 }

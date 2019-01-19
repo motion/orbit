@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { Row, Button } from '@mcro/ui'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { Button, Col } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import { Icon } from '../../../views/Icon'
+import * as React from 'react'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { QueryStore } from '../../../stores/QueryStore/QueryStore'
+import { Icon } from '../../../views/Icon'
 
 type Props = {
   queryStore?: QueryStore
@@ -11,9 +11,7 @@ type Props = {
   width?: number
 }
 
-export const FilterButton = props => (
-  <Button circular chromeless size={0.9} sizePadding={0.8} {...props} />
-)
+export const FilterButton = props => <Button chromeless size={0.9} sizePadding={0.8} {...props} />
 
 export default observer(function SearchFilters(props: Props) {
   const { queryStore } = useStoresSafe()
@@ -22,7 +20,7 @@ export default observer(function SearchFilters(props: Props) {
     return null
   }
   return (
-    <Row {...props}>
+    <Col {...props}>
       {queryFilters.integrationFilters.map((filter, i) => {
         return (
           <FilterButton
@@ -30,6 +28,7 @@ export default observer(function SearchFilters(props: Props) {
             active={filter.active}
             onClick={queryFilters.integrationFilterToggler(filter)}
             tooltip={filter.name}
+            icon={<Icon name={filter.integration} size={16} />}
             {...filter.active && {
               opacity: 1,
             }}
@@ -43,10 +42,10 @@ export default observer(function SearchFilters(props: Props) {
               opacity: 1,
             }}
           >
-            <Icon name={filter.integration} size={16} />
+            {filter.name}
           </FilterButton>
         )
       })}
-    </Row>
+    </Col>
   )
 })

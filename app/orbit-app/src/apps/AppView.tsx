@@ -8,7 +8,7 @@ import { AppProps } from './AppProps'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
 
-type Props = Pick<
+export type AppViewProps = Pick<
   AppProps<any>,
   | 'id'
   | 'title'

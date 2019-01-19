@@ -78,7 +78,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
       <SelectableList
         defaultSelected={0}
-        padTop={32}
+        padTop={28}
         items={searchStore.searchState.results}
         query={props.appStore.activeQuery}
         onSelect={props.onSelectItem}

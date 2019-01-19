@@ -213,7 +213,7 @@ export class SearchStore {
             icon,
             appConfig: {
               id: '0',
-              title: `Open app: ${app.name}`,
+              title: `Open ${app.name}`,
               type: AppType.message,
               data: {
                 icon,

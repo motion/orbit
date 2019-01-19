@@ -33,9 +33,9 @@ export const apps: AppsIndex = {
   message: {
     main: props => (
       <Center>
-        {props.appConfig.data.icon ? <Icon name={props.appConfig.data.icon} size={32} /> : null}
+        <Title size={2.5}>{props.appConfig.title}</Title>
         <VerticalSpace />
-        <Title>{props.appConfig.title}</Title>
+        {props.appConfig.data.icon ? <Icon name={props.appConfig.data.icon} size={64} /> : null}
       </Center>
     ),
     index: () => <div>empty main</div>,

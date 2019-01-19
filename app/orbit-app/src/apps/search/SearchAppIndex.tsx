@@ -33,6 +33,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       <Toolbar>
         <SearchNav />
       </Toolbar>
+
       <Absolute top={8} right={16} left={16} zIndex={1000}>
         <Row>
           <Popover

@@ -1,14 +1,12 @@
-import * as React from 'react'
-import { Row } from '../blocks/Row'
-import { TableInput } from '../table/TableInput'
-import { colors } from '../helpers/colors'
-import { View } from '../blocks/View'
-import { ClearButton } from '../buttons/ClearButton'
-import { Filter } from '../table/types'
-import { ThemeObject, CSSPropertySet, ThemeContext, gloss } from '@mcro/gloss'
-import { FilterToken } from '../table/FilterToken'
 import { color } from '@mcro/color'
+import { CSSPropertySet, gloss, Row, ThemeContext, ThemeObject, View } from '@mcro/gloss'
+import * as React from 'react'
+import { ClearButton } from '../buttons/ClearButton'
+import { colors } from '../helpers/colors'
 import { Icon } from '../Icon'
+import { FilterToken } from '../table/FilterToken'
+import { TableInput } from '../table/TableInput'
+import { Filter } from '../table/types'
 
 export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
   CSSPropertySet & {

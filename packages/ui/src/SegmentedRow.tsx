@@ -1,7 +1,7 @@
+import { Color, CSSPropertySet } from '@mcro/css'
+import { Row } from '@mcro/gloss'
 import * as React from 'react'
 import { MergeUIContext } from './helpers/contexts'
-import { Color, CSSPropertySet } from '@mcro/css'
-import { Row } from './blocks/Row'
 
 type SegmentedRowProps = CSSPropertySet & {
   active?: number

@@ -5,10 +5,8 @@
  * @format
  */
 
+import { Col, gloss, Row } from '@mcro/gloss'
 import { colors } from './helpers/colors'
-import { Row } from './blocks/Row'
-import { Col } from './blocks/Col'
-import { gloss } from '@mcro/gloss'
 
 export const Spacer = gloss(Col, {
   flexGrow: 1,

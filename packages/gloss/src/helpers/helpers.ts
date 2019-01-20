@@ -1,5 +1,3 @@
-import { GLOSS_IGNORE_COMPONENT_SYMBOL } from '../symbols'
-
 export const colorToString = (obj: any) => {
   const { model, color, valpha } = obj
   const hasAlpha = typeof valpha === 'number' && valpha !== 1
@@ -18,17 +16,4 @@ export const colorToString = (obj: any) => {
     return `hsl(${inner})`
   }
   return obj.toString()
-}
-
-const isGlossFirstArg = (a: any) =>
-  typeof a === 'undefined' || typeof a === 'string' || typeof a === 'object'
-
-export const isGlossArguments = (a: any, b: any) => {
-  if (b && b[GLOSS_IGNORE_COMPONENT_SYMBOL]) {
-    return false
-  }
-  if (typeof a === 'function' && typeof b === 'object') {
-    return true
-  }
-  return isGlossFirstArg(a)
 }

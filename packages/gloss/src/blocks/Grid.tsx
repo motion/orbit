@@ -1,5 +1,5 @@
+import { gloss } from '../gloss'
 import { View } from './View'
-import { gloss } from '@mcro/gloss'
 
 const px = (n: number | string) => (typeof n === 'number' ? n + 'px' : n)
 

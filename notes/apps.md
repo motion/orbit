@@ -35,3 +35,12 @@ needs for release:
     - accepts versions (git based?)
   - search endpoint
   - download ability
+
+# design side
+
+- orbits dock icon can be a "fake" one from the swift sub-process
+  - this lets us control its order in the focus!
+  - which is good because you _dont_ want it mucking up recent icon sort order every time you use it
+- we can pre-package the app icons with orbit for use in dock
+  - there can only be one instance of each app!
+    - so that means we dont need infinite icons

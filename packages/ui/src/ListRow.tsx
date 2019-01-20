@@ -1,9 +1,8 @@
-import * as React from 'react'
-import { attachTheme, gloss } from '@mcro/gloss'
-import Button from './Button'
-import { Row } from './blocks/Row'
-import { MergeUIContext } from './helpers/contexts'
 import { Color } from '@mcro/css'
+import { attachTheme, gloss, Row } from '@mcro/gloss'
+import * as React from 'react'
+import Button from './Button'
+import { MergeUIContext } from './helpers/contexts'
 
 type SegmentedRowProps = {
   active?: number

@@ -1,6 +1,5 @@
-import { gloss } from '@mcro/gloss'
+import { gloss, View } from '@mcro/gloss'
 import * as React from 'react'
-import { View } from '../blocks/View'
 import { Icon } from '../Icon'
 
 const ClearClickableArea = gloss(View, {

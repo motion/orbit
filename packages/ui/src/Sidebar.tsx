@@ -5,10 +5,9 @@
  * @format
  */
 
-import { Interactive } from './Interactive'
-import { Col } from './blocks/Col'
+import { Col, gloss } from '@mcro/gloss'
 import * as React from 'react'
-import { gloss } from '@mcro/gloss'
+import { Interactive } from './Interactive'
 
 const SidebarInteractiveContainer = gloss(Interactive, {
   flex: 'none',

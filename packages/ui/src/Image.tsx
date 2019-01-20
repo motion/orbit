@@ -1,5 +1,4 @@
-import { View } from './blocks/View'
-import { gloss } from '@mcro/gloss'
+import { gloss, View } from '@mcro/gloss'
 
 export const Image = gloss(View, {
   display: 'block',

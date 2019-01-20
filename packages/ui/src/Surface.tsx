@@ -1,23 +1,23 @@
-import * as React from 'react'
 import {
+  alphaColor,
   Color,
   CSSPropertySet,
-  propsToThemeStyles,
-  propsToStyles,
-  alphaColor,
-  ThemeObject,
   gloss,
-  ThemeSelect,
+  propsToStyles,
+  propsToTextSize,
+  propsToThemeStyles,
   Theme,
+  ThemeObject,
+  ThemeSelect,
+  View,
 } from '@mcro/gloss'
-import { Icon } from './Icon'
-import { HoverGlow } from './effects/HoverGlow'
+import * as React from 'react'
 import { Glint } from './effects/Glint'
-import { View } from './blocks/View'
-import { propsToTextSize } from './helpers/propsToTextSize'
+import { HoverGlow } from './effects/HoverGlow'
 import { UIContext, UIContextType } from './helpers/contexts'
-import { Tooltip } from './Tooltip'
+import { Icon } from './Icon'
 import { PopoverProps } from './Popover'
+import { Tooltip } from './Tooltip'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells

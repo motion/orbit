@@ -5,13 +5,11 @@
  * @format
  */
 
+import { gloss, Row, View } from '@mcro/gloss'
 import * as React from 'react'
-import { View } from './blocks/View'
-import { Row } from './blocks/Row'
-import { Orderable } from './Orderable'
 import { colors } from './helpers/colors'
+import { Orderable } from './Orderable'
 import { Tab } from './Tab'
-import { gloss } from '@mcro/gloss'
 
 export type TabsProps = {
   // Callback for when the active tab has changed.

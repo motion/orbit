@@ -11,8 +11,16 @@ export default function AppsAppIndex(props: AppProps<AppType.apps>) {
     id: x.id,
     title: x.name,
     icon: `orbit${capitalize(x.type)}`,
-    group: 'Installed',
+    group: 'Installed Apps',
   }))
 
-  return <SelectableList items={results} onSelect={props.onSelectItem} onOpen={props.onOpenItem} />
+  return (
+    <SelectableList
+      sortable
+      defaultSelected={0}
+      items={results}
+      onSelect={props.onSelectItem}
+      onOpen={props.onOpenItem}
+    />
+  )
 }

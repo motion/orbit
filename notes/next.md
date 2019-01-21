@@ -49,6 +49,9 @@ tasks:
 - add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
+- settings panes
+  - run over and fix them, a lot of breaking things like github not loading repos
+  - can add "enter" key shortcut to toggle selection in table
 - syncers
   - on process exit it should clear all processing Jobs
   - github syncer and drive syncer not showing anything in their setting pane

@@ -8,6 +8,7 @@ export enum AppType {
   bit = 'bit',
   settings = 'settings',
   message = 'message',
+  apps = 'apps',
 }
 
 export type AppConfig = {

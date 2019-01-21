@@ -5,6 +5,7 @@ import { Title, VerticalSpace } from '../views'
 import { Center } from '../views/Center'
 import { Icon } from '../views/Icon'
 import { AppProps } from './AppProps'
+import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
 import { home } from './home'
 import { lists } from './lists'
@@ -30,6 +31,7 @@ export const apps: AppsIndex = {
   settings,
   bit,
   home,
+  apps: appsApps,
   message: {
     main: props => (
       <Center>

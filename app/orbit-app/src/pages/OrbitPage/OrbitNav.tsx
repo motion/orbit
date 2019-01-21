@@ -117,12 +117,16 @@ export default observer(function OrbitNav() {
             }}
           />
           <View flex={1} minWidth={10} />
-          <Tab tooltip="Apps">
+          <Tab
+            isActive={paneManagerStore.activePane.type === 'apps'}
+            onClick={paneManagerStore.activePaneByTypeSetter('apps')}
+            tooltip="Apps"
+          >
             <Icon name="grid48" size={10} opacity={0.5} />
           </Tab>
           <Tab
-            isActive={paneManagerStore.activePane.name === 'Sources'}
-            onClick={paneManagerStore.activePaneByNameSetter('Sources')}
+            isActive={paneManagerStore.activePane.type === 'sources'}
+            onClick={paneManagerStore.activePaneByTypeSetter('sources')}
             tooltip="Sources"
           >
             <Icon name="design_app" size={11} opacity={0.5} />

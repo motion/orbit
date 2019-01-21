@@ -1,5 +1,5 @@
 import { deep, store } from '@mcro/black'
-import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
+import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
 import { AppConfig } from '@mcro/models'
 
 export let App = null as AppStore
@@ -74,6 +74,7 @@ class AppStore {
     screenSize: [0, 0],
     darkTheme: false,
     orbitState: {
+      blurred: false,
       pinned: false,
       docked: false,
       orbitOnLeft: false,

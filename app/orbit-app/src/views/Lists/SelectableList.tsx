@@ -16,7 +16,7 @@ export type SelectableListProps = OrbitListProps & {
 // TODO this could provide a selection store *if* not already in context to be more simple
 
 export default function SelectableList(props: SelectableListProps) {
-  const stores = useStoresSafe()
+  const stores = useStoresSafe({ optional: ['selectionStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
 
   useSelectableResults(props, selectionStore)

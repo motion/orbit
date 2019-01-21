@@ -7,7 +7,7 @@ import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
-import { OrbitList } from '../../views/Lists/OrbitList'
+import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 
@@ -49,15 +49,6 @@ class ListsIndexStore {
     return this.props.appStore.activeQuery
   }
 
-  setSelectionResults = react(
-    () => always(this.results),
-    () => {
-      this.props.appStore.setResults([
-        { type: 'column', indices: this.results.map((_, index) => index) },
-      ])
-    },
-  )
-
   results = react(
     () => always(this.activeQuery, this.allLists),
     () => {
@@ -73,7 +64,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>
-      <OrbitList
+      <SelectableList
         items={results}
         itemProps={props.itemProps}
         getItemProps={index => {

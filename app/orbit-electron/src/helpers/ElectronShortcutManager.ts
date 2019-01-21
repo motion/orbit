@@ -1,12 +1,12 @@
-import { globalShortcut } from 'electron'
 import { Logger } from '@mcro/logger'
+import { globalShortcut } from 'electron'
 
-const log = new Logger('shortcutsStore')
+const log = new Logger('ElectronShortcutManager')
 
 type ShortcutsMap = { [key: string]: string }
 type OnShortcut = (name: string, key: string) => any
 
-export class ShortcutsStore {
+export class ElectronShortcutManager {
   isRegistered = false
   shortcuts: ShortcutsMap = null
   onShortcutCb: OnShortcut = null

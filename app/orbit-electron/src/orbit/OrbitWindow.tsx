@@ -8,6 +8,7 @@ import { BrowserWindow, Menu } from 'electron'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -17,7 +18,7 @@ class OrbitWindowStore {
   disposeShow = null
   alwaysOnTop = true
   hasMoved = false
-
+  blurred = true
   size = [0, 0]
   position = [0, 0]
 
@@ -46,11 +47,6 @@ class OrbitWindowStore {
     this.hasMoved = true
     console.log('got a move', position)
     this.position = position
-  }
-
-  didMount() {
-    // temp bugfix
-    root['OrbitWindowStore'] = this
   }
 
   handleRef = ref => {
@@ -89,36 +85,35 @@ class OrbitWindowStore {
     this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
 
-  handleFocus = () => {
-    // avoid sending two show commands in a row in some cases
-    const lm = Electron.bridge.lastMessage
-    if (lm && lm.message === App.messages.SHOW) {
-      console.log('last message', lm, Date.now() - lm.at)
-      if (Date.now() - lm.at < 300) {
-        console.log('avoid sending double "show" event when already opened')
-        return
-      }
-    }
-    Electron.sendMessage(App, App.messages.SHOW)
-  }
-
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
-  handleElectronFocus = () => {
+  handleFocus = () => {
+    this.blurred = false
     Electron.setState({ focusedAppId: 'app' })
   }
 
   handleBlur = () => {
-    if (process.env.NODE_ENV === 'development') {
-      // avoid in development so we can debug things
-      return
-    }
-    Electron.sendMessage(App, App.messages.HIDE)
+    this.blurred = true
   }
 }
 
 export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
+  root['OrbitWindowStore'] = store // helper for dev
+
+  // handle shortcuts
+  useStore(OrbitShortcutsStore, {
+    onToggleOpen() {
+      const shown = App.orbitState.docked
+      console.log('ok', store.blurred)
+      if (store.blurred && shown) {
+        store.orbitRef.focus()
+        return
+      }
+      Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
+    },
+  })
+
   const [show, setShow] = React.useState(false)
   const url = Config.urls.server
 
@@ -144,7 +139,7 @@ export default observer(function OrbitWindow() {
       size={store.size.slice()}
       onResize={store.setSize}
       onMove={store.setPosition}
-      onFocus={store.handleElectronFocus}
+      onFocus={store.handleFocus}
       onBlur={store.handleBlur}
       showDevTools={Electron.state.showDevTools.app}
       transparent

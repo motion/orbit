@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Popover, Row, Text, Tooltip, View } from '@mcro/ui'
+import { Row, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -44,8 +44,6 @@ export default observer(function OrbitNav() {
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-
-  console.log('space', space, 'apps', activeApps)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -133,24 +131,6 @@ export default observer(function OrbitNav() {
           </Tab>
         </OrbitNavChrome>
       </OrbitNavClip>
-      {items
-        .filter(x => x.showDropdown)
-        .map(item => (
-          <Popover
-            key={item.app.id}
-            openOnClick
-            closeOnClick
-            closeOnClickAway
-            theme="light"
-            width={300}
-            background
-            borderRadius={8}
-            elevation={7}
-            target={`.appDropdown-${item.app.id}`}
-          >
-            test me out
-          </Popover>
-        ))}
     </>
   )
 })

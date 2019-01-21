@@ -1,6 +1,7 @@
+import { ensure, react } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
-import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { AppStore } from '../../apps/AppStore'
 import { StoreContext } from '../../contexts'
 import { useSelectableResults } from '../../hooks/useSelectableResults'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -13,41 +14,50 @@ export type SelectableListProps = OrbitListProps & {
   isSelectable?: boolean
 }
 
-// TODO this could provide a selection store *if* not already in context to be more simple
+class SelectableStore {
+  props: {
+    appStore?: AppStore<any>
+    selectionStore?: SelectionStore
+  }
+  listRef = null
+
+  setListRef = ref => {
+    this.listRef = ref
+  }
+
+  // handle scroll to row
+  handleSelection = react(
+    () => {
+      const { selectionStore, appStore } = this.props
+      if (appStore && !appStore.isActive) {
+        return
+      }
+      const { activeIndex, selectEvent } = selectionStore
+      if (selectEvent === SelectEvent.click) {
+        return
+      }
+      return activeIndex
+    },
+    activeIndex => {
+      ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
+      ensure('list', !!this.listRef)
+      this.listRef.scrollToRow(activeIndex)
+    },
+  )
+}
 
 export default function SelectableList(props: SelectableListProps) {
-  const stores = useStoresSafe({ optional: ['selectionStore'] })
+  const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
+  const selectableStore = useStore(SelectableStore, { selectionStore, appStore: stores.appStore })
+
+  console.log('rendering selectable list...', props)
 
   useSelectableResults(props, selectionStore)
 
-  const [ref, setRef] = React.useState({ store: null, list: null })
-
-  // handle scroll to row
-  useObserver(() => {
-    if (stores.appStore && !stores.appStore.isActive) {
-      return
-    }
-    const { activeIndex, selectEvent } = selectionStore
-    if (selectEvent === SelectEvent.click) {
-      return
-    }
-    if (ref.list && typeof activeIndex === 'number' && activeIndex >= 0) {
-      ref.list.scrollToRow(activeIndex)
-    }
-  })
-
   return (
     <MergeContext Context={StoreContext} value={{ selectionStore }}>
-      <OrbitList
-        scrollToAlignment="center"
-        forwardRef={(list, store) => {
-          if (ref.store !== store) {
-            setRef({ store, list })
-          }
-        }}
-        {...props}
-      />
+      <OrbitList scrollToAlignment="center" forwardRef={selectableStore.setListRef} {...props} />
     </MergeContext>
   )
 }

@@ -105,7 +105,7 @@ export default observer(function OrbitWindow() {
   useStore(OrbitShortcutsStore, {
     onToggleOpen() {
       const shown = App.orbitState.docked
-      console.log('ok', store.blurred)
+      console.log('ok', store.blurred, shown)
       if (store.blurred && shown) {
         store.orbitRef.focus()
         return

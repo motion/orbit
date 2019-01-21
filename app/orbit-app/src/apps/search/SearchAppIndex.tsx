@@ -27,6 +27,7 @@ const ToolButton = props => (
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const searchStore = useStore(SearchStore, props)
   const { queryStore } = useStoresSafe()
+  console.log('rendering SearchAppIndex...', props)
   return (
     <>
       {/* <Toolbar>

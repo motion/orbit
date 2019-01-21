@@ -1,11 +1,11 @@
-import * as React from 'react'
 import { useObserveMany } from '@mcro/model-bridge'
-import { PersonBitModel, AppType } from '@mcro/models'
+import { AppType, PersonBitModel } from '@mcro/models'
+import * as React from 'react'
 import NoResultsDialog from '../../components/NoResultsDialog'
-import { AppProps } from '../AppProps'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
+import { AppProps } from '../AppProps'
 
 export default function PeopleAppIndex(props: AppProps<AppType.people>) {
   // people and query
@@ -21,6 +21,8 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
   if (!people.length) {
     return <NoResultsDialog subName="the directory" />
   }
+
+  console.log('render people index...')
 
   return (
     <SelectableList

@@ -1,5 +1,5 @@
-import { useComputed } from 'mobx-react-lite'
-import { useEffect } from 'react'
+import { useObserver } from 'mobx-react-lite'
+import { useEffect, useRef } from 'react'
 import { Direction, SelectionStore } from '../stores/SelectionStore'
 import { orbitItemsKey } from '../views/Lists/OrbitList'
 import { SelectableListProps } from '../views/Lists/SelectableList'
@@ -17,13 +17,20 @@ export function useSelectableResults(props: SelectableListProps, selectionStore:
     }
     return true
   }
+  const key = useRef(null)
 
-  useComputed(
-    () => {
-      selectionStore.setResults([{ type: 'column', indices: props.items.map((_, index) => index) }])
-    },
-    [orbitItemsKey(props.items)],
-  )
+  useObserver(() => {
+    if (isActive()) {
+      const nextKey = orbitItemsKey(props.items)
+      if (nextKey !== key.current) {
+        key.current = nextKey
+        console.log('setting selection', props.items)
+        selectionStore.setResults([
+          { type: 'column', indices: props.items.map((_, index) => index) },
+        ])
+      }
+    }
+  }, 'useSelectableResults')
 
   useEffect(() => {
     if (

@@ -215,9 +215,7 @@ export class SearchStore {
               id: '0',
               title: `Open ${app.name}`,
               type: AppType.message,
-              data: {
-                icon,
-              },
+              icon,
             },
             onOpen: () => {
               console.log('selecting app...', app.type, app.id)

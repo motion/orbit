@@ -13,12 +13,14 @@ export default function AppsAppIndex(props: AppProps<AppType.apps>) {
     id: x.id,
     title: x.name,
     icon: `orbit${capitalize(x.type)}`,
+    type: 'installed',
     group: 'Installed Apps',
   }))
   const results = [
     ...activeItems,
     ...activeItems.map(x => ({
       ...x,
+      type: 'add',
       group: 'Add app',
     })),
   ]

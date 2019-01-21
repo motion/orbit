@@ -2,9 +2,6 @@ import { AppType } from '@mcro/models'
 import * as React from 'react'
 import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { GenericComponent } from '../types'
-import { Title, VerticalSpace } from '../views'
-import { Center } from '../views/Center'
-import { Icon } from '../views/Icon'
 import { AppProps } from './AppProps'
 import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
@@ -15,6 +12,7 @@ import { search } from './search'
 import { settings } from './settings'
 import { sources } from './sources'
 import { topics } from './topics'
+import { MessageViewMain } from './views/MessageViewMain'
 
 type App = {
   index?: GenericComponent<AppProps<any>>
@@ -34,13 +32,7 @@ export const apps = memoizeAll({
   home,
   apps: appsApps,
   message: {
-    main: props => (
-      <Center>
-        <Title size={2.5}>{props.appConfig.title}</Title>
-        <VerticalSpace />
-        {props.appConfig.data.icon ? <Icon name={props.appConfig.data.icon} size={64} /> : null}
-      </Center>
-    ),
+    main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,
   },
 }) as AppsIndex

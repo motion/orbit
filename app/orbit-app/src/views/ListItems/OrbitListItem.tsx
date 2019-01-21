@@ -1,4 +1,4 @@
-import { Bit, PersonBit } from '@mcro/models'
+import { AppConfig, AppType, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -67,7 +67,10 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
           selectionStore.toggleSelected(index, eventType)
         }
         if (props.onSelect) {
-          props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)
+          props.onSelect(
+            index,
+            props.appConfig || (normalized && normalized.appConfig) || itemToAppConfig(props),
+          )
         }
       }}
     >
@@ -90,6 +93,15 @@ const extraProps = {
   preventSelect: true,
 }
 const spaceBetween = <div style={{ flex: 1 }} />
+
+function itemToAppConfig(props: ListItemProps): AppConfig {
+  return {
+    id: props.id,
+    type: props.type as AppType,
+    title: props.title,
+    icon: props.icon,
+  }
+}
 
 export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({
   title: normalized.title,

@@ -24,12 +24,14 @@ class OrbitWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
-      let scl = 0.65
+      // max initial size to prevent massive screen on huge monitor
+      let scl = 0.75
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide
       w = Math.min(h * 1.45, w)
-      this.size = [w, h].map(x => Math.round(x))
+      const maxSize = [1600, 1000]
+      this.size = [w, h].map(x => Math.round(x)).map((x, i) => Math.min(maxSize[i], x))
       // centered
       this.position = [screenSize[0] / 2 - w / 2, screenSize[1] / 2 - h / 2].map(x => Math.round(x))
     },

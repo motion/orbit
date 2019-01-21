@@ -1,5 +1,6 @@
 import { AppType } from '@mcro/models'
 import * as React from 'react'
+import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { GenericComponent } from '../types'
 import { Title, VerticalSpace } from '../views'
 import { Center } from '../views/Center'
@@ -22,7 +23,7 @@ type App = {
 
 type AppsIndex = { [key in AppType]: App }
 
-export const apps: AppsIndex = {
+export const apps = memoizeAll({
   search,
   people,
   topics,
@@ -42,4 +43,17 @@ export const apps: AppsIndex = {
     ),
     index: () => <div>empty main</div>,
   },
+}) as AppsIndex
+
+function memoizeAll(apps) {
+  const res = {}
+  for (const key in apps) {
+    res[key] = {
+      main: memoIsEqualDeep(apps[key].main),
+      index: memoIsEqualDeep(apps[key].index),
+    }
+  }
+  return res
 }
+
+console.log('apps', apps)

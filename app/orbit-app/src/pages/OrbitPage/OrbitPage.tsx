@@ -117,7 +117,7 @@ function OrbitPageProvideStores(props: { children: any }) {
   const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const activeApps = useActiveAppsSorted({ spaceStore })
+  const activeApps = useActiveAppsSorted()
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: [
       ...activeApps.map(app => ({

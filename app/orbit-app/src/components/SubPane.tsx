@@ -25,6 +25,15 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
+class StaticContainer extends React.Component<any> {
+  shouldComponentUpdate() {
+    return false
+  }
+  render() {
+    return this.props.children
+  }
+}
+
 export const SubPane = observer(function SubPane(props: Props) {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const subPaneStore = useStore(SubPaneStore, props)
@@ -47,7 +56,7 @@ export const SubPane = observer(function SubPane(props: Props) {
           {...props}
         >
           <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
-            {props.children}
+            <StaticContainer>{props.children}</StaticContainer>
           </PaneContentInner>
         </Pane>
       </SubPaneInner>

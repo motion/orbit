@@ -3,27 +3,46 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppStore } from '../../apps/AppStore'
 import { StoreContext } from '../../contexts'
-import { useSelectableResults } from '../../hooks/useSelectableResults'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { SelectEvent, SelectionStore } from '../../stores/SelectionStore'
+import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
-import { OrbitList, OrbitListProps } from './OrbitList'
+import { orbitItemsKey, OrbitList, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   defaultSelected?: number
   isSelectable?: boolean
 }
 
+// child of SelectionStore, more specifically for Orbit lists
+
 class SelectableStore {
   props: {
     appStore?: AppStore<any>
     selectionStore?: SelectionStore
+    itemsKey: string
+    getItems: Function
   }
   listRef = null
 
   setListRef = ref => {
     this.listRef = ref
   }
+
+  isActive = () => {
+    if (this.props.appStore) {
+      return this.props.appStore.isActive
+    }
+    return true
+  }
+
+  updateSelectionResults = react(
+    () => this.props.itemsKey,
+    () => {
+      this.props.selectionStore.setResults([
+        { type: 'column', indices: this.props.getItems().map((_, index) => index) },
+      ])
+    },
+  )
 
   // handle scroll to row
   handleSelection = react(
@@ -49,11 +68,49 @@ class SelectableStore {
 export default function SelectableList(props: SelectableListProps) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
-  const selectableStore = useStore(SelectableStore, { selectionStore, appStore: stores.appStore })
+  // TODO only calculate for the visible items (we can use listRef)
+  const itemsKey = orbitItemsKey(props.items)
+  const getItems = React.useCallback(() => props.items, [itemsKey])
+  const selectableStore = useStore(SelectableStore, {
+    selectionStore,
+    appStore: stores.appStore,
+    itemsKey,
+    getItems,
+  })
 
   console.log('rendering selectable list...', props)
 
-  useSelectableResults(props, selectionStore)
+  React.useEffect(() => {
+    if (
+      typeof props.defaultSelected === 'number' &&
+      selectionStore &&
+      selectionStore.activeIndex === -1
+    ) {
+      selectionStore.setActiveIndex(props.defaultSelected)
+    }
+
+    return stores.shortcutStore.onShortcut(shortcut => {
+      if (!selectableStore.isActive()) {
+        return false
+      }
+      console.log('shortcut handle', shortcut)
+      switch (shortcut) {
+        case 'open':
+          if (props.onOpen) {
+            if (selectionStore) {
+              props.onOpen(selectionStore.activeIndex, 'key')
+            }
+          }
+          break
+        case 'up':
+        case 'down':
+          if (selectionStore) {
+            selectionStore.move(Direction[shortcut])
+          }
+          break
+      }
+    })
+  }, [])
 
   return (
     <MergeContext Context={StoreContext} value={{ selectionStore }}>

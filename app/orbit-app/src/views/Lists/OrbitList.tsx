@@ -18,8 +18,14 @@ export type OrbitListProps = VirtualListProps & {
 
 // fairly sloppy componenent, could be split more cleanly
 
-export const orbitItemsKey = items =>
-  items.map(x => (x.item ? x.item.id || x.item.email : `${x.id || x.email || x.key}`)).join(' ')
+export function orbitItemsKey(items) {
+  return items
+    .map((x, index) => {
+      const item = x.item || x
+      return `${item.id || item.email || item.key || index}`
+    })
+    .join(' ')
+}
 
 export function OrbitList({ items, offsetY = 0, ...props }: OrbitListProps) {
   const { appStore } = useStoresSafe()

@@ -1,4 +1,4 @@
-import { AppConfig, AppData, AppType } from '@mcro/models'
+import { AppConfig, AppType } from '@mcro/models'
 import { SubPaneStore } from '../components/SubPaneStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
@@ -17,11 +17,6 @@ export type AppProps<Type extends AppType> = {
   title?: string
   onSelectItem?: OrbitHandleSelect
   onOpenItem?: OrbitHandleSelect
-
-  // TODO this is all confused, were moving this onto AppEntity/AppModel
-  data?: AppData[Type]
-  updateData?: (values: Partial<AppData[Type]>) => void
-
   appStore: AppStore<Type>
   spaceStore: SpaceStore
   sourcesStore: SourcesStore

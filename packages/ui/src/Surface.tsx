@@ -250,6 +250,7 @@ const SurfaceFrame = gloss(View, {
       ...(props.inline && {
         display: 'inline',
       }),
+      boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       justifyContent: props.justify || props.justifyContent,
       alignSelf: props.alignSelf,
@@ -360,4 +361,19 @@ const getSegmentRadius = (props, uiContext) => {
     }
   }
   return segmentedStyle
+}
+const round = (x: number) => Math.round(x * 4) / 4
+const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
+const elevatedShadow = (x: number) => [
+  0,
+  smoother(x, 5),
+  smoother(x, 15),
+  [0, 0, 0, round(0.12 * smoother(x, 1))],
+]
+
+export function getSurfaceShadow(elevation: number) {
+  if (!elevation) {
+    return null
+  }
+  return [elevatedShadow(elevation) as any]
 }

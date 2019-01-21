@@ -42,7 +42,8 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
     }
   }
 
-  const icon = props.icon || (props.item ? props.item.icon : null) || null //!!normalized ? normalized.icon : null
+  const icon =
+    props.icon || (props.item ? props.item.icon : null) || (normalized ? normalized.icon : null)
 
   return (
     <VirtualListItem
@@ -58,9 +59,9 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
         return appActive && isSelected
       }}
       // allow props to override isSelected but not onSelect
-      // onSelect merges
       {...props}
       icon={icon ? <Icon name={icon} size={16} {...props.iconProps} /> : null}
+      // onSelect merges
       onSelect={(index, eventType) => {
         if (selectionStore && selectionStore.activeIndex !== index) {
           selectionStore.toggleSelected(index, eventType)

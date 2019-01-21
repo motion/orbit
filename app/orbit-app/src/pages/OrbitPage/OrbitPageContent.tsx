@@ -6,7 +6,6 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import AppView from '../../apps/AppView'
-import { SelectionManager } from '../../components/SelectionManager'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
@@ -32,15 +31,13 @@ export default observer(function OrbitPageContent() {
           <OrbitIndexView isHidden={false}>
             {paneManagerStore.panes.map(pane => (
               <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-                <SelectionManager paneId={pane.id}>
-                  <AppView
-                    viewType="index"
-                    id={pane.id}
-                    type={pane.type}
-                    onSelectItem={orbitStore.handleSelectItem}
-                    onAppStore={orbitStore.setAppStore(pane.id)}
-                  />
-                </SelectionManager>
+                <AppView
+                  viewType="index"
+                  id={pane.id}
+                  type={pane.type}
+                  onSelectItem={orbitStore.handleSelectItem}
+                  onAppStore={orbitStore.setAppStore(pane.id)}
+                />
               </SubPane>
             ))}
           </OrbitIndexView>

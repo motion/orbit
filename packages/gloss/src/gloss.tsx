@@ -189,7 +189,7 @@ function glossify(
   return [...nextClassNames, ...extraClassNames]
 }
 
-export function glossView<Props = GlossViewProps<any>>(
+export function gloss<Props = GlossViewProps<any>>(
   a?: CSSPropertySet | any,
   b?: CSSPropertySet,
 ): GlossView<Props> {

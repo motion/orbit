@@ -1,3 +1,4 @@
+import { ensure, react } from '@mcro/black'
 import { invertLightness } from '@mcro/color'
 import { gloss } from '@mcro/gloss'
 import { AppConfig, AppType } from '@mcro/models'
@@ -27,6 +28,8 @@ import OrbitPageContent from './OrbitPageContent'
 
 export class OrbitStore {
   stores = useHook(useStoresSafe)
+  lastSelectAt = Date.now()
+  nextItem = { index: -1, appConfig: null }
 
   get activePane() {
     return this.stores.paneManagerStore.activePane
@@ -37,19 +40,32 @@ export class OrbitStore {
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
-    console.log('select', index, appConfig, this.activePane)
-    if (!appConfig) {
-      console.warn('no app config', index)
-      return
-    }
-    const paneType = this.activePane.type
-    if (!isEqual(this.activeConfig[paneType], appConfig)) {
-      this.activeConfig = {
-        ...this.activeConfig,
-        [paneType]: appConfig,
-      }
-    }
+    this.nextItem = { index, appConfig }
   }
+
+  updateSelectedItem = react(
+    () => this.nextItem,
+    async ({ index, appConfig }, { sleep }) => {
+      const last = this.lastSelectAt
+      this.lastSelectAt = Date.now()
+
+      // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
+      if (Date.now() - last < 50) {
+        await sleep(50)
+      }
+
+      ensure('app config', !!appConfig)
+      console.log('select', index, appConfig, this.activePane)
+
+      const paneType = this.activePane.type
+      if (!isEqual(this.activeConfig[paneType], appConfig)) {
+        this.activeConfig = {
+          ...this.activeConfig,
+          [paneType]: appConfig,
+        }
+      }
+    },
+  )
 
   appStores: { [key: string]: AppStore<any> } = {}
 

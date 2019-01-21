@@ -2,8 +2,8 @@ import { ensure, react } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { SelectionGroup } from '../apps/SelectionResults'
-import { SelectionManagerProps } from '../components/SelectionManager'
 import { hoverSettler } from '../helpers/hoverSettler'
+import { SelectableListProps } from '../views/Lists/SelectableList'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 
@@ -25,25 +25,19 @@ export enum SelectEvent {
   click = 'click',
 }
 
+// TODO see why we had this here and redo later...
+// App.onMessage(App.messages.CLEAR_SELECTED, () => {
+//   this.clearSelected()
+// })
+
 export class SelectionStore {
-  props: SelectionManagerProps
+  props: SelectableListProps
 
   selectEvent: SelectEvent = SelectEvent.click
   leaveIndex = -1
   lastSelectAt = 0
-  _activeIndex = -1
+  _activeIndex = this.props.defaultSelected || -1
   movesMap: MovesMap[] | null = null
-  clearOff: any
-
-  didMount() {
-    this.clearOff = App.onMessage(App.messages.CLEAR_SELECTED, () => {
-      this.clearSelected()
-    })
-  }
-
-  willUnmount() {
-    this.clearOff()
-  }
 
   get activeIndex() {
     this.lastSelectAt
@@ -82,18 +76,6 @@ export class SelectionStore {
     },
   )
 
-  handleOnClearSelection = react(
-    () => this.activeIndex === -1,
-    shouldClear => {
-      ensure('shouldClear', shouldClear)
-      ensure('this.props.onClearSelection', !!this.props.onClearSelection)
-      this.props.onClearSelection()
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
   clearSelected = () => {
     this.leaveIndex = -1
     this.activeIndex = -1
@@ -128,7 +110,7 @@ export class SelectionStore {
     },
   )
 
-  toggleSelected = (index, eventType?: 'key' | 'click') => {
+  toggleSelected = (index: number, eventType?: 'key' | 'click') => {
     if (eventType) {
       this.setSelectEvent(SelectEvent[eventType])
     }
@@ -161,7 +143,7 @@ export class SelectionStore {
     }
   }
 
-  getNextIndex = (curIndex, direction: Direction) => {
+  getNextIndex = (curIndex: number, direction: Direction): number => {
     if (!this.movesMap) {
       return -1
     }
@@ -172,7 +154,7 @@ export class SelectionStore {
       if (direction === Direction.down) {
         return this.movesMap.length ? 0 : -1
       }
-      return
+      return -1
     }
     const maxIndex = this.movesMap.length - 1
     const curResult = this.movesMap[curIndex]
@@ -215,15 +197,15 @@ export class SelectionStore {
     return curIndex
   }
 
-  movesToNextRow = (dir, curIndex) => {
-    const amt = dir === 'right' ? 1 : -1
+  movesToNextRow = (dir: Direction, curIndex: number) => {
+    const amt = dir === Direction.right ? 1 : -1
     const all = this.movesMap
-    const hasMove = index => all[index] && all[index].moves.indexOf(dir) > -1
+    const hasMove = (index: number) => all[index] && all[index].moves.indexOf(dir) > -1
     let movesToNextRow = amt
     while (hasMove(curIndex + movesToNextRow)) {
       movesToNextRow += amt
     }
-    if (dir === 'right') {
+    if (dir === Direction.right) {
       movesToNextRow += amt
     }
     return movesToNextRow
@@ -261,7 +243,7 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = indices.map((id, index) => {
+        const nextMoves = indices.map((_, index) => {
           const moves = []
           if (index < indices.length - 1) {
             moves.push(Direction.down)
@@ -269,7 +251,7 @@ export class SelectionStore {
           if (hasPrevResults || index > 0) {
             moves.push(Direction.up)
           }
-          return { moves, id }
+          return { moves, index }
         })
         results = [...results, ...nextMoves]
       }
@@ -277,7 +259,7 @@ export class SelectionStore {
     this.movesMap = results
   }
 
-  getIndexForItem = index => {
+  getIndexForItem = (index: number) => {
     if (!this.movesMap) {
       throw new Error('Calling index before')
     }

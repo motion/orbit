@@ -1,8 +1,11 @@
+import { useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { StoreContext } from '../../contexts'
 import { useSelectableResults } from '../../hooks/useSelectableResults'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { SelectEvent } from '../../stores/SelectionStore'
+import { SelectEvent, SelectionStore } from '../../stores/SelectionStore'
+import { MergeContext } from '../MergeContext'
 import { OrbitList, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
@@ -13,14 +16,16 @@ export type SelectableListProps = OrbitListProps & {
 // TODO this could provide a selection store *if* not already in context to be more simple
 
 export default function SelectableList(props: SelectableListProps) {
-  useSelectableResults(props)
+  const stores = useStoresSafe()
+  const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
+
+  useSelectableResults(props, selectionStore)
 
   const [ref, setRef] = React.useState({ store: null, list: null })
-  const { appStore, selectionStore } = useStoresSafe()
 
   // handle scroll to row
   useObserver(() => {
-    if (appStore && !appStore.isActive) {
+    if (stores.appStore && !stores.appStore.isActive) {
       return
     }
     const { activeIndex, selectEvent } = selectionStore
@@ -33,14 +38,16 @@ export default function SelectableList(props: SelectableListProps) {
   })
 
   return (
-    <OrbitList
-      scrollToAlignment="center"
-      forwardRef={(list, store) => {
-        if (ref.store !== store) {
-          setRef({ store, list })
-        }
-      }}
-      {...props}
-    />
+    <MergeContext Context={StoreContext} value={{ selectionStore }}>
+      <OrbitList
+        scrollToAlignment="center"
+        forwardRef={(list, store) => {
+          if (ref.store !== store) {
+            setRef({ store, list })
+          }
+        }}
+        {...props}
+      />
+    </MergeContext>
   )
 }

@@ -1,5 +1,3 @@
-import { glossView } from './glossView'
-
 export { color } from '@mcro/color'
 export {
   Color,
@@ -23,7 +21,7 @@ export { Row } from './blocks/Row'
 export { View } from './blocks/View'
 // configureGloss
 export { configureGloss } from './config'
-export { GlossView } from './glossView'
+export { gloss, GlossView } from './gloss'
 export { alphaColor } from './helpers/alphaColor'
 export { colorToString } from './helpers/helpers'
 export { propsToStyles } from './helpers/propsToStyles'
@@ -34,6 +32,3 @@ export { default as Theme, ThemeSelect } from './theme/Theme'
 export { ThemeContext } from './theme/ThemeContext'
 export { ThemeMaker } from './theme/ThemeMaker'
 export { ThemeProvide } from './theme/ThemeProvide'
-
-// gloss
-export const gloss = glossView

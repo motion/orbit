@@ -1,5 +1,6 @@
 import { validCSSAttr } from '@mcro/css'
-import { gloss, propsToStyles } from '../gloss'
+import { gloss } from '../gloss'
+import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export const View = gloss().theme((props, theme) => ({

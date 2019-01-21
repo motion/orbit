@@ -2,7 +2,7 @@
   "name": "@mcro/gloss",
   "version": "2.3.10",
   "description": "Higher order component for nicer component styles",
-  "main": "_/gloss.js",
+  "main": "_/index.js",
   "sideEffects": false,
   "scripts": {
     "build": "tsc || true",

@@ -42,7 +42,6 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
     }
   }
 
-  console.log('props', props)
   const icon = props.icon || (props.item ? props.item.icon : null) || null //!!normalized ? normalized.icon : null
 
   return (

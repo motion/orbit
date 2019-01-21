@@ -67,6 +67,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
       <SelectableList
         items={results}
         itemProps={props.itemProps}
+        sortable
         getItemProps={index => {
           const result = results[index]
           return {

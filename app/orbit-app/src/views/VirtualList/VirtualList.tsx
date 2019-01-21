@@ -36,6 +36,7 @@ export type VirtualListProps = {
   scrollToAlignment?: 'auto' | 'start' | 'end' | 'center'
   scrollToIndex?: number
   padTop?: number
+  sortable?: boolean
 }
 
 class SortableList extends React.Component<any> {
@@ -153,26 +154,29 @@ const getSeparatorProps = ({ items }: VirtualListProps, index: number) => {
     return null
   }
   if (index === 0 || model.group !== items[index - 1].group) {
-    return { separator: model.group }
+    return { separator: `${model.group}` }
   }
   return null
 }
 
-const itemProps = (props: VirtualListProps, index: number) => {
-  const separatorProps = getSeparatorProps(props, index)
-  const padTopProps =
+const itemProps = (props: VirtualListProps, index: number): Partial<VirtualListItemProps<any>> => {
+  const next = [
+    getSeparatorProps(props, index),
     index === 0 && props.padTop
       ? {
           above: <div style={{ height: props.padTop }} />,
         }
-      : null
-  if (!separatorProps && !padTopProps) {
+      : null,
+    !props.sortable ? { disabled: true } : null,
+  ].filter(Boolean)
+  if (!next.length) {
     return null
   }
-  return {
-    ...separatorProps,
-    ...padTopProps,
+  let res = {}
+  for (const item of next) {
+    res = { ...res, ...item }
   }
+  return res
 }
 
 function useDefaultProps<A>(a: A, b: Partial<A>): A {

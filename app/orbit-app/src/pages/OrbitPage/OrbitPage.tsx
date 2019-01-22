@@ -45,7 +45,7 @@ export class OrbitStore {
 
   updateSelectedItem = react(
     () => this.nextItem,
-    async ({ index, appConfig }, { sleep }) => {
+    async ({ appConfig }, { sleep }) => {
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()
 

@@ -18,11 +18,9 @@ export default function AppsAppIndex() {
     {
       id: -1,
       title: 'Installed apps',
-      type: 'installed',
       icon: 'grid48',
-      subtitle: `${activeItems.map(x => x.title).join(', ')}`,
+      subtitle: `${activeItems.map(x => x.title).join(', ') || '...'}`,
       appConfig: {
-        id: -1,
         type: 'installed',
       },
     },

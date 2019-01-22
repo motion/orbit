@@ -115,7 +115,6 @@ export class MenuStore {
       const leftSpacing = 47
       const maxIndex = 3
       const xOffset = maxIndex - id
-      console.log('xoff', xOffset, id)
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
       return trayPositionX + offset
@@ -490,7 +489,6 @@ export function Menu() {
     queryStore,
     menuItems: menuApps,
     onMenuHover: index => {
-      console.log('ON MENU HOVER', menuApps, index)
       const app = menuApps.find(x => x.index === index)
       if (app) {
         paneManagerStore.setActivePane(app.id)

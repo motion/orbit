@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Popover, Row, Text, Tooltip, View } from '@mcro/ui'
+import { Button, Row, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -22,11 +22,11 @@ type TabProps = React.HTMLAttributes<'div'> & {
   sidePad?: number
   tooltip?: string
   textProps?: any
-  showDropdown?: boolean
+  onClickPopout?: Function
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
-  return <Tab {...props} />
+  return <OrbitTab {...props} />
 })
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
@@ -44,8 +44,6 @@ export default observer(function OrbitNav() {
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-
-  console.log('space', space, 'apps', activeApps)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -86,13 +84,18 @@ export default observer(function OrbitNav() {
     return {
       app,
       separator: !isActive && isLast && !nextIsActive,
-      isActive,
+      appId: app.id,
       disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
-      showDropdown: !isPinned,
       sidePad: isPinned ? 20 : buttonSidePad,
+      isActive,
       onClick: paneManagerStore.activePaneSetter(app.id),
+      onClickPopout:
+        !isPinned &&
+        (() => {
+          console.log('popout')
+        }),
       children: (
         <Icon
           name={`orbit${capitalize(app.type)}`}
@@ -117,48 +120,34 @@ export default observer(function OrbitNav() {
             }}
           />
           <View flex={1} minWidth={10} />
-          <Tab tooltip="Apps">
+          <OrbitTab
+            isActive={paneManagerStore.activePane.type === 'apps'}
+            onClick={paneManagerStore.activePaneByTypeSetter('apps')}
+            tooltip="Apps"
+          >
             <Icon name="grid48" size={10} opacity={0.5} />
-          </Tab>
-          <Tab
-            isActive={paneManagerStore.activePane.name === 'Sources'}
-            onClick={paneManagerStore.activePaneByNameSetter('Sources')}
+          </OrbitTab>
+          <OrbitTab
+            isActive={paneManagerStore.activePane.type === 'sources'}
+            onClick={paneManagerStore.activePaneByTypeSetter('sources')}
             tooltip="Sources"
           >
             <Icon name="design_app" size={11} opacity={0.5} />
-          </Tab>
+          </OrbitTab>
         </OrbitNavChrome>
       </OrbitNavClip>
-      {items
-        .filter(x => x.showDropdown)
-        .map(item => (
-          <Popover
-            key={item.app.id}
-            openOnClick
-            closeOnClick
-            closeOnClickAway
-            theme="light"
-            width={300}
-            background
-            borderRadius={8}
-            elevation={7}
-            target={`.appDropdown-${item.app.id}`}
-          >
-            test me out
-          </Popover>
-        ))}
     </>
   )
 })
 
-const Tab = ({
+const OrbitTab = ({
   app,
   children,
   tooltip,
   label,
   isActive = false,
   separator = false,
-  showDropdown = false,
+  onClickPopout,
   sidePad = buttonSidePad,
   textProps,
   className = '',
@@ -188,10 +177,16 @@ const Tab = ({
       )}
       {separator && <Separator />}
 
-      {showDropdown && (
-        <DropdownArrow
+      {!!onClickPopout && (
+        <PopoutIcon
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-          style={{ opacity: hovered ? 0.2 : 0, right: sidePad }}
+          opacity={hovered ? 0.2 : 0}
+          right={sidePad - 8}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            onClickPopout()
+          }}
         />
       )}
     </NavButtonChrome>
@@ -202,18 +197,21 @@ const Tab = ({
   return button
 }
 
-function DropdownArrow({ style, ...props }) {
+function PopoutIcon(props) {
   return (
-    <Icon
-      name="downArrow"
-      size={8}
-      style={{
-        transition: 'all ease 200ms 200ms',
-        position: 'absolute',
-        top: height / 2 - 8 / 2,
-        ...style,
-      }}
+    <Button
+      circular
+      borderWidth={0}
+      size={0.65}
+      icon="downArrow"
+      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 3, y: -3 } }}
       {...props}
+      style={{
+        // transition: 'opacity ease 200ms 200ms',
+        position: 'absolute',
+        top: height / 2 - 9,
+        ...props.style,
+      }}
     />
   )
 }

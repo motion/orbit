@@ -5,23 +5,22 @@
  * @format
  */
 
+import { gloss, Row } from '@mcro/gloss'
+import invariant from 'invariant'
 import * as React from 'react'
+import ContextMenu from '../ContextMenu'
+import { colors } from '../helpers/colors'
+// import ContextMenu from '../ContextMenu.js'
+import { Interactive } from '../Interactive'
 import {
   TableColumnOrder,
-  TableColumnSizes,
   TableColumns,
+  TableColumnSizes,
   TableOnColumnResize,
   TableOnSort,
   TableRowSortOrder,
 } from './types'
-import { normaliseColumnWidth, isPercentage } from './utils'
-// import ContextMenu from '../ContextMenu.js'
-import { Interactive } from '../Interactive'
-import { colors } from '../helpers/colors'
-import { Row } from '../blocks/Row'
-import ContextMenu from '../ContextMenu'
-import invariant from 'invariant'
-import { gloss } from '@mcro/gloss'
+import { isPercentage, normaliseColumnWidth } from './utils'
 
 const TableHeaderArrow = gloss({
   display: 'block',

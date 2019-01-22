@@ -1,5 +1,5 @@
+import { colorToString } from '.'
 import { GlossOptions } from './types'
-import { colorToString } from './gloss'
 
 export const Config: GlossOptions = {
   glossProp: 'css',

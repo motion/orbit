@@ -34,7 +34,7 @@
 }
 
 .rdrDateDisplayItem + .rdrDateDisplayItem {
-  margin-left: 0.833em;
+  margin-left: 0.5em;
 }
 
 .rdrDateDisplayItem input {
@@ -242,9 +242,9 @@
   background: transparent;
 }
 
-.rdrDateDisplay {
-  padding: 0px 10px;
-}
+/* .rdrDateDisplay {
+  padding: 0px 5px;
+} */
 
 .rdrDateDisplayItem {
   border-radius: 4px;
@@ -313,7 +313,7 @@
   display: block;
   width: 24px;
   height: 24px;
-  margin: 0 0.833em;
+  margin: 0 0.5em;
   padding: 0;
   border: 0;
   border-radius: 5px;
@@ -352,12 +352,12 @@
 }
 
 .rdrWeekDays {
-  padding: 0 0.833em;
+  padding: 0 0.5em;
 }
 
 .rdrMonth {
-  padding: 0 0.833em 1.666em 0.833em;
-  width: 360px;
+  padding: 0 0.5em 1.666em 0.5em;
+  width: 280px;
 }
 
 .rdrMonth .rdrWeekDays {
@@ -677,5 +677,5 @@
   text-align: left;
   font-weight: 600;
   color: #849095;
-  padding: 0.833em;
+  padding: 0.5em;
 }

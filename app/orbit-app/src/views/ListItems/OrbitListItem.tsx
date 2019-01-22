@@ -1,14 +1,17 @@
-import { Bit, PersonBit } from '@mcro/models'
+import { AppConfig, AppType, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Icon } from '../Icon'
 import { OrbitHandleSelect } from '../Lists/OrbitList'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import VirtualListItem, { VirtualListItemProps } from '../VirtualList/VirtualListItem'
 import { ListItemProps } from './ListItem'
 import { ListItemPerson } from './ListItemPerson'
 
-export type OrbitListItemProps = VirtualListItemProps<Bit | PersonBit> & {
+type OrbitItem = Bit | PersonBit | any
+
+export type OrbitListItemProps = VirtualListItemProps<OrbitItem> & {
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
 }
@@ -39,6 +42,9 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
     }
   }
 
+  const icon =
+    props.icon || (props.item ? props.item.icon : null) || (normalized ? normalized.icon : null)
+
   return (
     <VirtualListItem
       index={props.realIndex}
@@ -53,14 +59,18 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
         return appActive && isSelected
       }}
       // allow props to override isSelected but not onSelect
-      // onSelect merges
       {...props}
+      icon={icon ? <Icon name={icon} size={16} {...props.iconProps} /> : null}
+      // onSelect merges
       onSelect={(index, eventType) => {
         if (selectionStore && selectionStore.activeIndex !== index) {
           selectionStore.toggleSelected(index, eventType)
         }
         if (props.onSelect) {
-          props.onSelect(index, props.appConfig || (normalized && normalized.appConfig) || null)
+          props.onSelect(
+            index,
+            props.appConfig || (normalized && normalized.appConfig) || itemToAppConfig(props),
+          )
         }
       }}
     >
@@ -83,6 +93,15 @@ const extraProps = {
   preventSelect: true,
 }
 const spaceBetween = <div style={{ flex: 1 }} />
+
+function itemToAppConfig(props: ListItemProps): AppConfig {
+  return {
+    id: props.id,
+    type: props.type as AppType,
+    title: props.title,
+    icon: props.icon,
+  }
+}
 
 export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({
   title: normalized.title,

@@ -1,12 +1,12 @@
-import * as React from 'react'
-import { AppProps } from '../AppProps'
-import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { AppType } from '@mcro/models'
 import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import { sourceToAppConfig } from '../../stores/SourcesStore'
+import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
-import { AppType } from '@mcro/models'
+import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
+import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const { activeSources, allSources } = props.sourcesStore
@@ -44,5 +44,5 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     })),
   ]
 
-  return <SelectableList items={results} onSelect={props.onSelectItem} onOpen={props.onOpenItem} />
+  return <SelectableList items={results} />
 })

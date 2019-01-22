@@ -5,17 +5,15 @@
  * @format
  */
 
-import { TreeItemID, TreeItem, TreeItemSearchResultSet } from './Tree'
-import { Icon } from './Icon'
+import { Col, gloss, Row } from '@mcro/gloss'
 // import { ContextMenu } from './ContextMenu'
 import * as React from 'react'
-import { Row } from './blocks/Row'
-import { Col } from './blocks/Col'
-import { Image } from './Image'
-import { colors } from './helpers/colors'
-import { Text } from './Text'
 import { FixedList } from './FixedList'
-import { gloss } from '@mcro/gloss'
+import { colors } from './helpers/colors'
+import { Icon } from './Icon'
+import { Image } from './Image'
+import { Text } from './Text'
+import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
 // import isEqual from 'react-fast-compare'
 
 const ROW_HEIGHT = 23

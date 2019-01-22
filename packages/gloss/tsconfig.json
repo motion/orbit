@@ -1,14 +1,10 @@
 {
   "extends": "../../tsconfig.tspackage",
+  "include": ["src/**/*"],
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../css" },
-    { "path": "../color" },
-    { "path": "../gloss-displaynames" }
-  ]
+  "references": [{ "path": "../css" }, { "path": "../color" }, { "path": "../gloss-displaynames" }]
 }

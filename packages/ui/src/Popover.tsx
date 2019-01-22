@@ -1,14 +1,15 @@
-import * as React from 'react'
-import { on } from '@mcro/helpers'
-import { Portal } from './helpers/portal'
-import { isNumber, debounce, Cancelable, last, pick, isEqual } from 'lodash'
-import { Arrow } from './Arrow'
-import { SizedSurface } from './SizedSurface'
 import { Color, CSSPropertySet } from '@mcro/css'
+import { gloss, Theme } from '@mcro/gloss'
+import { on } from '@mcro/helpers'
+import { Cancelable, debounce, isEqual, isNumber, last, pick } from 'lodash'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import { Theme, gloss } from '@mcro/gloss'
-import { getTarget } from './helpers/getTarget'
+import { Arrow } from './Arrow'
 import { MergeUIContext } from './helpers/contexts'
+import { getTarget } from './helpers/getTarget'
+import { Portal } from './helpers/portal'
+import { SizedSurface } from './SizedSurface'
+import { getSurfaceShadow } from './Surface'
 
 export type PopoverProps = CSSPropertySet & {
   // if you set a group, it acts as an ID that makes sure only ONE popover
@@ -288,22 +289,6 @@ const INVERSE = {
   bottom: 'top',
   left: 'right',
   right: 'left',
-}
-
-const round = (x: number) => Math.round(x * 4) / 4
-const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
-const elevatedShadow = (x: number) => [
-  0,
-  smoother(x, 5),
-  smoother(x, 15),
-  [0, 0, 0, round(0.12 * smoother(x, 1))],
-]
-
-const getShadow = (elevation: PopoverProps['elevation']) => {
-  if (!elevation) {
-    return null
-  }
-  return [elevatedShadow(elevation) as any]
 }
 
 const initialState = {
@@ -979,7 +964,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                   }
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  boxShadow={getShadow(elevation)}
+                  boxShadow={getSurfaceShadow(elevation)}
                 />
               </ArrowContain>
             )}
@@ -990,7 +975,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               hover={false}
               active={false}
               overflow="visible"
-              boxShadow={getShadow(elevation)}
+              elevation={elevation}
               noInnerElement
               {...restProps}
               {...backgroundProp}

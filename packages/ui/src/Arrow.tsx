@@ -1,7 +1,5 @@
+import { Col, Color, CSSPropertySet, gloss, ThemeContext } from '@mcro/gloss'
 import * as React from 'react'
-import { gloss, CSSPropertySet, ThemeContext } from '@mcro/gloss'
-import { Col } from './blocks/Col'
-import { Color } from '@mcro/gloss'
 
 type Props = CSSPropertySet & {
   size: number

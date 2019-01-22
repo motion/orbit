@@ -5,18 +5,17 @@
  * @format
  */
 
+import { gloss, Row } from '@mcro/gloss'
 import * as React from 'react'
-import { normaliseColumnWidth } from './utils.js'
+import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
   TableBodyRow,
-  TableColumnSizes,
   TableColumnKeys,
+  TableColumnSizes,
   TableOnAddFilter,
 } from './types'
-import { Row } from '../blocks/Row.js'
-import FilterRow from './FilterRow.js'
-import { gloss } from '@mcro/gloss'
+import { normaliseColumnWidth } from './utils.js'
 
 const backgroundColor = (props, theme) => {
   if (props.highlighted) {

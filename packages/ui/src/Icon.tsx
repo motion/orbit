@@ -1,8 +1,7 @@
+import { Color, CSSPropertySet, gloss, View } from '@mcro/gloss'
+import fuzzy from 'fuzzy'
 import * as React from 'react'
 import { iconNames } from './iconNames'
-import fuzzy from 'fuzzy'
-import { View } from './blocks/View'
-import { Color, CSSPropertySet, gloss } from '@mcro/gloss'
 
 export type IconProps = React.HTMLProps<HTMLDivElement> &
   CSSPropertySet & {

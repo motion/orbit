@@ -5,11 +5,9 @@
  * @format
  */
 
+import { attachTheme, gloss, Row, ThemeObject, View } from '@mcro/gloss'
 import * as React from 'react'
 import { Icon } from './Icon'
-import { attachTheme, ThemeObject, gloss } from '@mcro/gloss'
-import { Row } from './blocks/Row'
-import { View } from './blocks/View'
 import { Text } from './Text'
 
 const BORDER = '1px solid #dddfe2'

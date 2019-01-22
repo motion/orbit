@@ -1,10 +1,9 @@
 import { AppType } from '@mcro/models'
 import * as React from 'react'
+import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { GenericComponent } from '../types'
-import { Title, VerticalSpace } from '../views'
-import { Center } from '../views/Center'
-import { Icon } from '../views/Icon'
 import { AppProps } from './AppProps'
+import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
 import { home } from './home'
 import { lists } from './lists'
@@ -13,6 +12,7 @@ import { search } from './search'
 import { settings } from './settings'
 import { sources } from './sources'
 import { topics } from './topics'
+import { MessageViewMain } from './views/MessageViewMain'
 
 type App = {
   index?: GenericComponent<AppProps<any>>
@@ -21,7 +21,7 @@ type App = {
 
 type AppsIndex = { [key in AppType]: App }
 
-export const apps: AppsIndex = {
+export const apps = memoizeAll({
   search,
   people,
   topics,
@@ -30,14 +30,22 @@ export const apps: AppsIndex = {
   settings,
   bit,
   home,
+  apps: appsApps,
   message: {
-    main: props => (
-      <Center>
-        {props.appConfig.data.icon ? <Icon name={props.appConfig.data.icon} size={32} /> : null}
-        <VerticalSpace />
-        <Title>{props.appConfig.title}</Title>
-      </Center>
-    ),
+    main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,
   },
+}) as AppsIndex
+
+function memoizeAll(apps) {
+  const res = {}
+  for (const key in apps) {
+    res[key] = {
+      main: memoIsEqualDeep(apps[key].main),
+      index: memoIsEqualDeep(apps[key].index),
+    }
+  }
+  return res
 }
+
+console.log('apps', apps)

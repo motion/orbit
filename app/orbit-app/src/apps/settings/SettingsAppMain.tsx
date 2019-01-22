@@ -5,10 +5,12 @@ import { AppType, Setting, SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { generalSettingQuery } from '../../helpers/queries'
 import * as Views from '../../views'
+import { Divider } from '../../views/Divider'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { AppProps } from '../AppProps'
@@ -98,7 +100,9 @@ const Section = gloss(View, {
   padding: [0, 0, 20],
 })
 
-export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
+export const SettingsAppMain = observer(function SettingsAppMain(
+  props: AppProps<AppType.settings>,
+) {
   const store = useStore(SettingAppStore, props)
 
   const handleClearAllData = () => {
@@ -117,7 +121,8 @@ export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
   }
   return (
     <View padding={20}>
-      <Views.Title>Settings</Views.Title>
+      <Views.Title>General Settings</Views.Title>
+      123: {JSON.stringify(props.appConfig)}
       {!!store.generalSetting && (
         <Section maxWidth={450}>
           <Views.CheckBoxRow
@@ -147,13 +152,17 @@ export const SettingsAppMain = (props: AppProps<AppType.settings>) => {
             />
           </Views.FormRow>
 
-          <Views.FormRow label="Account">
+          <Views.VerticalSpace />
+          <Divider />
+          <Views.VerticalSpace />
+
+          <Views.FormRow label="Reset">
             <Theme name="selected">
-              <Button onClick={handleClearAllData}>Clear all data</Button>
+              <Button onClick={handleClearAllData}>Reset all Orbit data</Button>
             </Theme>
           </Views.FormRow>
         </Section>
       )}
     </View>
   )
-}
+})

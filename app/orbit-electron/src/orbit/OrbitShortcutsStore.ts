@@ -1,27 +1,31 @@
-import { store, react } from '@mcro/black'
-import { App, Electron, Desktop } from '@mcro/stores'
-import { ShortcutsStore } from '../stores/ShortcutsStore'
+import { react } from '@mcro/black'
 import { Logger } from '@mcro/logger'
+import { App, Desktop, Electron } from '@mcro/stores'
+import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
 
 const log = new Logger('ShortcutsManager')
 
 const peekTriggers = 'abcdefghijzlmnopqrstuvwxyz0123456789'
 
-@store
-export class ShortcutsManager {
-  constructor() {
+export class OrbitShortcutsStore {
+  props: {
+    onToggleOpen?: Function
+  }
+
+  didMount() {
     this.globalShortcut.registerShortcuts()
   }
 
   // global shortcuts
   // TODO make it update when they change it...
-  globalShortcut = new ShortcutsStore({
+  globalShortcut = new ElectronShortcutManager({
     shortcuts: {
       toggleApp: 'Option+Space',
     },
-    onShortcut() {
-      const shown = App.orbitState.docked
-      Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
+    onShortcut: () => {
+      if (this.props.onToggleOpen) {
+        this.props.onToggleOpen()
+      }
     },
   })
 
@@ -41,7 +45,7 @@ export class ShortcutsManager {
     },
   )
 
-  peekShortcuts = new ShortcutsStore({
+  peekShortcuts = new ElectronShortcutManager({
     shortcuts: {
       optionAndDown: 'Option+Down',
       optionAndLeft: 'Option+Left',
@@ -55,7 +59,7 @@ export class ShortcutsManager {
         {},
       ),
     },
-    onShortcut(shortcut) {
+    onShortcut: shortcut => {
       console.log('got shortcut', shortcut)
       if (shortcut.indexOf('optionAnd') === 0) {
         const name = shortcut.replace('optionAnd', '').toLowerCase()

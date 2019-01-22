@@ -4,6 +4,7 @@ import { SubPaneStore } from './components/SubPaneStore'
 import { AppFrameStore } from './pages/AppPage/AppFrame'
 import { AppPageStore } from './pages/AppPage/AppPageStore'
 import { MenuStore } from './pages/ChromePage/menuLayer/Menu'
+import { OrbitStore } from './pages/OrbitPage/OrbitPage'
 import { OrbitWindowStore } from './stores/OrbitWindowStore'
 import { PaneManagerStore } from './stores/PaneManagerStore'
 import { QueryStore } from './stores/QueryStore/QueryStore'
@@ -27,6 +28,7 @@ export type AllStores = {
   subPaneStore?: SubPaneStore
   appFrameStore?: AppFrameStore
   menuStore?: MenuStore
+  orbitStore?: OrbitStore
 }
 
 export const StoreContext = createContext({} as AllStores)

@@ -1,13 +1,14 @@
-import * as React from 'react'
-import { react, ensure } from '@mcro/black'
-import { Window } from '@mcro/reactron'
-import { Electron, Desktop, App } from '@mcro/stores'
-import { Logger } from '@mcro/logger'
+import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { Menu, BrowserWindow } from 'electron'
-import root from 'global'
+import { Logger } from '@mcro/logger'
+import { Window } from '@mcro/reactron'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
+import { BrowserWindow, Menu } from 'electron'
+import root from 'global'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -17,19 +18,21 @@ class OrbitWindowStore {
   disposeShow = null
   alwaysOnTop = true
   hasMoved = false
-
+  blurred = true
   size = [0, 0]
   position = [0, 0]
 
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
-      let scl = 0.65
+      // max initial size to prevent massive screen on huge monitor
+      let scl = 0.75
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide
       w = Math.min(h * 1.45, w)
-      this.size = [w, h].map(x => Math.round(x))
+      const maxSize = [1600, 1000]
+      this.size = [w, h].map(x => Math.round(x)).map((x, i) => Math.min(maxSize[i], x))
       // centered
       this.position = [screenSize[0] / 2 - w / 2, screenSize[1] / 2 - h / 2].map(x => Math.round(x))
     },
@@ -44,11 +47,6 @@ class OrbitWindowStore {
     this.hasMoved = true
     console.log('got a move', position)
     this.position = position
-  }
-
-  didMount() {
-    // temp bugfix
-    root['OrbitWindowStore'] = this
   }
 
   handleRef = ref => {
@@ -87,28 +85,35 @@ class OrbitWindowStore {
     this.orbitRef.setVisibleOnAllWorkspaces(false) // disable all screen behavior
   }
 
-  handleFocus = () => {
-    // avoid sending two show commands in a row in some cases
-    const lm = Electron.bridge.lastMessage
-    if (lm && lm.message === App.messages.SHOW) {
-      console.log('last message', lm, Date.now() - lm.at)
-      if (Date.now() - lm.at < 300) {
-        console.log('avoid sending double "show" event when already opened')
-        return
-      }
-    }
-    Electron.sendMessage(App, App.messages.SHOW)
-  }
-
   // just set this here for devtools opening,
   // we are doing weird stuff with focus
-  handleElectronFocus = () => {
+  handleFocus = () => {
+    this.blurred = false
     Electron.setState({ focusedAppId: 'app' })
+  }
+
+  handleBlur = () => {
+    this.blurred = true
   }
 }
 
 export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
+  root['OrbitWindowStore'] = store // helper for dev
+
+  // handle shortcuts
+  useStore(OrbitShortcutsStore, {
+    onToggleOpen() {
+      const shown = App.orbitState.docked
+      console.log('ok', store.blurred, shown)
+      if (store.blurred && shown) {
+        store.orbitRef.focus()
+        return
+      }
+      Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
+    },
+  })
+
   const [show, setShow] = React.useState(false)
   const url = Config.urls.server
 
@@ -134,7 +139,8 @@ export default observer(function OrbitWindow() {
       size={store.size.slice()}
       onResize={store.setSize}
       onMove={store.setPosition}
-      onFocus={store.handleElectronFocus}
+      onFocus={store.handleFocus}
+      onBlur={store.handleBlur}
       showDevTools={Electron.state.showDevTools.app}
       transparent
       background="#00000000"

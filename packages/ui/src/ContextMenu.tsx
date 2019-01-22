@@ -5,9 +5,9 @@
  * @format
  */
 
-import * as React from 'react'
+import { Col } from '@mcro/gloss'
 import PropTypes from 'prop-types'
-import { Col } from './blocks/Col'
+import * as React from 'react'
 
 type MenuTemplate = Array<any>
 
@@ -38,12 +38,7 @@ export default class ContextMenu extends React.Component<Props> {
   }
 
   render() {
-    const {
-      items: _ignoreItems,
-      buildItems: _buildItems,
-      component,
-      ...props
-    } = this.props
+    const { items: _ignoreItems, buildItems: _buildItems, component, ...props } = this.props
     return React.createElement(
       component,
       {

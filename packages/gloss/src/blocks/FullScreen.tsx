@@ -1,5 +1,5 @@
+import { gloss } from '../gloss'
 import { Col } from './Col'
-import { gloss } from '@mcro/gloss'
 
 export const FullScreen = gloss(Col, {
   position: 'absolute',

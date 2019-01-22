@@ -4,8 +4,9 @@ import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
-import { GLOSS_SIMPLE_COMPONENT_SYMBOL } from './symbols'
 import { ThemeContext } from './theme/ThemeContext'
+
+const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 
 export type BaseRules = {
   [key: string]: string | number
@@ -188,7 +189,7 @@ function glossify(
   return [...nextClassNames, ...extraClassNames]
 }
 
-export function glossView<Props = GlossViewProps<any>>(
+export function gloss<Props = GlossViewProps<any>>(
   a?: CSSPropertySet | any,
   b?: CSSPropertySet,
 ): GlossView<Props> {

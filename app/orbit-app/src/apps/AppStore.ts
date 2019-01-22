@@ -1,9 +1,8 @@
-import { always, ensure, react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { AppType } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { AppProps } from './AppProps'
-import { SelectionGroup } from './SelectionResults'
 
 export class AppStore<Type extends AppType> {
   props: AppProps<Type>
@@ -12,21 +11,6 @@ export class AppStore<Type extends AppType> {
   )
 
   toolbar = null
-  selectionResults = null
-
-  setResults = (results: SelectionGroup[]) => {
-    this.selectionResults = results
-  }
-
-  // only update the selection store once this pane is active
-  setSelectionResultsOnActive = react(
-    () => always(this.selectionResults),
-    async (_, { when }) => {
-      ensure('this.stores.selectionStore', !!this.stores.selectionStore)
-      await when(() => this.isActive)
-      this.stores.selectionStore.setResults(this.selectionResults)
-    },
-  )
 
   get isActive() {
     const { id, isActive } = this.props

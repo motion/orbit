@@ -1,5 +1,5 @@
-import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
-import { store, deep } from '@mcro/black'
+import { deep, store } from '@mcro/black'
+import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
 
 export let Electron = null as ElectronStore
 

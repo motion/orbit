@@ -1,17 +1,17 @@
-import * as React from 'react'
-import OrbitHeaderInput from './OrbitHeaderInput'
-import { View, Row, Icon, Button } from '@mcro/ui'
-import OrbitHeaderButtons from './OrbitHeaderButtons'
-import { react, ensure } from '@mcro/black'
-import { App } from '@mcro/stores'
-import { AppActions } from '../../actions/AppActions'
-import { WindowCloseButton } from '../../views/WindowControls'
-import { observer } from 'mobx-react-lite'
-import { useStore, useHook } from '@mcro/use-store'
+import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
+import { App } from '@mcro/stores'
+import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { AppActions } from '../../actions/AppActions'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { WindowCloseButton } from '../../views/WindowControls'
+import OrbitHeaderButtons from './OrbitHeaderButtons'
+import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 import OrbitSwitch from './OrbitSwitch'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -114,11 +114,12 @@ export class HeaderStore {
 }
 
 export default observer(function OrbitHeader() {
-  const stores = useStoresSafe()
+  const { queryStore, paneManagerStore, orbitStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
+  const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
   return (
     <OrbitHeaderContainer
-      opacity={stores.paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
+      opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
@@ -128,18 +129,28 @@ export default observer(function OrbitHeader() {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          {/* <Icon name="arrowminleft" opacity={0.25} /> */}
+          <ClearButton
+            onClick={
+              paneManagerStore.activePane.type === 'settings'
+                ? paneManagerStore.setActivePaneToPrevious
+                : queryStore.clearQuery
+            }
+          >
+            <Icon name="arrowminleft" opacity={0.25} />
+          </ClearButton>
           <OrbitSwitch />
           <FakeInput>
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
               <OrbitHeaderButtons />
+              {/* TODO this can be <OrbitAutocomplete /> */}
+              {!!activeAppStore ? activeAppStore.toolbar : null}
             </After>
           </FakeInput>
           <Button
             chromeless
-            isActive={stores.paneManagerStore.activePane.type === 'settings'}
-            onClick={stores.paneManagerStore.activePaneByTypeSetter('settings')}
+            isActive={paneManagerStore.activePane.type === 'settings'}
+            onClick={paneManagerStore.activePaneByTypeSetter('settings')}
             tooltip="Settings"
           >
             <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />

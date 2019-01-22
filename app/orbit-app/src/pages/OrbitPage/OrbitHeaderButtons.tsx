@@ -1,11 +1,10 @@
-import * as React from 'react'
 import { gloss } from '@mcro/gloss'
 import { ClearButton, Icon } from '@mcro/ui'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 const Section = gloss('section', {
-  width: '100%',
   flexFlow: 'row',
   padding: [0, 6],
   alignItems: 'center',

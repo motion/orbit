@@ -1,11 +1,14 @@
-import * as React from 'react'
-import { on } from '@mcro/helpers'
+import {
+  alphaColor,
+  CSSPropertySet,
+  gloss,
+  Inline,
+  InlineBlock,
+  propsToTextSize,
+} from '@mcro/gloss'
+import { HighlightOptions, highlightText, on } from '@mcro/helpers'
 import keycode from 'keycode'
-import { InlineBlock } from './blocks/InlineBlock'
-import { Inline } from './blocks/Inline'
-import { highlightText, HighlightOptions } from '@mcro/helpers'
-import { propsToTextSize } from './helpers/propsToTextSize'
-import { alphaColor, CSSPropertySet, gloss } from '@mcro/gloss'
+import * as React from 'react'
 
 type ChildrenHlFn = ((Highlights) => JSX.Element | null)
 

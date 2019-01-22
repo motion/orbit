@@ -1,11 +1,9 @@
-import { gloss } from '@mcro/gloss'
-import * as React from 'react'
 import { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 
 export const Toolbar = props => {
   const stores = useStoresSafe()
-  const toolbar = <ToolbarChrome>{props.children}</ToolbarChrome>
+  const toolbar = props.children
 
   // this will do something a bit odd,
   // if theres an appStore, it just passes it up
@@ -24,12 +22,3 @@ export const Toolbar = props => {
     return toolbar
   }
 }
-
-const ToolbarChrome = gloss({
-  flexFlow: 'row',
-  alignItems: 'center',
-  padding: [3, '10%'],
-}).theme((_, theme) => ({
-  background: theme.tabBackground,
-  // borderBottom: [1, theme.borderColor.alpha(0.2)],
-}))

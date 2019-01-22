@@ -1,16 +1,20 @@
 export { color } from '@mcro/color'
-export { Theme, ThemeContext, ThemeProvide } from '@mcro/gloss'
+export {
+  Absolute,
+  Block,
+  Col,
+  FullScreen,
+  Grid,
+  Inline,
+  InlineBlock,
+  InlineFlex,
+  Row,
+  Theme,
+  ThemeContext,
+  ThemeProvide,
+  View,
+} from '@mcro/gloss'
 export * from './Arrow'
-export * from './blocks/Absolute'
-export * from './blocks/Block'
-export * from './blocks/Col'
-export * from './blocks/FullScreen'
-export * from './blocks/Grid'
-export * from './blocks/Inline'
-export * from './blocks/InlineBlock'
-export * from './blocks/InlineFlex'
-export * from './blocks/Row'
-export * from './blocks/View'
 export { ButtonProps, default as Button } from './Button'
 export * from './buttons/ClearButton'
 export * from './Circle'
@@ -26,13 +30,13 @@ export * from './form/Checkbox'
 export * from './form/Input'
 export * from './form/Label'
 export * from './form/SearchInput'
+export { configureUI } from './helpers/configure'
 export * from './helpers/forwardRef'
 export * from './helpers/getTarget'
 export * from './helpers/keycode'
 export * from './helpers/offset'
 export * from './helpers/passProps'
 export * from './helpers/portal'
-export * from './helpers/propsToTextSize'
 export * from './Icon'
 export * from './Image'
 export * from './Modal'

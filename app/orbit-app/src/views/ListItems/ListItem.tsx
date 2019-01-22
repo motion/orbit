@@ -81,7 +81,7 @@ export type ListItemProps = CSSPropertySetStrict &
     padding?: number | number[]
     titleFlex?: number
     subtitleProps?: Object
-    getIndex?: (id: T) => number
+    getIndex?: ((id: number) => number)
     subtitleSpaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any
@@ -180,7 +180,7 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [9, 11]}
+          padding={padding || [8, 11]}
           {...cardProps}
         >
           <div style={{ flexDirection: 'row', width: '100%' }}>
@@ -190,7 +190,11 @@ export default observer(function ListItem(props: ListItemProps) {
                 <Title>
                   {showIcon && (
                     <>
-                      <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
+                      {React.isValidElement(icon) ? (
+                        icon
+                      ) : (
+                        <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
+                      )}
                       <TitleSpace />
                     </>
                   )}
@@ -339,7 +343,7 @@ const ListItemChrome = gloss({
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.25),
+      background: theme.listItemBackgroundSelected || theme.background.alpha(0.15),
     }
   } else {
     listStyle = {

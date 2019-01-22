@@ -12,24 +12,15 @@ export class PaneManagerStore {
     onPaneChange: Function
   }
 
+  paneIndex = 0
+
   get panes() {
     return this.props.panes
   }
 
-  paneIndex = 0
-
-  activePane = react(
-    () => this.panes[this.paneIndex],
-    async (val, { sleep }) => {
-      // keyboard nav people may hold it down to move fast, this makes it more smooth
-      await sleep(50)
-      return val
-    },
-    {
-      deferFirstRun: true,
-      defaultValue: this.props.panes[this.paneIndex],
-    },
-  )
+  get activePane() {
+    return this.panes[this.paneIndex]
+  }
 
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,

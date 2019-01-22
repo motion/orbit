@@ -1,6 +1,7 @@
 import { debugEmit } from '@mcro/black'
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
 import { App } from '@mcro/stores'
+import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
 import { CompositeDisposable } from 'event-kit'
 import * as React from 'react'
@@ -10,6 +11,7 @@ import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import { sleep } from './helpers'
 import { setupTestApp } from './helpers/setupTestApp'
+import { Icon } from './views/Icon'
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly
@@ -17,6 +19,10 @@ import { setupTestApp } from './helpers/setupTestApp'
 if (process.env) {
   process.env.STACK_FILTER = 'true'
 }
+
+configureUI({
+  useIcon: Icon,
+})
 
 configureUseStore({
   onMount: store => {

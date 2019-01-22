@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '../gloss'
 import { Col } from './Col'
 
 export const Absolute = gloss(Col, {

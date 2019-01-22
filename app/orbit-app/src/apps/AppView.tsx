@@ -25,7 +25,7 @@ export type AppViewProps = Pick<
   onAppStore?: Function
 }
 
-export default React.memo(function AppView(props: Props) {
+export default React.memo(function AppView(props: AppViewProps) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // warning should never change it if you pass in a prop
@@ -59,8 +59,6 @@ export default React.memo(function AppView(props: Props) {
       queryStore={stores.queryStore}
       spaceStore={stores.spaceStore}
       paneManagerStore={stores.paneManagerStore}
-      data={{}}
-      updateData={_ => _}
       {...props}
     />
   )

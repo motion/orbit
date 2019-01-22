@@ -1,20 +1,21 @@
 until end of jan:
 
-1. fixes for sources/sync, fix searching within apps, maybe restore lists app
-2. fixes for search, selection, tabs, settingsIndexpane
-3. lists app icon, show in apps, cleanups, add button => search overlay design
-4. hunting down odd bugs and organizing code
-5. actions menu
-6. people app search/select fixes, fixing tray/menu display and interaction
-7. new app pane, command to pop out app into own window / multi apps
-8. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-9. restore menus a bit just actions dropdown + search
-10. hunting down odd bugs and organizing code
-11. get ocr hooked into menu enable/disable and output results
-12. get ocr => memory simple list
-13. work through lists apps a bit
-14. hunting down odd bugs and organizing code
-15.
+- Settings: index pane, mockup account
+-
+
+1. settingsIndexpane, fix tab drag index
+2. add button => search overlay design
+3. new app pane, command+enter to pop out app into own window / multi apps
+4. actions menu
+5. people app search/select fixes, fixing tray/menu display and interaction
+6. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+7. restore menus a bit just actions dropdown + search
+8. hunting down odd bugs and organizing code
+9. get ocr hooked into menu enable/disable and output results
+10. get ocr => memory simple list
+11. work through lists apps a bit
+12. hunting down odd bugs and organizing code
+13.
 
 sorting by prepping to split out work as best possible:
 
@@ -41,7 +42,7 @@ message:
 one month test period. changes in how we work:
 
 - less interruption and less need for sync in schedule, dont stretch your hours too much
-- open a PR when you start, commit every 30-90 minutes so i can track time
+- open a PR when you start, commit every 60 minutes so i can track time
 - post in #status in the morning with days plan
 - we need reduced boilerplate and optimize for speed and less code, its a startup
 - for example focus on merging a pr first that works ok, then note for later improvements
@@ -51,6 +52,9 @@ tasks:
 - add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
+- settings panes
+  - run over and fix them, a lot of breaking things like github not loading repos
+  - can add "enter" key shortcut to toggle selection in table
 - syncers
   - on process exit it should clear all processing Jobs
   - github syncer and drive syncer not showing anything in their setting pane

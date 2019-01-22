@@ -1,21 +1,16 @@
 import { App } from '@mcro/reactron'
+import { Electron } from '@mcro/stores'
+import { useStore } from '@mcro/use-store'
+import { app, clipboard } from 'electron'
 import * as React from 'react'
+import { devTools } from '../helpers/devTools'
+import { ElectronStore } from '../stores/ElectronStore'
+// import { observer } from 'mobx-react-lite'
 import { MenuItems } from './MenuItems'
 import OrbitWindow from './OrbitWindow'
-import { ElectronStore } from '../stores/ElectronStore'
-import { devTools } from '../helpers/devTools'
-import { useStore } from '@mcro/use-store'
-// import { observer } from 'mobx-react-lite'
-import { ShortcutsManager } from './ShortcutsManager'
-import { Electron } from '@mcro/stores'
-import { clipboard, app } from 'electron'
 
 export const OrbitRoot = () => {
   const electronStore = useStore(ElectronStore)
-
-  React.useEffect(() => {
-    new ShortcutsManager()
-  }, [])
 
   React.useEffect(() => {
     Electron.onMessage(msg => {

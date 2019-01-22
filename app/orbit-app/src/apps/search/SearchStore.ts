@@ -116,11 +116,10 @@ export class SearchStore {
       this.queryFilters.dateState,
       always(this.stores.spaceStore.apps),
     ],
-    async ([spaceId, query], { when, setValue, idle, sleep }): Promise<SearchState> => {
+    async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
       // if not on this pane, delay it a bit
       if (!this.isActive) {
-        await sleep(750)
-        await idle()
+        await when(() => this.isActive)
       }
 
       // RESULTS
@@ -213,11 +212,9 @@ export class SearchStore {
             icon,
             appConfig: {
               id: '0',
-              title: `Open app: ${app.name}`,
+              title: `Open ${app.name}`,
               type: AppType.message,
-              data: {
-                icon,
-              },
+              icon,
             },
             onOpen: () => {
               console.log('selecting app...', app.type, app.id)

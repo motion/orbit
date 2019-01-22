@@ -10,9 +10,20 @@ export class PaneManagerStore {
     disabled?: boolean
     panes: Pane[]
     onPaneChange: Function
+    defaultPaneIndex?: number
   }
 
-  paneIndex = 0
+  paneIndex = this.props.defaultPaneIndex || 0
+
+  syncPaneIndexProp = react(
+    () => this.props.defaultPaneIndex,
+    index => {
+      this.paneIndex = index
+    },
+    {
+      deferFirstRun: true,
+    },
+  )
 
   get panes() {
     return this.props.panes

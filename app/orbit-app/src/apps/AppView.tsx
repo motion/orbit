@@ -36,7 +36,6 @@ export default React.memo(function AppView(props: AppViewProps) {
   const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
   if (!AppView) {
-    console.warn('no index view for', props.type, props.viewType, props)
     return null
   }
 

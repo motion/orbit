@@ -1,5 +1,6 @@
 import { App } from '@mcro/stores'
 import { FullScreen, Row, View } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
@@ -8,6 +9,14 @@ export default function BrowserDebugTray({ children }: any) {
   if (IS_ELECTRON) {
     return children
   }
+
+  const { menuStore } = useStoresSafe()
+
+  // set open the first menu by default for dev
+  React.useEffect(() => {
+    menuStore.setPinnedOpen(1, true)
+  })
+
   return (
     <FullScreen>
       <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
@@ -33,7 +42,7 @@ export default function BrowserDebugTray({ children }: any) {
   )
 }
 
-const Target = (props: { id: number }) => {
+const Target = observer((props: { id: number }) => {
   const { menuStore } = useStoresSafe()
   return (
     <View
@@ -43,13 +52,13 @@ const Target = (props: { id: number }) => {
       }}
       onClick={() => {
         console.log('pin', props.id)
-        menuStore.togglePinnedOpen(props.id)
+        menuStore.setPinnedOpen(props.id, true)
       }}
       width={16}
       height={16}
       margin={[0, 5]}
       borderRadius={100}
-      background="#000"
+      background={menuStore.activeMenuIndex === props.id ? '#555' : '#000'}
     />
   )
-}
+})

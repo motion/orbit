@@ -22,10 +22,8 @@ export class SubPaneStore {
   }
 
   get paneInnerNode() {
-    if (!this.paneNode) {
-      return null
-    }
-    return this.paneNode.firstChild.firstChild as HTMLDivElement
+    if (!this.paneNode) return null
+    return this.paneNode.firstChild as HTMLDivElement
   }
 
   get isLeft() {
@@ -158,6 +156,10 @@ export class SubPaneStore {
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
+    console.log('updating height', this.paneInnerNode, height)
+    if (height === 0) {
+      return
+    }
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

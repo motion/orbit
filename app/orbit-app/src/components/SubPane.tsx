@@ -29,7 +29,7 @@ export const SubPane = observer(function SubPane(props: Props) {
   const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
-  const height = props.fullHeight ? 'auto' : subPaneStore.contentHeight
+  const height = props.fullHeight ? 'auto' : subPaneStore.fullHeight
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof props.before === 'function' ? props.before(isActive) : props.before}

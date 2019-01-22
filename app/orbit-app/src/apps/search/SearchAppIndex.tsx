@@ -82,8 +82,6 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         padTop={28}
         items={searchStore.searchState.results}
         query={props.appStore.activeQuery}
-        onSelect={props.onSelectItem}
-        onOpen={props.onOpenItem}
         rowCount={searchStore.remoteRowCount}
         loadMoreRows={searchStore.loadMore}
       />

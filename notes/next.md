@@ -1,5 +1,8 @@
 until end of jan:
 
+- Settings: index pane, mockup account
+-
+
 1. settingsIndexpane, fix tab drag index
 2. add button => search overlay design
 3. new app pane, command+enter to pop out app into own window / multi apps

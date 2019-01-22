@@ -6,11 +6,32 @@ import { StoreContext } from '../../contexts'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
-import { orbitItemsKey, OrbitList, OrbitListProps } from './OrbitList'
+import { OrbitHandleSelect, orbitItemsKey, OrbitList, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   defaultSelected?: number
   isSelectable?: boolean
+}
+
+type SelectContext = {
+  onSelectItem?: OrbitHandleSelect
+  onOpenItem?: OrbitHandleSelect
+}
+
+const SelectableContext = React.createContext({
+  onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
+  onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
+} as SelectContext)
+
+export function ProvideSelectableHandlers({
+  children,
+  ...rest
+}: SelectContext & { children: any }) {
+  return (
+    <MergeContext Context={SelectableContext} value={rest}>
+      {children}
+    </MergeContext>
+  )
 }
 
 // child of SelectionStore, more specifically for Orbit lists
@@ -71,6 +92,7 @@ export default function SelectableList(props: SelectableListProps) {
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = orbitItemsKey(props.items)
   const getItems = React.useCallback(() => props.items, [itemsKey])
+  const selectableProps = React.useContext(SelectableContext)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
     appStore: stores.appStore,
@@ -98,7 +120,7 @@ export default function SelectableList(props: SelectableListProps) {
         case 'open':
           if (props.onOpen) {
             if (selectionStore) {
-              props.onOpen(selectionStore.activeIndex, 'key')
+              props.onOpen(selectionStore.activeIndex, null)
             }
           }
           break
@@ -114,7 +136,13 @@ export default function SelectableList(props: SelectableListProps) {
 
   return (
     <MergeContext Context={StoreContext} value={{ selectionStore }}>
-      <OrbitList scrollToAlignment="center" forwardRef={selectableStore.setListRef} {...props} />
+      <OrbitList
+        scrollToAlignment="center"
+        forwardRef={selectableStore.setListRef}
+        onSelect={selectableProps.onSelectItem}
+        onOpen={selectableProps.onSelectItem}
+        {...props}
+      />
     </MergeContext>
   )
 }

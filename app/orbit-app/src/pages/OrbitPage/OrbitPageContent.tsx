@@ -9,6 +9,7 @@ import AppView from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
+import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 
 export default observer(function OrbitPageContent() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
@@ -20,7 +21,7 @@ export default observer(function OrbitPageContent() {
   React.useEffect(() => {
     return AppGlobalStore.onMessage(AppGlobalStore.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
-      paneManagerStore.setActivePane(101)
+      paneManagerStore.setActivePaneByType('settings')
     })
   }, [])
 
@@ -31,13 +32,14 @@ export default observer(function OrbitPageContent() {
           <OrbitIndexView isHidden={false}>
             {paneManagerStore.panes.map(pane => (
               <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-                <AppView
-                  viewType="index"
-                  id={pane.id}
-                  type={pane.type}
-                  onSelectItem={orbitStore.handleSelectItem}
-                  onAppStore={orbitStore.setAppStore(pane.id)}
-                />
+                <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
+                  <AppView
+                    viewType="index"
+                    id={pane.id}
+                    type={pane.type}
+                    onAppStore={orbitStore.setAppStore(pane.id)}
+                  />
+                </ProvideSelectableHandlers>
               </SubPane>
             ))}
           </OrbitIndexView>

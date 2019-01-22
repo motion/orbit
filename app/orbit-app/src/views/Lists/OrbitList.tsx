@@ -9,7 +9,9 @@ export type SearchableItem = (Bit | PersonBit)[]
 
 export type OrbitHandleSelect = ((index: number, appConfig: AppConfig) => any)
 
-export type OrbitListProps = VirtualListProps & {
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+export type OrbitListProps = Omit<VirtualListProps, 'onSelect' | 'onOpen'> & {
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
   query?: string

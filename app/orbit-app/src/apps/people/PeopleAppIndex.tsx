@@ -32,8 +32,6 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
       itemProps={props.itemProps}
       maxHeight={props.appStore.maxHeight}
       rowCount={results.length}
-      onSelect={props.onSelectItem}
-      onOpen={props.onOpenItem}
     />
   )
 }

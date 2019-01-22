@@ -10,5 +10,5 @@ export default function SourcesAppIndex() {
     ],
   })
 
-  return <SelectableList items={results} />
+  return <SelectableList defaultSelected={0} items={results} />
 }

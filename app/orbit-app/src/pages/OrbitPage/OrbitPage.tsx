@@ -40,6 +40,7 @@ export class OrbitStore {
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
+    console.log('selecting', index, appConfig)
     this.nextItem = { index, appConfig }
   }
 

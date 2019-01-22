@@ -81,7 +81,7 @@ export type ListItemProps = CSSPropertySetStrict &
     padding?: number | number[]
     titleFlex?: number
     subtitleProps?: Object
-    getIndex?: (id: T) => number
+    getIndex?: ((id: number) => number)
     subtitleSpaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any

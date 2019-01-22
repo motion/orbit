@@ -14,8 +14,9 @@ import {
 import * as React from 'react'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { configure } from './helpers/configure'
 import { UIContext, UIContextType } from './helpers/contexts'
-import { Icon } from './Icon'
+import { Icon as UIIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { Tooltip } from './Tooltip'
 
@@ -118,6 +119,7 @@ export default React.memo(function Surface(props: SurfaceProps) {
     ...rest
   } = props
 
+  const Icon = configure.useIcon || UIIcon
   const segmentedStyle = getSegmentRadius(props, uiContext)
 
   const stringIcon = typeof icon === 'string'

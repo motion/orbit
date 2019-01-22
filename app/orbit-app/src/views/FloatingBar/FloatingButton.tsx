@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@mcro/ui'
 import * as React from 'react'
 
-export function ControlButton(props: ButtonProps) {
+export function FloatingButton(props: ButtonProps) {
   return (
     <Button
       borderWidth={0}

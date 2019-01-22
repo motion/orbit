@@ -3,11 +3,11 @@ import { AppType, PersonBitModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import * as React from 'react'
 import NoResultsDialog from '../../components/NoResultsDialog'
+import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
-import { ControlButton } from '../../views/ControlButtons'
+import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import SelectableList from '../../views/Lists/SelectableList'
-import { TopControls } from '../../views/TopControls'
 import { AppProps } from '../AppProps'
 
 export default function PeopleAppIndex(props: AppProps<AppType.people>) {
@@ -27,10 +27,10 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
 
   return (
     <>
-      <TopControls>
+      <FloatingBar>
         <View flex={1} />
-        <ControlButton icon="funnel">All</ControlButton>
-      </TopControls>
+        <OrbitFilterIntegrationButton />
+      </FloatingBar>
       <SelectableList
         defaultSelected={0}
         items={results}

@@ -7,6 +7,7 @@ import { QueryStore } from './QueryStore'
 import { MarkType } from './types'
 
 export type SearchFilter = {
+  id: number
   type: string
   integration: IntegrationType
   name: string
@@ -122,10 +123,11 @@ export class QueryFilterStore {
   }
 
   get integrationFilters(): SearchFilter[] {
-    return this.sourcesStore.activeSources.map(app => ({
+    return this.sourcesStore.activeSources.map((app, id) => ({
+      id,
       type: 'source',
       integration: app.integration,
-      name: app.appName,
+      name: app.display.name,
       active: Object.keys(this.exclusiveFilters).length
         ? this.exclusiveFilters[app.integration]
         : false,

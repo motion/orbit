@@ -1,9 +1,11 @@
-import { validCSSAttr } from '@mcro/css'
+import { CSSPropertySet, validCSSAttr } from '@mcro/css'
 import { gloss } from '../gloss'
 import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
-export const View = gloss().theme((props, theme) => ({
+export type ViewProps = React.HTMLAttributes<'div'> & CSSPropertySet
+
+export const View = gloss<ViewProps>().theme((props, theme) => ({
   ...propsToStyles(props, theme),
   ...propsToTextSize(props),
 }))

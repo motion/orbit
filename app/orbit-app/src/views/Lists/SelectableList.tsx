@@ -3,10 +3,11 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppStore } from '../../apps/AppStore'
 import { StoreContext } from '../../contexts'
+import { isEqualReferential } from '../../helpers/isEqualReferential'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
-import { OrbitHandleSelect, orbitItemsKey, OrbitList, OrbitListProps } from './OrbitList'
+import OrbitList, { OrbitHandleSelect, orbitItemsKey, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   defaultSelected?: number
@@ -86,7 +87,7 @@ class SelectableStore {
   )
 }
 
-export default function SelectableList(props: SelectableListProps) {
+export default React.memo(function SelectableList(props: SelectableListProps) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
@@ -99,8 +100,6 @@ export default function SelectableList(props: SelectableListProps) {
     itemsKey,
     getItems,
   })
-
-  console.log('rendering selectable list...', props)
 
   React.useEffect(() => {
     if (
@@ -138,6 +137,7 @@ export default function SelectableList(props: SelectableListProps) {
     <MergeContext Context={StoreContext} value={{ selectionStore }}>
       <OrbitList
         scrollToAlignment="center"
+        itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
         onSelect={selectableProps.onSelectItem}
         onOpen={selectableProps.onSelectItem}
@@ -145,4 +145,4 @@ export default function SelectableList(props: SelectableListProps) {
       />
     </MergeContext>
   )
-}
+}, isEqualReferential)

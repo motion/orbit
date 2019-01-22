@@ -1,15 +1,21 @@
 import * as React from 'react'
 import { useContext } from 'react'
+import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 
-export const MergeContext = ({
-  Context,
-  value,
-  children,
-}: {
-  Context: React.Context<any>
-  value: Object
-  children: React.ReactNode
-}) => {
-  const current = useContext(Context)
-  return <Context.Provider value={{ ...current, ...value }}>{children}</Context.Provider>
-}
+// heavily memoized to avoid updates...
+
+export const MergeContext = memoIsEqualDeep(
+  ({
+    Context,
+    value,
+    children,
+  }: {
+    Context: React.Context<any>
+    value: Object
+    children: React.ReactNode
+  }): any => {
+    const context = useContext(Context)
+
+    return <Context.Provider value={{ ...context, ...value }}>{children}</Context.Provider>
+  },
+)

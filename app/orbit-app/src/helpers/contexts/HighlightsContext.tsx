@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { MergeContext } from '../../views/MergeContext'
 
 const defaultValue = {
   words: [] as string[],
@@ -15,7 +16,8 @@ export const ProvideHighlightsContextWithDefaults = ({
   value: Partial<typeof defaultValue>
   children: any
 }) => (
-  <HighlightsContext.Provider
+  <MergeContext
+    Context={HighlightsContext}
     value={{
       words: [],
       maxSurroundChars: Infinity,
@@ -24,5 +26,5 @@ export const ProvideHighlightsContextWithDefaults = ({
     }}
   >
     {children}
-  </HighlightsContext.Provider>
+  </MergeContext>
 )

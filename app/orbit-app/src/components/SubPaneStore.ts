@@ -121,6 +121,7 @@ export class SubPaneStore {
       ensure('is active', isActive)
       ensure('onChangeHeight', !!this.props.onChangeHeight)
       if (this.props.onChangeHeight) {
+        console.log('onchangeheight', height, this.props.id)
         this.props.onChangeHeight(height)
       }
     },
@@ -151,7 +152,7 @@ export class SubPaneStore {
 
   updateHeight = async () => {
     if (!this.paneInnerNode) {
-      console.warn('no pane inner node...')
+      console.warn('no pane inner node...', this.props.id, this.props)
       return
     }
     // this gets full content height

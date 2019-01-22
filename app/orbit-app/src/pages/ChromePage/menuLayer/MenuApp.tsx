@@ -22,7 +22,7 @@ function MenuApp({ menuId, ...appProps }: MenuAppProps) {
 
   return (
     <SubPane
-      id={appProps.id}
+      id={menuId}
       type={appProps.type}
       paddingLeft={0}
       paddingRight={0}

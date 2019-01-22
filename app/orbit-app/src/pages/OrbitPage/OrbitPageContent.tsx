@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import AppView from '../../apps/AppView'
+import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
@@ -60,13 +61,16 @@ export default observer(function OrbitPageContent() {
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   return (
-    <AppView
-      isActive
-      viewType="main"
-      id={props.pane.id}
-      type={props.pane.type}
-      appConfig={orbitStore.activeConfig[props.pane.type]}
-    />
+    <>
+      <OrbitToolBarRender id={props.pane.id} />
+      <AppView
+        isActive
+        viewType="main"
+        id={props.pane.id}
+        type={props.pane.type}
+        appConfig={orbitStore.activeConfig[props.pane.type]}
+      />
+    </>
   )
 })
 

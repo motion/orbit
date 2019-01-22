@@ -17,7 +17,15 @@ export default function AppsAppIndex(props: AppProps<AppType.apps>) {
     group: 'Installed Apps',
   }))
   const results = [
-    ...activeItems,
+    {
+      id: -1,
+      title: 'Installed apps',
+      icon: 'grid48',
+      subtitle: `${activeItems.map(x => x.title).join(', ')}`,
+      appConfig: {
+        type: 'installed',
+      },
+    },
     ...activeItems.map(x => ({
       ...x,
       type: 'add',

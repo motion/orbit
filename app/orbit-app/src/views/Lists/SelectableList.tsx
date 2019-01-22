@@ -113,7 +113,6 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
 
   React.useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
-      console.log('setting active index', props.defaultSelected)
       selectionStore.setActiveIndex(props.defaultSelected)
     }
 

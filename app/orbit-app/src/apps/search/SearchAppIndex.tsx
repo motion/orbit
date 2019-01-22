@@ -4,6 +4,7 @@ import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
+import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { ControlButton } from '../../views/ControlButtons'
 import SelectableList from '../../views/Lists/SelectableList'
@@ -11,18 +12,21 @@ import { TopControls } from '../../views/TopControls'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
 import { SearchStore } from './SearchStore'
+import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 import SearchFilters from './views/SearchFilters'
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const searchStore = useStore(SearchStore, props)
   const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
-  console.log('rendering SearchAppIndex...', props)
   return (
     <>
-      {/* <Toolbar>
+      <OrbitToolbar>
         <OrbitSuggestionBar />
-      </Toolbar> */}
+      </OrbitToolbar>
+
+      {/* TODO api for handling suggestions */}
+      {/* <OrbitSuggestions items={} /> */}
 
       <TopControls>
         <Popover

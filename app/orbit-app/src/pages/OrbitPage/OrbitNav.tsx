@@ -203,9 +203,11 @@ function PopoutIcon(props) {
     <Button
       circular
       borderWidth={0}
-      size={0.65}
+      width={18}
+      height={18}
       icon="downArrow"
-      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 3, y: -3 } }}
+      background="transparent"
+      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 5, y: -5 } }}
       {...props}
       style={{
         // transition: 'opacity ease 200ms 200ms',

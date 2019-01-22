@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { gloss } from '@mcro/gloss'
+import { Absolute, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -116,7 +116,6 @@ export class HeaderStore {
 export default observer(function OrbitHeader() {
   const { queryStore, paneManagerStore, orbitStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
-  const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
   return (
     <OrbitHeaderContainer
       opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
@@ -143,8 +142,6 @@ export default observer(function OrbitHeader() {
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
               <OrbitHeaderButtons />
-              {/* TODO this can be <OrbitAutocomplete /> */}
-              {!!activeAppStore ? activeAppStore.toolbar : null}
             </After>
           </FakeInput>
           <Button
@@ -157,10 +154,23 @@ export default observer(function OrbitHeader() {
           </Button>
           <Row flex={1} />
         </Row>
+
+        <OrbitAutoComplete />
       </HeaderTop>
 
       <OrbitNav />
     </OrbitHeaderContainer>
+  )
+})
+
+const OrbitAutoComplete = observer(function OrbitAutoComplete() {
+  const { orbitStore } = useStoresSafe()
+  const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
+  return null
+  return (
+    <Absolute bottom={0} left={0}>
+      {activeAppStore.toolbar || null}
+    </Absolute>
   )
 })
 
@@ -173,6 +183,7 @@ const HeaderTop = gloss({
   padding: [5, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
+  position: 'relative',
 })
 
 const After = gloss({

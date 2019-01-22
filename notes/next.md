@@ -1,13 +1,14 @@
 until end of jan:
 
-1. settingsIndexpane, fix tab drag index
-2. add button => search overlay design
-3. new app pane, command+enter to pop out app into own window / multi apps
-4. actions menu
-5. settings panes:
-   1. general settings
-   2. my account
-   3. manage spaces
+fix tab drag index
+add button => search overlay design
+new app pane
+command+enter to pop out app into own window / multi apps
+actions menu
+settings panes:
+
+2.  my account
+3.  manage spaces
 
 ---
 

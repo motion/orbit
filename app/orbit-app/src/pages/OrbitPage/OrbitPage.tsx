@@ -40,7 +40,6 @@ export class OrbitStore {
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
-    console.log('selecting', index, appConfig)
     this.nextItem = { index, appConfig }
   }
 
@@ -56,7 +55,6 @@ export class OrbitStore {
       }
 
       ensure('app config', !!appConfig)
-      console.log('select', index, appConfig, this.activePane)
 
       const paneType = this.activePane.type
       if (!isEqual(this.activeConfig[paneType], appConfig)) {

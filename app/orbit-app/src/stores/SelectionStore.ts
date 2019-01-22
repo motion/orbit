@@ -50,7 +50,6 @@ export class SelectionStore {
   }
 
   setActiveIndex = (val: number) => {
-    console.trace('setting', val)
     this.activeIndex = val
   }
 

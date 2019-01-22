@@ -25,8 +25,6 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
     return <NoResultsDialog subName="the directory" />
   }
 
-  console.log('render people index...')
-
   return (
     <>
       <TopControls>

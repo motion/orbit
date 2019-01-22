@@ -7,6 +7,10 @@ import { SettingsAppGeneral } from './SettingsAppGeneral'
 import SettingsAppSpaces from './SettingsAppSpaces'
 
 export default observer(function SettingsAppMain(props: AppProps<AppType.settings>) {
+  if (!props.appConfig) {
+    return null
+  }
+
   switch (props.appConfig.type as any) {
     case 'general':
       return <SettingsAppGeneral {...props} />

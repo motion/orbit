@@ -60,7 +60,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
           elevation={4}
           theme="light"
           target={
-            <ControlButton icon="funnel">
+            <ControlButton icon="funnel" width={46}>
               {queryFilters.hasIntegrationFilters
                 ? queryFilters.integrationFilters.filter(x => x.active).length
                 : 'All'}

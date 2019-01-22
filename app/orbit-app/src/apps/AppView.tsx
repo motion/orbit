@@ -10,15 +10,7 @@ import { AppStore } from './AppStore'
 
 export type AppViewProps = Pick<
   AppProps<any>,
-  | 'id'
-  | 'title'
-  | 'viewType'
-  | 'type'
-  | 'isActive'
-  | 'itemProps'
-  | 'appConfig'
-  | 'onSelectItem'
-  | 'onOpenItem'
+  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
 > & {
   title?: string
   appStore?: AppStore<any>
@@ -42,12 +34,10 @@ export default React.memo(function AppView(props: AppViewProps) {
   }
 
   const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
+
   if (!AppView) {
-    return (
-      <div>
-        no app view for {props.type} {props.viewType}
-      </div>
-    )
+    console.warn('no index view for', props.type, props.viewType, props)
+    return null
   }
 
   const appView = (

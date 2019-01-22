@@ -7,6 +7,7 @@ import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
 import { home } from './home'
 import { lists } from './lists'
+import { onboard } from './onboard'
 import { people } from './people/people'
 import { search } from './search'
 import { settings } from './settings'
@@ -21,7 +22,7 @@ type App = {
 
 type AppsIndex = { [key in AppType]: App }
 
-export const apps = memoizeAll({
+export const apps = memoizeAny({
   search,
   people,
   topics,
@@ -31,18 +32,24 @@ export const apps = memoizeAll({
   bit,
   home,
   apps: appsApps,
+  onboard,
   message: {
     main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,
   },
 }) as AppsIndex
 
-function memoizeAll(apps) {
+function memoizeAny(apps) {
   const res = {}
   for (const key in apps) {
-    res[key] = {
-      main: memoIsEqualDeep(apps[key].main),
-      index: memoIsEqualDeep(apps[key].index),
+    const main = apps[key].main
+    const index = apps[key].index
+    res[key] = {}
+    if (main) {
+      res[key].main = memoIsEqualDeep(main)
+    }
+    if (index) {
+      res[key].index = memoIsEqualDeep(index)
     }
   }
   return res

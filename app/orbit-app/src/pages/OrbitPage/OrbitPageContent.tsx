@@ -5,6 +5,7 @@ import { Col, Row, Sidebar, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
+import { apps } from '../../apps/apps'
 import AppView from '../../apps/AppView'
 import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { SubPane } from '../../components/SubPane'
@@ -29,7 +30,11 @@ export default observer(function OrbitPageContent() {
   return (
     <Col flex={1}>
       <Row flex={1}>
-        <Sidebar width={300} minWidth={100} maxWidth={500}>
+        <Sidebar
+          width={apps[orbitStore.activePane.type].index ? 300 : 0}
+          minWidth={100}
+          maxWidth={500}
+        >
           <OrbitIndexView isHidden={false}>
             {paneManagerStore.panes.map(pane => (
               <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>

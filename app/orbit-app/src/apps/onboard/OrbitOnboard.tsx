@@ -1,49 +1,25 @@
 import { sleep } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 import { command } from '@mcro/model-bridge'
+import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { ItemType, OrbitIntegration } from '../../sources/types'
 import { Title, VerticalSpace } from '../../views'
 import { BottomControls } from '../../views/BottomControls'
 import { SimpleItem } from '../../views/SimpleItem'
 import { default as Slider, SliderPane } from '../../views/Slider'
-import BlurryGuys from './BlurryGuys'
-import { SetupProxyCommand, CheckProxyCommand } from '@mcro/models'
-import { gloss } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
-import { AllStores } from '../../contexts'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useStore } from '@mcro/use-store'
 
 const framePad = 30
-export const numFrames = 3
-
-const Centered = gloss({
-  margin: 'auto',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-})
-
-const Unpad = gloss({
-  margin: [0, -framePad],
-})
-
-const AddButton = ({ disabled, ...props }) =>
-  disabled ? (
-    <Button chromeless disabled {...props} />
-  ) : (
-    <Theme theme={{ background: 'green', color: '#fff' }}>
-      <Button fontWeight={700} {...props} />
-    </Theme>
-  )
-
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
-  props: AllStores
-
+  stores = useHook(useStoresSafe)
   acceptedMessage = ''
   accepted = null
   curFrame = 0
@@ -78,9 +54,9 @@ class OnboardStore {
     },
     1: () => {},
     2: async () => {
-      this.props.paneManagerStore.setActivePane('home')
+      this.stores.paneManagerStore.setActivePaneByType('home')
       // save setting
-      await this.props.settingStore.update({
+      await this.stores.settingStore.update({
         hasOnboarded: true,
       })
     },
@@ -103,9 +79,9 @@ const filterApps = (app: OrbitIntegration<ItemType>) =>
 
 export default observer(function OrbitOnboard() {
   const stores = useStoresSafe()
-  const store = useStore(OnboardStore, stores)
+  const store = useStore(OnboardStore)
 
-  if (stores.paneManagerStore.activePane !== 'onboard') {
+  if (stores.paneManagerStore.activePane.type !== 'onboard') {
     return null
   }
   // for smart finding integrations...
@@ -271,3 +247,23 @@ export default observer(function OrbitOnboard() {
     </>
   )
 })
+
+const Centered = gloss({
+  margin: 'auto',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+})
+
+const Unpad = gloss({
+  margin: [0, -framePad],
+})
+
+const AddButton = ({ disabled, ...props }) =>
+  disabled ? (
+    <Button chromeless disabled {...props} />
+  ) : (
+    <Theme theme={{ background: 'green', color: '#fff' }}>
+      <Button fontWeight={700} {...props} />
+    </Theme>
+  )

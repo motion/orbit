@@ -23,7 +23,6 @@ import { AppWrapper } from '../../views'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
-import OrbitOnboard from './OrbitOnboard'
 import OrbitPageContent from './OrbitPageContent'
 
 export class OrbitStore {
@@ -100,8 +99,6 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <InnerChrome>
                 <OrbitPageContent />
               </InnerChrome>
-
-              <OrbitOnboard />
             </Chrome>
           </AppWrapper>
         </Theme>

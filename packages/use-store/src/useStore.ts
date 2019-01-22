@@ -96,6 +96,11 @@ const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
     storeInstance['__updateProps'] = updateProps
   }
 
+  // call this before automagic runs...
+  if (globalOptions.onMount) {
+    globalOptions.onMount(storeInstance)
+  }
+
   // @ts-ignore
   storeInstance.automagic({
     isSubscribable: x => x && typeof x.subscribe === 'function',
@@ -152,9 +157,6 @@ export function useStore<P, A extends { props?: P } | any>(
   // stores can use didMount and willUnmount
   useEffect(() => {
     store.didMount && store.didMount()
-    if (globalOptions.onMount) {
-      globalOptions.onMount(store)
-    }
     return () => {
       store.unmounted = true
       store.willUnmount && store.willUnmount()

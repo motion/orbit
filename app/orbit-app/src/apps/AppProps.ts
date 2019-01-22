@@ -7,7 +7,6 @@ import { SettingStore } from '../stores/SettingStore'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
-import { OrbitHandleSelect } from '../views/Lists/OrbitList'
 import { AppStore } from './AppStore'
 
 export type AppProps<Type extends AppType> = {
@@ -15,8 +14,6 @@ export type AppProps<Type extends AppType> = {
   viewType: 'index' | 'main' | 'setup'
   type: Type
   title?: string
-  onSelectItem?: OrbitHandleSelect
-  onOpenItem?: OrbitHandleSelect
   appStore: AppStore<Type>
   spaceStore: SpaceStore
   sourcesStore: SourcesStore

@@ -1,21 +1,24 @@
 until end of jan:
 
-- Settings: index pane, mockup account
--
-
 1. settingsIndexpane, fix tab drag index
 2. add button => search overlay design
 3. new app pane, command+enter to pop out app into own window / multi apps
 4. actions menu
-5. people app search/select fixes, fixing tray/menu display and interaction
-6. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-7. restore menus a bit just actions dropdown + search
-8. hunting down odd bugs and organizing code
-9. get ocr hooked into menu enable/disable and output results
-10. get ocr => memory simple list
-11. work through lists apps a bit
-12. hunting down odd bugs and organizing code
-13.
+5. settings panes:
+   1. general settings
+   2. my account
+   3. manage spaces
+
+---
+
+6. people app search/select fixes, fixing tray/menu display and interaction
+7. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+8. restore menus a bit just actions dropdown + search
+9. hunting down odd bugs and organizing code
+10. get ocr hooked into menu enable/disable and output results
+11. get ocr => memory simple list
+12. work through lists apps a bit
+13. hunting down odd bugs and organizing code
 
 sorting by prepping to split out work as best possible:
 

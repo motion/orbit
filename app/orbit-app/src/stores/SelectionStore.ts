@@ -36,7 +36,7 @@ export class SelectionStore {
   selectEvent: SelectEvent = SelectEvent.click
   leaveIndex = -1
   lastSelectAt = 0
-  _activeIndex = this.props.defaultSelected || -1
+  _activeIndex = typeof this.props.defaultSelected === 'number' ? this.props.defaultSelected : -1
   movesMap: MovesMap[] | null = null
 
   get activeIndex() {
@@ -50,6 +50,7 @@ export class SelectionStore {
   }
 
   setActiveIndex = (val: number) => {
+    console.trace('setting', val)
     this.activeIndex = val
   }
 
@@ -68,17 +69,9 @@ export class SelectionStore {
     },
   )
 
-  clearSelectedOnClosePeek = react(
-    () => !!App.peekState && !!App.peekState.target,
-    target => {
-      ensure('no target and active index', !target && this.hasActiveIndex)
-      this.clearSelected()
-    },
-  )
-
   clearSelected = () => {
     this.leaveIndex = -1
-    this.activeIndex = -1
+    this.setActiveIndex(-1)
   }
 
   getHoverSettler = hoverSettler({
@@ -126,7 +119,7 @@ export class SelectionStore {
       if (typeof index !== 'number') {
         console.error('index is not a number', index)
       } else {
-        this.activeIndex = index
+        this.setActiveIndex(index)
       }
     }
   }

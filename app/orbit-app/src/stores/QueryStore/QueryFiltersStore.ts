@@ -1,10 +1,10 @@
-import { store, react, ensure, always } from '@mcro/black'
-import { SourcesStore } from '../SourcesStore'
+import { always, ensure, react, store } from '@mcro/black'
+import { IntegrationType } from '@mcro/models'
 import { memoize } from 'lodash'
-import { MarkType } from './types'
+import { SourcesStore } from '../SourcesStore'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
-import { IntegrationType } from '@mcro/models'
+import { MarkType } from './types'
 
 export type SearchFilter = {
   type: string
@@ -65,7 +65,6 @@ export class QueryFilterStore {
   }
 
   isActive = querySegment => !this.disabledFilters[querySegment.text.toLowerCase().trim()]
-
   isntFilter = querySegment => !querySegment.type
   isFilter = querySegment => !!querySegment.type
 
@@ -118,10 +117,6 @@ export class QueryFilterStore {
     return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3].toLowerCase()])
   }
 
-  get hasExclusiveFilters() {
-    return Object.keys(this.exclusiveFilters).length
-  }
-
   get hasIntegrationFilters() {
     return this.integrationFilters.some(x => x.active)
   }
@@ -131,7 +126,9 @@ export class QueryFilterStore {
       type: 'source',
       integration: app.integration,
       name: app.appName,
-      active: this.hasExclusiveFilters ? this.exclusiveFilters[app.integration] : false,
+      active: Object.keys(this.exclusiveFilters).length
+        ? this.exclusiveFilters[app.integration]
+        : false,
     }))
   }
 
@@ -235,13 +232,13 @@ export class QueryFilterStore {
   }
 
   integrationFilterToggler = memoize((filter: SearchFilter) => {
-    return () => this.toggleExclusiveFilter(filter)
+    return () => this.toggleIntegrationFilter(filter)
   })
 
-  toggleExclusiveFilter = (filter: SearchFilter) => {
+  toggleIntegrationFilter = (filter: SearchFilter) => {
     this.exclusiveFilters = {
       ...this.exclusiveFilters,
-      [filter.type]: !this.exclusiveFilters[filter.type],
+      [filter.integration]: !this.exclusiveFilters[filter.integration],
     }
   }
 

@@ -16,6 +16,7 @@ import SearchFilters from './views/SearchFilters'
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const searchStore = useStore(SearchStore, props)
   const { queryStore } = useStoresSafe()
+  const { queryFilters } = queryStore
   console.log('rendering SearchAppIndex...', props)
   return (
     <>
@@ -38,14 +39,14 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         >
           <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
             <DateRangePicker
-              onChange={queryStore.queryFilters.onChangeDate}
-              ranges={[queryStore.queryFilters.dateState]}
+              onChange={queryFilters.onChangeDate}
+              ranges={[queryFilters.dateState]}
             />
           </View>
         </Popover>
         <View width={4} />
-        <ControlButton onClick={queryStore.queryFilters.toggleSortBy} tooltip="Sort by">
-          {queryStore.queryFilters.sortBy}
+        <ControlButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+          {queryFilters.sortBy}
         </ControlButton>
         <View flex={1} />
         <Popover
@@ -58,7 +59,13 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
           borderRadius={6}
           elevation={4}
           theme="light"
-          target={<ControlButton icon="funnel">All</ControlButton>}
+          target={
+            <ControlButton icon="funnel">
+              {queryFilters.hasIntegrationFilters
+                ? queryFilters.integrationFilters.filter(x => x.active).length
+                : 'All'}
+            </ControlButton>
+          }
         >
           <SearchFilters />
         </Popover>

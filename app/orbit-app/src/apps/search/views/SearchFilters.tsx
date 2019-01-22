@@ -12,8 +12,6 @@ type Props = {
   width?: number
 }
 
-export const FilterItem = props => <ListItem size={0.9} sizePadding={0.8} {...props} />
-
 export default observer(function SearchFilters(props: Props) {
   const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
@@ -24,25 +22,15 @@ export default observer(function SearchFilters(props: Props) {
     <Col {...props}>
       {queryFilters.integrationFilters.map((filter, i) => {
         return (
-          <FilterItem
+          <ListItem
             key={`${filter.integration}${i}`}
-            active={filter.active}
             width={200}
             onClick={queryFilters.integrationFilterToggler(filter)}
-            icon={<Icon name={filter.integration} size={16} />}
+            icon={<Icon name={filter.integration} size={16} /> as any}
             title={filter.name}
-            // {...filter.active && {
-            //   opacity: 1,
-            // }}
-            // {...!filter.active && {
-            //   opacity: 0.5,
-            // }}
-            // hoverStyle={{
-            //   opacity: filter.active ? 1 : 0.75,
-            // }}
-            // activeStyle={{
-            //   opacity: 1,
-            // }}
+            after={
+              filter.active ? <Icon margin="auto" name="check" color="#3AD052" size={10} /> : null
+            }
           />
         )
       })}

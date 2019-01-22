@@ -182,6 +182,7 @@ const OrbitTab = ({
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
           opacity={hovered ? 0.2 : 0}
           right={sidePad - 8}
+          tooltip="Open"
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()

@@ -11,7 +11,7 @@ import { WindowCloseButton } from '../../views/WindowControls'
 import OrbitHeaderButtons from './OrbitHeaderButtons'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
-import OrbitSwitch from './OrbitSwitch'
+import OrbitSwitch from './OrbitSpaceSwitch'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)

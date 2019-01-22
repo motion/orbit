@@ -81,7 +81,7 @@ const createNewSpace = () => {
   })
 }
 
-export default observer(function OrbitSwitch(props: Props) {
+export default observer(function OrbitSpaceSwitch(props: Props) {
   const stores = useStoresSafe()
   const store = useStore(SpaceSwitchStore, props)
 

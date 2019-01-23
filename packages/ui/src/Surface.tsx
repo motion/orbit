@@ -223,7 +223,7 @@ const SurfaceFrame = gloss(View, {
   position: 'relative',
 }).theme((props, theme) => {
   // :hover, :focus, :active
-  const { themeStyles, themeStylesFromProps } = propsToThemeStyles(props, theme, true)
+  const themeStyles = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
   // circular
   const circularStyles = props.circular && {
@@ -241,7 +241,6 @@ const SurfaceFrame = gloss(View, {
     : {
         ...(!props.chromeless && themeStyles['&:hover']),
         ...propStyles['&:hover'],
-        ...(themeStylesFromProps && themeStylesFromProps['&:hover']),
       }
   return alphaColor(
     {
@@ -270,8 +269,6 @@ const SurfaceFrame = gloss(View, {
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       ...propStyles,
-      // ...whereas theme styles passed in as ovverrides go in here
-      ...themeStylesFromProps,
       ...(!props.chromeless &&
         props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
       ...propsToTextSize(props),

@@ -1,15 +1,15 @@
-import { gloss } from '@mcro/gloss'
-import { App } from '@mcro/models'
-import { Button, Text, Tooltip, View } from '@mcro/ui'
-import { capitalize } from 'lodash'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { useActiveApps } from '../../hooks/useActiveApps'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
-import { Icon } from '../../views/Icon'
+import { gloss } from '@mcro/gloss';
+import { App } from '@mcro/models';
+import { Button, Text, Tooltip, View } from '@mcro/ui';
+import { capitalize } from 'lodash';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { useActiveApps } from '../../hooks/useActiveApps';
+import { useActiveSpace } from '../../hooks/useActiveSpace';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig';
+import { Icon } from '../../views/Icon';
 
 const height = 26
 const inactiveOpacity = 0.8
@@ -169,14 +169,11 @@ const OrbitTab = ({
   className = '',
   ...props
 }: TabProps) => {
-  const [hovered, setHovered] = React.useState(false)
   const button = (
     <NavButtonChrome
       className={`undraggable ${className}`}
       isActive={isActive}
       sidePad={sidePad}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       {...props}
     >
       {children}
@@ -196,7 +193,6 @@ const OrbitTab = ({
       {!!onClickPopout && (
         <PopoutIcon
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-          opacity={hovered ? 0.2 : 0}
           right={sidePad - 8}
           tooltip="Open"
           onClick={e => {
@@ -224,13 +220,13 @@ function PopoutIcon(props) {
       icon="downArrow"
       background="transparent"
       iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 5, y: -5 } }}
-      {...props}
-      style={{
-        // transition: 'opacity ease 200ms 200ms',
-        position: 'absolute',
-        top: height / 2 - 9,
-        ...props.style,
+      opacity={0}
+      top={height / 2 - 9}
+      position="absolute"
+      hoverStyle={{
+        opacity: 0.2,
       }}
+      {...props}
     />
   )
 }

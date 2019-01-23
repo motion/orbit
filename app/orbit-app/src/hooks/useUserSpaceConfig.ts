@@ -1,5 +1,5 @@
-import { save } from '@mcro/model-bridge'
-import { Space, User, UserModel } from '@mcro/models'
+import { loadOne, save } from '@mcro/model-bridge'
+import { Space, SpaceModel, User, UserModel } from '@mcro/models'
 import immer from 'immer'
 import { useEffect } from 'react'
 import { useActiveSpace } from './useActiveSpace'
@@ -16,18 +16,17 @@ export function useUserSpaceConfig(): [SpaceConfig, (next: Partial<SpaceConfig>)
 
   useEnsureUserSpaceConfig(activeUser, activeSpace)
 
-  const spaceConfig = (activeUser && activeUser.spaceConfig[activeSpace.id]) || DEFAULT_SPACE_CONFIG
+  const spaceConfig =
+    (activeUser && activeSpace && activeUser.spaceConfig[activeSpace.id]) || DEFAULT_SPACE_CONFIG
 
-  const updateSpaceConfig = next => {
-    if (!activeUser) {
-      console.warn('no user!!!!!!!')
-      return
-    }
+  const updateSpaceConfig = async next => {
+    const user = await loadOne(UserModel, { args: {} }) // TODO loadOne should allow empty args
+    const space = await loadOne(SpaceModel, { args: { where: { id: user.activeSpace } } })
     save(
       UserModel,
       immer(activeUser, user => {
-        const cur = user.spaceConfig[activeSpace.id]
-        user.spaceConfig[activeSpace.id] = {
+        const cur = user.spaceConfig[space.id]
+        user.spaceConfig[space.id] = {
           ...cur,
           ...next,
         }

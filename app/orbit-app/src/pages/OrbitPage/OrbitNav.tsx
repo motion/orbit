@@ -1,15 +1,15 @@
-import { gloss } from '@mcro/gloss';
-import { App } from '@mcro/models';
-import { Button, Text, Tooltip, View } from '@mcro/ui';
-import { capitalize } from 'lodash';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useActiveApps } from '../../hooks/useActiveApps';
-import { useActiveSpace } from '../../hooks/useActiveSpace';
-import { useStoresSafe } from '../../hooks/useStoresSafe';
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig';
-import { Icon } from '../../views/Icon';
+import { gloss, Row } from '@mcro/gloss'
+import { App } from '@mcro/models'
+import { Button, Text, Tooltip, View } from '@mcro/ui'
+import { capitalize } from 'lodash'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { Icon } from '../../views/Icon'
 
 const height = 26
 const inactiveOpacity = 0.8
@@ -32,11 +32,11 @@ const SortableTab = SortableElement((props: TabProps) => {
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
   return (
-    <>
+    <Row flex={3}>
       {props.items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
-    </>
+    </Row>
   )
 })
 

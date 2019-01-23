@@ -1,5 +1,5 @@
 import { App } from '@mcro/stores'
-import { FullScreen, Row, View } from '@mcro/ui'
+import { Absolute, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
@@ -14,11 +14,12 @@ export default function BrowserDebugTray({ children }: any) {
 
   // set open the first menu by default for dev
   React.useEffect(() => {
-    menuStore.setPinnedOpen(1, true)
+    menuStore
+    // .setPinnedOpen(1, true)
   })
 
   return (
-    <FullScreen>
+    <Absolute top={0} left={0} right={0}>
       <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
         <View
           onMouseLeave={() =>
@@ -38,7 +39,7 @@ export default function BrowserDebugTray({ children }: any) {
       <View position="relative" flex={1}>
         {children}
       </View>
-    </FullScreen>
+    </Absolute>
   )
 }
 

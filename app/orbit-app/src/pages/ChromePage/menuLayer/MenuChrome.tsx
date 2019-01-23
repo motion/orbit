@@ -58,6 +58,7 @@ export const MenuChrome = observer(function MenuChrome(props: { children: any })
         }}
       >
         <Popover
+          pointerEvents="all"
           noPortal
           open
           background

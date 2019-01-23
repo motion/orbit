@@ -75,7 +75,7 @@ const Pane = gloss(UI.View, {
   overflow: 'hidden',
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
-  pointerEvents: isActive ? 'auto' : 'inherit',
+  pointerEvents: isActive ? 'inherit' : 'none',
   transform: {
     x: isActive ? 0 : isLeft ? -10 : 10,
   },

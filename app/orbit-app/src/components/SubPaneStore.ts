@@ -157,7 +157,6 @@ export class SubPaneStore {
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
-    console.log('updating height', this.paneInnerNode, height)
     if (height === 0) {
       return
     }

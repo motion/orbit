@@ -408,6 +408,7 @@ export class MenuStore {
   handleMouseEvent = react(
     () => this.mouseEvent,
     async (event, { sleep, when }) => {
+      console.log('handling mouse', this.isOpenFast, this.isHoveringMenu)
       if (event === 'enter') {
         if (this.isOpenFast) {
           this.isHoveringMenu = true
@@ -505,9 +506,10 @@ export function Menu() {
 
   // Handle mouse enter/leave events
   React.useEffect(() => {
+    const parentNode = document.querySelector('.app-wrapper')
     const onMove = throttle(e => {
-      const hoverOut = e.target === document.documentElement
-      if (hoverOut) {
+      const isNotHovering = e.target === parentNode
+      if (isNotHovering) {
         if (menuStore.isHoveringMenu) {
           menuStore.handleMouseLeave()
         }
@@ -572,7 +574,7 @@ const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStoresSafe()
   const menuApps = useMenuApps()
   return (
-    <View className="app-parent-bounds" pointerEvents="auto">
+    <View className="app-parent-bounds">
       <Searchable
         queryStore={queryStore}
         inputProps={{

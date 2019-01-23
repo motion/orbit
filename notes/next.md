@@ -7,11 +7,7 @@ until end of jan:
   - same sort of deal... + link to slack
 
 - fix search results
-  - these three will make it feel great
-    - fix slow speed when just filtering:
-      - make it so it keeps the current X items after your current selection in memory
-        - then make it keep items that are perfect matches as you type at the top
-    - fix open on enter
+  - fix open on enter
 
 fix tab drag index
 new app pane

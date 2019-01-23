@@ -1,4 +1,4 @@
-import { always, ensure, react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
 import {
   AppType,
@@ -114,7 +114,7 @@ export class SearchStore {
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
       this.queryFilters.dateState,
-      always(this.stores.spaceStore.apps),
+      this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
       // if not on this pane, delay it a bit

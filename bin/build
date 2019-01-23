@@ -21,7 +21,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in reactron npm run watch) &
     (bin/in ui npm run watch) &
     (bin/in store-hmr npm run watch) &
-    (cd app && npx tsc --build --watch --preserveWatchOutput $ARGS) &
+    (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
     wait
   fi
   exit 0

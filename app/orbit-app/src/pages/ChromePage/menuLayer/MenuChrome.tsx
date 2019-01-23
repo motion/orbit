@@ -40,12 +40,12 @@ export const MenuChrome = observer(function MenuChrome(props: { children: any })
           height: window.innerHeight,
           position: 'absolute',
           zIndex: 100000,
-          pointerEvents: 'none',
           borderRadius: 12,
           top: pad,
           transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`),
           opacity,
           width: MENU_WIDTH,
+          pointerEvents: 'all',
         }}
       >
         {props.children}

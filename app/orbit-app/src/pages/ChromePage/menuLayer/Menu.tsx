@@ -3,7 +3,7 @@ import { AppType } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { debounce, memoize, throttle } from 'lodash'
+import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
@@ -29,16 +29,26 @@ export class MenuStore {
     menuItems: ({ id: number; index: number })[]
     onMenuHover?: (index: number) => any
   }
+
+  mouseEvent: 'enter' | 'leave' | null = null
   menuRef = createRef<any>()
   menuPad = 6
   aboveHeight = 40
   isHoveringMenu = false
-  isPinnedOpen = false
-  hoveringIndex = -1
   didRenderState = { at: Date.now(), open: false }
   searchInput: HTMLInputElement = null
-  // see how this interacts with isOpen
+
+  isPinnedOpen = false
+  hoveringIndex = -1
   activeMenuIndex = App.openMenu ? App.openMenu.id : -1
+
+  // source of truth!
+  // resolve the actual open state quickly so isOpen
+  // can derive off the truth state that is the most quick
+  isOpenFast = react(
+    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
+    _ => _,
+  )
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuIndex].size[1]
@@ -53,9 +63,15 @@ export class MenuStore {
 
   // debounce just a little to avoid isHoveringTray being false
   // before isHoveringMenu is true on mouse enter
-  isHoveringTray = react(() => this.hoveringIndex > -1, _ => _, {
-    delay: 60,
-  })
+  isHoveringTray = react(
+    () => this.hoveringIndex > -1,
+    async (next, { sleep }) => {
+      if (next === false) {
+        await sleep(60)
+      }
+      return next
+    },
+  )
 
   get isHoldingOption() {
     return Desktop.keyboardState.isHoldingOption
@@ -74,14 +90,6 @@ export class MenuStore {
       return { open, repositioning: false }
     },
     { defaultValue: { open: false, repositioning: false } },
-  )
-
-  // source of truth!
-  // resolve the actual open state quickly so isOpen
-  // can derive off the truth state that is the most quick
-  isOpenFast = react(
-    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
-    _ => _,
   )
 
   // the actual show/hide in the interface
@@ -113,7 +121,6 @@ export class MenuStore {
       const leftSpacing = 47
       const maxIndex = 3
       const xOffset = maxIndex - id
-      console.log('xoff', xOffset, id)
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
       return trayPositionX + offset
@@ -122,6 +129,10 @@ export class MenuStore {
       defaultValue: 0,
     },
   )
+
+  private setActiveMenuIndex(index: number) {
+    this.activeMenuIndex = index
+  }
 
   get isRepositioning() {
     // if its "staying open"
@@ -144,16 +155,19 @@ export class MenuStore {
     async (open, { sleep }) => {
       ensure('not open', !open)
       await sleep()
-      this.activeMenuIndex = -1
+      this.setActiveMenuIndex(-1)
+    },
+    {
+      deferFirstRun: true,
     },
   )
 
-  togglePinnedOpen(id: number) {
-    this.activeMenuIndex = id
-    this.setPinnedOpen(!this.isPinnedOpen)
+  togglePinnedOpen() {
+    this.setPinnedOpen(this.activeMenuIndex, !this.isPinnedOpen)
   }
 
-  setPinnedOpen(val: boolean) {
+  setPinnedOpen(id: number, val: boolean = true) {
+    this.setActiveMenuIndex(id)
     this.isPinnedOpen = val
     // when you unpin, clear the hover state too
     if (!this.isPinnedOpen) {
@@ -163,10 +177,10 @@ export class MenuStore {
 
   private updateHoverTm = null
 
-  setHoveringIndex = (index: number) => {
+  private setHoveringIndex = (index: number) => {
     clearTimeout(this.updateHoverTm)
     const update = () => {
-      this.activeMenuIndex = index
+      this.setActiveMenuIndex(index)
       this.hoveringIndex = index
     }
     if (index === -1) {
@@ -190,7 +204,7 @@ export class MenuStore {
 
   lastActiveMenuIndex = react(() => this.activeMenuIndex, _ => _, {
     delayValue: true,
-    defaultValue: -1,
+    defaultValue: this.activeMenuIndex,
   })
 
   setAppMenuOpen = react(
@@ -239,18 +253,6 @@ export class MenuStore {
       })
     },
   )
-
-  menuHeightSetter = memoize((index: number) => (height: number) => {
-    App.setState({
-      trayState: {
-        menuState: {
-          [index]: {
-            size: [MENU_WIDTH, height],
-          },
-        },
-      },
-    })
-  })
 
   setPinnedFromPinKey = react(
     () => always(Electron.state.pinKey.at),
@@ -384,13 +386,12 @@ export class MenuStore {
         case '1':
         case '2':
         case '3':
-          this.togglePinnedOpen(+event.value)
+          this.setPinnedOpen(+event.value)
+          this.togglePinnedOpen()
           break
       }
     }
   }
-
-  mouseEvent: 'enter' | 'leave' | null = null
 
   handleMouseEvent = react(
     () => this.mouseEvent,
@@ -483,7 +484,6 @@ export function Menu() {
     queryStore,
     menuItems: menuApps,
     onMenuHover: index => {
-      console.log('ON MENU HOVER', menuApps, index)
       const app = menuApps.find(x => x.index === index)
       if (app) {
         paneManagerStore.setActivePane(app.id)
@@ -493,9 +493,10 @@ export function Menu() {
 
   // Handle mouse enter/leave events
   React.useEffect(() => {
+    const parentNode = document.querySelector('.app-wrapper')
     const onMove = throttle(e => {
-      const hoverOut = e.target === document.documentElement
-      if (hoverOut) {
+      const isNotHovering = e.target === parentNode
+      if (isNotHovering) {
         if (menuStore.isHoveringMenu) {
           menuStore.handleMouseLeave()
         }
@@ -530,22 +531,22 @@ export function Menu() {
   }, [])
 
   return (
-    <BrowserDebugTray menuStore={menuStore}>
-      <MergeContext
-        Context={StoreContext}
-        value={{
-          queryStore,
-          menuStore,
-          paneManagerStore,
-        }}
-      >
+    <MergeContext
+      Context={StoreContext}
+      value={{
+        queryStore,
+        menuStore,
+        paneManagerStore,
+      }}
+    >
+      <BrowserDebugTray menuStore={menuStore}>
         <MainShortcutHandler>
           <MenuChrome>
             <MenuLayerContent />
           </MenuChrome>
         </MainShortcutHandler>
-      </MergeContext>
-    </BrowserDebugTray>
+      </BrowserDebugTray>
+    </MergeContext>
   )
 }
 
@@ -553,14 +554,14 @@ const itemProps = {
   oneLine: false,
   condensed: true,
   onSelectItem: false,
-  // hideSubtitle: true,
+  hideSubtitle: true,
 }
 
 const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStoresSafe()
   const menuApps = useMenuApps()
   return (
-    <View className="app-parent-bounds" pointerEvents="auto">
+    <View className="app-parent-bounds">
       <Searchable
         queryStore={queryStore}
         inputProps={{
@@ -571,8 +572,8 @@ const MenuLayerContent = React.memo(() => {
         {menuApps.map(app => (
           <MenuApp
             id={app.id}
+            index={app.index}
             key={app.id}
-            menuId={app.index}
             viewType="index"
             title={app.name}
             type={app.type}

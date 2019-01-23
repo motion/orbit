@@ -101,12 +101,18 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
     getItems,
   })
 
+  // TODO clear selection when app window closes, we really need useReaction()
+  // useReaction(
+  //   () => !!App.peekState && !App.peekState.target,
+  //   removedTarget => {
+  //     ensure('removedTarget', removedTarget)
+  //     selectionStore.clearSelected()
+  //   },
+  //   { deferFirstRun: true }
+  // )
+
   React.useEffect(() => {
-    if (
-      typeof props.defaultSelected === 'number' &&
-      selectionStore &&
-      selectionStore.activeIndex === -1
-    ) {
+    if (typeof props.defaultSelected === 'number' && selectionStore) {
       selectionStore.setActiveIndex(props.defaultSelected)
     }
 

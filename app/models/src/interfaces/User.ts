@@ -13,4 +13,14 @@ export interface User {
    * active space id
    */
   activeSpace?: number
+
+  /**
+   * spaceConfig
+   */
+  spaceConfig?: {
+    //
+    [spaceId: number]: {
+      activePaneIndex: number
+    }
+  }
 }

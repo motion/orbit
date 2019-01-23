@@ -18,7 +18,7 @@ export { Inline } from './blocks/Inline'
 export { InlineBlock } from './blocks/InlineBlock'
 export { InlineFlex } from './blocks/InlineFlex'
 export { Row } from './blocks/Row'
-export { View } from './blocks/View'
+export { View, ViewProps } from './blocks/View'
 // configureGloss
 export { configureGloss } from './config'
 export { gloss, GlossView } from './gloss'

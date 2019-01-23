@@ -13,6 +13,7 @@ import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutH
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -23,7 +24,6 @@ import { AppWrapper } from '../../views'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
-import OrbitOnboard from './OrbitOnboard'
 import OrbitPageContent from './OrbitPageContent'
 
 export class OrbitStore {
@@ -40,13 +40,12 @@ export class OrbitStore {
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
-    console.log('selecting', index, appConfig)
     this.nextItem = { index, appConfig }
   }
 
   updateSelectedItem = react(
     () => this.nextItem,
-    async ({ index, appConfig }, { sleep }) => {
+    async ({ appConfig }, { sleep }) => {
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()
 
@@ -56,7 +55,6 @@ export class OrbitStore {
       }
 
       ensure('app config', !!appConfig)
-      console.log('select', index, appConfig, this.activePane)
 
       const paneType = this.activePane.type
       if (!isEqual(this.activeConfig[paneType], appConfig)) {
@@ -102,8 +100,6 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <InnerChrome>
                 <OrbitPageContent />
               </InnerChrome>
-
-              <OrbitOnboard />
             </Chrome>
           </AppWrapper>
         </Theme>
@@ -119,7 +115,15 @@ function OrbitPageProvideStores(props: { children: any }) {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
+  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const paneManagerStore = useStore(PaneManagerStore, {
+    defaultIndex: spaceConfig.activePaneIndex || 0,
+    onPaneChange(index) {
+      console.log('save active index', index)
+      updateSpaceConfig({
+        activePaneIndex: index,
+      })
+    },
     panes: [
       ...activeApps.map(app => ({
         ...app,

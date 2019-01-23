@@ -31,29 +31,32 @@ export function orbitItemsKey(items: any[]) {
     .join(' ')
 }
 
-export default React.memo(
-  function OrbitList({ items, offsetY = 0, itemsKey, ...props }: OrbitListProps) {
-    console.log('re render obrit list')
-    const { appStore } = useStoresSafe()
-    const itemsKeyFull = itemsKey || orbitItemsKey(items)
-    const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKeyFull])
-    return (
-      <ProvideHighlightsContextWithDefaults
-        value={{
-          words: (props.query || appStore.activeQuery).split(' '),
-          maxChars: 500,
-          maxSurroundChars: 80,
-        }}
-      >
-        <VirtualList
-          items={items}
-          ItemView={OrbitListItem}
-          maxHeight={appStore.maxHeight - offsetY}
-          isRowLoaded={isRowLoaded}
-          {...props}
-        />
-      </ProvideHighlightsContextWithDefaults>
-    )
-  },
-  (a, b) => !![isEqualReferential(a, b), console.log('123', isEqualReferential(a, b))][0],
-)
+export default React.memo(function OrbitList({
+  items,
+  offsetY = 0,
+  itemsKey,
+  ...props
+}: OrbitListProps) {
+  const { appStore } = useStoresSafe()
+  const itemsKeyFull = itemsKey || orbitItemsKey(items)
+  const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKeyFull])
+  return (
+    <ProvideHighlightsContextWithDefaults
+      value={{
+        words: (props.query || appStore.activeQuery).split(' '),
+        maxChars: 500,
+        maxSurroundChars: 80,
+      }}
+    >
+      {/* TODO we change onSelect/onOpen signatures here, we should map them here, right now thats happening in OrbitListItem */}
+      <VirtualList
+        items={items}
+        ItemView={OrbitListItem}
+        maxHeight={appStore.maxHeight - offsetY}
+        isRowLoaded={isRowLoaded}
+        {...props}
+      />
+    </ProvideHighlightsContextWithDefaults>
+  )
+},
+isEqualReferential)

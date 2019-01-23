@@ -96,6 +96,11 @@ const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
     storeInstance['__updateProps'] = updateProps
   }
 
+  // call this before automagic runs...
+  if (globalOptions.onMount) {
+    globalOptions.onMount(storeInstance)
+  }
+
   // @ts-ignore
   storeInstance.automagic({
     isSubscribable: x => x && typeof x.subscribe === 'function',
@@ -118,7 +123,7 @@ const useReactiveStore = <A extends any>(
 
   if (!storeRef.current || hasChangedSource) {
     if (hasChangedSource) {
-      console.log('HMR replacing store', Store.constructor.name)
+      console.log('HMR replacing store', Store.constructor.name, Store.name)
     }
     const { store, hooks } = setupStoreReactiveProps(Store, props)
     storeRef.current = store
@@ -152,9 +157,6 @@ export function useStore<P, A extends { props?: P } | any>(
   // stores can use didMount and willUnmount
   useEffect(() => {
     store.didMount && store.didMount()
-    if (globalOptions.onMount) {
-      globalOptions.onMount(store)
-    }
     return () => {
       store.unmounted = true
       store.willUnmount && store.willUnmount()

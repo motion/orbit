@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, Row, Text, Tooltip, View } from '@mcro/ui'
+import { Button, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -8,6 +8,7 @@ import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-ho
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
@@ -31,11 +32,11 @@ const SortableTab = SortableElement((props: TabProps) => {
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
   return (
-    <Row flex={10}>
+    <>
       {props.items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
-    </Row>
+    </>
   )
 })
 
@@ -44,6 +45,7 @@ export default observer(function OrbitNav() {
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
+  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -116,14 +118,28 @@ export default observer(function OrbitNav() {
             distance={8}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
-              updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })
+              const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
+              const { activePaneIndex } = spaceConfig
+              // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
+              const activePaneId = space.paneSort[activePaneIndex]
+              console.log('ok', paneSort, space.paneSort, activePaneIndex, activePaneId)
+              if (activePaneId !== paneSort[activePaneIndex]) {
+                console.log('updating active index to', paneSort.indexOf(activePaneId))
+                updateSpaceConfig({
+                  activePaneIndex: paneSort.indexOf(activePaneId),
+                })
+              }
+              updateSpace({ paneSort })
             }}
           />
-          <View flex={1} minWidth={10} />
+          <OrbitTab tooltip="Add app">
+            <Icon name="add" size={10} opacity={0.5} />
+          </OrbitTab>
+          <View flex={2} />
           <OrbitTab
             isActive={paneManagerStore.activePane.type === 'apps'}
             onClick={paneManagerStore.activePaneByTypeSetter('apps')}
-            tooltip="Apps"
+            tooltip="All Apps"
           >
             <Icon name="grid48" size={10} opacity={0.5} />
           </OrbitTab>
@@ -182,6 +198,7 @@ const OrbitTab = ({
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
           opacity={hovered ? 0.2 : 0}
           right={sidePad - 8}
+          tooltip="Open"
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()
@@ -202,9 +219,11 @@ function PopoutIcon(props) {
     <Button
       circular
       borderWidth={0}
-      size={0.65}
+      width={18}
+      height={18}
       icon="downArrow"
-      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 3, y: -3 } }}
+      background="transparent"
+      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 5, y: -5 } }}
       {...props}
       style={{
         // transition: 'opacity ease 200ms 200ms',

@@ -1,6 +1,16 @@
 needs for release:
 
-# development side
+# design
+
+- Search app
+  - settings:
+    - master filters like type/integration/date
+- List app
+  - controlled/uncontrolled
+
+# technical
+
+## development
 
 - app pane that shows active apps and lets you search for new ones
 - "create new" option within that pane
@@ -21,14 +31,14 @@ needs for release:
   - orbit new
   - orbit dev
 
-# architecture side
+## architecture
 
 - need orbit package with apis
 - need permissions for data access stuff (v1.1)
 - need documentation for how to use and build, apis
 - need some example apps
 
-# release side
+## release
 
 - need a server
   - deploy endpoint
@@ -36,7 +46,7 @@ needs for release:
   - search endpoint
   - download ability
 
-# design side
+## design
 
 - orbits dock icon can be a "fake" one from the swift sub-process
   - this lets us control its order in the focus!

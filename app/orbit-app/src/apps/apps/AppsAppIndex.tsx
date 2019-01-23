@@ -1,13 +1,11 @@
-import { AppType } from '@mcro/models'
 import { Absolute, Theme } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton } from '../../views'
 import SelectableList from '../../views/Lists/SelectableList'
-import { AppProps } from '../AppProps'
 
-export default function AppsAppIndex(props: AppProps<AppType.apps>) {
+export default function AppsAppIndex() {
   const activeApps = useActiveAppsSorted()
   const activeItems = activeApps.map(x => ({
     id: x.id,
@@ -17,7 +15,15 @@ export default function AppsAppIndex(props: AppProps<AppType.apps>) {
     group: 'Installed Apps',
   }))
   const results = [
-    ...activeItems,
+    {
+      id: -1,
+      title: 'Installed apps',
+      icon: 'grid48',
+      subtitle: `${activeItems.map(x => x.title).join(', ') || '...'}`,
+      appConfig: {
+        type: 'installed',
+      },
+    },
     ...activeItems.map(x => ({
       ...x,
       type: 'add',
@@ -27,13 +33,7 @@ export default function AppsAppIndex(props: AppProps<AppType.apps>) {
 
   return (
     <>
-      <SelectableList
-        sortable
-        defaultSelected={0}
-        items={results}
-        onSelect={props.onSelectItem}
-        onOpen={props.onOpenItem}
-      />
+      <SelectableList sortable defaultSelected={0} items={results} />
       <Absolute bottom={10} right={10}>
         <Theme name="selected">
           <RoundButton

@@ -13,6 +13,7 @@ export {
   ThemeContext,
   ThemeProvide,
   View,
+  ViewProps,
 } from '@mcro/gloss'
 export * from './Arrow'
 export { ButtonProps, default as Button } from './Button'

@@ -11,4 +11,7 @@ export class UserEntity implements User {
 
   @Column()
   activeSpace: number
+
+  @Column({ type: 'simple-json' })
+  spaceConfig: User['spaceConfig']
 }

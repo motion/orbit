@@ -15,8 +15,8 @@ export default function ChomePage() {
   return (
     <StoreContext.Provider value={{ settingStore, sourcesStore, spaceStore }}>
       <Theme name="dark">
-        <AppWrapper>
-          <FullScreen>
+        <AppWrapper className="app-wrapper">
+          <FullScreen pointerEvents="none">
             <Menu />
           </FullScreen>
         </AppWrapper>

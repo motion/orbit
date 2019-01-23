@@ -368,8 +368,8 @@ const round = (x: number) => Math.round(x * 4) / 4
 const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
 const elevatedShadow = (x: number) => [
   0,
-  smoother(x, 5),
-  smoother(x, 15),
+  smoother(x, 3),
+  smoother(x, 17),
   [0, 0, 0, round(0.12 * smoother(x, 1))],
 ]
 

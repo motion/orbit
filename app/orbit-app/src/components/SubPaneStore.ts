@@ -22,10 +22,8 @@ export class SubPaneStore {
   }
 
   get paneInnerNode() {
-    if (!this.paneNode) {
-      return null
-    }
-    return this.paneNode.firstChild.firstChild as HTMLDivElement
+    if (!this.paneNode) return null
+    return this.paneNode.firstChild as HTMLDivElement
   }
 
   get isLeft() {
@@ -39,12 +37,9 @@ export class SubPaneStore {
 
   positionState = react(
     () => {
-      const { extraCondition, id } = this.props
+      const { id } = this.props
       const { paneManagerStore } = this.stores
-      const isActive =
-        paneManagerStore.activePane &&
-        id === paneManagerStore.activePane.id &&
-        (extraCondition ? extraCondition() : true)
+      const isActive = paneManagerStore.activePane && id === paneManagerStore.activePane.id
       return {
         isActive,
         isLeft: this.isLeft,
@@ -115,14 +110,10 @@ export class SubPaneStore {
     return Math.min(this.maxHeight, Math.max(minHeight, fullHeight))
   }
 
-  lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
-
   onChangeHeight = react(
-    () => [this.fullHeight, this.positionState.isActive],
-    async ([height, isActive]) => {
-      ensure('is active', isActive)
-      ensure('onChangeHeight', !!this.props.onChangeHeight)
-      if (this.props.onChangeHeight) {
+    () => [this.fullHeight, this.isActive],
+    ([height, isActive]) => {
+      if (this.props.onChangeHeight && isActive) {
         this.props.onChangeHeight(height)
       }
     },
@@ -153,11 +144,14 @@ export class SubPaneStore {
 
   updateHeight = async () => {
     if (!this.paneInnerNode) {
-      console.warn('no pane inner node...')
+      console.warn('no pane inner node...', this.props.id, this.props)
       return
     }
     // this gets full content height
     const { height } = this.paneInnerNode.getBoundingClientRect()
+    if (height === 0) {
+      return
+    }
     // get top from here because its not affected by scroll
     const { top } = this.innerPaneRef.current.getBoundingClientRect()
     if (top !== this.aboveContentHeight || height !== this.contentHeight) {

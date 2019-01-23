@@ -1,11 +1,11 @@
-import * as React from 'react'
+import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
+import { ButtonProps } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
-import { ButtonProps } from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 const dateBg = UI.color('#ffb049')
 
@@ -84,7 +84,6 @@ export default observer(function OrbitSuggestionBar() {
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length
-  filterStore.disabledFilters
   return (
     <SuggestionBar visible>
       <HorizontalScroll height={24}>

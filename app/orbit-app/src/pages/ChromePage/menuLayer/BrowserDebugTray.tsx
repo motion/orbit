@@ -1,5 +1,6 @@
 import { App } from '@mcro/stores'
-import { FullScreen, Row, View } from '@mcro/ui'
+import { Absolute, Row, View } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
@@ -8,8 +9,17 @@ export default function BrowserDebugTray({ children }: any) {
   if (IS_ELECTRON) {
     return children
   }
+
+  const { menuStore } = useStoresSafe()
+
+  // set open the first menu by default for dev
+  React.useEffect(() => {
+    menuStore
+    // .setPinnedOpen(1, true)
+  })
+
   return (
-    <FullScreen>
+    <Absolute top={0} left={0} right={0}>
       <Row justifyContent="center" alignItems="center" width="100%" background="#eee">
         <View
           onMouseLeave={() =>
@@ -29,27 +39,26 @@ export default function BrowserDebugTray({ children }: any) {
       <View position="relative" flex={1}>
         {children}
       </View>
-    </FullScreen>
+    </Absolute>
   )
 }
 
-const Target = (props: { id: number }) => {
+const Target = observer((props: { id: number }) => {
   const { menuStore } = useStoresSafe()
   return (
     <View
       onMouseEnter={() => {
-        console.log('send hover....', props.id)
         App.sendMessage(App, App.messages.TRAY_EVENT, { type: 'trayHovered', value: `${props.id}` })
       }}
       onClick={() => {
         console.log('pin', props.id)
-        menuStore.togglePinnedOpen(props.id)
+        menuStore.setPinnedOpen(props.id, true)
       }}
       width={16}
       height={16}
       margin={[0, 5]}
       borderRadius={100}
-      background="#000"
+      background={menuStore.activeMenuIndex === props.id ? '#555' : '#000'}
     />
   )
-}
+})

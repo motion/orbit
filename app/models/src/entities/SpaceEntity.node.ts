@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { SourceEntity } from './SourceEntity.node'
-import { AppEntity } from './AppEntity.node'
-import { Space } from '../interfaces/Space'
 import { Source } from '../interfaces/Source'
+import { Space } from '../interfaces/Space'
+import { AppEntity } from './AppEntity.node'
+import { SourceEntity } from './SourceEntity.node'
 
 @Entity()
 export class SpaceEntity implements Space {

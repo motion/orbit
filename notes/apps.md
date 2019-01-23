@@ -3,10 +3,14 @@ needs for release:
 # design
 
 - Search app
-  - settings:
-    - master filters like type/integration/date
+  - choose filters
 - List app
-  - controlled/uncontrolled
+  - choose sources
+  - choose editable
+  - choose sortable
+- Trend app
+  - choose sources
+  - choose editable
 
 # technical
 

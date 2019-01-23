@@ -55,9 +55,15 @@ export class MenuStore {
 
   // debounce just a little to avoid isHoveringTray being false
   // before isHoveringMenu is true on mouse enter
-  isHoveringTray = react(() => this.hoveringIndex > -1, _ => _, {
-    delay: 60,
-  })
+  isHoveringTray = react(
+    () => this.hoveringIndex > -1,
+    async (next, { sleep }) => {
+      if (next === false) {
+        await sleep(60)
+      }
+      return next
+    },
+  )
 
   get isHoldingOption() {
     return Desktop.keyboardState.isHoldingOption
@@ -353,7 +359,7 @@ export class MenuStore {
     },
   )
 
-  private handleTrayEvent = async (event: {
+  handleTrayEvent = async (event: {
     type: 'trayHovered' | 'trayClicked'
     value: '0' | '1' | '2' | '3' | 'Out'
   }) => {
@@ -392,7 +398,8 @@ export class MenuStore {
         case '1':
         case '2':
         case '3':
-          this.togglePinnedOpen(+event.value)
+          this.setPinnedOpen(+event.value)
+          this.togglePinnedOpen()
           break
       }
     }

@@ -54,5 +54,3 @@ function memoizeAny(apps) {
   }
   return res
 }
-
-console.log('apps', apps)

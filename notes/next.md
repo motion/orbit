@@ -1,23 +1,24 @@
 until end of jan:
 
+- manage space pane
+  - upload your image / name it / CRUD
+- manage account pane
+  - same sort of deal... + link to slack
+
 fix tab drag index
 add button => search overlay design
 new app pane
 command+enter to pop out app into own window / multi apps
 actions menu
-settings panes:
-
-2.  my account
-3.  manage spaces
 
 ---
 
-6. people app search/select fixes, fixing tray/menu display and interaction
-7. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-8. restore menus a bit just actions dropdown + search
-9. get ocr hooked into menu enable/disable and output results
-10. get ocr => memory simple list
-11. work through lists apps a bit
+1. people app search/select fixes, fixing tray/menu display and interaction
+2. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+3. restore menus a bit just actions dropdown + search
+4. get ocr hooked into menu enable/disable and output results
+5. get ocr => memory simple list
+6. work through lists apps a bit
 
 sorting by prepping to split out work as best possible:
 

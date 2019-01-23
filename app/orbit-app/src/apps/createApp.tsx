@@ -1,4 +1,4 @@
-import { Row, View } from '@mcro/ui'
+import { Absolute, Button, Row, Theme, View } from '@mcro/ui'
 import React from 'react'
 import { HorizontalSpace, Title } from '../views'
 import { Icon } from '../views/Icon'
@@ -27,6 +27,9 @@ export const createApp = {
     )
   },
   main: props => {
+    if (!props.appConfig) {
+      return null
+    }
     return (
       <View padding={20}>
         <Row alignItems="center">
@@ -35,6 +38,13 @@ export const createApp = {
           <Title margin={0}>New {props.appConfig.title} app</Title>
         </Row>
         {JSON.stringify(props.appConfig)}
+        <Absolute top={20} right={20}>
+          <Theme name="selected">
+            <Button elevation={1} size={1.2}>
+              Save
+            </Button>
+          </Theme>
+        </Absolute>
       </View>
     )
   },

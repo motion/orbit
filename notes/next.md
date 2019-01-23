@@ -77,6 +77,9 @@ tasks:
   - we should test search quite a bit more
     - have it do exact full searches first and then work down
     - so "full name" matches something with both words closer than "full" and "name"
+- cloud stuff:
+  - store teams/accounts in cloud
+    - no data just the config for it and identifiers
 - app store:
   - make it so we have servers to host them
   - make it so you can search them and install new ones

@@ -228,7 +228,7 @@ const OrbitTab = ({
       )}
       {separator && <Separator />}
 
-      {!!onClickPopout && (
+      {isActive && !!onClickPopout && (
         <PopoutIcon
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
           right={sidePad * 0.25}

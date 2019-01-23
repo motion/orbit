@@ -30,7 +30,7 @@ export const Glint = gloss<Props>({
       borderLeftRadius,
       borderRadius = 0,
       borderRightRadius,
-      opacity = 0.5,
+      opacity = 0.35,
       color = '#fff',
       size = 1,
       y = 0.5,

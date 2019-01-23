@@ -3,10 +3,17 @@ until end of jan:
 - manage space pane
   - upload your image / name it / CRUD
 - manage account pane
+
   - same sort of deal... + link to slack
 
-* fix list heights: in orbit app they should be fixed to the parent height not content height
-  - make option: fixToChildren and the default it fixes to parent
+- fix search results
+  - these three will make it feel great
+    - fix list heights: fixed to the parent height not content height
+      - make option: fixToChildren and the default it fixes to parent
+    - fix slow speed when just filtering:
+      - make it so it keeps the current X items after your current selection in memory
+        - then make it keep items that are perfect matches as you type at the top
+    - fix open on enter
 
 fix tab drag index
 new app pane

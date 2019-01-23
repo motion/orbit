@@ -1,4 +1,5 @@
-import { gloss, Row } from '@mcro/gloss'
+import { invertLightness } from '@mcro/color'
+import { gloss, Row, ThemeContext } from '@mcro/gloss'
 import { App } from '@mcro/models'
 import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
@@ -13,7 +14,7 @@ import { Icon } from '../../views/Icon'
 
 const height = 26
 const buttonSidePad = 12
-const inactiveOpacity = 0.9
+const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -42,7 +43,22 @@ const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
 })
 
 function OrbitTabIcon(props: IconProps) {
-  return <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
+  const { activeTheme } = React.useContext(ThemeContext)
+  return (
+    <View position="relative">
+      <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
+      {/* show underneath an opposite colored one to */}
+      <Icon
+        transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }}
+        color={invertLightness(activeTheme.color, 0.2)}
+        position="absolute"
+        top={0}
+        left={0}
+        zIndex={-1}
+        {...props}
+      />
+    </View>
+  )
 }
 
 export default observer(function OrbitNav() {
@@ -107,7 +123,7 @@ export default observer(function OrbitNav() {
         <OrbitTabIcon
           name={`orbit${capitalize(app.type)}`}
           size={isPinned ? 14 : 12}
-          opacity={isActive ? 1 : inactiveOpacity - 0.15}
+          opacity={isActive ? 0.6 : inactiveOpacity - 0.5}
         />
       ),
     }
@@ -294,5 +310,5 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   width: 1,
-  background: 'linear-gradient(transparent, rgba(0,0,0,0.08))',
+  background: 'linear-gradient(transparent, rgba(0,0,0,0.048))',
 })

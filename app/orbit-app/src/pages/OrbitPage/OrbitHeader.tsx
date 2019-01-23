@@ -1,4 +1,5 @@
 import { ensure, react } from '@mcro/black'
+import { invertLightness } from '@mcro/color'
 import { Absolute, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
@@ -168,7 +169,9 @@ const OrbitAutoComplete = observer(function OrbitAutoComplete() {
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
-})
+}).theme((_, theme) => ({
+  background: invertLightness(theme.background, 0.1).alpha(0.65),
+}))
 
 const HeaderTop = gloss({
   padding: [5, 10],

@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
 import { App as AppGlobalStore } from '@mcro/stores'
 import { Sidebar, View } from '@mcro/ui'
@@ -27,7 +27,7 @@ export default observer(function OrbitPageContent() {
   }, [])
 
   return (
-    <OrbitPageContentChrome>
+    <Row flex={1}>
       <Sidebar
         width={apps[orbitStore.activePane.type].index ? 300 : 0}
         minWidth={100}
@@ -55,16 +55,9 @@ export default observer(function OrbitPageContent() {
           </SubPane>
         ))}
       </OrbitMainView>
-    </OrbitPageContentChrome>
+    </Row>
   )
 })
-
-const OrbitPageContentChrome = gloss({
-  flexFlow: 'row',
-  flex: 1,
-}).theme((_, theme) => ({
-  borderTop: [2, theme.background],
-}))
 
 // separate view prevents big re-renders
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {

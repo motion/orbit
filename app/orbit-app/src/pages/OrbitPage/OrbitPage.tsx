@@ -1,5 +1,4 @@
 import { ensure, react } from '@mcro/black'
-import { invertLightness } from '@mcro/color'
 import { gloss } from '@mcro/gloss'
 import { AppConfig, AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -94,12 +93,10 @@ const OrbitPageInner = observer(function OrbitPageInner() {
       <MainShortcutHandler>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <Chrome>
-              <OrbitHeader />
-              <InnerChrome>
-                <OrbitPageContent />
-              </InnerChrome>
-            </Chrome>
+            <OrbitHeader />
+            <InnerChrome>
+              <OrbitPageContent />
+            </InnerChrome>
           </AppWrapper>
         </Theme>
       </MainShortcutHandler>
@@ -152,12 +149,6 @@ function OrbitPageProvideStores(props: { children: any }) {
     </MergeContext>
   )
 }
-
-const Chrome = gloss({
-  flex: 1,
-}).theme((_, theme) => ({
-  background: invertLightness(theme.background, 0.1).alpha(0.75),
-}))
 
 const InnerChrome = gloss({
   flexFlow: 'row',

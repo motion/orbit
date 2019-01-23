@@ -11,7 +11,7 @@ cp ./assets/appicon.icns ./app/orbit-electron/resources/icons
 
 # copy for development
 open ./assets
-open ./app/orbit-electron/node_modules/electron/dist
+open ./app/orbit/node_modules/electron/dist
 
 echo "\n\n\n"
 echo "1. in dist: right click Electron.app > Get info"

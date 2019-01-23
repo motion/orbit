@@ -15,8 +15,7 @@ export default observer(function MenuWindow() {
       alwaysOnTop={[true, 'floating', 2]}
       show={show}
       onReadyToShow={() => setShow(true)}
-      // half height for now to help when we get white background bugs...
-      size={[size[0], size[1] / 2]}
+      size={[size[0], size[1]]}
       focus={false}
       ignoreMouseEvents={!Desktop.hoverState.menuHovered}
       focusable

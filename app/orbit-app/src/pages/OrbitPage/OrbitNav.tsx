@@ -14,6 +14,7 @@ import { Icon } from '../../views/Icon'
 
 const height = 26
 const buttonSidePad = 12
+const pinnedSidePad = 22
 const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
@@ -111,7 +112,7 @@ export default observer(function OrbitNav() {
       disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
-      sidePad: isPinned ? 20 : buttonSidePad,
+      sidePad: isPinned ? pinnedSidePad : buttonSidePad,
       isActive,
       onClick: paneManagerStore.activePaneSetter(app.id),
       onClickPopout:
@@ -158,6 +159,7 @@ export default observer(function OrbitNav() {
           </OrbitTab>
           <View flex={2} />
           <OrbitTab
+            sidePad={pinnedSidePad}
             isActive={paneManagerStore.activePane.type === 'apps'}
             onClick={paneManagerStore.activePaneByTypeSetter('apps')}
             tooltip="All Apps"
@@ -165,6 +167,7 @@ export default observer(function OrbitNav() {
             <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
           </OrbitTab>
           <OrbitTab
+            sidePad={pinnedSidePad}
             isActive={paneManagerStore.activePane.type === 'sources'}
             onClick={paneManagerStore.activePaneByTypeSetter('sources')}
             tooltip="Sources"

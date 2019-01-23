@@ -8,7 +8,6 @@ import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { WindowCloseButton } from '../../views/WindowControls'
-import OrbitHeaderButtons from './OrbitHeaderButtons'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 import OrbitSwitch from './OrbitSpaceSwitch'
@@ -114,7 +113,7 @@ export class HeaderStore {
 }
 
 export default observer(function OrbitHeader() {
-  const { queryStore, paneManagerStore, orbitStore } = useStoresSafe()
+  const { queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   return (
     <OrbitHeaderContainer
@@ -128,20 +127,12 @@ export default observer(function OrbitHeader() {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          <ClearButton
-            onClick={
-              paneManagerStore.activePane.type === 'settings'
-                ? paneManagerStore.setActivePaneToPrevious
-                : queryStore.clearQuery
-            }
-          >
-            <Icon name="arrowminleft" opacity={0.25} />
-          </ClearButton>
           <OrbitSwitch />
           <FakeInput>
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
-              <OrbitHeaderButtons />
+              {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
+              {/* <OrbitHeaderButtons /> */}
             </After>
           </FakeInput>
           <Button
@@ -198,7 +189,7 @@ const FakeInput = gloss({
   justifyContent: 'center',
   margin: 'auto',
   flexFlow: 'row',
-  maxWidth: 980,
+  maxWidth: 700,
   width: '70%',
   minWidth: 400,
   cursor: 'text',

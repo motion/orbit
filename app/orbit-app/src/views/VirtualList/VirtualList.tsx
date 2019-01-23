@@ -205,7 +205,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
 
   if (!props.items.length) {
     return (
-      <View margin={[10, 0]}>
+      <View flex={1} margin={[10, 0]}>
         <Banner>No results</Banner>
       </View>
     )

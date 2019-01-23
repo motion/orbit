@@ -82,11 +82,11 @@ const light = {
 }
 
 const dark = {
-  cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
-  cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-  sidebarBorderColor: '#555',
   ...macModernTheme,
   ...Theme.fromStyles({
+    cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
+    cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
+    sidebarBorderColor: '#555',
     glintColor: [255, 255, 255, 0.2],
     inputBackground: [100, 100, 100, 0.5],
     inputBorderColor: 'transparent',
@@ -104,11 +104,11 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: [1, 1, 1, 0.25],
+    buttonBackground: [60, 60, 60, 0.8],
+    buttonBackgroundActive: [45, 45, 45, 0.8],
+    buttonBackgroundHover: [70, 70, 70, 0.8],
+    colorActive: '#fff',
   }),
-  buttonBackground: [60, 60, 60, 0.8],
-  buttonBackgroundActive: [45, 45, 45, 0.8],
-  buttonBackgroundHover: [70, 70, 70, 0.8],
-  colorActive: '#fff',
 }
 
 const clearLight = {

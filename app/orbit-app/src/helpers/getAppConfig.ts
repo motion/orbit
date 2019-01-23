@@ -1,24 +1,40 @@
-import { AppConfig } from '@mcro/models'
+import { AppConfig, AppType } from '@mcro/models'
 import { allIntegrations } from '../sources'
-import { ResolvableModel } from '../sources/types'
 import { sourceToAppConfig } from '../stores/SourcesStore'
+import { ListItemProps } from '../views/ListItems/ListItem'
+import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 
-export const getAppConfig = (model: ResolvableModel): AppConfig => {
+// this is mid-refactor in a sense
+// appConfig is a weird setup, its used basically to pass from a index over to a main view
+// it should be able to "set up" the main view
+// technically it could be anything you want, but earlier we had it a bit more typed/setup
+// this is sort of an awkward function to take certain things we understand and produce appConfig
+// but then it also falls back to generically mapping over ListItem props
+// works for now, but could be rethought
+
+export const getAppConfig = (props: OrbitListItemProps): AppConfig => {
+  const { item } = props
   let type: string = ''
-  switch (model.target) {
+  switch (item && item.target) {
     case 'bit':
-      type = model.integration
+      type = item.integration
       break
     case 'person-bit':
       type = 'person'
       break
-    default:
-      return null
   }
-  const app = allIntegrations[type]
-  if (!app) {
-    console.log('no app', type, allIntegrations)
-    return null
+  if (type) {
+    const app = allIntegrations[type]
+    return sourceToAppConfig(app, item)
   }
-  return sourceToAppConfig(app, model)
+  return listItemToAppConfig(props)
+}
+
+function listItemToAppConfig(props: ListItemProps): AppConfig {
+  return {
+    id: props.id,
+    type: props.type as AppType,
+    title: props.title,
+    icon: props.icon,
+  }
 }

@@ -91,6 +91,15 @@ tasks:
 - memory as a source
 - const [key, setKey] = useSetting('key')
   - easy way to be able to have a new UI-related query/update on setting
+- back button:
+  - simple simple version:
+    - store a log of searches and pane switches:
+      - appid of the pane
+      - text content of search
+    - be sure to debounce the search log entry quite a bit
+    - then on back just look at entry and either set input or pane...
+      - should be good enough for most use cases
+    - next step would be selected item inside, but thats already way more complex
 
 for me once split out:
 

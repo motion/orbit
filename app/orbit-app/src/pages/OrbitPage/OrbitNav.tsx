@@ -233,9 +233,11 @@ function PopoutIcon(props) {
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',
-  padding: [20, 10, 0],
+  padding: [20, 20, 0],
   margin: [-20, 0, 0],
-})
+}).theme((_, theme) => ({
+  boxShadow: [['inset', 0, -0.5, 0, theme.borderColor]],
+}))
 
 const OrbitNavChrome = gloss({
   height,
@@ -270,7 +272,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
-    // borderBottom: 'none',
+    // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
       ? [[0, 1, 8, [0, 0, 0, 0.05]], ['inset', 0, 0.5, 0, theme.background]]
       : null,

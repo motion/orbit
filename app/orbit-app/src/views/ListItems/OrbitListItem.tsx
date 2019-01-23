@@ -1,9 +1,8 @@
-import { AppConfig, AppType, Bit, PersonBit } from '@mcro/models'
+import { Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../Icon'
-import { OrbitHandleSelect } from '../Lists/OrbitList'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import VirtualListItem, { VirtualListItemProps } from '../VirtualList/VirtualListItem'
 import { ListItemProps } from './ListItem'
@@ -11,10 +10,7 @@ import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
 
-export type OrbitListItemProps = VirtualListItemProps<OrbitItem> & {
-  onSelect?: OrbitHandleSelect
-  onOpen?: OrbitHandleSelect
-}
+export type OrbitListItemProps = VirtualListItemProps<OrbitItem>
 
 export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
   const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })
@@ -61,18 +57,6 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
       // allow props to override isSelected but not onSelect
       {...props}
       icon={icon ? <Icon name={icon} size={16} {...props.iconProps} /> : null}
-      // onSelect merges
-      onSelect={(index, eventType) => {
-        if (selectionStore && selectionStore.activeIndex !== index) {
-          selectionStore.toggleSelected(index, eventType)
-        }
-        if (props.onSelect) {
-          props.onSelect(
-            index,
-            props.appConfig || (normalized && normalized.appConfig) || itemToAppConfig(props),
-          )
-        }
-      }}
     >
       {!!ItemView && (
         <ItemView
@@ -94,15 +78,6 @@ const extraProps = {
 }
 const spaceBetween = <div style={{ flex: 1 }} />
 
-function itemToAppConfig(props: ListItemProps): AppConfig {
-  return {
-    id: props.id,
-    type: props.type as AppType,
-    title: props.title,
-    icon: props.icon,
-  }
-}
-
 export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({
   title: normalized.title,
   location: normalized.location,
@@ -115,15 +90,3 @@ export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps
   preview: normalized.preview,
   after: normalized.after,
 })
-
-// setHoverSettler = react(
-//   () => this.props.hoverToSelect,
-//   hoverSelect => {
-//     ensure('hoverSelect', !!hoverSelect)
-//     ensure('!hoverSettler', !this.hoverSettler)
-//     this.hoverSettler = this.stores.appStore.getHoverSettler()
-//     this.hoverSettler.setItem({
-//       index: this.props.index,
-//     })
-//   },
-// )

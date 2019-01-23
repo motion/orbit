@@ -1,6 +1,7 @@
 import { AppConfig, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
+import { getAppConfig } from '../../helpers/getAppConfig'
 import { isEqualReferential } from '../../helpers/isEqualReferential'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
@@ -37,7 +38,7 @@ export default React.memo(function OrbitList({
   itemsKey,
   ...props
 }: OrbitListProps) {
-  const { appStore } = useStoresSafe()
+  const { appStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
   const itemsKeyFull = itemsKey || orbitItemsKey(items)
   const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKeyFull])
   return (
@@ -55,6 +56,19 @@ export default React.memo(function OrbitList({
         maxHeight={appStore.maxHeight - offsetY}
         isRowLoaded={isRowLoaded}
         {...props}
+        onSelect={(index, eventType) => {
+          if (selectionStore && selectionStore.activeIndex !== index) {
+            selectionStore.toggleSelected(index, eventType)
+          }
+          if (props.onSelect) {
+            props.onSelect(index, getAppConfig(items[index]))
+          }
+        }}
+        onOpen={index => {
+          if (props.onOpen) {
+            props.onOpen(index, getAppConfig(items[index]))
+          }
+        }}
       />
     </ProvideHighlightsContextWithDefaults>
   )

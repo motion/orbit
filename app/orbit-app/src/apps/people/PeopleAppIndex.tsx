@@ -12,7 +12,7 @@ import { AppProps } from '../AppProps'
 
 export default function PeopleAppIndex(props: AppProps<AppType.people>) {
   // people and query
-  const people = useObserveMany(PersonBitModel, { take: 10000 })
+  const people = useObserveMany(PersonBitModel, { take: 100000, where: { hasSlack: true } })
   const results = useOrbitFilterableResults({
     items: people,
     filterKey: 'name',

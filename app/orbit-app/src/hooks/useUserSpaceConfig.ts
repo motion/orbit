@@ -19,6 +19,10 @@ export function useUserSpaceConfig(): [SpaceConfig, (next: Partial<SpaceConfig>)
   const spaceConfig = (activeUser && activeUser.spaceConfig[activeSpace.id]) || DEFAULT_SPACE_CONFIG
 
   const updateSpaceConfig = next => {
+    if (!activeUser) {
+      console.warn('no user!!!!!!!')
+      return
+    }
     save(
       UserModel,
       immer(activeUser, user => {

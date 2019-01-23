@@ -1,7 +1,7 @@
 import { gloss } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
 import { App as AppGlobalStore } from '@mcro/stores'
-import { Col, Row, Sidebar, View } from '@mcro/ui'
+import { Sidebar, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
@@ -27,39 +27,44 @@ export default observer(function OrbitPageContent() {
   }, [])
 
   return (
-    <Col flex={1}>
-      <Row flex={1}>
-        <Sidebar
-          width={apps[orbitStore.activePane.type].index ? 300 : 0}
-          minWidth={100}
-          maxWidth={500}
-        >
-          <OrbitIndexView isHidden={false}>
-            {paneManagerStore.panes.map(pane => (
-              <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-                <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-                  <AppView
-                    viewType="index"
-                    id={pane.id}
-                    type={pane.type}
-                    onAppStore={orbitStore.setAppStore(pane.id)}
-                  />
-                </ProvideSelectableHandlers>
-              </SubPane>
-            ))}
-          </OrbitIndexView>
-        </Sidebar>
-        <OrbitMainView>
+    <OrbitPageContentChrome>
+      <Sidebar
+        width={apps[orbitStore.activePane.type].index ? 300 : 0}
+        minWidth={100}
+        maxWidth={500}
+      >
+        <OrbitIndexView isHidden={false}>
           {paneManagerStore.panes.map(pane => (
-            <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
-              <OrbitPageMainView pane={pane} />
+            <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
+              <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
+                <AppView
+                  viewType="index"
+                  id={pane.id}
+                  type={pane.type}
+                  onAppStore={orbitStore.setAppStore(pane.id)}
+                />
+              </ProvideSelectableHandlers>
             </SubPane>
           ))}
-        </OrbitMainView>
-      </Row>
-    </Col>
+        </OrbitIndexView>
+      </Sidebar>
+      <OrbitMainView>
+        {paneManagerStore.panes.map(pane => (
+          <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
+            <OrbitPageMainView pane={pane} />
+          </SubPane>
+        ))}
+      </OrbitMainView>
+    </OrbitPageContentChrome>
   )
 })
+
+const OrbitPageContentChrome = gloss({
+  flexFlow: 'row',
+  flex: 1,
+}).theme((_, theme) => ({
+  borderTop: [2, theme.background],
+}))
 
 // separate view prevents big re-renders
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {

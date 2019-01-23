@@ -277,7 +277,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
-      ? [[0, 1, 10, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.6)]]
+      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.6)]]
       : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,

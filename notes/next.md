@@ -100,6 +100,11 @@ tasks:
     - then on back just look at entry and either set input or pane...
       - should be good enough for most use cases
     - next step would be selected item inside, but thats already way more complex
+- splitting out all the views for the app kit
+  - fixing their types
+  - Icon, most things in views/\*
+  - VirutalList/VirtualListItem => List/ListItem etc
+  - content type views: Thread/Message/etc
 
 for me once split out:
 

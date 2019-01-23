@@ -23,8 +23,6 @@ const menuHeightSetter = memoize((index: number) => (height: number) => {
 
 export default observer(function MenuApp(props: MenuAppProps & { index: number }) {
   const { menuStore } = useStoresSafe()
-  console.log('MenuApp', props)
-
   // memo to prevent expensive renders on height changes
   const menuApp = React.useMemo(
     () => {

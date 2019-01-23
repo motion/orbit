@@ -12,46 +12,58 @@ export type SubPaneProps = CSSPropertySetStrict & {
   type?: AppType
   fullHeight?: boolean
   preventScroll?: boolean
-  store?: SubPaneStore
   style?: Object
   after?: React.ReactNode
   before?: React.ReactNode
-  fadeBottom?: boolean
   onScrollNearBottom?: Function
-  extraCondition?: () => boolean
   onChangeHeight?: (height: number) => void
   offsetY?: number
+  children?: any
+  transition?: string
 }
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
 export const SubPane = observer(function SubPane(props: Props) {
-  const transition = props.transition || 'opacity ease 90ms, transform ease 120ms'
+  const {
+    fullHeight,
+    preventScroll,
+    style,
+    after,
+    before,
+    offsetY,
+    transition = 'opacity ease 90ms, transform ease 120ms',
+    children,
+    ...rest
+  } = props
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore.positionState
-  const height = props.fullHeight ? 'auto' : subPaneStore.fullHeight
+  const height = fullHeight ? 'auto' : subPaneStore.fullHeight
   return (
     <SubPaneFrame isActive={isActive}>
-      {typeof props.before === 'function' ? props.before(isActive) : props.before}
-      {!!props.offsetY && <div style={{ height: props.offsetY, pointerEvents: 'none' }} />}
+      {typeof before === 'function' ? before(isActive) : before}
+      {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
         <Pane
           isActive={isActive}
           isLeft={isLeft}
-          style={props.style}
+          style={style}
           height={height}
           forwardRef={subPaneStore.paneRef}
-          preventScroll={props.preventScroll}
+          preventScroll={preventScroll}
           transition={transition}
-          {...props.fullHeight && { bottom: 0 }}
-          {...props}
+          {...fullHeight && { bottom: 0 }}
+          {...rest}
         >
-          <PaneContentInner style={{ maxHeight: subPaneStore.maxHeight }}>
-            {props.children}
+          {/* used by SubPaneStore to find real content height */}
+          <PaneContentInner
+            style={{ maxHeight: subPaneStore.maxHeight, flex: fullHeight ? 1 : 'none' }}
+          >
+            {children}
           </PaneContentInner>
         </Pane>
       </SubPaneInner>
-      {props.after}
+      {after}
     </SubPaneFrame>
   )
 })

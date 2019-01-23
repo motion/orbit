@@ -13,7 +13,7 @@ export const createApp = {
           },
           {
             title: 'List',
-            icon: 'orbitList',
+            icon: 'orbitLists',
             subtitle: 'Custom list pane',
           },
         ]}

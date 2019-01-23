@@ -118,7 +118,7 @@ function OrbitPageProvideStores(props: { children: any }) {
   const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultIndex: spaceConfig.activePaneIndex || 0,
-    onPangeChange(index) {
+    onPaneChange(index) {
       console.log('save active index', index)
       updateSpaceConfig({
         activePaneIndex: index,

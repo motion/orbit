@@ -10,6 +10,7 @@ type SpaceConfig = User['spaceConfig'][any]
 const DEFAULT_SPACE_CONFIG: SpaceConfig = { activePaneIndex: 0 }
 
 export function useUserSpaceConfig(): [SpaceConfig, (next: Partial<SpaceConfig>) => any] {
+  // TODO make useActive user have an update function as well...
   const activeUser = useActiveUser()
   const [activeSpace] = useActiveSpace()
 

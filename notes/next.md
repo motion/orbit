@@ -39,16 +39,6 @@ sorting by prepping to split out work as best possible:
 
 # employee
 
-message:
-
-one month test period. changes in how we work:
-
-- less interruption and less need for sync in schedule, dont stretch your hours too much
-- open a PR when you start, commit every 60 minutes so i can track time
-- post in #status in the morning with days plan
-- we need reduced boilerplate and optimize for speed and less code, its a startup
-- for example focus on merging a pr first that works ok, then note for later improvements
-
 tasks:
 
 - add the props type to useStore

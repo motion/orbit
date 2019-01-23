@@ -1,4 +1,4 @@
-import { differenceInCalendarYears } from 'date-fns/esm/fp'
+import { differenceInCalendarDays, differenceInCalendarYears } from 'date-fns/esm/fp'
 import * as React from 'react'
 import { TimeAgo } from './TimeAgo'
 
@@ -8,24 +8,27 @@ const defaultOptions = {
   day: 'numeric',
 }
 
-export const DateFormat = ({
-  date = new Date(),
-  locale = 'en-US',
-  options = null,
-  nice = false,
-}) => {
+export function DateFormat({ date = new Date(), locale = 'en-US', options = null, nice = false }) {
   if (nice) {
     return <TimeAgo>{date}</TimeAgo>
   }
-  let finalOptions = options || defaultOptions
-  if (differenceInCalendarYears(date, Date.now()) > 1) {
+  let finalOptions = {
+    ...defaultOptions,
+    ...options,
+  }
+  if (differenceInCalendarYears(date, Date.now()) > 0) {
     finalOptions.year = '2-digit'
+    delete finalOptions.weekday
+  } else if (differenceInCalendarDays(date, Date.now()) < 7) {
+    finalOptions = {
+      weekday: 'short',
+    }
   }
   return (
     <>
       {date
         .toLocaleDateString(locale, finalOptions)
-        .replace(',', '')
+        .replace(/,.*,/, ',')
         .replace(/\//g, '·')}
     </>
   )

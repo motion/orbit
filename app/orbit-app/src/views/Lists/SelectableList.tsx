@@ -10,6 +10,7 @@ import { MergeContext } from '../MergeContext'
 import OrbitList, { OrbitHandleSelect, orbitItemsKey, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
+  minSelected?: number
   defaultSelected?: number
   isSelectable?: boolean
 }

@@ -142,7 +142,7 @@ export default observer(function ListItem(props: ListItemProps) {
     <AfterHeader>
       <Row>
         {showDate && (
-          <UI.Text alpha={0.6} size={0.9} fontWeight={600}>
+          <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
             <DateFormat
               date={new Date(updatedAt)}
               nice={differenceInCalendarDays(Date.now, updatedAt) < 7}

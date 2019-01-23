@@ -22,7 +22,7 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     visible?: boolean
   }
 
-export const SearchInput = ({
+export function SearchInput({
   width = '100%',
   before = null,
   placeholder = null,
@@ -35,10 +35,10 @@ export const SearchInput = ({
   filterProps = null,
   value = null,
   flex = null,
-  padding = 5,
+  padding = 4,
   visible,
   ...props
-}: SearchInputProps) => {
+}: SearchInputProps) {
   const { activeTheme } = React.useContext(ThemeContext)
   return (
     <SearchBar

@@ -5,13 +5,13 @@
  * @format
  */
 
-import { on } from '@mcro/helpers'
-import { Filter, FilterIncludeExclude } from './types'
-import * as React from 'react'
-import PropTypes from 'prop-types'
 import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { on } from '@mcro/helpers'
+import PropTypes from 'prop-types'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../form/SearchInput'
+import { Filter, FilterIncludeExclude } from './types'
 
 type State = {
   filters: Filter[]
@@ -155,8 +155,7 @@ export class Searchable extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    // @ts-ignore
-    window.document.removeEventListener('keydown', this.onKeyDown)
+    window.document.removeEventListener('keydown', this.onKeyDown as any)
   }
 
   onKeyDown = (e: React.KeyboardEvent<any>) => {

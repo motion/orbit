@@ -120,7 +120,6 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
       if (!selectableStore.isActive()) {
         return false
       }
-      console.log('shortcut handle', shortcut)
       switch (shortcut) {
         case 'open':
           if (props.onOpen) {

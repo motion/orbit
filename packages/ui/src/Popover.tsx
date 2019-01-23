@@ -1026,7 +1026,7 @@ const PopoverContainer = gloss({
   isOpen: {
     zIndex: 5000,
     '& > *': {
-      pointerEvents: 'inherit !important',
+      pointerEvents: 'all !important',
     },
   },
   isClosing: {

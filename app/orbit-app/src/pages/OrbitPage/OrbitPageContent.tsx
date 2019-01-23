@@ -7,7 +7,6 @@ import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
 import AppView from '../../apps/AppView'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
@@ -67,7 +66,8 @@ const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pan
   const { orbitStore } = useStoresSafe()
   return (
     <>
-      <OrbitToolBarRender id={props.pane.id} />
+      {/* TODO figure where to put an autocomplete... */}
+      {/* <OrbitToolBarRender id={props.pane.id} /> */}
       <AppView
         isActive
         viewType="main"

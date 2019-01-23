@@ -7,7 +7,9 @@ import { useStore } from '@mcro/use-store'
 import { BrowserWindow, Menu } from 'electron'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
+import { join } from 'path'
 import * as React from 'react'
+import { ROOT } from '../constants'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
@@ -127,6 +129,8 @@ export default observer(function OrbitWindow() {
     return null
   }
 
+  console.log('icon', join(ROOT, 'resources', 'icons', 'appicon.png'))
+
   return (
     <Window
       show={show ? App.orbitState.docked : false}
@@ -146,6 +150,7 @@ export default observer(function OrbitWindow() {
       background="#00000000"
       vibrancy={App.state.darkTheme ? 'dark' : 'light'}
       hasShadow
+      icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />
   )
 })

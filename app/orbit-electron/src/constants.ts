@@ -1,3 +1,5 @@
+import { join } from 'path'
+
 export const WEB_PREFERENCES = {
   nativeWindowOpen: true,
   experimentalFeatures: true,
@@ -5,3 +7,5 @@ export const WEB_PREFERENCES = {
   allowRunningInsecureContent: false,
   webSecurity: false,
 }
+
+export const ROOT = join(__dirname, '..')

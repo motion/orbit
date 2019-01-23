@@ -13,8 +13,6 @@ import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
-const buttonSidePad = 12
-const pinnedSidePad = 22
 const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
@@ -27,6 +25,7 @@ type TabProps = React.HTMLAttributes<'div'> & {
   tooltip?: string
   textProps?: any
   onClickPopout?: Function
+  thicc?: boolean
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
@@ -35,7 +34,7 @@ const SortableTab = SortableElement((props: TabProps) => {
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
   return (
-    <Row flex={3}>
+    <Row>
       {props.items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
@@ -68,6 +67,7 @@ export default observer(function OrbitNav() {
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
   const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
+  const [showCreateNew, setShowCreateNew] = React.useState(false)
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -101,7 +101,7 @@ export default observer(function OrbitNav() {
   const items: TabProps[] = space.paneSort.map((id, index) => {
     const app = activeApps.find(x => x.id === id)
     const isLast = index !== activeApps.length
-    const isActive = paneManagerStore.activePane.id === app.id
+    const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
     const nextIsActive =
       activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
     const isPinned = app.type === 'search'
@@ -112,9 +112,12 @@ export default observer(function OrbitNav() {
       disabled: isPinned,
       label: isPinned ? '' : app.name,
       stretch: !isPinned,
-      sidePad: isPinned ? pinnedSidePad : buttonSidePad,
+      thicc: isPinned,
       isActive,
-      onClick: paneManagerStore.activePaneSetter(app.id),
+      onClick: () => {
+        setShowCreateNew(false)
+        paneManagerStore.activePaneSetter(app.id)()
+      },
       onClickPopout:
         !isPinned &&
         (() => {
@@ -131,52 +134,55 @@ export default observer(function OrbitNav() {
   })
 
   return (
-    <>
-      <OrbitNavClip>
-        <OrbitNavChrome>
-          <SortableTabs
-            axis="x"
-            lockAxis="x"
-            distance={8}
-            items={items}
-            onSortEnd={({ oldIndex, newIndex }) => {
-              const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
-              const { activePaneIndex } = spaceConfig
-              // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
-              const activePaneId = space.paneSort[activePaneIndex]
-              console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
-              if (activePaneId !== paneSort[activePaneIndex]) {
-                console.log('updating active index to', paneSort.indexOf(activePaneId))
-                updateSpaceConfig({
-                  activePaneIndex: paneSort.indexOf(activePaneId),
-                })
-              }
-              updateSpace({ paneSort })
-            }}
-          />
-          <OrbitTab tooltip="Add app">
-            <OrbitTabIcon name="add" size={10} opacity={0.5} />
-          </OrbitTab>
-          <View flex={2} />
-          <OrbitTab
-            sidePad={pinnedSidePad}
-            isActive={paneManagerStore.activePane.type === 'apps'}
-            onClick={paneManagerStore.activePaneByTypeSetter('apps')}
-            tooltip="All Apps"
-          >
-            <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
-          </OrbitTab>
-          <OrbitTab
-            sidePad={pinnedSidePad}
-            isActive={paneManagerStore.activePane.type === 'sources'}
-            onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-            tooltip="Sources"
-          >
-            <OrbitTabIcon name="design_app" size={11} opacity={0.5} />
-          </OrbitTab>
-        </OrbitNavChrome>
-      </OrbitNavClip>
-    </>
+    <OrbitNavClip>
+      <OrbitNavChrome>
+        <SortableTabs
+          axis="x"
+          lockAxis="x"
+          distance={8}
+          items={items}
+          onSortEnd={({ oldIndex, newIndex }) => {
+            const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
+            const { activePaneIndex } = spaceConfig
+            // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
+            const activePaneId = space.paneSort[activePaneIndex]
+            console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
+            if (activePaneId !== paneSort[activePaneIndex]) {
+              console.log('updating active index to', paneSort.indexOf(activePaneId))
+              updateSpaceConfig({
+                activePaneIndex: paneSort.indexOf(activePaneId),
+              })
+            }
+            updateSpace({ paneSort })
+          }}
+        />
+        {showCreateNew && <OrbitTab stretch isActive label="New app" />}
+        <OrbitTab
+          tooltip={showCreateNew ? 'Cancel' : 'Add'}
+          thicc
+          onClick={() => setShowCreateNew(!showCreateNew)}
+        >
+          <OrbitTabIcon name={showCreateNew ? 'remove' : 'add'} size={10} opacity={0.5} />
+        </OrbitTab>
+        <View flex={2} />
+        <OrbitTab
+          thicc
+          isActive={paneManagerStore.activePane.type === 'apps'}
+          onClick={paneManagerStore.activePaneByTypeSetter('apps')}
+          tooltip="All Apps"
+        >
+          <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
+        </OrbitTab>
+        <OrbitTab
+          thicc
+          isActive={paneManagerStore.activePane.type === 'sources'}
+          onClick={paneManagerStore.activePaneByTypeSetter('sources')}
+          tooltip="Sources"
+        >
+          <OrbitTabIcon name="design_app" size={11} opacity={0.5} />
+        </OrbitTab>
+      </OrbitNavChrome>
+    </OrbitNavClip>
   )
 })
 
@@ -188,11 +194,12 @@ const OrbitTab = ({
   isActive = false,
   separator = false,
   onClickPopout,
-  sidePad = buttonSidePad,
   textProps,
+  thicc,
   className = '',
   ...props
 }: TabProps) => {
+  const sidePad = thicc ? 20 : 12
   const button = (
     <NavButtonChrome
       className={`undraggable ${className}`}
@@ -204,7 +211,7 @@ const OrbitTab = ({
       {!!label && (
         <Text
           size={0.95}
-          marginLeft={!!children ? buttonSidePad * 0.75 : 0}
+          marginLeft={!!children ? sidePad * 0.8 : 0}
           alpha={isActive ? 1 : inactiveOpacity}
           fontWeight={500}
           {...textProps}
@@ -217,7 +224,7 @@ const OrbitTab = ({
       {!!onClickPopout && (
         <PopoutIcon
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-          right={sidePad - 8}
+          right={sidePad * 0.25}
           tooltip="Open"
           onClick={e => {
             e.preventDefault()
@@ -292,8 +299,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   }
   return {
     padding: [0, sidePad],
-    flexGrow: stretch ? 1 : 0,
-    minWidth: stretch ? 90 : 0,
+    minWidth: stretch ? 160 : 0,
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],

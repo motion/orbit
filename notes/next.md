@@ -8,6 +8,7 @@ until end of jan:
 
 - fix search results
   - fix open on enter
+  - fix select on search broke
 
 fix tab drag index
 new app pane

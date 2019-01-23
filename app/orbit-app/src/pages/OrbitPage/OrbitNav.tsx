@@ -236,7 +236,7 @@ const OrbitNavClip = gloss({
   padding: [20, 20, 0],
   margin: [-20, 0, 0],
 }).theme((_, theme) => ({
-  boxShadow: [['inset', 0, -0.5, 0, theme.borderColor]],
+  boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
 }))
 
 const OrbitNavChrome = gloss({
@@ -258,6 +258,9 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   height,
   maxWidth: 180,
   borderTopRadius: 3,
+  transform: {
+    y: 0.5,
+  },
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const background = theme.tabBackground || theme.background
@@ -274,7 +277,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
-      ? [[0, 1, 8, [0, 0, 0, 0.05]], ['inset', 0, 0.5, 0, theme.background]]
+      ? [[0, 1, 10, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.6)]]
       : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,

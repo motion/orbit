@@ -5,6 +5,9 @@ until end of jan:
 - manage account pane
   - same sort of deal... + link to slack
 
+* fix list heights: in orbit app they should be fixed to the parent height not content height
+  - make option: fixToChildren and the default it fixes to parent
+
 fix tab drag index
 new app pane
 command+enter to pop out app into own window / multi apps

@@ -64,6 +64,7 @@ const SubPaneFrame = gloss(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
+    pointerEvents: 'inherit',
   },
 })
 
@@ -84,10 +85,8 @@ const Pane = gloss(UI.View, {
 const SubPaneInner = gloss(UI.View, {
   position: 'relative',
   flex: 1,
-  pointerEvents: 'none',
 })
 
 const PaneContentInner = gloss({
   position: 'relative',
-  flex: 1,
 })

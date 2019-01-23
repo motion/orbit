@@ -123,7 +123,7 @@ const useReactiveStore = <A extends any>(
 
   if (!storeRef.current || hasChangedSource) {
     if (hasChangedSource) {
-      console.log('HMR replacing store', Store.constructor.name)
+      console.log('HMR replacing store', Store.constructor.name, Store.name)
     }
     const { store, hooks } = setupStoreReactiveProps(Store, props)
     storeRef.current = store

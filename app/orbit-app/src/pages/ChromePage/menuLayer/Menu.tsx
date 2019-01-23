@@ -3,7 +3,7 @@ import { AppType } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { debounce, memoize, throttle } from 'lodash'
+import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
@@ -41,6 +41,14 @@ export class MenuStore {
   isPinnedOpen = false
   hoveringIndex = -1
   activeMenuIndex = App.openMenu ? App.openMenu.id : -1
+
+  // source of truth!
+  // resolve the actual open state quickly so isOpen
+  // can derive off the truth state that is the most quick
+  isOpenFast = react(
+    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
+    _ => _,
+  )
 
   get menuHeight() {
     return App.state.trayState.menuState[this.activeOrLastActiveMenuIndex].size[1]
@@ -82,14 +90,6 @@ export class MenuStore {
       return { open, repositioning: false }
     },
     { defaultValue: { open: false, repositioning: false } },
-  )
-
-  // source of truth!
-  // resolve the actual open state quickly so isOpen
-  // can derive off the truth state that is the most quick
-  isOpenFast = react(
-    () => this.isHoldingOption || this.isHoveringTray || this.isHoveringMenu || this.isPinnedOpen,
-    _ => _,
   )
 
   // the actual show/hide in the interface
@@ -254,18 +254,6 @@ export class MenuStore {
     },
   )
 
-  menuHeightSetter = memoize((index: number) => (height: number) => {
-    App.setState({
-      trayState: {
-        menuState: {
-          [index]: {
-            size: [MENU_WIDTH, height],
-          },
-        },
-      },
-    })
-  })
-
   setPinnedFromPinKey = react(
     () => always(Electron.state.pinKey.at),
     () => {
@@ -408,7 +396,6 @@ export class MenuStore {
   handleMouseEvent = react(
     () => this.mouseEvent,
     async (event, { sleep, when }) => {
-      console.log('handling mouse', this.isOpenFast, this.isHoveringMenu)
       if (event === 'enter') {
         if (this.isOpenFast) {
           this.isHoveringMenu = true
@@ -585,8 +572,8 @@ const MenuLayerContent = React.memo(() => {
         {menuApps.map(app => (
           <MenuApp
             id={app.id}
+            index={app.index}
             key={app.id}
-            menuId={app.index}
             viewType="index"
             title={app.name}
             type={app.type}

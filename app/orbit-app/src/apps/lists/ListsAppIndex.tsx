@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { FloatingBarBottom } from '../../views/FloatingBar/FloatingBarBottom'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
@@ -80,8 +81,9 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
           }
         }}
       />
-      <View flex={1} />
-      <ListEdit />
+      <FloatingBarBottom>
+        <ListEdit />
+      </FloatingBarBottom>
     </>
   )
 })

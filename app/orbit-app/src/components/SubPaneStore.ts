@@ -113,15 +113,10 @@ export class SubPaneStore {
     return Math.min(this.maxHeight, Math.max(minHeight, fullHeight))
   }
 
-  lastHeight = react(() => this.fullHeight, _ => _, { delayValue: true })
-
   onChangeHeight = react(
-    () => [this.fullHeight, this.positionState.isActive],
-    async ([height, isActive]) => {
-      ensure('is active', isActive)
-      ensure('onChangeHeight', !!this.props.onChangeHeight)
-      if (this.props.onChangeHeight) {
-        console.log('onchangeheight', height, this.props.id)
+    () => [this.fullHeight, this.isActive],
+    ([height, isActive]) => {
+      if (this.props.onChangeHeight && isActive) {
         this.props.onChangeHeight(height)
       }
     },

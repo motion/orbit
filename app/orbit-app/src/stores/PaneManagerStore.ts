@@ -9,7 +9,7 @@ export class PaneManagerStore {
   props: {
     disabled?: boolean
     panes: Pane[]
-    onPaneChange: Function
+    onPaneChange: (index: number, pane: Pane) => any
     defaultPaneIndex?: number
   }
 
@@ -110,7 +110,7 @@ export class PaneManagerStore {
     () => this.activePane,
     pane => {
       if (this.props.onPaneChange) {
-        this.props.onPaneChange(pane)
+        this.props.onPaneChange(this.paneIndex, pane)
       }
     },
     {

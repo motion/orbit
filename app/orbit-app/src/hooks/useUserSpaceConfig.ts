@@ -5,15 +5,32 @@ import { useEffect } from 'react'
 import { useActiveSpace } from './useActiveSpace'
 import { useActiveUser } from './useActiveUser'
 
-const DEFAULT_SPACE_CONFIG = { activePaneIndex: 0 }
+type SpaceConfig = User['spaceConfig'][any]
 
-export function useUserSpaceConfig(): User['spaceConfig'][any] {
+const DEFAULT_SPACE_CONFIG: SpaceConfig = { activePaneIndex: 0 }
+
+export function useUserSpaceConfig(): [SpaceConfig, (next: Partial<SpaceConfig>) => any] {
   const activeUser = useActiveUser()
   const [activeSpace] = useActiveSpace()
 
   useEnsureUserSpaceConfig(activeUser, activeSpace)
 
-  return (activeUser && activeUser.spaceConfig[activeSpace.id]) || DEFAULT_SPACE_CONFIG
+  const spaceConfig = (activeUser && activeUser.spaceConfig[activeSpace.id]) || DEFAULT_SPACE_CONFIG
+
+  const updateSpaceConfig = next => {
+    save(
+      UserModel,
+      immer(activeUser, user => {
+        const cur = user.spaceConfig[activeSpace.id]
+        user.spaceConfig[activeSpace.id] = {
+          ...cur,
+          ...next,
+        }
+      }),
+    )
+  }
+
+  return [spaceConfig, updateSpaceConfig]
 }
 
 function useEnsureUserSpaceConfig(user: User, space: Space) {

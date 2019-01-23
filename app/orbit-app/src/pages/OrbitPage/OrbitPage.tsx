@@ -115,9 +115,15 @@ function OrbitPageProvideStores(props: { children: any }) {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
-  const spaceConfig = useUserSpaceConfig()
+  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultIndex: spaceConfig.activePaneIndex || 0,
+    onPangeChange(index) {
+      console.log('save active index', index)
+      updateSpaceConfig({
+        activePaneIndex: index,
+      })
+    },
     panes: [
       ...activeApps.map(app => ({
         ...app,

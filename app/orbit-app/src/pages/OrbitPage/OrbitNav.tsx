@@ -8,6 +8,7 @@ import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-ho
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
@@ -44,6 +45,7 @@ export default observer(function OrbitNav() {
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
+  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -116,7 +118,18 @@ export default observer(function OrbitNav() {
             distance={8}
             items={items}
             onSortEnd={({ oldIndex, newIndex }) => {
-              updateSpace({ paneSort: arrayMove(space.paneSort, oldIndex, newIndex) })
+              const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
+              const { activePaneIndex } = spaceConfig
+              // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
+              const activePaneId = space.paneSort[activePaneIndex]
+              console.log('ok', paneSort, space.paneSort, activePaneIndex, activePaneId)
+              if (activePaneId !== paneSort[activePaneIndex]) {
+                console.log('updating active index to', paneSort.indexOf(activePaneId))
+                updateSpaceConfig({
+                  activePaneIndex: paneSort.indexOf(activePaneId),
+                })
+              }
+              updateSpace({ paneSort })
             }}
           />
           <View flex={1} minWidth={10} />

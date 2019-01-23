@@ -1,6 +1,6 @@
-import { Col, gloss } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, Popover, Row, Text, Tooltip, View } from '@mcro/ui'
+import { Button, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -10,7 +10,6 @@ import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
-import ListItem from '../../views/ListItems/ListItem'
 
 const height = 26
 const inactiveOpacity = 0.8
@@ -33,11 +32,11 @@ const SortableTab = SortableElement((props: TabProps) => {
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
   return (
-    <Row flex={10}>
+    <>
       {props.items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
-    </Row>
+    </>
   )
 })
 
@@ -133,39 +132,14 @@ export default observer(function OrbitNav() {
               updateSpace({ paneSort })
             }}
           />
-          <View flex={1} minWidth={10} />
-          <Popover
-            delay={250}
-            openOnClick
-            closeOnClickAway
-            group="filters"
-            background
-            borderRadius={6}
-            elevation={2}
-            theme="light"
-            target={
-              <OrbitTab tooltip="Add app">
-                <Icon name="add" size={10} opacity={0.5} />
-              </OrbitTab>
-            }
-          >
-            <Col>
-              {[{ id: 0, title: 'People', icon: 'orbitPeople' }].map(filter => {
-                return (
-                  <ListItem
-                    key={filter.id}
-                    width={200}
-                    icon={<Icon name={filter.icon} size={16} /> as any}
-                    title={filter.title}
-                  />
-                )
-              })}
-            </Col>
-          </Popover>
+          <OrbitTab tooltip="Add app">
+            <Icon name="add" size={10} opacity={0.5} />
+          </OrbitTab>
+          <View flex={2} />
           <OrbitTab
             isActive={paneManagerStore.activePane.type === 'apps'}
             onClick={paneManagerStore.activePaneByTypeSetter('apps')}
-            tooltip="Manage Apps"
+            tooltip="All Apps"
           >
             <Icon name="grid48" size={10} opacity={0.5} />
           </OrbitTab>

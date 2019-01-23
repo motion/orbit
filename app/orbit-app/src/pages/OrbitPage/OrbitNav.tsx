@@ -1,6 +1,6 @@
 import { gloss, Row } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, Text, Tooltip, View } from '@mcro/ui'
+import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -12,7 +12,8 @@ import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
-const inactiveOpacity = 0.8
+const buttonSidePad = 12
+const inactiveOpacity = 0.9
 
 type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -39,6 +40,10 @@ const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
     </Row>
   )
 })
+
+function OrbitTabIcon(props: IconProps) {
+  return <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
+}
 
 export default observer(function OrbitNav() {
   const { paneManagerStore } = useStoresSafe()
@@ -99,7 +104,7 @@ export default observer(function OrbitNav() {
           console.log('popout')
         }),
       children: (
-        <Icon
+        <OrbitTabIcon
           name={`orbit${capitalize(app.type)}`}
           size={isPinned ? 14 : 12}
           opacity={isActive ? 1 : inactiveOpacity - 0.15}
@@ -122,7 +127,7 @@ export default observer(function OrbitNav() {
               const { activePaneIndex } = spaceConfig
               // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
               const activePaneId = space.paneSort[activePaneIndex]
-              console.log('ok', paneSort, space.paneSort, activePaneIndex, activePaneId)
+              console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
               if (activePaneId !== paneSort[activePaneIndex]) {
                 console.log('updating active index to', paneSort.indexOf(activePaneId))
                 updateSpaceConfig({
@@ -133,7 +138,7 @@ export default observer(function OrbitNav() {
             }}
           />
           <OrbitTab tooltip="Add app">
-            <Icon name="add" size={10} opacity={0.5} />
+            <OrbitTabIcon name="add" size={10} opacity={0.5} />
           </OrbitTab>
           <View flex={2} />
           <OrbitTab
@@ -141,14 +146,14 @@ export default observer(function OrbitNav() {
             onClick={paneManagerStore.activePaneByTypeSetter('apps')}
             tooltip="All Apps"
           >
-            <Icon name="grid48" size={10} opacity={0.5} />
+            <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
           </OrbitTab>
           <OrbitTab
             isActive={paneManagerStore.activePane.type === 'sources'}
             onClick={paneManagerStore.activePaneByTypeSetter('sources')}
             tooltip="Sources"
           >
-            <Icon name="design_app" size={11} opacity={0.5} />
+            <OrbitTabIcon name="design_app" size={11} opacity={0.5} />
           </OrbitTab>
         </OrbitNavChrome>
       </OrbitNavClip>
@@ -233,7 +238,7 @@ function PopoutIcon(props) {
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',
-  padding: [20, 20, 0],
+  padding: [20, 25, 0],
   margin: [-20, 0, 0],
 }).theme((_, theme) => ({
   boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
@@ -247,8 +252,6 @@ const OrbitNavChrome = gloss({
   alignItems: 'flex-end',
   // background: '#00000099',
 })
-
-const buttonSidePad = 14
 
 const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
   position: 'relative',
@@ -269,7 +272,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     transition: isActive ? 'none' : 'all ease-out 500ms',
   }
   return {
-    padding: [5, sidePad],
+    padding: [0, sidePad],
     flexGrow: stretch ? 1 : 0,
     minWidth: stretch ? 90 : 0,
     background: isActive ? background : 'transparent',

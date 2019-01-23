@@ -116,7 +116,7 @@ export default observer(function OrbitNav() {
       isActive,
       onClick: () => {
         setShowCreateNew(false)
-        paneManagerStore.activePaneSetter(app.id)()
+        paneManagerStore.setActivePane(app.id)
       },
       onClickPopout:
         !isPinned &&
@@ -160,7 +160,14 @@ export default observer(function OrbitNav() {
         <OrbitTab
           tooltip={showCreateNew ? 'Cancel' : 'Add'}
           thicc
-          onClick={() => setShowCreateNew(!showCreateNew)}
+          onClick={() => {
+            if (!showCreateNew) {
+              paneManagerStore.setActivePaneByType('createApp')
+            } else {
+              paneManagerStore.back()
+            }
+            setShowCreateNew(!showCreateNew)
+          }}
         >
           <OrbitTabIcon name={showCreateNew ? 'remove' : 'add'} size={10} opacity={0.5} />
         </OrbitTab>

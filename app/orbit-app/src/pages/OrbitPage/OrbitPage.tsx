@@ -129,6 +129,7 @@ function OrbitPageProvideStores(props: { children: any }) {
         { name: 'Settings', type: 'settings' },
         { name: 'Apps', type: 'apps' },
         { name: 'Sources', type: 'sources' },
+        { name: 'Add app', type: 'createApp' },
         { name: 'Onboard', type: 'onboard' },
       ].map((pane, id) => ({ ...pane, id: `app-${id}` })),
     ],

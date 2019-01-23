@@ -96,7 +96,6 @@ const OrbitPageInner = observer(function OrbitPageInner() {
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <Chrome>
               <OrbitHeader />
-
               <InnerChrome>
                 <OrbitPageContent />
               </InnerChrome>
@@ -147,7 +146,11 @@ function OrbitPageProvideStores(props: { children: any }) {
     paneManagerStore,
   }
 
-  return <StoreContext.Provider value={stores}>{props.children}</StoreContext.Provider>
+  return (
+    <MergeContext Context={StoreContext} value={stores}>
+      {props.children}
+    </MergeContext>
+  )
 }
 
 const Chrome = gloss({

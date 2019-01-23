@@ -16,6 +16,7 @@ import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { MergeContext } from '../../../views/MergeContext'
+import { VirtualListDefaultProps } from '../../../views/VirtualList/VirtualList'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
 import MenuApp from './MenuApp'
@@ -531,21 +532,23 @@ export function Menu() {
   }, [])
 
   return (
-    <MergeContext
-      Context={StoreContext}
-      value={{
-        queryStore,
-        menuStore,
-        paneManagerStore,
-      }}
-    >
-      <BrowserDebugTray menuStore={menuStore}>
-        <MainShortcutHandler>
-          <MenuChrome>
-            <MenuLayerContent />
-          </MenuChrome>
-        </MainShortcutHandler>
-      </BrowserDebugTray>
+    <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
+      <MergeContext
+        Context={StoreContext}
+        value={{
+          queryStore,
+          menuStore,
+          paneManagerStore,
+        }}
+      >
+        <BrowserDebugTray menuStore={menuStore}>
+          <MainShortcutHandler>
+            <MenuChrome>
+              <MenuLayerContent />
+            </MenuChrome>
+          </MainShortcutHandler>
+        </BrowserDebugTray>
+      </MergeContext>
     </MergeContext>
   )
 }

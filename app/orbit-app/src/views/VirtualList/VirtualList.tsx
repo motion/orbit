@@ -37,6 +37,7 @@ export type VirtualListProps = {
   scrollToIndex?: number
   padTop?: number
   sortable?: boolean
+  dynamicHeight?: boolean
 }
 
 class SortableList extends React.Component<any> {
@@ -93,20 +94,26 @@ class VirtualListStore {
   measureTm = null
 
   measureHeight() {
-    if (!this.cache) {
-      return
-    }
-    // height
-    let height = 0
-    for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
-      height += this.cache.rowHeight(i)
-    }
-    if (height === 0) {
-      return
-    }
-    this.height = Math.min(this.props.maxHeight || Infinity, height)
-    if (this.props.onChangeHeight) {
-      this.props.onChangeHeight(this.height)
+    if (this.props.dynamicHeight) {
+      if (!this.cache) {
+        return
+      }
+      // height
+      let height = 0
+      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+        height += this.cache.rowHeight(i)
+      }
+      if (height === 0) {
+        return
+      }
+      this.height = Math.min(this.props.maxHeight || Infinity, height)
+      if (this.props.onChangeHeight) {
+        this.props.onChangeHeight(this.height)
+      }
+    } else {
+      if (this.rootRef && this.rootRef.parentNode) {
+        this.height = (this.rootRef.parentNode as HTMLDivElement).clientHeight
+      }
     }
   }
 
@@ -179,12 +186,19 @@ const itemProps = (props: VirtualListProps, index: number): Partial<VirtualListI
   return res
 }
 
+// TODO extract useDefaultProps + DefaultProps context into helper libs
+
 function useDefaultProps<A>(a: A, b: Partial<A>): A {
   return { ...b, ...a }
 }
 
+export const VirtualListDefaultProps = React.createContext({
+  estimatedRowHeight: 60,
+} as Partial<VirtualListProps>)
+
 export default observer(function VirtualList(rawProps: VirtualListProps) {
-  const props = useDefaultProps(rawProps, { estimatedRowHeight: 60 })
+  const defaultProps = React.useContext(VirtualListDefaultProps)
+  const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
   const { cache, width, height } = store
 

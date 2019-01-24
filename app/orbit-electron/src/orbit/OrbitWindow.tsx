@@ -147,9 +147,11 @@ export default observer(function OrbitWindow() {
 
   console.log('icon', join(ROOT, 'resources', 'icons', 'appicon.png'))
 
+  const showWindow = Electron.isTorn ? true : show ? App.orbitState.docked : false
+
   return (
     <Window
-      show={show ? App.orbitState.docked : false}
+      show={showWindow}
       focus
       onReadyToShow={() => setShow(true)}
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}

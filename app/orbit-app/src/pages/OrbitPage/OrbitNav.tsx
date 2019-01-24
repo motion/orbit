@@ -177,6 +177,7 @@ export default observer(function OrbitNav() {
           isActive={paneManagerStore.activePane.type === 'apps'}
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
           tooltip="All Apps"
+          separator
         >
           <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
         </OrbitTab>
@@ -328,6 +329,9 @@ const Separator = gloss({
   top: 0,
   right: 0,
   bottom: 0,
+  transform: {
+    y: -1,
+  },
   width: 1,
-  background: 'linear-gradient(transparent, rgba(0,0,0,0.048))',
+  background: 'linear-gradient(transparent 15%, rgba(0,0,0,0.048))',
 })

@@ -4,6 +4,7 @@ import * as React from 'react'
 export function FloatingButton(props: ButtonProps) {
   return (
     <Button
+      glint={false}
       borderWidth={0}
       sizeHeight={0.8}
       sizeIcon={1.45}

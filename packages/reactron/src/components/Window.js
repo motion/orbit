@@ -46,6 +46,7 @@ export class Window extends BaseComponent {
     this.propHandlers = {
       nodeIntegration: this.handleSetProp('nodeIntegration'),
       kiosk: this.handleSetProp('kiosk'),
+      vibrancy: this.handleSetProp('vibrancy'),
       fullScreen: this.handleSetProp('fullScreen'),
       visibleOnAllWorkspaces: this.handleSetProp('visibleOnAllWorkspaces'),
       fullScreenable: this.handleSetProp('fullScreenable'),

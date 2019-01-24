@@ -178,7 +178,7 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
-  background: theme.background.alpha(0.72),
+  background: theme.headerBackground || theme.background.alpha(0.72),
 }))
 
 const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
@@ -188,9 +188,7 @@ const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
 }))
 
 const HeaderTop = gloss(View, {
-  padding: [4, 10],
   flexFlow: 'row',
-  transition: 'all ease-in 300ms',
   position: 'relative',
 })
 
@@ -198,7 +196,7 @@ const OrbitHeaderBg = gloss(FullScreen, {
   zIndex: -1,
   pointerEvents: 'none',
 }).theme((_, theme) => ({
-  background: `linear-gradient(${theme.background.alpha(0.35)}, transparent)`,
+  background: `linear-gradient(${theme.background.alpha(0.5)},${theme.background.alpha(0)})`,
 }))
 
 const After = gloss({

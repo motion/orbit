@@ -209,7 +209,7 @@ const OrbitTab = ({
       <Row maxWidth="100%" alignItems="center" justifyContent="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={isActive ? 0.7 : !label ? 0.5 : 0.3}
+            opacity={isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.25}
             isActive={isActive}
             name={icon}
             size={iconSize}

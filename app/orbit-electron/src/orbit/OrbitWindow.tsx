@@ -116,7 +116,11 @@ export default observer(function OrbitWindow() {
   root['OrbitWindowStore'] = store // helper for dev
 
   const url = Config.urls.server
-  log.info(`--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size}`)
+  const vibrancy = App.state.darkTheme ? 'dark' : 'light'
+
+  log.info(
+    `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${vibrancy}`,
+  )
 
   const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
@@ -172,7 +176,7 @@ export default observer(function OrbitWindow() {
       showDevTools={Electron.state.showDevTools.app}
       transparent
       background="#00000000"
-      vibrancy={App.state.darkTheme ? 'dark' : 'light'}
+      vibrancy={vibrancy}
       hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />

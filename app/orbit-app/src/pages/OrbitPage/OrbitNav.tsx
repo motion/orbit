@@ -133,8 +133,8 @@ export default observer(function OrbitNav() {
       children: (
         <OrbitTabIcon
           name={`orbit${capitalize(app.type)}`}
-          size={isPinned ? 14 : 12}
-          opacity={isActive ? iconOpacity : inactiveOpacity - 0.5}
+          size={isPinned ? 16 : 12}
+          opacity={isActive ? iconOpacity : inactiveOpacity - 0.6}
         />
       ),
     }
@@ -194,7 +194,7 @@ export default observer(function OrbitNav() {
           tooltip="All Apps"
           separator
         >
-          <OrbitTabIcon name="grid48" size={10} opacity={0.5} />
+          <OrbitTabIcon name="grid48" size={10} opacity={0.4} />
         </OrbitTab>
         <OrbitTab
           thicc
@@ -202,7 +202,7 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           tooltip="Sources"
         >
-          <OrbitTabIcon name="design_app" size={11} opacity={0.5} />
+          <OrbitTabIcon name="design_app" size={11} opacity={0.4} />
         </OrbitTab>
       </OrbitNavChrome>
     </OrbitNavClip>
@@ -235,9 +235,10 @@ const OrbitTab = ({
         {!!label && (
           <Text
             ellipse
+            className="tab-label"
             size={0.9}
-            marginLeft={!!children ? sidePad * 0.8 : 0}
-            alpha={isActive ? 1 : inactiveOpacity}
+            marginLeft={!!children ? sidePad * 0.7 : 0}
+            opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={500}
             {...textProps}
           >
@@ -331,10 +332,13 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
-      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.6)]]
+      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor]]
       : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,
+    '&:hover .tab-label': {
+      opacity: 1,
+    },
     '&:active': glowStyle,
   }
 })

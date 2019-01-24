@@ -122,7 +122,7 @@ export default observer(function OrbitHeader() {
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
-      <HeaderTop>
+      <HeaderTop padding={orbitStore.isTorn ? [2, 10] : [4, 10]}>
         <OrbitClose dontDim={orbitStore.isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
@@ -158,7 +158,7 @@ export default observer(function OrbitHeader() {
       </HeaderTop>
 
       <OrbitNav />
-      <OrbitHeaderDivider />
+      <OrbitHeaderDivider torn={orbitStore.isTorn} />
       <OrbitHeaderBg />
     </OrbitHeaderContainer>
   )
@@ -182,14 +182,14 @@ const OrbitHeaderContainer = gloss(View, {
   background: invertLightness(theme.background, 0.1).alpha(0.7),
 }))
 
-const OrbitHeaderDivider = gloss({
+const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
   height: 1,
-}).theme((_, theme) => ({
-  background: theme.tabBackground,
+}).theme(({ torn }, theme) => ({
+  background: torn ? theme.borderColor.alpha(0.5) : theme.tabBackground,
 }))
 
-const HeaderTop = gloss({
-  padding: [2, 10],
+const HeaderTop = gloss(View, {
+  padding: [4, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
   position: 'relative',

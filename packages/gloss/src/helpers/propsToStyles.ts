@@ -1,4 +1,5 @@
-import { validCSSAttr, CSSPropertySet, ThemeObject } from '@mcro/css'
+import { CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
+import { Config } from '../config'
 import { alphaColor } from './alphaColor'
 
 export const styleVal = (val, theme) => (typeof val === 'function' ? val(theme) : val)
@@ -10,15 +11,18 @@ export const propsToStyles = (props: any, theme: ThemeObject) => {
     ...props.style,
   }
   // loop over props turning into styles
-  for (const key in props) {
+  for (let key in props) {
     // &:hover, etc
-    if (key[0] === '&') {
+    const abbrev = Config.pseudoAbbreviations[key]
+    if (key[0] === '&' || abbrev) {
+      const psuedoKey = abbrev || key
+      const subStyle = props[key]
       const val = {}
       // theme functions for sub objects
-      for (const subKey in props[key]) {
-        val[subKey] = styleVal(props[key][subKey], theme)
+      for (const subKey in subStyle) {
+        val[subKey] = styleVal(subStyle[subKey], theme)
       }
-      styles[key] = val
+      styles[psuedoKey] = val
     } else if (validCSSAttr[key]) {
       styles[key] = styleVal(props[key], theme)
     }

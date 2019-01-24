@@ -183,7 +183,7 @@ export default observer(function ListItem(props: ListItemProps) {
           padding={padding || [8, 11]}
           {...cardProps}
         >
-          <div style={{ flexDirection: 'row', width: '100%' }}>
+          <div style={{ flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
             {before}
             <ListItemMainContent oneLine={oneLine}>
               {showTitle && (
@@ -322,6 +322,7 @@ const Divider = gloss({
 }))
 
 const ListItemChrome = gloss({
+  flexFlow: 'row',
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
@@ -405,6 +406,7 @@ const Bottom = gloss({
 
 const ListItemMainContent = gloss({
   flex: 1,
+  overflow: 'hidden',
   maxWidth: '100%',
   margin: ['auto', 0],
   oneLine: {

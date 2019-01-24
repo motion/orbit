@@ -1,5 +1,6 @@
 import { debugEmit } from '@mcro/black'
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
+import { configureGloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
@@ -19,6 +20,14 @@ import { Icon } from './views/Icon'
 if (process.env) {
   process.env.STACK_FILTER = 'true'
 }
+
+configureGloss({
+  pseudoAbbreviations: {
+    hoverStyle: '&:hover',
+    activeStyle: '&:active',
+    focusStyle: '&:focus',
+  },
+})
 
 configureUI({
   useIcon: Icon,

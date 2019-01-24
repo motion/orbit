@@ -1,5 +1,6 @@
 import { Absolute, Button, Row, Theme, View } from '@mcro/ui'
 import React from 'react'
+import OrbitIconSelect from '../components/OrbitIconSelect'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
 import { Icon } from '../views/Icon'
@@ -51,6 +52,11 @@ export const createApp = {
             newAppStore.setName(e.target.value)
           }}
         />
+
+        <VerticalSpace />
+
+        <SubTitle>Select Icon</SubTitle>
+        <OrbitIconSelect />
 
         <Absolute top={20} right={20}>
           <Theme name="selected">

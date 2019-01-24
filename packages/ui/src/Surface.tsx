@@ -175,7 +175,6 @@ export default React.memo(function Surface(props: SurfaceProps) {
         {glint && !props.chromeless && (
           <Glint
             key={0}
-            size={size}
             borderLeftRadius={segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius}
             borderRightRadius={
               segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius

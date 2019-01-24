@@ -20,6 +20,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const searchStore = useStore(SearchStore, props)
   const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
+  const items = searchStore.searchState.results
   return (
     <>
       <OrbitToolbar>
@@ -60,24 +61,28 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       <SelectableList
         defaultSelected={0}
         // padTop={28}
-        items={searchStore.searchState.results}
+        items={items}
         query={props.appStore.activeQuery}
         rowCount={searchStore.remoteRowCount}
         loadMoreRows={searchStore.loadMore}
         getItemProps={index => {
-          return {
-            after: (
-              <View
-                alignItems="center"
-                justifyContent="center"
-                width={32}
-                opacity={0.5}
-                hoverStyle={{ opacity: 1 }}
-              >
-                <Icon name="dots" size={12} />
-              </View>
-            ),
+          const item = items[index]
+          if (item.item && item.item.target) {
+            return {
+              after: (
+                <View
+                  alignItems="center"
+                  justifyContent="center"
+                  width={32}
+                  opacity={0.5}
+                  hoverStyle={{ opacity: 1 }}
+                >
+                  <Icon name="dots" size={12} />
+                </View>
+              ),
+            }
           }
+          return null
         }}
       />
     </>

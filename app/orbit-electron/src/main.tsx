@@ -7,6 +7,7 @@ import 'raf/polyfill'
 import * as React from 'react'
 import waitPort from 'wait-port'
 import AppsWindow from './apps/AppsWindow'
+import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
@@ -17,7 +18,7 @@ export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 
   // handle our own separate process in development
-  if (process.env.NODE_ENV === 'development') {
+  if (!IS_SUB_ORBIT && process.env.NODE_ENV === 'development') {
     // in any electron process...
     require('source-map-support/register')
     require('./helpers/installGlobals')

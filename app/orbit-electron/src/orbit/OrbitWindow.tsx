@@ -9,7 +9,7 @@ import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
-import { ROOT } from '../constants'
+import { IS_SUB_ORBIT, ROOT } from '../constants'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
@@ -21,6 +21,7 @@ class OrbitWindowStore {
   alwaysOnTop = true
   hasMoved = false
   blurred = true
+  initialShow = false
   size = [0, 0]
   position = [0, 0]
 
@@ -52,9 +53,7 @@ class OrbitWindowStore {
   }
 
   handleRef = ref => {
-    if (!ref) {
-      return
-    }
+    if (!ref) return
     this.orbitRef = ref.window
   }
 
@@ -99,11 +98,25 @@ class OrbitWindowStore {
   handleBlur = () => {
     this.blurred = true
   }
+
+  get show() {
+    if (Electron.isTorn) {
+      return true
+    }
+    return this.initialShow ? App.orbitState.docked : false
+  }
+
+  setInitialShow = () => {
+    this.initialShow = true
+  }
 }
 
 export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
+
+  const url = Config.urls.server
+  log.info(`--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size}`)
 
   const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
@@ -117,11 +130,16 @@ export default observer(function OrbitWindow() {
     },
   })
 
+  // onMount
   React.useEffect(() => {
     // set orbit icon in dev
-    if (process.env.NODE_ENV === 'development') {
-      console.log('setting dev icon...')
+    if (!IS_SUB_ORBIT && process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
+    }
+
+    if (IS_SUB_ORBIT) {
+      // TODO pass the right icon based on app type here
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon-search.png'))
     }
 
     // handle tear away
@@ -132,28 +150,15 @@ export default observer(function OrbitWindow() {
     })
   }, [])
 
-  const [show, setShow] = React.useState(false)
-  const url = Config.urls.server
-
-  log.info(
-    `---- render OrbitWindow show ${show} ${url} hovered? ${Desktop.hoverState.orbitHovered} ${
-      store.size
-    }`,
-  )
-
-  if (!store.size || !store.size[0]) {
+  if (!store.size[0]) {
     return null
   }
 
-  console.log('icon', join(ROOT, 'resources', 'icons', 'appicon.png'))
-
-  const showWindow = Electron.isTorn ? true : show ? App.orbitState.docked : false
-
   return (
     <Window
-      show={showWindow}
+      show={store.show}
       focus
-      onReadyToShow={() => setShow(true)}
+      onReadyToShow={store.setInitialShow}
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       ref={store.handleRef}
       file={url}

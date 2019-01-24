@@ -44,7 +44,7 @@ export const createApp = {
           <View flex={1} />
           <Theme name="selected">
             <Button disabled={!newAppStore.name} elevation={1} size={1.4}>
-              Add
+              Save
             </Button>
           </Theme>
         </Row>
@@ -54,6 +54,7 @@ export const createApp = {
         <SubTitle>Name</SubTitle>
         <Input
           placeholder="Name..."
+          value={newAppStore.name}
           onChange={e => {
             newAppStore.setName(e.target.value)
           }}

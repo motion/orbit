@@ -1,5 +1,5 @@
 export class NewAppStore {
-  name = ''
+  name = 'New app'
   type = 'search'
 
   setName = (val: string) => {
@@ -11,7 +11,7 @@ export class NewAppStore {
   }
 
   reset = () => {
-    this.name = ''
+    this.name = 'New app'
     this.type = 'search'
   }
 }

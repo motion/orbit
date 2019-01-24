@@ -26,16 +26,26 @@ export default observer(function OrbitPageContent() {
     })
   }, [])
 
+  const activeApp = apps[orbitStore.activePane.type]
+  const hasIndex = !!activeApp.index
+  const hasMain = !!activeApp.main
+
   return (
     <Row flex={1}>
       <Sidebar
-        width={apps[orbitStore.activePane.type].index ? 300 : 0}
+        width={hasIndex ? (hasMain ? 300 : window.innerWidth) : 0}
         minWidth={100}
         maxWidth={500}
       >
-        <OrbitIndexView isHidden={false}>
+        <OrbitIndexView>
           {paneManagerStore.panes.map(pane => (
-            <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
+            <SubPane
+              key={pane.id}
+              id={pane.id}
+              type={AppType[pane.type]}
+              fullHeight
+              padding={!hasMain ? [25, 80] : 0}
+            >
               <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
                 <AppView
                   viewType="index"
@@ -48,7 +58,7 @@ export default observer(function OrbitPageContent() {
           ))}
         </OrbitIndexView>
       </Sidebar>
-      <OrbitMainView>
+      <OrbitMainView width={hasMain ? 'auto' : 0}>
         {paneManagerStore.panes.map(pane => (
           <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
             <OrbitPageMainView pane={pane} />
@@ -80,15 +90,9 @@ const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pan
 const OrbitIndexView = gloss(View, {
   flex: 1,
   position: 'relative',
-  isHidden: {
-    position: 'absolute',
-    pointerEvents: 'none',
-    visibility: 'hidden',
-    zIndex: -1,
-  },
 })
 
-const OrbitMainView = gloss({
+const OrbitMainView = gloss(View, {
   flex: 1,
   position: 'relative',
 }).theme((_, theme) => ({

@@ -114,7 +114,7 @@ export class HeaderStore {
 }
 
 export default observer(function OrbitHeader() {
-  const { queryStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   return (
     <>
@@ -129,7 +129,7 @@ export default observer(function OrbitHeader() {
           </OrbitClose>
           <Row flex={1} alignItems="center">
             <Row flex={1} />
-            <OrbitSwitch />
+            {!orbitStore.isTorn && <OrbitSwitch />}
             <FakeInput>
               <OrbitHeaderInput headerStore={headerStore} />
               <After>
@@ -137,14 +137,16 @@ export default observer(function OrbitHeader() {
                 {/* <OrbitHeaderButtons /> */}
               </After>
             </FakeInput>
-            <Button
-              chromeless
-              isActive={paneManagerStore.activePane.type === 'settings'}
-              onClick={paneManagerStore.activePaneByTypeSetter('settings')}
-              tooltip="Settings"
-            >
-              <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
-            </Button>
+            {!orbitStore.isTorn && (
+              <Button
+                chromeless
+                isActive={paneManagerStore.activePane.type === 'settings'}
+                onClick={paneManagerStore.activePaneByTypeSetter('settings')}
+                tooltip="Settings"
+              >
+                <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
+              </Button>
+            )}
             <Row flex={1} />
           </Row>
 

@@ -27,6 +27,7 @@ import OrbitHeader from './OrbitHeader'
 import OrbitPageContent from './OrbitPageContent'
 
 export class OrbitStore {
+  isTorn = false
   stores = useHook(useStoresSafe)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
@@ -37,6 +38,10 @@ export class OrbitStore {
 
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
+  }
+
+  setTorn = () => {
+    this.isTorn = true
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
@@ -95,7 +100,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <OrbitHeader />
-            <InnerChrome>
+            <InnerChrome torn={orbitStore.isTorn}>
               <OrbitPageContent />
             </InnerChrome>
           </AppWrapper>
@@ -157,10 +162,10 @@ function OrbitPageProvideStores(props: { children: any }) {
   )
 }
 
-const InnerChrome = gloss({
+const InnerChrome = gloss<{ torn?: boolean }>({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',
-}).theme(() => ({
-  boxShadow: [[0, 0, 50, [40, 40, 40, 0.4]]],
+}).theme(({ torn }) => ({
+  boxShadow: [torn ? null : [0, 0, 50, [40, 40, 40, 0.4]]],
 }))

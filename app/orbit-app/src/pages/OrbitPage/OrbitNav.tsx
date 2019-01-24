@@ -63,7 +63,7 @@ function OrbitTabIcon(props: IconProps) {
 }
 
 export default observer(function OrbitNav() {
-  const { paneManagerStore, newAppStore } = useStoresSafe()
+  const { orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
@@ -90,6 +90,12 @@ export default observer(function OrbitNav() {
     },
     [space && space.id, appIds.join('')],
   )
+
+  if (orbitStore.isTorn) {
+    return null
+  }
+
+  // after hooks
 
   if (!activeApps.length || !space || !space.paneSort) {
     return (
@@ -122,7 +128,7 @@ export default observer(function OrbitNav() {
       onClickPopout:
         !isPinned &&
         (() => {
-          console.log('popout')
+          orbitStore.setTorn()
         }),
       children: (
         <OrbitTabIcon

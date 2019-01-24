@@ -19,8 +19,7 @@ export class GMailMessageParser {
    */
   private htmlBody: string
 
-  constructor(private message: GMailMessage) {
-  }
+  constructor(private message: GMailMessage) {}
 
   /**
    * Gets the date from the Gmail message.
@@ -72,12 +71,10 @@ export class GMailMessageParser {
 
     if (this.textBody) {
       return this.removeAnnoyingCharacters(this.textBody)
-
     } else if (this.htmlBody) {
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
       return this.removeAnnoyingCharacters(DOMPurify.sanitize(this.htmlBody, { ALLOWED_TAGS: [] }))
-
     } else {
       return this.removeAnnoyingCharacters(this.message.snippet)
     }
@@ -93,11 +90,16 @@ export class GMailMessageParser {
     if (this.htmlBody) {
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return DOMPurify.sanitize(this.htmlBody)
-        .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
-        .replace(/&nbsp;/gi, ' ')
-        .replace(/•/gi, '')
-        .trim()
+      return (
+        DOMPurify.sanitize(this.htmlBody)
+          .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
+          .replace(/&nbsp;/gi, ' ')
+          .replace(/•/gi, '')
+          // gmail formats plain text links as <http://google.com>
+          // turn <http://google.com> => http://google.com
+          .replace(/<([^>]+)>/g, '$1')
+          .trim()
+      )
     } else if (this.textBody) {
       return this.textBody
     } else {
@@ -112,7 +114,7 @@ export class GMailMessageParser {
     return str
       .replace(/&nbsp;/gi, ' ')
       .replace(/•/gi, '')
-      .replace(/\s/g,' ')
+      .replace(/\s/g, ' ')
       .trim()
   }
 

@@ -171,6 +171,7 @@ const OrbitHeaderContainer = gloss(View, {
   zIndex: 4,
 }).theme((_, theme) => ({
   background: invertLightness(theme.background, 0.1).alpha(0.65),
+  // borderBottom: [5, theme.tabBackground],
 }))
 
 const HeaderTop = gloss({

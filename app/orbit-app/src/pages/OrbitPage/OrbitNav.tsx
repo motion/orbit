@@ -229,7 +229,7 @@ const OrbitTab = ({
         {!!label && (
           <Text
             ellipse
-            size={0.95}
+            size={0.9}
             marginLeft={!!children ? sidePad * 0.8 : 0}
             alpha={isActive ? 1 : inactiveOpacity}
             fontWeight={500}

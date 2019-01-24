@@ -62,7 +62,7 @@ const light = {
   sidebarBorderColor: '#eee',
   ...Theme.fromStyles({
     sidebarBackground: [255, 255, 255, 0.75],
-    tabBackground: [255, 255, 255, 0.8],
+    tabBackground: [255, 255, 255, 0.68],
     // tabBackgroundActive: [255, 255, 255, 0.8],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',

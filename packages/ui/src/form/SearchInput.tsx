@@ -35,7 +35,7 @@ export function SearchInput({
   filterProps = null,
   value = null,
   flex = null,
-  padding = 4,
+  padding = 0,
   visible,
   ...props
 }: SearchInputProps) {

@@ -50,7 +50,7 @@ type SidebarProps = {
   /**
    * Background color.
    */
-  backgroundColor?: string
+  background?: string
   /**
    * Callback when the sidebar size ahs changed.
    */
@@ -99,7 +99,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 
   render() {
-    const { backgroundColor, onResize, position, children } = this.props
+    const { background, onResize, position, children } = this.props
     let height, minHeight, maxHeight, width, minWidth, maxWidth
 
     const resizable: { [key: string]: boolean } = {}
@@ -141,7 +141,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         resizable={resizable}
         onResize={this.onResize}
       >
-        <SidebarContainer position={position} backgroundColor={backgroundColor}>
+        <SidebarContainer position={position} background={background}>
           {children}
         </SidebarContainer>
       </SidebarInteractiveContainer>

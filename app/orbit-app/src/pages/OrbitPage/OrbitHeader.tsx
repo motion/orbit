@@ -117,41 +117,44 @@ export default observer(function OrbitHeader() {
   const { queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   return (
-    <OrbitHeaderContainer
-      opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
-      className="draggable"
-      onMouseUp={headerStore.handleMouseUp}
-    >
-      <HeaderTop>
-        <OrbitClose onClick={AppActions.closeOrbit}>
-          <WindowCloseButton size={8} />
-        </OrbitClose>
-        <Row flex={1} alignItems="center">
-          <Row flex={1} />
-          <OrbitSwitch />
-          <FakeInput>
-            <OrbitHeaderInput headerStore={headerStore} />
-            <After>
-              {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
-              {/* <OrbitHeaderButtons /> */}
-            </After>
-          </FakeInput>
-          <Button
-            chromeless
-            isActive={paneManagerStore.activePane.type === 'settings'}
-            onClick={paneManagerStore.activePaneByTypeSetter('settings')}
-            tooltip="Settings"
-          >
-            <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
-          </Button>
-          <Row flex={1} />
-        </Row>
+    <>
+      <OrbitHeaderContainer
+        opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
+        className="draggable"
+        onMouseUp={headerStore.handleMouseUp}
+      >
+        <HeaderTop>
+          <OrbitClose onClick={AppActions.closeOrbit}>
+            <WindowCloseButton size={8} />
+          </OrbitClose>
+          <Row flex={1} alignItems="center">
+            <Row flex={1} />
+            <OrbitSwitch />
+            <FakeInput>
+              <OrbitHeaderInput headerStore={headerStore} />
+              <After>
+                {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
+                {/* <OrbitHeaderButtons /> */}
+              </After>
+            </FakeInput>
+            <Button
+              chromeless
+              isActive={paneManagerStore.activePane.type === 'settings'}
+              onClick={paneManagerStore.activePaneByTypeSetter('settings')}
+              tooltip="Settings"
+            >
+              <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
+            </Button>
+            <Row flex={1} />
+          </Row>
 
-        <OrbitAutoComplete />
-      </HeaderTop>
+          <OrbitAutoComplete />
+        </HeaderTop>
 
-      <OrbitNav />
-    </OrbitHeaderContainer>
+        <OrbitNav />
+        <OrbitHeaderDivider />
+      </OrbitHeaderContainer>
+    </>
   )
 })
 
@@ -170,8 +173,13 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
-  background: invertLightness(theme.background, 0.1).alpha(0.65),
-  // borderBottom: [5, theme.tabBackground],
+  background: invertLightness(theme.background, 0.1).alpha(0.75),
+}))
+
+const OrbitHeaderDivider = gloss({
+  height: 1,
+}).theme((_, theme) => ({
+  background: theme.tabBackground,
 }))
 
 const HeaderTop = gloss({

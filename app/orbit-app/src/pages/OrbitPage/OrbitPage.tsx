@@ -78,13 +78,13 @@ export class OrbitStore {
   })
 }
 
-export default observer(function OrbitPage() {
+export default function OrbitPage() {
   return (
     <OrbitPageProvideStores>
       <OrbitPageInner />
     </OrbitPageProvideStores>
   )
-})
+}
 
 const OrbitPageInner = observer(function OrbitPageInner() {
   const orbitStore = useStore(OrbitStore)
@@ -162,5 +162,5 @@ const InnerChrome = gloss({
   flex: 1,
   overflow: 'hidden',
 }).theme(() => ({
-  boxShadow: [[0, 0, 70, [0, 0, 0, 0.05]]],
+  boxShadow: [[0, 0, 50, [40, 40, 40, 0.4]]],
 }))

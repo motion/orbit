@@ -1,8 +1,7 @@
-import { PersonBit } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { memoize } from 'lodash'
 import * as React from 'react'
-import { AppActions } from '../actions/AppActions'
+import { preventDefault } from '../helpers/preventDefault'
+import { useStoresSafe } from '../hooks/useStoresSafe'
 
 const shortName = name => {
   const names = name.split(' ')
@@ -10,26 +9,27 @@ const shortName = name => {
   return `${names[0]}${lastInitial}`
 }
 
-const handleClick = memoize((person: PersonBit) => e => {
-  e.stopPropagation()
-  e.preventDefault()
-  AppActions.queryTogglePersonFilter(person.name)
-})
-
 const Person = props => (
-  <UI.Inline marginRight={4} onClick={handleClick(props.person)}>
+  <UI.Inline marginRight={4} onClick={props.onClick}>
     {shortName(props.person.name)}
     {props.after}
   </UI.Inline>
 )
 
 export default function PeopleRow({ people }) {
+  const { queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(UI.ThemeContext)
   const total = (people || []).length
   if (total === 0) {
     return null
   }
+
+  const onClickPerson = person => {
+    queryStore.togglePersonFilter(person.name)
+  }
+
   const half = total / 2
+
   return (
     <UI.Row alignItems="center" marginRight={20} maxWidth="calc(100% - 20px)">
       <UI.Row marginRight={14} alignItems="center">
@@ -53,11 +53,17 @@ export default function PeopleRow({ people }) {
         <UI.Text size={0.9} alpha={0.6} fontWeight={400}>
           {people.length <= 2 &&
             (people || []).map((person, i) => (
-              <Person key={i} person={person} after={i < people.length - 1 ? ',' : ''} />
+              <Person
+                key={i}
+                person={person}
+                onClick={preventDefault(() => onClickPerson(person))}
+                after={i < people.length - 1 ? ',' : ''}
+              />
             ))}
           {people.length > 2 && (
             <>
-              <Person person={people[0]} /> +{people.length - 1}
+              <Person onClick={preventDefault(() => onClickPerson(people[0]))} person={people[0]} />{' '}
+              +{people.length - 1}
             </>
           )}
         </UI.Text>

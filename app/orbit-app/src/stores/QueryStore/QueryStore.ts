@@ -1,7 +1,7 @@
 import { react } from '@mcro/black'
 import { SourcesStore } from '../SourcesStore'
-import { QueryFilterStore } from './QueryFiltersStore'
 import { NLPStore } from './NLPStore'
+import { QueryFilterStore } from './QueryFiltersStore'
 
 export class QueryStore {
   props: {
@@ -56,5 +56,23 @@ export class QueryStore {
 
   onChangeQuery = e => {
     this.queryInstant = e.target.value
+  }
+
+  toggleLocationFilter(location: string) {
+    if (this.queryInstant.indexOf(location) === -1) {
+      this.setQuery(`${this.queryInstant.trim()} in:${location}`)
+    }
+  }
+
+  togglePersonFilter(person: string) {
+    if (this.queryInstant.indexOf(person) === -1) {
+      this.setQuery(`${this.queryInstant.trim()} ${person}`)
+    }
+  }
+
+  queryToggleFilter(str: string) {
+    if (this.queryInstant.indexOf(str) === -1) {
+      this.setQuery(`${this.queryInstant.trim()} ${str}`)
+    }
   }
 }

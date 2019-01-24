@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { invertLightness } from '@mcro/color'
-import { Absolute, gloss } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -117,46 +117,45 @@ export default observer(function OrbitHeader() {
   const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   return (
-    <>
-      <OrbitHeaderContainer
-        opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
-        className="draggable"
-        onMouseUp={headerStore.handleMouseUp}
-      >
-        <HeaderTop>
-          <OrbitClose onClick={AppActions.closeOrbit}>
-            <WindowCloseButton size={8} />
-          </OrbitClose>
-          <Row flex={1} alignItems="center">
-            <Row flex={1} />
-            {!orbitStore.isTorn && <OrbitSwitch />}
-            <FakeInput>
-              <OrbitHeaderInput headerStore={headerStore} />
-              <After>
-                {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
-                {/* <OrbitHeaderButtons /> */}
-              </After>
-            </FakeInput>
-            {!orbitStore.isTorn && (
-              <Button
-                chromeless
-                isActive={paneManagerStore.activePane.type === 'settings'}
-                onClick={paneManagerStore.activePaneByTypeSetter('settings')}
-                tooltip="Settings"
-              >
-                <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
-              </Button>
-            )}
-            <Row flex={1} />
-          </Row>
+    <OrbitHeaderContainer
+      opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
+      className="draggable"
+      onMouseUp={headerStore.handleMouseUp}
+    >
+      <HeaderTop>
+        <OrbitClose onClick={AppActions.closeOrbit}>
+          <WindowCloseButton size={8} />
+        </OrbitClose>
+        <Row flex={1} alignItems="center">
+          <Row flex={1} />
+          {!orbitStore.isTorn && <OrbitSwitch />}
+          <FakeInput>
+            <OrbitHeaderInput headerStore={headerStore} />
+            <After>
+              {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
+              {/* <OrbitHeaderButtons /> */}
+            </After>
+          </FakeInput>
+          {!orbitStore.isTorn && (
+            <Button
+              chromeless
+              isActive={paneManagerStore.activePane.type === 'settings'}
+              onClick={paneManagerStore.activePaneByTypeSetter('settings')}
+              tooltip="Settings"
+            >
+              <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
+            </Button>
+          )}
+          <Row flex={1} />
+        </Row>
 
-          <OrbitAutoComplete />
-        </HeaderTop>
+        <OrbitAutoComplete />
+      </HeaderTop>
 
-        <OrbitNav />
-        <OrbitHeaderDivider />
-      </OrbitHeaderContainer>
-    </>
+      <OrbitNav />
+      <OrbitHeaderDivider />
+      <OrbitHeaderBg />
+    </OrbitHeaderContainer>
   )
 })
 
@@ -190,6 +189,13 @@ const HeaderTop = gloss({
   transition: 'all ease-in 300ms',
   position: 'relative',
 })
+
+const OrbitHeaderBg = gloss(FullScreen, {
+  zIndex: -1,
+  pointerEvents: 'none',
+}).theme((_, theme) => ({
+  background: `linear-gradient(${theme.background.alpha(0.5)}, transparent)`,
+}))
 
 const After = gloss({
   alignItems: 'center',

@@ -61,7 +61,6 @@ export default React.memo(function OrbitList({
             selectionStore.toggleSelected(index, eventType)
           }
           if (props.onSelect) {
-            console.log('get config', items[index])
             props.onSelect(index, getAppConfig(items[index]))
           }
         }}

@@ -1,27 +1,21 @@
 until end of jan:
 
-- manage space pane
-  - upload your image / name it / CRUD
-- manage account pane
+- manage space pane: upload your image / name it / CRUD
+- manage account pane: same sort of deal... + link to slack
+  fix search results: open on enter, onOpen broke
+  fix tab drag index
+  new app pane
+  command+enter to pop out app into own window / multi apps
+  actions menu
+  add people to search
+  fixing tray/menu display and interaction
+  restore menus a bit just actions dropdown + search
+  get ocr hooked into menu enable/disable and output results
+  get ocr => memory simple list
 
-  - same sort of deal... + link to slack
-
-- fix search results
-  - fix open on enter
-  - fix select on search broke
-
-fix tab drag index
-new app pane
-command+enter to pop out app into own window / multi apps
-actions menu
-
-1. add people to search
-2. fixing tray/menu display and interaction
-3. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-4. restore menus a bit just actions dropdown + search
-5. get ocr hooked into menu enable/disable and output results
-6. get ocr => memory simple list
-7. work through lists apps a bit
+- big things
+  lists
+  actions menu
 
 ---
 
@@ -117,7 +111,6 @@ tasks:
 
 for me once split out:
 
-- search interaction with other apps
 - people with topics
 - memory app or some idea of how to make it work
 - topics as a source / topics apps generally

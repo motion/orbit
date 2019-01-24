@@ -36,6 +36,7 @@ sorting by prepping to split out work as best possible:
 
 tasks:
 
+- make min/max/close buttons work
 - add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?

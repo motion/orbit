@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { WindowCloseButton } from '../../views/WindowControls'
+import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 import OrbitSwitch from './OrbitSpaceSwitch'
@@ -123,8 +123,13 @@ export default observer(function OrbitHeader() {
       onMouseUp={headerStore.handleMouseUp}
     >
       <HeaderTop>
-        <OrbitClose onClick={AppActions.closeOrbit}>
-          <WindowCloseButton size={8} />
+        <OrbitClose dontDim={orbitStore.isTorn} onClick={AppActions.closeOrbit}>
+          <WindowControls
+            itemProps={{ size: 10 }}
+            onClose={() => console.log('close')}
+            onMin={orbitStore.isTorn ? () => console.log('min') : null}
+            onMax={orbitStore.isTorn ? () => console.log('min') : null}
+          />
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
@@ -184,7 +189,7 @@ const OrbitHeaderDivider = gloss({
 }))
 
 const HeaderTop = gloss({
-  padding: [5, 10],
+  padding: [2, 10],
   flexFlow: 'row',
   transition: 'all ease-in 300ms',
   position: 'relative',
@@ -222,21 +227,14 @@ const FakeInput = gloss({
 
 const OrbitClose = gloss({
   position: 'absolute',
-  top: 0,
-  left: 0,
+  top: 2,
+  left: 3,
   padding: 4,
   opacity: 0.1,
   '&:hover': {
     opacity: 1,
   },
-}).theme((_, theme) => {
-  const isDark = theme.background.isDark()
-  return {
-    '& > div': {
-      background: isDark ? 'transparent' : [230, 230, 230, 0.25],
-    },
-    '&:hover > div': {
-      background: isDark ? '#fff' : '#000',
-    },
-  }
+  dontDim: {
+    opacity: 1,
+  },
 })

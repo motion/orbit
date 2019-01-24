@@ -139,7 +139,12 @@ export default observer(function OrbitWindow() {
 
     // handle tear away
     return Electron.onMessage(Electron.messages.TEAR, (appType: string) => {
-      app.dock.setIcon(join(ROOT, 'resources', 'icons', `appicon-${appType}.png`))
+      try {
+        app.dock.setIcon(join(ROOT, 'resources', 'icons', `appicon-${appType}.png`))
+      } catch (err) {
+        console.log('ERROR setting icon!', err)
+        return
+      }
       Electron.setIsTorn()
       orbitShortcutsStore.dispose()
       require('@mcro/orbit').main({ subOrbit: true })

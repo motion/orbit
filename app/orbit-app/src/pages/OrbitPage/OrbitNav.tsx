@@ -13,6 +13,7 @@ import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
+const iconOpacity = 0.6
 const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
@@ -127,7 +128,7 @@ export default observer(function OrbitNav() {
         <OrbitTabIcon
           name={`orbit${capitalize(app.type)}`}
           size={isPinned ? 14 : 12}
-          opacity={isActive ? 0.6 : inactiveOpacity - 0.5}
+          opacity={isActive ? iconOpacity : inactiveOpacity - 0.5}
         />
       ),
     }
@@ -156,7 +157,15 @@ export default observer(function OrbitNav() {
             updateSpace({ paneSort })
           }}
         />
-        {showCreateNew && <OrbitTab stretch isActive label={newAppStore.name || 'New app'} />}
+        {showCreateNew && (
+          <OrbitTab stretch isActive label={newAppStore.name || 'New app'}>
+            <OrbitTabIcon
+              name={`orbit${capitalize(newAppStore.type)}`}
+              size={12}
+              opacity={iconOpacity}
+            />
+          </OrbitTab>
+        )}
         <OrbitTab
           tooltip={showCreateNew ? 'Cancel' : 'Add'}
           thicc

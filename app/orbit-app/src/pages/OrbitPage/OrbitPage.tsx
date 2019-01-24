@@ -118,7 +118,7 @@ function OrbitPageProvideStores(props: { children: any }) {
     defaultIndex: spaceConfig.activePaneIndex || 0,
     onPaneChange(index) {
       // reset name on pane change...
-      newAppStore.resetName()
+      newAppStore.reset()
 
       console.log('save active index', index)
       updateSpaceConfig({

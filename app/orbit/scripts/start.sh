@@ -34,6 +34,10 @@ fi
 if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
   echo "DISABLE REPL"
 else
+
+  # its nice to debug just the main electron process by default
+  export DEBUG_ELECTRON_MAIN=true
+
   (cd ../orbit-repl && npm start &)
 fi
 

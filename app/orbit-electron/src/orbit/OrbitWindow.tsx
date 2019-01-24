@@ -61,6 +61,7 @@ class OrbitWindowStore {
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
+      ensure('not torn', !Electron.isTorn)
       ensure('did move', !!moved)
       ensure('window', !!this.orbitRef)
       // wait for move to finish
@@ -74,6 +75,7 @@ class OrbitWindowStore {
   handleOrbitDocked = react(
     () => App.orbitState.docked,
     docked => {
+      ensure('not torn', !Electron.isTorn)
       if (!docked) {
         Menu.sendActionToFirstResponder('hide:')
       }
@@ -118,6 +120,7 @@ export default observer(function OrbitWindow() {
   React.useEffect(() => {
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
+      console.log('setting dev icon...')
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
     }
 

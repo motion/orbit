@@ -20,6 +20,7 @@ export class OrbitShortcutsStore {
   dispose() {
     this.disposed = true
     this.globalShortcut.unregisterShortcuts()
+    this.peekShortcuts.unregisterShortcuts()
   }
 
   // global shortcuts

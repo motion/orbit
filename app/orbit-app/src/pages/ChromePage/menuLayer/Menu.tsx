@@ -377,9 +377,6 @@ export class MenuStore {
       switch (event.value) {
         case '0':
           // special case: switch us over to the main orbit app
-          // sync query over to search
-          App.setState({ query: this.props.queryStore.query })
-          // then open the main window to show it there instead
           AppActions.setOrbitDocked(!App.state.orbitState.docked)
           // and close this menu
           this.closeMenu()

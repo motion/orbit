@@ -17,6 +17,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { normalizeItem } from '../../helpers/normalizeItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace, RoundButton } from '../../views'
 import ListItem from '../../views/ListItems/ListItem'
 import { SubTitle } from '../../views/SubTitle'
@@ -100,6 +101,7 @@ class PeopleAppStore {
 const PersonHeader = gloss()
 
 export default observer(function PeopleAppMain(props: AppProps<AppType.people>) {
+  const { queryStore } = useStoresSafe()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
@@ -123,14 +125,14 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
           </IntegrationButton> */}
               <IntegrationButton
                 icon="zoom"
-                onClick={() => App.setState({ query: `${person.name} documents` })}
+                onClick={() => queryStore.setQuery(`${person.name} documents`)}
               >
                 Documents
               </IntegrationButton>
               <HorizontalSpace />
               <IntegrationButton
                 icon="zoom"
-                onClick={() => App.setState({ query: `${person.name} tasks` })}
+                onClick={() => queryStore.setQuery(`${person.name} tasks`)}
               >
                 Tasks
               </IntegrationButton>

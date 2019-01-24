@@ -178,5 +178,5 @@ const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,
   overflow: 'hidden',
 }).theme(({ torn }) => ({
-  boxShadow: [torn ? null : [0, 0, 50, [40, 40, 40, 0.4]]],
+  boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
 }))

@@ -1,4 +1,3 @@
-export * from './clearSearch'
 export * from './closeApp'
 export * from './closeOrbit'
 export * from './open'

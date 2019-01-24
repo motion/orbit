@@ -13,7 +13,6 @@ import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { Icon } from '../../views/Icon'
 
 const height = 26
-const iconOpacity = 0.6
 const inactiveOpacity = 0.8
 
 type TabProps = React.HTMLAttributes<'div'> & {
@@ -27,6 +26,8 @@ type TabProps = React.HTMLAttributes<'div'> & {
   textProps?: any
   onClickPopout?: Function
   thicc?: boolean
+  icon?: string
+  iconSize?: number
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
@@ -42,25 +43,6 @@ const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
     </Row>
   )
 })
-
-function OrbitTabIcon(props: IconProps) {
-  const { activeTheme } = React.useContext(ThemeContext)
-  return (
-    <View position="relative">
-      <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
-      {/* show underneath an opposite colored one to */}
-      <Icon
-        transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }}
-        color={invertLightness(activeTheme.color, 0.2)}
-        position="absolute"
-        top={0}
-        left={0}
-        zIndex={-1}
-        {...props}
-      />
-    </View>
-  )
-}
 
 export default observer(function OrbitNav() {
   const { orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -105,40 +87,35 @@ export default observer(function OrbitNav() {
     )
   }
 
-  const items: TabProps[] = space.paneSort.map((id, index) => {
-    const app = activeApps.find(x => x.id === id)
-    const isLast = index !== activeApps.length
-    const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
-    const nextIsActive =
-      activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-    const isPinned = app.type === 'search'
-    return {
-      app,
-      separator: !isActive && isLast && !nextIsActive,
-      appId: app.id,
-      disabled: isPinned,
-      label: isPinned ? '' : app.name,
-      stretch: !isPinned,
-      thicc: isPinned,
-      isActive,
-      onClick: () => {
-        setShowCreateNew(false)
-        paneManagerStore.setActivePane(app.id)
-      },
-      onClickPopout:
-        !isPinned &&
-        (() => {
-          orbitStore.setTorn()
-        }),
-      children: (
-        <OrbitTabIcon
-          name={`orbit${capitalize(app.type)}`}
-          size={isPinned ? 16 : 12}
-          opacity={isActive ? iconOpacity : inactiveOpacity - 0.6}
-        />
-      ),
-    }
-  })
+  const items = space.paneSort.map(
+    (id, index): TabProps => {
+      const app = activeApps.find(x => x.id === id)
+      const isLast = index !== activeApps.length
+      const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
+      const nextIsActive =
+        activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
+      const isPinned = app.type === 'search'
+      return {
+        app,
+        separator: !isActive && isLast && !nextIsActive,
+        label: isPinned ? '' : app.name,
+        stretch: !isPinned,
+        thicc: isPinned,
+        isActive,
+        icon: `orbit${capitalize(app.type)}`,
+        iconSize: isPinned ? 16 : 12,
+        onClick: () => {
+          setShowCreateNew(false)
+          paneManagerStore.setActivePane(app.id)
+        },
+        onClickPopout:
+          !isPinned &&
+          (() => {
+            orbitStore.setTorn()
+          }),
+      }
+    },
+  )
 
   return (
     <OrbitNavClip>
@@ -164,17 +141,18 @@ export default observer(function OrbitNav() {
           }}
         />
         {showCreateNew && (
-          <OrbitTab stretch isActive label={newAppStore.name || 'New app'}>
-            <OrbitTabIcon
-              name={`orbit${capitalize(newAppStore.type)}`}
-              size={12}
-              opacity={iconOpacity}
-            />
-          </OrbitTab>
+          <OrbitTab
+            stretch
+            icon={`orbit${capitalize(newAppStore.type)}`}
+            iconSize={12}
+            isActive
+            label={newAppStore.name || 'New app'}
+          />
         )}
         <OrbitTab
           tooltip={showCreateNew ? 'Cancel' : 'Add'}
           thicc
+          icon={showCreateNew ? 'remove' : 'add'}
           onClick={() => {
             if (!showCreateNew) {
               paneManagerStore.setActivePaneByType('createApp')
@@ -183,9 +161,7 @@ export default observer(function OrbitNav() {
             }
             setShowCreateNew(!showCreateNew)
           }}
-        >
-          <OrbitTabIcon name={showCreateNew ? 'remove' : 'add'} size={10} opacity={0.5} />
-        </OrbitTab>
+        />
         <View flex={2} />
         <OrbitTab
           thicc
@@ -193,17 +169,16 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
           tooltip="All Apps"
           separator
-        >
-          <OrbitTabIcon name="grid48" size={10} opacity={0.4} />
-        </OrbitTab>
+          icon="grid48"
+        />
         <OrbitTab
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           tooltip="Sources"
-        >
-          <OrbitTabIcon name="design_app" size={11} opacity={0.4} />
-        </OrbitTab>
+          icon="design_app"
+          iconSize={11}
+        />
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -211,7 +186,8 @@ export default observer(function OrbitNav() {
 
 const OrbitTab = ({
   app,
-  children,
+  icon,
+  iconSize = 10,
   tooltip,
   label,
   isActive = false,
@@ -231,13 +207,20 @@ const OrbitTab = ({
       {...props}
     >
       <Row maxWidth="100%" alignItems="center" justifyContent="center">
-        {children}
+        {!!icon && (
+          <OrbitTabIcon
+            opacity={isActive ? 0.7 : !label ? 0.5 : 0.3}
+            isActive={isActive}
+            name={icon}
+            size={iconSize}
+          />
+        )}
         {!!label && (
           <Text
             ellipse
             className="tab-label"
             size={0.9}
-            marginLeft={!!children ? sidePad * 0.7 : 0}
+            marginLeft={!!icon ? sidePad * 0.7 : 0}
             opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={500}
             {...textProps}
@@ -266,6 +249,25 @@ const OrbitTab = ({
     return <Tooltip label={tooltip}>{button}</Tooltip>
   }
   return button
+}
+
+function OrbitTabIcon({ opacity, ...props }: IconProps) {
+  const { activeTheme } = React.useContext(ThemeContext)
+  return (
+    <View position="relative" opacity={opacity}>
+      <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
+      {/* show underneath an opposite colored one to */}
+      <Icon
+        transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }}
+        color={invertLightness(activeTheme.color, 0.2)}
+        position="absolute"
+        top={0}
+        left={0}
+        zIndex={-1}
+        {...props}
+      />
+    </View>
+  )
 }
 
 function PopoutIcon(props) {

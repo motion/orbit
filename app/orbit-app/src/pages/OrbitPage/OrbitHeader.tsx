@@ -1,5 +1,4 @@
 import { ensure, react } from '@mcro/black'
-import { invertLightness } from '@mcro/color'
 import { Absolute, FullScreen, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
@@ -179,7 +178,7 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
-  background: invertLightness(theme.background, 0.1).alpha(0.7),
+  background: theme.background.alpha(0.72),
 }))
 
 const OrbitHeaderDivider = gloss<{ torn?: boolean }>({

@@ -156,7 +156,7 @@ const SidebarContainer = gloss(Col, {
 }).theme((props, theme) => {
   const borderColor = theme.sidebarBorderColor || theme.borderColor
   return {
-    background: props.background || theme.sidebarBackground,
+    background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
     borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
     borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
     borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',

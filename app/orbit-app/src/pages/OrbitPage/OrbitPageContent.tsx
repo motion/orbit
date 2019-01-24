@@ -1,4 +1,4 @@
-import { gloss, Row, ThemeContext } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
 import { App as AppGlobalStore } from '@mcro/stores'
 import { Sidebar, View } from '@mcro/ui'
@@ -14,7 +14,6 @@ import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 
 export default observer(function OrbitPageContent() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
-  const { activeTheme } = React.useContext(ThemeContext)
 
   if (!orbitStore.activePane) {
     return null
@@ -37,7 +36,6 @@ export default observer(function OrbitPageContent() {
         width={hasIndex ? (hasMain ? 300 : window.innerWidth) : 0}
         minWidth={100}
         maxWidth={500}
-        background={activeTheme.background.alpha(0.8).toString()}
       >
         <OrbitIndexView>
           {paneManagerStore.panes.map(pane => (

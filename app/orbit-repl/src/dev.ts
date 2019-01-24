@@ -14,18 +14,23 @@ const {
   DEBUG_ELECTRON_CHROME,
 } = process.env
 
+const debugElectron = DEBUG_ELECTRON === 'true'
+const debugElectronMain = DEBUG_ELECTRON_MAIN === 'true'
+const debugElectronApps = DEBUG_ELECTRON_APPS === 'true'
+const debugElectronChrome = DEBUG_ELECTRON_CHROME === 'true'
+
 async function start() {
   const sessions = [
     // node processes
     { port: '9000' }, // desktop
-    (DEBUG_ELECTRON || DEBUG_ELECTRON_MAIN) && { port: '9001' }, // electron
+    (debugElectron || debugElectronMain) && { port: '9001' }, // electron
     !DISABLE_SYNCERS && { port: '9003' }, // syncers
 
     // remote processes
     { port: '9002' }, // electron remote
-    (DEBUG_ELECTRON || DEBUG_ELECTRON_APPS) && { port: '9004' }, // electron-apps main
+    (debugElectron || debugElectronApps) && { port: '9004' }, // electron-apps main
     { port: '9005' }, // electron-apps remote
-    (DEBUG_ELECTRON || DEBUG_ELECTRON_CHROME) && { port: '9006' }, // electron-chrome main
+    (debugElectron || debugElectronChrome) && { port: '9006' }, // electron-chrome main
     { port: '9007' }, // electron-menus remote
   ].filter(Boolean)
   console.log('starting REPL with sessions...', sessions)

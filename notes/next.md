@@ -62,7 +62,9 @@ tasks:
       - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
       - these endpoints would need some rate limit logic (later)
 - debug why gdrive syncer items show "empty" in frontend and clean that view up
-- gmail syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
+- gmail:
+  - syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
+  - email formatting looks odd for quite a few, investigate how to format it properly and fix some common issues
 - issue with reporting errors in observable queries, they are unhandled/not sent upwards
   - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)

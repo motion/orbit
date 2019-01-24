@@ -2,7 +2,9 @@ import { App } from '@mcro/reactron'
 import { Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { app, clipboard } from 'electron'
+import { join } from 'path'
 import * as React from 'react'
+import { ROOT } from '../constants'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'
 // import { observer } from 'mobx-react-lite'
@@ -13,7 +15,12 @@ export const OrbitRoot = () => {
   const electronStore = useStore(ElectronStore)
 
   React.useEffect(() => {
-    Electron.onMessage(msg => {
+    // set orbit icon in dev
+    if (process.env.NODE_ENV === 'development') {
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
+    }
+
+    return Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.COPY:
           clipboard.writeText(msg)

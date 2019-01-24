@@ -1,4 +1,4 @@
-import { GlobalConfig, setGlobalConfig } from '@mcro/config'
+import { getGlobalConfig, setGlobalConfig } from '@mcro/config'
 import { ChildProcess } from 'child_process'
 import root from 'global'
 import waitOn from 'wait-on'
@@ -12,22 +12,40 @@ Error.stackTraceLimit = Infinity
 
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_SYNCERS, IGNORE_ELECTRON } = process.env
 
-export async function main() {
-  console.log(`starting ${PROCESS_NAME}`)
+export async function main({ subOrbit = false } = {}) {
+  console.log(`starting ${PROCESS_NAME} ${subOrbit ? ' as a sub orbit' : ''}`)
 
-  // ensure every process gets configuration
-  const config: GlobalConfig = ORBIT_CONFIG
-    ? JSON.parse(ORBIT_CONFIG)
-    : await require('./getInitialConfig').getInitialConfig()
-  if (!config) {
-    throw new Error("Couldn't find config")
+  // setup config
+  if (SUB_PROCESS) {
+    setGlobalConfig(JSON.parse(ORBIT_CONFIG))
+  } else if (!subOrbit && !SUB_PROCESS) {
+    // first process, set up initial configuration
+    setGlobalConfig(await require('./getInitialConfig').getInitialConfig())
   }
-  setGlobalConfig(config)
+
+  const config = getGlobalConfig()
+
+  if (process.env.FIRST_RUN === 'true') {
+    // 🐛 for some reason you'll get "directv-tick" consistently on a port
+    // EVEN IF port was found to be empty.... killing again helps
+    try {
+      const ports = Object.values(config.ports)
+      console.log('Ensuring all ports clear...', ports)
+      const killPort = require('kill-port')
+      await Promise.all(ports.map(port => killPort(port)))
+    } catch {
+      // errors just show the ports empty
+    }
+  }
 
   // if we are in a forked sub-process, we go off and run them
   if (SUB_PROCESS) {
     console.log('starting sub process', SUB_PROCESS)
     switch (SUB_PROCESS) {
+      // we run another orbit sub-process for each app you persist
+      case 'orbit':
+        require('./startElectron').startElectron({ mainProcess: true })
+        return
       case 'desktop':
         require('@mcro/orbit-desktop').main()
         return
@@ -63,6 +81,17 @@ export async function main() {
       const p = startChildProcess(opts)
       processes.push(p)
       setupHandleExit(processes)
+    }
+
+    // starting a new orbit as a sub-process
+    if (subOrbit) {
+      setupProcess({
+        name: 'orbit',
+        // TODO we can increment for each new orbit sub-process, need a counter here
+        // inspectPort: 9006,
+        // inspectPortRemote: 9007,
+      })
+      return
     }
 
     // start desktop before starting other processes (it runs the server)...
@@ -120,5 +149,7 @@ export async function main() {
   }
 }
 
-// self starting
-main()
+if (SUB_PROCESS || process.env.FIRST_RUN === 'true') {
+  main()
+  process.env.FIRST_RUN = 'false'
+}

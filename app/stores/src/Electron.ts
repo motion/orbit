@@ -41,6 +41,7 @@ class ElectronStore {
     FOCUS: 'FOCUS',
     COPY: 'COPY',
     RESTART: 'RESTART',
+    TEAR: 'TEAR',
   }
 
   bridge = Bridge
@@ -50,6 +51,8 @@ class ElectronStore {
   source = 'Electron'
 
   lastAction = null
+  // TODO make this way more legit, for now this works...
+  isTorn = false
 
   state = deep({
     pinKey: { name: '' as PinKeyType, at: Date.now() },
@@ -71,6 +74,10 @@ class ElectronStore {
 
   start = async (options?: BridgeOptions) => {
     await Bridge.start(this, this.state, options)
+  }
+
+  setIsTorn() {
+    this.isTorn = true
   }
 }
 

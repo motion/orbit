@@ -1,7 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { AppConfig, AppType } from '@mcro/models'
-import { App } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { isEqual, memoize } from 'lodash'
@@ -42,6 +42,7 @@ export class OrbitStore {
 
   setTorn = () => {
     this.isTorn = true
+    App.sendMessage(Electron, Electron.messages.TEAR)
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {

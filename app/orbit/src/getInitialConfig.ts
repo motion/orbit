@@ -1,8 +1,7 @@
-import { app } from 'electron'
-import { findContiguousPorts } from './helpers/findContiguousPorts'
-import killPort from 'kill-port'
-import * as Path from 'path'
 import { GlobalConfig } from '@mcro/config'
+import { app } from 'electron'
+import * as Path from 'path'
+import { findContiguousPorts } from './helpers/findContiguousPorts'
 import execa = require('execa')
 
 export async function getInitialConfig(): Promise<GlobalConfig> {
@@ -14,16 +13,6 @@ export async function getInitialConfig(): Promise<GlobalConfig> {
 
   if (!ports) {
     throw new Error('no ports found!')
-  }
-
-  // for some reason you'll get "directv-tick" consistently on a port
-  // even though that port was found to be empty....
-  // so attempting to make sure we kill anything even if it looks empty
-  try {
-    console.log('Found ports, ensuring clear', ports)
-    await Promise.all(ports.map(port => killPort(port)))
-  } catch {
-    // errors are just showing the ports are empty
   }
 
   const desktopRoot = Path.join(require.resolve('@mcro/orbit-desktop'), '..', '..')

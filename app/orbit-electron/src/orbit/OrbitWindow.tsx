@@ -27,6 +27,7 @@ class OrbitWindowStore {
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
       let scl = 0.75
       let w = screenSize[0] * scl
@@ -47,7 +48,6 @@ class OrbitWindowStore {
 
   setPosition = position => {
     this.hasMoved = true
-    console.log('got a move', position)
     this.position = position
   }
 
@@ -103,8 +103,7 @@ export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  // handle shortcuts
-  useStore(OrbitShortcutsStore, {
+  const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
       const shown = App.orbitState.docked
       console.log('ok', store.blurred, shown)
@@ -115,6 +114,15 @@ export default observer(function OrbitWindow() {
       Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
     },
   })
+
+  // handle tears
+  React.useEffect(() => {
+    return Electron.onMessage(Electron.messages.TEAR, () => {
+      Electron.setIsTorn()
+      orbitShortcutsStore.dispose()
+      require('@mcro/orbit').main({ subOrbit: true })
+    })
+  }, [])
 
   const [show, setShow] = React.useState(false)
   const url = Config.urls.server

@@ -4,7 +4,7 @@ import { Logger } from '@mcro/logger'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
-import { BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
@@ -115,8 +115,13 @@ export default observer(function OrbitWindow() {
     },
   })
 
-  // handle tears
   React.useEffect(() => {
+    // set orbit icon in dev
+    if (process.env.NODE_ENV === 'development') {
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
+    }
+
+    // handle tear away
     return Electron.onMessage(Electron.messages.TEAR, () => {
       Electron.setIsTorn()
       orbitShortcutsStore.dispose()

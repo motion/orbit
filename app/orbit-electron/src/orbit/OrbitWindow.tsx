@@ -9,7 +9,7 @@ import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
-import { IS_SUB_ORBIT, ROOT } from '../constants'
+import { ROOT } from '../constants'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
@@ -133,17 +133,13 @@ export default observer(function OrbitWindow() {
   // onMount
   React.useEffect(() => {
     // set orbit icon in dev
-    if (!IS_SUB_ORBIT && process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
     }
 
-    if (IS_SUB_ORBIT) {
-      // TODO pass the right icon based on app type here
-      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon-search.png'))
-    }
-
     // handle tear away
-    return Electron.onMessage(Electron.messages.TEAR, () => {
+    return Electron.onMessage(Electron.messages.TEAR, (appType: string) => {
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', `appicon-${appType}.png`))
       Electron.setIsTorn()
       orbitShortcutsStore.dispose()
       require('@mcro/orbit').main({ subOrbit: true })

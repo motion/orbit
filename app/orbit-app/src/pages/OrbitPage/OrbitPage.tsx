@@ -42,7 +42,9 @@ export class OrbitStore {
 
   setTorn = () => {
     this.isTorn = true
-    App.sendMessage(Electron, Electron.messages.TEAR)
+    console.log('Tearing away app', this.activePane.type)
+
+    App.sendMessage(Electron, Electron.messages.TEAR, this.activePane.type)
 
     // set App.orbitState.docked false so next orbit window is hidden on start
     // TODO clean up tearing a bit, including this settimeout

@@ -1,7 +1,9 @@
 import { Absolute, Button, Row, Theme, View } from '@mcro/ui'
 import React from 'react'
-import { HorizontalSpace, Title } from '../views'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
 import { Icon } from '../views/Icon'
+import { Input } from '../views/Input'
 import SelectableList from '../views/Lists/SelectableList'
 
 export const createApp = {
@@ -27,6 +29,8 @@ export const createApp = {
     )
   },
   main: props => {
+    const { newAppStore } = useStoresSafe()
+
     if (!props.appConfig) {
       return null
     }
@@ -35,13 +39,23 @@ export const createApp = {
         <Row alignItems="center">
           <Icon name={props.appConfig.icon} size={32} />
           <HorizontalSpace />
-          <Title margin={0}>New {props.appConfig.title} app</Title>
+          <Title margin={0}>Setup</Title>
         </Row>
-        {JSON.stringify(props.appConfig)}
+
+        <VerticalSpace />
+
+        <SubTitle>Name</SubTitle>
+        <Input
+          placeholder="Name..."
+          onChange={e => {
+            newAppStore.setName(e.target.value)
+          }}
+        />
+
         <Absolute top={20} right={20}>
           <Theme name="selected">
             <Button elevation={1} size={1.2}>
-              Save
+              Create {props.appConfig.title.toLowerCase()} app
             </Button>
           </Theme>
         </Absolute>

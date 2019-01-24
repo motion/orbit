@@ -62,7 +62,7 @@ function OrbitTabIcon(props: IconProps) {
 }
 
 export default observer(function OrbitNav() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore, newAppStore } = useStoresSafe()
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
@@ -156,7 +156,7 @@ export default observer(function OrbitNav() {
             updateSpace({ paneSort })
           }}
         />
-        {showCreateNew && <OrbitTab stretch isActive label="New app" />}
+        {showCreateNew && <OrbitTab stretch isActive label={newAppStore.name || 'New app'} />}
         <OrbitTab
           tooltip={showCreateNew ? 'Cancel' : 'Add'}
           thicc
@@ -214,18 +214,21 @@ const OrbitTab = ({
       sidePad={sidePad}
       {...props}
     >
-      {children}
-      {!!label && (
-        <Text
-          size={0.95}
-          marginLeft={!!children ? sidePad * 0.8 : 0}
-          alpha={isActive ? 1 : inactiveOpacity}
-          fontWeight={500}
-          {...textProps}
-        >
-          {label}
-        </Text>
-      )}
+      <Row maxWidth="100%" alignItems="center" justifyContent="center">
+        {children}
+        {!!label && (
+          <Text
+            ellipse
+            size={0.95}
+            marginLeft={!!children ? sidePad * 0.8 : 0}
+            alpha={isActive ? 1 : inactiveOpacity}
+            fontWeight={500}
+            {...textProps}
+          >
+            {label}
+          </Text>
+        )}
+      </Row>
       {separator && <Separator />}
 
       {isActive && !!onClickPopout && (

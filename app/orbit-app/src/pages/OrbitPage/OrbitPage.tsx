@@ -13,6 +13,7 @@ import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -111,10 +112,14 @@ function OrbitPageProvideStores(props: { children: any }) {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
+  const newAppStore = useStore(NewAppStore)
   const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultIndex: spaceConfig.activePaneIndex || 0,
     onPaneChange(index) {
+      // reset name on pane change...
+      newAppStore.resetName()
+
       console.log('save active index', index)
       updateSpaceConfig({
         activePaneIndex: index,
@@ -142,6 +147,7 @@ function OrbitPageProvideStores(props: { children: any }) {
     spaceStore,
     queryStore,
     paneManagerStore,
+    newAppStore,
   }
 
   return (

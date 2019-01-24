@@ -10,6 +10,7 @@ import { MergeContext } from '../MergeContext'
 import OrbitList, { OrbitHandleSelect, orbitItemsKey, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
+  minSelected?: number
   defaultSelected?: number
   isSelectable?: boolean
 }
@@ -113,14 +114,16 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
 
   React.useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
-      selectionStore.setActiveIndex(props.defaultSelected)
+      // only update if its on -1, to allow them to customize it in other ways
+      if (selectionStore.activeIndex === -1) {
+        selectionStore.setActiveIndex(props.defaultSelected)
+      }
     }
 
     return stores.shortcutStore.onShortcut(shortcut => {
       if (!selectableStore.isActive()) {
         return false
       }
-      console.log('shortcut handle', shortcut)
       switch (shortcut) {
         case 'open':
           if (props.onOpen) {

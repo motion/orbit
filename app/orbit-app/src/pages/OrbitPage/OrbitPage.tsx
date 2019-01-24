@@ -1,5 +1,4 @@
 import { ensure, react } from '@mcro/black'
-import { invertLightness } from '@mcro/color'
 import { gloss } from '@mcro/gloss'
 import { AppConfig, AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -14,6 +13,7 @@ import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
@@ -94,13 +94,10 @@ const OrbitPageInner = observer(function OrbitPageInner() {
       <MainShortcutHandler>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <Chrome>
-              <OrbitHeader />
-
-              <InnerChrome>
-                <OrbitPageContent />
-              </InnerChrome>
-            </Chrome>
+            <OrbitHeader />
+            <InnerChrome>
+              <OrbitPageContent />
+            </InnerChrome>
           </AppWrapper>
         </Theme>
       </MainShortcutHandler>
@@ -115,10 +112,14 @@ function OrbitPageProvideStores(props: { children: any }) {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
+  const newAppStore = useStore(NewAppStore)
   const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultIndex: spaceConfig.activePaneIndex || 0,
     onPaneChange(index) {
+      // reset name on pane change...
+      newAppStore.reset()
+
       console.log('save active index', index)
       updateSpaceConfig({
         activePaneIndex: index,
@@ -133,6 +134,7 @@ function OrbitPageProvideStores(props: { children: any }) {
         { name: 'Settings', type: 'settings' },
         { name: 'Apps', type: 'apps' },
         { name: 'Sources', type: 'sources' },
+        { name: 'Add app', type: 'createApp' },
         { name: 'Onboard', type: 'onboard' },
       ].map((pane, id) => ({ ...pane, id: `app-${id}` })),
     ],
@@ -145,21 +147,20 @@ function OrbitPageProvideStores(props: { children: any }) {
     spaceStore,
     queryStore,
     paneManagerStore,
+    newAppStore,
   }
 
-  return <StoreContext.Provider value={stores}>{props.children}</StoreContext.Provider>
+  return (
+    <MergeContext Context={StoreContext} value={stores}>
+      {props.children}
+    </MergeContext>
+  )
 }
-
-const Chrome = gloss({
-  flex: 1,
-}).theme((_, theme) => ({
-  background: invertLightness(theme.background, 0.1).alpha(0.75),
-}))
 
 const InnerChrome = gloss({
   flexFlow: 'row',
   flex: 1,
   overflow: 'hidden',
 }).theme(() => ({
-  boxShadow: [[0, 0, 80, [0, 0, 0, 0.045]]],
+  boxShadow: [[0, 0, 70, [0, 0, 0, 0.05]]],
 }))

@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { HighlightedTextArea } from '../../views/HighlightedTextArea'
-import { View, ThemeContext } from '@mcro/ui'
-import { HeaderStore } from './OrbitHeader'
+import { ThemeContext, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HighlightedTextArea } from '../../views/HighlightedTextArea'
+import { HeaderStore } from './OrbitHeader'
 
 const handleKeyDown = e => {
   // up/down/enter

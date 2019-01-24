@@ -194,23 +194,24 @@ export const Icon = React.memo(
     }
 
     return (
-      <SVG
-        fill={fill || activeTheme.color.toString()}
-        svg={icon}
-        width={`${size}`}
-        height={`${size}`}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          width: size,
-          height: size,
-          opacity,
-          ...style,
-        }}
-        cleanup={['fill', 'title', 'desc']}
-        {...props}
-      />
+      <View {...props}>
+        <SVG
+          fill={fill || activeTheme.color.toString()}
+          svg={icon}
+          width={`${size}`}
+          height={`${size}`}
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+            width: size,
+            height: size,
+            opacity,
+            ...style,
+          }}
+          cleanup={['fill', 'title', 'desc']}
+        />
+      </View>
     )
   },
 )

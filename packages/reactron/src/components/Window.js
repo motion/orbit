@@ -1,7 +1,7 @@
-import { BaseComponent } from './BaseComponent'
-import { BrowserWindow } from 'electron'
 import { Logger } from '@mcro/logger'
+import { BrowserWindow } from 'electron'
 import isEqual from 'lodash.isequal'
+import { BaseComponent } from './BaseComponent'
 
 const log = new Logger('reactron')
 
@@ -36,6 +36,7 @@ export class Window extends BaseComponent {
       frame: !!props.frame,
       kiosk: !!props.kiosk,
       fullScreen: !!props.fullScreen,
+      icon: props.icon,
     }
     this.window = new BrowserWindow(this.options)
 

@@ -5,6 +5,7 @@ export const Config: GlossOptions = {
   glossProp: 'css',
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
+  pseudoAbbreviations: {},
 }
 
 export function configureGloss(options: Partial<GlossOptions>) {

@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react'
-import { AllStores, StoreContext } from '../contexts'
+import { StoreContext } from '../contexts'
+import { AllStores } from '../contexts/StoreContext'
 
 type GuaranteedAllStores = { [P in keyof AllStores]-?: AllStores[P] }
 

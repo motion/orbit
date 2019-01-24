@@ -38,7 +38,7 @@ export const Tooltip = React.forwardRef(
         borderRadius={4}
         distance={10}
         arrowSize={8}
-        fontSize={13}
+        fontSize={12}
         delay={450}
         popoverProps={POPOVER_PROPS}
         ignoreSegment

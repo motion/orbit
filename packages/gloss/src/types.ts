@@ -1,3 +1,5 @@
+export type Psuedos = '&:hover' | '&:active' | '&:focus'
+
 export type GlossOptions = {
   dontTheme?: boolean
   glossProp?: string
@@ -5,6 +7,7 @@ export type GlossOptions = {
   toColor?: Function
   isColor?: Function
   parentStylesOverride?: boolean
+  pseudoAbbreviations?: { [key: string]: Psuedos }
 }
 
 type GlossViewConfig = {

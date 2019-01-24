@@ -1,8 +1,7 @@
 import { ensure, react } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { AppActions } from '../actions/AppActions'
 import { SelectionGroup } from '../apps/SelectionResults'
-import { hoverSettler } from '../helpers/hoverSettler'
 import { SelectableListProps } from '../views/Lists/SelectableList'
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
@@ -25,18 +24,22 @@ export enum SelectEvent {
   click = 'click',
 }
 
-// TODO see why we had this here and redo later...
-// App.onMessage(App.messages.CLEAR_SELECTED, () => {
-//   this.clearSelected()
-// })
+const getDefaultActiveIndex = (props: SelectableListProps) => {
+  if (typeof props.defaultSelected === 'number') {
+    return props.defaultSelected
+  }
+  if (typeof props.minSelected === 'number') {
+    return props.minSelected
+  }
+  return -1
+}
 
 export class SelectionStore {
   props: SelectableListProps
 
   selectEvent: SelectEvent = SelectEvent.click
-  leaveIndex = -1
   lastSelectAt = 0
-  _activeIndex = typeof this.props.defaultSelected === 'number' ? this.props.defaultSelected : -1
+  _activeIndex = getDefaultActiveIndex(this.props)
   movesMap: MovesMap[] | null = null
 
   get activeIndex() {
@@ -50,7 +53,10 @@ export class SelectionStore {
   }
 
   setActiveIndex = (val: number) => {
-    this.activeIndex = val
+    this.activeIndex = Math.max(
+      typeof this.props.minSelected === 'number' ? this.props.minSelected : -1,
+      val,
+    )
   }
 
   get hasActiveIndex() {
@@ -69,38 +75,24 @@ export class SelectionStore {
   )
 
   clearSelected = () => {
-    this.leaveIndex = -1
     this.setActiveIndex(-1)
   }
 
-  getHoverSettler = hoverSettler({
-    enterDelay: 40,
-    betweenDelay: 40,
-    onHovered(res) {
-      // leave
-      if (!res) {
-        if (this.activeIndex !== -1) {
-          this.leaveIndex = this.activeIndex
-        }
-        return
-      }
-      this.leaveIndex = -1
-      this.toggleSelected(res.index)
-    },
-  })
-
-  clearSelectedOnLeave = react(
-    () => [this.leaveIndex, Desktop.hoverState.appHovered],
-    async ([leaveIndex, appHovered], { sleep, when }) => {
-      if (!appHovered) {
-        await sleep(100)
-      }
-      await when(() => !appHovered)
-      await sleep(100)
-      ensure('has leave index', leaveIndex > -1)
-      this.clearSelected()
-    },
-  )
+  // getHoverSettler = hoverSettler({
+  //   enterDelay: 40,
+  //   betweenDelay: 40,
+  //   onHovered(res) {
+  //     // leave
+  //     if (!res) {
+  //       if (this.activeIndex !== -1) {
+  //         this.leaveIndex = this.activeIndex
+  //       }
+  //       return
+  //     }
+  //     this.leaveIndex = -1
+  //     this.toggleSelected(res.index)
+  //   },
+  // })
 
   toggleSelected = (index: number, eventType?: 'key' | 'click') => {
     if (eventType) {

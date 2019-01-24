@@ -1,14 +1,10 @@
-import { gloss, View } from '@mcro/gloss'
+import { color, gloss, View } from '@mcro/gloss'
 import * as React from 'react'
 import { Icon } from '../Icon'
 
 const ClearClickableArea = gloss(View, {
   padding: 5,
-  opacity: 0,
   transition: 'all ease 250ms 100ms',
-  '&:hover': {
-    opacity: 1,
-  },
 })
 
 const ClearFrame = gloss(View, {
@@ -22,7 +18,11 @@ const ClearFrame = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'default',
-})
+}).theme((_, theme) => ({
+  background:
+    (theme.buttonBackground && color(theme.buttonBackground).alpha(0.25)) ||
+    theme.background.alpha(0.25),
+}))
 
 export const ClearButton = ({
   onClick = null,

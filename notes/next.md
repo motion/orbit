@@ -3,29 +3,29 @@ until end of jan:
 - manage space pane
   - upload your image / name it / CRUD
 - manage account pane
+
   - same sort of deal... + link to slack
 
+- fix search results
+  - fix open on enter
+  - fix select on search broke
+
 fix tab drag index
-add button => search overlay design
 new app pane
 command+enter to pop out app into own window / multi apps
 actions menu
 
+1. add people to search
+2. fixing tray/menu display and interaction
+3. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
+4. restore menus a bit just actions dropdown + search
+5. get ocr hooked into menu enable/disable and output results
+6. get ocr => memory simple list
+7. work through lists apps a bit
+
 ---
 
-1. people app search/select fixes, fixing tray/menu display and interaction
-2. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-3. restore menus a bit just actions dropdown + search
-4. get ocr hooked into menu enable/disable and output results
-5. get ocr => memory simple list
-6. work through lists apps a bit
-
 sorting by prepping to split out work as best possible:
-
-- finish some app management stuff:
-
-  - create new app pane with pick name/etc
-  - customizable search app
 
 - figure out account management
   - need some way to sync
@@ -77,6 +77,9 @@ tasks:
   - we should test search quite a bit more
     - have it do exact full searches first and then work down
     - so "full name" matches something with both words closer than "full" and "name"
+- cloud stuff:
+  - store teams/accounts in cloud
+    - no data just the config for it and identifiers
 - app store:
   - make it so we have servers to host them
   - make it so you can search them and install new ones
@@ -91,6 +94,26 @@ tasks:
 - memory as a source
 - const [key, setKey] = useSetting('key')
   - easy way to be able to have a new UI-related query/update on setting
+- back button:
+  - simple simple version:
+    - store a log of searches and pane switches:
+      - appid of the pane
+      - text content of search
+    - be sure to debounce the search log entry quite a bit
+    - then on back just look at entry and either set input or pane...
+      - should be good enough for most use cases
+    - next step would be selected item inside, but thats already way more complex
+- prep for apps split:
+  - splitting out all the views for the app kit
+    - fixing their types
+    - Icon, most things in views/\*
+    - VirutalList/VirtualListItem => List/ListItem etc
+    - content type views: Thread/Message/etc
+  - creating a thing that downloads our webpack setup on demand for development
+    - interface to show that
+    - creating npm package `orbit-dev-tools` that has webpack, @mcro/build, etc
+    - `npm install orbit-dev-tools` basically our dev tools
+    - check to keep them up to date in the app
 
 for me once split out:
 

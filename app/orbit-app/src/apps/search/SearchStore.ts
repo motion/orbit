@@ -106,6 +106,33 @@ export class SearchStore {
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
+  private getQuickResults(query: string) {
+    return fuzzyQueryFilter(
+      query,
+      this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
+      {
+        key: 'name',
+      },
+    ).map(app => {
+      const icon = `orbit${capitalize(app.type)}`
+      return {
+        group: 'Apps',
+        title: app.name,
+        icon,
+        appConfig: {
+          id: '0',
+          title: `Open ${app.name}`,
+          type: AppType.message,
+          icon,
+        },
+        onOpen: () => {
+          console.log('selecting app...', app.type, app.id)
+          this.stores.paneManagerStore.setActivePane(app.id)
+        },
+      }
+    })
+  }
+
   searchState = react(
     () => [
       this.stores.spaceStore.activeSpace.id,
@@ -117,19 +144,14 @@ export class SearchStore {
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
-      // if not on this pane, delay it a bit
-      if (!this.isActive) {
-        await when(() => this.isActive)
-      }
-
       // RESULTS
       let results: OrbitListItemProps[] = []
 
       // if typing, wait a bit
       const isChangingQuery = this.searchState.query !== query
       if (isChangingQuery) {
-        // if no query, we dont need to debounce or wait for nlp
-        if (query) {
+        // short queries we dont need to wait
+        if (query.length > 3) {
           // wait for nlp to give us results
           await when(() => this.stores.appStore.nlp.query === query)
         }
@@ -163,27 +185,24 @@ export class SearchStore {
         .map(x => x.text)
 
       const { startDate, endDate } = dateState
-      const baseFindOptions = {
-        spaceId, // todo: how do we can space id from store here?
-        query: activeQuery,
-        searchBy,
-        sortBy,
-        startDate,
-        endDate,
-        integrationFilters,
-        peopleFilters,
-        locationFilters,
-      }
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
-        const searchOpts: SearchQuery = {
-          ...baseFindOptions,
+        const args: SearchQuery = {
+          spaceId,
+          query: activeQuery,
+          searchBy,
+          sortBy,
+          startDate,
+          endDate,
+          integrationFilters,
+          peopleFilters,
+          locationFilters,
           group,
           maxBitsCount,
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
-        const nextResults = await loadMany(SearchResultModel, { args: searchOpts })
+        const nextResults = await loadMany(SearchResultModel, { args })
         if (!nextResults) {
           return false
         }
@@ -197,32 +216,7 @@ export class SearchStore {
       }
 
       // app search
-      results = [
-        ...fuzzyQueryFilter(
-          activeQuery,
-          this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
-          {
-            key: 'name',
-          },
-        ).map(app => {
-          const icon = `orbit${capitalize(app.type)}`
-          return {
-            group: 'Apps',
-            title: app.name,
-            icon,
-            appConfig: {
-              id: '0',
-              title: `Open ${app.name}`,
-              type: AppType.message,
-              icon,
-            },
-            onOpen: () => {
-              console.log('selecting app...', app.type, app.id)
-              this.stores.paneManagerStore.setActivePane(app.id)
-            },
-          }
-        }),
-      ]
+      results = [...this.getQuickResults(activeQuery)]
       setValue({ results, query, finished: false })
 
       await updateNextResults({

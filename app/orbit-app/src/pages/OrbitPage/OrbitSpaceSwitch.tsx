@@ -1,5 +1,6 @@
 import { ensure, react } from '@mcro/black'
-import { CSSPropertySet } from '@mcro/gloss'
+import { invertLightness } from '@mcro/color'
+import { CSSPropertySet, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Col, Popover, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -12,7 +13,6 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { Icon } from '../../views/Icon'
 import { NavButton } from '../../views/NavButton'
-import { OrbitOrb } from '../../views/OrbitOrb'
 import { RowItem } from '../../views/RowItem'
 
 type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
@@ -125,7 +125,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
             }}
             {...props}
           >
-            <OrbitOrb size={16} background={'#DDADDA'} color="#985FC9" />
+            <OrbBackground />
           </NavButton>
         }
       >
@@ -174,3 +174,14 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
     </FocusableShortcutHandler>
   )
 })
+
+const OrbBackground = gloss({
+  borderRadius: 100,
+  width: 16,
+  height: 16,
+}).theme((_, theme) => ({
+  border: [2, invertLightness(theme.background, 1).alpha(0.5)],
+  '&:hover': {
+    border: [2, invertLightness(theme.background, 1).alpha(0.75)],
+  },
+}))

@@ -1,10 +1,10 @@
+import { gloss, Row } from '@mcro/gloss'
+import { SegmentedRow, View } from '@mcro/ui'
 import * as React from 'react'
-import { Row, SegmentedRow, View } from '@mcro/ui'
-import { TitleBarSpace } from './TitleBarSpace'
+import { AppActions } from '../../../actions/AppActions'
 import { NormalItem } from '../../../helpers/normalizeItem'
 import { TitleBarButton } from './TitleBarButton'
-import { AppActions } from '../../../actions/AppActions'
-import { Icon } from '../../../views/Icon'
+import { TitleBarSpace } from './TitleBarSpace'
 
 export class BitTitleBar extends React.Component<{
   searchBar: any
@@ -13,33 +13,39 @@ export class BitTitleBar extends React.Component<{
   render() {
     const { searchBar, normalizedItem } = this.props
     return (
-      <>
-        <Row alignItems="center" height={38} margin={[8, 15]}>
-          {searchBar}
-          <View flex={1} />
-          <TitleBarSpace />
-          <SegmentedRow spaced>
-            <TitleBarButton
-              onClick={() => {
-                AppActions.open(normalizedItem.locationLink)
-                AppActions.setOrbitDocked(false)
-              }}
-              icon={<Icon icon={normalizedItem.icon} size={14} />}
-            >
-              {normalizedItem.location}
-            </TitleBarButton>
-            <TitleBarButton
-              onClick={() => {
-                AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
-                AppActions.setOrbitDocked(false)
-              }}
-              tooltip="Open"
-            >
-              Open
-            </TitleBarButton>
-          </SegmentedRow>
-        </Row>
-      </>
+      <ToolbarChrome>
+        {searchBar}
+        <View flex={1} />
+        <TitleBarSpace />
+        <SegmentedRow spaced>
+          <TitleBarButton
+            onClick={() => {
+              AppActions.open(normalizedItem.locationLink)
+              AppActions.setOrbitDocked(false)
+            }}
+            icon={normalizedItem.icon}
+          >
+            {normalizedItem.location}
+          </TitleBarButton>
+          <TitleBarButton
+            onClick={() => {
+              AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
+              AppActions.setOrbitDocked(false)
+            }}
+            tooltip="Open"
+          >
+            Open
+          </TitleBarButton>
+        </SegmentedRow>
+      </ToolbarChrome>
     )
   }
 }
+
+const ToolbarChrome = gloss(Row, {
+  alignItems: 'center',
+  height: 48,
+  padding: [6, 10],
+}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor.alpha(0.2)],
+}))

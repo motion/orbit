@@ -41,6 +41,12 @@ export class PaneManagerStore {
     on(this, autoTrack(this, ['paneIndex']))
   }
 
+  back = () => {
+    if (this.lastActivePane) {
+      this.setActivePane(this.lastActivePane.id)
+    }
+  }
+
   move = (direction: Direction) => {
     if (this.props.disabled) {
       return

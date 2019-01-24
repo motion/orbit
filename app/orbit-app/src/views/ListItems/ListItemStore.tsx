@@ -87,10 +87,11 @@ export class ListItemStore {
     // set this before doing callbacks to allow for instant update
     this.isSelected = isSelected
     if (isSelected) {
+      ensure('not clicked', Date.now() - this.clickAt > 10)
       // delay to allow fast keyboard movement down lists
       await sleep(35)
       if (onSelect) {
-        onSelect(this.index)
+        onSelect(this.index, 'key')
       } else {
         log.info('no preview event for', this.index)
       }

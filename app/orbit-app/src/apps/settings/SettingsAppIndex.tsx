@@ -12,7 +12,6 @@ export default function SourcesAppIndex() {
   const results = useOrbitFilterableResults({
     items: [
       {
-        id: 0,
         group: 'Settings',
         type: 'general',
         title: 'General',
@@ -20,7 +19,6 @@ export default function SourcesAppIndex() {
         subtitle: 'Shortcuts, startup, theme',
       },
       {
-        id: 2,
         group: 'Settings',
         type: 'account',
         title: 'Account',
@@ -28,7 +26,7 @@ export default function SourcesAppIndex() {
         subtitle: 'Manage your account',
       },
       ...spaces.map((space, index) => ({
-        id: `space-${space.id}`,
+        id: space.id,
         group: 'Spaces',
         type: 'space',
         title: space.name,
@@ -37,7 +35,6 @@ export default function SourcesAppIndex() {
         after: index === 0 && <Icon name="check" size={12} />,
       })),
       {
-        id: 3,
         group: 'Spaces',
         title: 'Create new space...',
         icon: 'add',

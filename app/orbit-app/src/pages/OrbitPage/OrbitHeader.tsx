@@ -115,6 +115,8 @@ export class HeaderStore {
 export default observer(function OrbitHeader() {
   const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
+  const isOnSettings = paneManagerStore.activePane.type === 'settings'
+  const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   return (
     <OrbitHeaderContainer
       opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
@@ -143,11 +145,22 @@ export default observer(function OrbitHeader() {
           {!orbitStore.isTorn && (
             <Button
               chromeless
-              isActive={paneManagerStore.activePane.type === 'settings'}
-              onClick={paneManagerStore.activePaneByTypeSetter('settings')}
+              isActive={isOnSettings}
+              onClick={() => {
+                if (isOnSettings) {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
               tooltip="Settings"
             >
-              <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
+              <Icon
+                name="gear"
+                size={12}
+                opacity={0.45 + settingsIconActiveOpacityInc}
+                hoverOpacity={0.5 + settingsIconActiveOpacityInc}
+              />
             </Button>
           )}
           <Row flex={1} />

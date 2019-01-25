@@ -17,7 +17,7 @@ export default observer(function SettingsAppSpaces(_: AppProps<AppType.settings>
 
       <Text size={1.2}>
         Spaces are the high level way you can organize your content. Use the orb to the left of the
-        search bar to switch between spaces. 123
+        search bar to switch between spaces.
       </Text>
 
       {JSON.stringify(activeSpace)}

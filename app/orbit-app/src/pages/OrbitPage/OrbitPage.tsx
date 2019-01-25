@@ -13,6 +13,7 @@ import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { AppsStore } from '../../stores/AppsStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
@@ -133,6 +134,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
 })
 
 function OrbitPageProvideStores(props: { children: any }) {
+  const appsStore = useStore(AppsStore)
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -168,6 +170,7 @@ function OrbitPageProvideStores(props: { children: any }) {
   })
 
   const stores = {
+    appsStore,
     settingStore,
     sourcesStore,
     orbitWindowStore,

@@ -5,7 +5,6 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { GenericComponent } from '../types'
 import { MergeContext } from '../views/MergeContext'
 import { AppProps } from './AppProps'
-import { apps } from './apps'
 import { AppStore } from './AppStore'
 
 export type AppViewProps = Pick<
@@ -29,11 +28,13 @@ export default React.memo(function AppView(props: AppViewProps) {
     }
   }, [])
 
-  if (!apps[props.type]) {
+  if (!stores.appsStore.apps[props.type]) {
     return <div>noo app of type {props.type}</div>
   }
 
-  const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
+  const AppView = stores.appsStore.apps[props.type][props.viewType] as GenericComponent<
+    AppProps<any>
+  >
 
   if (!AppView) {
     return null

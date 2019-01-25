@@ -1,6 +1,6 @@
-import * as React from 'react'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 
 class MyStore {
   firstState = 0
@@ -21,8 +21,7 @@ export const TestHMR = observer(props => {
   }
   return (
     <>
-      Hello world
-      {/* <TestHMRInner /> */}
+      Hello world {/* <TestHMRInner /> */}
       first state: {store.firstState}
       <br />
       next state: {store.otherState}

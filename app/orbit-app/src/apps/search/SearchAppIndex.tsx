@@ -1,4 +1,5 @@
 import { AppType } from '@mcro/models'
+import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
@@ -71,6 +72,8 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
             return {
               after: (
                 <Popover
+                  // selected would otherwise override this theme
+                  theme={App.state.darkTheme ? 'dark' : 'light'}
                   width={250}
                   height={300}
                   target={

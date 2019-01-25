@@ -25,7 +25,7 @@ export type VirtualListProps = {
   forwardRef?: (a: any, b: VirtualListStore) => any
   items: any[]
   itemProps?: Partial<VirtualListItemProps<any>>
-  getItemProps?: GetItemProps
+  getItemProps?: GetItemProps | null | false
   ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function

@@ -431,6 +431,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       const target = this.domNode.classList.contains('popover-target')
       if (target) {
         this.target = this.domNode
+      } else {
+        // potentially we can just get it directly
+        throw new Error('Couldnt pass className down to target to do measurements...')
       }
     }
 

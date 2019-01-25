@@ -102,7 +102,7 @@ const AppPageContent = observer(() => {
         <Icon
           onClick={appFrameStore.toggleSidebar}
           name="sidebar"
-          fill={appFrameStore.showSidebar ? '#3FB2FF' : '#666'}
+          color={appFrameStore.showSidebar ? '#3FB2FF' : '#666'}
           size={16}
           style={{ opacity: appFrameStore.showSidebar ? 1 : 0.5 }}
         />

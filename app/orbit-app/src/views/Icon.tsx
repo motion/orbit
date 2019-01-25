@@ -146,18 +146,18 @@ const icons = {
   downArrow: require('!raw-loader!../../public/icons/down-arrow.svg'),
 }
 
-type Props = React.HTMLProps<SVGElement> &
+type Props = React.HTMLProps<any> &
   IconProps & {
     ref: any
     name: string
-    fill?: string
     size?: number
     style?: any
   }
 
 export const Icon = React.memo(
-  ({ name, fill, size = 32, style = null, opacity, ...props }: Props) => {
+  ({ name, color, size = 32, style = null, opacity, ...props }: Props) => {
     const { activeTheme } = React.useContext(ThemeContext)
+    const finalColor = color || activeTheme.color.toString()
 
     // image based integration icons
     const integrationIcon = useIntegrationIcon({ icon: name })
@@ -189,14 +189,21 @@ export const Icon = React.memo(
     // ...or fallback to @mcro/ui icon
     if (!icon) {
       return (
-        <UI.Icon name={name} color={fill} size={size} style={style} opacity={opacity} {...props} />
+        <UI.Icon
+          name={name}
+          color={finalColor}
+          size={size}
+          style={style}
+          opacity={opacity}
+          {...props}
+        />
       )
     }
 
     return (
       <View {...props}>
         <SVG
-          fill={fill || activeTheme.color.toString()}
+          fill={finalColor}
           svg={icon}
           width={`${size}`}
           height={`${size}`}

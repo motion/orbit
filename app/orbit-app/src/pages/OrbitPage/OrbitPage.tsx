@@ -146,9 +146,11 @@ function OrbitPageProvideStores(props: { children: any }) {
     onPaneChange(index) {
       // reset name on pane change...
       newAppStore.reset()
-      updateSpaceConfig({
-        activePaneIndex: index,
-      })
+      if (index !== spaceConfig.activePaneIndex) {
+        updateSpaceConfig({
+          activePaneIndex: index,
+        })
+      }
     },
     panes: [
       ...activeApps.map(app => ({

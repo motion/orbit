@@ -103,10 +103,6 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
     getItems,
   })
 
-  if (props.debug) {
-    console.log('selectionStore', selectionStore)
-  }
-
   // TODO clear selection when app window closes, we really need useReaction()
   // useReaction(
   //   () => !!App.peekState && !App.peekState.target,
@@ -155,7 +151,6 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
         itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
         onSelect={(index, appConfig, eventType) => {
-          console.log('selecting.......', index, selectionStore.activeIndex)
           if (selectionStore && selectionStore.activeIndex !== index) {
             selectionStore.toggleSelected(index, eventType)
           }

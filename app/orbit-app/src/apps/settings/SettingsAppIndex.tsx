@@ -11,7 +11,5 @@ export default function SourcesAppIndex() {
     ],
   })
 
-  console.log('render sources', results)
-
-  return <SelectableList debug minSelected={0} items={results} />
+  return <SelectableList minSelected={0} items={results} />
 }

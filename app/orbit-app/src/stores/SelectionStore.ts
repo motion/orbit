@@ -25,9 +25,6 @@ export enum SelectEvent {
 }
 
 const getDefaultActiveIndex = (props: SelectableListProps) => {
-  if (props.debug) {
-    debugger
-  }
   if (typeof props.defaultSelected === 'number') {
     return props.defaultSelected
   }
@@ -51,9 +48,6 @@ export class SelectionStore {
   }
 
   set activeIndex(val) {
-    if (this.props.debug) {
-      debugger
-    }
     this.lastSelectAt = Date.now()
     this._activeIndex = val
   }

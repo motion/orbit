@@ -75,7 +75,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                     <View
                       alignItems="center"
                       justifyContent="center"
-                      width={32}
+                      width={34}
                       opacity={0.5}
                       hoverStyle={{ opacity: 1 }}
                       onClick={preventDefault(() => console.log('show popover'))}
@@ -90,9 +90,16 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                   borderRadius={10}
                   elevation={2}
                 >
-                  <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
-                    hi
-                  </View>
+                  {isShown => (
+                    <View
+                      width={250}
+                      height={300}
+                      className="calendar-dom theme-light"
+                      padding={10}
+                    >
+                      {isShown ? 'show' : 'hide'}
+                    </View>
+                  )}
                 </Popover>
               ),
             }

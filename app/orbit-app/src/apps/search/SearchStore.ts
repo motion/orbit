@@ -124,7 +124,7 @@ export class SearchStore {
         titleProps: null,
         appConfig: {
           title: `Open ${app.name}`,
-          icon: null,
+          icon,
         },
         onOpen: () => {
           console.log('selecting app...', app.type, app.id)

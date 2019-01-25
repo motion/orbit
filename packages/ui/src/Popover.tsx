@@ -424,6 +424,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       this.open()
     }
 
+    const isManuallyPositioned = getIsManuallyPositioned(this.props)
+
     // allow multiple flexible ways to pass in targets
     if (typeof target === 'string') {
       this.target = getTarget(target)
@@ -432,12 +434,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       if (target) {
         this.target = this.domNode
       } else {
-        // potentially we can just get it directly
-        throw new Error('Couldnt pass className down to target to do measurements...')
+        if (!isManuallyPositioned) {
+          // potentially we can just get it directly
+          throw new Error('Couldnt pass className down to target to do measurements...')
+        }
       }
     }
-
-    const isManuallyPositioned = getIsManuallyPositioned(this.props)
 
     if (!isManuallyPositioned && !this.target) {
       throw new Error('Not manually positioned and no target found.')

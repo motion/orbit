@@ -12,10 +12,10 @@ export function SubSection({
 }) {
   return (
     <>
-      <VerticalSpace />
-      <SubTitle>{title}</SubTitle>
-      <Divider padding={[5, 10]} />
-      <VerticalSpace />
+      <VerticalSpace small />
+      <SubTitle size={1.3}>{title}</SubTitle>
+      <Divider padding={5} />
+      <VerticalSpace small />
       {children}
     </>
   )

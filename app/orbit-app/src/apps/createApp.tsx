@@ -1,4 +1,3 @@
-import { gloss } from '@mcro/gloss'
 import { Button, Row, Text, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
@@ -6,6 +5,7 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
 import { Divider } from '../views/Divider'
 import { Icon } from '../views/Icon'
+import { IconContainer } from '../views/IconContainer'
 import { Input } from '../views/Input'
 
 const apps = [
@@ -67,9 +67,9 @@ export const createApp = {
           {apps.map((app, index) => (
             <View key={index} alignItems="center" marginRight={12}>
               <Theme name={app.type === type ? 'selected' : null}>
-                <IconSelect onClick={() => newAppStore.setType(app.type)}>
+                <IconContainer onClick={() => newAppStore.setType(app.type)}>
                   <Icon name={app.icon} />
-                </IconSelect>
+                </IconContainer>
               </Theme>
               <Text marginTop={5} ellipse size={0.9} fontWeight={500} alpha={0.8}>
                 {app.title}
@@ -87,17 +87,3 @@ export const createApp = {
     )
   }),
 }
-
-const IconSelect = gloss({
-  padding: 10,
-  borderRadius: 8,
-}).theme((_, theme) => ({
-  background: theme.background,
-  boxShadow: [
-    ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.5)],
-    [0, 0, 0, 3, theme.borderColor.alpha(0.25)],
-  ],
-  '&:hover': {
-    background: theme.backgroundHover,
-  },
-}))

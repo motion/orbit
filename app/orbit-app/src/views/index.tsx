@@ -107,7 +107,7 @@ export const HorizontalSpace = gloss({
   width: 10,
 })
 
-export const VerticalSpace = gloss({
+export const VerticalSpace = gloss<{ small?: boolean }>({
   pointerEvents: 'none',
   height: 16,
   small: {

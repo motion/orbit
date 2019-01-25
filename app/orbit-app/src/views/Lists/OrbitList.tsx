@@ -1,15 +1,17 @@
 import { AppConfig, Bit, PersonBit } from '@mcro/models'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
+import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
-export type OrbitHandleSelect = ((index: number, appConfig: AppConfig) => any)
+export type OrbitHandleSelect = ((
+  index: number,
+  appConfig: AppConfig,
+  eventType?: 'click' | 'key',
+) => any)
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -20,28 +22,18 @@ export type OrbitListProps = Omit<VirtualListProps, 'onSelect' | 'onOpen'> & {
   itemsKey?: string
 }
 
-export default observer(function OrbitList({ items, itemsKey, ...props }: OrbitListProps) {
-  const { appStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
+export default function OrbitList({ items, itemsKey, ...props }: OrbitListProps) {
   const isRowLoaded = x => x.index < items.length
   return (
-    <ProvideHighlightsContextWithDefaults
-      value={{
-        words: (props.query || appStore.activeQuery).split(' '),
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }}
-    >
+    <OrbitHighlightActiveQuery>
       <VirtualList
         items={items}
         ItemView={OrbitListItem}
         isRowLoaded={isRowLoaded}
         {...props}
         onSelect={(index, eventType) => {
-          if (selectionStore && selectionStore.activeIndex !== index) {
-            selectionStore.toggleSelected(index, eventType)
-          }
           if (props.onSelect) {
-            props.onSelect(index, getAppConfig(items[index], index))
+            props.onSelect(index, getAppConfig(items[index], index), eventType)
           }
         }}
         onOpen={index => {
@@ -50,6 +42,6 @@ export default observer(function OrbitList({ items, itemsKey, ...props }: OrbitL
           }
         }}
       />
-    </ProvideHighlightsContextWithDefaults>
+    </OrbitHighlightActiveQuery>
   )
-})
+}

@@ -119,8 +119,10 @@ class VirtualListStore {
       }
     } else {
       if (this.frameHeight) {
-        this.height = Math.min(this.props.maxHeight, this.frameHeight)
-        console.log('set heihgt', this.height)
+        const height = Math.min(this.props.maxHeight, this.frameHeight)
+        if (height !== this.height) {
+          this.height = height
+        }
       }
     }
   }

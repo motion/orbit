@@ -1,6 +1,6 @@
 import { Button, Input, Row } from '@mcro/ui'
 import * as React from 'react'
-import { ProvideHighlightsContextWithDefaults } from '../helpers/contexts/HighlightsContext'
+import { MergeHighlightsContext } from '../helpers/contexts/HighlightsContext'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
 import { Icon } from '../views/Icon'
 
@@ -26,7 +26,7 @@ export default React.memo(function Searchable(props: SearchableProps) {
         />
         <ContextButton marginLeft={6} />
       </Row>
-      <ProvideHighlightsContextWithDefaults
+      <MergeHighlightsContext
         value={{
           words: props.queryStore.query.split(' '),
           maxChars: 500,
@@ -34,7 +34,7 @@ export default React.memo(function Searchable(props: SearchableProps) {
         }}
       >
         {props.children}
-      </ProvideHighlightsContextWithDefaults>
+      </MergeHighlightsContext>
     </>
   )
 })

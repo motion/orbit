@@ -89,12 +89,12 @@ class SelectableStore {
   )
 }
 
-export default React.memo(function SelectableList(props: SelectableListProps) {
+export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
-  const itemsKey = orbitItemsKey(props.items)
-  const getItems = React.useCallback(() => props.items, [itemsKey])
+  const itemsKey = orbitItemsKey(items)
+  const getItems = React.useCallback(() => items, [itemsKey])
   const selectableProps = React.useContext(SelectableContext)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
@@ -102,6 +102,10 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
     itemsKey,
     getItems,
   })
+
+  if (props.debug) {
+    console.log('selectionStore', selectionStore)
+  }
 
   // TODO clear selection when app window closes, we really need useReaction()
   // useReaction(
@@ -146,11 +150,20 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
   return (
     <MergeContext Context={StoreContext} value={{ selectionStore }}>
       <OrbitList
+        items={items}
         scrollToAlignment="center"
         itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
-        onSelect={selectableProps.onSelectItem}
-        onOpen={selectableProps.onSelectItem}
+        onSelect={(index, appConfig, eventType) => {
+          console.log('selecting.......', index, selectionStore.activeIndex)
+          if (selectionStore && selectionStore.activeIndex !== index) {
+            selectionStore.toggleSelected(index, eventType)
+          }
+          if (selectableProps && selectableProps.onSelectItem) {
+            selectableProps.onSelectItem(index, appConfig, eventType)
+          }
+        }}
+        onOpen={selectableProps && selectableProps.onSelectItem}
         {...props}
       />
     </MergeContext>

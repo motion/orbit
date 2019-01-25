@@ -98,7 +98,7 @@ async function main() {
 // render app
 async function startApp() {
   // re-require for hmr to capture new value
-  const { OrbitRoot } = require('./OrbitRoot')
+  const OrbitRoot = require('./OrbitRoot').default
   ReactDOM.render(React.createElement(OrbitRoot), document.querySelector('#app'))
 }
 

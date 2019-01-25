@@ -7,15 +7,15 @@ const defaultValue = {
   maxChars: Infinity,
 }
 
+export type HighlightsContextValue = typeof defaultValue
+export type MergeHighlightsContextProps = {
+  value: Partial<HighlightsContextValue>
+  children: any
+}
+
 export const HighlightsContext = React.createContext(defaultValue)
 
-export const ProvideHighlightsContextWithDefaults = ({
-  value,
-  children,
-}: {
-  value: Partial<typeof defaultValue>
-  children: any
-}) => (
+export const MergeHighlightsContext = ({ value, children }: MergeHighlightsContextProps) => (
   <MergeContext
     Context={HighlightsContext}
     value={{

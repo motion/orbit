@@ -1,9 +1,10 @@
 import { AppType } from '@mcro/models'
-import { Absolute, Theme } from '@mcro/ui'
+import { Absolute, Text, Theme } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { RoundButton } from '../../views'
+import { RoundButton, Title } from '../../views'
+import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
 
 export default observer(function SettingsAppSpaces(_: AppProps<AppType.settings>) {
@@ -11,8 +12,14 @@ export default observer(function SettingsAppSpaces(_: AppProps<AppType.settings>
   const { activeSpace, inactiveSpaces } = stores.spaceStore
 
   return (
-    <>
-      hello spaces
+    <Section sizePadding={2}>
+      <Title>Spaces</Title>
+
+      <Text size={1.2}>
+        Spaces are the high level way you can organize your content. Use the orb to the left of the
+        search bar to switch between spaces. 123
+      </Text>
+
       {JSON.stringify(activeSpace)}
       {JSON.stringify(inactiveSpaces)}
       <Absolute bottom={10} right={10}>
@@ -27,6 +34,6 @@ export default observer(function SettingsAppSpaces(_: AppProps<AppType.settings>
           />
         </Theme>
       </Absolute>
-    </>
+    </Section>
   )
 })

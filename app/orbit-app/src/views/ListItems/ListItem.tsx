@@ -43,6 +43,7 @@ export type ListItemProps = CSSPropertySetStrict &
   Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    slim?: boolean
     above?: React.ReactNode
     activeStyle?: Object
     before?: React.ReactNode
@@ -120,6 +121,7 @@ export default observer(function ListItem(props: ListItemProps) {
     before,
     separatorProps,
     above,
+    slim,
     ...restProps
   } = props
   const { isSelected } = store
@@ -131,6 +133,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
+  const sizeLineHeight = slim ? 0.8 : 1
   const renderedChildren = showChildren && (
     <Text size={0.9} alpha={0.8}>
       {children}
@@ -180,10 +183,10 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [8, 11]}
+          padding={padding || (slim ? [4, 8] : [8, 11])}
           {...cardProps}
         >
-          <div style={{ flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
+          <ListItemInner>
             {before}
             <ListItemMainContent oneLine={oneLine}>
               {showTitle && (
@@ -193,25 +196,35 @@ export default observer(function ListItem(props: ListItemProps) {
                       {React.isValidElement(icon) ? (
                         React.cloneElement(icon, { style: { marginTop: 1 }, ...iconProps })
                       ) : (
-                        <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
+                        <Icon
+                          name={icon}
+                          size={slim ? 12 : 16}
+                          style={{ marginTop: slim ? 4 : 1 }}
+                          {...iconProps}
+                        />
                       )}
-                      <TitleSpace />
+                      <TitleSpace slim={slim} />
                     </>
                   )}
-                  <HighlightText sizeLineHeight={0.85} ellipse fontWeight={600} {...titleProps}>
+                  <HighlightText
+                    sizeLineHeight={0.85}
+                    ellipse
+                    fontWeight={slim ? 500 : 600}
+                    {...titleProps}
+                  >
                     {title}
                   </HighlightText>
-                  <TitleSpace />
+                  <TitleSpace slim={slim} />
                   {props.afterTitle}
                   {afterHeader}
                 </Title>
               )}
               {showSubtitle && (
-                <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
+                <ListItemSubtitle margin={showTitle && !slim ? [1, 0, 0] : 0}>
                   {showIcon && !showTitle && (
                     <>
-                      <Icon icon={icon} size={14} {...iconProps} />
-                      <TitleSpace />
+                      <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />
+                      <TitleSpace slim={slim} />
                     </>
                   )}
                   {!!location && (
@@ -226,7 +239,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       >
                         {location}
                       </RoundButtonSmall>
-                      <TitleSpace />
+                      <TitleSpace slim={slim} />
                     </>
                   )}
                   {showPreviewInSubtitle ? (
@@ -234,7 +247,13 @@ export default observer(function ListItem(props: ListItemProps) {
                   ) : null}
                   {!!subtitle &&
                     (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.8} size={0.9} ellipse {...subtitleProps}>
+                      <UI.Text
+                        alpha={0.8}
+                        size={0.9}
+                        sizeLineHeight={sizeLineHeight}
+                        ellipse
+                        {...subtitleProps}
+                      >
                         {subtitle}
                       </UI.Text>
                     ) : (
@@ -286,7 +305,7 @@ export default observer(function ListItem(props: ListItemProps) {
               )}
             </ListItemMainContent>
             {props.after}
-          </div>
+          </ListItemInner>
         </ListItemChrome>
         <Divider />
       </ListFrame>
@@ -364,6 +383,13 @@ const ListItemChrome = gloss({
   return style
 })
 
+const ListItemInner = gloss({
+  flexDirection: 'row',
+  flex: 1,
+  overflow: 'hidden',
+  alignItems: 'center',
+})
+
 const Title = gloss({
   width: '100%',
   flexFlow: 'row',
@@ -377,7 +403,6 @@ const Preview = gloss({
 })
 
 const ListItemSubtitle = gloss(UI.View, {
-  minHeight: 20,
   margin: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
@@ -396,6 +421,9 @@ const TitleSpace = gloss({
   minWidth: 10,
   shouldFlex: {
     flex: 1,
+  },
+  slim: {
+    minWidth: 6,
   },
 })
 

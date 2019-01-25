@@ -119,6 +119,17 @@ export default observer(function OrbitNav() {
 
   return (
     <OrbitNavClip>
+      {/* <Popover open width={200} elevation={1} target=".appDropdown-10">
+        <ListItem
+          slim
+          title="Open"
+          subtitle="Persist this window"
+          after={<Icon size={12} opacity={0.5} name="keyboardArrowReturn" />}
+        />
+        <ListItem slim title="Settings" />
+        <ListItem slim title="Remove" />
+      </Popover> */}
+
       <OrbitNavChrome>
         <SortableTabs
           axis="x"
@@ -232,7 +243,7 @@ const OrbitTab = ({
       {separator && <Separator />}
 
       {isActive && !!onClickPopout && (
-        <PopoutIcon
+        <DropDownButton
           className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
           right={sidePad * 0.25}
           tooltip="Open"
@@ -270,7 +281,7 @@ function OrbitTabIcon({ opacity, ...props }: IconProps) {
   )
 }
 
-function PopoutIcon(props) {
+function DropDownButton(props) {
   return (
     <Button
       circular
@@ -279,7 +290,7 @@ function PopoutIcon(props) {
       height={18}
       icon="downArrow"
       background="transparent"
-      iconProps={{ size: 8, style: { transform: 'rotate(225deg)', x: 5, y: -5 } }}
+      iconProps={{ size: 8 }}
       opacity={0}
       top={height / 2 - 9}
       position="absolute"

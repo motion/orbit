@@ -59,8 +59,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       </FloatingBar>
 
       <SelectableList
-        defaultSelected={0}
-        // padTop={28}
+        minSelected={0}
         items={items}
         query={props.appStore.activeQuery}
         rowCount={searchStore.remoteRowCount}

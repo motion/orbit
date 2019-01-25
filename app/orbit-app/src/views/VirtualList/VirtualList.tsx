@@ -52,7 +52,7 @@ class VirtualListStore {
   props: VirtualListProps
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
-  rootRef: HTMLDivElement = null
+  frameRef: HTMLDivElement = null
   height = window.innerHeight
   width = 0
   isSorting = false
@@ -71,12 +71,12 @@ class VirtualListStore {
     },
   )
 
-  setRootRef = (ref: HTMLDivElement) => {
-    if (this.rootRef || !ref) {
+  setFrameRef = (ref: HTMLDivElement) => {
+    if (this.frameRef || !ref) {
       return
     }
 
-    this.rootRef = ref
+    this.frameRef = ref
 
     // measure on resize
     // @ts-ignore
@@ -84,19 +84,19 @@ class VirtualListStore {
       this.measure()
       this.measureHeight()
     })
-    observer.observe(this.rootRef)
+    observer.observe(this.frameRef)
 
     this.measure()
   }
 
-  get parentHeight() {
-    if (!this.rootRef) {
+  get frameHeight() {
+    if (!this.frameRef) {
       return window.innerHeight
     }
-    return this.rootRef.clientHeight
+    return this.frameRef.clientHeight
   }
 
-  doMeasureHeight = react(() => always(this.cache, this.rootRef), this.measureHeight)
+  doMeasureHeight = react(() => always(this.cache, this.frameRef), this.measureHeight)
 
   measureTm = null
 
@@ -113,23 +113,26 @@ class VirtualListStore {
       if (height === 0) {
         return
       }
-      this.height = Math.min(this.props.maxHeight || this.parentHeight, height)
+      this.height = Math.min(this.props.maxHeight, height)
       if (this.props.onChangeHeight) {
         this.props.onChangeHeight(this.height)
       }
     } else {
-      this.height = this.parentHeight
+      if (this.frameHeight) {
+        this.height = Math.min(this.props.maxHeight, this.frameHeight)
+        console.log('set heihgt', this.height)
+      }
     }
   }
 
   measure() {
-    if (!this.rootRef || this.rootRef.clientWidth === 0) {
+    if (!this.frameRef || this.frameRef.clientWidth === 0) {
       clearTimeout(this.measureTm)
       this.measureTm = setTimeout(this.measure)
       return
     }
 
-    this.width = this.rootRef.clientWidth
+    this.width = this.frameRef.clientWidth
 
     if (!this.cache) {
       this.cache = new CellMeasurerCache({
@@ -199,6 +202,7 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
 
 export const VirtualListDefaultProps = React.createContext({
   estimatedRowHeight: 60,
+  maxHeight: window.innerHeight,
 } as Partial<VirtualListProps>)
 
 export default observer(function VirtualList(rawProps: VirtualListProps) {
@@ -290,7 +294,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
 
   return (
     <div
-      ref={store.setRootRef}
+      ref={store.setFrameRef}
       style={{
         height: props.dynamicHeight ? store.height : 'auto',
         flex: props.dynamicHeight ? 'none' : 1,

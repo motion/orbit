@@ -106,6 +106,16 @@ export default function OrbitPage() {
 const OrbitPageInner = observer(function OrbitPageInner() {
   const orbitStore = useStore(OrbitStore)
   const theme = App.state.darkTheme ? 'dark' : 'light'
+
+  React.useEffect(() => {
+    // prevent close on the main window
+    window.onbeforeunload = function(e) {
+      if (!orbitStore.isTorn) {
+        e.returnValue = false
+      }
+    }
+  }, [])
+
   return (
     <MergeContext Context={StoreContext} value={{ orbitStore }}>
       <MainShortcutHandler>

@@ -58,7 +58,7 @@ function getOrbitBrowser() {
   return OrbitBrowser
 }
 
-export default hot(module)(function OrbitRoot() {
+export const OrbitRoot = hot(module)(function OrbitRoot() {
   const OrbitBrowser = getOrbitBrowser()
 
   // update screen size state

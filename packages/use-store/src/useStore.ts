@@ -114,7 +114,7 @@ const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
 
 const useReactiveStore = <A extends any>(
   Store: new () => A,
-  props: any,
+  props?: any,
   options?: UseStoreOptions,
 ): A => {
   const storeHooks = useRef<Function[] | null>(null)
@@ -122,6 +122,9 @@ const useReactiveStore = <A extends any>(
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
+    if (props && props.debug) {
+      console.log('yea create new', Store, props)
+    }
     const { hooks, store } = setupStoreReactiveProps(Store, props)
     storeRef.current = store
     storeHooks.current = hooks

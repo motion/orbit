@@ -1,6 +1,5 @@
 import { AppType } from '@mcro/models'
 import * as React from 'react'
-import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { GenericComponent } from '../types'
 import { AppProps } from './AppProps'
 import { apps as appsApps } from './apps/index'
@@ -18,12 +17,12 @@ import { MessageViewMain } from './views/MessageViewMain'
 
 type App = {
   index?: GenericComponent<AppProps<any>>
-  main: GenericComponent<AppProps<any>>
+  main?: GenericComponent<AppProps<any>>
 }
 
 type AppsIndex = { [key in AppType]: App }
 
-export const apps = memoizeAny({
+export const apps: AppsIndex = {
   search,
   people,
   topics,
@@ -33,26 +32,11 @@ export const apps = memoizeAny({
   bit,
   home,
   apps: appsApps,
+  // @ts-ignore
   onboard,
   createApp,
   message: {
     main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,
   },
-}) as AppsIndex
-
-function memoizeAny(apps) {
-  const res = {}
-  for (const key in apps) {
-    const main = apps[key].main
-    const index = apps[key].index
-    res[key] = {}
-    if (main) {
-      res[key].main = memoIsEqualDeep(main)
-    }
-    if (index) {
-      res[key].index = memoIsEqualDeep(index)
-    }
-  }
-  return res
 }

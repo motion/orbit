@@ -4,12 +4,11 @@ import { Col, Row, Sidebar, Text } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import AppView from '../../apps/AppView'
+import { AppView } from '../../apps/AppView'
 import Searchable from '../../components/Searchable'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { AppsStore } from '../../stores/AppsStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
@@ -24,7 +23,6 @@ import { AppPageStore } from './AppPageStore'
 // see main.ts for setup for testing this in browser
 
 export default React.memo(() => {
-  const appsStore = useStore(AppsStore)
   const sourcesStore = useStore(SourcesStore)
   const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
@@ -34,7 +32,6 @@ export default React.memo(() => {
   return (
     <StoreContext.Provider
       value={{
-        appsStore,
         sourcesStore,
         settingStore,
         spaceStore,

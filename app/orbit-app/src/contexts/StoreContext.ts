@@ -5,7 +5,6 @@ import { AppFrameStore } from '../pages/AppPage/AppFrame'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { MenuStore } from '../pages/ChromePage/menuLayer/Menu'
 import { OrbitStore } from '../pages/OrbitPage/OrbitPage'
-import { AppsStore } from '../stores/AppsStore'
 import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
@@ -17,7 +16,6 @@ import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AllStores = {
-  appsStore?: AppsStore
   queryStore?: QueryStore
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore

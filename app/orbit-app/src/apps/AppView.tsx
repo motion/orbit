@@ -5,18 +5,19 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { GenericComponent } from '../types'
 import { MergeContext } from '../views/MergeContext'
 import { AppProps } from './AppProps'
+import { apps } from './apps'
 import { AppStore } from './AppStore'
 
 export type AppViewProps = Pick<
   AppProps<any>,
-  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
+  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'appConfig'
 > & {
   title?: string
   appStore?: AppStore<any>
   onAppStore?: Function
 }
 
-export default React.memo(function AppView(props: AppViewProps) {
+export const AppView = React.memo(function AppView(props: AppViewProps) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // warning should never change it if you pass in a prop
@@ -28,29 +29,30 @@ export default React.memo(function AppView(props: AppViewProps) {
     }
   }, [])
 
-  if (!stores.appsStore.apps[props.type]) {
+  if (!apps[props.type]) {
     return <div>noo app of type {props.type}</div>
   }
 
-  const AppView = stores.appsStore.apps[props.type][props.viewType] as GenericComponent<
-    AppProps<any>
-  >
+  const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
   if (!AppView) {
     return null
   }
 
-  const appView = (
-    <AppView
-      appStore={props.appStore || appStore}
-      sourcesStore={stores.sourcesStore}
-      settingStore={stores.settingStore}
-      subPaneStore={stores.subPaneStore}
-      queryStore={stores.queryStore}
-      spaceStore={stores.spaceStore}
-      paneManagerStore={stores.paneManagerStore}
-      {...props}
-    />
+  const appView = React.useMemo(
+    () => (
+      <AppView
+        appStore={props.appStore || appStore}
+        sourcesStore={stores.sourcesStore}
+        settingStore={stores.settingStore}
+        subPaneStore={stores.subPaneStore}
+        queryStore={stores.queryStore}
+        spaceStore={stores.spaceStore}
+        paneManagerStore={stores.paneManagerStore}
+        {...props}
+      />
+    ),
+    Object.values(props),
   )
 
   if (!props.appStore) {

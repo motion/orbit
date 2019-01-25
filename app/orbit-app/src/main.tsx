@@ -98,15 +98,15 @@ async function main() {
 // render app
 async function startApp() {
   // re-require for hmr to capture new value
-  const OrbitRoot = require('./OrbitRoot').default
-  ReactDOM.render(React.createElement(OrbitRoot), document.querySelector('#app'))
+  const { OrbitRoot } = require('./OrbitRoot')
+  ReactDOM.render(<OrbitRoot />, document.querySelector('#app'))
 }
 
 // hot reloading
-if (process.env.NODE_ENV === 'development') {
-  if (typeof module['hot'] !== 'undefined') {
-    module['hot'].accept(startApp)
-  }
-}
+// if (process.env.NODE_ENV === 'development') {
+//   if (typeof module['hot'] !== 'undefined') {
+//     module['hot'].accept(startApp)
+//   }
+// }
 
 main()

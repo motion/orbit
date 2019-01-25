@@ -28,10 +28,8 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       <OrbitToolbar>
         <OrbitSuggestionBar />
       </OrbitToolbar>
-
       {/* TODO api for handling suggestions */}
       {/* <OrbitSuggestions items={} /> */}
-
       <FloatingBar>
         <Popover
           delay={250}

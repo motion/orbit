@@ -8,7 +8,7 @@ import { Avatar } from '../Avatar'
 export const ListItemPerson = ({ item }: { item: PersonBit }) => {
   return (
     <>
-      {!!item.photo && <Avatar position="absolute" top={-20} right={-20} src={item.photo} />}
+      {!!item.photo && <Avatar position="absolute" top={-38} right={-22} src={item.photo} />}
       {/* TODO: email is less important than their top topics */}
       {/* But we could have small icons for email/slack */}
       <Text alpha={0.8} ellipse>

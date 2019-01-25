@@ -226,9 +226,16 @@ const positionStateX = (
   targetBounds?: Bounds,
 ): PositionStateX => {
   const { arrowSize } = props
-  const targetCenter = targetBounds
-    ? targetBounds.left + targetBounds.width / 2
-    : popoverBounds.width / 2 + popoverBounds.left
+  let targetCenter: number
+
+  if (getIsManuallyPositioned(props)) {
+    targetCenter = props.left + props.width / 2
+    popoverBounds = { width: props.width, height: props.height, top: 0, left: 0 }
+  } else {
+    targetCenter = targetBounds
+      ? targetBounds.left + targetBounds.width / 2
+      : popoverBounds.width / 2 + popoverBounds.left
+  }
 
   const popoverHalfWidth = popoverBounds.width / 2
   let left = 0
@@ -351,10 +358,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   static getDerivedStateFromProps(props, state) {
     let nextState: Partial<State> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
-
-    if (props.open === false) {
-      console.log('popover', props, state)
-    }
 
     if (isManuallyPositioned) {
       nextState = {

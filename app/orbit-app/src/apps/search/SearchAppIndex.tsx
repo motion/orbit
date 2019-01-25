@@ -6,6 +6,7 @@ import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
+import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import { FloatingButton } from '../../views/FloatingBar/FloatingButton'
@@ -69,15 +70,30 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
           if (item.item && item.item.target) {
             return {
               after: (
-                <View
-                  alignItems="center"
-                  justifyContent="center"
-                  width={32}
-                  opacity={0.5}
-                  hoverStyle={{ opacity: 1 }}
+                <Popover
+                  target={
+                    <View
+                      alignItems="center"
+                      justifyContent="center"
+                      width={32}
+                      opacity={0.5}
+                      hoverStyle={{ opacity: 1 }}
+                      onClick={preventDefault(() => console.log('show popover'))}
+                    >
+                      <Icon name="dots" size={12} />
+                    </View>
+                  }
+                  openOnClick
+                  closeOnClickAway
+                  group="filters"
+                  background
+                  borderRadius={10}
+                  elevation={2}
                 >
-                  <Icon name="dots" size={12} />
-                </View>
+                  <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
+                    hi
+                  </View>
+                </Popover>
               ),
             }
           }

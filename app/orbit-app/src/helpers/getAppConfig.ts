@@ -36,13 +36,11 @@ export const getAppConfig = (props: OrbitListItemProps, id?: number): AppConfig 
 }
 
 function listItemToAppConfig(props: ListItemProps): AppConfig {
-  if (props.appConfig) {
-    return props.appConfig
-  }
   return {
     id: props.id,
     type: props.type as AppType,
     title: props.title,
     icon: props.icon,
+    ...props.appConfig,
   }
 }

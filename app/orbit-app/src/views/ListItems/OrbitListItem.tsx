@@ -12,7 +12,7 @@ type OrbitItem = Bit | PersonBit | any
 
 export type OrbitListItemProps = VirtualListItemProps<OrbitItem>
 
-export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
+export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps) => {
   const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })
 
   // this is the view from sources, each bit type can have its own display
@@ -20,16 +20,16 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
   let itemProps: Partial<ListItemProps> = null
   let normalized: NormalItem = null
 
-  if (props.item && props.item.target) {
-    switch (props.item.target) {
+  if (item && item.target) {
+    switch (item.target) {
       case 'bit':
       case 'person-bit':
-        normalized = normalizeItem(props.item)
+        normalized = normalizeItem(item)
         itemProps = getNormalPropsForListItem(normalized)
 
-        if (props.item.target === 'bit') {
+        if (item.target === 'bit') {
           ItemView = sourcesStore.getView(normalized.integration, 'item')
-        } else if (props.item.target === 'person-bit') {
+        } else if (item.target === 'person-bit') {
           ItemView = ListItemPerson
         }
         break
@@ -38,8 +38,7 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
     }
   }
 
-  const icon =
-    props.icon || (props.item ? props.item.icon : null) || (normalized ? normalized.icon : null)
+  const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
 
   return (
     <VirtualListItem
@@ -60,7 +59,7 @@ export const OrbitListItem = React.memo((props: OrbitListItemProps) => {
     >
       {!!ItemView && (
         <ItemView
-          item={props.item}
+          item={item}
           shownLimit={3}
           renderText={renderHighlightedText}
           extraProps={extraProps}

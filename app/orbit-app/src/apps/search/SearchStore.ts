@@ -31,12 +31,13 @@ const groupToName = {
 const searchGroupsToResults = (results: SearchResult[]) => {
   const res = results.map(result => {
     const group = groupToName[result.group]
-    const firstFew = result.bits.slice(0, 4).map(bit => ({
+    const max = 6
+    const firstFew = result.bits.slice(0, max).map(bit => ({
       item: bit,
       group,
     }))
     const showMore =
-      result.bitsTotalCount > 3
+      result.bitsTotalCount > max - 1
         ? [
             {
               title: result.title,

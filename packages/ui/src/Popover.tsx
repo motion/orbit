@@ -394,14 +394,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   setPopoverRef = (ref: HTMLElement) => {
     if (ref) {
       this.popoverRef = ref
-      this.resizeObserver.observe(ref)
+      const inner = ref.querySelector('.popover-inner-surface')
+      this.resizeObserver.observe(inner)
       this.mutationObserver.observe(ref, { attributes: true })
     }
   }
 
   // @ts-ignore
-  resizeObserver = new ResizeObserver(() => this.setPosition())
-  mutationObserver = new MutationObserver(() => this.setPosition())
+  resizeObserver = new ResizeObserver(() => {
+    this.setPosition()
+  })
+  mutationObserver = new MutationObserver(() => {
+    this.setPosition()
+  })
 
   get domNode() {
     return findDOMNode(this) as HTMLDivElement
@@ -972,6 +977,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               </ArrowContain>
             )}
             <SizedSurface
+              className="popover-inner-surface"
               sizeRadius
               flex={1}
               ignoreSegment

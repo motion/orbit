@@ -71,6 +71,8 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
             return {
               after: (
                 <Popover
+                  width={250}
+                  height={300}
                   target={
                     <View
                       alignItems="center"
@@ -91,12 +93,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                   elevation={2}
                 >
                   {isShown => (
-                    <View
-                      width={250}
-                      height={300}
-                      className="calendar-dom theme-light"
-                      padding={10}
-                    >
+                    <View flex={1} className="calendar-dom theme-light" padding={10}>
                       {isShown ? 'show' : 'hide'}
                     </View>
                   )}

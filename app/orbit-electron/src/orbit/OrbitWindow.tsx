@@ -5,6 +5,7 @@ import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { app, BrowserWindow, Menu } from 'electron'
+import { pathExists } from 'fs-extra'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
@@ -144,13 +145,13 @@ export default observer(function OrbitWindow() {
     }
 
     // handle tear away
-    return Electron.onMessage(Electron.messages.TEAR, (appType: string) => {
-      try {
-        app.dock.setIcon(join(ROOT, 'resources', 'icons', `appicon-${appType}.png`))
-      } catch (err) {
-        console.log('ERROR setting icon!', err)
+    return Electron.onMessage(Electron.messages.TEAR, async (appType: string) => {
+      const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
+      if (!(await pathExists(iconPath))) {
+        console.error('no icon!')
         return
       }
+      app.dock.setIcon(iconPath)
       Electron.setIsTorn()
       orbitShortcutsStore.dispose()
       require('@mcro/orbit').main({ subOrbit: true })

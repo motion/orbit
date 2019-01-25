@@ -24,6 +24,7 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
+  appId = App.state.appCount
 
   updateSize = react(
     () => Electron.state.screenSize,
@@ -115,7 +116,7 @@ export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const url = Config.urls.server
+  const url = `${Config.urls.server}/?appId=${store.appId}`
   const vibrancy = App.state.darkTheme ? 'dark' : 'light'
 
   log.info(

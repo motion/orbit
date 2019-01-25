@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { react, ensure } from '@mcro/black'
-import { Window } from '@mcro/reactron'
-import { Electron, Desktop, App } from '@mcro/stores'
-import { Logger } from '@mcro/logger'
-import { getGlobalConfig } from '@mcro/config'
-import { WEB_PREFERENCES } from '../constants'
-import { BrowserWindow } from 'electron'
-import global from 'global'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
+import { ensure, react } from '@mcro/black';
+import { getGlobalConfig } from '@mcro/config';
+import { Logger } from '@mcro/logger';
+import { Window } from '@mcro/reactron';
+import { App, Desktop, Electron } from '@mcro/stores';
+import { useStore } from '@mcro/use-store';
+import { BrowserWindow } from 'electron';
+import global from 'global';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { WEB_PREFERENCES } from '../constants';
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -40,10 +40,6 @@ class AppWindowStore {
     // so we are switching renderers technically which is real weird
     // and react reconciler api surface doesnt support mixed renderers...
     this.closeApp()
-  }
-
-  get url() {
-    return `${Config.urls.server}/app?id=${this.props.id}`
   }
 
   // looks at desktop appFocusState and then controls electron focus
@@ -112,7 +108,10 @@ export default observer(function AppWindow(props: Props) {
   const store = useStore(AppWindowStore, props)
   const { id, isPeek } = props
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
-  log.info(`Rendering app window ${id} at url ${store.url} ignore mouse? ${ignoreMouseEvents}`)
+  const url = `${Config.urls.server}/app?peekId=${this.props.id}`
+
+  log.info(`Rendering app window ${id} at url ${url} ignore mouse? ${ignoreMouseEvents}`)
+  
   return (
     <Window
       alwaysOnTop={isPeek}
@@ -121,7 +120,7 @@ export default observer(function AppWindow(props: Props) {
       ref={store.handleRef}
       ignoreMouseEvents={ignoreMouseEvents}
       focusable={isPeek}
-      file={store.url}
+      file={url}
       frame={false}
       hasShadow={false}
       showDevTools={Electron.state.showDevTools[`${id}`] || false}

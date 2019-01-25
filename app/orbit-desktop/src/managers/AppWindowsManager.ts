@@ -1,10 +1,10 @@
-import { Screen } from '@mcro/screen'
-import { store, react } from '@mcro/black'
-import { App, Desktop } from '@mcro/stores'
-import { screenOptions } from '../constants'
-import { Logger } from '@mcro/logger'
-import { join } from 'path'
+import { react, store } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import { Screen } from '@mcro/screen'
+import { App, Desktop } from '@mcro/stores'
+import { join } from 'path'
+import { screenOptions } from '../constants'
 
 const log = new Logger('AppsManager')
 const Config = getGlobalConfig()
@@ -24,7 +24,7 @@ export class AppWindowsManager {
 
   // launch app icons and events to listen for focus
   manageAppIcons = react(
-    () => App.appsState.map(app => ({ id: app.id, torn: app.torn })),
+    () => App.peeksState.map(app => ({ id: app.id, torn: app.torn })),
     async (apps, { sleep }) => {
       // debounce to prevent lots of processing
       await sleep(50)

@@ -1,8 +1,10 @@
 import { useObserveMany } from '@mcro/model-bridge'
 import { SpaceModel } from '@mcro/models'
+import { Icon } from '@mcro/ui'
 import * as React from 'react'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
+import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default function SourcesAppIndex() {
   const spaces = useObserveMany(SpaceModel, {})
@@ -25,13 +27,26 @@ export default function SourcesAppIndex() {
         icon: 'users_badge',
         subtitle: 'Manage your account',
       },
-      ...spaces.map(space => ({
+      ...spaces.map((space, index) => ({
         id: `space-${space.id}`,
         group: 'Spaces',
         type: 'space',
         title: space.name,
         subtitle: '10 members',
+        before: <OrbitOrb size={18} marginRight={10} />,
+        after: index === 0 && <Icon name="check" size={12} />,
       })),
+      {
+        id: 3,
+        group: 'Spaces',
+        title: 'Create new space...',
+        icon: 'add',
+        padding: [16, 11],
+        type: 'new-space',
+        titleProps: {
+          fontWeight: 300,
+        },
+      },
     ],
   })
 

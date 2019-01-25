@@ -1,3 +1,4 @@
+import { View } from '@mcro/ui'
 import * as React from 'react'
 // import { View, color as colorize } from '@mcro/ui'
 
@@ -21,6 +22,8 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = ({ size = 32, background, color, ...props }) => (
-  <GradientOutlineCircle width={size} height={size} {...props} />
+export const OrbitOrb = ({ size = 32, ...props }) => (
+  <View alignItems="center" justifyContent="center" {...props}>
+    <GradientOutlineCircle width={size} height={size} {...props} />
+  </View>
 )

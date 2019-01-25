@@ -341,6 +341,7 @@ const ListItemChrome = gloss({
   flexFlow: 'row',
   position: 'relative',
   flex: 1,
+  alignItems: 'center',
   chromeless: {
     background: 'transparent',
     padding: 8,
@@ -403,12 +404,12 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 10,
+  minWidth: 8,
   shouldFlex: {
     flex: 1,
   },
   slim: {
-    minWidth: 6,
+    minWidth: 5,
   },
 })
 

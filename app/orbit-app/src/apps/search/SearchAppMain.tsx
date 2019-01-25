@@ -8,7 +8,7 @@ import SearchAppIndex from './SearchAppIndex'
 export default function SearchAppMain(props: AppProps<AppType.search>) {
   const appConfig = props.appConfig
 
-  if (!appConfig || !appConfig.id) {
+  if (!appConfig) {
     return <Message>Nothing selected {JSON.stringify(appConfig || null)}</Message>
   }
 

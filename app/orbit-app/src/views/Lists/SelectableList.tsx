@@ -7,7 +7,8 @@ import { isEqualReferential } from '../../helpers/isEqualReferential'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
-import OrbitList, { OrbitHandleSelect, orbitItemsKey, OrbitListProps } from './OrbitList'
+import { orbitItemsKey } from './orbitItemsKey'
+import OrbitList, { OrbitHandleSelect, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   minSelected?: number

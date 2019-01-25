@@ -116,7 +116,8 @@ export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const url = `${Config.urls.server}/?appId=${store.appId}`
+  const appQuery = `/?appId=${store.appId}`
+  const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
   const vibrancy = App.state.darkTheme ? 'dark' : 'light'
 
   log.info(

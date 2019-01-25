@@ -53,7 +53,7 @@ class VirtualListStore {
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
   rootRef: HTMLDivElement = null
-  height = 100
+  height = window.innerHeight
   width = 0
   isSorting = false
   observing = false
@@ -89,7 +89,14 @@ class VirtualListStore {
     this.measure()
   }
 
-  doMeasureHeight = react(() => always(this.cache), this.measureHeight)
+  get parentHeight() {
+    if (!this.rootRef) {
+      return window.innerHeight
+    }
+    return this.rootRef.clientHeight
+  }
+
+  doMeasureHeight = react(() => always(this.cache, this.rootRef), this.measureHeight)
 
   measureTm = null
 
@@ -106,14 +113,12 @@ class VirtualListStore {
       if (height === 0) {
         return
       }
-      this.height = Math.min(this.props.maxHeight || Infinity, height)
+      this.height = Math.min(this.props.maxHeight || this.parentHeight, height)
       if (this.props.onChangeHeight) {
         this.props.onChangeHeight(this.height)
       }
     } else {
-      if (this.rootRef && this.rootRef.parentNode) {
-        this.height = (this.rootRef.parentNode as HTMLDivElement).clientHeight
-      }
+      this.height = this.parentHeight
     }
   }
 
@@ -200,7 +205,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const defaultProps = React.useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
-  const { cache, width, height } = store
 
   React.useEffect(() => {
     if (!store.listRef) {
@@ -229,7 +233,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
-      <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
+      <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
             onSelect={props.onSelect}
@@ -265,10 +269,10 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
           }
         }}
         items={props.items}
-        deferredMeasurementCache={cache}
-        height={height}
-        width={width}
-        rowHeight={cache.rowHeight}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={store.width}
+        rowHeight={store.cache.rowHeight}
         overscanRowCount={20}
         rowCount={props.items.length}
         estimatedRowSize={props.estimatedRowHeight}
@@ -288,11 +292,12 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
     <div
       ref={store.setRootRef}
       style={{
-        height,
+        height: props.dynamicHeight ? store.height : 'auto',
+        flex: props.dynamicHeight ? 'none' : 1,
         width: '100%',
       }}
     >
-      {!!width && !!cache && (
+      {!!store.width && !!store.cache && (
         <>
           {props.infinite && (
             <InfiniteLoader

@@ -1,14 +1,14 @@
-import { ensure, react } from '@mcro/black';
-import { getGlobalConfig } from '@mcro/config';
-import { Logger } from '@mcro/logger';
-import { Window } from '@mcro/reactron';
-import { App, Desktop, Electron } from '@mcro/stores';
-import { useStore } from '@mcro/use-store';
-import { BrowserWindow } from 'electron';
-import global from 'global';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { WEB_PREFERENCES } from '../constants';
+import { ensure, react } from '@mcro/black'
+import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import { Window } from '@mcro/reactron'
+import { App, Desktop, Electron } from '@mcro/stores'
+import { useStore } from '@mcro/use-store'
+import { BrowserWindow } from 'electron'
+import global from 'global'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { WEB_PREFERENCES } from '../constants'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -111,7 +111,7 @@ export default observer(function AppWindow(props: Props) {
   const url = `${Config.urls.server}/app?peekId=${this.props.id}`
 
   log.info(`Rendering app window ${id} at url ${url} ignore mouse? ${ignoreMouseEvents}`)
-  
+
   return (
     <Window
       alwaysOnTop={isPeek}

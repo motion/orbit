@@ -203,7 +203,7 @@ export const Icon = React.memo(
     return (
       <View {...props}>
         <SVG
-          fill={finalColor}
+          fill={`${finalColor}`}
           svg={icon}
           width={`${size}`}
           height={`${size}`}

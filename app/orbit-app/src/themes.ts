@@ -71,7 +71,7 @@ const light = {
     // tabBackgroundActive: [255, 255, 255, 0.8],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',
-    // listItemBackground: '#fff',
+    listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: 'eee',
     listItemBackgroundSelected: orbitColor,
     listItemBackgroundHover: [100, 100, 100, 0.024],

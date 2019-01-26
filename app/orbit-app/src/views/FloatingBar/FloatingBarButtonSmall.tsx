@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@mcro/ui'
 import * as React from 'react'
 
-export function FloatingButton(props: ButtonProps) {
+export function FloatingBarButtonSmall(props: ButtonProps) {
   return (
     <Button
       glint={false}

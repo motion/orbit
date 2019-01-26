@@ -219,7 +219,7 @@ export default observer(function ListItem(props: ListItemProps) {
               </Title>
             )}
             {showSubtitle && (
-              <ListItemSubtitle margin={showTitle && !slim ? [1, 0, 0] : 0}>
+              <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
                     <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />

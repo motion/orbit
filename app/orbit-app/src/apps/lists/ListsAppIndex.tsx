@@ -5,11 +5,11 @@ import { Button } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
-import { FloatingBarBottom } from '../../views/FloatingBar/FloatingBarBottom'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
@@ -103,14 +103,16 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>
-      <OrbitToolbar>
+      <OrbitToolbar />
+      {/* <OrbitToolbar>
         <ListAppBreadcrumbs />
       </OrbitToolbar>
-      <ListAppBreadcrumbs />
+      <ListAppBreadcrumbs /> */}
       <SelectableList minSelected={0} items={results} sortable />
-      <FloatingBarBottom>
+
+      <OrbitFloatingBar showSearch>
         <ListEdit />
-      </FloatingBarBottom>
+      </OrbitFloatingBar>
     </>
   )
 })

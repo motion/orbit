@@ -1,7 +1,6 @@
 import { AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -9,17 +8,15 @@ import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegratio
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingButton } from '../../views/FloatingBar/FloatingButton'
+import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
-import { SearchStore } from './SearchStore'
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
-  const searchStore = useStore(SearchStore, props)
-  const { queryStore } = useStoresSafe()
+  const { searchStore, queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   const items = searchStore.searchState.results
   return (
@@ -31,7 +28,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
           openOnHover
           closeOnClickAway
           group="filters"
-          target={<FloatingButton icon="ui-1_calendar-57" />}
+          target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
           background
           borderRadius={10}
           elevation={4}
@@ -45,9 +42,9 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
           </View>
         </Popover>
         <View width={4} />
-        <FloatingButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+        <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
           {queryFilters.sortBy}
-        </FloatingButton>
+        </FloatingBarButtonSmall>
         <View width={4} />
         <OrbitFilterIntegrationButton />
         <View width={4} />

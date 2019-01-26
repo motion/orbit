@@ -2,7 +2,7 @@ import { Col, Popover, ViewProps } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { FloatingButton } from '../views/FloatingBar/FloatingButton'
+import { FloatingBarButtonSmall } from '../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../views/Icon'
 import ListItem from '../views/ListItems/ListItem'
 
@@ -21,11 +21,11 @@ export default observer(function OrbitFilterIntegrationButton(props: ViewProps) 
       elevation={4}
       theme="light"
       target={
-        <FloatingButton icon="funnel" width={46}>
+        <FloatingBarButtonSmall icon="funnel" width={46}>
           {queryFilters.hasIntegrationFilters
             ? queryFilters.integrationFilters.filter(x => x.active).length
             : 'All'}
-        </FloatingButton>
+        </FloatingBarButtonSmall>
       }
     >
       <Col {...props}>

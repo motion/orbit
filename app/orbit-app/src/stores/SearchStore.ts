@@ -9,11 +9,10 @@ import {
 } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { capitalize, flatten, uniq } from 'lodash'
-import { fuzzyQueryFilter } from '../../helpers'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { MarkType } from '../../stores/QueryStore/types'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
-import { AppProps } from '../AppProps'
+import { fuzzyQueryFilter } from '../helpers'
+import { useStoresSafe } from '../hooks/useStoresSafe'
+import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+import { MarkType } from './QueryStore/types'
 
 type SearchState = {
   results: OrbitListItemProps[]
@@ -52,27 +51,18 @@ const searchGroupsToResults = (results: SearchResult[]) => {
 }
 
 export class SearchStore {
-  props: AppProps<AppType.search>
   stores = useHook(useStoresSafe)
 
   get activeQuery() {
-    return this.stores.appStore.activeQuery
-  }
-
-  get isActive() {
-    return this.stores.appStore.isActive
+    return this.stores.queryStore.query
   }
 
   get queryFilters() {
-    return this.stores.appStore.queryFilters
+    return this.stores.queryStore.queryFilters
   }
 
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
-
-  get selectedItem() {
-    return this.searchState.results[this.stores.appStore.activeIndex]
-  }
 
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
@@ -164,7 +154,7 @@ export class SearchStore {
   searchState = react(
     () => [
       this.stores.spaceStore.activeSpace.id,
-      this.stores.appStore.activeQuery,
+      this.stores.queryStore.query,
       this.queryFilters.activeFilters,
       this.queryFilters.exclusiveFilters,
       this.queryFilters.sortBy,
@@ -181,7 +171,7 @@ export class SearchStore {
         // short queries we dont need to wait
         if (query.length > 3) {
           // wait for nlp to give us results
-          await when(() => this.stores.appStore.nlp.query === query)
+          await when(() => this.stores.queryStore.nlpStore.nlp.query === query)
         }
       }
 

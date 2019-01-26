@@ -50,6 +50,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         </FloatingButton>
         <View width={4} />
         <OrbitFilterIntegrationButton />
+        <View width={4} />
         <OrbitSuggestionBar />
       </OrbitToolbar>
       {/* TODO api for handling suggestions */}

@@ -34,7 +34,11 @@ export const OrbitToolBarRender = observer(function OrbitToolBarProvide() {
   return <ToolbarChrome>{appStore.toolbar}</ToolbarChrome>
 })
 
-const ToolbarChrome = gloss(View, { padding: [4, 10] }).theme((_, theme) => ({
+const ToolbarChrome = gloss(View, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  padding: [4, 10],
+}).theme((_, theme) => ({
   background: theme.tabBackground,
   borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))

@@ -9,7 +9,6 @@ import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegratio
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import { FloatingButton } from '../../views/FloatingBar/FloatingButton'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
@@ -26,18 +25,13 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   return (
     <>
       <OrbitToolbar>
-        <OrbitSuggestionBar />
-      </OrbitToolbar>
-      {/* TODO api for handling suggestions */}
-      {/* <OrbitSuggestions items={} /> */}
-      <FloatingBar>
         <Popover
           delay={250}
           openOnClick
           openOnHover
           closeOnClickAway
           group="filters"
-          target={<FloatingButton icon="calendar" />}
+          target={<FloatingButton icon="ui-1_calendar-57" />}
           background
           borderRadius={10}
           elevation={4}
@@ -54,9 +48,15 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         <FloatingButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
           {queryFilters.sortBy}
         </FloatingButton>
-        <View flex={1} />
+        <View width={4} />
         <OrbitFilterIntegrationButton />
-      </FloatingBar>
+        <OrbitSuggestionBar />
+      </OrbitToolbar>
+      {/* TODO api for handling suggestions */}
+      {/* <OrbitSuggestions items={} /> */}
+      {/* <FloatingBar>
+
+      </FloatingBar> */}
 
       <SelectableList
         minSelected={0}

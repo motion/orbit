@@ -8,7 +8,7 @@ const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-export const selectThemeSubset = (prefix: string, theme: ThemeObject): ThemeObject => {
+export function selectThemeSubset(prefix: string, theme: ThemeObject): ThemeObject {
   // read from cache
   if (cacheKey.has(theme)) {
     const isCached = cacheKey.get(theme).has(prefix)

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { UIContext, UIContextType } from '../helpers/contexts'
+import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
 export type InputProps = SizedSurfaceProps & {
   sync?: { get: () => any; set: (a: any) => void }
@@ -81,7 +81,6 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
         alignItems="center"
         flexFlow="row"
         themeSelect="input"
-        sizeFont={1.2}
         sizePadding
         sizeHeight
         sizeLineHeight
@@ -101,10 +100,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
   }
 }
 
-export const Input = (props: InputProps) => {
-  return (
-    <UIContext.Consumer>
-      {uiContext => <InputPlain uiContext={uiContext} {...props} />}
-    </UIContext.Consumer>
-  )
+export function Input(props: InputProps) {
+  const uiContext = React.useContext(UIContext)
+  return <InputPlain uiContext={uiContext} {...props} />
 }

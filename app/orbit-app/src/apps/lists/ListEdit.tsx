@@ -59,7 +59,7 @@ export default observer(function ListEdit() {
           // closeOnClickAway
           target={
             <Button
-              circular
+              sizeRadius={3}
               icon={
                 <View marginLeft={4} fontSize={18}>
                   😓

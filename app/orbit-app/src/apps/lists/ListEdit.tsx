@@ -3,9 +3,9 @@ import { AppModel, ListsApp } from '@mcro/models'
 import { Button, Input, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { Picker } from 'emoji-mart'
-import 'emoji-mart/css/emoji-mart.css'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import '../../../public/styles/emojimart.css'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { HorizontalSpace } from '../../views'
@@ -57,14 +57,22 @@ export default observer(function ListEdit() {
         openOnClick
         // closeOnClickAway
         target={
-          <Button circular icon={<View marginLeft={4}>😓</View>} iconSize={14} type="submit" />
+          <Button
+            circular
+            icon={
+              <View marginLeft={4} fontSize={18}>
+                😓
+              </View>
+            }
+            iconSize={14}
+            type="submit"
+          />
         }
         background
         borderRadius={10}
         elevation={4}
-        className="display-block"
       >
-        <Picker native />
+        <Picker native title="Choose emoji..." />
       </Popover>
 
       <HorizontalSpace />

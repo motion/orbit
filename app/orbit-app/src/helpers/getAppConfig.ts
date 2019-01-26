@@ -12,22 +12,27 @@ import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 // but then it also falls back to generically mapping over ListItem props
 // works for now, but could be rethought
 
-export const getAppConfig = (props: OrbitListItemProps): AppConfig => {
+export const getAppConfig = (props: OrbitListItemProps, id?: number): AppConfig => {
   const { item } = props
   let type: string = ''
-  switch (item && item.target) {
-    case 'bit':
-      type = item.integration
-      break
-    case 'person-bit':
-      type = 'person'
-      break
+  if (item) {
+    switch (item.target) {
+      case 'bit':
+        type = item.integration
+        break
+      case 'person-bit':
+        type = 'person'
+        break
+    }
+    if (type) {
+      const app = allIntegrations[type]
+      return sourceToAppConfig(app, item)
+    }
   }
-  if (type) {
-    const app = allIntegrations[type]
-    return sourceToAppConfig(app, item)
+  return {
+    id,
+    ...listItemToAppConfig(props),
   }
-  return listItemToAppConfig(props)
 }
 
 function listItemToAppConfig(props: ListItemProps): AppConfig {
@@ -36,5 +41,6 @@ function listItemToAppConfig(props: ListItemProps): AppConfig {
     type: props.type as AppType,
     title: props.title,
     icon: props.icon,
+    ...props.appConfig,
   }
 }

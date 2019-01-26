@@ -31,12 +31,13 @@ const groupToName = {
 const searchGroupsToResults = (results: SearchResult[]) => {
   const res = results.map(result => {
     const group = groupToName[result.group]
-    const firstFew = result.bits.slice(0, 4).map(bit => ({
+    const max = 6
+    const firstFew = result.bits.slice(0, max).map(bit => ({
       item: bit,
       group,
     }))
     const showMore =
-      result.bitsTotalCount > 3
+      result.bitsTotalCount > max - 1
         ? [
             {
               title: result.title,
@@ -106,8 +107,8 @@ export class SearchStore {
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
-  private getQuickResults(query: string) {
-    return fuzzyQueryFilter(
+  getAppsResults(query: string) {
+    const apps = fuzzyQueryFilter(
       query,
       this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
       {
@@ -119,10 +120,10 @@ export class SearchStore {
         group: 'Apps',
         title: app.name,
         icon,
+        type: AppType.message,
+        titleProps: null,
         appConfig: {
-          id: '0',
           title: `Open ${app.name}`,
-          type: AppType.message,
           icon,
         },
         onOpen: () => {
@@ -131,6 +132,33 @@ export class SearchStore {
         },
       }
     })
+
+    // TODO show only if they have more apps
+    // TODO count how many apps
+    if (apps.length) {
+      apps.push({
+        group: 'Apps',
+        title: 'All apps...',
+        icon: null,
+        titleProps: {
+          fontWeight: 300,
+        },
+        type: AppType.message,
+        appConfig: {
+          title: 'All apps',
+          icon: 'grid48',
+        },
+        onOpen: () => {
+          this.stores.paneManagerStore.setActivePaneByType('apps')
+        },
+      })
+    }
+
+    return apps
+  }
+
+  private getQuickResults(query: string) {
+    return [...this.getAppsResults(query)]
   }
 
   searchState = react(

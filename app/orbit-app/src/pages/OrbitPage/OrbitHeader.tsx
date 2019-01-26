@@ -1,6 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { invertLightness } from '@mcro/color'
-import { Absolute, gloss } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -8,7 +7,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { WindowCloseButton } from '../../views/WindowControls'
+import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 import OrbitSwitch from './OrbitSpaceSwitch'
@@ -114,21 +113,28 @@ export class HeaderStore {
 }
 
 export default observer(function OrbitHeader() {
-  const { queryStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
+  const isOnSettings = paneManagerStore.activePane.type === 'settings'
+  const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   return (
     <OrbitHeaderContainer
       opacity={paneManagerStore.activePane.type === 'onboard' ? 0 : 1}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
-      <HeaderTop>
-        <OrbitClose onClick={AppActions.closeOrbit}>
-          <WindowCloseButton size={8} />
+      <HeaderTop padding={orbitStore.isTorn ? [2, 10] : [4, 10]}>
+        <OrbitClose dontDim={orbitStore.isTorn} onClick={AppActions.closeOrbit}>
+          <WindowControls
+            itemProps={{ size: 10 }}
+            onClose={() => console.log('close')}
+            onMin={orbitStore.isTorn ? () => console.log('min') : null}
+            onMax={orbitStore.isTorn ? () => console.log('min') : null}
+          />
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          <OrbitSwitch />
+          {!orbitStore.isTorn && <OrbitSwitch />}
           <FakeInput>
             <OrbitHeaderInput headerStore={headerStore} />
             <After>
@@ -136,14 +142,27 @@ export default observer(function OrbitHeader() {
               {/* <OrbitHeaderButtons /> */}
             </After>
           </FakeInput>
-          <Button
-            chromeless
-            isActive={paneManagerStore.activePane.type === 'settings'}
-            onClick={paneManagerStore.activePaneByTypeSetter('settings')}
-            tooltip="Settings"
-          >
-            <Icon name="gear" size={12} opacity={0.45} hoverOpacity={0.5} />
-          </Button>
+          {!orbitStore.isTorn && (
+            <Button
+              chromeless
+              isActive={isOnSettings}
+              onClick={() => {
+                if (isOnSettings) {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
+              tooltip="Settings"
+            >
+              <Icon
+                name="gear"
+                size={12}
+                opacity={0.45 + settingsIconActiveOpacityInc}
+                hoverOpacity={0.5 + settingsIconActiveOpacityInc}
+              />
+            </Button>
+          )}
           <Row flex={1} />
         </Row>
 
@@ -151,6 +170,8 @@ export default observer(function OrbitHeader() {
       </HeaderTop>
 
       <OrbitNav />
+      <OrbitHeaderDivider torn={orbitStore.isTorn} />
+      <OrbitHeaderBg />
     </OrbitHeaderContainer>
   )
 })
@@ -170,15 +191,26 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
-  background: invertLightness(theme.background, 0.1).alpha(0.65),
+  background: theme.headerBackground || theme.background.alpha(0.72),
 }))
 
-const HeaderTop = gloss({
-  padding: [5, 10],
+const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
+  height: 1,
+}).theme(({ torn }, theme) => ({
+  background: torn ? theme.borderColor.alpha(0.5) : theme.tabBackground,
+}))
+
+const HeaderTop = gloss(View, {
   flexFlow: 'row',
-  transition: 'all ease-in 300ms',
   position: 'relative',
 })
+
+const OrbitHeaderBg = gloss(FullScreen, {
+  zIndex: -1,
+  pointerEvents: 'none',
+}).theme((_, theme) => ({
+  background: `linear-gradient(${theme.background.alpha(0.5)},${theme.background.alpha(0)})`,
+}))
 
 const After = gloss({
   alignItems: 'center',
@@ -205,21 +237,14 @@ const FakeInput = gloss({
 
 const OrbitClose = gloss({
   position: 'absolute',
-  top: 0,
-  left: 0,
+  top: 2,
+  left: 3,
   padding: 4,
   opacity: 0.1,
   '&:hover': {
     opacity: 1,
   },
-}).theme((_, theme) => {
-  const isDark = theme.background.isDark()
-  return {
-    '& > div': {
-      background: isDark ? 'transparent' : [230, 230, 230, 0.25],
-    },
-    '&:hover > div': {
-      background: isDark ? '#fff' : '#000',
-    },
-  }
+  dontDim: {
+    opacity: 1,
+  },
 })

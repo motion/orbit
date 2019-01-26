@@ -46,9 +46,8 @@ class AppStore {
   // shortcuts
   orbitState: AppStore['state']['orbitState']
   authState: AppStore['state']['authState']
-  appsState: AppStore['state']['appsState']
+  peeksState: AppStore['state']['peeksState']
   setOrbitState: Function
-  setAppsState: Function
   setAuthState: Function
 
   messages = {
@@ -70,7 +69,7 @@ class AppStore {
   source = 'App'
 
   state = deep({
-    query: '',
+    appCount: 0,
     screenSize: [0, 0],
     darkTheme: false,
     orbitState: {
@@ -91,7 +90,7 @@ class AppStore {
         3: defaultMenuState(3),
       },
     },
-    appsState: [defaultPeekState],
+    peeksState: [defaultPeekState],
     authState: {
       openId: null,
       closeId: null,
@@ -105,7 +104,7 @@ class AppStore {
   })
 
   get peekState() {
-    return this.state.appsState[0]
+    return this.state.peeksState[0]
   }
 
   get isShowingPeek() {
@@ -118,7 +117,7 @@ class AppStore {
 
   getAppState(id: number): AppState {
     return {
-      ...this.state.appsState.find(x => x.id === id),
+      ...this.state.peeksState.find(x => x.id === id),
     }
   }
 

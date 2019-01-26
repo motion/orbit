@@ -3,7 +3,7 @@ import { Bit, PersonBit, Setting } from '@mcro/models'
 import { App, AppState } from '@mcro/stores'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
-import { APP_ID } from '../../constants'
+import { PEEK_ID } from '../../constants'
 
 type AppPageItemState = AppState & {
   model: PersonBit | Bit | Setting
@@ -31,7 +31,7 @@ export class AppPageStore {
 
   // appConfig given the id
   appState = react(
-    () => App.getAppState(APP_ID),
+    () => App.getAppState(PEEK_ID),
     async (appState, { sleep, state }) => {
       if (!appState) {
         console.log('weird no app state...', appState)
@@ -47,7 +47,7 @@ export class AppPageStore {
       return appState
     },
     {
-      defaultValue: App.getAppState(APP_ID),
+      defaultValue: App.getAppState(PEEK_ID),
     },
   )
 

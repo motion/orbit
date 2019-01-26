@@ -25,7 +25,7 @@ export type VirtualListProps = {
   forwardRef?: (a: any, b: VirtualListStore) => any
   items: any[]
   itemProps?: Partial<VirtualListItemProps<any>>
-  getItemProps?: GetItemProps
+  getItemProps?: GetItemProps | null | false
   ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function
@@ -52,8 +52,8 @@ class VirtualListStore {
   props: VirtualListProps
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
-  rootRef: HTMLDivElement = null
-  height = 100
+  frameRef: HTMLDivElement = null
+  height = window.innerHeight
   width = 0
   isSorting = false
   observing = false
@@ -71,12 +71,12 @@ class VirtualListStore {
     },
   )
 
-  setRootRef = (ref: HTMLDivElement) => {
-    if (this.rootRef || !ref) {
+  setFrameRef = (ref: HTMLDivElement) => {
+    if (this.frameRef || !ref) {
       return
     }
 
-    this.rootRef = ref
+    this.frameRef = ref
 
     // measure on resize
     // @ts-ignore
@@ -84,12 +84,19 @@ class VirtualListStore {
       this.measure()
       this.measureHeight()
     })
-    observer.observe(this.rootRef)
+    observer.observe(this.frameRef)
 
     this.measure()
   }
 
-  doMeasureHeight = react(() => always(this.cache), this.measureHeight)
+  get frameHeight() {
+    if (!this.frameRef) {
+      return window.innerHeight
+    }
+    return this.frameRef.clientHeight
+  }
+
+  doMeasureHeight = react(() => always(this.cache, this.frameRef), this.measureHeight)
 
   measureTm = null
 
@@ -106,25 +113,28 @@ class VirtualListStore {
       if (height === 0) {
         return
       }
-      this.height = Math.min(this.props.maxHeight || Infinity, height)
+      this.height = Math.min(this.props.maxHeight, height)
       if (this.props.onChangeHeight) {
         this.props.onChangeHeight(this.height)
       }
     } else {
-      if (this.rootRef && this.rootRef.parentNode) {
-        this.height = (this.rootRef.parentNode as HTMLDivElement).clientHeight
+      if (this.frameHeight) {
+        const height = Math.min(this.props.maxHeight, this.frameHeight)
+        if (height !== this.height) {
+          this.height = height
+        }
       }
     }
   }
 
   measure() {
-    if (!this.rootRef || this.rootRef.clientWidth === 0) {
+    if (!this.frameRef || this.frameRef.clientWidth === 0) {
       clearTimeout(this.measureTm)
       this.measureTm = setTimeout(this.measure)
       return
     }
 
-    this.width = this.rootRef.clientWidth
+    this.width = this.frameRef.clientWidth
 
     if (!this.cache) {
       this.cache = new CellMeasurerCache({
@@ -194,13 +204,13 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
 
 export const VirtualListDefaultProps = React.createContext({
   estimatedRowHeight: 60,
+  maxHeight: window.innerHeight,
 } as Partial<VirtualListProps>)
 
 export default observer(function VirtualList(rawProps: VirtualListProps) {
   const defaultProps = React.useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
-  const { cache, width, height } = store
 
   React.useEffect(() => {
     if (!store.listRef) {
@@ -229,7 +239,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (
-      <CellMeasurer key={key} cache={cache} columnIndex={0} parent={parent} rowIndex={index}>
+      <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
             onSelect={props.onSelect}
@@ -265,10 +275,10 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
           }
         }}
         items={props.items}
-        deferredMeasurementCache={cache}
-        height={height}
-        width={width}
-        rowHeight={cache.rowHeight}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={store.width}
+        rowHeight={store.cache.rowHeight}
         overscanRowCount={20}
         rowCount={props.items.length}
         estimatedRowSize={props.estimatedRowHeight}
@@ -286,13 +296,14 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
 
   return (
     <div
-      ref={store.setRootRef}
+      ref={store.setFrameRef}
       style={{
-        height,
+        height: props.dynamicHeight ? store.height : 'auto',
+        flex: props.dynamicHeight ? 'none' : 1,
         width: '100%',
       }}
     >
-      {!!width && !!cache && (
+      {!!store.width && !!store.cache && (
         <>
           {props.infinite && (
             <InfiniteLoader

@@ -10,14 +10,14 @@ import { AppStore } from './AppStore'
 
 export type AppViewProps = Pick<
   AppProps<any>,
-  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'itemProps' | 'appConfig'
+  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'appConfig'
 > & {
   title?: string
   appStore?: AppStore<any>
   onAppStore?: Function
 }
 
-export default React.memo(function AppView(props: AppViewProps) {
+export const AppView = React.memo(function AppView(props: AppViewProps) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // warning should never change it if you pass in a prop
@@ -39,17 +39,20 @@ export default React.memo(function AppView(props: AppViewProps) {
     return null
   }
 
-  const appView = (
-    <AppView
-      appStore={props.appStore || appStore}
-      sourcesStore={stores.sourcesStore}
-      settingStore={stores.settingStore}
-      subPaneStore={stores.subPaneStore}
-      queryStore={stores.queryStore}
-      spaceStore={stores.spaceStore}
-      paneManagerStore={stores.paneManagerStore}
-      {...props}
-    />
+  const appView = React.useMemo(
+    () => (
+      <AppView
+        appStore={props.appStore || appStore}
+        sourcesStore={stores.sourcesStore}
+        settingStore={stores.settingStore}
+        subPaneStore={stores.subPaneStore}
+        queryStore={stores.queryStore}
+        spaceStore={stores.spaceStore}
+        paneManagerStore={stores.paneManagerStore}
+        {...props}
+      />
+    ),
+    Object.values(props),
   )
 
   if (!props.appStore) {

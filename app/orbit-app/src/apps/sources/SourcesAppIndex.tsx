@@ -44,5 +44,5 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     })),
   ]
 
-  return <SelectableList items={results} />
+  return <SelectableList minSelected={0} items={results} />
 })

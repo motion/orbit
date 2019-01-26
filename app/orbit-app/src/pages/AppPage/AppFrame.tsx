@@ -1,17 +1,17 @@
-import * as React from 'react'
-import { react, ensure, on } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import * as Constants from '../../constants'
-import Resizable, { ResizeCallback } from 're-resizable'
+import { ensure, on, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { debounce } from 'lodash'
-import { AppActions } from '../../actions/AppActions'
-import { AppPageStore } from './AppPageStore'
-import AppFrameArrow from './AppFrameArrow'
 import { App } from '@mcro/stores'
+import * as UI from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import { debounce } from 'lodash'
 import { observer } from 'mobx-react-lite'
+import Resizable, { ResizeCallback } from 're-resizable'
+import * as React from 'react'
+import { AppActions } from '../../actions/AppActions'
+import * as Constants from '../../constants'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useStore, useHook } from '@mcro/use-store'
+import AppFrameArrow from './AppFrameArrow'
+import { AppPageStore } from './AppPageStore'
 
 const SHADOW_PAD = 70
 
@@ -46,7 +46,7 @@ const arrToObj = size => {
   }
 }
 
-const initialAppState = App.getAppState(Constants.APP_ID)
+const initialAppState = App.getAppState(Constants.PEEK_ID)
 
 export class AppFrameStore {
   stores = useHook(useStoresSafe)
@@ -203,10 +203,10 @@ export class AppFrameStore {
   }
 
   resetframeMoveOnFinishDrag = react(
-    () => App.getAppState(Constants.APP_ID).position,
+    () => App.getAppState(Constants.PEEK_ID).position,
     () => {
       ensure('finished drag', this.finishDrag)
-      console.log('finish drag?', this.frameMove, App.appsState[Constants.APP_ID].position)
+      console.log('finish drag?', this.frameMove, App.peeksState[Constants.PEEK_ID].position)
       this.frameMove = [0, 0]
       this.finishDrag = false
     },

@@ -1,6 +1,6 @@
-import { BaseComponent } from './BaseComponent'
-import EventEmitter from 'events'
 import { MenuItem as ElectronMenuItem } from 'electron'
+import EventEmitter from 'events'
+import { BaseComponent } from './BaseComponent'
 
 export class MenuItem extends BaseComponent {
   mount() {
@@ -28,7 +28,7 @@ export class MenuItem extends BaseComponent {
       menuItem.accelerators = props.accelerators
     }
     if (props.onClick) {
-      menuItem.click = (menuItem, browserWindow, event) => {
+      menuItem.click = (_item, _browserWindow, event) => {
         this.emitter.emit('click', event)
       }
     }

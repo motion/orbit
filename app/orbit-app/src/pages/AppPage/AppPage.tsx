@@ -4,7 +4,7 @@ import { Col, Row, Sidebar, Text } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import AppView from '../../apps/AppView'
+import { AppView } from '../../apps/AppView'
 import Searchable from '../../components/Searchable'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
@@ -31,7 +31,14 @@ export default React.memo(() => {
   const selectionStore = useStore(SelectionStore)
   return (
     <StoreContext.Provider
-      value={{ sourcesStore, settingStore, spaceStore, appPageStore, queryStore, selectionStore }}
+      value={{
+        sourcesStore,
+        settingStore,
+        spaceStore,
+        appPageStore,
+        queryStore,
+        selectionStore,
+      }}
     >
       <MainShortcutHandler>
         <AppWrapper>
@@ -92,7 +99,7 @@ const AppPageContent = observer(() => {
         <Icon
           onClick={appFrameStore.toggleSidebar}
           name="sidebar"
-          fill={appFrameStore.showSidebar ? '#3FB2FF' : '#666'}
+          color={appFrameStore.showSidebar ? '#3FB2FF' : '#666'}
           size={16}
           style={{ opacity: appFrameStore.showSidebar ? 1 : 0.5 }}
         />

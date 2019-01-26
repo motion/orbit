@@ -4,10 +4,10 @@ import * as React from 'react'
 import { RoundButtonSmall } from './RoundButtonSmall'
 
 export const StatusBar = gloss({
-  margin: 7,
+  margin: 10,
   borderRadius: 7,
-  padding: [0, 4],
-  height: 28,
+  padding: [0, 7],
+  height: 26,
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -16,7 +16,7 @@ export const StatusBar = gloss({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
-  boxShadow: [[0, 0, 8, [0, 0, 0, 0.025]]],
+  boxShadow: [[0, 0, 18, [0, 0, 0, 0.055]]],
   // backdropFilter: 'blur(10px)',
 }).theme((_, theme) => ({
   background: theme.background.alpha(0.98),

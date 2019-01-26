@@ -1,27 +1,21 @@
 until end of jan:
 
-- manage space pane
-  - upload your image / name it / CRUD
-- manage account pane
+- manage space pane: upload your image / name it / CRUD
+- manage account pane: same sort of deal... + link to slack
+  fix search results: open on enter, onOpen broke
+  fix tab drag index
+  new app pane
+  command+enter to pop out app into own window / multi apps
+  actions menu
+  add people to search
+  fixing tray/menu display and interaction
+  restore menus a bit just actions dropdown + search
+  get ocr hooked into menu enable/disable and output results
+  get ocr => memory simple list
 
-  - same sort of deal... + link to slack
-
-- fix search results
-  - fix open on enter
-  - fix select on search broke
-
-fix tab drag index
-new app pane
-command+enter to pop out app into own window / multi apps
-actions menu
-
-1. add people to search
-2. fixing tray/menu display and interaction
-3. movement: move selection into main pane would be helpful for scrolling emails + fixing action commands, tab should move from the main search input to the "create" action in lists apps
-4. restore menus a bit just actions dropdown + search
-5. get ocr hooked into menu enable/disable and output results
-6. get ocr => memory simple list
-7. work through lists apps a bit
+- big things
+  lists
+  actions menu
 
 ---
 
@@ -42,6 +36,7 @@ sorting by prepping to split out work as best possible:
 
 tasks:
 
+- make min/max/close buttons work
 - add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
@@ -67,7 +62,9 @@ tasks:
       - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
       - these endpoints would need some rate limit logic (later)
 - debug why gdrive syncer items show "empty" in frontend and clean that view up
-- gmail syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
+- gmail:
+  - syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
+  - email formatting looks odd for quite a few, investigate how to format it properly and fix some common issues
 - issue with reporting errors in observable queries, they are unhandled/not sent upwards
   - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
   - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
@@ -117,7 +114,6 @@ tasks:
 
 for me once split out:
 
-- search interaction with other apps
 - people with topics
 - memory app or some idea of how to make it work
 - topics as a source / topics apps generally

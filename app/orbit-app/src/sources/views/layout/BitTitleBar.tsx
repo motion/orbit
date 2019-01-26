@@ -44,8 +44,8 @@ export class BitTitleBar extends React.Component<{
 
 const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
-  height: 48,
-  padding: [6, 10],
+  height: 38,
+  padding: [5, 10],
 }).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))

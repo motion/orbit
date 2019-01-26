@@ -43,6 +43,7 @@ export type ListItemProps = CSSPropertySetStrict &
   Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    slim?: boolean
     above?: React.ReactNode
     activeStyle?: Object
     before?: React.ReactNode
@@ -120,6 +121,7 @@ export default observer(function ListItem(props: ListItemProps) {
     before,
     separatorProps,
     above,
+    slim,
     ...restProps
   } = props
   const { isSelected } = store
@@ -131,6 +133,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
+  const sizeLineHeight = slim ? 0.8 : 1
   const renderedChildren = showChildren && (
     <Text size={0.9} alpha={0.8}>
       {children}
@@ -180,113 +183,125 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || [8, 11]}
+          padding={padding || (slim ? [4, 8] : [8, 11])}
           {...cardProps}
         >
-          <div style={{ flexDirection: 'row', flex: 1, overflow: 'hidden' }}>
-            {before}
-            <ListItemMainContent oneLine={oneLine}>
-              {showTitle && (
-                <Title>
-                  {showIcon && (
-                    <>
-                      {React.isValidElement(icon) ? (
-                        React.cloneElement(icon, { style: { marginTop: 1 }, ...iconProps })
-                      ) : (
-                        <Icon name={icon} size={16} style={{ marginTop: 1 }} {...iconProps} />
-                      )}
-                      <TitleSpace />
-                    </>
-                  )}
-                  <HighlightText sizeLineHeight={0.85} ellipse fontWeight={600} {...titleProps}>
-                    {title}
-                  </HighlightText>
-                  <TitleSpace />
-                  {props.afterTitle}
-                  {afterHeader}
-                </Title>
-              )}
-              {showSubtitle && (
-                <ListItemSubtitle margin={showTitle ? [3, 0, 0] : 0}>
-                  {showIcon && !showTitle && (
-                    <>
-                      <Icon icon={icon} size={14} {...iconProps} />
-                      <TitleSpace />
-                    </>
-                  )}
-                  {!!location && (
-                    <>
-                      <RoundButtonSmall
-                        margin={-3}
-                        maxWidth={120}
-                        fontWeight={400}
-                        fontSize={13}
-                        alpha={0.8}
-                        onClick={store.handleClickLocation}
-                      >
-                        {location}
-                      </RoundButtonSmall>
-                      <TitleSpace />
-                    </>
-                  )}
-                  {showPreviewInSubtitle ? (
-                    <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
-                  ) : null}
-                  {!!subtitle &&
-                    (typeof subtitle === 'string' ? (
-                      <UI.Text alpha={0.8} size={0.9} ellipse {...subtitleProps}>
-                        {subtitle}
-                      </UI.Text>
+          {before}
+          <ListItemMainContent oneLine={oneLine}>
+            {showTitle && (
+              <Title>
+                {showIcon && (
+                  <>
+                    {React.isValidElement(icon) ? (
+                      React.cloneElement(icon, { style: { marginTop: 1 }, ...iconProps })
                     ) : (
-                      subtitle
-                    ))}
-                  {!subtitle && (
-                    <>
-                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                      {peopleNode}
-                    </>
-                  )}
-                  {!showTitle && (
-                    <>
-                      {!!subtitle && peopleNode}
-                      <HorizontalSpace />
-                      {afterHeader}
-                    </>
-                  )}
-                </ListItemSubtitle>
-              )}
-              {!showSubtitle && !showTitle && (
-                <View
-                  position="absolute"
-                  right={Array.isArray(padding) ? padding[0] : padding}
-                  top={Array.isArray(padding) ? padding[1] : padding}
+                      <Icon
+                        name={icon}
+                        size={slim ? 12 : 16}
+                        style={{ marginTop: slim ? 4 : 1 }}
+                        {...iconProps}
+                      />
+                    )}
+                    <TitleSpace slim={slim} />
+                  </>
+                )}
+                <HighlightText
+                  sizeLineHeight={0.85}
+                  ellipse
+                  fontWeight={slim ? 500 : 600}
+                  {...titleProps}
                 >
-                  {afterHeader}
-                </View>
-              )}
-              {/* vertical space only if needed */}
-              {showSubtitle && (!!children || !!preview) && (
-                <div style={{ flex: 1, maxHeight: 4 }} />
-              )}
-              {showPreview && (
-                <Preview>
-                  {typeof preview !== 'string' && preview}
-                  {typeof preview === 'string' && (
-                    <HighlightText alpha={0.8} size={1} sizeLineHeight={0.9} ellipse={5}>
-                      {preview}
-                    </HighlightText>
-                  )}
-                </Preview>
-              )}
-              {showPreviewInSubtitle ? null : renderedChildren}
-              {showPeople && !showSubtitle && (
-                <Bottom>
-                  <PeopleRow people={people} />
-                </Bottom>
-              )}
-            </ListItemMainContent>
-            {props.after}
-          </div>
+                  {title}
+                </HighlightText>
+                <TitleSpace slim={slim} />
+                {props.afterTitle}
+                {afterHeader}
+              </Title>
+            )}
+            {showSubtitle && (
+              <ListItemSubtitle margin={showTitle && !slim ? [1, 0, 0] : 0}>
+                {showIcon && !showTitle && (
+                  <>
+                    <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />
+                    <TitleSpace slim={slim} />
+                  </>
+                )}
+                {!!location && (
+                  <>
+                    <RoundButtonSmall
+                      margin={-3}
+                      maxWidth={120}
+                      fontWeight={400}
+                      fontSize={13}
+                      alpha={0.8}
+                      onClick={store.handleClickLocation}
+                    >
+                      {location}
+                    </RoundButtonSmall>
+                    <TitleSpace slim={slim} />
+                  </>
+                )}
+                {showPreviewInSubtitle ? (
+                  <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                ) : null}
+                {!!subtitle &&
+                  (typeof subtitle === 'string' ? (
+                    <UI.Text
+                      alpha={0.8}
+                      size={0.9}
+                      sizeLineHeight={sizeLineHeight}
+                      ellipse
+                      {...subtitleProps}
+                    >
+                      {subtitle}
+                    </UI.Text>
+                  ) : (
+                    subtitle
+                  ))}
+                {!subtitle && (
+                  <>
+                    <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                    {peopleNode}
+                  </>
+                )}
+                {!showTitle && (
+                  <>
+                    {!!subtitle && peopleNode}
+                    <HorizontalSpace />
+                    {afterHeader}
+                  </>
+                )}
+              </ListItemSubtitle>
+            )}
+            {!showSubtitle && !showTitle && (
+              <View
+                position="absolute"
+                right={Array.isArray(padding) ? padding[0] : padding}
+                top={Array.isArray(padding) ? padding[1] : padding}
+              >
+                {afterHeader}
+              </View>
+            )}
+            {/* vertical space only if needed */}
+            {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+            {showPreview && (
+              <Preview>
+                {typeof preview !== 'string' && preview}
+                {typeof preview === 'string' && (
+                  <HighlightText alpha={0.8} size={1} sizeLineHeight={0.9} ellipse={5}>
+                    {preview}
+                  </HighlightText>
+                )}
+              </Preview>
+            )}
+            {showPreviewInSubtitle ? null : renderedChildren}
+            {showPeople && !showSubtitle && (
+              <Bottom>
+                <PeopleRow people={people} />
+              </Bottom>
+            )}
+          </ListItemMainContent>
+          {props.after}
         </ListItemChrome>
         <Divider />
       </ListFrame>
@@ -297,6 +312,7 @@ export default observer(function ListItem(props: ListItemProps) {
 const ListFrame = gloss(UI.View, {
   position: 'relative',
   userSelect: 'none',
+  overflow: 'hidden',
   isExpanded: {
     userSelect: 'auto',
   },
@@ -323,13 +339,9 @@ const Divider = gloss({
 
 const ListItemChrome = gloss({
   flexFlow: 'row',
-  overflow: 'hidden',
   position: 'relative',
-  maxHeight: '100%',
   flex: 1,
-  transform: {
-    z: 0,
-  },
+  alignItems: 'center',
   chromeless: {
     background: 'transparent',
     padding: 8,
@@ -377,7 +389,6 @@ const Preview = gloss({
 })
 
 const ListItemSubtitle = gloss(UI.View, {
-  minHeight: 20,
   margin: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
@@ -393,9 +404,12 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 10,
+  minWidth: 8,
   shouldFlex: {
     flex: 1,
+  },
+  slim: {
+    minWidth: 5,
   },
 })
 
@@ -405,8 +419,9 @@ const Bottom = gloss({
 })
 
 const ListItemMainContent = gloss({
+  // this lets flex shrink... https://css-tricks.com/flexbox-truncated-text/
+  minWidth: 0,
   flex: 1,
-  overflow: 'hidden',
   maxWidth: '100%',
   margin: ['auto', 0],
   oneLine: {

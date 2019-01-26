@@ -13,7 +13,7 @@ export const OrbitRoot = () => {
   const electronStore = useStore(ElectronStore)
 
   React.useEffect(() => {
-    Electron.onMessage(msg => {
+    return Electron.onMessage(msg => {
       switch (msg) {
         case Electron.messages.COPY:
           clipboard.writeText(msg)

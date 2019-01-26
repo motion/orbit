@@ -23,7 +23,7 @@ function useActivePaneName() {
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitWindowStore, queryStore } = useStoresSafe()
+  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const placeholder = useActivePaneName()
   return (
@@ -32,7 +32,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
         forwardRef={headerStore.inputRef}
         width="100%"
         fontWeight={400}
-        fontSize={18}
+        fontSize={orbitStore.isTorn ? 16 : 18}
         lineHeight={22}
         border="none"
         display="block"

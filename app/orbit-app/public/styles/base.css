@@ -80,7 +80,8 @@
   background: transparent;
 }
 
-.calendar-dom * {
+.calendar-dom *,
+.display-block * {
   display: block;
   flex-shrink: initial;
   flex-flow: row;

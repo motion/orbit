@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 
-export const RoundButton = props => (
+export const RoundButton = (props: UI.ButtonProps) => (
   <UI.Button
     sizeRadius={100}
     glint={false}

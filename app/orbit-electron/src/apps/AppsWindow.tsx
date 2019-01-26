@@ -1,19 +1,19 @@
-import * as React from 'react'
 import { react } from '@mcro/black'
-import { App } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
-import AppWindow from './AppWindow'
+import { App } from '@mcro/stores'
+import { useStore } from '@mcro/use-store'
 import { BrowserWindow } from 'electron'
 import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
+import * as React from 'react'
+import AppWindow from './AppWindow'
 
 const log = new Logger('electron')
 
 class AppWindowsStore {
   window: BrowserWindow = null
 
-  appsStateDebounced = react(
-    () => App.appsState,
+  peeksStateDebounced = react(
+    () => App.peeksState,
     _ => JSON.parse(JSON.stringify(_)),
     // delay a little so we can finish syncing torn state
     {
@@ -24,12 +24,12 @@ class AppWindowsStore {
 
 export default observer(function AppsWindow() {
   const store = useStore(AppWindowsStore)
-  const appsState = store.appsStateDebounced
-  if (!appsState) {
+  const peeksState = store.peeksStateDebounced
+  if (!peeksState) {
     return null
   }
-  log.info(`Rendering apps ${appsState.length}`)
-  return appsState.map(({ id }, index) => {
+  log.info(`Rendering apps ${peeksState.length}`)
+  return peeksState.map(({ id }, index) => {
     return <AppWindow key={id} id={id} isPeek={index === 0} />
   })
 })

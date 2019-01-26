@@ -1,9 +1,9 @@
-import { App, defaultPeekState } from '@mcro/stores'
 import { stringify } from '@mcro/helpers'
+import { App, defaultPeekState } from '@mcro/stores'
 
 export function tearPeek() {
-  const [curPeek, ...rest] = App.appsState
-  const appsState = [
+  const [curPeek, ...rest] = App.peeksState
+  const peeksState = [
     // create next peek
     {
       ...defaultPeekState,
@@ -16,13 +16,13 @@ export function tearPeek() {
     },
     ...rest,
   ]
-  console.log('setting app state', appsState)
+  console.log('setting app state', peeksState)
   // set
   App.setState({
     lastTear: Date.now(),
-    appsState,
+    peeksState,
   })
   setTimeout(() => {
-    console.log('APP STATE IS NOW', stringify(App.appsState))
+    console.log('APP STATE IS NOW', stringify(App.peeksState))
   })
 }

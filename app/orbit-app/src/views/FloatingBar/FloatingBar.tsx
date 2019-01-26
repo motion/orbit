@@ -2,7 +2,7 @@ import { gloss } from '@mcro/gloss'
 
 export const FloatingBar = gloss({
   flexFlow: 'row',
-  padding: [10, 12],
+  padding: [8, 12],
 }).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))

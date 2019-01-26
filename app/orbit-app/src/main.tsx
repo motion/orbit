@@ -1,3 +1,6 @@
+// Be careful not to import anything that depends on getGlobalConfig() here
+// we set it up once with setGlobalConfig() and then import the rest of the app
+
 import { debugEmit } from '@mcro/black'
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
 import { configureGloss } from '@mcro/gloss'
@@ -11,7 +14,6 @@ import 'react-hot-loader' // must be imported before react
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import { sleep } from './helpers'
-import { setupTestApp } from './helpers/setupTestApp'
 import { Icon } from './views/Icon'
 
 // because for some reason we are picking up electron process.env stuff...
@@ -65,12 +67,6 @@ async function fetchInitialConfig() {
   setGlobalConfig(config)
 }
 
-function setupDevStore() {
-  const { DevStore } = require('./stores/DevStore')
-  const devStore = new DevStore()
-  window['Root'] = devStore
-}
-
 // setup for app
 async function main() {
   // we've already started, ignore
@@ -89,8 +85,10 @@ async function main() {
   if (Date.now() - x > 200) console.log('long start....', Date.now() - x)
 
   if (process.env.NODE_ENV === 'development') {
-    setupTestApp()
-    setupDevStore()
+    require('./helpers/setupTestApp').setupTestApp()
+    const { DevStore } = require('./stores/DevStore')
+    const devStore = new DevStore()
+    window['Root'] = devStore
   }
 
   // now run app..
@@ -101,14 +99,14 @@ async function main() {
 async function startApp() {
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
-  ReactDOM.render(React.createElement(OrbitRoot), document.querySelector('#app'))
+  ReactDOM.render(<OrbitRoot />, document.querySelector('#app'))
 }
 
 // hot reloading
-if (process.env.NODE_ENV === 'development') {
-  if (typeof module['hot'] !== 'undefined') {
-    module['hot'].accept(startApp)
-  }
-}
+// if (process.env.NODE_ENV === 'development') {
+//   if (typeof module['hot'] !== 'undefined') {
+//     module['hot'].accept(startApp)
+//   }
+// }
 
 main()

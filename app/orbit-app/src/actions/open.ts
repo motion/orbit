@@ -1,9 +1,10 @@
-import { Bit, PersonBit } from '@mcro/models'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { command } from '@mcro/model-bridge'
+import { Bit, OpenCommand, PersonBit } from '@mcro/models'
+import { App, Electron } from '@mcro/stores'
 import { AppActions } from './AppActions'
 
 export async function open(url) {
-  App.sendMessage(Desktop, Desktop.messages.OPEN, url)
+  await command(OpenCommand, { url })
 }
 
 export async function openItem(item?: Bit | PersonBit) {

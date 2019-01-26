@@ -3,9 +3,11 @@ import * as React from 'react'
 import { ControlButton } from './ControlButton'
 
 export const WindowCloseButton = props => <ControlButton icon="x" background="#FF6159" {...props} />
+export const WindowMaxButton = props => <ControlButton icon="z" background="#62C554" {...props} />
+export const WindowMinButton = props => <ControlButton icon="y" background="#F6BE4F" {...props} />
 
 export const WindowControls = ({
-  spaceBetween = 4,
+  spaceBetween = 6,
   onClose = null,
   onMax = null,
   onMin = null,
@@ -20,25 +22,13 @@ export const WindowControls = ({
       {!!onMax && (
         <>
           <View width={spaceBetween} />
-          <ControlButton
-            onClick={onMax}
-            icon="y"
-            background="#F6BE4F"
-            {...itemProps}
-            {...maxProps}
-          />
+          <WindowMinButton onClick={onMax} {...itemProps} {...maxProps} />
         </>
       )}
       {!!onMin && (
         <>
           <View width={spaceBetween} />
-          <ControlButton
-            onClick={onMin}
-            icon="z"
-            background="#62C554"
-            {...itemProps}
-            {...minProps}
-          />
+          <WindowMaxButton onClick={onMin} {...itemProps} {...minProps} />
         </>
       )}
     </Row>

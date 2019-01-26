@@ -1,15 +1,17 @@
 import { AppConfig, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
-import { ProvideHighlightsContextWithDefaults } from '../../helpers/contexts/HighlightsContext'
+import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
-import { isEqualReferential } from '../../helpers/isEqualReferential'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
 export type SearchableItem = (Bit | PersonBit)[]
 
-export type OrbitHandleSelect = ((index: number, appConfig: AppConfig) => any)
+export type OrbitHandleSelect = ((
+  index: number,
+  appConfig: AppConfig,
+  eventType?: 'click' | 'key',
+) => any)
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -17,61 +19,29 @@ export type OrbitListProps = Omit<VirtualListProps, 'onSelect' | 'onOpen'> & {
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
   query?: string
-  offsetY?: number
   itemsKey?: string
 }
 
-// fairly sloppy componenent, could be split more cleanly
-
-export function orbitItemsKey(items: any[]) {
-  return items
-    .map((x, index) => {
-      const item = x.item || x
-      return `${item.id || item.email || item.key || index}`
-    })
-    .join(' ')
-}
-
-export default React.memo(function OrbitList({
-  items,
-  offsetY = 0,
-  itemsKey,
-  ...props
-}: OrbitListProps) {
-  const { appStore, selectionStore } = useStoresSafe({ optional: ['selectionStore'] })
-  const itemsKeyFull = itemsKey || orbitItemsKey(items)
-  const isRowLoaded = React.useCallback(find => find.index < items.length, [itemsKeyFull])
+export default function OrbitList({ items, itemsKey, ...props }: OrbitListProps) {
+  const isRowLoaded = x => x.index < items.length
   return (
-    <ProvideHighlightsContextWithDefaults
-      value={{
-        words: (props.query || appStore.activeQuery).split(' '),
-        maxChars: 500,
-        maxSurroundChars: 80,
-      }}
-    >
-      {/* TODO we change onSelect/onOpen signatures here, we should map them here, right now thats happening in OrbitListItem */}
+    <OrbitHighlightActiveQuery>
       <VirtualList
         items={items}
         ItemView={OrbitListItem}
-        maxHeight={appStore.maxHeight - offsetY}
         isRowLoaded={isRowLoaded}
         {...props}
         onSelect={(index, eventType) => {
-          if (selectionStore && selectionStore.activeIndex !== index) {
-            selectionStore.toggleSelected(index, eventType)
-          }
           if (props.onSelect) {
-            console.log('get config', items[index])
-            props.onSelect(index, getAppConfig(items[index]))
+            props.onSelect(index, getAppConfig(items[index], index), eventType)
           }
         }}
         onOpen={index => {
           if (props.onOpen) {
-            props.onOpen(index, getAppConfig(items[index]))
+            props.onOpen(index, getAppConfig(items[index], index))
           }
         }}
       />
-    </ProvideHighlightsContextWithDefaults>
+    </OrbitHighlightActiveQuery>
   )
-},
-isEqualReferential)
+}

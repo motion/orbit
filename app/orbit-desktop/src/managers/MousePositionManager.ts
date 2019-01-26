@@ -1,7 +1,7 @@
-import { App, Desktop } from '@mcro/stores'
-import { store, react } from '@mcro/black'
+import { react, store } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 import { Screen } from '@mcro/screen'
+import { App, Desktop } from '@mcro/stores'
 import { throttle } from 'lodash'
 
 type Point = [number, number]
@@ -64,7 +64,7 @@ export class MousePositionManager {
 
     // app hovered
     let appHovered = { ...Desktop.hoverState.appHovered }
-    for (const [index, app] of App.appsState.entries()) {
+    for (const [index, app] of App.peeksState.entries()) {
       const isPeek = index === 0
       const hovered = isMouseOver(app, mousePos)
       appHovered[app.id] = isPeek ? !!app.target && hovered : hovered

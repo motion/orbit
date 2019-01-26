@@ -12,6 +12,7 @@ import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
+  commandOpen: 'command+enter',
   open: ['tab', 'enter'],
   switchSpaces: 'command+k',
   copyLink: 'command+shift+c',
@@ -32,7 +33,7 @@ const rootShortcuts = {
 }
 
 export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
-  const { queryStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   const movePaneOrSelection = (direction: Direction) => () => {
@@ -47,6 +48,9 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
   }
 
   let handlers: any = {
+    commandOpen: () => {
+      orbitStore.setTorn()
+    },
     switchSpaces: () => {
       AppActions.showSpaceSwitcher()
     },

@@ -1,9 +1,9 @@
-import * as React from 'react'
 import { Searchable, SearchBarType } from '@mcro/ui'
-import { ProvideHighlightsContextWithDefaults } from '../../../helpers/contexts/HighlightsContext'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import * as React from 'react'
 import { AppStore } from '../../../apps/AppStore'
+import { MergeHighlightsContext } from '../../../helpers/contexts/HighlightsContext'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { SelectionStore } from '../../../stores/SelectionStore'
 
 type SearchChildProps = {
   searchBar: SearchBarType
@@ -27,15 +27,14 @@ export const AppSearchable = (props: Props) => {
       // onChange={() => selectionStore.setHighlightIndex(0)}
       searchBarProps={{
         minWidth: 120,
-        padding: [3, 0],
       }}
     >
       {({ searchBar, searchTerm }) => {
         return (
           // dont searchTerm by spaces, its used for searching the whole term here
-          <ProvideHighlightsContextWithDefaults value={{ words: [searchTerm] }}>
+          <MergeHighlightsContext value={{ words: [searchTerm] }}>
             {props.children({ searchBar, searchTerm })}
-          </ProvideHighlightsContextWithDefaults>
+          </MergeHighlightsContext>
         )
       }}
     </Searchable>

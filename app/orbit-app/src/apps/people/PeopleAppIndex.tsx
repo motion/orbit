@@ -32,7 +32,7 @@ export default function PeopleAppIndex(props: AppProps<AppType.people>) {
         <OrbitFilterIntegrationButton />
       </FloatingBar>
       <SelectableList
-        defaultSelected={0}
+        minSelected={0}
         items={results}
         query={removePrefixIfExists(props.appStore.activeQuery, '@')}
         itemProps={props.itemProps}

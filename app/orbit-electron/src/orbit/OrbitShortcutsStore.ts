@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { Logger } from '@mcro/logger'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
@@ -11,9 +11,16 @@ export class OrbitShortcutsStore {
   props: {
     onToggleOpen?: Function
   }
+  disposed = false
 
   didMount() {
     this.globalShortcut.registerShortcuts()
+  }
+
+  dispose() {
+    this.disposed = true
+    this.globalShortcut.unregisterShortcuts()
+    this.peekShortcuts.unregisterShortcuts()
   }
 
   // global shortcuts
@@ -32,6 +39,7 @@ export class OrbitShortcutsStore {
   disableGlobalShortcutsDuringShortcutSettingInputFocus = react(
     () => App.orbitState.shortcutInputFocused,
     focused => {
+      ensure('not disposed', !this.disposed)
       if (focused) {
         log.info('Removing global shortcut temporarily...')
         this.globalShortcut.unregisterShortcuts()
@@ -71,6 +79,7 @@ export class OrbitShortcutsStore {
   enablePeekShortcutsWhenHoldingOption = react(
     () => Desktop.keyboardState.isHoldingOption,
     async (optionDown, { sleep }) => {
+      ensure('not torn', !this.disposed)
       if (optionDown) {
         await sleep(500)
         this.peekShortcuts.registerShortcuts()

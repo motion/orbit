@@ -1,15 +1,15 @@
-import { gloss } from '@mcro/gloss'
+import { gloss, View } from '@mcro/gloss'
 
-export const Avatar = gloss('img', {
+export const Avatar = gloss(View, {
   borderRadius: 100,
   width: 70,
   height: 70,
-  margin: [10, 0],
-  position: 'absolute',
-  top: -22,
-  right: -22,
   transform: {
     scale: 1,
     rotate: '40deg',
   },
 })
+
+Avatar.defaultProps = {
+  tagName: 'img',
+}

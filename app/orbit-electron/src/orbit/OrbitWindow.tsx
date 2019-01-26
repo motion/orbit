@@ -4,7 +4,8 @@ import { Logger } from '@mcro/logger'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
-import { BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
+import { pathExists } from 'fs-extra'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
@@ -21,12 +22,15 @@ class OrbitWindowStore {
   alwaysOnTop = true
   hasMoved = false
   blurred = true
+  initialShow = false
   size = [0, 0]
   position = [0, 0]
+  appId = App.state.appCount
 
   updateSize = react(
     () => Electron.state.screenSize,
     screenSize => {
+      ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
       let scl = 0.75
       let w = screenSize[0] * scl
@@ -47,20 +51,18 @@ class OrbitWindowStore {
 
   setPosition = position => {
     this.hasMoved = true
-    console.log('got a move', position)
     this.position = position
   }
 
   handleRef = ref => {
-    if (!ref) {
-      return
-    }
+    if (!ref) return
     this.orbitRef = ref.window
   }
 
   handleOrbitSpaceMove = react(
     () => Desktop.state.movedToNewSpace,
     async (moved, { sleep, when }) => {
+      ensure('not torn', !Electron.isTorn)
       ensure('did move', !!moved)
       ensure('window', !!this.orbitRef)
       // wait for move to finish
@@ -74,6 +76,7 @@ class OrbitWindowStore {
   handleOrbitDocked = react(
     () => App.orbitState.docked,
     docked => {
+      ensure('not torn', !Electron.isTorn)
       if (!docked) {
         Menu.sendActionToFirstResponder('hide:')
       }
@@ -97,14 +100,32 @@ class OrbitWindowStore {
   handleBlur = () => {
     this.blurred = true
   }
+
+  get show() {
+    if (Electron.isTorn) {
+      return true
+    }
+    return this.initialShow ? App.orbitState.docked : false
+  }
+
+  setInitialShow = () => {
+    this.initialShow = true
+  }
 }
 
 export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  // handle shortcuts
-  useStore(OrbitShortcutsStore, {
+  const appQuery = `/?appId=${store.appId}`
+  const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
+  const vibrancy = App.state.darkTheme ? 'dark' : 'light'
+
+  log.info(
+    `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${vibrancy}`,
+  )
+
+  const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
       const shown = App.orbitState.docked
       console.log('ok', store.blurred, shown)
@@ -116,26 +137,36 @@ export default observer(function OrbitWindow() {
     },
   })
 
-  const [show, setShow] = React.useState(false)
-  const url = Config.urls.server
+  // onMount
+  React.useEffect(() => {
+    // set orbit icon in dev
+    if (process.env.NODE_ENV === 'development') {
+      app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
+    }
 
-  log.info(
-    `---- render OrbitWindow show ${show} ${url} hovered? ${Desktop.hoverState.orbitHovered} ${
-      store.size
-    }`,
-  )
+    // handle tear away
+    return Electron.onMessage(Electron.messages.TEAR, async (appType: string) => {
+      const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
+      if (!(await pathExists(iconPath))) {
+        console.error('no icon!')
+        return
+      }
+      app.dock.setIcon(iconPath)
+      Electron.setIsTorn()
+      orbitShortcutsStore.dispose()
+      require('@mcro/orbit').main({ subOrbit: true })
+    })
+  }, [])
 
-  if (!store.size || !store.size[0]) {
+  if (!store.size[0]) {
     return null
   }
 
-  console.log('icon', join(ROOT, 'resources', 'icons', 'appicon.png'))
-
   return (
     <Window
-      show={show ? App.orbitState.docked : false}
+      show={store.show}
       focus
-      onReadyToShow={() => setShow(true)}
+      onReadyToShow={store.setInitialShow}
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       ref={store.handleRef}
       file={url}
@@ -148,7 +179,7 @@ export default observer(function OrbitWindow() {
       showDevTools={Electron.state.showDevTools.app}
       transparent
       background="#00000000"
-      vibrancy={App.state.darkTheme ? 'dark' : 'light'}
+      vibrancy={vibrancy}
       hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />

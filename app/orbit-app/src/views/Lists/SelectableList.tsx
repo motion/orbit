@@ -7,7 +7,8 @@ import { isEqualReferential } from '../../helpers/isEqualReferential'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
-import OrbitList, { OrbitHandleSelect, orbitItemsKey, OrbitListProps } from './OrbitList'
+import { orbitItemsKey } from './orbitItemsKey'
+import OrbitList, { OrbitHandleSelect, OrbitListProps } from './OrbitList'
 
 export type SelectableListProps = OrbitListProps & {
   minSelected?: number
@@ -88,12 +89,12 @@ class SelectableStore {
   )
 }
 
-export default React.memo(function SelectableList(props: SelectableListProps) {
+export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
-  const itemsKey = orbitItemsKey(props.items)
-  const getItems = React.useCallback(() => props.items, [itemsKey])
+  const itemsKey = orbitItemsKey(items)
+  const getItems = React.useCallback(() => items, [itemsKey])
   const selectableProps = React.useContext(SelectableContext)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
@@ -145,11 +146,19 @@ export default React.memo(function SelectableList(props: SelectableListProps) {
   return (
     <MergeContext Context={StoreContext} value={{ selectionStore }}>
       <OrbitList
+        items={items}
         scrollToAlignment="center"
         itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
-        onSelect={selectableProps.onSelectItem}
-        onOpen={selectableProps.onSelectItem}
+        onSelect={(index, appConfig, eventType) => {
+          if (selectionStore && selectionStore.activeIndex !== index) {
+            selectionStore.toggleSelected(index, eventType)
+          }
+          if (selectableProps && selectableProps.onSelectItem) {
+            selectableProps.onSelectItem(index, appConfig, eventType)
+          }
+        }}
+        onOpen={selectableProps && selectableProps.onSelectItem}
         {...props}
       />
     </MergeContext>

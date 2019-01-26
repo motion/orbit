@@ -6,18 +6,31 @@ Error.stackTraceLimit = Infinity
 // they dont work well (you can only access globals not see logs)
 // so lets avoid clutter unless absolutely wanted
 
+const {
+  DISABLE_SYNCERS,
+  DEBUG_ELECTRON,
+  DEBUG_ELECTRON_MAIN,
+  DEBUG_ELECTRON_APPS,
+  DEBUG_ELECTRON_CHROME,
+} = process.env
+
+const debugElectron = DEBUG_ELECTRON === 'true'
+const debugElectronMain = DEBUG_ELECTRON_MAIN === 'true'
+const debugElectronApps = DEBUG_ELECTRON_APPS === 'true'
+const debugElectronChrome = DEBUG_ELECTRON_CHROME === 'true'
+
 async function start() {
   const sessions = [
     // node processes
     { port: '9000' }, // desktop
-    process.env.DEBUG_ELECTRON && { port: '9001' }, // electron
-    !process.env.DISABLE_SYNCERS && { port: '9003' }, // syncers
+    (debugElectron || debugElectronMain) && { port: '9001' }, // electron
+    !DISABLE_SYNCERS && { port: '9003' }, // syncers
 
     // remote processes
     { port: '9002' }, // electron remote
-    process.env.DEBUG_ELECTRON && { port: '9004' }, // electron-apps main
+    (debugElectron || debugElectronApps) && { port: '9004' }, // electron-apps main
     { port: '9005' }, // electron-apps remote
-    process.env.DEBUG_ELECTRON && { port: '9006' }, // electron-menus main
+    (debugElectron || debugElectronChrome) && { port: '9006' }, // electron-chrome main
     { port: '9007' }, // electron-menus remote
   ].filter(Boolean)
   console.log('starting REPL with sessions...', sessions)

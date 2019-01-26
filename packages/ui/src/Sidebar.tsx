@@ -50,7 +50,7 @@ type SidebarProps = {
   /**
    * Background color.
    */
-  backgroundColor?: string
+  background?: string
   /**
    * Callback when the sidebar size ahs changed.
    */
@@ -99,7 +99,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 
   render() {
-    const { backgroundColor, onResize, position, children } = this.props
+    const { background, onResize, position, children } = this.props
     let height, minHeight, maxHeight, width, minWidth, maxWidth
 
     const resizable: { [key: string]: boolean } = {}
@@ -141,7 +141,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         resizable={resizable}
         onResize={this.onResize}
       >
-        <SidebarContainer position={position} backgroundColor={backgroundColor}>
+        <SidebarContainer position={position} background={background}>
           {children}
         </SidebarContainer>
       </SidebarInteractiveContainer>
@@ -156,7 +156,7 @@ const SidebarContainer = gloss(Col, {
 }).theme((props, theme) => {
   const borderColor = theme.sidebarBorderColor || theme.borderColor
   return {
-    background: props.background || theme.sidebarBackground,
+    background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
     borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
     borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
     borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',

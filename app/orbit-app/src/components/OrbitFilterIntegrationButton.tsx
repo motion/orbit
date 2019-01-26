@@ -35,7 +35,10 @@ export default observer(function OrbitFilterIntegrationButton(props: ViewProps) 
               key={filter.id}
               width={200}
               onClick={queryFilters.integrationFilterToggler(filter)}
-              icon={<Icon name={filter.integration} size={16} /> as any}
+              icon={filter.integration}
+              titleProps={{
+                fontWeight: 300,
+              }}
               title={filter.name}
               after={
                 filter.active ? <Icon margin="auto" name="check" color="#3AD052" size={10} /> : null

@@ -226,9 +226,16 @@ const positionStateX = (
   targetBounds?: Bounds,
 ): PositionStateX => {
   const { arrowSize } = props
-  const targetCenter = targetBounds
-    ? targetBounds.left + targetBounds.width / 2
-    : popoverBounds.width / 2 + popoverBounds.left
+  let targetCenter: number
+
+  if (getIsManuallyPositioned(props)) {
+    targetCenter = props.left + props.width / 2
+    popoverBounds = { width: props.width, height: props.height, top: 0, left: 0 }
+  } else {
+    targetCenter = targetBounds
+      ? targetBounds.left + targetBounds.width / 2
+      : popoverBounds.width / 2 + popoverBounds.left
+  }
 
   const popoverHalfWidth = popoverBounds.width / 2
   let left = 0
@@ -352,10 +359,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     let nextState: Partial<State> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
 
-    if (props.open === false) {
-      console.log('popover', props, state)
-    }
-
     if (isManuallyPositioned) {
       nextState = {
         ...nextState,
@@ -391,14 +394,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   setPopoverRef = (ref: HTMLElement) => {
     if (ref) {
       this.popoverRef = ref
-      this.resizeObserver.observe(ref)
+      const inner = ref.querySelector('.popover-inner-surface')
+      this.resizeObserver.observe(inner)
       this.mutationObserver.observe(ref, { attributes: true })
     }
   }
 
   // @ts-ignore
-  resizeObserver = new ResizeObserver(() => this.setPosition())
-  mutationObserver = new MutationObserver(() => this.setPosition())
+  resizeObserver = new ResizeObserver(() => {
+    this.setPosition()
+  })
+  mutationObserver = new MutationObserver(() => {
+    this.setPosition()
+  })
 
   get domNode() {
     return findDOMNode(this) as HTMLDivElement
@@ -416,6 +424,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       this.open()
     }
 
+    const isManuallyPositioned = getIsManuallyPositioned(this.props)
+
     // allow multiple flexible ways to pass in targets
     if (typeof target === 'string') {
       this.target = getTarget(target)
@@ -423,10 +433,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       const target = this.domNode.classList.contains('popover-target')
       if (target) {
         this.target = this.domNode
+      } else {
+        if (!isManuallyPositioned) {
+          // potentially we can just get it directly
+          throw new Error('Couldnt pass className down to target to do measurements...')
+        }
       }
     }
-
-    const isManuallyPositioned = getIsManuallyPositioned(this.props)
 
     if (!isManuallyPositioned && !this.target) {
       throw new Error('Not manually positioned and no target found.')
@@ -969,6 +982,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               </ArrowContain>
             )}
             <SizedSurface
+              className="popover-inner-surface"
               sizeRadius
               flex={1}
               ignoreSegment

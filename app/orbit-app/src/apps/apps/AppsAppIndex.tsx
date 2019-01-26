@@ -1,9 +1,10 @@
-import { Absolute, Theme } from '@mcro/ui'
+import { Button, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton } from '../../views'
-import SelectableList from '../../views/Lists/SelectableList'
+import OrbitList from '../../views/Lists/OrbitList'
+import { SortableGrid } from '../../views/SortableGrid'
 
 export default function AppsAppIndex() {
   const activeApps = useActiveAppsSorted()
@@ -13,39 +14,22 @@ export default function AppsAppIndex() {
     icon: `orbit${capitalize(x.type)}`,
     type: 'installed',
     group: 'Installed Apps',
+    after: <RoundButton circular icon="remove" />,
   }))
-  const results = [
-    {
-      id: -1,
-      title: 'Installed apps',
-      icon: 'grid48',
-      subtitle: `${activeItems.map(x => x.title).join(', ') || '...'}`,
-      appConfig: {
-        type: 'installed',
-      },
-    },
-    ...activeItems.map(x => ({
-      ...x,
-      type: 'add',
-      group: 'Add app',
-    })),
-  ]
+  const results = [...activeItems]
 
   return (
     <>
-      <SelectableList sortable defaultSelected={0} items={results} />
-      <Absolute bottom={10} right={10}>
-        <Theme name="selected">
-          <RoundButton
-            elevation={1}
-            size={1.8}
-            sizeIcon={0.6}
-            circular
-            icon="add"
-            tooltip="Create new app"
-          />
-        </Theme>
-      </Absolute>
+      <SortableGrid
+        items={[
+          ...[1, 2, 3, 4, 5, 6, 7, 8].map(x => (
+            <View>
+              <Button icon="hi" size={2} /> test 123 {x}
+            </View>
+          )),
+        ]}
+      />
+      <OrbitList sortable items={results} />
     </>
   )
 }

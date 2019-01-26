@@ -51,41 +51,39 @@ export default observer(function ListEdit() {
 
   return (
     <Row tagName="form" onSubmit={store.handleSubmit} flex={1} alignItems="center">
-      <Popover
-        width={368}
-        height={452}
-        openOnClick
-        // closeOnClickAway
-        target={
-          <Button
-            circular
-            icon={
-              <View marginLeft={4} fontSize={18}>
-                😓
-              </View>
-            }
-            iconSize={14}
-            type="submit"
-          />
-        }
-        background
-        borderRadius={10}
-        elevation={4}
-      >
-        <Picker native title="Choose emoji..." />
-      </Popover>
-
-      <HorizontalSpace />
-      <Input
-        value={store.name}
-        onChange={store.handleNameChange}
-        flex={1}
-        placeholder="New folder..."
-      />
-      <HorizontalSpace />
-      <SegmentedRow>
-        <Button circular icon="boldadd" type="submit" />
+      <SegmentedRow flex={1}>
+        <Popover
+          width={368}
+          height={452}
+          openOnClick
+          // closeOnClickAway
+          target={
+            <Button
+              circular
+              icon={
+                <View marginLeft={4} fontSize={18}>
+                  😓
+                </View>
+              }
+              iconSize={14}
+              type="submit"
+            />
+          }
+          background
+          borderRadius={10}
+          elevation={4}
+        >
+          <Picker native title="Choose emoji..." />
+        </Popover>
+        <Input
+          value={store.name}
+          onChange={store.handleNameChange}
+          flex={1}
+          placeholder="New folder..."
+        />
       </SegmentedRow>
+      <HorizontalSpace />
+      <Button circular icon="boldadd" type="submit" />
     </Row>
   )
 })

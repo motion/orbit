@@ -1,5 +1,6 @@
 import { always, react } from '@mcro/black'
-import { AppType, ListsApp } from '@mcro/models'
+import { loadMany } from '@mcro/model-bridge'
+import { AppType, ListsApp, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
@@ -7,6 +8,7 @@ import * as React from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarBottom } from '../../views/FloatingBar/FloatingBarBottom'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
@@ -44,14 +46,56 @@ class ListsIndexStore {
     return this.props.appStore.activeQuery
   }
 
-  results = react(
-    () => always(this.activeQuery, this.allLists),
-    () => {
-      return fuzzyQueryFilter(this.activeQuery, this.allLists, {
+  get results() {
+    return [...this.currentFolderResults, ...this.otherFolderResults, ...this.searchResults]
+  }
+
+  currentFolderResults = react(
+    () => [this.activeQuery, always(this.allLists)],
+    ([query]) => {
+      return fuzzyQueryFilter(query, this.allLists, {
         key: 'title',
       })
     },
     { defaultValue: this.allLists },
+  )
+
+  // TODO make this work
+  otherFolderResults = react(
+    () => [this.activeQuery, always(this.allLists)],
+    ([query]) => {
+      return fuzzyQueryFilter(query, this.allLists, {
+        key: 'title',
+      })
+    },
+    {
+      defaultValue: [],
+    },
+  )
+
+  searchResults = react(
+    () => [this.activeQuery, this.stores.spaceStore.activeSpace.id, always(this.allLists)],
+    async ([query, spaceId], { sleep }) => {
+      if (query.length < 2 || this.results.length > 10) {
+        return []
+      }
+      // make searchresults lower priority than filtered
+      await sleep(40)
+      const results = await loadMany(SearchResultModel, {
+        args: {
+          spaceId,
+          query,
+          take: 20,
+        },
+      })
+      return results.map(r => ({
+        ...r,
+        group: 'Search Results',
+      }))
+    },
+    {
+      defaultValue: [],
+    },
   )
 }
 
@@ -59,7 +103,10 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>
-      <OrbitToolbar>Memory > Breadcrumb > Should > Go > Here</OrbitToolbar>
+      <OrbitToolbar>
+        <ListAppBreadcrumbs />
+      </OrbitToolbar>
+      <ListAppBreadcrumbs />
       <SelectableList minSelected={0} items={results} sortable />
       <FloatingBarBottom>
         <ListEdit />
@@ -67,3 +114,13 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     </>
   )
 })
+
+function ListAppBreadcrumbs() {
+  return (
+    <Breadcrumbs>
+      <Breadcrumb>Memory</Breadcrumb>
+      <Breadcrumb>Memory</Breadcrumb>
+      <Breadcrumb>Memory</Breadcrumb>
+    </Breadcrumbs>
+  )
+}

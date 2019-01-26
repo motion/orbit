@@ -13,7 +13,7 @@ import * as React from 'react'
 type ChildrenHlFn = ((Highlights) => JSX.Element | null)
 
 export type TextProps = CSSPropertySet &
-  React.HTMLProps<HTMLParagraphElement> & {
+  React.HTMLAttributes<HTMLParagraphElement> & {
     color?: CSSPropertySet['color'] | false
     editable?: boolean
     autoselect?: boolean

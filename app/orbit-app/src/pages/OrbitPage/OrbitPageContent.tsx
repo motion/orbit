@@ -73,17 +73,13 @@ export default observer(function OrbitPageContent() {
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   return (
-    <>
-      {/* TODO figure where to put an autocomplete... */}
-      {/* <OrbitToolBarRender id={props.pane.id} /> */}
-      <AppView
-        isActive
-        viewType="main"
-        id={props.pane.id}
-        type={props.pane.type}
-        appConfig={orbitStore.activeConfig[props.pane.type]}
-      />
-    </>
+    <AppView
+      isActive
+      viewType="main"
+      id={props.pane.id}
+      type={props.pane.type}
+      appConfig={orbitStore.activeConfig[props.pane.type]}
+    />
   )
 })
 

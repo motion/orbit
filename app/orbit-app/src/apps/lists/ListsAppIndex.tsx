@@ -1,13 +1,13 @@
 import { always, react } from '@mcro/black'
 import { AppType, ListsApp } from '@mcro/models'
-import { Button, View } from '@mcro/ui'
+import { Button } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { FloatingBarBottom } from '../../views/FloatingBar/FloatingBarBottom'
-import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
@@ -34,13 +34,7 @@ class ListsIndexStore {
         index,
         type: 'list',
         title: listItem.name,
-        after: (
-          <View margin="auto" padding={[0, 6]}>
-            <Button circular size={0.9}>
-              <Icon name="pin" size={12} color="#fff" />
-            </Button>
-          </View>
-        ),
+        after: <Button circular chromeless size={0.9} icon="arrowright" />,
         subtitle: (listItem.bits || []).length + ' items',
       }
     })
@@ -65,22 +59,8 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const { results } = useStore(ListsIndexStore, props)
   return (
     <>
-      <SelectableList
-        items={results}
-        itemProps={props.itemProps}
-        sortable
-        getItemProps={index => {
-          const result = results[index]
-          return {
-            appConfig: {
-              id: `${result.id}`,
-              title: result.title,
-              type: AppType.lists,
-              index: result.index,
-            },
-          }
-        }}
-      />
+      <OrbitToolbar>Memory > Breadcrumb > Should > Go > Here</OrbitToolbar>
+      <SelectableList minSelected={0} items={results} sortable />
       <FloatingBarBottom>
         <ListEdit />
       </FloatingBarBottom>

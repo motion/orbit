@@ -1,11 +1,12 @@
 import { loadOne, save } from '@mcro/model-bridge'
 import { AppModel, ListsApp } from '@mcro/models'
-import * as React from 'react'
-import { Input, Button, Row } from '@mcro/ui'
-import { useStore, useHook } from '@mcro/use-store'
-import { SpaceStore } from '../../stores/SpaceStore'
+import { Button, Input, Row, SegmentedRow } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { SpaceStore } from '../../stores/SpaceStore'
+import { HorizontalSpace } from '../../views'
 
 class ListEditStore {
   props: { spaceStore: SpaceStore }
@@ -17,14 +18,16 @@ class ListEditStore {
 
   handleSubmit = async e => {
     e.preventDefault()
-    let listsApp: ListsApp = await loadOne(AppModel, {
+    let listsApp = (await loadOne(AppModel, {
       args: {
-        type: 'lists',
-        spaceId: this.stores.spaceStore.activeSpace.id,
+        where: {
+          spaceId: this.stores.spaceStore.activeSpace.id,
+        },
       },
-    })
+    })) as ListsApp
     if (!listsApp) {
       listsApp = {
+        target: 'app',
         type: 'lists',
         name: 'lists',
         spaceId: this.stores.spaceStore.activeSpace.id,
@@ -34,7 +37,7 @@ class ListEditStore {
       }
     }
     listsApp.data.lists.push({ name: this.name, order: 0, pinned: false, bits: [] })
-    // create a space
+    // create app
     await save(AppModel, listsApp)
     console.log('saved lists app', listsApp)
     this.name = ''
@@ -45,15 +48,19 @@ export default observer(function ListEdit() {
   const store = useStore(ListEditStore)
 
   return (
-    <Row tagName="form" onSubmit={store.handleSubmit} padding={10} alignItems="center">
+    <Row tagName="form" onSubmit={store.handleSubmit} flex={1} alignItems="center">
+      <Button circular icon={<>😓</>} iconSize={14} type="submit" />
+      <HorizontalSpace />
       <Input
         value={store.name}
         onChange={store.handleNameChange}
         flex={1}
-        placeholder="Create..."
+        placeholder="Create folder..."
       />
-      <div style={{ width: 10 }} />
-      <Button icon="boldadd" type="submit" />
+      <HorizontalSpace />
+      <SegmentedRow>
+        <Button circular icon="boldadd" type="submit" />
+      </SegmentedRow>
     </Row>
   )
 })

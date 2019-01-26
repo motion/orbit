@@ -96,7 +96,7 @@ const dark = {
     colorActive: '#fff',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-    tabBackground: [25, 25, 25],
+    tabBackground: [30, 30, 30],
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [20, 20, 20, 0.85],
     sidebarBorderColor: '#333',

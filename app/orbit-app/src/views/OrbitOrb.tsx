@@ -22,8 +22,8 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = ({ size = 32, ...props }) => (
+export const OrbitOrb = ({ size = 32, background, color, ...props }) => (
   <View alignItems="center" justifyContent="center" {...props}>
-    <GradientOutlineCircle width={size} height={size} {...props} />
+    <GradientOutlineCircle width={size} height={size} background={background} color={color} />
   </View>
 )

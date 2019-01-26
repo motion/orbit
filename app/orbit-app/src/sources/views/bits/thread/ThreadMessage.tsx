@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { HighlightText } from '../../../../views/HighlightText'
-import { AppActions } from '../../../../actions/AppActions'
-import { Text } from '@mcro/ui'
-import { VerticalSpace, HorizontalSpace } from '../../../../views'
-import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
-import { DateFormat } from '../../../../views/DateFormat'
 import { gloss } from '@mcro/gloss'
+import { Text } from '@mcro/ui'
+import * as React from 'react'
+import { AppActions } from '../../../../actions/AppActions'
+import { HorizontalSpace, VerticalSpace } from '../../../../views'
+import { DateFormat } from '../../../../views/DateFormat'
+import { HighlightText } from '../../../../views/HighlightText'
+import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 
 const Message = gloss({
   padding: 15,
@@ -33,14 +33,16 @@ const Block = gloss({
 })
 
 const MailBody = ({ children, ...props }) => (
-  <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+  <Text>
+    <Block className="gmail-body" {...props} dangerouslySetInnerHTML={{ __html: children }} />
+  </Text>
 )
 
 const openMail = email => () => {
   AppActions.open(`mailto:${email}`)
 }
 
-export const ThreadMessage = ({ message }) => {
+export function ThreadMessage({ message }) {
   return (
     <Message>
       <Text fontWeight={500} size={0.9} alpha={0.8}>

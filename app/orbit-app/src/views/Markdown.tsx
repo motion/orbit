@@ -1,3 +1,4 @@
+import { Text } from '@mcro/ui'
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkEmoji from 'remark-emoji'
@@ -25,6 +26,10 @@ type MarkdownProps = Partial<typeof markdownOptions> & {
   className?: string
 }
 
-export const Markdown = ({ className, ...props }: MarkdownProps) => {
-  return <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />
+export function Markdown({ className, ...props }: MarkdownProps) {
+  return (
+    <Text>
+      <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />
+    </Text>
+  )
 }

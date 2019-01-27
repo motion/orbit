@@ -34,33 +34,69 @@ sorting by prepping to split out work as best possible:
 
 # employee
 
-tasks:
+## architecture for deploying apps/sources
 
-- make min/max/close buttons work
+- theres a few ways these work:
+  1. deploying new apps internally for teams
+  2. deploying new source internally for teams
+  3. us releasing a new source/app for anyone to use
+  4. (eventually) anyone releasing new apps/sources into an app store
+
+Prerequisites:
+
+Lets clean up settings/syncers a bit and figure out how to architect them to cover the two use cases:
+
+1. We can release new sources that people can use
+2. People on teams can create new sources internally
+
+For #2 we need have prerequisite:
+
+1. We need to have a basic account/team system
+
+Once that is ready we can get apps working in a similar way, and then we can start looking at the app/source store.
+
+---
+
+So, step by step:
+
+1. Finish bugs in syncers (see #syncers)
+2. Account/team system
+3. Figure out architecture for developing new apps/sources
+4. Develop account/team system
+   1. test out by creating a fake team "Motion"
+   2. deploy a new source to "Motion" team
+5. Figure out good model for us (Orbit) to add new sources as well
+6. Build a test new source and deploy it
+7. Do the same for apps
+
+#misc
+
 - add the props type to useStore
 - loadOne/observeOne commands are being resolved by both syncers and desktop from client calls
   - this should just go from client => desktop right?
 - settings panes
   - run over and fix them, a lot of breaking things like github not loading repos
   - can add "enter" key shortcut to toggle selection in table
-- syncers
-  - on process exit it should clear all processing Jobs
-  - github syncer and drive syncer not showing anything in their setting pane
-  - syncers arent running after first adding them
-  - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
-    - perhaps we need better checks for that
-  - syncers arent streaming or something weird is happening
-  - github smart sync shouldn't sync everything, just recent stuff
-  - got an out of memory issue during multiple syncs:
-    - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
-  - compression:
-    - needs to just do a sweep like a garbage collector:
-      - have concept of "full" vs "compressed" sync state for bits
-      - if an integration is taking more space, move from full => compressed
-    - needs concept of "hydrate" endpoint
-      - this can be shared between the syncers and the frontend (command)
-      - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
-      - these endpoints would need some rate limit logic (later)
+
+#syncers
+
+- on process exit it should clear all processing Jobs
+- github syncer and drive syncer not showing anything in their setting pane
+- syncers arent running after first adding them
+- crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
+  - perhaps we need better checks for that
+- syncers arent streaming or something weird is happening
+- github smart sync shouldn't sync everything, just recent stuff
+- got an out of memory issue during multiple syncs:
+  - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
+- compression:
+  - needs to just do a sweep like a garbage collector:
+    - have concept of "full" vs "compressed" sync state for bits
+    - if an integration is taking more space, move from full => compressed
+  - needs concept of "hydrate" endpoint
+    - this can be shared between the syncers and the frontend (command)
+    - if a bit is "compressed", then it can call "hydrate" on the frontend to fetch full info
+    - these endpoints would need some rate limit logic (later)
 - debug why gdrive syncer items show "empty" in frontend and clean that view up
 - gmail:
   - syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else

@@ -84,11 +84,11 @@ const OrbitAutoComplete = observer(function OrbitAutoComplete() {
   )
 })
 
-const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
-  height: 1,
-}).theme(({ torn }, theme) => ({
-  background: torn ? theme.borderColor.alpha(0.5) : theme.tabBackground,
-}))
+// const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
+//   height: 1,
+// }).theme(({ torn }, theme) => ({
+//   background: torn ? theme.borderColor.alpha(0.5) : theme.tabBackground,
+// }))
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

@@ -26,7 +26,7 @@ export default observer(function OrbitControls() {
 })
 
 const ToolbarChrome = gloss(Row, {
-  minHeight: 1,
+  minHeight: 2,
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({

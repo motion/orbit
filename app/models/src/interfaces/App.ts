@@ -2,18 +2,18 @@ import { Space } from './Space'
 
 // app data
 
-export type ListsAppDataListItem = {
-  name: string
-  pinned: boolean
-  order: number
-  bits: {
-    id: number
-    order: number
-  }[]
+type ItemID = number | string
+
+export type ListAppDataItem = {
+  id: ItemID
+  type: 'bit' | 'person' | 'folder'
+  name?: string
+  children: ItemID[]
 }
 
 export type ListsAppData = {
-  lists: ListsAppDataListItem[]
+  rootItemID: ItemID
+  items: { [key in ItemID]: ListAppDataItem }
 }
 
 export type PeopleAppData = {}

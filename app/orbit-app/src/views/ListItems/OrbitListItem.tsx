@@ -1,6 +1,7 @@
 import { Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
+import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../Icon'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
@@ -10,7 +11,7 @@ import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
 
-export type OrbitListItemProps = VirtualListItemProps<OrbitItem>
+export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'>
 
 export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps) => {
   const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })

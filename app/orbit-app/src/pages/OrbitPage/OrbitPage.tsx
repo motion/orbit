@@ -77,6 +77,7 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor],
   background: theme.headerBackground || theme.background.alpha(0.65),
 }))
 

@@ -166,12 +166,14 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
-  // '& .orbit-tab-inactive': {
-  //   opacity: 0.5,
-  // },
-  // '&:hover .orbit-tab-inactive': {
-  //   opacity: 1,
-  // },
+  '& .orbit-tab-inactive.unpinned .tab-icon': {
+    transition: 'all ease 300ms',
+    opacity: 0,
+  },
+  '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
+    // transition: 'all ease 1200ms 500ms',
+    opacity: 0,
+  },
   // background: '#00000099',
 })
 

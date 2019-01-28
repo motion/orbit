@@ -1,7 +1,8 @@
-import { gloss, Row } from '@mcro/gloss'
+import { Absolute, gloss } from '@mcro/gloss'
 import { App } from '@mcro/models'
 import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
+import { Center } from '../views/Center'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 26
@@ -41,34 +42,39 @@ export function OrbitTab({
   const sidePad = thicc ? 18 : 12
   const button = (
     <NavButtonChrome
-      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} undraggable ${className}`}
+      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
+        thicc ? 'pinned' : 'unpinned'
+      } undraggable ${className}`}
       isActive={isActive}
       sidePad={sidePad}
       {...props}
     >
-      <Row maxWidth="100%" alignItems="center" justifyContent="center">
-        {!!icon && (
-          <OrbitTabIcon
-            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
-            isActive={isActive}
-            name={icon}
-            size={iconSize}
-            marginRight={!!label ? sidePad * 0.7 : 0}
-          />
-        )}
-        {!!label && (
-          <Text
-            ellipse
-            className="tab-label"
-            size={0.95}
-            opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={400}
-            {...textProps}
-          >
-            {label}
-          </Text>
-        )}
-      </Row>
+      {!!icon && (
+        <OrbitTabIcon
+          opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
+          isActive={isActive}
+          name={icon}
+          size={iconSize}
+          // marginRight={!!label ? sidePad * 0.7 : 0}
+        />
+      )}
+      {!!label && (
+        <Absolute top={0} bottom={0} left={30} right={30}>
+          <Center>
+            <Text
+              ellipse
+              className="tab-label"
+              size={0.95}
+              opacity={isActive ? 1 : inactiveOpacity}
+              fontWeight={400}
+              {...textProps}
+            >
+              {label}
+            </Text>
+          </Center>
+        </Absolute>
+      )}
+
       {separator && <Separator />}
 
       {isActive && !!onClickPopout && (
@@ -94,6 +100,7 @@ export function OrbitTab({
 function OrbitTabIcon(props: IconProps) {
   return (
     <Icon
+      className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
       {...props}
@@ -126,7 +133,6 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   position: 'relative',
   flexFlow: 'row',
   alignItems: 'center',
-  justifyContent: 'center',
   borderTopRadius: 3,
   transform: {
     y: 0.5,

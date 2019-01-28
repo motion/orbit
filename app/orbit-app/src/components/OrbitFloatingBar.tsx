@@ -7,7 +7,7 @@ import { FloatingBarButtonLarge } from '../views/FloatingBar/FloatingBarButtonLa
 
 export default function OrbitFloatingBar(props: { showSearch?: boolean; children?: any }) {
   const { searchStore } = useStoresSafe()
-  const [isShown, setIsShown] = useState(true)
+  const [isShown, setIsShown] = useState(false)
   const [barHeight, setBarHeight] = useState(300)
   const topBarHeight = 60
 

@@ -8,8 +8,7 @@ import {
   SearchResultModel,
 } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
-import { capitalize, flatten, uniq } from 'lodash'
-import { fuzzyQueryFilter } from '../helpers'
+import { flatten, uniq } from 'lodash'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { MarkType } from './QueryStore/types'
@@ -97,54 +96,61 @@ export class SearchStore {
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
-  getAppsResults(query: string) {
-    const apps = fuzzyQueryFilter(
-      query,
-      this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
-      {
-        key: 'name',
-      },
-    ).map(app => {
-      const icon = `orbit${capitalize(app.type)}`
-      return {
-        group: 'Apps',
-        title: app.name,
-        icon,
-        type: AppType.message,
-        titleProps: null,
-        appConfig: {
-          title: `Open ${app.name}`,
-          icon,
-        },
-        onOpen: () => {
-          console.log('selecting app...', app.type, app.id)
-          this.stores.paneManagerStore.setActivePane(app.id)
-        },
-      }
-    })
+  getAppsResults(query: string): OrbitListItemProps[] {
+    const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
+
+    // const apps = fuzzyQueryFilter(
+    //   query,
+    //   this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
+    //   {
+    //     key: 'name',
+    //   },
+    // ).map(app => {
+    //   const icon = `orbit${capitalize(app.type)}`
+    //   return {
+    //     group: 'Apps',
+    //     title: app.name,
+    //     icon,
+    //     titleProps: null,
+    //     appConfig: {
+    //       type: AppType.message,
+    //       title: `Open ${app.name}`,
+    //       icon,
+    //     },
+    //     onOpen: () => {
+    //       console.log('selecting app...', app.type, app.id)
+    //       this.stores.paneManagerStore.setActivePane(app.id)
+    //     },
+    //   }
+    // })
 
     // TODO show only if they have more apps
     // TODO count how many apps
-    if (apps.length) {
-      apps.push({
-        group: 'Apps',
-        title: 'All apps...',
-        icon: null,
-        titleProps: {
-          fontWeight: 300,
-        },
-        type: AppType.message,
-        appConfig: {
-          title: 'All apps',
-          icon: 'grid48',
-        },
-        onOpen: () => {
-          this.stores.paneManagerStore.setActivePaneByType('apps')
-        },
-      })
-    }
+    // const apps = [{
+    //     group: 'Apps',
+    //     title: 'All apps...',
+    //     icon: null,
+    //     titleProps: {
+    //       fontWeight: 300,
+    //     },
+    //     appConfig: {
+    //       type: AppType.message,
+    //       title: 'All apps',
+    //       icon: 'grid48',
+    //     },
+    //     onOpen: () => {
+    //       this.stores.paneManagerStore.setActivePaneByType('apps')
+    //     },
+    //   }]
 
-    return apps
+    return [
+      {
+        title: 'Apps',
+        subtitle: `${apps.map(x => x.name).join(', ')}`,
+        icon: 'orbitApps',
+        type: AppType.apps,
+      },
+    ]
   }
 
   private getQuickResults(query: string) {

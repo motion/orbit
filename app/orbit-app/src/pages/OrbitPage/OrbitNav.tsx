@@ -180,7 +180,8 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
           tooltip="All Apps"
           separator
-          icon="grid48"
+          icon="orbitApps"
+          iconSize={12}
         />
         <OrbitTab
           thicc
@@ -220,7 +221,7 @@ const OrbitTab = ({
       <Row maxWidth="100%" alignItems="center" justifyContent="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.25}
+            opacity={isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.3}
             isActive={isActive}
             name={icon}
             size={iconSize}

@@ -208,7 +208,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 <HighlightText
                   sizeLineHeight={0.85}
                   ellipse
-                  fontWeight={slim ? 500 : 600}
+                  fontWeight={slim ? 400 : 500}
                   {...titleProps}
                 >
                   {title}

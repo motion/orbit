@@ -24,7 +24,7 @@ const Block = gloss(UI.Block, {
     background: theme.background.darken(0.1),
   },
   '&::placeholder': {
-    color: theme.color.alpha(0.5),
+    color: theme.color.alpha(0.8),
   },
 }))
 

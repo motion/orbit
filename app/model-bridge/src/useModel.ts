@@ -1,4 +1,5 @@
 import { Model } from '@mcro/mediator'
+import { merge } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { loadOne, observeCount, observeMany, observeManyAndCount, observeOne, save } from '.'
 
@@ -138,10 +139,7 @@ export function useModel<ModelType, Args>(
   )
 
   const update = (next: Partial<ModelType>) => {
-    const nextValue = {
-      ...value,
-      ...next,
-    }
+    const nextValue = merge({ ...value }, next)
     updateIfNew(nextValue)
     // save async after update
     save(model, nextValue)

@@ -80,8 +80,12 @@ _Favorites_
 - settings panes
   - run over and fix them, a lot of breaking things like github not loading repos
   - can add "enter" key shortcut to toggle selection in table
-
-#account
+- issue with reporting errors in observable queries, they are unhandled/not sent upwards
+  - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
+  - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
+    at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
+    at new Subscription"
+    #account
 
 sorting by prepping to split out work as best possible:
 
@@ -96,16 +100,19 @@ sorting by prepping to split out work as best possible:
   - allow teammates option from your master to "join" the space automatically
   - give an invite code to the first person
 
-#misc
-
 #syncers
 
 - on process exit it should clear all processing Jobs
+- general:
+  - syncers no longer seem to run once you add them, you have to hit refresh
+- slack:
+  - re-syncs seem to be doing a lot of work, can we improve incremental
+  - for some reason my slack never synced for me, check to be sure it syncs reliable
+  - seems like People arent showing the slack conversations on their profile
 - github syncer and drive syncer not showing anything in their setting pane
 - syncers arent running after first adding them
 - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
   - perhaps we need better checks for that
-- syncers arent streaming or something weird is happening
 - github smart sync shouldn't sync everything, just recent stuff
 - got an out of memory issue during multiple syncs:
   - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
@@ -113,8 +120,3 @@ sorting by prepping to split out work as best possible:
 - gmail:
   - syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
   - email formatting looks odd for quite a few, investigate how to format it properly and fix some common issues
-- issue with reporting errors in observable queries, they are unhandled/not sent upwards
-  - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method."
-  - "at EntityManager.findOne (/Users/nw/projects/motion/orbit/app/orbit-desktop/node_modules/typeorm/entity-manager/EntityManager.js:449:16)
-    at /Users/nw/projects/motion/orbit/app/orbit-desktop/src/observer/QueryObserver.ts:78:45
-    at new Subscription"

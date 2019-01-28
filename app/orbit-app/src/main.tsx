@@ -88,6 +88,7 @@ async function main() {
     require('./helpers/setupTestApp').setupTestApp()
     const { DevStore } = require('./stores/DevStore')
     const devStore = new DevStore()
+    devStore['rerender'] = startApp
     window['Root'] = devStore
   }
 

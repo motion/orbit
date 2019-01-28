@@ -53,7 +53,6 @@ window['LoggerSettings'] = LoggerSettings
 window['toJS'] = toJS
 window['stringify'] = stringify
 window['AppActions'] = AppActions
-window['Mediator'] = Repositories.Mediator
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')
 

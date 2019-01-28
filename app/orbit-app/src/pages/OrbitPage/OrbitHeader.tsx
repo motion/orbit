@@ -152,9 +152,11 @@ export default observer(function OrbitHeader() {
             >
               <Icon
                 name="gear"
-                // size={10}
+                size={14}
                 opacity={0.2 + settingsIconActiveOpacityInc}
-                hoverOpacity={0.5 + settingsIconActiveOpacityInc}
+                hoverStyle={{
+                  opacity: 0.5 + settingsIconActiveOpacityInc,
+                }}
               />
             </Button>
             // </Absolute>

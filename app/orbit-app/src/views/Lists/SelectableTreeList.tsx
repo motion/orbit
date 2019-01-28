@@ -37,7 +37,7 @@ export function SelectableTreeList(props: SelectableTreeListProps) {
         cancelled = true
       }
     },
-    [JSON.stringify(Object.keys(props.items))],
+    [JSON.stringify(props.items), currentItemID],
   )
 
   console.log('render', items)

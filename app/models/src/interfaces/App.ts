@@ -6,7 +6,7 @@ type ItemID = number | string
 
 export type ListAppDataItem = {
   id: ItemID
-  type: 'bit' | 'person' | 'folder'
+  type: 'bit' | 'person' | 'folder' | 'root'
   name?: string
   children: ItemID[]
 }

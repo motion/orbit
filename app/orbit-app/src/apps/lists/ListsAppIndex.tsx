@@ -1,110 +1,99 @@
-import { always, react } from '@mcro/black'
-import { loadMany, loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
-import {
-  AppModel,
-  AppType,
-  BitModel,
-  ListsApp,
-  PersonBitModel,
-  SearchResultModel,
-} from '@mcro/models'
+import { loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
+import { AppModel, AppType, BitModel, ListsAppData, PersonBitModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
-import { useHook } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
-import { fuzzyQueryFilter } from '../../helpers'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { SelectableTreeList } from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 
-class ListsIndexStore {
-  props: AppProps<AppType.lists>
-  stores = useHook(useStoresSafe)
+// class ListsIndexStore {
+//   props: AppProps<AppType.lists>
+//   stores = useHook(useStoresSafe)
 
-  get apps() {
-    return this.stores.spaceStore.apps
-  }
+//   get apps() {
+//     return this.stores.spaceStore.apps
+//   }
 
-  get listsApp() {
-    return this.apps.find(app => app.type === AppType.lists) as ListsApp
-  }
+//   get listsApp() {
+//     return this.apps.find(app => app.type === AppType.lists) as ListsApp
+//   }
 
-  get allLists() {
-    if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) {
-      return []
-    }
-    return this.listsApp.data.lists.map((listItem, index) => {
-      return {
-        id: index,
-        index,
-        type: 'list',
-        title: listItem.name,
-        after: <Button circular chromeless size={0.9} icon="arrowright" />,
-        subtitle: (listItem.bits || []).length + ' items',
-      }
-    })
-  }
+//   get allLists() {
+//     if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) {
+//       return []
+//     }
+//     return this.listsApp.data.lists.map((listItem, index) => {
+//       return {
+//         id: index,
+//         index,
+//         type: 'list',
+//         title: listItem.name,
+//         after: <Button circular chromeless size={0.9} icon="arrowright" />,
+//         subtitle: (listItem.bits || []).length + ' items',
+//       }
+//     })
+//   }
 
-  get activeQuery() {
-    return this.props.appStore.activeQuery
-  }
+//   get activeQuery() {
+//     return this.props.appStore.activeQuery
+//   }
 
-  get results() {
-    return [...this.currentFolderResults, ...this.otherFolderResults, ...this.searchResults]
-  }
+//   get results() {
+//     return [...this.currentFolderResults, ...this.otherFolderResults, ...this.searchResults]
+//   }
 
-  currentFolderResults = react(
-    () => [this.activeQuery, always(this.allLists)],
-    ([query]) => {
-      return fuzzyQueryFilter(query, this.allLists, {
-        key: 'title',
-      })
-    },
-    { defaultValue: this.allLists },
-  )
+//   currentFolderResults = react(
+//     () => [this.activeQuery, always(this.allLists)],
+//     ([query]) => {
+//       return fuzzyQueryFilter(query, this.allLists, {
+//         key: 'title',
+//       })
+//     },
+//     { defaultValue: this.allLists },
+//   )
 
-  // TODO make this work
-  otherFolderResults = react(
-    () => [this.activeQuery, always(this.allLists)],
-    ([query]) => {
-      return fuzzyQueryFilter(query, this.allLists, {
-        key: 'title',
-      })
-    },
-    {
-      defaultValue: [],
-    },
-  )
+//   // TODO make this work
+//   otherFolderResults = react(
+//     () => [this.activeQuery, always(this.allLists)],
+//     ([query]) => {
+//       return fuzzyQueryFilter(query, this.allLists, {
+//         key: 'title',
+//       })
+//     },
+//     {
+//       defaultValue: [],
+//     },
+//   )
 
-  searchResults = react(
-    () => [this.activeQuery, this.stores.spaceStore.activeSpace.id, always(this.allLists)],
-    async ([query, spaceId], { sleep }) => {
-      if (query.length < 2 || this.results.length > 10) {
-        return []
-      }
-      // make searchresults lower priority than filtered
-      await sleep(40)
-      const results = await loadMany(SearchResultModel, {
-        args: {
-          spaceId,
-          query,
-          take: 20,
-        },
-      })
-      return results.map(r => ({
-        ...r,
-        group: 'Search Results',
-      }))
-    },
-    {
-      defaultValue: [],
-    },
-  )
-}
+//   searchResults = react(
+//     () => [this.activeQuery, this.stores.spaceStore.activeSpace.id, always(this.allLists)],
+//     async ([query, spaceId], { sleep }) => {
+//       if (query.length < 2 || this.results.length > 10) {
+//         return []
+//       }
+//       // make searchresults lower priority than filtered
+//       await sleep(40)
+//       const results = await loadMany(SearchResultModel, {
+//         args: {
+//           spaceId,
+//           query,
+//           take: 20,
+//         },
+//       })
+//       return results.map(r => ({
+//         ...r,
+//         group: 'Search Results',
+//       }))
+//     },
+//     {
+//       defaultValue: [],
+//     },
+//   )
+// }
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const [listApp /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
@@ -117,11 +106,17 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 
   console.log('testItems', testItems)
 
-  const items = {
-    [testItems[0].id]: {
-      id: testItems[0].id,
-      type: 'bit',
-      children: [testItems[1].id, testItems[2].id, testItems[3].id],
+  const items: ListsAppData['items'] = {
+    [0]: {
+      id: 0,
+      type: 'root',
+      children: [1, testItems[1].id],
+    },
+    [1]: {
+      id: 1,
+      type: 'folder',
+      name: 'My folder',
+      children: [testItems[2].id, testItems[3].id],
     },
     [testItems[1].id]: {
       id: testItems[1].id,
@@ -150,17 +145,23 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 
       <SelectableTreeList
         minSelected={0}
-        rootItemID={Object.keys(items)[0]}
+        rootItemID={0}
         items={items}
-        onLoadItem={async ({ id, type }) => {
-          switch (type) {
+        onLoadItem={async item => {
+          switch (item.type) {
+            case 'folder':
+              return {
+                title: item.name,
+                subtitle: `${item.children.length} items`,
+                after: <Button circular chromeless size={0.9} icon="arrowright" />,
+              }
             case 'bit':
               return {
-                item: await loadOne(BitModel, { args: { where: { id: +id } } }),
+                item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
               }
             case 'person':
               return {
-                item: await loadOne(PersonBitModel, { args: { where: { id: +id } } }),
+                item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
               }
           }
           return null

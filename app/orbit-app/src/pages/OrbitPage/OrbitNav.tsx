@@ -28,6 +28,7 @@ type TabProps = React.HTMLAttributes<'div'> & {
   thicc?: boolean
   icon?: string
   iconSize?: number
+  iconAdjustOpacity?: number
 }
 
 const SortableTab = SortableElement((props: TabProps) => {
@@ -164,6 +165,7 @@ export default observer(function OrbitNav() {
           tooltip={showCreateNew ? 'Cancel' : 'Add'}
           thicc
           icon={showCreateNew ? 'remove' : 'add'}
+          iconAdjustOpacity={-0.2}
           onClick={() => {
             if (!showCreateNew) {
               paneManagerStore.setActivePaneByType('createApp')
@@ -200,6 +202,7 @@ const OrbitTab = ({
   app,
   icon,
   iconSize = 10,
+  iconAdjustOpacity = 0,
   tooltip,
   label,
   isActive = false,
@@ -221,7 +224,7 @@ const OrbitTab = ({
       <Row maxWidth="100%" alignItems="center" justifyContent="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.3}
+            opacity={(isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.3) + iconAdjustOpacity}
             isActive={isActive}
             name={icon}
             size={iconSize}

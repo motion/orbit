@@ -4,8 +4,6 @@ until end of jan:
 - manage account pane: same sort of deal... + link to slack
   fix search results: open on enter, onOpen broke
   fix tab drag index
-  new app pane
-  command+enter to pop out app into own window / multi apps
   actions menu
   add people to search
   fixing tray/menu display and interaction

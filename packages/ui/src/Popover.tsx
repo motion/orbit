@@ -405,7 +405,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     this.setPosition()
   })
   mutationObserver = new MutationObserver(() => {
-    this.setPosition()
+    // console.log('mutations', mutations)
+    // this.setPosition()
   })
 
   get domNode() {

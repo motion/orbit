@@ -1,6 +1,6 @@
 import * as React from 'react'
-import AtlassianSettingLogin from '../../../views/shared/AtlassianSettingLogin'
 import { Title } from '../../../../views'
+import AtlassianSettingLogin from '../../../views/shared/AtlassianSettingLogin'
 
 export const JiraSetup = () => (
   <>

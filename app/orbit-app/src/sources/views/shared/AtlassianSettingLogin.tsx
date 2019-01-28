@@ -1,19 +1,17 @@
-import { react } from '@mcro/black'
 import { command } from '@mcro/model-bridge'
 import {
-  SourceSaveCommand,
-  AtlassianSourceValuesCredentials,
   AtlassianSource,
+  AtlassianSourceValuesCredentials,
   Source,
+  SourceSaveCommand,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 type Props = {
   type: string
@@ -32,82 +30,60 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-class AtlassianSettingLoginStore {
-  props: Props
-  // source: Setting
-
-  status: string
-  error: string
-  values: AtlassianSource['values'] = {
-    username: '',
-    password: '',
-    domain: '',
-  }
-
-  source = react(
-    () => this.props.source,
-    async propSetting => {
-      // if source was sent via component props then use it
-      if (propSetting) {
-        this.values = propSetting.values.credentials
-        return propSetting
-      }
-
-      // if setting prop was not defined then at least
-      // integration type should be defined to create a new setting
-      if (!this.props.type) throw new Error('No props.type')
-
-      // create a new empty setting
-      return {
-        category: 'integration',
-        type: this.props.type,
-        token: null,
-      } as Source
-    },
-  )
-}
-
 export default observer(function AtlassianSettingLogin(props: Props) {
   const { spaceStore } = useStoresSafe()
-  const store = useStore(AtlassianSettingLoginStore, { ...props, spaceStore })
+  const [status, setStatus] = React.useState('')
+  const [error, setError] = React.useState('')
+  const [source] = React.useState(
+    props.source ||
+      ({
+        category: 'integration',
+        type: props.type,
+        token: null,
+      } as Source),
+  )
+  const [credentials, setCredentials] = React.useState<AtlassianSource['values']['credentials']>(
+    (props.source && props.source.values.credentials) || {
+      username: '',
+      password: '',
+      domain: '',
+    },
+  )
 
   const addIntegration = async e => {
     e.preventDefault()
-    const { source } = store
-    source.values = { ...source.values, credentials: store.values }
-    if (!source.spaces) source.spaces = []
+    source.values = { ...source.values, credentials }
+    if (!source.spaces) {
+      source.spaces = []
+    }
     if (!source.spaces.find(space => space.id === spaceStore.activeSpace.id)) {
       source.spaces.push(spaceStore.activeSpace)
     }
-    console.log(`adding integration!`, source)
-
     // send command to the desktop
-    store.status = Statuses.LOADING
+    setStatus(Statuses.LOADING)
     const result = await command(SourceSaveCommand, {
       source,
     })
-
     // update status on success of fail
     if (result.success) {
-      store.status = Statuses.SUCCESS
-      store.error = null
+      setStatus(Statuses.SUCCESS)
+      setError(null)
       AppActions.clearPeek()
     } else {
-      store.status = Statuses.FAIL
-      store.error = result.error
+      setStatus(Statuses.FAIL)
+      setError(result.error)
     }
   }
 
   const handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
     val: AtlassianSourceValuesCredentials[typeof prop],
   ) => {
-    store.values = {
-      ...store.values,
+    setCredentials({
+      ...credentials,
       [prop]: val,
-    }
+    })
   }
 
-  const { values, status, error } = store
   return (
     <UI.Col tagName="form" onSubmit={addIntegration} padding={20}>
       <Message>
@@ -120,18 +96,18 @@ export default observer(function AtlassianSettingLogin(props: Props) {
           <Views.Table>
             <Views.InputRow
               label="Domain"
-              value={values.domain}
+              value={credentials.domain}
               onChange={handleChange('domain')}
             />
             <Views.InputRow
               label="Username"
-              value={values.username}
+              value={credentials.username}
               onChange={handleChange('username')}
             />
             <Views.InputRow
               label="Password"
               type="password"
-              value={values.password}
+              value={credentials.password}
               onChange={handleChange('password')}
             />
           </Views.Table>

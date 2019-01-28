@@ -108,6 +108,7 @@ sorting by prepping to split out work as best possible:
 - slack:
   - re-syncs seem to be doing a lot of work, can we improve incremental
   - for some reason my slack never synced for me, check to be sure it syncs reliable
+  - seems like People arent showing the slack conversations on their profile
 - github syncer and drive syncer not showing anything in their setting pane
 - syncers arent running after first adding them
 - crawler doesn't seem to handle links in slack for me, it was timing out / not syncing

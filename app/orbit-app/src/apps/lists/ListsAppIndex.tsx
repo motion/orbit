@@ -108,7 +108,23 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         <ListAppBreadcrumbs />
       </OrbitToolbar>
       <ListAppBreadcrumbs /> */}
-      <SelectableList minSelected={0} items={results} sortable />
+
+      <SelectableList
+        minSelected={0}
+        items={results}
+        sortable
+        getContextMenu={index => {
+          console.log('getting context menu', index)
+          return [
+            {
+              label: 'Delete',
+              click: () => {
+                console.log('delete item')
+              },
+            },
+          ]
+        }}
+      />
 
       <OrbitFloatingBar showSearch>
         <ListEdit />

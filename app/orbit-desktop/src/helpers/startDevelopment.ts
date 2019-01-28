@@ -1,5 +1,5 @@
-import { COSAL_DB } from '../constants'
 import { removeSync } from 'fs-extra'
+import { COSAL_DB } from '../constants'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
 export function startDevelopment(appRoot: OrbitDesktopRoot) {
@@ -15,7 +15,7 @@ export function startDevelopment(appRoot: OrbitDesktopRoot) {
   }
 
   process.on('uncaughtException', err => {
-    console.warn('uncaughtException', err)
+    console.error('uncaughtException', err)
   })
 
   process.on('unhandledRejection', function(reason) {

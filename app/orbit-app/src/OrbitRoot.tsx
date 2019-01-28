@@ -2,7 +2,7 @@
 import { command } from '@mcro/model-bridge'
 import { OpenCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { ThemeProvide } from '@mcro/ui'
+import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import { isEqual, throttle } from 'lodash'
@@ -97,8 +97,10 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   })
 
   return (
-    <ThemeProvide themes={themes}>
-      <OrbitBrowser />
-    </ThemeProvide>
+    <ContextMenuProvider>
+      <ThemeProvide themes={themes}>
+        <OrbitBrowser />
+      </ThemeProvide>
+    </ContextMenuProvider>
   )
 })

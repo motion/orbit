@@ -6,7 +6,7 @@ export const ContextMenuContext = createContext<(items: MenuTemplate) => void>(n
 
 export type MenuTemplate = Partial<MenuItem>[]
 
-export function ContextMenuProvider() {
+export function ContextMenuProvider(props: { children: React.ReactNode }) {
   const [menuTemplate, setMenuTemplate] = useState([])
 
   const onContextMenu = () => {
@@ -21,7 +21,7 @@ export function ContextMenuProvider() {
         setMenuTemplate([...menuTemplate, ...items])
       }}
     >
-      <Container onContextMenu={onContextMenu} />
+      <Container onContextMenu={onContextMenu}>{props.children}</Container>
     </ContextMenuContext.Provider>
   )
 }

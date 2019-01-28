@@ -1,51 +1,39 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
+import { Col, ViewProps } from '@mcro/gloss'
+import React, { useContext } from 'react'
+import { ContextMenuContext, MenuTemplate } from './ContextMenuProvider'
 
-import { Col } from '@mcro/gloss'
-import PropTypes from 'prop-types'
-import * as React from 'react'
-
-type MenuTemplate = Array<any>
-
-type Props = {
+type ContextMenuProps = ViewProps & {
   items?: MenuTemplate
   buildItems?: () => MenuTemplate
   children: React.ReactNode
   component?: React.ComponentType<any> | string
 }
 
-export default class ContextMenu extends React.Component<Props> {
-  static defaultProps = {
-    component: Col,
-  }
+export default function ContextMenu({
+  children,
+  component = Col,
+  items,
+  buildItems,
+  ...restProps
+}: ContextMenuProps) {
+  const appendToContextMenu = useContext(ContextMenuContext)
 
-  static contextTypes = {
-    appendToContextMenu: PropTypes.func,
-  }
-
-  onContextMenu = (_: React.MouseEvent) => {
-    if (typeof this.context.appendToContextMenu === 'function') {
-      if (this.props.items != null) {
-        this.context.appendToContextMenu(this.props.items)
-      } else if (this.props.buildItems != null) {
-        this.context.appendToContextMenu(this.props.buildItems())
+  const onContextMenu = (_: React.MouseEvent) => {
+    if (typeof appendToContextMenu === 'function') {
+      if (items != null) {
+        appendToContextMenu(items)
+      } else if (buildItems != null) {
+        appendToContextMenu(buildItems())
       }
     }
   }
 
-  render() {
-    const { items: _ignoreItems, buildItems: _buildItems, component, ...props } = this.props
-    return React.createElement(
-      component,
-      {
-        onContextMenu: this.onContextMenu,
-        ...props,
-      },
-      this.props.children,
-    )
-  }
+  return React.createElement(
+    component,
+    {
+      onContextMenu,
+      ...restProps,
+    },
+    children,
+  )
 }

@@ -5,28 +5,27 @@
  * @format
  */
 
-import {
-  TableColumnOrder,
-  TableColumnSizes,
-  TableColumns,
-  TableHighlightedRows,
-  TableRowSortOrder,
-  TableRows,
-  TableBodyRow,
-  TableOnAddFilter,
-} from './types'
-
+import { gloss } from '@mcro/gloss'
+import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
+import debounceRender from 'react-debounce-render'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
-import debounceRender from 'react-debounce-render'
-import { debounce, isEqual } from 'lodash'
-import { DEFAULT_ROW_HEIGHT } from './types'
-import { TableRow } from './TableRow'
-import { TableHead } from './TableHead'
 import ContextMenu from '../ContextMenu'
 import { getSortedRows } from './getSortedRows'
-import { gloss } from '@mcro/gloss'
+import { TableHead } from './TableHead'
+import { TableRow } from './TableRow'
+import {
+  DEFAULT_ROW_HEIGHT,
+  TableBodyRow,
+  TableColumnOrder,
+  TableColumns,
+  TableColumnSizes,
+  TableHighlightedRows,
+  TableOnAddFilter,
+  TableRows,
+  TableRowSortOrder,
+} from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}

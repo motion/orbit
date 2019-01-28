@@ -1,15 +1,15 @@
-import webpack from 'webpack'
-import * as Path from 'path'
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
-import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import { DuplicatesPlugin } from 'inspectpack/plugin'
+import * as Path from 'path'
 // import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
-import { DuplicatesPlugin } from 'inspectpack/plugin'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
+import webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -36,7 +36,7 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
-const target = getFlag('--target') || 'web'
+const target = getFlag('--target') || 'electron-renderer'
 
 console.log('webpack info', JSON.stringify({ outputPath, target, isProd, tsConfig }))
 

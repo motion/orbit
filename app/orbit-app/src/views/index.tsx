@@ -66,7 +66,7 @@ export const CheckBoxRow = ({
   children,
   checked,
   onChange,
-}) => (
+}: InputProps) => (
   <FormTableRow>
     <FormTableLabel>
       <Label htmlFor={name}>{children}</Label>

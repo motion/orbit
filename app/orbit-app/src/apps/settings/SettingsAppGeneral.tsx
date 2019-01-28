@@ -1,14 +1,14 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, sleep } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { observeOne, save } from '@mcro/model-bridge'
+import { observeOne } from '@mcro/model-bridge'
 import { AppType, Setting, SettingModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { generalSettingQuery } from '../../helpers/queries'
+import { useSettings } from '../../hooks/useSettings'
 import * as Views from '../../views'
 import { Divider } from '../../views/Divider'
 import { Input } from '../../views/Input'
@@ -70,23 +70,6 @@ class SettingsGeneralStore {
     },
   )
 
-  generalChange = prop => val => {
-    console.log('handleChange', prop, val)
-    this.generalSetting.values[prop] = val
-    save(SettingModel, this.generalSetting)
-  }
-
-  changeTheme = val => {
-    if (val !== App.state.darkTheme) {
-      this.generalChange('darkTheme')(val)
-      App.setState({ darkTheme: val })
-    }
-  }
-
-  shortcutChange = val => {
-    this.generalChange('openShortcut')(niceCharsToElectronChars(val))
-  }
-
   focusShortcut = () => {
     App.setOrbitState({ shortcutInputFocused: true })
   }
@@ -100,10 +83,13 @@ const Section = gloss(View, {
   padding: [0, 0, 20],
 })
 
-export const SettingsAppGeneral = observer(function SettingsAppGeneral(
-  props: AppProps<AppType.settings>,
-) {
+export const SettingsAppGeneral = function SettingsAppGeneral(props: AppProps<AppType.settings>) {
   const store = useStore(SettingsGeneralStore, props)
+  const [settings, updateSettings] = useSettings()
+
+  if (!settings) {
+    return null
+  }
 
   const handleClearAllData = () => {
     if (
@@ -116,52 +102,53 @@ export const SettingsAppGeneral = observer(function SettingsAppGeneral(
     }
   }
 
-  if (!store.generalSetting) {
-    return null
-  }
   return (
     <View padding={20}>
       <Views.Title>General Settings</Views.Title>
-      {!!store.generalSetting && (
-        <Section maxWidth={450}>
-          <Views.CheckBoxRow
-            checked={store.generalSetting.values.autoLaunch}
-            onChange={store.generalChange('autoLaunch')}
-          >
-            Start on Login
-          </Views.CheckBoxRow>
-          <Views.CheckBoxRow
-            checked={store.generalSetting.values.autoUpdate}
-            onChange={store.generalChange('autoUpdate')}
-          >
-            Auto Update
-          </Views.CheckBoxRow>
-          <Views.CheckBoxRow
-            checked={store.generalSetting.values.darkTheme}
-            onChange={store.changeTheme}
-          >
-            Dark Theme
-          </Views.CheckBoxRow>
-          <Views.FormRow label="Open shortcut">
-            <ShortcutCapture
-              defaultValue={electronToNiceChars(store.generalSetting.values.openShortcut)}
-              onUpdate={store.shortcutChange}
-              modifierChars={eventCharsToNiceChars}
-              element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
-            />
-          </Views.FormRow>
+      <Section maxWidth={450}>
+        <Views.CheckBoxRow
+          checked={settings.values.autoLaunch}
+          onChange={autoLaunch => updateSettings({ values: { autoLaunch } })}
+        >
+          Start on Login
+        </Views.CheckBoxRow>
+        <Views.CheckBoxRow
+          checked={settings.values.autoUpdate}
+          onChange={autoUpdate => updateSettings({ values: { autoUpdate } })}
+        >
+          Auto Update
+        </Views.CheckBoxRow>
+        <Views.CheckBoxRow
+          checked={settings.values.darkTheme}
+          onChange={async darkTheme => {
+            updateSettings({ values: { darkTheme } })
+            await sleep(20)
+            App.setState({ darkTheme })
+          }}
+        >
+          Dark Theme
+        </Views.CheckBoxRow>
+        <Views.FormRow label="Open shortcut">
+          <ShortcutCapture
+            defaultValue={electronToNiceChars(settings.values.openShortcut)}
+            onUpdate={val => {
+              updateSettings({ values: { openShortcut: niceCharsToElectronChars(val) } })
+            }}
+            modifierChars={eventCharsToNiceChars}
+            element={<Input onFocus={store.focusShortcut} onBlur={store.blurShortcut} />}
+          />
+        </Views.FormRow>
 
-          <Views.VerticalSpace />
-          <Divider />
-          <Views.VerticalSpace />
+        <Views.VerticalSpace />
+        <Divider />
+        <Views.VerticalSpace />
 
-          <Views.FormRow label="Reset">
-            <Theme name="selected">
-              <Button onClick={handleClearAllData}>Reset all Orbit data</Button>
-            </Theme>
-          </Views.FormRow>
-        </Section>
-      )}
+        <Views.FormRow label="Reset">
+          <Theme name="selected">
+            <Button onClick={handleClearAllData}>Reset all Orbit data</Button>
+          </Theme>
+        </Views.FormRow>
+      </Section>
     </View>
   )
-})
+}

@@ -27,14 +27,15 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const { activeTheme } = React.useContext(ThemeContext)
   const activePaneName = useActivePaneName()
   const placeholder = activePaneName === 'Search' ? spaceStore.activeSpace.name : activePaneName
+  const fontSize = orbitStore.isTorn ? 16 : 20
   return (
     <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
       <HighlightedTextArea
         forwardRef={headerStore.inputRef}
         width="100%"
         fontWeight={400}
-        fontSize={orbitStore.isTorn ? 16 : 18}
-        lineHeight={22}
+        fontSize={fontSize}
+        lineHeight={fontSize + 4}
         border="none"
         display="block"
         background="transparent"

@@ -1,49 +1,14 @@
-import { invertLightness } from '@mcro/color'
-import { gloss, Row, ThemeContext } from '@mcro/gloss'
-import { App } from '@mcro/models'
-import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
+import { gloss, Row } from '@mcro/gloss'
+import { View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
-import { Icon } from '../../views/Icon'
-
-const height = 26
-const inactiveOpacity = 0.8
-
-type TabProps = React.HTMLAttributes<'div'> & {
-  app?: App
-  separator?: boolean
-  isActive?: boolean
-  label?: string
-  stretch?: boolean
-  sidePad?: number
-  tooltip?: string
-  textProps?: any
-  onClickPopout?: Function
-  thicc?: boolean
-  icon?: string
-  iconSize?: number
-  iconAdjustOpacity?: number
-}
-
-const SortableTab = SortableElement((props: TabProps) => {
-  return <OrbitTab {...props} />
-})
-
-const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
-  return (
-    <Row>
-      {props.items.map((item, index) => (
-        <SortableTab {...item} key={index} index={index} />
-      ))}
-    </Row>
-  )
-})
 
 export default observer(function OrbitNav() {
   const { orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -120,17 +85,6 @@ export default observer(function OrbitNav() {
 
   return (
     <OrbitNavClip>
-      {/* <Popover open width={200} elevation={1} target=".appDropdown-10">
-        <ListItem
-          slim
-          title="Open"
-          subtitle="Persist this window"
-          after={<Icon size={12} opacity={0.5} name="keyboardArrowReturn" />}
-        />
-        <ListItem slim title="Settings" />
-        <ListItem slim title="Remove" />
-      </Popover> */}
-
       <OrbitNavChrome>
         <SortableTabs
           axis="x"
@@ -198,124 +152,16 @@ export default observer(function OrbitNav() {
   )
 })
 
-const OrbitTab = ({
-  app,
-  icon,
-  iconSize = 10,
-  iconAdjustOpacity = 0,
-  tooltip,
-  label,
-  isActive = false,
-  separator = false,
-  onClickPopout,
-  textProps,
-  thicc,
-  className = '',
-  ...props
-}: TabProps) => {
-  const sidePad = thicc ? 20 : 12
-  const button = (
-    <NavButtonChrome
-      className={`undraggable ${className}`}
-      isActive={isActive}
-      sidePad={sidePad}
-      {...props}
-    >
-      <Row maxWidth="100%" alignItems="center" justifyContent="center">
-        {!!icon && (
-          <OrbitTabIcon
-            opacity={(isActive ? (!label ? 0.9 : 0.6) : !label ? 0.5 : 0.3) + iconAdjustOpacity}
-            isActive={isActive}
-            name={icon}
-            size={iconSize}
-          />
-        )}
-        {!!label && (
-          <Text
-            ellipse
-            className="tab-label"
-            size={0.9}
-            marginLeft={!!icon ? sidePad * 0.7 : 0}
-            opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={500}
-            {...textProps}
-          >
-            {label}
-          </Text>
-        )}
-      </Row>
-      {separator && <Separator />}
-
-      {isActive && !!onClickPopout && (
-        <DropDownButton
-          className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-          right={sidePad * 0.25}
-          tooltip="Open"
-          onClick={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            onClickPopout()
-          }}
-        />
-      )}
-    </NavButtonChrome>
-  )
-  if (tooltip) {
-    return <Tooltip label={tooltip}>{button}</Tooltip>
-  }
-  return button
-}
-
-function OrbitTabIcon({ opacity, ...props }: IconProps) {
-  const { activeTheme } = React.useContext(ThemeContext)
-  return (
-    <View position="relative" opacity={opacity}>
-      <Icon transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }} {...props} />
-      {/* show underneath an opposite colored one to */}
-      <Icon
-        transform={{ y: height % 2 === 0 ? 0.5 : -0.5 }}
-        color={invertLightness(activeTheme.color, 0.2)}
-        position="absolute"
-        top={0}
-        left={0}
-        zIndex={-1}
-        {...props}
-      />
-    </View>
-  )
-}
-
-function DropDownButton(props) {
-  return (
-    <Button
-      circular
-      borderWidth={0}
-      width={18}
-      height={18}
-      icon="downArrow"
-      background="transparent"
-      iconProps={{ size: 8 }}
-      opacity={0}
-      top={height / 2 - 9}
-      position="absolute"
-      hoverStyle={{
-        opacity: 0.2,
-      }}
-      {...props}
-    />
-  )
-}
-
 const OrbitNavClip = gloss({
   overflow: 'hidden',
-  padding: [20, 25, 0],
+  padding: [20, 40, 0],
   margin: [-20, 0, 0],
 }).theme((_, theme) => ({
   boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
 }))
 
 const OrbitNavChrome = gloss({
-  height,
+  height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   zIndex: 1000,
@@ -323,51 +169,16 @@ const OrbitNavChrome = gloss({
   // background: '#00000099',
 })
 
-const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
-  position: 'relative',
-  flexFlow: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height,
-  maxWidth: 180,
-  borderTopRadius: 3,
-  transform: {
-    y: 0.5,
-  },
-}).theme(({ isActive, stretch, sidePad }, theme) => {
-  // const background = theme.tabBackground || theme.background
-  const background = theme.tabBackground || theme.background
-  const glowStyle = {
-    background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
-    transition: isActive ? 'none' : 'all ease-out 500ms',
-  }
-  return {
-    padding: [0, sidePad],
-    minWidth: stretch ? 160 : 0,
-    background: isActive ? background : 'transparent',
-    // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
-    // border: [1, isActive ? theme.borderColor : 'transparent'],
-    // borderBottom: [1, theme.borderColor],
-    boxShadow: isActive
-      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor]]
-      : null,
-    // borderTopRadius: 3,
-    '&:hover': glowStyle,
-    '&:hover .tab-label': {
-      opacity: 1,
-    },
-    '&:active': glowStyle,
-  }
+const SortableTab = SortableElement((props: TabProps) => {
+  return <OrbitTab {...props} />
 })
 
-const Separator = gloss({
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  transform: {
-    y: -1,
-  },
-  width: 1,
-  background: 'linear-gradient(transparent 15%, rgba(0,0,0,0.048))',
+const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
+  return (
+    <Row>
+      {props.items.map((item, index) => (
+        <SortableTab {...item} key={index} index={index} />
+      ))}
+    </Row>
+  )
 })

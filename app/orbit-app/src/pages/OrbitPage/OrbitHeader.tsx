@@ -123,7 +123,7 @@ export default observer(function OrbitHeader() {
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
-      <HeaderTop padding={orbitStore.isTorn ? [2, 10] : [4, 10]}>
+      <HeaderTop padding={orbitStore.isTorn ? [2, 10] : [6, 10]}>
         <OrbitClose dontDim={orbitStore.isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
@@ -143,27 +143,27 @@ export default observer(function OrbitHeader() {
             </After>
           </FakeInput>
           {!orbitStore.isTorn && (
-            <Absolute top={0} right={0}>
-              <Button
-                chromeless
-                isActive={isOnSettings}
-                onClick={() => {
-                  if (isOnSettings) {
-                    paneManagerStore.back()
-                  } else {
-                    paneManagerStore.setActivePaneByType('settings')
-                  }
-                }}
-                tooltip="Settings"
-              >
-                <Icon
-                  name="gear"
-                  size={10}
-                  opacity={0.2 + settingsIconActiveOpacityInc}
-                  hoverOpacity={0.5 + settingsIconActiveOpacityInc}
-                />
-              </Button>
-            </Absolute>
+            // <Absolute top={0} right={0}>
+            <Button
+              chromeless
+              isActive={isOnSettings}
+              onClick={() => {
+                if (isOnSettings) {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
+              tooltip="Settings"
+            >
+              <Icon
+                name="gear"
+                // size={10}
+                opacity={0.2 + settingsIconActiveOpacityInc}
+                hoverOpacity={0.5 + settingsIconActiveOpacityInc}
+              />
+            </Button>
+            // </Absolute>
           )}
           <Row flex={1} />
         </Row>
@@ -193,7 +193,7 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   zIndex: 4,
 }).theme((_, theme) => ({
-  background: theme.headerBackground || theme.background.alpha(0.72),
+  background: theme.headerBackground || theme.background.alpha(0.65),
 }))
 
 const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
@@ -211,7 +211,7 @@ const OrbitHeaderBg = gloss(FullScreen, {
   zIndex: -1,
   pointerEvents: 'none',
 }).theme((_, theme) => ({
-  background: `linear-gradient(${theme.background.alpha(0.5)},${theme.background.alpha(0)})`,
+  background: `linear-gradient(${theme.background.alpha(0.3)},${theme.background.alpha(0)})`,
 }))
 
 const After = gloss({
@@ -221,13 +221,13 @@ const After = gloss({
 
 const FakeInput = gloss({
   height: 32,
-  padding: [0, 10],
+  padding: [2, 10],
   alignItems: 'center',
   justifyContent: 'center',
   margin: 'auto',
   flexFlow: 'row',
-  maxWidth: 700,
-  width: '70%',
+  maxWidth: 820,
+  width: '75%',
   minWidth: 400,
   cursor: 'text',
   transition: 'none',

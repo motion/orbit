@@ -1,7 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { Absolute, FullScreen, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, ClearButton, Icon, Row, View } from '@mcro/ui'
+import { Button, Icon, Row, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -113,7 +113,7 @@ export class HeaderStore {
 }
 
 export default observer(function OrbitHeader() {
-  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   const isOnSettings = paneManagerStore.activePane.type === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
@@ -135,13 +135,7 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <Row flex={1} />
           {!orbitStore.isTorn && <OrbitSwitch />}
-          <FakeInput>
-            <OrbitHeaderInput headerStore={headerStore} />
-            <After>
-              {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
-              {/* <OrbitHeaderButtons /> */}
-            </After>
-          </FakeInput>
+          <OrbitHeaderInput headerStore={headerStore} />
           {!orbitStore.isTorn && (
             // <Absolute top={0} right={0}>
             <Button
@@ -213,29 +207,6 @@ const OrbitHeaderBg = gloss(FullScreen, {
 }).theme((_, theme) => ({
   background: `linear-gradient(${theme.background.alpha(0.3)},${theme.background.alpha(0)})`,
 }))
-
-const After = gloss({
-  alignItems: 'center',
-  flexFlow: 'row',
-})
-
-const FakeInput = gloss({
-  height: 32,
-  padding: [2, 10],
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: 'auto',
-  flexFlow: 'row',
-  maxWidth: 820,
-  width: '75%',
-  minWidth: 400,
-  cursor: 'text',
-  transition: 'none',
-  '&:active': {
-    background: [0, 0, 0, 0.025],
-    transition: 'all ease-out 350ms 350ms',
-  },
-})
 
 const OrbitClose = gloss({
   position: 'absolute',

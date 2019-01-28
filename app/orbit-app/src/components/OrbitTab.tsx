@@ -140,9 +140,9 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   height: tabHeight,
   maxWidth: 160,
   borderTopRadius: 3,
-  // transform: {
-  //   y: 0.5,
-  // },
+  transform: {
+    y: 0.5,
+  },
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const background = theme.tabBackground || theme.background

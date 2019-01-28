@@ -30,7 +30,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const placeholder = activePaneName === 'Search' ? spaceStore.activeSpace.name : activePaneName
   const fontSize = orbitStore.isTorn ? 16 : 19
   return (
-    <FakeInput>
+    <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
           forwardRef={headerStore.inputRef}
@@ -64,14 +64,13 @@ const After = gloss({
   flexFlow: 'row',
 })
 
-const FakeInput = gloss({
+const FakeInput = gloss(View, {
   height: 32,
   padding: [2, 10],
   alignItems: 'center',
   justifyContent: 'center',
-  margin: 'auto',
+  margin: ['auto', 20],
   flexFlow: 'row',
-  maxWidth: 820,
   width: '75%',
   minWidth: 400,
   cursor: 'text',

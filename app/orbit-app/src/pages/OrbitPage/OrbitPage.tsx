@@ -1,10 +1,10 @@
-import { gloss } from '@mcro/gloss'
+import { gloss, Row, View } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
+import { OrbitToolBarProvider, OrbitToolBarRender } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -48,20 +48,48 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore }}>
-      <MainShortcutHandler>
-        <Theme name={theme}>
-          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <OrbitHeader />
-            <InnerChrome torn={orbitStore.isTorn}>
-              <OrbitToolBarRender />
-              <OrbitPageContent />
-            </InnerChrome>
-          </AppWrapper>
-        </Theme>
-      </MainShortcutHandler>
-    </MergeContext>
+    <OrbitToolBarProvider>
+      <MergeContext Context={StoreContext} value={{ searchStore, orbitStore }}>
+        <MainShortcutHandler>
+          <Theme name={theme}>
+            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+              <OrbitHeader />
+              <InnerChrome torn={orbitStore.isTorn}>
+                {!orbitStore.isTorn ? (
+                  <ToolbarChrome>
+                    <ToolbarInner>
+                      <OrbitToolBarRender.Before />
+                      <View flex={1} />
+                      <OrbitToolBarRender.After />
+                    </ToolbarInner>
+                  </ToolbarChrome>
+                ) : null}
+                <OrbitPageContent />
+              </InnerChrome>
+            </AppWrapper>
+          </Theme>
+        </MainShortcutHandler>
+      </MergeContext>
+    </OrbitToolBarProvider>
   )
+})
+
+const ToolbarChrome = gloss(Row, {
+  minHeight: 3,
+  alignItems: 'center',
+  justifyContent: 'center',
+}).theme((_, theme) => ({
+  background: theme.tabBackground,
+  borderBottom: [1, theme.borderColor.alpha(0.4)],
+}))
+
+const ToolbarInner = gloss({
+  flexFlow: 'row',
+  alignItems: 'center',
+  maxWidth: 820,
+  width: '75%',
+  minWidth: 400,
+  padding: [4, 10],
 })
 
 function OrbitPageProvideStores(props: { children: any }) {

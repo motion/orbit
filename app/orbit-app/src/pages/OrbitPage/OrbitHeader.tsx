@@ -6,6 +6,7 @@ import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
+import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
@@ -135,7 +136,9 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <Row flex={1} />
           {!orbitStore.isTorn && <OrbitSwitch />}
+          {orbitStore.isTorn && <OrbitToolBarRender.Before />}
           <OrbitHeaderInput headerStore={headerStore} />
+          {orbitStore.isTorn && <OrbitToolBarRender.After />}
           {!orbitStore.isTorn && (
             // <Absolute top={0} right={0}>
             <Button

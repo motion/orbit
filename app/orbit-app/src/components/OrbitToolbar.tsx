@@ -1,57 +1,70 @@
-import { gloss, View } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { MergeContext } from '../views/MergeContext'
 
-export function OrbitToolbar(props) {
-  const stores = useStoresSafe()
-  const toolbar = props.children
+type ToolbarContextItem = {
+  before?: React.ReactNode
+  after?: React.ReactNode
+}
 
-  // this will do something a bit odd,
-  // if theres an appStore, it just passes it up
-  // if not it will render it directly
-  // this lets us have toolbars that can be place differently depending on their use
-
-  useEffect(() => {
-    if (stores.appStore) {
-      stores.appStore.setToolbar(toolbar)
-    }
-  }, [])
-
-  if (stores.appStore) {
-    return null
-  } else {
-    return toolbar
+type ToolbarContextValue = {
+  setToolbar: (id: number, toolbar: React.ReactNode) => void
+  toolbars: {
+    [key: string]: ToolbarContextItem
   }
 }
 
-export const OrbitToolBarRender = observer(function OrbitToolBarProvide() {
+export const OrbitToolBarContext = createContext({
+  setToolbar: null,
+  toolbars: {},
+} as ToolbarContextValue)
+
+export function OrbitToolBarProvider(props: { children: React.ReactNode }) {
+  const [toolbars, setToolbars] = useState({})
+  return (
+    <MergeContext
+      Context={OrbitToolBarContext}
+      value={{
+        toolbars,
+        setToolbar(id, value) {
+          setToolbars({
+            ...toolbars,
+            [id]: value,
+          })
+        },
+      }}
+    >
+      {props.children}
+    </MergeContext>
+  )
+}
+
+export function OrbitToolbar(props: ToolbarContextItem) {
+  const { setToolbar } = useContext(OrbitToolBarContext)
+  const { appStore } = useStoresSafe()
+
+  useEffect(() => {
+    setToolbar(appStore.id, props)
+    return () => {
+      setToolbar(appStore.id, null)
+    }
+  }, [])
+
+  return null
+}
+
+const OrbitToolBarRenderer = observer(function OrbitToolBarRenderer(props: {
+  type: 'before' | 'after'
+}): any {
   const { orbitStore } = useStoresSafe()
   const appStore = orbitStore.appStores[orbitStore.activePane.id]
-
-  if (!appStore || !appStore.toolbar) {
-    return null
-  }
-  return (
-    <ToolbarChrome>
-      <ToolbarInner>{appStore.toolbar}</ToolbarInner>
-    </ToolbarChrome>
-  )
+  const { toolbars } = useContext(OrbitToolBarContext)
+  const toolbarElement = appStore && toolbars[appStore.id] && toolbars[appStore.id][props.type]
+  return toolbarElement ? toolbarElement : null
 })
 
-const ToolbarChrome = gloss(View, {
-  padding: [4, 10],
-  alignItems: 'center',
-  justifyContent: 'center',
-}).theme((_, theme) => ({
-  background: theme.tabBackground,
-  borderBottom: [1, theme.borderColor.alpha(0.2)],
-}))
-
-const ToolbarInner = gloss({
-  flexFlow: 'row',
-  alignItems: 'center',
-  maxWidth: 820,
-  width: '75%',
-  minWidth: 400,
-})
+export const OrbitToolBarRender = {
+  Before: () => <OrbitToolBarRenderer type="before" />,
+  After: () => <OrbitToolBarRenderer type="after" />,
+}

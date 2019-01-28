@@ -67,35 +67,38 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      <OrbitToolbar>
-        <Popover
-          delay={250}
-          openOnClick
-          openOnHover
-          closeOnClickAway
-          group="filters"
-          target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
-          background
-          borderRadius={10}
-          elevation={4}
-          theme="light"
-        >
-          <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
-            <DateRangePicker
-              onChange={queryFilters.onChangeDate}
-              ranges={[queryFilters.dateState]}
-            />
-          </View>
-        </Popover>
-        <View width={8} />
-        <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
-          {queryFilters.sortBy}
-        </FloatingBarButtonSmall>
-        <View width={8} />
-        <OrbitFilterIntegrationButton />
-        <View flex={1} />
-        <OrbitSuggestionBar />
-      </OrbitToolbar>
+      <OrbitToolbar
+        before={
+          <>
+            <Popover
+              delay={250}
+              openOnClick
+              openOnHover
+              closeOnClickAway
+              group="filters"
+              target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
+              background
+              borderRadius={10}
+              elevation={4}
+              theme="light"
+            >
+              <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
+                <DateRangePicker
+                  onChange={queryFilters.onChangeDate}
+                  ranges={[queryFilters.dateState]}
+                />
+              </View>
+            </Popover>
+            <View width={8} />
+            <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+              {queryFilters.sortBy}
+            </FloatingBarButtonSmall>
+            <View width={8} />
+            <OrbitFilterIntegrationButton />
+          </>
+        }
+        after={<OrbitSuggestionBar />}
+      />
 
       <SelectableList
         minSelected={0}

@@ -36,6 +36,7 @@ const SuggestionBar = gloss(UI.Row, {
   height: '100%',
   overflow: 'hidden',
   position: 'relative',
+  alignItems: 'center',
   // above subpane
   zIndex: 10,
   padding: [0, 10],

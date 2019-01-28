@@ -55,6 +55,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
               <OrbitHeader />
               <InnerChrome torn={orbitStore.isTorn}>
+                <OrbitPageContent />
                 {!orbitStore.isTorn ? (
                   <ToolbarChrome>
                     <OrbitToolBarRender>
@@ -68,7 +69,6 @@ const OrbitPageInner = observer(function OrbitPageInner() {
                     </OrbitToolBarRender>
                   </ToolbarChrome>
                 ) : null}
-                <OrbitPageContent />
               </InnerChrome>
             </AppWrapper>
           </Theme>

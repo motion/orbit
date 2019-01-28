@@ -43,6 +43,7 @@ export type ListItemProps = CSSPropertySetStrict &
   Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    subTextOpacity?: number
     slim?: boolean
     above?: React.ReactNode
     activeStyle?: Object
@@ -122,6 +123,7 @@ export default observer(function ListItem(props: ListItemProps) {
     separatorProps,
     above,
     slim,
+    subTextOpacity = 0.7,
     ...restProps
   } = props
   const { isSelected } = store
@@ -135,7 +137,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const renderedChildren = showChildren && (
-    <Text size={0.9} alpha={0.8}>
+    <Text size={0.9} alpha={subTextOpacity}>
       {children}
     </Text>
   )
@@ -233,7 +235,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       maxWidth={120}
                       fontWeight={400}
                       fontSize={13}
-                      alpha={0.8}
+                      alpha={subTextOpacity}
                       onClick={store.handleClickLocation}
                     >
                       {location}
@@ -247,7 +249,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 {!!subtitle &&
                   (typeof subtitle === 'string' ? (
                     <HighlightText
-                      alpha={0.8}
+                      alpha={subTextOpacity}
                       size={0.9}
                       sizeLineHeight={sizeLineHeight}
                       ellipse
@@ -288,7 +290,7 @@ export default observer(function ListItem(props: ListItemProps) {
               <Preview>
                 {typeof preview !== 'string' && preview}
                 {typeof preview === 'string' && (
-                  <HighlightText alpha={0.8} size={1} sizeLineHeight={0.9} ellipse={5}>
+                  <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={5}>
                     {preview}
                   </HighlightText>
                 )}
@@ -389,7 +391,6 @@ const Preview = gloss({
 })
 
 const ListItemSubtitle = gloss(UI.View, {
-  margin: [0, 0, 4],
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,

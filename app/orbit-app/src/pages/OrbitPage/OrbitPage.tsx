@@ -58,11 +58,11 @@ const OrbitPageInner = observer(function OrbitPageInner() {
                 {!orbitStore.isTorn ? (
                   <ToolbarChrome>
                     <OrbitToolBarRender>
-                      {({ before, after }) => (
-                        <ToolbarInner>
-                          {before}
+                      {toolbars => (
+                        <ToolbarInner hasToolbars={!!toolbars}>
+                          {toolbars && toolbars.before}
                           <View flex={1} />
-                          {after}
+                          {toolbars && toolbars.after}
                         </ToolbarInner>
                       )}
                     </OrbitToolBarRender>
@@ -93,7 +93,9 @@ const ToolbarInner = gloss({
   maxWidth: 820,
   width: '75%',
   minWidth: 400,
-  padding: [4, 10],
+  hasToolbars: {
+    padding: [4, 10],
+  },
 })
 
 function OrbitPageProvideStores(props: { children: any }) {

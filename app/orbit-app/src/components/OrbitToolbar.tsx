@@ -55,14 +55,12 @@ export function OrbitToolbar(props: ToolbarContextItem) {
 }
 
 export const OrbitToolBarRender = observer(function OrbitToolBarRender(props: {
-  children: ((toolbar: ToolbarContextItem) => any)
+  children: ((toolbars: ToolbarContextItem | false) => any)
 }) {
   const { orbitStore } = useStoresSafe()
   const appStore = orbitStore.appStores[orbitStore.activePane.id]
   const { toolbars } = useContext(OrbitToolBarContext)
   const toolbarElements = appStore && toolbars[appStore.id] && toolbars[appStore.id]
-  if (!toolbarElements || (!toolbarElements.before && !toolbarElements.after)) {
-    return null
-  }
-  return props.children(toolbarElements)
+  const hasToolbars = toolbarElements && (toolbarElements.before || toolbarElements.after)
+  return props.children(hasToolbars ? toolbarElements : false)
 })

@@ -139,9 +139,9 @@ export default observer(function OrbitHeader() {
           <OrbitToolBarRender key={`${orbitStore.isTorn}`}>
             {toolbars => (
               <>
-                {orbitStore.isTorn && toolbars.before}
+                {orbitStore.isTorn && toolbars && toolbars.before}
                 <OrbitHeaderInput headerStore={headerStore} />
-                {orbitStore.isTorn && toolbars.after}
+                {orbitStore.isTorn && toolbars && toolbars.after}
               </>
             )}
           </OrbitToolBarRender>

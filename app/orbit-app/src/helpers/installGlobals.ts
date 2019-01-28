@@ -57,6 +57,17 @@ window['Mediator'] = Repositories.Mediator
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')
 
+const fastCompare = require('react-fast-compare')
+window['reactFastCompareDebug'] = (a, b) => {
+  for (const key in a) {
+    if (!fastCompare(a[key], b[key])) {
+      console.log('falsy value', key)
+      return false
+    }
+  }
+  return true
+}
+
 // make the various model/repositories global
 for (const repo in Repositories) {
   window[repo] = Repositories[repo]

@@ -16,8 +16,8 @@ Needs:
 TODO (high level):
 
 1. Clean up settings/syncers bugs
-2. Figure out architecture for syncers/apps to cover Needs 1/2/3
-3. BLOCKING #2, we need to have the account/team system setup
+2. we need to have the account/team system setup
+3. Figure out architecture for syncers/apps to cover Needs 1/2/3
 
 TODO (broken down):
 
@@ -71,6 +71,13 @@ _Favorites_
   get ocr => memory simple list
 
 ---
+
+#backend
+
+- it would be nice to have the initial model setup and general model creation better:
+  - CreateUser command
+  - CreateSpace command
+  - having it so we can write it in a way where if we change the schema everything updates
 
 #bugs
 

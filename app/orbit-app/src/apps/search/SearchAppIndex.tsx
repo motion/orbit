@@ -1,6 +1,7 @@
 import { AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
+import { memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -18,6 +19,51 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const { searchStore, queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   const items = searchStore.searchState.results
+
+  const getItemProps = React.useCallback(
+    memoize(index => {
+      const item = items[index]
+      if (item.item && item.item.target) {
+        return {
+          after: (
+            <Popover
+              // selected would otherwise override this theme
+              theme={App.state.darkTheme ? 'dark' : 'light'}
+              width={250}
+              height={300}
+              target={
+                <View
+                  alignItems="center"
+                  justifyContent="center"
+                  width={34}
+                  opacity={0.5}
+                  hoverStyle={{ opacity: 1 }}
+                  onClick={preventDefault(() => console.log('show popover'))}
+                >
+                  <Icon name="dots" size={12} />
+                </View>
+              }
+              openOnClick
+              closeOnClickAway
+              group="filters"
+              background
+              borderRadius={10}
+              elevation={2}
+            >
+              {isShown => (
+                <View flex={1} className="calendar-dom theme-light" padding={10}>
+                  {isShown ? 'show' : 'hide'}
+                </View>
+              )}
+            </Popover>
+          ),
+        }
+      }
+      return null
+    }),
+    [items.map(i => `${i.id}${i.title}`).join(' ')],
+  )
+
   return (
     <>
       {/* <OrbitToolbar>
@@ -59,46 +105,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         query={props.appStore.activeQuery}
         rowCount={searchStore.remoteRowCount}
         loadMoreRows={searchStore.loadMore}
-        getItemProps={index => {
-          const item = items[index]
-          if (item.item && item.item.target) {
-            return {
-              after: (
-                <Popover
-                  // selected would otherwise override this theme
-                  theme={App.state.darkTheme ? 'dark' : 'light'}
-                  width={250}
-                  height={300}
-                  target={
-                    <View
-                      alignItems="center"
-                      justifyContent="center"
-                      width={34}
-                      opacity={0.5}
-                      hoverStyle={{ opacity: 1 }}
-                      onClick={preventDefault(() => console.log('show popover'))}
-                    >
-                      <Icon name="dots" size={12} />
-                    </View>
-                  }
-                  openOnClick
-                  closeOnClickAway
-                  group="filters"
-                  background
-                  borderRadius={10}
-                  elevation={2}
-                >
-                  {isShown => (
-                    <View flex={1} className="calendar-dom theme-light" padding={10}>
-                      {isShown ? 'show' : 'hide'}
-                    </View>
-                  )}
-                </Popover>
-              ),
-            }
-          }
-          return null
-        }}
+        getItemProps={getItemProps}
       />
     </>
   )

@@ -67,8 +67,7 @@ export default observer(function OrbitHeader() {
         <OrbitAutoComplete />
       </HeaderTop>
 
-      {/* <OrbitNav /> */}
-      <OrbitHeaderDivider torn={orbitStore.isTorn} />
+      {/* <OrbitHeaderDivider torn={orbitStore.isTorn} /> */}
       <OrbitHeaderBg />
     </>
   )

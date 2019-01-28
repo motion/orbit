@@ -38,7 +38,7 @@ export function OrbitTab({
   className = '',
   ...props
 }: TabProps) {
-  const sidePad = thicc ? 20 : 12
+  const sidePad = thicc ? 18 : 12
   const button = (
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} undraggable ${className}`}
@@ -148,7 +148,10 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
-      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor]]
+      ? [
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.045 : 0.1]],
+          ['inset', 0, 0, 0, 0.5, theme.borderColor],
+        ]
       : null,
     // borderTopRadius: 3,
     '&:hover': glowStyle,

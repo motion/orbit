@@ -60,7 +60,7 @@ export default observer(function OrbitNav() {
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
         activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = app.type === 'search'
+      const isPinned = false && app.type === 'search'
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,

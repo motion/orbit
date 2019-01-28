@@ -74,7 +74,6 @@ const FakeInput = gloss(View, {
   width: '75%',
   minWidth: 400,
   cursor: 'text',
-  borderBottom: [2, 'transparent'],
   transition: 'none',
   '&:active': {
     background: [0, 0, 0, 0.035],

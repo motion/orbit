@@ -193,12 +193,12 @@ export default observer(function ListItem(props: ListItemProps) {
                 {showIcon && (
                   <>
                     {React.isValidElement(icon) ? (
-                      React.cloneElement(icon, { style: { marginTop: 1 }, ...iconProps })
+                      React.cloneElement(icon, { style: { marginTop: 2 }, ...iconProps })
                     ) : (
                       <Icon
                         name={icon}
                         size={slim ? 12 : 16}
-                        style={{ marginTop: slim ? 4 : 1 }}
+                        style={{ marginTop: slim ? 4 : 2 }}
                         {...iconProps}
                       />
                     )}

@@ -146,9 +146,10 @@ export class SearchStore {
     return [
       {
         title: 'Apps',
-        subtitle: `${apps.map(x => x.name).join(', ')}`,
+        // subtitle: `${apps.map(x => x.name).join(', ')}`,
         icon: 'orbitApps',
         type: AppType.apps,
+        group: 'Index',
       },
     ]
   }

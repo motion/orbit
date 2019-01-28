@@ -1,9 +1,9 @@
-import { Button, View } from '@mcro/ui'
+import { Text, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton, Title } from '../../views'
-import OrbitList from '../../views/Lists/OrbitList'
+import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
 import { SortableGrid } from '../../views/SortableGrid'
 
@@ -25,15 +25,23 @@ export default function AppsAppMain() {
       <SortableGrid
         maxWidth={400}
         margin="auto"
-        items={[
-          ...[1, 2, 3, 4, 5, 6, 7, 8].map(x => (
-            <View>
-              <Button icon="hi" size={2} /> test 123 {x}
-            </View>
-          )),
-        ]}
+        items={results.map(x => (
+          <View
+            key={x.id}
+            alignItems="center"
+            justifyContent="center"
+            width={60}
+            height={60}
+            margin={10}
+          >
+            <Icon size={32} name={x.icon} />
+            <Text ellipse fontWeight={500} size={0.9}>
+              {x.title}
+            </Text>
+          </View>
+        ))}
       />
-      <OrbitList sortable items={results} />
+      {/* <OrbitList sortable items={results} /> */}
     </Section>
   )
 }

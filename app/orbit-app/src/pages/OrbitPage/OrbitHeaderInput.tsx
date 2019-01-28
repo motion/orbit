@@ -66,10 +66,10 @@ const After = gloss({
 
 const FakeInput = gloss(View, {
   height: 32,
-  padding: [2, 10],
+  padding: [2, 8],
   alignItems: 'center',
   justifyContent: 'center',
-  margin: ['auto', 20],
+  margin: ['auto', 8],
   flexFlow: 'row',
   width: '75%',
   minWidth: 400,

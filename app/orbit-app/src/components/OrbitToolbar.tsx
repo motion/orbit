@@ -4,8 +4,8 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { MergeContext } from '../views/MergeContext'
 
 type ToolbarContextItem = {
-  before?: React.ReactNode
-  after?: React.ReactNode
+  before?: any
+  after?: any
 }
 
 type ToolbarContextValue = {
@@ -54,17 +54,15 @@ export function OrbitToolbar(props: ToolbarContextItem) {
   return null
 }
 
-const OrbitToolBarRenderer = observer(function OrbitToolBarRenderer(props: {
-  type: 'before' | 'after'
-}): any {
+export const OrbitToolBarRender = observer(function OrbitToolBarRender(props: {
+  children: ((toolbar: ToolbarContextItem) => any)
+}) {
   const { orbitStore } = useStoresSafe()
   const appStore = orbitStore.appStores[orbitStore.activePane.id]
   const { toolbars } = useContext(OrbitToolBarContext)
-  const toolbarElement = appStore && toolbars[appStore.id] && toolbars[appStore.id][props.type]
-  return toolbarElement ? toolbarElement : null
+  const toolbarElements = appStore && toolbars[appStore.id] && toolbars[appStore.id]
+  if (!toolbarElements || (!toolbarElements.before && !toolbarElements.after)) {
+    return null
+  }
+  return props.children(toolbarElements)
 })
-
-export const OrbitToolBarRender = {
-  Before: () => <OrbitToolBarRenderer type="before" />,
-  After: () => <OrbitToolBarRenderer type="after" />,
-}

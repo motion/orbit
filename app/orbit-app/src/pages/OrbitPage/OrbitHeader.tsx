@@ -136,9 +136,15 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <Row flex={1} />
           {!orbitStore.isTorn && <OrbitSwitch />}
-          {orbitStore.isTorn && <OrbitToolBarRender.Before />}
-          <OrbitHeaderInput headerStore={headerStore} />
-          {orbitStore.isTorn && <OrbitToolBarRender.After />}
+          <OrbitToolBarRender key={`${orbitStore.isTorn}`}>
+            {toolbars => (
+              <>
+                {orbitStore.isTorn && toolbars.before}
+                <OrbitHeaderInput headerStore={headerStore} />
+                {orbitStore.isTorn && toolbars.after}
+              </>
+            )}
+          </OrbitToolBarRender>
           {!orbitStore.isTorn && (
             // <Absolute top={0} right={0}>
             <Button

@@ -1,11 +1,10 @@
-import { invertLightness } from '@mcro/color'
-import { gloss, Row, ThemeContext } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
+import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 28
+export const tabHeight = 26
 const inactiveOpacity = 0.6
 
 export type TabProps = React.HTMLAttributes<'div'> & {
@@ -50,10 +49,11 @@ export function OrbitTab({
       <Row maxWidth="100%" alignItems="center" justifyContent="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.35) + iconAdjustOpacity}
+            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
             isActive={isActive}
             name={icon}
             size={iconSize}
+            marginRight={!!label ? sidePad * 0.7 : 0}
           />
         )}
         {!!label && (
@@ -61,7 +61,6 @@ export function OrbitTab({
             ellipse
             className="tab-label"
             size={0.95}
-            marginLeft={!!icon ? sidePad * 0.7 : 0}
             opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={500}
             {...textProps}
@@ -92,22 +91,13 @@ export function OrbitTab({
   return button
 }
 
-function OrbitTabIcon({ opacity, ...props }: IconProps) {
-  const { activeTheme } = React.useContext(ThemeContext)
+function OrbitTabIcon(props: IconProps) {
   return (
-    <View position="relative" opacity={opacity}>
-      <Icon transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }} {...props} />
-      {/* show underneath an opposite colored one to */}
-      <Icon
-        transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
-        color={invertLightness(activeTheme.color, 0.2)}
-        position="absolute"
-        top={0}
-        left={0}
-        zIndex={-1}
-        {...props}
-      />
-    </View>
+    <Icon
+      transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
+      // marginLeft={-(props.size + +props.marginRight)}
+      {...props}
+    />
   )
 }
 
@@ -139,7 +129,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   justifyContent: 'center',
   height: tabHeight,
   maxWidth: 160,
-  borderTopRadius: 5,
+  borderTopRadius: 3,
   transform: {
     y: 0.5,
   },

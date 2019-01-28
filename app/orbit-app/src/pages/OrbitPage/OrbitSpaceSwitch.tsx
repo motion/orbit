@@ -117,7 +117,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         group="filters"
         onChangeVisibility={store.setOpen}
         target={
-          <NavButton chromeless margin={['auto', 0]} {...props}>
+          <NavButton sizePadding={0.6} chromeless margin={['auto', 0]} {...props}>
             <OrbBackground />
           </NavButton>
         }

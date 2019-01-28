@@ -57,11 +57,15 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <InnerChrome torn={orbitStore.isTorn}>
                 {!orbitStore.isTorn ? (
                   <ToolbarChrome>
-                    <ToolbarInner>
-                      <OrbitToolBarRender.Before />
-                      <View flex={1} />
-                      <OrbitToolBarRender.After />
-                    </ToolbarInner>
+                    <OrbitToolBarRender>
+                      {({ before, after }) => (
+                        <ToolbarInner>
+                          {before}
+                          <View flex={1} />
+                          {after}
+                        </ToolbarInner>
+                      )}
+                    </OrbitToolBarRender>
                   </ToolbarChrome>
                 ) : null}
                 <OrbitPageContent />

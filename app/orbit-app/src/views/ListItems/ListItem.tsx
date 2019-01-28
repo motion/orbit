@@ -246,7 +246,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 ) : null}
                 {!!subtitle &&
                   (typeof subtitle === 'string' ? (
-                    <UI.Text
+                    <HighlightText
                       alpha={0.8}
                       size={0.9}
                       sizeLineHeight={sizeLineHeight}
@@ -254,7 +254,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       {...subtitleProps}
                     >
                       {subtitle}
-                    </UI.Text>
+                    </HighlightText>
                   ) : (
                     subtitle
                   ))}

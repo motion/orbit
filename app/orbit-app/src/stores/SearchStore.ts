@@ -9,6 +9,7 @@ import {
 } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
+import { fuzzyQueryFilter } from '../helpers'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { MarkType } from './QueryStore/types'
@@ -143,15 +144,21 @@ export class SearchStore {
     //     },
     //   }]
 
-    return [
-      {
-        title: 'Apps',
-        // subtitle: `${apps.map(x => x.name).join(', ')}`,
-        icon: 'orbitApps',
-        type: AppType.apps,
-        group: 'Index',
-      },
-    ]
+    const searchedApps = fuzzyQueryFilter(query, apps, { key: 'name' })
+
+    if (searchedApps.length) {
+      return [
+        {
+          title: 'Apps',
+          subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
+          icon: 'orbitApps',
+          type: AppType.apps,
+          group: 'Index',
+        },
+      ]
+    }
+
+    return []
   }
 
   private getQuickResults(query: string) {

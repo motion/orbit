@@ -31,7 +31,7 @@ const ToolbarChrome = gloss(Row, {
   justifyContent: 'center',
 }).theme((_, theme) => ({
   background: theme.tabBackground,
-  // borderBottom: [1, theme.borderColor.alpha(0.4)],
+  borderBottom: [1, theme.sidebarBorderColor],
 }))
 
 const ToolbarInner = gloss({

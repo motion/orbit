@@ -119,6 +119,7 @@ function OrbitPageProvideStores(props: { children: any }) {
 const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,
   overflow: 'hidden',
+  position: 'relative',
 }).theme(({ torn }) => ({
   boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
 }))

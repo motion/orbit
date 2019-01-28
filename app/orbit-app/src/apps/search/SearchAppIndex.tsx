@@ -6,14 +6,15 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
+import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const { searchStore, queryStore } = useStoresSafe()
@@ -66,12 +67,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      {/* <OrbitToolbar>
-        <OrbitSuggestionBar />
-      </OrbitToolbar> */}
-      {/* TODO api for handling suggestions */}
-      {/* <OrbitSuggestions items={} /> */}
-      <FloatingBar>
+      <OrbitToolbar>
         <Popover
           delay={250}
           openOnClick
@@ -91,13 +87,15 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
             />
           </View>
         </Popover>
-        <View width={4} />
+        <View width={8} />
         <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
           {queryFilters.sortBy}
         </FloatingBarButtonSmall>
-        <View flex={1} />
+        <View width={8} />
         <OrbitFilterIntegrationButton />
-      </FloatingBar>
+        <View flex={1} />
+        <OrbitSuggestionBar />
+      </OrbitToolbar>
 
       <SelectableList
         minSelected={0}

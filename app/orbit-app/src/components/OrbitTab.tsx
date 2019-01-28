@@ -5,7 +5,7 @@ import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 26
+export const tabHeight = 28
 const inactiveOpacity = 0.6
 
 export type TabProps = React.HTMLAttributes<'div'> & {
@@ -42,7 +42,7 @@ export function OrbitTab({
   const sidePad = thicc ? 20 : 12
   const button = (
     <NavButtonChrome
-      className={`undraggable ${className}`}
+      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} undraggable ${className}`}
       isActive={isActive}
       sidePad={sidePad}
       {...props}
@@ -139,7 +139,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   justifyContent: 'center',
   height: tabHeight,
   maxWidth: 160,
-  borderTopRadius: 3,
+  borderTopRadius: 5,
   transform: {
     y: 0.5,
   },

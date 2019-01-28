@@ -60,7 +60,7 @@ export default observer(function OrbitNav() {
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
         activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = app.type === 'search'
+      const isPinned = false && app.type === 'search'
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
@@ -69,7 +69,7 @@ export default observer(function OrbitNav() {
         thicc: isPinned,
         isActive,
         icon: `orbit${capitalize(app.type)}`,
-        iconSize: isPinned ? 16 : 12,
+        iconSize: isPinned ? 16 : 14,
         onClick: () => {
           setShowCreateNew(false)
           paneManagerStore.setActivePane(app.id)
@@ -166,6 +166,12 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
+  // '& .orbit-tab-inactive': {
+  //   opacity: 0.5,
+  // },
+  // '&:hover .orbit-tab-inactive': {
+  //   opacity: 1,
+  // },
   // background: '#00000099',
 })
 

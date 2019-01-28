@@ -168,7 +168,6 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         }}
         sortable
         getContextMenu={index => {
-          console.log('getting context menu', index)
           return [
             {
               label: 'Delete',

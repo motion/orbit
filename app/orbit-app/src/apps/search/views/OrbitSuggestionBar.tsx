@@ -33,7 +33,6 @@ const activeThemes = {
 }
 
 const SuggestionBar = gloss(UI.Row, {
-  flex: 1,
   height: '100%',
   overflow: 'hidden',
   position: 'relative',

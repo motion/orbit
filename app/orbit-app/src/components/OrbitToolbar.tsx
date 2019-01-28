@@ -28,17 +28,30 @@ export function OrbitToolbar(props) {
 export const OrbitToolBarRender = observer(function OrbitToolBarProvide() {
   const { orbitStore } = useStoresSafe()
   const appStore = orbitStore.appStores[orbitStore.activePane.id]
+
   if (!appStore || !appStore.toolbar) {
     return null
   }
-  return <ToolbarChrome>{appStore.toolbar}</ToolbarChrome>
+  return (
+    <ToolbarChrome>
+      <ToolbarInner>{appStore.toolbar}</ToolbarInner>
+    </ToolbarChrome>
+  )
 })
 
 const ToolbarChrome = gloss(View, {
-  flexFlow: 'row',
-  alignItems: 'center',
   padding: [4, 10],
+  alignItems: 'center',
+  justifyContent: 'center',
 }).theme((_, theme) => ({
   background: theme.tabBackground,
   borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))
+
+const ToolbarInner = gloss({
+  flexFlow: 'row',
+  alignItems: 'center',
+  maxWidth: 820,
+  width: '75%',
+  minWidth: 400,
+})

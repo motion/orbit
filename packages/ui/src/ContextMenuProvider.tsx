@@ -1,27 +1,35 @@
 import { gloss } from '@mcro/gloss'
 import { MenuItem, remote } from 'electron'
-import React, { createContext, useState } from 'react'
+import React, { createContext, useRef } from 'react'
 
 export const ContextMenuContext = createContext<(items: MenuTemplate) => void>(null)
 
 export type MenuTemplate = Partial<MenuItem>[]
 
-export function ContextMenuProvider(props: { children: React.ReactNode }) {
-  const [menuTemplate, setMenuTemplate] = useState([])
-
-  const onContextMenu = () => {
-    const menu = remote.Menu.buildFromTemplate(menuTemplate)
-    setMenuTemplate([])
-    menu.popup({ window: remote.getCurrentWindow() })
-  }
+export function ContextMenuProvider(props: {
+  children: React.ReactNode
+  onContextMenu?: Function
+}) {
+  const menuTemplate = useRef([])
 
   return (
     <ContextMenuContext.Provider
       value={(items: MenuTemplate) => {
-        setMenuTemplate([...menuTemplate, ...items])
+        menuTemplate.current = items
       }}
     >
-      <Container onContextMenu={onContextMenu}>{props.children}</Container>
+      <Container
+        onContextMenu={() => {
+          if (props.onContextMenu) {
+            props.onContextMenu(menuTemplate.current)
+            return
+          }
+          const menu = remote.Menu.buildFromTemplate(menuTemplate.current)
+          menu.popup({ window: remote.getCurrentWindow() })
+        }}
+      >
+        {props.children}
+      </Container>
     </ContextMenuContext.Provider>
   )
 }

@@ -1,4 +1,4 @@
-import { Col, ViewProps } from '@mcro/gloss'
+import { Contents, ViewProps } from '@mcro/gloss'
 import React, { useContext } from 'react'
 import { ContextMenuContext, MenuTemplate } from './ContextMenuProvider'
 
@@ -11,19 +11,19 @@ type ContextMenuProps = ViewProps & {
 
 export default function ContextMenu({
   children,
-  component = Col,
+  component = Contents,
   items,
   buildItems,
   ...restProps
 }: ContextMenuProps) {
-  const appendToContextMenu = useContext(ContextMenuContext)
+  const setMenuItems = useContext(ContextMenuContext)
 
   const onContextMenu = (_: React.MouseEvent) => {
-    if (typeof appendToContextMenu === 'function') {
+    if (typeof setMenuItems === 'function') {
       if (items != null) {
-        appendToContextMenu(items)
+        setMenuItems(items)
       } else if (buildItems != null) {
-        appendToContextMenu(buildItems())
+        setMenuItems(buildItems())
       }
     }
   }

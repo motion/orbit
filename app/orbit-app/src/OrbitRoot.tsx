@@ -5,6 +5,7 @@ import { App } from '@mcro/stores'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
+import contextMenu from 'electron-context-menu'
 import { isEqual, throttle } from 'lodash'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
@@ -96,8 +97,23 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
     }
   })
 
+  // context menu
+  const contextMenuItems = React.useRef([])
+  React.useEffect(() => {
+    contextMenu({
+      prepend: (params, browserWindow) => {
+        console.log('right click', params, browserWindow, contextMenuItems.current)
+        return contextMenuItems.current
+      },
+    })
+  }, [])
+
   return (
-    <ContextMenuProvider>
+    <ContextMenuProvider
+      onContextMenu={items => {
+        contextMenuItems.current = items
+      }}
+    >
       <ThemeProvide themes={themes}>
         <OrbitBrowser />
       </ThemeProvide>

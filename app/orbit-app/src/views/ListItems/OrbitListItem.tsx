@@ -40,6 +40,13 @@ export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps)
 
   const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
 
+  const isSelected = React.useCallback(index => {
+    const appActive = appStore ? appStore.isActive : true
+    const isSelected =
+      props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
+    return appActive && isSelected
+  }, [])
+
   return (
     <VirtualListItem
       index={props.realIndex}
@@ -47,12 +54,7 @@ export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps)
       subtitleSpaceBetween={spaceBetween}
       {...ItemView && ItemView.itemProps}
       {...itemProps}
-      isSelected={index => {
-        const appActive = appStore ? appStore.isActive : true
-        const isSelected =
-          props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
-        return appActive && isSelected
-      }}
+      isSelected={isSelected}
       // allow props to override isSelected but not onSelect
       {...props}
       icon={icon ? <Icon name={icon} size={16} {...props.iconProps} /> : null}

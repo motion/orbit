@@ -33,7 +33,7 @@ export default observer(function OrbitPageContent() {
   return (
     <Row flex={1}>
       <Sidebar
-        width={hasIndex ? (hasMain ? 310 : window.innerWidth) : 0}
+        width={hasIndex ? (hasMain ? 340 : window.innerWidth) : 0}
         minWidth={100}
         maxWidth={500}
       >

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Center } from '../views/Center'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 26
+export const tabHeight = 28
 const inactiveOpacity = 0.7
 
 export type TabProps = React.HTMLAttributes<'div'> & {
@@ -66,7 +66,7 @@ export function OrbitTab({
               className="tab-label"
               size={0.95}
               opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={400}
+              fontWeight={500}
               {...textProps}
             >
               {label}

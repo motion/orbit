@@ -193,12 +193,12 @@ export default observer(function ListItem(props: ListItemProps) {
                 {showIcon && (
                   <>
                     {React.isValidElement(icon) ? (
-                      React.cloneElement(icon, { style: { marginTop: 1 }, ...iconProps })
+                      React.cloneElement(icon, { style: { marginTop: 2 }, ...iconProps })
                     ) : (
                       <Icon
                         name={icon}
                         size={slim ? 12 : 16}
-                        style={{ marginTop: slim ? 4 : 1 }}
+                        style={{ marginTop: slim ? 4 : 2 }}
                         {...iconProps}
                       />
                     )}
@@ -208,7 +208,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 <HighlightText
                   sizeLineHeight={0.85}
                   ellipse
-                  fontWeight={slim ? 500 : 600}
+                  fontWeight={slim ? 400 : 500}
                   {...titleProps}
                 >
                   {title}
@@ -219,7 +219,7 @@ export default observer(function ListItem(props: ListItemProps) {
               </Title>
             )}
             {showSubtitle && (
-              <ListItemSubtitle margin={showTitle && !slim ? [1, 0, 0] : 0}>
+              <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
                     <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />
@@ -246,7 +246,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 ) : null}
                 {!!subtitle &&
                   (typeof subtitle === 'string' ? (
-                    <UI.Text
+                    <HighlightText
                       alpha={0.8}
                       size={0.9}
                       sizeLineHeight={sizeLineHeight}
@@ -254,7 +254,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       {...subtitleProps}
                     >
                       {subtitle}
-                    </UI.Text>
+                    </HighlightText>
                   ) : (
                     subtitle
                   ))}

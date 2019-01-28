@@ -13,9 +13,9 @@ export enum AppType {
 }
 
 export type AppConfig = {
+  id?: string
   title?: string
   type: AppType
-  id: string
   data?: any
   icon?: string
   iconLight?: string

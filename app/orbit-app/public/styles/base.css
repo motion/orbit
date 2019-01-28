@@ -482,6 +482,8 @@ body * {
   align-items: stretch;
   flex-shrink: 0;
   outline: 0;
+  /* flexbox has super weird behavior otherwise where things dont "shrink to fit" unless you set this */
+  min-width: 0;
 }
 
 /* prevent overscroll bounce */

@@ -4,13 +4,13 @@ import * as React from 'react'
 import { ResolvableModel } from '../sources/types'
 
 export type NormalItem = {
-  id: string
-  type: 'person' | 'bit' | 'source'
+  id?: string
+  icon?: string
+  title?: string
+  type?: string
   subType?: string
-  title: string
   preview?: React.ReactNode
   content?: any
-  icon: string
   location?: string
   locationLink?: string
   webLink?: string

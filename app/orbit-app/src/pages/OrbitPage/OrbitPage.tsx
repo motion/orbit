@@ -13,6 +13,7 @@ import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SearchStore } from '../../stores/SearchStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
@@ -31,6 +32,7 @@ export default function OrbitPage() {
 }
 
 const OrbitPageInner = observer(function OrbitPageInner() {
+  const searchStore = useStore(SearchStore)
   const orbitStore = useStore(OrbitStore)
   const theme = App.state.darkTheme ? 'dark' : 'light'
 
@@ -46,7 +48,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <MergeContext Context={StoreContext} value={{ orbitStore }}>
+    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore }}>
       <MainShortcutHandler>
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>

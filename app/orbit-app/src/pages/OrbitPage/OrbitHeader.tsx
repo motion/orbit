@@ -143,25 +143,27 @@ export default observer(function OrbitHeader() {
             </After>
           </FakeInput>
           {!orbitStore.isTorn && (
-            <Button
-              chromeless
-              isActive={isOnSettings}
-              onClick={() => {
-                if (isOnSettings) {
-                  paneManagerStore.back()
-                } else {
-                  paneManagerStore.setActivePaneByType('settings')
-                }
-              }}
-              tooltip="Settings"
-            >
-              <Icon
-                name="gear"
-                size={12}
-                opacity={0.45 + settingsIconActiveOpacityInc}
-                hoverOpacity={0.5 + settingsIconActiveOpacityInc}
-              />
-            </Button>
+            <Absolute top={0} right={0}>
+              <Button
+                chromeless
+                isActive={isOnSettings}
+                onClick={() => {
+                  if (isOnSettings) {
+                    paneManagerStore.back()
+                  } else {
+                    paneManagerStore.setActivePaneByType('settings')
+                  }
+                }}
+                tooltip="Settings"
+              >
+                <Icon
+                  name="gear"
+                  size={10}
+                  opacity={0.2 + settingsIconActiveOpacityInc}
+                  hoverOpacity={0.5 + settingsIconActiveOpacityInc}
+                />
+              </Button>
+            </Absolute>
           )}
           <Row flex={1} />
         </Row>

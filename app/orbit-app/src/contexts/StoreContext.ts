@@ -9,6 +9,7 @@ import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
+import { SearchStore } from '../stores/SearchStore'
 import { SelectionStore } from '../stores/SelectionStore'
 import { SettingStore } from '../stores/SettingStore'
 import { ShortcutStore } from '../stores/ShortcutStore'
@@ -16,6 +17,7 @@ import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
 
 export type AllStores = {
+  searchStore?: SearchStore
   queryStore?: QueryStore
   paneManagerStore?: PaneManagerStore
   selectionStore?: SelectionStore

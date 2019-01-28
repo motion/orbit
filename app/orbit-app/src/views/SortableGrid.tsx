@@ -1,4 +1,4 @@
-import { Row, View } from '@mcro/ui'
+import { Row, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { SortableContainer, SortableContainerProps, SortableElement } from 'react-sortable-hoc'
 
@@ -14,6 +14,11 @@ const SortableGridInner = SortableContainer(({ items, ...props }: any) => {
   )
 })
 
-export function SortableGrid(props: SortableContainerProps & { items?: any[] }) {
+type SortableGridProps = SortableContainerProps &
+  ViewProps & {
+    items?: any[]
+  }
+
+export function SortableGrid(props: SortableGridProps) {
   return <SortableGridInner axis="xy" {...props} />
 }

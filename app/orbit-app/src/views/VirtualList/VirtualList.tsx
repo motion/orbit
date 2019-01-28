@@ -1,6 +1,8 @@
 import { always, ensure, react } from '@mcro/black'
 import { View } from '@mcro/ui'
+import ContextMenu from '@mcro/ui/_/ContextMenu'
 import { useStore } from '@mcro/use-store'
+import { MenuItem } from 'electron'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SortableContainer } from 'react-sortable-hoc'
@@ -25,6 +27,7 @@ export type VirtualListProps = {
   forwardRef?: (a: any, b: VirtualListStore) => any
   items: any[]
   itemProps?: Partial<VirtualListItemProps<any>>
+  getContextMenu?: (index: number) => Partial<MenuItem>[]
   getItemProps?: GetItemProps | null | false
   ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
@@ -238,7 +241,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   const rowRenderer = ({ key, index, parent, style }) => {
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
-    return (
+    const itemElement = (
       <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ItemView
@@ -254,6 +257,10 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
         </div>
       </CellMeasurer>
     )
+    if (props.getContextMenu) {
+      return <ContextMenu items={props.getContextMenu(index)}>{itemElement}</ContextMenu>
+    }
+    return itemElement
   }
 
   const getList = (infiniteProps?) => {

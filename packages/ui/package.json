@@ -37,5 +37,8 @@
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },
+  "devDependencies": {
+    "@types/electron": "1.6.10"
+  },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

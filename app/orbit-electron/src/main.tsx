@@ -1,16 +1,15 @@
-import { Logger } from '@mcro/logger';
-import { render } from '@mcro/reactron';
-import { Electron } from '@mcro/stores';
-import electronContextMenu from 'electron-context-menu';
-import electronDebug from 'electron-debug';
-import 'raf/polyfill';
-import * as React from 'react';
-import waitPort from 'wait-port';
-import AppsWindow from './apps/AppsWindow';
-import { IS_SUB_ORBIT } from './constants';
-import ElectronRoot from './ElectronRoot';
-import MenuWindow from './menus/MenuWindow';
-import { OrbitRoot } from './orbit/OrbitRoot';
+import { Logger } from '@mcro/logger'
+import { render } from '@mcro/reactron'
+import { Electron } from '@mcro/stores'
+import electronDebug from 'electron-debug'
+import 'raf/polyfill'
+import * as React from 'react'
+import waitPort from 'wait-port'
+import AppsWindow from './apps/AppsWindow'
+import { IS_SUB_ORBIT } from './constants'
+import ElectronRoot from './ElectronRoot'
+import MenuWindow from './menus/MenuWindow'
+import { OrbitRoot } from './orbit/OrbitRoot'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -35,7 +34,6 @@ export async function main() {
   }
 
   // why not make it a bit easier in prod mode too
-  electronContextMenu()
   electronDebug()
 
   // start Electron state store

@@ -1,14 +1,14 @@
-import 'isomorphic-fetch'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
-import { cleanupChildren } from './helpers/cleanupChildren'
+import 'isomorphic-fetch'
 import { once } from 'lodash'
+import { cleanupChildren } from './helpers/cleanupChildren'
 
 export async function main() {
   /*
    *  Setup app after config
    */
-  const { Root } = require('./Root')
-  const appRoot = new Root()
+  const { OrbitDesktopRoot } = require('./OrbitDesktopRoot')
+  const appRoot = new OrbitDesktopRoot()
 
   if (process.env.NODE_ENV === 'development') {
     require('./helpers/startDevelopment').startDevelopment(appRoot)

@@ -12,6 +12,7 @@ export {
 export { Absolute } from './blocks/Absolute'
 export { Block } from './blocks/Block'
 export { Col } from './blocks/Col'
+export { Contents } from './blocks/Contents'
 export { FullScreen } from './blocks/FullScreen'
 export { Grid } from './blocks/Grid'
 export { Inline } from './blocks/Inline'

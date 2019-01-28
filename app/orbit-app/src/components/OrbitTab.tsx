@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 26
-const inactiveOpacity = 0.6
+const inactiveOpacity = 0.7
 
 export type TabProps = React.HTMLAttributes<'div'> & {
   app?: App

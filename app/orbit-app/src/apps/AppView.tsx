@@ -29,18 +29,18 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
     }
   }, [])
 
-  if (!apps[props.type]) {
-    return <div>noo app of type {props.type}</div>
-  }
+  const appElement = React.useMemo(() => {
+    if (!apps[props.type]) {
+      return <div>noo app of type {props.type}</div>
+    }
 
-  const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
+    const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
-  if (!AppView) {
-    return null
-  }
+    if (!AppView) {
+      return null
+    }
 
-  const appView = React.useMemo(
-    () => (
+    return (
       <AppView
         appStore={props.appStore || appStore}
         sourcesStore={stores.sourcesStore}
@@ -51,17 +51,16 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
         paneManagerStore={stores.paneManagerStore}
         {...props}
       />
-    ),
-    Object.values(props),
-  )
+    )
+  }, Object.values(props))
 
   if (!props.appStore) {
     return (
       <MergeContext Context={StoreContext} value={{ appStore }}>
-        {appView}
+        {appElement}
       </MergeContext>
     )
   }
 
-  return appView
+  return appElement
 })

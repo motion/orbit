@@ -236,7 +236,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
   }
 
   const rowRenderer = ({ key, index, parent, style }) => {
-    console.log('call render', index)
     const item = props.items[index]
     const ItemView = props.ItemView || VirtualListItem
     return (

@@ -153,7 +153,7 @@ export class SearchStore {
           subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
           icon: 'orbitApps',
           type: AppType.apps,
-          group: 'Index',
+          group: this.stores.spaceStore.activeSpace.name,
         },
       ]
     }

@@ -23,9 +23,10 @@ function useActivePaneName() {
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
+  const { orbitStore, orbitWindowStore, queryStore, spaceStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
-  const placeholder = useActivePaneName()
+  const activePaneName = useActivePaneName()
+  const placeholder = activePaneName === 'Search' ? spaceStore.activeSpace.name : activePaneName
   return (
     <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
       <HighlightedTextArea

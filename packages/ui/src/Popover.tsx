@@ -929,6 +929,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         isPositioned={!isMeasuring}
         isOpen={isOpen}
         isClosing={closing}
+        noHoverOnChildren={noHoverOnChildren}
       >
         {!!overlay && (
           <Overlay
@@ -959,6 +960,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           left={left}
           top={top}
           style={style}
+          noHoverOnChildren={noHoverOnChildren}
         >
           <PopoverInner>
             {!noArrow && (
@@ -1037,19 +1039,22 @@ const PopoverContainer = gloss({
   isPositioned: {
     opacity: 1,
   },
-  isOpen: {
-    zIndex: 5000,
-    '& > *': {
-      pointerEvents: 'all !important',
-    },
-  },
   isClosing: {
     zIndex: 5000 - 1,
   },
   isMeasuring: {
     opacity: 0,
   },
-})
+}).theme(({ isOpen, noHoverOnChildren }) =>
+  isOpen
+    ? {
+        zIndex: 5000,
+        '& > *': {
+          pointerEvents: noHoverOnChildren ? 'none' : 'all !important',
+        },
+      }
+    : null,
+)
 
 const Overlay = gloss({
   position: 'absolute',
@@ -1075,6 +1080,10 @@ const PopoverWrap = gloss({
   pointerEvents: 'none',
   zIndex: -1,
 }).theme(p => {
+  let pointerEvents = p.noHoverOnChildren ? 'none' : p.pointerEvents || 'none'
+  if (p.isOpen && !p.noHoverOnChildren) {
+    pointerEvents = p.noPortal ? 'inherit' : 'auto'
+  }
   return {
     width: p.width,
     height: p.height,
@@ -1083,7 +1092,7 @@ const PopoverWrap = gloss({
       ? 'none'
       : p.transition || 'opacity ease-in 60ms, transform ease-out 100ms',
     opacity: p.isOpen && !p.willReposition ? 1 : 0,
-    pointerEvents: p.pointerEvents || (p.isOpen ? (p.noPortal ? 'inherit' : 'auto') : 'none'),
+    pointerEvents,
     transform: {
       x: p.left,
       y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,

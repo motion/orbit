@@ -1,3 +1,4 @@
+import { sleep } from '@mcro/black'
 import { AppType } from '@mcro/models'
 import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -38,8 +39,13 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       id: `${source.integration}${index}`,
       title: source.appName,
       icon: source.integration,
-      onClick: !source.views.setup && addSourceClickHandler(source),
-      disableSelect: !source.views.setup,
+      onClick:
+        !source.views.setup &&
+        (async e => {
+          await sleep(300)
+          addSourceClickHandler(source)(e)
+        }),
+      // disableSelect: !source.views.setup,
       after: source.views.setup ? null : (
         <View marginTop={4}>
           <Icon size={12} opacity={0.5} name="uilink6" />
@@ -47,10 +53,14 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       ),
       appConfig: source.views.setup
         ? {
-            ...sourceToAppConfig(source, { target: 'source' }),
+            ...sourceToAppConfig(source),
+            type: AppType.sources,
             viewType: 'setup',
           }
-        : null,
+        : {
+            type: 'message',
+            title: `Opening private authentication for ${source.appName}`,
+          },
       group: 'Add source',
     })),
   ]

@@ -55,6 +55,7 @@ window['stringify'] = stringify
 window['AppActions'] = AppActions
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')
+window['apps'] = require('../apps/apps').apps
 
 const fastCompare = require('react-fast-compare')
 window['reactFastCompareDebug'] = (a, b) => {

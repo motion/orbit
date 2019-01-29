@@ -2,6 +2,7 @@ import { gloss } from '@mcro/gloss'
 import { ClearButton, ThemeContext, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { HeaderStore } from './OrbitHeader'
@@ -18,16 +19,21 @@ type Props = {
   headerStore: HeaderStore
 }
 
-function useActivePaneName() {
+function useActivePane() {
   const { paneManagerStore } = useStoresSafe()
-  return paneManagerStore.activePane.name
+  return paneManagerStore.activePane
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
-  const activePaneName = useActivePaneName()
-  const placeholder = activePaneName
+  const [activeSpace] = useActiveSpace()
+  const activePane = useActivePane()
+  const placeholder =
+    (activePane &&
+      activeSpace &&
+      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
+    ''
   const fontSize = orbitStore.isTorn ? 16 : 18
   return (
     <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>

@@ -131,7 +131,8 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 2,
+  borderTopRadius: 5,
+  overflow: 'hidden',
   transform: {
     y: 0.5,
   },
@@ -140,7 +141,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.25)}, ${backgroundBase})`
+  const background = `linear-gradient(${backgroundBase.alpha(0.5)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -154,12 +155,11 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
       ? [
-          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.08 : 0.2]],
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
           ['inset', 0, 0, 0, 0.5, theme.borderColor],
           ['inset', 0, 0, 0, 1, backgroundBase],
         ]
       : null,
-    // borderTopRadius: 3,
     '&:hover': glowStyle,
     '&:hover .tab-label': {
       opacity: 1,

@@ -61,7 +61,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
           }
         : {
             type: 'message',
-            title: `Opening private authentication for ${source.appName}`,
+            title: `Opening private authentication for ${source.appName}...`,
           },
       group: 'Add source',
     })),

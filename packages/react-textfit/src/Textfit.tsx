@@ -1,13 +1,13 @@
+import { debounce } from 'lodash'
 import React from 'react'
 import ResizeObserver from 'resize-observer-polyfill'
-import shallowEqual from './utils/shallowEqual'
+import { innerHeight, innerWidth } from './utils/innerSize'
 import series from './utils/series'
-import whilst from './utils/whilst'
+import shallowEqual from './utils/shallowEqual'
 import throttle from './utils/throttle'
 import uniqueId from './utils/uniqueId'
-import { innerWidth, innerHeight } from './utils/innerSize'
 import { waitForFonts } from './utils/waitForFonts'
-import { debounce } from 'lodash'
+import whilst from './utils/whilst'
 
 function assertElementFitsWidth(el, width) {
   // -1: temporary bugfix, will be refactored soon

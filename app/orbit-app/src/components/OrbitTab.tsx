@@ -65,7 +65,7 @@ export function OrbitTab({
             className="tab-label"
             size={0.95}
             opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={500}
+            fontWeight={400}
             {...textProps}
           >
             {label}

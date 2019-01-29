@@ -1,5 +1,4 @@
 import { Text, View } from '@mcro/ui'
-import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton, Title } from '../../views'
@@ -12,7 +11,7 @@ export default function AppsAppMain() {
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
-    icon: `orbit${capitalize(x.type)}`,
+    icon: `orbit-${x.type}-full`,
     type: 'installed',
     group: 'Installed Apps',
     after: <RoundButton circular icon="remove" />,
@@ -23,18 +22,17 @@ export default function AppsAppMain() {
     <Section sizePadding={2}>
       <Title>Apps</Title>
       <SortableGrid
-        maxWidth={400}
         margin="auto"
         items={results.map(x => (
           <View
             key={x.id}
             alignItems="center"
             justifyContent="center"
-            width={60}
-            height={60}
+            width={98}
+            height={98}
             margin={10}
           >
-            <Icon size={32} name={x.icon} />
+            <Icon size={58} name={x.icon} />
             <Text ellipse fontWeight={500} size={0.9}>
               {x.title}
             </Text>

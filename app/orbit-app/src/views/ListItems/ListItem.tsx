@@ -60,6 +60,7 @@ export type ListItemProps = CSSPropertySetStrict &
     afterTitle?: React.ReactNode
     after?: React.ReactNode
     titleProps?: Object
+    iconBefore?: boolean
     iconProps?: Object
     separatorProps?: Object
     className?: string
@@ -123,6 +124,7 @@ export default observer(function ListItem(props: ListItemProps) {
     separatorProps,
     above,
     slim,
+    iconBefore,
     subTextOpacity = 0.7,
     ...restProps
   } = props
@@ -143,7 +145,7 @@ export default observer(function ListItem(props: ListItemProps) {
   )
   const { activeThemeName } = React.useContext(UI.ThemeContext)
 
-  const afterHeader = (
+  const afterHeaderElement = (
     <AfterHeader>
       <Row>
         {showDate && (
@@ -158,12 +160,32 @@ export default observer(function ListItem(props: ListItemProps) {
     </AfterHeader>
   )
 
-  const peopleNode = !!people && (
+  const peopleElement = !!people && (
     <>
       <HorizontalSpace />
       <PeopleRow people={people} />
     </>
   )
+
+  const iconElement =
+    showIcon &&
+    (() => {
+      const iconPropsFinal = {
+        size: iconBefore ? (slim ? 32 : 48) : slim ? 12 : 16,
+        style: { marginTop: slim ? 4 : 2 },
+        ...iconProps,
+      }
+      return (
+        <>
+          {React.isValidElement(icon) ? (
+            React.cloneElement(icon, iconPropsFinal)
+          ) : (
+            <Icon name={icon} {...iconPropsFinal} />
+          )}
+          <TitleSpace slim={slim} />
+        </>
+      )
+    })()
 
   return (
     <UI.Theme name={isSelected ? 'selected' : null}>
@@ -189,24 +211,11 @@ export default observer(function ListItem(props: ListItemProps) {
           {...cardProps}
         >
           {before}
+          {iconBefore && showIcon && iconElement}
           <ListItemMainContent oneLine={oneLine}>
             {showTitle && (
               <Title>
-                {showIcon && (
-                  <>
-                    {React.isValidElement(icon) ? (
-                      React.cloneElement(icon, { style: { marginTop: 2 }, ...iconProps })
-                    ) : (
-                      <Icon
-                        name={icon}
-                        size={slim ? 12 : 16}
-                        style={{ marginTop: slim ? 4 : 2 }}
-                        {...iconProps}
-                      />
-                    )}
-                    <TitleSpace slim={slim} />
-                  </>
-                )}
+                {showIcon && !iconBefore && iconElement}
                 <HighlightText
                   sizeLineHeight={0.85}
                   ellipse
@@ -217,7 +226,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 </HighlightText>
                 <TitleSpace slim={slim} />
                 {props.afterTitle}
-                {afterHeader}
+                {afterHeaderElement}
               </Title>
             )}
             {showSubtitle && (
@@ -263,14 +272,14 @@ export default observer(function ListItem(props: ListItemProps) {
                 {!subtitle && (
                   <>
                     <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    {peopleNode}
+                    {peopleElement}
                   </>
                 )}
                 {!showTitle && (
                   <>
-                    {!!subtitle && peopleNode}
+                    {!!subtitle && peopleElement}
                     <HorizontalSpace />
-                    {afterHeader}
+                    {afterHeaderElement}
                   </>
                 )}
               </ListItemSubtitle>
@@ -281,7 +290,7 @@ export default observer(function ListItem(props: ListItemProps) {
                 right={Array.isArray(padding) ? padding[0] : padding}
                 top={Array.isArray(padding) ? padding[1] : padding}
               >
-                {afterHeader}
+                {afterHeaderElement}
               </View>
             )}
             {/* vertical space only if needed */}

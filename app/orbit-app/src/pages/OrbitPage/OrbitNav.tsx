@@ -1,6 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
 import { View } from '@mcro/ui'
-import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -60,7 +59,7 @@ export default observer(function OrbitNav() {
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
         activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = app.type === 'search' || app.type === 'people'
+      const isPinned = false && (app.type === 'search' || app.type === 'people')
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
@@ -68,7 +67,7 @@ export default observer(function OrbitNav() {
         stretch: !isPinned,
         thicc: isPinned,
         isActive,
-        icon: `orbit${capitalize(app.type)}`,
+        icon: `orbit-${app.type}`,
         iconSize: isPinned ? 16 : 14,
         onClick: () => {
           setShowCreateNew(false)
@@ -109,7 +108,7 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit${capitalize(newAppStore.type)}`}
+            icon={`orbit-${newAppStore.type}`}
             iconSize={12}
             isActive
             label={newAppStore.name || 'New app'}
@@ -166,14 +165,14 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
-  '& .orbit-tab-inactive.unpinned .tab-icon': {
-    transition: 'all ease 300ms',
-    opacity: 0,
-  },
-  '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
-    // transition: 'all ease 1200ms 500ms',
-    opacity: 0,
-  },
+  // '& .orbit-tab-inactive.unpinned .tab-icon': {
+  //   transition: 'all ease 300ms',
+  //   opacity: 0,
+  // },
+  // '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
+  //   // transition: 'all ease 1200ms 500ms',
+  //   opacity: 0,
+  // },
   // background: '#00000099',
 })
 

@@ -1,5 +1,5 @@
-import { MigrationInterface, getRepository } from 'typeorm'
-import { SpaceEntity, App, AppEntity } from '@mcro/models'
+import { App, AppEntity, SpaceEntity } from '@mcro/models'
+import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550169 implements MigrationInterface {
   public async up(): Promise<any> {
@@ -41,7 +41,8 @@ export class EnsureModels1546916550169 implements MigrationInterface {
               type: 'lists',
               spaceId: space.id,
               data: {
-                lists: [],
+                rootItemID: 0,
+                items: {},
               },
             },
           ]

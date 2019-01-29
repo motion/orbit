@@ -1,8 +1,7 @@
-import { Absolute, gloss } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { App } from '@mcro/models'
 import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
-import { Center } from '../views/Center'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 28
@@ -49,31 +48,29 @@ export function OrbitTab({
       sidePad={sidePad}
       {...props}
     >
-      {!!icon && (
-        <OrbitTabIcon
-          opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
-          isActive={isActive}
-          name={icon}
-          size={iconSize}
-          // marginRight={!!label ? sidePad * 0.7 : 0}
-        />
-      )}
-      {!!label && (
-        <Absolute top={0} bottom={0} left={30} right={30}>
-          <Center>
-            <Text
-              ellipse
-              className="tab-label"
-              size={0.95}
-              opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={500}
-              {...textProps}
-            >
-              {label}
-            </Text>
-          </Center>
-        </Absolute>
-      )}
+      <Row margin={['auto', 0]} alignItems="center">
+        {!!icon && (
+          <OrbitTabIcon
+            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
+            isActive={isActive}
+            name={icon}
+            size={iconSize}
+            marginRight={!!label ? sidePad * 0.7 : 0}
+          />
+        )}
+        {!!label && (
+          <Text
+            ellipse
+            className="tab-label"
+            size={0.95}
+            opacity={isActive ? 1 : inactiveOpacity}
+            fontWeight={500}
+            {...textProps}
+          >
+            {label}
+          </Text>
+        )}
+      </Row>
 
       {separator && <Separator />}
 
@@ -132,6 +129,7 @@ function DropDownButton(props) {
 const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
   position: 'relative',
   flexFlow: 'row',
+  justifyContent: 'center',
   alignItems: 'center',
   borderTopRadius: 3,
   transform: {

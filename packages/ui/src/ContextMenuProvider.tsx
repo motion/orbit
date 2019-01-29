@@ -1,10 +1,20 @@
 import { gloss } from '@mcro/gloss'
-import { MenuItem, remote } from 'electron'
+import { remote } from 'electron'
 import React, { createContext, useRef } from 'react'
 
 export const ContextMenuContext = createContext<(items: MenuTemplate) => void>(null)
 
-export type MenuTemplate = Partial<MenuItem>[]
+export type MenuTemplate = (
+  | Partial<{
+      checked: boolean
+      click: Function
+      enabled: boolean
+      label: string
+      visible: boolean
+    }>
+  | {
+      type: 'separator'
+    })[]
 
 export function ContextMenuProvider(props: {
   children: React.ReactNode

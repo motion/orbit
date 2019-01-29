@@ -184,13 +184,19 @@ const SortableTab = SortableElement((props: TabProps) => {
     <ContextMenu
       items={[
         {
-          label: 'Pin',
+          label: 'Open...',
         },
         {
-          label: 'Edit',
+          label: 'App settings',
         },
         {
-          label: 'Remove',
+          type: 'separator',
+        },
+        {
+          label: 'Pin tab',
+        },
+        {
+          label: 'Remove tab',
         },
       ]}
     >

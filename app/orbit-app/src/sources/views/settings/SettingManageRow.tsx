@@ -57,7 +57,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
       {!!(activeJobs.length || removeJobs.length) && (
         <>
           <Text size={0.9} fontWeight={400}>
-            {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}
+            {activeJobs.length ? 'Syncing...' : removeJobs.length ? 'Removing...' : name}{' '}
           </Text>
           {!removeJobs.length && (
             <>
@@ -86,7 +86,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
           onClick={() => handleRefresh(sourceId)}
         />
         <TitleBarButton
-          icon="remove"
+          icon="boldremove"
           tooltip={`Remove ${props.source.name}`}
           onClick={() => removeIntegration(props.source)}
         />

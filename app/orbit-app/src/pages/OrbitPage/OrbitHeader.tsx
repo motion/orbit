@@ -37,29 +37,29 @@ export default observer(function OrbitHeader() {
             )}
           </OrbitToolBarRender>
           {!orbitStore.isTorn && (
-            // <Absolute top={0} right={0}>
-            <Button
-              chromeless
-              isActive={isOnSettings}
-              onClick={() => {
-                if (isOnSettings) {
-                  paneManagerStore.back()
-                } else {
-                  paneManagerStore.setActivePaneByType('settings')
-                }
-              }}
-              tooltip="Settings"
-            >
-              <Icon
-                name="gear"
-                size={14}
-                opacity={0.2 + settingsIconActiveOpacityInc}
-                hoverStyle={{
-                  opacity: 0.5 + settingsIconActiveOpacityInc,
+            <Absolute top={0} right={0}>
+              <Button
+                chromeless
+                isActive={isOnSettings}
+                onClick={() => {
+                  if (isOnSettings) {
+                    paneManagerStore.back()
+                  } else {
+                    paneManagerStore.setActivePaneByType('settings')
+                  }
                 }}
-              />
-            </Button>
-            // </Absolute>
+                tooltip="Settings"
+              >
+                <Icon
+                  name="gear"
+                  size={12}
+                  opacity={0.2 + settingsIconActiveOpacityInc}
+                  hoverStyle={{
+                    opacity: 0.5 + settingsIconActiveOpacityInc,
+                  }}
+                />
+              </Button>
+            </Absolute>
           )}
           <Row flex={1} />
         </Row>

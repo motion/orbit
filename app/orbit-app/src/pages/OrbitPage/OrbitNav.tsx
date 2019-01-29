@@ -129,7 +129,7 @@ export default observer(function OrbitNav() {
           }}
         />
         <View flex={2} />
-        <OrbitTab
+        {/* <OrbitTab
           thicc
           isActive={paneManagerStore.activePane.type === 'apps'}
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
@@ -137,13 +137,13 @@ export default observer(function OrbitNav() {
           separator
           icon="orbit-apps"
           iconSize={12}
-        />
+        /> */}
         <OrbitTab
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Sources"
-          icon="design_app"
+          tooltip="Manage Space"
+          icon="grid48"
           iconSize={11}
         />
       </OrbitNavChrome>

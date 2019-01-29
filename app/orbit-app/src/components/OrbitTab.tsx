@@ -139,7 +139,8 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   maxWidth: 160,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
-  const background = theme.tabBackground || theme.background
+  const backgroundBase = theme.tabBackground || theme.background
+  const background = `linear-gradient(${backgroundBase.alpha(0.25)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -155,6 +156,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
       ? [
           [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.08 : 0.2]],
           ['inset', 0, 0, 0, 0.5, theme.borderColor],
+          ['inset', 0, 0, 0, 1, backgroundBase],
         ]
       : null,
     // borderTopRadius: 3,

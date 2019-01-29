@@ -1,5 +1,12 @@
 import { loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
-import { AppModel, AppType, BitModel, ListsAppData, PersonBitModel } from '@mcro/models'
+import {
+  AppModel,
+  AppType,
+  BitModel,
+  ListAppDataItem,
+  ListsAppData,
+  PersonBitModel,
+} from '@mcro/models'
 import { Button, ButtonProps, Text, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -102,10 +109,11 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 
   const testItems = useObserveMany(BitModel, { take: 10 })
   const treeRef = React.useRef<SelectableTreeRef>(null)
-  const [depth, setDepth] = React.useState(0)
-  const getDepth = React.useRef(depth)
+  const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
+  const getDepth = React.useRef(0)
+  getDepth.current = treeState.depth
 
-  console.log('treeRef', treeRef, depth)
+  console.log('treeRef', treeRef, treeState)
 
   if (testItems.length < 4) {
     return null
@@ -128,16 +136,19 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     [testItems[1].id]: {
       id: testItems[1].id,
       type: 'bit',
+      name: 'OneLogin - verify your email',
       children: [],
     },
     [testItems[2].id]: {
       id: testItems[2].id,
       type: 'bit',
+      name: 'Snapchat Login on July 29, 2018',
       children: [],
     },
     [testItems[3].id]: {
       id: testItems[3].id,
       type: 'bit',
+      name: 'Your Friday evening order with Uber Eats',
       children: [],
     },
   }
@@ -154,7 +165,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
               chromeless
               size={0.9}
               icon="arrowright"
-              onClick={() => setDepth(getDepth.current - 1)}
+              onClick={() => setTreeState({ ...treeState, depth: getDepth.current - 1 })}
             />
           ),
         }
@@ -181,13 +192,17 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     ]
   }, [])
 
+  const onChangeDepth = React.useCallback((depth, history) => {
+    setTreeState({ depth, history })
+  }, [])
+
   return (
     <>
       <OrbitToolbar
         before={
           <>
             <View width={30}>
-              {depth > 0 && (
+              {treeState.depth > 0 && (
                 <FloatingBarButtonSmall
                   circular
                   icon="arrows-1_bold-left"
@@ -198,7 +213,15 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
               )}
             </View>
             <HorizontalSpace />
-            <ListAppBreadcrumbs />
+            <ListAppBreadcrumbs
+              items={[
+                {
+                  id: 0,
+                  name: listApp.name,
+                },
+                ...treeState.history.slice(1).map(id => items[id]),
+              ]}
+            />
           </>
         }
       />
@@ -210,8 +233,8 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         loadItem={loadItem}
         sortable
         getContextMenu={getContextMenu}
-        onChangeDepth={setDepth}
-        depth={depth}
+        onChangeDepth={onChangeDepth}
+        depth={treeState.depth}
       />
       <OrbitFloatingBar showSearch>
         <ListEdit />
@@ -237,12 +260,12 @@ function OrbitBreadcrumb(props: ButtonProps) {
   )
 }
 
-function ListAppBreadcrumbs() {
+function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
   return (
     <Breadcrumbs>
-      <OrbitBreadcrumb>Memory</OrbitBreadcrumb>
-      <OrbitBreadcrumb>My folder</OrbitBreadcrumb>
-      <OrbitBreadcrumb>Some sub folder 4</OrbitBreadcrumb>
+      {props.items.map((item, index) => (
+        <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
+      ))}
     </Breadcrumbs>
   )
 }

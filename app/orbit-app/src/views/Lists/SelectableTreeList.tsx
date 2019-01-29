@@ -7,10 +7,12 @@ import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitListItemProps } from '../ListItems/OrbitListItem'
 import SelectableList, { SelectableListProps } from './SelectableList'
 
+type ID = number | string
+
 type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
   depth?: number
-  onChangeDepth?: (depth: number) => any
-  rootItemID: ListsAppData['rootItemID']
+  onChangeDepth?: (depth: number, history: ID[]) => any
+  rootItemID: ID
   items: ListsAppData['items']
   loadItem: (item: ListAppDataItem) => Promise<OrbitListItemProps>
 }
@@ -20,41 +22,68 @@ export type SelectableTreeRef = {
   depth: number
 }
 
+// class SelectableTreeListStore {
+//   props: SelectableTreeListProps
+//   currentID = this
+//   depth = 0
+//   history = []
+//   error = null
+//   loadedItems = {}
+// }
+
 export default React.forwardRef(function SelectableTreeList(props: SelectableTreeListProps, ref) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'shortcutStore'] })
   const selectionStore =
     props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+
+  // move to reducer or store?
+  // const [state, dispatch] = useReducer({
+  //   currentId: 0,
+  //   error: null,
+  //   history: [],
+  //   depth: 0,
+  //   loadedItems: {}
+  // })
+
   const [currentItemID, setCurrentItemID] = useState(props.rootItemID)
   const currentItem = props.items[currentItemID]
   const [childrenItems, setChildrenItems] = useState([])
   const [error, setError] = useState('')
   const history = useRef([props.rootItemID])
-  const [depth, setDepth] = useState(0)
+  const [depth, setDepthPrivate] = useState(0)
+  const getDepth = useRef(0)
+
+  // keep history in sync with depth
+  const setDepth = (next: number) => {
+    history.current = history.current.slice(0, next + 1)
+    getDepth.current = next
+    setDepthPrivate(next)
+  }
   const setDepthWithCallback = (depth: number) => {
     setDepth(depth)
     if (props.onChangeDepth) {
-      props.onChangeDepth(depth)
+      props.onChangeDepth(depth, [...history.current])
     }
   }
 
   const back = () => depth > 0 && setDepthWithCallback(depth - 1)
 
-  // props.depth => depth
   useEffect(
-    () => {
-      setDepth(props.depth)
+    function syncDepthPropToState() {
+      if (props.depth !== depth) {
+        setDepth(props.depth)
+      }
       const nextItemID = history.current[props.depth]
       if (typeof nextItemID === 'number' && nextItemID !== currentItemID) {
         console.log('updating current item from props change')
         setCurrentItemID(nextItemID)
       }
     },
-    [props.depth],
+    [props.depth, depth],
   )
 
-  // updateRef
   useEffect(
-    () => {
+    function updateRef() {
       ref['current'] = {
         back,
         depth,
@@ -63,9 +92,8 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     [depth],
   )
 
-  // fetch items
   useEffect(
-    () => {
+    function fetchItems() {
       if (!currentItem) {
         setError(`No item found with id ${currentItemID}`)
         return
@@ -85,14 +113,14 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
   )
 
   const handleOpen = useCallback(
-    (index, appConfig?, eventType?) => {
+    function handleOpen(index, appConfig?, eventType?) {
       const nextID = currentItem.children[index]
       const next = props.items[nextID]
 
       if (next.type === 'folder') {
-        const nextDepth = depth + 1
-        setDepthWithCallback(nextDepth)
+        const nextDepth = getDepth.current + 1
         history.current[nextDepth] = nextID
+        setDepthWithCallback(nextDepth)
         setCurrentItemID(nextID)
         return
       }
@@ -104,9 +132,8 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     [currentItemID],
   )
 
-  // handle shortcuts
   useEffect(
-    () => {
+    function handleShortcuts() {
       if (selectionStore && stores.shortcutStore) {
         return stores.shortcutStore.onShortcut(shortcut => {
           switch (shortcut) {

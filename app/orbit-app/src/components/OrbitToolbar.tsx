@@ -28,7 +28,6 @@ export function OrbitToolBarProvider(props: { children: React.ReactNode }) {
       value={{
         toolbars,
         setToolbar(id, value) {
-          console.log('updating toolbar', id, value)
           setToolbars({
             ...toolbars,
             [id]: value,

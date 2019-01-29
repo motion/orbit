@@ -87,7 +87,9 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
         return
       }
 
-      props.onOpen(index, appConfig, eventType)
+      if (props.onOpen) {
+        props.onOpen(index, appConfig, eventType)
+      }
     },
     [currentItemID],
   )

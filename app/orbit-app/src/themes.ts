@@ -87,6 +87,7 @@ const light = {
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
+    light02: [60, 60, 60],
     background: [50, 50, 50],
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
@@ -99,11 +100,11 @@ const dark = {
     colorActive: '#fff',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-    tabBackground: [35, 35, 35],
+    tabBackground: [40, 40, 40],
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [25, 25, 25, 0.85],
     sidebarBorderColor: '#444',
-    glintColor: [255, 255, 255, 0.25],
+    glintColor: [255, 255, 255, 0.2],
     inputBackground: [100, 100, 100, 0.5],
     inputBorderColor: 'transparent',
     inputBackgroundHover: [110, 110, 110, 0.5],

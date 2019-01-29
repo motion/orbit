@@ -7,7 +7,7 @@ import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import { SelectableTreeList } from '../../views/Lists/SelectableTreeList'
+import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 
@@ -100,6 +100,8 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const [listApp /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
 
   const testItems = useObserveMany(BitModel, { take: 10 })
+  const treeRef = React.useRef<SelectableTreeRef>(null)
+  console.log('treeRef', treeRef)
 
   if (testItems.length < 10) {
     return null
@@ -141,10 +143,11 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
       <OrbitToolbar before={<ListAppBreadcrumbs />} />
 
       <SelectableTreeList
+        ref={treeRef}
         minSelected={0}
         rootItemID={0}
         items={items}
-        onLoadItem={async item => {
+        loadItem={async item => {
           switch (item.type) {
             case 'folder':
               return {

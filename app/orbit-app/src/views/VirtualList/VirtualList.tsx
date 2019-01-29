@@ -41,6 +41,7 @@ export type VirtualListProps = {
   padTop?: number
   sortable?: boolean
   dynamicHeight?: boolean
+  keyMapper?: (index: number) => string | number
 }
 
 class SortableList extends React.Component<any> {
@@ -145,6 +146,9 @@ class VirtualListStore {
         defaultWidth: this.width,
         fixedWidth: true,
         keyMapper: (rowIndex: number) => {
+          if (this.props.keyMapper) {
+            return this.props.keyMapper(rowIndex)
+          }
           if (typeof rowIndex === 'undefined') {
             return 0
           }
@@ -258,7 +262,11 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
       </CellMeasurer>
     )
     if (props.getContextMenu) {
-      return <ContextMenu items={props.getContextMenu(index)}>{itemElement}</ContextMenu>
+      return (
+        <ContextMenu key={key} items={props.getContextMenu(index)}>
+          {itemElement}
+        </ContextMenu>
+      )
     }
     return itemElement
   }

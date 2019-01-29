@@ -97,8 +97,7 @@ _Favorites_
 #syncers
 
 - on process exit it should clear all processing Jobs
-- general:
-  - syncers no longer seem to run once you add them, you have to hit refresh
+- you can add the same exact integration twice, lets prevent that
 - slack:
   - re-syncs seem to be doing a lot of work, can we improve incremental
   - for some reason my slack never synced for me, check to be sure it syncs reliable

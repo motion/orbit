@@ -40,6 +40,7 @@ export default function AppsAppMain() {
         items={results}
         getItem={(item, { isSelected, select }) => (
           <View
+            key={item.id}
             alignItems="center"
             justifyContent="center"
             margin={10}

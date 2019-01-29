@@ -247,7 +247,7 @@ export default observer(function ListItem(props: ListItemProps) {
                       alpha={subTextOpacity}
                       onClick={store.handleClickLocation}
                     >
-                      {location}
+                      {JSON.stringify(location)}
                     </RoundButtonSmall>
                     <TitleSpace slim={slim} />
                   </>

@@ -1,6 +1,9 @@
 import { ListAppDataItem, ListsAppData } from '@mcro/models'
+import { useStore } from '@mcro/use-store'
 import { Omit } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitListItemProps } from '../ListItems/OrbitListItem'
 import SelectableList, { SelectableListProps } from './SelectableList'
 
@@ -18,6 +21,9 @@ export type SelectableTreeRef = {
 }
 
 export default React.forwardRef(function SelectableTreeList(props: SelectableTreeListProps, ref) {
+  const stores = useStoresSafe({ optional: ['selectionStore', 'shortcutStore'] })
+  const selectionStore =
+    props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
   const [currentItemID, setCurrentItemID] = useState(props.rootItemID)
   const currentItem = props.items[currentItemID]
   const [childrenItems, setChildrenItems] = useState([])
@@ -31,6 +37,9 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     }
   }
 
+  const back = () => depth > 0 && setDepthWithCallback(depth - 1)
+
+  // props.depth => depth
   useEffect(
     () => {
       setDepth(props.depth)
@@ -43,17 +52,18 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     [props.depth],
   )
 
+  // updateRef
   useEffect(
     () => {
       ref['current'] = {
-        back: () => depth > 0 && setDepthWithCallback(depth - 1),
+        back,
         depth,
       }
     },
     [depth],
   )
 
-  // Update items
+  // fetch items
   useEffect(
     () => {
       if (!currentItem) {
@@ -74,8 +84,8 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     [JSON.stringify(props.items), currentItemID],
   )
 
-  const onOpen = useCallback(
-    (index, appConfig, eventType) => {
+  const handleOpen = useCallback(
+    (index, appConfig?, eventType?) => {
       const nextID = currentItem.children[index]
       const next = props.items[nextID]
 
@@ -94,10 +104,36 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
     [currentItemID],
   )
 
+  // handle shortcuts
+  useEffect(
+    () => {
+      if (selectionStore && stores.shortcutStore) {
+        return stores.shortcutStore.onShortcut(shortcut => {
+          switch (shortcut) {
+            case 'left':
+              back()
+              return
+            case 'right':
+              handleOpen(selectionStore.activeIndex)
+              break
+          }
+        })
+      }
+    },
+    [currentItemID],
+  )
+
   return (
     <>
       {error && <div>SelectableTreeListError: {error}</div>}
-      {!error && <SelectableList {...props} onOpen={onOpen} items={childrenItems} />}
+      {!error && (
+        <SelectableList
+          {...props}
+          selectionStore={selectionStore}
+          onOpen={handleOpen}
+          items={childrenItems}
+        />
+      )}
     </>
   )
 })

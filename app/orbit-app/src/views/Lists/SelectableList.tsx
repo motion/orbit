@@ -14,6 +14,7 @@ export type SelectableListProps = OrbitListProps & {
   minSelected?: number
   defaultSelected?: number
   isSelectable?: boolean
+  selectionStore?: SelectionStore
 }
 
 type SelectContext = {
@@ -91,7 +92,8 @@ class SelectableStore {
 
 export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
-  const selectionStore = stores.selectionStore || useStore(SelectionStore, props)
+  const selectionStore =
+    props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = orbitItemsKey(items)
   const getItems = React.useCallback(() => items, [itemsKey])

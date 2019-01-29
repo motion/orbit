@@ -1,24 +1,42 @@
-import { Row, View, ViewProps } from '@mcro/ui'
+import { Contents } from '@mcro/gloss'
+import { Row, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { SortableContainer, SortableContainerProps, SortableElement } from 'react-sortable-hoc'
 
-const SortableItem = SortableElement(({ value }: any) => <View>{value}</View>)
+type GetGridItem<A> = (item: A, index: number) => any
 
-const SortableGridInner = SortableContainer(({ items, ...props }: any) => {
+export type SortableGridProps<A extends any> = SortableContainerProps &
+  ViewProps & {
+    items?: A[]
+    getItem?: GetGridItem<A>
+  }
+
+type SortableGridItemProps = {
+  value: any
+  getItem: GetGridItem<any>
+  realIndex: number
+}
+
+const SortableItem = SortableElement(({ value, realIndex, getItem }: SortableGridItemProps) => (
+  <Contents>{getItem(value, realIndex)}</Contents>
+))
+
+const SortableGridInner = SortableContainer(({ items, getItem, ...props }: any) => {
   return (
     <Row overflow="hidden" flexWrap="wrap" {...props}>
       {items.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} />
+        <SortableItem
+          key={`item-${value.id}`}
+          index={index}
+          realIndex={index}
+          value={value}
+          getItem={getItem}
+        />
       ))}
     </Row>
   )
 })
 
-type SortableGridProps = SortableContainerProps &
-  ViewProps & {
-    items?: any[]
-  }
-
-export function SortableGrid(props: SortableGridProps) {
+export function SortableGrid(props: SortableGridProps<any>) {
   return <SortableGridInner axis="xy" {...props} />
 }

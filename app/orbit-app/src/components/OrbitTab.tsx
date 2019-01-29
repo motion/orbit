@@ -1,10 +1,10 @@
 import { gloss, Row } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
+import { Button, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 24
+export const tabHeight = 26
 const inactiveOpacity = 0.5
 
 export type TabProps = React.HTMLAttributes<'div'> & {
@@ -48,6 +48,7 @@ export function OrbitTab({
       sidePad={sidePad}
       {...props}
     >
+      {isActive && <Glint />}
       <Row margin={['auto', 0]} alignItems="center">
         {!!icon && (
           <OrbitTabIcon
@@ -131,7 +132,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 5,
+  borderTopRadius: 3,
   overflow: 'hidden',
   transform: {
     y: 0.5,
@@ -141,7 +142,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.5)}, ${backgroundBase})`
+  const background = `linear-gradient(${backgroundBase.alpha(0.75)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -157,7 +158,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
       ? [
           [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
           ['inset', 0, 0, 0, 0.5, theme.borderColor],
-          ['inset', 0, 0, 0, 1, backgroundBase.alpha(0.8)],
+          // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,
     '&:hover': glowStyle,

@@ -4,7 +4,7 @@ import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 28
+export const tabHeight = 26
 const inactiveOpacity = 0.7
 
 export type TabProps = React.HTMLAttributes<'div'> & {
@@ -131,7 +131,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 3,
+  borderTopRadius: 2,
   transform: {
     y: 0.5,
   },
@@ -153,7 +153,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
       ? [
-          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.045 : 0.1]],
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.08 : 0.2]],
           ['inset', 0, 0, 0, 0.5, theme.borderColor],
         ]
       : null,

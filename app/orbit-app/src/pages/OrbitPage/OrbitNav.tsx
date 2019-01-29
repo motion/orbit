@@ -68,7 +68,7 @@ export default observer(function OrbitNav() {
         thicc: isPinned,
         isActive,
         icon: `orbit-${app.type}`,
-        iconSize: isPinned ? 16 : 14,
+        iconSize: isPinned ? 16 : 13,
         onClick: () => {
           setShowCreateNew(false)
           paneManagerStore.setActivePane(app.id)

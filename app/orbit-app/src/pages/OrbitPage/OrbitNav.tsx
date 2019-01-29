@@ -10,7 +10,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 
 export default observer(function OrbitNav() {
-  const { orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
@@ -63,7 +63,7 @@ export default observer(function OrbitNav() {
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
-        label: isPinned ? '' : app.name,
+        label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
         stretch: !isPinned,
         thicc: isPinned,
         isActive,

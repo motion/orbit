@@ -27,7 +27,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const { orbitStore, orbitWindowStore, queryStore, spaceStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const activePaneName = useActivePaneName()
-  const placeholder = activePaneName === 'Search' ? spaceStore.activeSpace.name : activePaneName
+  const placeholder = activePaneName
   const fontSize = orbitStore.isTorn ? 16 : 19
   return (
     <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>

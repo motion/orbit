@@ -11,6 +11,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
 
   private async ensureDefaultSetting() {
     let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
+
     if (!setting) {
       console.log('Creating initial general setting')
       const settingEntity = new SettingEntity()
@@ -58,6 +59,8 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               target: 'app',
               name: 'Search',
               type: 'search',
+              colors: ['green', 'magenta'],
+              pinned: true,
               spaceId: space.id,
               data: {},
             },
@@ -65,26 +68,29 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               target: 'app',
               name: 'People',
               type: 'people',
+              colors: ['red', 'darkblue'],
+              pinned: true,
               spaceId: space.id,
               data: {},
             },
             {
               target: 'app',
-              name: 'Topics',
-              type: 'topics',
-              spaceId: space.id,
-              data: {},
-            },
-            {
-              target: 'app',
-              name: 'Memory',
+              name: 'Directory',
               type: 'lists',
               spaceId: space.id,
+              colors: ['pink', 'orange'],
               data: {
                 rootItemID: 0,
                 items: {},
               },
             },
+            // {
+            //   target: 'app',
+            //   name: 'Topics',
+            //   type: 'topics',
+            //   spaceId: space.id,
+            //   data: {},
+            // },
           ]
           await Promise.all(
             defaultApps.map(app => {

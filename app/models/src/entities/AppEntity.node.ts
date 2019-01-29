@@ -18,10 +18,10 @@ export class AppEntity extends BaseEntity {
   @Column()
   name?: string
 
-  @Column({ type: 'simple-json' })
-  colors: string[]
+  @Column({ type: 'simple-json', default: '[]' })
+  colors?: string[]
 
-  @Column()
+  @Column({ default: false })
   pinned?: boolean
 
   @Column()

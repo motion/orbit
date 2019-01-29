@@ -1,6 +1,6 @@
-import { SourceEntity } from '@mcro/models'
-import { Source } from '@mcro/models'
-import { ConnectionOptions, createConnection, Connection } from 'typeorm'
+import { Source, SourceEntity } from '@mcro/models'
+import { remove } from 'fs-extra'
+import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'
 import { migrations } from '../migrations'
 
@@ -112,7 +112,7 @@ export default async function connectModels(models) {
       )
 
       try {
-        connection.close()
+        await connection.close()
       } catch {
         // it may have been left open in previous block, or may not in which case its fine
       }
@@ -124,24 +124,37 @@ export default async function connectModels(models) {
         migrationsRun: false,
       })
 
-      // execute drop queries
-      await connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'job_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'bit_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'person_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'source_entity_spaces_space_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'space_entity'`) // maybe we should remove them next step instead? (and make sources to be retrieved from spaces)
-      await connection.query(`DROP TABLE IF EXISTS 'source_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
-      await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
+      // 😮 TODO
+      // we should really save their data into a simple JSON object at the very least here
+      // 😮 TODO
 
-      // close connection
-      await connection.close()
+      try {
+        // execute drop queries
+        await connection.query(`DROP TABLE IF EXISTS 'bit_entity_people_person_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'job_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'bit_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'person_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'source_entity_spaces_space_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'source_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'space_entity'`) // maybe we should remove them next step instead? (and make sources to be retrieved from spaces)
 
-      // last chance. create connection again. this time it should work
+        // close connection
+        await connection.close()
+
+        return await createConnection(buildOptions(models))
+      } catch (err) {
+        console.log('step 4 failed..........', err)
+      }
+
+      // holy shit things went wrong. fucking hell... lets nuke.
+      console.log('going nuclear!')
+      await remove(DATABASE_PATH)
+
       return await createConnection(buildOptions(models))
     }
   }

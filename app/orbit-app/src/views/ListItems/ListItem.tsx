@@ -171,7 +171,7 @@ export default observer(function ListItem(props: ListItemProps) {
     showIcon &&
     (() => {
       const iconPropsFinal = {
-        size: iconBefore ? (slim ? 32 : 48) : slim ? 12 : 16,
+        size: iconBefore ? (slim ? 30 : 40) : slim ? 12 : 16,
         style: { marginTop: slim ? 4 : 2 },
         ...iconProps,
       }

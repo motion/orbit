@@ -166,21 +166,21 @@
 .rdrEndEdge {
   pointer-events: none;
 }
-
+/*
 .rdrInRange {
-}
+} */
 
 .rdrDayStartPreview,
 .rdrDayInPreview,
 .rdrDayEndPreview {
   pointer-events: none;
 }
-
+/*
 .rdrDayHovered {
 }
 
 .rdrDayActive {
-}
+} */
 
 .rdrDateRangePickerWrapper {
   display: -webkit-inline-box;
@@ -190,9 +190,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.rdrDefinedRangesWrapper {
 }
 
 .rdrStaticRanges {
@@ -208,21 +205,21 @@
 .rdrStaticRange {
   font-size: inherit;
 }
-
+/*
 .rdrStaticRangeLabel {
 }
 
 .rdrInputRanges {
-}
+} */
 
 .rdrInputRange {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
-
+/*
 .rdrInputRangeInput {
-}
+} */
 
 /* reset our styles for their base css */
 
@@ -555,7 +552,7 @@
 
 .rdrDefinedRangesWrapper {
   font-size: 12px;
-  width: 140px;
+  width: 95px;
 }
 
 .rdrDefinedRangesWrapper .rdrStaticRangeSelected {

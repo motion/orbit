@@ -81,8 +81,10 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
               borderRadius={10}
               elevation={4}
               theme="light"
+              width={390}
+              height={300}
             >
-              <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
+              <View flex={1} className="calendar-dom theme-light" padding={10}>
                 <DateRangePicker
                   onChange={queryFilters.onChangeDate}
                   ranges={[queryFilters.dateState]}

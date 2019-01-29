@@ -99,7 +99,7 @@ function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
   return (
     <Icon
-      color={invertLightness(theme.color, 0.4).alpha(0.7)}
+      color={invertLightness(theme.color, 0.8).alpha(0.6)}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}

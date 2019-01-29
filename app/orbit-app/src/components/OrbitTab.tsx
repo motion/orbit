@@ -157,7 +157,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
       ? [
           [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
           ['inset', 0, 0, 0, 0.5, theme.borderColor],
-          ['inset', 0, 0, 0, 1, backgroundBase],
+          ['inset', 0, 0, 0, 1, backgroundBase.alpha(0.8)],
         ]
       : null,
     '&:hover': glowStyle,

@@ -78,7 +78,7 @@ export default observer(function OrbitHeader() {
         <OrbitAutoComplete />
       </HeaderTop>
 
-      {/* <OrbitHeaderDivider torn={isTorn} /> */}
+      {isTorn && <OrbitHeaderDivider />}
       <OrbitHeaderBg />
     </>
   )
@@ -95,11 +95,11 @@ const OrbitAutoComplete = observer(function OrbitAutoComplete() {
   )
 })
 
-// const OrbitHeaderDivider = gloss<{ torn?: boolean }>({
-//   height: 1,
-// }).theme(({ torn }, theme) => ({
-//   background: torn ? theme.borderColor.alpha(0.5) : theme.tabBackground,
-// }))
+const OrbitHeaderDivider = gloss({
+  height: 1,
+}).theme((_, theme) => ({
+  background: theme.borderColor.alpha(0.6),
+}))
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

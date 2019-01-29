@@ -1,7 +1,8 @@
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/models'
 import { Button, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
+import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 26
@@ -52,7 +53,6 @@ export function OrbitTab({
       <Row margin={['auto', 0]} alignItems="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={(isActive ? (!label ? 1 : 1) : !label ? 0.4 : 0.4) + iconAdjustOpacity}
             isActive={isActive}
             name={icon}
             size={iconSize}
@@ -96,8 +96,10 @@ export function OrbitTab({
 }
 
 function OrbitTabIcon(props: IconProps) {
+  const theme = useTheme()
   return (
     <Icon
+      color={invertLightness(theme.color, 0.4).alpha(0.7)}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}

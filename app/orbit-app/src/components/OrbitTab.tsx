@@ -4,8 +4,8 @@ import { Button, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
-export const tabHeight = 26
-const inactiveOpacity = 0.7
+export const tabHeight = 24
+const inactiveOpacity = 0.5
 
 export type TabProps = React.HTMLAttributes<'div'> & {
   app?: App

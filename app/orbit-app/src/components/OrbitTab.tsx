@@ -56,7 +56,7 @@ export function OrbitTab({
             isActive={isActive}
             name={icon}
             size={iconSize}
-            marginRight={!!label ? sidePad * 0.7 : 0}
+            marginRight={!!label ? sidePad * 0.6 : 0}
           />
         )}
         {!!label && (

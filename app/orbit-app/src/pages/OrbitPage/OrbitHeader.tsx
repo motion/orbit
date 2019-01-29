@@ -1,4 +1,5 @@
 import { Absolute, FullScreen, gloss } from '@mcro/gloss'
+import { App } from '@mcro/stores'
 import { Button, Icon, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -20,7 +21,13 @@ export default observer(function OrbitHeader() {
         <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
-            onClose={() => console.log('close')}
+            onClose={() => {
+              if (isTorn) {
+                console.log('close me')
+              } else {
+                App.setOrbitState({ docked: !App.orbitState.docked })
+              }
+            }}
             onMin={isTorn ? () => console.log('min') : null}
             onMax={isTorn ? () => console.log('min') : null}
           />
@@ -75,7 +82,7 @@ export default observer(function OrbitHeader() {
           <Row flex={1} />
         </Row>
 
-        <OrbitAutoComplete />
+        {/* <OrbitAutoComplete /> */}
       </HeaderTop>
 
       {isTorn && <OrbitHeaderDivider />}
@@ -84,16 +91,16 @@ export default observer(function OrbitHeader() {
   )
 })
 
-const OrbitAutoComplete = observer(function OrbitAutoComplete() {
-  const { orbitStore } = useStoresSafe()
-  const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
-  return null
-  return (
-    <Absolute bottom={0} left={0}>
-      {activeAppStore.toolbar || null}
-    </Absolute>
-  )
-})
+// const OrbitAutoComplete = observer(function OrbitAutoComplete() {
+//   const { orbitStore } = useStoresSafe()
+//   const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
+//   return null
+//   return (
+//     <Absolute bottom={0} left={0}>
+//       {activeAppStore.toolbar || null}
+//     </Absolute>
+//   )
+// })
 
 const OrbitHeaderDivider = gloss({
   height: 1,

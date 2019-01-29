@@ -28,7 +28,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const { activeTheme } = React.useContext(ThemeContext)
   const activePaneName = useActivePaneName()
   const placeholder = activePaneName
-  const fontSize = orbitStore.isTorn ? 16 : 19
+  const fontSize = orbitStore.isTorn ? 16 : 18
   return (
     <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

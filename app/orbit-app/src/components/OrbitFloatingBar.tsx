@@ -34,7 +34,7 @@ export default function OrbitFloatingBar(props: { showSearch?: boolean; children
 
         <Theme name={isShown ? 'selected' : null}>
           <FloatingBarButtonLarge
-            icon="orbitSearch"
+            icon="orbit-search"
             onClick={() => {
               setIsShown(!isShown)
             }}

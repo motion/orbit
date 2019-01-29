@@ -51,7 +51,7 @@ export function OrbitTab({
       <Row margin={['auto', 0]} alignItems="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.4) + iconAdjustOpacity}
+            opacity={(isActive ? (!label ? 1 : 1) : !label ? 0.4 : 0.4) + iconAdjustOpacity}
             isActive={isActive}
             name={icon}
             size={iconSize}

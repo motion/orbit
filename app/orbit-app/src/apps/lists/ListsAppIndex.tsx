@@ -137,11 +137,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 
   return (
     <>
-      <OrbitToolbar />
-      {/* <OrbitToolbar>
-        <ListAppBreadcrumbs />
-      </OrbitToolbar>
-      <ListAppBreadcrumbs /> */}
+      <OrbitToolbar before={<ListAppBreadcrumbs />} />
 
       <SelectableTreeList
         minSelected={0}

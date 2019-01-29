@@ -10,13 +10,16 @@ export const addSourceClickHandler = memoize(
     e.preventDefault()
     // ...otherwise we open browser to oauth
     console.log('opening...')
-
-    if (await command(SetupProxyCommand)) {
-      const url = `${getGlobalConfig().urls.auth}/auth/${app.integration}`
-      console.log('proxy setup success, opening...', url)
-      await command(OpenCommand, {
-        url,
-      })
-    }
+    addSource(app)
   },
 )
+
+export async function addSource(app: OrbitIntegration<any>) {
+  if (await command(SetupProxyCommand)) {
+    const url = `${getGlobalConfig().urls.auth}/auth/${app.integration}`
+    console.log('proxy setup success, opening...', url)
+    await command(OpenCommand, {
+      url,
+    })
+  }
+}

@@ -9,9 +9,15 @@ export const SourcesAppMain = (props: AppProps<any>) => {
     return <div>no item selected</div>
   }
 
-  console.log('showing', props.appConfig)
   if (props.appConfig.type !== AppType.sources) {
-    return <AppView viewType="main" {...props.appConfig} id={+props.appConfig.id} />
+    return (
+      <AppView
+        viewType="main"
+        type={props.appConfig.type}
+        appConfig={props.appConfig}
+        id={+props.appConfig.id}
+      />
+    )
   }
 
   const source = useObserveOne(

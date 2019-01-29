@@ -4,7 +4,7 @@ import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
-import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
@@ -42,8 +42,10 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       onClick:
         !source.views.setup &&
         (async e => {
-          await sleep(300)
-          addSourceClickHandler(source)(e)
+          e.preventDefault()
+          e.stopPropagation()
+          await sleep(700)
+          addSource(source)
         }),
       // disableSelect: !source.views.setup,
       after: source.views.setup ? null : (

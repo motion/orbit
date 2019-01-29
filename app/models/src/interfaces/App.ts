@@ -37,8 +37,7 @@ export interface BaseApp {
   type?: string
   data?: any
   pinned?: boolean
-  backgroundColor?: string
-  color?: string
+  colors?: string[]
 }
 
 export type AppData = {

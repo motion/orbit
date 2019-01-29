@@ -1,10 +1,12 @@
-import { MigrationInterface, getRepository } from 'typeorm'
-import { SpaceEntity, SettingEntity } from '@mcro/models'
+import { App, AppEntity, SettingEntity, SpaceEntity, UserEntity } from '@mcro/models'
+import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
     await this.ensureDefaultSetting()
     await this.ensureDefaultSpace()
+    await this.ensureDefaultApps()
+    await this.ensureDefaultUser()
   }
 
   private async ensureDefaultSetting() {
@@ -40,12 +42,74 @@ export class EnsureModels1546916550168 implements MigrationInterface {
           paneSort: [],
           colors: ['red', 'gray'],
         },
-        {
-          name: 'Discussions',
-          paneSort: [],
-          colors: ['blue', 'red'],
-        },
       ])
+    }
+  }
+
+  private async ensureDefaultApps() {
+    const spaces = await getRepository(SpaceEntity).find()
+
+    await Promise.all(
+      spaces.map(async space => {
+        const apps = await getRepository(AppEntity).find({ spaceId: space.id })
+        if (!apps.length) {
+          const defaultApps: App[] = [
+            {
+              target: 'app',
+              name: 'Search',
+              type: 'search',
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'People',
+              type: 'people',
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'Topics',
+              type: 'topics',
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'Memory',
+              type: 'lists',
+              spaceId: space.id,
+              data: {
+                rootItemID: 0,
+                items: {},
+              },
+            },
+          ]
+          await Promise.all(
+            defaultApps.map(app => {
+              return getRepository(AppEntity).save(app)
+            }),
+          )
+        }
+      }),
+    )
+  }
+
+  private async ensureDefaultUser() {
+    const user = await getRepository(UserEntity).findOne({})
+    const firstSpace = await getRepository(SpaceEntity).findOne({})
+
+    if (!firstSpace) {
+      throw new Error('Should be at least one space...')
+    }
+
+    if (!user) {
+      await getRepository(UserEntity).save({
+        name: 'Me',
+        activeSpace: firstSpace.id,
+        spaceConfig: {},
+      })
     }
   }
 

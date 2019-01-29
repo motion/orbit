@@ -1,11 +1,16 @@
+import { useObserveOne } from '@mcro/model-bridge'
+import { AppType, IntegrationType, SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { AppProps } from '../AppProps'
-import { SourceModel, IntegrationType } from '@mcro/models'
-import { useObserveOne } from '@mcro/model-bridge'
+import { AppView } from '../AppView'
 
 export const SourcesAppMain = (props: AppProps<any>) => {
   if (!props.appConfig) {
     return <div>no item selected</div>
+  }
+
+  if (props.appConfig.type === AppType.apps) {
+    return <AppView viewType="main" {...props.appConfig} id={+props.appConfig.id} />
   }
 
   const source = useObserveOne(
@@ -14,6 +19,7 @@ export const SourcesAppMain = (props: AppProps<any>) => {
       where: { id: +props.appConfig.id },
     },
   )
+
   const type = props.appConfig.integration as IntegrationType
   const View = props.sourcesStore.getView(type, 'setting')
 

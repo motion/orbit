@@ -2,6 +2,7 @@ import { AppConfig, Bit, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
+import { Omit } from '../../helpers/typeHelpers/omit'
 import { OrbitListItem } from '../ListItems/OrbitListItem'
 import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
@@ -12,8 +13,6 @@ export type OrbitHandleSelect = ((
   appConfig: AppConfig,
   eventType?: 'click' | 'key',
 ) => any)
-
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 export type OrbitListProps = Omit<VirtualListProps, 'onSelect' | 'onOpen'> & {
   onSelect?: OrbitHandleSelect

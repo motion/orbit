@@ -6,14 +6,15 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
+import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const { searchStore, queryStore } = useStoresSafe()
@@ -66,38 +67,40 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      {/* <OrbitToolbar>
-        <OrbitSuggestionBar />
-      </OrbitToolbar> */}
-      {/* TODO api for handling suggestions */}
-      {/* <OrbitSuggestions items={} /> */}
-      <FloatingBar>
-        <Popover
-          delay={250}
-          openOnClick
-          openOnHover
-          closeOnClickAway
-          group="filters"
-          target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
-          background
-          borderRadius={10}
-          elevation={4}
-          theme="light"
-        >
-          <View width={390} height={300} className="calendar-dom theme-light" padding={10}>
-            <DateRangePicker
-              onChange={queryFilters.onChangeDate}
-              ranges={[queryFilters.dateState]}
-            />
-          </View>
-        </Popover>
-        <View width={4} />
-        <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
-          {queryFilters.sortBy}
-        </FloatingBarButtonSmall>
-        <View flex={1} />
-        <OrbitFilterIntegrationButton />
-      </FloatingBar>
+      <OrbitToolbar
+        before={
+          <>
+            <Popover
+              delay={250}
+              openOnClick
+              openOnHover
+              closeOnClickAway
+              group="filters"
+              target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
+              background
+              borderRadius={10}
+              elevation={4}
+              theme="light"
+              width={390}
+              height={300}
+            >
+              <View flex={1} className="calendar-dom theme-light" padding={10}>
+                <DateRangePicker
+                  onChange={queryFilters.onChangeDate}
+                  ranges={[queryFilters.dateState]}
+                />
+              </View>
+            </Popover>
+            <View width={8} />
+            <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+              {queryFilters.sortBy}
+            </FloatingBarButtonSmall>
+            <View width={8} />
+            <OrbitFilterIntegrationButton />
+          </>
+        }
+        after={<OrbitSuggestionBar />}
+      />
 
       <SelectableList
         minSelected={0}

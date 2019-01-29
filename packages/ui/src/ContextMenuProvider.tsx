@@ -20,11 +20,13 @@ export function ContextMenuProvider(props: {
     >
       <Container
         onContextMenu={() => {
+          const currentMenu = menuTemplate.current
+          menuTemplate.current = []
           if (props.onContextMenu) {
-            props.onContextMenu(menuTemplate.current)
+            props.onContextMenu(currentMenu)
             return
           }
-          const menu = remote.Menu.buildFromTemplate(menuTemplate.current)
+          const menu = remote.Menu.buildFromTemplate(currentMenu)
           menu.popup({ window: remote.getCurrentWindow() })
         }}
       >

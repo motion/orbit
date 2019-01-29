@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { InputProps, Row, Text, View } from '@mcro/ui'
+import { InputProps, Row, Text, TextProps, View } from '@mcro/ui'
 import * as React from 'react'
 import { Input } from './Input'
 
@@ -22,13 +22,17 @@ export const FormTableRow = gloss(Row, {
   alignItems: 'center',
 })
 
+type RowProps = {
+  label?: React.ReactNode
+}
+
 export const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
 const Label = props => <Text tagName="label" {...props} />
 
-export const FormRow = ({ label, children }) => (
+export const FormRow = ({ label, children }: RowProps & { children?: React.ReactNode }) => (
   <FormTableRow>
     <FormTableLabel>
       <Label>{label}</Label>
@@ -43,7 +47,7 @@ export const InputRow = ({
   value = '',
   onChange = null,
   ...props
-}: InputProps) => (
+}: InputProps & RowProps) => (
   <FormTableRow>
     <FormTableLabel>
       <Label>{label}</Label>
@@ -120,6 +124,8 @@ export const Title = ({ verticalSpacing = 1, children, ...props }) => (
     {children}
   </UI.Text>
 )
+
+export const IntroText = (props: TextProps) => <Text size={1.2} alpha={0.8} {...props} />
 
 export const SubPaneTitle = props => {
   return <Title marginLeft={12} marginRight={12} {...props} />

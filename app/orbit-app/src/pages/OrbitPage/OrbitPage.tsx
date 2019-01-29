@@ -1,14 +1,15 @@
-import { gloss } from '@mcro/gloss'
+import { gloss, View } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
+import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
@@ -19,7 +20,9 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
+import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
+import OrbitNav from './OrbitNav'
 import OrbitPageContent from './OrbitPageContent'
 import { OrbitStore } from './OrbitStore'
 
@@ -34,6 +37,7 @@ export default function OrbitPage() {
 const OrbitPageInner = observer(function OrbitPageInner() {
   const searchStore = useStore(SearchStore)
   const orbitStore = useStore(OrbitStore)
+  const headerStore = useStore(HeaderStore)
   const theme = App.state.darkTheme ? 'dark' : 'light'
 
   React.useEffect(() => {
@@ -48,21 +52,34 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore }}>
-      <MainShortcutHandler>
-        <Theme name={theme}>
-          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <OrbitHeader />
-            <InnerChrome torn={orbitStore.isTorn}>
-              <OrbitToolBarRender />
-              <OrbitPageContent />
-            </InnerChrome>
-          </AppWrapper>
-        </Theme>
-      </MainShortcutHandler>
-    </MergeContext>
+    <OrbitToolBarProvider>
+      <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
+        <MainShortcutHandler>
+          <Theme name={theme}>
+            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+              <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+                <OrbitHeader />
+                <OrbitNav />
+              </OrbitHeaderContainer>
+              <InnerChrome torn={orbitStore.isTorn}>
+                <OrbitControls />
+                <OrbitPageContent />
+              </InnerChrome>
+            </AppWrapper>
+          </Theme>
+        </MainShortcutHandler>
+      </MergeContext>
+    </OrbitToolBarProvider>
   )
 })
+
+const OrbitHeaderContainer = gloss(View, {
+  position: 'relative',
+  zIndex: 4,
+}).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor],
+  background: theme.headerBackground || theme.background.alpha(0.65),
+}))
 
 function OrbitPageProvideStores(props: { children: any }) {
   const settingStore = useStore(SettingStore)
@@ -119,6 +136,7 @@ function OrbitPageProvideStores(props: { children: any }) {
 const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,
   overflow: 'hidden',
+  position: 'relative',
 }).theme(({ torn }) => ({
   boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
 }))

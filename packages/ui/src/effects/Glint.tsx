@@ -53,8 +53,8 @@ export const Glint = gloss<Props>({
       top: 0,
       height: '100%',
       transform: { y: y * (bottom ? 1 : -1), z: 0 },
-      borderTop: isUndef(bottom) && [size, theme.glintColor || color],
-      borderBottom: !isUndef(bottom) && [size, theme.glintColor || color],
+      borderTop: isUndef(bottom) && [size, color || theme.glintColor || theme.background],
+      borderBottom: !isUndef(bottom) && [size, color || theme.glintColor || theme.background],
       ...radiusStyle,
     }
   },

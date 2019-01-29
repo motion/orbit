@@ -1,5 +1,4 @@
 import { Button, View } from '@mcro/ui'
-import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton } from '../../views'
@@ -11,7 +10,7 @@ export default function AppsAppIndex() {
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
-    icon: `orbit${capitalize(x.type)}`,
+    icon: `orbit-${x.type}`,
     type: 'installed',
     group: 'Installed Apps',
     after: <RoundButton circular icon="remove" />,

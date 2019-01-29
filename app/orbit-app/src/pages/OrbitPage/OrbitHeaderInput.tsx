@@ -2,6 +2,7 @@ import { gloss } from '@mcro/gloss'
 import { ClearButton, ThemeContext, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 import { HeaderStore } from './OrbitHeader'
@@ -18,19 +19,24 @@ type Props = {
   headerStore: HeaderStore
 }
 
-function useActivePaneName() {
+function useActivePane() {
   const { paneManagerStore } = useStoresSafe()
-  return paneManagerStore.activePane.name
+  return paneManagerStore.activePane
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitStore, orbitWindowStore, queryStore, spaceStore } = useStoresSafe()
+  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
-  const activePaneName = useActivePaneName()
-  const placeholder = activePaneName === 'Search' ? spaceStore.activeSpace.name : activePaneName
-  const fontSize = orbitStore.isTorn ? 16 : 19
+  const [activeSpace] = useActiveSpace()
+  const activePane = useActivePane()
+  const placeholder =
+    (activePane &&
+      activeSpace &&
+      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
+    ''
+  const fontSize = orbitStore.isTorn ? 16 : 18
   return (
-    <FakeInput>
+    <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
           forwardRef={headerStore.inputRef}
@@ -52,30 +58,34 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
         />
       </View>
       <After>
-        {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
-        {/* <OrbitHeaderButtons /> */}
+        <ClearButton hidden={!queryStore.hasQuery} onClick={queryStore.clearQuery} />
       </After>
     </FakeInput>
   )
 })
 
 const After = gloss({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
   alignItems: 'center',
+  justifyContent: 'center',
   flexFlow: 'row',
 })
 
-const FakeInput = gloss({
+const FakeInput = gloss(View, {
+  position: 'relative',
   height: 32,
-  padding: [2, 10],
+  padding: [2, 8],
   alignItems: 'center',
   justifyContent: 'center',
-  margin: 'auto',
+  margin: ['auto', 8],
   flexFlow: 'row',
-  maxWidth: 820,
-  width: '75%',
+  width: '70%',
   minWidth: 400,
+  maxWidth: 700,
   cursor: 'text',
-  borderBottom: [2, 'transparent'],
   transition: 'none',
   '&:active': {
     background: [0, 0, 0, 0.035],

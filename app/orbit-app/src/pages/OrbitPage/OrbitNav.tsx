@@ -1,6 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
 import { View } from '@mcro/ui'
-import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -11,7 +10,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 
 export default observer(function OrbitNav() {
-  const { orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
   const activeApps = useActiveApps()
   const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
@@ -60,15 +59,15 @@ export default observer(function OrbitNav() {
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
         activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = app.type === 'search'
+      const isPinned = false && (app.type === 'search' || app.type === 'people')
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
-        label: isPinned ? '' : app.name,
+        label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
         stretch: !isPinned,
         thicc: isPinned,
         isActive,
-        icon: `orbit${capitalize(app.type)}`,
+        icon: `orbit-${app.type}`,
         iconSize: isPinned ? 16 : 12,
         onClick: () => {
           setShowCreateNew(false)
@@ -109,7 +108,7 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit${capitalize(newAppStore.type)}`}
+            icon={`orbit-${newAppStore.type}`}
             iconSize={12}
             isActive
             label={newAppStore.name || 'New app'}
@@ -130,21 +129,21 @@ export default observer(function OrbitNav() {
           }}
         />
         <View flex={2} />
-        <OrbitTab
+        {/* <OrbitTab
           thicc
           isActive={paneManagerStore.activePane.type === 'apps'}
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
           tooltip="All Apps"
           separator
-          icon="orbitApps"
+          icon="orbit-apps"
           iconSize={12}
-        />
+        /> */}
         <OrbitTab
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Sources"
-          icon="design_app"
+          tooltip="Manage Space"
+          icon="grid48"
           iconSize={11}
         />
       </OrbitNavChrome>
@@ -166,6 +165,14 @@ const OrbitNavChrome = gloss({
   position: 'relative',
   zIndex: 1000,
   alignItems: 'flex-end',
+  // '& .orbit-tab-inactive.unpinned .tab-icon': {
+  //   transition: 'all ease 300ms',
+  //   opacity: 0,
+  // },
+  // '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
+  //   // transition: 'all ease 1200ms 500ms',
+  //   opacity: 0,
+  // },
   // background: '#00000099',
 })
 

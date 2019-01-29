@@ -7,7 +7,7 @@ const transports: ClientTransport[] = []
 
 // want this to be a single name for this client (no matter how many transports)
 const name = randomString(5)
-const isWebApp = !process.env.SUB_PROCESS
+const isWebApp = !process.env.SUB_PROCESS || process.env.SUB_PROCESS === 'orbit'
 const shouldConnectToSyncers = process.env.SUB_PROCESS === 'desktop' // || isWebApp
 const shouldConnectToDesktop = process.env.SUB_PROCESS === 'syncers' || isWebApp
 

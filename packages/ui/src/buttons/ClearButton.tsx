@@ -5,6 +5,10 @@ import { Icon } from '../Icon'
 const ClearClickableArea = gloss(View, {
   padding: 5,
   transition: 'all ease 250ms 100ms',
+  hidden: {
+    pointerEvents: 'none',
+    opacity: 0,
+  },
 })
 
 const ClearFrame = gloss(View, {
@@ -33,6 +37,7 @@ export const ClearButton = ({
   onMouseLeave = null,
   children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
   hover = null,
+  hidden = false,
   ...props
 }) => (
   <ClearClickableArea
@@ -45,6 +50,7 @@ export const ClearButton = ({
       onMouseEnter,
       onMouseLeave,
     }}
+    hidden={hidden}
   >
     <ClearFrame {...props}>{children}</ClearFrame>
   </ClearClickableArea>

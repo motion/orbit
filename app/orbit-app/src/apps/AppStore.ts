@@ -10,7 +10,9 @@ export class AppStore<Type extends AppType> {
     useStoresSafe({ optional: ['selectionStore', 'subPaneStore', 'paneManagerStore'] }),
   )
 
-  toolbar = null
+  get id() {
+    return this.props.id
+  }
 
   get isActive() {
     const { id, isActive } = this.props
@@ -67,10 +69,6 @@ export class AppStore<Type extends AppType> {
     return this.stores.subPaneStore.paneNode
   }
 
-  get getHoverSettler() {
-    return this.stores.selectionStore.getHoverSettler
-  }
-
   get toggleSelected() {
     if (this.stores.selectionStore) {
       return this.stores.selectionStore.toggleSelected
@@ -83,9 +81,5 @@ export class AppStore<Type extends AppType> {
       return subPaneStore.maxHeight
     }
     return window.innerHeight - 50
-  }
-
-  setToolbar = toolbar => {
-    this.toolbar = toolbar
   }
 }

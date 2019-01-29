@@ -4,13 +4,24 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const { activeSources, allSources } = props.sourcesStore
+  const [activeSpace] = useActiveSpace()
+  const activeApps = useActiveApps()
   const results = [
+    {
+      title: activeSpace ? activeSpace.name : '',
+      subtitle: `${activeApps.map(x => x.name).join(', ')}`,
+      icon: 'orbit-apps-full',
+      iconBefore: true,
+      type: AppType.apps,
+    },
     ...activeSources.map(app => ({
       // only apply the click events to the active sources...
       ...props.itemProps,
@@ -20,7 +31,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       icon: app.integration,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),
-      group: 'Sources',
+      group: 'Active Sources',
     })),
     ...allSources.map((source, index) => ({
       // ...these have their own onClick

@@ -1,12 +1,11 @@
-import { invertLightness } from '@mcro/color'
-import { gloss, Row, ThemeContext } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, IconProps, Text, Tooltip, View } from '@mcro/ui'
+import { Button, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 26
-const inactiveOpacity = 0.6
+const inactiveOpacity = 0.5
 
 export type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -39,21 +38,25 @@ export function OrbitTab({
   className = '',
   ...props
 }: TabProps) {
-  const sidePad = thicc ? 20 : 12
+  const sidePad = thicc ? 18 : 12
   const button = (
     <NavButtonChrome
-      className={`undraggable ${className}`}
+      className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
+        thicc ? 'pinned' : 'unpinned'
+      } undraggable ${className}`}
       isActive={isActive}
       sidePad={sidePad}
       {...props}
     >
-      <Row maxWidth="100%" alignItems="center" justifyContent="center">
+      {isActive && <Glint />}
+      <Row margin={['auto', 0]} alignItems="center">
         {!!icon && (
           <OrbitTabIcon
-            opacity={(isActive ? (!label ? 0.9 : 0.7) : !label ? 0.5 : 0.35) + iconAdjustOpacity}
+            opacity={(isActive ? (!label ? 1 : 1) : !label ? 0.4 : 0.4) + iconAdjustOpacity}
             isActive={isActive}
             name={icon}
             size={iconSize}
+            marginRight={!!label ? sidePad * 0.7 : 0}
           />
         )}
         {!!label && (
@@ -61,7 +64,6 @@ export function OrbitTab({
             ellipse
             className="tab-label"
             size={0.95}
-            marginLeft={!!icon ? sidePad * 0.7 : 0}
             opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={500}
             {...textProps}
@@ -70,6 +72,7 @@ export function OrbitTab({
           </Text>
         )}
       </Row>
+
       {separator && <Separator />}
 
       {isActive && !!onClickPopout && (
@@ -92,22 +95,14 @@ export function OrbitTab({
   return button
 }
 
-function OrbitTabIcon({ opacity, ...props }: IconProps) {
-  const { activeTheme } = React.useContext(ThemeContext)
+function OrbitTabIcon(props: IconProps) {
   return (
-    <View position="relative" opacity={opacity}>
-      <Icon transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }} {...props} />
-      {/* show underneath an opposite colored one to */}
-      <Icon
-        transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
-        color={invertLightness(activeTheme.color, 0.2)}
-        position="absolute"
-        top={0}
-        left={0}
-        zIndex={-1}
-        {...props}
-      />
-    </View>
+    <Icon
+      className="tab-icon"
+      transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
+      // marginLeft={-(props.size + +props.marginRight)}
+      {...props}
+    />
   )
 }
 
@@ -135,17 +130,19 @@ function DropDownButton(props) {
 const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
   position: 'relative',
   flexFlow: 'row',
-  alignItems: 'center',
   justifyContent: 'center',
-  height: tabHeight,
-  maxWidth: 160,
+  alignItems: 'center',
   borderTopRadius: 3,
+  overflow: 'hidden',
   transform: {
     y: 0.5,
   },
+  height: tabHeight,
+  maxWidth: 160,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
-  const background = theme.tabBackground || theme.background
+  const backgroundBase = theme.tabBackground || theme.background
+  const background = `linear-gradient(${backgroundBase.alpha(0.75)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -158,9 +155,12 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
-      ? [[0, 2, 9, [0, 0, 0, 0.045]], ['inset', 0, 0, 0, 0.5, theme.borderColor]]
+      ? [
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
+          ['inset', 0, 0, 0, 0.5, theme.borderColor],
+          // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
+        ]
       : null,
-    // borderTopRadius: 3,
     '&:hover': glowStyle,
     '&:hover .tab-label': {
       opacity: 1,

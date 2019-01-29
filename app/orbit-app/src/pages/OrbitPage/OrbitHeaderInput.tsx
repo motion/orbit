@@ -24,7 +24,7 @@ function useActivePaneName() {
 }
 
 export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitStore, orbitWindowStore, queryStore, spaceStore } = useStoresSafe()
+  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const activePaneName = useActivePaneName()
   const placeholder = activePaneName

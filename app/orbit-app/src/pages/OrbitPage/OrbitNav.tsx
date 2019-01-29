@@ -135,7 +135,7 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('apps')}
           tooltip="All Apps"
           separator
-          icon="orbitApps"
+          icon="orbit-apps"
           iconSize={12}
         />
         <OrbitTab

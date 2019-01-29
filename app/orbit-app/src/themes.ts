@@ -62,7 +62,7 @@ const light = {
     backgroundActive: '#eee',
     backgroundHover: '#eee',
     color: '#444',
-    borderColor: '#ccc',
+    borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
     sidebarBackground: [250, 250, 250, 0.75],

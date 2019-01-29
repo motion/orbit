@@ -1,10 +1,11 @@
 import { loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
 import { AppModel, AppType, BitModel, ListsAppData, PersonBitModel } from '@mcro/models'
-import { Button, ButtonProps, Text } from '@mcro/ui'
+import { Button, ButtonProps, Text, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
+import { HorizontalSpace } from '../../views'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
@@ -101,9 +102,12 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 
   const testItems = useObserveMany(BitModel, { take: 10 })
   const treeRef = React.useRef<SelectableTreeRef>(null)
-  console.log('treeRef', treeRef)
+  const [depth, setDepth] = React.useState(0)
+  const getDepth = React.useRef(depth)
 
-  if (testItems.length < 10) {
+  console.log('treeRef', treeRef, depth)
+
+  if (testItems.length < 4) {
     return null
   }
 
@@ -138,47 +142,77 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     },
   }
 
+  const loadItem = React.useCallback(async item => {
+    switch (item.type) {
+      case 'folder':
+        return {
+          title: item.name,
+          subtitle: `${item.children.length} items`,
+          after: (
+            <Button
+              circular
+              chromeless
+              size={0.9}
+              icon="arrowright"
+              onClick={() => setDepth(getDepth.current - 1)}
+            />
+          ),
+        }
+      case 'bit':
+        return {
+          item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
+        }
+      case 'person':
+        return {
+          item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
+        }
+    }
+    return null
+  }, [])
+
+  const getContextMenu = React.useCallback(index => {
+    return [
+      {
+        label: 'Delete',
+        click: () => {
+          console.log('delete item')
+        },
+      },
+    ]
+  }, [])
+
   return (
     <>
-      <OrbitToolbar before={<ListAppBreadcrumbs />} />
-
+      <OrbitToolbar
+        before={
+          <>
+            <View width={30}>
+              {depth > 0 && (
+                <FloatingBarButtonSmall
+                  circular
+                  icon="arrows-1_bold-left"
+                  onClick={() => {
+                    treeRef.current.back()
+                  }}
+                />
+              )}
+            </View>
+            <HorizontalSpace />
+            <ListAppBreadcrumbs />
+          </>
+        }
+      />
       <SelectableTreeList
         ref={treeRef}
         minSelected={0}
         rootItemID={0}
         items={items}
-        loadItem={async item => {
-          switch (item.type) {
-            case 'folder':
-              return {
-                title: item.name,
-                subtitle: `${item.children.length} items`,
-                after: <Button circular chromeless size={0.9} icon="arrowright" />,
-              }
-            case 'bit':
-              return {
-                item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
-              }
-            case 'person':
-              return {
-                item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
-              }
-          }
-          return null
-        }}
+        loadItem={loadItem}
         sortable
-        getContextMenu={index => {
-          return [
-            {
-              label: 'Delete',
-              click: () => {
-                console.log('delete item')
-              },
-            },
-          ]
-        }}
+        getContextMenu={getContextMenu}
+        onChangeDepth={setDepth}
+        depth={depth}
       />
-
       <OrbitFloatingBar showSearch>
         <ListEdit />
       </OrbitFloatingBar>
@@ -191,16 +225,9 @@ function OrbitBreadcrumb(props: ButtonProps) {
     <Breadcrumb>
       {isLast => (
         <>
-          <FloatingBarButtonSmall {...props} />
+          <FloatingBarButtonSmall chromeless {...props} />
           {!isLast ? (
-            <Text
-              size={1.5}
-              fontWeight={900}
-              alpha={0.5}
-              margin={[0, 10]}
-              height={4}
-              lineHeight={0}
-            >
+            <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
               {' · '}
             </Text>
           ) : null}

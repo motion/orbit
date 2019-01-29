@@ -28,6 +28,7 @@ export function OrbitToolBarProvider(props: { children: React.ReactNode }) {
       value={{
         toolbars,
         setToolbar(id, value) {
+          console.log('updating toolbar', id, value)
           setToolbars({
             ...toolbars,
             [id]: value,
@@ -44,12 +45,15 @@ export function OrbitToolbar(props: ToolbarContextItem) {
   const { setToolbar } = useContext(OrbitToolBarContext)
   const { appStore } = useStoresSafe()
 
-  useEffect(() => {
-    setToolbar(appStore.id, props)
-    return () => {
-      setToolbar(appStore.id, null)
-    }
-  }, [])
+  useEffect(
+    () => {
+      setToolbar(appStore.id, props)
+      return () => {
+        setToolbar(appStore.id, null)
+      }
+    },
+    [props.before, props.after],
+  )
 
   return null
 }

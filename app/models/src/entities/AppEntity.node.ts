@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SpaceEntity } from './SpaceEntity.node'
 import { Space } from '../interfaces/Space'
+import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
 export class AppEntity extends BaseEntity {
@@ -17,6 +17,15 @@ export class AppEntity extends BaseEntity {
 
   @Column()
   name?: string
+
+  @Column()
+  backgroundColor?: string
+
+  @Column()
+  color?: string
+
+  @Column()
+  pinned?: boolean
 
   @Column()
   type?: string

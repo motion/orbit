@@ -58,27 +58,33 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
         />
       </View>
       <After>
-        {queryStore.hasQuery && <ClearButton onClick={queryStore.clearQuery} />}
-        {/* <OrbitHeaderButtons /> */}
+        <ClearButton hidden={!queryStore.hasQuery} onClick={queryStore.clearQuery} />
       </After>
     </FakeInput>
   )
 })
 
 const After = gloss({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
   alignItems: 'center',
+  justifyContent: 'center',
   flexFlow: 'row',
 })
 
 const FakeInput = gloss(View, {
+  position: 'relative',
   height: 32,
   padding: [2, 8],
   alignItems: 'center',
   justifyContent: 'center',
   margin: ['auto', 8],
   flexFlow: 'row',
-  width: '75%',
+  width: '70%',
   minWidth: 400,
+  maxWidth: 700,
   cursor: 'text',
   transition: 'none',
   '&:active': {

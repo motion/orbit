@@ -13,30 +13,41 @@ export default observer(function OrbitHeader() {
   const { headerStore, orbitStore, paneManagerStore } = useStoresSafe()
   const isOnSettings = paneManagerStore.activePane.type === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
+  const { isTorn } = orbitStore
   return (
     <>
-      <HeaderTop padding={orbitStore.isTorn ? [2, 10] : [6, 10]}>
-        <OrbitClose dontDim={orbitStore.isTorn} onClick={AppActions.closeOrbit}>
+      <HeaderTop padding={isTorn ? [2, 10] : [6, 10]}>
+        <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
             onClose={() => console.log('close')}
-            onMin={orbitStore.isTorn ? () => console.log('min') : null}
-            onMax={orbitStore.isTorn ? () => console.log('min') : null}
+            onMin={isTorn ? () => console.log('min') : null}
+            onMax={isTorn ? () => console.log('min') : null}
           />
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          {!orbitStore.isTorn && <OrbitSwitch />}
-          <OrbitToolBarRender key={`${orbitStore.isTorn}`}>
+          {!isTorn && <OrbitSwitch />}
+          <OrbitToolBarRender key={`${isTorn}`}>
             {toolbars => (
               <>
-                {orbitStore.isTorn && toolbars && toolbars.before}
+                {isTorn && toolbars && (
+                  <>
+                    {toolbars.before}
+                    <View flex={1} />
+                  </>
+                )}
                 <OrbitHeaderInput headerStore={headerStore} />
-                {orbitStore.isTorn && toolbars && toolbars.after}
+                {isTorn && toolbars && (
+                  <>
+                    <View flex={1} />
+                    {toolbars.after}
+                  </>
+                )}
               </>
             )}
           </OrbitToolBarRender>
-          {!orbitStore.isTorn && (
+          {!isTorn && (
             <Absolute top={0} right={0}>
               <Button
                 chromeless
@@ -67,7 +78,7 @@ export default observer(function OrbitHeader() {
         <OrbitAutoComplete />
       </HeaderTop>
 
-      {/* <OrbitHeaderDivider torn={orbitStore.isTorn} /> */}
+      {/* <OrbitHeaderDivider torn={isTorn} /> */}
       <OrbitHeaderBg />
     </>
   )

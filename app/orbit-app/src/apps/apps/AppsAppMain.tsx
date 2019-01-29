@@ -11,12 +11,21 @@ export default function AppsAppMain() {
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
-    icon: `orbit-${x.type}-full`,
+    icon: <Icon size={58} name={`orbit-${x.type}-full`} />,
     type: 'installed',
     group: 'Installed Apps',
     after: <RoundButton circular icon="remove" />,
   }))
-  const results = [...activeItems]
+  const results = [
+    ...activeItems,
+    {
+      id: '1000',
+      icon: <Icon name="add" size={32} opacity={0.25} />,
+      title: 'Add',
+      type: 'add',
+      onClick: () => {},
+    },
+  ]
 
   return (
     <Section sizePadding={2}>
@@ -32,7 +41,7 @@ export default function AppsAppMain() {
             height={98}
             margin={10}
           >
-            <Icon size={58} name={x.icon} />
+            {x.icon}
             <Text ellipse fontWeight={500} size={0.9}>
               {x.title}
             </Text>

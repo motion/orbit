@@ -31,7 +31,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       icon: app.integration,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),
-      group: 'Sources',
+      group: 'Active Sources',
     })),
     ...allSources.map((source, index) => ({
       // ...these have their own onClick

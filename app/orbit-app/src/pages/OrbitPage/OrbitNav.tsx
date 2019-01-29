@@ -155,6 +155,9 @@ const OrbitNavClip = gloss({
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
+  transform: {
+    y: 0.5,
+  },
 }).theme((_, theme) => ({
   boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
 }))

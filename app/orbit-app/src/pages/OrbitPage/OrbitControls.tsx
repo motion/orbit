@@ -26,12 +26,16 @@ export default observer(function OrbitControls() {
 })
 
 const ToolbarChrome = gloss(Row, {
-  // minHeight: 2,
+  minHeight: 4,
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({
   background: theme.tabBackground,
-  borderBottom: [1, theme.borderColor.alpha(0.2)],
+  boxShadow: [
+    ['inset', 0, 0.5, 0, 0, theme.borderColor],
+    ['inset', 0, -0.5, 0, 0, theme.borderColor],
+  ],
+  // borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))
 
 const ToolbarInner = gloss({

@@ -194,6 +194,7 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
+      'process.env.DISABLE_SYNCERS': JSON.stringify(process.env.DISABLE_SYNCERS || false),
     }),
 
     new webpack.IgnorePlugin(/electron-log/),

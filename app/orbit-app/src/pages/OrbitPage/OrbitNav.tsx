@@ -1,5 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
-import { View } from '@mcro/ui'
+import { ContextMenu, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -180,7 +180,23 @@ const OrbitNavChrome = gloss({
 })
 
 const SortableTab = SortableElement((props: TabProps) => {
-  return <OrbitTab {...props} />
+  return (
+    <ContextMenu
+      items={[
+        {
+          label: 'Pin',
+        },
+        {
+          label: 'Edit',
+        },
+        {
+          label: 'Remove',
+        },
+      ]}
+    >
+      <OrbitTab {...props} />
+    </ContextMenu>
+  )
 })
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {

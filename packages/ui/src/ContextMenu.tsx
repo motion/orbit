@@ -9,7 +9,7 @@ type ContextMenuProps = ViewProps & {
   component?: React.ComponentType<any> | string
 }
 
-export default function ContextMenu({
+export function ContextMenu({
   children,
   component = Contents,
   items,

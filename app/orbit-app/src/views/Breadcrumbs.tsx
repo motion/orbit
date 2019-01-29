@@ -1,5 +1,6 @@
-import { Row, Text, TextProps, View, ViewProps } from '@mcro/ui'
+import { Row, Text, TextProps, ViewProps } from '@mcro/ui'
 import React from 'react'
+import { Omit } from '../helpers/typeHelpers/omit'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
@@ -24,31 +25,43 @@ export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = React.useReducer(breadcrumbsReducer, { children: new Set() })
   return (
     <BreadcrumbsContext.Provider value={{ dispatch, children: [...state.children] }}>
-      <Row {...props} />
+      <Row alignItems="center" {...props} />
     </BreadcrumbsContext.Provider>
   )
 }
 
-export function Breadcrumb(props: TextProps) {
+export type BreadcrumbsProps = Omit<TextProps, 'children'> & {
+  separator?: React.ReactNode
+  children?: React.ReactNode | ((isLast?: boolean) => React.ReactNode)
+}
+
+export function Breadcrumb({
+  separator = <Text>{' >'}</Text>,
+  children,
+  ...props
+}: BreadcrumbsProps) {
   const id = React.useRef(null)
-  const { dispatch, children } = React.useContext(BreadcrumbsContext)
-  const total = children.length
-  const index = children.indexOf(id.current)
+  const breadcrumbsContext = React.useContext(BreadcrumbsContext)
+  const total = breadcrumbsContext.children.length
+  const index = breadcrumbsContext.children.indexOf(id.current)
   const isLast = index === total - 1
 
   React.useEffect(() => {
     id.current = Math.random()
-    dispatch({ type: 'mount', value: id.current })
+    breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
     return () => {
-      dispatch({ type: 'unmount', value: id.current })
+      breadcrumbsContext.dispatch({ type: 'unmount', value: id.current })
     }
   }, [])
 
+  if (typeof children === 'function') {
+    return children(isLast)
+  }
+
   return (
-    <View>
-      <Text {...props}>
-        {props.children} {isLast ? '' : '>'}
-      </Text>
-    </View>
+    <>
+      <Text {...props}>{children}</Text>
+      {isLast ? '' : separator}
+    </>
   )
 }

@@ -1,11 +1,12 @@
 import { loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
 import { AppModel, AppType, BitModel, ListsAppData, PersonBitModel } from '@mcro/models'
-import { Button } from '@mcro/ui'
+import { Button, ButtonProps, Text } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
+import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { SelectableTreeList } from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
@@ -182,12 +183,36 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   )
 })
 
+function OrbitBreadcrumb(props: ButtonProps) {
+  return (
+    <Breadcrumb>
+      {isLast => (
+        <>
+          <FloatingBarButtonSmall {...props} />
+          {!isLast ? (
+            <Text
+              size={1.5}
+              fontWeight={900}
+              alpha={0.5}
+              margin={[0, 10]}
+              height={4}
+              lineHeight={0}
+            >
+              {' · '}
+            </Text>
+          ) : null}
+        </>
+      )}
+    </Breadcrumb>
+  )
+}
+
 function ListAppBreadcrumbs() {
   return (
     <Breadcrumbs>
-      <Breadcrumb>Memory</Breadcrumb>
-      <Breadcrumb>Memory</Breadcrumb>
-      <Breadcrumb>Memory</Breadcrumb>
+      <OrbitBreadcrumb>Memory</OrbitBreadcrumb>
+      <OrbitBreadcrumb>My folder</OrbitBreadcrumb>
+      <OrbitBreadcrumb>Some sub folder 4</OrbitBreadcrumb>
     </Breadcrumbs>
   )
 }

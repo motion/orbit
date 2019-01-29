@@ -90,16 +90,11 @@ export class GMailMessageParser {
     if (this.htmlBody) {
       const window = new JSDOM('').window
       const DOMPurify = createDOMPurify(window)
-      return (
-        DOMPurify.sanitize(this.htmlBody)
-          .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
-          .replace(/&nbsp;/gi, ' ')
-          .replace(/•/gi, '')
-          // gmail formats plain text links as <http://google.com>
-          // turn <http://google.com> => http://google.com
-          .replace(/<([^>]+)>/g, '$1')
-          .trim()
-      )
+      return DOMPurify.sanitize(this.htmlBody)
+        .replace(/<div class="gmail_quote">((.|\n)*)<\/div>/, '')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/•/gi, '')
+        .trim()
     } else if (this.textBody) {
       return this.textBody
     } else {
@@ -111,11 +106,16 @@ export class GMailMessageParser {
    * Removes some annoying characters that we don't wanna see in the body.
    */
   private removeAnnoyingCharacters(str: string) {
-    return str
-      .replace(/&nbsp;/gi, ' ')
-      .replace(/•/gi, '')
-      .replace(/\s/g, ' ')
-      .trim()
+    return (
+      str
+        // gmail formats plain text links as <http://google.com>
+        // turn <http://google.com> => http://google.com
+        .replace(/<([^>]+)>/g, '$1')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/•/gi, '')
+        .replace(/\s/g, ' ')
+        .trim()
+    )
   }
 
   /**

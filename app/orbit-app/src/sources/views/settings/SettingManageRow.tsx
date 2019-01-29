@@ -86,7 +86,6 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
           onClick={() => handleRefresh(sourceId)}
         />
         <TitleBarButton
-          disabled={removeJobs.length > 0 || activeJobs.length > 0}
           icon="remove"
           tooltip={`Remove ${props.source.name}`}
           onClick={() => removeIntegration(props.source)}

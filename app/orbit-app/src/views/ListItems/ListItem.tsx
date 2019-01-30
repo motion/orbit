@@ -139,6 +139,12 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle || showPeople
+  const defaultPadding = slim ? [6, 8] : [8, 11]
+
+  // add a little vertical height for full height icons
+  if (slim && iconBefore) {
+    defaultPadding[0] += 2
+  }
 
   const renderedChildren = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
@@ -190,11 +196,11 @@ export default observer(function ListItem(props: ListItemProps) {
     (() => {
       let size = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 16
       if (isMultiLine) {
-        size += 6
+        size += 8
       }
       const iconPropsFinal = {
         size,
-        style: { transform: `translateY(${slim ? 4 : 2}px)` },
+        style: iconBefore ? null : { transform: `translateY(${slim ? 4 : 2}px)` },
         ...iconProps,
       }
       return (
@@ -229,7 +235,7 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || (slim ? [4, 8] : [8, 11])}
+          padding={padding || defaultPadding}
           {...cardProps}
         >
           {before}
@@ -435,7 +441,7 @@ const TitleSpace = gloss({
     flex: 1,
   },
   slim: {
-    minWidth: 5,
+    minWidth: 6,
   },
 })
 

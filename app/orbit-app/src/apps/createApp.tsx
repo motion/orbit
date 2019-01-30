@@ -36,8 +36,6 @@ const CreateAppMain = observer(function CreateAppMain() {
   const app = apps.find(x => x.type === type)
   const [background, setBackground] = useState('#111')
 
-  console.log('app.icon', app.icon)
-
   return (
     <View padding={20} margin="auto" width="80%" minHeight="80%" minWidth={400} maxWidth={700}>
       {/* header */}
@@ -69,7 +67,7 @@ const CreateAppMain = observer(function CreateAppMain() {
       <VerticalSpace />
 
       <View>
-        <ColorPicker onChange={setBackground} />
+        <ColorPicker onChangeColor={setBackground} activeColor={background} />
       </View>
       <VerticalSpace />
 

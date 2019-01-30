@@ -1,3 +1,4 @@
+import { useTheme } from '@mcro/gloss'
 import { color } from '@mcro/ui'
 import React from 'react'
 import { appIcons } from './appIcons'
@@ -16,7 +17,8 @@ export default React.memo(function AppIcon({
   style,
   ...props
 }: AppIconProps) {
-  const fill = `${props.color || '#fff'}`
+  const theme = useTheme()
+  const fill = props.color || (size < 28 ? theme.background : background)
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
@@ -49,8 +51,8 @@ export default React.memo(function AppIcon({
     <SVG
       fill={fill}
       svg={iconSrc}
-      width={`${size}`}
-      height={`${size}`}
+      width={`${size}px`}
+      height={`${size}px`}
       style={{
         alignItems: 'center',
         justifyContent: 'center',

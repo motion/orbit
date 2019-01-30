@@ -57,6 +57,7 @@ export default observer(function OrbitNav() {
   const items = space.paneSort.map(
     (id, index): TabProps => {
       const app = activeApps.find(x => x.id === id)
+      const pinnedApps = activeApps.filter(x => x.pinned).length
       const isLast = index !== activeApps.length
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
@@ -66,6 +67,8 @@ export default observer(function OrbitNav() {
         app,
         separator: !isActive && isLast && !nextIsActive,
         label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+        // disable if its the only sortable tab, or if its pinned
+        disabled: isPinned || pinnedApps === 1,
         stretch: !isPinned,
         thicc: isPinned,
         isActive,

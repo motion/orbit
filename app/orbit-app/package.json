@@ -71,7 +71,8 @@
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "webpack-runtime-require": "0.3.0",
-    "emoji-mart": "2.9.2"
+    "emoji-mart": "2.9.2",
+    "randomcolor": "0.5.3"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",

@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
+import { ColorPicker } from '../views/ColorPicker'
 import { Divider } from '../views/Divider'
 import { Icon } from '../views/Icon'
 import { IconContainer } from '../views/IconContainer'
@@ -48,9 +49,7 @@ export const createApp = {
             </Button>
           </Theme>
         </Row>
-
         <VerticalSpace />
-
         <SubTitle>Name</SubTitle>
         <Input
           placeholder="Name..."
@@ -60,6 +59,7 @@ export const createApp = {
           }}
         />
 
+        <ColorPicker />
         <VerticalSpace />
 
         <SubTitle>Type</SubTitle>
@@ -77,11 +77,9 @@ export const createApp = {
             </View>
           ))}
         </Row>
-
         <VerticalSpace />
         <Divider />
         <VerticalSpace />
-
         <SubTitle>Setup</SubTitle>
       </View>
     )

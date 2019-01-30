@@ -1,4 +1,4 @@
-import { gloss, Row, SimpleText } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolBarRender } from '../../components/OrbitToolbar'
@@ -13,21 +13,9 @@ export default observer(function OrbitControls() {
           <OrbitToolBarRender>
             {toolbars => (
               <ToolbarInner hasToolbars={!!toolbars}>
-                <ToolbarSide>
-                  <SimpleText size={0.92} alpha={0.75}>
-                    {toolbars && toolbars.before}
-                  </SimpleText>
-                </ToolbarSide>
-                <ToolbarCenter>
-                  <SimpleText size={0.92} alpha={0.75}>
-                    {toolbars && toolbars.center}
-                  </SimpleText>
-                </ToolbarCenter>
-                <ToolbarSide end>
-                  <SimpleText size={0.92} alpha={0.75}>
-                    {toolbars && toolbars.after}
-                  </SimpleText>
-                </ToolbarSide>
+                <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
+                <ToolbarCenter>{toolbars && toolbars.center}</ToolbarCenter>
+                <ToolbarSide end>{toolbars && toolbars.after}</ToolbarSide>
               </ToolbarInner>
             )}
           </OrbitToolBarRender>

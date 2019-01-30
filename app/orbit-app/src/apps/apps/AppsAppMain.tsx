@@ -25,49 +25,58 @@ export default function AppsAppMain() {
     ...activeItems,
     {
       id: '10000',
-      icon: <Icon name="add" size={32} opacity={0.25} />,
+      icon: (
+        <View width={58} height={58} alignItems="center" justifyContent="center">
+          <Icon name="add" size={32} opacity={0.25} />
+        </View>
+      ),
       title: 'Add',
       type: 'add',
       onClick: () => {},
+      disabled: true,
     },
   ]
+
+  const getItem = React.useCallback(
+    (item, { isSelected, select }) => (
+      <View
+        key={item.id}
+        alignItems="center"
+        justifyContent="center"
+        margin={10}
+        width={98}
+        height={98}
+        onClick={() => {
+          console.log('clcik me...')
+          select()
+        }}
+      >
+        <View alignItems="center" position="relative" width={58} height={58}>
+          {item.type !== 'add' && (
+            <Absolute
+              top={2}
+              left={2}
+              right={2}
+              bottom={2}
+              borderRadius={17}
+              boxShadow={isSelected ? [[0, 0, 10, 'blue']] : null}
+              zIndex={-1}
+            />
+          )}
+          {item.icon}
+        </View>
+        <Text ellipse fontWeight={500} size={0.9}>
+          {item.title}
+        </Text>
+      </View>
+    ),
+    [results.map(x => x.id).join('')],
+  )
 
   return (
     <Section sizePadding={2}>
       <Title>Apps</Title>
-      <SelectableGrid
-        margin="auto"
-        items={results}
-        getItem={(item, { isSelected, select }) => (
-          <View
-            key={item.id}
-            alignItems="center"
-            justifyContent="center"
-            margin={10}
-            width={98}
-            height={98}
-            onClick={() => {
-              console.log('clcik me...')
-              select()
-            }}
-          >
-            <View alignItems="center" position="relative" width={58} height={58}>
-              <Absolute
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                borderRadius={20}
-                boxShadow={isSelected ? [[0, 0, 8, 'blue']] : null}
-              />
-              {item.icon}
-            </View>
-            <Text ellipse fontWeight={500} size={0.9}>
-              {item.title}
-            </Text>
-          </View>
-        )}
-      />
+      <SelectableGrid margin="auto" items={results} getItem={getItem} />
       {/* <OrbitList sortable items={results} /> */}
     </Section>
   )
@@ -78,7 +87,7 @@ type SelectableGridProps<A> = Omit<SortableGridProps<any>, 'getItem'> & {
   selectionStore?: SelectionStore
 }
 
-const SelectableGrid = function SelectableGrid({
+const SelectableGrid = React.memo(function SelectableGrid({
   items,
   getItem,
   ...props
@@ -121,4 +130,4 @@ const SelectableGrid = function SelectableGrid({
       {...props}
     />
   )
-}
+})

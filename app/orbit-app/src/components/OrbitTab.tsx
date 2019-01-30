@@ -23,6 +23,7 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   iconSize?: number
   iconAdjustOpacity?: number
   getContext?: () => MenuTemplate
+  disabled?: boolean
 }
 
 export function OrbitTab({

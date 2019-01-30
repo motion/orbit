@@ -3,7 +3,6 @@ import * as React from 'react'
 import { HighlightText } from '../HighlightText'
 
 const HighlightTextFrame = gloss({
-  padding: [2, 0],
   flex: 1,
   overflow: 'hidden',
   whiteSpace: 'pre',

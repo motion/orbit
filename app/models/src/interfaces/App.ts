@@ -9,6 +9,7 @@ export type ListAppDataItem = {
   type: 'bit' | 'person' | 'folder' | 'root'
   name?: string
   children: ItemID[]
+  icon?: string
 }
 
 export type ListsAppData = {
@@ -35,7 +36,6 @@ export interface BaseApp {
   spaceId?: number
   name?: string
   type?: string
-  data?: any
   pinned?: boolean
   colors?: string[]
 }
@@ -57,6 +57,16 @@ export type SourcesApp = BaseApp & { type: 'sources'; data: any }
 export type SettingsApp = BaseApp & { type: 'settings'; data: any }
 
 // App
+
+export type AppByType = {
+  search: SearchApp
+  people: PeopleApp
+  topics: TopicsApp
+  lists: ListsApp
+  memory: MemoryApp
+  sources: SourcesApp
+  settings: SettingsApp
+}
 
 export type App =
   | SearchApp

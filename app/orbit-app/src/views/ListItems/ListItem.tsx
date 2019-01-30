@@ -188,7 +188,7 @@ export default observer(function ListItem(props: ListItemProps) {
     (() => {
       const iconPropsFinal = {
         size: iconBefore ? (slim ? 30 : 40) : slim ? 12 : 16,
-        style: { marginTop: slim ? 4 : 2 },
+        style: { transform: `translateY(${slim ? 4 : 2}px)` },
         ...iconProps,
       }
       return (

@@ -1,20 +1,56 @@
 import { AppType } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { memoize } from 'lodash'
+import { flatten, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
+import ListItem from '../../views/ListItems/ListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import './calendar.css' // theme css file
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
+
+const ItemActionDropdown = React.memo(function ItemActionDropdown() {
+  console.log('render item action dropdown')
+  const listApps = useActiveApps('lists')
+  return (
+    <>
+      {flatten(
+        listApps.map(app => {
+          let items = [
+            {
+              id: `app-${app.id}`,
+              title: app.name,
+              icon: `orbit-${app.type}`,
+              subtitle: `Parent list...`,
+            },
+          ]
+          console.log('app.data.items', app.data.items)
+          for (const id in app.data.items) {
+            const folder = app.data.items[id]
+            if (folder.type === 'folder') {
+              items.push({
+                id: `folder-${folder.id}`,
+                title: folder.name,
+                icon: folder.icon,
+                subtitle: null,
+              })
+            }
+          }
+          return items.map(({ id, ...item }) => <ListItem key={id} {...item} />)
+        }),
+      )}
+    </>
+  )
+})
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
   const { searchStore, queryStore } = useStoresSafe()
@@ -51,11 +87,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
               borderRadius={10}
               elevation={2}
             >
-              {isShown => (
-                <View flex={1} className="calendar-dom theme-light" padding={10}>
-                  {isShown ? 'show' : 'hide'}
-                </View>
-              )}
+              {isShown => isShown && <ItemActionDropdown />}
             </Popover>
           ),
         }

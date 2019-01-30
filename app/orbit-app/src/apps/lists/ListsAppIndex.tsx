@@ -1,10 +1,10 @@
-import { loadOne, useModel, useObserveMany } from '@mcro/model-bridge'
+import { loadOne, useModel } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
   BitModel,
   ListAppDataItem,
-  ListsAppData,
+  ListsApp,
   PersonBitModel,
 } from '@mcro/models'
 import { Button, ButtonProps, Text, View } from '@mcro/ui'
@@ -105,47 +105,44 @@ import ListEdit from './ListEdit'
 // }
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const [listApp /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
-  const testItems = useObserveMany(BitModel, { take: 10 })
+  const [app /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
+  const listApp = app as ListsApp
+  const items = listApp.data.items
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
   const getDepth = React.useRef(0)
   getDepth.current = treeState.depth
 
-  if (testItems.length < 4) {
-    return null
-  }
+  console.log('items', items)
 
-  console.log('testItems', testItems)
-
-  const items: ListsAppData['items'] = {
-    [0]: {
-      id: 0,
-      type: 'root',
-      children: [1, testItems[1].id],
-    },
-    [1]: {
-      id: 1,
-      type: 'folder',
-      name: 'My folder',
-      children: [testItems[2].id, testItems[3].id],
-    },
-    [testItems[1].id]: {
-      id: testItems[1].id,
-      type: 'bit',
-      name: 'OneLogin - verify your email',
-    },
-    [testItems[2].id]: {
-      id: testItems[2].id,
-      type: 'bit',
-      name: 'Snapchat Login on July 29, 2018',
-    },
-    [testItems[3].id]: {
-      id: testItems[3].id,
-      type: 'bit',
-      name: 'Your Friday evening order with Uber Eats',
-    },
-  }
+  // const items: ListsAppData['items'] = {
+  //   [0]: {
+  //     id: 0,
+  //     type: 'root',
+  //     children: [1, testItems[1].id],
+  //   },
+  //   [1]: {
+  //     id: 1,
+  //     type: 'folder',
+  //     name: 'My folder',
+  //     children: [testItems[2].id, testItems[3].id],
+  //   },
+  //   [testItems[1].id]: {
+  //     id: testItems[1].id,
+  //     type: 'bit',
+  //     name: 'OneLogin - verify your email',
+  //   },
+  //   [testItems[2].id]: {
+  //     id: testItems[2].id,
+  //     type: 'bit',
+  //     name: 'Snapchat Login on July 29, 2018',
+  //   },
+  //   [testItems[3].id]: {
+  //     id: testItems[3].id,
+  //     type: 'bit',
+  //     name: 'Your Friday evening order with Uber Eats',
+  //   },
+  // }
 
   const loadItem = React.useCallback(async item => {
     switch (item.type) {

@@ -22,13 +22,11 @@ import ListEdit from './ListEdit'
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
-  const items = (listApp && listApp.data.items) || []
+  const items = (listApp && listApp.data.items) || {}
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
   const getDepth = React.useRef(0)
   getDepth.current = treeState.depth
-
-  console.log('items', items)
 
   const loadItem = React.useCallback(async item => {
     switch (item.type) {
@@ -80,17 +78,16 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
       <OrbitToolbar
         before={
           <>
-            <View width={30}>
-              {treeState.depth > 0 && (
-                <FloatingBarButtonSmall
-                  circular
-                  icon="arrows-1_bold-left"
-                  onClick={() => {
-                    treeRef.current.back()
-                  }}
-                />
-              )}
-            </View>
+            {treeState.depth > 0 && (
+              <FloatingBarButtonSmall
+                icon="arrows-1_bold-left"
+                onClick={() => {
+                  treeRef.current.back()
+                }}
+              >
+                Back
+              </FloatingBarButtonSmall>
+            )}
           </>
         }
         center={
@@ -146,10 +143,12 @@ function OrbitBreadcrumb(props: ButtonProps) {
 
 function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
   return (
-    <Breadcrumbs>
-      {props.items.map((item, index) => (
-        <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
-      ))}
-    </Breadcrumbs>
+    <View flex={1}>
+      <Breadcrumbs>
+        {props.items.map((item, index) => (
+          <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
+        ))}
+      </Breadcrumbs>
+    </View>
   )
 }

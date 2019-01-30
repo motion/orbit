@@ -179,7 +179,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        margin={[-3, -1]}
+        margin={[2, -1]}
         maxWidth={120}
         fontWeight={400}
         fontSize={13}

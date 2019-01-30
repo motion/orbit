@@ -22,7 +22,7 @@ export const lists = {
       }
 
       const id = child.id || Math.random()
-      item.children.push(child.id)
+      item.children.push(id)
 
       // add to hash
       if (child.target === 'bit') {

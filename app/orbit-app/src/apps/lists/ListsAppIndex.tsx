@@ -10,10 +10,10 @@ import {
 import { Button, ButtonProps, Text, View } from '@mcro/ui'
 import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
+import pluralize from 'pluralize'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
-import { HorizontalSpace } from '../../views'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
@@ -73,6 +73,8 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     setTreeState({ depth, history })
   }, [])
 
+  const numItems = (listApp && Object.keys(listApp.data.items).length) || 0
+
   return (
     <>
       <OrbitToolbar
@@ -89,23 +91,23 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
                 />
               )}
             </View>
-            <HorizontalSpace />
-            {listApp && (
-              <ListAppBreadcrumbs
-                items={[
-                  {
-                    id: 0,
-                    name: listApp.name,
-                  },
-                  ...treeState.history
-                    .slice(1)
-                    .filter(Boolean)
-                    .map(id => items[id]),
-                ]}
-              />
-            )}
           </>
         }
+        center={
+          <ListAppBreadcrumbs
+            items={[
+              {
+                id: 0,
+                name: listApp ? listApp.name : '',
+              },
+              ...treeState.history
+                .slice(1)
+                .filter(Boolean)
+                .map(id => items[id]),
+            ]}
+          />
+        }
+        after={`${numItems} ${pluralize('item', numItems)}`}
       />
       <SelectableTreeList
         ref={treeRef}

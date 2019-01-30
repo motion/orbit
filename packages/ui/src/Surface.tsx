@@ -284,6 +284,13 @@ const SurfaceFrame = gloss(View, {
   )
 })
 
+const ellipseStyle = {
+  display: 'block',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}
+
 const Element = gloss({
   // needed to reset for <button /> at least
   fontSize: 'inherit',
@@ -321,10 +328,7 @@ const Element = gloss({
     ...(props.inline && {
       display: 'inline',
     }),
-    ...(props.ellipse && {
-      textOverflow: 'ellipse',
-      whiteSpace: 'nowrap',
-    }),
+    ...(props.ellipse && ellipseStyle),
     width: props.width || `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }

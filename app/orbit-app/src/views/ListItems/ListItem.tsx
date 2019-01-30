@@ -184,6 +184,7 @@ export default observer(function ListItem(props: ListItemProps) {
         fontSize={13}
         alpha={subTextOpacity}
         onClick={store.handleClickLocation}
+        ellipse
       >
         {`${location}`}
       </RoundButtonSmall>

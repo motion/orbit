@@ -1,7 +1,7 @@
 import { AppType, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { flatten } from 'lodash'
+import { flatten, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -63,14 +63,14 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
 })
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
-  const { searchStore, queryStore } = useStoresSafe()
-  const { queryFilters } = queryStore
+  const { searchStore } = useStoresSafe()
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    index => {
+    memoize(index => {
       const item = items[index]
       if (item.item && item.item.target === 'bit') {
+        const showItemDropdown = isShown => isShown && <ItemActionDropdown />
         return {
           after: (
             <MergeContext Context={ItemActionContext} value={{ item: item.item }}>
@@ -99,54 +99,20 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                 borderRadius={10}
                 elevation={1}
               >
-                {isShown => isShown && <ItemActionDropdown />}
+                {showItemDropdown}
               </Popover>
             </MergeContext>
           ),
         }
       }
       return null
-    },
+    }),
     [items.map(i => `${i.id}${i.title}`).join(' ')],
   )
 
   return (
     <>
-      <OrbitToolbar
-        before={
-          <>
-            <Popover
-              delay={250}
-              openOnClick
-              openOnHover
-              closeOnClickAway
-              group="filters"
-              target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
-              background
-              borderRadius={10}
-              elevation={4}
-              theme="light"
-              width={390}
-              height={300}
-            >
-              <View flex={1} className="calendar-dom theme-light" padding={10}>
-                <DateRangePicker
-                  onChange={queryFilters.onChangeDate}
-                  ranges={[queryFilters.dateState]}
-                />
-              </View>
-            </Popover>
-            <View width={8} />
-            <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
-              {queryFilters.sortBy}
-            </FloatingBarButtonSmall>
-            <View width={8} />
-            <OrbitFilterIntegrationButton />
-          </>
-        }
-        after={<OrbitSuggestionBar />}
-      />
-
+      <SearchToolbar />
       <SelectableList
         minSelected={0}
         items={items}
@@ -156,5 +122,47 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         getItemProps={getItemProps}
       />
     </>
+  )
+})
+
+const SearchToolbar = observer(function SearchToolbar() {
+  const { queryStore } = useStoresSafe()
+  const { queryFilters } = queryStore
+
+  return (
+    <OrbitToolbar
+      before={
+        <>
+          <Popover
+            delay={250}
+            openOnClick
+            openOnHover
+            closeOnClickAway
+            group="filters"
+            target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
+            background
+            borderRadius={10}
+            elevation={4}
+            theme="light"
+            width={390}
+            height={300}
+          >
+            <View flex={1} className="calendar-dom theme-light" padding={10}>
+              <DateRangePicker
+                onChange={queryFilters.onChangeDate}
+                ranges={[queryFilters.dateState]}
+              />
+            </View>
+          </Popover>
+          <View width={8} />
+          <FloatingBarButtonSmall onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+            {queryFilters.sortBy}
+          </FloatingBarButtonSmall>
+          <View width={8} />
+          <OrbitFilterIntegrationButton />
+        </>
+      }
+      after={<OrbitSuggestionBar />}
+    />
   )
 })

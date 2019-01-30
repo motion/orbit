@@ -145,6 +145,7 @@ const semiDark = {
 export const themes = {
   selected: {
     ...Theme.fromStyles({
+      iconFill: '#fff',
       background: orbitColor,
       backgroundHover: orbitColor,
       backgroundActive: orbitColor,

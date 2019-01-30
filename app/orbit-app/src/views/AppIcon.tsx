@@ -18,7 +18,7 @@ export default React.memo(function AppIcon({
   ...props
 }: AppIconProps) {
   const theme = useTheme()
-  const fill = props.color || (size < 28 ? theme.background : background)
+  const fill = props.color || (size < 36 ? theme.iconFill || theme.background : background)
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color

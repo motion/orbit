@@ -139,7 +139,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle || showPeople
-  const defaultPadding = slim ? [6, 8] : [8, 11]
+  const defaultPadding = slim ? [6, 8] : [7, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons
@@ -445,7 +445,7 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 9,
+  minWidth: 8,
   shouldFlex: {
     flex: 1,
   },

@@ -241,7 +241,7 @@ const adjust = {
   },
   slack: {
     transform: {
-      scale: 0.95,
+      scale: 0.92,
     },
   },
   gmail: {
@@ -253,7 +253,7 @@ const adjust = {
   },
   github: {
     transform: {
-      x: '-1%',
+      // x: '-1%',
     },
   },
   confluence: {

@@ -149,18 +149,19 @@ export class SearchStore {
     if (searchedApps.length) {
       return [
         {
-          title: `${this.stores.spaceStore.activeSpace.name} Home`,
+          title: `Apps`,
           subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
           icon: 'orbit-apps-full',
           iconBefore: true,
           type: AppType.apps,
-          // group: this.stores.spaceStore.activeSpace.name,
+          group: this.stores.spaceStore.activeSpace.name,
         },
         ...searchedApps.map(app => ({
           title: app.name,
           slim: true,
           iconBefore: true,
           icon: `orbit-${app.type}-full`,
+          group: this.stores.spaceStore.activeSpace.name,
           appConfig: {
             type: AppType.message,
             title: `Open ${app.name}`,

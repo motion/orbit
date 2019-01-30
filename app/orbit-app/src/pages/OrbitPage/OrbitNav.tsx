@@ -59,9 +59,9 @@ export default observer(function OrbitNav() {
       const app = activeApps.find(x => x.id === id)
       const pinnedApps = activeApps.filter(x => x.pinned).length
       const isLast = index !== activeApps.length
-      const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
+      const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
       const nextIsActive =
-        activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
+        activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
       const isPinned = app.pinned
       return {
         app,
@@ -90,7 +90,8 @@ export default observer(function OrbitNav() {
               label: 'Toggle Pinned',
               checked: isPinned,
               click() {
-                save(AppModel, { ...app, pinned: !app.pinned })
+                // TODO umed type not accepting
+                save(AppModel, { ...app, pinned: !app.pinned } as any)
               },
             },
             {
@@ -100,7 +101,7 @@ export default observer(function OrbitNav() {
         },
         onClick: () => {
           setShowCreateNew(false)
-          paneManagerStore.setActivePane(app.id)
+          paneManagerStore.setActivePane(`${app.id}`)
         },
         onClickPopout:
           !isPinned &&
@@ -150,7 +151,7 @@ export default observer(function OrbitNav() {
           iconAdjustOpacity={-0.2}
           onClick={() => {
             if (!showCreateNew) {
-              paneManagerStore.setActivePaneByType('createApp')
+              paneManagerStore.setActivePane('app-apps-new')
             } else {
               paneManagerStore.back()
             }

@@ -18,7 +18,7 @@ export default function SearchAppMain(props: AppProps<AppType.search>) {
   return (
     <AppView
       viewType="main"
-      id={+appConfig.id}
+      id={appConfig.id}
       title={appConfig.title}
       type={appConfig.type}
       appConfig={appConfig}

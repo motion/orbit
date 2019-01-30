@@ -104,15 +104,16 @@ function OrbitPageProvideStores(props: { children: any }) {
     panes: [
       ...activeApps.map(app => ({
         ...app,
+        id: `${app.id}`,
         keyable: true,
       })),
       ...[
-        { name: 'Settings', type: 'settings' },
-        { name: 'Apps', type: 'apps' },
-        { name: 'Sources', type: 'sources' },
-        { name: 'Add app', type: 'createApp' },
-        { name: 'Onboard', type: 'onboard' },
-      ].map((pane, id) => ({ ...pane, id: `app-${id}` })),
+        { id: 'app-settings', name: 'Settings', type: 'settings' },
+        { id: 'app-apps', name: 'Apps', type: 'apps' },
+        { id: 'app-sources', name: 'Sources', type: 'sources' },
+        { id: 'app-apps-new', name: 'Add app', type: 'apps' },
+        { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
+      ],
     ],
   })
 

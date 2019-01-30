@@ -1,13 +1,13 @@
 import { Button, Row, Text, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
-import { ColorPicker } from '../views/ColorPicker'
-import { Divider } from '../views/Divider'
-import { Icon } from '../views/Icon'
-import { IconContainer } from '../views/IconContainer'
-import { Input } from '../views/Input'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../../views'
+import { ColorPicker } from '../../views/ColorPicker'
+import { Divider } from '../../views/Divider'
+import { Icon } from '../../views/Icon'
+import { IconContainer } from '../../views/IconContainer'
+import { Input } from '../../views/Input'
 
 const apps = [
   {
@@ -30,7 +30,7 @@ const apps = [
   },
 ]
 
-const CreateAppMain = observer(function CreateAppMain() {
+export default observer(function AppsMainNew() {
   const { newAppStore } = useStoresSafe()
   const { type } = newAppStore
   const app = apps.find(x => x.type === type)
@@ -95,7 +95,3 @@ const CreateAppMain = observer(function CreateAppMain() {
     </View>
   )
 })
-
-export const createApp = {
-  main: CreateAppMain,
-}

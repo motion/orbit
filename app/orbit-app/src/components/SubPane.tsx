@@ -8,7 +8,7 @@ import * as React from 'react'
 import { SubPaneStore } from './SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {
-  id: number
+  id: any
   type?: AppType
   fullHeight?: boolean
   preventScroll?: boolean

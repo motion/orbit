@@ -5,10 +5,10 @@ import { RoundButton } from '../../views'
 import OrbitList from '../../views/Lists/OrbitList'
 import { SortableGrid } from '../../views/SortableGrid'
 
-export default function AppsAppIndex() {
+export default function AppsAppsIndex() {
   const activeApps = useActiveAppsSorted()
   const activeItems = activeApps.map(x => ({
-    id: x.id,
+    id: `${x.id}`,
     title: x.name,
     icon: `orbit-${x.type}`,
     type: 'installed',

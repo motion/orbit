@@ -9,7 +9,6 @@ export enum AppType {
   settings = 'settings',
   message = 'message',
   apps = 'apps',
-  createApp = 'createApp',
 }
 
 export type AppConfig = {

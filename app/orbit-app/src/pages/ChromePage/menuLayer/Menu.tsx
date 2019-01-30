@@ -484,7 +484,7 @@ export function Menu() {
     onMenuHover: index => {
       const app = menuApps.find(x => x.index === index)
       if (app) {
-        paneManagerStore.setActivePane(app.id)
+        paneManagerStore.setActivePane(`${app.id}`)
       }
     },
   })
@@ -550,12 +550,13 @@ export function Menu() {
   )
 }
 
-const itemProps = {
-  oneLine: false,
-  condensed: true,
-  onSelectItem: false,
-  hideSubtitle: true,
-}
+// TODO theres a context for this right?
+// const itemProps = {
+//   oneLine: false,
+//   condensed: true,
+//   onSelectItem: false,
+//   hideSubtitle: true,
+// }
 
 const MenuLayerContent = React.memo(() => {
   const { menuStore, queryStore } = useStoresSafe()
@@ -577,7 +578,6 @@ const MenuLayerContent = React.memo(() => {
             viewType="index"
             title={app.name}
             type={app.type}
-            itemProps={itemProps}
           />
         ))}
       </Searchable>

@@ -1,17 +1,13 @@
 import { Absolute } from '@mcro/gloss'
 import { Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import React, { useEffect, useMemo } from 'react'
-import { Omit } from '../../helpers/typeHelpers/omit'
+import React from 'react'
+import { SelectableGrid } from '../../components/SelectableGrid'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { RoundButton, Title } from '../../views'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
-import { SortableGrid, SortableGridProps } from '../../views/SortableGrid'
 
-export default function AppsAppMain() {
+export default function AppsMainManage() {
   const activeApps = useActiveAppsSorted()
   const activeItems = activeApps.map(x => ({
     id: x.id,
@@ -81,53 +77,3 @@ export default function AppsAppMain() {
     </Section>
   )
 }
-
-type SelectableGridProps<A> = Omit<SortableGridProps<any>, 'getItem'> & {
-  getItem?: (item: A, { isSelected: boolean, select: Function }) => any
-  selectionStore?: SelectionStore
-}
-
-const SelectableGrid = React.memo(function SelectableGrid({
-  items,
-  getItem,
-  ...props
-}: SelectableGridProps<any>) {
-  const selectionStore = props.selectionStore || useStore(SelectionStore)
-  const moves = items.map((_, i) => i)
-  const itemsKey = JSON.stringify(items.map(i => i.id))
-
-  useEffect(
-    () => {
-      selectionStore.setResults([{ type: 'column' as 'column', indices: moves }])
-    },
-    [itemsKey],
-  )
-
-  const itemViews = useMemo(
-    () => {
-      return items.map((item, index) => {
-        const select = () => {
-          selectionStore.setActiveIndex(index)
-        }
-        return observer(() => {
-          return getItem(item, {
-            isSelected: selectionStore.activeIndex === index,
-            select,
-          })
-        })
-      })
-    },
-    [itemsKey],
-  )
-
-  return (
-    <SortableGrid
-      items={items}
-      getItem={(_, index) => {
-        const ItemView = itemViews[index]
-        return <ItemView />
-      }}
-      {...props}
-    />
-  )
-})

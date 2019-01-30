@@ -1,5 +1,5 @@
 import { save } from '@mcro/model-bridge'
-import { AppModel, Bit, ListAppDataItem, ListsApp } from '@mcro/models'
+import { AppModel, Bit, ListsApp } from '@mcro/models'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'
 
@@ -13,7 +13,7 @@ export const lists = {
     receive(
       app: ListsApp,
       parentID: number,
-      child: Bit | Partial<ListAppDataItem> & { target: 'folder' },
+      child: Bit | { id?: number; name?: string; icon?: string; target: 'folder' },
     ) {
       const item = app.data.items[parentID]
 

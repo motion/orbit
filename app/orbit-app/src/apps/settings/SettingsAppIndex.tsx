@@ -16,6 +16,7 @@ export default function SourcesAppIndex() {
         type: 'general',
         title: 'General',
         icon: 'gear',
+        iconBefore: true,
         subtitle: 'Shortcuts, startup, theme',
       },
       {
@@ -23,6 +24,7 @@ export default function SourcesAppIndex() {
         type: 'account',
         title: 'Account',
         icon: 'users_badge',
+        iconBefore: true,
         subtitle: 'Manage your account',
       },
       ...spaces.map((space, index) => ({

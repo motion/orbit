@@ -78,12 +78,13 @@ export default observer(function OrbitNav() {
             },
             {
               label: 'App settings',
+              checked: true,
             },
             {
               type: 'separator',
             },
             {
-              label: 'Pinned',
+              label: 'Toggle Pinned',
               checked: isPinned,
               click() {
                 save(AppModel, { ...app, pinned: !app.pinned })

@@ -65,7 +65,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
             <Popover
               towards="right"
               // selected would otherwise override this theme
-              theme={App.state.darkTheme ? 'dark' : 'light'}
+              theme={App.state.darkTheme ? 'light' : 'dark'}
               width={250}
               height={300}
               target={

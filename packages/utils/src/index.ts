@@ -3,7 +3,7 @@ import stringHash from 'string-hash'
 export function runWithTimeout<A>(cb: () => Promise<A>, time = 1000): Promise<A> {
   return new Promise((resolve, reject) => {
     let failTm = setTimeout(() => {
-      this.log.warning('Failed to crawl, timed out....')
+      console.warn('Failed to crawl, timed out....')
       reject()
     }, time)
     cb()

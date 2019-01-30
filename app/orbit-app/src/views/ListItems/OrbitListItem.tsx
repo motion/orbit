@@ -3,17 +3,20 @@ import * as React from 'react'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { OrbitItemViewProps } from '../../sources/types'
 import { Icon } from '../Icon'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
-import VirtualListItem, { VirtualListItemProps } from '../VirtualList/VirtualListItem'
-import { ListItemProps } from './ListItem'
+import { VirtualListItemProps } from '../VirtualList/VirtualListItem'
+import ListItem, { ListItemProps } from './ListItem'
 import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
 
-export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'>
+export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> & {
+  itemViewProps?: OrbitItemViewProps<any>
+}
 
-export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps) => {
+export const OrbitListItem = React.memo(({ item, itemViewProps, ...props }: OrbitListItemProps) => {
   const { appStore, selectionStore, sourcesStore } = useStoresSafe({ optional: ['selectionStore'] })
 
   // this is the view from sources, each bit type can have its own display
@@ -49,8 +52,7 @@ export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps)
   }, [])
 
   return (
-    <VirtualListItem
-      index={props.realIndex}
+    <ListItem
       searchTerm={props.query}
       subtitleSpaceBetween={spaceBetween}
       {...ItemView && ItemView.itemProps}
@@ -65,19 +67,21 @@ export const OrbitListItem = React.memo(({ item, ...props }: OrbitListItemProps)
           item={item}
           shownLimit={3}
           renderText={renderHighlightedText}
-          extraProps={extraProps}
+          // extraProps={extraProps}
           normalizedItem={normalized}
           {...ItemView.itemProps}
+          {...itemViewProps}
         />
       )}
-    </VirtualListItem>
+    </ListItem>
   )
 })
 
-const extraProps = {
-  condensed: true,
-  preventSelect: true,
-}
+// const extraProps = {
+//   condensed: true,
+//   preventSelect: true,
+// }
+
 const spaceBetween = <div style={{ flex: 1 }} />
 
 export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({

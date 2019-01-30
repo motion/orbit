@@ -160,7 +160,7 @@ const SearchToolbar = observer(function SearchToolbar() {
           <OrbitFilterIntegrationButton />
         </>
       }
-      after={<OrbitSuggestionBar />}
+      center={<OrbitSuggestionBar />}
     />
   )
 })

@@ -246,12 +246,12 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
 
   const rowRenderer = ({ key, index, parent, style }) => {
     const item = props.items[index]
-    const ItemView = props.ItemView || VirtualListItem
     const itemElement = (
       <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
           <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-            <ItemView
+            <VirtualListItem
+              ItemView={props.ItemView}
               onSelect={props.onSelect}
               onOpen={props.onOpen}
               {...itemProps(props, index)}

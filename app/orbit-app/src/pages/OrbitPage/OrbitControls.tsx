@@ -1,4 +1,4 @@
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolBarRender } from '../../components/OrbitToolbar'
@@ -13,9 +13,9 @@ export default observer(function OrbitControls() {
           <OrbitToolBarRender>
             {toolbars => (
               <ToolbarInner hasToolbars={!!toolbars}>
-                {toolbars && toolbars.before}
-                <View flex={1} />
-                {toolbars && toolbars.after}
+                <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
+                <ToolbarCenter>{toolbars && toolbars.center}</ToolbarCenter>
+                <ToolbarSide>{toolbars && toolbars.after}</ToolbarSide>
               </ToolbarInner>
             )}
           </OrbitToolBarRender>
@@ -48,4 +48,20 @@ const ToolbarInner = gloss({
     height: 32,
     padding: [0, 10],
   },
+})
+
+const ToolbarSide = gloss({
+  flexFlow: 'row',
+  width: '25%',
+  maxWidth: 150,
+  alignItems: 'center',
+})
+
+const ToolbarCenter = gloss({
+  flexFlow: 'row',
+  flex: 2,
+  overflowX: 'scroll',
+  overflowY: 'hidden',
+  alignItems: 'center',
+  justifyContent: 'center',
 })

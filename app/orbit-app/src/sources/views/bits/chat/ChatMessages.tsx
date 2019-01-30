@@ -1,18 +1,18 @@
+import { GenericBit, SlackBitData } from '@mcro/models'
 import * as React from 'react'
 import { ChatMessage } from './ChatMessage'
-import { SlackBitData, GenericBit } from '@mcro/models'
 
 const idFn = _ => _
 
-export const ChatMessages = ({
-  bit,
+export function ChatMessages({
+  item,
   processMessage = idFn,
 }: {
-  bit: GenericBit<'slack'>
+  item: GenericBit<'slack'>
   processMessage?: Function
-}) => {
+}) {
   // TODO abstract it into "message" type data
-  const messages = (bit.data as SlackBitData).messages
+  const messages = (item.data as SlackBitData).messages
   if (!messages) {
     return null
   }
@@ -23,7 +23,7 @@ export const ChatMessages = ({
           key={index}
           message={processMessage(message)}
           previousMessage={messages[index - 1]}
-          bit={bit}
+          item={item}
         />
       ))}
     </>

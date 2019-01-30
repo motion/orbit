@@ -1,13 +1,13 @@
-import * as React from 'react'
+import { gloss } from '@mcro/gloss'
 import { SlackBitDataMessage } from '@mcro/models'
-import { OrbitItemViewProps } from '../../../types'
-import { View, Row, Text } from '@mcro/ui'
+import { Row, Text, View } from '@mcro/ui'
+import * as React from 'react'
 import { ItemResolverDecorationContext } from '../../../../helpers/contexts/ItemResolverDecorationContext'
-import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
 import { DateFormat } from '../../../../views/DateFormat'
 import { HighlightText } from '../../../../views/HighlightText'
 import { Markdown } from '../../../../views/Markdown'
-import { gloss } from '@mcro/gloss'
+import { RoundButtonPerson } from '../../../../views/RoundButtonPerson'
+import { OrbitItemViewProps } from '../../../types'
 
 type SlackMessageProps = OrbitItemViewProps<'slack'> & {
   message: SlackBitDataMessage
@@ -34,12 +34,12 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
   static contextType = ItemResolverDecorationContext
 
   render() {
-    const { bit, extraProps = {}, message, renderText, previousMessage, hide = {} } = this.props
+    const { item, extraProps = {}, message, renderText, previousMessage } = this.props
     const decoration = this.context
-    if (!message.text || !bit) {
+    if (!message.text || !item) {
       return null
     }
-    const person = (bit.people || []).find(person => person.integrationId === message.user)
+    const person = (item.people || []).find(person => person.integrationId === message.user)
     let previousBySameAuthor = false
     let previousWithinOneMinute = false
     if (previousMessage) {
@@ -90,7 +90,7 @@ export class ChatMessage extends React.Component<SlackMessageProps> {
             {!extraProps.condensed && (
               <>
                 <div style={{ width: 6 }} />
-                {!(hide && hide.itemDate) && (!previousMessage || !previousWithinOneMinute) && (
+                {(!previousMessage || !previousWithinOneMinute) && (
                   <Text size={0.9} fontWeight={500} alpha={0.5}>
                     {<DateFormat date={new Date(message.time)} />}
                   </Text>

@@ -21,19 +21,19 @@ export const lists = {
         throw new Error('Invalid parent to add')
       }
 
+      const id = child.id || Math.random()
       item.children.push(child.id)
 
       // add to hash
       if (child.target === 'bit') {
-        app.data.items[child.id] = {
-          id: child.id,
+        app.data.items[id] = {
+          id,
           type: 'bit',
           name: child.title,
         }
       }
 
       if (child.target === 'folder') {
-        const id = Math.random()
         app.data.items[id] = {
           id,
           children: [],

@@ -7,10 +7,10 @@ import { CreateFolder } from '../../components/CreateFolder'
 import { HorizontalSpace } from '../../views'
 
 export default function ListEdit(props: { app: ListsApp; parentID: number }) {
-  const handleAdd = async () => {
+  const handleAdd = name => {
     lists.actions.receive(props.app, props.parentID, {
       target: 'folder',
-      name: '',
+      name,
     })
   }
 

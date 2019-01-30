@@ -33,7 +33,6 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
               subtitle: `Parent list...`,
             },
           ]
-          console.log('app.data.items', app.data.items)
           for (const id in app.data.items) {
             const folder = app.data.items[id]
             if (folder.type === 'folder') {
@@ -64,6 +63,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         return {
           after: (
             <Popover
+              towards="right"
               // selected would otherwise override this theme
               theme={App.state.darkTheme ? 'dark' : 'light'}
               width={250}
@@ -85,7 +85,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
               group="filters"
               background
               borderRadius={10}
-              elevation={2}
+              elevation={1}
             >
               {isShown => isShown && <ItemActionDropdown />}
             </Popover>

@@ -55,4 +55,5 @@ export function SlackItem(props: OrbitItemViewProps<'slack'>) {
 
 SlackItem.itemProps = {
   hideTitle: true,
+  slim: true,
 }

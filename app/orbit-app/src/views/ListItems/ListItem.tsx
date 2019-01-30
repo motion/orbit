@@ -124,7 +124,7 @@ export default observer(function ListItem(props: ListItemProps) {
     separatorProps,
     above,
     slim,
-    iconBefore,
+    iconBefore: iconBeforeProp,
     subTextOpacity = 0.7,
     ...restProps
   } = props
@@ -133,13 +133,14 @@ export default observer(function ListItem(props: ListItemProps) {
   const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!createdAt && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
-  const showTitle = !props.hideTitle
+  const showTitle = !!title && !props.hideTitle
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle || showPeople
   const defaultPadding = slim ? [6, 8] : [8, 11]
+  const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons
   if (slim && iconBefore) {
@@ -178,7 +179,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        margin={-3}
+        margin={[-3, -1]}
         maxWidth={120}
         fontWeight={400}
         fontSize={13}
@@ -195,7 +196,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const iconElement =
     showIcon &&
     (() => {
-      let iconSize = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 14
+      let iconSize = iconBefore ? (slim ? 18 : 22) : slim ? 12 : 14
       if (isMultiLine && iconBefore) {
         iconSize += 8
       }
@@ -444,12 +445,12 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 8,
+  minWidth: 9,
   shouldFlex: {
     flex: 1,
   },
   slim: {
-    minWidth: 6,
+    minWidth: 8,
   },
 })
 

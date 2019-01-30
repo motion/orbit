@@ -285,27 +285,11 @@ export class SearchStore {
         endIndex: take,
       })
       await updateNextResults({
-        maxBitsCount: 2,
+        maxBitsCount: 100,
         group: 'overall',
         startIndex: 0,
         endIndex: take,
       })
-
-      // wait for active before loading more than one page of results
-      /* if (!this.isActive) {
-        await when(() => this.isActive)
-      }
-
-      // infinite scroll
-      this.nextRows = null
-      while (true) {
-        // wait for load more event
-        await whenChanged(() => this.nextRows)
-        const updated = await updateNextResults(this.nextRows)
-        if (!updated) {
-          break
-        }
-      } */
 
       // finished
       return {
@@ -318,16 +302,4 @@ export class SearchStore {
       defaultValue: { results: [], query: '', finished: false },
     },
   )
-
-  get quickResultsOffset() {
-    return 0
-  }
-
-  // todo
-  // I don't think someone is going to scroll more than 1000 items? Or even 100...
-  remoteRowCount = 1000
-
-  loadMore = ({ startIndex, stopIndex }) => {
-    this.nextRows = { startIndex, endIndex: stopIndex }
-  }
 }

@@ -45,7 +45,7 @@ const ToolbarInner = gloss({
   width: '75%',
   minWidth: 400,
   hasToolbars: {
-    height: 30,
+    height: 32,
     padding: [0, 10],
   },
 })

@@ -117,8 +117,6 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         minSelected={0}
         items={items}
         query={props.appStore.activeQuery}
-        rowCount={searchStore.remoteRowCount}
-        loadMoreRows={searchStore.loadMore}
         getItemProps={getItemProps}
       />
     </>

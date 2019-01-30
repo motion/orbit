@@ -48,9 +48,11 @@ export default function OrbitList({ items, itemsKey, ...props }: OrbitListProps)
             <Center alignItems="center">
               <View>
                 <SubTitle>No results</SubTitle>
-                <Text ellipse size={0.95} alpha={0.6}>
-                  "{props.query}"
-                </Text>
+                {!!props.query && (
+                  <Text ellipse size={0.95} alpha={0.6}>
+                    "{props.query}"
+                  </Text>
+                )}
               </View>
             </Center>
           </View>

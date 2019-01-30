@@ -94,24 +94,10 @@ _Favorites_
     at new Subscription"
     #account
 
-sorting by prepping to split out work as best possible:
-
-- figure out account management
-  - need some way to sync
-  - have to beat this:
-    - you get your own account via just email
-    - once you enter email and add ONE integration, we can link them
-    - perhaps just limit to slack/google first
-    - that way we can store email + integration for next time you sign in
-    - then we can provide a way to invite your teammates down the road
-  - allow teammates option from your master to "join" the space automatically
-  - give an invite code to the first person
-
 #syncers
 
 - on process exit it should clear all processing Jobs
-- general:
-  - syncers no longer seem to run once you add them, you have to hit refresh
+- you can add the same exact integration twice, lets prevent that
 - slack:
   - re-syncs seem to be doing a lot of work, can we improve incremental
   - for some reason my slack never synced for me, check to be sure it syncs reliable

@@ -8,7 +8,7 @@
 import { gloss, Row } from '@mcro/gloss'
 import invariant from 'invariant'
 import * as React from 'react'
-import ContextMenu from '../ContextMenu'
+import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
 // import ContextMenu from '../ContextMenu.js'
 import { Interactive } from '../Interactive'

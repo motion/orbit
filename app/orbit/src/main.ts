@@ -1,4 +1,6 @@
 import { getGlobalConfig, setGlobalConfig } from '@mcro/config'
+// add fetch abort
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import { ChildProcess } from 'child_process'
 import root from 'global'
 import waitOn from 'wait-on'

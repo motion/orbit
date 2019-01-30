@@ -44,12 +44,15 @@ export function OrbitToolbar(props: ToolbarContextItem) {
   const { setToolbar } = useContext(OrbitToolBarContext)
   const { appStore } = useStoresSafe()
 
-  useEffect(() => {
-    setToolbar(appStore.id, props)
-    return () => {
-      setToolbar(appStore.id, null)
-    }
-  }, [])
+  useEffect(
+    () => {
+      setToolbar(appStore.id, props)
+      return () => {
+        setToolbar(appStore.id, null)
+      }
+    },
+    [props.before, props.after],
+  )
 
   return null
 }

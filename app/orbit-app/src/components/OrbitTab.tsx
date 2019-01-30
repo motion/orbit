@@ -1,7 +1,8 @@
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
+import { Button, ContextMenu, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
+import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon } from '../views/Icon'
 
 export const tabHeight = 26
@@ -21,6 +22,7 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   icon?: string
   iconSize?: number
   iconAdjustOpacity?: number
+  getContext?: Function
 }
 
 export function OrbitTab({
@@ -36,6 +38,7 @@ export function OrbitTab({
   textProps,
   thicc,
   className = '',
+  getContext,
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
@@ -48,45 +51,46 @@ export function OrbitTab({
       sidePad={sidePad}
       {...props}
     >
-      {isActive && <Glint />}
-      <Row margin={['auto', 0]} alignItems="center">
-        {!!icon && (
-          <OrbitTabIcon
-            opacity={(isActive ? (!label ? 1 : 1) : !label ? 0.4 : 0.4) + iconAdjustOpacity}
-            isActive={isActive}
-            name={icon}
-            size={iconSize}
-            marginRight={!!label ? sidePad * 0.7 : 0}
+      <ContextMenu items={getContext ? getContext() : null}>
+        {isActive && <Glint />}
+        <Row margin={['auto', 0]} alignItems="center">
+          {!!icon && (
+            <OrbitTabIcon
+              isActive={isActive}
+              name={icon}
+              size={iconSize}
+              marginRight={!!label ? sidePad * 0.6 : 0}
+            />
+          )}
+          {!!label && (
+            <Text
+              ellipse
+              className="tab-label"
+              size={0.95}
+              opacity={isActive ? 1 : inactiveOpacity}
+              fontWeight={400}
+              {...textProps}
+            >
+              {label}
+            </Text>
+          )}
+        </Row>
+
+        {separator && <Separator />}
+
+        {isActive && !!onClickPopout && (
+          <DropDownButton
+            className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
+            right={sidePad * 0.25}
+            tooltip="Open"
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              onClickPopout()
+            }}
           />
         )}
-        {!!label && (
-          <Text
-            ellipse
-            className="tab-label"
-            size={0.95}
-            opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={500}
-            {...textProps}
-          >
-            {label}
-          </Text>
-        )}
-      </Row>
-
-      {separator && <Separator />}
-
-      {isActive && !!onClickPopout && (
-        <DropDownButton
-          className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-          right={sidePad * 0.25}
-          tooltip="Open"
-          onClick={e => {
-            e.preventDefault()
-            e.stopPropagation()
-            onClickPopout()
-          }}
-        />
-      )}
+      </ContextMenu>
     </NavButtonChrome>
   )
   if (tooltip) {
@@ -96,8 +100,10 @@ export function OrbitTab({
 }
 
 function OrbitTabIcon(props: IconProps) {
+  const theme = useTheme()
   return (
     <Icon
+      color={invertLightness(theme.color, 0.8).alpha(0.6)}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -134,11 +140,11 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   alignItems: 'center',
   borderTopRadius: 3,
   overflow: 'hidden',
+  height: tabHeight,
+  maxWidth: 160,
   transform: {
     y: 0.5,
   },
-  height: tabHeight,
-  maxWidth: 160,
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const backgroundBase = theme.tabBackground || theme.background

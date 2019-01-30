@@ -4,12 +4,20 @@ import { Space } from './Space'
 
 type ItemID = number | string
 
-export type ListAppDataItem = {
-  id: ItemID
-  type: 'bit' | 'person' | 'folder' | 'root'
-  name?: string
-  children: ItemID[]
-}
+export type ListAppDataItem =
+  | {
+      id: ItemID
+      type: 'folder' | 'root'
+      name?: string
+      children: ItemID[]
+      icon?: string
+    }
+  | {
+      id: ItemID
+      type: 'bit' | 'person'
+      name?: string
+      icon?: string
+    }
 
 export type ListsAppData = {
   rootItemID: ItemID
@@ -28,14 +36,15 @@ export type TopicsAppData = {
 
 // base
 
-export interface BaseApp {
+interface BaseApp {
   target: 'app'
   id?: number
   space?: Space
   spaceId?: number
   name?: string
   type?: string
-  data?: any
+  pinned?: boolean
+  colors?: string[]
 }
 
 export type AppData = {
@@ -55,6 +64,16 @@ export type SourcesApp = BaseApp & { type: 'sources'; data: any }
 export type SettingsApp = BaseApp & { type: 'settings'; data: any }
 
 // App
+
+export type AppByType = {
+  search: SearchApp
+  people: PeopleApp
+  topics: TopicsApp
+  lists: ListsApp
+  memory: MemoryApp
+  sources: SourcesApp
+  settings: SettingsApp
+}
 
 export type App =
   | SearchApp

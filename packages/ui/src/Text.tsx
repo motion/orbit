@@ -1,11 +1,5 @@
-import {
-  alphaColor,
-  CSSPropertySet,
-  gloss,
-  Inline,
-  InlineBlock,
-  propsToTextSize,
-} from '@mcro/gloss'
+import { CSSPropertySetStrict } from '@mcro/css'
+import { alphaColor, CSSPropertySet, gloss, Inline, propsToTextSize, View } from '@mcro/gloss'
 import { HighlightOptions, highlightText, on } from '@mcro/helpers'
 import keycode from 'keycode'
 import * as React from 'react'
@@ -254,13 +248,9 @@ export class Text extends React.PureComponent<TextProps> {
         forwardRef={this.getRef}
         ignoreColor={ignoreColor}
         color={color}
-        {...ellipse && {
-          flex: 1,
-          display: 'flex',
-          overflow: 'hidden',
-        }}
-        {...finalProps}
+        ellipse={ellipse}
         {...props}
+        {...finalProps}
       />
     )
   }
@@ -268,7 +258,7 @@ export class Text extends React.PureComponent<TextProps> {
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
-const TextBlock = gloss(InlineBlock, {
+const TextBlock = gloss(View, {
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
@@ -280,21 +270,32 @@ const TextBlock = gloss(InlineBlock, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ignoreColor, color, alpha, alphaHover }, theme) => {
+}).theme(({ ellipse, ignoreColor, alpha, alphaHover, ...props }, theme) => {
+  let styles: CSSPropertySetStrict = {
+    display: 'inline-block',
+  }
+
+  if (ellipse) {
+    styles = {
+      ...styles,
+      display: 'flex',
+      overflow: 'hidden',
+      flex: 1,
+    }
+  }
+
   if (ignoreColor) {
     return {
+      ...styles,
       color: 'inherit',
     }
   }
-  return alphaColor(
-    {
-      color: color || theme.color,
-    },
-    {
-      alpha,
-      alphaHover,
-    },
-  )
+
+  const color = props.color || theme.color
+  return {
+    ...styles,
+    ...alphaColor({ color }, { alpha, alphaHover }),
+  }
 })
 
 const TextEllipse = gloss(Inline, {

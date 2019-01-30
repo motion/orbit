@@ -75,7 +75,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
 
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
-  zIndex: 4,
+  zIndex: 400,
 }).theme((_, theme) => ({
   // borderBottom: [1, theme.borderColor],
   background: theme.headerBackground || theme.background.alpha(0.65),
@@ -137,6 +137,7 @@ const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,
   overflow: 'hidden',
   position: 'relative',
+  zIndex: 1,
 }).theme(({ torn }) => ({
   boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
 }))

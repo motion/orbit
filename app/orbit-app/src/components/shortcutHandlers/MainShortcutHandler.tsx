@@ -19,8 +19,10 @@ const rootShortcuts = {
   escape: 'esc',
   down: 'down',
   up: 'up',
-  left: ['left', 'command+shift+['],
-  right: ['right', 'command+shift+]'],
+  leftTab: 'command+shift+[',
+  rightTab: 'command+shift+]',
+  left: 'left',
+  right: 'right',
   1: 'command+1',
   2: 'command+2',
   3: 'command+3',
@@ -35,17 +37,6 @@ const rootShortcuts = {
 export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
   const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
-
-  const movePaneOrSelection = (direction: Direction) => () => {
-    const leftOrRight = direction === Direction.left || direction === Direction.right
-    if (leftOrRight) {
-      if (paneManagerStore) {
-        paneManagerStore.move(direction)
-      }
-    } else {
-      shortcutStore.emit(direction)
-    }
-  }
 
   let handlers: any = {
     commandOpen: () => {
@@ -81,10 +72,12 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
         return AppActions.setOrbitDocked(false)
       }
     },
-    up: movePaneOrSelection(Direction.up),
-    down: movePaneOrSelection(Direction.down),
-    left: movePaneOrSelection(Direction.left),
-    right: movePaneOrSelection(Direction.right),
+    up: () => shortcutStore.emit(Direction.up),
+    down: () => shortcutStore.emit(Direction.down),
+    left: () => shortcutStore.emit(Direction.left),
+    right: () => shortcutStore.emit(Direction.right),
+    rightTab: () => paneManagerStore.move(Direction.right),
+    leftTab: () => paneManagerStore.move(Direction.left),
   }
 
   if (paneManagerStore) {

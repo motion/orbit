@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { Title } from '../../../../views'
-import { OrbitItemViewProps } from '../../../types'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
+import { OrbitItemViewProps } from '../../../types'
 
 export const Document = ({ bit, renderText, extraProps }: OrbitItemViewProps<any>) => {
   if (renderText) {
     return renderText(bit.body)
   }
   if (extraProps && extraProps.oneLine) {
-    return <HighlightTextItem>{bit.body.slice(0, 200)}</HighlightTextItem>
+    return <HighlightTextItem ellipse>{bit.body.slice(0, 200)}</HighlightTextItem>
   }
   return (
     <>

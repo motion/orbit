@@ -1,22 +1,15 @@
-import { always, ensure, react } from '@mcro/black'
-import { View } from '@mcro/ui'
-import ContextMenu from '@mcro/ui/_/ContextMenu'
-import { useStore } from '@mcro/use-store'
-import { MenuItem } from 'electron'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { SortableContainer } from 'react-sortable-hoc'
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  InfiniteLoader,
-  List,
-  WindowScroller,
-} from 'react-virtualized'
-import { GenericComponent } from '../../types'
-import { Banner } from '../Banner'
-import { HandleSelection } from '../ListItems/ListItem'
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
+import { always, ensure, react } from '@mcro/black';
+import { ContextMenu, View } from '@mcro/ui';
+import { useStore } from '@mcro/use-store';
+import { MenuItem } from 'electron';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { SortableContainer } from 'react-sortable-hoc';
+import { CellMeasurer, CellMeasurerCache, InfiniteLoader, List, WindowScroller } from 'react-virtualized';
+import { GenericComponent } from '../../types';
+import { Banner } from '../Banner';
+import { HandleSelection } from '../ListItems/ListItem';
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem';
 
 export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
 
@@ -41,6 +34,7 @@ export type VirtualListProps = {
   padTop?: number
   sortable?: boolean
   dynamicHeight?: boolean
+  keyMapper?: (index: number) => string | number
 }
 
 class SortableList extends React.Component<any> {
@@ -145,6 +139,9 @@ class VirtualListStore {
         defaultWidth: this.width,
         fixedWidth: true,
         keyMapper: (rowIndex: number) => {
+          if (this.props.keyMapper) {
+            return this.props.keyMapper(rowIndex)
+          }
           if (typeof rowIndex === 'undefined') {
             return 0
           }
@@ -258,7 +255,11 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
       </CellMeasurer>
     )
     if (props.getContextMenu) {
-      return <ContextMenu items={props.getContextMenu(index)}>{itemElement}</ContextMenu>
+      return (
+        <ContextMenu key={key} items={props.getContextMenu(index)}>
+          {itemElement}
+        </ContextMenu>
+      )
     }
     return itemElement
   }

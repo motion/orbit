@@ -16,8 +16,6 @@
  * task callbacks.
  */
 
-import process from 'process'
-
 export default function series(tasks, cb) {
   const results = []
   let current = 0
@@ -27,7 +25,7 @@ export default function series(tasks, cb) {
     function end() {
       if (cb) cb(err, results)
     }
-    if (isSync) process.nextTick(end)
+    if (isSync) setImmediate(end)
     else end()
   }
 

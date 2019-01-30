@@ -130,7 +130,7 @@ export default observer(function ListItem(props: ListItemProps) {
   } = props
   const { isSelected } = store
   const showChildren = !props.hideBody
-  const showSubtitle = (!!subtitle || !!location) && !props.hideSubtitle
+  const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!createdAt && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
   const showTitle = !props.hideTitle
@@ -138,10 +138,12 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
+  const isMultiLine = showPreview || showSubtitle || showPeople
+
   const renderedChildren = showChildren && (
-    <Text size={0.9} alpha={subTextOpacity}>
+    <UI.SimpleText size={0.9} alpha={subTextOpacity}>
       {children}
-    </Text>
+    </UI.SimpleText>
   )
   const { activeThemeName } = React.useContext(UI.ThemeContext)
 
@@ -167,12 +169,32 @@ export default observer(function ListItem(props: ListItemProps) {
     </>
   )
 
+  const locationElement = !!location && (
+    <>
+      <RoundButtonSmall
+        margin={-3}
+        maxWidth={120}
+        fontWeight={400}
+        fontSize={13}
+        alpha={subTextOpacity}
+        onClick={store.handleClickLocation}
+      >
+        {`${location}`}
+      </RoundButtonSmall>
+      <TitleSpace slim={slim} />
+    </>
+  )
+
   const iconElement =
     showIcon &&
     (() => {
+      let size = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 16
+      if (isMultiLine) {
+        size += 6
+      }
       const iconPropsFinal = {
-        size: iconBefore ? (slim ? 30 : 40) : slim ? 12 : 16,
-        style: { marginTop: slim ? 4 : 2 },
+        size,
+        style: { transform: `translateY(${slim ? 4 : 2}px)` },
         ...iconProps,
       }
       return (
@@ -237,21 +259,7 @@ export default observer(function ListItem(props: ListItemProps) {
                     <TitleSpace slim={slim} />
                   </>
                 )}
-                {!!location && (
-                  <>
-                    <RoundButtonSmall
-                      margin={-3}
-                      maxWidth={120}
-                      fontWeight={400}
-                      fontSize={13}
-                      alpha={subTextOpacity}
-                      onClick={store.handleClickLocation}
-                    >
-                      {JSON.stringify(location)}
-                    </RoundButtonSmall>
-                    <TitleSpace slim={slim} />
-                  </>
-                )}
+                {!!location && locationElement}
                 {showPreviewInSubtitle ? (
                   <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
                 ) : null}
@@ -296,16 +304,24 @@ export default observer(function ListItem(props: ListItemProps) {
             {/* vertical space only if needed */}
             {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
             {showPreview && (
-              <Preview>
-                {typeof preview !== 'string' && preview}
-                {typeof preview === 'string' && (
-                  <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={5}>
-                    {preview}
-                  </HighlightText>
-                )}
-              </Preview>
+              <>
+                {locationElement}
+                <Preview>
+                  {typeof preview !== 'string' && preview}
+                  {typeof preview === 'string' && (
+                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
+                      {preview}
+                    </HighlightText>
+                  )}
+                </Preview>
+              </>
             )}
-            {showPreviewInSubtitle ? null : renderedChildren}
+            {!showPreviewInSubtitle && (
+              <Row alignItems="center" flex={1}>
+                {locationElement}
+                {renderedChildren}
+              </Row>
+            )}
             {showPeople && !showSubtitle && (
               <Bottom>
                 <PeopleRow people={people} />
@@ -345,7 +361,7 @@ const Divider = gloss({
   left: 10,
   right: 10,
 }).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.1),
+  background: theme.borderColor.alpha(0.09),
 }))
 
 const ListItemChrome = gloss({
@@ -403,7 +419,7 @@ const ListItemSubtitle = gloss(UI.View, {
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,
-  overflow: 'hidden',
+  overflowX: 'hidden',
 })
 
 const AfterHeader = gloss({

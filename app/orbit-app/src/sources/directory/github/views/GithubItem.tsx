@@ -8,10 +8,6 @@ export class GithubItem extends React.Component<OrbitItemViewProps<'github'>> {
     if (!item) {
       return null
     }
-    return (
-      <>
-        <Task {...this.props} body={item.body} comments={item.data.comments} />
-      </>
-    )
+    return <Task {...this.props} body={item.body} comments={item.data.comments} />
   }
 }

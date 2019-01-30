@@ -69,6 +69,25 @@ export default observer(function OrbitNav() {
         isActive,
         icon: `orbit-${app.type}`,
         iconSize: isPinned ? 16 : 12,
+        getContext() {
+          return [
+            {
+              label: 'Open...',
+            },
+            {
+              label: 'App settings',
+            },
+            {
+              type: 'separator',
+            },
+            {
+              label: 'Pin tab',
+            },
+            {
+              label: 'Remove tab',
+            },
+          ]
+        },
         onClick: () => {
           setShowCreateNew(false)
           paneManagerStore.setActivePane(app.id)
@@ -155,6 +174,9 @@ const OrbitNavClip = gloss({
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
+  transform: {
+    y: 0.5,
+  },
 }).theme((_, theme) => ({
   boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
 }))

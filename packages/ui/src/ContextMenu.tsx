@@ -9,7 +9,7 @@ type ContextMenuProps = ViewProps & {
   component?: React.ComponentType<any> | string
 }
 
-export default function ContextMenu({
+export function ContextMenu({
   children,
   component = Contents,
   items,
@@ -17,6 +17,10 @@ export default function ContextMenu({
   ...restProps
 }: ContextMenuProps) {
   const setMenuItems = useContext(ContextMenuContext)
+
+  if (!items) {
+    return <>{children}</>
+  }
 
   const onContextMenu = (_: React.MouseEvent) => {
     if (typeof setMenuItems === 'function') {

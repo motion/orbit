@@ -104,10 +104,10 @@ async function startApp() {
 }
 
 // hot reloading
-// if (process.env.NODE_ENV === 'development') {
-//   if (typeof module['hot'] !== 'undefined') {
-//     module['hot'].accept(startApp)
-//   }
-// }
+if (process.env.NODE_ENV === 'development') {
+  if (typeof module['hot'] !== 'undefined') {
+    module['hot'].accept(startApp)
+  }
+}
 
 main()

@@ -9,6 +9,7 @@ export {
   InlineBlock,
   InlineFlex,
   Row,
+  SimpleText,
   Theme,
   ThemeContext,
   ThemeProvide,

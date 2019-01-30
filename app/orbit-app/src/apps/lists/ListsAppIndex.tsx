@@ -1,4 +1,4 @@
-import { loadOne, useModel } from '@mcro/model-bridge'
+import { loadOne, useObserveOne } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
@@ -105,8 +105,7 @@ import ListEdit from './ListEdit'
 // }
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const [app /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
-  const listApp = app as ListsApp
+  const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
   const items = listApp.data.items
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
@@ -114,35 +113,6 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   getDepth.current = treeState.depth
 
   console.log('items', items)
-
-  // const items: ListsAppData['items'] = {
-  //   [0]: {
-  //     id: 0,
-  //     type: 'root',
-  //     children: [1, testItems[1].id],
-  //   },
-  //   [1]: {
-  //     id: 1,
-  //     type: 'folder',
-  //     name: 'My folder',
-  //     children: [testItems[2].id, testItems[3].id],
-  //   },
-  //   [testItems[1].id]: {
-  //     id: testItems[1].id,
-  //     type: 'bit',
-  //     name: 'OneLogin - verify your email',
-  //   },
-  //   [testItems[2].id]: {
-  //     id: testItems[2].id,
-  //     type: 'bit',
-  //     name: 'Snapchat Login on July 29, 2018',
-  //   },
-  //   [testItems[3].id]: {
-  //     id: testItems[3].id,
-  //     type: 'bit',
-  //     name: 'Your Friday evening order with Uber Eats',
-  //   },
-  // }
 
   const loadItem = React.useCallback(async item => {
     switch (item.type) {
@@ -177,7 +147,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
       {
         label: 'Delete',
         click: () => {
-          console.log('delete item')
+          console.log('delete item', index)
         },
       },
     ]

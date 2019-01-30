@@ -16,7 +16,7 @@ export const lists = {
       const item = app.data.items[parentID]
 
       if (item.type === 'folder' || item.type === 'root') {
-        item.children.push(item.id)
+        item.children.push(target.id)
 
         // add to hash
         app.data.items[target.id] = {

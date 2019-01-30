@@ -138,6 +138,8 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
+  const isMultiLine = showPreview || showSubtitle || showPeople
+
   const renderedChildren = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
       {children}
@@ -186,8 +188,12 @@ export default observer(function ListItem(props: ListItemProps) {
   const iconElement =
     showIcon &&
     (() => {
+      let size = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 16
+      if (isMultiLine) {
+        size += 6
+      }
       const iconPropsFinal = {
-        size: iconBefore ? (slim ? 30 : 40) : slim ? 12 : 16,
+        size,
         style: { transform: `translateY(${slim ? 4 : 2}px)` },
         ...iconProps,
       }

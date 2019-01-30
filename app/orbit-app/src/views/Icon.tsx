@@ -230,6 +230,8 @@ export const Icon = React.memo(
   },
 )
 
+Icon['acceptsIconProps'] = true
+
 const adjust = {
   icon: {
     transform: {

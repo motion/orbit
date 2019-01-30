@@ -143,9 +143,6 @@ function glossify(
   }
 
   if (hasDynamicStyles) {
-    // create new object to prevent buggy mutations
-    // TODO this shouldnt be necessary...
-    myStyles = { ...myStyles }
     for (const key in dynamicStyles) {
       myStyles[key] = myStyles[key] || {}
       myStyles[key] = {

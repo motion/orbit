@@ -11,7 +11,7 @@ import {
   SlackPersonData,
 } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { Button, Row } from '@mcro/ui'
+import { Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -157,15 +157,9 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
             <StrongSubTitle>Recent Topics</StrongSubTitle>
             <Row flexFlow="row" flexWrap="wrap" padding={[5, 0, 0]}>
               {topics.map((item, index) => (
-                <Button
-                  sizeHeight={0.9}
-                  margin={[0, 6, 6, 0]}
-                  alpha={0.8}
-                  sizeRadius={2}
-                  key={index}
-                >
+                <RoundButton margin={[0, 6, 6, 0]} key={index}>
                   {item}
-                </Button>
+                </RoundButton>
               ))}
             </Row>
           </Section>

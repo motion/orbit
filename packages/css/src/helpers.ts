@@ -1,7 +1,7 @@
-import { CSSArray } from './types'
-import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
-import { toColor, isColor } from './toColor'
+import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+import { isColor, toColor } from './toColor'
+import { CSSArray } from './types'
 
 export const px = (x: number | string) =>
   typeof x === 'number' ? `${x}px` : `${+x}` === x ? `${x}px` : x

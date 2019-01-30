@@ -3,8 +3,8 @@ import * as React from 'react'
 
 export const RoundButton = (props: UI.ButtonProps) => (
   <UI.Button
-    sizeRadius={100}
     glint={false}
+    sizeRadius={100}
     borderWidth={0}
     fontWeight={300}
     display="inline-flex"

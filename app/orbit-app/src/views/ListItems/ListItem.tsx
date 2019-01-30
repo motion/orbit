@@ -195,19 +195,26 @@ export default observer(function ListItem(props: ListItemProps) {
   const iconElement =
     showIcon &&
     (() => {
-      let size = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 16
-      if (isMultiLine) {
-        size += 8
+      let iconSize = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 14
+      if (isMultiLine && iconBefore) {
+        iconSize += 8
       }
       const iconPropsFinal = {
-        size,
-        style: iconBefore ? null : { transform: `translateY(${slim ? 4 : 2}px)` },
+        size: iconSize,
         ...iconProps,
+      }
+      if (!iconBefore) {
+        iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
       }
       return (
         <>
           {React.isValidElement(icon) ? (
-            React.cloneElement(icon, iconPropsFinal)
+            // dont overwrite the icons original props
+            icon.type['acceptsIconProps'] ? (
+              React.cloneElement(icon, iconPropsFinal)
+            ) : (
+              icon
+            )
           ) : (
             <Icon name={icon} {...iconPropsFinal} />
           )}
@@ -262,7 +269,7 @@ export default observer(function ListItem(props: ListItemProps) {
               <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
-                    <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />
+                    <Icon name={icon} size={slim ? 12 : 14} {...iconProps} />
                     <TitleSpace slim={slim} />
                   </>
                 )}
@@ -368,7 +375,7 @@ const Divider = gloss({
   left: 10,
   right: 10,
 }).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.09),
+  background: theme.borderColor.alpha(0.12),
 }))
 
 const ListItemChrome = gloss({
@@ -413,7 +420,7 @@ const ListItemChrome = gloss({
 const Title = gloss({
   width: '100%',
   flexFlow: 'row',
-  justifyContent: 'space-between',
+  // justifyContent: 'space-between',
   alignItems: 'flex-start',
 })
 

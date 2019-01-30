@@ -1,4 +1,6 @@
 import { gloss, Row } from '@mcro/gloss'
+import { save } from '@mcro/model-bridge'
+import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -59,7 +61,7 @@ export default observer(function OrbitNav() {
       const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
       const nextIsActive =
         activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = false && (app.type === 'search' || app.type === 'people')
+      const isPinned = app.pinned
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
@@ -81,7 +83,11 @@ export default observer(function OrbitNav() {
               type: 'separator',
             },
             {
-              label: 'Pin tab',
+              label: 'Pinned',
+              checked: isPinned,
+              click() {
+                save(AppModel, { ...app, pinned: !app.pinned })
+              },
             },
             {
               label: 'Remove tab',

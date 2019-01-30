@@ -1,6 +1,6 @@
 import { gloss, Row, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ContextMenu, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
+import { Button, ContextMenu, Glint, IconProps, MenuTemplate, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon } from '../views/Icon'
@@ -22,7 +22,7 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   icon?: string
   iconSize?: number
   iconAdjustOpacity?: number
-  getContext?: Function
+  getContext?: () => MenuTemplate
 }
 
 export function OrbitTab({

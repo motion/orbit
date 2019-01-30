@@ -21,6 +21,7 @@ export function orbitItemToListItemProps(props: Item): OrbitListItemProps {
     const item = (props as unknown) as Bit | PersonBit
     return { item }
   }
+  return props as any
 }
 
 export type OrbitHandleSelect = ((

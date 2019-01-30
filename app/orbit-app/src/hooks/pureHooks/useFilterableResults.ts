@@ -1,6 +1,6 @@
-import { fuzzyQueryFilter } from '../../helpers'
 import { sortBy } from 'lodash'
-import { groupByFirstLetter } from '../../helpers/groupByFirstLetter'
+import { useMemo } from 'react'
+import { fuzzyQueryFilter } from '../../helpers'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 
 export type FilterableProps<A> = {
@@ -10,14 +10,23 @@ export type FilterableProps<A> = {
   sortBy?: (item: A) => string
   removePrefix?: string
   groupByLetter?: boolean
+  groupMinimum?: number
 }
 
-export function useFilterableResults(props: FilterableProps<any>) {
+export function useFilterableResults({
+  filterKey = 'id',
+  groupMinimum,
+  ...props
+}: FilterableProps<any>) {
   const query = props.removePrefix
     ? removePrefixIfExists(props.query || '', props.removePrefix)
     : props.query || ''
-  const filtered = fuzzyQueryFilter(query, props.items, { key: props.filterKey })
-  const sorted = props.sortBy ? sortBy(filtered, props.sortBy) : filtered
-  const grouped = props.groupByLetter ? groupByFirstLetter(sorted) : sorted
-  return grouped
+
+  // cache the sort before we do the rest
+  let items = useMemo(() => (props.sortBy ? sortBy(props.items, props.sortBy) : props.items), [
+    props.items,
+    props.sortBy,
+  ])
+
+  return props.query ? fuzzyQueryFilter(query, items, { key: filterKey }) : items
 }

@@ -17,17 +17,21 @@ import { Banner } from '../Banner'
 import { HandleSelection } from '../ListItems/ListItem'
 import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 
-export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
+export type GetItemProps<A> = (
+  item: A,
+  index: number,
+  items: A[],
+) => Partial<VirtualListItemProps<A>> | null
 
-export type VirtualListProps = {
+export type VirtualListProps<A> = {
   onChangeHeight?: (height: number) => any
   onSelect?: HandleSelection
   onOpen?: HandleSelection
   forwardRef?: (a: any, b: VirtualListStore) => any
-  items: any[]
+  items: A[]
   itemProps?: Partial<VirtualListItemProps<any>>
   getContextMenu?: (index: number) => Partial<MenuItem>[]
-  getItemProps?: GetItemProps | null | false
+  getItemProps?: GetItemProps<A> | null | false
   ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function
@@ -53,7 +57,7 @@ class SortableList extends React.Component<any> {
 const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
-  props: VirtualListProps
+  props: VirtualListProps<any>
   windowScrollerRef = React.createRef<WindowScroller>()
   listRef: List = null
   frameRef: HTMLDivElement = null
@@ -172,7 +176,7 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = ({ items }: VirtualListProps, index: number) => {
+const getSeparatorProps = ({ items }: VirtualListProps<any>, index: number) => {
   const model = items[index]
   if (!model.group) {
     return null
@@ -183,7 +187,10 @@ const getSeparatorProps = ({ items }: VirtualListProps, index: number) => {
   return null
 }
 
-const itemProps = (props: VirtualListProps, index: number): Partial<VirtualListItemProps<any>> => {
+const itemProps = (
+  props: VirtualListProps<any>,
+  index: number,
+): Partial<VirtualListItemProps<any>> => {
   const next = [
     getSeparatorProps(props, index),
     index === 0 && props.padTop
@@ -212,9 +219,9 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
 export const VirtualListDefaultProps = React.createContext({
   estimatedRowHeight: 60,
   maxHeight: window.innerHeight,
-} as Partial<VirtualListProps>)
+} as Partial<VirtualListProps<any>>)
 
-export default observer(function VirtualList(rawProps: VirtualListProps) {
+export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = React.useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
@@ -256,7 +263,7 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
               onOpen={props.onOpen}
               {...itemProps(props, index)}
               {...props.itemProps}
-              {...props.getItemProps && props.getItemProps(index)}
+              {...props.getItemProps && props.getItemProps(item, index, props.items)}
               {...item}
               index={index}
               realIndex={index}

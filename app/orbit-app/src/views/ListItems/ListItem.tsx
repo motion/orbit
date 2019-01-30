@@ -7,7 +7,6 @@ import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { HorizontalSpace } from '..'
-import PeopleRow from '../../components/PeopleRow'
 import { NormalItem } from '../../helpers/normalizeItem'
 import { DateFormat } from '../DateFormat'
 import { HighlightText } from '../HighlightText'
@@ -24,7 +23,6 @@ export type HandleSelection = ((
 ) => any)
 
 export type ListItemHide = {
-  hidePeople?: boolean
   hideTitle?: boolean
   hideIcon?: boolean
   hideSubtitle?: boolean
@@ -98,7 +96,6 @@ export default observer(function ListItem(props: ListItemProps) {
     createdAt,
     icon,
     location,
-    people,
     preview,
     subtitle,
     title,
@@ -126,6 +123,7 @@ export default observer(function ListItem(props: ListItemProps) {
     slim,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.7,
+    after,
     ...restProps
   } = props
   const { isSelected } = store
@@ -134,11 +132,10 @@ export default observer(function ListItem(props: ListItemProps) {
   const showDate = !!createdAt && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
   const showTitle = !!title && !props.hideTitle
-  const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
-  const isMultiLine = showPreview || showSubtitle || showPeople
+  const isMultiLine = showPreview || showSubtitle
   const defaultPadding = slim ? [6, 8] : [7, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
@@ -167,13 +164,6 @@ export default observer(function ListItem(props: ListItemProps) {
         )}
       </Row>
     </AfterHeader>
-  )
-
-  const peopleElement = !!people && (
-    <>
-      <HorizontalSpace />
-      <PeopleRow people={people} />
-    </>
   )
 
   const locationElement = !!location && (
@@ -295,12 +285,10 @@ export default observer(function ListItem(props: ListItemProps) {
                 {!subtitle && (
                   <>
                     <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    {peopleElement}
                   </>
                 )}
                 {!showTitle && (
                   <>
-                    {!!subtitle && peopleElement}
                     <HorizontalSpace />
                     {afterHeaderElement}
                   </>
@@ -337,13 +325,8 @@ export default observer(function ListItem(props: ListItemProps) {
                 {renderedChildren}
               </Row>
             )}
-            {showPeople && !showSubtitle && (
-              <Bottom>
-                <PeopleRow people={people} />
-              </Bottom>
-            )}
           </ListItemMainContent>
-          {props.after}
+          {after}
         </ListItemChrome>
         <Divider />
       </ListFrame>
@@ -452,11 +435,6 @@ const TitleSpace = gloss({
   slim: {
     minWidth: 8,
   },
-})
-
-const Bottom = gloss({
-  flexFlow: 'row',
-  alignItems: 'center',
 })
 
 const ListItemMainContent = gloss({

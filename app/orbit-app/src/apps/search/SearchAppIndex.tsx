@@ -67,8 +67,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(index => {
-      const item = items[index]
+    memoize(item => {
       if (item.item && item.item.target === 'bit') {
         const showItemDropdown = isShown => isShown && <ItemActionDropdown />
         return {

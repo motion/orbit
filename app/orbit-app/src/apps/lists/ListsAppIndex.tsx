@@ -134,19 +134,16 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
       id: testItems[1].id,
       type: 'bit',
       name: 'OneLogin - verify your email',
-      children: [],
     },
     [testItems[2].id]: {
       id: testItems[2].id,
       type: 'bit',
       name: 'Snapchat Login on July 29, 2018',
-      children: [],
     },
     [testItems[3].id]: {
       id: testItems[3].id,
       type: 'bit',
       name: 'Your Friday evening order with Uber Eats',
-      children: [],
     },
   }
 

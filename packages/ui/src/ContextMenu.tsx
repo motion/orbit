@@ -18,6 +18,10 @@ export function ContextMenu({
 }: ContextMenuProps) {
   const setMenuItems = useContext(ContextMenuContext)
 
+  if (!items) {
+    return <>{children}</>
+  }
+
   const onContextMenu = (_: React.MouseEvent) => {
     if (typeof setMenuItems === 'function') {
       if (items != null) {

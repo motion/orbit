@@ -1,5 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
-import { ContextMenu, View } from '@mcro/ui'
+import { View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -69,6 +69,25 @@ export default observer(function OrbitNav() {
         isActive,
         icon: `orbit-${app.type}`,
         iconSize: isPinned ? 16 : 12,
+        getContext() {
+          return [
+            {
+              label: 'Open...',
+            },
+            {
+              label: 'App settings',
+            },
+            {
+              type: 'separator',
+            },
+            {
+              label: 'Pin tab',
+            },
+            {
+              label: 'Remove tab',
+            },
+          ]
+        },
         onClick: () => {
           setShowCreateNew(false)
           paneManagerStore.setActivePane(app.id)
@@ -180,29 +199,7 @@ const OrbitNavChrome = gloss({
 })
 
 const SortableTab = SortableElement((props: TabProps) => {
-  return (
-    <ContextMenu
-      items={[
-        {
-          label: 'Open...',
-        },
-        {
-          label: 'App settings',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Pin tab',
-        },
-        {
-          label: 'Remove tab',
-        },
-      ]}
-    >
-      <OrbitTab {...props} />
-    </ContextMenu>
-  )
+  return <OrbitTab {...props} />
 })
 
 const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {

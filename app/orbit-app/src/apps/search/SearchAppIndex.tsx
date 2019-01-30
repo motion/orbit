@@ -1,7 +1,7 @@
 import { AppType, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { flatten, memoize } from 'lodash'
+import { flatten } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -68,7 +68,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(index => {
+    index => {
       const item = items[index]
       if (item.item && item.item.target === 'bit') {
         return {
@@ -106,7 +106,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
         }
       }
       return null
-    }),
+    },
     [items.map(i => `${i.id}${i.title}`).join(' ')],
   )
 

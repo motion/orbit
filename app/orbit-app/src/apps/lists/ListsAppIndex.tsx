@@ -106,14 +106,11 @@ import ListEdit from './ListEdit'
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const [listApp /* , updateListApp */] = useModel(AppModel, { where: { id: props.id } })
-
   const testItems = useObserveMany(BitModel, { take: 10 })
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
   const getDepth = React.useRef(0)
   getDepth.current = treeState.depth
-
-  console.log('treeRef', treeRef, treeState)
 
   if (testItems.length < 4) {
     return null

@@ -81,7 +81,12 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               colors: ['pink', 'orange'],
               data: {
                 rootItemID: 0,
-                items: {},
+                items: {
+                  0: {
+                    id: 0,
+                    type: 'root',
+                  },
+                },
               },
             },
             // {

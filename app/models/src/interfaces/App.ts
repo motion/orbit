@@ -8,7 +8,7 @@ export type ListAppDataItem = {
   id: ItemID
   type: 'bit' | 'person' | 'folder' | 'root'
   name?: string
-  children: ItemID[]
+  children?: ItemID[]
   icon?: string
 }
 
@@ -29,7 +29,7 @@ export type TopicsAppData = {
 
 // base
 
-export interface BaseApp {
+interface BaseApp {
   target: 'app'
   id?: number
   space?: Space

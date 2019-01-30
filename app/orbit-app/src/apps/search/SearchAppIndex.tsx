@@ -17,7 +17,7 @@ import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
 import { AppProps } from '../AppProps'
-import { lists } from '../lists'
+import { listRootID, lists } from '../lists'
 import './calendar.css' // theme css file
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
@@ -40,7 +40,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
               subtitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction.item)
-                lists.actions.receive(app, itemAction.item)
+                lists.actions.receive(app, listRootID, itemAction.item)
               },
             },
           ]

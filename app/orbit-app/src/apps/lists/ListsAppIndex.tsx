@@ -8,6 +8,7 @@ import {
   PersonBitModel,
 } from '@mcro/models'
 import { Button, ButtonProps, Text, View } from '@mcro/ui'
+import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
@@ -198,7 +199,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         depth={treeState.depth}
       />
       <OrbitFloatingBar showSearch>
-        <ListEdit />
+        <ListEdit app={listApp} parentID={last(treeState.history)} />
       </OrbitFloatingBar>
     </>
   )

@@ -2,13 +2,11 @@ import { AppType } from '@mcro/models'
 import { Button, Row, SegmentedRow, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useActiveUser } from '../../hooks/useActiveUser'
 import { InputRow, IntroText, Title, VerticalSpace } from '../../views'
 import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
 
 export default observer(function SettingsAppAccount(_props: AppProps<AppType.settings>) {
-  const user = useActiveUser()
 
   return (
     <Section sizePadding={2}>

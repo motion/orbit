@@ -11,10 +11,11 @@ import ListItem from '../../views/ListItems/ListItem'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppProps'
+import { useModel } from '@mcro/model-bridge'
 
 export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppType.settings>) {
   const id = +appConfig.id
-  const space = useObserveOne(SpaceModel, { where: { id } })
+  const [space] = useModel(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })
 
   console.log('integrations, integrations', integrations)

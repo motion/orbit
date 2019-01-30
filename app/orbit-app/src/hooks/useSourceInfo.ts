@@ -1,9 +1,9 @@
 import { BitModel, SourceModel, JobModel } from '@mcro/models'
-import { useObserveOne, useObserveCount } from '@mcro/model-bridge'
+import { useModel, useModelCount } from '@mcro/model-bridge'
 
 export function useSourceInfo(sourceId: number | false) {
   const hasSourceId = sourceId !== false
-  const source = useObserveOne(
+  const source = useModel(
     SourceModel,
     hasSourceId && {
       where: {
@@ -11,8 +11,8 @@ export function useSourceInfo(sourceId: number | false) {
       },
     },
   )
-  const bitsCount = useObserveCount(BitModel, hasSourceId && { where: { sourceId } })
-  const lastJob = useObserveOne(
+  const bitsCount = useModelCount(BitModel, hasSourceId && { where: { sourceId } })
+  const lastJob = useModel(
     JobModel,
     hasSourceId && {
       where: { sourceId },

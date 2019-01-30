@@ -1,4 +1,4 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { SpaceModel } from '@mcro/models'
 import { Icon } from '@mcro/ui'
 import * as React from 'react'
@@ -7,7 +7,7 @@ import SelectableList from '../../views/Lists/SelectableList'
 import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default function SourcesAppIndex() {
-  const spaces = useObserveMany(SpaceModel, {})
+  const [spaces] = useModels(SpaceModel, {})
 
   const results = useOrbitFilterableResults({
     items: [

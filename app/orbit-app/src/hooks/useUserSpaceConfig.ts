@@ -1,9 +1,8 @@
-import { loadOne, save } from '@mcro/model-bridge'
+import { loadOne, save, useModel } from '@mcro/model-bridge'
 import { Space, SpaceModel, User, UserModel } from '@mcro/models'
 import immer from 'immer'
 import { useEffect } from 'react'
 import { useActiveSpace } from './useActiveSpace'
-import { useActiveUser } from './useActiveUser'
 
 type SpaceConfig = User['spaceConfig'][any]
 
@@ -11,7 +10,7 @@ const DEFAULT_SPACE_CONFIG: SpaceConfig = { activePaneIndex: 0 }
 
 export function useUserSpaceConfig(): [SpaceConfig, (next: Partial<SpaceConfig>) => any] {
   // TODO make useActive user have an update function as well...
-  const activeUser = useActiveUser()
+  const [activeUser] = useModel(UserModel, {}) // todo: now you have update function as well
   const [activeSpace] = useActiveSpace()
 
   useEnsureUserSpaceConfig(activeUser, activeSpace)

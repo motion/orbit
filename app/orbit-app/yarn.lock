@@ -149,13 +149,6 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@mcro/keyword-extract@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@mcro/keyword-extract/-/keyword-extract-2.3.0.tgz#4829564a90865aa3eb707dce204b425495e6efce"
-  integrity sha512-v5s6vycSJsVKFFpITxziJmwY0wMdvjvK2GOJVP15VwNhQJXu2dbNptz24/uAQ6ZXshwHS68DizRRERWZLBFZxw==
-  dependencies:
-    lodash "4.17.10"
-
 "@react-navigation/core@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.2.tgz#8631801533a27d034a3b8421dfd0510a9f27dcf3"
@@ -1253,7 +1246,7 @@ lodash.toarray@^4.4.0:
   resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
   integrity sha1-JMS/zWsvuji/0FlNsRedjptlZWE=
 
-lodash@4.17.10, lodash@^4.13.1, lodash@^4.17.10:
+lodash@^4.13.1, lodash@^4.17.10:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
   integrity sha512-UejweD1pDoXu+AD825lWwp4ZGtSwgnpZxb3JDViD7StjQz+Nb/6l093lx4OQ0foGWNRoc19mWy7BzL+UAK2iVg==

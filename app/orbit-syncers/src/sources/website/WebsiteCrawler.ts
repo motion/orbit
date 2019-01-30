@@ -100,7 +100,7 @@ export class WebsiteCrawler {
         waitUntil: 'networkidle2',
         timeout: 100000,
       })
-      await page.waitFor(1000);
+      await page.waitFor(1000)
     } catch (err) {
       this.log.warning('couldn\'t open this link', err)
       return

@@ -1,4 +1,4 @@
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 import { AppType, IntegrationType, SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { AppProps } from '../AppProps'
@@ -20,7 +20,8 @@ export const SourcesAppMain = (props: AppProps<any>) => {
     )
   }
 
-  const source = useObserveOne(
+  // todo(nate) move to the top of component?
+  const [source] = useModel(
     SourceModel,
     props.appConfig.viewType !== 'setup' && {
       where: { id: +props.appConfig.id },

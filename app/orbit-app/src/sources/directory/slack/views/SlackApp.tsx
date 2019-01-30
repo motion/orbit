@@ -3,7 +3,7 @@ import { OrbitSourceMainProps } from '../../../types'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
 import { SegmentedRow, Button, Theme, Row, ThemeContext, color } from '@mcro/ui'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { BitModel, GenericBit, Bit } from '@mcro/models'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 import { Divider } from '../../../../views/Divider'
@@ -33,7 +33,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 export default React.memo(function SlackApp(props: Props) {
   const { item } = props
 
-  const nextConvos = useObserveMany(BitModel, {
+  const [nextConvos] = useModels(BitModel, {
     where: {
       integration: item.integration,
       type: item.type,
@@ -51,7 +51,7 @@ export default React.memo(function SlackApp(props: Props) {
     },
   })
 
-  const prevConvos = useObserveMany(BitModel, {
+  const [prevConvos] = useModels(BitModel, {
     where: {
       integration: item.integration,
       type: item.type,

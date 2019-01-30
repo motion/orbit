@@ -5,10 +5,11 @@ import { BitDecoration } from '../search/mainViews/BitDecoration'
 import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { normalizeItem } from '../../helpers/normalizeItem'
 import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 
 export default function BitAppMain(props: AppProps<AppType.bit>) {
-  const bit = useObserveOne(BitModel, { where: { id: +props.appConfig.id } })
+  const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
+  // console.log('hello bit', bit)
   if (!bit) {
     return null
   }

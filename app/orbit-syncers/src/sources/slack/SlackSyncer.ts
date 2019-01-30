@@ -166,8 +166,8 @@ export class SlackSyncer implements IntegrationSyncer {
                   await runWithTimeout(() => this.crawler.start())
                 }
 
-                await runWithTimeout(() =>
-                  this.crawler.run({
+                await runWithTimeout(() => {
+                  return this.crawler.run({
                     url: attachment.original_url,
                     deep: false,
                     handler: async data => {
@@ -182,8 +182,8 @@ export class SlackSyncer implements IntegrationSyncer {
                       )
                       return true
                     },
-                  }),
-                )
+                  })
+                }, 10000)
               } catch (error) {
                 this.log.warning(`failed to craw a slack link's website`, attachment, error)
               }

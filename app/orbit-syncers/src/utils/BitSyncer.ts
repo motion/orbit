@@ -56,7 +56,7 @@ export class BitSyncer {
     const { apiBits, dbBits } = options
 
     // calculate bits that we need to update in the database
-    const insertedBits = apiBits.filter(apiBit => {
+    let insertedBits = apiBits.filter(apiBit => {
       return !dbBits.some(dbBit => dbBit.id === apiBit.id)
     })
     const updatedBits = apiBits.filter(apiBit => {
@@ -65,6 +65,14 @@ export class BitSyncer {
     })
     const removedBits = dbBits.filter(dbBit => {
       return !apiBits.some(apiBit => apiBit.id === dbBit.id)
+    })
+
+    // from inserted bits we filter out bits with same content hash
+    const duplicateInsertBits = insertedBits.filter(bit => {
+      return insertedBits.filter(b => b.contentHash === bit.contentHash).length > 1
+    })
+    insertedBits = insertedBits.filter(bit => {
+      return insertedBits.filter(b => b.contentHash === bit.contentHash).length === 1
     })
 
     // if we have explicitly removed bits set, add them to removing bits
@@ -87,7 +95,7 @@ export class BitSyncer {
     //   return
     // }
 
-    this.log.timer('save bits in the database', { insertedBits, updatedBits, removedBits })
+    this.log.timer('save bits in the database', { insertedBits, updatedBits, removedBits, duplicateInsertBits })
     try {
       await getManager().transaction(async manager => {
         // drop all exist bits if such option was specified

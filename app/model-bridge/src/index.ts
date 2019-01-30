@@ -48,6 +48,7 @@ export const loadManyAndCount: MediatorClient['loadManyAndCount'] = Mediator.loa
   Mediator,
 )
 export const loadOne: MediatorClient['loadOne'] = Mediator.loadOne.bind(Mediator)
+export const loadCount: MediatorClient['loadCount'] = Mediator.loadCount.bind(Mediator)
 export const save: MediatorClient['save'] = Mediator.save.bind(Mediator)
 export const remove: MediatorClient['remove'] = Mediator.remove.bind(Mediator)
 

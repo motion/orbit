@@ -1,4 +1,4 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { AppType, PersonBitModel } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -15,7 +15,7 @@ import { AppProps } from '../AppProps'
 
 export default observer(function PeopleAppIndex(props: AppProps<AppType.people>) {
   // people and query
-  const people = useObserveMany(PersonBitModel, { take: 100000, where: { hasSlack: true } })
+  const [people] = useModels(PersonBitModel, { take: 100000, where: { hasSlack: true } })
   const { queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   const results = useOrbitFilterableResults({

@@ -2,6 +2,7 @@ import { save } from '@mcro/model-bridge'
 import { AppModel, Bit, ListsApp } from '@mcro/models'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'
+import { SaveOptions } from '@mcro/mediator'
 
 export const listRootID = 0
 
@@ -43,8 +44,7 @@ export const lists = {
         }
       }
 
-      // TODO umed type not accepting here
-      save(AppModel, app as any)
+      save(AppModel, app as SaveOptions<ListsApp>)
     },
   },
 }

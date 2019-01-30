@@ -1,4 +1,4 @@
-import { loadOne, useObserveOne } from '@mcro/model-bridge'
+import { loadOne } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
@@ -19,6 +19,7 @@ import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButto
 import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
+import { useModel } from '@mcro/model-bridge'
 
 // class ListsIndexStore {
 //   props: AppProps<AppType.lists>
@@ -106,7 +107,7 @@ import ListEdit from './ListEdit'
 // }
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
+  const [listApp] = useModel(AppModel, { where: { id: props.id } }) as [ListsApp, any]
   const items = listApp.data.items
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })

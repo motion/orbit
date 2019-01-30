@@ -198,7 +198,7 @@ export default observer(function ListItem(props: ListItemProps) {
     (() => {
       let iconSize = iconBefore ? (slim ? 18 : 20) : slim ? 12 : 14
       if (isMultiLine && iconBefore) {
-        iconSize += 2
+        iconSize += 8
       }
       const iconPropsFinal = {
         size: iconSize,

@@ -52,7 +52,6 @@ export const Icon = React.memo(
     type = 'mini',
     children,
     color,
-    size = 16,
     margin = 0,
     ...props
   }: IconProps) => {
@@ -68,10 +67,14 @@ export const Icon = React.memo(
       console.warn('no name given for icon')
       return null
     }
-    const iconName = findMatch(name)
     content = content || children
+
+    const iconName = findMatch(name)
+    // icons here are consistently a bit too big...
+    const size = props.size > 18 ? props.size * 0.85 : props.size
+
     return (
-      <IconInner color={color} size={size} {...props}>
+      <IconInner color={color} {...props} size={size}>
         <div
           className={`icon nc-icon-${type} ${iconName}`}
           style={{

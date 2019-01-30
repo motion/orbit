@@ -15,7 +15,7 @@ export default observer(function OrbitControls() {
               <ToolbarInner hasToolbars={!!toolbars}>
                 <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
                 <ToolbarCenter>{toolbars && toolbars.center}</ToolbarCenter>
-                <ToolbarSide end>{toolbars && toolbars.after}</ToolbarSide>
+                <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
               </ToolbarInner>
             )}
           </OrbitToolBarRender>
@@ -55,7 +55,7 @@ const ToolbarSide = gloss({
   width: '25%',
   maxWidth: 150,
   alignItems: 'center',
-  end: {
+  atEnd: {
     justifyContent: 'flex-end',
   },
 })

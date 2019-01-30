@@ -2,6 +2,8 @@ import * as UI from '@mcro/ui'
 import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
+import AppIcon from './AppIcon'
+import { appIcons } from './appIcons'
 import { SVG } from './SVG'
 
 const icons = {
@@ -153,7 +155,7 @@ const icons = {
   downArrow: require('!raw-loader!../../public/icons/down-arrow.svg'),
 }
 
-type Props = React.HTMLProps<any> &
+export type OrbitIconProps = React.HTMLProps<any> &
   IconProps & {
     ref: any
     name: string
@@ -161,74 +163,78 @@ type Props = React.HTMLProps<any> &
     style?: any
   }
 
-export const Icon = React.memo(
-  ({ name, color, size = 32, style = null, opacity, ...props }: Props) => {
-    const { activeTheme } = React.useContext(ThemeContext)
-    const finalColor = color || activeTheme.color.toString()
+export const Icon = React.memo((props: OrbitIconProps) => {
+  const { name, color, size = 32, style, opacity, ...restProps } = props
+  const { activeTheme } = React.useContext(ThemeContext)
+  const finalColor = color || activeTheme.color.toString()
 
-    // image based integration icons
-    const integrationIcon = useIntegrationIcon({ icon: name })
-    if (integrationIcon) {
-      const sizeProps = {
-        width: size,
-        height: size,
-      }
-      return (
-        <View
-          className={`icon ${props.className || ''}`}
-          display="inline-block"
-          textAlign="center"
-          justifyContent="center"
-          style={style}
-          opacity={opacity}
-          {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
-          {...sizeProps}
-          {...props}
-        >
-          <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
-        </View>
-      )
+  // image based integration icons
+  const integrationIcon = useIntegrationIcon({ icon: name })
+
+  if (appIcons[name]) {
+    return <AppIcon {...props} />
+  }
+
+  if (integrationIcon) {
+    const sizeProps = {
+      width: size,
+      height: size,
     }
-
-    // find our custom streamline icons...
-    const icon = icons[name]
-
-    // ...or fallback to @mcro/ui icon
-    if (!icon) {
-      return (
-        <UI.Icon
-          name={name}
-          color={finalColor}
-          size={size}
-          style={style}
-          opacity={opacity}
-          {...props}
-        />
-      )
-    }
-
     return (
-      <View {...props}>
-        <SVG
-          fill={`${finalColor}`}
-          svg={icon}
-          width={`${size}`}
-          height={`${size}`}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-            width: size,
-            height: size,
-            opacity,
-            ...style,
-          }}
-          cleanup={['fill', 'title', 'desc']}
-        />
+      <View
+        className={`icon ${props.className || ''}`}
+        display="inline-block"
+        textAlign="center"
+        justifyContent="center"
+        style={style}
+        opacity={opacity}
+        {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+        {...sizeProps}
+        {...restProps}
+      >
+        <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
       </View>
     )
-  },
-)
+  }
+
+  // find our custom streamline icons...
+  const icon = icons[name]
+
+  // ...or fallback to @mcro/ui icon
+  if (!icon) {
+    return (
+      <UI.Icon
+        name={name}
+        color={finalColor}
+        size={size}
+        style={style}
+        opacity={opacity}
+        {...restProps}
+      />
+    )
+  }
+
+  return (
+    <View {...restProps}>
+      <SVG
+        fill={`${finalColor}`}
+        svg={icon}
+        width={`${size}`}
+        height={`${size}`}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          width: size,
+          height: size,
+          opacity,
+          ...style,
+        }}
+        cleanup={['fill', 'title', 'desc']}
+      />
+    </View>
+  )
+})
 
 Icon['acceptsIconProps'] = true
 

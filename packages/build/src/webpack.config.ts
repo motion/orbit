@@ -186,7 +186,7 @@ const config = {
         test: /\.(md)$/,
         use: 'raw-loader',
       },
-    ],
+    ].filter(Boolean),
   },
   plugins: [
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
@@ -198,6 +198,8 @@ const config = {
     }),
 
     new webpack.IgnorePlugin(/electron-log/),
+
+    target === 'web' && new webpack.IgnorePlugin(/^electron$/),
 
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',

@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.3.10",
   "scripts": {
-    "start": "mcro-build --entry ./src/index --port 5001"
+    "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",

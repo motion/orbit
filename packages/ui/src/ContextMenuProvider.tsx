@@ -1,5 +1,4 @@
 import { gloss } from '@mcro/gloss'
-import { remote } from 'electron'
 import React, { createContext, useRef } from 'react'
 
 export const ContextMenuContext = createContext<(items: MenuTemplate) => void>(null)
@@ -36,8 +35,8 @@ export function ContextMenuProvider(props: {
             props.onContextMenu(currentMenu)
             return
           }
-          const menu = remote.Menu.buildFromTemplate(currentMenu)
-          menu.popup({ window: remote.getCurrentWindow() })
+          const menu = require('electron').remote.Menu.buildFromTemplate(currentMenu)
+          menu.popup({ window: require('electron').remote.getCurrentWindow() })
         }}
       >
         {props.children}

@@ -12,13 +12,23 @@ export default observer(function OrbitControls() {
         <ToolbarChrome>
           <OrbitToolBarRender>
             {toolbars => (
-              <SimpleText alpha={0.8} fontWeight={500}>
-                <ToolbarInner hasToolbars={!!toolbars}>
-                  <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
-                  <ToolbarCenter>{toolbars && toolbars.center}</ToolbarCenter>
-                  <ToolbarSide end>{toolbars && toolbars.after}</ToolbarSide>
-                </ToolbarInner>
-              </SimpleText>
+              <ToolbarInner hasToolbars={!!toolbars}>
+                <ToolbarSide>
+                  <SimpleText size={0.92} alpha={0.75}>
+                    {toolbars && toolbars.before}
+                  </SimpleText>
+                </ToolbarSide>
+                <ToolbarCenter>
+                  <SimpleText size={0.92} alpha={0.75}>
+                    {toolbars && toolbars.center}
+                  </SimpleText>
+                </ToolbarCenter>
+                <ToolbarSide end>
+                  <SimpleText size={0.92} alpha={0.75}>
+                    {toolbars && toolbars.after}
+                  </SimpleText>
+                </ToolbarSide>
+              </ToolbarInner>
             )}
           </OrbitToolBarRender>
         </ToolbarChrome>

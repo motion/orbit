@@ -1,23 +1,46 @@
+import { Col, Theme, ThemeProvide } from '@mcro/gloss'
+import { Button, Popover, Row } from '@mcro/ui'
 import * as React from 'react'
-import { ThemeProvide, Theme } from '@mcro/gloss'
 import { themes } from './themes'
-import { Button, Row } from '@mcro/ui'
 
 export const TestUI = () => {
   return (
     <ThemeProvide themes={themes}>
       <Theme name="light">
-        <Button size={2} tooltip="hi hello" tooltipProps={{ open: true }}>
-          test
-        </Button>
-
-        <Row position="absolute" right={0}>
-          <Button
-            tooltip="hi hello"
-            tooltipProps={{ open: true, ref: x => (window.x = x), debug: true }}
-          >
-            1
+        <Row flex={1} overflow="hidden" height="100%">
+          <Col width={200} overflowY="auto">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
+              <Row padding={20} height={200} key={i} borderBottom={[1, 'grey']} alignItems="center">
+                <Col flex={1}>hello</Col>
+                <Popover
+                  towards="right"
+                  width={250}
+                  height={300}
+                  target={<Col>***</Col>}
+                  openOnClick
+                  closeOnClickAway
+                  group="filters"
+                  background
+                  borderRadius={10}
+                  elevation={1}
+                >
+                  <Col width={100} height={200} background="red" />
+                </Popover>
+              </Row>
+            ))}
+          </Col>
+          <Button size={2} tooltip="hi hello" tooltipProps={{ open: true }}>
+            test
           </Button>
+
+          <Row position="absolute" right={0}>
+            <Button
+              tooltip="hi hello"
+              tooltipProps={{ open: true, ref: x => (window.x = x), debug: true }}
+            >
+              1
+            </Button>
+          </Row>
         </Row>
       </Theme>
     </ThemeProvide>

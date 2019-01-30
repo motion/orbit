@@ -181,7 +181,10 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
                   id: 0,
                   name: listApp.name,
                 },
-                ...treeState.history.slice(1).map(id => items[id]),
+                ...treeState.history
+                  .slice(1)
+                  .filter(Boolean)
+                  .map(id => items[id]),
               ]}
             />
           </>

@@ -1,15 +1,21 @@
-import { always, ensure, react } from '@mcro/black';
-import { ContextMenu, View } from '@mcro/ui';
-import { useStore } from '@mcro/use-store';
-import { MenuItem } from 'electron';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { SortableContainer } from 'react-sortable-hoc';
-import { CellMeasurer, CellMeasurerCache, InfiniteLoader, List, WindowScroller } from 'react-virtualized';
-import { GenericComponent } from '../../types';
-import { Banner } from '../Banner';
-import { HandleSelection } from '../ListItems/ListItem';
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem';
+import { always, ensure, react } from '@mcro/black'
+import { ContextMenu, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { MenuItem } from 'electron'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { SortableContainer } from 'react-sortable-hoc'
+import {
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+  List,
+  WindowScroller,
+} from 'react-virtualized'
+import { GenericComponent } from '../../types'
+import { Banner } from '../Banner'
+import { HandleSelection } from '../ListItems/ListItem'
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 
 export type GetItemProps = (index: number) => Partial<VirtualListItemProps<any>> | null
 
@@ -35,6 +41,7 @@ export type VirtualListProps = {
   sortable?: boolean
   dynamicHeight?: boolean
   keyMapper?: (index: number) => string | number
+  placeholder?: JSX.Element
 }
 
 class SortableList extends React.Component<any> {
@@ -229,9 +236,11 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
 
   if (!props.items.length) {
     return (
-      <View flex={1} margin={[10, 0]}>
-        <Banner>No results</Banner>
-      </View>
+      props.placeholder || (
+        <View flex={1} margin={[10, 0]}>
+          <Banner>No results</Banner>
+        </View>
+      )
     )
   }
 
@@ -241,26 +250,21 @@ export default observer(function VirtualList(rawProps: VirtualListProps) {
     const itemElement = (
       <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
         <div style={style}>
-          <ItemView
-            onSelect={props.onSelect}
-            onOpen={props.onOpen}
-            {...itemProps(props, index)}
-            {...props.itemProps}
-            {...props.getItemProps && props.getItemProps(index)}
-            {...item}
-            index={index}
-            realIndex={index}
-          />
+          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
+            <ItemView
+              onSelect={props.onSelect}
+              onOpen={props.onOpen}
+              {...itemProps(props, index)}
+              {...props.itemProps}
+              {...props.getItemProps && props.getItemProps(index)}
+              {...item}
+              index={index}
+              realIndex={index}
+            />
+          </ContextMenu>
         </div>
       </CellMeasurer>
     )
-    if (props.getContextMenu) {
-      return (
-        <ContextMenu key={key} items={props.getContextMenu(index)}>
-          {itemElement}
-        </ContextMenu>
-      )
-    }
     return itemElement
   }
 

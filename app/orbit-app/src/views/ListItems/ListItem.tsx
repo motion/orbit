@@ -124,7 +124,7 @@ export default observer(function ListItem(props: ListItemProps) {
     separatorProps,
     above,
     slim,
-    iconBefore,
+    iconBefore: iconBeforeProp,
     subTextOpacity = 0.7,
     ...restProps
   } = props
@@ -133,12 +133,19 @@ export default observer(function ListItem(props: ListItemProps) {
   const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!createdAt && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
-  const showTitle = !props.hideTitle
+  const showTitle = !!title && !props.hideTitle
   const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle || showPeople
+  const defaultPadding = slim ? [6, 8] : [7, 10]
+  const iconBefore = iconBeforeProp || !showTitle
+
+  // add a little vertical height for full height icons
+  if (slim && iconBefore) {
+    defaultPadding[0] += 2
+  }
 
   const renderedChildren = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
@@ -172,12 +179,13 @@ export default observer(function ListItem(props: ListItemProps) {
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        margin={-3}
+        margin={[-3, -1]}
         maxWidth={120}
         fontWeight={400}
         fontSize={13}
         alpha={subTextOpacity}
         onClick={store.handleClickLocation}
+        ellipse
       >
         {`${location}`}
       </RoundButtonSmall>
@@ -188,19 +196,26 @@ export default observer(function ListItem(props: ListItemProps) {
   const iconElement =
     showIcon &&
     (() => {
-      let size = iconBefore ? (slim ? 22 : 28) : slim ? 12 : 16
-      if (isMultiLine) {
-        size += 6
+      let iconSize = iconBefore ? (slim ? 18 : 22) : slim ? 12 : 14
+      if (isMultiLine && iconBefore) {
+        iconSize += 8
       }
       const iconPropsFinal = {
-        size,
-        style: { transform: `translateY(${slim ? 4 : 2}px)` },
+        size: iconSize,
         ...iconProps,
+      }
+      if (!iconBefore) {
+        iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
       }
       return (
         <>
           {React.isValidElement(icon) ? (
-            React.cloneElement(icon, iconPropsFinal)
+            // dont overwrite the icons original props
+            icon.type['acceptsIconProps'] ? (
+              React.cloneElement(icon, iconPropsFinal)
+            ) : (
+              icon
+            )
           ) : (
             <Icon name={icon} {...iconPropsFinal} />
           )}
@@ -229,7 +244,7 @@ export default observer(function ListItem(props: ListItemProps) {
           borderRadius={borderRadius}
           onClick={store.handleClick}
           disableShadow={disableShadow}
-          padding={padding || (slim ? [4, 8] : [8, 11])}
+          padding={padding || defaultPadding}
           {...cardProps}
         >
           {before}
@@ -255,7 +270,7 @@ export default observer(function ListItem(props: ListItemProps) {
               <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
-                    <Icon icon={icon} size={slim ? 12 : 14} {...iconProps} />
+                    <Icon name={icon} size={slim ? 12 : 14} {...iconProps} />
                     <TitleSpace slim={slim} />
                   </>
                 )}
@@ -361,7 +376,7 @@ const Divider = gloss({
   left: 10,
   right: 10,
 }).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.09),
+  background: theme.borderColor.alpha(0.12),
 }))
 
 const ListItemChrome = gloss({
@@ -406,7 +421,7 @@ const ListItemChrome = gloss({
 const Title = gloss({
   width: '100%',
   flexFlow: 'row',
-  justifyContent: 'space-between',
+  // justifyContent: 'space-between',
   alignItems: 'flex-start',
 })
 
@@ -435,7 +450,7 @@ const TitleSpace = gloss({
     flex: 1,
   },
   slim: {
-    minWidth: 5,
+    minWidth: 8,
   },
 })
 

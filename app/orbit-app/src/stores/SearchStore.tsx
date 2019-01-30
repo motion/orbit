@@ -149,18 +149,19 @@ export class SearchStore {
     if (searchedApps.length) {
       return [
         {
-          title: `${this.stores.spaceStore.activeSpace.name} Home`,
+          title: `Apps`,
           subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
           icon: 'orbit-apps-full',
           iconBefore: true,
           type: AppType.apps,
-          // group: this.stores.spaceStore.activeSpace.name,
+          group: this.stores.spaceStore.activeSpace.name,
         },
         ...searchedApps.map(app => ({
           title: app.name,
           slim: true,
           iconBefore: true,
           icon: `orbit-${app.type}-full`,
+          group: this.stores.spaceStore.activeSpace.name,
           appConfig: {
             type: AppType.message,
             title: `Open ${app.name}`,
@@ -285,27 +286,11 @@ export class SearchStore {
         endIndex: take,
       })
       await updateNextResults({
-        maxBitsCount: 2,
+        maxBitsCount: 100,
         group: 'overall',
         startIndex: 0,
         endIndex: take,
       })
-
-      // wait for active before loading more than one page of results
-      /* if (!this.isActive) {
-        await when(() => this.isActive)
-      }
-
-      // infinite scroll
-      this.nextRows = null
-      while (true) {
-        // wait for load more event
-        await whenChanged(() => this.nextRows)
-        const updated = await updateNextResults(this.nextRows)
-        if (!updated) {
-          break
-        }
-      } */
 
       // finished
       return {
@@ -318,16 +303,4 @@ export class SearchStore {
       defaultValue: { results: [], query: '', finished: false },
     },
   )
-
-  get quickResultsOffset() {
-    return 0
-  }
-
-  // todo
-  // I don't think someone is going to scroll more than 1000 items? Or even 100...
-  remoteRowCount = 1000
-
-  loadMore = ({ startIndex, stopIndex }) => {
-    this.nextRows = { startIndex, endIndex: stopIndex }
-  }
 }

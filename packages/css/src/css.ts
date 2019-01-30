@@ -1,22 +1,22 @@
-import { px, processArray, processObject } from './helpers'
-import { CAMEL_TO_SNAKE } from './cssNameMap'
 import {
-  psuedoKeys,
+  COLOR_KEYS,
   FALSE_VALUES,
+  psuedoKeys,
+  SHORTHANDS,
   UNDEFINED,
   unitlessNumberProperties,
-  COLOR_KEYS,
-  SHORTHANDS,
 } from './constants'
+import { CAMEL_TO_SNAKE } from './cssNameMap'
+import { processArray, processObject, px } from './helpers'
 import { toColor } from './toColor'
 
 // exports
 export { configureCSS } from './config'
-export { snakeToCamel, camelToSnake } from './helpers'
-export { validCSSAttr, psuedoKeys } from './constants'
+export { psuedoKeys, validCSSAttr } from './constants'
 export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
-export { Transform, Color, ThemeObject } from './types'
 export * from './helpers'
+export { camelToSnake, snakeToCamel } from './helpers'
+export { Color, ThemeObject, Transform } from './types'
 
 export type CSSOptions = {
   errorMessage?: string
@@ -88,6 +88,10 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = css(value, opts)
       respond = true
     } else if (valueType === 'object') {
+      // bugfix: avoid react elements... TODO make it check the right symbol
+      if (value['$$typeof']) {
+        continue
+      }
       toReturn[finalKey] = processObject(key, value)
       respond = true
     } else if (key === 'isolate') {

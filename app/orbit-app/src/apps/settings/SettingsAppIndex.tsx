@@ -31,7 +31,7 @@ export default function SourcesAppIndex() {
         type: 'space',
         title: space.name,
         subtitle: '10 members',
-        before: <OrbitOrb size={18} marginRight={10} />,
+        before: <OrbitOrb size={18} background="red" color="blue" marginRight={12} />,
         after: index === 0 && <Icon name="check" size={12} />,
       })),
       {

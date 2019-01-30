@@ -2,7 +2,7 @@ import { gloss, View } from '@mcro/gloss'
 import * as React from 'react'
 
 export const DividerContainer = gloss(View, {
-  pointerEvents: 'all',
+  pointerEvents: 'inherit',
   padding: [10, 6],
   zIndex: 10,
 })

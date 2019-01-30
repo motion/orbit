@@ -1,6 +1,5 @@
 import { View } from '@mcro/ui'
 import * as React from 'react'
-// import { View, color as colorize } from '@mcro/ui'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
   return (

@@ -1,5 +1,5 @@
-import { color, ThemeContext } from '@mcro/ui'
-import React, { useContext } from 'react'
+import { color } from '@mcro/ui'
+import React from 'react'
 import { appIcons } from './appIcons'
 import { OrbitIconProps } from './Icon'
 import { SVG } from './SVG'
@@ -16,17 +16,14 @@ export default React.memo(function AppIcon({
   style,
   ...props
 }: AppIconProps) {
-  const { activeTheme } = useContext(ThemeContext)
-  const fill = `${props.color || activeTheme.color}`
+  const fill = `${props.color || '#fff'}`
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
-  const bgLight = color(background)
-    .lighten(0.1)
-    .hex()
-  const bgDark = color(background)
-    .darken(0.1)
-    .hex()
+  const bg = color(background)
+  const adjust = bg.isDark() ? 0.15 : 0.05
+  const bgLight = bg.lighten(adjust).hex()
+  const bgDark = bg.darken(adjust).hex()
 
   const newID = bgLight.replace('#', '')
 
@@ -47,10 +44,6 @@ export default React.memo(function AppIcon({
     /stop-color="#121212" offset="100%"/g,
     `stop-color="${bgDark}" offset="100%"`,
   )
-
-  if (background === 'blue') {
-    console.log(iconSrc)
-  }
 
   return (
     <SVG

@@ -8,12 +8,14 @@ export function ColorPicker({
   count = 10,
   luminosity = 'bright',
   hue,
+  onChange,
   ...viewProps
 }: {
   count?: number
   seed?: number
   luminosity?: string
   hue?: string
+  onChange?: (color: string) => any
 } & ViewProps) {
   const colors = useMemo(
     () =>
@@ -37,6 +39,9 @@ export function ColorPicker({
           borderRadius={2}
           border={[1, [255, 255, 255, 1]]}
           boxShadow={[[0, 2, 2, [0, 0, 0, 0.15]]]}
+          onClick={() => {
+            onChange(color)
+          }}
           {...viewProps}
         />
       ))}

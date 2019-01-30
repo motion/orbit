@@ -34,7 +34,7 @@ const CreateAppMain = observer(function CreateAppMain() {
   const { newAppStore } = useStoresSafe()
   const { type } = newAppStore
   const app = apps.find(x => x.type === type)
-  const [color, setColor] = useState('#111')
+  const [background, setBackground] = useState('#111')
 
   console.log('app.icon', app.icon)
 
@@ -42,7 +42,7 @@ const CreateAppMain = observer(function CreateAppMain() {
     <View padding={20} margin="auto" width="80%" minHeight="80%" minWidth={400} maxWidth={700}>
       {/* header */}
       <Row alignItems="center">
-        <Icon color="red" background="yellow" name={`${app.icon}-full`} size={48} />
+        <Icon background={background} name={`${app.icon}-full`} size={48} />
 
         <HorizontalSpace />
         <Title margin={0}>{newAppStore.name}</Title>
@@ -69,7 +69,7 @@ const CreateAppMain = observer(function CreateAppMain() {
       <VerticalSpace />
 
       <View>
-        <ColorPicker />
+        <ColorPicker onChange={setBackground} />
       </View>
       <VerticalSpace />
 

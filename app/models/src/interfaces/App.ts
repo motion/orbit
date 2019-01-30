@@ -4,13 +4,20 @@ import { Space } from './Space'
 
 type ItemID = number | string
 
-export type ListAppDataItem = {
-  id: ItemID
-  type: 'bit' | 'person' | 'folder' | 'root'
-  name?: string
-  children?: ItemID[]
-  icon?: string
-}
+export type ListAppDataItem =
+  | {
+      id: ItemID
+      type: 'folder' | 'root'
+      name?: string
+      children: ItemID[]
+      icon?: string
+    }
+  | {
+      id: ItemID
+      type: 'bit' | 'person'
+      name?: string
+      icon?: string
+    }
 
 export type ListsAppData = {
   rootItemID: ItemID

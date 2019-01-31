@@ -1,7 +1,5 @@
-export function preventDefault(cb: Function) {
-  return (e: React.MouseEvent<any>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    cb(e)
-  }
+export function preventDefault(e: React.MouseEvent<any>) {
+  e.preventDefault()
+  e.stopPropagation()
+  return e
 }

@@ -3,7 +3,7 @@ import { Text } from '@mcro/ui'
 
 export const Separator = gloss(Text, {
   padding: [16, 10, 2],
-  opacity: 0.655,
+  opacity: 0.65,
 })
 
 Separator.defaultProps = {

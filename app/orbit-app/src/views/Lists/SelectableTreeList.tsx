@@ -86,9 +86,11 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
 
   useEffect(
     function updateRef() {
-      ref['current'] = {
-        back,
-        depth,
+      if (ref) {
+        ref['current'] = {
+          back,
+          depth,
+        }
       }
     },
     [depth],

@@ -1,7 +1,7 @@
 import { AppType, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { flatten, memoize } from 'lodash'
+import { flatten, flow, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -86,7 +86,10 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                     width={34}
                     opacity={0.5}
                     hoverStyle={{ opacity: 1 }}
-                    onClick={preventDefault(() => console.log('show popover'))}
+                    onClick={flow(
+                      preventDefault,
+                      () => console.log('show popover'),
+                    )}
                   >
                     <Icon name="dots" size={12} />
                   </View>

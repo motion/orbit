@@ -11,7 +11,7 @@ import { AppStore } from './AppStore'
 
 export type AppProps<Type extends AppType> = {
   id?: string | number
-  viewType?: 'index' | 'main' | 'setup'
+  viewType?: 'index' | 'main' | 'setup' | 'settings'
   type?: Type
   title?: string
   appStore: AppStore<Type>

@@ -45,8 +45,10 @@ export default observer(function AppsMainNew() {
 
       <VerticalSpace />
 
+      <SubTitle>Color</SubTitle>
       <View>
         <ColorPicker
+          count={18}
           onChangeColor={color => {
             newAppStore.update({ colors: [color, 'white'] })
           }}

@@ -144,8 +144,8 @@ const SearchToolbar = observer(function SearchToolbar() {
             borderRadius={10}
             elevation={4}
             theme="light"
-            width={390}
-            height={300}
+            width={420}
+            height={310}
           >
             <View flex={1} className="calendar-dom theme-light" padding={10}>
               <DateRangePicker

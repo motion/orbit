@@ -3,20 +3,26 @@ import { AppType } from '@mcro/models'
 import { Absolute, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import { useActiveApps } from '../hooks/useActiveApps'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import OrbitControls from '../pages/OrbitPage/OrbitControls'
+import { defaultApps } from '../stores/NewAppStore'
 import SelectableList from '../views/Lists/SelectableList'
 import { AppProps } from './AppProps'
 import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
 
+const descriptions = {
+  search: 'Custom search with filters',
+  lists: 'Controlled or controllable list',
+  people: 'Manageable list of people',
+}
+
 function CreateAppIndex() {
-  const apps = useActiveApps()
   return (
     <SelectableList
       minSelected={0}
-      items={apps.map(app => ({
+      items={defaultApps.map(app => ({
         title: app.name,
+        subtitle: descriptions[app.type],
         icon: <AppIcon app={app} />,
         type: app.type,
         iconBefore: true,
@@ -53,10 +59,10 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         {/* <AppView viewType="index" id="0" type={type} appConfig={{ type }} /> */}
       </View>
 
-      <Absolute bottom={20} right={20}>
+      <Absolute bottom={25} right={25}>
         <Theme name="selected">
-          <Button iconAfter elevation={2} size={1.6} icon="check">
-            Save
+          <Button elevation={2} size={1.4}>
+            Add
           </Button>
         </Theme>
       </Absolute>

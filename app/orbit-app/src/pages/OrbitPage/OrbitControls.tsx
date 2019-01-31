@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalScroll, HorizontalSpace } from '../../views'
+import { HorizontalScroll } from '../../views'
 
 const height = 32
 
@@ -20,11 +20,9 @@ export default observer(function OrbitControls() {
                 <ToolbarCenter>
                   {toolbars && toolbars.center && (
                     <>
-                      <HorizontalSpace />
-                      <HorizontalSpace />
+                      <ToolbarSpace />
                       <HorizontalScroll height={height}>{toolbars.center}</HorizontalScroll>
-                      <HorizontalSpace />
-                      <HorizontalSpace />
+                      <ToolbarSpace />
                     </>
                   )}
                 </ToolbarCenter>
@@ -36,6 +34,10 @@ export default observer(function OrbitControls() {
       ) : null}
     </>
   )
+})
+
+const ToolbarSpace = gloss({
+  width: 30,
 })
 
 const ToolbarChrome = gloss(Row, {
@@ -54,8 +56,8 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss({
   flexFlow: 'row',
   alignItems: 'center',
-  maxWidth: 820,
-  width: '75%',
+  maxWidth: 920,
+  width: '100%',
   minWidth: 400,
   hasToolbars: {
     height,

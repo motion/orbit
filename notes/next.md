@@ -2,9 +2,7 @@
 
 Goal: Make progress on apps, syncers, and account so we can deploy it in beta.
 
-## Make teams, apps, and sources all work for production
-
-@umed
+## Umed
 
 Needs:
 
@@ -36,29 +34,13 @@ TODO (broken down):
 
 ---
 
-## Finish the lists app, people app, and designs for various panes
-
-@nate
-
-Needs:
-
-1. orbit basically needs to function well day to day
-
-TODO (high level):
-
-1. Make Search, Favorites, People, and Lists apps work pretty well
-2. Fix and finish the Account, Settings, Sources, Apps management panes
-3. Continue to get the Menu working enough to be testable
-
-TODO (broken down):
+## Nate
 
 _Search_
 
+- keep current items in memory and just filter them on search by title (not fuzzy just match subsection)
 - Opening, movement fixes
 - Submenu for items to favorite or pin to a list
-
-_Favorites_
-
 - manage space pane: upload your image / name it / CRUD
 - manage account pane: same sort of deal... + link to slack
   fix search results: open on enter, onOpen broke

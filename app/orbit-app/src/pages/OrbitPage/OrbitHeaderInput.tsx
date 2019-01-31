@@ -32,7 +32,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const placeholder =
     (activePane &&
       activeSpace &&
-      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
+      (activePane.type === 'sources' ? `Space: ${activeSpace.name}` : activePane.name)) ||
     ''
   const fontSize = orbitStore.isTorn ? 16 : 18
   return (

@@ -17,9 +17,9 @@ const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item:
           width={70}
           height={70}
           src={item.photo}
-          style={{
-            '-webkit-mask-image': `linear-gradient(to bottom, transparent 0%, #eee 100%)`,
-          }}
+          // style={{
+          //   '-webkit-mask-image': `linear-gradient(to bottom, transparent 0%, black 100%)`,
+          // }}
         />
       )}
       {/* TODO: email is less important than their top topics */}

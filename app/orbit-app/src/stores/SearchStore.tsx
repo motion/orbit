@@ -10,7 +10,6 @@ import {
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
 import React from 'react'
-import { fuzzyQueryFilter } from '../helpers'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { Icon } from '../views/Icon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
@@ -99,41 +98,48 @@ export class SearchStore {
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
+  get homeItem() {
+    return {
+      title: `Apps`,
+      subtitle: `${this.stores.spaceStore.apps
+        .map(x => x.name)
+        .slice(0, 2)
+        .join(', ')}`,
+      icon: 'orbit-apps-full',
+      iconBefore: true,
+      type: AppType.apps,
+      group: this.stores.spaceStore.activeSpace.name,
+    }
+  }
+
   getAppsResults(query: string): OrbitListItemProps[] {
     const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
-    const searchedApps = fuzzyQueryFilter(query, apps, { key: 'name' })
+    const searchedApps =
+      (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []
 
-    if (searchedApps.length) {
-      return [
-        {
-          title: `Apps`,
-          subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
-          icon: 'orbit-apps-full',
-          iconBefore: true,
-          type: AppType.apps,
-          group: this.stores.spaceStore.activeSpace.name,
+    const appToResult = app => {
+      const icon = <Icon name={`orbit-${app.type}-full`} background={app.colors[0]} />
+      return {
+        title: app.name,
+        slim: true,
+        iconBefore: true,
+        icon,
+        group: this.stores.spaceStore.activeSpace.name,
+        appConfig: {
+          type: AppType.message,
+          title: `Open ${app.name}`,
         },
-        ...searchedApps.map(app => {
-          const icon = <Icon name={`orbit-${app.type}-full`} background={app.colors[0]} />
-          return {
-            title: app.name,
-            slim: true,
-            iconBefore: true,
-            icon,
-            group: this.stores.spaceStore.activeSpace.name,
-            appConfig: {
-              type: AppType.message,
-              title: `Open ${app.name}`,
-            },
-            onOpen: () => {
-              this.stores.paneManagerStore.setActivePane(`${app.id}`)
-            },
-          }
-        }),
-      ]
+        onOpen: () => {
+          this.stores.paneManagerStore.setActivePane(`${app.id}`)
+        },
+      }
     }
 
-    return []
+    if (searchedApps.length) {
+      return searchedApps.map(appToResult)
+    }
+
+    return [this.homeItem, ...apps.slice(0, 2).map(appToResult)]
   }
 
   private getQuickResults(query: string) {

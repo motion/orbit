@@ -138,7 +138,7 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
             </Links>
           </Info>
         </CardContent>
-        {!App.state.darkTheme && (
+        {!App.state.isDark && (
           <Map>
             <FadeMap />
             <FadeMapRight />

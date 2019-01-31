@@ -536,10 +536,7 @@ link {
   display: none;
 }
 
-a,
-input,
-textarea,
-select {
+a {
   outline: 0;
 }
 

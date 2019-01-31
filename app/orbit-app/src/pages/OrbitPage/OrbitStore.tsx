@@ -1,6 +1,7 @@
 import { ensure, react } from '@mcro/black'
-import { AppConfig, AppType } from '@mcro/models'
-import { App, Electron } from '@mcro/stores'
+import { observeOne } from '@mcro/model-bridge'
+import { AppConfig, AppType, UserModel } from '@mcro/models'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual, memoize } from 'lodash'
 import { AppStore } from '../../apps/AppStore'
@@ -16,6 +17,21 @@ export class OrbitStore {
   get activePane() {
     return this.stores.paneManagerStore.activePane
   }
+
+  // sync settings to App.state.isDark for now until we migrate
+  activeUser = null
+  activeUser$ = observeOne(UserModel, {}).subscribe(x => (this.activeUser = x))
+
+  syncThemeToAppState = react(
+    () => [this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
+    ([theme, osTheme]) => {
+      if (theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')) {
+        App.setState({ isDark: true })
+      } else {
+        App.setState({ isDark: false })
+      }
+    },
+  )
 
   appStores: { [key: string]: AppStore<any> } = {}
   activeConfig: { [key: string]: AppConfig } = {

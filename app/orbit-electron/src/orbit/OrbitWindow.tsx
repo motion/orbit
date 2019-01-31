@@ -4,17 +4,22 @@ import { Logger } from '@mcro/logger'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron'
 import { pathExists } from 'fs-extra'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
 import { ROOT } from '../constants'
+import { getScreenSize } from '../helpers/getScreenSize'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
+
+const setScreenSize = () => {
+  Electron.setState({ screenSize: getScreenSize() })
+}
 
 class OrbitWindowStore {
   orbitRef: BrowserWindow
@@ -26,6 +31,24 @@ class OrbitWindowStore {
   size = [0, 0]
   position = [0, 0]
   appId = App.state.appCount
+
+  didMount() {
+    // screen events
+    setScreenSize()
+    screen.on('display-metrics-changed', async () => {
+      log.info('got display metrics changed event')
+      setScreenSize()
+    })
+
+    // theme events
+    const updateTheme = () => {
+      const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
+      console.log('sending theme', theme)
+      Electron.sendMessage(Desktop, Desktop.messages.OS_THEME, theme)
+    }
+    updateTheme()
+    systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', updateTheme)
+  }
 
   updateSize = react(
     () => Electron.state.screenSize,
@@ -119,7 +142,7 @@ export default observer(function OrbitWindow() {
 
   const appQuery = `/?appId=${store.appId}`
   const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
-  const vibrancy = App.state.darkTheme ? 'dark' : 'light'
+  const vibrancy = App.state.isDark ? 'dark' : 'light'
 
   log.info(
     `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${vibrancy}`,
@@ -165,8 +188,8 @@ export default observer(function OrbitWindow() {
   return (
     <Window
       show={store.show}
-      focus
       onReadyToShow={store.setInitialShow}
+      focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}
       ref={store.handleRef}
       file={url}

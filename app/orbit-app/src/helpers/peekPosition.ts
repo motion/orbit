@@ -1,4 +1,4 @@
-import { AppConfig } from '@mcro/stores'
+import { AppConfig } from '@mcro/models'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 60

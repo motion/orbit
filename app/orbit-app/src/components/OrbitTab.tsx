@@ -168,7 +168,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
       ? [
-          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.26]],
           ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]

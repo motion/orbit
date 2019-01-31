@@ -117,7 +117,7 @@ const OrbitHeaderBg = gloss(FullScreen, {
   pointerEvents: 'none',
 }).theme((_, theme) => ({
   background: theme.background.isDark()
-    ? null
+    ? `linear-gradient(${theme.background.alpha(0)},rgba(0,0,0,0.2))`
     : `linear-gradient(${theme.background.alpha(0.1)},${theme.background.alpha(0)})`,
 }))
 

@@ -23,4 +23,13 @@ export interface User {
       activePaneIndex: number
     }
   }
+
+  settings?: {
+    hasOnboarded?: boolean
+    autoUpdate?: boolean
+    autoLaunch?: boolean
+    theme?: 'dark' | 'light' | 'automatic'
+    openShortcut?: string
+    recentSearches?: string[]
+  }
 }

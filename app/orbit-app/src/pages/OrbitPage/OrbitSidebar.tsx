@@ -23,7 +23,7 @@ export default observer(function OrbitSidebar() {
 
   return (
     <Sidebar
-      width={hasIndex ? (hasMain ? 320 : window.innerWidth) : 0}
+      width={hasIndex ? (hasMain ? 340 : window.innerWidth) : 0}
       minWidth={100}
       maxWidth={500}
     >

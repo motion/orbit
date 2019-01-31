@@ -17,6 +17,7 @@ export {
   ViewProps,
 } from '@mcro/gloss'
 export * from './Arrow'
+export * from './Border'
 export { ButtonProps, default as Button } from './Button'
 export * from './buttons/ClearButton'
 export * from './Circle'

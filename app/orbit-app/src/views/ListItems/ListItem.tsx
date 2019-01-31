@@ -164,7 +164,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle
-  const defaultPadding = slim ? [6, 8] : [7, 10]
+  const defaultPadding = slim ? [7, 9] : [7, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons
@@ -214,7 +214,7 @@ export default observer(function ListItem(props: ListItemProps) {
   )
 
   return (
-    <UI.Theme name={isSelected ? 'selected' : null}>
+    <UI.Theme select={isSelected ? theme => theme.selected : null}>
       <>
         {above}
         {!!separator && (
@@ -340,13 +340,10 @@ const ListFrame = gloss(UI.View, {
   isExpanded: {
     userSelect: 'auto',
   },
-  transform: {
-    z: 0,
-  },
 }).theme(({ borderRadius }, theme) => {
   return {
     color: theme.color,
-    background: theme.listItemBackground || theme.background.alpha(0.5),
+    background: theme.listItemBackground || theme.background,
     borderRadius: borderRadius || 0,
   }
 })
@@ -380,7 +377,7 @@ const ListItemChrome = gloss({
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.15),
+      background: theme.listItemBackground || theme.background.alpha(0.15),
     }
   } else {
     listStyle = {

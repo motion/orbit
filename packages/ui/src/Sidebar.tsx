@@ -7,11 +7,19 @@
 
 import { gloss } from '@mcro/gloss'
 import * as React from 'react'
+import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive } from './Interactive'
 
 const SidebarInteractiveContainer = gloss(Interactive, {
   flex: 'none',
 })
+
+const borderByPosition = {
+  left: <BorderRight />,
+  right: <BorderLeft />,
+  top: <BorderBottom />,
+  bottom: <BorderTop />,
+}
 
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
@@ -142,6 +150,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         onResize={this.onResize}
       >
         <SidebarContainer position={position} background={background}>
+          {borderByPosition[position]}
           {children}
         </SidebarContainer>
       </SidebarInteractiveContainer>
@@ -155,13 +164,8 @@ const SidebarContainer = gloss({
   overflowY: 'auto',
   position: 'relative',
 }).theme((props, theme) => {
-  const borderColor = theme.sidebarBorderColor || theme.borderColor
   return {
     background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
-    borderLeft: props.position === 'right' ? `1px solid ${borderColor}` : 'none',
-    borderTop: props.position === 'bottom' ? `1px solid ${borderColor}` : 'none',
-    borderRight: props.position === 'left' ? `1px solid ${borderColor}` : 'none',
-    borderBottom: props.position === 'top' ? `1px solid ${borderColor}` : 'none',
     textOverflow: props.overflow ? 'ellipsis' : 'auto',
     whiteSpace: props.overflow ? 'nowrap' : 'normal',
   }

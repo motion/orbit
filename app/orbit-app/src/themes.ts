@@ -65,8 +65,8 @@ const light = {
     borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
+    headerBackground: [255, 255, 255, 0.56],
     sidebarBackground: [255, 255, 255, 0.85],
-    sidebarBorderColor: '#eee',
     tabBackground: [250, 250, 250],
     // tabBackgroundActive: [255, 255, 255, 0.8],
     tabBorderColor: [205, 205, 205],
@@ -74,7 +74,6 @@ const light = {
     buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: 'eee',
-    listItemBackgroundSelected: orbitColor,
     listItemBackgroundHover: [100, 100, 100, 0.024],
     inputBackground: '#f2f2f2',
     inputHover: '#f2f2f2',
@@ -82,6 +81,15 @@ const light = {
     inputBackgroundActive: [0, 0, 0, 0.1],
     cardBackground: [250, 250, 250],
     cardBorderColor: [0, 0, 0, 0.1],
+  }),
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    listItemBackground: orbitColor.alpha(0.35),
+    color: '#fff',
+    borderColor: orbitActiveBg,
   }),
 }
 
@@ -94,7 +102,7 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: '#444',
-    headerBackground: [8, 8, 8, 0.7],
+    headerBackground: [25, 25, 25, 0.7],
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],
@@ -117,6 +125,14 @@ const dark = {
     cardBackground: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
+  }),
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: [55, 55, 55, 0.75],
+    backgroundHover: '#555',
+    backgroundActive: '#444',
+    color: '#fff',
+    borderColor: orbitActiveBg,
   }),
 }
 

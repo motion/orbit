@@ -189,6 +189,7 @@ const isRightClick = e =>
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
+  zIndex: 10000000000,
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
@@ -203,7 +204,6 @@ const OrbitNavChrome = gloss({
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
-  zIndex: 1000,
   alignItems: 'flex-end',
   // '& .orbit-tab-inactive.unpinned .tab-icon': {
   //   transition: 'all ease 300ms',

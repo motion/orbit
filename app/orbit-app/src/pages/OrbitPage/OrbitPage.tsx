@@ -71,9 +71,9 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
+                <OrbitControls />
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
-                <OrbitControls />
                 <Row flex={1}>
                   <OrbitSidebar />
                   <OrbitContent />

@@ -30,7 +30,7 @@ const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({
-  background: `linear-gradient(${theme.tabBackground}, ${theme.background})`,
+  background: `linear-gradient(${theme.tabBackground.alpha(0.95)}, ${theme.background})`,
   boxShadow: [
     ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
     // ['inset', 0, -0.5, 0, 0, theme.borderColor],

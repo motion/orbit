@@ -20,7 +20,9 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       icon: 'orbit-apps-full',
       iconBefore: true,
       iconSize: 12,
-      type: AppType.apps,
+      appConfig: {
+        subType: 'manage-apps',
+      },
     },
     ...activeSources.map(app => ({
       // only apply the click events to the active sources...

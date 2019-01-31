@@ -1,6 +1,6 @@
 import { useTheme } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
-import { Absolute, Button, Row, Theme, View } from '@mcro/ui'
+import { Absolute, BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
@@ -55,7 +55,8 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         <OrbitControls />
       </View>
 
-      <View width="50%" position="relative" borderLeft={[1, theme.borderColor]}>
+      <View width="50%" position="relative">
+        <BorderLeft />
         {/* <AppView viewType="index" id="0" type={type} appConfig={{ type }} /> */}
       </View>
 

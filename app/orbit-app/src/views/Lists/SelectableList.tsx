@@ -89,10 +89,15 @@ class SelectableStore {
   )
 }
 
-export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
+export default React.memo(function SelectableList({
+  items,
+  ...props
+}: SelectableListProps & { createNewSelectionStore?: boolean }) {
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore =
-    props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+    props.selectionStore ||
+    (!props.createNewSelectionStore && stores.selectionStore) ||
+    useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = orbitItemsKey(items)
   const getItems = React.useCallback(() => items, [itemsKey])

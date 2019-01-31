@@ -3,7 +3,7 @@ import { App } from '@mcro/models'
 import { Button, ContextMenu, Glint, IconProps, MenuTemplate, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { Icon } from '../views/Icon'
+import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 26
 const inactiveOpacity = 0.5
@@ -19,17 +19,19 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   textProps?: any
   onClickPopout?: Function
   thicc?: boolean
-  icon?: string
+  icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
   getContext?: () => MenuTemplate
   disabled?: boolean
+  iconProps?: OrbitIconProps
 }
 
 export function OrbitTab({
   app,
   icon,
   iconSize = 10,
+  iconProps,
   iconAdjustOpacity = 0,
   tooltip,
   label,
@@ -55,14 +57,17 @@ export function OrbitTab({
       <ContextMenu items={getContext ? getContext() : null}>
         {isActive && <Glint />}
         <Row margin={['auto', 0]} alignItems="center">
-          {!!icon && (
+          {!React.isValidElement(icon) && (
             <OrbitTabIcon
               isActive={isActive}
-              name={icon}
+              name={`${icon}`}
               size={iconSize}
               marginRight={!!label ? sidePad * 0.6 : 0}
+              {...iconProps}
             />
           )}
+          {React.isValidElement(icon) &&
+            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
           {!!label && (
             <Text
               ellipse

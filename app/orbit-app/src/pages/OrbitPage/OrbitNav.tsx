@@ -73,6 +73,7 @@ export default observer(function OrbitNav() {
         thicc: isPinned,
         isActive,
         icon: `orbit-${app.type}`,
+        // iconProps: isPinned ? { color: app.colors[0] } : null,
         iconSize: isPinned ? 16 : 12,
         getContext() {
           return [

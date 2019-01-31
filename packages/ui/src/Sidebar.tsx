@@ -5,7 +5,7 @@
  * @format
  */
 
-import { Col, gloss } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { Interactive } from './Interactive'
 
@@ -149,10 +149,11 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 }
 
-const SidebarContainer = gloss(Col, {
+const SidebarContainer = gloss({
   height: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',
+  position: 'relative',
 }).theme((props, theme) => {
   const borderColor = theme.sidebarBorderColor || theme.borderColor
   return {

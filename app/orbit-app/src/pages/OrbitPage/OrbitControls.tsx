@@ -63,7 +63,7 @@ const ToolbarSide = gloss({
 const ToolbarCenter = gloss({
   flexFlow: 'row',
   flex: 2,
-  overflowX: 'scroll',
+  overflowX: 'auto',
   overflowY: 'hidden',
   alignItems: 'center',
   justifyContent: 'center',

@@ -7,13 +7,14 @@ import {
   ListsApp,
   PersonBitModel,
 } from '@mcro/models'
-import { Button, ButtonProps, Text, View } from '@mcro/ui'
+import { Absolute, Button, ButtonProps, Input, PassProps, Row, Text, View } from '@mcro/ui'
 import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
+import { BorderBottom } from '../../views/Border'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
@@ -21,7 +22,7 @@ import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
+  const listApp = useObserveOne(AppModel, { where: { id: +props.id } }) as ListsApp
   const items = (listApp && listApp.data.items) || {}
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
@@ -106,6 +107,29 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         }
         after={`${numItems} ${pluralize('item', numItems)}`}
       />
+
+      <Row position="relative">
+        <BorderBottom opacity={0.5} />
+        <Input
+          chromeless
+          sizeRadius={0}
+          paddingLeft={12}
+          paddingRight={40}
+          height={35}
+          // onChange={e => setName(e.target.value)}
+          flex={1}
+          placeholder="Add..."
+        />
+        <Absolute top={0} right={12} bottom={0}>
+          <Row flex={1} alignItems="center">
+            <PassProps chromeless opacity={0.5} hoverOpacity={1}>
+              <Button tooltip="Add" icon="add" />
+              <Button tooltip="Create folder" icon="folder" />
+            </PassProps>
+          </Row>
+        </Absolute>
+      </Row>
+
       <SelectableTreeList
         ref={treeRef}
         minSelected={0}

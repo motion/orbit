@@ -60,7 +60,7 @@ export class OrbitStore {
     },
   )
 
-  setAppStore = memoize((id: number) => (store: AppStore<any>) => {
+  setAppStore = memoize((id: string) => (store: AppStore<any>) => {
     if (this.appStores[id] !== store) {
       this.appStores = {
         ...this.appStores,

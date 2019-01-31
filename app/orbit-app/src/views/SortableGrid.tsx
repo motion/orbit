@@ -1,5 +1,4 @@
-import { View } from '@mcro/gloss'
-import { Row, ViewProps } from '@mcro/ui'
+import { Row, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { SortableContainer, SortableContainerProps, SortableElement } from 'react-sortable-hoc'
 
@@ -17,9 +16,14 @@ type SortableGridItemProps = {
   realIndex: number
 }
 
-const SortableItem = SortableElement(({ value, realIndex, getItem }: SortableGridItemProps) => (
-  <View>{getItem(value, realIndex)}</View>
-))
+class GridItem extends React.PureComponent<SortableGridItemProps> {
+  render() {
+    const { value, realIndex, getItem } = this.props
+    return <View zIndex={100000}>{getItem(value, realIndex)}</View>
+  }
+}
+
+const SortableItem = SortableElement(GridItem)
 
 const SortableGridInner = SortableContainer(({ items, getItem, ...props }: any) => {
   return (
@@ -38,5 +42,5 @@ const SortableGridInner = SortableContainer(({ items, getItem, ...props }: any) 
 })
 
 export function SortableGrid(props: SortableGridProps<any>) {
-  return <SortableGridInner axis="xy" pressDelay={30} {...props} />
+  return <SortableGridInner axis="xy" pressDelay={150} {...props} />
 }

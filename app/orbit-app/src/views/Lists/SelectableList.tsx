@@ -3,7 +3,6 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppStore } from '../../apps/AppStore'
 import { StoreContext } from '../../contexts'
-import { isEqualReferential } from '../../helpers/isEqualReferential'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
@@ -105,16 +104,6 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
     getItems,
   })
 
-  // TODO clear selection when app window closes, we really need useReaction()
-  // useReaction(
-  //   () => !!App.peekState && !App.peekState.target,
-  //   removedTarget => {
-  //     ensure('removedTarget', removedTarget)
-  //     selectionStore.clearSelected()
-  //   },
-  //   { deferFirstRun: true }
-  // )
-
   React.useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
       // only update if its on -1, to allow them to customize it in other ways
@@ -165,4 +154,14 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
       />
     </MergeContext>
   )
-}, isEqualReferential)
+})
+
+// TODO clear selection when app window closes, we really need useReaction()
+// useReaction(
+//   () => !!App.peekState && !App.peekState.target,
+//   removedTarget => {
+//     ensure('removedTarget', removedTarget)
+//     selectionStore.clearSelected()
+//   },
+//   { deferFirstRun: true }
+// )

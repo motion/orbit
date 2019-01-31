@@ -53,6 +53,8 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
   const [depth, setDepthPrivate] = useState(0)
   const getDepth = useRef(0)
 
+  console.log('render with', currentItem, childrenItems)
+
   // keep history in sync with depth
   const setDepth = (next: number) => {
     history.current = history.current.slice(0, next + 1)
@@ -94,10 +96,20 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
 
   useEffect(
     function fetchItems() {
-      if (!currentItem) {
-        setError(`No item found with id ${currentItemID}`)
+      if (!currentItem || (currentItem.type !== 'folder' && currentItem.type !== 'root')) {
+        // error if we have items
+        if (Object.keys(props.items).length) {
+          setError(
+            `No item found root, ${
+              props.rootItemID
+            } current, ${currentItemID}, items ${JSON.stringify(props.items)}`,
+          )
+        } else {
+          // just loading if we dont (they passed in items={[]})
+        }
         return
       }
+      setError(null)
       let cancelled = false
       const items = Promise.all(currentItem.children.map(id => props.loadItem(props.items[id])))
       items.then(nextItems => {
@@ -109,11 +121,15 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
         cancelled = true
       }
     },
-    [JSON.stringify(props.items), currentItemID],
+    [JSON.stringify(currentItem), currentItemID],
   )
 
   const handleOpen = useCallback(
     function handleOpen(index, appConfig?, eventType?) {
+      if (currentItem.type !== 'folder' && currentItem.type !== 'root') {
+        console.log('cant open', currentItem, 'not folder or root')
+        return
+      }
       const nextID = currentItem.children[index]
       const next = props.items[nextID]
 
@@ -129,7 +145,7 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
         props.onOpen(index, appConfig, eventType)
       }
     },
-    [currentItemID],
+    [JSON.stringify(currentItem), currentItemID],
   )
 
   useEffect(

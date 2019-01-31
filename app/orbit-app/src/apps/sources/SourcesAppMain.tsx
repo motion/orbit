@@ -15,7 +15,7 @@ export const SourcesAppMain = (props: AppProps<any>) => {
         viewType="main"
         type={props.appConfig.type}
         appConfig={props.appConfig}
-        id={+props.appConfig.id}
+        id={props.appConfig.id}
       />
     )
   }

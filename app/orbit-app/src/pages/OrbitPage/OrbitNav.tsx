@@ -1,4 +1,6 @@
 import { gloss, Row } from '@mcro/gloss'
+import { save } from '@mcro/model-bridge'
+import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -55,19 +57,23 @@ export default observer(function OrbitNav() {
   const items = space.paneSort.map(
     (id, index): TabProps => {
       const app = activeApps.find(x => x.id === id)
+      const pinnedApps = activeApps.filter(x => x.pinned).length
       const isLast = index !== activeApps.length
-      const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
+      const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
       const nextIsActive =
-        activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = false && (app.type === 'search' || app.type === 'people')
+        activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
+      const isPinned = app.pinned
       return {
         app,
         separator: !isActive && isLast && !nextIsActive,
         label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+        // disable if its the only sortable tab, or if its pinned
+        disabled: isPinned || pinnedApps === 1,
         stretch: !isPinned,
         thicc: isPinned,
         isActive,
         icon: `orbit-${app.type}`,
+        // iconProps: isPinned ? { color: app.colors[0] } : null,
         iconSize: isPinned ? 16 : 12,
         getContext() {
           return [
@@ -76,12 +82,18 @@ export default observer(function OrbitNav() {
             },
             {
               label: 'App settings',
+              checked: true,
             },
             {
               type: 'separator',
             },
             {
-              label: 'Pin tab',
+              label: 'Toggle Pinned',
+              checked: isPinned,
+              click() {
+                // TODO umed type not accepting
+                save(AppModel, { ...app, pinned: !app.pinned } as any)
+              },
             },
             {
               label: 'Remove tab',
@@ -90,7 +102,7 @@ export default observer(function OrbitNav() {
         },
         onClick: () => {
           setShowCreateNew(false)
-          paneManagerStore.setActivePane(app.id)
+          paneManagerStore.setActivePane(`${app.id}`)
         },
         onClickPopout:
           !isPinned &&
@@ -109,6 +121,7 @@ export default observer(function OrbitNav() {
           lockAxis="x"
           distance={8}
           items={items}
+          shouldCancelStart={isRightClick}
           onSortEnd={({ oldIndex, newIndex }) => {
             const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
             const { activePaneIndex } = spaceConfig
@@ -127,10 +140,10 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit-${newAppStore.type}`}
+            icon={`orbit-${newAppStore.app.type}`}
             iconSize={12}
             isActive
-            label={newAppStore.name || 'New app'}
+            label={newAppStore.app.name || 'New app'}
           />
         )}
         <OrbitTab
@@ -140,7 +153,7 @@ export default observer(function OrbitNav() {
           iconAdjustOpacity={-0.2}
           onClick={() => {
             if (!showCreateNew) {
-              paneManagerStore.setActivePaneByType('createApp')
+              paneManagerStore.setActivePane('app-createApp')
             } else {
               paneManagerStore.back()
             }
@@ -169,6 +182,11 @@ export default observer(function OrbitNav() {
     </OrbitNavClip>
   )
 })
+
+// https://github.com/clauderic/react-sortable-hoc/issues/256
+const isRightClick = e =>
+  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
+  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',

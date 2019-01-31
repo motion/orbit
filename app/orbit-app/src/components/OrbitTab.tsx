@@ -1,12 +1,13 @@
 import { gloss, Row, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ContextMenu, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
+import { Button, ContextMenu, Glint, IconProps, MenuTemplate, Text, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { Icon } from '../views/Icon'
+import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 26
 const inactiveOpacity = 0.5
+const border = 5
 
 export type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -19,16 +20,19 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   textProps?: any
   onClickPopout?: Function
   thicc?: boolean
-  icon?: string
+  icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
-  getContext?: Function
+  getContext?: () => MenuTemplate
+  disabled?: boolean
+  iconProps?: OrbitIconProps
 }
 
 export function OrbitTab({
   app,
   icon,
   iconSize = 10,
+  iconProps,
   iconAdjustOpacity = 0,
   tooltip,
   label,
@@ -52,16 +56,19 @@ export function OrbitTab({
       {...props}
     >
       <ContextMenu items={getContext ? getContext() : null}>
-        {isActive && <Glint />}
+        {isActive && <Glint y={2} borderRadius={border} />}
         <Row margin={['auto', 0]} alignItems="center">
-          {!!icon && (
+          {!React.isValidElement(icon) && (
             <OrbitTabIcon
               isActive={isActive}
-              name={icon}
+              name={`${icon}`}
               size={iconSize}
               marginRight={!!label ? sidePad * 0.6 : 0}
+              {...iconProps}
             />
           )}
+          {React.isValidElement(icon) &&
+            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
           {!!label && (
             <Text
               ellipse
@@ -103,7 +110,7 @@ function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
   return (
     <Icon
-      color={invertLightness(theme.color, 0.8).alpha(0.6)}
+      color={invertLightness(theme.color, 0.8).alpha(props.isActive ? 1 : 0.6)}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -138,7 +145,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 3,
+  borderTopRadius: border,
   overflow: 'hidden',
   height: tabHeight,
   maxWidth: 160,
@@ -148,7 +155,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.75)}, ${backgroundBase})`
+  const background = `linear-gradient(${backgroundBase.alpha(0.8)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -163,7 +170,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     boxShadow: isActive
       ? [
           [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
-          ['inset', 0, 0, 0, 0.5, theme.borderColor],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,

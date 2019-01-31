@@ -3,7 +3,7 @@ import { memoize } from 'lodash'
 import { autoTrack } from '../helpers/Track'
 import { Direction } from './SelectionStore'
 
-export type Pane = { id: number; name?: string; type?: string; keyable?: boolean }
+export type Pane = { id: string; name?: string; type?: string; keyable?: boolean }
 
 export class PaneManagerStore {
   props: {
@@ -74,10 +74,10 @@ export class PaneManagerStore {
   }
 
   // set pane functions
-  setActivePane = (id: number) => this.setPaneBy('id', id)
+  setActivePane = (id: string) => this.setPaneBy('id', id)
   setActivePaneByName = (name: string) => this.setPaneBy('name', name)
   setActivePaneByType = (type: string) => this.setPaneBy('type', type)
-  activePaneSetter = memoize((id: number) => () => this.setActivePane(id))
+  activePaneSetter = memoize((id: string) => () => this.setActivePane(id))
   activePaneByNameSetter = memoize((name: string) => () => this.setActivePaneByName(name))
   activePaneByTypeSetter = memoize((type: string) => () => this.setActivePaneByType(type))
   activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
@@ -102,7 +102,7 @@ export class PaneManagerStore {
     }
   }
 
-  indexOfPane = (id: number) => {
+  indexOfPane = (id: string) => {
     return this.panes.findIndex(x => x.id === id)
   }
 

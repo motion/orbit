@@ -1,14 +1,14 @@
-import * as React from 'react'
-import { OrbitSourceMainProps } from '../../../types'
-import ScrollableContent from '../../../views/layout/ScrollableContent'
-import { SegmentedRow, Button, Theme, Row, ThemeContext, color } from '@mcro/ui'
-import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import { useObserveMany } from '@mcro/model-bridge'
-import { BitModel, GenericBit, Bit } from '@mcro/models'
-import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
+import { Bit, BitModel, GenericBit } from '@mcro/models'
+import { Button, color, Row, SegmentedRow, Theme, ThemeContext } from '@mcro/ui'
+import * as React from 'react'
+import { Title } from '../../../../views'
 import { Divider } from '../../../../views/Divider'
 import { Pane } from '../../../../views/Pane'
-import { Title } from '../../../../views'
+import { OrbitSourceMainProps } from '../../../types'
+import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
+import { BitStatusBar } from '../../../views/layout/BitStatusBar'
+import ScrollableContent from '../../../views/layout/ScrollableContent'
 
 type Props = OrbitSourceMainProps<'slack'>
 
@@ -21,7 +21,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
       {bits.map(bit => {
         return (
           <React.Fragment key={bit.id}>
-            <ChatMessages key={bit.id} bit={bit as GenericBit<'slack'>} />
+            <ChatMessages key={bit.id} item={bit as GenericBit<'slack'>} />
             <Divider />
           </React.Fragment>
         )
@@ -100,7 +100,7 @@ export default React.memo(function SlackApp(props: Props) {
       <Pane isShown={activePane === 0}>
         <ScrollableContent key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-            {!!props.item && <ChatMessages bit={props.item} />}
+            {!!props.item && <ChatMessages item={props.item} />}
           </div>
         </ScrollableContent>
       </Pane>

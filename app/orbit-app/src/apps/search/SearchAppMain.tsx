@@ -3,7 +3,6 @@ import * as React from 'react'
 import { Message } from '../../views/Message'
 import { AppProps } from '../AppProps'
 import { AppView } from '../AppView'
-// import SearchAppIndex from './SearchAppIndex'
 
 export default function SearchAppMain(props: AppProps<AppType.search>) {
   const appConfig = props.appConfig
@@ -19,7 +18,7 @@ export default function SearchAppMain(props: AppProps<AppType.search>) {
   return (
     <AppView
       viewType="main"
-      id={+appConfig.id}
+      id={appConfig.id}
       title={appConfig.title}
       type={appConfig.type}
       appConfig={appConfig}

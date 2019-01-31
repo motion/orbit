@@ -1,3 +1,19 @@
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+
+// dont import app level stuff in here
+// it will break hmr
+
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+// ⚠️ ️
+
 import * as Black from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { color } from '@mcro/gloss'
@@ -55,7 +71,6 @@ window['stringify'] = stringify
 window['AppActions'] = AppActions
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')
-window['apps'] = require('../apps/apps').apps
 
 const fastCompare = require('react-fast-compare')
 window['reactFastCompareDebug'] = (a, b) => {

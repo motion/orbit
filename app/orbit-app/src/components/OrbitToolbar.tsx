@@ -5,6 +5,7 @@ import { MergeContext } from '../views/MergeContext'
 
 type ToolbarContextItem = {
   before?: any
+  center?: any
   after?: any
 }
 
@@ -51,7 +52,7 @@ export function OrbitToolbar(props: ToolbarContextItem) {
         setToolbar(appStore.id, null)
       }
     },
-    [props.before, props.after],
+    [props.before, props.after, props.center],
   )
 
   return null
@@ -64,6 +65,7 @@ export const OrbitToolBarRender = observer(function OrbitToolBarRender(props: {
   const appStore = orbitStore.appStores[orbitStore.activePane.id]
   const { toolbars } = useContext(OrbitToolBarContext)
   const toolbarElements = appStore && toolbars[appStore.id] && toolbars[appStore.id]
-  const hasToolbars = toolbarElements && (toolbarElements.before || toolbarElements.after)
+  const hasToolbars =
+    toolbarElements && !!(toolbarElements.before || toolbarElements.after || toolbarElements.center)
   return props.children(hasToolbars ? toolbarElements : false)
 })

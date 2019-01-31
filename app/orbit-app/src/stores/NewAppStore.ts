@@ -1,17 +1,47 @@
-export class NewAppStore {
-  name = 'New app'
-  type = 'search'
+import { App, AppType } from '@mcro/models'
 
-  setName = (val: string) => {
-    this.name = val
+export const defaultApps: App[] = [
+  {
+    target: 'app',
+    name: 'Search',
+    type: 'search',
+    colors: ['red'],
+    data: {},
+  },
+  {
+    target: 'app',
+    name: 'List',
+    type: 'lists',
+    colors: ['blue'],
+    data: {
+      rootItemID: 0,
+      items: {},
+    },
+  },
+  {
+    target: 'app',
+    name: 'Directory',
+    type: 'people',
+    colors: ['green'],
+    data: {},
+  },
+]
+
+export class NewAppStore {
+  app: App = defaultApps[0]
+
+  update(app: Partial<App>) {
+    this.app = {
+      ...this.app,
+      ...app,
+    } as App
   }
 
-  setType = (val: string) => {
-    this.type = val
+  setApp(type: AppType) {
+    this.app = defaultApps.find(x => x.type === type)
   }
 
   reset = () => {
-    this.name = 'New app'
-    this.type = 'search'
+    this.app = defaultApps[0]
   }
 }

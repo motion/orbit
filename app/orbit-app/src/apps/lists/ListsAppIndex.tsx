@@ -10,110 +10,23 @@ import {
 import { Button, ButtonProps, Text, View } from '@mcro/ui'
 import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
+import pluralize from 'pluralize'
 import * as React from 'react'
 import OrbitFloatingBar from '../../components/OrbitFloatingBar'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
-import { HorizontalSpace } from '../../views'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 import ListEdit from './ListEdit'
 
-// class ListsIndexStore {
-//   props: AppProps<AppType.lists>
-//   stores = useHook(useStoresSafe)
-
-//   get apps() {
-//     return this.stores.spaceStore.apps
-//   }
-
-//   get listsApp() {
-//     return this.apps.find(app => app.type === AppType.lists) as ListsApp
-//   }
-
-//   get allLists() {
-//     if (!this.listsApp || !this.listsApp.data || !this.listsApp.data.lists) {
-//       return []
-//     }
-//     return this.listsApp.data.lists.map((listItem, index) => {
-//       return {
-//         id: index,
-//         index,
-//         type: 'list',
-//         title: listItem.name,
-//         after: <Button circular chromeless size={0.9} icon="arrowright" />,
-//         subtitle: (listItem.bits || []).length + ' items',
-//       }
-//     })
-//   }
-
-//   get activeQuery() {
-//     return this.props.appStore.activeQuery
-//   }
-
-//   get results() {
-//     return [...this.currentFolderResults, ...this.otherFolderResults, ...this.searchResults]
-//   }
-
-//   currentFolderResults = react(
-//     () => [this.activeQuery, always(this.allLists)],
-//     ([query]) => {
-//       return fuzzyQueryFilter(query, this.allLists, {
-//         key: 'title',
-//       })
-//     },
-//     { defaultValue: this.allLists },
-//   )
-
-//   // TODO make this work
-//   otherFolderResults = react(
-//     () => [this.activeQuery, always(this.allLists)],
-//     ([query]) => {
-//       return fuzzyQueryFilter(query, this.allLists, {
-//         key: 'title',
-//       })
-//     },
-//     {
-//       defaultValue: [],
-//     },
-//   )
-
-//   searchResults = react(
-//     () => [this.activeQuery, this.stores.spaceStore.activeSpace.id, always(this.allLists)],
-//     async ([query, spaceId], { sleep }) => {
-//       if (query.length < 2 || this.results.length > 10) {
-//         return []
-//       }
-//       // make searchresults lower priority than filtered
-//       await sleep(40)
-//       const results = await loadMany(SearchResultModel, {
-//         args: {
-//           spaceId,
-//           query,
-//           take: 20,
-//         },
-//       })
-//       return results.map(r => ({
-//         ...r,
-//         group: 'Search Results',
-//       }))
-//     },
-//     {
-//       defaultValue: [],
-//     },
-//   )
-// }
-
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
   const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
-  const items = listApp.data.items
+  const items = (listApp && listApp.data.items) || {}
   const treeRef = React.useRef<SelectableTreeRef>(null)
   const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
   const getDepth = React.useRef(0)
   getDepth.current = treeState.depth
-
-  console.log('items', items)
 
   const loadItem = React.useCallback(async item => {
     switch (item.type) {
@@ -158,37 +71,40 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     setTreeState({ depth, history })
   }, [])
 
+  const numItems = (listApp && Object.keys(listApp.data.items).length) || 0
+
   return (
     <>
       <OrbitToolbar
         before={
           <>
-            <View width={30}>
-              {treeState.depth > 0 && (
-                <FloatingBarButtonSmall
-                  circular
-                  icon="arrows-1_bold-left"
-                  onClick={() => {
-                    treeRef.current.back()
-                  }}
-                />
-              )}
-            </View>
-            <HorizontalSpace />
-            <ListAppBreadcrumbs
-              items={[
-                {
-                  id: 0,
-                  name: listApp.name,
-                },
-                ...treeState.history
-                  .slice(1)
-                  .filter(Boolean)
-                  .map(id => items[id]),
-              ]}
-            />
+            {treeState.depth > 0 && (
+              <FloatingBarButtonSmall
+                icon="arrows-1_bold-left"
+                onClick={() => {
+                  treeRef.current.back()
+                }}
+              >
+                Back
+              </FloatingBarButtonSmall>
+            )}
           </>
         }
+        center={
+          <ListAppBreadcrumbs
+            items={[
+              {
+                id: 0,
+                name: listApp ? listApp.name : '',
+              },
+              ...treeState.history
+                .slice(1)
+                .filter(Boolean)
+                .map(id => items[id]),
+            ]}
+          />
+        }
+        after={`${numItems} ${pluralize('item', numItems)}`}
       />
       <SelectableTreeList
         ref={treeRef}
@@ -227,10 +143,12 @@ function OrbitBreadcrumb(props: ButtonProps) {
 
 function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
   return (
-    <Breadcrumbs>
-      {props.items.map((item, index) => (
-        <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
-      ))}
-    </Breadcrumbs>
+    <View flex={1}>
+      <Breadcrumbs>
+        {props.items.map((item, index) => (
+          <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
+        ))}
+      </Breadcrumbs>
+    </View>
   )
 }

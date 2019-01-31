@@ -1,5 +1,5 @@
-import { colorString, toHex, toRgbPercent } from './colorString'
 import { colorConvert } from './colorConvert'
+import { colorString, toHex, toRgbPercent } from './colorString'
 
 const slice = [].slice
 const skippedModels = [
@@ -184,21 +184,21 @@ export class Color {
     return new Color(this.color.map(roundToPlace(places)).concat(this.valpha), this.model)
   }
 
-  alpha(val) {
+  alpha(val?) {
     if (arguments.length) {
       return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model)
     }
     return this.valpha
   }
 
-  keyword(val) {
+  keyword(val?) {
     if (arguments.length) {
       return new Color(val)
     }
     return colorConvert[this.model].keyword(this.color)
   }
 
-  hex(val) {
+  hex(val?) {
     if (arguments.length) {
       return new Color(val)
     }

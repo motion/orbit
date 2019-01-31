@@ -6,21 +6,20 @@ import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const { activeSources, allSources } = props.sourcesStore
-  const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const results = [
     {
-      title: activeSpace ? activeSpace.name : '',
+      title: 'Manage apps',
       subtitle: `${activeApps.map(x => x.name).join(', ')}`,
       icon: 'orbit-apps-full',
       iconBefore: true,
+      iconSize: 12,
       type: AppType.apps,
     },
     ...activeSources.map(app => ({
@@ -30,6 +29,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       title: app.display.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
       icon: app.integration,
+      iconBefore: true,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),
       group: 'Active Sources',

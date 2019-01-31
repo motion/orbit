@@ -15,6 +15,8 @@ export type TopicsAppData = {
   topics?: { name: string }[]
 }
 
+export type CustomAppData = any
+
 // base
 
 export interface BaseApp {
@@ -33,13 +35,14 @@ export type AppData = {
   people: PeopleAppData
   topics: TopicsAppData
   lists: ListsAppData
-  memory: {}
+  custom: CustomAppData
 }
 
 export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
 export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
 export type SourcesApp = BaseApp & { type: 'sources'; data: any }
 export type SettingsApp = BaseApp & { type: 'settings'; data: any }
+export type CustomApp = BaseApp & { type: 'custom'; data: CustomAppData }
 
 // App
 

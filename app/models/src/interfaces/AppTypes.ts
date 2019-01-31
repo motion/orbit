@@ -10,6 +10,7 @@ export enum AppType {
   apps = 'apps',
   createApp = 'createApp',
   onboard = 'onboard',
+  custom = 'custom',
 }
 
 export type AppConfig = {

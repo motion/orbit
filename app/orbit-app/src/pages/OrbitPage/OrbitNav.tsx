@@ -44,6 +44,9 @@ export default observer(function OrbitNav() {
   // when pinned, we need to update paneSort so pinned is always first
   React.useEffect(
     () => {
+      if (!space || !activeApps.length) {
+        return
+      }
       let pinned = []
       let unpinned = []
       for (const id of space.paneSort) {
@@ -59,7 +62,7 @@ export default observer(function OrbitNav() {
         updateSpace({ paneSort })
       }
     },
-    [activeApps.map(x => x.pinned).join('')],
+    [space && space.paneSort.join(''), activeApps.map(x => x.pinned).join('')],
   )
 
   if (orbitStore.isTorn) {

@@ -197,10 +197,10 @@ const positionStateY = (
     // final top
     top = getEdgePadding(props, top, window.innerHeight, popoverBounds.height)
   } else {
-    // left or right
-    const yCenter = targetCenter - popoverBounds.height / 2
-    top = yCenter
-    arrowTop = popoverBounds.height / 2 - arrowHeight / 2 + props.distance
+    // HORIZONTAL
+    const popoverCenter = popoverBounds.height / 2
+    top = targetCenter - popoverCenter
+    arrowTop = targetCenter - top + arrowHeight / 2
   }
 
   // adjustments
@@ -212,6 +212,7 @@ const positionStateY = (
     if (direction === 'top') {
       maxHeight = (targetBounds ? targetBounds.top : 0) - top + props.distance * 2 - arrowSize / 2
     } else {
+      // HORIZONTAL
       maxHeight = window.innerHeight - (targetBounds ? targetBounds.top + targetBounds.height : 0)
     }
   }
@@ -272,6 +273,7 @@ const positionStateX = (
       break
     case 'right':
       left = (targetBounds ? targetBounds.left + targetBounds.width : 0) + props.distance
+      console.log('popoverBounds2', popoverBounds)
       arrowLeft = -popoverHalfWidth - arrowSize
       break
   }

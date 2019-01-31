@@ -78,7 +78,7 @@ export type SurfaceProps = CSSPropertySet & {
   themeSelect?: ThemeSelect
 }
 
-export default React.memo(function Surface(props: SurfaceProps) {
+export const Surface = React.memo(function Surface(props: SurfaceProps) {
   const uiContext = React.useContext(UIContext)
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
 

@@ -27,7 +27,7 @@
     "prepack-webpack-plugin": "1.1.2",
     "raw-loader": "0.5.1",
     "react-dev-utils": "6.0.5",
-    "react-hot-loader": "4.6.3",
+    "react-hot-loader": "4.6.5",
     "schedule": "0.4.0",
     "style-loader": "0.23.1",
     "svg-inline-loader": "^0.8.0",

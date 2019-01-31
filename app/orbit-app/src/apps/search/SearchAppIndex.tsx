@@ -28,7 +28,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   const listApps = useActiveApps('lists')
 
   return (
-    <View overflowX="hidden" overflowY="auto">
+    <View overflowX="hidden" overflowY="auto" flex={1}>
       <Separator paddingTop={10}>Send to...</Separator>
       {flatten(
         listApps.map(app => {
@@ -50,8 +50,9 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
               items.push({
                 id: `folder-${folder.id}`,
                 title: folder.name,
-                icon: folder.icon,
+                icon: folder.icon || 'folder',
                 subtitle: null,
+                marginLeft: 10,
               })
             }
           }
@@ -67,12 +68,13 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(({ item }) => {
+    memoize(({ item }, index) => {
       if (item && item.target === 'bit') {
         return {
           after: (
             <MergeContext Context={ItemActionContext} value={{ item }}>
               <Popover
+                open={index === 3}
                 towards="right"
                 // selected would otherwise override this theme
                 theme={App.state.isDark ? 'light' : 'dark'}

@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { ThemeContext } from './ThemeContext'
-import { ThemeMaker, SimpleStyleObject } from './ThemeMaker'
-import { selectThemeSubset } from '../helpers/selectThemeSubset'
 import { ThemeObject } from '@mcro/css'
+import * as React from 'react'
+import { selectThemeSubset } from '../helpers/selectThemeSubset'
+import { ThemeContext } from './ThemeContext'
+import { SimpleStyleObject, ThemeMaker } from './ThemeMaker'
 
 const MakeTheme = new ThemeMaker()
 const makeName = () => `theme-${Math.random}`.slice(0, 15)
@@ -23,7 +23,7 @@ type ThemeProps = {
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-export default React.memo(function Theme({ theme, name, select, children }: ThemeProps) {
+export function Theme({ theme, name, select, children }: ThemeProps) {
   if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
@@ -78,7 +78,7 @@ export default React.memo(function Theme({ theme, name, select, children }: Them
       {children}
     </ThemeContext.Provider>
   )
-})
+}
 
 export const ChangeThemeByName = React.memo(
   ({ name, children }: { name: string; children: any }) => {

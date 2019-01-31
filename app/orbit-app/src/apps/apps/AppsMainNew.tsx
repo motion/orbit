@@ -1,46 +1,100 @@
-import { Button, Row, Text, Theme, View } from '@mcro/ui'
+import { App } from '@mcro/models'
+import { Button, IconProps, Row, Text, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
-import { Divider } from '../../views/Divider'
 import { Icon } from '../../views/Icon'
 import { IconContainer } from '../../views/IconContainer'
 import { Input } from '../../views/Input'
 
-const apps = [
+const defaultApps: App[] = [
   {
-    title: 'Search',
-    icon: 'orbit-search',
-    subtitle: 'Custom search pane',
+    target: 'app',
+    name: 'Search',
     type: 'search',
+    colors: ['red'],
+    data: {},
   },
   {
-    title: 'List',
-    icon: 'orbit-lists',
-    subtitle: 'Custom list pane',
+    target: 'app',
+    name: 'List',
     type: 'lists',
+    colors: ['blue'],
+    data: {
+      rootItemID: 0,
+      items: {},
+    },
   },
   {
-    title: 'Directory',
-    icon: 'orbit-people',
-    subtitle: 'Filtered people app',
+    target: 'app',
+    name: 'Directory',
     type: 'people',
+    colors: ['green'],
+    data: {},
   },
 ]
+
+function AppIcon({ app, ...props }: { app: App } & Partial<IconProps>) {
+  return <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} {...props} />
+}
 
 export default observer(function AppsMainNew() {
   const { newAppStore } = useStoresSafe()
   const { type } = newAppStore
-  const app = apps.find(x => x.type === type)
-  const [background, setBackground] = useState('#111')
+  const [app, setApp] = useState<App>(null)
+
+  useEffect(
+    () => {
+      const nextApp = defaultApps.find(x => x.type === type)
+      console.log('nextApp', nextApp)
+      setApp(nextApp)
+    },
+    [type],
+  )
+
+  if (!app) {
+    return null
+  }
+
+  return (
+    <>
+      <SubTitle>Type</SubTitle>
+      <Row>
+        {defaultApps.map((app, index) => (
+          <View key={index} alignItems="center" marginRight={12}>
+            <Theme name={app.type === type ? 'selected' : null}>
+              <IconContainer onClick={() => newAppStore.setType(app.type)}>
+                <AppIcon app={app} />
+              </IconContainer>
+            </Theme>
+            <Text marginTop={5} ellipse size={0.9} fontWeight={500} alpha={0.8}>
+              {app.name}
+            </Text>
+          </View>
+        ))}
+      </Row>
+
+      <AppsMainNewSetup app={app} />
+    </>
+  )
+})
+
+const AppsMainNewSetup = observer(function AppsMainNewSetup({
+  app,
+  ...props
+}: {
+  app: App
+  changeColor?: (color: string) => any
+}) {
+  const { newAppStore } = useStoresSafe()
 
   return (
     <View padding={20} margin="auto" width="80%" minHeight="80%" minWidth={400} maxWidth={700}>
       {/* header */}
       <Row alignItems="center">
-        <Icon background={background} name={`${app.icon}-full`} size={48} />
+        <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} />
 
         <HorizontalSpace />
         <Title margin={0}>{newAppStore.name}</Title>
@@ -67,31 +121,8 @@ export default observer(function AppsMainNew() {
       <VerticalSpace />
 
       <View>
-        <ColorPicker onChangeColor={setBackground} activeColor={background} />
+        <ColorPicker onChangeColor={props.changeColor} activeColor={app.colors[0]} />
       </View>
-      <VerticalSpace />
-
-      <SubTitle>Type</SubTitle>
-      <Row>
-        {apps.map((app, index) => (
-          <View key={index} alignItems="center" marginRight={12}>
-            <Theme name={app.type === type ? 'selected' : null}>
-              <IconContainer onClick={() => newAppStore.setType(app.type)}>
-                <Icon name={app.icon} />
-              </IconContainer>
-            </Theme>
-            <Text marginTop={5} ellipse size={0.9} fontWeight={500} alpha={0.8}>
-              {app.title}
-            </Text>
-          </View>
-        ))}
-      </Row>
-
-      <VerticalSpace />
-      <Divider />
-      <VerticalSpace />
-
-      <SubTitle>Setup</SubTitle>
     </View>
   )
 })

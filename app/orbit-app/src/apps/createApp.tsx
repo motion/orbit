@@ -9,7 +9,6 @@ import OrbitControls from '../pages/OrbitPage/OrbitControls'
 import SelectableList from '../views/Lists/SelectableList'
 import { AppProps } from './AppProps'
 import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
-import { AppView } from './AppView'
 
 function CreateAppIndex() {
   const apps = useActiveApps()
@@ -51,7 +50,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
       </View>
 
       <View width="50%" position="relative" borderLeft={[1, theme.borderColor]}>
-        <AppView viewType="index" id="0" type={type} appConfig={{ type }} />
+        {/* <AppView viewType="index" id="0" type={type} appConfig={{ type }} /> */}
       </View>
 
       <Absolute bottom={20} right={20}>

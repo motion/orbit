@@ -7,6 +7,7 @@ import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 26
 const inactiveOpacity = 0.5
+const border = 5
 
 export type TabProps = React.HTMLAttributes<'div'> & {
   app?: App
@@ -55,7 +56,7 @@ export function OrbitTab({
       {...props}
     >
       <ContextMenu items={getContext ? getContext() : null}>
-        {isActive && <Glint />}
+        {isActive && <Glint y={2} borderRadius={border} />}
         <Row margin={['auto', 0]} alignItems="center">
           {!React.isValidElement(icon) && (
             <OrbitTabIcon
@@ -144,7 +145,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 3,
+  borderTopRadius: border,
   overflow: 'hidden',
   height: tabHeight,
   maxWidth: 160,
@@ -154,7 +155,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
 }).theme(({ isActive, stretch, sidePad }, theme) => {
   // const background = theme.tabBackground || theme.background
   const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.75)}, ${backgroundBase})`
+  const background = `linear-gradient(${backgroundBase.alpha(0.8)}, ${backgroundBase})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
@@ -169,7 +170,7 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     boxShadow: isActive
       ? [
           [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
-          ['inset', 0, 0, 0, 0.5, theme.borderColor],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,

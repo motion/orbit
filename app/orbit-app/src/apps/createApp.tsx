@@ -9,6 +9,7 @@ import { defaultApps } from '../stores/NewAppStore'
 import SelectableList from '../views/Lists/SelectableList'
 import { AppProps } from './AppProps'
 import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
+import { AppView } from './AppView'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -57,7 +58,14 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
 
       <View width="50%" position="relative">
         <BorderLeft />
-        {/* <AppView viewType="index" id="0" type={type} appConfig={{ type }} /> */}
+        <AppView
+          viewType="index"
+          id={type}
+          type={type}
+          appConfig={{
+            type: type,
+          }}
+        />
       </View>
 
       <Absolute bottom={25} right={25}>

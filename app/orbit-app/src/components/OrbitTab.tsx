@@ -50,14 +50,14 @@ export function OrbitTab({
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
         thicc ? 'pinned' : 'unpinned'
-      } undraggable ${className}`}
+      } undraggable ${className || ''}`}
       isActive={isActive}
       sidePad={sidePad}
       {...props}
     >
       <ContextMenu items={getContext ? getContext() : null}>
         {isActive && <Glint y={2} borderRadius={border} />}
-        <Row margin={['auto', 0]} alignItems="center">
+        <Row alignItems="center">
           {!React.isValidElement(icon) && (
             <OrbitTabIcon
               isActive={isActive}

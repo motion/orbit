@@ -12,7 +12,6 @@ import { fuzzyQueryFilter } from '../../helpers'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { Icon } from '../../views/Icon'
-import { NavButton } from '../../views/NavButton'
 import { RowItem } from '../../views/RowItem'
 
 type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
@@ -116,11 +115,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         elevation={7}
         group="filters"
         onChangeVisibility={store.setOpen}
-        target={
-          <NavButton sizePadding={0.6} chromeless margin={['auto', 0]} {...props}>
-            <OrbBackground />
-          </NavButton>
-        }
+        target={<OrbBackground {...props} />}
       >
         <Col
           forwardRef={store.popoverContentRef}
@@ -168,7 +163,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
   )
 })
 
-const OrbBackground = gloss({
+const OrbBackground = gloss(View, {
   borderRadius: 100,
   width: 16,
   height: 16,

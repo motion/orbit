@@ -60,7 +60,7 @@ export default function OrbitList({ items, itemsKey, ...props }: OrbitListProps)
           }
         }}
         placeholder={
-          <View flex={1} minHeight={200}>
+          <View flex={1} minHeight={200} position="relative">
             <Center alignItems="center">
               <View>
                 <SubTitle>No results</SubTitle>

@@ -9,12 +9,12 @@ type UseModelOptions = {
   observe?: true
 }
 
-type ObserveModelOptions = {
+/*type ObserveModelOptions = {
   defaultValue?: any
   onChange?: (val: any) => any
-}
+}*/
 
-function useObserveModel<ModelType, Args>(
+/*function useObserveModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: ObserveModelOptions & { observeFn: Function },
@@ -55,7 +55,7 @@ function useObserveModel<ModelType, Args>(
   )
 
   return value
-}
+}*/
 
 // TODO we can now de-dupe and just re-use the same queries from useModel
 
@@ -66,70 +66,103 @@ function use<ModelType, Args>(
   options: UseModelOptions = {},
 ): any {
 
+  // we observe and update if necessary
+  let observeFn: Function;
+  if (type === 'one') {
+    observeFn = observeOne
+
+  } else if (type === 'many') {
+    observeFn = observeMany
+
+  } else if (type === 'count') {
+    observeFn = observeCount
+  }
+
   // store most recent value
-  const defaultValue = options.defaultValue || {
+  let defaultValue = options.defaultValue || {
     one: null,
     many: [],
     count: 0,
   }[type]
+
   const observeEnabled = options.observe === undefined || options.observe === true
   const [value, setValue] = useState(defaultValue)
+  const subscription = useRef(null)
+  const curQuery = useRef(null)
 
-  const updateIfNew = (nextValue: any) => {
+  const setValueAdvanced = (nextValue: any): boolean => {
     if (type === "one" || type === "many") {
       if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
+        // console.log(`set a new value`, nextValue)
         setValue(nextValue)
-        if (nextValue instanceof Array) { // for many models
-          for (let value of nextValue) {
-            ModelCache.set(model, value)
-          }
-        } else { // for single model
-          ModelCache.set(model, nextValue)
-        }
+        return true
       }
     } else if (type === "count") {
-      if (nextValue !== value)
+      if (nextValue !== value) {
         setValue(nextValue)
+        return true
+      }
+    }
+    return false
+  };
+
+  const updateIfNew = (nextValue: any) => {
+    const updated = setValueAdvanced(nextValue)
+    if (updated) {
+      // console.log(`updating cache`)
+      ModelCache.add(model, type, query, nextValue)
     }
   }
 
-  // we observe and update if necessary
-  if (type === 'one') {
-    useObserveModel(model, observeEnabled && query, {
-      defaultValue,
-      onChange: updateIfNew,
-      observeFn: observeOne
-    })
-
-  } else if (type === 'many') {
-    useObserveModel(model, observeEnabled && query, {
-      defaultValue,
-      onChange: updateIfNew,
-      ...options,
-      observeFn: observeMany
-    })
-
-  } else if (type === 'count') {
-    useObserveModel(model, observeEnabled && query, {
-      defaultValue,
-      onChange: updateIfNew,
-      ...options,
-      observeFn: observeCount
-    })
+  const dispose = () => {
+    if (subscription.current) {
+      // console.log('unsubscribed', curQuery.current)
+      subscription.current.unsubscribe()
+      ModelCache.remove(model, type, curQuery.current)
+    }
   }
+
+  // unmount
+  useEffect(dispose, [])
+
+  // on new query: subscribe, update
+  useEffect(
+    () => {
+      if (observeEnabled === false)
+        return
+
+      const isQueryChanged = JSON.stringify(curQuery.current) !== JSON.stringify(query)
+      if (isQueryChanged === false)
+        return
+
+      // unsubscribe from previous subscription
+      dispose()
+
+      // subscribe new and update
+      curQuery.current = query
+      // console.log('subscribed', observeFn, query)
+      subscription.current = observeFn(model, { args: query }).subscribe(updateIfNew)
+
+      const entry = ModelCache.findEntryByQuery(model, type, query)
+      if (entry) {
+        // console.log(`entry told to update`, entry)
+        updateIfNew(entry.value)
+      }
+    },
+    [JSON.stringify(query), observeEnabled],
+  )
 
   useEffect(
     () => {
-      if (query === false || observeEnabled) {
+      if (observeEnabled)
         return
-      }
+
       let cancelled = false
 
       if (type === 'one') {
         loadOne(model, { args: query }).then(nextValue => {
           if (!cancelled) {
             updateIfNew(nextValue)
-            // setValue(nextValue) // todo: can we use updateIfNew here?
           }
         })
 
@@ -146,6 +179,12 @@ function use<ModelType, Args>(
             updateIfNew(nextValue)
           }
         })
+      }
+
+      const entry = ModelCache.findEntryByQuery(model, type, query)
+      if (entry) {
+        // console.log(`entry told to update`, entry)
+        updateIfNew(entry.value)
       }
 
       return () => {

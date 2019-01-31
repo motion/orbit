@@ -9,7 +9,7 @@ import { useModel } from '@mcro/model-bridge'
 
 export default function BitAppMain(props: AppProps<AppType.bit>) {
   const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
-  // console.log('hello bit', bit)
+  console.log('hello bit', bit)
   if (!bit) {
     return null
   }

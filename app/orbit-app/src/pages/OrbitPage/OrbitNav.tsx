@@ -2,6 +2,7 @@ import { gloss, Row } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
+import { isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -40,6 +41,27 @@ export default observer(function OrbitNav() {
     [space && space.id, appIds.join('')],
   )
 
+  // when pinned, we need to update paneSort so pinned is always first
+  React.useEffect(
+    () => {
+      let pinned = []
+      let unpinned = []
+      for (const id of space.paneSort) {
+        const app = activeApps.find(x => x.id === id)
+        if (app.pinned) {
+          pinned.push(id)
+        } else {
+          unpinned.push(id)
+        }
+      }
+      const paneSort = [...pinned, ...unpinned]
+      if (!isEqual(paneSort, space.paneSort)) {
+        updateSpace({ paneSort })
+      }
+    },
+    [activeApps.map(x => x.pinned).join('')],
+  )
+
   if (orbitStore.isTorn) {
     return null
   }
@@ -57,7 +79,6 @@ export default observer(function OrbitNav() {
   const items = space.paneSort.map(
     (id, index): TabProps => {
       const app = activeApps.find(x => x.id === id)
-      const pinnedApps = activeApps.filter(x => x.pinned).length
       const isLast = index !== activeApps.length
       const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
       const nextIsActive =
@@ -67,8 +88,6 @@ export default observer(function OrbitNav() {
         app,
         separator: !isActive && isLast && !nextIsActive,
         label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
-        // disable if its the only sortable tab, or if its pinned
-        disabled: isPinned || pinnedApps === 1,
         stretch: !isPinned,
         thicc: isPinned,
         isActive,
@@ -171,13 +190,13 @@ export default observer(function OrbitNav() {
           iconSize={12}
         /> */}
         <OrbitTab
+          icon="grid48"
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           tooltip="Manage Space"
-          icon="grid48"
-          iconSize={11}
         />
+        {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -189,6 +208,7 @@ const isRightClick = e =>
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
+  zIndex: 10000000000,
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
@@ -203,7 +223,6 @@ const OrbitNavChrome = gloss({
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
-  zIndex: 1000,
   alignItems: 'flex-end',
   // '& .orbit-tab-inactive.unpinned .tab-icon': {
   //   transition: 'all ease 300ms',

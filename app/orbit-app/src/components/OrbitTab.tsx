@@ -50,14 +50,14 @@ export function OrbitTab({
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
         thicc ? 'pinned' : 'unpinned'
-      } undraggable ${className}`}
+      } undraggable ${className || ''}`}
       isActive={isActive}
       sidePad={sidePad}
       {...props}
     >
       <ContextMenu items={getContext ? getContext() : null}>
         {isActive && <Glint y={2} borderRadius={border} />}
-        <Row margin={['auto', 0]} alignItems="center">
+        <Row alignItems="center">
           {!React.isValidElement(icon) && (
             <OrbitTabIcon
               isActive={isActive}
@@ -153,9 +153,8 @@ const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: 
     y: 0.5,
   },
 }).theme(({ isActive, stretch, sidePad }, theme) => {
-  // const background = theme.tabBackground || theme.background
-  const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.8)}, ${backgroundBase})`
+  const backgroundBase = theme.tabBackground
+  const background = `linear-gradient(${backgroundBase.alpha(0.7)}, ${backgroundBase.alpha(0.95)})`
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',

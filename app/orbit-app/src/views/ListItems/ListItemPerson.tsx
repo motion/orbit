@@ -9,7 +9,19 @@ import { Avatar } from '../Avatar'
 const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item: PersonBit }) {
   return (
     <>
-      {!!item.photo && <Avatar position="absolute" top={-15} right={-22} src={item.photo} />}
+      {!!item.photo && (
+        <Avatar
+          position="absolute"
+          top={-15}
+          right={-22}
+          width={70}
+          height={70}
+          src={item.photo}
+          style={{
+            '-webkit-mask-image': `linear-gradient(to bottom, transparent 0%, #eee 100%)`,
+          }}
+        />
+      )}
       {/* TODO: email is less important than their top topics */}
       {/* But we could have small icons for email/slack */}
       <Text alpha={0.8} ellipse>

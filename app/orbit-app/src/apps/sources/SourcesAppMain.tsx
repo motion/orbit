@@ -8,6 +8,7 @@ import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
 import { AppIcon } from '../apps/AppsMainNew'
 import { AppView } from '../AppView'
+import SettingsAppSpaceMain from '../settings/SettingsAppSpaceMain'
 
 export const SourcesAppMain = (props: AppProps<any>) => {
   const source = useObserveOne(
@@ -26,14 +27,18 @@ export const SourcesAppMain = (props: AppProps<any>) => {
     return <ManageApps />
   }
 
+  if (props.appConfig.subType === 'manage-space') {
+    return <SettingsAppSpaceMain {...props} />
+  }
+
   const type = props.appConfig.integration as IntegrationType
   const View = props.sourcesStore.getView(type, 'setting')
 
   if (!View) {
+    console.log(props.appConfig)
     return (
       <div>
         no view type {type}, for source <br />
-        appConfig: <pre>{JSON.stringify(props.appConfig, null, 2)}</pre>
       </div>
     )
   }

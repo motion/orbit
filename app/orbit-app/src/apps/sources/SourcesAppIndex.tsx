@@ -6,13 +6,22 @@ import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
+import { OrbitOrb } from '../../views/OrbitOrb'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
+  const [activeSpace] = useActiveSpace()
+  const activeSpaceName = activeSpace ? activeSpace.name : ''
   const { activeSources, allSources } = props.sourcesStore
   const activeApps = useActiveApps()
+
+  if (!activeSpace || !activeApps.length) {
+    return null
+  }
+
   const results = [
     {
       title: 'Apps',
@@ -20,8 +29,26 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       icon: 'orbit-apps-full',
       iconBefore: true,
       iconSize: 12,
+      group: activeSpaceName,
       appConfig: {
         subType: 'manage-apps',
+      },
+    },
+    {
+      title: activeSpaceName,
+      subtitle: `Settings and members`,
+      icon: (
+        <OrbitOrb
+          size={18}
+          background={activeSpace.colors[0]}
+          color={activeSpace.colors[1]}
+          marginRight={12}
+        />
+      ),
+      iconBefore: true,
+      group: activeSpaceName,
+      appConfig: {
+        subType: 'manage-space',
       },
     },
     ...activeSources.map(app => ({

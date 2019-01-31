@@ -46,7 +46,7 @@ class OrbitWindowStore {
       console.log('sending theme', theme)
       Electron.sendMessage(Desktop, Desktop.messages.OS_THEME, theme)
     }
-    setTimeout(updateTheme, 5000)
+    updateTheme()
     systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', updateTheme)
   }
 

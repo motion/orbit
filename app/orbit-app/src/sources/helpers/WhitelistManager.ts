@@ -1,6 +1,6 @@
-import { store, react } from '@mcro/black'
-import { SourceModel, GithubSource, SlackSource, GmailSource } from '@mcro/models'
+import { react, store } from '@mcro/black'
 import { save } from '@mcro/model-bridge'
+import { GithubSource, GmailSource, SlackSource, SourceModel } from '@mcro/models'
 import produce from 'immer'
 import { memoize } from 'lodash'
 

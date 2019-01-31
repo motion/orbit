@@ -65,7 +65,6 @@ export const OrbitListItem = React.memo(
         {...ItemView && ItemView.itemProps}
         {...itemProps}
         isSelected={isSelected}
-        // allow props to override isSelected but not onSelect
         {...props}
         icon={icon}
       >

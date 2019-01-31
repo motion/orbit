@@ -93,10 +93,11 @@ export default React.memo(function SelectableList({
   items,
   ...props
 }: SelectableListProps & { createNewSelectionStore?: boolean }) {
+  const newNamespace = !!props.createNewSelectionStore
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore =
     props.selectionStore ||
-    (!props.createNewSelectionStore && stores.selectionStore) ||
+    (newNamespace == false && stores.selectionStore) ||
     useStore(SelectionStore, props)
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = orbitItemsKey(items)
@@ -146,16 +147,22 @@ export default React.memo(function SelectableList({
         scrollToAlignment="center"
         itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
+        onOpen={selectableProps && selectableProps.onSelectItem}
+        {...props}
+        // overwrite props explicitly
         onSelect={(index, appConfig, eventType) => {
           if (selectionStore && selectionStore.activeIndex !== index) {
             selectionStore.toggleSelected(index, eventType)
           }
-          if (selectableProps && selectableProps.onSelectItem) {
-            selectableProps.onSelectItem(index, appConfig, eventType)
+          if (!newNamespace) {
+            if (selectableProps && selectableProps.onSelectItem) {
+              selectableProps.onSelectItem(index, appConfig, eventType)
+            }
+          }
+          if (props.onSelect) {
+            props.onSelect(index, appConfig, eventType)
           }
         }}
-        onOpen={selectableProps && selectableProps.onSelectItem}
-        {...props}
       />
     </MergeContext>
   )

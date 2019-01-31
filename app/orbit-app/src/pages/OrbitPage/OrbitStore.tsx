@@ -23,7 +23,7 @@ export class OrbitStore {
   activeUser$ = observeOne(UserModel, {}).subscribe(x => (this.activeUser = x))
 
   syncThemeToAppState = react(
-    () => [this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
+    () => [this.activeUser && this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
     ([theme, osTheme]) => {
       if (theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')) {
         App.setState({ isDark: true })

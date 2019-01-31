@@ -53,8 +53,6 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
   const [depth, setDepthPrivate] = useState(0)
   const getDepth = useRef(0)
 
-  console.log('render with', currentItem, childrenItems)
-
   // keep history in sync with depth
   const setDepth = (next: number) => {
     history.current = history.current.slice(0, next + 1)

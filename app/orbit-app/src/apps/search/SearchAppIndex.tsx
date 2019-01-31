@@ -28,7 +28,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   const listApps = useActiveApps('lists')
 
   return (
-    <>
+    <View overflowX="hidden" overflowY="auto">
       <Separator paddingTop={10}>Send to...</Separator>
       {flatten(
         listApps.map(app => {
@@ -58,7 +58,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
           return items.map(({ id, ...item }) => <ListItem key={id} {...item} />)
         }),
       )}
-    </>
+    </View>
   )
 })
 
@@ -67,12 +67,11 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(item => {
-      if (item.item && item.item.target === 'bit') {
-        const showItemDropdown = isShown => isShown && <ItemActionDropdown />
+    memoize(({ item }) => {
+      if (item && item.target === 'bit') {
         return {
           after: (
-            <MergeContext Context={ItemActionContext} value={{ item: item.item }}>
+            <MergeContext Context={ItemActionContext} value={{ item }}>
               <Popover
                 towards="right"
                 // selected would otherwise override this theme
@@ -101,7 +100,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                 borderRadius={10}
                 elevation={1}
               >
-                {showItemDropdown}
+                {isShown => isShown && <ItemActionDropdown />}
               </Popover>
             </MergeContext>
           ),
@@ -109,7 +108,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       }
       return null
     }),
-    [items.map(i => `${i.id}${i.title}`).join(' ')],
+    [items.map(i => `${i.id}`).join(' ')],
   )
 
   return (

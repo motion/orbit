@@ -135,7 +135,7 @@ export class SearchStore {
       }
     }
 
-    if (searchedApps.length) {
+    if (query) {
       return searchedApps.map(appToResult)
     }
 
@@ -143,6 +143,7 @@ export class SearchStore {
   }
 
   private getQuickResults(query: string) {
+    // TODO recent history
     return [...this.getAppsResults(query)]
   }
 

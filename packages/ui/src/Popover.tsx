@@ -273,7 +273,7 @@ const positionStateX = (
       break
     case 'right':
       left = (targetBounds ? targetBounds.left + targetBounds.width : 0) + props.distance
-      console.log('popoverBounds2', popoverBounds)
+      console.log('popoverBounds22', popoverHalfWidth, popoverBounds.width, arrowSize)
       arrowLeft = -popoverHalfWidth - arrowSize
       break
   }

@@ -1,4 +1,4 @@
-import { Col, Color, CSSPropertySet, gloss, ThemeContext } from '@mcro/gloss'
+import { Col, Color, Contents, CSSPropertySet, gloss, ThemeContext } from '@mcro/gloss'
 import * as React from 'react'
 
 type Props = CSSPropertySet & {
@@ -11,20 +11,7 @@ type Props = CSSPropertySet & {
   border?: Array<any> | string
 }
 
-// why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
-const ArrowOuter = gloss(Col, {
-  position: 'relative',
-  overflow: 'hidden',
-})
-
-const ArrowInner = gloss(Col, {
-  position: 'absolute',
-  left: 0,
-  borderRadius: 1,
-  transform: { rotate: '45deg' },
-})
-
-export const Arrow = ({
+export function Arrow({
   size = 16,
   towards = 'bottom',
   boxShadow,
@@ -32,32 +19,37 @@ export const Arrow = ({
   border,
   background,
   ...props
-}: Props) => {
+}: Props) {
   const theme = React.useContext(ThemeContext).activeTheme
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)
-  const transform = {
+  const transformOuter = {
     right: { rotate: '90deg' },
     bottom: { rotate: '0deg' },
-    left: { rotate: '-90deg', x: 0, y: -10 },
+    left: { rotate: '-90deg' }, // x is -y here
     top: { rotate: '0deg' },
   }[towards]
-  const rotate = {
-    left: '0deg',
-    right: '0deg',
-    bottom: '0deg',
-    top: '0deg',
-  }[towards]
+
+  let width = size
+  let height = size
+
+  // add extra space so we dont clip shadows
+  if (towards === 'left') {
+    // were rotated so inverse...
+    width = size * 4
+    transformOuter['x'] = -size * 1.5
+  }
+  // TODO do for rest...
+
   return (
-    <Col {...props}>
-      <ArrowOuter transform={transform} width={size} height={size}>
-        <Col
-          {...{
-            transform: { rotate: rotate },
-            width: size,
-            height: size,
-          }}
-        >
+    <Contents {...props}>
+      <ArrowOuter
+        transformOrigin="top left"
+        transform={transformOuter}
+        width={width}
+        height={height}
+      >
+        <ArrowMiddle width={size} height={size}>
           <ArrowInner
             {...{
               top: innerTop * 0.75,
@@ -69,8 +61,23 @@ export const Arrow = ({
               background: background || theme.background,
             }}
           />
-        </Col>
+        </ArrowMiddle>
       </ArrowOuter>
-    </Col>
+    </Contents>
   )
 }
+
+// why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
+const ArrowOuter = gloss(Col, {
+  position: 'relative',
+  overflow: 'hidden',
+  alignItems: 'center',
+})
+
+const ArrowInner = gloss(Col, {
+  position: 'absolute',
+  borderRadius: 1,
+  transform: { rotate: '45deg' },
+})
+
+const ArrowMiddle = gloss(Col)

@@ -30,7 +30,7 @@ export function ColorPicker({
   )
 
   return (
-    <Row marginBottom={-5}>
+    <Row marginBottom={-5} flexWrap="wrap">
       {colors.map(color => (
         <View
           key={color}

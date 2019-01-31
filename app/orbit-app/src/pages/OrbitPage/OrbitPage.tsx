@@ -111,7 +111,7 @@ function OrbitPageProvideStores(props: { children: any }) {
         { id: 'app-settings', name: 'Settings', type: 'settings' },
         { id: 'app-apps', name: 'Apps', type: 'apps' },
         { id: 'app-sources', name: 'Sources', type: 'sources' },
-        { id: 'app-apps-new', name: 'New...', type: 'apps' },
+        { id: 'app-createApp', name: 'New...', type: 'createApp' },
         { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
       ],
     ],

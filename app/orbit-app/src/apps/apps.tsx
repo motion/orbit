@@ -4,6 +4,7 @@ import { GenericComponent } from '../types'
 import { AppProps } from './AppProps'
 import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
+import { createApp } from './createApp'
 import { home } from './home'
 import { lists } from './lists'
 import { onboard } from './onboard'
@@ -33,6 +34,7 @@ export const apps: AppsIndex = {
   apps: appsApps,
   // @ts-ignore
   onboard,
+  createApp,
   message: {
     main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,

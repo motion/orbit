@@ -1,15 +1,15 @@
-import { gloss, Row } from '@mcro/gloss';
-import { save } from '@mcro/model-bridge';
-import { AppModel } from '@mcro/models';
-import { View } from '@mcro/ui';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab';
-import { useActiveApps } from '../../hooks/useActiveApps';
-import { useActiveSpace } from '../../hooks/useActiveSpace';
-import { useStoresSafe } from '../../hooks/useStoresSafe';
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig';
+import { gloss, Row } from '@mcro/gloss'
+import { save } from '@mcro/model-bridge'
+import { AppModel } from '@mcro/models'
+import { View } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
+import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -139,10 +139,10 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit-${newAppStore.type}`}
+            icon={`orbit-${newAppStore.app.type}`}
             iconSize={12}
             isActive
-            label={newAppStore.name || 'New app'}
+            label={newAppStore.app.name || 'New app'}
           />
         )}
         <OrbitTab
@@ -152,7 +152,7 @@ export default observer(function OrbitNav() {
           iconAdjustOpacity={-0.2}
           onClick={() => {
             if (!showCreateNew) {
-              paneManagerStore.setActivePane('app-apps-new')
+              paneManagerStore.setActivePane('app-createApp')
             } else {
               paneManagerStore.back()
             }

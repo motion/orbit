@@ -11,7 +11,6 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
-import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -197,7 +196,7 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           tooltip="Manage Space"
         />
-        <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc />
+        {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )

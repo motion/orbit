@@ -12,7 +12,7 @@ export default function AppsMainManage() {
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
-    icon: <Icon size={58} name={`orbit-${x.type}-full`} />,
+    icon: <Icon background={x.colors[0]} size={58} name={`orbit-${x.type}-full`} />,
     type: 'installed',
     group: 'Installed Apps',
     after: <RoundButton circular icon="remove" />,

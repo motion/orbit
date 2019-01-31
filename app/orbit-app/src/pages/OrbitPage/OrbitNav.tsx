@@ -1,15 +1,15 @@
-import { gloss, Row } from '@mcro/gloss'
-import { save } from '@mcro/model-bridge'
-import { AppModel } from '@mcro/models'
-import { View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
-import { useActiveApps } from '../../hooks/useActiveApps'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { gloss, Row } from '@mcro/gloss';
+import { save } from '@mcro/model-bridge';
+import { AppModel } from '@mcro/models';
+import { View } from '@mcro/ui';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab';
+import { useActiveApps } from '../../hooks/useActiveApps';
+import { useActiveSpace } from '../../hooks/useActiveSpace';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig';
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -120,6 +120,7 @@ export default observer(function OrbitNav() {
           lockAxis="x"
           distance={8}
           items={items}
+          shouldCancelStart={isRightClick}
           onSortEnd={({ oldIndex, newIndex }) => {
             const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
             const { activePaneIndex } = spaceConfig
@@ -180,6 +181,11 @@ export default observer(function OrbitNav() {
     </OrbitNavClip>
   )
 })
+
+// https://github.com/clauderic/react-sortable-hoc/issues/256
+const isRightClick = e =>
+  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
+  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
   overflow: 'hidden',

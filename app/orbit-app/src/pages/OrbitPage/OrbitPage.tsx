@@ -140,5 +140,5 @@ const InnerChrome = gloss<{ torn?: boolean }>({
   position: 'relative',
   zIndex: 1,
 }).theme(({ torn }) => ({
-  boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
+  boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
 }))

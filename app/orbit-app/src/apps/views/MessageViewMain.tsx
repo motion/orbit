@@ -1,4 +1,5 @@
 import { AppConfig } from '@mcro/models'
+import { PassProps } from '@mcro/ui'
 import * as React from 'react'
 import { Title, VerticalSpace } from '../../views'
 import { Center } from '../../views/Center'
@@ -12,7 +13,9 @@ export function MessageViewMain(props: AppConfig) {
         <TextFit>{props.title}</TextFit>
       </Title>
       <VerticalSpace />
-      {props.icon ? <Icon name={props.icon} size={64} /> : null}
+      <PassProps size={64}>
+        {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon || null}
+      </PassProps>
     </Center>
   )
 }

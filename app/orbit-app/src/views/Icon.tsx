@@ -172,6 +172,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   const integrationIcon = useIntegrationIcon({ icon: name })
 
   if (appIcons[name]) {
+    console.log('got name now', name)
     return <AppIcon {...props} />
   }
 

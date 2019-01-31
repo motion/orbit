@@ -6,7 +6,6 @@ import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitItemViewProps } from '../../sources/types'
-import { Icon } from '../Icon'
 import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
 import { VirtualListItemProps } from '../VirtualList/VirtualListItem'
 import ListItem, { ListItemProps } from './ListItem'
@@ -68,7 +67,7 @@ export const OrbitListItem = React.memo(
         isSelected={isSelected}
         // allow props to override isSelected but not onSelect
         {...props}
-        icon={icon ? <Icon name={icon} size={16} {...props.iconProps} /> : null}
+        icon={icon}
       >
         {!!ItemView && (
           <ItemView

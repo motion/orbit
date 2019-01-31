@@ -51,7 +51,7 @@ export type ListItemProps = CSSPropertySetStrict &
     listItem?: boolean
     subtitle?: React.ReactNode
     date?: React.ReactNode
-    icon?: React.ReactNode
+    icon?: any
     index?: number
     isExpanded?: boolean
     style?: any
@@ -89,6 +89,34 @@ export type ListItemProps = CSSPropertySetStrict &
     separator?: React.ReactNode
     group?: string
   }
+
+function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLine: boolean) {
+  let iconSize = iconBefore ? (slim ? 20 : 22) : slim ? 12 : 14
+  if (isMultiLine && iconBefore) {
+    iconSize += 6
+  }
+  const iconPropsFinal = {
+    size: iconSize,
+    ...iconProps,
+  }
+  if (!iconBefore) {
+    iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
+  }
+  let element = icon
+  if (React.isValidElement(icon)) {
+    if (icon.type['acceptsIconProps']) {
+      element = React.cloneElement(icon, iconPropsFinal)
+    }
+  } else {
+    element = <Icon name={icon} {...iconPropsFinal} />
+  }
+  return (
+    <>
+      {element}
+      <TitleSpace slim={slim} />
+    </>
+  )
+}
 
 export default observer(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
@@ -144,7 +172,9 @@ export default observer(function ListItem(props: ListItemProps) {
     defaultPadding[0] += 2
   }
 
-  const renderedChildren = showChildren && (
+  const iconElement = showIcon && getIcon(props, isMultiLine)
+
+  const childrenElement = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
       {children}
     </UI.SimpleText>
@@ -182,37 +212,6 @@ export default observer(function ListItem(props: ListItemProps) {
       <TitleSpace slim={slim} />
     </>
   )
-
-  const iconElement =
-    showIcon &&
-    (() => {
-      let iconSize = iconBefore ? (slim ? 20 : 22) : slim ? 12 : 14
-      if (isMultiLine && iconBefore) {
-        iconSize += 6
-      }
-      const iconPropsFinal = {
-        size: iconSize,
-        ...iconProps,
-      }
-      if (!iconBefore) {
-        iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
-      }
-      return (
-        <>
-          {React.isValidElement(icon) ? (
-            // dont overwrite the icons original props
-            icon.type['acceptsIconProps'] ? (
-              React.cloneElement(icon, iconPropsFinal)
-            ) : (
-              icon
-            )
-          ) : (
-            <Icon name={icon} {...iconPropsFinal} />
-          )}
-          <TitleSpace slim={slim} />
-        </>
-      )
-    })()
 
   return (
     <UI.Theme name={isSelected ? 'selected' : null}>
@@ -260,13 +259,13 @@ export default observer(function ListItem(props: ListItemProps) {
               <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
-                    <Icon name={icon} size={slim ? 12 : 14} {...iconProps} />
+                    {iconElement}
                     <TitleSpace slim={slim} />
                   </>
                 )}
                 {!!location && locationElement}
                 {showPreviewInSubtitle ? (
-                  <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                  <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
                 ) : null}
                 {!!subtitle &&
                   (typeof subtitle === 'string' ? (
@@ -322,7 +321,7 @@ export default observer(function ListItem(props: ListItemProps) {
             {!showPreviewInSubtitle && (
               <Row alignItems="center" flex={1}>
                 {locationElement}
-                {renderedChildren}
+                {childrenElement}
               </Row>
             )}
           </ListItemMainContent>
@@ -438,8 +437,6 @@ const TitleSpace = gloss({
 })
 
 const ListItemMainContent = gloss({
-  // this lets flex shrink... https://css-tricks.com/flexbox-truncated-text/
-  minWidth: 0,
   flex: 1,
   maxWidth: '100%',
   margin: ['auto', 0],

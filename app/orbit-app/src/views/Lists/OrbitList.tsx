@@ -13,13 +13,9 @@ export type SearchableItem = Bit | PersonBit
 
 type Item = SearchableItem | OrbitListItemProps
 
-export function orbitItemToListItemProps(props: Item): OrbitListItemProps {
-  if (props['item']) {
-    return props['item']
-  }
-  if (props['target']) {
-    const item = (props as unknown) as Bit | PersonBit
-    return { item }
+export function orbitItemToListItemProps(props: any): OrbitListItemProps {
+  if (props.target) {
+    return { item: props }
   }
   return props as any
 }

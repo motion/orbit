@@ -17,12 +17,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
       const settingEntity = new SettingEntity()
       Object.assign(settingEntity, {
         name: 'general',
-        values: {
-          openShortcut: 'Option+Space',
-          autoLaunch: true,
-          autoUpdate: true,
-          darkTheme: true,
-        },
+        values: {},
       })
       await getRepository(SettingEntity).save(settingEntity)
       setting = await getRepository(SettingEntity).findOne({ name: 'general' })
@@ -121,6 +116,13 @@ export class EnsureModels1546916550168 implements MigrationInterface {
         name: 'Me',
         activeSpace: firstSpace.id,
         spaceConfig: {},
+        settings: {
+          hasOnboarded: false,
+          openShortcut: 'Option+Space',
+          autoLaunch: true,
+          autoUpdate: true,
+          theme: 'automatic',
+        },
       })
     }
   }

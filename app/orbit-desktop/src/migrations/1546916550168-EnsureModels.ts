@@ -1,5 +1,5 @@
-import { App, AppEntity, SettingEntity, SpaceEntity, UserEntity } from '@mcro/models'
-import { getRepository, MigrationInterface } from 'typeorm'
+import { App, AppEntity, SettingEntity, SpaceEntity, userDefaultValue, UserEntity } from '@mcro/models';
+import { getRepository, MigrationInterface } from 'typeorm';
 
 export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
@@ -113,16 +113,8 @@ export class EnsureModels1546916550168 implements MigrationInterface {
 
     if (!user) {
       await getRepository(UserEntity).save({
-        name: 'Me',
+        ...userDefaultValue,
         activeSpace: firstSpace.id,
-        spaceConfig: {},
-        settings: {
-          hasOnboarded: false,
-          openShortcut: 'Option+Space',
-          autoLaunch: true,
-          autoUpdate: true,
-          theme: 'automatic',
-        },
       })
     }
   }

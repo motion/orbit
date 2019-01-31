@@ -42,7 +42,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   const searchStore = useStore(SearchStore)
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
-  const theme = App.state.darkTheme ? 'dark' : 'light'
+  const theme = App.state.isDark ? 'dark' : 'light'
 
   React.useEffect(() => {
     // prevent close on the main window

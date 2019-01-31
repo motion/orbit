@@ -71,7 +71,7 @@ class AppStore {
   state = deep({
     appCount: 0,
     screenSize: [0, 0],
-    darkTheme: false,
+    isDark: false,
     orbitState: {
       blurred: false,
       pinned: false,

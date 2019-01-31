@@ -54,7 +54,6 @@ import { Screen } from '@mcro/screen'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { writeJSON } from 'fs-extra'
 import root from 'global'
-import macosVersion from 'macos-version'
 import open from 'opn'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -72,6 +71,7 @@ import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
 import { OCRManager } from './managers/OCRManager'
 import { OnboardManager } from './managers/OnboardManager'
+import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OracleManager } from './managers/OracleManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
@@ -111,6 +111,7 @@ export class OrbitDesktopRoot {
   private databaseManager: DatabaseManager
   private keyboardManager: KeyboardManager
   private topicsManager: TopicsManager
+  private operatingSystemManager: OperatingSystemManager
 
   start = async () => {
     await Desktop.start({
@@ -120,13 +121,6 @@ export class OrbitDesktopRoot {
         App,
         Electron,
         Desktop,
-      },
-    })
-
-    // set some initial state on desktop
-    Desktop.setState({
-      operatingSystem: {
-        macVersion: macosVersion(),
       },
     })
 
@@ -140,6 +134,10 @@ export class OrbitDesktopRoot {
     // TODO: this abritrary ordering of these things is really a dependency graph, could be setup that way
     this.generalSettingManager = new GeneralSettingManager()
     await this.generalSettingManager.start()
+
+    // manages operating system state
+    this.operatingSystemManager = new OperatingSystemManager()
+    this.operatingSystemManager.start()
 
     // cosal is a dependency of many things
     this.cosalManager = new CosalManager({ dbPath: COSAL_DB })

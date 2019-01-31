@@ -1,6 +1,13 @@
-import { useObserveOne } from '@mcro/model-bridge'
-import { UserModel } from '@mcro/models'
+import { useModel } from '@mcro/model-bridge'
+import { userDefaultValue, UserModel } from '@mcro/models'
 
 export function useActiveUser() {
-  return useObserveOne(UserModel, {})
+  return useModel(
+    UserModel,
+    {},
+    {
+      observe: true,
+      defaultValue: userDefaultValue,
+    },
+  )
 }

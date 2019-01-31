@@ -9,13 +9,13 @@ const Config = getGlobalConfig()
 
 export default observer(function MenuWindow() {
   const [show, setShow] = React.useState(false)
-  const size = Electron.state.screenSize.slice()
   return (
     <Window
       alwaysOnTop={[true, 'floating', 2]}
       show={show}
       onReadyToShow={() => setShow(true)}
-      size={[size[0], size[1]]}
+      // TODO useScreenSize()
+      size={Electron.state.screenSize.slice()}
       focus={false}
       ignoreMouseEvents={!Desktop.hoverState.menuHovered}
       focusable

@@ -8,7 +8,7 @@ import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
 
 export default observer(function SettingsAppAccount(_props: AppProps<AppType.settings>) {
-  const user = useActiveUser()
+  const [user] = useActiveUser()
 
   return (
     <Section sizePadding={2}>

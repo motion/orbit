@@ -1,20 +1,12 @@
-import { debugState, sleep, store } from '@mcro/black'
-import { Logger } from '@mcro/logger'
-import { Electron } from '@mcro/stores'
-import { screen } from 'electron'
+import { debugState } from '@mcro/black'
 import root from 'global'
-import { getScreenSize } from '../helpers/getScreenSize'
 
-const log = new Logger('ElectronStore')
-
-@store
 export class ElectronStore {
   error = null
   appRef = null
   stores = null
   views = null
   clear = Date.now()
-  show = 0
   apps = new Set()
 
   async didMount() {
@@ -25,28 +17,6 @@ export class ElectronStore {
       this.stores = stores
       this.views = views
     })
-
-    this.setScreenSize()
-    this.reset()
-
-    screen.on('display-metrics-changed', async () => {
-      log.info('got display metrics changed event')
-      // give it a bit to adjust
-      await sleep(100)
-      this.setScreenSize()
-      this.reset()
-    })
-  }
-
-  private setScreenSize = () => {
-    Electron.setState({ screenSize: getScreenSize() })
-  }
-
-  async reset() {
-    log.info('Resetting...')
-    this.show = 0
-    await sleep(16)
-    this.show = 2
   }
 
   restart() {

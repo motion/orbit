@@ -1,12 +1,12 @@
-import { action } from 'mobx'
-import { isPlainObject, isEqual } from 'lodash'
-import RWebSocket from 'reconnecting-websocket'
-import WS from './websocket'
-import * as Mobx from 'mobx'
-import stringify from 'stringify-object'
-import { Logger } from '@mcro/logger'
 import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import { isEqual, isPlainObject } from 'lodash'
+import * as Mobx from 'mobx'
+import { action } from 'mobx'
+import RWebSocket from 'reconnecting-websocket'
+import stringify from 'stringify-object'
 import { SocketManager } from './SocketManager'
+import WS from './websocket'
 
 const log = new Logger(`bridge ${process.env.PROCESS_NAME || ''}`)
 
@@ -461,11 +461,10 @@ export class BridgeManager {
       throw new Error(`Bad store.source, store: ${Store}`)
     }
 
-    const packet = JSON.stringify({ message, value })
     this.lastMessage = { message: message, at: Date.now() }
 
     if (this.options.master) {
-      this.socketManager.sendMessage(Store.source, packet)
+      this.socketManager.sendMessage({ to: Store.source, message, value })
     } else {
       if (!this.isSocketOpen) {
         log.info('\n\n\nWaiting for open socket....\n\n\n')
@@ -476,7 +475,7 @@ export class BridgeManager {
       // this would happen when sockets are on desktop side
       // and then any Store.setState call will hang...
       nextCycleCb(() => {
-        this.socket.send(JSON.stringify({ message: packet, to: Store.source }))
+        this.socket.send(JSON.stringify({ message, value, to: Store.source }))
       })
     }
   }

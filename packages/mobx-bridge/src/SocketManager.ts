@@ -1,5 +1,5 @@
-import { Server } from 'ws'
 import { Logger } from '@mcro/logger'
+import { Server } from 'ws'
 
 const log = new Logger('scrn')
 
@@ -53,12 +53,12 @@ export class SocketManager {
   }
 
   // really fast direct messages
-  sendMessage = (source: string, message: string) => {
+  sendMessage = (data: { to: string; message: string; value?: any }) => {
     for (const { uid, socket } of this.activeSockets) {
-      if (this.identities[uid] !== source) {
+      if (this.identities[uid] !== data.to) {
         continue
       }
-      socket.send(message)
+      socket.send(JSON.stringify(data))
     }
   }
 
@@ -95,13 +95,14 @@ export class SocketManager {
     // listen for incoming
     socket.on('message', str => {
       // message
-      const { action, state, source, message, to } = JSON.parse(str)
+      const { action, state, source, message, value, to } = JSON.parse(str)
       if (to) {
         if (to === this.masterSource) {
-          this.actions.onMessage(message)
+          console.log(str)
+          this.actions.onMessage({ message, value })
           return
         }
-        this.sendMessage(to, message)
+        this.sendMessage({ to, message, value })
         return
       }
       if (state) {

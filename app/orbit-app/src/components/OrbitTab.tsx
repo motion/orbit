@@ -1,6 +1,6 @@
-import { gloss, Row, useTheme } from '@mcro/gloss'
+import { gloss, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ContextMenu, Glint, IconProps, MenuTemplate, Text, Tooltip } from '@mcro/ui'
+import { Button, ButtonProps, ContextMenu, Glint, IconProps, MenuTemplate, Tooltip } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
@@ -9,7 +9,7 @@ export const tabHeight = 26
 const inactiveOpacity = 0.5
 const border = 5
 
-export type TabProps = React.HTMLAttributes<'div'> & {
+export type TabProps = ViewProps & {
   app?: App
   separator?: boolean
   isActive?: boolean
@@ -26,6 +26,7 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   getContext?: () => MenuTemplate
   disabled?: boolean
   iconProps?: OrbitIconProps
+  after?: React.ReactNode
 }
 
 export function OrbitTab({
@@ -43,6 +44,7 @@ export function OrbitTab({
   thicc,
   className = '',
   getContext,
+  after,
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
@@ -58,7 +60,7 @@ export function OrbitTab({
     >
       <ContextMenu items={getContext ? getContext() : null}>
         {isActive && <Glint y={2} borderRadius={border} />}
-        <Row alignItems="center">
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
           {!React.isValidElement(icon) && (
             <OrbitTabIcon
               isActive={isActive}
@@ -71,25 +73,28 @@ export function OrbitTab({
           {React.isValidElement(icon) &&
             React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
           {!!label && (
-            <Text
+            <SimpleText
               ellipse
               className="tab-label"
+              display="flex"
+              flex={1}
               size={0.95}
               opacity={isActive ? 1 : inactiveOpacity}
               fontWeight={400}
               {...textProps}
             >
               {label}
-            </Text>
+            </SimpleText>
           )}
         </Row>
 
         {separator && <Separator />}
 
-        {isActive && !!onClickPopout && (
-          <DropDownButton
+        {after}
+
+        {/* {isActive && !!onClickPopout && (
+          <OrbitTabButton
             className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-            right={sidePad * 0.25}
             tooltip="Open"
             onClick={e => {
               e.preventDefault()
@@ -97,7 +102,7 @@ export function OrbitTab({
               onClickPopout()
             }}
           />
-        )}
+        )} */}
       </ContextMenu>
     </NavButtonChrome>
   )
@@ -120,9 +125,11 @@ function OrbitTabIcon(props: IconProps) {
   )
 }
 
-function DropDownButton(props) {
+export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
+      top={tabHeight / 2 - 8}
+      right={8}
       circular
       borderWidth={0}
       width={18}
@@ -131,10 +138,9 @@ function DropDownButton(props) {
       background="transparent"
       iconProps={{ size: 8 }}
       opacity={0}
-      top={tabHeight / 2 - 9}
       position="absolute"
       hoverStyle={{
-        opacity: 0.2,
+        opacity: 0.4,
       }}
       {...props}
     />

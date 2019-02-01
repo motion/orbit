@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
-import { Scrollable, Title } from '../views'
+import { Title } from '../views'
 import { BorderTop } from '../views/Border'
 import { Divider } from '../views/Divider'
 import SelectableList from '../views/Lists/SelectableList'
@@ -68,21 +68,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         <Divider />
 
         <Section paddingTop={0}>
-          <Scrollable>
-            <AppView type={type} viewType="settings" />
-          </Scrollable>
-        </Section>
-
-        <View flex={1} />
-
-        <Section>
-          <BorderTop />
-
-          <Theme name="selected">
-            <Button elevation={2} size={1.4}>
-              Create
-            </Button>
-          </Theme>
+          <AppView type={type} viewType="settings" />
         </Section>
       </View>
 
@@ -93,14 +79,26 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
           <Title>Preview</Title>
         </Section>
 
-        <AppView
-          viewType="index"
-          id={type}
-          type={type}
-          appConfig={{
-            type: type,
-          }}
-        />
+        <View flex={1}>
+          <AppView
+            viewType="index"
+            id={type}
+            type={type}
+            appConfig={{
+              type: type,
+            }}
+          />
+        </View>
+
+        <Section>
+          <BorderTop />
+
+          <Theme name="selected">
+            <Button elevation={2} size={1.4}>
+              Create
+            </Button>
+          </Theme>
+        </Section>
       </View>
     </Row>
   )

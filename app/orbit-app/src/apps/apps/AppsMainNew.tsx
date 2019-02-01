@@ -9,7 +9,15 @@ import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
 
 export function AppIcon({ app, ...props }: { app: App } & Partial<IconProps>) {
-  return <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} {...props} />
+  return (
+    <Icon
+      background={app.colors[0]}
+      color={app.colors[1]}
+      name={`orbit-${app.type}-full`}
+      size={48}
+      {...props}
+    />
+  )
 }
 
 export default observer(function AppsMainNew() {
@@ -30,7 +38,7 @@ export default observer(function AppsMainNew() {
   return (
     <>
       <Row alignItems="center">
-        <Icon background={app.colors[0]} color="white" name={`orbit-${app.type}-full`} size={48} />
+        <AppIcon removeStroke app={app} size={48} />
 
         <HorizontalSpace />
         <Input
@@ -58,9 +66,8 @@ export default observer(function AppsMainNew() {
 
       <View>
         <ColorPicker
-          count={18}
-          onChangeColor={color => {
-            newAppStore.update({ colors: [color, 'white'] })
+          onChangeColor={colors => {
+            newAppStore.update({ colors })
           }}
           activeColor={app.colors[0]}
         />

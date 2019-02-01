@@ -23,16 +23,20 @@ export default React.memo(function AppIcon({
   background = '#222',
   size = 32,
   style,
+  removeStroke,
   ...props
-}: AppIconProps) {
+}: AppIconProps & { removeStroke?: boolean }) {
   const theme = useTheme()
-  const fill = props.color || (size < 36 ? theme.iconFill || theme.background : background)
+  const fill = color(
+    props.color || (size < 36 ? theme.iconFill || theme.background : background),
+  ).hex()
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
-  const bg = color(background)
-  const adjust = bg.isDark() ? 0.15 : 0.05
-  const bgLight = bg.lighten(adjust).hex()
+  let bg = color(background)
+
+  const adjust = bg.isDark() ? 0.12 : 0.05
+  const bgLight = (bg.lightness() === 100 ? bg : bg.lighten(adjust)).hex()
   const bgDark = bg.darken(adjust).hex()
 
   const newID = bgLight.replace('#', '')
@@ -44,6 +48,11 @@ export default React.memo(function AppIcon({
       .replace('"', '')
       .trim()
     iconSrc = iconSrc.replace(new RegExp(id, 'g'), `${id}-${newID}`)
+  }
+
+  if (removeStroke) {
+    // remove stroke
+    iconSrc = iconSrc.replace(/ stroke-width="[0-9]+"/gi, '')
   }
 
   iconSrc = iconSrc.replace(

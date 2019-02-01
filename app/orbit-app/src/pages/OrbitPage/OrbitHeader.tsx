@@ -12,11 +12,13 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitHeader() {
-  const { orbitStore, paneManagerStore } = useStoresSafe()
-  const isOnSettings = paneManagerStore.activePane.type === 'settings'
+  const { newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const activePaneType = paneManagerStore.activePane.type
+  const isOnSettings = activePaneType === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
   const toolbars = useOrbitToolbars()
+  const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
 
   return (
     <>
@@ -45,7 +47,7 @@ export default observer(function OrbitHeader() {
           )}
 
           <View width={22} alignItems="center" justifyContent="center">
-            <Icon name={`orbit-${paneManagerStore.activePane.type}`} size={18} opacity={0.15} />
+            <Icon name={`orbit-${icon}`} size={18} opacity={0.15} />
           </View>
           <OrbitHeaderInput />
 

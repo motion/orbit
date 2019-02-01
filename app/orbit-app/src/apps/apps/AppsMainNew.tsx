@@ -3,7 +3,7 @@ import { IconProps, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalSpace, SubTitle, VerticalSpace } from '../../views'
+import { HorizontalSpace, VerticalSpace } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
@@ -30,7 +30,7 @@ export default observer(function AppsMainNew() {
   return (
     <>
       <Row alignItems="center">
-        <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} />
+        <Icon background={app.colors[0]} color="white" name={`orbit-${app.type}-full`} size={48} />
 
         <HorizontalSpace />
         <Input
@@ -53,10 +53,6 @@ export default observer(function AppsMainNew() {
           </Button>
         </Theme> */}
       </Row>
-
-      <VerticalSpace />
-
-      <SubTitle>Name</SubTitle>
 
       <VerticalSpace />
 

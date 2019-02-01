@@ -3,9 +3,9 @@ import { Absolute, BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import OrbitControls from '../pages/OrbitPage/OrbitControls'
 import { defaultApps } from '../stores/NewAppStore'
 import { Title } from '../views'
+import { Divider } from '../views/Divider'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import { AppProps } from './AppProps'
@@ -30,7 +30,7 @@ function CreateAppIndex() {
           title: app.name,
           subtitle: descriptions[app.type],
           icon: <AppIcon app={app} />,
-          type: app.type,
+          type: AppType[app.type],
           iconBefore: true,
         }))}
       />
@@ -58,17 +58,27 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
     <Row flex={1}>
       <View width="50%">
         <Section paddingBottom={0}>
-          <Title>Customize</Title>
+          <Title>Setup</Title>
         </Section>
 
         <Section paddingTop={0}>
           <AppsMainNew />
         </Section>
-        <OrbitControls />
+
+        <Divider />
+
+        <Section paddingTop={0}>
+          <AppView type={type} viewType="settings" />
+        </Section>
       </View>
 
       <View width="50%" position="relative">
         <BorderLeft />
+
+        <Section paddingBottom={0}>
+          <Title>Preview</Title>
+        </Section>
+
         <AppView
           viewType="index"
           id={type}

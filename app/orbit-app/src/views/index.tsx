@@ -34,12 +34,15 @@ export const FormTableLabel = ({ children }) => (
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
-const Label = props => <Text tagName="label" {...props} />
+const Label = props => <Text tagName="label" flex={1} {...props} />
 
 export const FormRow = ({ label, children }: RowProps & { children?: React.ReactNode }) => (
   <FormTableRow>
     <FormTableLabel>
-      <Label>{label}</Label>
+      <Row flex={1} alignItems="center">
+        <Label>{label}</Label>
+        <HorizontalSpace />
+      </Row>
     </FormTableLabel>
     <FormTableValue>{children}</FormTableValue>
   </FormTableRow>

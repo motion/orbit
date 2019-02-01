@@ -152,7 +152,7 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit-${newAppStore.app.type}`}
+            // icon={`orbit-custom`}
             iconSize={12}
             isActive
             label={newAppStore.app.name || 'New app'}

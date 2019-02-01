@@ -2,8 +2,7 @@ import * as UI from '@mcro/ui'
 import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
-import AppIcon from './AppIcon'
-import { appIcons } from './appIcons'
+import AppIcon, { appIcons } from './AppIcon'
 import { SVG } from './SVG'
 
 const icons = {

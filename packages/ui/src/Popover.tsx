@@ -273,7 +273,6 @@ const positionStateX = (
       break
     case 'right':
       left = (targetBounds ? targetBounds.left + targetBounds.width : 0) + props.distance
-      console.log('popoverBounds22', popoverHalfWidth, popoverBounds.width, arrowSize)
       arrowLeft = -popoverHalfWidth - arrowSize
       break
   }
@@ -471,16 +470,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
 
       // handling flickers poorly, TODO investigate why portals cause it to never hide on initial mount
-      on(
-        this,
-        setTimeout(() => {
+      setTimeout(() => {
+        if (!this.unmounted) {
           this.setState({ finishedMount: true })
-        }, 500),
-      )
+        }
+      }, 500)
     }
   }
 
+  unmounted = false
+
   componentWillUnmount() {
+    PopoverState.openPopovers.delete(this)
+    this.unmounted = true
     this.mutationObserver.disconnect()
     this.resizeObserver.disconnect()
   }
@@ -512,6 +514,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
+    if (this.unmounted) {
+      return
+    }
     if (getIsManuallyPositioned(this.props)) {
       return
     }

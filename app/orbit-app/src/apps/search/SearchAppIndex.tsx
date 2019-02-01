@@ -68,16 +68,16 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(({ item }, index) => {
+    memoize(({ item }) => {
       if (item && item.target === 'bit') {
         return {
           after: (
             <MergeContext Context={ItemActionContext} value={{ item }}>
               <Popover
-                open={index === 3}
                 towards="right"
                 // selected would otherwise override this theme
                 theme={App.state.isDark ? 'light' : 'dark'}
+                distance={5}
                 width={250}
                 height={300}
                 target={

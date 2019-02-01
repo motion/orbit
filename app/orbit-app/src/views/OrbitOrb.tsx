@@ -28,7 +28,13 @@ export function OrbitOrb({ size = 32, colors = ['red', 'green'], ...props }) {
     innerSize -= 1
   }
   return (
-    <OrbBackground width={size} height={size} borderRadius={size * 2} {...props}>
+    <OrbBackground
+      width={size}
+      height={size}
+      borderRadius={size * 2}
+      {...props}
+      className={`undraggable ${props.className || ''}`}
+    >
       <View
         borderRadius={1000}
         width={innerSize}

@@ -650,6 +650,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const hovered = this.isHovered
     this.cancelIfWillOpen()
     await this.clearHovered()
+    if (this.unmounted) {
+      return
+    }
     this.close()
     // after click, remove hover listeners until mouseleave
     if (hovered) {
@@ -836,7 +839,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   handleTargetClick = () => {
-    setTimeout(this.stopListeningUntilNextMouseEnter)
+    // settimeout so it captures once the action completes
+    setTimeout(() => {
+      if (!this.unmounted) {
+        this.stopListeningUntilNextMouseEnter()
+      }
+    }, 0)
   }
 
   controlledTarget = target => {

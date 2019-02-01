@@ -75,26 +75,25 @@ function addRules(displayName: string, rules: BaseRules, namespace: string, tagN
   return className
 }
 
+const whiteSpaceRegex = /[\s]+/g
+
 function glossify(
   id: string,
   displayName: string,
-  // TODO type better
   themeFn: (a: Object, b: ThemeObject) => any,
-  // TODO type better
   allStyles: { styles: any; propStyles: any },
-  classNames: string[] | null,
+  previousClassNames: string[] | null,
   props: CSSPropertySet,
   tagName: string,
   theme: ThemeObject,
 ) {
   const hasPropStyles = !!Object.keys(allStyles.propStyles).length
-  // if this is a secondary render then check if the props are essentially equivalent
-  let extraClassNames = null
   let myStyles = { ...allStyles.styles }
-  // if passed any classes from another styled component, ignore that class and merge in their
-  // resolved styles
+
+  // if passed any classes from another styled component
+  // ignore that class and merge in their resolved styles
   if (props.className) {
-    const propClassNames = `${props.className}`.trim().split(/[\s]+/g)
+    const propClassNames = `${props.className}`.trim().split(whiteSpaceRegex)
     for (const className of propClassNames) {
       const classInfo = tracker.get(className)
       if (classInfo) {
@@ -103,9 +102,6 @@ function glossify(
           ...myStyles,
           [namespace]: style,
         }
-      } else {
-        extraClassNames = extraClassNames || []
-        extraClassNames.push(className)
       }
     }
   }
@@ -146,7 +142,8 @@ function glossify(
     }
   }
 
-  let nextClassNames: string[]
+  let nextClassNames: string[] | null = null
+
   // sort so we properly order pseudo keys
   const keys = Object.keys(myStyles)
   const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
@@ -157,27 +154,22 @@ function glossify(
     nextClassNames = nextClassNames || []
     nextClassNames.push(className)
     // if this is the first mount render or we didn't previously have this class then add it as new
-    if (classNames == null || !classNames.includes(className)) {
+    if (previousClassNames == null || !previousClassNames.includes(className)) {
       gc.registerClassUse(className)
     }
   }
 
   // check what classNames have been removed if this is a secondary render
-  if (classNames !== null) {
-    for (const className of classNames) {
+  if (previousClassNames !== null) {
+    for (const className of previousClassNames) {
       // if this previous class isn't in the current classes then deregister it
       if (!nextClassNames || !nextClassNames.includes(className)) {
         gc.deregisterClassUse(className)
       }
     }
   }
-  if (!extraClassNames) {
-    return nextClassNames
-  }
-  if (!nextClassNames) {
-    return extraClassNames
-  }
-  return [...nextClassNames, ...extraClassNames]
+
+  return nextClassNames
 }
 
 export function gloss<Props = GlossViewProps<any>>(
@@ -195,7 +187,7 @@ export function gloss<Props = GlossViewProps<any>>(
     const targetAttrs = targetConfig ? targetConfig.ignoreAttrs : null
     const attrArr = ThemedView.ignoreAttrs || targetAttrs
     ignoreAttrs = arrToDict(attrArr)
-  })
+  }, 0)
 
   const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isSimpleView) {
@@ -224,36 +216,43 @@ export function gloss<Props = GlossViewProps<any>>(
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = React.useContext(ThemeContext)
     const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    // merge theme if they pass an object theme in
-    const lastCN = React.useRef(null)
+    const lastClassNames = React.useRef(null)
     const classNames = glossify(
       id,
       displayName,
       themeFn,
       Styles,
-      lastCN.current,
+      lastClassNames.current,
       props,
       tag,
       activeTheme,
     )
-    lastCN.current = classNames
+    lastClassNames.current = classNames
 
-    React.useEffect(
-      () => () => {
-        classNames && classNames.forEach(gc.deregisterClassUse)
-      },
-      [],
-    )
+    // unmount
+    React.useEffect(() => {
+      return () => {
+        const current = lastClassNames.current
+        if (current) {
+          current.forEach(gc.deregisterClassUse)
+        }
+      }
+    }, [])
 
     // if this is a plain view we can use tagName, otherwise just pass it down
     const element =
       typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
     const isDOMElement = typeof element === 'string'
 
-    let finalProps = {} as any
+    // set up final props with filtering for various attributes
+    const finalProps = {
+      className: props.className || '',
+    } as any
+
     if (ref) {
       finalProps.ref = ref
     }
+
     for (const key in props) {
       if (ignoreAttrs && ignoreAttrs[key]) {
         continue
@@ -268,7 +267,7 @@ export function gloss<Props = GlossViewProps<any>>(
     }
 
     if (classNames) {
-      finalProps.className = classNames.join(' ')
+      finalProps.className += ` ${classNames.join(' ')}`
     }
 
     return React.createElement(element, finalProps, props.children)

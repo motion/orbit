@@ -1,20 +1,32 @@
 import { useObserveOne } from '@mcro/model-bridge'
 import { AppType, SpaceModel } from '@mcro/models'
-import { Row, Text, Theme } from '@mcro/ui'
+import { Col, Row, Text, Theme } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import randomColor from 'randomcolor'
 import * as React from 'react'
 import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
-import { FormRow, InputRow, Title, VerticalSpace } from '../../views'
+import {
+  FormRow,
+  HorizontalScroll,
+  HorizontalSpace,
+  InputRow,
+  Title,
+  VerticalSpace,
+} from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import ListItem from '../../views/ListItems/ListItem'
+import { OrbitOrb } from '../../views/OrbitOrb'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppProps'
+
+const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
 export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppType.settings>) {
   const id = +appConfig.id
   const space = useObserveOne(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })
+  const [colors, setColors] = React.useState(defaultColors)
 
   return (
     <Section sizePadding={2}>
@@ -32,9 +44,27 @@ export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppTy
           }}
         />
 
-        <FormRow label="Color">
-          <Row>
-            <ColorPicker />
+        <FormRow label="Theme">
+          <Row alignItems="center" overflow="hidden" flex={1}>
+            <OrbitOrb size={48} colors={colors} />
+            <HorizontalSpace />
+            <Col flex={1}>
+              <HorizontalScroll height={30}>
+                <ColorPicker
+                  count={50}
+                  activeColor={colors[0]}
+                  onChangeColor={x => setColors([x, colors[1]])}
+                />
+              </HorizontalScroll>
+              <VerticalSpace small />
+              <HorizontalScroll height={30}>
+                <ColorPicker
+                  count={50}
+                  activeColor={colors[1]}
+                  onChangeColor={x => setColors([colors[0], x])}
+                />
+              </HorizontalScroll>
+            </Col>
           </Row>
         </FormRow>
       </SubSection>

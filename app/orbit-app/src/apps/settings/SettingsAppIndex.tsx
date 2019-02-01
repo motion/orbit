@@ -39,7 +39,7 @@ export default function SourcesAppIndex() {
         type: 'space',
         title: space.name,
         subtitle: '10 members',
-        before: <OrbitOrb size={18} background="red" color="blue" marginRight={12} />,
+        before: <OrbitOrb size={18} colors={space.colors} marginRight={12} />,
         after: space.id === user.activeSpace && (
           <Button chromeless circular icon="check" iconSize={12} />
         ),

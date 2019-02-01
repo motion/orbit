@@ -29,7 +29,7 @@ export const RowItem = ({
 }) => {
   return (
     <RowItemFrame padding={leftPad} selected={selected} {...props}>
-      <OrbitOrb size={16} background={orb[0]} color={orb[1]} />
+      <OrbitOrb size={16} colors={orb} />
       <View width={10} />
       <Col flex={1}>
         <Text sizeLineHeight={0.8} size={1.15} fontWeight={600} {...titleProps}>

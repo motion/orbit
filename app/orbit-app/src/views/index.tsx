@@ -26,7 +26,11 @@ type RowProps = {
   label?: React.ReactNode
 }
 
-export const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
+export const FormTableLabel = ({ children }) => (
+  <TableCell width="30%" maxWidth={125}>
+    {children}
+  </TableCell>
+)
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 

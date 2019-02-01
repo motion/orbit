@@ -37,14 +37,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     {
       title: activeSpaceName,
       subtitle: `Settings and members`,
-      icon: (
-        <OrbitOrb
-          size={18}
-          background={activeSpace.colors[0]}
-          color={activeSpace.colors[1]}
-          marginRight={12}
-        />
-      ),
+      icon: <OrbitOrb size={18} colors={activeSpace.colors} marginRight={12} />,
       iconBefore: true,
       group: activeSpaceName,
       appConfig: {

@@ -1,6 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { invertLightness } from '@mcro/color'
-import { CSSPropertySet, gloss } from '@mcro/gloss'
+import { CSSPropertySet } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Col, Popover, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -9,9 +8,11 @@ import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
 import { fuzzyQueryFilter } from '../../helpers'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { Icon } from '../../views/Icon'
+import { OrbitOrb } from '../../views/OrbitOrb'
 import { RowItem } from '../../views/RowItem'
 
 type Props = React.HTMLProps<HTMLDivElement> & CSSPropertySet
@@ -83,6 +84,7 @@ const createNewSpace = () => {
 export default observer(function OrbitSpaceSwitch(props: Props) {
   const stores = useStoresSafe()
   const store = useStore(SpaceSwitchStore, props)
+  const [activeSpace] = useActiveSpace()
 
   const handlers = {
     select: () => {
@@ -97,7 +99,6 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
     stores.paneManagerStore.setActivePaneByType('settings')
   }
 
-  const { activeSpace } = stores.spaceStore
   const { selectedIndex, filteredSpaces } = store
   const borderRadius = 8
 
@@ -115,7 +116,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         elevation={7}
         group="filters"
         onChangeVisibility={store.setOpen}
-        target={<OrbBackground {...props} />}
+        target={<OrbitOrb colors={activeSpace.colors} size={18} {...props} />}
       >
         <Col
           forwardRef={store.popoverContentRef}
@@ -129,7 +130,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
                 orb={activeSpace.colors}
                 title={activeSpace.name}
                 subtitle="20 people"
-                after={<Icon onClick={goToTeamSettings} name="gear" size={14} opacity={0.5} />}
+                // after={<Icon onClick={goToTeamSettings} name="gear" size={14} opacity={0.5} />}
                 hover={false}
               />
             ) : (
@@ -142,10 +143,9 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
                   onClick={() => (stores.spaceStore.activeIndex = index)}
                   key={space.id}
                   selected={selectedIndex === index + 1}
-                  orb={space.color}
+                  orb={space.colors}
                   title={space.name}
                   titleProps={{ fontWeight: 400, size: 0.95, alpha: 0.8 }}
-                  {...space.props}
                 />
               )
             })}
@@ -162,14 +162,3 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
     </FocusableShortcutHandler>
   )
 })
-
-const OrbBackground = gloss(View, {
-  borderRadius: 100,
-  width: 16,
-  height: 16,
-}).theme((_, theme) => ({
-  border: [2, invertLightness(theme.background, 1).alpha(0.5)],
-  '&:hover': {
-    border: [2, invertLightness(theme.background, 1).alpha(0.75)],
-  },
-}))

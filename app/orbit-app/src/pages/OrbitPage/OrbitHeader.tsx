@@ -44,7 +44,9 @@ export default observer(function OrbitHeader() {
             </>
           )}
 
-          <Icon name={`orbit-${paneManagerStore.activePane.type}`} size={18} opacity={0.18} />
+          <View width={22} alignItems="center" justifyContent="center">
+            <Icon name={`orbit-${paneManagerStore.activePane.type}`} size={18} opacity={0.15} />
+          </View>
           <OrbitHeaderInput />
 
           {isTorn && toolbars && (

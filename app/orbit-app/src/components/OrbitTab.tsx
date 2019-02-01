@@ -67,6 +67,7 @@ export function OrbitTab({
               name={`${icon}`}
               size={iconSize}
               marginRight={!!label ? sidePad * 0.6 : 0}
+              thicc={thicc}
               {...iconProps}
             />
           )}
@@ -116,7 +117,8 @@ function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
   return (
     <Icon
-      color={invertLightness(theme.color, 0.8).alpha(props.isActive ? 1 : 0.6)}
+      color={invertLightness(theme.color, 0.8)}
+      opacity={props.isActive ? 1 : props.thicc ? 0.5 : 0.3}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -181,6 +183,9 @@ const NavButtonChrome = gloss<TabProps>({
         ]
       : null,
     '&:hover': glowStyle,
+    '&:hover .tab-icon': {
+      opacity: '1 !important',
+    },
     '&:hover .tab-label': {
       opacity: 1,
     },

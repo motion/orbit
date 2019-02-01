@@ -211,6 +211,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   return (
     <View {...restProps}>
       <SVG
+        className={restProps.className}
         fill={`${finalColor}`}
         svg={icon}
         width={`${size}`}

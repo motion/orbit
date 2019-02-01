@@ -100,7 +100,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
   }
 }
 
-export function Input(props: InputProps) {
+export const Input = React.forwardRef(function Input(props: InputProps, ref) {
   const uiContext = React.useContext(UIContext)
-  return <InputPlain uiContext={uiContext} {...props} />
-}
+  return <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
+})

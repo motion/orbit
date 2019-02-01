@@ -942,7 +942,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         {!!overlay && (
           <Overlay
             key={0}
-            forwardRef={this.overlayRef}
+            ref={this.overlayRef}
             isShown={isOpen && !closing}
             onClick={e => this.handleOverlayClick(e)}
             overlay={overlay}
@@ -953,7 +953,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           {...popoverProps}
           isOpen={!closing && !!isOpen}
           willReposition={isMeasuring}
-          forwardRef={this.setPopoverRef}
+          ref={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}

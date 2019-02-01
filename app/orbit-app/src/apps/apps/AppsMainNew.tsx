@@ -1,9 +1,9 @@
 import { App } from '@mcro/models'
 import { IconProps, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../../views'
+import { HorizontalSpace, SubTitle, VerticalSpace } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
@@ -15,6 +15,17 @@ export function AppIcon({ app, ...props }: { app: App } & Partial<IconProps>) {
 export default observer(function AppsMainNew() {
   const { newAppStore } = useStoresSafe()
   const { app } = newAppStore
+  const inputRef = useRef(null)
+
+  useEffect(
+    () => {
+      if (inputRef.current) {
+        inputRef.current.focus()
+        inputRef.current.select()
+      }
+    },
+    [inputRef.current],
+  )
 
   return (
     <View padding={15}>
@@ -22,7 +33,18 @@ export default observer(function AppsMainNew() {
         <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} />
 
         <HorizontalSpace />
-        <Title margin={0}>{app.name}</Title>
+        <Input
+          ref={inputRef}
+          placeholder="Name..."
+          margin={['auto', 0]}
+          value={app.name}
+          onFocus={e => {
+            e.target.select()
+          }}
+          onChange={e => {
+            newAppStore.update({ name: e.target.value })
+          }}
+        />
 
         {/* <View flex={1} />
         <Theme name="selected">
@@ -35,17 +57,9 @@ export default observer(function AppsMainNew() {
       <VerticalSpace />
 
       <SubTitle>Name</SubTitle>
-      <Input
-        placeholder="Name..."
-        value={app.name}
-        onChange={e => {
-          newAppStore.update({ name: e.target.value })
-        }}
-      />
 
       <VerticalSpace />
 
-      <SubTitle>Color</SubTitle>
       <View>
         <ColorPicker
           count={18}

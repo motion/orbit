@@ -43,13 +43,13 @@ export const SubPane = observer(function SubPane(props: Props) {
     <SubPaneFrame isActive={isActive}>
       {typeof before === 'function' ? before(isActive) : before}
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
-      <SubPaneInner forwardRef={subPaneStore.innerPaneRef}>
+      <SubPaneInner ref={subPaneStore.innerPaneRef}>
         <Pane
           isActive={isActive}
           isLeft={isLeft}
           style={style}
           height={height}
-          forwardRef={subPaneStore.paneRef}
+          ref={subPaneStore.paneRef}
           preventScroll={preventScroll}
           transition={transition}
           {...fullHeight && { bottom: 0 }}

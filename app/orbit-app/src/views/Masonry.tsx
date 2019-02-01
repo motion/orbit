@@ -1,7 +1,7 @@
-import * as React from 'react'
 import { on } from '@mcro/black'
-import isEqual from 'react-fast-compare'
 import { gloss } from '@mcro/gloss'
+import * as React from 'react'
+import isEqual from 'react-fast-compare'
 
 const rowHeight = 1
 const gridGap = 7
@@ -90,7 +90,7 @@ export class Masonry extends React.PureComponent<MasonryProps> {
     if (!measured) {
       return (
         <MasonryGrid
-          forwardRef={this.handleGridRef}
+          ref={this.handleGridRef}
           {...props}
           style={{
             opacity: 0,

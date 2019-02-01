@@ -1,19 +1,19 @@
-import { CSSPropertySetStrict } from '@mcro/css'
-import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
-import { Row, Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { HorizontalSpace } from '..'
-import { NormalItem } from '../../helpers/normalizeItem'
-import { DateFormat } from '../DateFormat'
-import { HighlightText } from '../HighlightText'
-import { Icon } from '../Icon'
-import { RoundButtonSmall } from '../RoundButtonSmall'
-import { Separator } from '../Separator'
-import { ListItemStore } from './ListItemStore'
+import { CSSPropertySetStrict } from '@mcro/css';
+import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss';
+import * as UI from '@mcro/ui';
+import { Row, Text, View } from '@mcro/ui';
+import { useStore } from '@mcro/use-store';
+import { differenceInCalendarDays } from 'date-fns/esm/fp';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { HorizontalSpace } from '..';
+import { NormalItem } from '../../helpers/normalizeItem';
+import { DateFormat } from '../DateFormat';
+import { HighlightText } from '../HighlightText';
+import { Icon } from '../Icon';
+import { RoundButtonSmall } from '../RoundButtonSmall';
+import { Separator } from '../Separator';
+import { ListItemStore } from './ListItemStore';
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 export type HandleSelection = ((
@@ -227,7 +227,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </UI.Theme>
         )}
       </>
-      <ListFrame isExpanded={isExpanded} forwardRef={store.setCardWrapRef} {...restProps}>
+      <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
         <ListItemChrome
           isSelected={isSelected}
           borderRadius={borderRadius}

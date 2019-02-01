@@ -74,11 +74,7 @@ export class Carousel extends React.PureComponent<CarouselProps> {
     } = this.props
 
     return (
-      <HorizontalScrollRow
-        forwardRef={this.frameRef}
-        height={cardHeight + verticalPadding * 2}
-        {...props}
-      >
+      <HorizontalScrollRow ref={this.frameRef} height={cardHeight + verticalPadding * 2} {...props}>
         {before}
         {(items || []).map((item, index) => (
           <CardView

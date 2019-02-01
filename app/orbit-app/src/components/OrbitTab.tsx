@@ -53,6 +53,7 @@ export function OrbitTab({
       } undraggable ${className || ''}`}
       isActive={isActive}
       sidePad={sidePad}
+      thicc={thicc}
       {...props}
     >
       <ContextMenu items={getContext ? getContext() : null}>
@@ -140,7 +141,7 @@ function DropDownButton(props) {
   )
 }
 
-const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
+const NavButtonChrome = gloss<TabProps>({
   position: 'relative',
   flexFlow: 'row',
   justifyContent: 'center',

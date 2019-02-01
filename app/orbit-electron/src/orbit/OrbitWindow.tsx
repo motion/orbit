@@ -142,7 +142,7 @@ export default observer(function OrbitWindow() {
 
   const appQuery = `/?appId=${store.appId}`
   const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
-  const vibrancy = App.state.isDark ? 'dark' : 'light'
+  const vibrancy = App.state.isDark ? 'ultra-dark' : 'light'
 
   log.info(
     `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${vibrancy}`,

@@ -1,6 +1,14 @@
 import { gloss, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ButtonProps, ContextMenu, Glint, IconProps, MenuTemplate, Tooltip } from '@mcro/ui'
+import {
+  Button,
+  ButtonProps,
+  Glint,
+  IconProps,
+  MenuTemplate,
+  Tooltip,
+  useContextMenu,
+} from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
@@ -48,52 +56,54 @@ export function OrbitTab({
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
+  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+
   const button = (
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
         thicc ? 'pinned' : 'unpinned'
       } undraggable ${className || ''}`}
       isActive={isActive}
-      sidePad={sidePad}
       thicc={thicc}
+      sidePad={sidePad}
+      {...contextMenuProps}
       {...props}
     >
-      <ContextMenu items={getContext ? getContext() : null}>
-        {isActive && <Glint y={2} borderRadius={border} />}
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
-          {!React.isValidElement(icon) && (
-            <OrbitTabIcon
-              isActive={isActive}
-              name={`${icon}`}
-              size={iconSize}
-              marginRight={!!label ? sidePad * 0.6 : 0}
-              thicc={thicc}
-              {...iconProps}
-            />
-          )}
-          {React.isValidElement(icon) &&
-            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
-          {!!label && (
-            <SimpleText
-              ellipse
-              className="tab-label"
-              display="flex"
-              flex={1}
-              size={0.95}
-              opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={400}
-              {...textProps}
-            >
-              {label}
-            </SimpleText>
-          )}
-        </Row>
+      {isActive && <Glint y={2} borderRadius={border} />}
+      <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+        {!React.isValidElement(icon) && (
+          <OrbitTabIcon
+            isActive={isActive}
+            name={`${icon}`}
+            size={iconSize}
+            marginRight={!!label ? sidePad * 0.6 : 0}
+            thicc={thicc}
+            {...iconProps}
+          />
+        )}
+        {React.isValidElement(icon) &&
+          React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
+        {!!label && (
+          <SimpleText
+            ellipse
+            className="tab-label"
+            display="flex"
+            flex={1}
+            size={0.95}
+            opacity={isActive ? 1 : inactiveOpacity}
+            fontWeight={400}
+            {...textProps}
+          >
+            {label}
+          </SimpleText>
+        )}
+      </Row>
 
-        {separator && <Separator />}
+      {separator && <Separator />}
 
-        {after}
+      {after}
 
-        {/* {isActive && !!onClickPopout && (
+      {/* {isActive && !!onClickPopout && (
           <OrbitTabButton
             className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
             tooltip="Open"
@@ -104,7 +114,6 @@ export function OrbitTab({
             }}
           />
         )} */}
-      </ContextMenu>
     </NavButtonChrome>
   )
   if (tooltip) {

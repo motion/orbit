@@ -8,7 +8,6 @@ import { OrbitToolBarRender } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
-import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitHeader() {
   const { headerStore, orbitStore, paneManagerStore } = useStoresSafe()
@@ -34,7 +33,7 @@ export default observer(function OrbitHeader() {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          {!isTorn && <OrbitSpaceSwitch />}
+          {/* {!isTorn && <OrbitSpaceSwitch />} */}
           <OrbitToolBarRender key={`${isTorn}`}>
             {toolbars => (
               <>

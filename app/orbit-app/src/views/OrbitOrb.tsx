@@ -21,20 +21,30 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = ({ size = 32, colors = ['red', 'green'], ...props }) => (
-  <OrbBackground width={size} height={size} borderRadius={size * 2} {...props}>
-    <View
-      borderRadius={1000}
-      width={size - 4}
-      height={size - 4}
-      background={`linear-gradient(${colors[0]}, ${colors[1]})`}
-    />
-  </OrbBackground>
-)
+export function OrbitOrb({ size = 32, colors = ['red', 'green'], ...props }) {
+  // make sure its even number
+  let innerSize = Math.ceil(size * 0.8)
+  if (innerSize % 2 !== 0) {
+    innerSize -= 1
+  }
+  return (
+    <OrbBackground width={size} height={size} borderRadius={size * 2} {...props}>
+      <View
+        borderRadius={1000}
+        width={innerSize}
+        height={innerSize}
+        background={`linear-gradient(${colors[0]}, ${colors[1]})`}
+      />
+    </OrbBackground>
+  )
+}
 
 const OrbBackground = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({
-  background: theme.background.isDark() ? theme.background.darken(1) : theme.background.lighten(1),
+  background: (theme.background.isDark()
+    ? theme.background.darken(0.4)
+    : theme.background.lighten(0.4)
+  ).alpha(0.7),
 }))

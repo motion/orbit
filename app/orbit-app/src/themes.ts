@@ -102,7 +102,7 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: '#464646',
-    headerBackground: [25, 25, 25, 0.75],
+    headerBackground: [0, 0, 0, 0.75],
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],

@@ -1,7 +1,7 @@
 import { AppType, Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
-import { flatten, memoize } from 'lodash'
+import { flatten, flow, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -28,7 +28,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   const listApps = useActiveApps('lists')
 
   return (
-    <>
+    <View overflowX="hidden" overflowY="auto" flex={1}>
       <Separator paddingTop={10}>Send to...</Separator>
       {flatten(
         listApps.map(app => {
@@ -50,15 +50,16 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
               items.push({
                 id: `folder-${folder.id}`,
                 title: folder.name,
-                icon: folder.icon,
+                icon: folder.icon || 'folder',
                 subtitle: null,
+                marginLeft: 10,
               })
             }
           }
           return items.map(({ id, ...item }) => <ListItem key={id} {...item} />)
         }),
       )}
-    </>
+    </View>
   )
 })
 
@@ -67,16 +68,16 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
-    memoize(item => {
-      if (item.item && item.item.target === 'bit') {
-        const showItemDropdown = isShown => isShown && <ItemActionDropdown />
+    memoize(({ item }) => {
+      if (item && item.target === 'bit') {
         return {
           after: (
-            <MergeContext Context={ItemActionContext} value={{ item: item.item }}>
+            <MergeContext Context={ItemActionContext} value={{ item }}>
               <Popover
                 towards="right"
                 // selected would otherwise override this theme
                 theme={App.state.isDark ? 'light' : 'dark'}
+                distance={5}
                 width={250}
                 height={300}
                 target={
@@ -86,7 +87,10 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                     width={34}
                     opacity={0.5}
                     hoverStyle={{ opacity: 1 }}
-                    onClick={preventDefault(() => console.log('show popover'))}
+                    onClick={flow(
+                      preventDefault,
+                      () => console.log('show popover'),
+                    )}
                   >
                     <Icon name="dots" size={12} />
                   </View>
@@ -98,7 +102,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
                 borderRadius={10}
                 elevation={1}
               >
-                {showItemDropdown}
+                {isShown => isShown && <ItemActionDropdown />}
               </Popover>
             </MergeContext>
           ),
@@ -106,7 +110,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       }
       return null
     }),
-    [items.map(i => `${i.id}${i.title}`).join(' ')],
+    [items.map(i => `${i.id}`).join(' ')],
   )
 
   return (
@@ -141,8 +145,8 @@ const SearchToolbar = observer(function SearchToolbar() {
             borderRadius={10}
             elevation={4}
             theme="light"
-            width={390}
-            height={300}
+            width={420}
+            height={310}
           >
             <View flex={1} className="calendar-dom theme-light" padding={10}>
               <DateRangePicker

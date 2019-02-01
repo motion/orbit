@@ -49,7 +49,7 @@ export default React.memo(function AppIcon({
 
   return (
     <SVG
-      fill={fill}
+      fill={`${fill}`}
       svg={iconSrc}
       width={`${size}px`}
       height={`${size}px`}

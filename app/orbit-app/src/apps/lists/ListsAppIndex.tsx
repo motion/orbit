@@ -1,4 +1,5 @@
-import { loadOne, useObserveOne } from '@mcro/model-bridge'
+import { react } from '@mcro/black'
+import { loadOne, observeOne } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
@@ -7,26 +8,93 @@ import {
   ListsApp,
   PersonBitModel,
 } from '@mcro/models'
-import { Button, ButtonProps, Text, View } from '@mcro/ui'
-import { last } from 'lodash'
+import { Absolute, Button, ButtonProps, Input, PassProps, Row, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { dropRight, flow, last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
 import * as React from 'react'
-import OrbitFloatingBar from '../../components/OrbitFloatingBar'
+import { lists } from '.'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
+import { getTargetValue } from '../../helpers/getTargetValue'
+import { preventDefault } from '../../helpers/preventDefault'
+import { BorderBottom } from '../../views/Border'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import SelectableTreeList, { SelectableTreeRef } from '../../views/Lists/SelectableTreeList'
+import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
-import ListEdit from './ListEdit'
+
+class ListStore {
+  props: AppProps<AppType.lists>
+
+  query = ''
+  depth = 0
+  history = [0]
+  appRaw = react(() => +this.props.id, id => observeOne(AppModel, { args: { where: { id } } }))
+
+  get app() {
+    return this.appRaw as ListsApp
+  }
+
+  get parentId() {
+    return last(this.history)
+  }
+
+  get items() {
+    return (this.app && this.app.data.items) || {}
+  }
+
+  setQuery = val => {
+    this.query = val
+  }
+
+  back = () => {
+    this.depth--
+    this.history = dropRight(this.history)
+  }
+}
 
 export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const listApp = useObserveOne(AppModel, { where: { id: props.id } }) as ListsApp
-  const items = (listApp && listApp.data.items) || {}
-  const treeRef = React.useRef<SelectableTreeRef>(null)
-  const [treeState, setTreeState] = React.useState({ depth: 0, history: [0] })
-  const getDepth = React.useRef(0)
-  getDepth.current = treeState.depth
+  const store = useStore(ListStore, props)
+  const numItems = Object.keys(store.items).length
+
+  return (
+    <>
+      <OrbitToolbar
+        before={
+          <>
+            {store.depth > 0 && (
+              <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={store.back}>
+                Back
+              </FloatingBarButtonSmall>
+            )}
+          </>
+        }
+        center={
+          <ListAppBreadcrumbs
+            items={[
+              {
+                id: 0,
+                name: store.app ? store.app.name : '',
+              },
+              ...store.history
+                .slice(1)
+                .filter(Boolean)
+                .map(id => store.items[id]),
+            ]}
+          />
+        }
+        after={`${numItems} ${pluralize('item', numItems)}`}
+      />
+
+      <ListAdd store={store} />
+      <ListCurrentFolder store={store} />
+    </>
+  )
+})
+
+const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store: ListStore }) {
+  const { items } = store
 
   const loadItem = React.useCallback(async item => {
     switch (item.type) {
@@ -34,15 +102,7 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         return {
           title: item.name,
           subtitle: `${item.children.length} items`,
-          after: (
-            <Button
-              circular
-              chromeless
-              size={0.9}
-              icon="arrowright"
-              onClick={() => setTreeState({ ...treeState, depth: getDepth.current - 1 })}
-            />
-          ),
+          after: <Button circular chromeless size={0.9} icon="arrowright" onClick={store.back} />,
         }
       case 'bit':
         return {
@@ -68,59 +128,61 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   }, [])
 
   const onChangeDepth = React.useCallback((depth, history) => {
-    setTreeState({ depth, history })
+    store.depth = depth
+    store.history = history
   }, [])
 
-  const numItems = (listApp && Object.keys(listApp.data.items).length) || 0
-
   return (
-    <>
-      <OrbitToolbar
-        before={
-          <>
-            {treeState.depth > 0 && (
-              <FloatingBarButtonSmall
-                icon="arrows-1_bold-left"
-                onClick={() => {
-                  treeRef.current.back()
-                }}
-              >
-                Back
-              </FloatingBarButtonSmall>
-            )}
-          </>
-        }
-        center={
-          <ListAppBreadcrumbs
-            items={[
-              {
-                id: 0,
-                name: listApp ? listApp.name : '',
-              },
-              ...treeState.history
-                .slice(1)
-                .filter(Boolean)
-                .map(id => items[id]),
-            ]}
-          />
-        }
-        after={`${numItems} ${pluralize('item', numItems)}`}
+    <SelectableTreeList
+      minSelected={0}
+      rootItemID={0}
+      items={items}
+      loadItem={loadItem}
+      sortable
+      getContextMenu={getContextMenu}
+      onChangeDepth={onChangeDepth}
+      depth={store.depth}
+    />
+  )
+})
+
+const addFolder = (store: ListStore) => {
+  lists.actions.receive(store.app, store.parentId, {
+    target: 'folder',
+    name: store.query,
+  })
+  store.setQuery('')
+}
+
+const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
+  return (
+    <Row position="relative">
+      <BorderBottom opacity={0.5} />
+      <Input
+        chromeless
+        sizeRadius={0}
+        paddingLeft={12}
+        paddingRight={40}
+        height={35}
+        value={store.query}
+        onChange={flow(
+          preventDefault,
+          getTargetValue,
+          store.setQuery,
+        )}
+        onEnter={() => addFolder(store)}
+        flex={1}
+        placeholder="Add..."
       />
-      <SelectableTreeList
-        ref={treeRef}
-        minSelected={0}
-        rootItemID={0}
-        items={items}
-        loadItem={loadItem}
-        sortable
-        getContextMenu={getContextMenu}
-        onChangeDepth={onChangeDepth}
-        depth={treeState.depth}
-      />
-      <OrbitFloatingBar showSearch>
-        <ListEdit app={listApp} parentID={last(treeState.history)} />
-      </OrbitFloatingBar>
-    </>
+      <Absolute top={0} right={12} bottom={0}>
+        <Row flex={1} alignItems="center">
+          <PassProps chromeless opacity={0.5} hoverOpacity={1}>
+            <Button tooltip="Add" icon="add" />
+            <Button tooltip="Create folder" icon="folder" onClick={() => addFolder(store)} />
+          </PassProps>
+        </Row>
+      </Absolute>
+    </Row>
   )
 })
 

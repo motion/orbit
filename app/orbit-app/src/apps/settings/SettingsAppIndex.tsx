@@ -1,13 +1,19 @@
 import { useObserveMany } from '@mcro/model-bridge'
 import { SpaceModel } from '@mcro/models'
-import { Icon } from '@mcro/ui'
+import { Button } from '@mcro/ui'
 import * as React from 'react'
+import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
 import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default function SourcesAppIndex() {
+  const [user, setUser] = useActiveUser()
   const spaces = useObserveMany(SpaceModel, {})
+
+  if (!user) {
+    return null
+  }
 
   const results = useOrbitFilterableResults({
     items: [
@@ -27,14 +33,19 @@ export default function SourcesAppIndex() {
         iconBefore: true,
         subtitle: 'Manage your account',
       },
-      ...spaces.map((space, index) => ({
-        id: space.id,
+      ...spaces.map(space => ({
+        id: `${space.id}`,
         group: 'Spaces',
         type: 'space',
         title: space.name,
         subtitle: '10 members',
         before: <OrbitOrb size={18} background="red" color="blue" marginRight={12} />,
-        after: index === 0 && <Icon name="check" size={12} />,
+        after: space.id === user.activeSpace && (
+          <Button chromeless circular icon="check" iconSize={12} />
+        ),
+        onOpen: () => {
+          setUser({ activeSpace: space.id })
+        },
       })),
       {
         group: 'Spaces',

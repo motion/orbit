@@ -164,7 +164,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
   const isMultiLine = showPreview || showSubtitle
-  const defaultPadding = slim ? [7, 9] : [7, 10]
+  const defaultPadding = slim ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons

@@ -6,10 +6,10 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run build-js & npm run build-types",
+    "watch": "npm run build-js -- --watch & npm run build-types-watch",
     "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
     "build-types": "tsc  --emitDeclarationOnly || true",
-    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch",
-    "watch": "npm run build-js -- --watch & npm run build-types-watch"
+    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",

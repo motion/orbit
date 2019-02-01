@@ -6,7 +6,7 @@ const margin = [0, 5, 5, 0]
 
 export function ColorPicker({
   count = 10,
-  luminosity = 'bright',
+  luminosity = 'dark',
   hue,
   onChangeColor,
   activeColor,
@@ -39,7 +39,7 @@ export function ColorPicker({
           height={30}
           margin={margin}
           borderRadius={2}
-          border={[1, activeColor === color ? 'black' : [255, 255, 255, 1]]}
+          border={[1, activeColor === color ? 'white' : 'transparent']}
           boxShadow={[[0, 2, 2, [0, 0, 0, 0.15]]]}
           onClick={() => {
             onChangeColor(color)

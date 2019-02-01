@@ -1,6 +1,6 @@
 import { Contents, ViewProps } from '@mcro/gloss'
-import React, { useContext } from 'react'
-import { ContextMenuContext, MenuTemplate } from './ContextMenuProvider'
+import React, { forwardRef, useContext, useEffect } from 'react'
+import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
 type ContextMenuProps = ViewProps & {
   items?: MenuTemplate
@@ -9,25 +9,29 @@ type ContextMenuProps = ViewProps & {
   component?: React.ComponentType<any> | string
 }
 
-export function ContextMenu({
-  children,
-  component = Contents,
-  items,
-  buildItems,
-  ...restProps
-}: ContextMenuProps) {
-  const setMenuItems = useContext(ContextMenuContext)
+export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(function ContextMenu(
+  props,
+  ref,
+) {
+  const { children, component = Contents, items, buildItems, ...restProps } = props
+  const context = useContext(ContextMenuContext)
+  const { setItems } = context
 
-  if (!items) {
-    return <>{children}</>
-  }
+  useEffect(
+    () => {
+      if (ref) {
+        ref['current'] = context
+      }
+    },
+    [ref, context],
+  )
 
   const onContextMenu = (_: React.MouseEvent) => {
-    if (typeof setMenuItems === 'function') {
+    if (typeof setItems === 'function') {
       if (items != null) {
-        setMenuItems(items)
+        setItems(items)
       } else if (buildItems != null) {
-        setMenuItems(buildItems())
+        setItems(buildItems())
       }
     }
   }
@@ -40,4 +44,4 @@ export function ContextMenu({
     },
     children,
   )
-}
+})

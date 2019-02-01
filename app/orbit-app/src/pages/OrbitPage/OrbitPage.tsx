@@ -10,7 +10,6 @@ import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutH
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
@@ -29,13 +28,13 @@ import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
 import { OrbitStore } from './OrbitStore'
 
-export default function OrbitPage() {
+export default React.memo(function OrbitPage() {
   return (
     <OrbitPageProvideStores>
       <OrbitPageInner />
     </OrbitPageProvideStores>
   )
-}
+})
 
 const OrbitPageInner = observer(function OrbitPageInner() {
   const { paneManagerStore } = useStoresSafe()
@@ -95,7 +94,15 @@ const OrbitHeaderContainer = gloss(View, {
   background: theme.headerBackground || theme.background.alpha(0.65),
 }))
 
-function OrbitPageProvideStores(props: { children: any }) {
+const defaultPanes = [
+  { id: 'app-settings', name: 'Settings', type: 'settings' },
+  { id: 'app-apps', name: 'Apps', type: 'apps' },
+  { id: 'app-sources', name: 'Sources', type: 'sources' },
+  { id: 'app-createApp', name: 'New...', type: 'createApp' },
+  { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
+]
+
+const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -103,32 +110,30 @@ function OrbitPageProvideStores(props: { children: any }) {
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
-  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
+
+  const panes = [
+    // these go first so they can stay stable when switching spaces
+    // where the index would go crazy and change
+    // TODO would be better if paneManager use ID now instead of index, i think
+    ...defaultPanes,
+    ...activeApps.map(app => ({
+      ...app,
+      id: `${app.id}`,
+      keyable: true,
+    })),
+  ]
+
+  // one past the defaults is the first app
+  const firstAppIndex = defaultPanes.length
+
   const paneManagerStore = useStore(PaneManagerStore, {
-    defaultIndex: spaceConfig.activePaneIndex || 0,
+    defaultIndex: orbitWindowStore.activePaneIndex || firstAppIndex,
     onPaneChange(index) {
       // reset name on pane change...
       newAppStore.reset()
-      if (index !== spaceConfig.activePaneIndex) {
-        updateSpaceConfig({
-          activePaneIndex: index,
-        })
-      }
+      orbitWindowStore.activePaneIndex = index
     },
-    panes: [
-      ...activeApps.map(app => ({
-        ...app,
-        id: `${app.id}`,
-        keyable: true,
-      })),
-      ...[
-        { id: 'app-settings', name: 'Settings', type: 'settings' },
-        { id: 'app-apps', name: 'Apps', type: 'apps' },
-        { id: 'app-sources', name: 'Sources', type: 'sources' },
-        { id: 'app-createApp', name: 'New...', type: 'createApp' },
-        { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
-      ],
-    ],
+    panes,
   })
 
   const stores = {
@@ -146,7 +151,7 @@ function OrbitPageProvideStores(props: { children: any }) {
       {props.children}
     </MergeContext>
   )
-}
+})
 
 const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,

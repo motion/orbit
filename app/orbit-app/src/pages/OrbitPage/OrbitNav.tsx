@@ -10,36 +10,18 @@ import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
 
 export default observer(function OrbitNav() {
-  const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const {
+    spaceStore,
+    orbitStore,
+    orbitWindowStore,
+    paneManagerStore,
+    newAppStore,
+  } = useStoresSafe()
   const activeApps = useActiveApps()
-  const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const [showCreateNew, setShowCreateNew] = React.useState(false)
-
-  // keep apps in sync with paneSort
-  // TODO: this can be refactored into useSyncSpacePaneOrderEffect
-  //       but we should refactor useObserve/useModel first so it re-uses
-  //       identical queries using a WeakMap so we dont have tons of observes...
-  React.useEffect(
-    () => {
-      if (!space || !activeApps.length) {
-        return
-      }
-      if (!space.paneSort) {
-        updateSpace({ paneSort: activeApps.map(x => x.id) })
-        return
-      }
-      if (activeApps.length && activeApps.length !== space.paneSort.length) {
-        updateSpace({ paneSort: activeApps.map(x => x.id) })
-        return
-      }
-    },
-    [space && space.id, appIds.join('')],
-  )
 
   // when pinned, we need to update paneSort so pinned is always first
   React.useEffect(
@@ -51,6 +33,9 @@ export default observer(function OrbitNav() {
       let unpinned = []
       for (const id of space.paneSort) {
         const app = activeApps.find(x => x.id === id)
+        if (!app) {
+          continue
+        }
         if (app.pinned) {
           pinned.push(id)
         } else {
@@ -79,61 +64,66 @@ export default observer(function OrbitNav() {
     )
   }
 
-  const items = space.paneSort.map(
-    (id, index): TabProps => {
-      const app = activeApps.find(x => x.id === id)
-      const isLast = index !== activeApps.length
-      const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
-      const nextIsActive =
-        activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
-      const isPinned = app.pinned
-      return {
-        app,
-        separator: !isActive && isLast && !nextIsActive,
-        label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
-        stretch: !isPinned,
-        thicc: isPinned,
-        isActive,
-        icon: `orbit-${app.type}`,
-        // iconProps: isPinned ? { color: app.colors[0] } : null,
-        iconSize: isPinned ? 16 : 12,
-        getContext() {
-          return [
-            {
-              label: 'Open...',
-            },
-            {
-              label: 'App settings',
-              checked: true,
-            },
-            {
-              type: 'separator',
-            },
-            {
-              label: 'Toggle Pinned',
-              checked: isPinned,
-              click() {
-                // TODO umed type not accepting
-                save(AppModel, { ...app, pinned: !app.pinned } as any)
+  const items = space.paneSort
+    .map(
+      (id, index): TabProps => {
+        const app = activeApps.find(x => x.id === id)
+        if (!app) {
+          return null
+        }
+        const isLast = index !== activeApps.length
+        const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
+        const nextIsActive =
+          activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
+        const isPinned = app.pinned
+        return {
+          app,
+          separator: !isActive && isLast && !nextIsActive,
+          label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+          stretch: !isPinned,
+          thicc: isPinned,
+          isActive,
+          icon: `orbit-${app.type}`,
+          // iconProps: isPinned ? { color: app.colors[0] } : null,
+          iconSize: isPinned ? 16 : 12,
+          getContext() {
+            return [
+              {
+                label: 'Open...',
               },
-            },
-            {
-              label: 'Remove tab',
-            },
-          ]
-        },
-        onClick: () => {
-          setShowCreateNew(false)
-          paneManagerStore.setActivePane(`${app.id}`)
-        },
-        onClickPopout:
-          !isPinned &&
-          (() => {
-            orbitStore.setTorn()
-          }),
-      }
-    },
-  )
+              {
+                label: 'App settings',
+                checked: true,
+              },
+              {
+                type: 'separator',
+              },
+              {
+                label: 'Toggle Pinned',
+                checked: isPinned,
+                click() {
+                  // TODO umed type not accepting
+                  save(AppModel, { ...app, pinned: !app.pinned } as any)
+                },
+              },
+              {
+                label: 'Remove tab',
+              },
+            ]
+          },
+          onClick: () => {
+            setShowCreateNew(false)
+            paneManagerStore.setActivePane(`${app.id}`)
+          },
+          onClickPopout:
+            !isPinned &&
+            (() => {
+              orbitStore.setTorn()
+            }),
+        }
+      },
+    )
+    .filter(Boolean)
 
   return (
     <OrbitNavClip>
@@ -146,15 +136,13 @@ export default observer(function OrbitNav() {
           shouldCancelStart={isRightClick}
           onSortEnd={({ oldIndex, newIndex }) => {
             const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
-            const { activePaneIndex } = spaceConfig
+            const { activePaneIndex } = orbitWindowStore
             // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
             const activePaneId = space.paneSort[activePaneIndex]
             console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
             if (activePaneId !== paneSort[activePaneIndex]) {
-              console.log('updating active index to', paneSort.indexOf(activePaneId))
-              updateSpaceConfig({
-                activePaneIndex: paneSort.indexOf(activePaneId),
-              })
+              orbitWindowStore.activePaneIndex = paneSort.indexOf(activePaneId)
+              console.log('updating active index to', orbitWindowStore.activePaneIndex)
             }
             updateSpace({ paneSort })
           }}

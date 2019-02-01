@@ -101,8 +101,7 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   const contextMenuItems = React.useRef([])
   React.useEffect(() => {
     contextMenu({
-      prepend: (params, browserWindow) => {
-        console.log('right click', params, browserWindow, contextMenuItems.current)
+      prepend: (/* params, browserWindow */) => {
         return contextMenuItems.current
       },
     })

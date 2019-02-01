@@ -9,7 +9,6 @@ import { gloss, Row } from '@mcro/gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 import { ContextMenu } from '../ContextMenu'
-import { colors } from '../helpers/colors'
 // import ContextMenu from '../ContextMenu.js'
 import { Interactive } from '../Interactive'
 import {
@@ -51,8 +50,6 @@ const TableHeaderColumnContainer = gloss({
 })
 
 const TableHeadContainer = gloss(Row, {
-  borderBottom: `1px solid ${colors.sectionHeaderBorder}`,
-  color: colors.light50,
   flexShrink: 0,
   left: 0,
   overflow: 'hidden',
@@ -61,13 +58,15 @@ const TableHeadContainer = gloss(Row, {
   textAlign: 'left',
   top: 0,
   zIndex: 2,
-})
+}).theme((_, theme) => ({
+  borderBottom: [1, theme.borderColor],
+  color: theme.color,
+}))
 
 const TableHeadColumnContainer = gloss({
   flexFlow: 'row',
   justifyContent: 'space-between',
   position: 'relative',
-  backgroundColor: colors.white,
   height: 23,
   lineHeight: '23px',
   fontSize: '0.85em',
@@ -80,14 +79,17 @@ const TableHeadColumnContainer = gloss({
     top: 5,
     height: 13,
     width: 1,
-    background: colors.light15,
   },
   '&:last-child::after': {
     display: 'none',
   },
-}).theme(({ width }) => ({
+}).theme(({ width }, theme) => ({
+  background: theme.background,
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
+  '&:after': {
+    background: theme.light02,
+  },
 }))
 
 const RIGHT_RESIZABLE = { right: true }

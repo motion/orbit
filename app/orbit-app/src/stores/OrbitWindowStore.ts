@@ -9,6 +9,7 @@ export class OrbitWindowStore {
     queryStore: QueryStore
   }
 
+  activePaneIndex = 0
   contentHeight = 0
   inputFocused = false
 

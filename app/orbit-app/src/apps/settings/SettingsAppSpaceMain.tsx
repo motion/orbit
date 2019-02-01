@@ -1,12 +1,11 @@
 import { useObserveOne } from '@mcro/model-bridge'
 import { AppType, SpaceModel } from '@mcro/models'
-import { Row, Text, Theme, View } from '@mcro/ui'
+import { Row, Text, Theme } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
 import { FormRow, InputRow, Title, VerticalSpace } from '../../views'
-import { Icon } from '../../views/Icon'
-import { IconContainer } from '../../views/IconContainer'
+import { ColorPicker } from '../../views/ColorPicker'
 import ListItem from '../../views/ListItems/ListItem'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
@@ -16,8 +15,6 @@ export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppTy
   const id = +appConfig.id
   const space = useObserveOne(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })
-
-  console.log('integrations, integrations', integrations)
 
   return (
     <Section sizePadding={2}>
@@ -31,24 +28,13 @@ export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppTy
           label="Name"
           placeholder="Name..."
           onChange={e => {
-            //
+            // update name...
           }}
         />
 
         <FormRow label="Color">
           <Row>
-            {[1, 2, 3].map((app, index) => (
-              <View key={index} alignItems="center" marginRight={12}>
-                <Theme name={index === 0 ? 'selected' : null}>
-                  <IconContainer onClick={() => {}}>
-                    <Icon name="orbitPeople" />
-                  </IconContainer>
-                </Theme>
-                <Text marginTop={5} ellipse size={0.9} fontWeight={500} alpha={0.8}>
-                  hello world
-                </Text>
-              </View>
-            ))}
+            <ColorPicker />
           </Row>
         </FormRow>
       </SubSection>

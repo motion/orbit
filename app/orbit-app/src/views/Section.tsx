@@ -11,7 +11,7 @@ export function Section({ sizePadding = 1, padding, ...props }: SectionProps) {
     <View
       overflowY="auto"
       maxHeight="100%"
-      padding={padding || [sizePadding * 20, sizePadding * 30]}
+      padding={padding || [sizePadding * 20, sizePadding * 15]}
       {...props}
     />
   )

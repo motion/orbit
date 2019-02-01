@@ -86,8 +86,8 @@ export function SettingsAppGeneral(/* props: AppProps<AppType.settings> */) {
       </CheckBoxRow>
 
       <FormRow label="Theme">
-        <select onChange={e => updateSettings({ theme: e.target.value })}>
-          {['dark', 'light', 'automatic'].map(theme => (
+        <select value={settings.theme} onChange={e => updateSettings({ theme: e.target.value })}>
+          {['automatic', 'light', 'dark'].map(theme => (
             <option key={theme} value={theme}>
               {capitalize(theme)}
             </option>

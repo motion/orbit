@@ -197,10 +197,10 @@ const positionStateY = (
     // final top
     top = getEdgePadding(props, top, window.innerHeight, popoverBounds.height)
   } else {
-    // left or right
-    const yCenter = targetCenter - popoverBounds.height / 2
-    top = yCenter
-    arrowTop = popoverBounds.height / 2 - arrowHeight / 2 + props.distance
+    // HORIZONTAL
+    const popoverCenter = popoverBounds.height / 2
+    top = targetCenter - popoverCenter
+    arrowTop = targetCenter - top + arrowHeight / 2
   }
 
   // adjustments
@@ -212,6 +212,7 @@ const positionStateY = (
     if (direction === 'top') {
       maxHeight = (targetBounds ? targetBounds.top : 0) - top + props.distance * 2 - arrowSize / 2
     } else {
+      // HORIZONTAL
       maxHeight = window.innerHeight - (targetBounds ? targetBounds.top + targetBounds.height : 0)
     }
   }
@@ -469,16 +470,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
 
       // handling flickers poorly, TODO investigate why portals cause it to never hide on initial mount
-      on(
-        this,
-        setTimeout(() => {
+      setTimeout(() => {
+        if (!this.unmounted) {
           this.setState({ finishedMount: true })
-        }, 500),
-      )
+        }
+      }, 500)
     }
   }
 
+  unmounted = false
+
   componentWillUnmount() {
+    PopoverState.openPopovers.delete(this)
+    this.unmounted = true
     this.mutationObserver.disconnect()
     this.resizeObserver.disconnect()
   }
@@ -510,6 +514,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
+    if (this.unmounted) {
+      return
+    }
     if (getIsManuallyPositioned(this.props)) {
       return
     }

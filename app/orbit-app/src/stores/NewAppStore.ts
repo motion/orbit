@@ -25,6 +25,13 @@ export const defaultApps: App[] = [
     colors: ['green'],
     data: {},
   },
+  {
+    target: 'app',
+    name: 'Custom',
+    type: 'custom',
+    colors: ['gray'],
+    data: {},
+  },
 ]
 
 export class NewAppStore {

@@ -1,4 +1,4 @@
-import { View } from '@mcro/ui'
+import { gloss, View } from '@mcro/gloss'
 import * as React from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -22,7 +22,19 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
 }
 
 export const OrbitOrb = ({ size = 32, background, color, ...props }) => (
-  <View alignItems="center" justifyContent="center" {...props}>
-    <GradientOutlineCircle width={size} height={size} background={background} color={color} />
-  </View>
+  <OrbBackground width={size} height={size} borderRadius={size * 2} {...props}>
+    <View
+      borderRadius={1000}
+      width={size - 4}
+      height={size - 4}
+      background={`linear-gradient(${background}, ${color})`}
+    />
+  </OrbBackground>
 )
+
+const OrbBackground = gloss(View, {
+  alignItems: 'center',
+  justifyContent: 'center',
+}).theme((_, theme) => ({
+  background: theme.background.isDark() ? theme.background.darken(1) : theme.background.lighten(1),
+}))

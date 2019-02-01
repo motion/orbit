@@ -16,6 +16,10 @@ export type SearchAppFilter =
       type: 'content'
       value: 'person' | 'document' | 'email' | 'chat' | 'task' | 'wiki'
     }
+  | {
+      type: 'extras'
+      value: 'showApps'
+    }
 
 export type SearchAppData = {
   enforcedFilters?: SearchAppFilter[]

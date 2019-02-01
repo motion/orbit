@@ -2,7 +2,7 @@ import { gloss, Row } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
-import { isEqual } from 'lodash'
+import { differenceWith, isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -19,6 +19,10 @@ export default observer(function OrbitNav() {
   const [space, updateSpace] = useActiveSpace()
   const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const [showCreateNew, setShowCreateNew] = React.useState(false)
+  const hasMismatchedIds =
+    activeApps.length &&
+    space &&
+    !!differenceWith(space.paneSort, activeApps.map(x => x.id), isEqual).length
 
   // keep apps in sync with paneSort
   // TODO: this can be refactored into useSyncSpacePaneOrderEffect
@@ -33,7 +37,7 @@ export default observer(function OrbitNav() {
         updateSpace({ paneSort: activeApps.map(x => x.id) })
         return
       }
-      if (activeApps.length && activeApps.length !== space.paneSort.length) {
+      if (hasMismatchedIds) {
         updateSpace({ paneSort: activeApps.map(x => x.id) })
         return
       }
@@ -51,6 +55,9 @@ export default observer(function OrbitNav() {
       let unpinned = []
       for (const id of space.paneSort) {
         const app = activeApps.find(x => x.id === id)
+        if (!app) {
+          continue
+        }
         if (app.pinned) {
           pinned.push(id)
         } else {
@@ -71,7 +78,7 @@ export default observer(function OrbitNav() {
 
   // after hooks
 
-  if (!activeApps.length || !space || !space.paneSort) {
+  if (!activeApps.length || !space || !space.paneSort || hasMismatchedIds) {
     return (
       <OrbitNavClip>
         <OrbitNavChrome />

@@ -113,7 +113,7 @@ const dark = {
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     tabBackground: [55, 55, 55],
     tabInactiveHover: [0, 0, 0, 0.2],
-    sidebarBackground: [25, 25, 25, 0.85],
+    sidebarBackground: [25, 25, 25, 0.68],
     sidebarBorderColor: '#444',
     glintColor: [255, 255, 255, 0.2],
     inputBackground: [100, 100, 100, 0.5],

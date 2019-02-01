@@ -4,6 +4,7 @@ export {
   configureCSS,
   css,
   CSSPropertySet,
+  linearGradient,
   psuedoKeys,
   ThemeObject,
   validCSSAttr,

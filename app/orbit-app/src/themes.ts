@@ -1,4 +1,4 @@
-import { color, ThemeMaker } from '@mcro/gloss'
+import { color, linearGradient, ThemeMaker } from '@mcro/gloss'
 
 const Theme = new ThemeMaker()
 
@@ -97,12 +97,12 @@ const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     light02: [60, 60, 60],
-    background: [50, 50, 50],
+    background: [55, 55, 55],
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: '#464646',
-    headerBackground: [10, 10, 10, 0.75],
+    headerBackground: linearGradient([0, 0, 0, 0.35], [0, 0, 0, 0.55]),
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],

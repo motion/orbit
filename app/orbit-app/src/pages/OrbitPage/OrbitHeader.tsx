@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss } from '@mcro/gloss'
+import { Absolute, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -90,7 +90,6 @@ export default observer(function OrbitHeader() {
       </HeaderTop>
 
       {isTorn && <OrbitHeaderDivider />}
-      <OrbitHeaderBg />
     </>
   )
 })
@@ -116,15 +115,6 @@ const HeaderTop = gloss(View, {
   flexFlow: 'row',
   position: 'relative',
 })
-
-const OrbitHeaderBg = gloss(FullScreen, {
-  zIndex: -1,
-  pointerEvents: 'none',
-}).theme((_, theme) => ({
-  background: theme.background.isDark()
-    ? 'transparent'
-    : `linear-gradient(${theme.background.alpha(0.1)},${theme.background.alpha(0)})`,
-}))
 
 const OrbitClose = gloss({
   position: 'absolute',

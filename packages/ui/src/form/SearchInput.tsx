@@ -22,7 +22,7 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     visible?: boolean
   }
 
-export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
+export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProps>(
   function SearchInput(
     {
       width = '100%',

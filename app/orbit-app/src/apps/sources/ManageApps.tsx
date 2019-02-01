@@ -2,8 +2,10 @@ import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
 import { useActiveApps } from '../../hooks/useActiveApps'
+import { Title } from '../../views'
 import { BorderLeft } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
+import { Section } from '../../views/Section'
 import { AppIcon } from '../apps/AppsMainNew'
 import { AppView } from '../AppView'
 
@@ -18,6 +20,9 @@ export const ManageApps = function ManageApps() {
   return (
     <Row flex={1}>
       <View width="50%">
+        <Section paddingBottom={0}>
+          <Title>Apps</Title>
+        </Section>
         <SelectableList
           createNewSelectionStore
           minSelected={0}

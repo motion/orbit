@@ -4,16 +4,13 @@ import * as React from 'react'
 import { Title, VerticalSpace } from '../../views'
 import { Center } from '../../views/Center'
 import { Icon } from '../../views/Icon'
-import { TextFit } from '../../views/TextFit'
 
 export function MessageViewMain(props: AppConfig) {
   return (
     <Center>
-      <Title>
-        <TextFit>{props.title}</TextFit>
-      </Title>
+      <Title size={props.title.length > 100 ? 1.4 : 2.2}>{props.title}</Title>
       <VerticalSpace />
-      <PassProps size={64}>
+      <PassProps size={88}>
         {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon || null}
       </PassProps>
     </Center>

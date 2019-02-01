@@ -1,5 +1,17 @@
 import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
-import * as React from 'react'
+import {
+  createElement,
+  forwardRef,
+  FunctionComponent,
+  HTMLAttributes,
+  memo,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  ValidationMap,
+} from 'react'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
@@ -12,20 +24,19 @@ export type BaseRules = {
   [key: string]: string | number
 }
 
-type GlossViewProps<Props> = Props & React.HTMLAttributes<any> & { tagName?: string }
+type GlossProps<Props> = Props & HTMLAttributes<any> & { tagName?: string }
+type GlossThemeFn<Props> = ((props: GlossProps<Props>, theme: ThemeObject) => CSSPropertySet | null)
 
-type GlossThemeFn<Props> = ((
-  props: GlossViewProps<Props>,
-  theme: ThemeObject,
-) => CSSPropertySet | null)
-
-type GlossCompiledView<Props> = React.SFC<GlossViewProps<Props>> & {
-  ignoreAttrs?: Object
+export interface GlossView<Props> {
+  // copied from FunctionComponent
+  (props: Props & { children?: ReactNode }, context?: any): ReactElement<any> | null
+  propTypes?: ValidationMap<Props>
+  contextTypes?: ValidationMap<any>
   defaultProps?: Partial<Props>
-}
-
-export type GlossView<Props> = GlossCompiledView<GlossViewProps<Props>> & {
-  theme: ((cb: GlossThemeFn<Props>) => GlossCompiledView<GlossViewProps<Props>>)
+  displayName?: string
+  // extra:
+  ignoreAttrs?: Object
+  theme: ((cb: GlossThemeFn<Props>) => FunctionComponent<GlossProps<Props>>)
 }
 
 const tracker = new Map()
@@ -172,7 +183,7 @@ function glossify(
   return nextClassNames
 }
 
-export function gloss<Props = GlossViewProps<any>>(
+export function gloss<Props = GlossProps<any>>(
   a?: CSSPropertySet | any,
   b?: CSSPropertySet,
 ): GlossView<Props> {
@@ -211,12 +222,12 @@ export function gloss<Props = GlossViewProps<any>>(
   // the actual view!
   //
 
-  ThemedView = React.forwardRef<HTMLDivElement, GlossViewProps<Props>>((props, ref) => {
+  ThemedView = forwardRef<HTMLDivElement, GlossProps<Props>>((props, ref) => {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
-    const { activeTheme } = React.useContext(ThemeContext)
+    const { activeTheme } = useContext(ThemeContext)
     const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    const lastClassNames = React.useRef(null)
+    const lastClassNames = useRef(null)
     const classNames = glossify(
       id,
       displayName,
@@ -230,7 +241,7 @@ export function gloss<Props = GlossViewProps<any>>(
     lastClassNames.current = classNames
 
     // unmount
-    React.useEffect(() => {
+    useEffect(() => {
       return () => {
         const current = lastClassNames.current
         if (current) {
@@ -270,10 +281,10 @@ export function gloss<Props = GlossViewProps<any>>(
       finalProps.className += ` ${classNames.join(' ')}`
     }
 
-    return React.createElement(element, finalProps, props.children)
+    return createElement(element, finalProps, props.children)
   })
 
-  ThemedView = React.memo(ThemedView)
+  ThemedView = memo(ThemedView)
 
   ThemedView.themeFn = null
   ThemedView.displayName = 'SimpleView'

@@ -1,43 +1,50 @@
-import * as React from 'react'
-import { StatusBar } from '../../../views/StatusBar'
-import { AppActions } from '../../../actions/AppActions'
-import { View } from '@mcro/ui'
-import { DateFormat } from '../../../views/DateFormat'
-import { OrbitSourceMainProps } from '../../types'
 import { gloss } from '@mcro/gloss'
+import { View } from '@mcro/ui'
+import * as React from 'react'
+import { AppActions } from '../../../actions/AppActions'
+import { DateFormat } from '../../../views/DateFormat'
+import {
+  StatusBar,
+  StatusBarButton,
+  StatusBarSection,
+  StatusBarSpace,
+  StatusBarText,
+} from '../../../views/StatusBar'
+import { OrbitSourceMainProps } from '../../types'
 
 const Cmd = gloss({
   opacity: 0.6,
+  marginLeft: 4,
 })
 
-export const BitStatusBar = ({ normalizedItem, model }: OrbitSourceMainProps<any>) => {
+export const BitStatusBar = ({ normalizedItem, item }: OrbitSourceMainProps<any>) => {
   const { location, locationLink, updatedAt } = normalizedItem
   return (
     <StatusBar>
-      <StatusBar.Button
+      <StatusBarButton
         onClick={e => {
           e.stopPropagation()
           AppActions.open(locationLink)
         }}
       >
         {location}
-      </StatusBar.Button>
-      <StatusBar.Space />
+      </StatusBarButton>
+      <StatusBarSpace />
       {!!updatedAt && (
-        <StatusBar.Text>
+        <StatusBarText>
           <DateFormat date={updatedAt} />
-        </StatusBar.Text>
+        </StatusBarText>
       )}
       <View flex={1} />
-      <StatusBar.Section>
-        <StatusBar.Button onClick={() => AppActions.copyItem(model)}>
+      <StatusBarSection>
+        <StatusBarButton onClick={() => AppActions.copyItem(item)}>
           Copy Link <Cmd>⌘+C</Cmd>
-        </StatusBar.Button>
+        </StatusBarButton>
         <View width={5} />
-        <StatusBar.Button onClick={() => AppActions.openItem(model)}>
+        <StatusBarButton onClick={() => AppActions.openItem(item)}>
           Open <Cmd>Enter</Cmd>
-        </StatusBar.Button>
-      </StatusBar.Section>
+        </StatusBarButton>
+      </StatusBarSection>
     </StatusBar>
   )
 }

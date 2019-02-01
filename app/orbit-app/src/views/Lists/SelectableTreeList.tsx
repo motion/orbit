@@ -14,7 +14,7 @@ type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
   onChangeDepth?: (depth: number, history: ID[]) => any
   rootItemID: ID
   items: ListsAppData['items']
-  loadItem: (item: ListAppDataItem) => Promise<OrbitListItemProps>
+  loadItemProps: (item: ListAppDataItem) => Promise<OrbitListItemProps>
 }
 
 export type SelectableTreeRef = {
@@ -111,7 +111,9 @@ export default React.forwardRef(function SelectableTreeList(props: SelectableTre
       }
       setError(null)
       let cancelled = false
-      const items = Promise.all(currentItem.children.map(id => props.loadItem(props.items[id])))
+      const items = Promise.all(
+        currentItem.children.map(id => props.loadItemProps(props.items[id])),
+      )
       items.then(nextItems => {
         if (!cancelled) {
           setChildrenItems(nextItems)

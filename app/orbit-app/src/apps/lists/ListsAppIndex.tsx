@@ -96,13 +96,16 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
 const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store: ListStore }) {
   const { items } = store
 
-  const loadItem = React.useCallback(async item => {
+  const loadItemProps = React.useCallback(async item => {
     switch (item.type) {
       case 'folder':
         return {
           title: item.name,
           subtitle: `${item.children.length} items`,
           after: <Button circular chromeless size={0.9} icon="arrowright" onClick={store.back} />,
+          appConfig: {
+            subType: 'folder',
+          },
         }
       case 'bit':
         return {
@@ -137,7 +140,7 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
       minSelected={0}
       rootItemID={0}
       items={items}
-      loadItem={loadItem}
+      loadItemProps={loadItemProps}
       sortable
       getContextMenu={getContextMenu}
       onChangeDepth={onChangeDepth}

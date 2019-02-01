@@ -7,7 +7,6 @@ import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { HorizontalSpace } from '..'
-import { NormalItem } from '../../helpers/normalizeItem'
 import { BorderBottom } from '../Border'
 import { DateFormat } from '../DateFormat'
 import { HighlightText } from '../HighlightText'
@@ -39,9 +38,9 @@ export type ListItemDisplayProps = {
 }
 
 export type ListItemProps = CSSPropertySetStrict &
-  Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    title?: React.ReactNode
     subTextOpacity?: number
     slim?: boolean
     above?: React.ReactNode

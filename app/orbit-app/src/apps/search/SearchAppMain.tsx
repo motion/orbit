@@ -2,7 +2,7 @@ import { AppType } from '@mcro/models'
 import * as React from 'react'
 import { Message } from '../../views/Message'
 import { AppProps } from '../AppProps'
-import { AppView } from '../AppView'
+import { AppSubView } from '../views/AppSubView'
 
 export default function SearchAppMain(props: AppProps<AppType.search>) {
   const appConfig = props.appConfig
@@ -15,13 +15,5 @@ export default function SearchAppMain(props: AppProps<AppType.search>) {
     return <div>todo: search</div>
   }
 
-  return (
-    <AppView
-      viewType="main"
-      id={appConfig.id}
-      title={appConfig.title}
-      type={appConfig.type}
-      appConfig={appConfig}
-    />
-  )
+  return <AppSubView appConfig={appConfig} />
 }

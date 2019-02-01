@@ -5,8 +5,21 @@ import { SubTitle, Title } from '../../views'
 import OrbitList from '../../views/Lists/OrbitList'
 import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
+import { AppSubView } from '../views/AppSubView'
 
-export const ListsAppMain = React.memo(function ListsAppMain(props: AppProps<AppType.lists>) {
+type ListAppProps = AppProps<AppType.lists>
+
+export const ListsAppMain = React.memo(function ListsAppMain(props: ListAppProps) {
+  if (!props.appConfig) {
+    return null
+  }
+  if (props.appConfig.subType === 'folder') {
+    return <ListsAppMainFolder {...props} />
+  }
+  return <AppSubView appConfig={props.appConfig} />
+})
+
+function ListsAppMainFolder(props: ListAppProps) {
   const items = useObserveMany(BitModel, {
     where: {},
     take: 10,
@@ -17,4 +30,4 @@ export const ListsAppMain = React.memo(function ListsAppMain(props: AppProps<App
       <OrbitList items={items} placeholder={<SubTitle>No items</SubTitle>} />
     </Section>
   )
-})
+}

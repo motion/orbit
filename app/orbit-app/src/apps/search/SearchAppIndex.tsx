@@ -12,7 +12,8 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
-import ListItem, { ListItemProps } from '../../views/ListItems/ListItem'
+import ListItem from '../../views/ListItems/ListItem'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
@@ -32,7 +33,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
       <Separator paddingTop={10}>Send to...</Separator>
       {flatten(
         listApps.map(app => {
-          let items: ListItemProps[] = [
+          let items: OrbitListItemProps[] = [
             {
               id: `app-${app.id}`,
               title: app.name,

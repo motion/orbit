@@ -80,7 +80,10 @@ export class PaneManagerStore {
   activePaneSetter = memoize((id: string) => () => this.setActivePane(id))
   activePaneByNameSetter = memoize((name: string) => () => this.setActivePaneByName(name))
   activePaneByTypeSetter = memoize((type: string) => () => this.setActivePaneByType(type))
-  activePaneIndexSetter = memoize((index: number) => () => this.setPaneIndex(index))
+
+  setPaneByKeyableIndex(index: number) {
+    this.setActivePane(this.panes.filter(x => x.keyable)[index].id)
+  }
 
   hasPaneIndex = (index: number) => {
     if (index > this.panes.length - 1) {

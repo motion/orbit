@@ -110,6 +110,9 @@ export function useModel<ModelType, Args>(
 
   const updateIfNew = (nextValue: any) => {
     if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
+      if (process.env.NODE_ENV === 'development') {
+        console.debug('updating model', model.name, 'old value', value, 'new value', nextValue)
+      }
       setValue(nextValue)
     }
   }

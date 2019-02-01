@@ -79,6 +79,7 @@ export default React.memo(function AppIcon({
         ...style,
       }}
       cleanup
+      {...props}
     />
   )
 })

@@ -6,7 +6,6 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
 import { Title } from '../views'
 import { BorderTop } from '../views/Border'
-import { Divider } from '../views/Divider'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import { AppProps } from './AppProps'
@@ -64,8 +63,6 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         <Section paddingTop={0}>
           <AppsMainNew />
         </Section>
-
-        <Divider />
 
         <Section paddingTop={0}>
           <AppView type={type} viewType="settings" />

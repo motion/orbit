@@ -1,9 +1,9 @@
 import { App } from '@mcro/models'
-import { IconProps, Row, View } from '@mcro/ui'
+import { IconProps, Popover, Row } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalSpace, VerticalSpace } from '../../views'
+import { HorizontalSpace } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
@@ -38,11 +38,31 @@ export default observer(function AppsMainNew() {
   return (
     <>
       <Row alignItems="center">
-        <AppIcon removeStroke app={app} size={48} />
+        <Popover
+          theme="tooltip"
+          borderRadius={10}
+          elevation={1}
+          openOnClick
+          background
+          width={250}
+          height={250}
+          target={<AppIcon removeStroke app={app} size={48} />}
+          overflowY="auto"
+          padding={10}
+        >
+          <ColorPicker
+            onChangeColor={colors => {
+              newAppStore.update({ colors })
+            }}
+            activeColor={app.colors[0]}
+          />
+        </Popover>
 
         <HorizontalSpace />
+
         <Input
           ref={inputRef}
+          fontSize={18}
           placeholder="Name..."
           margin={['auto', 0]}
           value={app.name}
@@ -53,25 +73,7 @@ export default observer(function AppsMainNew() {
             newAppStore.update({ name: e.target.value })
           }}
         />
-
-        {/* <View flex={1} />
-        <Theme name="selected">
-          <Button disabled={!app.name} elevation={1} size={1.4}>
-            Save
-          </Button>
-        </Theme> */}
       </Row>
-
-      <VerticalSpace />
-
-      <View>
-        <ColorPicker
-          onChangeColor={colors => {
-            newAppStore.update({ colors })
-          }}
-          activeColor={app.colors[0]}
-        />
-      </View>
     </>
   )
 })

@@ -98,15 +98,14 @@ const niceColors = [
   ['rgb(46, 204, 64)', 'rgb(133, 20, 75)'],
 ]
 
-const margin = [0, 5, 5, 0]
-
 export function ColorPicker({
   count = 40,
   luminosity = 'dark',
   hue,
   onChangeColor,
   activeColor,
-  size = 22,
+  size = 32,
+  className,
   ...viewProps
 }: {
   activeColor?: string
@@ -120,22 +119,21 @@ export function ColorPicker({
   const combos = niceColors.slice(0, count)
 
   return (
-    <Row marginBottom={-5} flexWrap="wrap">
+    <Row justifyContent="space-around" marginBottom={-5} flexWrap="wrap" className={className}>
       {combos.map((colors, i) => (
         <Squircle
           key={i}
           colors={colors}
           width={size}
           height={size}
-          margin={margin}
-          borderRadius={2}
-          boxShadow={[[0, 2, 2, [0, 0, 0, 0.15]]]}
+          margin={[0, 5, 5, 0]}
           onClick={() => {
             onChangeColor([colors[0], colors[1]])
           }}
           {...viewProps}
         />
       ))}
+      <View flex={1} />
     </Row>
   )
 }
@@ -145,7 +143,7 @@ SVG.defaultProps = {
   tagName: 'svg',
 }
 
-function Squircle({ colors, ...rest }: any) {
+export function Squircle({ colors, ...rest }: any) {
   return (
     <SVG width="1024px" height="1024px" viewBox="0 0 1024 1024" {...rest}>
       <defs>

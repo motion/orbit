@@ -43,15 +43,18 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
 export function useContextMenu({ items, buildItems }: UseContextProps) {
   const { setItems } = useContext(ContextMenuContext)
 
-  const onContextMenu = () => {
-    if (typeof setItems === 'function') {
-      if (items != null) {
-        setItems(items)
-      } else if (buildItems != null) {
-        setItems(buildItems())
+  const onContextMenu = React.useCallback(
+    () => {
+      if (typeof setItems === 'function') {
+        if (items != null) {
+          setItems(items)
+        } else if (buildItems != null) {
+          setItems(buildItems())
+        }
       }
-    }
-  }
+    },
+    [buildItems, JSON.stringify(items)],
+  )
 
   return { onContextMenu }
 }

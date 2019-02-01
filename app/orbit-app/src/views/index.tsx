@@ -26,6 +26,10 @@ type RowProps = {
   label?: React.ReactNode
 }
 
+export const Scrollable = gloss(View, {
+  overflowY: 'auto',
+})
+
 export const FormTableLabel = ({ children }) => (
   <TableCell width="30%" maxWidth={125}>
     {children}

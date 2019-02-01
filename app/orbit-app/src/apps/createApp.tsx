@@ -1,10 +1,11 @@
 import { AppType } from '@mcro/models'
-import { Absolute, BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
+import { BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
-import { Title } from '../views'
+import { Scrollable, Title } from '../views'
+import { BorderTop } from '../views/Border'
 import { Divider } from '../views/Divider'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
@@ -25,7 +26,6 @@ function CreateAppIndex() {
         <Title>Choose type</Title>
       </Section>
       <SelectableList
-        minSelected={0}
         items={defaultApps.map(app => ({
           title: app.name,
           subtitle: descriptions[app.type],
@@ -68,7 +68,21 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         <Divider />
 
         <Section paddingTop={0}>
-          <AppView type={type} viewType="settings" />
+          <Scrollable>
+            <AppView type={type} viewType="settings" />
+          </Scrollable>
+        </Section>
+
+        <View flex={1} />
+
+        <Section>
+          <BorderTop />
+
+          <Theme name="selected">
+            <Button elevation={2} size={1.4}>
+              Create
+            </Button>
+          </Theme>
         </Section>
       </View>
 
@@ -88,14 +102,6 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
           }}
         />
       </View>
-
-      <Absolute bottom={25} right={25}>
-        <Theme name="selected">
-          <Button elevation={2} size={1.4}>
-            Add
-          </Button>
-        </Theme>
-      </Absolute>
     </Row>
   )
 })

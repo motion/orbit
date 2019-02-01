@@ -2,20 +2,31 @@ import { BaseApp } from './App'
 
 export type ItemID = number | string
 
+type ListItemFilter =
+  | {
+      type: 'recent-items'
+      sourceId: number
+      limit?: number
+    }
+  | {
+      type: 'trending-items'
+      sourceId: number
+      limit?: number
+    }
+
+type BaseListItem = {
+  id: ItemID
+  name?: string
+  icon?: string
+  filter?: ListItemFilter
+}
+
 export type ListAppDataItem =
-  | {
-      id: ItemID
+  | BaseListItem & {
       type: 'folder' | 'root'
-      name?: string
       children: ItemID[]
-      icon?: string
     }
-  | {
-      id: ItemID
-      type: 'bit' | 'person'
-      name?: string
-      icon?: string
-    }
+  | BaseListItem & { type: 'bit' | 'person' }
 
 export type ListsAppData = {
   rootItemID: ItemID

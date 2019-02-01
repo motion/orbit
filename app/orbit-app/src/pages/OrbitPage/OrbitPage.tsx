@@ -123,8 +123,6 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
     })),
   ]
 
-  console.log('setting panes', panes)
-
   // one past the defaults is the first app
   const firstAppIndex = defaultPanes.length
 

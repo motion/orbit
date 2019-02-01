@@ -1,32 +1,32 @@
-import { gloss, Row, View } from '@mcro/gloss'
-import { App } from '@mcro/stores'
-import { Theme } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { AppActions } from '../../actions/AppActions'
-import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
-import { StoreContext } from '../../contexts'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HeaderStore } from '../../stores/HeaderStore'
-import { NewAppStore } from '../../stores/NewAppStore'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SearchStore } from '../../stores/SearchStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { SpaceStore } from '../../stores/SpaceStore'
-import { AppWrapper } from '../../views'
-import { MergeContext } from '../../views/MergeContext'
-import OrbitContent from './OrbitContent'
-import OrbitControls from './OrbitControls'
-import OrbitHeader from './OrbitHeader'
-import OrbitNav from './OrbitNav'
-import OrbitSidebar from './OrbitSidebar'
-import { OrbitStore } from './OrbitStore'
+import { gloss, Row, View } from '@mcro/gloss';
+import { App } from '@mcro/stores';
+import { Theme } from '@mcro/ui';
+import { useStore } from '@mcro/use-store';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { AppActions } from '../../actions/AppActions';
+import { OrbitToolBarProvider } from '../../components/OrbitToolbar';
+import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler';
+import { StoreContext } from '../../contexts';
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { HeaderStore } from '../../stores/HeaderStore';
+import { NewAppStore } from '../../stores/NewAppStore';
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore';
+import { PaneManagerStore } from '../../stores/PaneManagerStore';
+import { QueryStore } from '../../stores/QueryStore/QueryStore';
+import { SearchStore } from '../../stores/SearchStore';
+import { SettingStore } from '../../stores/SettingStore';
+import { SourcesStore } from '../../stores/SourcesStore';
+import { SpaceStore } from '../../stores/SpaceStore';
+import { AppWrapper } from '../../views';
+import { MergeContext } from '../../views/MergeContext';
+import OrbitContent from './OrbitContent';
+import OrbitControls from './OrbitControls';
+import OrbitHeader from './OrbitHeader';
+import OrbitNav from './OrbitNav';
+import OrbitSidebar from './OrbitSidebar';
+import { OrbitStore } from './OrbitStore';
 
 export default React.memo(function OrbitPage() {
   return (
@@ -98,7 +98,7 @@ const defaultPanes = [
   { id: 'app-settings', name: 'Settings', type: 'settings' },
   { id: 'app-apps', name: 'Apps', type: 'apps' },
   { id: 'app-sources', name: 'Sources', type: 'sources' },
-  { id: 'app-createApp', name: 'New...', type: 'createApp' },
+  { id: 'app-createApp', name: 'Add app', type: 'createApp' },
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]
 

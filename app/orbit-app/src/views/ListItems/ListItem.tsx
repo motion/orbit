@@ -1,19 +1,20 @@
-import { CSSPropertySetStrict } from '@mcro/css';
-import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss';
-import * as UI from '@mcro/ui';
-import { Row, Text, View } from '@mcro/ui';
-import { useStore } from '@mcro/use-store';
-import { differenceInCalendarDays } from 'date-fns/esm/fp';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { HorizontalSpace } from '..';
-import { NormalItem } from '../../helpers/normalizeItem';
-import { DateFormat } from '../DateFormat';
-import { HighlightText } from '../HighlightText';
-import { Icon } from '../Icon';
-import { RoundButtonSmall } from '../RoundButtonSmall';
-import { Separator } from '../Separator';
-import { ListItemStore } from './ListItemStore';
+import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import { Row, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { differenceInCalendarDays } from 'date-fns/esm/fp'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { HorizontalSpace } from '..'
+import { NormalItem } from '../../helpers/normalizeItem'
+import { BorderBottom } from '../Border'
+import { DateFormat } from '../DateFormat'
+import { HighlightText } from '../HighlightText'
+import { Icon } from '../Icon'
+import { RoundButtonSmall } from '../RoundButtonSmall'
+import { Separator } from '../Separator'
+import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 export type HandleSelection = ((
@@ -327,7 +328,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </ListItemMainContent>
           {after}
         </ListItemChrome>
-        <Divider />
+        <BorderBottom opacity={0.28} />
       </ListFrame>
     </UI.Theme>
   )
@@ -347,16 +348,6 @@ const ListFrame = gloss(UI.View, {
     borderRadius: borderRadius || 0,
   }
 })
-
-const Divider = gloss({
-  height: 1,
-  position: 'absolute',
-  bottom: 0,
-  left: 10,
-  right: 10,
-}).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.12),
-}))
 
 const ListItemChrome = gloss({
   flexFlow: 'row',

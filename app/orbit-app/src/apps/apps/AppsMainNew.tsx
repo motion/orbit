@@ -28,7 +28,7 @@ export default observer(function AppsMainNew() {
   )
 
   return (
-    <View padding={15}>
+    <>
       <Row alignItems="center">
         <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} />
 
@@ -69,6 +69,6 @@ export default observer(function AppsMainNew() {
           activeColor={app.colors[0]}
         />
       </View>
-    </View>
+    </>
   )
 })

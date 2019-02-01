@@ -12,6 +12,7 @@ const ellipseStyle = {
 
 export const SimpleText = gloss<
   {
+    size?: number
     ellipse?: boolean
     alpha?: number
     alphaHover?: number

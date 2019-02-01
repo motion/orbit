@@ -57,7 +57,13 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
   return (
     <Row flex={1}>
       <View width="50%">
-        <AppsMainNew />
+        <Section paddingBottom={0}>
+          <Title>Customize</Title>
+        </Section>
+
+        <Section paddingTop={0}>
+          <AppsMainNew />
+        </Section>
         <OrbitControls />
       </View>
 

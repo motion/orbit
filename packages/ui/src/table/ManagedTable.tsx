@@ -554,7 +554,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
                       rowLineHeight ||
                       DEFAULT_ROW_HEIGHT
                     }
-                    ref={this.tableRef}
+                    forwardRef={this.tableRef}
                     width={width}
                     estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
                     overscanCount={5}

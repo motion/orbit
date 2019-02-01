@@ -45,7 +45,11 @@ export class NewAppStore {
   }
 
   setApp(type: AppType) {
-    this.app = defaultApps.find(x => x.type === type)
+    this.app = {
+      ...this.app,
+      type,
+      data: {},
+    }
   }
 
   reset = () => {

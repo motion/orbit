@@ -129,8 +129,6 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultIndex: orbitWindowStore.activePaneIndex || firstAppIndex,
     onPaneChange(index) {
-      // reset name on pane change...
-      newAppStore.reset()
       orbitWindowStore.activePaneIndex = index
     },
     panes,

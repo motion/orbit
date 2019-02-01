@@ -37,6 +37,7 @@ export default observer(function OrbitHeaderInput({ headerStore }: Props) {
   const fontSize = orbitStore.isTorn ? 16 : 18
   return (
     <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>
+      <select />
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
           forwardRef={headerStore.inputRef}

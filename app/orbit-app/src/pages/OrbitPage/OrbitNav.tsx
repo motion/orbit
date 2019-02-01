@@ -12,7 +12,6 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitNav() {
   const {
@@ -86,8 +85,7 @@ export default observer(function OrbitNav() {
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
-          icon:
-            index === 0 ? <OrbitSpaceSwitch marginRight={isPinned ? 0 : 8} /> : `orbit-${app.type}`,
+          icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {

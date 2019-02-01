@@ -4,16 +4,19 @@ import { Button, Icon, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
+import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
+import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitHeader() {
-  const { headerStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, paneManagerStore } = useStoresSafe()
   const isOnSettings = paneManagerStore.activePane.type === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
+  const toolbars = useOrbitToolbars()
+
   return (
     <>
       <HeaderTop padding={isTorn ? [2, 10] : [6, 10]}>
@@ -33,26 +36,20 @@ export default observer(function OrbitHeader() {
         </OrbitClose>
         <Row flex={1} alignItems="center">
           <Row flex={1} />
-          {/* {!isTorn && <OrbitSpaceSwitch />} */}
-          <OrbitToolBarRender key={`${isTorn}`}>
-            {toolbars => (
-              <>
-                {isTorn && toolbars && (
-                  <>
-                    {toolbars.before}
-                    <View flex={1} />
-                  </>
-                )}
-                <OrbitHeaderInput headerStore={headerStore} />
-                {isTorn && toolbars && (
-                  <>
-                    <View flex={1} />
-                    {toolbars.after}
-                  </>
-                )}
-              </>
-            )}
-          </OrbitToolBarRender>
+          {isTorn && toolbars && (
+            <>
+              {toolbars.before}
+              <View flex={1} />
+            </>
+          )}
+          <OrbitHeaderInput />
+          {isTorn && toolbars && (
+            <>
+              <View flex={1} />
+              {toolbars.after}
+            </>
+          )}
+          {!isTorn && <OrbitSpaceSwitch />}
           {!isTorn && (
             <Absolute top={0} right={0}>
               <Button

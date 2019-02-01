@@ -2,7 +2,6 @@ import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
 import {
   createElement,
   forwardRef,
-  FunctionComponent,
   HTMLAttributes,
   memo,
   ReactElement,
@@ -36,7 +35,7 @@ export interface GlossView<Props> {
   displayName?: string
   // extra:
   ignoreAttrs?: Object
-  theme: ((cb: GlossThemeFn<Props>) => FunctionComponent<GlossProps<Props>>)
+  theme: ((cb: GlossThemeFn<Props>) => GlossView<Props>)
 }
 
 const tracker = new Map()

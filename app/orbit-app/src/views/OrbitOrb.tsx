@@ -21,13 +21,13 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = ({ size = 32, background, color, ...props }) => (
+export const OrbitOrb = ({ size = 32, colors = ['red', 'green'], ...props }) => (
   <OrbBackground width={size} height={size} borderRadius={size * 2} {...props}>
     <View
       borderRadius={1000}
       width={size - 4}
       height={size - 4}
-      background={`linear-gradient(${background}, ${color})`}
+      background={`linear-gradient(${colors[0]}, ${colors[1]})`}
     />
   </OrbBackground>
 )

@@ -566,7 +566,7 @@ const MenuLayerContent = React.memo(() => {
       <Searchable
         queryStore={queryStore}
         inputProps={{
-          forwardRef: menuStore.handleSearchInput,
+          ref: menuStore.handleSearchInput,
           onChange: queryStore.onChangeQuery,
         }}
       >

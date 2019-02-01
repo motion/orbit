@@ -8,7 +8,6 @@ import ListItem from '../../../views/ListItems/ListItem'
 
 type Props = {
   queryStore?: QueryStore
-  forwardRef?: any
   width?: number
 }
 

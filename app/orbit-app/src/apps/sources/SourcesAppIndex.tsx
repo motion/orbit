@@ -47,7 +47,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     ...activeSources.map(app => ({
       // only apply the click events to the active sources...
       ...props.itemProps,
-      id: app.source.id,
+      id: `${app.source.id}`,
       title: app.display.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
       icon: app.integration,
@@ -79,10 +79,10 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
         ? {
             ...sourceToAppConfig(source),
             type: AppType.sources,
-            viewType: 'setup',
+            viewType: 'setup' as 'setup',
           }
         : {
-            type: 'message',
+            type: AppType.message,
             title: `Opening private authentication for ${source.appName}...`,
           },
       group: 'Add source',

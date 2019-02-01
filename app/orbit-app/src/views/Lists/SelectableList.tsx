@@ -14,6 +14,7 @@ export type SelectableListProps = OrbitListProps & {
   defaultSelected?: number
   isSelectable?: boolean
   selectionStore?: SelectionStore
+  createNewSelectionStore?: boolean
 }
 
 type SelectContext = {
@@ -89,10 +90,7 @@ class SelectableStore {
   )
 }
 
-export default React.memo(function SelectableList({
-  items,
-  ...props
-}: SelectableListProps & { createNewSelectionStore?: boolean }) {
+export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
   const newNamespace = !!props.createNewSelectionStore
   const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
   const selectionStore =

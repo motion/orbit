@@ -335,7 +335,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           }}
           onChange={this.onChangeSearchTerm}
           value={this.state.searchTerm}
-          forwardRef={this.inputRef}
+          ref={this.inputRef}
           onFocus={this.onInputFocus}
           onBlur={this.onInputBlur}
           {...searchInputProps}

@@ -77,7 +77,7 @@ export const OrbitCard = observer(
     return (
       <CardWrap
         {...hoverToSelect && store.hoverSettler && store.hoverSettler.props}
-        forwardRef={store.setCardWrapRef}
+        ref={store.setCardWrapRef}
         {...props}
         {...isSelected && activeStyle}
       >

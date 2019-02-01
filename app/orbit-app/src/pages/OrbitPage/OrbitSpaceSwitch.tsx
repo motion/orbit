@@ -86,6 +86,10 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
   const store = useStore(SpaceSwitchStore, props)
   const [activeSpace] = useActiveSpace()
 
+  if (!activeSpace) {
+    return
+  }
+
   const handlers = {
     select: () => {
       console.log('should switch space')
@@ -93,10 +97,6 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
     },
     down: store.down,
     up: store.up,
-  }
-
-  const goToTeamSettings = () => {
-    stores.paneManagerStore.setActivePaneByType('settings')
   }
 
   const { selectedIndex, filteredSpaces } = store
@@ -118,12 +118,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         onChangeVisibility={store.setOpen}
         target={<OrbitOrb colors={activeSpace.colors} size={18} {...props} />}
       >
-        <Col
-          forwardRef={store.popoverContentRef}
-          borderRadius={borderRadius}
-          overflow="hidden"
-          flex={1}
-        >
+        <Col ref={store.popoverContentRef} borderRadius={borderRadius} overflow="hidden" flex={1}>
           <View overflowY="auto" maxHeight={300}>
             {activeSpace ? (
               <RowItem

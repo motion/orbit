@@ -10,6 +10,7 @@ export function ColorPicker({
   hue,
   onChangeColor,
   activeColor,
+  size = 22,
   ...viewProps
 }: {
   activeColor?: string
@@ -17,6 +18,7 @@ export function ColorPicker({
   seed?: number
   luminosity?: string
   hue?: string
+  size?: number
   onChangeColor?: (color: string) => any
 } & ViewProps) {
   const colors = useMemo(
@@ -35,8 +37,8 @@ export function ColorPicker({
         <View
           key={color}
           background={color}
-          width={30}
-          height={30}
+          width={size}
+          height={size}
           margin={margin}
           borderRadius={2}
           border={[1, activeColor === color ? 'white' : 'transparent']}

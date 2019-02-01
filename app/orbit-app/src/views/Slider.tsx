@@ -47,7 +47,7 @@ export default React.memo(function Slider(props: SliderProps) {
       height={currentHeight}
       curFrame={curFrame}
       transition={transition}
-      forwardRef={frameRef}
+      ref={frameRef}
       {...rest}
     >
       {React.Children.map(children, (child, index) =>
@@ -99,7 +99,7 @@ export const SliderPane = ({
     <SliderPaneContainer
       width={width}
       height={fixHeightToTallest && currentHeight ? currentHeight : 'auto'}
-      forwardRef={ref}
+      ref={ref}
       padding={[verticalPad, framePad, verticalPad]}
       {...props}
     >

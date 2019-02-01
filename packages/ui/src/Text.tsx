@@ -245,7 +245,7 @@ export class Text extends React.PureComponent<TextProps> {
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
-        forwardRef={this.getRef}
+        ref={this.getRef}
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}

@@ -5,11 +5,11 @@
  * @format
  */
 
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
-import { gloss } from '@mcro/gloss'
 
 const invariant = require('invariant')
 
@@ -601,7 +601,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       <InteractiveContainer
         className={this.props.className}
         hidden={this.props.hidden}
-        forwardRef={this.setRef}
+        ref={this.setRef}
         onMouseDown={this.startAction}
         onMouseMove={this.onLocalMouseMove}
         onMouseLeave={this.onMouseLeave} // eslint-disable-next-line

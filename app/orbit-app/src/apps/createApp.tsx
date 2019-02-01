@@ -1,4 +1,3 @@
-import { useTheme } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
 import { Absolute, BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -6,7 +5,9 @@ import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import OrbitControls from '../pages/OrbitPage/OrbitControls'
 import { defaultApps } from '../stores/NewAppStore'
+import { Title } from '../views'
 import SelectableList from '../views/Lists/SelectableList'
+import { Section } from '../views/Section'
 import { AppProps } from './AppProps'
 import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
 import { AppView } from './AppView'
@@ -19,22 +20,26 @@ const descriptions = {
 
 function CreateAppIndex() {
   return (
-    <SelectableList
-      minSelected={0}
-      items={defaultApps.map(app => ({
-        title: app.name,
-        subtitle: descriptions[app.type],
-        icon: <AppIcon app={app} />,
-        type: app.type,
-        iconBefore: true,
-      }))}
-    />
+    <>
+      <Section paddingBottom={0}>
+        <Title>Choose type</Title>
+      </Section>
+      <SelectableList
+        minSelected={0}
+        items={defaultApps.map(app => ({
+          title: app.name,
+          subtitle: descriptions[app.type],
+          icon: <AppIcon app={app} />,
+          type: app.type,
+          iconBefore: true,
+        }))}
+      />
+    </>
   )
 }
 
 const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.createApp>) {
   const { newAppStore } = useStoresSafe()
-  const theme = useTheme()
 
   if (!props.appConfig) {
     return null
@@ -52,7 +57,13 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
   return (
     <Row flex={1}>
       <View width="50%">
-        <AppsMainNew />
+        <Section paddingBottom={0}>
+          <Title>Customize</Title>
+        </Section>
+
+        <Section paddingTop={0}>
+          <AppsMainNew />
+        </Section>
         <OrbitControls />
       </View>
 

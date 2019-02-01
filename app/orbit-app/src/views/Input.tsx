@@ -3,10 +3,9 @@ import { View } from '@mcro/ui'
 
 export const Input = gloss(View, {
   position: 'relative',
+  flex: 1,
   flexFlow: 'row',
   borderRadius: 7,
-  height: '100%',
-  width: '100%',
   alignItems: 'center',
   padding: [8, 12],
 }).theme((_, theme) => ({

@@ -12,13 +12,7 @@ export type BaseRules = {
   [key: string]: string | number
 }
 
-type GlossViewProps<Props> = Props &
-  React.HTMLProps<any> & {
-    className?: string
-    tagName?: string
-    children?: any
-    theme?: ThemeObject
-  }
+type GlossViewProps<Props> = Props & React.HTMLAttributes<any> & { tagName?: string }
 
 type GlossThemeFn<Props> = ((
   props: GlossViewProps<Props>,
@@ -225,15 +219,23 @@ export function gloss<Props = GlossViewProps<any>>(
   // the actual view!
   //
 
-  ThemedView = React.memo((props: GlossViewProps<Props>) => {
+  ThemedView = React.forwardRef<HTMLDivElement, GlossViewProps<Props>>((props, ref) => {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = React.useContext(ThemeContext)
     const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
     // merge theme if they pass an object theme in
-    const theme = props.theme ? { ...activeTheme, ...props.theme } : activeTheme
     const lastCN = React.useRef(null)
-    const classNames = glossify(id, displayName, themeFn, Styles, lastCN.current, props, tag, theme)
+    const classNames = glossify(
+      id,
+      displayName,
+      themeFn,
+      Styles,
+      lastCN.current,
+      props,
+      tag,
+      activeTheme,
+    )
     lastCN.current = classNames
 
     React.useEffect(
@@ -248,17 +250,11 @@ export function gloss<Props = GlossViewProps<any>>(
       typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
     const isDOMElement = typeof element === 'string'
 
-    // TODO this could probably be a proxy? but forwardRef?
     let finalProps = {} as any
+    if (ref) {
+      finalProps.ref = ref
+    }
     for (const key in props) {
-      if (key === 'forwardRef') {
-        if (isDOMElement || isSimpleView) {
-          finalProps.ref = props[key]
-        } else {
-          finalProps[key] = props[key]
-        }
-        continue
-      }
       if (ignoreAttrs && ignoreAttrs[key]) {
         continue
       }
@@ -277,6 +273,8 @@ export function gloss<Props = GlossViewProps<any>>(
 
     return React.createElement(element, finalProps, props.children)
   })
+
+  ThemedView = React.memo(ThemedView)
 
   ThemedView.themeFn = null
   ThemedView.displayName = 'SimpleView'

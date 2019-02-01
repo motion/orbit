@@ -1,27 +1,27 @@
-import * as React from 'react'
-import { view, provide, attach } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import { Header, Footer } from '../components'
-import { SectionContent } from '../views/sectionContent'
-import { Slant, Title, P, AppleLogo, HomeImg, WindowsLogo } from '../views'
-import * as Constants from '../constants'
-import Media from 'react-media'
-import { scrollTo } from '../helpers'
-import { Join } from '../components/Join'
-import { Bauhaus } from '../views/Bauhaus'
-import { Parallax, ParallaxLayer } from '../components/Parallax'
-import profileImg from '../../public/profileimg.jpg'
-import { Icon } from '../views/icon'
-import * as _ from 'lodash'
-import homeImg from '../../public/orbit.jpg'
-import searchImg from '../../public/orbit-search.jpg'
-import avatarCardImg from '../../public/javi.png'
-import { Page } from '../views/Page'
-import { throttle } from 'lodash'
+import { view } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import * as _ from 'lodash'
+import { throttle } from 'lodash'
+import * as React from 'react'
+import Media from 'react-media'
+import avatarCardImg from '../../public/javi.png'
+import searchImg from '../../public/orbit-search.jpg'
+import homeImg from '../../public/orbit.jpg'
+import profileImg from '../../public/profileimg.jpg'
+import { Footer, Header } from '../components'
+import { Join } from '../components/Join'
+import { Parallax, ParallaxLayer } from '../components/Parallax'
+import * as Constants from '../constants'
+import { scrollTo } from '../helpers'
+import { AppleLogo, HomeImg, P, Slant, Title, WindowsLogo } from '../views'
+import { Bauhaus } from '../views/Bauhaus'
+import { Icon } from '../views/icon'
+import { Page } from '../views/Page'
+import { SectionContent } from '../views/sectionContent'
 
 const forwardRef = Component => {
-  return React.forwardRef((props, ref) => <Component {...props} forwardRef={ref} />)
+  return React.forwardRef((props, ref) => <Component {...props} ref={ref} />)
 }
 
 const bodyBg = Constants.colorMain
@@ -103,7 +103,7 @@ WaveSVG.defaultProps = {
 
 const WaveBanner = forwardRef(({ forwardRef, fill = '#000', ...props }) => (
   <WaveSVG
-    forwardRef={forwardRef}
+    ref={forwardRef}
     className="wavebanner"
     preserveAspectRatio="none"
     viewBox="0 0 3701 2273"

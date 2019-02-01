@@ -2,11 +2,13 @@ import { gloss, Row } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
-import { isEqual } from 'lodash'
+import { flow, isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
+import { sleep } from '../../helpers'
+import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -154,22 +156,35 @@ export default observer(function OrbitNav() {
             iconSize={12}
             isActive
             label={newAppStore.app.name || 'New app'}
+            after={
+              <OrbitTabButton
+                icon="remove"
+                opacity={0.5}
+                onClick={flow(
+                  preventDefault,
+                  () => {
+                    setShowCreateNew(false)
+                    paneManagerStore.back()
+                  },
+                )}
+              />
+            }
           />
         )}
-        <OrbitTab
-          tooltip={showCreateNew ? 'Cancel' : 'Add'}
-          thicc
-          icon={showCreateNew ? 'remove' : 'add'}
-          iconAdjustOpacity={-0.2}
-          onClick={() => {
-            if (!showCreateNew) {
+        {!showCreateNew && (
+          <OrbitTab
+            tooltip={showCreateNew ? 'Cancel' : 'Add'}
+            thicc
+            icon={showCreateNew ? 'remove' : 'add'}
+            iconAdjustOpacity={-0.2}
+            onClick={async () => {
+              setShowCreateNew(true)
+              await sleep(10) // panemanager is heavy and this helps the ui from lagging
               paneManagerStore.setActivePane('app-createApp')
-            } else {
-              paneManagerStore.back()
-            }
-            setShowCreateNew(!showCreateNew)
-          }}
-        />
+            }}
+            transition="all ease-in 100ms"
+          />
+        )}
         <View flex={2} />
         {/* <OrbitTab
           thicc

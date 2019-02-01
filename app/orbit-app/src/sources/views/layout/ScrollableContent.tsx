@@ -1,8 +1,8 @@
-import * as React from 'react'
-import * as UI from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import * as UI from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { useStoresSafe } from '../../../hooks/useStoresSafe'
 
 const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
@@ -37,9 +37,7 @@ export default observer(function ScrollableContent(props: { scrollTo?: string; c
 
   return (
     <PeekContentChrome>
-      <ContentInner forwardRef={appPageStore && appPageStore.contentFrame}>
-        {props.children}
-      </ContentInner>
+      <ContentInner ref={appPageStore && appPageStore.contentFrame}>{props.children}</ContentInner>
     </PeekContentChrome>
   )
 })

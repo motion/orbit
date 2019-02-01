@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { HorizontalSpace } from '..'
 import { NormalItem } from '../../helpers/normalizeItem'
+import { BorderBottom } from '../Border'
 import { DateFormat } from '../DateFormat'
 import { HighlightText } from '../HighlightText'
 import { Icon } from '../Icon'
@@ -227,7 +228,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </UI.Theme>
         )}
       </>
-      <ListFrame isExpanded={isExpanded} forwardRef={store.setCardWrapRef} {...restProps}>
+      <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
         <ListItemChrome
           isSelected={isSelected}
           borderRadius={borderRadius}
@@ -327,7 +328,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </ListItemMainContent>
           {after}
         </ListItemChrome>
-        <Divider />
+        <BorderBottom opacity={0.28} />
       </ListFrame>
     </UI.Theme>
   )
@@ -347,16 +348,6 @@ const ListFrame = gloss(UI.View, {
     borderRadius: borderRadius || 0,
   }
 })
-
-const Divider = gloss({
-  height: 1,
-  position: 'absolute',
-  bottom: 0,
-  left: 10,
-  right: 10,
-}).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.12),
-}))
 
 const ListItemChrome = gloss({
   flexFlow: 'row',

@@ -13,7 +13,7 @@ import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 26
+export const tabHeight = 28
 const inactiveOpacity = 0.5
 const border = 5
 
@@ -71,7 +71,7 @@ export function OrbitTab({
     >
       {isActive && <Glint y={2} borderRadius={border} />}
       <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
-        {!React.isValidElement(icon) && (
+        {!React.isValidElement(icon) && !!icon && (
           <OrbitTabIcon
             isActive={isActive}
             name={`${icon}`}

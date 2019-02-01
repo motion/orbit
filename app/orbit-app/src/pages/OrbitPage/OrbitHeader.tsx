@@ -1,11 +1,12 @@
 import { Absolute, FullScreen, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Icon, Row, View } from '@mcro/ui'
+import { Button, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitSpaceSwitch from './OrbitSpaceSwitch'
@@ -19,7 +20,7 @@ export default observer(function OrbitHeader() {
 
   return (
     <>
-      <HeaderTop padding={isTorn ? [2, 10] : [6, 10]}>
+      <HeaderTop padding={isTorn ? [2, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
@@ -42,7 +43,10 @@ export default observer(function OrbitHeader() {
               <View flex={1} />
             </>
           )}
+
+          <Icon name={`orbit-${paneManagerStore.activePane.type}`} size={18} opacity={0.18} />
           <OrbitHeaderInput />
+
           {isTorn && toolbars && (
             <>
               <View flex={1} />

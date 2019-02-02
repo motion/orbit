@@ -10,8 +10,8 @@ import {
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
 import React from 'react'
-import { AppIcon } from '../apps/apps/AppsMainNew'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { MarkType } from './QueryStore/types'
 

@@ -55,10 +55,11 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    background: '#fff',
+    background: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
     color: '#444',
@@ -67,8 +68,8 @@ const light = {
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
     headerBackground: [255, 255, 255, 0.56],
     sidebarBackground: [255, 255, 255, 0.85],
-    tabBackground: [250, 250, 250],
-    // tabBackgroundActive: [255, 255, 255, 0.8],
+    tabBackgroundTop: lightBackground.alpha(0.7),
+    tabBackgroundBottom: lightBackground.alpha(0.95),
     tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',
@@ -93,16 +94,17 @@ const light = {
   }),
 }
 
+const darkBackground = color([55, 55, 55])
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     light02: [60, 60, 60],
-    background: [55, 55, 55],
+    background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: '#464646',
-    headerBackground: linearGradient([0, 0, 0, 0.35], [0, 0, 0, 0.48]),
+    headerBackground: linearGradient([0, 0, 0, 0.45], [0, 0, 0, 0.58]),
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],
@@ -111,7 +113,8 @@ const dark = {
     colorActive: '#fff',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-    tabBackground: [55, 55, 55],
+    tabBackgroundTop: darkBackground.darken(0.1).alpha(0.7),
+    tabBackgroundBottom: darkBackground.alpha(0.95),
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [25, 25, 25, 0.68],
     sidebarBorderColor: '#444',

@@ -1,4 +1,4 @@
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, linearGradient, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
@@ -43,7 +43,7 @@ const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({
-  background: `linear-gradient(${theme.tabBackground.alpha(0.95)}, ${theme.background})`,
+  background: linearGradient(theme.tabBackgroundBottom, theme.background),
   boxShadow: [
     ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
     // ['inset', 0, -0.5, 0, 0, theme.borderColor],

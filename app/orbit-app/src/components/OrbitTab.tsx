@@ -1,4 +1,4 @@
-import { gloss, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
+import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
 import {
   Button,
@@ -171,12 +171,13 @@ const NavButtonChrome = gloss<TabProps>({
     y: 0.5,
   },
 }).theme(({ isActive, stretch, sidePad }, theme) => {
-  const backgroundBase = theme.tabBackground
-  const background = `linear-gradient(${backgroundBase.alpha(0.7)}, ${backgroundBase.alpha(0.95)})`
+  const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
+
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
   }
+
   return {
     padding: [0, sidePad],
     minWidth: stretch ? 160 : 0,

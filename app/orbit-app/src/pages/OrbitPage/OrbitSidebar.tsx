@@ -5,12 +5,11 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { apps } from '../../apps/apps'
 import { AppView } from '../../apps/AppView'
+import { SmallListItemPropsProvider } from '../../components/SmallListItemPropsProvider'
 import { SubPane } from '../../components/SubPane'
-import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderTop } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
-import { renderHighlightedText } from '../../views/VirtualList/renderHighlightedText'
 
 export default observer(function OrbitSidebar() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
@@ -24,7 +23,7 @@ export default observer(function OrbitSidebar() {
   const hasMain = !!activeApp.main
 
   return (
-    <ItemPropsProvider value={{ oneLine: true, renderText: renderHighlightedText }}>
+    <SmallListItemPropsProvider>
       <Sidebar
         width={hasIndex ? (hasMain ? 340 : window.innerWidth) : 0}
         minWidth={100}
@@ -52,7 +51,7 @@ export default observer(function OrbitSidebar() {
           ))}
         </OrbitIndexView>
       </Sidebar>
-    </ItemPropsProvider>
+    </SmallListItemPropsProvider>
   )
 })
 

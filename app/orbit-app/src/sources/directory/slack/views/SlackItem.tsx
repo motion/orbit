@@ -1,5 +1,6 @@
 import { SlackBitDataMessage } from '@mcro/models'
 import * as React from 'react'
+import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitItemViewProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
@@ -15,8 +16,9 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
   return res
 }
 
-export function SlackItem(props: OrbitItemViewProps<'slack'>) {
-  const { item, searchTerm, shownLimit, oneLine, renderText, hide } = props
+export function SlackItem(rawProps: OrbitItemViewProps<'slack'>) {
+  const itemProps = React.useContext(ItemPropsContext)
+  const { item, searchTerm, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
   const { data, people } = item
 
   if (!data || !data.messages) {
@@ -45,10 +47,9 @@ export function SlackItem(props: OrbitItemViewProps<'slack'>) {
     return (
       <ChatMessage
         key={index}
-        {...props}
+        {...rawProps}
         message={message}
         previousMessage={data.messages[index - 1]}
-        hide={hide}
         oneLine={oneLine}
         renderText={renderText}
       />

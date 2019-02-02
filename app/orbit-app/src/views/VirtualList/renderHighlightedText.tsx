@@ -19,3 +19,13 @@ export function renderHighlightedText(text: string) {
     </HighlightTextFrame>
   )
 }
+
+export function renderHighlightedTextSingle(text: string) {
+  return (
+    <HighlightTextFrame>
+      <HighlightText ellipse whiteSpace="normal" options={{ maxSurroundChars: 100 }}>
+        {collapseWhitespace(text)}
+      </HighlightText>
+    </HighlightTextFrame>
+  )
+}

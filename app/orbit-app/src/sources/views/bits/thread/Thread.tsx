@@ -5,21 +5,23 @@ import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitItemViewProps } from '../../../types'
 import { ThreadMessage } from './ThreadMessage'
 
-export const Thread = ({ item, renderText }: OrbitItemViewProps<any>) => {
+export const Thread = (rawProps: OrbitItemViewProps<any>) => {
   const itemProps = React.useContext(ItemPropsContext)
+  const props = { ...itemProps, ...rawProps }
 
-  if (!item) {
+  if (!props.item) {
     return null
   }
-  const { messages } = item.data as GmailBitData
+
+  const { messages } = props.item.data as GmailBitData
   if (!messages) {
     return null
   }
-  if (renderText) {
-    return renderText(item.body)
+  if (props.renderText) {
+    return props.renderText(props.item.body)
   }
-  if (itemProps.oneLine) {
-    return <HighlightTextItem ellipse>{item.body.slice(0, 200)}</HighlightTextItem>
+  if (props.oneLine) {
+    return <HighlightTextItem ellipse>{props.item.body.slice(0, 200)}</HighlightTextItem>
   }
 
   return (

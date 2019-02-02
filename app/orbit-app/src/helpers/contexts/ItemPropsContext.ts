@@ -9,6 +9,7 @@ export const ItemPropsContext = createContext({
   beforeTitle: null,
   itemProps: null as ViewProps,
   textProps: null as TextProps,
+  renderText: null,
 })
 
 export type ItemsPropsContextType = ContextValueOf<typeof ItemPropsContext>

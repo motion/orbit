@@ -9,15 +9,14 @@ import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
 import Searchable from '../../../components/Searchable'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
+import { SmallListItemPropsProvider } from '../../../components/SmallListItemPropsProvider'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../contexts'
-import { ItemPropsProvider } from '../../../contexts/ItemPropsProvider'
 import { useActiveApps } from '../../../hooks/useActiveApps'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { MergeContext } from '../../../views/MergeContext'
-import { renderHighlightedText } from '../../../views/VirtualList/renderHighlightedText'
 import { VirtualListDefaultProps } from '../../../views/VirtualList/VirtualList'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
@@ -531,7 +530,7 @@ export function Menu() {
   }, [])
 
   return (
-    <ItemPropsProvider value={{ oneLine: true, renderText: renderHighlightedText }}>
+    <SmallListItemPropsProvider>
       <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
         <MergeContext
           Context={StoreContext}
@@ -550,7 +549,7 @@ export function Menu() {
           </BrowserDebugTray>
         </MergeContext>
       </MergeContext>
-    </ItemPropsProvider>
+    </SmallListItemPropsProvider>
   )
 }
 

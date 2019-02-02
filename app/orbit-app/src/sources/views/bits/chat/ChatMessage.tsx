@@ -30,8 +30,9 @@ const SlackMessageInner = gloss({
   overflow: 'hidden',
 })
 
-export function ChatMessage({ item, message, renderText, previousMessage }: SlackMessageProps) {
+export function ChatMessage(rawProps: SlackMessageProps) {
   const itemProps = React.useContext(ItemPropsContext)
+  const { item, message, renderText, previousMessage } = { ...itemProps, ...rawProps }
 
   if (!message.text || !item) {
     return null

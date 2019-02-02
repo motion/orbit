@@ -19,7 +19,6 @@ export function tearPeek() {
   console.log('setting app state', peeksState)
   // set
   App.setState({
-    lastTear: Date.now(),
     peeksState,
   })
   setTimeout(() => {

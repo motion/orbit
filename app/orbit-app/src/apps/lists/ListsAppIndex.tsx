@@ -21,6 +21,7 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { BorderBottom } from '../../views/Border'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 
@@ -93,31 +94,36 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   )
 })
 
+export async function loadListItem(
+  item?: ListAppDataItem,
+  listId?: number,
+): Promise<OrbitListItemProps> {
+  switch (item.type) {
+    case 'folder':
+      return {
+        title: item.name,
+        subtitle: `${item.children.length} items`,
+        after: <Button circular chromeless size={0.9} icon="arrowright" />,
+        appConfig: {
+          id: `${listId || -1}`,
+          subId: `${item.id}`,
+          subType: 'folder',
+        },
+      }
+    case 'bit':
+      return {
+        item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
+      }
+    case 'person':
+      return {
+        item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
+      }
+  }
+  return null
+}
+
 const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store: ListStore }) {
   const { items } = store
-
-  const loadItemProps = React.useCallback(async item => {
-    switch (item.type) {
-      case 'folder':
-        return {
-          title: item.name,
-          subtitle: `${item.children.length} items`,
-          after: <Button circular chromeless size={0.9} icon="arrowright" onClick={store.back} />,
-          appConfig: {
-            subType: 'folder',
-          },
-        }
-      case 'bit':
-        return {
-          item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
-        }
-      case 'person':
-        return {
-          item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
-        }
-    }
-    return null
-  }, [])
 
   const getContextMenu = React.useCallback(index => {
     return [
@@ -133,6 +139,10 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
   const onChangeDepth = React.useCallback((depth, history) => {
     store.depth = depth
     store.history = history
+  }, [])
+
+  const loadItemProps = React.useCallback((item: ListAppDataItem) => {
+    return loadListItem(item, +store.props.id)
   }, [])
 
   return (

@@ -1,15 +1,17 @@
-import { gloss, Row } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
-import React from 'react'
-import { useOrbitToolbars } from '../../components/OrbitToolbar'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalScroll } from '../../views'
+import { gloss, Row } from '@mcro/gloss';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
+import { useOrbitToolbars } from '../../components/OrbitToolbar';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { HorizontalScroll } from '../../views';
 
 const height = 32
 
 export default observer(function OrbitControls() {
   const { orbitStore } = useStoresSafe()
   const toolbars = useOrbitToolbars()
+
+  console.log('toolbars', toolbars)
 
   return (
     <>

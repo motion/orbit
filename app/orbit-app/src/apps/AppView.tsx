@@ -1,5 +1,6 @@
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
+import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { StoreContext } from '../contexts'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { GenericComponent } from '../types'
@@ -44,7 +45,7 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
       )
     }
 
-    return (
+    const appElement = (
       <AppView
         appStore={props.appStore || appStore}
         sourcesStore={stores.sourcesStore}
@@ -56,6 +57,14 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
         {...props}
       />
     )
+
+    // small rendering for index views
+    if (props.viewType === 'index') {
+      return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
+    }
+
+    // regular rendering for others
+    return appElement
   }, Object.values(props))
 
   if (!props.appStore) {

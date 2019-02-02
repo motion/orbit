@@ -9,7 +9,6 @@ import { createRef } from 'react'
 import { AppActions } from '../../../actions/AppActions'
 import Searchable from '../../../components/Searchable'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
-import { SmallListItemPropsProvider } from '../../../components/SmallListItemPropsProvider'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../contexts'
 import { useActiveApps } from '../../../hooks/useActiveApps'
@@ -530,26 +529,24 @@ export function Menu() {
   }, [])
 
   return (
-    <SmallListItemPropsProvider>
-      <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
-        <MergeContext
-          Context={StoreContext}
-          value={{
-            queryStore,
-            menuStore,
-            paneManagerStore,
-          }}
-        >
-          <BrowserDebugTray menuStore={menuStore}>
-            <MainShortcutHandler>
-              <MenuChrome>
-                <MenuLayerContent />
-              </MenuChrome>
-            </MainShortcutHandler>
-          </BrowserDebugTray>
-        </MergeContext>
+    <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
+      <MergeContext
+        Context={StoreContext}
+        value={{
+          queryStore,
+          menuStore,
+          paneManagerStore,
+        }}
+      >
+        <BrowserDebugTray menuStore={menuStore}>
+          <MainShortcutHandler>
+            <MenuChrome>
+              <MenuLayerContent />
+            </MenuChrome>
+          </MainShortcutHandler>
+        </BrowserDebugTray>
       </MergeContext>
-    </SmallListItemPropsProvider>
+    </MergeContext>
   )
 }
 

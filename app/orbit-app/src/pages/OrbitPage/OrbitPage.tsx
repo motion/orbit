@@ -39,7 +39,7 @@ export default React.memo(function OrbitPage() {
 
 const OrbitPageInner = observer(function OrbitPageInner() {
   const { paneManagerStore } = useStoresSafe()
-  const searchStore = useStore(SearchStore)
+  const searchStore = useStore(SearchStore, { paneManagerStore })
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'

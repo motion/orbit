@@ -52,7 +52,7 @@ export type ListItemProps = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     subtitle?: React.ReactNode
-    date?: number
+    date?: Date
     icon?: any
     index?: number
     isExpanded?: boolean
@@ -183,7 +183,7 @@ export default observer(function ListItem(props: ListItemProps) {
       <Row>
         {showDate && (
           <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
-            <DateFormat date={new Date(date)} nice={differenceInCalendarDays(Date.now, date) < 7} />
+            <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
           </UI.Text>
         )}
       </Row>

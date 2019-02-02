@@ -16,19 +16,22 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
 }
 
 export function SlackItem(props: OrbitItemViewProps<'slack'>) {
-  const { item, searchTerm, shownLimit, extraProps, renderText, hide } = props
+  const { item, searchTerm, shownLimit, oneLine, renderText, hide } = props
   const { data, people } = item
+
   if (!data || !data.messages) {
     return null
   }
+
   const messages = getMessages(data.messages, { searchTerm, shownLimit })
 
   // one line view
   const text = messages.map(message => message.text).join(' ')
+
   if (renderText) {
     return renderText(text)
   }
-  if (extraProps && extraProps.oneLine) {
+  if (oneLine) {
     return <HighlightTextItem ellipse>{text.slice(0, 200)}</HighlightTextItem>
   }
 
@@ -46,7 +49,7 @@ export function SlackItem(props: OrbitItemViewProps<'slack'>) {
         message={message}
         previousMessage={data.messages[index - 1]}
         hide={hide}
-        extraProps={extraProps}
+        oneLine={oneLine}
         renderText={renderText}
       />
     )

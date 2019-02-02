@@ -9,16 +9,11 @@ export type TaskLike = {
   comments: TaskCommentLike[]
 }
 
-export function Task({
-  body,
-  comments,
-  renderText,
-  extraProps,
-}: OrbitItemViewProps<any> & TaskLike) {
+export function Task({ body, comments, renderText, oneLine }: OrbitItemViewProps<any> & TaskLike) {
   if (renderText) {
     return renderText(body)
   }
-  if (extraProps && extraProps.oneLine) {
+  if (oneLine) {
     return <HighlightTextItem ellipse>{body.slice(0, 200)}</HighlightTextItem>
   }
   return (

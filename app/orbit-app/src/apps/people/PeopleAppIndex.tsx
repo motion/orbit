@@ -19,11 +19,13 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
   // people and query
   const { queryStore } = useStoresSafe()
   const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters
-  const where = {}
+  const where = []
   if (hasIntegrationFilters) {
     for (const filter of integrationFilters) {
       if (filter.active) {
-        where[`has${capitalize(filter.integration)}`] = true
+        where.push({
+          [`has${capitalize(filter.integration)}`]: true,
+        })
       }
     }
   }

@@ -5,13 +5,16 @@ import PeopleRow from '../../components/PeopleRow'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { OrbitItemViewProps } from '../../sources/types'
-import { renderHighlightedText } from '../VirtualList/renderHighlightedText'
+import { ItemType, OrbitItemViewProps } from '../../sources/types'
 import { VirtualListItemProps } from '../VirtualList/VirtualListItem'
 import ListItem, { ListItemProps } from './ListItem'
 import ListItemPerson from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
+
+type OrbitItemComponent<A extends ItemType> = React.FunctionComponent<OrbitItemViewProps<A>> & {
+  itemProps?: OrbitItemViewProps<A>
+}
 
 export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> & {
   // for appconfig merge
@@ -30,7 +33,7 @@ export const OrbitListItem = React.memo(
     })
 
     // this is the view from sources, each bit type can have its own display
-    let ItemView = null
+    let ItemView: OrbitItemComponent<any> = null
     let itemProps: Partial<ListItemProps> = null
     let normalized: NormalItem = null
 
@@ -54,12 +57,15 @@ export const OrbitListItem = React.memo(
 
     const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
 
-    const isSelected = React.useCallback(index => {
+    const isSelected = React.useCallback((index: number) => {
       const appActive = appStore ? appStore.isActive : true
       const isSelected =
         props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
-      return appActive && isSelected
-    }, [])
+      if (appActive) {
+        return isSelected
+      }
+      return false
+    }, []) as any
 
     const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
 
@@ -78,9 +84,6 @@ export const OrbitListItem = React.memo(
         {!!ItemView && (
           <ItemView
             item={item}
-            shownLimit={3}
-            renderText={renderHighlightedText}
-            // extraProps={extraProps}
             normalizedItem={normalized}
             {...ItemView.itemProps}
             {...itemViewProps}
@@ -103,15 +106,15 @@ const Bottom = gloss({
 
 const spaceBetween = <div style={{ flex: 1 }} />
 
-export const getNormalPropsForListItem = (normalized: NormalItem): ListItemProps => ({
+export const getNormalPropsForListItem = (normalized: NormalItem): OrbitListItemProps => ({
   title: normalized.title,
   location: normalized.location,
-  webLink: normalized.webLink,
-  desktopLink: normalized.desktopLink,
-  updatedAt: normalized.updatedAt,
-  integration: normalized.integration,
-  icon: normalized.icon,
+  // webLink: normalized.webLink,
+  // desktopLink: normalized.desktopLink,
+  // integration: normalized.integration,
   people: normalized.people,
+  date: normalized.updatedAt,
+  icon: normalized.icon,
   preview: normalized.preview,
   after: normalized.after,
 })

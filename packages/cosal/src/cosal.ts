@@ -1,11 +1,11 @@
-import { getIncrementalCovariance, Covariance } from './getIncrementalCovariance'
-import { toCosal, Pair } from './toCosal'
-import { pathExists, readJSON, writeJSON, remove } from 'fs-extra'
-import { getDefaultVectors } from './getDefaultVectors'
-import { defaultSlang, normalizeWord } from './helpers'
-import { getCovariance } from './getCovariance'
-import { annoySearch, annoyScan } from './annoy'
+import { pathExists, readJSON, remove, writeJSON } from 'fs-extra'
 import { join } from 'path'
+import { annoyScan, annoySearch } from './annoy'
+import { getCovariance } from './getCovariance'
+import { getDefaultVectors } from './getDefaultVectors'
+import { Covariance, getIncrementalCovariance } from './getIncrementalCovariance'
+import { defaultSlang, normalizeWord } from './helpers'
+import { Pair, toCosal } from './toCosal'
 
 // exports
 export { getIncrementalCovariance } from './getIncrementalCovariance'
@@ -253,7 +253,7 @@ export class Cosal {
   topics = async (query: string, { max = 10 } = {}) => {
     if (!this.topicsList) {
       this.topicsList = await readJSON(join(__dirname, '../topics2.json'))
-      await this.scan(this.topicsList.slice(0, 100).map((text, id) => ({ text, id })), 'topics')
+      await this.scan(this.topicsList.map((text, id) => ({ text, id })), 'topics')
       await annoyScan({ db: 'topics', path: this.databasePath })
     }
     const res = await this.searchWithCovariance('topics', query, { max })

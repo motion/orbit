@@ -168,7 +168,15 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
 
             <Unpad>
               {recentBits.map(bit => {
-                return <OrbitListItem key={bit.id} item={bit} margin={0} padding={[15, 20]} />
+                return (
+                  <OrbitListItem
+                    itemViewProps={{ oneLine: false }}
+                    key={bit.id}
+                    item={bit}
+                    margin={0}
+                    padding={[15, 20]}
+                  />
+                )
               })}
             </Unpad>
           </Section>

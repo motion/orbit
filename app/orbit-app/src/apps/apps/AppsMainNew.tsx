@@ -1,24 +1,11 @@
-import { App } from '@mcro/models'
-import { IconProps, Popover, Row, View } from '@mcro/ui'
+import { Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace } from '../../views'
+import { AppIcon } from '../../views/AppIcon'
 import { ColorPicker } from '../../views/ColorPicker'
-import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
-
-export function AppIcon({ app, ...props }: { app: App } & Partial<IconProps>) {
-  return (
-    <Icon
-      background={app.colors[0]}
-      color={app.colors[1]}
-      name={`orbit-${app.type}-full`}
-      size={48}
-      {...props}
-    />
-  )
-}
 
 export default observer(function AppsMainNew() {
   const { newAppStore } = useStoresSafe()

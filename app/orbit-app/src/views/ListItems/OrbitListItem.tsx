@@ -72,6 +72,8 @@ export const OrbitListItem = React.memo(
         isSelected={isSelected}
         {...props}
         icon={icon}
+        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+        location={normalized ? normalized.location : props.location}
       >
         {!!ItemView && (
           <ItemView

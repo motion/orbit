@@ -5,11 +5,12 @@ import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
 import { Title } from '../views'
+import { AppIcon } from '../views/AppIcon'
 import { BorderTop } from '../views/Border'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import { AppProps } from './AppProps'
-import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
+import AppsMainNew from './apps/AppsMainNew'
 import { AppView } from './AppView'
 
 const descriptions = {

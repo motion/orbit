@@ -2,17 +2,16 @@ import * as UI from '@mcro/ui'
 import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
-import AppIcon from './AppIcon'
+import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
 
-export type OrbitIconProps = React.HTMLProps<any> &
-  IconProps & {
-    ref: any
-    name: string
-    size?: number
-    style?: any
-  }
+export type OrbitIconProps = IconProps & {
+  ref?: any
+  name: string
+  size?: number
+  style?: any
+}
 
 export const Icon = React.memo((props: OrbitIconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
@@ -23,7 +22,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   const integrationIcon = useIntegrationIcon({ icon: name })
 
   if (appIcons[name]) {
-    return <AppIcon {...props} />
+    return <AppIconInner {...props} />
   }
 
   if (integrationIcon) {

@@ -1,23 +1,22 @@
 import { useTheme } from '@mcro/gloss'
+import { App } from '@mcro/models'
 import { color } from '@mcro/ui'
-import React, { memo } from 'react'
+import React from 'react'
 import { OrbitIconProps } from './Icon'
 import { appIcons } from './icons'
 import { SVG } from './SVG'
 
-type AppIconProps = OrbitIconProps & {
-  background?: string
-}
+export type AppIconProps = { app: App; removeStroke?: boolean } & Partial<OrbitIconProps>
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export default memo(function AppIcon({
+export function AppIconInner({
   background = '#222',
   size = 32,
   style,
   removeStroke = true,
   ...props
-}: AppIconProps & { removeStroke?: boolean }) {
+}: OrbitIconProps) {
   const theme = useTheme()
   const fill = color(
     props.color || (size < 36 ? theme.iconFill || theme.background : background),
@@ -74,4 +73,18 @@ export default memo(function AppIcon({
       {...props}
     />
   )
-})
+}
+
+export function AppIcon({ app, ...props }: AppIconProps) {
+  return (
+    <AppIconInner
+      background={app.colors[0]}
+      color={app.colors[1]}
+      name={`orbit-${app.type}-full`}
+      size={48}
+      {...props}
+    />
+  )
+}
+
+AppIcon['acceptsIconProps'] = true

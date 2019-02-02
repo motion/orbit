@@ -40,6 +40,8 @@ export type ListItemDisplayProps = {
 export type ListItemProps = CSSPropertySetStrict &
   ListItemHide &
   ListItemDisplayProps & {
+    location?: React.ReactNode
+    preview?: React.ReactNode
     title?: React.ReactNode
     subTextOpacity?: number
     slim?: boolean
@@ -50,7 +52,7 @@ export type ListItemProps = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     subtitle?: React.ReactNode
-    date?: React.ReactNode
+    date?: number
     icon?: any
     index?: number
     isExpanded?: boolean
@@ -106,6 +108,8 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLi
   if (React.isValidElement(icon)) {
     if (icon.type['acceptsIconProps']) {
       element = React.cloneElement(icon, iconPropsFinal)
+    } else {
+      console.log('icon.type', icon.type)
     }
   } else {
     element = <Icon name={icon} {...iconPropsFinal} />
@@ -121,14 +125,12 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLi
 export default observer(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
   const {
-    createdAt,
-    icon,
+    date,
     location,
     preview,
+    icon,
     subtitle,
     title,
-    integration,
-    updatedAt,
     borderRadius,
     cardProps,
     children,
@@ -157,7 +159,7 @@ export default observer(function ListItem(props: ListItemProps) {
   const { isSelected } = store
   const showChildren = !props.hideBody
   const showSubtitle = !!subtitle && !props.hideSubtitle
-  const showDate = !!createdAt && !props.hideDate
+  const showDate = !!date && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
   const showTitle = !!title && !props.hideTitle
   const showPreview = !!preview && !children && !props.hideBody
@@ -186,10 +188,7 @@ export default observer(function ListItem(props: ListItemProps) {
       <Row>
         {showDate && (
           <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
-            <DateFormat
-              date={new Date(updatedAt)}
-              nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-            />
+            <DateFormat date={new Date(date)} nice={differenceInCalendarDays(Date.now, date) < 7} />
           </UI.Text>
         )}
       </Row>

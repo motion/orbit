@@ -4,6 +4,7 @@ import React from 'react'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { RoundButton, Title } from '../../views'
+import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
 
@@ -12,7 +13,7 @@ export default function AppsMainManage() {
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
-    icon: <Icon background={x.colors[0]} size={58} name={`orbit-${x.type}-full`} />,
+    icon: <AppIcon app={x} size={58} />,
     type: 'installed',
     group: 'Installed Apps',
     after: <RoundButton circular icon="remove" />,

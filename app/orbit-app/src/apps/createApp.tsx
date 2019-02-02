@@ -1,15 +1,16 @@
 import { AppType } from '@mcro/models'
-import { Absolute, BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
+import { BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import OrbitControls from '../pages/OrbitPage/OrbitControls'
 import { defaultApps } from '../stores/NewAppStore'
 import { Title } from '../views'
+import { AppIcon } from '../views/AppIcon'
+import { BorderTop } from '../views/Border'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import { AppProps } from './AppProps'
-import AppsMainNew, { AppIcon } from './apps/AppsMainNew'
+import AppsMainNew from './apps/AppsMainNew'
 import { AppView } from './AppView'
 
 const descriptions = {
@@ -25,12 +26,11 @@ function CreateAppIndex() {
         <Title>Choose type</Title>
       </Section>
       <SelectableList
-        minSelected={0}
         items={defaultApps.map(app => ({
           title: app.name,
           subtitle: descriptions[app.type],
           icon: <AppIcon app={app} />,
-          type: app.type,
+          type: AppType[app.type],
           iconBefore: true,
         }))}
       />
@@ -58,34 +58,46 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
     <Row flex={1}>
       <View width="50%">
         <Section paddingBottom={0}>
-          <Title>Customize</Title>
+          <Title>Setup</Title>
         </Section>
 
         <Section paddingTop={0}>
           <AppsMainNew />
         </Section>
-        <OrbitControls />
+
+        <Section paddingTop={0}>
+          <AppView type={type} viewType="settings" />
+        </Section>
       </View>
 
       <View width="50%" position="relative">
         <BorderLeft />
-        <AppView
-          viewType="index"
-          id={type}
-          type={type}
-          appConfig={{
-            type: type,
-          }}
-        />
-      </View>
 
-      <Absolute bottom={25} right={25}>
-        <Theme name="selected">
-          <Button elevation={2} size={1.4}>
-            Add
-          </Button>
-        </Theme>
-      </Absolute>
+        <Section paddingBottom={0}>
+          <Title>Preview</Title>
+        </Section>
+
+        <View flex={1}>
+          <AppView
+            viewType="index"
+            id={type}
+            type={type}
+            appConfig={{
+              type: type,
+            }}
+          />
+        </View>
+
+        <Section>
+          <BorderTop />
+
+          <Theme name="selected">
+            <Button elevation={2} size={1.4}>
+              Create
+            </Button>
+          </Theme>
+        </Section>
+      </View>
     </Row>
   )
 })

@@ -3,11 +3,18 @@ import { Row, Text } from '@mcro/ui'
 import * as React from 'react'
 import { RoundButtonSmall } from './RoundButtonSmall'
 
+const statusBarProps = {
+  alignItems: 'center',
+  fontWeight: 500,
+  alpha: 0.8,
+  size: 1.2,
+}
+
 export const StatusBar = gloss({
-  margin: 10,
+  margin: 8,
   borderRadius: 7,
   padding: [0, 7],
-  height: 26,
+  height: 38,
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -16,28 +23,21 @@ export const StatusBar = gloss({
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',
-  boxShadow: [[0, 0, 18, [0, 0, 0, 0.055]]],
   // backdropFilter: 'blur(10px)',
 }).theme((_, theme) => ({
-  background: theme.background.alpha(0.98),
+  background: theme.background.darken(0.1).alpha(0.97),
   border: [1, theme.borderColor.alpha(0.75)],
+  boxShadow: [[0, 0, 18, [0, 0, 0, 0.26]]],
 }))
 
-StatusBar.Space = gloss({
+export const StatusBarSpace = gloss({
   width: 10,
 })
 
-const AppStatusBarTextProps = {
-  alignItems: 'center',
-  fontWeight: 400,
-  alpha: 0.8,
-  fontSize: 12,
-}
-
-StatusBar.Button = props => (
-  <RoundButtonSmall background="transparent" {...AppStatusBarTextProps} {...props} />
+export const StatusBarButton = props => (
+  <RoundButtonSmall background="transparent" {...statusBarProps} {...props} />
 )
 
-StatusBar.Text = props => <Text {...AppStatusBarTextProps} {...props} />
+export const StatusBarText = props => <Text {...statusBarProps} {...props} />
 
-StatusBar.Section = props => <Row alignItems="center" {...props} />
+export const StatusBarSection = props => <Row alignItems="center" {...props} />

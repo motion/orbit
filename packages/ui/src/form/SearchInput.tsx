@@ -22,65 +22,70 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     visible?: boolean
   }
 
-export function SearchInput({
-  width = '100%',
-  before = null,
-  placeholder = null,
-  searchBarProps = null,
-  after = null,
-  actions = null,
-  filters = [],
-  onClickClear = null,
-  focusedToken = null,
-  filterProps = null,
-  value = null,
-  flex = null,
-  padding = 0,
-  visible,
-  ...props
-}: SearchInputProps) {
-  const { activeTheme } = React.useContext(ThemeContext)
-  return (
-    <SearchBar
-      position="relative"
-      zIndex="1"
-      key="searchbar"
-      flex={flex}
-      padding={padding}
-      {...searchBarProps}
-    >
-      {before}
-      <SearchBox width={width} tabIndex={-1}>
-        <SearchIcon
-          name="ui-1_zoom"
-          color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
-        />
-        {filters.map((filter, i) => (
-          <FilterToken
-            key={`${filter.key}:${filter.type}${i}`}
-            index={i}
-            filter={filter}
-            focused={i === focusedToken}
-            {...filterProps}
+export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProps>(
+  function SearchInput(
+    {
+      width = '100%',
+      before = null,
+      placeholder = null,
+      searchBarProps = null,
+      after = null,
+      actions = null,
+      filters = [],
+      onClickClear = null,
+      focusedToken = null,
+      filterProps = null,
+      value = null,
+      flex = null,
+      padding = 0,
+      visible,
+      ...props
+    },
+    ref,
+  ) {
+    const { activeTheme } = React.useContext(ThemeContext)
+    return (
+      <SearchBar
+        position="relative"
+        zIndex="1"
+        key="searchbar"
+        flex={flex}
+        padding={padding}
+        {...searchBarProps}
+      >
+        {before}
+        <SearchBox width={width} tabIndex={-1}>
+          <SearchIcon
+            name="ui-1_zoom"
+            color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
           />
-        ))}
-        <SearchInnerInput placeholder={placeholder} {...props} />
-        <SearchClearButton
-          onClick={onClickClear}
-          visible={typeof visible === 'boolean' ? visible : value && !!value.length}
-          opacity={1}
-          position="relative"
-          zIndex={2}
-          // weirdly this fixes a strange overlap bug
-          flex={1}
-          marginLeft={5}
-        />
-      </SearchBox>
-      {after}
-      {actions != null ? <Actions>{actions}</Actions> : null}
-    </SearchBar>
-  )
-}
+          {filters.map((filter, i) => (
+            <FilterToken
+              key={`${filter.key}:${filter.type}${i}`}
+              index={i}
+              filter={filter}
+              focused={i === focusedToken}
+              {...filterProps}
+            />
+          ))}
+          <SearchInnerInput placeholder={placeholder} ref={ref} {...props} />
+          <SearchClearButton
+            onClick={onClickClear}
+            visible={typeof visible === 'boolean' ? visible : value && !!value.length}
+            opacity={1}
+            position="relative"
+            zIndex={2}
+            // weirdly this fixes a strange overlap bug
+            flex={1}
+            marginLeft={5}
+          />
+        </SearchBox>
+        {after}
+        {actions != null ? <Actions>{actions}</Actions> : null}
+      </SearchBar>
+    )
+  },
+)
 
 const SearchClearButton = gloss(ClearButton, {
   position: 'absolute',

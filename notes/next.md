@@ -1,23 +1,4 @@
-# Sprint 1
-
-Goal: Make progress on apps, syncers, and account so we can deploy it in beta.
-
-## Umed
-
-Needs:
-
-1. as a user i can deploy new apps to my team
-2. as a user i can deploy a new source to my team
-3. as Orbit we can deploy new apps/sources to end-users with ease
-4. (in the future) as a user i can release a new app or source that any other use can install (app store)
-
-TODO (high level):
-
-1. Clean up settings/syncers bugs
-2. we need to have the account/team system setup
-3. Figure out architecture for syncers/apps to cover Needs 1/2/3
-
-TODO (broken down):
+umed:
 
 1. Fix a few small bugs and type issues I've run into (see #bugs)
 2. Finish bugs in syncers (see #syncers)
@@ -32,11 +13,7 @@ TODO (broken down):
 5. Build a test new source and deploy it
 6. Do the same for apps
 
----
-
-## Nate
-
-_Search_
+nate:
 
 - keep current items in memory and just filter them on search by title (not fuzzy just match subsection)
 - Opening, movement fixes

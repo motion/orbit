@@ -4,6 +4,7 @@ export {
   configureCSS,
   css,
   CSSPropertySet,
+  linearGradient,
   psuedoKeys,
   ThemeObject,
   validCSSAttr,
@@ -15,6 +16,7 @@ export { Col } from './blocks/Col'
 export { Contents } from './blocks/Contents'
 export { FullScreen } from './blocks/FullScreen'
 export { Grid } from './blocks/Grid'
+export { Inherit } from './blocks/Inherit'
 export { Inline } from './blocks/Inline'
 export { InlineBlock } from './blocks/InlineBlock'
 export { InlineFlex } from './blocks/InlineFlex'

@@ -1,7 +1,7 @@
 import { gloss, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
+import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalScroll } from '../../views'
 
@@ -9,27 +9,25 @@ const height = 32
 
 export default observer(function OrbitControls() {
   const { orbitStore } = useStoresSafe()
+  const toolbars = useOrbitToolbars()
+
   return (
     <>
       {!orbitStore.isTorn ? (
         <ToolbarChrome>
-          <OrbitToolBarRender>
-            {toolbars => (
-              <ToolbarInner hasToolbars={!!toolbars}>
-                <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
-                <ToolbarCenter>
-                  {toolbars && toolbars.center && (
-                    <>
-                      <ToolbarSpace />
-                      <HorizontalScroll height={height}>{toolbars.center}</HorizontalScroll>
-                      <ToolbarSpace />
-                    </>
-                  )}
-                </ToolbarCenter>
-                <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
-              </ToolbarInner>
-            )}
-          </OrbitToolBarRender>
+          <ToolbarInner hasToolbars={!!toolbars}>
+            <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
+            <ToolbarCenter>
+              {toolbars && toolbars.center && (
+                <>
+                  <ToolbarSpace />
+                  <HorizontalScroll height={height}>{toolbars.center}</HorizontalScroll>
+                  <ToolbarSpace />
+                </>
+              )}
+            </ToolbarCenter>
+            <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
+          </ToolbarInner>
         </ToolbarChrome>
       ) : null}
     </>

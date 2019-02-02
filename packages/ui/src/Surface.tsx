@@ -38,7 +38,7 @@ export type SurfaceProps = CSSPropertySet & {
   dim?: boolean
   elementProps?: Object
   elevation?: number
-  forwardRef?: React.Ref<any>
+  forwardRef?: React.Ref<HTMLDivElement>
   glint?: boolean
   glow?: boolean
   glowProps?: Object
@@ -116,6 +116,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     className,
     alignItems,
     justifyContent,
+    forwardRef,
     ...rest
   } = props
 
@@ -212,7 +213,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
 
   return (
     <Theme select={themeSelect}>
-      <SurfaceFrame {...surfaceProps} />
+      <SurfaceFrame ref={forwardRef} {...surfaceProps} />
     </Theme>
   )
 })

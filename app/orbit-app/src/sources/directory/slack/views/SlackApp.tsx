@@ -1,10 +1,10 @@
 import { useObserveMany } from '@mcro/model-bridge'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
-import { Button, color, Row, SegmentedRow, Theme, ThemeContext } from '@mcro/ui'
+import { Button, Row, SegmentedRow, ThemeContext } from '@mcro/ui'
 import * as React from 'react'
-import { Title } from '../../../../views'
 import { Divider } from '../../../../views/Divider'
 import { Pane } from '../../../../views/Pane'
+import { SectionTitle } from '../../../../views/Section'
 import { OrbitSourceMainProps } from '../../../types'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
@@ -74,28 +74,28 @@ export default React.memo(function SlackApp(props: Props) {
 
   return (
     <>
-      <Theme
+      {/* <Theme
         theme={{
           color: color(activeTheme.color).alpha(0.5),
           colorActive: allThemes.selected.background,
           backgroundHover: activeTheme.backgroundHover,
           borderColor: 'transparent',
         }}
-      >
-        <Row alignItems="center" justifyContent="center" width="100%" margin={[0, 0, 8]}>
-          <SegmentedRow
-            spaced={0}
-            active={activePane}
-            onChange={setActivePane}
-            itemProps={{ chromeless: true, fontWeight: 600, sizeFont: 1.1, size: 0.9 }}
-          >
-            <Button>Conversation</Button>
-            <Button>Previously</Button>
-            <Button>Afterwards</Button>
-            <Button>Related</Button>
-          </SegmentedRow>
-        </Row>
-      </Theme>
+      > */}
+      <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
+        <SegmentedRow
+          spaced={0}
+          active={activePane}
+          onChange={setActivePane}
+          itemProps={{ chromeless: true, fontWeight: 600, sizeFont: 1.1, size: 0.9 }}
+        >
+          <Button>Conversation</Button>
+          <Button>Previously</Button>
+          <Button>Afterwards</Button>
+          <Button>Related</Button>
+        </SegmentedRow>
+      </Row>
+      {/* </Theme> */}
 
       <Pane isShown={activePane === 0}>
         <ScrollableContent key={prevConvos.length} scrollTo="#start">
@@ -107,17 +107,17 @@ export default React.memo(function SlackApp(props: Props) {
 
       <ScrollableContent>
         <Pane isShown={activePane === 1}>
-          <Title>Previously</Title>
+          <SectionTitle>Previously</SectionTitle>
           <ConvoGroup bits={prevConvos.reverse()} />
         </Pane>
 
         <Pane isShown={activePane === 2}>
-          <Title>Afterwards</Title>
+          <SectionTitle>Afterwards</SectionTitle>
           <ConvoGroup bits={nextConvos} />
         </Pane>
 
         <Pane isShown={activePane === 3}>
-          <Title>Related</Title>
+          <SectionTitle>Related</SectionTitle>
           related items
         </Pane>
       </ScrollableContent>

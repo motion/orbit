@@ -1,5 +1,5 @@
 import { gloss } from '@mcro/gloss'
-import { Bit, PersonBit } from '@mcro/models'
+import { AppConfig, AppType, Bit, Person, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import PeopleRow from '../../components/PeopleRow'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
@@ -14,8 +14,13 @@ import ListItemPerson from './ListItemPerson'
 type OrbitItem = Bit | PersonBit | any
 
 export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> & {
+  // for appconfig merge
+  id?: string
+  type?: AppType
+  people?: Person[]
   hidePeople?: boolean
   itemViewProps?: OrbitItemViewProps<any>
+  appConfig?: AppConfig
 }
 
 export const OrbitListItem = React.memo(
@@ -67,6 +72,8 @@ export const OrbitListItem = React.memo(
         isSelected={isSelected}
         {...props}
         icon={icon}
+        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+        location={normalized ? normalized.location : props.location}
       >
         {!!ItemView && (
           <ItemView

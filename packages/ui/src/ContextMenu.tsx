@@ -2,12 +2,16 @@ import { Contents, ViewProps } from '@mcro/gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
-type ContextMenuProps = ViewProps & {
+type UseContextProps = {
   items?: MenuTemplate
   buildItems?: () => MenuTemplate
-  children: React.ReactNode
-  component?: React.ComponentType<any> | string
 }
+
+type ContextMenuProps = ViewProps &
+  UseContextProps & {
+    children: React.ReactNode
+    component?: React.ComponentType<any> | string
+  }
 
 export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(function ContextMenu(
   props,
@@ -15,7 +19,7 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
 ) {
   const { children, component = Contents, items, buildItems, ...restProps } = props
   const context = useContext(ContextMenuContext)
-  const { setItems } = context
+  const { onContextMenu } = useContextMenu({ items, buildItems })
 
   useEffect(
     () => {
@@ -26,16 +30,6 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
     [ref, context],
   )
 
-  const onContextMenu = (_: React.MouseEvent) => {
-    if (typeof setItems === 'function') {
-      if (items != null) {
-        setItems(items)
-      } else if (buildItems != null) {
-        setItems(buildItems())
-      }
-    }
-  }
-
   return React.createElement(
     component,
     {
@@ -45,3 +39,22 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
     children,
   )
 })
+
+export function useContextMenu({ items, buildItems }: UseContextProps) {
+  const { setItems } = useContext(ContextMenuContext)
+
+  const onContextMenu = React.useCallback(
+    () => {
+      if (typeof setItems === 'function') {
+        if (items != null) {
+          setItems(items)
+        } else if (buildItems != null) {
+          setItems(buildItems())
+        }
+      }
+    },
+    [buildItems, JSON.stringify(items)],
+  )
+
+  return { onContextMenu }
+}

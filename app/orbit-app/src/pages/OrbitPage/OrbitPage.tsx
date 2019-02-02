@@ -1,32 +1,33 @@
-import { gloss, Row, View } from '@mcro/gloss';
-import { App } from '@mcro/stores';
-import { Theme } from '@mcro/ui';
-import { useStore } from '@mcro/use-store';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { AppActions } from '../../actions/AppActions';
-import { OrbitToolBarProvider } from '../../components/OrbitToolbar';
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler';
-import { StoreContext } from '../../contexts';
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
-import { useStoresSafe } from '../../hooks/useStoresSafe';
-import { HeaderStore } from '../../stores/HeaderStore';
-import { NewAppStore } from '../../stores/NewAppStore';
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore';
-import { PaneManagerStore } from '../../stores/PaneManagerStore';
-import { QueryStore } from '../../stores/QueryStore/QueryStore';
-import { SearchStore } from '../../stores/SearchStore';
-import { SettingStore } from '../../stores/SettingStore';
-import { SourcesStore } from '../../stores/SourcesStore';
-import { SpaceStore } from '../../stores/SpaceStore';
-import { AppWrapper } from '../../views';
-import { MergeContext } from '../../views/MergeContext';
-import OrbitContent from './OrbitContent';
-import OrbitControls from './OrbitControls';
-import OrbitHeader from './OrbitHeader';
-import OrbitNav from './OrbitNav';
-import OrbitSidebar from './OrbitSidebar';
-import { OrbitStore } from './OrbitStore';
+import { gloss, Row, View } from '@mcro/gloss'
+import { App } from '@mcro/stores'
+import { Theme } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import { once } from 'lodash'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { AppActions } from '../../actions/AppActions'
+import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
+import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
+import { StoreContext } from '../../contexts'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HeaderStore } from '../../stores/HeaderStore'
+import { NewAppStore } from '../../stores/NewAppStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { QueryStore } from '../../stores/QueryStore/QueryStore'
+import { SearchStore } from '../../stores/SearchStore'
+import { SettingStore } from '../../stores/SettingStore'
+import { SourcesStore } from '../../stores/SourcesStore'
+import { SpaceStore } from '../../stores/SpaceStore'
+import { AppWrapper } from '../../views'
+import { MergeContext } from '../../views/MergeContext'
+import OrbitContent from './OrbitContent'
+import OrbitControls from './OrbitControls'
+import OrbitHeader from './OrbitHeader'
+import OrbitNav from './OrbitNav'
+import OrbitSidebar from './OrbitSidebar'
+import { OrbitStore } from './OrbitStore'
 
 export default React.memo(function OrbitPage() {
   return (
@@ -102,6 +103,10 @@ const defaultPanes = [
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]
 
+function useOnce(fn: Function, reset = []) {
+  return React.useCallback(once(fn as any), reset)
+}
+
 const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
@@ -123,18 +128,25 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
     })),
   ]
 
-  // one past the defaults is the first app
-  const firstAppIndex = defaultPanes.length
-
   const paneManagerStore = useStore(PaneManagerStore, {
-    defaultIndex: orbitWindowStore.activePaneIndex || firstAppIndex,
+    defaultIndex: orbitWindowStore.activePaneIndex,
     onPaneChange(index) {
-      // reset name on pane change...
-      newAppStore.reset()
       orbitWindowStore.activePaneIndex = index
     },
     panes,
   })
+
+  // move to first app pane on first run
+  const hasLoadedApps = !!activeApps.length
+  const setToFirstAppPane = useOnce(() => {
+    paneManagerStore.setPaneIndex(defaultPanes.length)
+  })
+  React.useEffect(
+    () => {
+      hasLoadedApps && setToFirstAppPane()
+    },
+    [hasLoadedApps],
+  )
 
   const stores = {
     settingStore,

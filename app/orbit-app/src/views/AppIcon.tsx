@@ -1,30 +1,33 @@
 import { useTheme } from '@mcro/gloss'
+import { App } from '@mcro/models'
 import { color } from '@mcro/ui'
 import React from 'react'
-import { appIcons } from './appIcons'
 import { OrbitIconProps } from './Icon'
+import { appIcons } from './icons'
 import { SVG } from './SVG'
 
-type AppIconProps = OrbitIconProps & {
-  background?: string
-}
+export type AppIconProps = { app: App; removeStroke?: boolean } & Partial<OrbitIconProps>
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export default React.memo(function AppIcon({
+export function AppIconInner({
   background = '#222',
   size = 32,
   style,
+  removeStroke = true,
   ...props
-}: AppIconProps) {
+}: OrbitIconProps) {
   const theme = useTheme()
-  const fill = props.color || (size < 36 ? theme.iconFill || theme.background : background)
+  const fill = color(
+    props.color || (size < 36 ? theme.iconFill || theme.background : background),
+  ).hex()
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
-  const bg = color(background)
-  const adjust = bg.isDark() ? 0.15 : 0.05
-  const bgLight = bg.lighten(adjust).hex()
+  let bg = color(background)
+
+  const adjust = bg.isDark() ? 0.12 : 0.05
+  const bgLight = (bg.lightness() === 100 ? bg : bg.lighten(adjust)).hex()
   const bgDark = bg.darken(adjust).hex()
 
   const newID = bgLight.replace('#', '')
@@ -36,6 +39,11 @@ export default React.memo(function AppIcon({
       .replace('"', '')
       .trim()
     iconSrc = iconSrc.replace(new RegExp(id, 'g'), `${id}-${newID}`)
+  }
+
+  if (removeStroke) {
+    // remove stroke
+    iconSrc = iconSrc.replace(/ stroke-width="[0-9]+"/gi, '')
   }
 
   iconSrc = iconSrc.replace(
@@ -62,6 +70,21 @@ export default React.memo(function AppIcon({
         ...style,
       }}
       cleanup
+      {...props}
     />
   )
-})
+}
+
+export function AppIcon({ app, ...props }: AppIconProps) {
+  return (
+    <AppIconInner
+      background={app.colors[0]}
+      color={app.colors[1]}
+      name={`orbit-${app.type}-full`}
+      size={48}
+      {...props}
+    />
+  )
+}
+
+AppIcon['acceptsIconProps'] = true

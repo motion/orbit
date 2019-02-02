@@ -1,16 +1,11 @@
-import { App } from '@mcro/models'
-import { IconProps, Row, View } from '@mcro/ui'
+import { Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HorizontalSpace, SubTitle, VerticalSpace } from '../../views'
+import { HorizontalSpace } from '../../views'
+import { AppIcon } from '../../views/AppIcon'
 import { ColorPicker } from '../../views/ColorPicker'
-import { Icon } from '../../views/Icon'
 import { Input } from '../../views/Input'
-
-export function AppIcon({ app, ...props }: { app: App } & Partial<IconProps>) {
-  return <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} {...props} />
-}
 
 export default observer(function AppsMainNew() {
   const { newAppStore } = useStoresSafe()
@@ -30,11 +25,35 @@ export default observer(function AppsMainNew() {
   return (
     <>
       <Row alignItems="center">
-        <Icon background={app.colors[0]} name={`orbit-${app.type}-full`} size={48} />
+        <Popover
+          theme="tooltip"
+          borderRadius={10}
+          elevation={1}
+          openOnClick
+          background
+          width={250}
+          height={250}
+          target={
+            <View>
+              <AppIcon removeStroke app={app} size={48} />
+            </View>
+          }
+          overflowY="auto"
+          padding={10}
+        >
+          <ColorPicker
+            onChangeColor={colors => {
+              newAppStore.update({ colors })
+            }}
+            activeColor={app.colors[0]}
+          />
+        </Popover>
 
         <HorizontalSpace />
+
         <Input
           ref={inputRef}
+          fontSize={18}
           placeholder="Name..."
           margin={['auto', 0]}
           value={app.name}
@@ -45,30 +64,7 @@ export default observer(function AppsMainNew() {
             newAppStore.update({ name: e.target.value })
           }}
         />
-
-        {/* <View flex={1} />
-        <Theme name="selected">
-          <Button disabled={!app.name} elevation={1} size={1.4}>
-            Save
-          </Button>
-        </Theme> */}
       </Row>
-
-      <VerticalSpace />
-
-      <SubTitle>Name</SubTitle>
-
-      <VerticalSpace />
-
-      <View>
-        <ColorPicker
-          count={18}
-          onChangeColor={color => {
-            newAppStore.update({ colors: [color, 'white'] })
-          }}
-          activeColor={app.colors[0]}
-        />
-      </View>
     </>
   )
 })

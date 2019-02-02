@@ -138,6 +138,8 @@ export function automagicReact(
   }
 
   function dispose() {
+    // clear reactionID
+    reactionID = null
     if (disposed) {
       return
     }

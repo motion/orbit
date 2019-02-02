@@ -1,11 +1,19 @@
 import { gloss, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ButtonProps, ContextMenu, Glint, IconProps, MenuTemplate, Tooltip } from '@mcro/ui'
+import {
+  Button,
+  ButtonProps,
+  Glint,
+  IconProps,
+  MenuTemplate,
+  Tooltip,
+  useContextMenu,
+} from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 26
+export const tabHeight = 28
 const inactiveOpacity = 0.5
 const border = 5
 
@@ -48,51 +56,54 @@ export function OrbitTab({
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
+  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+
   const button = (
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
         thicc ? 'pinned' : 'unpinned'
       } undraggable ${className || ''}`}
       isActive={isActive}
-      sidePad={sidePad}
       thicc={thicc}
+      sidePad={sidePad}
+      {...contextMenuProps}
       {...props}
     >
-      <ContextMenu items={getContext ? getContext() : null}>
-        {isActive && <Glint y={2} borderRadius={border} />}
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
-          {!React.isValidElement(icon) && (
-            <OrbitTabIcon
-              isActive={isActive}
-              name={`${icon}`}
-              size={iconSize}
-              marginRight={!!label ? sidePad * 0.6 : 0}
-              {...iconProps}
-            />
-          )}
-          {React.isValidElement(icon) &&
-            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
-          {!!label && (
-            <SimpleText
-              ellipse
-              className="tab-label"
-              display="flex"
-              flex={1}
-              size={0.95}
-              opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={400}
-              {...textProps}
-            >
-              {label}
-            </SimpleText>
-          )}
-        </Row>
+      {isActive && <Glint y={2} borderRadius={border} />}
+      <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+        {!React.isValidElement(icon) && !!icon && (
+          <OrbitTabIcon
+            isActive={isActive}
+            name={`${icon}`}
+            size={iconSize}
+            marginRight={!!label ? sidePad * 0.6 : 0}
+            thicc={thicc}
+            {...iconProps}
+          />
+        )}
+        {React.isValidElement(icon) &&
+          React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
+        {!!label && (
+          <SimpleText
+            ellipse
+            className="tab-label"
+            display="flex"
+            flex={1}
+            size={0.95}
+            opacity={isActive ? 1 : inactiveOpacity}
+            fontWeight={400}
+            {...textProps}
+          >
+            {label}
+          </SimpleText>
+        )}
+      </Row>
 
-        {separator && <Separator />}
+      {separator && <Separator />}
 
-        {after}
+      {after}
 
-        {/* {isActive && !!onClickPopout && (
+      {/* {isActive && !!onClickPopout && (
           <OrbitTabButton
             className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
             tooltip="Open"
@@ -103,7 +114,6 @@ export function OrbitTab({
             }}
           />
         )} */}
-      </ContextMenu>
     </NavButtonChrome>
   )
   if (tooltip) {
@@ -116,7 +126,8 @@ function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
   return (
     <Icon
-      color={invertLightness(theme.color, 0.8).alpha(props.isActive ? 1 : 0.6)}
+      color={invertLightness(theme.color, 0.8)}
+      opacity={props.isActive ? 1 : props.thicc ? 0.5 : 0.3}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -181,6 +192,9 @@ const NavButtonChrome = gloss<TabProps>({
         ]
       : null,
     '&:hover': glowStyle,
+    '&:hover .tab-icon': {
+      opacity: '1 !important',
+    },
     '&:hover .tab-label': {
       opacity: 1,
     },
@@ -194,8 +208,10 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: -1,
+    y: 0,
+    x: 0.5,
   },
   width: 1,
-  background: 'linear-gradient(transparent 15%, rgba(0,0,0,0.048))',
-})
+}).theme((_, theme) => ({
+  background: `linear-gradient(transparent 15%, ${theme.background.darken(0.2).alpha(0.65)})`,
+}))

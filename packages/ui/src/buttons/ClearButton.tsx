@@ -4,7 +4,8 @@ import { Icon } from '../Icon'
 
 const ClearClickableArea = gloss(View, {
   padding: 5,
-  transition: 'all ease 250ms 100ms',
+  transition: 'all ease 450ms 100ms',
+  opacity: 1,
   hidden: {
     pointerEvents: 'none',
     opacity: 0,

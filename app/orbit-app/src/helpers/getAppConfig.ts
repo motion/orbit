@@ -1,7 +1,6 @@
-import { AppConfig, AppType } from '@mcro/models'
+import { AppConfig } from '@mcro/models'
 import { allIntegrations } from '../sources'
 import { sourceToAppConfig } from '../stores/SourcesStore'
-import { ListItemProps } from '../views/ListItems/ListItem'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 
 // this is mid-refactor in a sense
@@ -12,7 +11,7 @@ import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 // but then it also falls back to generically mapping over ListItem props
 // works for now, but could be rethought
 
-export const getAppConfig = (props: OrbitListItemProps, id?: string): AppConfig => {
+export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
   const { item } = props
   let type: string = ''
   if (item) {
@@ -35,11 +34,11 @@ export const getAppConfig = (props: OrbitListItemProps, id?: string): AppConfig 
   }
 }
 
-function listItemToAppConfig(props: ListItemProps): AppConfig {
+function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   return {
     id: props.id,
-    type: props.type as AppType,
-    title: props.title,
+    type: props.type,
+    title: typeof props.title === 'string' ? props.title : undefined,
     icon: props.icon,
     ...props.appConfig,
   }

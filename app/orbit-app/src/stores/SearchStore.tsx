@@ -11,7 +11,7 @@ import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
 import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { Icon } from '../views/Icon'
+import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { MarkType } from './QueryStore/types'
 
@@ -118,12 +118,11 @@ export class SearchStore {
       (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []
 
     const appToResult = app => {
-      const icon = <Icon name={`orbit-${app.type}-full`} background={app.colors[0]} />
       return {
         title: app.name,
         slim: true,
         iconBefore: true,
-        icon,
+        icon: <AppIcon app={app} />,
         group: this.stores.spaceStore.activeSpace.name,
         appConfig: {
           type: AppType.message,

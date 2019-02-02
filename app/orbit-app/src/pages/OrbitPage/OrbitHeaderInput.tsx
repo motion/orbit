@@ -5,7 +5,6 @@ import * as React from 'react'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
-import { HeaderStore } from './OrbitHeader'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -15,17 +14,13 @@ const handleKeyDown = e => {
   }
 }
 
-type Props = {
-  headerStore: HeaderStore
-}
-
 function useActivePane() {
   const { paneManagerStore } = useStoresSafe()
   return paneManagerStore.activePane
 }
 
-export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
+export default observer(function OrbitHeaderInput() {
+  const { orbitStore, orbitWindowStore, queryStore, headerStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()

@@ -37,7 +37,11 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
     const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
     if (!AppView) {
-      return null
+      return (
+        <div>
+          not found {props.type} {props.viewType}
+        </div>
+      )
     }
 
     return (

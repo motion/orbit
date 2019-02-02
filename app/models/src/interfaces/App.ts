@@ -1,3 +1,4 @@
+import { AppType } from './AppTypes'
 import { ListsApp, ListsAppData } from './ListApp'
 import { SearchApp, SearchAppData } from './SearchApp'
 import { Space } from './Space'
@@ -38,21 +39,33 @@ export type AppData = {
   custom: CustomAppData
 }
 
-export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
-export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
-export type SourcesApp = BaseApp & { type: 'sources'; data: any }
-export type SettingsApp = BaseApp & { type: 'settings'; data: any }
-export type CustomApp = BaseApp & { type: 'custom'; data: CustomAppData }
+export type PeopleApp = BaseApp & { type: AppType.people; data: PeopleAppData }
+export type TopicsApp = BaseApp & { type: AppType.topics; data: TopicsAppData }
+export type SourcesApp = BaseApp & { type: AppType.sources; data: any }
+export type SettingsApp = BaseApp & { type: AppType.settings; data: any }
+export type CustomApp = BaseApp & { type: AppType.custom; data: CustomAppData }
 
 // App
 
-export type AppByType = {
-  search: SearchApp
-  people: PeopleApp
-  topics: TopicsApp
-  lists: ListsApp
-  sources: SourcesApp
-  settings: SettingsApp
-}
+export type AppByType<A extends AppType> = A extends AppType.search
+  ? SearchApp
+  : A extends AppType.people
+  ? PeopleApp
+  : A extends AppType.topics
+  ? TopicsApp
+  : A extends AppType.lists
+  ? ListsApp
+  : A extends AppType.sources
+  ? SourcesApp
+  : A extends AppType.settings
+  ? SettingsApp
+  : App
 
-export type App = SearchApp | PeopleApp | TopicsApp | ListsApp | SourcesApp | SettingsApp
+export type App =
+  | SearchApp
+  | PeopleApp
+  | TopicsApp
+  | ListsApp
+  | SourcesApp
+  | SettingsApp
+  | CustomApp

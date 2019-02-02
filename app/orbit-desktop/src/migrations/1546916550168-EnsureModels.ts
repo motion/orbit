@@ -1,5 +1,13 @@
-import { App, AppEntity, SettingEntity, SpaceEntity, userDefaultValue, UserEntity } from '@mcro/models';
-import { getRepository, MigrationInterface } from 'typeorm';
+import {
+  App,
+  AppEntity,
+  AppType,
+  SettingEntity,
+  SpaceEntity,
+  userDefaultValue,
+  UserEntity,
+} from '@mcro/models'
+import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
@@ -53,7 +61,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Search',
-              type: 'search',
+              type: AppType.search,
               colors: ['green', 'magenta'],
               pinned: true,
               spaceId: space.id,
@@ -62,7 +70,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Directory',
-              type: 'people',
+              type: AppType.people,
               colors: ['red', 'darkblue'],
               spaceId: space.id,
               pinned: true,
@@ -71,7 +79,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Home',
-              type: 'lists',
+              type: AppType.lists,
               spaceId: space.id,
               colors: ['pink', 'orange'],
               data: {

@@ -3,7 +3,7 @@ import { gloss } from '../gloss'
 import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
-export type ViewProps = React.HTMLAttributes<'div'> & CSSPropertySet
+export type ViewProps = React.HTMLAttributes<HTMLDivElement> & CSSPropertySet
 
 export const View = gloss<ViewProps>().theme((props, theme) => ({
   ...propsToStyles(props, theme),

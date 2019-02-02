@@ -1,10 +1,10 @@
-import { JiraApp } from './views/JiraApp'
-import { JiraSettings } from './views/JiraSettings'
+import icon from '!raw-loader!../../../../public/icons/jira.svg'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/jira.svg'
-import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
+import { GetOrbitIntegration } from '../../types'
+import { JiraApp } from './views/JiraApp'
 import { JiraItem } from './views/JiraItem'
+import { JiraSettings } from './views/JiraSettings'
 import { JiraSetup } from './views/JiraSetup'
 
 export const jira: GetOrbitIntegration<'jira'> = (source?: Source) => ({

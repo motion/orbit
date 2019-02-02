@@ -106,8 +106,6 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   if (React.isValidElement(icon)) {
     if (icon.type['acceptsIconProps']) {
       element = React.cloneElement(icon, iconPropsFinal)
-    } else {
-      console.log('icon.type', icon.type)
     }
   } else {
     element = <Icon name={icon} {...iconPropsFinal} />

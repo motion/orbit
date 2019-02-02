@@ -162,9 +162,7 @@ export class SearchStore {
     ],
     async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
       if (this.props.paneManagerStore) {
-        console.log('wait...', this.props.paneManagerStore.activePane.type === 'search')
         await when(() => this.props.paneManagerStore.activePane.type === 'search')
-        console.log('wait...', this.props.paneManagerStore.activePane.type === 'search')
       }
 
       // RESULTS

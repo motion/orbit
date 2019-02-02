@@ -19,14 +19,20 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
   // people and query
   const { queryStore } = useStoresSafe()
   const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters
-  const where = {}
+
+  let where = null
   if (hasIntegrationFilters) {
     for (const filter of integrationFilters) {
       if (filter.active) {
-        where[`has${capitalize(filter.integration)}`] = true
+        where = where || []
+        where.push({
+          [`has${capitalize(filter.integration)}`]: true,
+        })
       }
     }
   }
+
+  console.log('where', where)
   const people = useObserveMany(PersonBitModel, { take: 50000, where })
   const results = useOrbitFilterableResults({
     items: people,

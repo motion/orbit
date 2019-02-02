@@ -2,6 +2,7 @@ import { AppType } from '@mcro/models'
 import { BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
+import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
 import { Title } from '../views'
@@ -78,14 +79,16 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         </Section>
 
         <View flex={1}>
-          <AppView
-            viewType="index"
-            id={type}
-            type={type}
-            appConfig={{
-              type: type,
-            }}
-          />
+          <SmallListItemPropsProvider>
+            <AppView
+              viewType="index"
+              id={type}
+              type={type}
+              appConfig={{
+                type: type,
+              }}
+            />
+          </SmallListItemPropsProvider>
         </View>
 
         <Section>

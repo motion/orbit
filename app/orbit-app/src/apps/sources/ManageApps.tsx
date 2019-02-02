@@ -1,12 +1,13 @@
+import { AppType } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { Title } from '../../views'
+import { AppIcon } from '../../views/AppIcon'
 import { BorderLeft } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import { Section } from '../../views/Section'
-import { AppIcon } from '../apps/AppsMainNew'
 import { AppView } from '../AppView'
 
 export const ManageApps = function ManageApps() {
@@ -29,7 +30,7 @@ export const ManageApps = function ManageApps() {
           items={apps.map(app => ({
             title: app.name,
             icon: <AppIcon app={app} />,
-            type: app.type,
+            type: AppType[app.type],
             iconBefore: true,
           }))}
           onSelect={setIndex}

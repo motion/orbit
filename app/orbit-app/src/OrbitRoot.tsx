@@ -1,12 +1,10 @@
 // import dev helpers
 import { command } from '@mcro/model-bridge'
 import { OpenCommand } from '@mcro/models'
-import { App } from '@mcro/stores'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import contextMenu from 'electron-context-menu'
-import { isEqual, throttle } from 'lodash'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import './helpers/installDevelopmentHelpers'
@@ -61,24 +59,6 @@ function getOrbitBrowser() {
 
 export const OrbitRoot = hot(module)(function OrbitRoot() {
   const OrbitBrowser = getOrbitBrowser()
-
-  // update screen size state
-  React.useEffect(() => {
-    const handleWindowResize = throttle(() => {
-      if (!App.setState) {
-        return
-      }
-      const screenSize = [window.innerWidth, window.innerHeight]
-      if (!isEqual(App.state.screenSize, screenSize)) {
-        App.setState({ screenSize })
-      }
-    }, 16 * 4)
-
-    window.addEventListener('resize', handleWindowResize)
-    return () => {
-      window.removeEventListener('resize', handleWindowResize)
-    }
-  })
 
   // capture un-captured links
   // if you don't then clicking a link will cause electron to go there

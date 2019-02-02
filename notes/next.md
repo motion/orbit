@@ -70,5 +70,9 @@ nate:
   - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
 - debug why gdrive syncer items show "empty" in frontend and clean that view up
 - gmail:
+  - HTML stuff is a mess, its too heavy (super high cpu on sync)
+    - ideally we would just keep some recent ones in HTML and the rest just plain text
+    - and then even better we would then fetch the HTML bodies as needed when they search
+  - is syncing my spam folder :/
   - syncer bodies are getting cut off early when they are just text, for example i see one where it just shows the first two sentences but nothing else
   - email formatting looks odd for quite a few, investigate how to format it properly and fix some common issues

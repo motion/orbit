@@ -15,6 +15,7 @@ export enum AppType {
 
 export type AppConfig = {
   id?: string
+  subId?: string
   title?: string
   type?: AppType
   data?: any

@@ -13,6 +13,7 @@ import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+import { PaneManagerStore } from './PaneManagerStore'
 import { MarkType } from './QueryStore/types'
 
 type SearchState = {
@@ -52,6 +53,9 @@ const searchGroupsToResults = (results: SearchResult[]) => {
 }
 
 export class SearchStore {
+  props: {
+    paneManagerStore?: PaneManagerStore
+  }
   stores = useHook(useStoresSafe)
 
   get activeQuery() {
@@ -157,6 +161,10 @@ export class SearchStore {
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
+      if (this.props.paneManagerStore) {
+        await when(() => this.props.paneManagerStore.activePane.type === 'search')
+      }
+
       // RESULTS
       let results: OrbitListItemProps[] = []
 

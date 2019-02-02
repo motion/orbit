@@ -66,9 +66,7 @@ export function useOrbitToolbars() {
 
   useObserver(() => {
     const appStore = orbitStore.appStores[orbitStore.activePane.id]
-    const currentBar = appStore && toolbars[appStore.id]
-    const hasToolbars = currentBar && !!(currentBar.before || currentBar.after || currentBar.center)
-    const next = hasToolbars ? bars : false
+    const next = (appStore && toolbars[appStore.id]) || false
     if (!isEqual(bars, next)) {
       setBars(next)
     }

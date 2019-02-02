@@ -70,7 +70,6 @@ class AppStore {
 
   state = deep({
     appCount: 0,
-    screenSize: [0, 0],
     isDark: false,
     orbitState: {
       blurred: false,
@@ -99,7 +98,6 @@ class AppStore {
     hoveredWord: null,
     hoveredLine: null,
     contextMessage: '',
-    lastTear: 0,
     showSpaceSwitcher: 0,
   })
 

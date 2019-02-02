@@ -52,7 +52,7 @@ export type ListItemProps = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     subtitle?: React.ReactNode
-    date?: number
+    date?: Date
     icon?: any
     index?: number
     isExpanded?: boolean
@@ -92,11 +92,9 @@ export type ListItemProps = CSSPropertySetStrict &
     group?: string
   }
 
-function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLine: boolean) {
-  let iconSize = iconBefore ? (slim ? 20 : 22) : slim ? 12 : 14
-  if (isMultiLine && iconBefore) {
-    iconSize += 6
-  }
+function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
+  let iconSize = iconBefore ? (slim ? 20 : 30) : slim ? 12 : 14
+
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,
@@ -108,8 +106,6 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLi
   if (React.isValidElement(icon)) {
     if (icon.type['acceptsIconProps']) {
       element = React.cloneElement(icon, iconPropsFinal)
-    } else {
-      console.log('icon.type', icon.type)
     }
   } else {
     element = <Icon name={icon} {...iconPropsFinal} />
@@ -165,7 +161,6 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
-  const isMultiLine = showPreview || showSubtitle
   const defaultPadding = slim ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
@@ -174,7 +169,7 @@ export default observer(function ListItem(props: ListItemProps) {
     defaultPadding[0] += 2
   }
 
-  const iconElement = showIcon && getIcon(props, isMultiLine)
+  const iconElement = showIcon && getIcon(props)
 
   const childrenElement = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
@@ -188,7 +183,7 @@ export default observer(function ListItem(props: ListItemProps) {
       <Row>
         {showDate && (
           <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
-            <DateFormat date={new Date(date)} nice={differenceInCalendarDays(Date.now, date) < 7} />
+            <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
           </UI.Text>
         )}
       </Row>

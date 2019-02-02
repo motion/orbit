@@ -18,9 +18,7 @@ export function AppIconInner({
   ...props
 }: OrbitIconProps) {
   const theme = useTheme()
-  const fill = color(
-    props.color || (size < 36 ? theme.iconFill || theme.background : background),
-  ).hex()
+  const fill = color(props.color || theme.iconFill || '#fff').hex()
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color

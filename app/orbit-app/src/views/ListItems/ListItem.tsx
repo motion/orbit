@@ -92,11 +92,9 @@ export type ListItemProps = CSSPropertySetStrict &
     group?: string
   }
 
-function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps, isMultiLine: boolean) {
-  let iconSize = iconBefore ? (slim ? 20 : 22) : slim ? 12 : 14
-  if (isMultiLine && iconBefore) {
-    iconSize += 6
-  }
+function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
+  let iconSize = iconBefore ? (slim ? 20 : 30) : slim ? 12 : 14
+
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,
@@ -165,7 +163,6 @@ export default observer(function ListItem(props: ListItemProps) {
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
-  const isMultiLine = showPreview || showSubtitle
   const defaultPadding = slim ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
@@ -174,7 +171,7 @@ export default observer(function ListItem(props: ListItemProps) {
     defaultPadding[0] += 2
   }
 
-  const iconElement = showIcon && getIcon(props, isMultiLine)
+  const iconElement = showIcon && getIcon(props)
 
   const childrenElement = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>

@@ -15,7 +15,7 @@ export default memo(function AppIcon({
   background = '#222',
   size = 32,
   style,
-  removeStroke,
+  removeStroke = true,
   ...props
 }: AppIconProps & { removeStroke?: boolean }) {
   const theme = useTheme()

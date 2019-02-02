@@ -2,6 +2,7 @@ import { gloss, Row, View } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
+import { once } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
@@ -102,6 +103,10 @@ const defaultPanes = [
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]
 
+function useOnce(fn: Function, reset = []) {
+  return React.useCallback(once(fn as any), reset)
+}
+
 const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
@@ -123,16 +128,25 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
     })),
   ]
 
-  // one past the defaults is the first app
-  const firstAppIndex = defaultPanes.length
-
   const paneManagerStore = useStore(PaneManagerStore, {
-    defaultIndex: orbitWindowStore.activePaneIndex || firstAppIndex,
+    defaultIndex: orbitWindowStore.activePaneIndex,
     onPaneChange(index) {
       orbitWindowStore.activePaneIndex = index
     },
     panes,
   })
+
+  // move to first app pane on first run
+  const hasLoadedApps = !!activeApps.length
+  const setToFirstAppPane = useOnce(() => {
+    paneManagerStore.setPaneIndex(defaultPanes.length)
+  })
+  React.useEffect(
+    () => {
+      hasLoadedApps && setToFirstAppPane()
+    },
+    [hasLoadedApps],
+  )
 
   const stores = {
     settingStore,

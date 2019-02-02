@@ -1,9 +1,13 @@
 import { Button, ButtonProps } from '@mcro/ui'
 import * as React from 'react'
 
-export function FloatingBarButtonSmall(props: ButtonProps) {
+export const FloatingBarButtonSmall = React.forwardRef(function FloatingBarButtonSmall(
+  props: ButtonProps,
+  ref,
+) {
   return (
     <Button
+      ref={ref}
       glint={false}
       borderWidth={0}
       sizeHeight={0.8}
@@ -15,4 +19,4 @@ export function FloatingBarButtonSmall(props: ButtonProps) {
       {...props}
     />
   )
-}
+})

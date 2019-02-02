@@ -1,17 +1,9 @@
 import { useTheme } from '@mcro/gloss'
 import { color } from '@mcro/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { OrbitIconProps } from './Icon'
+import { appIcons } from './icons'
 import { SVG } from './SVG'
-
-export const appIcons = {
-  ['orbit-search-full']: require('!raw-loader!../../public/icons/appicon-search.svg'),
-  ['orbit-topics-full']: require('!raw-loader!../../public/icons/appicon-topics.svg'),
-  ['orbit-people-full']: require('!raw-loader!../../public/icons/appicon-people.svg'),
-  ['orbit-lists-full']: require('!raw-loader!../../public/icons/appicon-lists.svg'),
-  ['orbit-apps-full']: require('!raw-loader!../../public/icons/appicon-apps.svg'),
-  ['orbit-custom-full']: require('!raw-loader!../../public/icons/appicon-custom.svg'),
-}
 
 type AppIconProps = OrbitIconProps & {
   background?: string
@@ -19,7 +11,7 @@ type AppIconProps = OrbitIconProps & {
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
-export default React.memo(function AppIcon({
+export default memo(function AppIcon({
   background = '#222',
   size = 32,
   style,

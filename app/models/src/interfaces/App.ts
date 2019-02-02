@@ -47,14 +47,19 @@ export type CustomApp = BaseApp & { type: AppType.custom; data: CustomAppData }
 
 // App
 
-export type AppByType = {
-  search: SearchApp
-  people: PeopleApp
-  topics: TopicsApp
-  lists: ListsApp
-  sources: SourcesApp
-  settings: SettingsApp
-}
+export type AppByType<A extends AppType> = A extends AppType.search
+  ? SearchApp
+  : A extends AppType.people
+  ? PeopleApp
+  : A extends AppType.topics
+  ? TopicsApp
+  : A extends AppType.lists
+  ? ListsApp
+  : A extends AppType.sources
+  ? SourcesApp
+  : A extends AppType.settings
+  ? SettingsApp
+  : App
 
 export type App =
   | SearchApp

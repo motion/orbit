@@ -170,7 +170,7 @@ export function Squircle({ colors, ...rest }: any) {
         <g id="icon" transform="translate(24.000000, 26.000000)">
           <g id="squircle2">
             <g id="Rectangle">
-              <use fill="black" fill-opacity="1" filter="url(#filter-3)" />
+              <use fill="black" fillOpacity="1" filter="url(#filter-3)" />
               <path
                 strokeOpacity="0.214787138"
                 strokeWidth="6"

@@ -1,5 +1,5 @@
 import { App } from '@mcro/models'
-import { IconProps, Popover, Row } from '@mcro/ui'
+import { IconProps, Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -46,7 +46,11 @@ export default observer(function AppsMainNew() {
           background
           width={250}
           height={250}
-          target={<AppIcon removeStroke app={app} size={48} />}
+          target={
+            <View>
+              <AppIcon removeStroke app={app} size={48} />
+            </View>
+          }
           overflowY="auto"
           padding={10}
         >

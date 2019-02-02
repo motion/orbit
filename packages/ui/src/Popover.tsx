@@ -849,7 +849,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 
   controlledTarget = target => {
     const targetProps = {
-      forwardRef: this.targetRef,
+      ref: this.targetRef,
       active: false,
       className: `${target.props.className} popover-target`,
     }

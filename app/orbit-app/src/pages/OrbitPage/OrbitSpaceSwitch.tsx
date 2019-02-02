@@ -116,7 +116,11 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         elevation={7}
         group="filters"
         onChangeVisibility={store.setOpen}
-        target={<OrbitOrb colors={activeSpace.colors} size={18} {...props} />}
+        target={
+          <View>
+            <OrbitOrb colors={activeSpace.colors} size={18} {...props} />
+          </View>
+        }
       >
         <Col ref={store.popoverContentRef} borderRadius={borderRadius} overflow="hidden" flex={1}>
           <View overflowY="auto" maxHeight={300}>

@@ -18,7 +18,7 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 
-export const SizedSurface = (props: SizedSurfaceProps) => {
+export function SizedSurface(props: SizedSurfaceProps) {
   const {
     size = 1,
     sizeHeight,

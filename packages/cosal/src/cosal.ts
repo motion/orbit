@@ -253,7 +253,7 @@ export class Cosal {
   topics = async (query: string, { max = 10 } = {}) => {
     if (!this.topicsList) {
       this.topicsList = await readJSON(join(__dirname, '../topics2.json'))
-      await this.scan(this.topicsList.map((text, id) => ({ text, id })), 'topics')
+      await this.scan(this.topicsList.slice(0, 2000).map((text, id) => ({ text, id })), 'topics')
       await annoyScan({ db: 'topics', path: this.databasePath })
     }
     const res = await this.searchWithCovariance('topics', query, { max })

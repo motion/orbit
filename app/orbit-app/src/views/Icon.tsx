@@ -67,41 +67,41 @@ export const Icon = React.memo((props: OrbitIconProps) => {
 
 Icon['acceptsIconProps'] = true
 
-const adjust = {
-  icon: {
-    transform: {
-      x: -7,
-      y: 2,
-    },
-  },
-  slack: {
-    transform: {
-      scale: 0.92,
-    },
-  },
-  gmail: {
-    transform: {
-      scale: 0.95,
-      x: '-1%',
-      y: '-1%',
-    },
-  },
-  github: {
-    transform: {
-      // x: '-1%',
-    },
-  },
-  confluence: {
-    transform: {
-      // y: '-31%',
-      scale: 1.4,
-    },
-  },
-  jira: {
-    transform: {
-      y: '5%',
-      x: '-8%',
-      scale: 1.4,
-    },
-  },
-}
+// const adjust = {
+//   icon: {
+//     transform: {
+//       x: -7,
+//       y: 2,
+//     },
+//   },
+//   slack: {
+//     transform: {
+//       scale: 0.92,
+//     },
+//   },
+//   gmail: {
+//     transform: {
+//       scale: 0.95,
+//       x: '-1%',
+//       y: '-1%',
+//     },
+//   },
+//   github: {
+//     transform: {
+//       // x: '-1%',
+//     },
+//   },
+//   confluence: {
+//     transform: {
+//       // y: '-31%',
+//       scale: 1.4,
+//     },
+//   },
+//   jira: {
+//     transform: {
+//       y: '5%',
+//       x: '-8%',
+//       scale: 1.4,
+//     },
+//   },
+// }

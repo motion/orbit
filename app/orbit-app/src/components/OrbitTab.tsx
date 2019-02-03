@@ -91,7 +91,7 @@ export function OrbitTab({
             flex={1}
             size={0.95}
             opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={400}
+            fontWeight={500}
             {...textProps}
           >
             {label}

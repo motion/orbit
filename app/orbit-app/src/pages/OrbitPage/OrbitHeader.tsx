@@ -1,24 +1,27 @@
 import { Absolute, gloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Row, View } from '@mcro/ui'
+import { Button, Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { DateRangePicker } from 'react-date-range'
 import { AppActions } from '../../actions/AppActions'
+import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
-import OrbitSpaceSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitHeader() {
-  const { newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
   const isOnSettings = activePaneType === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
+  const { queryFilters } = queryStore
 
   return (
     <>
@@ -37,6 +40,8 @@ export default observer(function OrbitHeader() {
             onMax={isTorn ? () => console.log('min') : null}
           />
         </OrbitClose>
+
+        {/* header input area */}
         <Row flex={1} alignItems="center">
           <Row flex={1} />
           {isTorn && toolbars && (
@@ -49,6 +54,7 @@ export default observer(function OrbitHeader() {
           <View width={22} alignItems="center" justifyContent="center">
             <Icon name={`orbit-${icon}`} size={18} opacity={0.15} />
           </View>
+
           <OrbitHeaderInput />
 
           {isTorn && toolbars && (
@@ -57,9 +63,39 @@ export default observer(function OrbitHeader() {
               {toolbars.after}
             </>
           )}
-          {!isTorn && <OrbitSpaceSwitch />}
+
+          <Popover
+            delay={250}
+            openOnClick
+            openOnHover
+            closeOnClickAway
+            group="filters"
+            target={<FloatingBarButton icon="ui-1_calendar-57" />}
+            background
+            borderRadius={10}
+            elevation={4}
+            theme="light"
+            width={420}
+            height={310}
+          >
+            <View flex={1} className="calendar-dom theme-light" padding={10}>
+              <DateRangePicker
+                onChange={queryFilters.onChangeDate}
+                ranges={[queryFilters.dateState]}
+              />
+            </View>
+          </Popover>
+          <View width={8} />
+          <FloatingBarButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+            {queryFilters.sortBy}
+          </FloatingBarButton>
+          <View width={8} />
+          <OrbitFilterIntegrationButton />
+
+          {/* {!isTorn && <OrbitSpaceSwitch />} */}
+
           {!isTorn && (
-            <Absolute top={0} right={0}>
+            <Absolute top={1} right={0}>
               <Button
                 chromeless
                 isActive={isOnSettings}
@@ -74,7 +110,7 @@ export default observer(function OrbitHeader() {
               >
                 <Icon
                   name="gear"
-                  size={12}
+                  size={13}
                   opacity={0.2 + settingsIconActiveOpacityInc}
                   hoverStyle={{
                     opacity: 0.5 + settingsIconActiveOpacityInc,

@@ -36,6 +36,25 @@ export type BreadcrumbsProps = Omit<TextProps, 'children'> & {
   children?: React.ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => React.ReactNode)
 }
 
+export function Breadcrumb({
+  separator = <Text>{' >'}</Text>,
+  children,
+  ...props
+}: BreadcrumbsProps) {
+  const crumb = useBreadcrumb()
+
+  if (typeof children === 'function') {
+    return children(crumb)
+  }
+
+  return (
+    <>
+      <Text {...props}>{children}</Text>
+      {crumb.isLast ? '' : separator}
+    </>
+  )
+}
+
 export function useBreadcrumb() {
   const id = React.useRef(null)
   if (!id.current) {
@@ -54,23 +73,4 @@ export function useBreadcrumb() {
   }, [])
 
   return { index, total, isLast }
-}
-
-export function Breadcrumb({
-  separator = <Text>{' >'}</Text>,
-  children,
-  ...props
-}: BreadcrumbsProps) {
-  const crumb = useBreadcrumb()
-
-  if (typeof children === 'function') {
-    return children(crumb)
-  }
-
-  return (
-    <>
-      <Text {...props}>{children}</Text>
-      {crumb.isLast ? '' : separator}
-    </>
-  )
 }

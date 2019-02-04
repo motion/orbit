@@ -17,7 +17,6 @@ import {
   ButtonProps,
   Input,
   Panel,
-  PanelProps,
   PassProps,
   Row,
   Text,
@@ -53,6 +52,23 @@ class ListStore {
   depth = 0
   history = [0]
   appRaw = react(() => +this.props.id, id => observeOne(AppModel, { args: { where: { id } } }))
+  searchCollapsed = true
+
+  setSearchCollapsedOnQuery = react(
+    () => !!this.query,
+    hasQuery => {
+      this.searchCollapsed = !hasQuery
+    },
+  )
+
+  toggleSearchCollapsed = () => {
+    this.setSearchCollapsed(!this.searchCollapsed)
+  }
+
+  setSearchCollapsed = val => {
+    console.log('setting to ', val)
+    this.searchCollapsed = val
+  }
 
   get app() {
     return this.appRaw as ListsApp
@@ -277,9 +293,14 @@ const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
       />
       <Absolute top={0} right={12} bottom={0}>
         <Row flex={1} alignItems="center">
-          <PassProps chromeless opacity={0.5} hoverOpacity={1}>
-            <Button tooltip="Add" icon="add" />
-            <Button tooltip="Create folder" icon="folder" onClick={() => addFolder(store)} />
+          <PassProps chromeless opacity={0.35} hoverOpacity={1}>
+            <Button
+              active={!store.searchCollapsed}
+              tooltip="Search to add"
+              icon="zoom"
+              onClick={store.toggleSearchCollapsed}
+            />
+            <Button tooltip="Create folder" icon="folder-15" onClick={() => addFolder(store)} />
           </PassProps>
         </Row>
       </Absolute>
@@ -301,7 +322,7 @@ function ListCrumb(props: ButtonProps) {
   )
 }
 
-function ListAppBreadcrumbs(props: { items: { id: number; name: React.ReactNode }[] }) {
+function ListAppBreadcrumbs(props: { items: { id: any; name: React.ReactNode }[] }) {
   return (
     <View flex={1}>
       <Breadcrumbs>
@@ -313,7 +334,9 @@ function ListAppBreadcrumbs(props: { items: { id: number; name: React.ReactNode 
   )
 }
 
-function SearchPanel(props: Partial<PanelProps>) {
+const ListSearchResults = observer(function ListSearchResults({ store }: { store: ListStore }) {
+  const { searchCollapsed, searchResults, query } = store
+
   return (
     <Panel
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
@@ -321,23 +344,11 @@ function SearchPanel(props: Partial<PanelProps>) {
       padding={[0, 10]}
       padded={false}
       collapsable
-      collapsed={true}
-      heading="Search Results"
-      {...props}
-    />
-  )
-}
-
-const ListSearchResults = observer(function ListSearchResults(props: { store: ListStore }) {
-  const { searchResults, query } = props.store
-
-  if (!searchResults) {
-    return <SearchPanel />
-  }
-
-  return (
-    <SearchPanel heading={`Search Results (${searchResults.length})`}>
-      <SelectableList query={query} items={searchResults} />
-    </SearchPanel>
+      collapsed={searchCollapsed}
+      onCollapse={store.setSearchCollapsed}
+      heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+    >
+      <SelectableList query={query} items={searchResults || []} />
+    </Panel>
   )
 })

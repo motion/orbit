@@ -5,8 +5,8 @@
  * @format
  */
 
-import { attachTheme, gloss, Row, ThemeObject, View, ViewProps } from '@mcro/gloss'
-import * as React from 'react'
+import { gloss, Row, ThemeObject, View, ViewProps } from '@mcro/gloss'
+import React, { useEffect, useState } from 'react'
 import { Icon } from './Icon'
 import { Text } from './Text'
 
@@ -14,9 +14,14 @@ const Chevron = gloss(Icon, {
   marginRight: 4,
   marginLeft: -2,
   marginBottom: 1,
-})
+}).theme(theme => ({
+  color: theme.iconColor || theme.color,
+}))
 
 export type PanelProps = {
+  // whether to position above content
+  floating?: boolean
+
   /**
    * Whether the panel takes up all the space it can. Equivalent to the following CSS:
    *
@@ -51,6 +56,9 @@ export type PanelProps = {
    */
   collapsed?: boolean
 
+  // callback on collapse change
+  onCollapse?: (next?: boolean) => any
+
   /**
    * Heading for this panel. If this is anything other than a string then no
    * padding is applied to the heading.
@@ -63,13 +71,15 @@ export type PanelProps = {
   openFlex?: number
 } & ViewProps
 
-type State = {
-  collapsed: boolean
-}
-
 const PanelContainer = gloss(View).theme((props, theme) => ({
   borderBottom: props.collapsed ? 'none' : [1, theme.sidebarBorderColor || theme.borderColor],
   flex: props.collapsed ? 'initial' : props.openFlex || 1,
+  ...(props.floating && {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }),
 }))
 
 const PanelHeader = gloss(Row, {
@@ -98,64 +108,60 @@ const PanelBody = gloss({
   padding: props.padded ? 10 : 0,
 }))
 
-@attachTheme
-export class Panel extends React.Component<PanelProps, State> {
-  static defaultProps = {
-    stretch: false,
-    collapsable: false,
+export function Panel(props: PanelProps) {
+  const {
+    padded,
+    children,
+    className,
+    stretch = false,
+    heading,
+    collapsable = false,
+    accessory,
+    theme,
+    floating = false,
+    onCollapse,
+    ...restProps
+  } = props
+  const [collapsed, setCollapsed] = useState(true)
+
+  useEffect(
+    () => {
+      if (typeof restProps.collapsed === 'boolean') {
+        setCollapsed(restProps.collapsed)
+      }
+    },
+    [restProps.collapsed],
+  )
+
+  const onClick = () => {
+    const next = !collapsed
+    setCollapsed(next)
+    if (onCollapse) {
+      onCollapse(next)
+    }
   }
 
-  static PanelContainer = PanelContainer
-  static PanelHeader = PanelHeader
-  static PanelBody = PanelBody
+  return (
+    <PanelContainer
+      className={className}
+      stretch={stretch}
+      collapsed={collapsed}
+      floating={floating}
+      {...restProps}
+    >
+      <PanelHeader padded={typeof heading === 'string'} onClick={onClick}>
+        {collapsable && <Chevron name={collapsed ? 'triangle-right' : 'triangle-down'} size={12} />}
+        <View flex={1}>
+          <Text size={0.95}>{heading}</Text>
+        </View>
+        {accessory}
+      </PanelHeader>
 
-  state = {
-    collapsed: this.props.collapsed == null ? false : this.props.collapsed,
-  }
-
-  onClick = () => this.setState({ collapsed: !this.state.collapsed })
-
-  render() {
-    const {
-      padded,
-      children,
-      className,
-      stretch,
-      heading,
-      collapsable,
-      accessory,
-      theme,
-      ...props
-    } = this.props
-    const { collapsed } = this.state
-    return (
-      <Panel.PanelContainer
-        className={className}
-        stretch={stretch}
-        collapsed={collapsed}
-        {...props}
-      >
-        <Panel.PanelHeader padded={typeof heading === 'string'} onClick={this.onClick}>
-          {collapsable && (
-            <Chevron
-              // @ts-ignore
-              color={theme.titleBar.icon}
-              name={collapsed ? 'triangle-right' : 'triangle-down'}
-              size={12}
-            />
-          )}
-          <View flex={1}>
-            <Text size={0.95}>{heading}</Text>
-          </View>
-          {accessory}
-        </Panel.PanelHeader>
-
-        {children == null || (collapsable && collapsed) ? null : (
-          <Panel.PanelBody stretch={stretch} padded={padded}>
-            {children}
-          </Panel.PanelBody>
-        )}
-      </Panel.PanelContainer>
-    )
-  }
+      {children == null || (collapsable && collapsed) ? null : (
+        <PanelBody stretch={stretch} padded={padded}>
+          {children}
+        </PanelBody>
+      )}
+    </PanelContainer>
+  )
 }

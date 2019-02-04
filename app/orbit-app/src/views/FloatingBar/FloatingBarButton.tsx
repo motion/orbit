@@ -14,6 +14,7 @@ export const FloatingBarButton = React.forwardRef(function FloatingBarButtonSmal
       glint={false}
       fontWeight={500}
       alpha={0.8}
+      sizeHeight={0.95}
       sizePadding={1.2}
       size={0.95}
       sizeRadius={3}

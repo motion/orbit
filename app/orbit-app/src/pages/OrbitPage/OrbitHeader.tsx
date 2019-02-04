@@ -65,9 +65,12 @@ export default observer(function OrbitHeader() {
             </>
           )}
 
-          <FloatingBarButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
-            {queryFilters.sortBy}
-          </FloatingBarButton>
+          <FloatingBarButton
+            onClick={queryFilters.toggleSortBy}
+            tooltip={`Sort by: ${queryFilters.sortBy}`}
+            circular
+            icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
+          />
           <View width={8} />
           <Popover
             delay={250}
@@ -75,7 +78,7 @@ export default observer(function OrbitHeader() {
             openOnHover
             closeOnClickAway
             group="filters"
-            target={<FloatingBarButton icon="ui-1_calendar-57" />}
+            target={<FloatingBarButton circular icon="ui-1_calendar-57" />}
             background
             borderRadius={10}
             elevation={4}

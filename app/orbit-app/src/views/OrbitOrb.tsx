@@ -1,4 +1,4 @@
-import { gloss, View, ViewProps } from '@mcro/gloss'
+import { gloss, linearGradient, View, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -43,7 +43,7 @@ export const OrbitOrb = React.forwardRef<any, ViewProps>(function OrbitOrb(
         borderRadius={1000}
         width={innerSize}
         height={innerSize}
-        background={`linear-gradient(${colors[0]}, ${colors[1]})`}
+        background={linearGradient(colors[0], colors[1])}
       />
     </OrbBackground>
   )

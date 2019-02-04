@@ -184,15 +184,17 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
             }
           />
         )}
-        {icon && !stringIcon && <div>{icon}</div>}
-        {icon && stringIcon && (
-          <Icon
-            order={icon && iconAfter ? 3 : 'auto'}
-            name={`${icon}`}
-            size={getIconSize(props)}
-            {...iconProps}
-          />
-        )}
+        <div style={{ opacity: typeof props.alpha === 'number' ? props.alpha : 1 }}>
+          {icon && !stringIcon && <div>{icon}</div>}
+          {icon && stringIcon && (
+            <Icon
+              order={icon && iconAfter ? 3 : 'auto'}
+              name={`${icon}`}
+              size={getIconSize(props)}
+              {...iconProps}
+            />
+          )}
+        </div>
         {glow && !dimmed && !disabled && (
           <HoverGlow
             full

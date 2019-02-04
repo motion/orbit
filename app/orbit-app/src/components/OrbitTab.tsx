@@ -40,7 +40,7 @@ export type TabProps = ViewProps & {
 export function OrbitTab({
   app,
   icon,
-  iconSize = 10,
+  iconSize: iconSizeProp,
   iconProps,
   iconAdjustOpacity = 0,
   tooltip,
@@ -57,6 +57,7 @@ export function OrbitTab({
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+  const iconSize = iconSizeProp || (thicc ? 12 : 10)
 
   const button = (
     <NavButtonChrome
@@ -75,9 +76,9 @@ export function OrbitTab({
           <OrbitTabIcon
             isActive={isActive}
             name={`${icon}`}
-            size={iconSize}
             marginRight={!!label ? sidePad * 0.6 : 0}
             thicc={thicc}
+            size={iconSize}
             {...iconProps}
           />
         )}

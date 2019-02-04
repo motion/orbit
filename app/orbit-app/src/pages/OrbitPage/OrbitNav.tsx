@@ -204,12 +204,7 @@ export default observer(function OrbitNav() {
           tooltip="Sources"
         />
         <OrbitTab
-          icon={
-            <OrbitOrb
-              colors={[[255 / 2, 255 / 2, 255 / 2, 0.5], [255 / 2, 255 / 2, 255 / 2, 0.5]]}
-              size={12}
-            />
-          }
+          icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
           thicc
           // isActive={paneManagerStore.activePane.type === 'space'}
           // onClick={paneManagerStore.activePaneByTypeSetter('space')}

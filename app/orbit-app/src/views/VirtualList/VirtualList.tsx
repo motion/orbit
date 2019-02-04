@@ -332,8 +332,6 @@ export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
         )
       }
 
-      console.log('rendering the virtual list', props)
-
       return (
         <div
           ref={store.setFrameRef}

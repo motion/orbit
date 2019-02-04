@@ -64,6 +64,10 @@ export default observer(function OrbitHeader() {
             </>
           )}
 
+          <FloatingBarButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
+            {queryFilters.sortBy}
+          </FloatingBarButton>
+          <View width={8} />
           <Popover
             delay={250}
             openOnClick
@@ -85,10 +89,6 @@ export default observer(function OrbitHeader() {
               />
             </View>
           </Popover>
-          <View width={8} />
-          <FloatingBarButton onClick={queryFilters.toggleSortBy} tooltip="Sort by">
-            {queryFilters.sortBy}
-          </FloatingBarButton>
           <View width={8} />
           <OrbitFilterIntegrationButton />
 

@@ -32,7 +32,6 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
     }
   }
 
-  console.log('where', where)
   const people = useObserveMany(PersonBitModel, { take: 50000, where })
   const results = useOrbitFilterableResults({
     items: people,
@@ -56,6 +55,7 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
         <OrbitFilterIntegrationButton />
       </FloatingBar>
       <SelectableList
+        key={0}
         getItemProps={results.length > 12 ? groupByLetter('name') : null}
         minSelected={0}
         items={results}

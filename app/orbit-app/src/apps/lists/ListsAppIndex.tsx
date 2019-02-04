@@ -191,6 +191,7 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
 
   return (
     <SelectableTreeList
+      key={100}
       minSelected={0}
       rootItemID={0}
       items={items}

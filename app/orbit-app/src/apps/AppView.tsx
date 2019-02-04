@@ -1,5 +1,5 @@
 import { useStore } from '@mcro/use-store'
-import * as React from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { StoreContext } from '../contexts'
 import { useStoresSafe } from '../hooks/useStoresSafe'
@@ -18,19 +18,19 @@ export type AppViewProps = Pick<
   onAppStore?: Function
 }
 
-export const AppView = React.memo(function AppView(props: AppViewProps) {
+export const AppView = memo(function AppView(props: AppViewProps) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // warning should never change it if you pass in a prop
   const appStore = props.appStore || useStore(AppStore, props)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.onAppStore) {
       props.onAppStore(appStore)
     }
   }, [])
 
-  const appElement = React.useMemo(() => {
+  const appElement = useMemo(() => {
     if (!apps[props.type]) {
       return <div>noo app of type {props.type}</div>
     }

@@ -8,18 +8,14 @@ import SelectableList from '../../views/Lists/SelectableList'
 import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default function SourcesAppIndex() {
-  const [user, setUser] = useActiveUser()
+  const [user = {}, setUser] = useActiveUser()
   const spaces = useObserveMany(SpaceModel, {})
-
-  if (!user) {
-    return null
-  }
 
   const results = useOrbitFilterableResults({
     items: [
       {
         group: 'Settings',
-        type: 'general',
+        subType: 'general',
         title: 'General',
         icon: 'gear',
         iconBefore: true,
@@ -27,7 +23,7 @@ export default function SourcesAppIndex() {
       },
       {
         group: 'Settings',
-        type: 'account',
+        subType: 'account',
         title: 'Account',
         icon: 'users_badge',
         iconBefore: true,
@@ -36,7 +32,7 @@ export default function SourcesAppIndex() {
       ...spaces.map(space => ({
         id: `${space.id}`,
         group: 'Spaces',
-        type: 'space',
+        subType: 'space',
         title: space.name,
         subtitle: '10 members',
         before: <OrbitOrb size={18} colors={space.colors} marginRight={12} />,
@@ -52,13 +48,17 @@ export default function SourcesAppIndex() {
         title: 'Create new space...',
         icon: 'add',
         padding: [16, 11],
-        type: 'new-space',
+        subType: 'new-space',
         titleProps: {
           fontWeight: 300,
         },
       },
     ],
   })
+
+  if (!user) {
+    return null
+  }
 
   return <SelectableList minSelected={0} items={results} />
 }

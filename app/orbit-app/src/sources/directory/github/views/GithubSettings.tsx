@@ -52,6 +52,7 @@ class GithubSettingStore {
 
 export default observer(function GithubSettings(props: Props) {
   const store = useStore(GithubSettingStore, props)
+  console.log('render github.')
   return (
     <>
       <SettingManageRow source={props.source} whitelist={store.whitelist} />

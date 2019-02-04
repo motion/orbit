@@ -23,7 +23,6 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
 import OrbitContent from './OrbitContent'
-import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
@@ -71,7 +70,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
-                <OrbitControls />
+                {/* <OrbitControls /> */}
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
                 <Row flex={1}>

@@ -2,9 +2,8 @@ import { always, ensure, react } from '@mcro/black'
 import { ContextMenu, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
-import hashSum from 'hash-sum'
 import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { Component, createContext, createRef, useContext, useEffect, useMemo } from 'react'
 import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc'
 import {
   CellMeasurer,
@@ -49,7 +48,7 @@ export type VirtualListProps<A> = SortableContainerProps & {
   placeholder?: JSX.Element
 }
 
-class SortableList extends React.Component<any> {
+class SortableList extends Component<any> {
   render() {
     return <List {...this.props} ref={this.props.forwardRef} />
   }
@@ -59,7 +58,7 @@ const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
   props: VirtualListProps<any>
-  windowScrollerRef = React.createRef<WindowScroller>()
+  windowScrollerRef = createRef<WindowScroller>()
   listRef: List = null
   frameRef: HTMLDivElement = null
   height = window.innerHeight
@@ -122,9 +121,14 @@ class VirtualListStore {
       if (height === 0) {
         return
       }
-      this.height = Math.min(this.props.maxHeight, height)
-      if (this.props.onChangeHeight) {
-        this.props.onChangeHeight(this.height)
+
+      height = Math.min(this.props.maxHeight, height)
+
+      if (height !== this.height) {
+        this.height = height
+        if (this.props.onChangeHeight) {
+          this.props.onChangeHeight(this.height)
+        }
       }
     } else {
       if (this.frameHeight) {
@@ -143,7 +147,9 @@ class VirtualListStore {
       return
     }
 
-    this.width = this.frameRef.clientWidth
+    if (this.frameRef.clientWidth !== this.width) {
+      this.width = this.frameRef.clientWidth
+    }
 
     if (!this.cache) {
       this.cache = new CellMeasurerCache({
@@ -217,17 +223,17 @@ function useDefaultProps<A>(a: A, b: Partial<A>): A {
   return { ...b, ...a }
 }
 
-export const VirtualListDefaultProps = React.createContext({
+export const VirtualListDefaultProps = createContext({
   estimatedRowHeight: 60,
   maxHeight: window.innerHeight,
 } as Partial<VirtualListProps<any>>)
 
 export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
-  const defaultProps = React.useContext(VirtualListDefaultProps)
+  const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!store.listRef) {
       return
     }
@@ -242,108 +248,120 @@ export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
     }
   })
 
-  if (!props.items.length) {
-    return (
-      props.placeholder || (
-        <View flex={1} margin={[10, 0]}>
-          <Banner>No results</Banner>
-        </View>
-      )
-    )
-  }
+  // memo this whole thing because react is rendering things even when props dont change
+  // which is a bit odd given React.memo supposedly prevents that
+  // and this is an expensive area
+  const element = useMemo(
+    () => {
+      if (!props.items.length) {
+        return (
+          props.placeholder || (
+            <View flex={1} margin={[10, 0]}>
+              <Banner>No results</Banner>
+            </View>
+          )
+        )
+      }
 
-  const rowRenderer = ({ key, index, parent, style }) => {
-    const item = props.items[index]
-    const itemElement = (
-      // 🐛 sortable needs keys based on content https://github.com/clauderic/react-sortable-hoc/issues/103
-      <CellMeasurer
-        key={`${key}${hashSum(item)}`}
-        cache={store.cache}
-        columnIndex={0}
-        parent={parent}
-        rowIndex={index}
-      >
-        <div style={style}>
-          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-            <VirtualListItem
-              ItemView={props.ItemView}
-              onSelect={props.onSelect}
-              onOpen={props.onOpen}
-              {...itemProps(props, index)}
-              {...props.itemProps}
-              {...props.getItemProps && props.getItemProps(item, index, props.items)}
-              {...item}
-              index={index}
-              realIndex={index}
-            />
-          </ContextMenu>
-        </div>
-      </CellMeasurer>
-    )
-    return itemElement
-  }
+      function rowRenderer({ key, index, parent, style }) {
+        const item = props.items[index]
+        const itemElement = (
+          <CellMeasurer
+            key={key}
+            cache={store.cache}
+            columnIndex={0}
+            parent={parent}
+            rowIndex={index}
+          >
+            <div style={style}>
+              <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
+                <VirtualListItem
+                  // key={Math.random()}
+                  ItemView={props.ItemView}
+                  onSelect={props.onSelect}
+                  onOpen={props.onOpen}
+                  {...itemProps(props, index)}
+                  {...props.itemProps}
+                  {...props.getItemProps && props.getItemProps(item, index, props.items)}
+                  {...item}
+                  index={index}
+                  realIndex={index}
+                />
+              </ContextMenu>
+            </div>
+          </CellMeasurer>
+        )
+        return itemElement
+      }
 
-  const getList = (infiniteProps?) => {
-    let extraProps = {} as any
-    if (infiniteProps && infiniteProps.onRowsRendered) {
-      extraProps.onRowsRendered = infiniteProps.onRowsRendered
-    }
-    return (
-      <SortableListContainer
-        forwardRef={ref => {
-          if (ref) {
-            if (props.forwardRef) {
-              props.forwardRef(ref, store)
-            }
-            store.listRef = ref
-            if (infiniteProps && infiniteProps.registerChild) {
-              infiniteProps.registerChild(ref)
-            }
-          }
-        }}
-        items={props.items}
-        deferredMeasurementCache={store.cache}
-        height={store.height}
-        width={store.width}
-        rowHeight={store.cache.rowHeight}
-        overscanRowCount={20}
-        rowCount={props.items.length}
-        estimatedRowSize={props.estimatedRowHeight}
-        rowRenderer={rowRenderer}
-        distance={10}
-        lockAxis="y"
-        helperClass="sortableHelper"
-        shouldCancelStart={isRightClick}
-        scrollToAlignment={props.scrollToAlignment}
-        scrollToIndex={props.scrollToIndex}
-        {...extraProps}
-      />
-    )
-  }
+      function getList(infiniteProps?) {
+        let extraProps = {} as any
+        if (infiniteProps && infiniteProps.onRowsRendered) {
+          extraProps.onRowsRendered = infiniteProps.onRowsRendered
+        }
+        return (
+          <SortableListContainer
+            forwardRef={ref => {
+              if (ref) {
+                if (props.forwardRef) {
+                  props.forwardRef(ref, store)
+                }
+                store.listRef = ref
+                if (infiniteProps && infiniteProps.registerChild) {
+                  infiniteProps.registerChild(ref)
+                }
+              }
+            }}
+            items={props.items}
+            deferredMeasurementCache={store.cache}
+            height={store.height}
+            width={store.width}
+            rowHeight={store.cache.rowHeight}
+            overscanRowCount={20}
+            rowCount={props.items.length}
+            estimatedRowSize={props.estimatedRowHeight}
+            rowRenderer={rowRenderer}
+            distance={10}
+            lockAxis="y"
+            helperClass="sortableHelper"
+            shouldCancelStart={isRightClick}
+            scrollToAlignment={props.scrollToAlignment}
+            scrollToIndex={props.scrollToIndex}
+            {...extraProps}
+          />
+        )
+      }
 
-  return (
-    <div
-      ref={store.setFrameRef}
-      style={{
-        height: props.dynamicHeight ? store.height : 'auto',
-        flex: props.dynamicHeight ? 'none' : 1,
-        width: '100%',
-      }}
-    >
-      {!!store.width && !!store.cache && (
-        <>
-          {props.infinite && (
-            <InfiniteLoader
-              isRowLoaded={props.isRowLoaded}
-              loadMoreRows={props.loadMoreRows}
-              rowCount={props.rowCount}
-            >
-              {getList}
-            </InfiniteLoader>
+      console.log('rendering the virtual list', props)
+
+      return (
+        <div
+          ref={store.setFrameRef}
+          style={{
+            height: props.dynamicHeight ? store.height : 'auto',
+            flex: props.dynamicHeight ? 'none' : 1,
+            width: '100%',
+          }}
+        >
+          {!!store.width && !!store.cache && (
+            <>
+              {props.infinite && (
+                <InfiniteLoader
+                  isRowLoaded={props.isRowLoaded}
+                  loadMoreRows={props.loadMoreRows}
+                  rowCount={props.rowCount}
+                >
+                  {getList}
+                </InfiniteLoader>
+              )}
+              {!props.infinite && getList()}
+            </>
           )}
-          {!props.infinite && getList()}
-        </>
-      )}
-    </div>
+        </div>
+      )
+    },
+    [...Object.keys(props), ...Object.values(props), store.width, store.height],
   )
+
+  return <>{element}</>
 })

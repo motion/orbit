@@ -35,7 +35,6 @@ const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pan
   const { orbitStore } = useStoresSafe()
   return (
     <AppView
-      isActive
       viewType="main"
       id={props.pane.id}
       type={props.pane.type}

@@ -52,7 +52,7 @@ export default observer(function OrbitHeader() {
           )}
 
           <View width={22} alignItems="center" justifyContent="center">
-            <Icon name={`orbit-${icon}`} size={18} opacity={0.15} />
+            <Icon name={`orbit-${icon}`} size={16} opacity={0.15} />
           </View>
 
           <OrbitHeaderInput />

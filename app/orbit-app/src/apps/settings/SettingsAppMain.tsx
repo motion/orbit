@@ -11,7 +11,7 @@ export default observer(function SettingsAppMain(props: AppProps<AppType.setting
     return null
   }
 
-  switch (props.appConfig.type as any) {
+  switch (props.appConfig.subType) {
     case 'general':
       return <SettingsAppGeneral {...props} />
     case 'space':

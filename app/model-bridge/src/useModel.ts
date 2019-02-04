@@ -9,108 +9,36 @@ type UseModelOptions = {
   observe?: true
 }
 
-/*type ObserveModelOptions = {
-  defaultValue?: any
-  onChange?: (val: any) => any
-}*/
-
-/*function useObserveModel<ModelType, Args>(
-  model: Model<ModelType, Args, any>,
-  query: Args | false,
-  options: ObserveModelOptions & { observeFn: Function },
-) {
-  const subscription = useRef(null)
-  const curQuery = useRef(null)
-  const [value, setValue] = useState(options.defaultValue)
-  const dispose = () => subscription.current && subscription.current.unsubscribe()
-
-  // unmount
-  useEffect(() => dispose, [])
-
-  // on new query: subscribe, update
-  useEffect(
-    () => {
-      if (query === false) {
-        return
-      }
-      const hasNewQuery = JSON.stringify(curQuery.current) !== JSON.stringify(query)
-      if (hasNewQuery) {
-        curQuery.current = query
-
-        // unsubscribe last
-        dispose()
-
-        // subscribe new and update
-        subscription.current = options.observeFn(model, { args: query }).subscribe(nextValue => {
-          if (options.onChange) {
-            options.onChange(nextValue)
-          }
-          if (JSON.stringify(value) !== JSON.stringify(nextValue)) {
-            setValue(nextValue)
-          }
-        })
-      }
-    },
-    [JSON.stringify(query), options.onChange],
-  )
-
-  return value
-}*/
-
-// TODO we can now de-dupe and just re-use the same queries from useModel
-
 function use<ModelType, Args>(
-  type: "one"|"many"|"count", // manyAndCount
+  type: 'one' | 'many' | 'count',
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: UseModelOptions = {},
 ): any {
 
-  // we observe and update if necessary
-  let observeFn: Function;
-  if (type === 'one') {
-    observeFn = observeOne
-
-  } else if (type === 'many') {
-    observeFn = observeMany
-
-  } else if (type === 'count') {
-    observeFn = observeCount
-  }
-
-  // store most recent value
-  let defaultValue = options.defaultValue || {
-    one: null,
-    many: [],
-    count: 0,
-  }[type]
-
   const observeEnabled = options.observe === undefined || options.observe === true
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState(
+    options.defaultValue ||
+      {
+        one: null,
+        many: [],
+        count: 0,
+      }[type],
+  )
   const subscription = useRef(null)
   const curQuery = useRef(null)
 
-  const setValueAdvanced = (nextValue: any): boolean => {
-    if (type === "one" || type === "many") {
+  const updateIfNew = (nextValue: any) => {
+    if (type === 'one' || type === 'many') {
       if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
-        // console.log(`set a new value`, nextValue)
         setValue(nextValue)
-        return true
+        ModelCache.add(model, type, query, nextValue)
       }
-    } else if (type === "count") {
+    } else if (type === 'count') {
       if (nextValue !== value) {
         setValue(nextValue)
-        return true
+        ModelCache.add(model, type, query, nextValue)
       }
-    }
-    return false
-  };
-
-  const updateIfNew = (nextValue: any) => {
-    const updated = setValueAdvanced(nextValue)
-    if (updated) {
-      // console.log(`updating cache`)
-      ModelCache.add(model, type, query, nextValue)
     }
   }
 
@@ -128,57 +56,41 @@ function use<ModelType, Args>(
   // on new query: subscribe, update
   useEffect(
     () => {
-      if (observeEnabled === false)
-        return
+      let cancelled = false
+
+      if (query === false) return
 
       const isQueryChanged = JSON.stringify(curQuery.current) !== JSON.stringify(query)
-      if (isQueryChanged === false)
-        return
+      if (isQueryChanged === false) return
 
       // unsubscribe from previous subscription
       dispose()
 
       // subscribe new and update
       curQuery.current = query
-      // console.log('subscribed', observeFn, query)
-      subscription.current = observeFn(model, { args: query }).subscribe(updateIfNew)
 
-      const entry = ModelCache.findEntryByQuery(model, type, query)
-      if (entry) {
-        // console.log(`entry told to update`, entry)
-        updateIfNew(entry.value)
-      }
-    },
-    [JSON.stringify(query), observeEnabled],
-  )
-
-  useEffect(
-    () => {
-      if (observeEnabled)
-        return
-
-      let cancelled = false
-
-      if (type === 'one') {
-        loadOne(model, { args: query }).then(nextValue => {
-          if (!cancelled) {
-            updateIfNew(nextValue)
-          }
-        })
-
-      } else if (type === 'many') {
-        loadMany(model, { args: query }).then(nextValue => {
-          if (!cancelled) {
-            updateIfNew(nextValue)
-          }
-        })
-
-      } else if (type === 'count') {
-        loadCount(model, { args: query }).then(nextValue => {
-          if (!cancelled) {
-            updateIfNew(nextValue)
-          }
-        })
+      if (observeEnabled) {
+        if (type === 'one') {
+          subscription.current = observeOne(model, { args: query }).subscribe(updateIfNew)
+        } else if (type === 'many') {
+          subscription.current = observeMany(model, { args: query }).subscribe(updateIfNew)
+        } else if (type === 'count') {
+          subscription.current = observeCount(model, { args: query }).subscribe(updateIfNew)
+        }
+      } else {
+        if (type === 'one') {
+          loadOne(model, { args: query }).then(nextValue => {
+            if (!cancelled) updateIfNew(nextValue)
+          })
+        } else if (type === 'many') {
+          loadMany(model, { args: query }).then(nextValue => {
+            if (!cancelled) updateIfNew(nextValue)
+          })
+        } else if (type === 'count') {
+          loadCount(model, { args: query }).then(nextValue => {
+            if (!cancelled) updateIfNew(nextValue)
+          })
+        }
       }
 
       const entry = ModelCache.findEntryByQuery(model, type, query)
@@ -194,25 +106,23 @@ function use<ModelType, Args>(
     [JSON.stringify(query), observeEnabled],
   )
 
-  const update = (next: Partial<ModelType>|Partial<ModelType>[]) => {
+  const valueUpdater = (next: Partial<ModelType> | Partial<ModelType>[]) => {
     // save async after update
-    // todo: what if save failed?
     if (type === 'one') {
       const nextValue = merge({ ...value }, next)
       updateIfNew(nextValue)
       save(model, nextValue)
-
     } else if (type === 'many') {
-      const nextValue = merge([ ...value ], next)
+      const nextValue = merge([...value], next)
       updateIfNew(nextValue)
-      for (let item of (next as Partial<ModelType>[])) {
+      for (let item of next as Partial<ModelType>[]) {
         save(model, item as any)
       }
     }
   }
 
   if (type === 'one' || type === 'many') {
-    return [value, update]
+    return [value, valueUpdater]
   }
 
   return value
@@ -223,7 +133,7 @@ export function useModel<ModelType, Args>(
   query: Args | false,
   options: UseModelOptions = {},
 ): [ModelType, ((next: Partial<ModelType>) => any)] {
-  return use("one", model, query, options)
+  return use('one', model, query, options)
 }
 
 export function useModels<ModelType, Args>(
@@ -231,7 +141,7 @@ export function useModels<ModelType, Args>(
   query: Args | false,
   options: UseModelOptions = {},
 ): [ModelType[], ((next: Partial<ModelType>[]) => any)] {
-  return use("many", model, query, options)
+  return use('many', model, query, options)
 }
 
 export function useModelCount<ModelType, Args>(
@@ -239,5 +149,5 @@ export function useModelCount<ModelType, Args>(
   query: Args | false,
   options: UseModelOptions = {},
 ): number {
-  return use("count", model, query, options)
+  return use('count', model, query, options)
 }

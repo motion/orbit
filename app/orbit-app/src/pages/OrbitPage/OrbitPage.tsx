@@ -98,6 +98,7 @@ const defaultPanes = [
   { id: 'app-settings', name: 'Settings', type: 'settings' },
   { id: 'app-apps', name: 'Apps', type: 'apps' },
   { id: 'app-sources', name: 'Sources', type: 'sources' },
+  { id: 'app-spaces', name: 'Spaces', type: 'spaces' },
   { id: 'app-createApp', name: 'Add app', type: 'createApp' },
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]

@@ -4,7 +4,6 @@ import * as React from 'react'
 import { AppProps } from '../AppProps'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
-import SettingsAppSpaceMain from './SettingsAppSpaceMain'
 
 export default observer(function SettingsAppMain(props: AppProps<AppType.settings>) {
   if (!props.appConfig) {
@@ -14,8 +13,6 @@ export default observer(function SettingsAppMain(props: AppProps<AppType.setting
   switch (props.appConfig.subType) {
     case 'general':
       return <SettingsAppGeneral {...props} />
-    case 'space':
-      return <SettingsAppSpaceMain {...props} />
     case 'account':
       return <SettingsAppAccount {...props} />
     default:

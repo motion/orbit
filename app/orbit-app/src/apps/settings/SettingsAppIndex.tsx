@@ -43,16 +43,6 @@ export default function SourcesAppIndex() {
           setUser({ activeSpace: space.id })
         },
       })),
-      {
-        group: 'Spaces',
-        title: 'Create new space...',
-        icon: 'add',
-        padding: [16, 11],
-        subType: 'new-space',
-        titleProps: {
-          fontWeight: 300,
-        },
-      },
     ],
   })
 

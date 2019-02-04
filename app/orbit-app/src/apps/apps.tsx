@@ -11,6 +11,7 @@ import { people } from './people/people'
 import { search } from './search'
 import { settings } from './settings'
 import { sources } from './sources'
+import { spaces } from './spaces'
 import { topics } from './topics'
 import { MessageViewMain } from './views/MessageViewMain'
 
@@ -22,6 +23,7 @@ type App = {
 type AppsIndex = { [key in AppType]: App }
 
 export const apps: AppsIndex = {
+  spaces,
   search,
   people,
   topics,

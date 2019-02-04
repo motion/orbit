@@ -187,15 +187,6 @@ export default observer(function OrbitNav() {
           />
         )}
         <View flex={2} />
-        {/* <OrbitTab
-          thicc
-          isActive={paneManagerStore.activePane.type === 'apps'}
-          onClick={paneManagerStore.activePaneByTypeSetter('apps')}
-          tooltip="All Apps"
-          separator
-          icon="orbit-apps"
-          iconSize={12}
-        /> */}
         <OrbitTab
           icon="layers"
           thicc
@@ -206,9 +197,9 @@ export default observer(function OrbitNav() {
         <OrbitTab
           icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
           thicc
-          // isActive={paneManagerStore.activePane.type === 'space'}
-          // onClick={paneManagerStore.activePaneByTypeSetter('space')}
-          tooltip="Manage Space"
+          isActive={paneManagerStore.activePane.type === 'spaces'}
+          onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
+          tooltip="Space"
         />
         {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>

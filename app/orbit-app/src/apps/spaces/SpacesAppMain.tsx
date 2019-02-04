@@ -22,7 +22,7 @@ import { AppProps } from '../AppProps'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
-export default observer(function SettingsAppSpaces({ appConfig }: AppProps<AppType.settings>) {
+export default observer(function SpaceesAppMain({ appConfig }: AppProps<AppType.settings>) {
   const id = +appConfig.id
   const space = useObserveOne(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })

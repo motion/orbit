@@ -12,6 +12,7 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default observer(function OrbitNav() {
   const {
@@ -196,10 +197,22 @@ export default observer(function OrbitNav() {
           iconSize={12}
         /> */}
         <OrbitTab
-          icon="grid48"
+          icon="layers"
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
+          tooltip="Sources"
+        />
+        <OrbitTab
+          icon={
+            <OrbitOrb
+              colors={[[255 / 2, 255 / 2, 255 / 2, 0.5], [255 / 2, 255 / 2, 255 / 2, 0.5]]}
+              size={12}
+            />
+          }
+          thicc
+          // isActive={paneManagerStore.activePane.type === 'space'}
+          // onClick={paneManagerStore.activePaneByTypeSetter('space')}
           tooltip="Manage Space"
         />
         {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}

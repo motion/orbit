@@ -13,6 +13,7 @@ import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+import { SpaceIcon } from '../views/SpaceIcon'
 import { PaneManagerStore } from './PaneManagerStore'
 import { MarkType } from './QueryStore/types'
 
@@ -29,10 +30,9 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]) => {
+export function searchGroupsToResults(results: SearchResult[], { max = 6 }: { max?: number } = {}) {
   const res = results.map(result => {
     const group = groupToName[result.group]
-    const max = 6
     const firstFew = result.bits.slice(0, max).map(bit => ({
       item: bit,
       group,
@@ -104,15 +104,16 @@ export class SearchStore {
 
   get homeItem() {
     return {
-      title: `Apps`,
-      subtitle: `${this.stores.spaceStore.apps
-        .map(x => x.name)
-        .slice(0, 2)
-        .join(', ')}`,
-      icon: 'orbit-apps-full',
+      title: this.stores.spaceStore.activeSpace.name,
+      // subtitle: `${this.stores.spaceStore.apps
+      //   .map(x => x.name)
+      //   .slice(0, 2)
+      //   .join(', ')}`,
+      slim: true,
+      icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
       type: AppType.apps,
-      group: this.stores.spaceStore.activeSpace.name,
+      // group: this.stores.spaceStore.activeSpace.name,
     }
   }
 

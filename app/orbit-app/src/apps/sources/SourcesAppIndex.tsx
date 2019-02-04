@@ -9,7 +9,6 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
-import { OrbitOrb } from '../../views/OrbitOrb'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
@@ -32,16 +31,6 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       group: activeSpaceName,
       appConfig: {
         subType: 'manage-apps',
-      },
-    },
-    {
-      title: activeSpaceName,
-      subtitle: `Settings and members`,
-      icon: <OrbitOrb size={18} colors={activeSpace.colors} marginRight={12} />,
-      iconBefore: true,
-      group: activeSpaceName,
-      appConfig: {
-        subType: 'manage-space',
       },
     },
     ...activeSources.map(app => ({

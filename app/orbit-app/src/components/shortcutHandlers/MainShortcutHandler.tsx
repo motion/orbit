@@ -43,7 +43,7 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
       orbitStore.setTorn()
     },
     switchSpaces: () => {
-      AppActions.showSpaceSwitcher()
+      paneManagerStore.setActivePaneByType('spaces')
     },
     open: () => {
       shortcutStore.emit('open')

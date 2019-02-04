@@ -31,154 +31,156 @@ export type SelectableTreeRef = {
 //   loadedItems = {}
 // }
 
-export default React.forwardRef(function SelectableTreeList(props: SelectableTreeListProps, ref) {
-  const stores = useStoresSafe({ optional: ['selectionStore', 'shortcutStore'] })
-  const selectionStore =
-    props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
+  function SelectableTreeList(props, ref) {
+    const stores = useStoresSafe({ optional: ['selectionStore', 'shortcutStore'] })
+    const selectionStore =
+      props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
 
-  // move to reducer or store?
-  // const [state, dispatch] = useReducer({
-  //   currentId: 0,
-  //   error: null,
-  //   history: [],
-  //   depth: 0,
-  //   loadedItems: {}
-  // })
+    // move to reducer or store?
+    // const [state, dispatch] = useReducer({
+    //   currentId: 0,
+    //   error: null,
+    //   history: [],
+    //   depth: 0,
+    //   loadedItems: {}
+    // })
 
-  const [currentItemID, setCurrentItemID] = useState(props.rootItemID)
-  const currentItem = props.items[currentItemID]
-  const [childrenItems, setChildrenItems] = useState([])
-  const [error, setError] = useState('')
-  const history = useRef([props.rootItemID])
-  const [depth, setDepthPrivate] = useState(0)
-  const getDepth = useRef(0)
+    const [currentItemID, setCurrentItemID] = useState(props.rootItemID)
+    const currentItem = props.items[currentItemID]
+    const [childrenItems, setChildrenItems] = useState([])
+    const [error, setError] = useState('')
+    const history = useRef([props.rootItemID])
+    const [depth, setDepthPrivate] = useState(0)
+    const getDepth = useRef(0)
 
-  // keep history in sync with depth
-  const setDepth = (next: number) => {
-    history.current = history.current.slice(0, next + 1)
-    getDepth.current = next
-    setDepthPrivate(next)
-  }
-  const setDepthWithCallback = (depth: number) => {
-    setDepth(depth)
-    if (props.onChangeDepth) {
-      props.onChangeDepth(depth, [...history.current])
+    // keep history in sync with depth
+    const setDepth = (next: number) => {
+      history.current = history.current.slice(0, next + 1)
+      getDepth.current = next
+      setDepthPrivate(next)
     }
-  }
-
-  const back = () => depth > 0 && setDepthWithCallback(depth - 1)
-
-  useEffect(
-    function syncDepthPropToState() {
-      if (props.depth !== depth) {
-        setDepth(props.depth)
+    const setDepthWithCallback = (depth: number) => {
+      setDepth(depth)
+      if (props.onChangeDepth) {
+        props.onChangeDepth(depth, [...history.current])
       }
-      const nextItemID = history.current[props.depth]
-      if (typeof nextItemID === 'number' && nextItemID !== currentItemID) {
-        console.log('updating current item from props change')
-        setCurrentItemID(nextItemID)
-      }
-    },
-    [props.depth, depth],
-  )
+    }
 
-  useEffect(
-    function updateRef() {
-      if (ref) {
-        ref['current'] = {
-          back,
-          depth,
+    const back = () => depth > 0 && setDepthWithCallback(depth - 1)
+
+    useEffect(
+      function syncDepthPropToState() {
+        if (props.depth !== depth) {
+          setDepth(props.depth)
         }
-      }
-    },
-    [depth],
-  )
-
-  useEffect(
-    function fetchItems() {
-      if (!currentItem || (currentItem.type !== 'folder' && currentItem.type !== 'root')) {
-        // error if we have items
-        if (Object.keys(props.items).length) {
-          setError(
-            `No item found root, ${
-              props.rootItemID
-            } current, ${currentItemID}, items ${JSON.stringify(props.items)}`,
-          )
-        } else {
-          // just loading if we dont (they passed in items={[]})
+        const nextItemID = history.current[props.depth]
+        if (typeof nextItemID === 'number' && nextItemID !== currentItemID) {
+          console.log('updating current item from props change')
+          setCurrentItemID(nextItemID)
         }
-        return
-      }
-      setError(null)
-      let cancelled = false
-      const items = Promise.all(
-        currentItem.children.map(id => props.loadItemProps(props.items[id])),
-      )
-      items.then(nextItems => {
-        if (!cancelled) {
-          setChildrenItems(nextItems)
+      },
+      [props.depth, depth],
+    )
+
+    useEffect(
+      function updateRef() {
+        if (ref) {
+          ref['current'] = {
+            back,
+            depth,
+          }
         }
-      })
-      return () => {
-        cancelled = true
-      }
-    },
-    [JSON.stringify(currentItem), currentItemID],
-  )
+      },
+      [depth],
+    )
 
-  const handleOpen = useCallback(
-    function handleOpen(index, appConfig?, eventType?) {
-      if (currentItem.type !== 'folder' && currentItem.type !== 'root') {
-        console.log('cant open', currentItem, 'not folder or root')
-        return
-      }
-      const nextID = currentItem.children[index]
-      const next = props.items[nextID]
-
-      if (next.type === 'folder') {
-        const nextDepth = getDepth.current + 1
-        history.current[nextDepth] = nextID
-        setDepthWithCallback(nextDepth)
-        setCurrentItemID(nextID)
-        return
-      }
-
-      if (props.onOpen) {
-        props.onOpen(index, appConfig, eventType)
-      }
-    },
-    [JSON.stringify(currentItem), currentItemID],
-  )
-
-  useEffect(
-    function handleShortcuts() {
-      if (selectionStore && stores.shortcutStore) {
-        return stores.shortcutStore.onShortcut(shortcut => {
-          switch (shortcut) {
-            case 'left':
-              back()
-              return
-            case 'right':
-              handleOpen(selectionStore.activeIndex)
-              break
+    useEffect(
+      function fetchItems() {
+        if (!currentItem || (currentItem.type !== 'folder' && currentItem.type !== 'root')) {
+          // error if we have items
+          if (Object.keys(props.items).length) {
+            setError(
+              `No item found root, ${
+                props.rootItemID
+              } current, ${currentItemID}, items ${JSON.stringify(props.items)}`,
+            )
+          } else {
+            // just loading if we dont (they passed in items={[]})
+          }
+          return
+        }
+        setError(null)
+        let cancelled = false
+        const items = Promise.all(
+          currentItem.children.map(id => props.loadItemProps(props.items[id])),
+        )
+        items.then(nextItems => {
+          if (!cancelled) {
+            setChildrenItems(nextItems)
           }
         })
-      }
-    },
-    [currentItemID],
-  )
+        return () => {
+          cancelled = true
+        }
+      },
+      [JSON.stringify(currentItem), currentItemID],
+    )
 
-  return (
-    <>
-      {error && <div>SelectableTreeListError: {error}</div>}
-      {!error && (
-        <SelectableList
-          {...props}
-          selectionStore={selectionStore}
-          onOpen={handleOpen}
-          items={childrenItems}
-        />
-      )}
-    </>
-  )
-})
+    const handleOpen = useCallback(
+      function handleOpen(index, appConfig?, eventType?) {
+        if (currentItem.type !== 'folder' && currentItem.type !== 'root') {
+          console.log('cant open', currentItem, 'not folder or root')
+          return
+        }
+        const nextID = currentItem.children[index]
+        const next = props.items[nextID]
+
+        if (next.type === 'folder') {
+          const nextDepth = getDepth.current + 1
+          history.current[nextDepth] = nextID
+          setDepthWithCallback(nextDepth)
+          setCurrentItemID(nextID)
+          return
+        }
+
+        if (props.onOpen) {
+          props.onOpen(index, appConfig, eventType)
+        }
+      },
+      [JSON.stringify(currentItem), currentItemID],
+    )
+
+    useEffect(
+      function handleShortcuts() {
+        if (selectionStore && stores.shortcutStore) {
+          return stores.shortcutStore.onShortcut(shortcut => {
+            switch (shortcut) {
+              case 'left':
+                back()
+                return
+              case 'right':
+                handleOpen(selectionStore.activeIndex)
+                break
+            }
+          })
+        }
+      },
+      [currentItemID],
+    )
+
+    return (
+      <>
+        {error && <div>SelectableTreeListError: {error}</div>}
+        {!error && (
+          <SelectableList
+            {...props}
+            selectionStore={selectionStore}
+            onOpen={handleOpen}
+            items={childrenItems}
+          />
+        )}
+      </>
+    )
+  },
+)

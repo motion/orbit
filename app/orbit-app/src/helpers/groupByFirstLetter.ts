@@ -11,23 +11,22 @@ function getLetter(name: string) {
   return letter
 }
 
-export const groupByLetter = memoize(
-  (key: string = 'name') =>
-    function groupByLetter<A>(item: A, index: number, items: A[]): { separator?: string } {
-      if (items[index - 1]) {
-        const lastLetter = getLetter(items[index - 1][key])
-        const thisLetter = getLetter(item[key])
-        if (thisLetter !== lastLetter) {
-          return {
-            separator: thisLetter,
-          }
-        }
-      } else {
-        // first index
+export const groupByLetter = memoize((key: string = 'name') => {
+  return function groupByLetter<A>(item: A, index: number, items: A[]): { separator?: string } {
+    if (items[index - 1]) {
+      const lastLetter = getLetter(items[index - 1][key])
+      const thisLetter = getLetter(item[key])
+      if (thisLetter !== lastLetter) {
         return {
-          separator: getLetter(item[key]),
+          separator: thisLetter,
         }
       }
-      return item
-    },
-)
+    } else {
+      // first index
+      return {
+        separator: getLetter(item[key]),
+      }
+    }
+    return item
+  }
+})

@@ -19,6 +19,7 @@ export const icons = {
   ['orbit-lists']: require('!raw-loader!../../public/icons/icon-lists.svg'),
   ['orbit-apps']: require('!raw-loader!../../public/icons/icon-apps.svg'),
   ['orbit-custom']: require('!raw-loader!../../public/icons/icon-custom.svg'),
+  ['orbit-sources']: require('!raw-loader!../../public/icons/icon-sources.svg'),
   ['orbit-settings']: require('!raw-loader!../../public/icons/icon-settings.svg'),
 
   orbitalSmall: require('!raw-loader!../../public/orbital-small.svg'),

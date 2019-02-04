@@ -22,9 +22,8 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
-import OrbitContent from './OrbitContent'
-import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
+import OrbitContent from './OrbitMain'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
 import { OrbitStore } from './OrbitStore'
@@ -71,7 +70,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
-                <OrbitControls />
+                {/* <OrbitControls /> */}
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
                 <Row flex={1}>
@@ -99,6 +98,7 @@ const defaultPanes = [
   { id: 'app-settings', name: 'Settings', type: 'settings' },
   { id: 'app-apps', name: 'Apps', type: 'apps' },
   { id: 'app-sources', name: 'Sources', type: 'sources' },
+  { id: 'app-spaces', name: 'Spaces', type: 'spaces' },
   { id: 'app-createApp', name: 'Add app', type: 'createApp' },
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]

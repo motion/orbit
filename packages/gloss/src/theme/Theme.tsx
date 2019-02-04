@@ -9,7 +9,7 @@ const makeName = () => `theme-${Math.random}`.slice(0, 15)
 const baseThemeName = makeName()
 const themeCache = {}
 
-export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string
+export type ThemeSelect = ((theme: ThemeObject) => ThemeObject) | string | false | undefined
 
 type ThemeProps = {
   theme?: string | SimpleStyleObject

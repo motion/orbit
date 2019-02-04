@@ -1,21 +1,21 @@
+import { react } from '@mcro/black'
+import { loadMany } from '@mcro/model-bridge'
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { GithubRepository } from '@mcro/services'
-import { Text, View, SearchableTable, Tabs, Tab } from '@mcro/ui'
-import * as React from 'react'
-import { loadMany } from '@mcro/model-bridge'
-import { DateFormat } from '../../../../views/DateFormat'
-import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
-import { OrbitSourceSettingProps } from '../../../types'
-import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SettingManageRow } from '../../../views/settings/SettingManageRow'
+import { SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { DateFormat } from '../../../../views/DateFormat'
+import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
+import { WhitelistManager } from '../../../helpers/WhitelistManager'
+import { OrbitSourceSettingProps } from '../../../types'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<GithubSource>
 
 class GithubSettingStore {
   props: Props
-  repositories: GithubRepository[] = null
   userOrgs = []
   sortOrder = {
     key: 'lastCommit',
@@ -26,14 +26,16 @@ class GithubSettingStore {
     getAll: this.getAllFilterIds.bind(this),
   })
 
-  async didMount() {
-    this.repositories =
-      (await loadMany(GithubRepositoryModel, {
+  repositories = react(
+    () => this.props.source.id,
+    async sourceId => {
+      return (await loadMany(GithubRepositoryModel, {
         args: {
-          sourceId: this.props.source.id,
+          sourceId,
         },
-      })) || []
-  }
+      })) as GithubRepository[]
+    },
+  )
 
   willUnmount() {
     this.whitelist.dispose()
@@ -50,6 +52,7 @@ class GithubSettingStore {
 
 export default observer(function GithubSettings(props: Props) {
   const store = useStore(GithubSettingStore, props)
+  console.log('render github.')
   return (
     <>
       <SettingManageRow source={props.source} whitelist={store.whitelist} />

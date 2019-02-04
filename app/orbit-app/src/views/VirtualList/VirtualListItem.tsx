@@ -1,6 +1,4 @@
 import * as React from 'react'
-import { memo } from 'react'
-import isEqualDeep from 'react-fast-compare'
 import { SortableElement } from 'react-sortable-hoc'
 import { GenericComponent } from '../../types'
 import ListItem, { ListItemProps } from '../ListItems/ListItem'
@@ -23,8 +21,8 @@ class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>
   }
 }
 
-const SortableVirtualListItem = SortableElement(VirtualListItemInner)
+export default SortableElement(VirtualListItemInner)
 
-export default memo(function VirtualListItem(props: VirtualListItemProps<any>) {
-  return <SortableVirtualListItem {...props} />
-}, isEqualDeep)
+// export default memo(function VirtualListItem(props: VirtualListItemProps<any>) {
+//   return <SortableVirtualListItem {...props} />
+// }, isEqualDeep)

@@ -14,7 +14,7 @@ import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 28
-const inactiveOpacity = 0.5
+const inactiveOpacity = 0.45
 const border = 5
 
 export type TabProps = ViewProps & {
@@ -40,7 +40,7 @@ export type TabProps = ViewProps & {
 export function OrbitTab({
   app,
   icon,
-  iconSize = 10,
+  iconSize: iconSizeProp,
   iconProps,
   iconAdjustOpacity = 0,
   tooltip,
@@ -57,6 +57,7 @@ export function OrbitTab({
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+  const iconSize = iconSizeProp || (thicc ? 12 : 10)
 
   const button = (
     <NavButtonChrome
@@ -75,9 +76,10 @@ export function OrbitTab({
           <OrbitTabIcon
             isActive={isActive}
             name={`${icon}`}
-            size={iconSize}
             marginRight={!!label ? sidePad * 0.6 : 0}
             thicc={thicc}
+            size={iconSize}
+            iconAdjustOpacity={iconAdjustOpacity}
             {...iconProps}
           />
         )}
@@ -91,7 +93,7 @@ export function OrbitTab({
             flex={1}
             size={0.95}
             opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={500}
+            fontWeight={400}
             {...textProps}
           >
             {label}
@@ -124,10 +126,12 @@ export function OrbitTab({
 
 function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
+  let opacity = props.isActive ? 1 : props.thicc ? 0.5 : 0.3
+  opacity += props.iconAdjustOpacity || 0
   return (
     <Icon
       color={invertLightness(theme.color, 0.8)}
-      opacity={props.isActive ? 1 : props.thicc ? 0.5 : 0.3}
+      opacity={opacity}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -139,6 +143,7 @@ function OrbitTabIcon(props: IconProps) {
 export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
+      glint={false}
       top={tabHeight / 2 - 8}
       right={8}
       circular
@@ -166,7 +171,6 @@ const NavButtonChrome = gloss<TabProps>({
   borderTopRadius: border,
   overflow: 'hidden',
   height: tabHeight,
-  maxWidth: 160,
   transform: {
     y: 0.5,
   },
@@ -180,7 +184,7 @@ const NavButtonChrome = gloss<TabProps>({
 
   return {
     padding: [0, sidePad],
-    minWidth: stretch ? 160 : 0,
+    minWidth: stretch ? 150 : 0,
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
@@ -209,7 +213,7 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: 0,
+    y: -0.5,
     x: 0.5,
   },
   width: 1,

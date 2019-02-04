@@ -336,10 +336,8 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  return (
-    props.iconSize ||
-    Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
-  )
+  const size = (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1)
+  return props.iconSize || Math.round(size * 100) / 100
 }
 
 const getSegmentRadius = (props, uiContext) => {

@@ -117,6 +117,7 @@ export class SearchStore {
   }
 
   getAppsResults(query: string): OrbitListItemProps[] {
+    const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
     const searchedApps =
       (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []
@@ -127,7 +128,7 @@ export class SearchStore {
         slim: true,
         iconBefore: true,
         icon: <AppIcon app={app} />,
-        group: this.stores.spaceStore.activeSpace.name,
+        // group: spaceName,
         appConfig: {
           type: AppType.message,
           title: `Open ${app.name}`,
@@ -142,7 +143,24 @@ export class SearchStore {
       return searchedApps.map(appToResult)
     }
 
-    return [this.homeItem, ...apps.slice(0, 2).map(appToResult)]
+    return [
+      this.homeItem,
+      ...apps.slice(0, 2).map(appToResult),
+      {
+        title: 'Create new app...',
+        icon: 'orbit-custom-full',
+        slim: true,
+        iconBefore: true,
+        // group: spaceName,
+        appConfig: {
+          type: AppType.message,
+          title: `Create new app`,
+        },
+        onOpen: () => {
+          this.stores.paneManagerStore.setActivePaneByType(`createApp`)
+        },
+      },
+    ]
   }
 
   private getQuickResults(query: string) {

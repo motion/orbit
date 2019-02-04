@@ -3,7 +3,7 @@ import fuzzy from 'fuzzy'
 import * as React from 'react'
 import { iconNames } from './iconNames'
 
-export type IconProps = React.HTMLProps<HTMLDivElement> &
+export type IconProps = React.HTMLAttributes<HTMLDivElement> &
   CSSPropertySet & {
     size: number
     color?: Color

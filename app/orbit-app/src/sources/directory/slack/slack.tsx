@@ -1,10 +1,10 @@
-import SlackApp from './views/SlackApp'
-import SlackSettings from './views/SlackSettings'
+import iconSlack from '!raw-loader!../../../../public/icons/slack.svg'
 import { Source } from '@mcro/models'
-import iconSlack from '../../../../public/icons/slack.svg'
-import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
+import { GetOrbitIntegration } from '../../types'
+import SlackApp from './views/SlackApp'
 import { SlackItem } from './views/SlackItem'
+import SlackSettings from './views/SlackSettings'
 
 export const slack: GetOrbitIntegration<'slack'> = (source?: Source) => ({
   modelType: 'bit',

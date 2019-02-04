@@ -1,6 +1,6 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
-import { Button, Row, SegmentedRow, ThemeContext } from '@mcro/ui'
+import { Button, Row, SegmentedRow } from '@mcro/ui'
 import * as React from 'react'
 import { Divider } from '../../../../views/Divider'
 import { Pane } from '../../../../views/Pane'
@@ -33,7 +33,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
 export default React.memo(function SlackApp(props: Props) {
   const { item } = props
 
-  const nextConvos = useObserveMany(BitModel, {
+  const [nextConvos] = useModels(BitModel, {
     where: {
       integration: item.integration,
       type: item.type,
@@ -51,7 +51,7 @@ export default React.memo(function SlackApp(props: Props) {
     },
   })
 
-  const prevConvos = useObserveMany(BitModel, {
+  const [prevConvos] = useModels(BitModel, {
     where: {
       integration: item.integration,
       type: item.type,
@@ -70,18 +70,9 @@ export default React.memo(function SlackApp(props: Props) {
   })
 
   const [activePane, setActivePane] = React.useState(0)
-  const { activeTheme, allThemes } = React.useContext(ThemeContext)
 
   return (
     <>
-      {/* <Theme
-        theme={{
-          color: color(activeTheme.color).alpha(0.5),
-          colorActive: allThemes.selected.background,
-          backgroundHover: activeTheme.backgroundHover,
-          borderColor: 'transparent',
-        }}
-      > */}
       <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
         <SegmentedRow
           spaced={0}
@@ -95,7 +86,6 @@ export default React.memo(function SlackApp(props: Props) {
           <Button>Related</Button>
         </SegmentedRow>
       </Row>
-      {/* </Theme> */}
 
       <Pane isShown={activePane === 0}>
         <ScrollableContent key={prevConvos.length} scrollTo="#start">

@@ -1,4 +1,4 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { SpaceModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import * as React from 'react'
@@ -10,7 +10,7 @@ import { OrbitOrb } from '../../views/OrbitOrb'
 export default function SpacesAppIndex() {
   const [user = {}, setUser] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
-  const allSpaces = useObserveMany(SpaceModel, {})
+  const [allSpaces] = useModels(SpaceModel, {})
   const activeSpace = allSpaces.find(x => x.id === activeSpaceId)
   const inactiveSpaces = allSpaces.filter(x => x.id !== activeSpaceId)
 

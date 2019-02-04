@@ -1,9 +1,9 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { JobModel } from '@mcro/models'
 
 export const useJobs = (sourceId: number | false) => {
   const hasSource = sourceId !== false
-  const jobs = useObserveMany(
+  const [jobs] = useModels(
     JobModel,
     hasSource && {
       where: {

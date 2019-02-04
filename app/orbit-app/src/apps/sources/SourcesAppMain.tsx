@@ -1,11 +1,11 @@
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 import { IntegrationType, SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { ManageApps } from './ManageApps'
 
 export const SourcesAppMain = (props: AppProps<any>) => {
-  const source = useObserveOne(
+  const source = useModel(
     SourceModel,
     props.appConfig &&
       props.appConfig.viewType !== 'setup' && {

@@ -1,13 +1,20 @@
 import { Row, ViewProps } from '@mcro/gloss'
-import React from 'react'
-import { Omit } from '../../../app/orbit-app/src/helpers/typeHelpers/omit'
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+} from 'react'
 import { Text, TextProps } from './Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
-const BreadcrumbsContext = React.createContext({
+const BreadcrumbsContext = createContext({
   children: [],
-  dispatch: null as React.Dispatch<BreadcrumbActions>,
+  dispatch: null as Dispatch<BreadcrumbActions>,
 })
 
 function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbActions) {
@@ -23,7 +30,7 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
 }
 
 export function Breadcrumbs(props: ViewProps) {
-  const [state, dispatch] = React.useReducer(breadcrumbsReducer, { children: new Set() })
+  const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
   return (
     <BreadcrumbsContext.Provider value={{ dispatch, children: [...state.children] }}>
       <Row alignItems="center" {...props} />
@@ -31,9 +38,11 @@ export function Breadcrumbs(props: ViewProps) {
   )
 }
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
 export type BreadcrumbsProps = Omit<TextProps, 'children'> & {
-  separator?: React.ReactNode
-  children?: React.ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => React.ReactNode)
+  separator?: ReactNode
+  children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }
 
 export function Breadcrumb({
@@ -56,16 +65,16 @@ export function Breadcrumb({
 }
 
 export function useBreadcrumb() {
-  const id = React.useRef(null)
+  const id = useRef(null)
   if (!id.current) {
     id.current = Math.random()
   }
-  const breadcrumbsContext = React.useContext(BreadcrumbsContext)
+  const breadcrumbsContext = useContext(BreadcrumbsContext)
   const total = breadcrumbsContext.children.length
   const index = breadcrumbsContext.children.indexOf(id.current)
   const isLast = index === total - 1
 
-  React.useEffect(() => {
+  useEffect(() => {
     breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
     return () => {
       breadcrumbsContext.dispatch({ type: 'unmount', value: id.current })

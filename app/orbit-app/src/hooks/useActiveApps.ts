@@ -1,4 +1,4 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { AppByType, AppModel, AppType } from '@mcro/models'
 import { useActiveSpace } from './useActiveSpace'
 
@@ -10,10 +10,11 @@ export function useActiveApps<A extends AppType>(type?: A): AppByType<A>[] {
   if (type) {
     where['type'] = type
   }
-  return useObserveMany(
+  const [apps] = useModels(
     AppModel,
     activeSpace && {
       where,
     },
-  ) as any
+  )
+  return apps as A extends undefined ? App : B[]
 }

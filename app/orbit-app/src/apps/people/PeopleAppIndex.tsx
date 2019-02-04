@@ -1,4 +1,4 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { AppType, PersonBitModel } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
@@ -32,7 +32,7 @@ export default observer(function PeopleAppIndex(props: AppProps<AppType.people>)
     }
   }
 
-  const people = useObserveMany(PersonBitModel, { take: 50000, where })
+  const [people] = useModels(PersonBitModel, { take: 50000, where })
   const results = useOrbitFilterableResults({
     items: people,
     filterKey: 'name',

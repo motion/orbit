@@ -38,7 +38,7 @@ export type SurfaceProps = CSSPropertySet & {
   dim?: boolean
   elementProps?: Object
   elevation?: number
-  forwardRef?: React.Ref<HTMLDivElement>
+  forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
   glowProps?: Object

@@ -68,7 +68,7 @@ export type OrbitIntegration<A extends ItemType> = {
   modelType: ModelFromType<A>['target']
   integration?: A
   appName?: string
-  defaultQuery?: any | FindOptions<ModelFromType<A>> // TODO umed
+  defaultQuery?: FindOptions<ModelFromType<A>>
   viewConfig?: AppConfig['viewConfig']
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>

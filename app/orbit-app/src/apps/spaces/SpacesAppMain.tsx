@@ -19,12 +19,13 @@ import { OrbitOrb } from '../../views/OrbitOrb'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppProps'
+import { useModel } from '@mcro/model-bridge'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
 export default observer(function SpaceesAppMain({ appConfig }: AppProps<AppType.settings>) {
   const id = +appConfig.id
-  const space = useObserveOne(SpaceModel, { where: { id } })
+  const [space] = useModel(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })
   const [colors, setColors] = React.useState(defaultColors)
 

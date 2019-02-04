@@ -27,7 +27,11 @@ export class GMailMessageParser {
    */
   getDate(): number {
     const dateHeader = this.message.payload.headers.find(x => x.name === 'Date')
-    if (dateHeader && dateHeader.value) return new Date(dateHeader.value).getTime()
+    if (dateHeader && dateHeader.value) {
+      const date = new Date(dateHeader.value).getTime()
+      if (!isNaN(date)) // for some reason some dates have different format
+        return date
+    }
 
     return parseInt(this.message.internalDate)
   }

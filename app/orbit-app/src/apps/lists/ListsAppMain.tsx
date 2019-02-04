@@ -1,4 +1,4 @@
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 import { AppModel, AppType, ListsApp } from '@mcro/models'
 import * as React from 'react'
 import { SubTitle, Title } from '../../views'
@@ -23,7 +23,7 @@ export const ListsAppMain = React.memo(function ListsAppMain(props: ListAppProps
 })
 
 function ListsAppMainFolder(props: ListAppProps) {
-  const list = useObserveOne(AppModel, { where: { id: +props.appConfig.id } }) as ListsApp
+  const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsApp, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
 

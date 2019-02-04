@@ -2,16 +2,29 @@ import stringHash from 'string-hash'
 
 export function runWithTimeout<A>(cb: () => Promise<A>, time = 1000): Promise<A> {
   return new Promise((resolve, reject) => {
+    let resolved = false
     let failTm = setTimeout(() => {
-      console.warn('Failed to crawl, timed out....')
-      reject()
+      if (resolved === false) {
+        console.warn('Failed to crawl, timed out....')
+        resolved = true
+        reject()
+      }
     }, time)
     cb()
       .then(val => {
         clearTimeout(failTm)
-        resolve(val)
+        if (resolved === false) {
+          resolved = true
+          resolve(val)
+        }
       })
-      .catch(reject)
+      .catch(error => {
+        clearTimeout(failTm)
+        if (resolved === false) {
+          resolved = true
+          reject(error)
+        }
+      })
   })
 }
 

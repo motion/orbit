@@ -1,4 +1,4 @@
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 import { AppType, BitModel } from '@mcro/models'
 import * as React from 'react'
 import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'
@@ -17,7 +17,8 @@ const defaultItemProps = {
 }
 
 export default function BitAppMain(props: AppProps<AppType.bit>) {
-  const bit = useObserveOne(BitModel, { where: { id: +props.appConfig.id } })
+  const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
+  console.log('hello bit', bit)
   if (!bit) {
     return null
   }

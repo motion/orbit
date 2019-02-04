@@ -1,10 +1,10 @@
-import { useObserveMany } from '@mcro/model-bridge'
+import { useModels } from '@mcro/model-bridge'
 import { JobModel } from '@mcro/models'
 import * as React from 'react'
 import { SubTitle } from '../views/SubTitle'
 
 export const SyncStatusAll = () => {
-  const activeJobs = useObserveMany(JobModel, {
+  const [activeJobs] = useModels(JobModel, {
     where: {
       status: 'PROCESSING',
     },

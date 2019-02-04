@@ -1,4 +1,5 @@
-import { gloss, linearGradient, Row } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
+import { BorderBottom } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
@@ -28,6 +29,7 @@ export default observer(function OrbitControls() {
         </ToolbarCenter>
         <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
       </ToolbarInner>
+      <BorderBottom opacity={0.5} />
     </ToolbarChrome>
   )
 })
@@ -40,8 +42,9 @@ const ToolbarChrome = gloss(Row, {
   minHeight: 3,
   alignItems: 'center',
   justifyContent: 'center',
+  position: 'relative',
 }).theme((_, theme) => ({
-  background: linearGradient('transparent', theme.background.darken(0.1)),
+  // background: linearGradient('transparent', theme.background.darken(0.05)),
   // background: linearGradient(theme.tabBackgroundBottom, theme.background),
   // boxShadow: [
   //   ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],

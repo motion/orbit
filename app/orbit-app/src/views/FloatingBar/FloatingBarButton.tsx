@@ -12,9 +12,10 @@ export const FloatingBarButton = React.forwardRef(function FloatingBarButtonSmal
       borderWidth={0}
       fontWeight={400}
       sizePadding={1.2}
+      size={0.95}
       sizeRadius={3}
       themeSelect={false}
-      background={theme => theme.background}
+      background={theme => theme.background.alpha(0.5)}
       {...props}
     />
   )

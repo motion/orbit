@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
 
-type ModelCacheType = "one"|"many"|"count"
+export type ModelCacheType = "one"|"many"|"count"
 
 export type ModelCacheEntry = {
   type: ModelCacheType

@@ -2,7 +2,6 @@ import { Model } from '@mcro/mediator'
 import { merge } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { loadMany, loadOne, observeCount, observeMany, observeOne, save, loadCount } from '.'
-import { ModelCache } from './ModelCache'
 
 type UseModelOptions = {
   defaultValue?: any
@@ -28,25 +27,9 @@ function use<ModelType, Args>(
   const subscription = useRef(null)
   const curQuery = useRef(null)
 
-  const updateIfNew = (nextValue: any) => {
-    if (type === 'one' || type === 'many') {
-      if (JSON.stringify(nextValue) !== JSON.stringify(value)) {
-        setValue(nextValue)
-        ModelCache.add(model, type, query, nextValue)
-      }
-    } else if (type === 'count') {
-      if (nextValue !== value) {
-        setValue(nextValue)
-        ModelCache.add(model, type, query, nextValue)
-      }
-    }
-  }
-
   const dispose = () => {
     if (subscription.current) {
-      // console.log('unsubscribed', curQuery.current)
       subscription.current.unsubscribe()
-      ModelCache.remove(model, type, curQuery.current)
     }
   }
 
@@ -71,32 +54,26 @@ function use<ModelType, Args>(
 
       if (observeEnabled) {
         if (type === 'one') {
-          subscription.current = observeOne(model, { args: query }).subscribe(updateIfNew)
+          subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(setValue)
         } else if (type === 'many') {
-          subscription.current = observeMany(model, { args: query }).subscribe(updateIfNew)
+          subscription.current = observeMany(model, { args: query, cacheValue: value }).subscribe(setValue)
         } else if (type === 'count') {
-          subscription.current = observeCount(model, { args: query }).subscribe(updateIfNew)
+          subscription.current = observeCount(model, { args: query, cacheValue: value }).subscribe(setValue)
         }
       } else {
         if (type === 'one') {
           loadOne(model, { args: query }).then(nextValue => {
-            if (!cancelled) updateIfNew(nextValue)
+            if (!cancelled) setValue(nextValue)
           })
         } else if (type === 'many') {
           loadMany(model, { args: query }).then(nextValue => {
-            if (!cancelled) updateIfNew(nextValue)
+            if (!cancelled) setValue(nextValue)
           })
         } else if (type === 'count') {
           loadCount(model, { args: query }).then(nextValue => {
-            if (!cancelled) updateIfNew(nextValue)
+            if (!cancelled) setValue(nextValue)
           })
         }
-      }
-
-      const entry = ModelCache.findEntryByQuery(model, type, query)
-      if (entry) {
-        // console.log(`entry told to update`, entry)
-        updateIfNew(entry.value)
       }
 
       return () => {
@@ -106,19 +83,14 @@ function use<ModelType, Args>(
     [JSON.stringify(query), observeEnabled],
   )
 
-  const valueUpdater = (next: Partial<ModelType> | Partial<ModelType>[]) => {
-    // save async after update
-    if (type === 'one') {
-      const nextValue = merge({ ...value }, next)
-      updateIfNew(nextValue)
-      save(model, nextValue)
-    } else if (type === 'many') {
-      const nextValue = merge([...value], next)
-      updateIfNew(nextValue)
-      for (let item of next as Partial<ModelType>[]) {
-        save(model, item as any)
-      }
-    }
+  const valueUpdater = (next: any) => {
+    const nextValue = merge(type === 'many' ? [ ...value ] : { ...value }, next)
+    setValue(nextValue)
+    save(model, nextValue, {
+      type,
+      args: query,
+      cacheValue: value
+    })
   }
 
   if (type === 'one' || type === 'many') {

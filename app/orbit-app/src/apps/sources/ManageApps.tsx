@@ -39,6 +39,9 @@ export const ManageApps = function ManageApps() {
 
       <View width="50%" position="relative">
         <BorderLeft />
+        <Section paddingBottom={0}>
+          <Title>Preview</Title>
+        </Section>
         <AppView
           viewType="index"
           id={selectedApp.id}

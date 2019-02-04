@@ -44,86 +44,89 @@ export default observer(function OrbitHeader() {
 
         {/* header input area */}
         <Row flex={1} alignItems="center">
-          <Row flex={1} />
+          <View flex={1} />
+
           {isTorn && toolbars && (
             <>
               {toolbars.before}
               <View flex={1} />
             </>
           )}
-
-          <View width={18} alignItems="center" justifyContent="center">
-            <Icon color={theme.color} name={`orbit-${icon}`} size={16} opacity={0.15} />
-          </View>
-
-          <OrbitHeaderInput />
-
-          {isTorn && toolbars && (
-            <>
-              <View flex={1} />
-              {toolbars.after}
-            </>
-          )}
-
-          <FloatingBarButton
-            onClick={queryFilters.toggleSortBy}
-            tooltip={`Sort by: ${queryFilters.sortBy}`}
-            circular
-            icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
-          />
-          <View width={8} />
-          <Popover
-            delay={250}
-            openOnClick
-            openOnHover
-            closeOnClickAway
-            group="filters"
-            target={<FloatingBarButton circular icon="ui-1_calendar-57" />}
-            background
-            borderRadius={10}
-            elevation={4}
-            theme="light"
-            width={420}
-            height={310}
-          >
-            <View flex={1} className="calendar-dom theme-light" padding={10}>
-              <DateRangePicker
-                onChange={queryFilters.onChangeDate}
-                ranges={[queryFilters.dateState]}
-              />
+          <HeaderContain>
+            <View width={18} alignItems="center" justifyContent="center">
+              <Icon color={theme.color} name={`orbit-${icon}`} size={16} opacity={0.15} />
             </View>
-          </Popover>
-          <View width={8} />
-          <OrbitFilterIntegrationButton />
 
-          {/* {!isTorn && <OrbitSpaceSwitch />} */}
+            <OrbitHeaderInput />
 
-          {!isTorn && (
-            <Absolute top={1} right={0}>
-              <Button
-                chromeless
-                isActive={isOnSettings}
-                onClick={() => {
-                  if (isOnSettings) {
-                    paneManagerStore.back()
-                  } else {
-                    paneManagerStore.setActivePaneByType('settings')
-                  }
-                }}
-                tooltip="Settings"
-              >
-                <Icon
-                  name="gear"
-                  size={13}
-                  opacity={0.2 + settingsIconActiveOpacityInc}
-                  hoverStyle={{
-                    opacity: 0.5 + settingsIconActiveOpacityInc,
-                  }}
+            {isTorn && toolbars && (
+              <>
+                <View flex={1} />
+                {toolbars.after}
+              </>
+            )}
+
+            <FloatingBarButton
+              onClick={queryFilters.toggleSortBy}
+              tooltip={`Sort by: ${queryFilters.sortBy}`}
+              circular
+              icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
+            />
+            <View width={8} />
+            <Popover
+              delay={250}
+              openOnClick
+              openOnHover
+              closeOnClickAway
+              group="filters"
+              target={<FloatingBarButton circular icon="ui-1_calendar-57" />}
+              background
+              borderRadius={10}
+              elevation={4}
+              theme="light"
+              width={420}
+              height={310}
+            >
+              <View flex={1} className="calendar-dom theme-light" padding={10}>
+                <DateRangePicker
+                  onChange={queryFilters.onChangeDate}
+                  ranges={[queryFilters.dateState]}
                 />
-              </Button>
-            </Absolute>
-          )}
-          <Row flex={1} />
+              </View>
+            </Popover>
+            <View width={8} />
+            <OrbitFilterIntegrationButton />
+
+            {/* {!isTorn && <OrbitSpaceSwitch />} */}
+
+            {!isTorn && (
+              <Absolute top={1} right={0}>
+                <Button
+                  chromeless
+                  isActive={isOnSettings}
+                  onClick={() => {
+                    if (isOnSettings) {
+                      paneManagerStore.back()
+                    } else {
+                      paneManagerStore.setActivePaneByType('settings')
+                    }
+                  }}
+                  tooltip="Settings"
+                >
+                  <Icon
+                    name="gear"
+                    size={13}
+                    opacity={0.2 + settingsIconActiveOpacityInc}
+                    hoverStyle={{
+                      opacity: 0.5 + settingsIconActiveOpacityInc,
+                    }}
+                  />
+                </Button>
+              </Absolute>
+            )}
+          </HeaderContain>
+
+          <View flex={1} />
         </Row>
 
         {/* <OrbitAutoComplete /> */}
@@ -132,6 +135,14 @@ export default observer(function OrbitHeader() {
       {isTorn && <OrbitHeaderDivider />}
     </>
   )
+})
+
+const HeaderContain = gloss({
+  flex: 10,
+  flexFlow: 'row',
+  width: '75%',
+  minWidth: 400,
+  maxWidth: 750,
 })
 
 // const OrbitAutoComplete = observer(function OrbitAutoComplete() {

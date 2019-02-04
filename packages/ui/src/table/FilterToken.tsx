@@ -5,13 +5,13 @@
  * @format
  */
 
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
-import { Filter } from './types'
 import { PureComponent } from 'react'
-import { Text } from '../Text'
 import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
-import { gloss } from '@mcro/gloss'
+import { Text } from '../Text'
+import { Filter } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -230,7 +230,7 @@ export class FilterToken extends PureComponent {
         onMouseDown={this.onMouseDown}
         focused={this.props.focused}
         color={color}
-        forwardRef={this.setRef}
+        ref={this.setRef}
       >
         <Key type={this.props.filter.type} focused={this.props.focused}>
           {filter.key}

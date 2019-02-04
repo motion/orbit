@@ -5,6 +5,7 @@
  * @format
  */
 
+import { View } from '@mcro/gloss'
 import * as React from 'react'
 import deepEqual from 'react-fast-compare'
 import textContent from '../helpers/textContent'
@@ -88,7 +89,9 @@ export const SearchableTable = props => (
   <Searchable {...props}>
     {({ searchBar, ...rest }) => (
       <>
-        {searchBar}
+        <View padding={[2, 15]} height={33}>
+          {searchBar}
+        </View>
         <SearchableManagedTable {...props} {...rest} />
       </>
     )}

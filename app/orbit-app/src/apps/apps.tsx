@@ -5,13 +5,13 @@ import { AppProps } from './AppProps'
 import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
 import { createApp } from './createApp'
-import { home } from './home'
 import { lists } from './lists'
 import { onboard } from './onboard'
 import { people } from './people/people'
 import { search } from './search'
 import { settings } from './settings'
 import { sources } from './sources'
+import { spaces } from './spaces'
 import { topics } from './topics'
 import { MessageViewMain } from './views/MessageViewMain'
 
@@ -23,6 +23,7 @@ type App = {
 type AppsIndex = { [key in AppType]: App }
 
 export const apps: AppsIndex = {
+  spaces,
   search,
   people,
   topics,
@@ -30,9 +31,7 @@ export const apps: AppsIndex = {
   sources,
   settings,
   bit,
-  home,
   apps: appsApps,
-  // @ts-ignore
   onboard,
   createApp,
   message: {

@@ -1,14 +1,16 @@
-import { gloss, View } from '@mcro/gloss'
+import { gloss, Row, View } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
+import { once } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { AppActions } from '../../actions/AppActions'
 import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
@@ -20,25 +22,26 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
-import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
+import OrbitContent from './OrbitMain'
 import OrbitNav from './OrbitNav'
-import OrbitPageContent from './OrbitPageContent'
+import OrbitSidebar from './OrbitSidebar'
 import { OrbitStore } from './OrbitStore'
 
-export default function OrbitPage() {
+export default React.memo(function OrbitPage() {
   return (
     <OrbitPageProvideStores>
       <OrbitPageInner />
     </OrbitPageProvideStores>
   )
-}
+})
 
 const OrbitPageInner = observer(function OrbitPageInner() {
-  const searchStore = useStore(SearchStore)
+  const { paneManagerStore } = useStoresSafe()
+  const searchStore = useStore(SearchStore, { paneManagerStore })
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
-  const theme = App.state.darkTheme ? 'dark' : 'light'
+  const theme = App.state.isDark ? 'dark' : 'light'
 
   React.useEffect(() => {
     // prevent close on the main window
@@ -51,6 +54,13 @@ const OrbitPageInner = observer(function OrbitPageInner() {
     }
   }, [])
 
+  React.useEffect(() => {
+    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
+      AppActions.setOrbitDocked(true)
+      paneManagerStore.setActivePaneByType('settings')
+    })
+  }, [])
+
   return (
     <OrbitToolBarProvider>
       <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
@@ -60,10 +70,13 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
+                {/* <OrbitControls /> */}
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
-                <OrbitControls />
-                <OrbitPageContent />
+                <Row flex={1}>
+                  <OrbitSidebar />
+                  <OrbitContent />
+                </Row>
               </InnerChrome>
             </AppWrapper>
           </Theme>
@@ -81,7 +94,20 @@ const OrbitHeaderContainer = gloss(View, {
   background: theme.headerBackground || theme.background.alpha(0.65),
 }))
 
-function OrbitPageProvideStores(props: { children: any }) {
+const defaultPanes = [
+  { id: 'app-settings', name: 'Settings', type: 'settings' },
+  { id: 'app-apps', name: 'Apps', type: 'apps' },
+  { id: 'app-sources', name: 'Sources', type: 'sources' },
+  { id: 'app-spaces', name: 'Spaces', type: 'spaces' },
+  { id: 'app-createApp', name: 'Add app', type: 'createApp' },
+  { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
+]
+
+function useOnce(fn: Function, reset = []) {
+  return React.useCallback(once(fn as any), reset)
+}
+
+const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -89,32 +115,38 @@ function OrbitPageProvideStores(props: { children: any }) {
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
-  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
+
+  const panes = [
+    // these go first so they can stay stable when switching spaces
+    // where the index would go crazy and change
+    // TODO would be better if paneManager use ID now instead of index, i think
+    ...defaultPanes,
+    ...activeApps.map(app => ({
+      ...app,
+      id: `${app.id}`,
+      keyable: true,
+    })),
+  ]
+
   const paneManagerStore = useStore(PaneManagerStore, {
-    defaultIndex: spaceConfig.activePaneIndex || 0,
+    defaultIndex: orbitWindowStore.activePaneIndex,
     onPaneChange(index) {
-      // reset name on pane change...
-      newAppStore.reset()
-      if (index !== spaceConfig.activePaneIndex) {
-        updateSpaceConfig({
-          activePaneIndex: index,
-        })
-      }
+      orbitWindowStore.activePaneIndex = index
     },
-    panes: [
-      ...activeApps.map(app => ({
-        ...app,
-        keyable: true,
-      })),
-      ...[
-        { name: 'Settings', type: 'settings' },
-        { name: 'Apps', type: 'apps' },
-        { name: 'Sources', type: 'sources' },
-        { name: 'Add app', type: 'createApp' },
-        { name: 'Onboard', type: 'onboard' },
-      ].map((pane, id) => ({ ...pane, id: `app-${id}` })),
-    ],
+    panes,
   })
+
+  // move to first app pane on first run
+  const hasLoadedApps = !!activeApps.length
+  const setToFirstAppPane = useOnce(() => {
+    paneManagerStore.setPaneIndex(defaultPanes.length)
+  })
+  React.useEffect(
+    () => {
+      hasLoadedApps && setToFirstAppPane()
+    },
+    [hasLoadedApps],
+  )
 
   const stores = {
     settingStore,
@@ -131,7 +163,7 @@ function OrbitPageProvideStores(props: { children: any }) {
       {props.children}
     </MergeContext>
   )
-}
+})
 
 const InnerChrome = gloss<{ torn?: boolean }>({
   flex: 1,
@@ -139,5 +171,5 @@ const InnerChrome = gloss<{ torn?: boolean }>({
   position: 'relative',
   zIndex: 1,
 }).theme(({ torn }) => ({
-  boxShadow: [torn ? null : [0, 0, 80, [40, 40, 40, 0.28]]],
+  boxShadow: [torn ? null : [0, 0, 80, [0, 0, 0, 0.05]]],
 }))

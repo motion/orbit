@@ -88,8 +88,10 @@ async function main() {
     require('./helpers/setupTestApp').setupTestApp()
     const { DevStore } = require('./stores/DevStore')
     const devStore = new DevStore()
-    devStore['rerender'] = startApp
     window['Root'] = devStore
+    devStore['rerender'] = () => {
+      startApp(true)
+    }
   }
 
   // now run app..
@@ -97,17 +99,20 @@ async function main() {
 }
 
 // render app
-async function startApp() {
+async function startApp(force = false) {
+  if (force) {
+    ReactDOM.render(<div />, document.querySelector('#app'))
+  }
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
   ReactDOM.render(<OrbitRoot />, document.querySelector('#app'))
 }
 
 // hot reloading
-if (process.env.NODE_ENV === 'development') {
-  if (typeof module['hot'] !== 'undefined') {
-    module['hot'].accept(startApp)
-  }
-}
+// if (process.env.NODE_ENV === 'development') {
+//   if (typeof module['hot'] !== 'undefined') {
+//     module['hot'].accept(startApp)
+//   }
+// }
 
 main()

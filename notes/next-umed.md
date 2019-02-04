@@ -1,0 +1,82 @@
+NEXT
+
+1. Discussion over goals for this week and plans for next.
+2. Plan for this week
+
+client:
+
+- [ ] client side query cache
+  - redo so its only touching `@mcro/model-bridge` observeOne/Many and save
+    - [ ] dedupe same queries
+    - [ ] keep queries alive after an unsubscribe, clean up after X (~5) seconds inactive
+      - this helps react hooks which will call subscribe/unsubscribe over and over
+    - [ ] 🐛 for some reason observeOne commands are being resolved by both Syncers and Desktop process
+      - check to be sure were not doing duplicate work there and fix if so
+  - this should just go from client => desktop right?
+- settings panes fixes:
+  - [ ] drive syncer not showing anything in their setting pane, some simple solutin we can discuss
+  - [ ] settings pane are loading/reloading their content every time
+    - problem: slack/github have to load the table content every time you look @ them
+    - solution:
+      - new generic model prop Source.data
+      - no need to type it yet, lets just get this working first
+      - [ ] hook: `const [sourceData, updateData] = useSourceData()`
+        - this is just a small function that extends current useModel
+      - [ ] useEffect that fetches/persists their data for each setting pane
+        - `useEffect(() => fetchData/updateData)`
+  - [ ] some settings panes are broken
+    - check over them all and fix bugs
+    - this is actually a medium size task because each pane needs some work
+- backend:
+  - [ ] 🐛 small: in Desktop, observable findOne queries don't have exceptions properly handled so its hard to know what query it was and debug args - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method." - adding a try/catch that works and shows the arguments passed would be helpful
+        search:
+  - [ ] 🐛 People aren't returning from the new SearchResult resolver, we should join in a summary of people:
+    - have three people joined (just name + avatar)
+    - have a count of the total people
+- syncers:
+  - [ ] throttle them
+    - honestly just do it in a dumb way, please, it will take 5 minutes to do and works fine (await sleep(~ms) in the loops)
+  - [ ] smart sync
+    - [ ] heavy vs smart sync
+      - heavy sync: limit initial full sync to 40MB per-integration
+      - AFTER 40MB lets sync just some light information
+      - light mode:
+        - if content is above a certain size per-item (~2kb) use Cosal.getTopWords() to bring it down to maybe 30 words
+        - for example slack heavy has attachments
+    - make these runnable on client side:
+      - [ ] `fetchFullItem` endpoint for every syncer
+        - this basically can take a light item (item id) and return the full item (heavy)
+      - [ ] `search` endpoing for every syncer
+        - if the integration has a search endpoint we expose them all in the same manner so they return light bits
+    - once thats ready we can move to step 2 for smart sync
+  - [ ] on process exit it should clear all processing Jobs table
+  - [ ] you can add the same exact integration twice, lets prevent that
+  - slack:
+    - [ ] partial re-sync, re-syncs doing a lot of work, slow down amt of resync too
+    - [ ] seems like People arent showing the slack conversations on their profile
+    - [ ] crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
+  - github:
+    - [ ] limit the total amount it syncs
+  - debug why gdrive syncer items show "empty" in frontend and clean that view up
+  - gmail:
+    - [ ] HTML stuff is a mess, its too heavy. theres got to be a faster one
+      - do we even need to parse it using an html parser isn't it already in HTML? lets discuss
+      - ideally we would just keep some recent ones in HTML and the rest just plain text (heavy/light)
+      - and then even better we would then fetch the HTML bodies as needed when they search
+      - got an out of memory issue during multiple syncs (due to html processing)
+        - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
+    - [ ] is syncing my spam folder :/
+    - [ ]syncer bodies are getting cut off early when they are just text
+      - for example i see one where it just shows the first two sentences but nothing else
+  - website crawler:
+    - depending on how hard this is we may cut it out
+    - just check into if its working and spend max a day on cleaning it up
+- non-syncing sources:
+  - we need sources where it just lets you hook into a database essentially
+    - all they really have is a `type`, and some credentials
+    - [ ] add schema for this in Source
+    - [ ] postgres:
+      - [ ] lets create a fake postgres database with some data in the stack we can have a script setup
+      - [ ] migration to automatically add that postgres source
+      - [ ] find icon, add it to frontend code so you can configure it like Website Crawler
+    - thats all for now, i will then build a simple app that lets us explore it easily

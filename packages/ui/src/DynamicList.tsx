@@ -5,12 +5,12 @@
  * @format
  */
 
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
-import { RowRenderer, OnScroll, KeyMapper } from './types'
-import { PureComponent, Component } from 'react'
-import { ResizeSensor } from './helpers/ResizeSensor'
+import { Component, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import { gloss } from '@mcro/gloss';
+import { ResizeSensor } from './helpers/ResizeSensor'
+import { KeyMapper, OnScroll, RowRenderer } from './types'
 
 type RowMeasureProps = {
   id: string
@@ -112,10 +112,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
   }
 
   componentWillReceiveProps(nextProps: DynamicListProps) {
-    if (
-      nextProps.rowCount !== this.props.rowCount ||
-      nextProps.pureData !== this.props.pureData
-    ) {
+    if (nextProps.rowCount !== this.props.rowCount || nextProps.pureData !== this.props.pureData) {
       this.queueMeasurements(nextProps)
     }
   }
@@ -352,10 +349,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
 
     return (
-      <DynamicListContainer
-        forwardRef={this.setContainerRef}
-        onScroll={this.handleScroll}
-      >
+      <DynamicListContainer ref={this.setContainerRef} onScroll={this.handleScroll}>
         <ResizeSensor onResize={this.onResize} />
         <div style={this.state.innerStyle}>
           <div style={this.state.containerStyle}>{children}</div>

@@ -1,5 +1,7 @@
 import { ThemeObject } from '@mcro/css'
 
+type PartialTheme = Partial<ThemeObject>
+
 const cacheKey = new WeakMap<ThemeObject, Set<Object>>()
 const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 
@@ -8,7 +10,14 @@ const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-export function selectThemeSubset(prefix: string, theme: ThemeObject): ThemeObject {
+export function selectThemeSubset(
+  prefix: string | undefined | false,
+  theme: ThemeObject,
+): ThemeObject {
+  if (!prefix) {
+    return theme
+  }
+
   // read from cache
   if (cacheKey.has(theme)) {
     const isCached = cacheKey.get(theme).has(prefix)
@@ -19,14 +28,21 @@ export function selectThemeSubset(prefix: string, theme: ThemeObject): ThemeObje
 
   // generate new subset theme
   const len = prefix.length
-  const o1 = { ...theme }
+  const selectedTheme: PartialTheme = {}
   for (const key in theme) {
     if (key.indexOf(prefix) === 0) {
       const newKey = key.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
-      o1[newKeyCamelCase] = theme[key]
+      selectedTheme[newKeyCamelCase] = theme[key]
     }
   }
+
+  // proxy back to full theme
+  const fullTheme = new Proxy(selectedTheme, {
+    get(target, key) {
+      return Reflect.get(target, key) || Reflect.get(theme, key)
+    },
+  }) as ThemeObject
 
   // write to cache
   if (!cacheKey.get(theme)) {
@@ -36,7 +52,7 @@ export function selectThemeSubset(prefix: string, theme: ThemeObject): ThemeObje
   if (!cacheVal.get(theme)) {
     cacheVal.set(theme, {})
   }
-  cacheVal.get(theme)[prefix] = o1
+  cacheVal.get(theme)[prefix] = fullTheme
 
-  return o1
+  return fullTheme
 }

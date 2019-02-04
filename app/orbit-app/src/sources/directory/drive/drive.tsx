@@ -1,10 +1,10 @@
-import { DriveApp } from './views/DriveApp'
-import DriveSettings from './views/DriveSettings'
+import icon from '!raw-loader!../../../../public/icons/drive.svg'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/drive.svg'
-import { GetOrbitIntegration, OrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
+import { GetOrbitIntegration, OrbitIntegration } from '../../types'
+import { DriveApp } from './views/DriveApp'
 import { DriveItem } from './views/DriveItem'
+import DriveSettings from './views/DriveSettings'
 
 export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
   modelType: 'bit',

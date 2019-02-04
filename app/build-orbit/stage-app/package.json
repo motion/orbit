@@ -19,6 +19,7 @@
     ],
     "npmRebuild": false,
     "mac": {
+      "darkModeSupport": true,
       "target": "zip",
       "icon": "../resources/icon.icns",
       "provisioningProfile": "../build-resources/orbit.provisionprofile",

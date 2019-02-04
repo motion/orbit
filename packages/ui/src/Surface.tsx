@@ -6,7 +6,7 @@ import {
   propsToStyles,
   propsToTextSize,
   propsToThemeStyles,
-  Theme,
+  selectThemeSubset,
   ThemeObject,
   ThemeSelect,
   View,
@@ -78,7 +78,7 @@ export type SurfaceProps = CSSPropertySet & {
   themeSelect?: ThemeSelect
 }
 
-export default React.memo(function Surface(props: SurfaceProps) {
+export const Surface = React.memo(function Surface(props: SurfaceProps) {
   const uiContext = React.useContext(UIContext)
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
 
@@ -116,6 +116,7 @@ export default React.memo(function Surface(props: SurfaceProps) {
     className,
     alignItems,
     justifyContent,
+    forwardRef,
     ...rest
   } = props
 
@@ -183,15 +184,17 @@ export default React.memo(function Surface(props: SurfaceProps) {
             }
           />
         )}
-        {icon && !stringIcon && <div>{icon}</div>}
-        {icon && stringIcon && (
-          <Icon
-            order={icon && iconAfter ? 3 : 'auto'}
-            name={`${icon}`}
-            size={getIconSize(props)}
-            {...iconProps}
-          />
-        )}
+        <div style={{ opacity: typeof props.alpha === 'number' ? props.alpha : 1 }}>
+          {icon && !stringIcon && <div>{icon}</div>}
+          {icon && stringIcon && (
+            <Icon
+              order={icon && iconAfter ? 3 : 'auto'}
+              name={`${icon}`}
+              size={getIconSize(props)}
+              {...iconProps}
+            />
+          )}
+        </div>
         {glow && !dimmed && !disabled && (
           <HoverGlow
             full
@@ -210,21 +213,21 @@ export default React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  return (
-    <Theme select={themeSelect}>
-      <SurfaceFrame {...surfaceProps} />
-    </Theme>
-  )
+  return <SurfaceFrame ref={forwardRef} themeSelect={themeSelect} {...surfaceProps} />
 })
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss(View, {
   fontFamily: 'inherit',
   position: 'relative',
-}).theme((props, theme) => {
+}).theme((props, baseTheme) => {
+  // select theme
+  const theme = selectThemeSubset(props.themeSelect, baseTheme)
+
   // :hover, :focus, :active
   const themeStyles = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
+
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -232,16 +235,19 @@ const SurfaceFrame = gloss(View, {
     padding: 0,
     width: props.height,
   }
+
   // icon
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
+
   const hoverStyle = props.active
     ? null
     : {
         ...(!props.chromeless && themeStyles['&:hover']),
         ...propStyles['&:hover'],
       }
+
   return alphaColor(
     {
       padding: props.padding,
@@ -335,10 +341,8 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  return (
-    props.iconSize ||
-    Math.round((props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1))
-  )
+  const size = (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1)
+  return props.iconSize || Math.round(size * 100) / 100
 }
 
 const getSegmentRadius = (props, uiContext) => {

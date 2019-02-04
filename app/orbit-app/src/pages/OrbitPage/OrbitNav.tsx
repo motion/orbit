@@ -1,41 +1,56 @@
 import { gloss, Row } from '@mcro/gloss'
+import { save } from '@mcro/model-bridge'
+import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
+import { flow, isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { OrbitTab, tabHeight, TabProps } from '../../components/OrbitTab'
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
+import { sleep } from '../../helpers'
+import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { useUserSpaceConfig } from '../../hooks/useUserSpaceConfig'
+import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default observer(function OrbitNav() {
-  const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const {
+    spaceStore,
+    orbitStore,
+    orbitWindowStore,
+    paneManagerStore,
+    newAppStore,
+  } = useStoresSafe()
   const activeApps = useActiveApps()
-  const appIds = activeApps.map(x => x.id)
   const [space, updateSpace] = useActiveSpace()
-  const [spaceConfig, updateSpaceConfig] = useUserSpaceConfig()
   const [showCreateNew, setShowCreateNew] = React.useState(false)
 
-  // keep apps in sync with paneSort
-  // TODO: this can be refactored into useSyncSpacePaneOrderEffect
-  //       but we should refactor useObserve/useModel first so it re-uses
-  //       identical queries using a WeakMap so we dont have tons of observes...
+  // when pinned, we need to update paneSort so pinned is always first
   React.useEffect(
     () => {
       if (!space || !activeApps.length) {
         return
       }
-      if (!space.paneSort) {
-        updateSpace({ paneSort: activeApps.map(x => x.id) })
-        return
+      let pinned = []
+      let unpinned = []
+      for (const id of space.paneSort) {
+        const app = activeApps.find(x => x.id === id)
+        if (!app) {
+          continue
+        }
+        if (app.pinned) {
+          pinned.push(id)
+        } else {
+          unpinned.push(id)
+        }
       }
-      if (activeApps.length && activeApps.length !== space.paneSort.length) {
-        updateSpace({ paneSort: activeApps.map(x => x.id) })
-        return
+      const paneSort = [...pinned, ...unpinned]
+      if (!isEqual(paneSort, space.paneSort)) {
+        updateSpace({ paneSort })
       }
     },
-    [space && space.id, appIds.join('')],
+    [space && space.paneSort.join(''), activeApps.map(x => x.pinned).join('')],
   )
 
   if (orbitStore.isTorn) {
@@ -52,54 +67,66 @@ export default observer(function OrbitNav() {
     )
   }
 
-  const items = space.paneSort.map(
-    (id, index): TabProps => {
-      const app = activeApps.find(x => x.id === id)
-      const isLast = index !== activeApps.length
-      const isActive = !showCreateNew && paneManagerStore.activePane.id === app.id
-      const nextIsActive =
-        activeApps[index + 1] && paneManagerStore.activePane.id === activeApps[index + 1].id
-      const isPinned = false && (app.type === 'search' || app.type === 'people')
-      return {
-        app,
-        separator: !isActive && isLast && !nextIsActive,
-        label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
-        stretch: !isPinned,
-        thicc: isPinned,
-        isActive,
-        icon: `orbit-${app.type}`,
-        iconSize: isPinned ? 16 : 12,
-        getContext() {
-          return [
-            {
-              label: 'Open...',
-            },
-            {
-              label: 'App settings',
-            },
-            {
-              type: 'separator',
-            },
-            {
-              label: 'Pin tab',
-            },
-            {
-              label: 'Remove tab',
-            },
-          ]
-        },
-        onClick: () => {
-          setShowCreateNew(false)
-          paneManagerStore.setActivePane(app.id)
-        },
-        onClickPopout:
-          !isPinned &&
-          (() => {
-            orbitStore.setTorn()
-          }),
-      }
-    },
-  )
+  const items = space.paneSort
+    .map(
+      (id, index): TabProps => {
+        const app = activeApps.find(x => x.id === id)
+        if (!app) {
+          return null
+        }
+        const isLast = index !== activeApps.length
+        const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
+        const nextIsActive =
+          activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
+        const isPinned = app.pinned
+        return {
+          app,
+          separator: !isActive && isLast && !nextIsActive,
+          label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+          stretch: !isPinned,
+          thicc: isPinned,
+          isActive,
+          icon: isPinned && `orbit-${app.type}`,
+          // iconProps: isPinned ? { color: app.colors[0] } : null,
+          iconSize: isPinned ? 16 : 12,
+          getContext() {
+            return [
+              {
+                label: 'Open...',
+              },
+              {
+                label: 'App settings',
+                checked: true,
+              },
+              {
+                type: 'separator',
+              },
+              {
+                label: 'Toggle Pinned',
+                checked: isPinned,
+                click() {
+                  // TODO umed type not accepting
+                  save(AppModel, { ...app, pinned: !app.pinned } as any)
+                },
+              },
+              {
+                label: 'Remove tab',
+              },
+            ]
+          },
+          onClick: () => {
+            setShowCreateNew(false)
+            paneManagerStore.setActivePane(`${app.id}`)
+          },
+          onClickPopout:
+            !isPinned &&
+            (() => {
+              orbitStore.setTorn()
+            }),
+        }
+      },
+    )
+    .filter(Boolean)
 
   return (
     <OrbitNavClip>
@@ -109,17 +136,16 @@ export default observer(function OrbitNav() {
           lockAxis="x"
           distance={8}
           items={items}
+          shouldCancelStart={isRightClick}
           onSortEnd={({ oldIndex, newIndex }) => {
             const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
-            const { activePaneIndex } = spaceConfig
+            const { activePaneIndex } = orbitWindowStore
             // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
             const activePaneId = space.paneSort[activePaneIndex]
             console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
             if (activePaneId !== paneSort[activePaneIndex]) {
-              console.log('updating active index to', paneSort.indexOf(activePaneId))
-              updateSpaceConfig({
-                activePaneIndex: paneSort.indexOf(activePaneId),
-              })
+              orbitWindowStore.activePaneIndex = paneSort.indexOf(activePaneId)
+              console.log('updating active index to', orbitWindowStore.activePaneIndex)
             }
             updateSpace({ paneSort })
           }}
@@ -127,50 +153,67 @@ export default observer(function OrbitNav() {
         {showCreateNew && (
           <OrbitTab
             stretch
-            icon={`orbit-${newAppStore.type}`}
+            // icon={`orbit-custom`}
             iconSize={12}
             isActive
-            label={newAppStore.name || 'New app'}
+            label={newAppStore.app.name || 'New app'}
+            after={
+              <OrbitTabButton
+                icon="remove"
+                opacity={0.5}
+                onClick={flow(
+                  preventDefault,
+                  () => {
+                    setShowCreateNew(false)
+                    paneManagerStore.back()
+                  },
+                )}
+              />
+            }
           />
         )}
-        <OrbitTab
-          tooltip={showCreateNew ? 'Cancel' : 'Add'}
-          thicc
-          icon={showCreateNew ? 'remove' : 'add'}
-          iconAdjustOpacity={-0.2}
-          onClick={() => {
-            if (!showCreateNew) {
-              paneManagerStore.setActivePaneByType('createApp')
-            } else {
-              paneManagerStore.back()
-            }
-            setShowCreateNew(!showCreateNew)
-          }}
-        />
+        {!showCreateNew && (
+          <OrbitTab
+            tooltip={showCreateNew ? 'Cancel' : 'Add'}
+            thicc
+            icon={showCreateNew ? 'remove' : 'add'}
+            iconAdjustOpacity={-0.2}
+            onClick={async () => {
+              setShowCreateNew(true)
+              await sleep(10) // panemanager is heavy and this helps the ui from lagging
+              paneManagerStore.setActivePane('app-createApp')
+            }}
+            transition="all ease-in 100ms"
+          />
+        )}
         <View flex={2} />
-        {/* <OrbitTab
-          thicc
-          isActive={paneManagerStore.activePane.type === 'apps'}
-          onClick={paneManagerStore.activePaneByTypeSetter('apps')}
-          tooltip="All Apps"
-          separator
-          icon="orbit-apps"
-          iconSize={12}
-        /> */}
         <OrbitTab
+          icon="layers"
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Manage Space"
-          icon="grid48"
-          iconSize={11}
+          tooltip="Sources"
         />
+        <OrbitTab
+          icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
+          thicc
+          isActive={paneManagerStore.activePane.type === 'spaces'}
+          onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
+          tooltip="Space"
+        />
+        {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )
 })
 
+// https://github.com/clauderic/react-sortable-hoc/issues/256
+const isRightClick = e =>
+  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
+  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
+
 const OrbitNavClip = gloss({
+  zIndex: 10000000000,
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
@@ -185,7 +228,6 @@ const OrbitNavChrome = gloss({
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
-  zIndex: 1000,
   alignItems: 'flex-end',
   // '& .orbit-tab-inactive.unpinned .tab-icon': {
   //   transition: 'all ease 300ms',

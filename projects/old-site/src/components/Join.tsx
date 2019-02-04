@@ -1,8 +1,8 @@
-import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import sanitize from 'sanitize-html'
 import jsonp from 'jsonp'
+import * as React from 'react'
+import sanitize from 'sanitize-html'
 import * as Constants from '../constants'
 
 const queryString = query => {
@@ -97,7 +97,7 @@ export class Join extends React.Component {
     return (
       <Section id="join">
         <Form
-          forwardRef={this.form}
+          ref={this.form}
           action="https://tryorbit.us18.list-manage.com/subscribe/post?u=019909d3efb283014d35674e5"
           method="post"
           id="mc-embedded-subscribe-form"
@@ -110,7 +110,7 @@ export class Join extends React.Component {
             <UI.Input
               flex={1}
               {...sizeProps}
-              forwardRef={this.email}
+              ref={this.email}
               type="email"
               name="EMAIL"
               id="mce-EMAIL"

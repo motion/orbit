@@ -197,10 +197,10 @@ const positionStateY = (
     // final top
     top = getEdgePadding(props, top, window.innerHeight, popoverBounds.height)
   } else {
-    // left or right
-    const yCenter = targetCenter - popoverBounds.height / 2
-    top = yCenter
-    arrowTop = popoverBounds.height / 2 - arrowHeight / 2 + props.distance
+    // HORIZONTAL
+    const popoverCenter = popoverBounds.height / 2
+    top = targetCenter - popoverCenter
+    arrowTop = targetCenter - top + arrowHeight / 2
   }
 
   // adjustments
@@ -212,6 +212,7 @@ const positionStateY = (
     if (direction === 'top') {
       maxHeight = (targetBounds ? targetBounds.top : 0) - top + props.distance * 2 - arrowSize / 2
     } else {
+      // HORIZONTAL
       maxHeight = window.innerHeight - (targetBounds ? targetBounds.top + targetBounds.height : 0)
     }
   }
@@ -469,16 +470,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
 
       // handling flickers poorly, TODO investigate why portals cause it to never hide on initial mount
-      on(
-        this,
-        setTimeout(() => {
+      setTimeout(() => {
+        if (!this.unmounted) {
           this.setState({ finishedMount: true })
-        }, 500),
-      )
+        }
+      }, 500)
     }
   }
 
+  unmounted = false
+
   componentWillUnmount() {
+    PopoverState.openPopovers.delete(this)
+    this.unmounted = true
     this.mutationObserver.disconnect()
     this.resizeObserver.disconnect()
   }
@@ -510,6 +514,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
+    if (this.unmounted) {
+      return
+    }
     if (getIsManuallyPositioned(this.props)) {
       return
     }
@@ -643,6 +650,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const hovered = this.isHovered
     this.cancelIfWillOpen()
     await this.clearHovered()
+    if (this.unmounted) {
+      return
+    }
     this.close()
     // after click, remove hover listeners until mouseleave
     if (hovered) {
@@ -829,12 +839,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   handleTargetClick = () => {
-    setTimeout(this.stopListeningUntilNextMouseEnter)
+    // settimeout so it captures once the action completes
+    setTimeout(() => {
+      if (!this.unmounted) {
+        this.stopListeningUntilNextMouseEnter()
+      }
+    }, 0)
   }
 
   controlledTarget = target => {
     const targetProps = {
-      forwardRef: this.targetRef,
+      ref: this.targetRef,
       active: false,
       className: `${target.props.className} popover-target`,
     }
@@ -935,7 +950,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         {!!overlay && (
           <Overlay
             key={0}
-            forwardRef={this.overlayRef}
+            ref={this.overlayRef}
             isShown={isOpen && !closing}
             onClick={e => this.handleOverlayClick(e)}
             overlay={overlay}
@@ -946,7 +961,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           {...popoverProps}
           isOpen={!closing && !!isOpen}
           willReposition={isMeasuring}
-          forwardRef={this.setPopoverRef}
+          ref={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}

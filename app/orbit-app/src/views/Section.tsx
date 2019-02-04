@@ -1,6 +1,7 @@
 import { ViewProps } from '@mcro/gloss'
-import { View } from '@mcro/ui'
+import { TextProps, View } from '@mcro/ui'
 import * as React from 'react'
+import { Title } from '.'
 
 export type SectionProps = ViewProps & {
   sizePadding?: number
@@ -11,8 +12,16 @@ export function Section({ sizePadding = 1, padding, ...props }: SectionProps) {
     <View
       overflowY="auto"
       maxHeight="100%"
-      padding={padding || [sizePadding * 20, sizePadding * 30]}
+      padding={padding || [sizePadding * 20, sizePadding * 15]}
       {...props}
     />
+  )
+}
+
+export function SectionTitle(props: TextProps) {
+  return (
+    <Section paddingBottom={0}>
+      <Title {...props} />
+    </Section>
   )
 }

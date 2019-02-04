@@ -9,9 +9,12 @@ import {
 } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
-import { fuzzyQueryFilter } from '../helpers'
+import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
+import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+import { SpaceIcon } from '../views/SpaceIcon'
+import { PaneManagerStore } from './PaneManagerStore'
 import { MarkType } from './QueryStore/types'
 
 type SearchState = {
@@ -27,10 +30,9 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]) => {
+export function searchGroupsToResults(results: SearchResult[], { max = 6 }: { max?: number } = {}) {
   const res = results.map(result => {
     const group = groupToName[result.group]
-    const max = 6
     const firstFew = result.bits.slice(0, max).map(bit => ({
       item: bit,
       group,
@@ -51,6 +53,9 @@ const searchGroupsToResults = (results: SearchResult[]) => {
 }
 
 export class SearchStore {
+  props: {
+    paneManagerStore?: PaneManagerStore
+  }
   stores = useHook(useStoresSafe)
 
   get activeQuery() {
@@ -97,87 +102,70 @@ export class SearchStore {
 
   hasQueryVal = react(this.hasQuery, _ => _)
 
+  get homeItem() {
+    return {
+      title: this.stores.spaceStore.activeSpace.name,
+      // subtitle: `${this.stores.spaceStore.apps
+      //   .map(x => x.name)
+      //   .slice(0, 2)
+      //   .join(', ')}`,
+      slim: true,
+      icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
+      iconBefore: true,
+      type: AppType.apps,
+      // group: this.stores.spaceStore.activeSpace.name,
+    }
+  }
+
   getAppsResults(query: string): OrbitListItemProps[] {
+    const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
+    const searchedApps =
+      (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []
 
-    // const apps = fuzzyQueryFilter(
-    //   query,
-    //   this.stores.spaceStore.apps.filter(x => x.type !== AppType.search),
-    //   {
-    //     key: 'name',
-    //   },
-    // ).map(app => {
-    //   const icon = `orbit${capitalize(app.type)}`
-    //   return {
-    // group: 'Apps',
-    // title: app.name,
-    // icon,
-    // titleProps: null,
-    // appConfig: {
-    //   type: AppType.message,
-    //   title: `Open ${app.name}`,
-    //   icon,
-    // },
-    // onOpen: () => {
-    //   console.log('selecting app...', app.type, app.id)
-    //   this.stores.paneManagerStore.setActivePane(app.id)
-    // },
-    //   }
-    // })
-
-    // TODO show only if they have more apps
-    // TODO count how many apps
-    // const apps = [{
-    //     group: 'Apps',
-    //     title: 'All apps...',
-    //     icon: null,
-    //     titleProps: {
-    //       fontWeight: 300,
-    //     },
-    //     appConfig: {
-    //       type: AppType.message,
-    //       title: 'All apps',
-    //       icon: 'grid48',
-    //     },
-    //     onOpen: () => {
-    //       this.stores.paneManagerStore.setActivePaneByType('apps')
-    //     },
-    //   }]
-
-    const searchedApps = fuzzyQueryFilter(query, apps, { key: 'name' })
-
-    if (searchedApps.length) {
-      return [
-        {
-          title: `Apps`,
-          subtitle: `${searchedApps.map(x => x.name).join(', ')}`,
-          icon: 'orbit-apps-full',
-          iconBefore: true,
-          type: AppType.apps,
-          group: this.stores.spaceStore.activeSpace.name,
+    const appToResult = app => {
+      return {
+        title: app.name,
+        slim: true,
+        iconBefore: true,
+        icon: <AppIcon app={app} />,
+        // group: spaceName,
+        appConfig: {
+          type: AppType.message,
+          title: `Open ${app.name}`,
         },
-        ...searchedApps.map(app => ({
-          title: app.name,
-          slim: true,
-          iconBefore: true,
-          icon: `orbit-${app.type}-full`,
-          group: this.stores.spaceStore.activeSpace.name,
-          appConfig: {
-            type: AppType.message,
-            title: `Open ${app.name}`,
-          },
-          onOpen: () => {
-            console.log('selecting app...', app.type, app.id)
-            this.stores.paneManagerStore.setActivePane(app.id)
-          },
-        })),
-      ]
+        onOpen: () => {
+          this.stores.paneManagerStore.setActivePane(`${app.id}`)
+        },
+      }
     }
 
-    return []
+    if (query) {
+      return searchedApps.map(appToResult)
+    }
+
+    return [
+      this.homeItem,
+      ...apps.slice(0, 2).map(appToResult),
+      {
+        title: 'Create new app...',
+        icon: 'orbit-custom-full',
+        slim: true,
+        iconBefore: true,
+        // group: spaceName,
+        appConfig: {
+          type: AppType.message,
+          title: `Create new app`,
+        },
+        onOpen: () => {
+          this.stores.paneManagerStore.setActivePaneByType(`createApp`)
+        },
+      },
+    ]
   }
 
   private getQuickResults(query: string) {
+    // TODO recent history
     return [...this.getAppsResults(query)]
   }
 
@@ -192,6 +180,10 @@ export class SearchStore {
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
     async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
+      if (this.props.paneManagerStore) {
+        await when(() => this.props.paneManagerStore.activePane.type === 'search')
+      }
+
       // RESULTS
       let results: OrbitListItemProps[] = []
 

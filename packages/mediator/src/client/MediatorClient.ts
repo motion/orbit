@@ -1,10 +1,10 @@
 import Observable from 'zen-observable'
 import { Command, Model } from '../common'
 import { ClientTransport } from './ClientTransport'
+import { ModelCache, ModelCacheType } from './ModelCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
-import { ModelCache, ModelCacheType } from './ModelCache'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -38,13 +38,14 @@ export class MediatorClient {
       args?: any
       value?: any
       cacheValue?: any
-
-    }
+    },
   ): Promise<ModelType> {
     if (!options) options = {}
 
-    if (options.cacheValue !== undefined &&
-      JSON.stringify(options.cacheValue) !== JSON.stringify(values)) {
+    if (
+      options.cacheValue !== undefined &&
+      JSON.stringify(options.cacheValue) !== JSON.stringify(values)
+    ) {
       ModelCache.add(model, options.type, options.args, values)
     }
 
@@ -84,11 +85,12 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0].execute('loadOne', {
-      model: model.name,
-      args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return this.options.transports[0]
+      .execute('loadOne', {
+        model: model.name,
+        args,
+        resolvers: qm instanceof Query ? qm.args : options.resolvers,
+      })
       .then(value => {
         // ModelCache.add(model, 'one', args, value)
         return value
@@ -113,11 +115,12 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0].execute('loadMany', {
-      model: model.name,
-      args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return this.options.transports[0]
+      .execute('loadMany', {
+        model: model.name,
+        args,
+        resolvers: qm instanceof Query ? qm.args : options.resolvers,
+      })
       .then(value => {
         // ModelCache.add(model, 'many', args, value)
         return value
@@ -167,11 +170,12 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0].execute('loadCount', {
-      model: model.name,
-      args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+    return this.options.transports[0]
+      .execute('loadCount', {
+        model: model.name,
+        args,
+        resolvers: qm instanceof Query ? qm.args : options.resolvers,
+      })
       .then(value => {
         // ModelCache.add(model, 'count', args, value)
         return value
@@ -199,8 +203,7 @@ export class MediatorClient {
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
     return new Observable(subscriptionObserver => {
-
-      const entry = ModelCache.findEntryByQuery(model, "one", args)
+      const entry = ModelCache.findEntryByQuery(model, 'one', args)
       if (entry) {
         subscriptionObserver.next(entry.value)
       }
@@ -214,24 +217,25 @@ export class MediatorClient {
           })
           .subscribe(
             value => {
-              if (options.cacheValue !== undefined &&
-                JSON.stringify(options.cacheValue) !== JSON.stringify(value)) {
-                ModelCache.add(model, "one", args, value)
+              if (
+                options.cacheValue !== undefined &&
+                JSON.stringify(options.cacheValue) !== JSON.stringify(value)
+              ) {
+                ModelCache.add(model, 'one', args, value)
                 subscriptionObserver.next(value)
-
               } else if (options.cacheValue === undefined) {
                 subscriptionObserver.next(value)
               }
             },
-      error => subscriptionObserver.error(error),
-      () => subscriptionObserver.complete()
+            error => subscriptionObserver.error(error),
+            () => subscriptionObserver.complete(),
           )
       })
 
       // remove subscription on cancellation
       return () => {
         subscriptions.forEach(subscription => subscription.unsubscribe())
-        ModelCache.remove(model, "one", args)
+        ModelCache.remove(model, 'one', args)
       }
     })
   }
@@ -257,8 +261,7 @@ export class MediatorClient {
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
     return new Observable(subscriptionObserver => {
-
-      const entry = ModelCache.findEntryByQuery(model, "one", args)
+      const entry = ModelCache.findEntryByQuery(model, 'one', args)
       if (entry) {
         subscriptionObserver.next(entry.value)
       }
@@ -272,25 +275,25 @@ export class MediatorClient {
           })
           .subscribe(
             value => {
-              if (options.cacheValue !== undefined &&
-                JSON.stringify(options.cacheValue) !== JSON.stringify(value)) {
-                ModelCache.add(model, "many", args, value)
+              if (
+                options.cacheValue !== undefined &&
+                JSON.stringify(options.cacheValue) !== JSON.stringify(value)
+              ) {
+                ModelCache.add(model, 'many', args, value)
                 subscriptionObserver.next(value)
-
               } else if (options.cacheValue === undefined) {
                 subscriptionObserver.next(value)
-
               }
             },
             error => subscriptionObserver.error(error),
-            () => subscriptionObserver.complete()
+            () => subscriptionObserver.complete(),
           )
       })
 
       // remove subscription on cancellation
       return () => {
         subscriptions.forEach(subscription => subscription.unsubscribe())
-        ModelCache.remove(model, "many", args)
+        ModelCache.remove(model, 'many', args)
       }
     })
   }
@@ -350,13 +353,11 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     } = {},
   ): Observable<number> {
-
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
     return new Observable(subscriptionObserver => {
-
-      const entry = ModelCache.findEntryByQuery(model, "one", args)
+      const entry = ModelCache.findEntryByQuery(model, 'one', args)
       if (entry) {
         subscriptionObserver.next(entry.value)
       }
@@ -369,24 +370,22 @@ export class MediatorClient {
           })
           .subscribe(
             value => {
-              if (options.cacheValue !== undefined &&
-                options.cacheValue !== value) {
-                ModelCache.add(model, "count", args, value)
+              if (options.cacheValue !== undefined && options.cacheValue !== value) {
+                ModelCache.add(model, 'count', args, value)
                 subscriptionObserver.next(value)
-
               } else if (options.cacheValue === undefined) {
                 subscriptionObserver.next(value)
               }
             },
             error => subscriptionObserver.error(error),
-            () => subscriptionObserver.complete()
+            () => subscriptionObserver.complete(),
           )
       })
 
       // remove subscription on cancellation
       return () => {
         subscriptions.forEach(subscription => subscription.unsubscribe())
-        ModelCache.remove(model, "count", args)
+        ModelCache.remove(model, 'count', args)
       }
     })
   }

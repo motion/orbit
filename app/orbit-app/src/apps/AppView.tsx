@@ -1,5 +1,6 @@
 import { useStore } from '@mcro/use-store'
-import * as React from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
+import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { StoreContext } from '../contexts'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { GenericComponent } from '../types'
@@ -17,19 +18,19 @@ export type AppViewProps = Pick<
   onAppStore?: Function
 }
 
-export const AppView = React.memo(function AppView(props: AppViewProps) {
+export const AppView = memo(function AppView(props: AppViewProps) {
   const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
   // ensure just one appStore ever is set in this tree
   // warning should never change it if you pass in a prop
   const appStore = props.appStore || useStore(AppStore, props)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.onAppStore) {
       props.onAppStore(appStore)
     }
   }, [])
 
-  const appElement = React.useMemo(() => {
+  const appElement = useMemo(() => {
     if (!apps[props.type]) {
       return <div>noo app of type {props.type}</div>
     }
@@ -37,10 +38,14 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
     const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
     if (!AppView) {
-      return null
+      return (
+        <div>
+          not found {props.type} {props.viewType}
+        </div>
+      )
     }
 
-    return (
+    const appElement = (
       <AppView
         appStore={props.appStore || appStore}
         sourcesStore={stores.sourcesStore}
@@ -52,6 +57,14 @@ export const AppView = React.memo(function AppView(props: AppViewProps) {
         {...props}
       />
     )
+
+    // small rendering for index views
+    if (props.viewType === 'index') {
+      return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
+    }
+
+    // regular rendering for others
+    return appElement
   }, Object.values(props))
 
   if (!props.appStore) {

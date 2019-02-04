@@ -4,7 +4,6 @@ import { ButtonProps } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
-import { HorizontalScroll } from '../../../views'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')
@@ -86,26 +85,24 @@ export default observer(function OrbitSuggestionBar() {
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length
   return (
     <SuggestionBar visible>
-      <HorizontalScroll height={24}>
-        {!!dateFilter && !hasTextualDateFilter && (
-          <SuggestionButton
-            onClick={filterStore.clearDate}
-            opacity={1}
-            borderBottom={[2, activeThemes.date.borderColor]}
-          >
-            {dateFilter}
-          </SuggestionButton>
-        )}
-        {filterStore.allFilters.map(filter => (
-          <SuggestionButton
-            key={`${filter.text}${filter.active}`}
-            onClick={() => filterStore.toggleFilterActive(filter.text)}
-            borderBottom={[2, getBorderColor(filter)]}
-          >
-            {filter.text}
-          </SuggestionButton>
-        ))}
-      </HorizontalScroll>
+      {!!dateFilter && !hasTextualDateFilter && (
+        <SuggestionButton
+          onClick={filterStore.clearDate}
+          opacity={1}
+          borderBottom={[2, activeThemes.date.borderColor]}
+        >
+          {dateFilter}
+        </SuggestionButton>
+      )}
+      {filterStore.allFilters.map(filter => (
+        <SuggestionButton
+          key={`${filter.text}${filter.active}`}
+          onClick={() => filterStore.toggleFilterActive(filter.text)}
+          borderBottom={[2, getBorderColor(filter)]}
+        >
+          {filter.text}
+        </SuggestionButton>
+      ))}
     </SuggestionBar>
   )
 })

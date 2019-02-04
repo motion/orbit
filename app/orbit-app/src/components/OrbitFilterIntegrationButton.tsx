@@ -2,13 +2,17 @@ import { Col, Popover, ViewProps } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { FloatingBarButtonSmall } from '../views/FloatingBar/FloatingBarButtonSmall'
+import { QueryFilterStore } from '../stores/QueryStore/QueryFiltersStore'
+import { FloatingBarButton } from '../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../views/Icon'
 import ListItem from '../views/ListItems/ListItem'
 
-export default observer(function OrbitFilterIntegrationButton(props: ViewProps) {
-  const { queryStore } = useStoresSafe()
-  const { queryFilters } = queryStore
+export default observer(function OrbitFilterIntegrationButton(
+  props: ViewProps & { queryFilterStore?: QueryFilterStore },
+) {
+  const stores = useStoresSafe()
+  const queryFilterStore = props.queryFilterStore || stores.queryStore.queryFilters
+  const { hasIntegrationFilters, integrationFilters, integrationFilterToggler } = queryFilterStore
   return (
     <Popover
       delay={250}
@@ -21,20 +25,18 @@ export default observer(function OrbitFilterIntegrationButton(props: ViewProps) 
       elevation={4}
       theme="light"
       target={
-        <FloatingBarButtonSmall icon="funnel" width={46}>
-          {queryFilters.hasIntegrationFilters
-            ? queryFilters.integrationFilters.filter(x => x.active).length
-            : 'All'}
-        </FloatingBarButtonSmall>
+        <FloatingBarButton icon="funnel">
+          {hasIntegrationFilters ? integrationFilters.filter(x => x.active).length : 'All'}
+        </FloatingBarButton>
       }
     >
       <Col {...props}>
-        {queryFilters.integrationFilters.map(filter => {
+        {integrationFilters.map(filter => {
           return (
             <ListItem
               key={filter.id}
               width={200}
-              onClick={queryFilters.integrationFilterToggler(filter)}
+              onClick={integrationFilterToggler(filter)}
               icon={filter.integration}
               titleProps={{
                 fontWeight: 300,

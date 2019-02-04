@@ -1,4 +1,12 @@
-import { App, AppEntity, SettingEntity, SpaceEntity, UserEntity } from '@mcro/models'
+import {
+  App,
+  AppEntity,
+  AppType,
+  SettingEntity,
+  SpaceEntity,
+  userDefaultValue,
+  UserEntity,
+} from '@mcro/models'
 import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
@@ -17,12 +25,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
       const settingEntity = new SettingEntity()
       Object.assign(settingEntity, {
         name: 'general',
-        values: {
-          openShortcut: 'Option+Space',
-          autoLaunch: true,
-          autoUpdate: true,
-          darkTheme: true,
-        },
+        values: {},
       })
       await getRepository(SettingEntity).save(settingEntity)
       setting = await getRepository(SettingEntity).findOne({ name: 'general' })
@@ -58,7 +61,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Search',
-              type: 'search',
+              type: AppType.search,
               colors: ['green', 'magenta'],
               pinned: true,
               spaceId: space.id,
@@ -66,17 +69,17 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             },
             {
               target: 'app',
-              name: 'People',
-              type: 'people',
+              name: 'Directory',
+              type: AppType.people,
               colors: ['red', 'darkblue'],
-              pinned: true,
               spaceId: space.id,
+              pinned: true,
               data: {},
             },
             {
               target: 'app',
-              name: 'Directory',
-              type: 'lists',
+              name: 'Home',
+              type: AppType.lists,
               spaceId: space.id,
               colors: ['pink', 'orange'],
               data: {
@@ -118,9 +121,8 @@ export class EnsureModels1546916550168 implements MigrationInterface {
 
     if (!user) {
       await getRepository(UserEntity).save({
-        name: 'Me',
+        ...userDefaultValue,
         activeSpace: firstSpace.id,
-        spaceConfig: {},
       })
     }
   }

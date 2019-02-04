@@ -1,7 +1,7 @@
 import { Model } from '@mcro/mediator'
 import { merge } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
-import { loadMany, loadOne, observeCount, observeMany, observeOne, save, loadCount } from '.'
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
 
 type UseModelOptions = {
   defaultValue?: any
@@ -14,7 +14,6 @@ function use<ModelType, Args>(
   query: Args | false,
   options: UseModelOptions = {},
 ): any {
-
   const observeEnabled = options.observe === undefined || options.observe === true
   const [value, setValue] = useState(
     options.defaultValue ||
@@ -54,11 +53,17 @@ function use<ModelType, Args>(
 
       if (observeEnabled) {
         if (type === 'one') {
-          subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(setValue)
+          subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(
+            setValue,
+          )
         } else if (type === 'many') {
-          subscription.current = observeMany(model, { args: query, cacheValue: value }).subscribe(setValue)
+          subscription.current = observeMany(model, { args: query, cacheValue: value }).subscribe(
+            setValue,
+          )
         } else if (type === 'count') {
-          subscription.current = observeCount(model, { args: query, cacheValue: value }).subscribe(setValue)
+          subscription.current = observeCount(model, { args: query, cacheValue: value }).subscribe(
+            setValue,
+          )
         }
       } else {
         if (type === 'one') {
@@ -84,12 +89,12 @@ function use<ModelType, Args>(
   )
 
   const valueUpdater = (next: any) => {
-    const nextValue = merge(type === 'many' ? [ ...value ] : { ...value }, next)
+    const nextValue = merge(type === 'many' ? [...value] : { ...value }, next)
     setValue(nextValue)
     save(model, nextValue, {
       type,
       args: query,
-      cacheValue: value
+      cacheValue: value,
     })
   }
 

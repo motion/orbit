@@ -1,4 +1,4 @@
-import { AppConfig, Bit, IntegrationType, Person, PersonBit, Source } from '@mcro/models'
+import { Bit, IntegrationType, Person, PersonBit, Source } from '@mcro/models'
 import { last } from 'lodash'
 import * as React from 'react'
 import { ResolvableModel } from '../sources/types'
@@ -25,7 +25,6 @@ export type NormalItem = {
   image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode
-  appConfig?: AppConfig
 }
 
 export type ItemResolverExtraProps = {

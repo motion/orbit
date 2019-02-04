@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { Markdown } from '../../../../views/Markdown'
 import { OrbitItemViewProps } from '../../../types'
@@ -9,16 +10,14 @@ export type TaskLike = {
   comments: TaskCommentLike[]
 }
 
-export function Task({
-  body,
-  comments,
-  renderText,
-  extraProps,
-}: OrbitItemViewProps<any> & TaskLike) {
+export function Task(rawProps: OrbitItemViewProps<any> & TaskLike) {
+  const itemProps = React.useContext(ItemPropsContext)
+  const { body, oneLine, renderText, comments } = { ...itemProps, ...rawProps }
+
   if (renderText) {
     return renderText(body)
   }
-  if (extraProps && extraProps.oneLine) {
+  if (oneLine) {
     return <HighlightTextItem ellipse>{body.slice(0, 200)}</HighlightTextItem>
   }
   return (

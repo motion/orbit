@@ -162,7 +162,7 @@ export class HighlightedTextArea extends React.Component<Props> {
       <TextAreaOuter height={props.lineHeight || '100%'}>
         <Block
           {...props}
-          forwardRef={this.highlights}
+          ref={this.highlights}
           dangerouslySetInnerHTML={{ __html: this.getHighlights() }}
           color="transparent"
           overflowX="scroll"
@@ -177,7 +177,7 @@ export class HighlightedTextArea extends React.Component<Props> {
           onChange={this.handleInputChange}
           onScroll={this.handleScroll}
           value={this.state.value}
-          forwardRef={forwardRef}
+          ref={forwardRef}
           className="hideScrollBar"
         />
       </TextAreaOuter>

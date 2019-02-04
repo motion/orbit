@@ -1,5 +1,4 @@
 export enum AppType {
-  home = 'home',
   search = 'search',
   people = 'people',
   topics = 'topics',
@@ -10,12 +9,16 @@ export enum AppType {
   message = 'message',
   apps = 'apps',
   createApp = 'createApp',
+  onboard = 'onboard',
+  custom = 'custom',
+  spaces = 'spaces',
 }
 
 export type AppConfig = {
   id?: string
+  subId?: string
   title?: string
-  type: AppType
+  type?: AppType
   data?: any
   icon?: string
   iconLight?: string

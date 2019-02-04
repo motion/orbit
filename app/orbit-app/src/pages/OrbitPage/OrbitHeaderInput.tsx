@@ -5,7 +5,6 @@ import * as React from 'react'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
-import { HeaderStore } from './OrbitHeader'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -15,28 +14,24 @@ const handleKeyDown = e => {
   }
 }
 
-type Props = {
-  headerStore: HeaderStore
-}
-
 function useActivePane() {
   const { paneManagerStore } = useStoresSafe()
   return paneManagerStore.activePane
 }
 
-export default observer(function OrbitHeaderInput({ headerStore }: Props) {
-  const { orbitStore, orbitWindowStore, queryStore } = useStoresSafe()
+export default observer(function OrbitHeaderInput() {
+  const { orbitStore, orbitWindowStore, queryStore, headerStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()
   const placeholder =
     (activePane &&
       activeSpace &&
-      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
+      (activePane.type === 'sources' ? `Space: ${activeSpace.name}` : activePane.name)) ||
     ''
   const fontSize = orbitStore.isTorn ? 16 : 18
   return (
-    <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 820}>
+    <FakeInput maxWidth={orbitStore.isTorn ? `calc(80% - ${400}px)` : 520}>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
         <HighlightedTextArea
           forwardRef={headerStore.inputRef}
@@ -82,9 +77,7 @@ const FakeInput = gloss(View, {
   justifyContent: 'center',
   margin: ['auto', 8],
   flexFlow: 'row',
-  width: '70%',
-  minWidth: 400,
-  maxWidth: 700,
+  flex: 1,
   cursor: 'text',
   transition: 'none',
   '&:active': {

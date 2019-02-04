@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.3.10",
   "scripts": {
-    "start": "mcro-build --entry ./src/index --port 5001"
+    "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
@@ -12,7 +12,7 @@
     "mobx-react-lite": "0.3.5",
     "react": "16.8.0-alpha.1",
     "react-dom": "16.8.0-alpha.1",
-    "react-hot-loader": "4.6.3",
+    "react-hot-loader": "4.6.5",
     "lodash": "^4.17.10"
   }
 }

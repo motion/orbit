@@ -39,6 +39,7 @@
     "event-kit": "^2.5.0",
     "fuzzysort": "1.1.4",
     "immer": "1.7.2",
+    "hash-sum": "1.0.2",
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",
     "keycode": "^2.1.9",
@@ -53,9 +54,8 @@
     "react": "16.8.0-alpha.1",
     "react-dom": "16.8.0-alpha.1",
     "react-date-range": "1.0.0-beta",
-    "react-draggable": "3.0.5",
     "react-fast-compare": "2.0.4",
-    "react-hot-loader": "4.6.3",
+    "react-hot-loader": "4.6.5",
     "react-hotkeys": "1.0.6",
     "react-markdown": "3.6.0",
     "react-sortable-hoc": "1.4.0",
@@ -71,7 +71,9 @@
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "webpack-runtime-require": "0.3.0",
-    "emoji-mart": "2.9.2"
+    "emoji-mart": "2.9.2",
+    "randomcolor": "0.5.3",
+    "memoize-weak": "1.0.2"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",

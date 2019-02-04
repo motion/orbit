@@ -1,3 +1,55 @@
+# Why Orbit
+
+this can be a pretty intense and long article tbh, with a lot of detail for every section. think like other popular longform articles that go about 50 pages or so and really dive into detail
+
+- history: reapp, flint (note: intranet work for quixey), motion, macro, mirai
+- all actually shared one thing:
+  - either they were trying to make development easier
+  - or make app building for teams easier
+  - (or mirai _was_ a large app, where we ran into issues building it)
+- turns out the problems i had been solving the whole time were related to how to build apps more easily
+- its not easy!
+- orbit started as a knowledge management tool
+  - really more knowledge augmentation
+  - we wanted to make it so you would know things as you did them
+- development was insanely hard
+- why?
+  - non-native apps are actually harder to do well then native, by a lot
+  - you have to re-build everything:
+    - selectable, sortable, draggable, virtual lists !!!!!
+    - virtual tables with all their itracacies
+    - tree views!
+    - themeable resizable everything
+    - popovers that can point and attach to anything, anywhere and trigger in many ways
+    - etc etc etc etc
+  - its easy to underestimate just how much native toolkits give you
+- native IS better
+  - at least on some platforms
+  - mac for example has a huge and comprehensive toolkit
+- BUT native sucks:
+  - you have to rebuild it for every platform
+  - re-compile on every save
+  - a unique API for everything you do
+  - different debugging tools for every platform
+  - need to hire teams for basically every platform
+- in the end the answer looks like this:
+  - once there is a good toolkit to build on the web that solves its problems:
+    - speed and breadth/depth of components, basically
+  - then you have clearly the best of all worlds, for _most_ apps
+    - you have fast beautiful and comprehensive toolkit
+    - with the best debugging and dev experience
+    - that only requires knowing one language and set of APIs
+    - and deploys anywhere for free
+- orbit started as an exploration of how teams work together
+- mid-way through research we landed on giving teams a nice intranet
+  - stripe home for your company
+- but intranet systems primary function usually is custom small apps
+- as we built we found its impossible to build one thing for everyone
+- but if we got the toolkit right, we could make it easy to build custom apps
+- and especially if we got DISTRIBUTION
+  - ie: truly an app platform where we can let users store data where it exists already
+  - that way we dont have tons of security issues and permissions asking
+
 # Unsilo (Cloud Lock-In)
 
 - looking around at the cloud theres a hell of a lot of silos

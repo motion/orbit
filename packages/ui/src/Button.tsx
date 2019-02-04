@@ -26,10 +26,12 @@ function ButtonInner({
   elementProps,
   opacity,
   disabled,
+  forwardRef,
   ...props
 }: ButtonProps) {
   return (
     <SizedSurface
+      forwardRef={forwardRef}
       themeSelect="button"
       tagName="button"
       alignItems="center"
@@ -61,11 +63,11 @@ function ButtonInner({
   )
 }
 
-export default React.forwardRef(function Button(props: ButtonProps, ref) {
+export const Button = React.forwardRef(function Button(props: ButtonProps, ref) {
   const uiContext = React.useContext(UIContext)
 
   if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
-    return <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
+    return <ButtonInner hover={uiContext.hovered} ref={ref} {...props} />
   }
 
   return <ButtonInner forwardRef={ref} {...props} />

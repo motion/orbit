@@ -26,16 +26,27 @@ type RowProps = {
   label?: React.ReactNode
 }
 
-export const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
+export const Scrollable = gloss(View, {
+  overflowY: 'auto',
+})
+
+export const FormTableLabel = ({ children }) => (
+  <TableCell width="30%" maxWidth={125}>
+    {children}
+  </TableCell>
+)
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
-const Label = props => <Text tagName="label" {...props} />
+const Label = props => <Text tagName="label" flex={1} {...props} />
 
 export const FormRow = ({ label, children }: RowProps & { children?: React.ReactNode }) => (
   <FormTableRow>
     <FormTableLabel>
-      <Label>{label}</Label>
+      <Row flex={1} alignItems="center">
+        <Label>{label}</Label>
+        <HorizontalSpace />
+      </Row>
     </FormTableLabel>
     <FormTableValue>{children}</FormTableValue>
   </FormTableRow>

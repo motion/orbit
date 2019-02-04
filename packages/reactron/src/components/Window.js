@@ -17,12 +17,21 @@ const EVENT_KEYS = {
 
 const properCase = str => `${str[0].toUpperCase()}${str.slice(1)}`
 
+const filterUndefined = obj => {
+  const next = {}
+  for (const key in obj) {
+    if (typeof obj[key] === 'undefined') continue
+    next[key] = obj[key]
+  }
+  return next
+}
+
 export class Window extends BaseComponent {
   mount() {
     this.extensionNames = {}
 
     const { props } = this
-    this.options = {
+    this.options = filterUndefined({
       show: props.show === undefined ? true : props.show,
       acceptFirstMouse: !!props.acceptFirstMouse,
       titleBarStyle: props.titleBarStyle,
@@ -37,7 +46,10 @@ export class Window extends BaseComponent {
       kiosk: !!props.kiosk,
       fullScreen: !!props.fullScreen,
       icon: props.icon,
-    }
+    })
+
+    console.log('setting with', this.options)
+
     this.window = new BrowserWindow(this.options)
 
     this.updateSize = () => configureSize.call(this, this.props)
@@ -104,10 +116,10 @@ export class Window extends BaseComponent {
       // changed value
       const newVal = [].concat(handler(propVal))
       if (!isEqual(this.options[key], newVal)) {
-        const setter = this.window[`set${properCase(key)}`]
-        if (setter) {
+        const setterInst = this.window[`set${properCase(key)}`]
+        if (setterInst) {
           log.info('update window, set', key, newVal)
-          setter.call(this.window, ...newVal)
+          setterInst.call(this.window, ...newVal)
           this.options[key] = newVal
         }
       }
@@ -144,26 +156,6 @@ export class Window extends BaseComponent {
   }
 }
 
-// function configureExtensions({ devToolsExtensions }) {
-//   if (this.unmounted) return
-//   const incoming = new Set(devToolsExtensions)
-//   const newExtensions = new Set(
-//     [...incoming].filter(x => !ALL_EXTENSIONS.has(x)),
-//   )
-//   const oldExtensions = [...ALL_EXTENSIONS].filter(x => !incoming.has(x))
-//   for (const path of oldExtensions) {
-//     BrowserWindow.removeDevToolsExtension(this.extensionNames[path])
-//     ALL_EXTENSIONS.delete(path)
-//     delete this.extensionNames[path]
-//   }
-//   for (const path of newExtensions) {
-//     console.log('adding dev tool', path)
-//     const name = BrowserWindow.addDevToolsExtension(path)
-//     ALL_EXTENSIONS.add(path)
-//     this.extensionNames[path] = name
-//   }
-// }
-
 function configureFile({ file }) {
   if (file) {
     this.window.loadURL(`${file}`)
@@ -186,8 +178,7 @@ function configureSize({ size: oSize, onResize, defaultSize, animateSize }) {
   }
   try {
     this.handleEvent(this.window, 'resize', onResize, rawHandler => {
-      const size = this.window.getSize()
-      rawHandler(size)
+      rawHandler(this.window.getSize())
     })
     if (!size && defaultSize) {
       this.window.setSize(...defaultSize)

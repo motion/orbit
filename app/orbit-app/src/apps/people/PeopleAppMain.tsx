@@ -16,10 +16,9 @@ import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { PEEK_BORDER_RADIUS } from '../../constants'
-import { normalizeItem } from '../../helpers/normalizeItem'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace, RoundButton } from '../../views'
-import ListItem from '../../views/ListItems/ListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { SubTitle } from '../../views/SubTitle'
 import { AppProps } from '../AppProps'
 
@@ -139,7 +138,7 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
             </Links>
           </Info>
         </CardContent>
-        {!App.state.darkTheme && (
+        {!App.state.isDark && (
           <Map>
             <FadeMap />
             <FadeMapRight />
@@ -154,10 +153,10 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
       <Content>
         <ContentInner>
           <Section>
-            <StrongSubTitle>Recent Topics</StrongSubTitle>
+            <StrongSubTitle>Topics</StrongSubTitle>
             <Row flexFlow="row" flexWrap="wrap" padding={[5, 0, 0]}>
               {topics.map((item, index) => (
-                <RoundButton margin={[0, 6, 6, 0]} key={index}>
+                <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
                   {item}
                 </RoundButton>
               ))}
@@ -170,17 +169,12 @@ export default observer(function PeopleAppMain(props: AppProps<AppType.people>) 
             <Unpad>
               {recentBits.map(bit => {
                 return (
-                  <ListItem
+                  <OrbitListItem
+                    itemViewProps={{ oneLine: false }}
                     key={bit.id}
-                    {...normalizeItem(bit)}
+                    item={bit}
                     margin={0}
-                    padding={15}
-                    extraProps={{
-                      condensed: true,
-                    }}
-                    theme={{
-                      backgroundHover: 'transparent',
-                    }}
+                    padding={[15, 20]}
                   />
                 )
               })}

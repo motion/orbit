@@ -1,4 +1,4 @@
-import { View } from '@mcro/ui'
+import { gloss, linearGradient, View, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -21,8 +21,40 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = ({ size = 32, background, color, ...props }) => (
-  <View alignItems="center" justifyContent="center" {...props}>
-    <GradientOutlineCircle width={size} height={size} background={background} color={color} />
-  </View>
-)
+export const OrbitOrb = React.forwardRef<any, ViewProps>(function OrbitOrb(
+  { size = 32, colors = ['red', 'green'], ...props },
+  ref,
+) {
+  // make sure its even number
+  let innerSize = Math.ceil(size * 0.8)
+  if (innerSize % 2 !== 0) {
+    innerSize -= 1
+  }
+  return (
+    <OrbBackground
+      ref={ref}
+      width={size}
+      height={size}
+      borderRadius={size * 2}
+      {...props}
+      className={`undraggable ${props.className || ''}`}
+    >
+      <View
+        borderRadius={1000}
+        width={innerSize}
+        height={innerSize}
+        background={linearGradient(colors[0], colors[1])}
+      />
+    </OrbBackground>
+  )
+})
+
+const OrbBackground = gloss(View, {
+  alignItems: 'center',
+  justifyContent: 'center',
+}).theme((_, theme) => ({
+  background: (theme.background.isDark()
+    ? theme.background.darken(0.4)
+    : theme.background.lighten(0.4)
+  ).alpha(0.7),
+}))

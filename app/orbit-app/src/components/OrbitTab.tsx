@@ -1,14 +1,23 @@
-import { gloss, Row, useTheme } from '@mcro/gloss'
+import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ContextMenu, Glint, IconProps, Text, Tooltip } from '@mcro/ui'
+import {
+  Button,
+  ButtonProps,
+  Glint,
+  IconProps,
+  MenuTemplate,
+  Tooltip,
+  useContextMenu,
+} from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { Icon } from '../views/Icon'
+import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 26
-const inactiveOpacity = 0.5
+export const tabHeight = 28
+const inactiveOpacity = 0.45
+const border = 5
 
-export type TabProps = React.HTMLAttributes<'div'> & {
+export type TabProps = ViewProps & {
   app?: App
   separator?: boolean
   isActive?: boolean
@@ -19,16 +28,20 @@ export type TabProps = React.HTMLAttributes<'div'> & {
   textProps?: any
   onClickPopout?: Function
   thicc?: boolean
-  icon?: string
+  icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
-  getContext?: Function
+  getContext?: () => MenuTemplate
+  disabled?: boolean
+  iconProps?: OrbitIconProps
+  after?: React.ReactNode
 }
 
 export function OrbitTab({
   app,
   icon,
-  iconSize = 10,
+  iconSize: iconSizeProp,
+  iconProps,
   iconAdjustOpacity = 0,
   tooltip,
   label,
@@ -39,49 +52,62 @@ export function OrbitTab({
   thicc,
   className = '',
   getContext,
+  after,
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
+  const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
+  const iconSize = iconSizeProp || (thicc ? 12 : 10)
+
   const button = (
     <NavButtonChrome
       className={`orbit-tab orbit-tab-${isActive ? 'active' : 'inactive'} ${
         thicc ? 'pinned' : 'unpinned'
-      } undraggable ${className}`}
+      } undraggable ${className || ''}`}
       isActive={isActive}
+      thicc={thicc}
       sidePad={sidePad}
+      {...contextMenuProps}
       {...props}
     >
-      <ContextMenu items={getContext ? getContext() : null}>
-        {isActive && <Glint />}
-        <Row margin={['auto', 0]} alignItems="center">
-          {!!icon && (
-            <OrbitTabIcon
-              isActive={isActive}
-              name={icon}
-              size={iconSize}
-              marginRight={!!label ? sidePad * 0.6 : 0}
-            />
-          )}
-          {!!label && (
-            <Text
-              ellipse
-              className="tab-label"
-              size={0.95}
-              opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={400}
-              {...textProps}
-            >
-              {label}
-            </Text>
-          )}
-        </Row>
+      {isActive && <Glint y={2} borderRadius={border} />}
+      <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+        {!React.isValidElement(icon) && !!icon && (
+          <OrbitTabIcon
+            isActive={isActive}
+            name={`${icon}`}
+            marginRight={!!label ? sidePad * 0.6 : 0}
+            thicc={thicc}
+            size={iconSize}
+            iconAdjustOpacity={iconAdjustOpacity}
+            {...iconProps}
+          />
+        )}
+        {React.isValidElement(icon) &&
+          React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
+        {!!label && (
+          <SimpleText
+            ellipse
+            className="tab-label"
+            display="flex"
+            flex={1}
+            size={0.95}
+            opacity={isActive ? 1 : inactiveOpacity}
+            fontWeight={400}
+            {...textProps}
+          >
+            {label}
+          </SimpleText>
+        )}
+      </Row>
 
-        {separator && <Separator />}
+      {separator && <Separator />}
 
-        {isActive && !!onClickPopout && (
-          <DropDownButton
+      {after}
+
+      {/* {isActive && !!onClickPopout && (
+          <OrbitTabButton
             className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-            right={sidePad * 0.25}
             tooltip="Open"
             onClick={e => {
               e.preventDefault()
@@ -89,8 +115,7 @@ export function OrbitTab({
               onClickPopout()
             }}
           />
-        )}
-      </ContextMenu>
+        )} */}
     </NavButtonChrome>
   )
   if (tooltip) {
@@ -101,9 +126,12 @@ export function OrbitTab({
 
 function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()
+  let opacity = props.isActive ? 1 : props.thicc ? 0.5 : 0.3
+  opacity += props.iconAdjustOpacity || 0
   return (
     <Icon
-      color={invertLightness(theme.color, 0.8).alpha(0.6)}
+      color={invertLightness(theme.color, 0.8)}
+      opacity={opacity}
       className="tab-icon"
       transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
@@ -112,9 +140,12 @@ function OrbitTabIcon(props: IconProps) {
   )
 }
 
-function DropDownButton(props) {
+export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
+      glint={false}
+      top={tabHeight / 2 - 8}
+      right={8}
       circular
       borderWidth={0}
       width={18}
@@ -123,51 +154,52 @@ function DropDownButton(props) {
       background="transparent"
       iconProps={{ size: 8 }}
       opacity={0}
-      top={tabHeight / 2 - 9}
       position="absolute"
       hoverStyle={{
-        opacity: 0.2,
+        opacity: 0.4,
       }}
       {...props}
     />
   )
 }
 
-const NavButtonChrome = gloss<{ isActive?: boolean; stretch?: boolean; sidePad: number }>({
+const NavButtonChrome = gloss<TabProps>({
   position: 'relative',
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: 3,
+  borderTopRadius: border,
   overflow: 'hidden',
   height: tabHeight,
-  maxWidth: 160,
   transform: {
     y: 0.5,
   },
 }).theme(({ isActive, stretch, sidePad }, theme) => {
-  // const background = theme.tabBackground || theme.background
-  const backgroundBase = theme.tabBackground || theme.background
-  const background = `linear-gradient(${backgroundBase.alpha(0.75)}, ${backgroundBase})`
+  const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
+
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
     transition: isActive ? 'none' : 'all ease-out 500ms',
   }
+
   return {
     padding: [0, sidePad],
-    minWidth: stretch ? 160 : 0,
+    minWidth: stretch ? 150 : 0,
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
     // borderBottom: [1, theme.borderColor],
     boxShadow: isActive
       ? [
-          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.2]],
-          ['inset', 0, 0, 0, 0.5, theme.borderColor],
+          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.26]],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,
     '&:hover': glowStyle,
+    '&:hover .tab-icon': {
+      opacity: '1 !important',
+    },
     '&:hover .tab-label': {
       opacity: 1,
     },
@@ -181,8 +213,10 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: -1,
+    y: -0.5,
+    x: 0.5,
   },
   width: 1,
-  background: 'linear-gradient(transparent 15%, rgba(0,0,0,0.048))',
-})
+}).theme((_, theme) => ({
+  background: `linear-gradient(transparent 15%, ${theme.background.darken(0.2).alpha(0.65)})`,
+}))

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { default as Surface, SurfaceProps } from './Surface'
+import { Surface, SurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 28
 
@@ -18,7 +18,7 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 
-export const SizedSurface = (props: SizedSurfaceProps) => {
+export function SizedSurface(props: SizedSurfaceProps) {
   const {
     size = 1,
     sizeHeight,
@@ -30,6 +30,7 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
     circular,
     ...rest
   } = props
+  let iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight))
   // sizes
   let height =
     typeof sizeHeight !== 'undefined'
@@ -49,10 +50,10 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   }
   if (sizePadding) {
     const padSize = num(sizePadding) * size
-    const padding = !!sizePadding
-      ? [sizeHeight ? 0 : Math.round(padSize * 1.5), Math.round(9 * padSize)]
-      : 0
-    pass.padding = padding
+    const topPad = sizeHeight ? 0 : Math.round(padSize * 1.5)
+    const sidePad = Math.round(9 * padSize)
+    pass.padding = [topPad, sidePad]
+    iconPad = sidePad * 0.45
   }
   if (sizeMargin) {
     const margin = num(sizeMargin) * 0.25 * size
@@ -74,6 +75,5 @@ export const SizedSurface = (props: SizedSurfaceProps) => {
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)
   }
-  const iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight))
   return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
 }

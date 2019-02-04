@@ -1,51 +1,79 @@
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
+import { BorderBottom } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useOrbitToolbars } from '../../components/OrbitToolbar'
+import { HorizontalScroll } from '../../views'
+
+const height = 32
 
 export default observer(function OrbitControls() {
-  const { orbitStore } = useStoresSafe()
+  const toolbars = useOrbitToolbars()
+
+  if (!toolbars) {
+    return null
+  }
+
   return (
-    <>
-      {!orbitStore.isTorn ? (
-        <ToolbarChrome>
-          <OrbitToolBarRender>
-            {toolbars => (
-              <ToolbarInner hasToolbars={!!toolbars}>
-                {toolbars && toolbars.before}
-                <View flex={1} />
-                {toolbars && toolbars.after}
-              </ToolbarInner>
-            )}
-          </OrbitToolBarRender>
-        </ToolbarChrome>
-      ) : null}
-    </>
+    <ToolbarChrome>
+      <ToolbarInner hasToolbars={!!toolbars}>
+        <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
+        <ToolbarCenter>
+          {toolbars && toolbars.center && (
+            <>
+              <ToolbarSpace />
+              <HorizontalScroll height={height}>{toolbars.center}</HorizontalScroll>
+              <ToolbarSpace />
+            </>
+          )}
+        </ToolbarCenter>
+        <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
+      </ToolbarInner>
+      <BorderBottom opacity={0.5} />
+    </ToolbarChrome>
   )
 })
 
+const ToolbarSpace = gloss({
+  width: 30,
+})
+
 const ToolbarChrome = gloss(Row, {
-  minHeight: 4,
+  minHeight: 3,
   alignItems: 'center',
   justifyContent: 'center',
+  position: 'relative',
 }).theme((_, theme) => ({
-  background: theme.tabBackground,
-  boxShadow: [
-    ['inset', 0, 0.5, 0, 0, theme.borderColor],
-    ['inset', 0, -0.5, 0, 0, theme.borderColor],
-  ],
+  // background: linearGradient('transparent', theme.background.darken(0.05)),
+  // background: linearGradient(theme.tabBackgroundBottom, theme.background),
+  // boxShadow: [
+  //   ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
+  //   // ['inset', 0, -0.5, 0, 0, theme.borderColor],
+  // ],
   // borderBottom: [1, theme.borderColor.alpha(0.2)],
 }))
 
 const ToolbarInner = gloss({
+  flex: 1,
   flexFlow: 'row',
-  alignItems: 'center',
-  maxWidth: 820,
-  width: '75%',
-  minWidth: 400,
   hasToolbars: {
-    height: 32,
+    height,
     padding: [0, 10],
   },
+})
+
+const ToolbarSide = gloss({
+  flexFlow: 'row',
+  maxWidth: 150,
+  alignItems: 'center',
+  atEnd: {
+    justifyContent: 'flex-end',
+  },
+})
+
+const ToolbarCenter = gloss({
+  flexFlow: 'row',
+  flex: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
 })

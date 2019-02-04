@@ -1,23 +1,32 @@
-import { Absolute, FullScreen, gloss } from '@mcro/gloss'
+import { Absolute, gloss, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Icon, Row, View } from '@mcro/ui'
+import { Button, Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { DateRangePicker } from 'react-date-range'
 import { AppActions } from '../../actions/AppActions'
-import { OrbitToolBarRender } from '../../components/OrbitToolbar'
+import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
+import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
-import OrbitSwitch from './OrbitSpaceSwitch'
 
 export default observer(function OrbitHeader() {
-  const { headerStore, orbitStore, paneManagerStore } = useStoresSafe()
-  const isOnSettings = paneManagerStore.activePane.type === 'settings'
+  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const activePaneType = paneManagerStore.activePane.type
+  const isOnSettings = activePaneType === 'settings'
   const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
+  const toolbars = useOrbitToolbars()
+  const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
+  const { queryFilters } = queryStore
+  const theme = useTheme()
+
   return (
     <>
-      <HeaderTop padding={isTorn ? [2, 10] : [6, 10]}>
+      <HeaderTop padding={isTorn ? [2, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}
@@ -32,63 +41,108 @@ export default observer(function OrbitHeader() {
             onMax={isTorn ? () => console.log('min') : null}
           />
         </OrbitClose>
+
+        {/* header input area */}
         <Row flex={1} alignItems="center">
-          <Row flex={1} />
-          {!isTorn && <OrbitSwitch />}
-          <OrbitToolBarRender key={`${isTorn}`}>
-            {toolbars => (
+          <View flex={1} />
+
+          {isTorn && toolbars && (
+            <>
+              {toolbars.before}
+              <View flex={1} />
+            </>
+          )}
+          <HeaderContain>
+            <View width={18} alignItems="center" justifyContent="center">
+              <Icon color={theme.color} name={`orbit-${icon}`} size={16} opacity={0.15} />
+            </View>
+
+            <OrbitHeaderInput />
+
+            {isTorn && toolbars && (
               <>
-                {isTorn && toolbars && (
-                  <>
-                    {toolbars.before}
-                    <View flex={1} />
-                  </>
-                )}
-                <OrbitHeaderInput headerStore={headerStore} />
-                {isTorn && toolbars && (
-                  <>
-                    <View flex={1} />
-                    {toolbars.after}
-                  </>
-                )}
+                <View flex={1} />
+                {toolbars.after}
               </>
             )}
-          </OrbitToolBarRender>
-          {!isTorn && (
-            <Absolute top={0} right={0}>
-              <Button
-                chromeless
-                isActive={isOnSettings}
-                onClick={() => {
-                  if (isOnSettings) {
-                    paneManagerStore.back()
-                  } else {
-                    paneManagerStore.setActivePaneByType('settings')
-                  }
-                }}
-                tooltip="Settings"
-              >
-                <Icon
-                  name="gear"
-                  size={12}
-                  opacity={0.2 + settingsIconActiveOpacityInc}
-                  hoverStyle={{
-                    opacity: 0.5 + settingsIconActiveOpacityInc,
-                  }}
+
+            <FloatingBarButton
+              onClick={queryFilters.toggleSortBy}
+              tooltip={`Sort by: ${queryFilters.sortBy}`}
+              circular
+              icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
+            />
+            <View width={8} />
+            <Popover
+              delay={250}
+              openOnClick
+              openOnHover
+              closeOnClickAway
+              group="filters"
+              target={<FloatingBarButton circular icon="ui-1_calendar-57" />}
+              background
+              borderRadius={10}
+              elevation={4}
+              theme="light"
+              width={420}
+              height={310}
+            >
+              <View flex={1} className="calendar-dom theme-light" padding={10}>
+                <DateRangePicker
+                  onChange={queryFilters.onChangeDate}
+                  ranges={[queryFilters.dateState]}
                 />
-              </Button>
-            </Absolute>
-          )}
-          <Row flex={1} />
+              </View>
+            </Popover>
+            <View width={8} />
+            <OrbitFilterIntegrationButton />
+
+            {/* {!isTorn && <OrbitSpaceSwitch />} */}
+
+            {!isTorn && (
+              <Absolute top={1} right={0}>
+                <Button
+                  chromeless
+                  isActive={isOnSettings}
+                  onClick={() => {
+                    if (isOnSettings) {
+                      paneManagerStore.back()
+                    } else {
+                      paneManagerStore.setActivePaneByType('settings')
+                    }
+                  }}
+                  tooltip="Settings"
+                >
+                  <Icon
+                    name="gear"
+                    size={13}
+                    opacity={0.2 + settingsIconActiveOpacityInc}
+                    hoverStyle={{
+                      opacity: 0.5 + settingsIconActiveOpacityInc,
+                    }}
+                  />
+                </Button>
+              </Absolute>
+            )}
+          </HeaderContain>
+
+          <View flex={1} />
         </Row>
 
         {/* <OrbitAutoComplete /> */}
       </HeaderTop>
 
       {isTorn && <OrbitHeaderDivider />}
-      <OrbitHeaderBg />
     </>
   )
+})
+
+const HeaderContain = gloss({
+  flex: 10,
+  flexFlow: 'row',
+  width: '75%',
+  minWidth: 400,
+  maxWidth: 750,
 })
 
 // const OrbitAutoComplete = observer(function OrbitAutoComplete() {
@@ -112,15 +166,6 @@ const HeaderTop = gloss(View, {
   flexFlow: 'row',
   position: 'relative',
 })
-
-const OrbitHeaderBg = gloss(FullScreen, {
-  zIndex: -1,
-  pointerEvents: 'none',
-}).theme((_, theme) => ({
-  background: theme.background.isDark()
-    ? null
-    : `linear-gradient(${theme.background.alpha(0.3)},${theme.background.alpha(0)})`,
-}))
 
 const OrbitClose = gloss({
   position: 'absolute',

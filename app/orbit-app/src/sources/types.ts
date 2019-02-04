@@ -1,12 +1,19 @@
+import {
+  AppConfig,
+  Bit,
+  GenericBit,
+  IntegrationType,
+  PersonBit,
+  SearchResult,
+  Source,
+} from '@mcro/models'
+import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
-import { IntegrationType, Bit, PersonBit, Source, SearchResult, GenericBit } from '@mcro/models'
-import { AppConfig } from '@mcro/models'
-import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { NormalItem } from '../helpers/normalizeItem'
-import { SearchBarType } from '@mcro/ui'
+import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { GenericComponent } from '../types'
-import { ListItemHide, ItemRenderText } from '../views/ListItems/ListItem'
+import { ItemRenderText, ListItemHide } from '../views/ListItems/ListItem'
 
 type AppTypeToModelType = {
   slack: Bit
@@ -32,12 +39,10 @@ export type OrbitItemViewProps<A extends ItemType> = {
   searchTerm?: string
   renderText?: ItemRenderText
   hide?: ListItemHide
-  extraProps?: {
-    beforeTitle?: React.ReactNode
-    oneLine?: boolean
-    condensed?: boolean
-    preventSelect?: boolean
-  }
+  beforeTitle?: React.ReactNode
+  oneLine?: boolean
+  condensed?: boolean
+  preventSelect?: boolean
 }
 
 export type OrbitSourceMainProps<A extends ItemType> = OrbitItemViewProps<A> & {

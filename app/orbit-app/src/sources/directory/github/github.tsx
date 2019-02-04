@@ -1,11 +1,11 @@
-import { GithubApp } from './views/GithubApp'
-import GithubSettings from './views/GithubSettings'
+import iconLight from '!raw-loader!../../../../public/icons/github-white.svg'
+import icon from '!raw-loader!../../../../public/icons/github.svg'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/github.svg'
-import iconLight from '../../../../public/icons/github-white.svg'
-import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
+import { GetOrbitIntegration } from '../../types'
+import { GithubApp } from './views/GithubApp'
 import { GithubItem } from './views/GithubItem'
+import GithubSettings from './views/GithubSettings'
 
 export const github: GetOrbitIntegration<'github'> = (source?: Source) => ({
   modelType: 'bit',

@@ -5,8 +5,8 @@
  * @format
  */
 
-import * as React from 'react'
 import { gloss } from '@mcro/gloss'
+import * as React from 'react'
 
 const IFrame = gloss('iframe', {
   height: '100%',
@@ -29,7 +29,7 @@ export class ResizeSensor extends React.Component<{
   }
 
   render() {
-    return <IFrame forwardRef={this.setRef} />
+    return <IFrame ref={this.setRef} />
   }
 
   componentDidMount() {

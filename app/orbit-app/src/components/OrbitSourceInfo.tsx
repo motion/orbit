@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useJobs } from '../hooks/useJobs'
 import { useSourceInfo } from '../hooks/useSourceInfo'
 import { OrbitIntegration } from '../sources/types'
+import { HorizontalSpace } from '../views'
 
 type Props = {
   sourceId: number
@@ -24,13 +25,15 @@ export const OrbitSourceInfo = (props: Props) => {
 
   return (
     <Row alignItems="center" flex={1}>
-      <Text size={0.9} alpha={0.5} ellipse>
-        {props.app.appName}&nbsp;·&nbsp;
-        {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
-      </Text>
-      <View flex={1} />
+      <View flex={1} justifyContent="center">
+        <Text size={0.9} alpha={0.5} ellipse>
+          {props.app.appName}&nbsp;·&nbsp;
+          {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
+        </Text>
+      </View>
+      <HorizontalSpace />
       {!!isSyncing && (
-        <Text size={0.9} alpha={0.8}>
+        <Text size={0.9} alpha={0.75}>
           Syncing...
         </Text>
       )}

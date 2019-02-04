@@ -1,11 +1,20 @@
-import * as React from 'react'
-import { AppProps } from '../AppProps'
-import { BitModel, AppType } from '@mcro/models'
-import { BitDecoration } from '../search/mainViews/BitDecoration'
-import { AppSearchable } from '../../sources/views/apps/AppSearchable'
-import { normalizeItem } from '../../helpers/normalizeItem'
-import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
 import { useModel } from '@mcro/model-bridge'
+import { AppType, BitModel } from '@mcro/models'
+import * as React from 'react'
+import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'
+import { normalizeItem } from '../../helpers/normalizeItem'
+import { AppSearchable } from '../../sources/views/apps/AppSearchable'
+import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
+import { AppProps } from '../AppProps'
+
+const defaultItemProps = {
+  itemProps: {
+    padding: [1, 6],
+    '&:hover': {
+      background: [0, 0, 0, 0.02],
+    },
+  },
+}
 
 export default function BitAppMain(props: AppProps<AppType.bit>) {
   const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
@@ -16,7 +25,7 @@ export default function BitAppMain(props: AppProps<AppType.bit>) {
   const View = props.sourcesStore.getView(bit.integration, 'main')
   const normalizedItem = normalizeItem(bit)
   return (
-    <BitDecoration>
+    <ItemPropsProvider value={defaultItemProps}>
       <AppSearchable appStore={props.appStore}>
         {({ searchBar }) => (
           <>
@@ -25,6 +34,6 @@ export default function BitAppMain(props: AppProps<AppType.bit>) {
           </>
         )}
       </AppSearchable>
-    </BitDecoration>
+    </ItemPropsProvider>
   )
 }

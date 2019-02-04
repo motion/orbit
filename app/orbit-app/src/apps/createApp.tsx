@@ -1,89 +1,108 @@
-import { Button, Row, Text, Theme, View } from '@mcro/ui'
+import { AppType } from '@mcro/models'
+import { BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { HorizontalSpace, SubTitle, Title, VerticalSpace } from '../views'
-import { Divider } from '../views/Divider'
-import { Icon } from '../views/Icon'
-import { IconContainer } from '../views/IconContainer'
-import { Input } from '../views/Input'
+import { defaultApps } from '../stores/NewAppStore'
+import { Title } from '../views'
+import { AppIcon } from '../views/AppIcon'
+import { BorderTop } from '../views/Border'
+import SelectableList from '../views/Lists/SelectableList'
+import { Section } from '../views/Section'
+import { AppProps } from './AppProps'
+import AppsMainNew from './apps/AppsMainNew'
+import { AppView } from './AppView'
 
-const apps = [
-  {
-    title: 'Search',
-    icon: 'orbitSearch',
-    subtitle: 'Custom search pane',
-    type: 'search',
-  },
-  {
-    title: 'List',
-    icon: 'orbitLists',
-    subtitle: 'Custom list pane',
-    type: 'lists',
-  },
-  {
-    title: 'Directory',
-    icon: 'orbitPeople',
-    subtitle: 'Filtered people app',
-    type: 'people',
-  },
-]
+const descriptions = {
+  search: 'Custom search with filters',
+  lists: 'Controlled or controllable list',
+  people: 'Manageable list of people',
+}
 
-export const createApp = {
-  main: observer(function CreateAppMain() {
-    const { newAppStore } = useStoresSafe()
-    const { type } = newAppStore
-    const app = apps.find(x => x.type === type)
-    return (
-      <View padding={20} margin="auto" width="80%" minHeight="80%" minWidth={400} maxWidth={700}>
-        <Row alignItems="center">
-          <Icon name={app.icon} size={32} />
-          <HorizontalSpace />
-          <Title margin={0}>{newAppStore.name}</Title>
+function CreateAppIndex() {
+  return (
+    <>
+      <Section paddingBottom={0}>
+        <Title>Choose type</Title>
+      </Section>
+      <SelectableList
+        items={defaultApps.map(app => ({
+          title: app.name,
+          subtitle: descriptions[app.type],
+          icon: <AppIcon app={app} />,
+          type: AppType[app.type],
+          iconBefore: true,
+        }))}
+      />
+    </>
+  )
+}
 
-          <View flex={1} />
+const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.createApp>) {
+  const { newAppStore } = useStoresSafe()
+
+  if (!props.appConfig) {
+    return null
+  }
+
+  const { type } = props.appConfig
+
+  useEffect(
+    () => {
+      newAppStore.setApp(type)
+    },
+    [type],
+  )
+
+  return (
+    <Row flex={1}>
+      <View width="50%">
+        <Section paddingBottom={0}>
+          <Title>Setup</Title>
+        </Section>
+
+        <Section paddingTop={0}>
+          <AppsMainNew />
+        </Section>
+
+        <Section paddingTop={0}>
+          <AppView type={type} viewType="settings" />
+        </Section>
+      </View>
+
+      <View width="50%" position="relative">
+        <BorderLeft />
+
+        <Section paddingBottom={0}>
+          <Title>Preview</Title>
+        </Section>
+
+        <View flex={1}>
+          <AppView
+            viewType="index"
+            id={type}
+            type={type}
+            appConfig={{
+              type: type,
+            }}
+          />
+        </View>
+
+        <Section>
+          <BorderTop />
+
           <Theme name="selected">
-            <Button disabled={!newAppStore.name} elevation={1} size={1.4}>
-              Save
+            <Button elevation={2} size={1.4}>
+              Create
             </Button>
           </Theme>
-        </Row>
-
-        <VerticalSpace />
-
-        <SubTitle>Name</SubTitle>
-        <Input
-          placeholder="Name..."
-          value={newAppStore.name}
-          onChange={e => {
-            newAppStore.setName(e.target.value)
-          }}
-        />
-
-        <VerticalSpace />
-
-        <SubTitle>Type</SubTitle>
-        <Row>
-          {apps.map((app, index) => (
-            <View key={index} alignItems="center" marginRight={12}>
-              <Theme name={app.type === type ? 'selected' : null}>
-                <IconContainer onClick={() => newAppStore.setType(app.type)}>
-                  <Icon name={app.icon} />
-                </IconContainer>
-              </Theme>
-              <Text marginTop={5} ellipse size={0.9} fontWeight={500} alpha={0.8}>
-                {app.title}
-              </Text>
-            </View>
-          ))}
-        </Row>
-
-        <VerticalSpace />
-        <Divider />
-        <VerticalSpace />
-
-        <SubTitle>Setup</SubTitle>
+        </Section>
       </View>
-    )
-  }),
+    </Row>
+  )
+})
+
+export const createApp = {
+  index: CreateAppIndex,
+  main: CreateAppMain,
 }

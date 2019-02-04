@@ -5,11 +5,20 @@ import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActive
 import { getAppConfig } from '../../helpers/getAppConfig'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { Center } from '../Center'
-import { OrbitListItem } from '../ListItems/OrbitListItem'
+import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
 import { SubTitle } from '../SubTitle'
 import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
-export type SearchableItem = (Bit | PersonBit)[]
+export type SearchableItem = Bit | PersonBit
+
+type Item = SearchableItem | OrbitListItemProps
+
+export function orbitItemToListItemProps(props: any): OrbitListItemProps {
+  if (props.target) {
+    return { item: props }
+  }
+  return props as any
+}
 
 export type OrbitHandleSelect = ((
   index: number,
@@ -17,7 +26,8 @@ export type OrbitHandleSelect = ((
   eventType?: 'click' | 'key',
 ) => any)
 
-export type OrbitListProps = Omit<VirtualListProps, 'onSelect' | 'onOpen'> & {
+export type OrbitListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' | 'items'> & {
+  items?: Item[]
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
   query?: string
@@ -33,18 +43,24 @@ export default function OrbitList({ items, itemsKey, ...props }: OrbitListProps)
         ItemView={OrbitListItem}
         isRowLoaded={isRowLoaded}
         {...props}
+        getItemProps={(item, index, items) => {
+          // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
+          const normalized = orbitItemToListItemProps(item)
+          const extraProps = (props.getItemProps && props.getItemProps(item, index, items)) || null
+          return { ...normalized, ...extraProps }
+        }}
         onSelect={(index, eventType) => {
           if (props.onSelect) {
-            props.onSelect(index, getAppConfig(items[index], index), eventType)
+            props.onSelect(index, getAppConfig(orbitItemToListItemProps(items[index])), eventType)
           }
         }}
         onOpen={index => {
           if (props.onOpen) {
-            props.onOpen(index, getAppConfig(items[index], index))
+            props.onOpen(index, getAppConfig(orbitItemToListItemProps(items[index])))
           }
         }}
         placeholder={
-          <View flex={1} minHeight={200}>
+          <View flex={1} minHeight={200} position="relative">
             <Center alignItems="center">
               <View>
                 <SubTitle>No results</SubTitle>

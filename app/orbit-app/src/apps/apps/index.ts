@@ -1,4 +1,4 @@
-import AppsAppMain from './AppsAppMain'
+import AppsAppMain from './AppsMain'
 
 export const apps = {
   // index: AppsAppIndex,

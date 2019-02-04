@@ -14,4 +14,7 @@ export class UserEntity implements User {
 
   @Column({ type: 'simple-json' })
   spaceConfig: User['spaceConfig']
+
+  @Column({ type: 'simple-json' })
+  settings: User['settings']
 }

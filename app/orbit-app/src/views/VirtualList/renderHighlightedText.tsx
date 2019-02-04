@@ -10,7 +10,17 @@ const HighlightTextFrame = gloss({
 
 const collapseWhitespace = str => str.replace(/\n[\s]*/g, ' ')
 
-export const renderHighlightedText = (text: string) => {
+export function renderHighlightedText(text: string) {
+  return (
+    <HighlightTextFrame>
+      <HighlightText whiteSpace="normal" options={{ maxSurroundChars: 100 }}>
+        {collapseWhitespace(text)}
+      </HighlightText>
+    </HighlightTextFrame>
+  )
+}
+
+export function renderHighlightedTextSingle(text: string) {
   return (
     <HighlightTextFrame>
       <HighlightText ellipse whiteSpace="normal" options={{ maxSurroundChars: 100 }}>

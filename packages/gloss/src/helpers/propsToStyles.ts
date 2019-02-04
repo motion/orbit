@@ -2,11 +2,13 @@ import { CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
 import { Config } from '../config'
 import { alphaColor } from './alphaColor'
 
-export const styleVal = (val, theme) => (typeof val === 'function' ? val(theme) : val)
+export function styleVal(val: any, theme: ThemeObject) {
+  return typeof val === 'function' ? val(theme) : val
+}
 
 // resolves props into styles for valid css
 
-export const propsToStyles = (props: any, theme: ThemeObject) => {
+export function propsToStyles(props: any, theme: ThemeObject) {
   const styles: CSSPropertySet = {
     ...props.style,
   }

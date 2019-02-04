@@ -1,4 +1,5 @@
 import * as UI from '@mcro/ui'
+import { flow } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from '../helpers/preventDefault'
 import { useStoresSafe } from '../hooks/useStoresSafe'
@@ -56,13 +57,22 @@ export default function PeopleRow({ people }) {
               <Person
                 key={i}
                 person={person}
-                onClick={preventDefault(() => onClickPerson(person))}
+                onClick={flow(
+                  preventDefault,
+                  () => onClickPerson(person),
+                )}
                 after={i < people.length - 1 ? ',' : ''}
               />
             ))}
           {people.length > 2 && (
             <>
-              <Person onClick={preventDefault(() => onClickPerson(people[0]))} person={people[0]} />{' '}
+              <Person
+                onClick={flow(
+                  preventDefault,
+                  () => onClickPerson(people[0]),
+                )}
+                person={people[0]}
+              />{' '}
               +{people.length - 1}
             </>
           )}

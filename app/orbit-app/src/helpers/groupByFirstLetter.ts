@@ -1,14 +1,32 @@
-export function groupByFirstLetter<A extends any>(items: A[]): ({ item: A; group?: string })[] {
-  return items.map(item => {
-    let letter
-    if (!item.name) {
+import { memoize } from 'lodash'
+
+function getLetter(name: string) {
+  let letter = '0-9'
+  if (name) {
+    letter = name[0].toLowerCase()
+    if (+name[0] === +name[0]) {
       letter = '0-9'
+    }
+  }
+  return letter
+}
+
+export const groupByLetter = memoize((key: string = 'name') => {
+  return function groupByLetter<A>(item: A, index: number, items: A[]): { separator?: string } {
+    if (items[index - 1]) {
+      const lastLetter = getLetter(items[index - 1][key])
+      const thisLetter = getLetter(item[key])
+      if (thisLetter !== lastLetter) {
+        return {
+          separator: thisLetter,
+        }
+      }
     } else {
-      letter = item.name[0].toLowerCase()
-      if (+item.name[0] === +item.name[0]) {
-        letter = '0-9'
+      // first index
+      return {
+        separator: getLetter(item[key]),
       }
     }
-    return { item, group: letter.toUpperCase() }
-  })
-}
+    return item
+  }
+})

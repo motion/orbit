@@ -1,5 +1,5 @@
-import { Bridge, proxySetters, BridgeOptions } from '@mcro/mobx-bridge'
-import { store, deep } from '@mcro/black'
+import { deep, store } from '@mcro/black'
+import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -21,6 +21,8 @@ export type DesktopStateOCRItem = [
 export type AppFocusState = {
   [key: number]: { focused: number | false; exited: boolean } | null
 }
+
+export type OSThemes = 'dark' | 'light'
 
 @store
 class DesktopStore {
@@ -46,6 +48,7 @@ class DesktopStore {
     CLEAR_OPTION: 'CLEAR_OPTION',
     RESET_DATA: 'RESET_DATA',
     PROXY_FN: 'PROXY_FN',
+    OS_THEME: 'OS_THEME',
   }
 
   bridge = Bridge
@@ -95,6 +98,7 @@ class DesktopStore {
       foundIntegrations: {},
     },
     operatingSystem: {
+      theme: 'light' as OSThemes,
       trayBounds: {
         size: [0, 0],
         position: [0, 0],

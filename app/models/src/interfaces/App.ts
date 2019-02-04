@@ -1,32 +1,14 @@
+import { AppType } from './AppTypes'
+import { ListsApp, ListsAppData } from './ListApp'
+import { SearchApp, SearchAppData } from './SearchApp'
 import { Space } from './Space'
+
+export * from './ListApp'
+export * from './SearchApp'
 
 // app data
 
-type ItemID = number | string
-
-export type ListAppDataItem =
-  | {
-      id: ItemID
-      type: 'folder' | 'root'
-      name?: string
-      children: ItemID[]
-      icon?: string
-    }
-  | {
-      id: ItemID
-      type: 'bit' | 'person'
-      name?: string
-      icon?: string
-    }
-
-export type ListsAppData = {
-  rootItemID: ItemID
-  items: { [key in ItemID]: ListAppDataItem }
-}
-
 export type PeopleAppData = {}
-
-export type SearchAppData = {}
 
 export type TopicsAppData = {
   trending?: { name: string }[]
@@ -34,9 +16,11 @@ export type TopicsAppData = {
   topics?: { name: string }[]
 }
 
+export type CustomAppData = any
+
 // base
 
-interface BaseApp {
+export interface BaseApp {
   target: 'app'
   id?: number
   space?: Space
@@ -52,34 +36,36 @@ export type AppData = {
   people: PeopleAppData
   topics: TopicsAppData
   lists: ListsAppData
-  memory: {}
+  custom: CustomAppData
 }
 
-export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
-export type PeopleApp = BaseApp & { type: 'people'; data: PeopleAppData }
-export type TopicsApp = BaseApp & { type: 'topics'; data: TopicsAppData }
-export type ListsApp = BaseApp & { type: 'lists'; data: ListsAppData }
-export type MemoryApp = BaseApp & { type: 'memory'; data: any }
-export type SourcesApp = BaseApp & { type: 'sources'; data: any }
-export type SettingsApp = BaseApp & { type: 'settings'; data: any }
+export type PeopleApp = BaseApp & { type: AppType.people; data: PeopleAppData }
+export type TopicsApp = BaseApp & { type: AppType.topics; data: TopicsAppData }
+export type SourcesApp = BaseApp & { type: AppType.sources; data: any }
+export type SettingsApp = BaseApp & { type: AppType.settings; data: any }
+export type CustomApp = BaseApp & { type: AppType.custom; data: CustomAppData }
 
 // App
 
-export type AppByType = {
-  search: SearchApp
-  people: PeopleApp
-  topics: TopicsApp
-  lists: ListsApp
-  memory: MemoryApp
-  sources: SourcesApp
-  settings: SettingsApp
-}
+export type AppByType<A extends AppType> = A extends AppType.search
+  ? SearchApp
+  : A extends AppType.people
+  ? PeopleApp
+  : A extends AppType.topics
+  ? TopicsApp
+  : A extends AppType.lists
+  ? ListsApp
+  : A extends AppType.sources
+  ? SourcesApp
+  : A extends AppType.settings
+  ? SettingsApp
+  : App
 
 export type App =
   | SearchApp
   | PeopleApp
   | TopicsApp
   | ListsApp
-  | MemoryApp
   | SourcesApp
   | SettingsApp
+  | CustomApp

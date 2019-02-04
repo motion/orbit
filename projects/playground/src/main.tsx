@@ -1,8 +1,7 @@
+import { debugState } from '@mcro/black'
+import ReactDOM from 'react-dom'
 import '../public/styles/nucleo.css'
 import '../public/testBase.css'
-import ReactDOM from 'react-dom'
-import './RootViewHMR'
-import { debugState } from '@mcro/black'
 
 debugState(({ stores }) => {
   window['stores'] = stores
@@ -12,7 +11,7 @@ debugState(({ stores }) => {
 const React = require('react')
 
 export function render() {
-  const { RootView } = require('./RootViewHMR')
+  const RootView = require('./RootView').default
   const RootNode = document.querySelector('#app')
   ReactDOM.render(<RootView />, RootNode)
 }

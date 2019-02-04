@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { on } from '@mcro/helpers'
-import throttle from 'raf-throttle'
-import { debounce } from 'lodash'
 import { Color } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
+import { on } from '@mcro/helpers'
+import { debounce } from 'lodash'
+import throttle from 'raf-throttle'
+import * as React from 'react'
 
 type ChildArgs = {
   translateX: number
@@ -261,7 +261,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const durationArg = show ? durationOut : durationIn
     const duration = durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
-      return <Overlay key="hoverglow" forwardRef={this.rootRef} style={{ opacity: 0 }} />
+      return <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
     }
     // find width / height (full == match size of container)
     let width = size || propWidth
@@ -302,7 +302,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     const glow = (
       <Overlay
         key="hoverglow"
-        forwardRef={this.rootRef}
+        ref={this.rootRef}
         style={{
           WebkitAppRegion: draggable ? 'drag' : 'no-drag',
           borderLeftRadius: borderLeftRadius || borderRadius,

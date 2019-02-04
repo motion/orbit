@@ -1,20 +1,23 @@
 import * as React from 'react'
+import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
 import { Title } from '../../../../views'
 import { HighlightText } from '../../../../views/HighlightText'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitItemViewProps } from '../../../types'
 
-export const Document = ({ bit, renderText, extraProps }: OrbitItemViewProps<any>) => {
+export const Document = ({ item, renderText }: OrbitItemViewProps<any>) => {
+  const itemProps = React.useContext(ItemPropsContext)
+
   if (renderText) {
-    return renderText(bit.body)
+    return renderText(item.body)
   }
-  if (extraProps && extraProps.oneLine) {
-    return <HighlightTextItem ellipse>{bit.body.slice(0, 200)}</HighlightTextItem>
+  if (itemProps.oneLine) {
+    return <HighlightTextItem ellipse>{item.body.slice(0, 200)}</HighlightTextItem>
   }
   return (
     <>
-      <Title>{bit.title}</Title>
-      <HighlightText>{bit.body}</HighlightText>
+      <Title>{item.title}</Title>
+      <HighlightText>{item.body}</HighlightText>
     </>
   )
 }

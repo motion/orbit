@@ -1,4 +1,4 @@
-import { color, ThemeMaker } from '@mcro/gloss'
+import { color, linearGradient, ThemeMaker } from '@mcro/gloss'
 
 const Theme = new ThemeMaker()
 
@@ -55,25 +55,26 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    background: '#fff',
+    background: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
     color: '#444',
     borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-    sidebarBackground: [250, 250, 250, 0.75],
-    sidebarBorderColor: '#eee',
-    tabBackground: [250, 250, 250],
-    // tabBackgroundActive: [255, 255, 255, 0.8],
+    headerBackground: linearGradient([255, 255, 255, 0.8], [255, 255, 255, 0.75]),
+    sidebarBackground: [255, 255, 255, 0.85],
+    tabBackgroundTop: lightBackground.alpha(0.7),
+    tabBackgroundBottom: lightBackground.alpha(0.95),
+    tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: 'eee',
-    listItemBackgroundSelected: orbitColor,
     listItemBackgroundHover: [100, 100, 100, 0.024],
     inputBackground: '#f2f2f2',
     inputHover: '#f2f2f2',
@@ -82,27 +83,40 @@ const light = {
     cardBackground: [250, 250, 250],
     cardBorderColor: [0, 0, 0, 0.1],
   }),
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    listItemBackground: orbitColor.alpha(0.35),
+    color: '#fff',
+    borderColor: orbitActiveBg,
+  }),
 }
 
+const darkBackground = color([55, 55, 55])
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     light02: [60, 60, 60],
-    background: [50, 50, 50],
+    background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
-    borderColor: '#444',
-    headerBackground: [15, 15, 15, 0.65],
+    borderColor: '#464646',
+    headerBackground: linearGradient([0, 0, 0, 0.45], [0, 0, 0, 0.55]),
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],
+    buttonBorderColor: [35, 35, 35],
+    buttonBorderColorHover: [40, 40, 40],
     colorActive: '#fff',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-    tabBackground: [40, 40, 40],
+    tabBackgroundTop: darkBackground.darken(0.1).alpha(0.8),
+    tabBackgroundBottom: darkBackground,
     tabInactiveHover: [0, 0, 0, 0.2],
-    sidebarBackground: [25, 25, 25, 0.85],
+    sidebarBackground: [25, 25, 25, 0.68],
     sidebarBorderColor: '#444',
     glintColor: [255, 255, 255, 0.2],
     inputBackground: [100, 100, 100, 0.5],
@@ -116,6 +130,14 @@ const dark = {
     cardBackground: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
+  }),
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: [10, 10, 10, 0.35],
+    backgroundHover: '#555',
+    backgroundActive: '#444',
+    color: '#fff',
+    borderColor: orbitActiveBg,
   }),
 }
 
@@ -145,6 +167,7 @@ const semiDark = {
 export const themes = {
   selected: {
     ...Theme.fromStyles({
+      iconFill: '#fff',
       background: orbitColor,
       backgroundHover: orbitColor,
       backgroundActive: orbitColor,

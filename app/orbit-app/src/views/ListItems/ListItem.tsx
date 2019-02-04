@@ -7,8 +7,7 @@ import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { HorizontalSpace } from '..'
-import PeopleRow from '../../components/PeopleRow'
-import { NormalItem } from '../../helpers/normalizeItem'
+import { BorderBottom } from '../Border'
 import { DateFormat } from '../DateFormat'
 import { HighlightText } from '../HighlightText'
 import { Icon } from '../Icon'
@@ -24,7 +23,6 @@ export type HandleSelection = ((
 ) => any)
 
 export type ListItemHide = {
-  hidePeople?: boolean
   hideTitle?: boolean
   hideIcon?: boolean
   hideSubtitle?: boolean
@@ -40,9 +38,11 @@ export type ListItemDisplayProps = {
 }
 
 export type ListItemProps = CSSPropertySetStrict &
-  Partial<NormalItem> &
   ListItemHide &
   ListItemDisplayProps & {
+    location?: React.ReactNode
+    preview?: React.ReactNode
+    title?: React.ReactNode
     subTextOpacity?: number
     slim?: boolean
     above?: React.ReactNode
@@ -52,8 +52,8 @@ export type ListItemProps = CSSPropertySetStrict &
     theme?: Partial<ThemeObject>
     listItem?: boolean
     subtitle?: React.ReactNode
-    date?: React.ReactNode
-    icon?: React.ReactNode
+    date?: Date
+    icon?: any
     index?: number
     isExpanded?: boolean
     style?: any
@@ -92,18 +92,41 @@ export type ListItemProps = CSSPropertySetStrict &
     group?: string
   }
 
+function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
+  let iconSize = iconBefore ? (slim ? 20 : 30) : slim ? 12 : 14
+
+  const iconPropsFinal = {
+    size: iconSize,
+    ...iconProps,
+  }
+  if (!iconBefore) {
+    iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
+  }
+  let element = icon
+  if (React.isValidElement(icon)) {
+    if (icon.type['acceptsIconProps']) {
+      element = React.cloneElement(icon, iconPropsFinal)
+    }
+  } else {
+    element = <Icon name={icon} {...iconPropsFinal} />
+  }
+  return (
+    <>
+      {element}
+      <TitleSpace slim={slim} />
+    </>
+  )
+}
+
 export default observer(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
   const {
-    createdAt,
-    icon,
+    date,
     location,
-    people,
     preview,
+    icon,
     subtitle,
     title,
-    integration,
-    updatedAt,
     borderRadius,
     cardProps,
     children,
@@ -126,20 +149,19 @@ export default observer(function ListItem(props: ListItemProps) {
     slim,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.7,
+    after,
     ...restProps
   } = props
   const { isSelected } = store
   const showChildren = !props.hideBody
   const showSubtitle = !!subtitle && !props.hideSubtitle
-  const showDate = !!createdAt && !props.hideDate
+  const showDate = !!date && !props.hideDate
   const showIcon = !!icon && !props.hideIcon
   const showTitle = !!title && !props.hideTitle
-  const showPeople = !!(!props.hidePeople && people && people.length && people[0].data['profile'])
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
   const sizeLineHeight = slim ? 0.8 : 1
-  const isMultiLine = showPreview || showSubtitle || showPeople
-  const defaultPadding = slim ? [6, 8] : [7, 10]
+  const defaultPadding = slim ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons
@@ -147,7 +169,9 @@ export default observer(function ListItem(props: ListItemProps) {
     defaultPadding[0] += 2
   }
 
-  const renderedChildren = showChildren && (
+  const iconElement = showIcon && getIcon(props)
+
+  const childrenElement = showChildren && (
     <UI.SimpleText size={0.9} alpha={subTextOpacity}>
       {children}
     </UI.SimpleText>
@@ -159,27 +183,17 @@ export default observer(function ListItem(props: ListItemProps) {
       <Row>
         {showDate && (
           <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
-            <DateFormat
-              date={new Date(updatedAt)}
-              nice={differenceInCalendarDays(Date.now, updatedAt) < 7}
-            />
+            <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
           </UI.Text>
         )}
       </Row>
     </AfterHeader>
   )
 
-  const peopleElement = !!people && (
-    <>
-      <HorizontalSpace />
-      <PeopleRow people={people} />
-    </>
-  )
-
   const locationElement = !!location && (
     <>
       <RoundButtonSmall
-        margin={[-3, -1]}
+        margin={[2, -1]}
         maxWidth={120}
         fontWeight={400}
         fontSize={13}
@@ -193,39 +207,8 @@ export default observer(function ListItem(props: ListItemProps) {
     </>
   )
 
-  const iconElement =
-    showIcon &&
-    (() => {
-      let iconSize = iconBefore ? (slim ? 18 : 22) : slim ? 12 : 14
-      if (isMultiLine && iconBefore) {
-        iconSize += 8
-      }
-      const iconPropsFinal = {
-        size: iconSize,
-        ...iconProps,
-      }
-      if (!iconBefore) {
-        iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
-      }
-      return (
-        <>
-          {React.isValidElement(icon) ? (
-            // dont overwrite the icons original props
-            icon.type['acceptsIconProps'] ? (
-              React.cloneElement(icon, iconPropsFinal)
-            ) : (
-              icon
-            )
-          ) : (
-            <Icon name={icon} {...iconPropsFinal} />
-          )}
-          <TitleSpace slim={slim} />
-        </>
-      )
-    })()
-
   return (
-    <UI.Theme name={isSelected ? 'selected' : null}>
+    <UI.Theme select={isSelected ? theme => theme.selected : null}>
       <>
         {above}
         {!!separator && (
@@ -238,7 +221,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </UI.Theme>
         )}
       </>
-      <ListFrame isExpanded={isExpanded} forwardRef={store.setCardWrapRef} {...restProps}>
+      <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
         <ListItemChrome
           isSelected={isSelected}
           borderRadius={borderRadius}
@@ -270,13 +253,13 @@ export default observer(function ListItem(props: ListItemProps) {
               <ListItemSubtitle>
                 {showIcon && !showTitle && (
                   <>
-                    <Icon name={icon} size={slim ? 12 : 14} {...iconProps} />
+                    {iconElement}
                     <TitleSpace slim={slim} />
                   </>
                 )}
                 {!!location && locationElement}
                 {showPreviewInSubtitle ? (
-                  <div style={{ flex: 1, overflow: 'hidden' }}>{renderedChildren}</div>
+                  <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
                 ) : null}
                 {!!subtitle &&
                   (typeof subtitle === 'string' ? (
@@ -295,12 +278,10 @@ export default observer(function ListItem(props: ListItemProps) {
                 {!subtitle && (
                   <>
                     <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    {peopleElement}
                   </>
                 )}
                 {!showTitle && (
                   <>
-                    {!!subtitle && peopleElement}
                     <HorizontalSpace />
                     {afterHeaderElement}
                   </>
@@ -334,18 +315,13 @@ export default observer(function ListItem(props: ListItemProps) {
             {!showPreviewInSubtitle && (
               <Row alignItems="center" flex={1}>
                 {locationElement}
-                {renderedChildren}
+                {childrenElement}
               </Row>
             )}
-            {showPeople && !showSubtitle && (
-              <Bottom>
-                <PeopleRow people={people} />
-              </Bottom>
-            )}
           </ListItemMainContent>
-          {props.after}
+          {after}
         </ListItemChrome>
-        <Divider />
+        <BorderBottom opacity={0.28} />
       </ListFrame>
     </UI.Theme>
   )
@@ -358,26 +334,13 @@ const ListFrame = gloss(UI.View, {
   isExpanded: {
     userSelect: 'auto',
   },
-  transform: {
-    z: 0,
-  },
 }).theme(({ borderRadius }, theme) => {
   return {
     color: theme.color,
-    background: theme.listItemBackground || theme.background.alpha(0.5),
+    background: theme.listItemBackground || theme.background,
     borderRadius: borderRadius || 0,
   }
 })
-
-const Divider = gloss({
-  height: 1,
-  position: 'absolute',
-  bottom: 0,
-  left: 10,
-  right: 10,
-}).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.12),
-}))
 
 const ListItemChrome = gloss({
   flexFlow: 'row',
@@ -398,7 +361,7 @@ const ListItemChrome = gloss({
   // selected...
   if (isSelected) {
     listStyle = {
-      background: theme.listItemBackgroundSelected || theme.background.alpha(0.15),
+      background: theme.listItemBackground || theme.background.alpha(0.15),
     }
   } else {
     listStyle = {
@@ -454,14 +417,7 @@ const TitleSpace = gloss({
   },
 })
 
-const Bottom = gloss({
-  flexFlow: 'row',
-  alignItems: 'center',
-})
-
 const ListItemMainContent = gloss({
-  // this lets flex shrink... https://css-tricks.com/flexbox-truncated-text/
-  minWidth: 0,
   flex: 1,
   maxWidth: '100%',
   margin: ['auto', 0],

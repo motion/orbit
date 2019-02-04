@@ -1,36 +1,34 @@
 import { Contents, ViewProps } from '@mcro/gloss'
-import React, { useContext } from 'react'
-import { ContextMenuContext, MenuTemplate } from './ContextMenuProvider'
+import React, { forwardRef, useContext, useEffect } from 'react'
+import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
-type ContextMenuProps = ViewProps & {
+type UseContextProps = {
   items?: MenuTemplate
   buildItems?: () => MenuTemplate
-  children: React.ReactNode
-  component?: React.ComponentType<any> | string
 }
 
-export function ContextMenu({
-  children,
-  component = Contents,
-  items,
-  buildItems,
-  ...restProps
-}: ContextMenuProps) {
-  const setMenuItems = useContext(ContextMenuContext)
-
-  if (!items) {
-    return <>{children}</>
+type ContextMenuProps = ViewProps &
+  UseContextProps & {
+    children: React.ReactNode
+    component?: React.ComponentType<any> | string
   }
 
-  const onContextMenu = (_: React.MouseEvent) => {
-    if (typeof setMenuItems === 'function') {
-      if (items != null) {
-        setMenuItems(items)
-      } else if (buildItems != null) {
-        setMenuItems(buildItems())
+export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(function ContextMenu(
+  props,
+  ref,
+) {
+  const { children, component = Contents, items, buildItems, ...restProps } = props
+  const context = useContext(ContextMenuContext)
+  const { onContextMenu } = useContextMenu({ items, buildItems })
+
+  useEffect(
+    () => {
+      if (ref) {
+        ref['current'] = context
       }
-    }
-  }
+    },
+    [ref, context],
+  )
 
   return React.createElement(
     component,
@@ -40,4 +38,23 @@ export function ContextMenu({
     },
     children,
   )
+})
+
+export function useContextMenu({ items, buildItems }: UseContextProps) {
+  const { setItems } = useContext(ContextMenuContext)
+
+  const onContextMenu = React.useCallback(
+    () => {
+      if (typeof setItems === 'function') {
+        if (items != null) {
+          setItems(items)
+        } else if (buildItems != null) {
+          setItems(buildItems())
+        }
+      }
+    },
+    [buildItems, JSON.stringify(items)],
+  )
+
+  return { onContextMenu }
 }

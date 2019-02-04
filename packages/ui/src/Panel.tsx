@@ -18,41 +18,49 @@ const Chevron = gloss(Icon, {
   marginBottom: 1,
 })
 
-type Props = {
+export type PanelProps = {
   className?: string
+
   /**
    * Whether this panel is floating from the rest of the UI. ie. if it has
    * margin and a border.
    */
   floating?: boolean
+
   /**
    * Whether the panel takes up all the space it can. Equivalent to the following CSS:
    *
    *  height: 100%;
    *  width: 100%;
    */
-  fill?: boolean
+  stretch?: boolean
+
   /**
    * Heading for this panel. If this is anything other than a string then no
    * padding is applied to the heading.
    */
   heading: React.ReactNode
+
   /**
    * Contents of the panel.
    */
   children?: React.ReactNode
+
   /**
    * Whether the panel header and body have padding.
    */
   padded?: boolean
+
   /**
-   * Whether the panel can be collapsed. Defaults to true
+   * Whether the panel can be collapsed
    */
   collapsable?: boolean
+
   /**
    * Initial state for panel if it is collapsable
    */
   collapsed?: boolean
+
   /**
    * Heading for this panel. If this is anything other than a string then no
    * padding is applied to the heading.
@@ -60,27 +68,29 @@ type Props = {
   accessory?: React.ReactNode
 
   theme?: ThemeObject
+
+  // how much the panel flexes when open
+  flex?: number
 }
 
 type State = {
   collapsed: boolean
 }
 
-const PanelContainer = gloss({
-  flex: 1,
-}).theme(props => ({
+const PanelContainer = gloss().theme(props => ({
   padding: props.floating ? 10 : 0,
   borderBottom: props.collapsed ? 'none' : BORDER,
+  flex: props.collapsed ? 'initial' : props.flex || 1,
 }))
 
 const PanelHeader = gloss(Row).theme(props => ({
   backgroundColor: '#f6f7f9',
   border: props.floating ? BORDER : 'none',
-  borderBottom: BORDER,
+  // borderBottom: BORDER,
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
   justifyContent: 'space-between',
-  lineHeight: '27px',
+  alignItems: 'center',
   fontWeight: 500,
   flexShrink: 0,
   padding: [3, 10],
@@ -89,7 +99,7 @@ const PanelHeader = gloss(Row).theme(props => ({
   },
 }))
 
-const PanelBody = gloss({}).theme(props => ({
+const PanelBody = gloss().theme(props => ({
   backgroundColor: '#fff',
   border: props.floating ? BORDER : 'none',
   borderBottomLeftRadius: 2,
@@ -100,9 +110,9 @@ const PanelBody = gloss({}).theme(props => ({
 }))
 
 @attachTheme
-export class Panel extends React.Component<Props, State> {
+export class Panel extends React.Component<PanelProps, State> {
   static defaultProps = {
-    fill: false,
+    stretch: false,
     floating: false,
     collapsable: false,
   }
@@ -122,7 +132,7 @@ export class Panel extends React.Component<Props, State> {
       padded,
       children,
       className,
-      fill,
+      stretch,
       floating,
       heading,
       collapsable,
@@ -134,7 +144,7 @@ export class Panel extends React.Component<Props, State> {
       <Panel.PanelContainer
         className={className}
         floating={floating}
-        fill={fill}
+        stretch={stretch}
         collapsed={collapsed}
       >
         <Panel.PanelHeader
@@ -157,7 +167,7 @@ export class Panel extends React.Component<Props, State> {
         </Panel.PanelHeader>
 
         {children == null || (collapsable && collapsed) ? null : (
-          <Panel.PanelBody fill={fill} padded={padded} floating={floating}>
+          <Panel.PanelBody stretch={stretch} padded={padded} floating={floating}>
             {children}
           </Panel.PanelBody>
         )}

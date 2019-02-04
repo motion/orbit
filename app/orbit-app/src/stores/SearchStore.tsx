@@ -29,10 +29,9 @@ const groupToName = {
   overall: 'Overall',
 }
 
-const searchGroupsToResults = (results: SearchResult[]) => {
+export function searchGroupsToResults(results: SearchResult[], { max = 6 }: { max?: number } = {}) {
   const res = results.map(result => {
     const group = groupToName[result.group]
-    const max = 6
     const firstFew = result.bits.slice(0, max).map(bit => ({
       item: bit,
       group,

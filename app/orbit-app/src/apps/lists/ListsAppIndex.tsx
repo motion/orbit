@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { loadOne, observeOne } from '@mcro/model-bridge'
+import { loadMany, loadOne, observeOne } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
@@ -7,9 +7,21 @@ import {
   ListAppDataItem,
   ListsApp,
   PersonBitModel,
+  SearchResultModel,
 } from '@mcro/models'
-import { Absolute, Button, ButtonProps, Input, PassProps, Row, Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import {
+  Absolute,
+  Button,
+  ButtonProps,
+  Input,
+  Panel,
+  PanelProps,
+  PassProps,
+  Row,
+  Text,
+  View,
+} from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
 import { dropRight, flow, last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
@@ -18,15 +30,19 @@ import { lists } from '.'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { searchGroupsToResults } from '../../stores/SearchStore'
 import { BorderBottom } from '../../views/Border'
 import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppProps'
 
 class ListStore {
   props: AppProps<AppType.lists>
+  stores = useHook(useStoresSafe)
 
   query = ''
   depth = 0
@@ -44,6 +60,28 @@ class ListStore {
   get items() {
     return (this.app && this.app.data.items) || {}
   }
+
+  searchResults = react(
+    () => [this.query, this.stores.spaceStore.activeSpace && this.stores.spaceStore.activeSpace.id],
+    async ([query, spaceId], { sleep }) => {
+      if (!query) {
+        return null
+      }
+      // make searchresults lower priority than filtered
+      await sleep(80)
+      const results = await loadMany(SearchResultModel, {
+        args: {
+          spaceId,
+          query,
+          take: 20,
+        },
+      })
+      return searchGroupsToResults(results).map(r => ({
+        ...r,
+        group: 'Search Results',
+      }))
+    },
+  )
 
   setQuery = val => {
     this.query = val
@@ -88,8 +126,14 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
         after={`${numItems} ${pluralize('item', numItems)}`}
       />
 
+      {/* Search/add bar */}
       <ListAdd store={store} />
+
+      {/* List items */}
       <ListCurrentFolder store={store} />
+
+      {/* Search results */}
+      <ListSearchResults store={store} />
     </>
   )
 })
@@ -227,3 +271,21 @@ function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
     </View>
   )
 }
+
+function SearchPanel(props: Partial<PanelProps>) {
+  return <Panel padded={false} collapsable heading="Search Results" {...props} />
+}
+
+const ListSearchResults = observer(function ListSearchResults(props: { store: ListStore }) {
+  const { searchResults, query } = props.store
+
+  if (!searchResults) {
+    return <SearchPanel />
+  }
+
+  return (
+    <SearchPanel heading={`Search Results (${searchResults.length})`}>
+      <SelectableList query={query} items={searchResults} />
+    </SearchPanel>
+  )
+})

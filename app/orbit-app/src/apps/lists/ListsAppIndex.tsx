@@ -1,10 +1,11 @@
 import { react } from '@mcro/black'
-import { loadMany, loadOne, observeOne } from '@mcro/model-bridge'
+import { loadMany, loadOne, observeOne, save } from '@mcro/model-bridge'
 import {
   AppModel,
   AppType,
   BitModel,
   ListAppDataItem,
+  ListAppDataItemFolder,
   ListsApp,
   PersonBitModel,
   SearchResultModel,
@@ -26,6 +27,7 @@ import { dropRight, flow, last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
 import * as React from 'react'
+import { arrayMove } from 'react-sortable-hoc'
 import { lists } from '.'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { getTargetValue } from '../../helpers/getTargetValue'
@@ -165,6 +167,7 @@ export async function loadListItem(
 
 const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store: ListStore }) {
   const { items } = store
+  const currentFolder = items[last(store.history)] as ListAppDataItemFolder
 
   const getContextMenu = React.useCallback(index => {
     return [
@@ -193,6 +196,18 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
       items={items}
       loadItemProps={loadItemProps}
       sortable
+      onSortEnd={({ oldIndex, newIndex }) => {
+        const children = arrayMove(currentFolder.children, oldIndex, newIndex)
+        console.log('updating sort for list folder', currentFolder, children)
+        store.app.data.items = {
+          ...store.app.data.items,
+          [currentFolder.id]: {
+            ...currentFolder,
+            children,
+          },
+        }
+        save(AppModel, store.app)
+      }}
       getContextMenu={getContextMenu}
       onChangeDepth={onChangeDepth}
       depth={store.depth}

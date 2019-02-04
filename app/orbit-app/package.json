@@ -39,6 +39,7 @@
     "event-kit": "^2.5.0",
     "fuzzysort": "1.1.4",
     "immer": "1.7.2",
+    "hash-sum": "1.0.2",
     "invariant": "2.2.4",
     "key-event-to-string": "1.2.0",
     "keycode": "^2.1.9",

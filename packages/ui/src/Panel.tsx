@@ -73,7 +73,6 @@ const PanelContainer = gloss(View).theme((props, theme) => ({
 }))
 
 const PanelHeader = gloss(Row, {
-  backgroundColor: '#f6f7f9',
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
   justifyContent: 'space-between',
@@ -82,6 +81,7 @@ const PanelHeader = gloss(Row, {
   flexShrink: 0,
   padding: [3, 10],
 }).theme((_, theme) => ({
+  backgroundColor: theme.background,
   '&:not(:first-child)': {
     borderTop: [1, theme.sidebarBorderColor || theme.borderColor],
   },

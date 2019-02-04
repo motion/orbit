@@ -21,12 +21,12 @@ type BaseListItem = {
   filter?: ListItemFilter
 }
 
-export type ListAppDataItem =
-  | BaseListItem & {
-      type: 'folder' | 'root'
-      children: ItemID[]
-    }
-  | BaseListItem & { type: 'bit' | 'person' }
+export type ListAppDataItemFolder = BaseListItem & {
+  type: 'folder' | 'root'
+  children: ItemID[]
+}
+
+export type ListAppDataItem = ListAppDataItemFolder | BaseListItem & { type: 'bit' | 'person' }
 
 export type ListsAppData = {
   rootItemID: ItemID

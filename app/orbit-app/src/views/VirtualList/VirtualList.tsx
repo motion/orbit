@@ -2,9 +2,10 @@ import { always, ensure, react } from '@mcro/black'
 import { ContextMenu, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
+import hashSum from 'hash-sum'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { SortableContainer } from 'react-sortable-hoc'
+import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc'
 import {
   CellMeasurer,
   CellMeasurerCache,
@@ -23,7 +24,7 @@ export type GetItemProps<A> = (
   items: A[],
 ) => Partial<VirtualListItemProps<A>> | null
 
-export type VirtualListProps<A> = {
+export type VirtualListProps<A> = SortableContainerProps & {
   onChangeHeight?: (height: number) => any
   onSelect?: HandleSelection
   onOpen?: HandleSelection
@@ -254,7 +255,14 @@ export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
   const rowRenderer = ({ key, index, parent, style }) => {
     const item = props.items[index]
     const itemElement = (
-      <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
+      // 🐛 sortable needs keys based on content https://github.com/clauderic/react-sortable-hoc/issues/103
+      <CellMeasurer
+        key={`${key}${hashSum(item)}`}
+        cache={store.cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={index}
+      >
         <div style={style}>
           <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
             <VirtualListItem

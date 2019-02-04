@@ -90,7 +90,7 @@ export class MediatorClient {
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
     })
       .then(value => {
-        ModelCache.add(model, 'one', args, value)
+        // ModelCache.add(model, 'one', args, value)
         return value
       })
   }
@@ -119,7 +119,7 @@ export class MediatorClient {
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
     })
       .then(value => {
-        ModelCache.add(model, 'many', args, value)
+        // ModelCache.add(model, 'many', args, value)
         return value
       })
   }
@@ -173,7 +173,7 @@ export class MediatorClient {
       resolvers: qm instanceof Query ? qm.args : options.resolvers,
     })
       .then(value => {
-        ModelCache.add(model, 'count', args, value)
+        // ModelCache.add(model, 'count', args, value)
         return value
       })
   }

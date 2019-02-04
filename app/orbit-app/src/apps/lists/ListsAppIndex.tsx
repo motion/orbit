@@ -76,10 +76,7 @@ class ListStore {
           take: 20,
         },
       })
-      return searchGroupsToResults(results).map(r => ({
-        ...r,
-        group: 'Search Results',
-      }))
+      return searchGroupsToResults(results)
     },
   )
 
@@ -273,7 +270,17 @@ function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
 }
 
 function SearchPanel(props: Partial<PanelProps>) {
-  return <Panel padded={false} collapsable heading="Search Results" {...props} />
+  return (
+    <Panel
+      boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
+      margin={[0, -10]}
+      padding={[0, 10]}
+      padded={false}
+      collapsable
+      heading="Search Results"
+      {...props}
+    />
+  )
 }
 
 const ListSearchResults = observer(function ListSearchResults(props: { store: ListStore }) {

@@ -5,12 +5,10 @@
  * @format
  */
 
-import { attachTheme, gloss, Row, ThemeObject, View } from '@mcro/gloss'
+import { attachTheme, gloss, Row, ThemeObject, View, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 import { Icon } from './Icon'
 import { Text } from './Text'
-
-const BORDER = '1px solid #dddfe2'
 
 const Chevron = gloss(Icon, {
   marginRight: 4,
@@ -19,14 +17,6 @@ const Chevron = gloss(Icon, {
 })
 
 export type PanelProps = {
-  className?: string
-
-  /**
-   * Whether this panel is floating from the rest of the UI. ie. if it has
-   * margin and a border.
-   */
-  floating?: boolean
-
   /**
    * Whether the panel takes up all the space it can. Equivalent to the following CSS:
    *
@@ -70,23 +60,20 @@ export type PanelProps = {
   theme?: ThemeObject
 
   // how much the panel flexes when open
-  flex?: number
-}
+  openFlex?: number
+} & ViewProps
 
 type State = {
   collapsed: boolean
 }
 
-const PanelContainer = gloss().theme(props => ({
-  padding: props.floating ? 10 : 0,
-  borderBottom: props.collapsed ? 'none' : BORDER,
-  flex: props.collapsed ? 'initial' : props.flex || 1,
+const PanelContainer = gloss(View).theme((props, theme) => ({
+  borderBottom: props.collapsed ? 'none' : [1, theme.sidebarBorderColor || theme.borderColor],
+  flex: props.collapsed ? 'initial' : props.openFlex || 1,
 }))
 
-const PanelHeader = gloss(Row).theme(props => ({
+const PanelHeader = gloss(Row, {
   backgroundColor: '#f6f7f9',
-  border: props.floating ? BORDER : 'none',
-  // borderBottom: BORDER,
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
   justifyContent: 'space-between',
@@ -94,18 +81,20 @@ const PanelHeader = gloss(Row).theme(props => ({
   fontWeight: 500,
   flexShrink: 0,
   padding: [3, 10],
+}).theme((_, theme) => ({
   '&:not(:first-child)': {
-    borderTop: BORDER,
+    borderTop: [1, theme.sidebarBorderColor || theme.borderColor],
   },
 }))
 
-const PanelBody = gloss().theme(props => ({
-  backgroundColor: '#fff',
-  border: props.floating ? BORDER : 'none',
+const PanelBody = gloss({
   borderBottomLeftRadius: 2,
   borderBottomRightRadius: 2,
   borderTop: 'none',
-  flexGrow: 1,
+  flex: 1,
+  overflow: 'hidden',
+}).theme((props, theme) => ({
+  backgroundColor: theme.background,
   padding: props.padded ? 10 : 0,
 }))
 
@@ -113,7 +102,6 @@ const PanelBody = gloss().theme(props => ({
 export class Panel extends React.Component<PanelProps, State> {
   static defaultProps = {
     stretch: false,
-    floating: false,
     collapsable: false,
   }
 
@@ -133,25 +121,21 @@ export class Panel extends React.Component<PanelProps, State> {
       children,
       className,
       stretch,
-      floating,
       heading,
       collapsable,
       accessory,
       theme,
+      ...props
     } = this.props
     const { collapsed } = this.state
     return (
       <Panel.PanelContainer
         className={className}
-        floating={floating}
         stretch={stretch}
         collapsed={collapsed}
+        {...props}
       >
-        <Panel.PanelHeader
-          floating={floating}
-          padded={typeof heading === 'string'}
-          onClick={this.onClick}
-        >
+        <Panel.PanelHeader padded={typeof heading === 'string'} onClick={this.onClick}>
           {collapsable && (
             <Chevron
               // @ts-ignore
@@ -167,7 +151,7 @@ export class Panel extends React.Component<PanelProps, State> {
         </Panel.PanelHeader>
 
         {children == null || (collapsable && collapsed) ? null : (
-          <Panel.PanelBody stretch={stretch} padded={padded} floating={floating}>
+          <Panel.PanelBody stretch={stretch} padded={padded}>
             {children}
           </Panel.PanelBody>
         )}

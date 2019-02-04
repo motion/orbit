@@ -293,6 +293,7 @@ function SearchPanel(props: Partial<PanelProps>) {
       padding={[0, 10]}
       padded={false}
       collapsable
+      collapsed={true}
       heading="Search Results"
       {...props}
     />

@@ -209,7 +209,7 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: 0,
+    y: -0.5,
     x: 0.5,
   },
   width: 1,

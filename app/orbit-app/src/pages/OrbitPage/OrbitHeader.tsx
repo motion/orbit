@@ -1,4 +1,4 @@
-import { Absolute, gloss } from '@mcro/gloss'
+import { Absolute, gloss, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -22,6 +22,7 @@ export default observer(function OrbitHeader() {
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
+  const theme = useTheme()
 
   return (
     <>
@@ -51,8 +52,8 @@ export default observer(function OrbitHeader() {
             </>
           )}
 
-          <View width={22} alignItems="center" justifyContent="center">
-            <Icon name={`orbit-${icon}`} size={16} opacity={0.15} />
+          <View width={18} alignItems="center" justifyContent="center">
+            <Icon color={theme.color} name={`orbit-${icon}`} size={16} opacity={0.15} />
           </View>
 
           <OrbitHeaderInput />

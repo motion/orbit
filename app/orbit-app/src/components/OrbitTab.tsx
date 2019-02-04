@@ -140,6 +140,7 @@ function OrbitTabIcon(props: IconProps) {
 export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
+      glint={false}
       top={tabHeight / 2 - 8}
       right={8}
       circular

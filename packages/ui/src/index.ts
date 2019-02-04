@@ -18,6 +18,7 @@ export {
 } from '@mcro/gloss'
 export * from './Arrow'
 export * from './Border'
+export * from './Breadcrumbs'
 export * from './Button'
 export * from './buttons/ClearButton'
 export * from './Circle'

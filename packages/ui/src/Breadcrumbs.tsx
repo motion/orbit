@@ -1,6 +1,7 @@
-import { Row, Text, TextProps, ViewProps } from '@mcro/ui'
+import { Row, ViewProps } from '@mcro/gloss'
 import React from 'react'
-import { Omit } from '../helpers/typeHelpers/omit'
+import { Omit } from '../../../app/orbit-app/src/helpers/typeHelpers/omit'
+import { Text, TextProps } from './Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
@@ -32,7 +33,27 @@ export function Breadcrumbs(props: ViewProps) {
 
 export type BreadcrumbsProps = Omit<TextProps, 'children'> & {
   separator?: React.ReactNode
-  children?: React.ReactNode | ((isLast?: boolean) => React.ReactNode)
+  children?: React.ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => React.ReactNode)
+}
+
+export function useBreadcrumb() {
+  const id = React.useRef(null)
+  if (!id.current) {
+    id.current = Math.random()
+  }
+  const breadcrumbsContext = React.useContext(BreadcrumbsContext)
+  const total = breadcrumbsContext.children.length
+  const index = breadcrumbsContext.children.indexOf(id.current)
+  const isLast = index === total - 1
+
+  React.useEffect(() => {
+    breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
+    return () => {
+      breadcrumbsContext.dispatch({ type: 'unmount', value: id.current })
+    }
+  }, [])
+
+  return { index, total, isLast }
 }
 
 export function Breadcrumb({
@@ -40,28 +61,16 @@ export function Breadcrumb({
   children,
   ...props
 }: BreadcrumbsProps) {
-  const id = React.useRef(null)
-  const breadcrumbsContext = React.useContext(BreadcrumbsContext)
-  const total = breadcrumbsContext.children.length
-  const index = breadcrumbsContext.children.indexOf(id.current)
-  const isLast = index === total - 1
-
-  React.useEffect(() => {
-    id.current = Math.random()
-    breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
-    return () => {
-      breadcrumbsContext.dispatch({ type: 'unmount', value: id.current })
-    }
-  }, [])
+  const crumb = useBreadcrumb()
 
   if (typeof children === 'function') {
-    return children(isLast)
+    return children(crumb)
   }
 
   return (
     <>
       <Text {...props}>{children}</Text>
-      {isLast ? '' : separator}
+      {crumb.isLast ? '' : separator}
     </>
   )
 }

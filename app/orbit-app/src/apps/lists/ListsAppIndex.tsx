@@ -12,6 +12,7 @@ import {
 } from '@mcro/models'
 import {
   Absolute,
+  Breadcrumbs,
   Button,
   ButtonProps,
   Input,
@@ -20,6 +21,7 @@ import {
   PassProps,
   Row,
   Text,
+  useBreadcrumb,
   View,
 } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -35,8 +37,8 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { searchGroupsToResults } from '../../stores/SearchStore'
 import { BorderBottom } from '../../views/Border'
-import { Breadcrumb, Breadcrumbs } from '../../views/Breadcrumbs'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
+import { Icon } from '../../views/Icon'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
@@ -47,6 +49,7 @@ class ListStore {
   stores = useHook(useStoresSafe)
 
   query = ''
+  selectedIndex = 0
   depth = 0
   history = [0]
   appRaw = react(() => +this.props.id, id => observeOne(AppModel, { args: { where: { id } } }))
@@ -57,6 +60,21 @@ class ListStore {
 
   get parentId() {
     return last(this.history)
+  }
+
+  get currentFolder() {
+    if (!this.app) {
+      return null
+    }
+    return this.app.data.items[this.parentId] as ListAppDataItemFolder
+  }
+
+  get selectedItem() {
+    if (!this.currentFolder) {
+      return null
+    }
+    const id = this.currentFolder.children[this.selectedIndex]
+    return this.items[id]
   }
 
   get items() {
@@ -96,6 +114,8 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const store = useStore(ListStore, props)
   const numItems = Object.keys(store.items).length
 
+  console.log('store.selectedItem', store.selectedItem)
+
   return (
     <>
       <OrbitToolbar
@@ -113,13 +133,14 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
             items={[
               {
                 id: 0,
-                name: store.app ? store.app.name : '',
+                name: <Icon name="home" size={12} opacity={0.5} />,
               },
               ...store.history
                 .slice(1)
                 .filter(Boolean)
                 .map(id => store.items[id]),
-            ]}
+              store.selectedItem,
+            ].filter(Boolean)}
           />
         }
         after={`${numItems} ${pluralize('item', numItems)}`}
@@ -165,9 +186,9 @@ export async function loadListItem(
   return null
 }
 
-const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store: ListStore }) {
-  const { items } = store
-  const currentFolder = items[last(store.history)] as ListAppDataItemFolder
+const ListCurrentFolder = observer(function ListCurrentFolder(props: { store: ListStore }) {
+  const { store } = props
+  const { items, currentFolder } = store
 
   const getContextMenu = React.useCallback(index => {
     return [
@@ -189,6 +210,26 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
     return loadListItem(item, +store.props.id)
   }, [])
 
+  const handleSortEnd = React.useCallback(
+    ({ oldIndex, newIndex }) => {
+      const children = arrayMove(currentFolder.children, oldIndex, newIndex)
+      console.log('updating sort for list folder', currentFolder, children)
+      store.app.data.items = {
+        ...store.app.data.items,
+        [currentFolder.id]: {
+          ...currentFolder,
+          children,
+        },
+      }
+      save(AppModel, store.app)
+    },
+    [JSON.stringify(currentFolder)],
+  )
+
+  const handleSelect = React.useCallback(index => {
+    store.selectedIndex = index
+  }, [])
+
   return (
     <SelectableTreeList
       key={100}
@@ -197,19 +238,9 @@ const ListCurrentFolder = observer(function ListCurrentFolder({ store }: { store
       items={items}
       loadItemProps={loadItemProps}
       sortable
-      onSortEnd={({ oldIndex, newIndex }) => {
-        const children = arrayMove(currentFolder.children, oldIndex, newIndex)
-        console.log('updating sort for list folder', currentFolder, children)
-        store.app.data.items = {
-          ...store.app.data.items,
-          [currentFolder.id]: {
-            ...currentFolder,
-            children,
-          },
-        }
-        save(AppModel, store.app)
-      }}
+      onSortEnd={handleSortEnd}
       getContextMenu={getContextMenu}
+      onSelect={handleSelect}
       onChangeDepth={onChangeDepth}
       depth={store.depth}
     />
@@ -256,29 +287,26 @@ const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
   )
 })
 
-function OrbitBreadcrumb(props: ButtonProps) {
+function ListCrumb(props: ButtonProps) {
+  const { isLast } = useBreadcrumb()
   return (
-    <Breadcrumb>
-      {isLast => (
-        <>
-          <FloatingBarButtonSmall chromeless {...props} />
-          {!isLast ? (
-            <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
-              {' · '}
-            </Text>
-          ) : null}
-        </>
-      )}
-    </Breadcrumb>
+    <>
+      <FloatingBarButtonSmall chromeless {...props} />
+      {!isLast ? (
+        <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
+          {' · '}
+        </Text>
+      ) : null}
+    </>
   )
 }
 
-function ListAppBreadcrumbs(props: { items: Partial<ListAppDataItem>[] }) {
+function ListAppBreadcrumbs(props: { items: { id: number; name: React.ReactNode }[] }) {
   return (
     <View flex={1}>
       <Breadcrumbs>
         {props.items.map((item, index) => (
-          <OrbitBreadcrumb key={`${item.id}${index}`}>{item.name}</OrbitBreadcrumb>
+          <ListCrumb key={`${item.id}${index}`}>{item.name}</ListCrumb>
         ))}
       </Breadcrumbs>
     </View>

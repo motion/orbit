@@ -128,7 +128,7 @@ export class SearchStore {
         slim: true,
         iconBefore: true,
         icon: <AppIcon app={app} />,
-        group: spaceName,
+        // group: spaceName,
         appConfig: {
           type: AppType.message,
           title: `Open ${app.name}`,
@@ -151,7 +151,7 @@ export class SearchStore {
         icon: 'orbit-custom-full',
         slim: true,
         iconBefore: true,
-        group: spaceName,
+        // group: spaceName,
         appConfig: {
           type: AppType.message,
           title: `Create new app`,

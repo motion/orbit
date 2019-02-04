@@ -6,7 +6,7 @@ import {
   propsToStyles,
   propsToTextSize,
   propsToThemeStyles,
-  Theme,
+  selectThemeSubset,
   ThemeObject,
   ThemeSelect,
   View,
@@ -211,21 +211,21 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  return (
-    <Theme select={themeSelect}>
-      <SurfaceFrame ref={forwardRef} {...surfaceProps} />
-    </Theme>
-  )
+  return <SurfaceFrame ref={forwardRef} themeSelect={themeSelect} {...surfaceProps} />
 })
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss(View, {
   fontFamily: 'inherit',
   position: 'relative',
-}).theme((props, theme) => {
+}).theme((props, baseTheme) => {
+  // select theme
+  const theme = selectThemeSubset(props.themeSelect, baseTheme)
+
   // :hover, :focus, :active
   const themeStyles = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
+
   // circular
   const circularStyles = props.circular && {
     alignItems: 'center',
@@ -233,16 +233,19 @@ const SurfaceFrame = gloss(View, {
     padding: 0,
     width: props.height,
   }
+
   // icon
   const hoverIconStyle = {
     color: props.iconHoverColor || themeStyles.colorHover,
   }
+
   const hoverStyle = props.active
     ? null
     : {
         ...(!props.chromeless && themeStyles['&:hover']),
         ...propStyles['&:hover'],
       }
+
   return alphaColor(
     {
       padding: props.padding,

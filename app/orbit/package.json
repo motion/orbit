@@ -19,7 +19,7 @@
     "@mcro/orbit-desktop": "^2.3.10",
     "@mcro/orbit-electron": "^2.3.10",
     "@mcro/orbit-syncers": "^2.3.10",
-    "electron": "4.0.0-beta.8",
+    "electron": "4.0.4",
     "electron-util": "0.9.0",
     "fs-extra": "7.0.0",
     "get-port": "4.0.0",

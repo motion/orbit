@@ -1,5 +1,5 @@
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { save } from '@mcro/model-bridge'
+import { remove, save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { flow } from 'lodash'
@@ -8,6 +8,7 @@ import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
@@ -70,15 +71,24 @@ export default observer(function OrbitNav() {
                 type: 'separator',
               },
               {
-                label: 'Toggle Pinned',
-                checked: isPinned,
+                label: isPinned ? 'Unpin' : 'Pin',
                 click() {
                   // TODO umed type not accepting
                   save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },
               {
-                label: 'Remove tab',
+                label: 'Remove',
+                click() {
+                  if (
+                    showConfirmDialog({
+                      title: 'Are you sure you want to delete this app?',
+                      message: `Deleting this app will remove it from this space and delete it's data.`,
+                    })
+                  ) {
+                    remove(AppModel, app)
+                  }
+                },
               },
             ]
           },
@@ -161,6 +171,7 @@ export default observer(function OrbitNav() {
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           iconSize={14}
           icon="gear"
+          thicc
         />
       </OrbitNavChrome>
     </OrbitNavClip>

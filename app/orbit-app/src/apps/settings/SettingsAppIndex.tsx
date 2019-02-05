@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
-import { OrbitSettingsToolbar } from '../sources/SourcesAppIndex'
+import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
 export default function StetingsAppIndex() {
   const [user] = useActiveUser()

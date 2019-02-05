@@ -1,4 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
+import { BorderBottom } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
@@ -35,6 +36,7 @@ export default observer(function OrbitControls() {
     <ToolbarChrome>
       <ToolbarInner hasToolbars={!!toolbars}>
         {toolbars.children || getFormattedToolbars()}
+        <BorderBottom opacity={0.5} />
       </ToolbarInner>
     </ToolbarChrome>
   )

@@ -96,6 +96,11 @@ export default observer(function OrbitNav() {
     )
     .filter(Boolean)
 
+  const isOnSettings =
+    paneManagerStore.activePane.type === 'sources' ||
+    paneManagerStore.activePane.type === 'spaces' ||
+    paneManagerStore.activePane.type === 'settings'
+
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
@@ -110,6 +115,8 @@ export default observer(function OrbitNav() {
           overflow="hidden"
           flexWrap="wrap"
           height={tabHeight}
+          opacity={isOnSettings ? 0.5 : 1}
+          transition="opacity ease 300ms"
         />
         {showCreateNew && (
           <OrbitTab
@@ -150,69 +157,11 @@ export default observer(function OrbitNav() {
         <View flex={1} />
 
         <OrbitTab
-          isActive={
-            paneManagerStore.activePane.type === 'sources' ||
-            paneManagerStore.activePane.type === 'spaces' ||
-            paneManagerStore.activePane.type === 'settings'
-          }
+          isActive={isOnSettings}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           iconSize={14}
           icon="gear"
         />
-        {/* <Popover
-          openOnHover
-          openOnClick
-          closeOnClickAway
-          group="filters"
-          background
-          borderRadius={10}
-          elevation={4}
-          themeName="tooltip"
-          target={
-
-          }
-        >
-          {[
-            {
-              title: 'Spaces',
-              icon: 'layers',
-            },
-            {
-              title: 'Space setup',
-              icon: 'grid48',
-            },
-            {
-              title: 'Settings',
-              icon: 'gear',
-            },
-          ].map((itemProps, index) => {
-            return (
-              <ListItem
-                key={index}
-                width={200}
-                titleProps={{
-                  fontWeight: 300,
-                }}
-                {...itemProps}
-              />
-            )
-          })}
-        </Popover> */}
-        {/* <OrbitTab
-          icon="layers"
-          thicc
-          isActive={paneManagerStore.activePane.type === 'sources'}
-          onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Manage Space"
-        />
-        <OrbitTab
-          icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
-          thicc
-          isActive={paneManagerStore.activePane.type === 'spaces'}
-          onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
-          tooltip="Spaces"
-        /> */}
-        {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )

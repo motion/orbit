@@ -1,18 +1,18 @@
-import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss';
-import { App } from '@mcro/stores';
-import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { DateRangePicker } from 'react-date-range';
-import { AppActions } from '../../actions/AppActions';
-import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton';
-import { useOrbitToolbars } from '../../components/OrbitToolbar';
-import { useStoresSafe } from '../../hooks/useStoresSafe';
-import { BorderBottom } from '../../views/Border';
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton';
-import { Icon } from '../../views/Icon';
-import { WindowControls } from '../../views/WindowControls';
-import OrbitHeaderInput from './OrbitHeaderInput';
+import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { App } from '@mcro/stores'
+import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { DateRangePicker } from 'react-date-range'
+import { AppActions } from '../../actions/AppActions'
+import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { useOrbitToolbars } from '../../components/OrbitToolbar'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { BorderBottom } from '../../views/Border'
+import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
+import { Icon } from '../../views/Icon'
+import { WindowControls } from '../../views/WindowControls'
+import OrbitHeaderInput from './OrbitHeaderInput'
 
 export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
@@ -148,6 +148,7 @@ const HeaderContain = gloss({
 
 const HeaderFade = gloss(FullScreen).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
+  lighterBg[3] = 0.15
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
   return {
     background,

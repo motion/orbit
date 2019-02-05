@@ -55,7 +55,7 @@ export default observer(function OrbitHeader() {
           )}
           <HeaderContain>
             <View width={18} alignItems="center" justifyContent="center">
-              <Icon color={theme.color} name={`orbit-${icon}`} size={18} opacity={0.15} />
+              <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
             </View>
 
             <OrbitHeaderInput />

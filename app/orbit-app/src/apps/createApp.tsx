@@ -1,5 +1,5 @@
-import { AppType } from '@mcro/models'
-import { BorderLeft, Button, Row, Theme, View } from '@mcro/ui'
+import { App, AppType } from '@mcro/models'
+import { Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStoresSafe } from '../hooks/useStoresSafe'
@@ -9,9 +9,11 @@ import { AppIcon } from '../views/AppIcon'
 import { BorderTop } from '../views/Border'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
+import VerticalSplitPane from '../views/VerticalSplitPane'
 import { AppProps } from './AppProps'
 import AppsMainNew from './apps/AppsMainNew'
 import { AppView } from './AppView'
+import PreviewApp from './views/PreviewApp'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -54,6 +56,10 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
     [type],
   )
 
+  const app = {
+    type,
+  } as App
+
   return (
     <Row flex={1}>
       <View width="50%">
@@ -70,23 +76,8 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         </Section>
       </View>
 
-      <View width="50%" position="relative">
-        <BorderLeft />
-
-        <Section paddingBottom={0}>
-          <Title>Preview</Title>
-        </Section>
-
-        <View flex={1}>
-          <AppView
-            viewType="index"
-            id={type}
-            type={type}
-            appConfig={{
-              type: type,
-            }}
-          />
-        </View>
+      <VerticalSplitPane>
+        <PreviewApp app={app} />
 
         <Section>
           <BorderTop />
@@ -97,7 +88,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
             </Button>
           </Theme>
         </Section>
-      </View>
+      </VerticalSplitPane>
     </Row>
   )
 })

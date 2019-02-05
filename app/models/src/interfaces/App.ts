@@ -29,6 +29,7 @@ export interface BaseApp {
   type?: string
   pinned?: boolean
   colors?: string[]
+  editable?: boolean
 }
 
 export type AppData = {

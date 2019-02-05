@@ -1,3 +1,4 @@
+import { View } from '@mcro/ui'
 import * as React from 'react'
 import { VerticalSpace } from '.'
 import { Divider } from './Divider'
@@ -11,12 +12,14 @@ export function SubSection({
   children: React.ReactNode
 }) {
   return (
-    <>
+    <View paddingBottom={10}>
       <VerticalSpace small />
-      <SubTitle size={1.3}>{title}</SubTitle>
+      <SubTitle size={1.3} paddingBottom={5}>
+        {title}
+      </SubTitle>
       <Divider padding={5} />
-      <VerticalSpace small />
+      <VerticalSpace />
       {children}
-    </>
+    </View>
   )
 }

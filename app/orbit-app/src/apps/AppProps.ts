@@ -10,6 +10,7 @@ import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { AppStore } from './AppStore'
 
 export type AppProps<Type extends AppType> = {
+  appConfig: AppConfig
   id?: string | number
   viewType?: 'index' | 'main' | 'setup' | 'settings'
   type?: Type
@@ -24,5 +25,4 @@ export type AppProps<Type extends AppType> = {
   subPaneStore?: SubPaneStore
   paneManagerStore?: PaneManagerStore
   itemProps?: Partial<OrbitListItemProps>
-  appConfig?: AppConfig
 }

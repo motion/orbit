@@ -111,10 +111,9 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
     element = <Icon name={icon} {...iconPropsFinal} />
   }
   return (
-    <>
-      {element}
-      <TitleSpace slim={slim} />
-    </>
+    // use a view to ensure consistent width
+    // and add the titlespace
+    <View width={iconSize + (slim ? 8 : 10)}>{element}</View>
   )
 }
 
@@ -408,7 +407,7 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 8,
+  minWidth: 10,
   shouldFlex: {
     flex: 1,
   },

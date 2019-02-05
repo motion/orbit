@@ -1,22 +1,22 @@
+import { ensure, react } from '@mcro/black'
+import { loadMany } from '@mcro/model-bridge'
 import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SlackChannel } from '@mcro/services'
+import { SearchableTable, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
-import { loadMany } from '@mcro/model-bridge'
-import { Text, View, SearchableTable } from '@mcro/ui'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 import { OrbitItemViewProps, OrbitSourceSettingProps } from '../../../types'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
+import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<SlackSource>
 
 class SlackSettingStore {
   props: Props
-  channels: SlackChannel[] = []
 
   syncing = {}
   whitelist = new WhitelistManager({
@@ -24,18 +24,26 @@ class SlackSettingStore {
     getAll: this.getAllFilterIds.bind(this),
   })
 
-  async didMount() {
-    const id = this.props.source.id
-    if (!id) {
-      throw new Error('No ID for source')
-    }
-    const channels = await loadMany(SlackChannelModel, {
-      args: {
-        sourceId: id,
-      },
-    })
-    this.channels = orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
-  }
+  channels = react(
+    () => this.props.source,
+    async source => {
+      ensure('source', !!source)
+      const id = this.props.source.id
+      if (!id) {
+        console.error('no id for source', this.props.source)
+        return []
+      }
+      const channels: SlackChannel[] = await loadMany(SlackChannelModel, {
+        args: {
+          sourceId: id,
+        },
+      })
+      return orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
+    },
+    {
+      defaultValue: [],
+    },
+  )
 
   columnSizes = {
     name: '25%',

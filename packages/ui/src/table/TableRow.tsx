@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row, SimpleText } from '@mcro/gloss'
 import * as React from 'react'
 import FilterRow from './FilterRow'
 import {
@@ -143,10 +143,10 @@ export class TableRow extends React.PureComponent<Props> {
             >
               {isFilterable && onAddFilter != null ? (
                 <FilterRow addFilter={onAddFilter} filterKey={key}>
-                  {value}
+                  <SimpleText>{value}</SimpleText>
                 </FilterRow>
               ) : (
-                value
+                <SimpleText>{value}</SimpleText>
               )}
             </TableBodyColumnContainer>
           )

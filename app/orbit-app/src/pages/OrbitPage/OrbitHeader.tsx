@@ -1,6 +1,6 @@
 import { Absolute, gloss, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Popover, Row, View } from '@mcro/ui'
+import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -8,6 +8,7 @@ import { AppActions } from '../../actions/AppActions'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
@@ -54,7 +55,7 @@ export default observer(function OrbitHeader() {
           )}
           <HeaderContain>
             <View width={18} alignItems="center" justifyContent="center">
-              <Icon color={theme.color} name={`orbit-${icon}`} size={16} opacity={0.15} />
+              <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
             </View>
 
             <OrbitHeaderInput />
@@ -66,36 +67,37 @@ export default observer(function OrbitHeader() {
               </>
             )}
 
-            <FloatingBarButton
-              onClick={queryFilters.toggleSortBy}
-              tooltip={`Sort by: ${queryFilters.sortBy}`}
-              circular
-              icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
-            />
-            <View width={8} />
-            <Popover
-              delay={250}
-              openOnClick
-              openOnHover
-              closeOnClickAway
-              group="filters"
-              target={<FloatingBarButton circular icon="ui-1_calendar-57" />}
-              background
-              borderRadius={10}
-              elevation={4}
-              theme="light"
-              width={420}
-              height={310}
-            >
-              <View flex={1} className="calendar-dom theme-light" padding={10}>
-                <DateRangePicker
-                  onChange={queryFilters.onChangeDate}
-                  ranges={[queryFilters.dateState]}
-                />
-              </View>
-            </Popover>
-            <View width={8} />
-            <OrbitFilterIntegrationButton />
+            <SegmentedRow>
+              <FloatingBarButton
+                onClick={queryFilters.toggleSortBy}
+                tooltip={`Sort by: ${queryFilters.sortBy}`}
+                icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
+              />
+
+              <Popover
+                delay={250}
+                openOnClick
+                openOnHover
+                closeOnClickAway
+                group="filters"
+                target={<FloatingBarButton icon="ui-1_calendar-57" />}
+                background
+                borderRadius={10}
+                elevation={4}
+                theme="light"
+                width={420}
+                height={310}
+              >
+                <View flex={1} className="calendar-dom theme-light" padding={10}>
+                  <DateRangePicker
+                    onChange={queryFilters.onChangeDate}
+                    ranges={[queryFilters.dateState]}
+                  />
+                </View>
+              </Popover>
+
+              <OrbitFilterIntegrationButton />
+            </SegmentedRow>
 
             {/* {!isTorn && <OrbitSpaceSwitch />} */}
 
@@ -129,20 +131,21 @@ export default observer(function OrbitHeader() {
           <View flex={1} />
         </Row>
 
+        {isTorn && <BorderBottom opacity={0.35} />}
         {/* <OrbitAutoComplete /> */}
       </HeaderTop>
-
-      {isTorn && <OrbitHeaderDivider />}
     </>
   )
 })
 
 const HeaderContain = gloss({
+  margin: 'auto',
+  alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
   width: '75%',
   minWidth: 400,
-  maxWidth: 750,
+  maxWidth: 650,
 })
 
 // const OrbitAutoComplete = observer(function OrbitAutoComplete() {
@@ -155,12 +158,6 @@ const HeaderContain = gloss({
 //     </Absolute>
 //   )
 // })
-
-const OrbitHeaderDivider = gloss({
-  height: 1,
-}).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.6),
-}))
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

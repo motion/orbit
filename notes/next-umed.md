@@ -27,6 +27,14 @@ client:
   - [ ] some settings panes are broken
     - check over them all and fix bugs
     - this is actually a medium size task because each pane needs some work
+- easier migration story:
+  - [ ] way to add a column to models without needing them to be recreated
+  - [ ] add a simple `bin` command to add a migration please
+  - [ ] in our recovery script, lets do step 1 of migrations where you:
+    - [ ] dump all models to JSON file in the dataDir directory
+    - [ ] re-create tables
+    - [ ] import JSON into tables and hope it gets the default values
+    - [ ] if it fails just leave a comment for me i'll pick it up
 - backend:
   - [ ] 🐛 small: in Desktop, observable findOne queries don't have exceptions properly handled so its hard to know what query it was and debug args - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method." - adding a try/catch that works and shows the arguments passed would be helpful
         search:

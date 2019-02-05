@@ -104,7 +104,7 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: '#464646',
-    headerBackground: linearGradient([0, 0, 0, 0.45], [0, 0, 0, 0.55]),
+    headerBackground: linearGradient([0, 0, 0, 0.45], [0, 0, 0, 0.52]),
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],

@@ -1,4 +1,4 @@
-import { useObserveOne } from '@mcro/model-bridge'
+import { useModel } from '@mcro/model-bridge'
 import { AppType, SpaceModel } from '@mcro/models'
 import { Col, Row, Text, Theme } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -10,6 +10,7 @@ import {
   HorizontalScroll,
   HorizontalSpace,
   InputRow,
+  SubTitle,
   Title,
   VerticalSpace,
 } from '../../views'
@@ -19,19 +20,19 @@ import { OrbitOrb } from '../../views/OrbitOrb'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppProps'
-import { useModel } from '@mcro/model-bridge'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
-export default observer(function SpaceesAppMain({ appConfig }: AppProps<AppType.settings>) {
+export default observer(function SpacesAppMain({ appConfig }: AppProps<AppType.settings>) {
   const id = +appConfig.id
   const [space] = useModel(SpaceModel, { where: { id } })
   const integrations = useIntegrationsForSpace({ spaceId: id })
   const [colors, setColors] = React.useState(defaultColors)
 
   return (
-    <Section sizePadding={2}>
-      <Title>Manage space: {appConfig.title}</Title>
+    <Section>
+      <SubTitle>Space</SubTitle>
+      <Title>{appConfig.title}</Title>
 
       <SubSection title="General">
         <Text size={1.1}>Customize your space appearance.</Text>

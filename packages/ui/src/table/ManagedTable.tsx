@@ -501,7 +501,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     100,
   )
 
-  getRow = ({ index, style }) => {
+  renderRow = ({ index, style }) => {
     const { onAddFilter, multiline, zebra } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
@@ -542,7 +542,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         <Container>
           {(!sortedRows.length && this.props.bodyPlaceholder) || null}
           {this.props.autoHeight ? (
-            sortedRows.map((_, index) => this.getRow({ index, style: {} }))
+            sortedRows.map((_, index) => this.renderRow({ index, style: {} }))
           ) : (
             <AutoSizer>
               {({ width, height }) => (
@@ -562,7 +562,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
                     onScroll={this.onScroll}
                     height={height}
                   >
-                    {this.getRow}
+                    {this.renderRow}
                   </List>
                 </ContextMenu>
               )}

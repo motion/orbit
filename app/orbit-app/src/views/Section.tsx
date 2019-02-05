@@ -12,6 +12,7 @@ export function Section({ sizePadding = 1, padding, ...props }: SectionProps) {
     <View
       overflowY="auto"
       maxHeight="100%"
+      position="relative"
       padding={padding || [sizePadding * 20, sizePadding * 15]}
       {...props}
     />

@@ -8,7 +8,9 @@ import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
+import { Title } from '../../views'
 import SelectableList from '../../views/Lists/SelectableList'
+import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
@@ -23,12 +25,11 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
 
   const results = [
     {
-      title: 'Apps',
+      title: 'Manage Apps',
       subtitle: `${activeApps.map(x => x.name).join(', ')}`,
       icon: 'orbit-apps-full',
       iconBefore: true,
       iconSize: 12,
-      group: activeSpaceName,
       appConfig: {
         subType: 'manage-apps',
       },
@@ -43,7 +44,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       iconBefore: true,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),
-      group: 'Active Sources',
+      group: 'Sources',
     })),
     ...allSources.map((source, index) => ({
       // ...these have their own onClick
@@ -78,5 +79,12 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
     })),
   ]
 
-  return <SelectableList minSelected={0} items={results} />
+  return (
+    <>
+      <Section paddingBottom={0}>
+        <Title>{activeSpaceName}</Title>
+      </Section>
+      <SelectableList minSelected={0} items={results} />
+    </>
+  )
 })

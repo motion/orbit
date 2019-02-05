@@ -109,7 +109,7 @@ export default observer(function OrbitSpaceSwitch(props: Props) {
         delay={100}
         openOnClick
         closeOnClickAway
-        theme="light"
+        themeName="light"
         width={300}
         background
         borderRadius={borderRadius}

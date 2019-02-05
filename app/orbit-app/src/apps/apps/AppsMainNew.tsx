@@ -26,7 +26,7 @@ export default observer(function AppsMainNew() {
     <>
       <Row alignItems="center">
         <Popover
-          theme="tooltip"
+          themeName="tooltip"
           borderRadius={10}
           elevation={1}
           openOnClick

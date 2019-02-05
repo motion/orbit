@@ -82,7 +82,7 @@ export default observer(function OrbitHeader() {
                 background
                 borderRadius={10}
                 elevation={4}
-                theme="light"
+                themeName="light"
                 width={420}
                 height={310}
               >

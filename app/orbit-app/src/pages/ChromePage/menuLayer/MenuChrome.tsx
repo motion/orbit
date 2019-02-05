@@ -71,7 +71,7 @@ export const MenuChrome = observer(function MenuChrome(props: { children: any })
           forgiveness={pad}
           edgePadding={0}
           elevation={20}
-          theme="dark"
+          themeName="dark"
         />
       </animated.div>
     </>

@@ -143,7 +143,7 @@ const HeaderContain = gloss({
   flexFlow: 'row',
   width: '75%',
   minWidth: 400,
-  maxWidth: 750,
+  maxWidth: 650,
 })
 
 // const OrbitAutoComplete = observer(function OrbitAutoComplete() {

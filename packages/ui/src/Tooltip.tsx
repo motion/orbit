@@ -13,7 +13,7 @@ const defaultOnClick = e => {
   console.log('no click on tooltip')
 }
 
-export const Tooltip = React.forwardRef(
+export const Tooltip = React.forwardRef<any, TooltipProps>(
   (
     {
       themeName = 'tooltip',
@@ -22,7 +22,7 @@ export const Tooltip = React.forwardRef(
       label,
       children,
       ...props
-    }: TooltipProps,
+    },
     ref,
   ) => {
     if (disabled || !label) {
@@ -44,7 +44,7 @@ export const Tooltip = React.forwardRef(
         ignoreSegment
         elevation={1}
         onClick={onClick}
-        theme={themeName}
+        themeName={themeName}
         target={children}
         ref={ref as any}
         {...props}

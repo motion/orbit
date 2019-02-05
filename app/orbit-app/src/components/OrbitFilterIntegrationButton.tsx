@@ -15,9 +15,7 @@ export default observer(function OrbitFilterIntegrationButton(
   const { hasIntegrationFilters, integrationFilters, integrationFilterToggler } = queryFilterStore
   return (
     <Popover
-      delay={250}
       openOnClick
-      openOnHover
       closeOnClickAway
       group="filters"
       background

@@ -275,13 +275,13 @@ const addFolder = (store: ListStore) => {
 const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
   return (
     <Row position="relative">
-      <BorderBottom opacity={0.5} />
+      <BorderBottom opacity={0.25} />
       <Input
         chromeless
         sizeRadius={0}
         paddingLeft={12}
         paddingRight={40}
-        height={35}
+        height={33}
         value={store.query}
         onChange={flow(
           preventDefault,

@@ -48,8 +48,6 @@ export type CustomApp = BaseApp & { type: AppType.custom; data: CustomAppData }
 
 // App
 
-export type GenericApp<A> = BaseApp & { type: any; data: any }
-
 export type AppByType<A extends AppType> = A extends AppType.search
   ? SearchApp
   : A extends AppType.people

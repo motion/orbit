@@ -192,14 +192,14 @@ export default observer(function OrbitNav() {
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Sources"
+          tooltip="Manage Space"
         />
         <OrbitTab
           icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
           thicc
           isActive={paneManagerStore.activePane.type === 'spaces'}
           onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
-          tooltip="Space"
+          tooltip="Spaces"
         />
         {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>

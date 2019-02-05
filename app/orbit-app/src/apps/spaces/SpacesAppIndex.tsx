@@ -21,7 +21,7 @@ export default function SpacesAppIndex() {
   const items = [
     {
       id: `${activeSpace.id}`,
-      group: 'Spaces',
+      group: 'Active Space',
       title: activeSpace.name,
       subtitle: '10 members',
       before: <OrbitOrb size={20} colors={activeSpace.colors} marginRight={12} />,
@@ -30,7 +30,7 @@ export default function SpacesAppIndex() {
     },
     ...inactiveSpaces.map(space => ({
       id: `${space.id}`,
-      group: 'Spaces',
+      group: 'My Spaces',
       subType: 'space',
       title: space.name,
       subtitle: '10 members',
@@ -40,14 +40,15 @@ export default function SpacesAppIndex() {
       },
     })),
     {
-      group: 'Spaces',
-      title: 'Create new space...',
+      group: 'My Spaces',
+      title: 'New',
+      subtitle: 'Create new space...',
       icon: 'add',
-      padding: [16, 11],
-      subType: 'new-space',
-      titleProps: {
-        fontWeight: 300,
+      iconBefore: true,
+      iconProps: {
+        size: 16,
       },
+      subType: 'new-space',
     },
   ]
 

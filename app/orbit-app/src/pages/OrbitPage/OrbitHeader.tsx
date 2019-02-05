@@ -139,6 +139,8 @@ export default observer(function OrbitHeader() {
 })
 
 const HeaderContain = gloss({
+  margin: 'auto',
+  alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
   width: '75%',

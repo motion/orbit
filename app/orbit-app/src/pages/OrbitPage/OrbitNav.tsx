@@ -1,4 +1,4 @@
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
@@ -107,6 +107,8 @@ export default observer(function OrbitNav() {
           items={items}
           shouldCancelStart={isRightClick}
           onSortEnd={handleSortEnd}
+          flex={3000}
+          overflow="hidden"
         />
         {showCreateNew && (
           <OrbitTab
@@ -144,7 +146,7 @@ export default observer(function OrbitNav() {
             transition="all ease-in 100ms"
           />
         )}
-        <View flex={2} />
+        <View flex={1} />
         <OrbitTab
           icon="layers"
           thicc
@@ -202,10 +204,12 @@ const SortableTab = SortableElement((props: TabProps) => {
   return <OrbitTab {...props} />
 })
 
-const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
+type SortableTabsProps = ViewProps & { items: TabProps[] }
+
+const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
   return (
-    <Row>
-      {props.items.map((item, index) => (
+    <Row {...restProps}>
+      {items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
     </Row>

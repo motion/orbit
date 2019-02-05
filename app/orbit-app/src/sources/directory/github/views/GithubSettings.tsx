@@ -1,65 +1,92 @@
-import { react } from '@mcro/black'
-import { loadMany } from '@mcro/model-bridge'
-import { GithubRepositoryModel, GithubSource } from '@mcro/models'
-import { GithubRepository } from '@mcro/services'
+import { loadMany, save } from '@mcro/model-bridge'
+import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitSourceSettingProps<GithubSource>
+export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
 
-class GithubSettingStore {
-  props: Props
-  userOrgs = []
-  sortOrder = {
+  // setup state
+  const [repositories, setRepositories] = useState(null)
+  // console.log('repositories', repositories)
+  const [sortOrder, setSortOrder] = useState({
     key: 'lastCommit',
     direction: 'up',
-  }
-  whitelist = new WhitelistManager({
-    source: this.props.source,
-    getAll: this.getAllFilterIds.bind(this),
   })
+  const [whitelist, setWhitelist] = useState(new WhitelistManager({
+    source,
+    getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
+  }))
 
-  repositories = react(
-    () => this.props.source.id,
-    async sourceId => {
-      return (await loadMany(GithubRepositoryModel, {
-        args: {
-          sourceId,
-        },
-      })) as GithubRepository[]
-    },
-  )
+  // refresh whitelist when source or repositories change
+  useEffect(() => {
 
-  willUnmount() {
-    this.whitelist.dispose()
-  }
+    setWhitelist(new WhitelistManager({
+      source,
+      getAll: () => {
+        return (repositories || []).map(repository => repository.nameWithOwner)
+      },
+    }))
 
-  onSortOrder = newOrder => {
-    this.sortOrder = newOrder
-  }
+    return () => whitelist.dispose();
 
-  private getAllFilterIds() {
-    return (this.repositories || []).map(repository => repository.nameWithOwner)
-  }
-}
+  }, [source.id, JSON.stringify(repositories)])
 
-export default observer(function GithubSettings(props: Props) {
-  const store = useStore(GithubSettingStore, props)
-  console.log('render github.')
+  // load and set repositories when source changes
+  useEffect(() => {
+
+    // for some reason we can get any source here, so filter out everything except github
+    if (source.type !== 'github')
+      return
+
+    // if we have repositories stored in the source - use them at first
+    if (source.data.repositories) {
+      // console.log(`set repositories from source`, source.data.repositories)
+      setRepositories(source.data.repositories)
+    }
+
+    // to make sure we always have a fresh repositories we load them form API
+    loadMany(GithubRepositoryModel, {
+      args: {
+        sourceId: source.id,
+      },
+    }).then(freshApiRepositories => {
+      // console.log(`loaded repositories from remote`, freshApiRepositories)
+
+      // we check if api repositories are changed
+      const sourceRepositories = source.data.repositories
+      if (!freshApiRepositories ||
+        JSON.stringify(sourceRepositories) === JSON.stringify(freshApiRepositories))
+        return
+
+      // console.log(`repositories changed, updating`)
+
+      // then we update source data in the db
+      setRepositories(freshApiRepositories)
+      source.data = {
+        ...source.data,
+        repositories: freshApiRepositories
+      }
+      save(SourceModel, {
+        id: source.id,
+        data: source.data
+      })
+    })
+
+  }, [source.id])
+
   return (
     <>
-      <SettingManageRow source={props.source} whitelist={store.whitelist} />
+      <SettingManageRow source={source} whitelist={whitelist} />
       <View
         flex={1}
-        opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'inherit'}
+        opacity={whitelist.isWhitelisting ? 0.5 : 1}
+        pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
           virtual
@@ -99,13 +126,13 @@ export default observer(function GithubSettings(props: Props) {
             },
           }}
           // onRowHighlighted={this.onRowHighlighted}
-          sortOrder={store.sortOrder}
-          onSort={store.onSortOrder}
+          sortOrder={sortOrder}
+          onSort={setSortOrder}
           multiHighlight
-          rows={(store.repositories || []).map(repository => {
+          rows={(repositories || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             const lastCommit = new Date(repository.pushedAt)
-            const isActive = store.whitelist.whilistStatusGetter(repository.nameWithOwner)
+            const isActive = whitelist.whilistStatusGetter(repository.nameWithOwner)
             return {
               key: `${repository.id}`,
               columns: {
@@ -133,7 +160,7 @@ export default observer(function GithubSettings(props: Props) {
                   sortValue: isActive,
                   value: (
                     <ReactiveCheckBox
-                      onChange={store.whitelist.updateWhitelistValueSetter(
+                      onChange={whitelist.updateWhitelistValueSetter(
                         repository.nameWithOwner,
                       )}
                       isActive={isActive}
@@ -145,11 +172,11 @@ export default observer(function GithubSettings(props: Props) {
           })}
           bodyPlaceholder={
             <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>{store.repositories ? 'No repositories found' : 'Loading...'}</Text>
+              <Text size={1.2}>{repositories ? 'No repositories found' : 'Loading...'}</Text>
             </div>
           }
         />
       </View>
     </>
   )
-})
+}

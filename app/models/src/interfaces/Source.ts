@@ -5,6 +5,13 @@ import { GmailSourceValues } from '../source-values/GmailSourceValues'
 import { JiraSourceValues } from '../source-values/JiraSourceValues'
 import { SlackSourceValues } from '../source-values/SlackSourceValues'
 import { WebsiteSourceValues } from '../source-values/WebsiteSourceValues'
+import { ConfluenceSourceData } from '../source-data/ConfluenceSourceData'
+import { DriveSourceData } from '../source-data/DriveSourceData'
+import { GithubSourceData } from '../source-data/GithubSourceData'
+import { GmailSourceData } from '../source-data/GmailSourceData'
+import { JiraSourceData } from '../source-data/JiraSourceData'
+import { SlackSourceData } from '../source-data/SlackSourceData'
+import { WebsiteSourceData } from '../source-data/WebsiteSourceData'
 import { Space } from './Space'
 
 export type BaseSource = {
@@ -36,17 +43,14 @@ export type BaseSource = {
   updatedAt?: Date
 }
 
-export type GithubSource = BaseSource & { type?: 'github'; values?: GithubSourceValues }
-export type SlackSource = BaseSource & { type?: 'slack'; values?: SlackSourceValues }
-export type DriveSource = BaseSource & { type?: 'drive'; values?: DriveSourceValues }
-export type GmailSource = BaseSource & { type?: 'gmail'; values?: GmailSourceValues }
-export type JiraSource = BaseSource & { type?: 'jira'; values?: JiraSourceValues }
-export type ConfluenceSource = BaseSource & {
-  type?: 'confluence'
-  values?: ConfluenceSourceValues
-}
+export type GithubSource = BaseSource & { type?: 'github', values?: GithubSourceValues, data?: GithubSourceData }
+export type SlackSource = BaseSource & { type?: 'slack', values?: SlackSourceValues, data?: SlackSourceData }
+export type DriveSource = BaseSource & { type?: 'drive', values?: DriveSourceValues, data?: DriveSourceData }
+export type GmailSource = BaseSource & { type?: 'gmail', values?: GmailSourceValues, data?: GmailSourceData }
+export type JiraSource = BaseSource & { type?: 'jira', values?: JiraSourceValues, data?: JiraSourceData }
+export type ConfluenceSource = BaseSource & { type?: 'confluence', values?: ConfluenceSourceValues, data?: ConfluenceSourceData }
 export type AtlassianSource = JiraSource | ConfluenceSource
-export type WebsiteSource = BaseSource & { type?: 'website'; values?: WebsiteSourceValues }
+export type WebsiteSource = BaseSource & { type?: 'website', values?: WebsiteSourceValues, data?: WebsiteSourceData }
 
 export type AllSources = {
   github: GithubSource

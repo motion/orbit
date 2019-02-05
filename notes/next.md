@@ -1,5 +1,14 @@
 nate:
 
+- p2p tests
+- add people to search
+- persist apps into new tabs
+- fix popovers when scrolled down
+- create space pane
+- edit space pane
+- fix onOpen
+- fix send submenu
+
 - keep current items in memory and just filter them on search by title (not fuzzy just match subsection)
 - Opening, movement fixes
 - Submenu for items to favorite or pin to a list
@@ -8,11 +17,6 @@ nate:
   fix search results: open on enter, onOpen broke
   fix tab drag index
   actions menu
-  add people to search
-  fixing tray/menu display and interaction
-  restore menus a bit just actions dropdown + search
-  get ocr hooked into menu enable/disable and output results
-  get ocr => memory simple list
 
 ---
 

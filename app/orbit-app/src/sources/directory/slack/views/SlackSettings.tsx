@@ -30,7 +30,8 @@ class SlackSettingStore {
       ensure('source', !!source)
       const id = this.props.source.id
       if (!id) {
-        throw new Error('No ID for source')
+        console.error('no id for source', this.props.source)
+        return []
       }
       const channels: SlackChannel[] = await loadMany(SlackChannelModel, {
         args: {

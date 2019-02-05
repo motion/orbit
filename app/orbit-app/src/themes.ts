@@ -117,6 +117,7 @@ const dark = {
     tabBackgroundTop: darkBackground.alpha(0.85),
     tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
+    tabBackgroundHover: [255, 255, 255, 0.015],
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [25, 25, 25, 0.62],
     sidebarBorderColor: '#444',

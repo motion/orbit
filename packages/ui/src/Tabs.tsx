@@ -205,7 +205,7 @@ const TabListItem = gloss(Row, {
     background,
     '&:hover': {
       background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease-out 500ms',
+      transition: active ? 'none' : 'all ease 400ms',
     },
   }
 })

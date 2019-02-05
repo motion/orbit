@@ -109,7 +109,7 @@ export class SearchStore {
       //   .map(x => x.name)
       //   .slice(0, 2)
       //   .join(', ')}`,
-      slim: true,
+      // slim: true,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
       type: AppType.apps,
@@ -117,7 +117,7 @@ export class SearchStore {
     }
   }
 
-  getAppsResults(query: string): OrbitListItemProps[] {
+  getRecentItems(query: string): OrbitListItemProps[] {
     // const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
     const searchedApps =
@@ -129,7 +129,7 @@ export class SearchStore {
         slim: true,
         iconBefore: true,
         icon: <AppIcon app={app} />,
-        // group: spaceName,
+        group: 'Top',
         appConfig: {
           type: AppType.message,
           title: `Open ${app.name}`,
@@ -166,7 +166,7 @@ export class SearchStore {
 
   private getQuickResults(query: string) {
     // TODO recent history
-    return [...this.getAppsResults(query)]
+    return [...this.getRecentItems(query)]
   }
 
   searchState = react(

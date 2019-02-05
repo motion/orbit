@@ -88,6 +88,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
                 items: {
                   0: {
                     id: 0,
+                    name: 'Root',
                     type: 'root',
                     children: [],
                   },

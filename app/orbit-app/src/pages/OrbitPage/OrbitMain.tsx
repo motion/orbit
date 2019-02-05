@@ -35,14 +35,13 @@ export default observer(function OrbitMain() {
 // separate view prevents big re-renders
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
-  return (
-    <AppView
-      viewType="main"
-      id={props.pane.id}
-      type={props.pane.type}
-      appConfig={orbitStore.activeConfig[props.pane.type]}
-    />
-  )
+  const appConfig = orbitStore.activeConfig[props.pane.type]
+
+  if (!appConfig) {
+    return null
+  }
+
+  return <AppView viewType="main" id={props.pane.id} type={props.pane.type} appConfig={appConfig} />
 })
 
 const OrbitMainView = gloss(View, {

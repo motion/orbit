@@ -8,6 +8,7 @@ import { AppActions } from '../../actions/AppActions'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
@@ -130,10 +131,9 @@ export default observer(function OrbitHeader() {
           <View flex={1} />
         </Row>
 
+        {isTorn && <BorderBottom opacity={0.35} />}
         {/* <OrbitAutoComplete /> */}
       </HeaderTop>
-
-      {isTorn && <OrbitHeaderDivider />}
     </>
   )
 })
@@ -158,12 +158,6 @@ const HeaderContain = gloss({
 //     </Absolute>
 //   )
 // })
-
-const OrbitHeaderDivider = gloss({
-  height: 1,
-}).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.6),
-}))
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

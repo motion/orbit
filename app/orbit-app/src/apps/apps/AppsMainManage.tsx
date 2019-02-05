@@ -1,15 +1,19 @@
 import { Absolute } from '@mcro/gloss'
+import { App } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
 import React from 'react'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { RoundButton, Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
+import { GetSortableItem } from '../../views/SortableGrid'
 
 export default function AppsMainManage() {
   const activeApps = useActiveAppsSorted()
+  const handleSortEnd = useAppSortHandler()
   const activeItems = activeApps.map(x => ({
     id: x.id,
     title: x.name,
@@ -33,6 +37,8 @@ export default function AppsMainManage() {
       disabled: true,
     },
   ]
+
+  const resultsKey = results.map(x => x.id).join('')
 
   const getItem = React.useCallback(
     (item, { isSelected, select }) => (
@@ -67,14 +73,30 @@ export default function AppsMainManage() {
         </Text>
       </View>
     ),
-    [results.map(x => x.id).join('')],
+    [resultsKey],
+  )
+
+  const getSortableItemProps = React.useCallback<GetSortableItem<App>>(
+    app => {
+      if (app.editable === false) {
+        return {
+          disabled: true,
+        }
+      }
+    },
+    [resultsKey],
   )
 
   return (
     <Section sizePadding={2}>
       <Title>Apps</Title>
-      <SelectableGrid margin="auto" items={results} getItem={getItem} />
-      {/* <OrbitList sortable items={results} /> */}
+      <SelectableGrid
+        margin="auto"
+        items={results}
+        getItem={getItem}
+        onSortEnd={handleSortEnd}
+        getSortableItemProps={getSortableItemProps}
+      />
     </Section>
   )
 }

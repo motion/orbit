@@ -118,7 +118,7 @@ export class SearchStore {
   }
 
   getAppsResults(query: string): OrbitListItemProps[] {
-    const spaceName = this.stores.spaceStore.activeSpace.name
+    // const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
     const searchedApps =
       (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []

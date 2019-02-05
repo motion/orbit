@@ -15,7 +15,7 @@ import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 28
 const inactiveOpacity = 0.45
-const border = 5
+const border = 3
 
 export type TabProps = ViewProps & {
   app?: App

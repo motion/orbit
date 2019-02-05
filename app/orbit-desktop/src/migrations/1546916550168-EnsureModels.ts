@@ -64,6 +64,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               type: AppType.search,
               colors: ['green', 'magenta'],
               pinned: true,
+              editable: false,
               spaceId: space.id,
               data: {},
             },

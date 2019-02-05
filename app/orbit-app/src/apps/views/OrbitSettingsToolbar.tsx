@@ -1,12 +1,10 @@
 import { Tab, Tabs } from '@mcro/ui'
-import { observable } from 'mobx'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
 
-const activePane = observable.box('0')
 const tabIconProps = {
   size: 10,
   marginRight: 8,
@@ -15,52 +13,40 @@ const tabIconProps = {
 
 export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
-  const activePaneKey = activePane.get()
+  const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
+  console.log('activePaneKey', activePaneKey)
   const panes = [
     {
-      key: '0',
+      key: 'sources',
       label: (
         <>
           <Icon name="box" {...tabIconProps} />
           Current Space
         </>
       ),
-      paneType: 'app-sources',
-      onClick: () => {
-        paneManagerStore.setActivePaneByType('sources')
-      },
     },
     {
-      key: '1',
+      key: 'spaces',
       label: (
         <>
           <Icon name="layer" {...tabIconProps} />
           Spaces
         </>
       ),
-      paneType: 'app-spaces',
-      onClick: () => {
-        paneManagerStore.setActivePaneByType('spaces')
-      },
     },
     {
-      key: '2',
+      key: 'settings',
       label: (
         <>
           <Icon name="gear" {...tabIconProps} />
           Settings
         </>
       ),
-      paneType: 'app-settings',
-      onClick: () => {
-        paneManagerStore.setActivePaneByType('settings')
-      },
     },
   ]
   const onActive = React.useCallback(key => {
     if (typeof key === 'string') {
-      panes.find(x => x.key === key).onClick()
-      activePane.set(key)
+      paneManagerStore.setActivePaneByType(key)
     }
   }, [])
   return (

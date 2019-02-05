@@ -195,6 +195,7 @@ export const themes = {
   // },
   tooltip: {
     background: 'rgba(20,20,20,0.94)',
+    backgroundHover: 'rgba(28,28,28,0.94)',
     color: '#fff',
   },
   dark,

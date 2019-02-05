@@ -54,7 +54,7 @@ export default observer(function OrbitHeader() {
             </>
           )}
           <HeaderContain>
-            <View width={18} alignItems="center" justifyContent="center">
+            <View width={24} alignItems="center" justifyContent="center">
               <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
             </View>
 
@@ -71,13 +71,11 @@ export default observer(function OrbitHeader() {
               <FloatingBarButton
                 onClick={queryFilters.toggleSortBy}
                 tooltip={`Sort by: ${queryFilters.sortBy}`}
-                icon={queryFilters.sortBy === 'Relevant' ? 'arrowup' : 'arrowdown'}
+                icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
               />
 
               <Popover
-                delay={250}
                 openOnClick
-                openOnHover
                 closeOnClickAway
                 group="filters"
                 target={<FloatingBarButton icon="ui-1_calendar-57" />}
@@ -145,7 +143,7 @@ const HeaderContain = gloss({
   flexFlow: 'row',
   width: '75%',
   minWidth: 400,
-  maxWidth: 650,
+  maxWidth: 680,
 })
 
 // const OrbitAutoComplete = observer(function OrbitAutoComplete() {

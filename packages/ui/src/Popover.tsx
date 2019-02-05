@@ -1,4 +1,4 @@
-import { Color, CSSPropertySet } from '@mcro/css'
+import { Color } from '@mcro/css'
 import { gloss, Theme } from '@mcro/gloss'
 import { on } from '@mcro/helpers'
 import { Cancelable, debounce, isEqual, isNumber, last, pick } from 'lodash'
@@ -9,9 +9,9 @@ import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
-import { getSurfaceShadow } from './Surface'
+import { getSurfaceShadow, SurfaceProps } from './Surface'
 
-export type PopoverProps = CSSPropertySet & {
+export type PopoverProps = SurfaceProps & {
   // if you set a group, it acts as an ID that makes sure only ONE popover
   // within that ID is ever open
   group?: string
@@ -1007,7 +1007,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               ignoreSegment
               hover={false}
               active={false}
-              overflow="visible"
+              overflow="hidden"
               elevation={elevation}
               noInnerElement
               {...restProps}

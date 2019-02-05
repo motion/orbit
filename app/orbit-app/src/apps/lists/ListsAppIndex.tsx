@@ -112,7 +112,10 @@ class ListStore {
           take: 20,
         },
       })
-      return searchGroupsToResults(results)
+      return searchGroupsToResults(results).map(item => ({
+        ...item,
+        after: <Button margin={['auto', 0, 'auto', 10]} icon="add" />,
+      }))
     },
   )
 

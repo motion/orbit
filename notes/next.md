@@ -22,6 +22,15 @@ nate:
 
 Next:
 
+Search/filtering refactor:
+
+- overmind
+- generic filters for every app
+- redo queryfilter/search filter stuff
+- support: in:github label:x, etc
+
+Next:
+
 - research using google drive + slack as a file store then we can be all local.
 - create new app pane (cnap)
 - cnap - permission on who can see it

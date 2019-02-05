@@ -12,10 +12,11 @@ import { SizedSurface } from './SizedSurface'
 import { getSurfaceShadow, SurfaceProps } from './Surface'
 
 export type PopoverProps = SurfaceProps & {
+  // custom theme for just the popover content
+  themeName?: string
   // if you set a group, it acts as an ID that makes sure only ONE popover
   // within that ID is ever open
   group?: string
-  theme?: string
   // can pass function to get isOpen passed in
   children?: React.ReactNode | PopoverChildrenFn
   // element or function that returns element, or querySelector to element
@@ -923,6 +924,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       width,
       transition,
       noPortal,
+      themeName,
       ...restProps
     } = this.props
     const {
@@ -1022,7 +1024,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       </PopoverContainer>
     )
 
-    const popoverChildren = <Theme name={theme}>{popoverContent}</Theme>
+    const popoverChildren = <Theme name={themeName}>{popoverContent}</Theme>
 
     if (noPortal) {
       return popoverChildren

@@ -1,19 +1,19 @@
 import { AppType } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
-import { appToAppConfig } from '../../helpers/appToAppConfig'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
-import { BorderLeft } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import { Section } from '../../views/Section'
-import { AppView } from '../AppView'
+import VerticalSplitPane from '../../views/VerticalSplitPane'
+import PreviewApp from '../views/PreviewApp'
 
 export const ManageApps = function ManageApps() {
   const apps = useActiveApps()
   const [index, setIndex] = useState(0)
   const selectedApp = apps[index]
+
   if (!selectedApp) {
     return null
   }
@@ -37,18 +37,9 @@ export const ManageApps = function ManageApps() {
         />
       </View>
 
-      <View width="50%" position="relative">
-        <BorderLeft />
-        <Section paddingBottom={0}>
-          <Title>Preview</Title>
-        </Section>
-        <AppView
-          viewType="index"
-          id={selectedApp.id}
-          type={selectedApp.type}
-          appConfig={appToAppConfig(selectedApp)}
-        />
-      </View>
+      <VerticalSplitPane>
+        <PreviewApp app={selectedApp} />
+      </VerticalSplitPane>
     </Row>
   )
 }

@@ -4,9 +4,11 @@ import React, { useState } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
+import { BorderTop } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import { Section } from '../../views/Section'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
+import { AppView } from '../AppView'
 import PreviewApp from '../views/PreviewApp'
 
 export const ManageApps = function ManageApps() {
@@ -24,7 +26,10 @@ export const ManageApps = function ManageApps() {
         <Section paddingBottom={0}>
           <Title>Apps</Title>
         </Section>
+
         <SelectableList
+          dynamicHeight
+          maxHeight={400}
           createNewSelectionStore
           minSelected={0}
           items={apps.map(app => ({
@@ -35,6 +40,11 @@ export const ManageApps = function ManageApps() {
           }))}
           onSelect={setIndex}
         />
+
+        <Section>
+          <BorderTop />
+          <AppView type={selectedApp.type} viewType="settings" />
+        </Section>
       </View>
 
       <VerticalSplitPane>

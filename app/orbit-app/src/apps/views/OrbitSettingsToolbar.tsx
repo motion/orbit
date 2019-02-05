@@ -2,8 +2,10 @@ import { Tab, Tabs } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
+import { SpaceIcon } from '../../views/SpaceIcon'
 
 const tabIconProps = {
   size: 10,
@@ -14,12 +16,14 @@ const tabIconProps = {
 export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
   const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
+  const [activeSpace] = useActiveSpace()
+
   const panes = [
     {
       key: 'sources',
       label: (
         <>
-          <Icon name="box" {...tabIconProps} />
+          {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
           Current Space
         </>
       ),

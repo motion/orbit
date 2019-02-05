@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import { SpaceEntity } from './SpaceEntity.node'
 import { Space } from '../interfaces/Space'
+import { SourceData } from '../source-data/SourceData'
 
 @Entity()
 export class SourceEntity extends BaseEntity {
@@ -39,6 +40,9 @@ export class SourceEntity extends BaseEntity {
 
   @Column('simple-json', { default: '{}' })
   values?: any
+
+  @Column('simple-json', { default: '{}' })
+  data?: SourceData
 
   @CreateDateColumn()
   createdAt?: Date

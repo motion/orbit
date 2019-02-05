@@ -1,97 +1,105 @@
-import { ensure, react } from '@mcro/black'
-import { loadMany } from '@mcro/model-bridge'
-import { SlackChannelModel, SlackSource } from '@mcro/models'
-import { SlackChannel } from '@mcro/services'
+import { loadMany, save } from '@mcro/model-bridge'
+import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { OrbitItemViewProps, OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-type Props = OrbitSourceSettingProps<SlackSource>
+export default function SlackSettings({ source }: OrbitItemViewProps<'slack'> & OrbitSourceSettingProps<SlackSource>) {
 
-class SlackSettingStore {
-  props: Props
-
-  syncing = {}
-  whitelist = new WhitelistManager({
-    source: this.props.source,
-    getAll: this.getAllFilterIds.bind(this),
-  })
-
-  channels = react(
-    () => this.props.source,
-    async source => {
-      ensure('source', !!source)
-      const id = this.props.source.id
-      if (!id) {
-        console.error('no id for source', this.props.source)
-        return []
-      }
-      const channels: SlackChannel[] = await loadMany(SlackChannelModel, {
-        args: {
-          sourceId: id,
-        },
-      })
-      return orderBy(channels, ['is_private', 'num_members'], ['asc', 'desc'])
-    },
-    {
-      defaultValue: [],
-    },
-  )
-
-  columnSizes = {
+  // setup state
+  const [channels, setChannels] = useState(null)
+  const [highlightedRows, setHighlightedRows] = useState([])
+  const columnSizes = {
     name: '25%',
     topic: '25%',
     members: '20%',
     createdAt: '15%',
     active: '15%',
   }
+  // console.log('channels', channels)
+  const [whitelist, setWhitelist] = useState(new WhitelistManager({
+    source,
+    getAll: () => (channels || []).map(channel => channel.id),
+  }))
 
-  handleColumnSize = sizes => {
-    console.log('handling', sizes)
-    this.columnSizes = sizes
-  }
+  // refresh whitelist when source or channels change
+  useEffect(() => {
 
-  highlightedRows = []
+    setWhitelist(new WhitelistManager({
+      source,
+      getAll: () => (channels || []).map(channel => channel.id),
+    }))
 
-  handleEnter = e => {
-    if (this.highlightedRows.length) {
-      e.preventDefault()
-      e.stopPropagation()
+    return () => whitelist.dispose();
+
+  }, [source.id, JSON.stringify(channels)])
+
+  // load and set channels when source changes
+  useEffect(() => {
+
+    // for some reason we can get any source here, so filter out everything except slack
+    if (source.type !== 'slack')
+      return
+
+    // if we have channels stored in the source - use them at first
+    if (source.data.channels) {
+      // console.log(`set channels from source`, props.source.data.channels)
+      const orderedChannels = orderBy(source.data.channels, ['is_private', 'num_members'], ['asc', 'desc'])
+      setChannels(orderedChannels)
     }
-  }
 
-  handleHighlightedRows = rows => {
-    this.highlightedRows = rows
-  }
+    // to make sure we always have a fresh channels we load them form API
+    loadMany(SlackChannelModel, {
+      args: {
+        sourceId: source.id,
+      },
+    }).then(freshApiChannels => {
+      // console.log(`loaded channels from remote`, freshApiRepositories)
 
-  private getAllFilterIds() {
-    return this.channels.map(x => x.id)
-  }
-}
+      // we check if api channels are changed
+      const sourceChannels = source.data.channels
+      if (!freshApiChannels ||
+        JSON.stringify(sourceChannels) === JSON.stringify(freshApiChannels))
+        return
 
-export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'> & Props) {
-  const store = useStore(SlackSettingStore, props)
-  const { source } = props
+      // console.log(`channels changed, updating`)
+
+      // then we update source data in the db
+      const orderedChannels = orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc'])
+      setChannels(orderedChannels)
+      source.data = {
+        ...source.data,
+        channels: freshApiChannels
+      }
+      save(SourceModel, {
+        id: source.id,
+        data: source.data
+      })
+    })
+
+  }, [source.id])
+
+  // const store = useStore(SlackSettingStore, props)
+  // const { source } = props
   return (
     <>
-      <SettingManageRow source={source} whitelist={store.whitelist} />
+      <SettingManageRow source={source} whitelist={whitelist} />
       <View
         flex={1}
-        opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'inherit'}
+        opacity={whitelist.isWhitelisting ? 0.5 : 1}
+        pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
           virtual
           rowLineHeight={28}
           floating={false}
-          columnSizes={store.columnSizes}
+          columnSizes={columnSizes}
           columns={{
             name: {
               value: 'Name',
@@ -119,10 +127,10 @@ export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'
             },
           }}
           multiHighlight
-          onRowHighlighted={store.handleHighlightedRows}
-          rows={store.channels.map((channel, index) => {
+          onRowHighlighted={setHighlightedRows}
+          rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
-            const isActive = store.whitelist.whilistStatusGetter(channel.id)
+            const isActive = whitelist.whilistStatusGetter(channel.id)
             return {
               key: `${index}`,
               columns: {
@@ -147,10 +155,10 @@ export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'
                   ),
                 },
                 active: {
-                  sortValue: store.whitelist.whilistStatusGetter(channel.id),
+                  sortValue: whitelist.whilistStatusGetter(channel.id),
                   value: (
                     <ReactiveCheckBox
-                      onChange={store.whitelist.updateWhitelistValueSetter(channel.id)}
+                      onChange={whitelist.updateWhitelistValueSetter(channel.id)}
                       isActive={isActive}
                     />
                   ),
@@ -167,4 +175,4 @@ export default observer(function SlackSettings(props: OrbitItemViewProps<'slack'
       </View>
     </>
   )
-})
+}

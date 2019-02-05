@@ -34,14 +34,14 @@ export const ModelCache = {
     const entry = this.findEntryByQuery(model, type, query)
     if (!entry) return
 
-    console.log(`removing in 5 seconds`)
+    // console.log(`removing in 5 seconds`)
     if (entry.removeTimer) {
       clearTimeout(entry.removeTimer)
     }
     entry.removeTimer = setTimeout(() => {
       const index = this.entries.indexOf(entry)
       if (index !== -1) this.entries.splice(index, 1)
-      console.log(`removed from cache!`)
+      // console.log(`removed from cache!`)
     }, 5000)
   },
 

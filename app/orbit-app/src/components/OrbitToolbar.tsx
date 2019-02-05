@@ -41,7 +41,6 @@ export function OrbitToolbar(props: ToolbarContextItem) {
     () => {
       if (!isEqual(lastProps.current, props)) {
         lastProps.current = props
-        console.log('setting', id, props)
         toolbarStore.setBars(id, props)
       }
     },

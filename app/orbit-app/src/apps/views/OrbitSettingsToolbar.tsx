@@ -14,7 +14,6 @@ const tabIconProps = {
 export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
   const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
-  console.log('activePaneKey', activePaneKey)
   const panes = [
     {
       key: 'sources',

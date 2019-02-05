@@ -1,3 +1,4 @@
+import { LinearGradient } from './colorHelpers'
 import {
   COLOR_KEYS,
   FALSE_VALUES,
@@ -89,8 +90,12 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = css(value, opts)
       respond = true
     } else if (valueType === 'object') {
-      // bugfix: avoid react elements... TODO make it check the right symbol
-      if (value['$$typeof']) {
+      if (value instanceof LinearGradient) {
+        toReturn[finalKey] = value.toString()
+        continue
+      }
+      // not react element
+      if (value['$$typeof'] === Symbol.for('react.element')) {
         continue
       }
       toReturn[finalKey] = processObject(key, value)

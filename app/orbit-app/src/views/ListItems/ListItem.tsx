@@ -408,7 +408,7 @@ const AfterHeader = gloss({
 })
 
 const TitleSpace = gloss({
-  minWidth: 8,
+  minWidth: 10,
   shouldFlex: {
     flex: 1,
   },

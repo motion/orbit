@@ -133,8 +133,6 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
   const store = useStore(ListStore, props)
   const numItems = Object.keys(store.items).length
 
-  console.log('store.selectedItem', store.selectedItem)
-
   return (
     <>
       <OrbitToolbar

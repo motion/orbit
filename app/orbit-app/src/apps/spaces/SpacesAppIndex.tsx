@@ -6,6 +6,7 @@ import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
 import { OrbitOrb } from '../../views/OrbitOrb'
+import { OrbitSettingsToolbar } from '../sources/SourcesAppIndex'
 
 export default function SpacesAppIndex() {
   const [user = {}, setUser] = useActiveUser()
@@ -43,5 +44,10 @@ export default function SpacesAppIndex() {
     items,
   })
 
-  return <SelectableList minSelected={0} items={results} />
+  return (
+    <>
+      <OrbitSettingsToolbar />
+      <SelectableList minSelected={0} items={results} />
+    </>
+  )
 }

@@ -1,5 +1,7 @@
+import { deep } from '@mcro/black'
+import { useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import isEqual from 'react-fast-compare'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { MergeContext } from '../views/MergeContext'
@@ -8,65 +10,60 @@ type ToolbarContextItem = {
   before?: any
   center?: any
   after?: any
+  children?: any
 }
 
-type ToolbarContextValue = {
-  setToolbar: (id: number, toolbar: React.ReactNode) => void
-  toolbars: {
-    [key: string]: ToolbarContextItem
+export const OrbitToolBarContext = createContext({ toolbarStore: null as ToolbarStore })
+
+class ToolbarStore {
+  bars = deep({})
+  setBars = (id, val) => {
+    this.bars[id] = val
   }
 }
 
-export const OrbitToolBarContext = createContext({
-  setToolbar: null,
-  toolbars: {},
-} as ToolbarContextValue)
-
 export function OrbitToolBarProvider(props: { children: React.ReactNode }) {
-  const [toolbars, setToolbars] = useState({})
+  const toolbarStore = useStore(ToolbarStore)
   return (
-    <MergeContext
-      Context={OrbitToolBarContext}
-      value={{
-        toolbars,
-        setToolbar(id, value) {
-          setToolbars({
-            ...toolbars,
-            [id]: value,
-          })
-        },
-      }}
-    >
+    <MergeContext Context={OrbitToolBarContext} value={{ toolbarStore }}>
       {props.children}
     </MergeContext>
   )
 }
 
 export function OrbitToolbar(props: ToolbarContextItem) {
-  const { setToolbar } = useContext(OrbitToolBarContext)
+  const { toolbarStore } = useContext(OrbitToolBarContext)
   const { appStore } = useStoresSafe()
+  const lastProps = useRef(null)
+  const id = `${appStore.id}`
 
   useEffect(
     () => {
-      setToolbar(+appStore.id, props)
-      return () => {
-        setToolbar(+appStore.id, null)
+      if (!isEqual(lastProps.current, props)) {
+        lastProps.current = props
+        console.log('setting', id, props)
+        toolbarStore.setBars(id, props)
       }
     },
-    [props.before, props.after, props.center],
+    [props],
   )
+
+  useEffect(() => {
+    return () => {
+      toolbarStore.setBars(id, null)
+    }
+  }, [])
 
   return null
 }
 
 export function useOrbitToolbars() {
   const { orbitStore } = useStoresSafe()
-  const { toolbars } = useContext(OrbitToolBarContext)
+  const { toolbarStore } = useContext(OrbitToolBarContext)
   const [bars, setBars] = useState<ToolbarContextItem | false>(false)
 
   useObserver(() => {
-    const appStore = orbitStore.appStores[orbitStore.activePane.id]
-    const next = (appStore && toolbars[appStore.id]) || false
+    const next = toolbarStore.bars[orbitStore.activePane.id] || false
     if (!isEqual(bars, next)) {
       setBars(next)
     }

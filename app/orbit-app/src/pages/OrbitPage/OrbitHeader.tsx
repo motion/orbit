@@ -1,6 +1,6 @@
-import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -99,7 +99,7 @@ export default observer(function OrbitHeader() {
 
             {/* {!isTorn && <OrbitSpaceSwitch />} */}
 
-            {!isTorn && (
+            {/* {!isTorn && (
               <Absolute top={1} right={0}>
                 <Button
                   chromeless
@@ -123,7 +123,7 @@ export default observer(function OrbitHeader() {
                   />
                 </Button>
               </Absolute>
-            )}
+            )} */}
           </HeaderContain>
 
           <View flex={1} />

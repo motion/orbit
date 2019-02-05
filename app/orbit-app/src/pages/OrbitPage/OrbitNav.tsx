@@ -13,7 +13,6 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -109,6 +108,8 @@ export default observer(function OrbitNav() {
           onSortEnd={handleSortEnd}
           flex={3000}
           overflow="hidden"
+          flexWrap="wrap"
+          height={tabHeight}
         />
         {showCreateNew && (
           <OrbitTab
@@ -147,7 +148,53 @@ export default observer(function OrbitNav() {
           />
         )}
         <View flex={1} />
+
         <OrbitTab
+          isActive={paneManagerStore.activePane.type === 'sources'}
+          onClick={paneManagerStore.activePaneByTypeSetter('sources')}
+          iconSize={14}
+          icon="gear"
+        />
+        {/* <Popover
+          openOnHover
+          openOnClick
+          closeOnClickAway
+          group="filters"
+          background
+          borderRadius={10}
+          elevation={4}
+          themeName="tooltip"
+          target={
+
+          }
+        >
+          {[
+            {
+              title: 'Spaces',
+              icon: 'layers',
+            },
+            {
+              title: 'Space setup',
+              icon: 'grid48',
+            },
+            {
+              title: 'Settings',
+              icon: 'gear',
+            },
+          ].map((itemProps, index) => {
+            return (
+              <ListItem
+                key={index}
+                width={200}
+                titleProps={{
+                  fontWeight: 300,
+                }}
+                {...itemProps}
+              />
+            )
+          })}
+        </Popover> */}
+        {/* <OrbitTab
           icon="layers"
           thicc
           isActive={paneManagerStore.activePane.type === 'sources'}
@@ -160,7 +207,7 @@ export default observer(function OrbitNav() {
           isActive={paneManagerStore.activePane.type === 'spaces'}
           onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
           tooltip="Spaces"
-        />
+        /> */}
         {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>

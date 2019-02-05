@@ -5,19 +5,21 @@
  * @format
  */
 
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Orderable } from './Orderable'
 import { Tab } from './Tab'
 
 export type TabsProps = {
+  // height
+  height?: number
   // Callback for when the active tab has changed.
   onActive?: (key: string | void) => void
   // The key of the default active tab.
   defaultActive?: string
   // The key of the currently active tab.
-  active?: string | number | void
+  active?: string | void
   // Tab elements.
   children?: Array<any>
   // Whether the tabs can be reordered by the user.
@@ -39,7 +41,7 @@ export type TabsProps = {
 }
 
 export function Tabs(props: TabsProps) {
-  const { onActive } = props
+  const { onActive, height = 26 } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
   const before = props.before || []
@@ -47,7 +49,6 @@ export function Tabs(props: TabsProps) {
   const tabs = {}
   // a list of keys
   const keys = props.order ? props.order.slice() : []
-  const tabContents = []
   const tabSiblings = []
 
   function add(comps) {
@@ -65,46 +66,41 @@ export function Tabs(props: TabsProps) {
         tabSiblings.push(comp)
         continue
       }
-      const { children, closable, label, onClose, width } = comp.props
-      const key = comp.key == null ? label : comp.key
+      const { closable, label, onClose, width } = comp.props
+      const key = comp.key
       if (typeof key !== 'string') {
-        throw new Error('tab needs a string key or a label')
+        throw new Error('tab needs a string key')
       }
       if (!keys.includes(key)) {
         keys.push(key)
       }
       const isActive: boolean = active === key
-      if (isActive || props.persist === true || comp.props.persist === true) {
-        tabContents.push(
-          <TabContent key={key} hidden={!isActive}>
-            {children}
-          </TabContent>,
-        )
-      }
+
       // this tab has been hidden from the tab bar but can still be selected if it's key is active
       if (comp.props.hidden) {
         continue
       }
       let closeButton
+      const onMouseDown =
+        !isActive && onActive
+          ? (event: MouseEvent) => {
+              if (event.target !== closeButton) {
+                onActive(key)
+              }
+            }
+          : undefined
       tabs[key] = (
         <TabListItem
           key={key}
+          className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
           active={isActive}
-          onMouseDown={
-            !isActive && onActive
-              ? (event: MouseEvent) => {
-                  if (event.target !== closeButton) {
-                    onActive(key)
-                  }
-                }
-              : undefined
-          }
+          onMouseDown={onMouseDown}
         >
-          {comp.props.label}
+          {label}
           {closable && (
-            <CloseButton // eslint-disable-next-line react/jsx-no-bind
-              ref={ref => (closeButton = ref)} // eslint-disable-next-line react/jsx-no-bind
+            <CloseButton
+              ref={ref => (closeButton = ref)}
               onMouseDown={() => {
                 if (isActive && onActive) {
                   const index = keys.indexOf(key)
@@ -147,35 +143,24 @@ export function Tabs(props: TabsProps) {
   }
 
   return (
-    <TabContainer>
+    <>
       <TabList>
         {before}
-        <TabScrollContainer>
+        <div style={{ width: '100%', overflow: 'hidden', height }}>
           <HideScrollBar>{tabList}</HideScrollBar>
-        </TabScrollContainer>
+        </div>
         {after}
       </TabList>
-      {tabContents}
       {tabSiblings}
-    </TabContainer>
+    </>
   )
 }
-
-const TabContainer = gloss(View, {
-  height: 'auto',
-})
 
 const TabList = gloss(Row, {
   flex: 1,
 }).theme((_, theme) => ({
-  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor]],
+  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor || theme.borderColor]],
 }))
-
-const TabScrollContainer = gloss({
-  width: '100%',
-  overflow: 'hidden',
-  height: 25,
-})
 
 const HideScrollBar = gloss({
   flexFlow: 'row',
@@ -192,16 +177,18 @@ const TabListItem = gloss(Row, {
   fontSize: 11,
   fontWeight: 500,
   lineHeight: 22,
+  alignItems: 'center',
   overflow: 'hidden',
   padding: [1, 10],
   position: 'relative',
+  height: '100%',
   justifyContent: 'center',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',
 }).theme(({ active, width }, theme) => {
   const background = active
-    ? theme.tabBackgroundActive || theme.background
+    ? theme.tabBackgroundActive || theme.backgroundActive
     : theme.tabBackground || theme.background
   return {
     width,
@@ -242,10 +229,4 @@ const CloseButton = gloss({
 
 const OrderableContainer = gloss({
   display: 'inline-block',
-})
-
-const TabContent = gloss({
-  height: 'auto',
-  overflow: 'auto',
-  width: '100%',
 })

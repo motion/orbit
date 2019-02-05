@@ -115,6 +115,7 @@ const dark = {
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     tabBackgroundTop: darkBackground.alpha(0.85),
     tabBackgroundBottom: darkBackground,
+    tabBackgroundActive: darkBackground.lighten(0.1),
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [25, 25, 25, 0.62],
     sidebarBorderColor: '#444',

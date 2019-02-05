@@ -10,6 +10,7 @@ import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
@@ -30,6 +31,9 @@ import OrbitSidebar from './OrbitSidebar'
 import { OrbitStore } from './OrbitStore'
 
 export default React.memo(function OrbitPage() {
+  // keep activeSpace.paneSort in sync with activeApps
+  useManagePaneSort()
+
   return (
     <OrbitPageProvideStores>
       <OrbitPageInner />

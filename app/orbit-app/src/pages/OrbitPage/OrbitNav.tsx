@@ -2,7 +2,7 @@ import { gloss, Row } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
-import { flow, isEqual } from 'lodash'
+import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -18,36 +18,9 @@ import { OrbitOrb } from '../../views/OrbitOrb'
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
   const activeApps = useActiveApps()
-  const [space, updateSpace] = useActiveSpace()
+  const [space] = useActiveSpace()
   const [showCreateNew, setShowCreateNew] = React.useState(false)
   const handleSortEnd = useAppSortHandler()
-
-  // when pinned, we need to update paneSort so pinned is always first
-  React.useEffect(
-    () => {
-      if (!space || !activeApps.length) {
-        return
-      }
-      let pinned = []
-      let unpinned = []
-      for (const id of space.paneSort) {
-        const app = activeApps.find(x => x.id === id)
-        if (!app) {
-          continue
-        }
-        if (app.pinned) {
-          pinned.push(id)
-        } else {
-          unpinned.push(id)
-        }
-      }
-      const paneSort = [...pinned, ...unpinned]
-      if (!isEqual(paneSort, space.paneSort)) {
-        updateSpace({ paneSort })
-      }
-    },
-    [space && space.paneSort.join(''), activeApps.map(x => x.pinned).join('')],
-  )
 
   if (orbitStore.isTorn) {
     return null

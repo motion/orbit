@@ -74,7 +74,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
               <Popover
                 towards="right"
                 // selected would otherwise override this theme
-                theme={App.state.isDark ? 'light' : 'dark'}
+                themeName={App.state.isDark ? 'light' : 'dark'}
                 distance={5}
                 width={250}
                 height={300}
@@ -113,7 +113,7 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      <SearchToolbar />
+      <OrbitToolbar center={<OrbitSuggestionBar />} />
       <SelectableList
         minSelected={0}
         items={items}
@@ -122,8 +122,4 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
       />
     </>
   )
-})
-
-const SearchToolbar = observer(function SearchToolbar() {
-  return <OrbitToolbar center={<OrbitSuggestionBar />} />
 })

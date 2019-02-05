@@ -8,9 +8,7 @@ import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
-import { Title } from '../../views'
 import SelectableList from '../../views/Lists/SelectableList'
-import { Section } from '../../views/Section'
 import { AppProps } from '../AppProps'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
@@ -81,9 +79,6 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
 
   return (
     <>
-      <Section paddingBottom={0}>
-        <Title>{activeSpaceName}</Title>
-      </Section>
       <SelectableList minSelected={0} items={results} />
     </>
   )

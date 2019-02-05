@@ -21,7 +21,7 @@ export default observer(function OrbitFilterIntegrationButton(
       background
       borderRadius={10}
       elevation={4}
-      theme="tooltip"
+      themeName="tooltip"
       target={
         <FloatingBarButton icon="funnel">
           {hasIntegrationFilters ? integrationFilters.filter(x => x.active).length : 'All'}

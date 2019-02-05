@@ -72,12 +72,14 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
         </Section>
 
         <Section paddingTop={0}>
-          <AppView type={type} viewType="settings" />
+          <AppView type={type} appConfig={{}} viewType="settings" />
         </Section>
       </View>
 
       <VerticalSplitPane>
         <PreviewApp app={app} />
+
+        <View flex={1} />
 
         <Section>
           <BorderTop />

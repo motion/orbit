@@ -8,7 +8,6 @@ import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import OrbitControls from './OrbitControls'
 
 export default observer(function OrbitMain() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
@@ -24,7 +23,6 @@ export default observer(function OrbitMain() {
     <OrbitMainView width={hasMain ? 'auto' : 0}>
       {paneManagerStore.panes.map(pane => (
         <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
-          <OrbitControls />
           <OrbitPageMainView pane={pane} />
         </SubPane>
       ))}

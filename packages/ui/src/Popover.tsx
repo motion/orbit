@@ -403,12 +403,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   // @ts-ignore
-  resizeObserver = new ResizeObserver((...args) => {
-    console.log('resize', this.props, args)
+  resizeObserver = new ResizeObserver((/* ...args */) => {
+    // console.log('resize', this.props, args)
     this.setPosition()
   })
-  mutationObserver = new MutationObserver((...args) => {
-    console.log('mutations', this.props, args)
+  mutationObserver = new MutationObserver((/* ...args */) => {
+    // console.log('mutations', this.props, args)
     this.setPosition()
   })
 

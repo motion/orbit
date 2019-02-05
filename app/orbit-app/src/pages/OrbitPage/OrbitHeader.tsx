@@ -1,4 +1,4 @@
-import { Absolute, gloss, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -82,7 +82,7 @@ export default observer(function OrbitHeader() {
                 background
                 borderRadius={10}
                 elevation={4}
-                theme="light"
+                themeName="light"
                 width={420}
                 height={310}
               >
@@ -130,8 +130,8 @@ export default observer(function OrbitHeader() {
         </Row>
 
         {isTorn && <BorderBottom opacity={0.35} />}
-        {/* <OrbitAutoComplete /> */}
       </HeaderTop>
+      <HeaderFade />
     </>
   )
 })
@@ -146,16 +146,14 @@ const HeaderContain = gloss({
   maxWidth: 680,
 })
 
-// const OrbitAutoComplete = observer(function OrbitAutoComplete() {
-//   const { orbitStore } = useStoresSafe()
-//   const activeAppStore = orbitStore.appStores[orbitStore.activePane.id]
-//   return null
-//   return (
-//     <Absolute bottom={0} left={0}>
-//       {activeAppStore.toolbar || null}
-//     </Absolute>
-//   )
-// })
+const HeaderFade = gloss(FullScreen).theme((_, theme) => {
+  const lighterBg = theme.headerBackground.getColors()[0]
+  lighterBg[3] = 0.15
+  const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
+  return {
+    background,
+  }
+})
 
 const HeaderTop = gloss(View, {
   flexFlow: 'row',

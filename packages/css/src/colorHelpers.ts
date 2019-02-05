@@ -1,6 +1,25 @@
-import { toColor } from './toColor'
+import { isColor, toColor } from './toColor'
 import { Color } from './types'
 
-export function linearGradient(top: Color, bottom: Color) {
-  return `linear-gradient(${toColor(top)}, ${toColor(bottom)})`
+export type GradientArg = string | Color
+
+export class LinearGradient {
+  items: GradientArg[]
+
+  constructor(items: GradientArg[]) {
+    this.items = items
+  }
+
+  getColors() {
+    return this.items.filter(isColor)
+  }
+
+  toString() {
+    const args = this.items.map(item => (isColor(item) ? toColor(item) : item)).join(', ')
+    return `linear-gradient(${args})`
+  }
+}
+
+export function linearGradient(...args: GradientArg[]) {
+  return new LinearGradient(args)
 }

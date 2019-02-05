@@ -11,36 +11,23 @@ export default function SpacesAppIndex() {
   const [user = {}, setUser] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
   const [allSpaces] = useModels(SpaceModel, {})
-  const activeSpace = allSpaces.find(x => x.id === activeSpaceId)
-  const inactiveSpaces = allSpaces.filter(x => x.id !== activeSpaceId)
-
-  if (!activeSpace) {
-    return null
-  }
 
   const items = [
-    {
-      id: `${activeSpace.id}`,
-      group: 'Active Space',
-      title: activeSpace.name,
-      subtitle: '10 members',
-      before: <OrbitOrb size={20} colors={activeSpace.colors} marginRight={12} />,
-      subType: 'space',
-      after: <Button chromeless circular icon="check" iconSize={12} />,
-    },
-    ...inactiveSpaces.map(space => ({
+    ...allSpaces.map(space => ({
       id: `${space.id}`,
-      group: 'My Spaces',
       subType: 'space',
       title: space.name,
       subtitle: '10 members',
       before: <OrbitOrb size={16} colors={space.colors} marginRight={12} />,
+      after: activeSpaceId === space.id && (
+        <Button chromeless circular icon="check" iconSize={12} />
+      ),
       onOpen: () => {
         setUser({ activeSpace: space.id })
       },
     })),
     {
-      group: 'My Spaces',
+      group: 'Manage',
       title: 'New',
       subtitle: 'Create new space...',
       icon: 'add',

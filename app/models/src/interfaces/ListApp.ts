@@ -16,7 +16,7 @@ type ListItemFilter =
 
 type BaseListItem = {
   id: ItemID
-  name?: string
+  name: string
   icon?: string
   filter?: ListItemFilter
 }

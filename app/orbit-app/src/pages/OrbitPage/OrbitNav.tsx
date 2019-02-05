@@ -150,7 +150,11 @@ export default observer(function OrbitNav() {
         <View flex={1} />
 
         <OrbitTab
-          isActive={paneManagerStore.activePane.type === 'sources'}
+          isActive={
+            paneManagerStore.activePane.type === 'sources' ||
+            paneManagerStore.activePane.type === 'spaces' ||
+            paneManagerStore.activePane.type === 'settings'
+          }
           onClick={paneManagerStore.activePaneByTypeSetter('sources')}
           iconSize={14}
           icon="gear"

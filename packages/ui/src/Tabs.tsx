@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Orderable } from './Orderable'
@@ -38,10 +38,16 @@ export type TabsProps = {
   before?: Array<any>
   // Elements to insert after all tabs in the tab list.
   after?: Array<any>
+  // extra props to pass to each tab
+  tabProps?: ViewProps
+  // extra props to pass to active tab
+  tabPropsActive?: ViewProps
+  // component to render each tab with
+  TabComponent?: any
 }
 
 export function Tabs(props: TabsProps) {
-  const { onActive, height = 26 } = props
+  const { TabComponent = TabListItem, tabProps, tabPropsActive, onActive, height = 26 } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
   const before = props.before || []
@@ -90,10 +96,12 @@ export function Tabs(props: TabsProps) {
             }
           : undefined
       tabs[key] = (
-        <TabListItem
+        <TabComponent
           key={key}
           className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
+          {...tabProps}
+          {...isActive && tabPropsActive}
           active={isActive}
           onMouseDown={onMouseDown}
         >
@@ -113,7 +121,7 @@ export function Tabs(props: TabsProps) {
               X
             </CloseButton>
           )}
-        </TabListItem>
+        </TabComponent>
       )
     }
   }
@@ -174,7 +182,7 @@ const HideScrollBar = gloss({
 })
 
 const TabListItem = gloss(Row, {
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 500,
   lineHeight: 22,
   alignItems: 'center',

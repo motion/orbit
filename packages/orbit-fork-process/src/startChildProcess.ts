@@ -55,6 +55,10 @@ export function startChildProcess({
 
     child.stderr.on('data', b => {
       const out = b.toString()
+      // ignore errors
+      if (out.indexOf('Debugger listening on')) {
+        return
+      }
       if (/error/i.test(out) === false) {
         console.error('\nGot an error that may not be worth reporting:')
         console.error(`${name} error:`, out, '\n\n\n')

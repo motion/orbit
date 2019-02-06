@@ -1,7 +1,7 @@
+import { cleanupChildren } from '@mcro/orbit-fork-process'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import 'isomorphic-fetch'
 import { once } from 'lodash'
-import { cleanupChildren } from './helpers/cleanupChildren'
 
 export async function main() {
   /*

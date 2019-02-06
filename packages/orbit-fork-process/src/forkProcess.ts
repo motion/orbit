@@ -2,6 +2,7 @@ import { exec } from 'child_process'
 import { cleanupChildren } from './cleanupChildren'
 import { ChildProcessProps, startChildProcess } from './startChildProcess'
 
+export { cleanupChildren } from './cleanupChildren'
 export { ChildProcessProps, startChildProcess } from './startChildProcess'
 
 export async function forkProcess(props: ChildProcessProps) {

@@ -1,8 +1,6 @@
 nate:
 
-- p2p tests
 - add people to search
-- persist apps into new tabs
 - fix popovers when scrolled down
 - create space pane
 - edit space pane

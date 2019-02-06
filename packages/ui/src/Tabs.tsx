@@ -95,6 +95,7 @@ export function Tabs(props: TabsProps) {
               }
             }
           : undefined
+
       tabs[key] = (
         <TabComponent
           key={key}

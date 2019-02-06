@@ -18,47 +18,14 @@ export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
   const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
   const [activeSpace] = useActiveSpace()
 
-  const panes = [
-    {
-      key: 'sources',
-      label: (
-        <>
-          {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
-          Current Space
-        </>
-      ),
-    },
-    {
-      key: 'spaces',
-      label: (
-        <>
-          <Icon name="layer" {...tabIconProps} />
-          Spaces
-        </>
-      ),
-    },
-    {
-      key: 'settings',
-      label: (
-        <>
-          <Icon name="gear" {...tabIconProps} />
-          Settings
-        </>
-      ),
-    },
-  ]
   const onActive = React.useCallback(key => {
     if (typeof key === 'string') {
       paneManagerStore.setActivePaneByType(key)
     }
   }, [])
+
   return (
     <OrbitToolbar>
-      <div>
-        <SegmentedRow>
-          <div />
-        </SegmentedRow>
-      </div>
       <View margin={[2, 'auto']} maxWidth={600} width="70%" flex={1}>
         <SegmentedRow>
           <Tabs
@@ -68,9 +35,33 @@ export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
             height={28}
             onActive={onActive}
           >
-            {panes.map(pane => (
-              <Tab key={pane.key} label={pane.label} />
-            ))}
+            <Tab
+              key="sources"
+              label={
+                <>
+                  {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
+                  Current Space
+                </>
+              }
+            />
+            <Tab
+              key="spaces"
+              label={
+                <>
+                  <Icon name="layer" {...tabIconProps} />
+                  Spaces
+                </>
+              }
+            />
+            <Tab
+              key="settings"
+              label={
+                <>
+                  <Icon name="gear" {...tabIconProps} />
+                  Settings
+                </>
+              }
+            />
           </Tabs>
         </SegmentedRow>
       </View>

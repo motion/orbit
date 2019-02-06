@@ -312,6 +312,9 @@ const Element = gloss({
   height: '100%',
   lineHeight: 'inherit',
   color: 'inherit',
+  transform: {
+    y: 0.5,
+  },
   noInnerElement: {
     display: 'none',
   },

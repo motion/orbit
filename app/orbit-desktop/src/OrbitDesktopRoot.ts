@@ -312,7 +312,6 @@ export class OrbitDesktopRoot {
         getBitNearTopicsResolver(this.cosal),
         getPeopleNearTopicsResolver(this.cosal),
         resolveMany(SearchResultModel, async args => {
-          console.log('ok resolve', await new SearchResultResolver(this.cosal, args).resolve())
           return await new SearchResultResolver(this.cosal, args).resolve()
         }),
         getSalientWordsResolver(this.cosal),

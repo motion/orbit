@@ -1,10 +1,18 @@
-import { Cosal } from '@mcro/cosal';
-import { Logger } from '@mcro/logger';
-import { Bit, BitContentType, BitContentTypes, SearchQuery, SearchResult, Source, SourceEntity } from '@mcro/models';
-import { uniq, uniqBy } from 'lodash';
-import { getRepository } from 'typeorm';
-import { SearchQueryExecutor } from '../search/SearchQueryExecutor';
-import { SearchResultUtils } from '../search/SearchResultUtils';
+import { Cosal } from '@mcro/cosal'
+import { Logger } from '@mcro/logger'
+import {
+  Bit,
+  BitContentType,
+  BitContentTypes,
+  SearchQuery,
+  SearchResult,
+  Source,
+  SourceEntity,
+} from '@mcro/models'
+import { uniq, uniqBy } from 'lodash'
+import { getRepository } from 'typeorm'
+import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
+import { SearchResultUtils } from '../search/SearchResultUtils'
 
 /**
  * Resolves search requests.
@@ -148,6 +156,7 @@ export class SearchResultResolver {
    */
   private async search(contentType: BitContentType): Promise<[Bit[], number]> {
     const sourceIds = this.sources.map(source => source.id)
+    this.log.info(`search`, this.sources, this.args)
 
     // parallel search both fts and cosal
     const [ftsResults, cosalResults] = await Promise.all([

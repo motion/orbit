@@ -1,8 +1,7 @@
-import { AppType } from '@mcro/models'
+import { App, AppType } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { BorderTop } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
@@ -12,7 +11,7 @@ import { AppView } from '../AppView'
 import PreviewApp from '../views/PreviewApp'
 
 export const ManageApps = function ManageApps() {
-  const apps = useActiveApps()
+  const apps = useActiveApps() as App[]
   const [index, setIndex] = useState(0)
   const selectedApp = apps[index]
 
@@ -23,10 +22,6 @@ export const ManageApps = function ManageApps() {
   return (
     <Row flex={1}>
       <View width="50%">
-        <Section paddingBottom={0}>
-          <Title>Apps</Title>
-        </Section>
-
         <SelectableList
           dynamicHeight
           maxHeight={400}

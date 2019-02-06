@@ -38,14 +38,11 @@ const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pan
   const appConfig = orbitStore.activeConfig[props.pane.type]
   const hasBars = useHasToolbar(props.pane.id)
 
-  if (!appConfig) {
-    return null
-  }
-
   return (
     <AppView
       before={hasBars && <OrbitControlsHeight />}
       viewType="main"
+      key={appConfig ? appConfig.id : 0}
       id={props.pane.id}
       type={props.pane.type}
       appConfig={appConfig}

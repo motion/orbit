@@ -5,6 +5,10 @@ import { AppProps } from '../AppProps'
 import { ManageApps } from './ManageApps'
 
 export const SourcesAppMain = (props: AppProps<any>) => {
+  if (!props.appConfig) {
+    return null
+  }
+
   const [source] = useModel(
     SourceModel,
     props.appConfig.viewType !== 'setup' && {

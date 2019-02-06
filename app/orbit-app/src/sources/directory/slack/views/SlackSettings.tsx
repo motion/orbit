@@ -7,11 +7,10 @@ import { useEffect, useState } from 'react'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { OrbitItemViewProps, OrbitSourceSettingProps } from '../../../types'
+import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
-export default function SlackSettings({ source }: OrbitItemViewProps<'slack'> & OrbitSourceSettingProps<SlackSource>) {
-
+export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackSource>) {
   // setup state
   const [channels, setChannels] = useState(null)
   const [highlightedRows, setHighlightedRows] = useState([])
@@ -23,70 +22,85 @@ export default function SlackSettings({ source }: OrbitItemViewProps<'slack'> & 
     active: '15%',
   }
   // console.log('channels', channels)
-  const [whitelist, setWhitelist] = useState(new WhitelistManager({
-    source,
-    getAll: () => (channels || []).map(channel => channel.id),
-  }))
-
-  // refresh whitelist when source or channels change
-  useEffect(() => {
-
-    setWhitelist(new WhitelistManager({
+  const [whitelist, setWhitelist] = useState(
+    new WhitelistManager({
       source,
       getAll: () => (channels || []).map(channel => channel.id),
-    }))
+    }),
+  )
 
-    return () => whitelist.dispose();
+  // refresh whitelist when source or channels change
+  useEffect(
+    () => {
+      setWhitelist(
+        new WhitelistManager({
+          source,
+          getAll: () => (channels || []).map(channel => channel.id),
+        }),
+      )
 
-  }, [source.id, JSON.stringify(channels)])
+      return () => whitelist.dispose()
+    },
+    [source.id, JSON.stringify(channels)],
+  )
 
   // load and set channels when source changes
-  useEffect(() => {
+  useEffect(
+    () => {
+      // for some reason we can get any source here, so filter out everything except slack
+      if (source.type !== 'slack') return
 
-    // for some reason we can get any source here, so filter out everything except slack
-    if (source.type !== 'slack')
-      return
-
-    // if we have channels stored in the source - use them at first
-    if (source.data.channels) {
-      // console.log(`set channels from source`, props.source.data.channels)
-      const orderedChannels = orderBy(source.data.channels, ['is_private', 'num_members'], ['asc', 'desc'])
-      setChannels(orderedChannels)
-    }
-
-    // to make sure we always have a fresh channels we load them form API
-    loadMany(SlackChannelModel, {
-      args: {
-        sourceId: source.id,
-      },
-    }).then(freshApiChannels => {
-      // console.log(`loaded channels from remote`, freshApiRepositories)
-
-      // we check if api channels are changed
-      const sourceChannels = source.data.channels
-      if (!freshApiChannels ||
-        JSON.stringify(sourceChannels) === JSON.stringify(freshApiChannels))
-        return
-
-      // console.log(`channels changed, updating`)
-
-      // then we update source data in the db
-      const orderedChannels = orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc'])
-      setChannels(orderedChannels)
-      source.data = {
-        ...source.data,
-        channels: freshApiChannels
+      // if we have channels stored in the source - use them at first
+      if (source.data.channels) {
+        // console.log(`set channels from source`, props.source.data.channels)
+        const orderedChannels = orderBy(
+          source.data.channels,
+          ['is_private', 'num_members'],
+          ['asc', 'desc'],
+        )
+        setChannels(orderedChannels)
       }
-      save(SourceModel, {
-        id: source.id,
-        data: source.data
+
+      // to make sure we always have a fresh channels we load them form API
+      loadMany(SlackChannelModel, {
+        args: {
+          sourceId: source.id,
+        },
+      }).then(freshApiChannels => {
+        // console.log(`loaded channels from remote`, freshApiRepositories)
+
+        // we check if api channels are changed
+        const sourceChannels = source.data.channels
+        if (
+          !freshApiChannels ||
+          JSON.stringify(sourceChannels) === JSON.stringify(freshApiChannels)
+        )
+          return
+
+        // console.log(`channels changed, updating`)
+
+        // then we update source data in the db
+        const orderedChannels = orderBy(
+          freshApiChannels,
+          ['is_private', 'num_members'],
+          ['asc', 'desc'],
+        )
+        setChannels(orderedChannels)
+        source.data = {
+          ...source.data,
+          channels: freshApiChannels,
+        }
+        save(SourceModel, {
+          id: source.id,
+          data: source.data,
+        })
       })
-    })
+    },
+    [source.id],
+  )
 
-  }, [source.id])
+  console.log('channels', channels)
 
-  // const store = useStore(SlackSettingStore, props)
-  // const { source } = props
   return (
     <>
       <SettingManageRow source={source} whitelist={whitelist} />
@@ -127,6 +141,7 @@ export default function SlackSettings({ source }: OrbitItemViewProps<'slack'> & 
             },
           }}
           multiHighlight
+          highlightedRows={highlightedRows}
           onRowHighlighted={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''

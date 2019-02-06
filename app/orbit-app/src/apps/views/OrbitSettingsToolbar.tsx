@@ -33,9 +33,9 @@ export function OrbitSettingsToolbar() {
 
   return (
     <OrbitToolbar>
-      <View margin={[2, 'auto']} maxWidth={500} width="70%" flex={1}>
+      <View margin="auto" maxWidth={500} width="70%" flex={1}>
         <SegmentedRow>
-          <Tabs active={activePaneKey} height={28} onActive={onActive}>
+          <Tabs active={activePaneKey} height={26} onActive={onActive}>
             <Tab
               key="sources"
               label={

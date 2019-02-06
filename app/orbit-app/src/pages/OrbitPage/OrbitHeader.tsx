@@ -142,7 +142,7 @@ const HeaderFade = gloss(FullScreen, {
   zIndex: -1,
 }).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
-  lighterBg[3] = 0.125
+  lighterBg[3] = 0.1
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
   return {
     background,

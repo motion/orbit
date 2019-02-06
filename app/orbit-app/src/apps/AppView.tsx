@@ -18,6 +18,8 @@ export type AppViewProps = Pick<
   title?: string
   appStore?: AppStore<any>
   onAppStore?: Function
+  after?: React.ReactNode
+  before?: React.ReactNode
 }
 
 export type AppViewRef = {
@@ -25,7 +27,7 @@ export type AppViewRef = {
 }
 
 export const AppView = memo(
-  forwardRef<AppViewRef, AppViewProps>(function AppView(props, ref) {
+  forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
     // ensure just one appStore ever is set in this tree
     // warning should never change it if you pass in a prop
@@ -73,6 +75,7 @@ export const AppView = memo(
 
       const appElement = (
         <Contents ref={rootRef}>
+          {before}
           <AppView
             appStore={props.appStore || appStore}
             sourcesStore={stores.sourcesStore}
@@ -83,6 +86,7 @@ export const AppView = memo(
             paneManagerStore={stores.paneManagerStore}
             {...props}
           />
+          {after}
         </Contents>
       )
 

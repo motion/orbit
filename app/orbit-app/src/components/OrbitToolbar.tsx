@@ -15,8 +15,8 @@ type ToolbarContextItem = {
 export const OrbitToolBarContext = createContext({ toolbarStore: null as ToolbarStore })
 
 class ToolbarStore {
-  bars = {}
-  setBars = (id, val) => {
+  bars: { [id: string]: ToolbarContextItem | null } = {}
+  setBars = (id: string, val: ToolbarContextItem | null) => {
     this.bars = {
       ...this.bars,
       [id]: val,

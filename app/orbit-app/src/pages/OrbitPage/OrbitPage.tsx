@@ -1,4 +1,4 @@
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row, View, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -170,7 +170,7 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
   )
 })
 
-const InnerChrome = gloss<{ torn?: boolean }>({
+const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',

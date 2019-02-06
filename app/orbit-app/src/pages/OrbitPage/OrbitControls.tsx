@@ -36,7 +36,7 @@ export default observer(function OrbitControls() {
     <ToolbarChrome hasToolbars={hasToolbars}>
       <ToolbarInner hasToolbars={hasToolbars}>
         {(toolbars && toolbars.children) || getFormattedToolbars()}
-        {hasToolbars && <BorderBottom opacity={0.5} />}
+        {hasToolbars && <BorderBottom opacity={0.25} />}
       </ToolbarInner>
     </ToolbarChrome>
   )

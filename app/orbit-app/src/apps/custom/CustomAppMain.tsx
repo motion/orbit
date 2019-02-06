@@ -64,7 +64,7 @@ export function CustomAppMain(_props: AppProps<AppType.custom>) {
 
       <VerticalSplitPane>
         <BorderLeft />
-        <View position="relative" zIndex={-1} flex={1}>
+        <View position="relative" flex={1}>
           <SearchableTable
             virtual
             rowLineHeight={28}

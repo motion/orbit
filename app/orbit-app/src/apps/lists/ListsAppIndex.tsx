@@ -104,7 +104,7 @@ class ListStore {
         return null
       }
       // make searchresults lower priority than filtered
-      await sleep(80)
+      await sleep(130)
       const results = await loadMany(SearchResultModel, {
         args: {
           spaceId,
@@ -112,6 +112,7 @@ class ListStore {
           take: 20,
         },
       })
+      await sleep(0)
       return searchGroupsToResults(results).map(item => ({
         ...item,
         after: <Button margin={['auto', 0, 'auto', 10]} icon="add" />,

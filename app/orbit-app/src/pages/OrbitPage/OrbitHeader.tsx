@@ -146,7 +146,9 @@ const HeaderContain = gloss({
   maxWidth: 680,
 })
 
-const HeaderFade = gloss(FullScreen).theme((_, theme) => {
+const HeaderFade = gloss(FullScreen, {
+  zIndex: -1,
+}).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
   lighterBg[3] = 0.15
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)

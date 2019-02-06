@@ -1,6 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
+import { forkProcess } from '@mcro/orbit-fork-process'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
@@ -177,6 +178,12 @@ export default observer(function OrbitWindow() {
       app.dock.setIcon(iconPath)
       Electron.setIsTorn()
       orbitShortcutsStore.dispose()
+      forkProcess({
+        name: 'orbit',
+        // TODO we can increment for each new orbit sub-process, need a counter here
+        // inspectPort: 9006,
+        // inspectPortRemote: 9007,
+      })
       require('@mcro/orbit').main({ subOrbit: true })
     })
   }, [])

@@ -1,13 +1,11 @@
 {
   "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
+    "composite": true,
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../../packages/config" },
-    { "path": "../../packages/orbit-fork-process" }
-  ]
+  "references": [{ "path": "../config" }]
 }

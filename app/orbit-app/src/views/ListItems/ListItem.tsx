@@ -93,7 +93,7 @@ export type ListItemProps = CSSPropertySetStrict &
   }
 
 function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
-  let iconSize = iconBefore ? (slim ? 20 : 30) : slim ? 12 : 14
+  let iconSize = iconBefore ? (slim ? 20 : 28) : slim ? 12 : 14
 
   const iconPropsFinal = {
     size: iconSize,
@@ -320,7 +320,7 @@ export default observer(function ListItem(props: ListItemProps) {
           </ListItemMainContent>
           {after}
         </ListItemChrome>
-        <BorderBottom opacity={0.28} />
+        <BorderBottom opacity={0.15} />
       </ListFrame>
     </UI.Theme>
   )

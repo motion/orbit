@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { HorizontalScroll } from '../../views'
+import { BorderBottom } from '../../views/Border'
 
 const height = 32
 
@@ -35,7 +36,7 @@ export default observer(function OrbitControls() {
     <ToolbarChrome>
       <ToolbarInner hasToolbars={!!toolbars}>
         {toolbars.children || getFormattedToolbars()}
-        {/* <BorderBottom opacity={0.5} /> */}
+        <BorderBottom opacity={0.5} />
       </ToolbarInner>
     </ToolbarChrome>
   )

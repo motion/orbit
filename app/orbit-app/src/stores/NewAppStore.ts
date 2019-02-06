@@ -63,9 +63,12 @@ export class NewAppStore {
     }
     this.app = {
       ...this.app,
-      type,
+      // update if not changed
       name,
       colors,
+      // always update
+      type,
+      data: nextApp.data,
     }
   }
 

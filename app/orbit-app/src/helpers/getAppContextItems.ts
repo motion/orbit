@@ -1,5 +1,5 @@
+import { remove } from '@mcro/model-bridge'
 import { App, AppModel } from '@mcro/models'
-import { remove } from 'mobx'
 import { showConfirmDialog } from './electron/showConfirmDialog'
 
 export function getAppContextItems(app: App) {
@@ -13,8 +13,7 @@ export function getAppContextItems(app: App) {
             message: `Deleting this app will remove it from this space and delete it's data.`,
           })
         ) {
-          // TODO @umed
-          remove(AppModel, app as any)
+          remove(AppModel, app)
         }
       },
     },

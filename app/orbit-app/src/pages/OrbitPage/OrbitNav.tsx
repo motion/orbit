@@ -14,6 +14,7 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { BorderBottom } from '../../views/Border'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
@@ -119,9 +120,9 @@ export default observer(function OrbitNav() {
           lockAxis="x"
           distance={8}
           items={items}
+          maxWidth={`calc(100% - ${showCreateNew ? 220 : 120}px)`}
           shouldCancelStart={isRightClick}
           onSortEnd={handleSortEnd}
-          flex={3000}
           overflow="hidden"
           flexWrap="wrap"
           height={tabHeight}
@@ -164,6 +165,7 @@ export default observer(function OrbitNav() {
             transition="all ease-in 100ms"
           />
         )}
+
         <View flex={1} />
 
         <OrbitTab
@@ -177,6 +179,7 @@ export default observer(function OrbitNav() {
           thicc
         />
       </OrbitNavChrome>
+      <BorderBottom zIndex={-1} />
     </OrbitNavClip>
   )
 })
@@ -194,24 +197,13 @@ const OrbitNavClip = gloss({
   transform: {
     y: 0.5,
   },
-}).theme((_, theme) => ({
-  boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
-}))
+})
 
 const OrbitNavChrome = gloss({
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
-  // '& .orbit-tab-inactive.unpinned .tab-icon': {
-  //   transition: 'all ease 300ms',
-  //   opacity: 0,
-  // },
-  // '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
-  //   // transition: 'all ease 1200ms 500ms',
-  //   opacity: 0,
-  // },
-  // background: '#00000099',
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

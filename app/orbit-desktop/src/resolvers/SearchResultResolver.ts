@@ -1,18 +1,10 @@
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
-import {
-  Bit,
-  BitContentType,
-  BitContentTypes,
-  SearchQuery,
-  SearchResult,
-  Source,
-  SourceEntity,
-} from '@mcro/models'
-import { uniq, uniqBy } from 'lodash'
-import { getRepository } from 'typeorm'
-import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
-import { SearchResultUtils } from '../search/SearchResultUtils'
+import { Cosal } from '@mcro/cosal';
+import { Logger } from '@mcro/logger';
+import { Bit, BitContentType, BitContentTypes, SearchQuery, SearchResult, Source, SourceEntity } from '@mcro/models';
+import { uniq, uniqBy } from 'lodash';
+import { getRepository } from 'typeorm';
+import { SearchQueryExecutor } from '../search/SearchQueryExecutor';
+import { SearchResultUtils } from '../search/SearchResultUtils';
 
 /**
  * Resolves search requests.
@@ -140,8 +132,14 @@ export class SearchResultResolver {
     }
     this.log.timer('search in cosal', query)
     const results = await this.cosal.search(query, Math.max(300, this.args.take))
-    const ids = results.map(x => x.id)
-    this.log.timer('search in cosal', { results, ids })
+
+    let ids = []
+    // distance is "relevancy", we can adjust this with testing
+    const lastIndex = results.findIndex(x => x.distance > 0.5)
+    if (lastIndex > 0) {
+      ids = results.slice(0, lastIndex).map(x => x.id)
+    }
+    this.log.timer('search in cosal', ids)
     return ids
   }
 

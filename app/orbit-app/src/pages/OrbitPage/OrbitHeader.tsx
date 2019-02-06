@@ -65,13 +65,7 @@ export default observer(function OrbitHeader() {
               </>
             )}
 
-            <SegmentedRow debug>
-              <FloatingBarButton
-                onClick={queryFilters.toggleSortBy}
-                tooltip={`Sort by: ${queryFilters.sortBy}`}
-                icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
-              />
-
+            <SegmentedRow>
               <Popover
                 openOnClick
                 closeOnClickAway
@@ -148,7 +142,7 @@ const HeaderFade = gloss(FullScreen, {
   zIndex: -1,
 }).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
-  lighterBg[3] = 0.15
+  lighterBg[3] = 0.125
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
   return {
     background,

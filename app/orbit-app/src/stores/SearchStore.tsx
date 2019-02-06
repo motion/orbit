@@ -179,7 +179,7 @@ export class SearchStore {
       this.queryFilters.dateState,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
+    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchState> => {
       if (this.props.paneManagerStore) {
         await when(() => this.props.paneManagerStore.activePane.type === 'search')
       }
@@ -227,6 +227,7 @@ export class SearchStore {
       const { startDate, endDate } = dateState
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
+        await sleep(0)
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,

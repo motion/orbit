@@ -66,6 +66,7 @@ const ToolbarInner = gloss({
   flexFlow: 'row',
   hasToolbars: {
     height,
+    padding: [0, 12],
   },
 })
 

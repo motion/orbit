@@ -1,5 +1,5 @@
-import { loadMany, save } from '@mcro/model-bridge'
-import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
+import { loadMany } from '@mcro/model-bridge'
+import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -90,10 +90,11 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
           ...source.data,
           channels: freshApiChannels,
         }
-        save(SourceModel, {
-          id: source.id,
-          data: source.data,
-        })
+        // TODO @umed commented out because this is deleting spaces property
+        // save(SourceModel, {
+        //   id: source.id,
+        //   data: source.data,
+        // })
       })
     },
     [source.id],

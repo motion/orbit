@@ -21,10 +21,7 @@ export const UIContext = React.createContext({
   inForm: null,
 } as UIContextType)
 
-export const MergeUIContext = ({ value, children }) => (
-  <UIContext.Consumer>
-    {currentValue => (
-      <UIContext.Provider value={{ ...currentValue, ...value }}>{children}</UIContext.Provider>
-    )}
-  </UIContext.Consumer>
-)
+export function MergeUIContext({ value, children }) {
+  const currentValue = React.useContext(UIContext)
+  return <UIContext.Provider value={{ ...currentValue, ...value }}>{children}</UIContext.Provider>
+}

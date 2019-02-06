@@ -64,7 +64,14 @@ export function Breadcrumb({
   )
 }
 
-export function useBreadcrumb() {
+export type BreadcrumbItem = {
+  index: number
+  total: number
+  isFirst: boolean
+  isLast: boolean
+}
+
+export function useBreadcrumb(): BreadcrumbItem {
   const id = useRef(null)
   if (!id.current) {
     id.current = Math.random()
@@ -73,6 +80,7 @@ export function useBreadcrumb() {
   const total = breadcrumbsContext.children.length
   const index = breadcrumbsContext.children.indexOf(id.current)
   const isLast = index === total - 1
+  const isFirst = index === 0
 
   useEffect(() => {
     breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
@@ -81,5 +89,5 @@ export function useBreadcrumb() {
     }
   }, [])
 
-  return { index, total, isLast }
+  return { index, total, isLast, isFirst }
 }

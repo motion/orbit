@@ -12,10 +12,10 @@ import {
   View,
 } from '@mcro/gloss'
 import * as React from 'react'
+import { BreadcrumbItem, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { configure } from './helpers/configure'
-import { UIContext, UIContextType } from './helpers/contexts'
 import { Icon as UIIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { Tooltip } from './Tooltip'
@@ -61,7 +61,6 @@ export type SurfaceProps = CSSPropertySet & {
   theme?: ThemeObject
   tooltip?: string
   tooltipProps?: PopoverProps
-  uiContext?: UIContextType
   width?: number | string
   alpha?: number
   alphaHover?: number
@@ -79,7 +78,7 @@ export type SurfaceProps = CSSPropertySet & {
 }
 
 export const Surface = React.memo(function Surface(props: SurfaceProps) {
-  const uiContext = React.useContext(UIContext)
+  const breadcrumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
 
   React.useEffect(() => {
@@ -121,7 +120,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
   } = props
 
   const Icon = configure.useIcon || UIIcon
-  const segmentedStyle = getSegmentRadius(props, uiContext)
+  const segmentedStyle = getSegmentRadius(props, breadcrumb)
 
   const stringIcon = typeof icon === 'string'
 
@@ -345,20 +344,19 @@ const getIconSize = (props: SurfaceProps) => {
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-const getSegmentRadius = (props, uiContext) => {
+function getSegmentRadius(props: SurfaceProps, item: BreadcrumbItem) {
   // support being inside a segmented list
   let segmentedStyle: any
   if (!props.ignoreSegment) {
-    if (uiContext && uiContext.inSegment) {
-      const { inSegment } = uiContext
+    if (item) {
       segmentedStyle = {
         borderRightRadius: props.borderRadius,
         borderLeftRadius: props.borderRadius,
       }
-      if (inSegment.first) {
+      if (item.isFirst) {
         segmentedStyle.borderRightRadius = 0
         segmentedStyle.borderRightWidth = 0
-      } else if (inSegment.last) {
+      } else if (item.isLast) {
         segmentedStyle.borderLeftRadius = 0
       } else {
         segmentedStyle.borderRightRadius = 0

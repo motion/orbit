@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@mcro/ui'
+import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
@@ -54,11 +54,18 @@ export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
   }, [])
   return (
     <OrbitToolbar>
-      <Tabs active={activePaneKey} height={32} onActive={onActive}>
-        {panes.map(pane => (
-          <Tab key={pane.key} label={pane.label} />
-        ))}
-      </Tabs>
+      <div>
+        <SegmentedRow>
+          <div />
+        </SegmentedRow>
+      </div>
+      <View margin={[2, 'auto']} maxWidth={600} width="70%" flex={1}>
+        <Tabs active={activePaneKey} height={28} onActive={onActive}>
+          {panes.map(pane => (
+            <Tab key={pane.key} label={pane.label} />
+          ))}
+        </Tabs>
+      </View>
     </OrbitToolbar>
   )
 })

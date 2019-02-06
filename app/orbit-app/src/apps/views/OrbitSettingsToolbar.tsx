@@ -1,6 +1,6 @@
-import { Button, SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import React from 'react'
+import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
+import { useObserver } from 'mobx-react-lite'
+import React, { useState } from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -13,10 +13,17 @@ const tabIconProps = {
   color: 'inherit',
 }
 
-export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
+export function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
-  const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
+  const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
   const [activeSpace] = useActiveSpace()
+
+  useObserver(() => {
+    const next = paneManagerStore.activePane.type.replace('app-', '')
+    if (next !== activePaneKey) {
+      setActivePaneKey(next)
+    }
+  })
 
   const onActive = React.useCallback(key => {
     if (typeof key === 'string') {
@@ -26,11 +33,11 @@ export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
 
   return (
     <OrbitToolbar>
-      <View margin={[2, 'auto']} maxWidth={600} width="70%" flex={1}>
+      <View margin={[2, 'auto']} maxWidth={500} width="70%" flex={1}>
         <SegmentedRow>
           <Tabs
-            TabComponent={Button}
-            tabProps={{ glint: false, flex: 1 }}
+            // TabComponent={Button}
+            // tabProps={{ glint: false, flex: 1 }}
             active={activePaneKey}
             height={28}
             onActive={onActive}
@@ -67,4 +74,4 @@ export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
       </View>
     </OrbitToolbar>
   )
-})
+}

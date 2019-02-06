@@ -59,6 +59,7 @@ const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
+    backgroundAlternate: '#f6f7f9',
     background: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
@@ -98,7 +99,7 @@ const darkBackground = color([60, 60, 60])
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    light02: [60, 60, 60],
+    backgroundAlternate: darkBackground.lighten(0.1),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],

@@ -18,11 +18,13 @@ import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
 
 const ROW_HEIGHT = 23
 
-const backgroundColor = props => {
+const backgroundColor = (props, theme) => {
   if (props.selected) {
-    return colors.macOSTitleBarIconSelected
+    return (
+      (theme.selected && theme.selected.background) || theme.backgroundSelected || theme.background
+    )
   } else if (props.even) {
-    return colors.light02
+    return theme.backgroundAlternate
   } else {
     return ''
   }
@@ -38,16 +40,16 @@ const TreeItemsRowContainer = gloss({
   minWidth: '100%',
   paddingRight: 20,
   position: 'relative',
-}).theme(props => {
+}).theme((props, theme) => {
   return {
-    backgroundColor: backgroundColor(props),
+    backgroundColor: backgroundColor(props, theme),
     color: props.selected ? colors.white : colors.grapeDark3,
     paddingLeft: (props.level - 1) * 12,
     '& *': {
       color: props.selected ? `${colors.white} !important` : '',
     },
     '&:hover': {
-      backgroundColor: props.selected ? colors.macOSTitleBarIconSelected : '#EBF1FB',
+      backgroundColor: props.selected ? theme.backgroundActive : theme.backgroundHover,
     },
   }
 })
@@ -63,15 +65,15 @@ const TreeItemsRowDecoration = gloss(Row, {
 })
 
 const TreeItemsLine = gloss({
-  backgroundColor: colors.light20,
   position: 'absolute',
   right: 3,
   top: ROW_HEIGHT - 3,
   zIndex: 2,
   width: 2,
   borderRadius: '999em',
-}).theme(({ childrenCount }) => ({
+}).theme(({ childrenCount }, theme) => ({
   height: childrenCount * ROW_HEIGHT - 4,
+  background: theme.borderColor,
 }))
 
 const DecorationImage = gloss(Image, {
@@ -102,9 +104,8 @@ const TreeItemsRowAttributeValue = gloss({
   color: colors.slateDark3,
 })
 
-const HighlightedText = gloss({
-  backgroundColor: '#ffff33',
-}).theme(({ selected }) => ({
+const HighlightedText = gloss().theme(({ selected }, theme) => ({
+  backgroundColor: theme.backgroundAlternate,
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
 }))
 
@@ -274,6 +275,7 @@ class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowSt
         ))
       : []
 
+    // TODO make this our icon
     const decoration = (() => {
       switch (element.decoration) {
         case 'litho':
@@ -328,7 +330,6 @@ class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowSt
 }
 
 const TreeItemsContainer = gloss(Col, {
-  backgroundColor: colors.white,
   minHeight: '100%',
   minWidth: '100%',
   overflow: 'auto',

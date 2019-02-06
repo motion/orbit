@@ -1,6 +1,14 @@
 import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
+import {
+  Button,
+  ButtonProps,
+  Glint,
+  IconProps,
+  MenuTemplate,
+  Tooltip,
+  useContextMenu,
+} from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
@@ -62,7 +70,7 @@ export function OrbitTab({
       {...contextMenuProps}
       {...props}
     >
-      {/* {isActive && <Glint y={1} borderRadius={border} />} */}
+      {isActive && <Glint y={1} borderRadius={border} />}
       <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
         {!React.isValidElement(icon) && !!icon && (
           <OrbitTabIcon

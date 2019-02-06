@@ -10,6 +10,7 @@ import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
@@ -30,6 +31,9 @@ import OrbitSidebar from './OrbitSidebar'
 import { OrbitStore } from './OrbitStore'
 
 export default React.memo(function OrbitPage() {
+  // keep activeSpace.paneSort in sync with activeApps
+  useManagePaneSort()
+
   return (
     <OrbitPageProvideStores>
       <OrbitPageInner />
@@ -96,10 +100,10 @@ const OrbitHeaderContainer = gloss(View, {
 }))
 
 const defaultPanes = [
-  { id: 'app-settings', name: 'Settings', type: 'settings' },
+  { id: 'app-sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
+  { id: 'app-spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
+  { id: 'app-settings', name: 'Settings', type: 'settings', isHidden: true, keyable: true },
   { id: 'app-apps', name: 'Apps', type: 'apps' },
-  { id: 'app-sources', name: 'Sources', type: 'sources' },
-  { id: 'app-spaces', name: 'Spaces', type: 'spaces' },
   { id: 'app-createApp', name: 'Add app', type: 'createApp' },
   { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
 ]

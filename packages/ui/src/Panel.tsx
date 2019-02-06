@@ -152,7 +152,9 @@ export function Panel(props: PanelProps) {
       <PanelHeader padded={typeof heading === 'string'} onClick={onClick}>
         {collapsable && <Chevron name={collapsed ? 'triangle-right' : 'triangle-down'} size={12} />}
         <View flex={1}>
-          <Text size={0.95}>{heading}</Text>
+          <Text size={0.9} alpha={0.65}>
+            {heading}
+          </Text>
         </View>
         {accessory}
       </PanelHeader>

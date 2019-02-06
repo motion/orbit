@@ -13,9 +13,9 @@ export default observer(function OrbitControls() {
     return null
   }
 
-  return (
-    <ToolbarChrome>
-      <ToolbarInner hasToolbars={!!toolbars}>
+  function getFormattedToolbars() {
+    return (
+      <>
         <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
         <ToolbarCenter>
           {toolbars && toolbars.center && (
@@ -27,6 +27,15 @@ export default observer(function OrbitControls() {
           )}
         </ToolbarCenter>
         <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
+      </>
+    )
+  }
+
+  return (
+    <ToolbarChrome>
+      <ToolbarInner hasToolbars={!!toolbars}>
+        {toolbars.children || getFormattedToolbars()}
+        {/* <BorderBottom opacity={0.5} /> */}
       </ToolbarInner>
     </ToolbarChrome>
   )
@@ -56,7 +65,6 @@ const ToolbarInner = gloss({
   flexFlow: 'row',
   hasToolbars: {
     height,
-    padding: [0, 10],
   },
 })
 

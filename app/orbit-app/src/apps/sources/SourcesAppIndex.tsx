@@ -10,10 +10,11 @@ import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppProps'
+import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
 export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
   const [activeSpace] = useActiveSpace()
-  const activeSpaceName = activeSpace ? activeSpace.name : ''
+  // const activeSpaceName = activeSpace ? activeSpace.name : ''
   const { activeSources, allSources } = props.sourcesStore
   const activeApps = useActiveApps()
 
@@ -79,6 +80,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
 
   return (
     <>
+      <OrbitSettingsToolbar />
       <SelectableList minSelected={0} items={results} />
     </>
   )

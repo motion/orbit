@@ -8,14 +8,17 @@ import React, {
   useReducer,
   useRef,
 } from 'react'
+import { MergeContext } from './helpers/MergeContext'
 import { Text, TextProps } from './Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
-const BreadcrumbsContext = createContext({
+const defaultBreadcrumbContext = {
   children: [],
   dispatch: null as Dispatch<BreadcrumbActions>,
-})
+}
+
+const BreadcrumbsContext = createContext(defaultBreadcrumbContext)
 
 function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbActions) {
   switch (action.type) {
@@ -32,9 +35,11 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
 export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
   return (
-    <BreadcrumbsContext.Provider value={{ dispatch, children: [...state.children] }}>
+    // TODO @umed type issue with dispatch
+    // @ts-ignore
+    <MergeContext Context={BreadcrumbsContext} value={{ dispatch, children: [...state.children] }}>
       <Row alignItems="center" {...props} />
-    </BreadcrumbsContext.Provider>
+    </MergeContext>
   )
 }
 
@@ -64,22 +69,47 @@ export function Breadcrumb({
   )
 }
 
-export function useBreadcrumb() {
-  const id = useRef(null)
-  if (!id.current) {
-    id.current = Math.random()
-  }
-  const breadcrumbsContext = useContext(BreadcrumbsContext)
-  const total = breadcrumbsContext.children.length
-  const index = breadcrumbsContext.children.indexOf(id.current)
-  const isLast = index === total - 1
+export function ResetBreadcrumb(props: { children: any }) {
+  return (
+    <MergeContext Context={BreadcrumbsContext} value={defaultBreadcrumbContext}>
+      {props.children}
+    </MergeContext>
+  )
+}
+
+export type BreadcrumbItem = {
+  index: number
+  total: number
+  isFirst: boolean
+  isLast: boolean
+}
+
+export function useBreadcrumb(): BreadcrumbItem {
+  const idRef = useRef(Math.random())
+  const id = idRef.current
+  const context = useContext(BreadcrumbsContext)
+  const dispatch = context && context.dispatch
 
   useEffect(() => {
-    breadcrumbsContext.dispatch({ type: 'mount', value: id.current })
+    if (!dispatch) return
+    if (context.children.indexOf(id) === -1) {
+      dispatch({ type: 'mount', value: id })
+    }
     return () => {
-      breadcrumbsContext.dispatch({ type: 'unmount', value: id.current })
+      if (context.children.indexOf(id) !== -1) {
+        dispatch({ type: 'unmount', value: id })
+      }
     }
   }, [])
 
-  return { index, total, isLast }
+  if (!dispatch) {
+    return null
+  }
+
+  const total = context.children.length
+  const index = context.children.indexOf(id)
+  const isLast = index === total - 1
+  const isFirst = index === 0
+
+  return { index, total, isLast, isFirst }
 }

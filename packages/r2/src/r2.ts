@@ -1,5 +1,5 @@
-import 'isomorphic-fetch'
 import caseless from 'caseless'
+import 'isomorphic-fetch'
 import toTypedArray from 'typedarray-to-buffer'
 
 const makeHeaders = obj => new Headers(obj)

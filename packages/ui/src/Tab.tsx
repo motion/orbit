@@ -28,10 +28,6 @@ export function Tab(_: {
    * Callback for when tab is closed.
    */
   onClose?: () => void
-  /**
-   * Contents of this tab.
-   */
-  children?: any
 }) {
   console.error("don't render me")
   return null

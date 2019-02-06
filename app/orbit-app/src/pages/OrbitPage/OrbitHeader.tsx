@@ -1,6 +1,6 @@
-import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -17,8 +17,6 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const isOnSettings = activePaneType === 'settings'
-  const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
@@ -67,7 +65,7 @@ export default observer(function OrbitHeader() {
               </>
             )}
 
-            <SegmentedRow>
+            <SegmentedRow debug>
               <FloatingBarButton
                 onClick={queryFilters.toggleSortBy}
                 tooltip={`Sort by: ${queryFilters.sortBy}`}
@@ -99,7 +97,7 @@ export default observer(function OrbitHeader() {
 
             {/* {!isTorn && <OrbitSpaceSwitch />} */}
 
-            {!isTorn && (
+            {/* {!isTorn && (
               <Absolute top={1} right={0}>
                 <Button
                   chromeless
@@ -123,7 +121,7 @@ export default observer(function OrbitHeader() {
                   />
                 </Button>
               </Absolute>
-            )}
+            )} */}
           </HeaderContain>
 
           <View flex={1} />
@@ -146,7 +144,9 @@ const HeaderContain = gloss({
   maxWidth: 680,
 })
 
-const HeaderFade = gloss(FullScreen).theme((_, theme) => {
+const HeaderFade = gloss(FullScreen, {
+  zIndex: -1,
+}).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
   lighterBg[3] = 0.15
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)

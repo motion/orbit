@@ -1,11 +1,14 @@
 import { getGlobalConfig, setGlobalConfig } from '@mcro/config'
-// add fetch abort
-import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+import { ChildProcessProps, startChildProcess } from '@mcro/orbit-fork-process'
 import { ChildProcess } from 'child_process'
 import root from 'global'
+import { join } from 'path'
 import waitOn from 'wait-on'
 import WebSocket from 'ws'
-import { startChildProcess } from './helpers/startChildProcess'
+
+// sort order important
+require('isomorphic-fetch')
+require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 
@@ -14,15 +17,19 @@ Error.stackTraceLimit = Infinity
 
 const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_SYNCERS, IGNORE_ELECTRON } = process.env
 
-export async function main({ subOrbit = false } = {}) {
-  console.log(`starting ${PROCESS_NAME} ${subOrbit ? ' as a sub orbit' : ''}`)
+export async function main() {
+  console.log(`starting ${PROCESS_NAME}`)
 
   // setup config
   if (SUB_PROCESS) {
     setGlobalConfig(JSON.parse(ORBIT_CONFIG))
-  } else if (!subOrbit && !SUB_PROCESS) {
+  } else {
     // first process, set up initial configuration
-    setGlobalConfig(await require('./getInitialConfig').getInitialConfig())
+    setGlobalConfig(
+      await require('./getInitialConfig').getInitialConfig({
+        appEntry: join(__dirname, '..', '_', 'main.js'),
+      }),
+    )
   }
 
   const config = getGlobalConfig()
@@ -79,21 +86,10 @@ export async function main({ subOrbit = false } = {}) {
     // our processes
     // each call pushes the process into the array and then gives them all over to setupHandleExit
     let processes: ChildProcess[] = []
-    const setupProcess = opts => {
+    const setupProcess = (opts: ChildProcessProps) => {
       const p = startChildProcess(opts)
       processes.push(p)
       setupHandleExit(processes)
-    }
-
-    // starting a new orbit as a sub-process
-    if (subOrbit) {
-      setupProcess({
-        name: 'orbit',
-        // TODO we can increment for each new orbit sub-process, need a counter here
-        // inspectPort: 9006,
-        // inspectPortRemote: 9007,
-      })
-      return
     }
 
     // start desktop before starting other processes (it runs the server)...

@@ -4,12 +4,12 @@ import * as Path from 'path'
 import { findContiguousPorts } from './helpers/findContiguousPorts'
 import execa = require('execa')
 
-export async function getInitialConfig(): Promise<GlobalConfig> {
+export async function getInitialConfig({ appEntry }: { appEntry: string }): Promise<GlobalConfig> {
   const isProd = process.env.NODE_ENV !== 'development'
 
   // find a bunch of ports for us to use
   const ports = await findContiguousPorts(14, isProd ? 3333 : 3001)
-  let config
+  let config: GlobalConfig
 
   if (!ports) {
     throw new Error('no ports found!')
@@ -37,6 +37,7 @@ export async function getInitialConfig(): Promise<GlobalConfig> {
   config = {
     isProd,
     paths: {
+      appEntry,
       orbitConfig: Path.join(userData, 'orbit.json'),
       desktopRoot,
       appStatic,

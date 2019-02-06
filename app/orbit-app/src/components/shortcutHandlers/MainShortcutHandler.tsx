@@ -12,6 +12,7 @@ import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
+  commandNew: 'command+n',
   commandOpen: 'command+enter',
   open: ['tab', 'enter'],
   switchSpaces: 'command+k',
@@ -35,10 +36,11 @@ const rootShortcuts = {
 }
 
 export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
-  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { newAppStore, orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   let handlers: any = {
+    commandNew: () => newAppStore.setShowCreateNew(true),
     commandOpen: () => {
       orbitStore.setTorn()
     },
@@ -83,15 +85,15 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
   if (paneManagerStore) {
     handlers = {
       ...handlers,
-      1: () => paneManagerStore.setPaneByKeyableIndex(1 - 1),
-      2: () => paneManagerStore.setPaneByKeyableIndex(2 - 1),
-      3: () => paneManagerStore.setPaneByKeyableIndex(3 - 1),
-      4: () => paneManagerStore.setPaneByKeyableIndex(4 - 1),
-      5: () => paneManagerStore.setPaneByKeyableIndex(5 - 1),
-      6: () => paneManagerStore.setPaneByKeyableIndex(6 - 1),
-      7: () => paneManagerStore.setPaneByKeyableIndex(7 - 1),
-      8: () => paneManagerStore.setPaneByKeyableIndex(8 - 1),
-      9: () => paneManagerStore.setPaneByKeyableIndex(9 - 1),
+      1: () => paneManagerStore.setPaneByKeyableIndex(0),
+      2: () => paneManagerStore.setPaneByKeyableIndex(1),
+      3: () => paneManagerStore.setPaneByKeyableIndex(2),
+      4: () => paneManagerStore.setPaneByKeyableIndex(3),
+      5: () => paneManagerStore.setPaneByKeyableIndex(4),
+      6: () => paneManagerStore.setPaneByKeyableIndex(5),
+      7: () => paneManagerStore.setPaneByKeyableIndex(6),
+      8: () => paneManagerStore.setPaneByKeyableIndex(7),
+      9: () => paneManagerStore.setPaneByKeyableIndex(8),
     }
   }
 

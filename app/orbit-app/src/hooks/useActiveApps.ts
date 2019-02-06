@@ -2,9 +2,9 @@ import { useModels } from '@mcro/model-bridge'
 import { App, AppByType, AppModel, AppType } from '@mcro/models'
 import { useActiveSpace } from './useActiveSpace'
 
-export function useActiveApps<A extends AppType>(
+export function useActiveApps<A extends AppType | undefined>(
   type?: A,
-): A extends undefined ? App : AppByType<A>[] {
+): A extends undefined ? App[] : AppByType<A>[] {
   const [activeSpace] = useActiveSpace()
   let where = { spaceId: activeSpace && activeSpace.id }
   if (type) {

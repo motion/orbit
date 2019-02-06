@@ -78,7 +78,7 @@ export default function AppsMainManage() {
 
   const getSortableItemProps = React.useCallback<GetSortableItem<App>>(
     app => {
-      if (app.editable === false) {
+      if (app.editable === false || app.pinned === true) {
         return {
           disabled: true,
         }

@@ -1,8 +1,7 @@
-import { spawn, ChildProcess } from 'child_process'
 import { getGlobalConfig } from '@mcro/config'
-import * as Path from 'path'
+import { ChildProcess, spawn } from 'child_process'
 
-type Props = {
+export type ChildProcessProps = {
   name: string
   isNode?: boolean
   env?: { [key: string]: any }
@@ -16,10 +15,11 @@ export function startChildProcess({
   inspectPort = null,
   inspectPortRemote = null,
   env = {},
-}: Props): ChildProcess {
+}: ChildProcessProps): ChildProcess {
   const Config = getGlobalConfig()
-  const root = Path.join(__dirname, '..', 'main')
-  let args = [root]
+  console.error('starting process, entry:', Config.paths.appEntry)
+
+  let args = [Config.paths.appEntry]
 
   if (!Config.isProd) {
     if (inspectPort) {
@@ -55,6 +55,14 @@ export function startChildProcess({
 
     child.stderr.on('data', b => {
       const out = b.toString()
+      // ignore errors
+      if (
+        out.indexOf('Debugger listening on') >= 0 ||
+        out.indexOf('Debugger attached.') >= 0 ||
+        out.indexOf('DeprecationWarning:') >= 0
+      ) {
+        return
+      }
       if (/error/i.test(out) === false) {
         console.error('\nGot an error that may not be worth reporting:')
         console.error(`${name} error:`, out, '\n\n\n')

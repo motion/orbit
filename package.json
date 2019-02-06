@@ -31,7 +31,7 @@
     "eslint-plugin-react": "^7.6.1",
     "eslint-plugin-babel": "^5.1.0",
     "typescript-eslint-parser": "21.0.2",
-    "lerna": "3.8.0",
+    "lerna": "3.10.8",
     "mobx": "5.8.0",
     "prettier": "1.15.3",
     "sb-promisify": "^2.0.2",

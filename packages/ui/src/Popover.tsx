@@ -5,6 +5,7 @@ import { Cancelable, debounce, isEqual, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Arrow } from './Arrow'
+import { ResetBreadcrumb } from './Breadcrumbs'
 import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
@@ -914,7 +915,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       overlay,
       passActive,
       popoverProps,
-      shadow,
       showForgiveness,
       style,
       target,
@@ -1002,23 +1002,24 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                 />
               </ArrowContain>
             )}
-            <SizedSurface
-              className="popover-inner-surface"
-              sizeRadius
-              flex={1}
-              ignoreSegment
-              hover={false}
-              active={false}
-              overflow="hidden"
-              elevation={elevation}
-              noInnerElement
-              {...restProps}
-              {...backgroundProp}
-            >
-              {typeof children === 'function'
-                ? (children as PopoverChildrenFn)(showPopover)
-                : children}
-            </SizedSurface>
+            <ResetBreadcrumb>
+              <SizedSurface
+                className="popover-inner-surface"
+                sizeRadius
+                flex={1}
+                hoverStyle={null}
+                activeStyle={null}
+                overflow="hidden"
+                elevation={elevation}
+                noInnerElement
+                {...restProps}
+                {...backgroundProp}
+              >
+                {typeof children === 'function'
+                  ? (children as PopoverChildrenFn)(showPopover)
+                  : children}
+              </SizedSurface>
+            </ResetBreadcrumb>
           </PopoverInner>
         </PopoverWrap>
       </PopoverContainer>

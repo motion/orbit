@@ -1,4 +1,3 @@
-import 'isomorphic-fetch'
 import { once } from 'lodash'
 import { OrbitSyncersRoot } from './OrbitSyncersRoot'
 

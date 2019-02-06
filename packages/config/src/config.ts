@@ -3,6 +3,7 @@
 export type GlobalConfig = {
   isProd: boolean
   paths: {
+    appEntry: string
     orbitConfig: string
     desktopRoot: string
     appStatic: string

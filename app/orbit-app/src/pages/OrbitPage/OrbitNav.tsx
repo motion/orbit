@@ -1,53 +1,26 @@
-import { gloss, Row } from '@mcro/gloss'
-import { save } from '@mcro/model-bridge'
+import { gloss, Row, ViewProps } from '@mcro/gloss'
+import { remove, save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
-import { flow, isEqual } from 'lodash'
+import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { showCreateNew } = newAppStore
   const activeApps = useActiveApps()
-  const [space, updateSpace] = useActiveSpace()
-  const [showCreateNew, setShowCreateNew] = React.useState(false)
+  const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
-
-  // when pinned, we need to update paneSort so pinned is always first
-  React.useEffect(
-    () => {
-      if (!space || !activeApps.length) {
-        return
-      }
-      let pinned = []
-      let unpinned = []
-      for (const id of space.paneSort) {
-        const app = activeApps.find(x => x.id === id)
-        if (!app) {
-          continue
-        }
-        if (app.pinned) {
-          pinned.push(id)
-        } else {
-          unpinned.push(id)
-        }
-      }
-      const paneSort = [...pinned, ...unpinned]
-      if (!isEqual(paneSort, space.paneSort)) {
-        updateSpace({ paneSort })
-      }
-    },
-    [space && space.paneSort.join(''), activeApps.map(x => x.pinned).join('')],
-  )
 
   if (orbitStore.isTorn) {
     return null
@@ -98,20 +71,29 @@ export default observer(function OrbitNav() {
                 type: 'separator',
               },
               {
-                label: 'Toggle Pinned',
-                checked: isPinned,
+                label: isPinned ? 'Unpin' : 'Pin',
                 click() {
                   // TODO umed type not accepting
                   save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },
               {
-                label: 'Remove tab',
+                label: 'Remove',
+                click() {
+                  if (
+                    showConfirmDialog({
+                      title: 'Are you sure you want to delete this app?',
+                      message: `Deleting this app will remove it from this space and delete it's data.`,
+                    })
+                  ) {
+                    remove(AppModel, app)
+                  }
+                },
               },
             ]
           },
           onClick: () => {
-            setShowCreateNew(false)
+            newAppStore.setShowCreateNew(false)
             paneManagerStore.setActivePane(`${app.id}`)
           },
           onClickPopout:
@@ -124,6 +106,11 @@ export default observer(function OrbitNav() {
     )
     .filter(Boolean)
 
+  const isOnSettings =
+    paneManagerStore.activePane.type === 'sources' ||
+    paneManagerStore.activePane.type === 'spaces' ||
+    paneManagerStore.activePane.type === 'settings'
+
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
@@ -134,6 +121,12 @@ export default observer(function OrbitNav() {
           items={items}
           shouldCancelStart={isRightClick}
           onSortEnd={handleSortEnd}
+          flex={3000}
+          overflow="hidden"
+          flexWrap="wrap"
+          height={tabHeight}
+          opacity={isOnSettings ? 0.5 : 1}
+          transition="opacity ease 300ms"
         />
         {showCreateNew && (
           <OrbitTab
@@ -149,7 +142,7 @@ export default observer(function OrbitNav() {
                 onClick={flow(
                   preventDefault,
                   () => {
-                    setShowCreateNew(false)
+                    newAppStore.setShowCreateNew(false)
                     paneManagerStore.back()
                   },
                 )}
@@ -164,29 +157,25 @@ export default observer(function OrbitNav() {
             icon={showCreateNew ? 'remove' : 'add'}
             iconAdjustOpacity={-0.2}
             onClick={async () => {
-              setShowCreateNew(true)
+              newAppStore.setShowCreateNew(true)
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
               paneManagerStore.setActivePane('app-createApp')
             }}
             transition="all ease-in 100ms"
           />
         )}
-        <View flex={2} />
+        <View flex={1} />
+
         <OrbitTab
-          icon="layers"
+          isActive={isOnSettings}
+          onClick={() => {
+            paneManagerStore.setActivePaneByType('sources')
+            newAppStore.setShowCreateNew(false)
+          }}
+          iconSize={14}
+          icon="gear"
           thicc
-          isActive={paneManagerStore.activePane.type === 'sources'}
-          onClick={paneManagerStore.activePaneByTypeSetter('sources')}
-          tooltip="Manage Space"
         />
-        <OrbitTab
-          icon={<OrbitOrb colors={[[150, 150, 150, 0.3], [150, 150, 180, 0.3]]} size={12} />}
-          thicc
-          isActive={paneManagerStore.activePane.type === 'spaces'}
-          onClick={paneManagerStore.activePaneByTypeSetter('spaces')}
-          tooltip="Spaces"
-        />
-        {/* <OrbitTab icon={<OrbitSpaceSwitch width={12} height={12} />} thicc /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -229,10 +218,12 @@ const SortableTab = SortableElement((props: TabProps) => {
   return <OrbitTab {...props} />
 })
 
-const SortableTabs = SortableContainer((props: { items: TabProps[] }) => {
+type SortableTabsProps = ViewProps & { items: TabProps[] }
+
+const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
   return (
-    <Row>
-      {props.items.map((item, index) => (
+    <Row {...restProps}>
+      {items.map((item, index) => (
         <SortableTab {...item} key={index} index={index} />
       ))}
     </Row>

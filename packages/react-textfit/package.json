@@ -5,6 +5,10 @@
   "main": "_/Textfit.js",
   "sideEffects": false,
   "license": "MIT",
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"

@@ -1,17 +1,17 @@
-import { App, AppType } from '@mcro/models'
+import { App, AppType, BaseApp } from '@mcro/models'
 
 export const defaultApps: App[] = [
   {
     target: 'app',
     name: 'Search',
-    type: 'search',
+    type: AppType.search,
     colors: ['red'],
     data: {},
   },
   {
     target: 'app',
     name: 'List',
-    type: 'lists',
+    type: AppType.lists,
     colors: ['blue'],
     data: {
       rootItemID: 0,
@@ -21,34 +21,41 @@ export const defaultApps: App[] = [
   {
     target: 'app',
     name: 'Directory',
-    type: 'people',
+    type: AppType.people,
     colors: ['green'],
     data: {},
   },
   {
     target: 'app',
     name: 'Custom',
-    type: 'custom',
+    type: AppType.custom,
     colors: ['gray'],
     data: {},
   },
 ]
 
+type GenericApp = BaseApp & { data: any; type: string }
+
 export class NewAppStore {
-  app: App = defaultApps[0]
+  showCreateNew = false
+
+  setShowCreateNew = (val: boolean) => {
+    this.showCreateNew = val
+  }
+
+  app: GenericApp = defaultApps[0]
 
   update(app: Partial<App>) {
     this.app = {
       ...this.app,
       ...app,
-    } as App
+    }
   }
 
   setApp(type: AppType) {
     this.app = {
       ...this.app,
       type,
-      data: {},
     }
   }
 

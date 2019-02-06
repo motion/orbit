@@ -184,7 +184,7 @@ const NavButtonChrome = gloss<TabProps>({
 
   return {
     padding: [0, sidePad],
-    minWidth: stretch ? 150 : 0,
+    width: stretch ? 150 : 'auto',
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
@@ -213,7 +213,7 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: -0.5,
+    y: -1,
     x: 0.5,
   },
   width: 1,

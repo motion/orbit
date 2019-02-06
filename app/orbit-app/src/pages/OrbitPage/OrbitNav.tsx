@@ -1,7 +1,9 @@
+import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -15,10 +17,27 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Pane } from '../../stores/PaneManagerStore'
 import { BorderBottom } from '../../views/Border'
+
+const isOnSettings = (pane: Pane) =>
+  pane.type === 'sources' || pane.type === 'spaces' || pane.type === 'settings'
+
+class OrbitNavStore {
+  stores = useHook(useStoresSafe)
+
+  previousTabID = react(
+    () => this.stores.paneManagerStore.activePane,
+    pane => {
+      ensure('not on settings', !isOnSettings(pane))
+      return pane.id
+    },
+  )
+}
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeApps = useActiveApps()
   const [space] = useActiveSpace()
@@ -96,11 +115,6 @@ export default observer(function OrbitNav() {
     )
     .filter(Boolean)
 
-  const isOnSettings =
-    paneManagerStore.activePane.type === 'sources' ||
-    paneManagerStore.activePane.type === 'spaces' ||
-    paneManagerStore.activePane.type === 'settings'
-
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
@@ -158,10 +172,14 @@ export default observer(function OrbitNav() {
         <View flex={1} />
 
         <OrbitTab
-          isActive={isOnSettings}
+          isActive={isOnSettings(paneManagerStore.activePane)}
           onClick={() => {
-            paneManagerStore.setActivePaneByType('sources')
             newAppStore.setShowCreateNew(false)
+            if (isOnSettings(paneManagerStore.activePane)) {
+              paneManagerStore.setActivePane(store.previousTabID)
+            } else {
+              paneManagerStore.setActivePaneByType('sources')
+            }
           }}
           iconSize={14}
           icon="gear"

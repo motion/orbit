@@ -51,9 +51,9 @@ export const AppView = memo(
     useEffect(
       () => {
         if (!ref) return
-        const current = {
-          hasView: !!AppView && !!findDOMNode(rootRef.current).firstChild,
-        }
+        if (!rootRef.current) return
+        const hasView = !!AppView && !!findDOMNode(rootRef.current).firstChild
+        const current = { hasView }
         if (typeof ref === 'function') {
           ref(current)
         } else {
@@ -65,7 +65,7 @@ export const AppView = memo(
           }
         }
       },
-      [ref],
+      [ref, rootRef.current],
     )
 
     const appElement = useMemo(() => {

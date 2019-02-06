@@ -14,9 +14,11 @@ import { BorderTop } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitControlsHeight } from './OrbitControls'
 
+type AppViewRefDictionary = { [key: string]: AppViewRef }
+
 export default observer(function OrbitSidebar() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
-  const [indexRef, setIndexRef] = React.useState<{ [key: string]: AppViewRef }>({})
+  const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
   const { activePane } = orbitStore
 
   if (!activePane) {
@@ -65,7 +67,7 @@ export function useHasToolbar(paneId: string) {
 const SidebarSubPane = React.memo(function SidebarSubPane(props: {
   pane: Pane
   setIndexRef: Function
-  indexRef: any
+  indexRef: AppViewRefDictionary
   hasMain: boolean
 }) {
   const { orbitStore } = useStoresSafe()
@@ -77,8 +79,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
         <AppView
           ref={state => {
-            if (!state || isEqual(state, indexRef[pane.id])) return
-            console.log('set', pane.id, state)
+            if (isEqual(state, indexRef[pane.id])) return
             setIndexRef({ ...indexRef, [pane.id]: state })
           }}
           viewType="index"

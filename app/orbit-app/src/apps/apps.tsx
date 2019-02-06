@@ -5,6 +5,7 @@ import { AppProps } from './AppProps'
 import { apps as appsApps } from './apps/index'
 import { bit } from './bit'
 import { createApp } from './createApp'
+import { custom } from './custom/custom'
 import { lists } from './lists'
 import { onboard } from './onboard'
 import { people } from './people/people'
@@ -34,6 +35,7 @@ export const apps: AppsIndex = {
   apps: appsApps,
   onboard,
   createApp,
+  custom,
   message: {
     main: props => <MessageViewMain {...props.appConfig} />,
     index: () => <div>empty main</div>,

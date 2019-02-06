@@ -115,6 +115,8 @@ export default observer(function OrbitNav() {
     )
     .filter(Boolean)
 
+  const onSettings = isOnSettings(paneManagerStore.activePane)
+
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
@@ -129,7 +131,7 @@ export default observer(function OrbitNav() {
           overflow="hidden"
           flexWrap="wrap"
           height={tabHeight}
-          opacity={isOnSettings ? 0.5 : 1}
+          opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"
         />
         {showCreateNew && (
@@ -159,7 +161,7 @@ export default observer(function OrbitNav() {
             tooltip={showCreateNew ? 'Cancel' : 'Add'}
             thicc
             icon={showCreateNew ? 'remove' : 'add'}
-            iconAdjustOpacity={-0.2}
+            iconAdjustOpacity={-0.1}
             onClick={async () => {
               newAppStore.setShowCreateNew(true)
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
@@ -172,10 +174,10 @@ export default observer(function OrbitNav() {
         <View flex={1} />
 
         <OrbitTab
-          isActive={isOnSettings(paneManagerStore.activePane)}
+          isActive={onSettings}
           onClick={() => {
             newAppStore.setShowCreateNew(false)
-            if (isOnSettings(paneManagerStore.activePane)) {
+            if (onSettings) {
               paneManagerStore.setActivePane(store.previousTabID)
             } else {
               paneManagerStore.setActivePaneByType('sources')

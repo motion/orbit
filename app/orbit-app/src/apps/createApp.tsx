@@ -7,7 +7,6 @@ import React, { useEffect } from 'react'
 import { useActiveSpace } from '../hooks/useActiveSpace'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
-import { Title } from '../views'
 import { AppIcon } from '../views/AppIcon'
 import { BorderTop } from '../views/Border'
 import SelectableList from '../views/Lists/SelectableList'
@@ -27,9 +26,6 @@ const descriptions = {
 function CreateAppIndex() {
   return (
     <>
-      <Section paddingBottom={0}>
-        <Title>Choose type</Title>
-      </Section>
       <SelectableList
         items={defaultApps.map(app => ({
           title: app.name,
@@ -75,14 +71,13 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.cr
     // not sure why, but can you check into i?
     // @ts-ignore
     save(AppModel, app as SaveOptions<App>)
+    newAppStore.setShowCreateNew(true)
   }
 
   return (
     <Row flex={1}>
       <View width="50%">
-        <Section paddingBottom={0}>
-          <Title>Setup</Title>
-        </Section>
+        {/* <SectionTitle>Setup</SectionTitle> */}
 
         <Section paddingTop={0}>
           <AppsMainNew />

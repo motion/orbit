@@ -54,7 +54,7 @@ const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
   justifyContent: 'center',
 }).theme(({ hasToolbars }, theme) => ({
-  zIndex: hasToolbars ? 1000 : -1,
+  zIndex: hasToolbars ? 1000000000 : -1,
   background: hasToolbars ? theme.tabBackgroundBottom || theme.background : 'transparent',
 }))
 

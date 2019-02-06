@@ -19,6 +19,8 @@ type AppViewRefDictionary = { [key: string]: AppViewRef }
 export default observer(function OrbitSidebar() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
   const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
+  const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+  const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
   const { activePane } = orbitStore
 
   if (!activePane) {
@@ -30,17 +32,24 @@ export default observer(function OrbitSidebar() {
   const hasIndexContent = !indexRef[activePane.id] || indexRef[activePane.id].hasView === true
   const hasMain = !!app.main
 
-  let sidebarWidth = 0
-  if (hasIndex && hasIndexContent) {
-    if (hasMain) {
-      sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
-    } else {
-      sidebarWidth = window.innerWidth
+  const actualWidth = (() => {
+    let next = 0
+    if (hasIndex && hasIndexContent) {
+      if (hasMain) {
+        next = sidebarWidth
+      } else {
+        next = window.innerWidth
+      }
     }
+    return next
+  })()
+
+  const handleResize = width => {
+    setSidebarWidth(width)
   }
 
   return (
-    <Sidebar width={sidebarWidth} minWidth={100} maxWidth={500}>
+    <Sidebar width={actualWidth} onResize={handleResize} minWidth={100} maxWidth={500}>
       <OrbitIndexView>
         <BorderTop />
         {paneManagerStore.panes.map(pane => {

@@ -20,8 +20,8 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { BorderBottom } from '../../views/Border'
 
-const isOnSettings = (pane: Pane) =>
-  pane.type === 'sources' || pane.type === 'spaces' || pane.type === 'settings'
+const isOnSettings = (pane?: Pane) =>
+  (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {
   stores = useHook(useStoresSafe)
@@ -43,7 +43,7 @@ export default observer(function OrbitNav() {
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
-  if (orbitStore.isTorn) {
+  if (orbitStore.isTorn || !paneManagerStore.activePane) {
     return null
   }
 

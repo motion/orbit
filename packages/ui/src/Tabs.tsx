@@ -166,9 +166,7 @@ export function Tabs(props: TabsProps) {
 
 const TabList = gloss(Row, {
   flex: 1,
-}).theme((_, theme) => ({
-  boxShadow: [[0.5, 0, 0, 0.5, theme.borderBottomColor || theme.borderColor]],
-}))
+})
 
 const HideScrollBar = gloss({
   flexFlow: 'row',

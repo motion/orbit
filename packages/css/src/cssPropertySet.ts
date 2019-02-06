@@ -1140,6 +1140,7 @@ export type OriginalCSSPropertySetStrict = {
   voiceStress?: CSSPropertyVal<voiceStress>
   voiceVolume?: CSSPropertyVal<voiceVolume>
   zoom?: CSSPropertyVal<zoom>
+  WebkitAppRegion?: string
 }
 
 export type CSSPropertySetStrict = OriginalCSSPropertySetStrict & {

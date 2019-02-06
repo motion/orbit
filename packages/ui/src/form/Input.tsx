@@ -2,16 +2,17 @@ import * as React from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
-export type InputProps = SizedSurfaceProps & {
-  sync?: { get: () => any; set: (a: any) => void }
-  onEnter?: Function
-  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'
-  name?: string
-  form?: Object
-  elementProps?: Object
-  onClick?: Function
-  forwardRef?: any
-}
+export type InputProps = React.HTMLProps<'input'> &
+  SizedSurfaceProps & {
+    sync?: { get: () => any; set: (a: any) => void }
+    onEnter?: Function
+    type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'
+    name?: string
+    form?: Object
+    elementProps?: Object
+    onClick?: Function
+    forwardRef?: any
+  }
 
 type InputDecoratedProps = InputProps & {
   uiContext: UIContextType
@@ -102,5 +103,6 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
 
 export const Input = React.forwardRef(function Input(props: InputProps, ref) {
   const uiContext = React.useContext(UIContext)
+  // @ts-ignore
   return <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
 })

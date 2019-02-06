@@ -30,12 +30,12 @@ export function SizedSurface(props: SizedSurfaceProps) {
     circular,
     ...rest
   } = props
-  let iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight))
   // sizes
   let height =
     typeof sizeHeight !== 'undefined'
       ? Math.round(LINE_HEIGHT * num(sizeHeight) * size)
       : props.height || undefined
+  let iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight || 1))
   // adjust for border x 2 (just looks good)
   if (props.inline) {
     height = height - 4

@@ -1,7 +1,7 @@
+import { CSSPropertySetStrict } from '@mcro/css'
 import {
   alphaColor,
   Color,
-  CSSPropertySet,
   gloss,
   propsToStyles,
   propsToTextSize,
@@ -23,8 +23,13 @@ import { Tooltip } from './Tooltip'
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceProps = CSSPropertySet & {
+export type SurfaceProps = CSSPropertySetStrict & {
+  hover?: boolean
+  hoverStyle?: any
   active?: boolean
+  activeStyle?: any
+  ellipse?: boolean
+  borderRadius?: number
   after?: React.ReactNode
   background?: Color
   badge?: React.ReactNode
@@ -71,10 +76,10 @@ export type SurfaceProps = CSSPropertySet & {
   highlightColor?: Color
   style?: Object
   ignoreSegment?: boolean
-  activeStyle?: Object
   sizeLineHeight?: boolean | number
   type?: string
   themeSelect?: ThemeSelect
+  iconPad?: number
 }
 
 export const Surface = React.memo(function Surface(props: SurfaceProps) {
@@ -346,26 +351,32 @@ const getIconSize = (props: SurfaceProps) => {
 
 function getSegmentRadius(props: SurfaceProps, item: BreadcrumbItem) {
   // support being inside a segmented list
-  let segmentedStyle: any
   if (!props.ignoreSegment) {
     if (item) {
-      segmentedStyle = {
-        borderRightRadius: props.borderRadius,
-        borderLeftRadius: props.borderRadius,
-      }
       if (item.isFirst) {
-        segmentedStyle.borderRightRadius = 0
-        segmentedStyle.borderRightWidth = 0
+        return {
+          borderRightRadius: 0,
+          borderRightWidth: 0,
+          borderLeftRadius: +props.borderRadius,
+        }
       } else if (item.isLast) {
-        segmentedStyle.borderLeftRadius = 0
+        return {
+          borderLeftRadius: 0,
+          borderRightRadius: +props.borderRadius,
+        }
       } else {
-        segmentedStyle.borderRightRadius = 0
-        segmentedStyle.borderRightWidth = 0
-        segmentedStyle.borderLeftRadius = 0
+        return {
+          borderRightRadius: 0,
+          borderRightWidth: 0,
+          borderLeftRadius: 0,
+        }
       }
     }
   }
-  return segmentedStyle
+  return {
+    borderRightRadius: +props.borderRadius,
+    borderLeftRadius: +props.borderRadius,
+  }
 }
 const round = (x: number) => Math.round(x * 4) / 4
 const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)

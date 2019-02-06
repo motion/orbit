@@ -17,8 +17,6 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const isOnSettings = activePaneType === 'settings'
-  const settingsIconActiveOpacityInc = isOnSettings ? 0.4 : 0
   const { isTorn } = orbitStore
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
@@ -67,7 +65,7 @@ export default observer(function OrbitHeader() {
               </>
             )}
 
-            <SegmentedRow>
+            <SegmentedRow debug>
               <FloatingBarButton
                 onClick={queryFilters.toggleSortBy}
                 tooltip={`Sort by: ${queryFilters.sortBy}`}

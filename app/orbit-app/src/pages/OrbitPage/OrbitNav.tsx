@@ -1,5 +1,5 @@
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { remove, save } from '@mcro/model-bridge'
+import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { flow } from 'lodash'
@@ -8,7 +8,8 @@ import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
-import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
+import { getAppContextItems } from '../../helpers/getAppContextItems'
+import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
@@ -78,19 +79,7 @@ export default observer(function OrbitNav() {
                   save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },
-              {
-                label: 'Remove',
-                click() {
-                  if (
-                    showConfirmDialog({
-                      title: 'Are you sure you want to delete this app?',
-                      message: `Deleting this app will remove it from this space and delete it's data.`,
-                    })
-                  ) {
-                    remove(AppModel, app)
-                  }
-                },
-              },
+              ...getAppContextItems(app),
             ]
           },
           onClick: () => {
@@ -183,11 +172,6 @@ export default observer(function OrbitNav() {
     </OrbitNavClip>
   )
 })
-
-// https://github.com/clauderic/react-sortable-hoc/issues/256
-const isRightClick = e =>
-  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
-  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
   zIndex: 10000000000,

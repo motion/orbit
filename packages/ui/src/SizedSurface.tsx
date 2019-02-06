@@ -18,6 +18,12 @@ export type SizedSurfaceProps = SurfaceProps & {
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 
+// always return even so things are always centered
+const getHeight = (size: number, sizeHeight: number | boolean) => {
+  const height = Math.round(LINE_HEIGHT * num(sizeHeight) * size)
+  return height % 2 === 0 ? height : height + 1
+}
+
 export function SizedSurface(props: SizedSurfaceProps) {
   const {
     size = 1,
@@ -32,9 +38,9 @@ export function SizedSurface(props: SizedSurfaceProps) {
   } = props
   // sizes
   let height =
-    typeof sizeHeight !== 'undefined'
-      ? Math.round(LINE_HEIGHT * num(sizeHeight) * size)
-      : props.height || undefined
+    typeof props.height === 'number'
+      ? props.height
+      : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
   let iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight || 1))
   // adjust for border x 2 (just looks good)
   if (props.inline) {

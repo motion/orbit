@@ -13,7 +13,7 @@ import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 28
+export const tabHeight = 26
 const inactiveOpacity = 0.45
 const border = 3
 

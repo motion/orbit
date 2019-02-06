@@ -9,7 +9,7 @@ import { gloss, Row, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Orderable } from './Orderable'
-import { Tab } from './Tab'
+import { Tab, TabItem } from './Tab'
 
 export type TabsProps = {
   // height
@@ -47,7 +47,7 @@ export type TabsProps = {
 }
 
 export function Tabs(props: TabsProps) {
-  const { TabComponent = TabListItem, tabProps, tabPropsActive, onActive, height = 26 } = props
+  const { TabComponent = TabItem, tabProps, tabPropsActive, onActive, height = 26 } = props
   const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
   const before = props.before || []
@@ -95,6 +95,7 @@ export function Tabs(props: TabsProps) {
               }
             }
           : undefined
+
       tabs[key] = (
         <TabComponent
           key={key}
@@ -155,7 +156,9 @@ export function Tabs(props: TabsProps) {
       <TabList>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
-          <HideScrollBar>{tabList}</HideScrollBar>
+          <HideScrollBar>
+            {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
+          </HideScrollBar>
         </div>
         {after}
       </TabList>
@@ -179,36 +182,7 @@ const HideScrollBar = gloss({
   boxSizing: 'content-box',
 })
 
-const TabListItem = gloss(Row, {
-  fontSize: 12,
-  fontWeight: 500,
-  lineHeight: 22,
-  alignItems: 'center',
-  overflow: 'hidden',
-  padding: [1, 10],
-  position: 'relative',
-  height: '100%',
-  justifyContent: 'center',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  userSelect: 'none',
-}).theme(({ active, width }, theme) => {
-  const background = active
-    ? theme.tabBackgroundActive || theme.backgroundActive
-    : theme.tabBackground || theme.background
-  return {
-    width,
-    flex: typeof width === 'number' ? 'none' : 1,
-    color: active ? theme.colorActive : theme.colorBlur,
-    background,
-    '&:hover': {
-      background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease 400ms',
-    },
-  }
-})
-
-const TabListAddItem = gloss(TabListItem, {
+const TabListAddItem = gloss(TabItem, {
   borderRight: 'none',
   flex: 0,
   flexGrow: 0,

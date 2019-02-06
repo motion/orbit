@@ -1,4 +1,3 @@
-import { deep } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
@@ -16,9 +15,12 @@ type ToolbarContextItem = {
 export const OrbitToolBarContext = createContext({ toolbarStore: null as ToolbarStore })
 
 class ToolbarStore {
-  bars = deep({})
+  bars = {}
   setBars = (id, val) => {
-    this.bars[id] = val
+    this.bars = {
+      ...this.bars,
+      [id]: val,
+    }
   }
 }
 

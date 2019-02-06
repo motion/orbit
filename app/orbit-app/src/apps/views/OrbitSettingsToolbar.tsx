@@ -1,6 +1,6 @@
-import { Button, SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import React from 'react'
+import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
+import { useObserver } from 'mobx-react-lite'
+import React, { useState } from 'react'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -13,67 +13,59 @@ const tabIconProps = {
   color: 'inherit',
 }
 
-export const OrbitSettingsToolbar = observer(function OrbitSettingsToolbar() {
+export function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
-  const activePaneKey = paneManagerStore.activePane.type.replace('app-', '')
+  const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
   const [activeSpace] = useActiveSpace()
 
-  const panes = [
-    {
-      key: 'sources',
-      label: (
-        <>
-          {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
-          Current Space
-        </>
-      ),
-    },
-    {
-      key: 'spaces',
-      label: (
-        <>
-          <Icon name="layer" {...tabIconProps} />
-          Spaces
-        </>
-      ),
-    },
-    {
-      key: 'settings',
-      label: (
-        <>
-          <Icon name="gear" {...tabIconProps} />
-          Settings
-        </>
-      ),
-    },
-  ]
+  useObserver(() => {
+    const next = paneManagerStore.activePane.type.replace('app-', '')
+    if (next !== activePaneKey) {
+      setActivePaneKey(next)
+    }
+  })
+
   const onActive = React.useCallback(key => {
     if (typeof key === 'string') {
       paneManagerStore.setActivePaneByType(key)
     }
   }, [])
+
   return (
     <OrbitToolbar>
-      <div>
-        <SegmentedRow>
-          <div />
-        </SegmentedRow>
-      </div>
-      <View margin={[2, 'auto']} maxWidth={600} width="70%" flex={1}>
-        <SegmentedRow>
-          <Tabs
-            TabComponent={Button}
-            tabProps={{ glint: false, flex: 1 }}
-            active={activePaneKey}
-            height={28}
-            onActive={onActive}
-          >
-            {panes.map(pane => (
-              <Tab key={pane.key} label={pane.label} />
-            ))}
+      <View margin="auto" width={420}>
+        <SegmentedRow borderRadius={200} boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]}>
+          <Tabs active={activePaneKey} height={24} onActive={onActive}>
+            <Tab
+              key="sources"
+              label={
+                <>
+                  {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
+                  Current Space
+                </>
+              }
+            />
+            <Tab
+              key="spaces"
+              label={
+                <>
+                  <Icon name="layer" {...tabIconProps} />
+                  Spaces
+                </>
+              }
+            />
+            <Tab
+              key="settings"
+              label={
+                <>
+                  <Icon name="gear" {...tabIconProps} />
+                  Settings
+                </>
+              }
+            />
           </Tabs>
         </SegmentedRow>
       </View>
     </OrbitToolbar>
   )
-})
+}

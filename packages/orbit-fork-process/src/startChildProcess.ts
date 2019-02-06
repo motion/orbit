@@ -1,6 +1,5 @@
 import { getGlobalConfig } from '@mcro/config'
 import { ChildProcess, spawn } from 'child_process'
-import * as Path from 'path'
 
 export type ChildProcessProps = {
   name: string
@@ -18,8 +17,9 @@ export function startChildProcess({
   env = {},
 }: ChildProcessProps): ChildProcess {
   const Config = getGlobalConfig()
-  const root = Path.join(__dirname, '..', 'main')
-  let args = [root]
+  console.error('starting process, entry:', Config.paths.appEntry)
+
+  let args = [Config.paths.appEntry]
 
   if (!Config.isProd) {
     if (inspectPort) {
@@ -56,7 +56,7 @@ export function startChildProcess({
     child.stderr.on('data', b => {
       const out = b.toString()
       // ignore errors
-      if (out.indexOf('Debugger listening on')) {
+      if (out.indexOf('Debugger listening on') >= 0) {
         return
       }
       if (/error/i.test(out) === false) {

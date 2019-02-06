@@ -4,6 +4,7 @@ import { ChildProcessProps, startChildProcess } from '@mcro/orbit-fork-process'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import { ChildProcess } from 'child_process'
 import root from 'global'
+import { join } from 'path'
 import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
@@ -22,7 +23,11 @@ export async function main() {
     setGlobalConfig(JSON.parse(ORBIT_CONFIG))
   } else {
     // first process, set up initial configuration
-    setGlobalConfig(await require('./getInitialConfig').getInitialConfig())
+    setGlobalConfig(
+      await require('./getInitialConfig').getInitialConfig({
+        appEntry: join(__dirname, '..', '_', 'main.js'),
+      }),
+    )
   }
 
   const config = getGlobalConfig()

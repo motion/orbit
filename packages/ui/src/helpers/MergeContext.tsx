@@ -9,13 +9,12 @@ export type MergeContextProps<A> = {
   children: React.ReactNode
 }
 
-export const MergeContext = memo(function MergeContext<A extends Object>(
-  props: MergeContextProps<A>,
-): any {
+export const MergeContext = memo(function MergeContext<A>(props: MergeContextProps<A>): any {
   const { Context } = props
   const context = useContext(props.Context)
-  return (
-    <Context.Provider value={{ ...context, ...props.value }}>{props.children}</Context.Provider>
-  )
-},
-isEqual)
+  if (context && typeof context === 'object') {
+    const value = Object.assign({}, context, props.value)
+    return <Context.Provider value={value}>{props.children}</Context.Provider>
+  }
+  return <Context.Provider value={props.value as A}>{props.children}</Context.Provider>
+}, isEqual)

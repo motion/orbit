@@ -56,7 +56,11 @@ export function startChildProcess({
     child.stderr.on('data', b => {
       const out = b.toString()
       // ignore errors
-      if (out.indexOf('Debugger listening on') >= 0) {
+      if (
+        out.indexOf('Debugger listening on') >= 0 ||
+        out.indexOf('Debugger attached.') >= 0 ||
+        out.indexOf('DeprecationWarning:') >= 0
+      ) {
         return
       }
       if (/error/i.test(out) === false) {

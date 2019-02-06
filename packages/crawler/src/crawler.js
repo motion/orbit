@@ -1,15 +1,14 @@
-import 'isomorphic-fetch'
-import { parse } from 'url'
-import puppeteer from 'puppeteer'
 import debug from 'debug'
-import CrawlerDB from './crawlerDB'
-import { uniq, range } from 'lodash'
+import { writeFileSync } from 'fs'
+import { range, uniq } from 'lodash'
+import OS from 'os'
+import puppeteer from 'puppeteer'
 import readabilityFromString from 'readability-from-string'
+import sanitizeHtml from 'sanitize-html'
 import upndown from 'upndown'
 import URI from 'urijs'
-import sanitizeHtml from 'sanitize-html'
-import { writeFileSync } from 'fs'
-import OS from 'os'
+import { parse } from 'url'
+import CrawlerDB from './crawlerDB'
 
 // dont use last two cores if possible
 // so on 4 core machine just use two
@@ -38,15 +37,7 @@ const cleanUrlHash = url => url.replace(ENDING_HASH, '')
 const cleanUrlSearch = url => url.replace(ENDING_QUERY, '')
 const cleanUrlEnd = url => cleanUrlHash(cleanUrlSearch(url))
 
-const FILTER_URL_EXTENSIONS = [
-  '.png',
-  '.jpg',
-  '.gif',
-  '.css',
-  '.js',
-  '.svg',
-  '.xml',
-]
+const FILTER_URL_EXTENSIONS = ['.png', '.jpg', '.gif', '.css', '.js', '.svg', '.xml']
 const urlSimilarity = (wanted, given) => {
   let score = 100
   // de-weight paths with ?params just a lil
@@ -84,9 +75,9 @@ export default class Crawler {
   }
 
   selectorFinder = ({ title, content }) => {
-    Array.from(
-      document.querySelectorAll('.breadcrumbs, .crumbs, .breadcrumb')
-    ).forEach(_ => _.remove())
+    Array.from(document.querySelectorAll('.breadcrumbs, .crumbs, .breadcrumb')).forEach(_ =>
+      _.remove(),
+    )
     let tries = 0
     let current = null
     let titleSelector = null
@@ -177,12 +168,8 @@ export default class Crawler {
     if (this.selectors) {
       log.page(`Using selectors: ${JSON.stringify(this.selectors)}`)
       selectorResults = await page.evaluate(selectors => {
-        const titles = Array.from(
-          document.querySelectorAll(selectors.titleSelector)
-        )
-        const content = Array.from(
-          document.querySelectorAll(selectors.contentSelector)
-        )
+        const titles = Array.from(document.querySelectorAll(selectors.titleSelector))
+        const content = Array.from(document.querySelectorAll(selectors.contentSelector))
           .filter(Boolean)
           .map(_ => _.innerText)
           .join('\n')
@@ -199,19 +186,14 @@ export default class Crawler {
     }
     const html = await page.evaluate(() => {
       // some kbs have error pages that are hidden in the dom
-      Array.from(document.querySelectorAll('.hide, .hidden, .error')).forEach(
-        _ => _.remove()
-      )
+      Array.from(document.querySelectorAll('.hide, .hidden, .error')).forEach(_ => _.remove())
       return document.documentElement.outerHTML
     })
     let result = selectorResults
     if (!result) {
-      result = readabilityFromString(
-        sanitizeHtml(html, { allowedTags: false }),
-        {
-          href: url,
-        }
-      )
+      result = readabilityFromString(sanitizeHtml(html, { allowedTags: false }), {
+        href: url,
+      })
       if (!result) {
         log.page(`Readability didn't find anything`)
         return null
@@ -223,10 +205,7 @@ export default class Crawler {
     } else {
       try {
         content = await new Promise((resolve, reject) => {
-          markdown.convert(
-            result.content,
-            (err, md) => (err ? reject(err) : resolve(md))
-          )
+          markdown.convert(result.content, (err, md) => (err ? reject(err) : resolve(md)))
         })
         if (content) {
           log.page(`Got markdown: ${content.slice(0, 30)}...`)
@@ -273,14 +252,10 @@ export default class Crawler {
   selectorParse = async (page, options) => {
     return await page.evaluate(async options => {
       const titleNode = document.querySelector(options.titleSelector)
-      const bodyNodes = Array.from(
-        document.querySelectorAll(options.bodySelector)
-      )
+      const bodyNodes = Array.from(document.querySelectorAll(options.bodySelector))
       return {
         title: titleNode ? titleNode.innerText : '',
-        body: bodyNodes.length
-          ? bodyNodes.map(node => node.innerText).join('\n\n')
-          : '',
+        body: bodyNodes.length ? bodyNodes.map(node => node.innerText).join('\n\n') : '',
       }
     }, options)
   }
@@ -294,8 +269,7 @@ export default class Crawler {
 
   validContentType = async url => {
     const res = await fetch(url, { method: 'HEAD' })
-    const contentType =
-      res.headers.get('content-type') || res.headers.get('Content-Type')
+    const contentType = res.headers.get('content-type') || res.headers.get('Content-Type')
     if (!contentType || !/text\/(html|xml|plain)/g.test(contentType)) {
       log.page(`Bad content-type: ${res.headers.get('content-type')} ${url}`)
       return false
@@ -305,9 +279,7 @@ export default class Crawler {
 
   findLinks = async (page, { target, initialUrl, matchesDepth, entryUrl }) => {
     const links = await page.evaluate(() => {
-      const val = Array.from(document.querySelectorAll('[href]')).map(
-        link => link.href
-      )
+      const val = Array.from(document.querySelectorAll('[href]')).map(link => link.href)
       return val
     })
     log.page(`Raw links: ${links.length}`)
@@ -315,15 +287,13 @@ export default class Crawler {
       links
         .filter(x => x !== null)
         .map(cleanUrlHash)
-        .map(href => normalizeHref(target.url, href))
+        .map(href => normalizeHref(target.url, href)),
     ).filter(link => {
       const parsed = parse(link)
       const noPrefix = s => s.replace(/www\./, '')
       const isNotOriginalUrl = link !== initialUrl
       return (
-        isNotOriginalUrl &&
-        matchesDepth(link) &&
-        noPrefix(parsed.host) === noPrefix(entryUrl.host)
+        isNotOriginalUrl && matchesDepth(link) && noPrefix(parsed.host) === noPrefix(entryUrl.host)
       )
     })
   }
@@ -408,7 +378,7 @@ export default class Crawler {
           return null
         }
         // content-type whitelist
-        if (!await this.validContentType(target.url)) {
+        if (!(await this.validContentType(target.url))) {
           return null
         }
         await page.goto(target.url, {
@@ -435,11 +405,7 @@ export default class Crawler {
         }
         // only count it if it finds goodies
         if (contents) {
-          log.page(
-            `Found title (${contents.title}) body of ${
-              contents.content.length
-            } length`
-          )
+          log.page(`Found title (${contents.title}) body of ${contents.content.length} length`)
         } else {
           log.page(`No contents found`)
         }
@@ -452,9 +418,7 @@ export default class Crawler {
         }
       } catch (err) {
         if (!isFinished()) {
-          log.page(
-            `Error crawling url ${target.url}\n${err.message}\n${err.stack}`
-          )
+          log.page(`Error crawling url ${target.url}\n${err.message}\n${err.stack}`)
         }
         return null
       }
@@ -464,9 +428,7 @@ export default class Crawler {
     const concurrentTabs = Math.min(maxCores, 7)
     const startTime = +Date.now()
     const loadingPage = range(concurrentTabs).map(() => false)
-    log.crawl(
-      `Using puppeteer options: ${JSON.stringify(options.puppeteerOptions)}`
-    )
+    log.crawl(`Using puppeteer options: ${JSON.stringify(options.puppeteerOptions)}`)
     const browser = await puppeteer.launch(options.puppeteerOptions)
     const pages = await Promise.all(loadingPage.map(() => browser.newPage()))
 

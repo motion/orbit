@@ -48,7 +48,6 @@
     "http-proxy": "1.17.0",
     "http-proxy-middleware": "^0.17.4",
     "invariant": "^2.2.2",
-    "isomorphic-fetch": "2.2.1",
     "jsdom": "^11.12.0",
     "kill-port": "^1.1.0",
     "lodash": "^4.17.10",

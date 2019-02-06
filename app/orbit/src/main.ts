@@ -1,12 +1,14 @@
 import { getGlobalConfig, setGlobalConfig } from '@mcro/config'
 import { ChildProcessProps, startChildProcess } from '@mcro/orbit-fork-process'
-// add fetch abort
-import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
 import { ChildProcess } from 'child_process'
 import root from 'global'
 import { join } from 'path'
 import waitOn from 'wait-on'
 import WebSocket from 'ws'
+
+// sort order important
+require('isomorphic-fetch')
+require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 
 // this is the entry for every process
 

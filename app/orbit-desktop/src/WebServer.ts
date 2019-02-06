@@ -1,10 +1,9 @@
-import 'isomorphic-fetch'
+import { getGlobalConfig } from '@mcro/config'
+import { Logger } from '@mcro/logger'
+import bodyParser from 'body-parser'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
-import bodyParser from 'body-parser'
-import { getGlobalConfig } from '@mcro/config'
 import killPort from 'kill-port'
-import { Logger } from '@mcro/logger'
 import * as Path from 'path'
 
 const log = new Logger('desktop')

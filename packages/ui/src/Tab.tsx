@@ -46,7 +46,6 @@ export function TabItem(props: ViewProps) {
       { borderRadius: typeof props.borderRadius === 'number' ? props.borderRadius : 100 },
       crumbs,
     )
-  console.log('segmentedProps', segmentedProps)
   return <TabItemChrome {...segmentedProps} {...props} />
 }
 

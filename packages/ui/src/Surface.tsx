@@ -12,12 +12,13 @@ import {
   View,
 } from '@mcro/gloss'
 import * as React from 'react'
-import { BreadcrumbItem, useBreadcrumb } from './Breadcrumbs'
+import { useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { configure } from './helpers/configure'
 import { Icon as UIIcon } from './Icon'
 import { PopoverProps } from './Popover'
+import { getSegmentRadius } from './SegmentedRow'
 import { Tooltip } from './Tooltip'
 
 // an element for creating surfaces that look like buttons
@@ -352,35 +353,6 @@ const getIconSize = (props: SurfaceProps) => {
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-function getSegmentRadius(props: SurfaceProps, item: BreadcrumbItem) {
-  // support being inside a segmented list
-  if (!props.ignoreSegment) {
-    if (item) {
-      if (item.isFirst) {
-        return {
-          borderRightRadius: 0,
-          borderRightWidth: 0,
-          borderLeftRadius: +props.borderRadius,
-        }
-      } else if (item.isLast) {
-        return {
-          borderLeftRadius: 0,
-          borderRightRadius: +props.borderRadius,
-        }
-      } else {
-        return {
-          borderRightRadius: 0,
-          borderRightWidth: 0,
-          borderLeftRadius: 0,
-        }
-      }
-    }
-  }
-  return {
-    borderRightRadius: +props.borderRadius,
-    borderLeftRadius: +props.borderRadius,
-  }
-}
 const round = (x: number) => Math.round(x * 4) / 4
 const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
 const elevatedShadow = (x: number) => [

@@ -35,13 +35,7 @@ export function OrbitSettingsToolbar() {
     <OrbitToolbar>
       <View margin={[2, 'auto']} maxWidth={500} width="70%" flex={1}>
         <SegmentedRow>
-          <Tabs
-            // TabComponent={Button}
-            // tabProps={{ glint: false, flex: 1 }}
-            active={activePaneKey}
-            height={28}
-            onActive={onActive}
-          >
+          <Tabs active={activePaneKey} height={28} onActive={onActive}>
             <Tab
               key="sources"
               label={

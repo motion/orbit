@@ -6,9 +6,10 @@ export function SegmentedRow(props: BreadcrumbsProps) {
 }
 
 export function getSegmentRadius(
-  props: { ignoreSegment?: boolean; borderRadius: number },
+  props: { ignoreSegment?: boolean; borderRadius?: number },
   item: BreadcrumbItem,
 ) {
+  const radius = typeof props.borderRadius === 'number' ? props.borderRadius : 0
   // support being inside a segmented list
   if (!props.ignoreSegment) {
     if (item) {
@@ -16,12 +17,12 @@ export function getSegmentRadius(
         return {
           borderRightRadius: 0,
           borderRightWidth: 0,
-          borderLeftRadius: +props.borderRadius,
+          borderLeftRadius: radius,
         }
       } else if (item.isLast) {
         return {
           borderLeftRadius: 0,
-          borderRightRadius: +props.borderRadius,
+          borderRightRadius: radius,
         }
       } else {
         return {
@@ -33,7 +34,7 @@ export function getSegmentRadius(
     }
   }
   return {
-    borderRightRadius: +props.borderRadius,
-    borderLeftRadius: +props.borderRadius,
+    borderRightRadius: radius,
+    borderLeftRadius: radius,
   }
 }

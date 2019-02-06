@@ -1,18 +1,12 @@
-import './../public/styles/siteBase.css'
-import './../public/styles/nucleo.css'
+import { ThemeProvide } from '@mcro/ui'
 import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import themes from './themes'
-import { ThemeProvide } from '@mcro/ui'
-import * as Constants from './constants'
-import * as Black from '@mcro/black'
-
+import './../public/styles/nucleo.css'
+import './../public/styles/siteBase.css'
 // for hmr
 import './router'
-
-window.Constants = Constants
-window.Black = Black
+import themes from './themes'
 
 function render() {
   const RootNode = document.querySelector('#app')

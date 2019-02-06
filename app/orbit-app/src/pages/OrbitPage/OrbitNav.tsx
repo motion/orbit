@@ -17,9 +17,9 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { showCreateNew } = newAppStore
   const activeApps = useActiveApps()
   const [space] = useActiveSpace()
-  const [showCreateNew, setShowCreateNew] = React.useState(false)
   const handleSortEnd = useAppSortHandler()
 
   if (orbitStore.isTorn) {
@@ -93,7 +93,7 @@ export default observer(function OrbitNav() {
             ]
           },
           onClick: () => {
-            setShowCreateNew(false)
+            newAppStore.setShowCreateNew(false)
             paneManagerStore.setActivePane(`${app.id}`)
           },
           onClickPopout:
@@ -142,7 +142,7 @@ export default observer(function OrbitNav() {
                 onClick={flow(
                   preventDefault,
                   () => {
-                    setShowCreateNew(false)
+                    newAppStore.setShowCreateNew(false)
                     paneManagerStore.back()
                   },
                 )}
@@ -157,7 +157,7 @@ export default observer(function OrbitNav() {
             icon={showCreateNew ? 'remove' : 'add'}
             iconAdjustOpacity={-0.2}
             onClick={async () => {
-              setShowCreateNew(true)
+              newAppStore.setShowCreateNew(true)
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
               paneManagerStore.setActivePane('app-createApp')
             }}
@@ -168,7 +168,10 @@ export default observer(function OrbitNav() {
 
         <OrbitTab
           isActive={isOnSettings}
-          onClick={paneManagerStore.activePaneByTypeSetter('sources')}
+          onClick={() => {
+            paneManagerStore.setActivePaneByType('sources')
+            newAppStore.setShowCreateNew(false)
+          }}
           iconSize={14}
           icon="gear"
           thicc

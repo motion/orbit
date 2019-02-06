@@ -37,6 +37,12 @@ export const defaultApps: App[] = [
 type GenericApp = BaseApp & { data: any; type: string }
 
 export class NewAppStore {
+  showCreateNew = false
+
+  setShowCreateNew = (val: boolean) => {
+    this.showCreateNew = val
+  }
+
   app: GenericApp = defaultApps[0]
 
   update(app: Partial<App>) {

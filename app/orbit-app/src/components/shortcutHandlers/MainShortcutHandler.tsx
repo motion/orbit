@@ -12,6 +12,7 @@ import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
+  commandNew: 'command+n',
   commandOpen: 'command+enter',
   open: ['tab', 'enter'],
   switchSpaces: 'command+k',
@@ -35,10 +36,11 @@ const rootShortcuts = {
 }
 
 export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
-  const { orbitStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { newAppStore, orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   let handlers: any = {
+    commandNew: () => newAppStore.setShowCreateNew(true),
     commandOpen: () => {
       orbitStore.setTorn()
     },

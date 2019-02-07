@@ -26,11 +26,16 @@ export class OrbitStore {
   syncThemeToAppState = react(
     () => [this.activeUser && this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
     ([theme, osTheme]) => {
-      if (theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')) {
+      ensure('active user', !!this.activeUser)
+      const shouldBeDark = theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')
+      if (shouldBeDark) {
         App.setState({ isDark: true })
       } else {
         App.setState({ isDark: false })
       }
+    },
+    {
+      defaultValue: Desktop.state.operatingSystem.theme,
     },
   )
 

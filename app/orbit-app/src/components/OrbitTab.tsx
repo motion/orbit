@@ -1,14 +1,6 @@
 import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/models'
-import {
-  Button,
-  ButtonProps,
-  Glint,
-  IconProps,
-  MenuTemplate,
-  Tooltip,
-  useContextMenu,
-} from '@mcro/ui'
+import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
@@ -70,7 +62,7 @@ export function OrbitTab({
       {...contextMenuProps}
       {...props}
     >
-      {isActive && <Glint y={1} borderRadius={border} />}
+      {/* {isActive && <Glint y={1} borderRadius={border} />} */}
       <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
         {!React.isValidElement(icon) && !!icon && (
           <OrbitTabIcon
@@ -188,11 +180,11 @@ const NavButtonChrome = gloss<TabProps>({
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
-    // borderBottom: [1, theme.borderColor],
+    borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
     boxShadow: isActive
       ? [
-          [0, 2, 9, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.26]],
-          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
+          [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
+          ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,

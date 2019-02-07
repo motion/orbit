@@ -1,6 +1,6 @@
 import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Button, PassProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -95,9 +95,13 @@ export default observer(function OrbitHeader() {
 
         {isEditing && (
           <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
-            <SegmentedRow spaced>
-              <Button tooltip="Open in VSCode">Edit</Button>
-              <Button tooltip="Deploy to space">Save</Button>
+            <SegmentedRow>
+              <PassProps size={0.9} sizeHeight={0.9}>
+                <Button icon="edit" tooltip="Open in VSCode">
+                  Open
+                </Button>
+                <Button tooltip="Deploy to space">Save</Button>
+              </PassProps>
             </SegmentedRow>
           </Absolute>
         )}

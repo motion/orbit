@@ -1,6 +1,6 @@
 import { react } from '@mcro/black'
 import { loadMany, observeOne } from '@mcro/model-bridge'
-import { AppModel, ListAppDataItemFolder, ListsApp, SearchResultModel } from '@mcro/models'
+import { AppModel, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
@@ -8,6 +8,7 @@ import React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { searchGroupsToResults } from '../../stores/SearchStore'
 import { ListAppProps } from './ListsApp'
+import { ListAppDataItemFolder, ListsAppBit } from './types'
 
 export class ListStore {
   props: ListAppProps
@@ -37,7 +38,7 @@ export class ListStore {
   }
 
   get app() {
-    return this.appRaw as ListsApp
+    return this.appRaw as ListsAppBit
   }
 
   get parentId() {

@@ -26,7 +26,8 @@ import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButto
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
-import { ListAppProps, ListsApp, loadListItem } from './ListsApp'
+import { loadListItem } from './helpers'
+import { ListAppProps, ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
 
 export default observer(function ListsAppIndex({ store }: ListAppProps) {

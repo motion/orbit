@@ -65,12 +65,13 @@ function AppLoader(props: AppLoaderProps) {
 
 function AppLoadDynamicView({ app }: AppLoaderProps) {
   const AppView = apps[app.type]
-  const appStore = useStore(AppStore, { id: `${app.id}` })
+  const appViewProps = { id: `${app.id}` }
+  const appStore = useStore(AppStore, appViewProps)
 
   if (typeof AppView === 'function') {
     return (
       <MergeContext Context={StoreContext} value={{ appStore }}>
-        <AppView appStore={appStore} />
+        <AppView {...appViewProps} appStore={appStore} />
       </MergeContext>
     )
   }

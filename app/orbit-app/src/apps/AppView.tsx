@@ -89,7 +89,7 @@ export const AppView = memo(
     }, Object.values(props))
 
     if (!appElement) {
-      console.log('AppView: no app of type', props.type, apps, stores.appsStore.appViews, props)
+      console.debug('AppView: no app of type', props.type, props.viewType)
       return null
     }
 

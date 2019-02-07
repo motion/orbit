@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/model-bridge'
-import { AppModel, ListsApp } from '@mcro/models'
+import { AppModel } from '@mcro/models'
 import * as React from 'react'
 import { SubTitle, Title } from '../../views'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
@@ -7,9 +7,12 @@ import OrbitList from '../../views/Lists/OrbitList'
 import { Message } from '../../views/Message'
 import { Section } from '../../views/Section'
 import { AppSubView } from '../views/AppSubView'
-import { ListAppProps, loadListItem } from './ListsApp'
+import { loadListItem } from './helpers'
+import { ListAppProps } from './ListsApp'
+import { ListsAppBit } from './types'
 
 export default React.memo(function ListsAppMain(props: ListAppProps) {
+  console.log('render main list', props)
   if (!props.appConfig) {
     return null
   }
@@ -20,7 +23,7 @@ export default React.memo(function ListsAppMain(props: ListAppProps) {
 })
 
 function ListsAppMainFolder(props: ListAppProps) {
-  const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsApp, any]
+  const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
 

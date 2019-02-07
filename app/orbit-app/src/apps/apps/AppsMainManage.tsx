@@ -114,7 +114,6 @@ export default function AppsMainManage() {
         getItem={getItem}
         onSortEnd={handleSortEnd}
         getSortableItemProps={item => {
-          console.log('item', item)
           if (item.disabled) {
             return {
               disabled: true,

@@ -1,4 +1,4 @@
-import { BaseApp } from './App'
+import { AppBit } from '@mcro/models'
 
 export type SearchAppFilter =
   | {
@@ -26,4 +26,4 @@ export type SearchAppData = {
   defaultSort?: 'recent' | 'relevant'
 }
 
-export type SearchApp = BaseApp & { type: 'search'; data: SearchAppData }
+export type SearchApp = AppBit & { type: 'search'; data: SearchAppData }

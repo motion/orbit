@@ -1,5 +1,5 @@
 import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
-import { App } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
@@ -10,7 +10,7 @@ const inactiveOpacity = 0.45
 const border = 3
 
 export type TabProps = ViewProps & {
-  app?: App
+  app?: AppBit
   separator?: boolean
   isActive?: boolean
   label?: string

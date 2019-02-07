@@ -1,5 +1,5 @@
 import { Absolute, ViewProps } from '@mcro/gloss'
-import { App } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
 import { SelectableGrid } from '../../components/SelectableGrid'
@@ -49,7 +49,7 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
   )
 }
 
-function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: App; isSelected?: boolean }) {
+function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelected?: boolean }) {
   const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
   return (
     <LargeIcon

@@ -1,25 +1,21 @@
 import { AppConfig } from '@mcro/models'
+import { GenericComponent } from '../types'
 import { AppStore } from './AppStore'
 
 export type AppProps = {
   appConfig?: AppConfig
-  id?: string | number
+  id?: string
   viewType?: 'index' | 'main' | 'setup' | 'settings'
   title?: string
   appStore: AppStore
   isActive?: boolean | (() => boolean)
 }
 
-export type AppView = (props: AppProps) => React.ReactNode
-
-export type AppViews = {
-  index: AppView
-  main: AppView
-}
-
 export type AppDefinition =
   // migrating to
-  | AppView
-  | (() => AppViews)
+  | GenericComponent<AppProps>
   // legacy, migrating away from
-  | AppViews
+  | {
+      index: GenericComponent<AppProps>
+      main: GenericComponent<AppProps>
+    }

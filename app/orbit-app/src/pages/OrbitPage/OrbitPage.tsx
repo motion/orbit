@@ -6,6 +6,7 @@ import { once } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
+import AppsLoader from '../../apps/AppsLoader'
 import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
@@ -92,17 +93,19 @@ const OrbitPageInner = observer(function OrbitPageInner() {
         >
           <Theme name={theme}>
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-              <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
-                <OrbitHeader />
-                <OrbitNav />
-              </OrbitHeaderContainer>
-              <InnerChrome torn={orbitStore.isTorn}>
-                <OrbitControls />
-                <Row flex={1}>
-                  <OrbitSidebar />
-                  <OrbitContent />
-                </Row>
-              </InnerChrome>
+              <AppsLoader>
+                <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+                  <OrbitHeader />
+                  <OrbitNav />
+                </OrbitHeaderContainer>
+                <InnerChrome torn={orbitStore.isTorn}>
+                  <OrbitControls />
+                  <Row flex={1}>
+                    <OrbitSidebar />
+                    <OrbitContent />
+                  </Row>
+                </InnerChrome>
+              </AppsLoader>
             </AppWrapper>
           </Theme>
         </MainShortcutHandler>

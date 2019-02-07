@@ -4,7 +4,7 @@ import { useStoresSafe } from '../hooks/useStoresSafe'
 import { AppProps } from './AppTypes'
 
 export class AppStore {
-  props: AppProps
+  props: Pick<AppProps, 'id' | 'isActive'>
   stores = useHook(() =>
     useStoresSafe({ optional: ['selectionStore', 'subPaneStore', 'paneManagerStore'] }),
   )

@@ -1,4 +1,4 @@
-import { BaseApp } from './App'
+import { AppBit } from '@mcro/models'
 
 export type ItemID = number | string
 
@@ -33,4 +33,4 @@ export type ListsAppData = {
   items: { [key in ItemID]: ListAppDataItem }
 }
 
-export type ListsApp = BaseApp & { type: 'lists'; data: ListsAppData }
+export type ListsAppBit = AppBit & { type: 'lists'; data: ListsAppData }

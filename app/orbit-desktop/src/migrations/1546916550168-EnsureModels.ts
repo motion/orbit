@@ -1,5 +1,5 @@
 import {
-  App,
+  AppBit,
   AppEntity,
   AppType,
   SettingEntity,
@@ -57,7 +57,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
       spaces.map(async space => {
         const apps = await getRepository(AppEntity).find({ spaceId: space.id })
         if (!apps.length) {
-          const defaultApps: App[] = [
+          const defaultApps: AppBit[] = [
             {
               target: 'app',
               name: 'Search',

@@ -12,6 +12,7 @@ import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
+  closeApp: 'command+q',
   closeTab: 'command+w',
   commandNew: 'command+n',
   commandOpen: 'command+enter',

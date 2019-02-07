@@ -67,7 +67,7 @@ const SuggestionButton = (props: ButtonProps) => (
     borderWidth={0}
     marginRight={8}
     borderTop={[2, 'transparent']}
-    alpha={0.7}
+    alpha={0.6}
     hoverStyle={{
       alpha: 1,
     }}

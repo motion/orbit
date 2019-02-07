@@ -14,7 +14,7 @@ export default observer(function OrbitControls() {
 
   function getFormattedToolbars() {
     return (
-      <>
+      <ToolbarsFormattedChrome>
         <ToolbarSide>{toolbars && toolbars.before}</ToolbarSide>
         <ToolbarCenter>
           {toolbars && toolbars.center && (
@@ -26,7 +26,7 @@ export default observer(function OrbitControls() {
           )}
         </ToolbarCenter>
         <ToolbarSide atEnd>{toolbars && toolbars.after}</ToolbarSide>
-      </>
+      </ToolbarsFormattedChrome>
     )
   }
 
@@ -40,6 +40,13 @@ export default observer(function OrbitControls() {
       </ToolbarInner>
     </ToolbarChrome>
   )
+})
+
+const ToolbarsFormattedChrome = gloss({
+  padding: [0, 10],
+  flexFlow: 'row',
+  alignItems: 'center',
+  flex: 1,
 })
 
 const ToolbarSpace = gloss({
@@ -59,7 +66,7 @@ const ToolbarChrome = gloss(Row, {
 }))
 
 const ToolbarInner = gloss({
-  flex: 1,
+  flex: 2,
   flexFlow: 'row',
   height,
   hasToolbars: {
@@ -69,6 +76,7 @@ const ToolbarInner = gloss({
 
 const ToolbarSide = gloss({
   flexFlow: 'row',
+  flex: 3,
   maxWidth: 150,
   alignItems: 'center',
   atEnd: {

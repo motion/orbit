@@ -13,6 +13,7 @@ export class OrbitStore {
   stores = useHook(useStoresSafe)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
+  isEditing = false
 
   get activePane() {
     return this.stores.paneManagerStore.activePane
@@ -38,6 +39,10 @@ export class OrbitStore {
     search: { id: '', type: AppType.search, title: '' },
   }
 
+  setEditing = () => {
+    this.isEditing = true
+  }
+
   setTorn = () => {
     this.isTorn = true
     console.log('Tearing away app', this.activePane.type)
@@ -49,7 +54,7 @@ export class OrbitStore {
     // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
     setTimeout(() => {
       App.setOrbitState({ docked: false })
-    }, 40)
+    }, 150)
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {

@@ -5,7 +5,7 @@ import { forkProcess } from '@mcro/orbit-fork-process'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
-import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron'
+import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'electron'
 import { pathExists } from 'fs-extra'
 import root from 'global'
 import { observer } from 'mobx-react-lite'
@@ -172,6 +172,7 @@ export default observer(function OrbitWindow() {
     return Electron.onMessage(Electron.messages.TEAR, async (appType: string) => {
       const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
       if (!(await pathExists(iconPath))) {
+        dialog.showErrorBox('No icon found for app...', 'Oops')
         console.error('no icon!')
         return
       }

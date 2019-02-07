@@ -139,19 +139,9 @@ export default observer(function OrbitNav() {
           opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"
         />
-        {activeApp.type === AppType.custom && (
-          <OrbitTab
-            thicc
-            icon="tool"
-            onClick={async () => {
-              // todo
-            }}
-          />
-        )}
         {showCreateNew && (
           <OrbitTab
             stretch
-            // icon={`orbit-custom`}
             iconSize={12}
             isActive
             label={newAppStore.app.name || 'New app'}
@@ -186,6 +176,17 @@ export default observer(function OrbitNav() {
 
         <View flex={1} />
 
+        {activeApp.type === AppType.custom && !orbitStore.isEditing && (
+          <OrbitTab
+            thicc
+            icon="tool"
+            tooltip="Edit app"
+            onClick={async () => {
+              orbitStore.setTorn()
+              orbitStore.setEditing()
+            }}
+          />
+        )}
         <OrbitTab
           isActive={onSettings}
           onClick={() => {

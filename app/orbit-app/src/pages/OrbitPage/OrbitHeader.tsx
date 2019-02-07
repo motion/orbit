@@ -1,6 +1,6 @@
-import { FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Button, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -17,7 +17,7 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const { isTorn } = orbitStore
+  const { isTorn, isEditing } = orbitStore
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
@@ -88,38 +88,19 @@ export default observer(function OrbitHeader() {
 
               <OrbitFilterIntegrationButton />
             </SegmentedRow>
-
-            {/* {!isTorn && <OrbitSpaceSwitch />} */}
-
-            {/* {!isTorn && (
-              <Absolute top={1} right={0}>
-                <Button
-                  chromeless
-                  isActive={isOnSettings}
-                  onClick={() => {
-                    if (isOnSettings) {
-                      paneManagerStore.back()
-                    } else {
-                      paneManagerStore.setActivePaneByType('settings')
-                    }
-                  }}
-                  tooltip="Settings"
-                >
-                  <Icon
-                    name="gear"
-                    size={13}
-                    opacity={0.2 + settingsIconActiveOpacityInc}
-                    hoverStyle={{
-                      opacity: 0.5 + settingsIconActiveOpacityInc,
-                    }}
-                  />
-                </Button>
-              </Absolute>
-            )} */}
           </HeaderContain>
 
           <View flex={1} />
         </Row>
+
+        {isEditing && (
+          <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+            <SegmentedRow spaced>
+              <Button tooltip="Open in VSCode">Edit</Button>
+              <Button tooltip="Deploy to space">Save</Button>
+            </SegmentedRow>
+          </Absolute>
+        )}
 
         {isTorn && <BorderBottom opacity={0.35} />}
       </HeaderTop>

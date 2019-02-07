@@ -1,4 +1,4 @@
-import { gloss, linearGradient, View, ViewProps } from '@mcro/gloss'
+import { gloss, View, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -26,7 +26,7 @@ export const OrbitOrb = React.forwardRef<any, ViewProps>(function OrbitOrb(
   ref,
 ) {
   // make sure its even number
-  let innerSize = Math.ceil(size * 0.8)
+  let innerSize = Math.ceil(size * 0.65)
   if (innerSize % 2 !== 0) {
     innerSize -= 1
   }
@@ -39,11 +39,11 @@ export const OrbitOrb = React.forwardRef<any, ViewProps>(function OrbitOrb(
       {...props}
       className={`undraggable ${props.className || ''}`}
     >
-      <View
-        borderRadius={1000}
+      <GradientOutlineCircle
         width={innerSize}
         height={innerSize}
-        background={linearGradient(colors[0], colors[1])}
+        startColor={colors[0]}
+        stopColor={colors[1]}
       />
     </OrbBackground>
   )
@@ -53,8 +53,7 @@ const OrbBackground = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
 }).theme((_, theme) => ({
-  background: (theme.background.isDark()
+  background: theme.background.isDark()
     ? theme.background.darken(0.4)
-    : theme.background.lighten(0.4)
-  ).alpha(0.7),
+    : theme.background.lighten(0.4),
 }))

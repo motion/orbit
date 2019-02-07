@@ -39,12 +39,12 @@ export class EnsureModels1546916550168 implements MigrationInterface {
         {
           name: 'Orbit',
           paneSort: [],
-          colors: ['blue', 'green'],
+          colors: ['#CACCAC', '#270769'],
         },
         {
           name: 'Me',
           paneSort: [],
-          colors: ['red', 'gray'],
+          colors: ['#ACEACE', '#D48D48'],
         },
       ])
     }

@@ -13,6 +13,7 @@ export function useActiveApp(): App {
 
   useObserver(() => {
     const app = activeApps.find(x => `${x.id}` === paneManagerStore.activePane.id)
+    if (!app) return
     if (app.id !== state.id) {
       setState({ id: app.id, app })
     }

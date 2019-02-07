@@ -29,6 +29,7 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       iconBefore: true,
       iconSize: 12,
       appConfig: {
+        type: AppType.sources,
         subType: 'manage-apps',
       },
     },

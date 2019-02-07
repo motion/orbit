@@ -135,8 +135,9 @@ export default observer(function OrbitNav() {
           onSortEnd={handleSortEnd}
           overflow="hidden"
           // let shadows from tabs go up above
-          paddingTop={10} // y
-          height={tabHeight + 10} // y
+          padding={10}
+          height={tabHeight + 20}
+          margin={[0, -10, -10]}
           flexWrap="wrap"
           opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"

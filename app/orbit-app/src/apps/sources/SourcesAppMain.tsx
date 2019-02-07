@@ -1,24 +1,33 @@
 import { useModel } from '@mcro/model-bridge'
-import { IntegrationType, SourceModel } from '@mcro/models'
+import { AppType, IntegrationType, SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { AppProps } from '../AppProps'
+import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
-export const SourcesAppMain = (props: AppProps<any>) => {
+export function SourcesAppMain(props: AppProps<any>) {
   if (!props.appConfig) {
     return null
   }
 
+  if (props.appConfig.subType === 'manage-apps') {
+    return <ManageApps />
+  }
+
+  if (props.appConfig.type === 'sources') {
+    return <SourceMain {...props} />
+  }
+
+  return <AppSubView appConfig={props.appConfig} />
+}
+
+function SourceMain(props: AppProps<AppType.sources>) {
   const [source] = useModel(
     SourceModel,
     props.appConfig.viewType !== 'setup' && {
       where: { id: +props.appConfig.id },
     },
   )
-
-  if (props.appConfig.subType === 'manage-apps') {
-    return <ManageApps />
-  }
 
   if (!source) {
     return null

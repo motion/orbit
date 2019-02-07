@@ -1,3 +1,12 @@
+prioritized:
+
+- get custom apps working ~2 weeks
+- get space management working ~2 weeks
+- get p2p or git based sync of apps working ~2 weeks
+- build website ~4 weeks
+- build docs ~4 weeks
+- go sell it ~~~
+
 nate:
 
 - add people to search

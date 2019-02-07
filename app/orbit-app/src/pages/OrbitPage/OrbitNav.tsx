@@ -69,19 +69,19 @@ export default observer(function OrbitNav() {
         if (!app) {
           return null
         }
-        const isLast = index !== activeApps.length
+        const isLast = index === activeApps.length
         const isActive = !showCreateNew && activeApp.id === id
         const nextIsActive =
           activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
         const isPinned = app.pinned
         return {
           app,
-          separator: !isActive && isLast && !nextIsActive,
+          separator: !isActive && !isLast && !nextIsActive,
           label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
-          icon: isPinned && `orbit-${app.type}`,
+          icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {

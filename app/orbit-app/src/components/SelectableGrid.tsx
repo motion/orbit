@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from 'react'
 import { SelectionStore } from '../stores/SelectionStore'
 import { SortableGrid, SortableGridProps } from '../views/SortableGrid'
 
-type SelectableGridProps<A> = SortableGridProps<any> & {
+type SelectableGridProps<A> = SortableGridProps<A> & {
   getItem?: (item: A, { isSelected: boolean, select: Function }) => any
   selectionStore?: SelectionStore
 }
@@ -27,6 +27,7 @@ export function SelectableGrid({ items, getItem, ...props }: SelectableGridProps
         const select = () => {
           selectionStore.setActiveIndex(index)
         }
+        // this is complex so we can do single updates on selection move
         return observer(() => {
           return getItem(item, {
             isSelected: selectionStore.activeIndex === index,

@@ -20,6 +20,17 @@ let globalOptions = {
   context: createContext(null),
 }
 
+export function disposeStore(store: any) {
+  store.unmounted = true
+  store.willUnmount && store.willUnmount()
+  if (globalOptions.onUnmount) {
+    globalOptions.onUnmount(store)
+  }
+  if (store.subscriptions) {
+    store.subscriptions.dispose()
+  }
+}
+
 const isReactElement = (x: any) => {
   if (!x) {
     return false
@@ -122,9 +133,6 @@ const useReactiveStore = <A extends any>(
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
-    if (props && props.debug) {
-      console.log('yea create new', Store, props)
-    }
     const { hooks, store } = setupStoreReactiveProps(Store, props)
     storeRef.current = store
     storeHooks.current = hooks
@@ -158,14 +166,7 @@ export function useStore<P, A extends { props?: P } | any>(
   useEffect(() => {
     store.didMount && store.didMount()
     return () => {
-      store.unmounted = true
-      store.willUnmount && store.willUnmount()
-      if (globalOptions.onUnmount) {
-        globalOptions.onUnmount(store)
-      }
-      if (store.subscriptions) {
-        store.subscriptions.dispose()
-      }
+      disposeStore(store)
     }
   }, [])
 
@@ -186,3 +187,37 @@ export const configureUseStore = (opts: UseGlobalStoreOptions) => {
 function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }
+
+// export function useStores<P, A extends { props?: P } | any>(
+//   Stores: (new () => A)[],
+//   options: UseStoreOptions & {
+//     getProps?: (index: number) => P
+//   } = {},
+//   conditions: any[]
+// ): A[] {
+//   const stores = useRef<A[]>([])
+
+//   useEffect(() => {
+//     let next = stores.current
+
+//     // delete
+//     next = next.map(store => {
+//       if (paneManagerStore.panes.some(x => stores.some(a => `${a.id}` === x.id)) === false) {
+//         disposeStore(store)
+//         return null
+//       }
+//       return store
+//     }).filter(Boolean)
+
+//     // add
+//     for (const pane of paneManagerStore.panes) {
+//       if (pane.subType !== 'app') continue
+//       if (stores.some(x => `${x.id}` === pane.id)) continue
+//       next.push(
+
+//       )
+//     }
+//   }, conditions)
+
+//   return []
+// }

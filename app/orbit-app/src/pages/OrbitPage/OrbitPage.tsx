@@ -47,13 +47,19 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'
-  const closedTabAt = React.useRef(0)
+  const shortcutState = React.useRef({
+    closeTab: 0,
+    closeApp: 0,
+  })
 
   React.useEffect(() => {
     // prevent close on the main window
     window.onbeforeunload = function(e) {
+      console.log(shortcutState.current)
+      alert('unloading!')
+
       // prevent on command+w
-      if (Date.now() - closedTabAt.current < 100) {
+      if (Date.now() - shortcutState.current.closeTab < 100) {
         e.returnValue = false
         return
       }
@@ -77,7 +83,10 @@ const OrbitPageInner = observer(function OrbitPageInner() {
         <MainShortcutHandler
           handlers={{
             closeTab: () => {
-              closedTabAt.current = Date.now()
+              shortcutState.current.closeTab = Date.now()
+            },
+            closeApp: () => {
+              shortcutState.current.closeApp = Date.now()
             },
           }}
         >

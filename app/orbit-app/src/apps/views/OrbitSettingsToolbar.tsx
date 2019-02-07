@@ -35,7 +35,7 @@ export function OrbitSettingsToolbar() {
     <OrbitToolbar>
       <View margin="auto" width={420}>
         <SegmentedRow borderRadius={200} boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]}>
-          <Tabs active={activePaneKey} height={24} onActive={onActive}>
+          <Tabs active={activePaneKey} height={22} onActive={onActive}>
             <Tab
               key="sources"
               label={

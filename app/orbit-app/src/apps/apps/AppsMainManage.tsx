@@ -10,7 +10,6 @@ import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
-import { GetSortableItem } from '../../views/SortableGrid'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode
@@ -37,7 +36,7 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
             right={2}
             bottom={2}
             borderRadius={17}
-            boxShadow={isSelected ? [[0, 0, 10, 'blue']] : null}
+            boxShadow={theme => (isSelected ? [[0, 0, 10, theme.selected.background]] : null)}
             zIndex={-1}
           />
         )}
@@ -65,14 +64,14 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: App; isSelected
 export default function AppsMainManage() {
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
-  const activeItems = activeApps.map(x => ({
-    id: x.id,
-    title: x.name,
-    type: 'installed',
-    group: 'Installed Apps',
-  }))
   const results = [
-    ...activeItems,
+    ...activeApps.map(x => ({
+      id: x.id,
+      title: x.name,
+      type: 'installed',
+      group: 'Installed Apps',
+      disabled: x.pinned || x.editable === false,
+    })),
     {
       id: '10000',
       icon: (
@@ -106,17 +105,6 @@ export default function AppsMainManage() {
     [resultsKey],
   )
 
-  const getSortableItemProps = React.useCallback<GetSortableItem<App>>(
-    app => {
-      if (app.editable === false || app.pinned === true) {
-        return {
-          disabled: true,
-        }
-      }
-    },
-    [resultsKey],
-  )
-
   return (
     <Section sizePadding={2}>
       <Title>Apps</Title>
@@ -125,7 +113,14 @@ export default function AppsMainManage() {
         items={results}
         getItem={getItem}
         onSortEnd={handleSortEnd}
-        getSortableItemProps={getSortableItemProps}
+        getSortableItemProps={item => {
+          console.log('item', item)
+          if (item.disabled) {
+            return {
+              disabled: true,
+            }
+          }
+        }}
       />
     </Section>
   )

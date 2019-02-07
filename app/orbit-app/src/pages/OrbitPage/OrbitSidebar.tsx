@@ -45,6 +45,7 @@ export default observer(function OrbitSidebar() {
   })()
 
   const handleResize = width => {
+    console.log('set widht', width)
     setSidebarWidth(width)
   }
 

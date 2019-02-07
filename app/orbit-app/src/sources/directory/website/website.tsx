@@ -1,10 +1,10 @@
-import { WebsiteApp } from './views/WebsiteApp'
-import { WebsiteSettings } from './views/WebsiteSettings'
+import icon from '!raw-loader!../../../../public/icons/website.svg'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/website.svg'
-import { GetOrbitIntegration } from '../../types'
 import { findManyType } from '../../helpers/queries'
+import { GetOrbitIntegration } from '../../types'
+import { WebsiteApp } from './views/WebsiteApp'
 import { WebsiteItem } from './views/WebsiteItem'
+import { WebsiteSettings } from './views/WebsiteSettings'
 import { WebsiteSetup } from './views/WebsiteSetup'
 
 export const website: GetOrbitIntegration<'website'> = (source?: Source) => ({

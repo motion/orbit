@@ -62,7 +62,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               target: 'app',
               name: 'Search',
               type: AppType.search,
-              colors: ['green', 'magenta'],
+              colors: ['#D48D48', '#ACEACE'],
               pinned: true,
               editable: false,
               spaceId: space.id,
@@ -72,7 +72,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               target: 'app',
               name: 'Directory',
               type: AppType.people,
-              colors: ['red', 'darkblue'],
+              colors: ['#0F1453', '#449878'],
               spaceId: space.id,
               pinned: true,
               data: {},
@@ -82,7 +82,8 @@ export class EnsureModels1546916550168 implements MigrationInterface {
               name: 'Home',
               type: AppType.lists,
               spaceId: space.id,
-              colors: ['pink', 'orange'],
+              colors: ['#353353', '#EADEAD'],
+              pinned: true,
               data: {
                 rootItemID: 0,
                 items: {

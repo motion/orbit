@@ -1,5 +1,7 @@
+import { Contents } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
-import React, { memo, useEffect, useMemo } from 'react'
+import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
+import { findDOMNode } from 'react-dom'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { StoreContext } from '../contexts'
 import { useStoresSafe } from '../hooks/useStoresSafe'
@@ -16,64 +18,95 @@ export type AppViewProps = Pick<
   title?: string
   appStore?: AppStore<any>
   onAppStore?: Function
+  after?: React.ReactNode
+  before?: React.ReactNode
 }
 
-export const AppView = memo(function AppView(props: AppViewProps) {
-  const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
-  // ensure just one appStore ever is set in this tree
-  // warning should never change it if you pass in a prop
-  const appStore = props.appStore || useStore(AppStore, props)
+export type AppViewRef = {
+  hasView?: boolean
+}
 
-  useEffect(() => {
-    if (props.onAppStore) {
-      props.onAppStore(appStore)
-    }
-  }, [])
+export const AppView = memo(
+  forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
+    const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
+    // ensure just one appStore ever is set in this tree
+    // warning should never change it if you pass in a prop
+    const appStore = props.appStore || useStore(AppStore, props)
+    const rootRef = useRef<HTMLDivElement>(null)
 
-  const appElement = useMemo(() => {
+    useEffect(() => {
+      if (props.onAppStore) {
+        props.onAppStore(appStore)
+      }
+    }, [])
+
     if (!apps[props.type]) {
-      return <div>noo app of type {props.type}</div>
+      console.error('AppView: no app of type', props.type, props)
+      return null
     }
 
     const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
 
-    if (!AppView) {
+    // handle ref
+    useEffect(
+      () => {
+        if (!ref) return
+        if (!rootRef.current) return
+        const hasView = !!AppView && !!findDOMNode(rootRef.current).firstChild
+        const current = { hasView }
+        if (typeof ref === 'function') {
+          ref(current)
+        } else {
+          // @ts-ignore
+          ref.current = current
+          return () => {
+            // @ts-ignore
+            ref.current = null
+          }
+        }
+      },
+      [ref, rootRef.current],
+    )
+
+    const appElement = useMemo(() => {
+      if (!AppView) {
+        return null
+      }
+
+      const appElement = (
+        <Contents ref={rootRef}>
+          {before}
+          <AppView
+            appStore={props.appStore || appStore}
+            sourcesStore={stores.sourcesStore}
+            settingStore={stores.settingStore}
+            subPaneStore={stores.subPaneStore}
+            queryStore={stores.queryStore}
+            spaceStore={stores.spaceStore}
+            paneManagerStore={stores.paneManagerStore}
+            {...props}
+          />
+          {after}
+        </Contents>
+      )
+
+      // small rendering for index views
+      if (props.viewType === 'index') {
+        return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
+      }
+
+      // regular rendering for others
+      return appElement
+    }, Object.values(props))
+
+    if (!props.appStore) {
       return (
-        <div>
-          not found {props.type} {props.viewType}
-        </div>
+        <MergeContext Context={StoreContext} value={{ appStore }}>
+          {appElement}
+        </MergeContext>
       )
     }
 
-    const appElement = (
-      <AppView
-        appStore={props.appStore || appStore}
-        sourcesStore={stores.sourcesStore}
-        settingStore={stores.settingStore}
-        subPaneStore={stores.subPaneStore}
-        queryStore={stores.queryStore}
-        spaceStore={stores.spaceStore}
-        paneManagerStore={stores.paneManagerStore}
-        {...props}
-      />
-    )
-
-    // small rendering for index views
-    if (props.viewType === 'index') {
-      return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
-    }
-
-    // regular rendering for others
     return appElement
-  }, Object.values(props))
-
-  if (!props.appStore) {
-    return (
-      <MergeContext Context={StoreContext} value={{ appStore }}>
-        {appElement}
-      </MergeContext>
-    )
-  }
-
-  return appElement
-})
+  }),
+)

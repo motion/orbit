@@ -1,6 +1,6 @@
-import { FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Button, PassProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
@@ -17,7 +17,7 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const { isTorn } = orbitStore
+  const { isTorn, isEditing } = orbitStore
   const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
@@ -65,13 +65,7 @@ export default observer(function OrbitHeader() {
               </>
             )}
 
-            <SegmentedRow debug>
-              <FloatingBarButton
-                onClick={queryFilters.toggleSortBy}
-                tooltip={`Sort by: ${queryFilters.sortBy}`}
-                icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
-              />
-
+            <SegmentedRow>
               <Popover
                 openOnClick
                 closeOnClickAway
@@ -94,38 +88,23 @@ export default observer(function OrbitHeader() {
 
               <OrbitFilterIntegrationButton />
             </SegmentedRow>
-
-            {/* {!isTorn && <OrbitSpaceSwitch />} */}
-
-            {/* {!isTorn && (
-              <Absolute top={1} right={0}>
-                <Button
-                  chromeless
-                  isActive={isOnSettings}
-                  onClick={() => {
-                    if (isOnSettings) {
-                      paneManagerStore.back()
-                    } else {
-                      paneManagerStore.setActivePaneByType('settings')
-                    }
-                  }}
-                  tooltip="Settings"
-                >
-                  <Icon
-                    name="gear"
-                    size={13}
-                    opacity={0.2 + settingsIconActiveOpacityInc}
-                    hoverStyle={{
-                      opacity: 0.5 + settingsIconActiveOpacityInc,
-                    }}
-                  />
-                </Button>
-              </Absolute>
-            )} */}
           </HeaderContain>
 
           <View flex={1} />
         </Row>
+
+        {isEditing && (
+          <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+            <SegmentedRow>
+              <PassProps size={0.9} sizeHeight={0.9}>
+                <Button icon="edit" tooltip="Open in VSCode">
+                  Open
+                </Button>
+                <Button tooltip="Deploy to space">Save</Button>
+              </PassProps>
+            </SegmentedRow>
+          </Absolute>
+        )}
 
         {isTorn && <BorderBottom opacity={0.35} />}
       </HeaderTop>
@@ -148,7 +127,7 @@ const HeaderFade = gloss(FullScreen, {
   zIndex: -1,
 }).theme((_, theme) => {
   const lighterBg = theme.headerBackground.getColors()[0]
-  lighterBg[3] = 0.15
+  lighterBg[3] = 0.1
   const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
   return {
     background,

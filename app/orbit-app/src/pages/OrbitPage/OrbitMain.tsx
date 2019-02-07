@@ -8,6 +8,8 @@ import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
+import { OrbitControlsHeight } from './OrbitControls'
+import { useHasToolbar } from './OrbitSidebar'
 
 export default observer(function OrbitMain() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
@@ -34,12 +36,18 @@ export default observer(function OrbitMain() {
 const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   const appConfig = orbitStore.activeConfig[props.pane.type]
+  const hasBars = useHasToolbar(props.pane.id)
 
-  if (!appConfig) {
-    return null
-  }
-
-  return <AppView viewType="main" id={props.pane.id} type={props.pane.type} appConfig={appConfig} />
+  return (
+    <AppView
+      before={hasBars && <OrbitControlsHeight />}
+      viewType="main"
+      key={appConfig ? appConfig.id : 0}
+      id={props.pane.id}
+      type={props.pane.type}
+      appConfig={appConfig}
+    />
+  )
 })
 
 const OrbitMainView = gloss(View, {

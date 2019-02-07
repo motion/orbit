@@ -8,6 +8,7 @@ import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import ListItem from '../../views/ListItems/ListItem'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
@@ -62,7 +63,8 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
 })
 
 export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
-  const { searchStore } = useStoresSafe()
+  const { searchStore, queryStore } = useStoresSafe()
+  const { queryFilters } = queryStore
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
@@ -113,7 +115,16 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      <OrbitToolbar center={<OrbitSuggestionBar />} />
+      <OrbitToolbar
+        before={
+          <FloatingBarButton
+            onClick={queryFilters.toggleSortBy}
+            tooltip={`Sort by: ${queryFilters.sortBy}`}
+            icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
+          />
+        }
+        center={<OrbitSuggestionBar />}
+      />
       <SelectableList
         minSelected={0}
         items={items}

@@ -24,8 +24,8 @@ type SearchState = {
 }
 
 const groupToName = {
-  'last-day': 'Last Day',
-  'last-week': 'Last Week',
+  'last-day': 'Recently',
+  'last-week': 'Recently',
   'last-month': 'Last Month',
   overall: 'Overall',
 }
@@ -113,7 +113,7 @@ export class SearchStore {
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
       type: AppType.apps,
-      // group: this.stores.spaceStore.activeSpace.name,
+      group: 'Home',
     }
   }
 
@@ -129,7 +129,7 @@ export class SearchStore {
         slim: true,
         iconBefore: true,
         icon: <AppIcon app={app} />,
-        group: 'Top',
+        group: 'Apps',
         appConfig: {
           type: AppType.message,
           title: `Open ${app.name}`,
@@ -152,7 +152,7 @@ export class SearchStore {
         icon: 'orbit-custom-full',
         slim: true,
         iconBefore: true,
-        // group: spaceName,
+        // group: 'Home',
         appConfig: {
           type: AppType.message,
           title: `Create new app`,
@@ -179,7 +179,7 @@ export class SearchStore {
       this.queryFilters.dateState,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query], { when, setValue }): Promise<SearchState> => {
+    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchState> => {
       if (this.props.paneManagerStore) {
         await when(() => this.props.paneManagerStore.activePane.type === 'search')
       }
@@ -227,6 +227,7 @@ export class SearchStore {
       const { startDate, endDate } = dateState
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
+        await sleep(0)
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,

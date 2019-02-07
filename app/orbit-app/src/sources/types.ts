@@ -52,9 +52,9 @@ export type OrbitSourceMainProps<A extends ItemType> = OrbitItemViewProps<A> & {
 }
 
 export type OrbitSourceSettingProps<T extends Source> = {
-  appConfig: AppConfig
+  appConfig?: AppConfig
+  appPageStore?: AppPageStore
   source: T
-  appPageStore: AppPageStore
 }
 
 export type OrbitIntegration<A extends ItemType> = {

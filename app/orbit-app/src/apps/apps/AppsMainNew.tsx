@@ -1,3 +1,4 @@
+import { App } from '@mcro/models'
 import { Popover, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
@@ -35,7 +36,8 @@ export default observer(function AppsMainNew() {
           height={250}
           target={
             <View>
-              <AppIcon removeStroke app={app} size={48} />
+              {/* TODO @umed type... */}
+              <AppIcon removeStroke app={app as App} size={48} />
             </View>
           }
           overflowY="auto"

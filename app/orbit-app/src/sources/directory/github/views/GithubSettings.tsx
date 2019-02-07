@@ -1,5 +1,5 @@
-import { loadMany, save } from '@mcro/model-bridge'
-import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
+import { loadMany } from '@mcro/model-bridge'
+import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,6 @@ import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
-
   // setup state
   const [repositories, setRepositories] = useState(null)
   // console.log('repositories', repositories)
@@ -18,67 +17,75 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
     key: 'lastCommit',
     direction: 'up',
   })
-  const [whitelist, setWhitelist] = useState(new WhitelistManager({
-    source,
-    getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
-  }))
+  const [whitelist, setWhitelist] = useState(
+    new WhitelistManager({
+      source,
+      getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
+    }),
+  )
 
   // refresh whitelist when source or repositories change
-  useEffect(() => {
+  useEffect(
+    () => {
+      setWhitelist(
+        new WhitelistManager({
+          source,
+          getAll: () => {
+            return (repositories || []).map(repository => repository.nameWithOwner)
+          },
+        }),
+      )
 
-    setWhitelist(new WhitelistManager({
-      source,
-      getAll: () => {
-        return (repositories || []).map(repository => repository.nameWithOwner)
-      },
-    }))
-
-    return () => whitelist.dispose();
-
-  }, [source.id, JSON.stringify(repositories)])
+      return () => whitelist.dispose()
+    },
+    [source.id, JSON.stringify(repositories)],
+  )
 
   // load and set repositories when source changes
-  useEffect(() => {
+  useEffect(
+    () => {
+      // for some reason we can get any source here, so filter out everything except github
+      if (source.type !== 'github') return
 
-    // for some reason we can get any source here, so filter out everything except github
-    if (source.type !== 'github')
-      return
-
-    // if we have repositories stored in the source - use them at first
-    if (source.data.repositories) {
-      // console.log(`set repositories from source`, source.data.repositories)
-      setRepositories(source.data.repositories)
-    }
-
-    // to make sure we always have a fresh repositories we load them form API
-    loadMany(GithubRepositoryModel, {
-      args: {
-        sourceId: source.id,
-      },
-    }).then(freshApiRepositories => {
-      // console.log(`loaded repositories from remote`, freshApiRepositories)
-
-      // we check if api repositories are changed
-      const sourceRepositories = source.data.repositories
-      if (!freshApiRepositories ||
-        JSON.stringify(sourceRepositories) === JSON.stringify(freshApiRepositories))
-        return
-
-      // console.log(`repositories changed, updating`)
-
-      // then we update source data in the db
-      setRepositories(freshApiRepositories)
-      source.data = {
-        ...source.data,
-        repositories: freshApiRepositories
+      // if we have repositories stored in the source - use them at first
+      if (source.data.repositories) {
+        // console.log(`set repositories from source`, source.data.repositories)
+        setRepositories(source.data.repositories)
       }
-      save(SourceModel, {
-        id: source.id,
-        data: source.data
-      })
-    })
 
-  }, [source.id])
+      // to make sure we always have a fresh repositories we load them form API
+      loadMany(GithubRepositoryModel, {
+        args: {
+          sourceId: source.id,
+        },
+      }).then(freshApiRepositories => {
+        // console.log(`loaded repositories from remote`, freshApiRepositories)
+
+        // we check if api repositories are changed
+        const sourceRepositories = source.data.repositories
+        if (
+          !freshApiRepositories ||
+          JSON.stringify(sourceRepositories) === JSON.stringify(freshApiRepositories)
+        )
+          return
+
+        // console.log(`repositories changed, updating`)
+
+        // then we update source data in the db
+        setRepositories(freshApiRepositories)
+        source.data = {
+          ...source.data,
+          repositories: freshApiRepositories,
+        }
+        // TODO @umed commented out because this is deleting spaces property
+        // save(SourceModel, {
+        //   id: source.id,
+        //   data: source.data
+        // })
+      })
+    },
+    [source.id],
+  )
 
   return (
     <>
@@ -160,9 +167,7 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
                   sortValue: isActive,
                   value: (
                     <ReactiveCheckBox
-                      onChange={whitelist.updateWhitelistValueSetter(
-                        repository.nameWithOwner,
-                      )}
+                      onChange={whitelist.updateWhitelistValueSetter(repository.nameWithOwner)}
                       isActive={isActive}
                     />
                   ),

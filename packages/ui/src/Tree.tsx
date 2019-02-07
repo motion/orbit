@@ -29,14 +29,14 @@ export type TreeItemAttribute = {
 export type TreeItem = {
   id: TreeItemID
   name: string
-  expanded: boolean
   children: Array<TreeItemID>
-  attributes: Array<TreeItemAttribute>
-  data: TreeItemData
-  decoration: string
+  expanded?: boolean
+  attributes?: Array<TreeItemAttribute>
+  data?: TreeItemData
+  decoration?: string
 }
 
-export class Tree extends React.Component<{
+export type TreeProps = {
   onTreeItemExpanded: (key: TreeItemID, deep: boolean) => void
   onTreeItemSelected: (key: TreeItemID) => void
   onTreeItemHovered?: (key?: TreeItemID) => void
@@ -46,7 +46,9 @@ export class Tree extends React.Component<{
   root?: TreeItemID
   elements: { [key: string]: TreeItem }
   useAppSidebar?: boolean
-}> {
+}
+
+export class Tree extends React.Component<TreeProps> {
   render() {
     const {
       selected,

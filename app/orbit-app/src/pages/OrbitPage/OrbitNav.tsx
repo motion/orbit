@@ -1,34 +1,60 @@
+import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { remove, save } from '@mcro/model-bridge'
-import { AppModel } from '@mcro/models'
+import { save } from '@mcro/model-bridge'
+import { AppModel, AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
-import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
+import { getAppContextItems } from '../../helpers/getAppContextItems'
+import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useActiveApp } from '../../hooks/useActiveApp'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Pane } from '../../stores/PaneManagerStore'
+import { BorderBottom } from '../../views/Border'
+
+const isOnSettings = (pane?: Pane) =>
+  (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
+
+class OrbitNavStore {
+  stores = useHook(useStoresSafe)
+
+  previousTabID = react(
+    () => this.stores.paneManagerStore.activePane,
+    pane => {
+      ensure('not on settings', !isOnSettings(pane))
+      return pane.id
+    },
+  )
+}
 
 export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeApps = useActiveApps()
+  const activeApp = useActiveApp()
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
   if (orbitStore.isTorn) {
+    if (!paneManagerStore.activePane) {
+      console.error('no active pane?')
+    }
     return null
   }
 
   // after hooks
 
-  if (!activeApps.length || !space || !space.paneSort) {
+  if (!activeApps.length || !space || !space.paneSort || !activeApp) {
     return (
       <OrbitNavClip>
         <OrbitNavChrome />
@@ -44,7 +70,7 @@ export default observer(function OrbitNav() {
           return null
         }
         const isLast = index !== activeApps.length
-        const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
+        const isActive = !showCreateNew && activeApp.id === id
         const nextIsActive =
           activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
         const isPinned = app.pinned
@@ -77,19 +103,7 @@ export default observer(function OrbitNav() {
                   save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },
-              {
-                label: 'Remove',
-                click() {
-                  if (
-                    showConfirmDialog({
-                      title: 'Are you sure you want to delete this app?',
-                      message: `Deleting this app will remove it from this space and delete it's data.`,
-                    })
-                  ) {
-                    remove(AppModel, app)
-                  }
-                },
-              },
+              ...getAppContextItems(app),
             ]
           },
           onClick: () => {
@@ -106,10 +120,7 @@ export default observer(function OrbitNav() {
     )
     .filter(Boolean)
 
-  const isOnSettings =
-    paneManagerStore.activePane.type === 'sources' ||
-    paneManagerStore.activePane.type === 'spaces' ||
-    paneManagerStore.activePane.type === 'settings'
+  const onSettings = isOnSettings(paneManagerStore.activePane)
 
   return (
     <OrbitNavClip>
@@ -119,19 +130,20 @@ export default observer(function OrbitNav() {
           lockAxis="x"
           distance={8}
           items={items}
+          maxWidth={`calc(100% - ${showCreateNew ? 220 : 120}px)`}
           shouldCancelStart={isRightClick}
           onSortEnd={handleSortEnd}
-          flex={3000}
           overflow="hidden"
+          // let shadows from tabs go up above
+          paddingTop={10} // y
+          height={tabHeight + 10} // y
           flexWrap="wrap"
-          height={tabHeight}
-          opacity={isOnSettings ? 0.5 : 1}
+          opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"
         />
         {showCreateNew && (
           <OrbitTab
             stretch
-            // icon={`orbit-custom`}
             iconSize={12}
             isActive
             label={newAppStore.app.name || 'New app'}
@@ -155,36 +167,47 @@ export default observer(function OrbitNav() {
             tooltip={showCreateNew ? 'Cancel' : 'Add'}
             thicc
             icon={showCreateNew ? 'remove' : 'add'}
-            iconAdjustOpacity={-0.2}
+            iconAdjustOpacity={-0.1}
             onClick={async () => {
               newAppStore.setShowCreateNew(true)
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
               paneManagerStore.setActivePane('app-createApp')
             }}
-            transition="all ease-in 100ms"
           />
         )}
+
         <View flex={1} />
 
+        {activeApp.type === AppType.custom && !orbitStore.isEditing && (
+          <OrbitTab
+            thicc
+            icon="tool"
+            tooltip="Edit app"
+            onClick={async () => {
+              orbitStore.setTorn()
+              orbitStore.setEditing()
+            }}
+          />
+        )}
         <OrbitTab
-          isActive={isOnSettings}
+          isActive={onSettings}
           onClick={() => {
-            paneManagerStore.setActivePaneByType('sources')
             newAppStore.setShowCreateNew(false)
+            if (onSettings) {
+              paneManagerStore.setActivePane(store.previousTabID)
+            } else {
+              paneManagerStore.setActivePaneByType('sources')
+            }
           }}
           iconSize={14}
           icon="gear"
           thicc
         />
       </OrbitNavChrome>
+      <BorderBottom zIndex={-1} />
     </OrbitNavClip>
   )
 })
-
-// https://github.com/clauderic/react-sortable-hoc/issues/256
-const isRightClick = e =>
-  (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
-  (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
 const OrbitNavClip = gloss({
   zIndex: 10000000000,
@@ -194,24 +217,13 @@ const OrbitNavClip = gloss({
   transform: {
     y: 0.5,
   },
-}).theme((_, theme) => ({
-  boxShadow: [['inset', 0, -0.5, 0, theme.borderColor.alpha(0.6)]],
-}))
+})
 
 const OrbitNavChrome = gloss({
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
-  // '& .orbit-tab-inactive.unpinned .tab-icon': {
-  //   transition: 'all ease 300ms',
-  //   opacity: 0,
-  // },
-  // '&:hover .orbit-tab-inactive.unpinned .tab-icon': {
-  //   // transition: 'all ease 1200ms 500ms',
-  //   opacity: 0,
-  // },
-  // background: '#00000099',
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

@@ -11,7 +11,7 @@ import { default as VirtualList, VirtualListProps } from '../VirtualList/Virtual
 
 export type SearchableItem = Bit | PersonBit
 
-type Item = SearchableItem | OrbitListItemProps
+export type Item = SearchableItem | OrbitListItemProps
 
 export function orbitItemToListItemProps(props: any): OrbitListItemProps {
   if (props.target) {

@@ -6,6 +6,7 @@ NEXT
 client:
 
 - [ ] client side query cache
+
   - redo so its only touching `@mcro/model-bridge` observeOne/Many and save
     - [ ] dedupe same queries
     - [ ] keep queries alive after an unsubscribe, clean up after X (~5) seconds inactive
@@ -13,6 +14,12 @@ client:
     - [ ] 🐛 for some reason observeOne commands are being resolved by both Syncers and Desktop process
       - check to be sure were not doing duplicate work there and fix if so
   - this should just go from client => desktop right?
+
+- [ ] syncers are choking up app speed
+
+  - [ ] simple throttle
+  - [ ] test to be sure you can add tabs when syncing is running and fix if not
+
 - settings panes fixes:
   - [ ] drive syncer not showing anything in their setting pane, some simple solutin we can discuss
   - [ ] settings pane are loading/reloading their content every time

@@ -30,7 +30,7 @@ export const Toolbar = gloss(Row, {
   padding: 6,
   width: '100%',
 }).theme(({ height, borderTop, borderBottom, background, position, compact }, theme) => ({
-  background: background || theme.background || colors.light02,
+  background: background || theme.backgroundAlternate || theme.background,
   borderBottom:
     borderBottom ||
     (position === 'bottom' ? 'none' : [1, theme.borderColor || colors.sectionHeaderBorder]),

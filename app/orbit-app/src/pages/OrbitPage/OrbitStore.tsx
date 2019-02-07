@@ -13,6 +13,7 @@ export class OrbitStore {
   stores = useHook(useStoresSafe)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
+  isEditing = false
 
   get activePane() {
     return this.stores.paneManagerStore.activePane
@@ -25,17 +26,26 @@ export class OrbitStore {
   syncThemeToAppState = react(
     () => [this.activeUser && this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
     ([theme, osTheme]) => {
-      if (theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')) {
+      ensure('active user', !!this.activeUser)
+      const shouldBeDark = theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')
+      if (shouldBeDark) {
         App.setState({ isDark: true })
       } else {
         App.setState({ isDark: false })
       }
+    },
+    {
+      defaultValue: Desktop.state.operatingSystem.theme,
     },
   )
 
   appStores: { [key: string]: AppStore<any> } = {}
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
+  }
+
+  setEditing = () => {
+    this.isEditing = true
   }
 
   setTorn = () => {
@@ -49,7 +59,7 @@ export class OrbitStore {
     // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
     setTimeout(() => {
       App.setOrbitState({ docked: false })
-    }, 40)
+    }, 150)
   }
 
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {

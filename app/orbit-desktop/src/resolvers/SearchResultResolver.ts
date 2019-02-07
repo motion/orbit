@@ -140,8 +140,14 @@ export class SearchResultResolver {
     }
     this.log.timer('search in cosal', query)
     const results = await this.cosal.search(query, Math.max(300, this.args.take))
-    const ids = results.map(x => x.id)
-    this.log.timer('search in cosal', { results, ids })
+
+    let ids = []
+    // distance is "relevancy", we can adjust this with testing
+    const lastIndex = results.findIndex(x => x.distance > 0.5)
+    if (lastIndex > 0) {
+      ids = results.slice(0, lastIndex).map(x => x.id)
+    }
+    this.log.timer('search in cosal', ids)
     return ids
   }
 
@@ -150,6 +156,7 @@ export class SearchResultResolver {
    */
   private async search(contentType: BitContentType): Promise<[Bit[], number]> {
     const sourceIds = this.sources.map(source => source.id)
+    this.log.info(`search`, this.sources, this.args)
 
     // parallel search both fts and cosal
     const [ftsResults, cosalResults] = await Promise.all([

@@ -53,9 +53,22 @@ export class NewAppStore {
   }
 
   setApp(type: AppType) {
+    const nextApp = defaultApps.find(x => x.type === type)
+    let name = this.app.name
+    let colors = this.app.colors
+    const neverChangedName = name === defaultApps.find(x => x.type === this.app.type).name
+    if (neverChangedName) {
+      name = nextApp.name
+      colors = nextApp.colors
+    }
     this.app = {
       ...this.app,
+      // update if not changed
+      name,
+      colors,
+      // always update
       type,
+      data: nextApp.data,
     }
   }
 

@@ -6,6 +6,7 @@ import {
   SortableElement,
   SortableElementProps,
 } from 'react-sortable-hoc'
+import { isRightClick } from '../helpers/isRightClick'
 
 export type GetGridItem<A> = (item: A, index: number) => any
 export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>
@@ -52,5 +53,5 @@ const SortableGridInner = SortableContainer(
 )
 
 export function SortableGrid(props: SortableGridProps<any>) {
-  return <SortableGridInner axis="xy" pressDelay={150} {...props} />
+  return <SortableGridInner shouldCancelStart={isRightClick} axis="xy" pressDelay={50} {...props} />
 }

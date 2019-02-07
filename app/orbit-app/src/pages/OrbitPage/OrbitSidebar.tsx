@@ -42,11 +42,11 @@ export function useInspectViews() {
 }
 
 export default observer(function OrbitSidebar() {
-  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStoresSafe()
+  const { activePane } = paneManagerStore
   const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
   const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
-  const { activePane } = orbitStore
   const { hasMain, hasIndex } = useInspectViews()
 
   if (!activePane) {

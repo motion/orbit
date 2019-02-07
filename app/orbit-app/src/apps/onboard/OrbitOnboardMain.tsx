@@ -77,7 +77,7 @@ class OnboardStore {
 const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
-export default observer(function OrbitOnboard() {
+export default observer(function OrbitOnboardMain() {
   const stores = useStoresSafe()
   const store = useStore(OnboardStore)
 

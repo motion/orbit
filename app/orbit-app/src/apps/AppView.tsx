@@ -44,11 +44,6 @@ export const AppView = memo(
     const views = stores.appsStore.appViews[props.id] || apps[props.type] || {}
     const AppView = views[props.viewType] as GenericComponent<AppProps>
 
-    if (!views || !AppView) {
-      console.log('AppView: no app of type', props.id, props.type, props.viewType, props)
-      return null
-    }
-
     // handle ref
     useEffect(
       () => {
@@ -72,11 +67,15 @@ export const AppView = memo(
     )
 
     const appElement = useMemo(() => {
+      if (!AppView) {
+        return null
+      }
+
       const appElement = (
         <Contents ref={rootRef}>
-          {before}
+          {before || null}
           <AppView appStore={props.appStore || appStore} {...props} />
-          {after}
+          {after || null}
         </Contents>
       )
 
@@ -89,8 +88,9 @@ export const AppView = memo(
       return appElement
     }, Object.values(props))
 
-    if (props.viewType == 'main') {
-      console.log('returning it', props.id, appElement)
+    if (!appElement) {
+      console.log('AppView: no app of type', props.type, apps, stores.appsStore.appViews, props)
+      return null
     }
 
     if (!props.appStore && !stores.appStore) {

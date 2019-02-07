@@ -1,6 +1,6 @@
 import { AppBit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import React, { memo } from 'react'
+import React, { useMemo } from 'react'
 import { StoreContext } from '../contexts'
 import { useActiveApps } from '../hooks/useActiveApps'
 import { MergeContext } from '../views/MergeContext'
@@ -35,33 +35,47 @@ export default function AppsLoader(props: { children?: any }) {
   )
 }
 
-const AppLoader = memo(
-  function AppLoader({ app, store }: { app: AppBit; store: AppsStore }) {
-    const AppView = apps[app.type]
+type AppLoaderProps = { app: AppBit; store: AppsStore }
 
-    if (!AppView) {
-      throw new Error(`App not found ${app.type}`)
-    }
+function AppLoader(props: AppLoaderProps) {
+  const AppView = apps[props.app.type]
 
+  if (!AppView) {
+    throw new Error(`App not found ${props.app.type}`)
+  }
+
+  // never run more than once
+  const element = useMemo(() => {
+    // functional app
     if (typeof AppView === 'function') {
-      const appStore = useStore(AppStore, { id: `${app.id}` })
-
-      return (
-        <MergeContext Context={StoreContext} value={{ appStore }}>
-          <AppView appStore={appStore} />
-        </MergeContext>
-      )
+      return <AppLoadDynamicView {...props} />
     }
 
+    // legacy
     if (AppView.index || AppView.main) {
-      store.handleAppViews(app.id, AppView)
+      props.store.handleAppViews(props.app.id, AppView)
+      return null
     } else {
       throw new Error(`Invalid definition ${AppView}`)
     }
+  }, [])
 
-    console.log('waht?', AppView)
-    return null
-  },
-  // NEVER re-render this component
-  () => true,
-)
+  return element
+}
+
+function AppLoadDynamicView({ app }: AppLoaderProps) {
+  const AppView = apps[app.type]
+  const appStore = useStore(AppStore, { id: `${app.id}` })
+
+  if (typeof AppView === 'function') {
+    return (
+      <MergeContext Context={StoreContext} value={{ appStore }}>
+        <AppView appStore={appStore} />
+      </MergeContext>
+    )
+  }
+
+  // should never get here just for typscript
+  console.warn('weird')
+  return null
+}

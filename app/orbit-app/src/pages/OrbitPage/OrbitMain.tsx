@@ -1,7 +1,8 @@
 import { gloss } from '@mcro/gloss'
 import { AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
+import { isEqual } from 'lodash'
+import { observer, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -30,22 +31,37 @@ export default observer(function OrbitMain() {
 })
 
 // separate view prevents big re-renders
-const OrbitPageMainView = observer(function OrbitPageMainView(props: { pane: Pane }) {
+function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
-  const appConfig = orbitStore.activeConfig[props.pane.type]
+  const [activeConfig, setActiveConfig] = React.useState(null)
   const hasBars = useHasToolbar(props.pane.id)
 
-  return (
-    <AppView
-      before={hasBars && <OrbitControlsHeight />}
-      viewType="main"
-      key={appConfig ? appConfig.id : 0}
-      id={props.pane.id}
-      type={props.pane.type}
-      appConfig={appConfig}
-    />
+  useObserver(() => {
+    const appConfig = orbitStore.activeConfig[props.pane.type]
+    if (!isEqual(appConfig, activeConfig)) {
+      setActiveConfig(appConfig)
+    }
+  })
+
+  // only ever render once!
+  const element = React.useMemo(
+    () => {
+      return (
+        <AppView
+          key={activeConfig ? activeConfig.id : Math.random()}
+          before={hasBars && <OrbitControlsHeight />}
+          viewType="main"
+          id={props.pane.id}
+          type={props.pane.type}
+          appConfig={activeConfig}
+        />
+      )
+    },
+    [activeConfig],
   )
-})
+
+  return element
+}
 
 const OrbitMainView = gloss(View, {
   flex: 1,

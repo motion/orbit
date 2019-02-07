@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { apps as appsApps } from './apps/index'
+import AppsAppsMain from './apps/AppsMain'
 import { AppDefinition } from './AppTypes'
 import { bit } from './bit'
 import { createApp } from './createApp'
 import { custom } from './custom/custom'
 import { ListsApp } from './lists/ListsApp'
-import { onboard } from './onboard'
+import OrbitOnboardMain from './onboard/OrbitOnboardMain'
 import { people } from './people/people'
 import { search } from './search'
 import { settings } from './settings'
@@ -25,8 +25,12 @@ export const apps: AppsIndex = {
   sources,
   settings,
   bit,
-  apps: appsApps,
-  onboard,
+  apps: {
+    main: AppsAppsMain,
+  },
+  onboard: {
+    main: OrbitOnboardMain,
+  },
   createApp,
   custom,
   message: {

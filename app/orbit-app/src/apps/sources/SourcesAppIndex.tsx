@@ -25,7 +25,6 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
   const results = [
     {
       title: 'Manage Apps',
-      subtitle: `${activeApps.map(x => x.name).join(', ')}`,
       icon: 'orbit-apps-full',
       iconBefore: true,
       iconSize: 12,

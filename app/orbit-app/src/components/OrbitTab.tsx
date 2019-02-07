@@ -125,7 +125,7 @@ function OrbitTabIcon(props: IconProps) {
       color={invertLightness(theme.color, 0.8)}
       opacity={opacity}
       className="tab-icon"
-      transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
+      // transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
       {...props}
     />
@@ -205,10 +205,9 @@ const Separator = gloss({
   right: 0,
   bottom: 0,
   transform: {
-    y: -1,
     x: 0.5,
   },
   width: 1,
 }).theme((_, theme) => ({
-  background: `linear-gradient(transparent 15%, ${theme.background.darken(0.2).alpha(0.65)})`,
+  background: `linear-gradient(transparent, ${theme.borderColor.alpha(0.65)})`,
 }))

@@ -17,7 +17,6 @@ export type ListAppProps = AppProps & {
 }
 
 export function ListsApp(props: AppProps) {
-  console.log('got props', props)
   const store = useStore(ListStore, props)
   return (
     <App index={<ListsAppIndex {...props} store={store} />}>

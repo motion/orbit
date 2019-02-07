@@ -12,7 +12,6 @@ import { ListAppProps } from './ListsApp'
 import { ListsAppBit } from './types'
 
 export default React.memo(function ListsAppMain(props: ListAppProps) {
-  console.log('render main list', props)
   if (!props.appConfig) {
     return null
   }

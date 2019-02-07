@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import { AppsStore } from '../apps/AppsLoader'
 import { AppStore } from '../apps/AppStore'
 import { SubPaneStore } from '../components/SubPaneStore'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'
@@ -26,7 +27,8 @@ export type AllStores = {
   spaceStore?: SpaceStore
   settingStore?: SettingStore
   orbitWindowStore?: OrbitWindowStore
-  appStore?: AppStore<any>
+  appStore?: AppStore
+  appsStore?: AppsStore
   appPageStore?: AppPageStore
   shortcutStore?: ShortcutStore
   subPaneStore?: SubPaneStore

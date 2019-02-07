@@ -4,7 +4,7 @@ import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults
 import SelectableList from '../../views/Lists/SelectableList'
 import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
-export default function StetingsAppIndex() {
+export default function SettingsAppIndex() {
   const [user] = useActiveUser()
   const results = useOrbitFilterableResults({
     items: [

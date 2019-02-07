@@ -3,28 +3,25 @@ import { AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { apps } from '../../apps/apps'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { OrbitControlsHeight } from './OrbitControls'
-import { useHasToolbar } from './OrbitSidebar'
+import { useHasToolbar, useInspectViews } from './OrbitSidebar'
 
 export default observer(function OrbitMain() {
-  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStoresSafe()
+  const { hasMain } = useInspectViews()
 
-  if (!orbitStore.activePane) {
+  if (!paneManagerStore.activePane) {
     return null
   }
-
-  const activeApp = apps[orbitStore.activePane.type]
-  const hasMain = !!activeApp.main
 
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
       {paneManagerStore.panes.map(pane => (
-        <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight preventScroll>
+        <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
           <OrbitPageMainView pane={pane} />
         </SubPane>
       ))}

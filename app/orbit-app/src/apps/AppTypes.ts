@@ -11,11 +11,13 @@ export type AppProps = {
   isActive?: boolean | (() => boolean)
 }
 
+export type AppViews = {
+  index?: GenericComponent<AppProps>
+  main?: GenericComponent<AppProps>
+}
+
 export type AppDefinition =
   // migrating to
   | GenericComponent<AppProps>
   // legacy, migrating away from
-  | {
-      index: GenericComponent<AppProps>
-      main: GenericComponent<AppProps>
-    }
+  | AppViews

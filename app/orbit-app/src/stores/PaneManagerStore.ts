@@ -9,6 +9,8 @@ export type Pane = {
   type?: string
   keyable?: boolean
   isHidden?: boolean
+  // lets you use this a bit more dynamically
+  subType?: string
 }
 
 export class PaneManagerStore {

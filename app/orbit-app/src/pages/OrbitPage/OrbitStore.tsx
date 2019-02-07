@@ -39,7 +39,7 @@ export class OrbitStore {
     },
   )
 
-  appStores: { [key: string]: AppStore<any> } = {}
+  appStores: { [key: string]: AppStore } = {}
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
   }

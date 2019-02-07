@@ -1,4 +1,3 @@
-import { AppType } from '@mcro/models'
 import * as React from 'react'
 import { apps as appsApps } from './apps/index'
 import { AppDefinition } from './AppTypes'
@@ -15,7 +14,7 @@ import { spaces } from './spaces'
 import { topics } from './topics'
 import { MessageViewMain } from './views/MessageViewMain'
 
-type AppsIndex = { [key in AppType]: AppDefinition }
+type AppsIndex = { [key: string]: AppDefinition }
 
 export const apps: AppsIndex = {
   spaces,

@@ -16,21 +16,44 @@ import { OrbitControlsHeight } from './OrbitControls'
 
 type AppViewRefDictionary = { [key: string]: AppViewRef }
 
+// needs to be in observer for now, we can refactor later
+export function useInspectViews() {
+  const { appsStore, paneManagerStore } = useStoresSafe()
+  const { activePane } = paneManagerStore
+
+  let hasIndex = false
+  let hasMain = false
+
+  if (activePane.subType === 'app') {
+    // dynamic app view
+    hasMain = !!appsStore.appViews[activePane.id].main
+    hasIndex = !!appsStore.appViews[activePane.id].index
+  } else {
+    // static view we provide for alternate panes like settings/onboarding
+    const app = apps[activePane.type]
+    hasIndex = !!app['index']
+    hasMain = !!app['main']
+  }
+
+  return {
+    hasMain,
+    hasIndex,
+  }
+}
+
 export default observer(function OrbitSidebar() {
   const { orbitStore, paneManagerStore } = useStoresSafe()
   const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
   const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
   const { activePane } = orbitStore
+  const { hasMain, hasIndex } = useInspectViews()
 
   if (!activePane) {
     return null
   }
 
-  const app = apps[activePane.type]
-  const hasIndex = !!app.index
   const hasIndexContent = !indexRef[activePane.id] || indexRef[activePane.id].hasView === true
-  const hasMain = !!app.main
 
   const actualWidth = (() => {
     let next = 0

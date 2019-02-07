@@ -153,6 +153,7 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
       ...app,
       id: `${app.id}`,
       keyable: true,
+      subType: 'app',
     })),
   ]
 

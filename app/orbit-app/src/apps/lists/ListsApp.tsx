@@ -1,8 +1,9 @@
 import { SaveOptions } from '@mcro/mediator'
 import { save } from '@mcro/model-bridge'
-import { AppModel, Bit } from '@mcro/models'
+import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
+import { App } from '../App'
 import { AppProps } from '../AppTypes'
 import ListsAppIndex from './ListsAppIndex'
 import ListsAppMain from './ListsAppMain'
@@ -56,6 +57,8 @@ ListsApp.api = {
       }
     }
 
+    // TODO @umed type issue
+    // @ts-ignore
     save(AppModel, app as SaveOptions<ListsAppBit>)
   },
 }

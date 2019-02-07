@@ -1,13 +1,15 @@
 import { AppBit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React, { memo } from 'react'
+import { StoreContext } from '../contexts'
 import { useActiveApps } from '../hooks/useActiveApps'
+import { MergeContext } from '../views/MergeContext'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
 
-class AppsStore {
-  appViews = {}
+export class AppsStore {
+  appViews: { [key: number]: AppViews } = {}
 
   handleAppViews = (id: number, views: AppViews) => {
     this.appViews = {
@@ -26,10 +28,10 @@ export default function AppsLoader(props: { children?: any }) {
   })
 
   return (
-    <>
+    <MergeContext Context={StoreContext} value={{ appsStore }}>
       {appLoadViews}
       {props.children}
-    </>
+    </MergeContext>
   )
 }
 
@@ -43,12 +45,12 @@ const AppLoader = memo(
 
     if (typeof AppView === 'function') {
       const appStore = useStore(AppStore, { id: `${app.id}` })
-      const element = <AppView appStore={appStore} />
 
-      // TODO we need to validate make sure they return an <App />
-      console.log('element', element)
-
-      return element
+      return (
+        <MergeContext Context={StoreContext} value={{ appStore }}>
+          <AppView appStore={appStore} />
+        </MergeContext>
+      )
     }
 
     if (AppView.index || AppView.main) {

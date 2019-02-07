@@ -47,14 +47,19 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'
+  const closedTabAt = React.useRef(0)
 
   React.useEffect(() => {
     // prevent close on the main window
-    if (process.env.NODE_ENV === 'production') {
-      window.onbeforeunload = function(e) {
-        if (!orbitStore.isTorn) {
-          e.returnValue = false
-        }
+    window.onbeforeunload = function(e) {
+      // prevent on command+w
+      if (Date.now() - closedTabAt.current < 100) {
+        e.returnValue = false
+        return
+      }
+      if (orbitStore.isTorn) {
+        e.returnValue = false
+        return
       }
     }
   }, [])
@@ -69,7 +74,13 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   return (
     <OrbitToolBarProvider>
       <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
-        <MainShortcutHandler>
+        <MainShortcutHandler
+          handlers={{
+            closeTab: () => {
+              closedTabAt.current = Date.now()
+            },
+          }}
+        >
           <Theme name={theme}>
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>

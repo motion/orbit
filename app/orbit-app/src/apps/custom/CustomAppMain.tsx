@@ -3,6 +3,7 @@ import { BorderLeft, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
+import { Title } from '../../views'
 import { DateFormat } from '../../views/DateFormat'
 import ReactiveCheckBox from '../../views/ReactiveCheckBox'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
@@ -59,6 +60,8 @@ export function CustomAppMain(_props: AppProps<AppType.custom>) {
   return (
     <Row flex={1}>
       <VerticalSplitPane>
+        <Title>hello</Title>
+
         <CustomAppTree />
       </VerticalSplitPane>
 

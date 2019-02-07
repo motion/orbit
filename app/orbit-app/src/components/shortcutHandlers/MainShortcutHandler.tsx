@@ -12,6 +12,7 @@ import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
+  closeTab: 'command+w',
   commandNew: 'command+n',
   commandOpen: 'command+enter',
   open: ['tab', 'enter'],
@@ -35,7 +36,10 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-export default observer(function MainShortcutHandler({ children }: { children?: React.ReactNode }) {
+export default observer(function MainShortcutHandler(props: {
+  children?: React.ReactNode
+  handlers?: any
+}) {
   const { newAppStore, orbitStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
@@ -78,13 +82,13 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
     down: () => shortcutStore.emit(Direction.down),
     left: () => shortcutStore.emit(Direction.left),
     right: () => shortcutStore.emit(Direction.right),
-    rightTab: () => paneManagerStore.move(Direction.right),
-    leftTab: () => paneManagerStore.move(Direction.left),
   }
 
   if (paneManagerStore) {
     handlers = {
       ...handlers,
+      rightTab: () => paneManagerStore.move(Direction.right),
+      leftTab: () => paneManagerStore.move(Direction.left),
       1: () => paneManagerStore.setPaneByKeyableIndex(0),
       2: () => paneManagerStore.setPaneByKeyableIndex(1),
       3: () => paneManagerStore.setPaneByKeyableIndex(2),
@@ -101,10 +105,13 @@ export default observer(function MainShortcutHandler({ children }: { children?: 
     <MergeContext Context={StoreContext} value={{ shortcutStore }}>
       <FocusableShortcutHandler
         shortcuts={rootShortcuts}
-        handlers={handlers}
+        handlers={{
+          ...handlers,
+          ...props.handlers,
+        }}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       >
-        {children}
+        {props.children}
       </FocusableShortcutHandler>
     </MergeContext>
   )

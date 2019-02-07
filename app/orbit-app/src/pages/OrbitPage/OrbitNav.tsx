@@ -1,7 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
-import { AppModel } from '@mcro/models'
+import { AppModel, AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
@@ -13,6 +13,7 @@ import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useActiveApp } from '../../hooks/useActiveApp'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
@@ -40,16 +41,20 @@ export default observer(function OrbitNav() {
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeApps = useActiveApps()
+  const activeApp = useActiveApp()
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
-  if (orbitStore.isTorn || !paneManagerStore.activePane) {
+  if (orbitStore.isTorn) {
+    if (!paneManagerStore.activePane) {
+      console.error('no active pane?')
+    }
     return null
   }
 
   // after hooks
 
-  if (!activeApps.length || !space || !space.paneSort) {
+  if (!activeApps.length || !space || !space.paneSort || !activeApp) {
     return (
       <OrbitNavClip>
         <OrbitNavChrome />
@@ -65,7 +70,7 @@ export default observer(function OrbitNav() {
           return null
         }
         const isLast = index !== activeApps.length
-        const isActive = !showCreateNew && paneManagerStore.activePane.id === `${app.id}`
+        const isActive = !showCreateNew && activeApp.id === id
         const nextIsActive =
           activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
         const isPinned = app.pinned
@@ -134,6 +139,15 @@ export default observer(function OrbitNav() {
           opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"
         />
+        {activeApp.type === AppType.custom && (
+          <OrbitTab
+            thicc
+            icon="tool"
+            onClick={async () => {
+              // todo
+            }}
+          />
+        )}
         {showCreateNew && (
           <OrbitTab
             stretch
@@ -167,7 +181,6 @@ export default observer(function OrbitNav() {
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
               paneManagerStore.setActivePane('app-createApp')
             }}
-            transition="all ease-in 100ms"
           />
         )}
 

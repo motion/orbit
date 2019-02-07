@@ -1,15 +1,5 @@
-import { react } from '@mcro/black'
-import { loadMany, loadOne, observeOne, save } from '@mcro/model-bridge'
-import {
-  AppModel,
-  AppType,
-  BitModel,
-  ListAppDataItem,
-  ListAppDataItemFolder,
-  ListsApp,
-  PersonBitModel,
-  SearchResultModel,
-} from '@mcro/models'
+import { save } from '@mcro/model-bridge'
+import { AppModel, ListAppDataItem } from '@mcro/models'
 import {
   Absolute,
   Breadcrumbs,
@@ -23,115 +13,23 @@ import {
   useBreadcrumb,
   View,
 } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
-import { dropRight, flow, last } from 'lodash'
+import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
 import * as React from 'react'
 import { arrayMove } from 'react-sortable-hoc'
-import { lists } from '.'
 import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { searchGroupsToResults } from '../../stores/SearchStore'
 import { BorderBottom } from '../../views/Border'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
-import { AppProps } from '../AppProps'
+import { ListAppProps, ListsApp, loadListItem } from './ListsApp'
+import { ListStore } from './ListStore'
 
-class ListStore {
-  props: AppProps<AppType.lists>
-  stores = useHook(useStoresSafe)
-
-  query = ''
-  selectedIndex = 0
-  depth = 0
-  history = [0]
-  appRaw = react(() => +this.props.id, id => observeOne(AppModel, { args: { where: { id } } }))
-  searchCollapsed = true
-
-  setSearchCollapsedOnQuery = react(
-    () => !!this.query,
-    hasQuery => {
-      this.searchCollapsed = !hasQuery
-    },
-  )
-
-  toggleSearchCollapsed = () => {
-    this.setSearchCollapsed(!this.searchCollapsed)
-  }
-
-  setSearchCollapsed = val => {
-    console.log('setting to ', val)
-    this.searchCollapsed = val
-  }
-
-  get app() {
-    return this.appRaw as ListsApp
-  }
-
-  get parentId() {
-    return last(this.history)
-  }
-
-  get currentFolder() {
-    if (!this.app) {
-      return null
-    }
-    return this.app.data.items[this.parentId] as ListAppDataItemFolder
-  }
-
-  get selectedItem() {
-    if (!this.currentFolder) {
-      return null
-    }
-    const id = this.currentFolder.children[this.selectedIndex]
-    return this.items[id]
-  }
-
-  get items() {
-    return (this.app && this.app.data.items) || {}
-  }
-
-  searchResults = react(
-    () => [this.query, this.stores.spaceStore.activeSpace && this.stores.spaceStore.activeSpace.id],
-    async ([query, spaceId], { sleep }) => {
-      if (!query) {
-        return null
-      }
-      // make searchresults lower priority than filtered
-      await sleep(130)
-      const results = await loadMany(SearchResultModel, {
-        args: {
-          spaceId,
-          query,
-          take: 20,
-        },
-      })
-      await sleep(0)
-      return searchGroupsToResults(results).map(item => ({
-        ...item,
-        after: <Button margin={['auto', 0, 'auto', 10]} icon="add" />,
-      }))
-    },
-  )
-
-  setQuery = val => {
-    this.query = val
-  }
-
-  back = () => {
-    this.depth--
-    this.history = dropRight(this.history)
-  }
-}
-
-export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<AppType.lists>) {
-  const store = useStore(ListStore, props)
+export default observer(function ListsAppIndex({ store }: ListAppProps) {
   const numItems = Object.keys(store.items).length
 
   return (
@@ -175,34 +73,6 @@ export const ListsAppIndex = observer(function ListsAppIndex(props: AppProps<App
     </>
   )
 })
-
-export async function loadListItem(
-  item?: ListAppDataItem,
-  listId?: number,
-): Promise<OrbitListItemProps> {
-  switch (item.type) {
-    case 'folder':
-      return {
-        title: item.name,
-        subtitle: `${item.children.length} items`,
-        after: <Button circular chromeless size={0.9} icon="arrowright" />,
-        appConfig: {
-          id: `${listId || -1}`,
-          subId: `${item.id}`,
-          subType: 'folder',
-        },
-      }
-    case 'bit':
-      return {
-        item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
-      }
-    case 'person':
-      return {
-        item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
-      }
-  }
-  return null
-}
 
 const ListCurrentFolder = observer(function ListCurrentFolder(props: { store: ListStore }) {
   const { store } = props
@@ -266,7 +136,7 @@ const ListCurrentFolder = observer(function ListCurrentFolder(props: { store: Li
 })
 
 const addFolder = (store: ListStore) => {
-  lists.actions.receive(store.app, store.parentId, {
+  ListsApp.api.receive(store.app, store.parentId, {
     target: 'folder',
     name: store.query,
   })

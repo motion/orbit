@@ -17,6 +17,7 @@ type OrbitItemComponent<A extends ItemType> = React.FunctionComponent<OrbitItemV
 }
 
 export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> & {
+  index?: number
   // for appconfig merge
   id?: string
   type?: AppType

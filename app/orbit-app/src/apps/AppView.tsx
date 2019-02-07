@@ -1,22 +1,23 @@
-import { Contents } from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
-import { findDOMNode } from 'react-dom'
-import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
-import { StoreContext } from '../contexts'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { GenericComponent } from '../types'
-import { MergeContext } from '../views/MergeContext'
-import { AppProps } from './AppProps'
-import { apps } from './apps'
-import { AppStore } from './AppStore'
+import { Contents } from '@mcro/gloss';
+import { AppType } from '@mcro/models';
+import { useStore } from '@mcro/use-store';
+import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import { findDOMNode } from 'react-dom';
+import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider';
+import { StoreContext } from '../contexts';
+import { GenericComponent } from '../types';
+import { MergeContext } from '../views/MergeContext';
+import { apps } from './apps';
+import { AppStore } from './AppStore';
+import { AppProps } from './AppTypes';
 
 export type AppViewProps = Pick<
-  AppProps<any>,
-  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'appConfig'
+  AppProps,
+  'id' | 'title' | 'viewType' | 'isActive' | 'appConfig'
 > & {
+  type: AppType
   title?: string
-  appStore?: AppStore<any>
+  appStore?: AppStore
   onAppStore?: Function
   after?: React.ReactNode
   before?: React.ReactNode
@@ -28,7 +29,6 @@ export type AppViewRef = {
 
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
-    const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
     // ensure just one appStore ever is set in this tree
     // warning should never change it if you pass in a prop
     const appStore = props.appStore || useStore(AppStore, props)
@@ -45,7 +45,7 @@ export const AppView = memo(
       return null
     }
 
-    const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
+    const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps>
 
     // handle ref
     useEffect(
@@ -78,12 +78,6 @@ export const AppView = memo(
           {before}
           <AppView
             appStore={props.appStore || appStore}
-            sourcesStore={stores.sourcesStore}
-            settingStore={stores.settingStore}
-            subPaneStore={stores.subPaneStore}
-            queryStore={stores.queryStore}
-            spaceStore={stores.spaceStore}
-            paneManagerStore={stores.paneManagerStore}
             {...props}
           />
           {after}

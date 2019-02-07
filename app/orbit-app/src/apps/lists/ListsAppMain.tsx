@@ -1,18 +1,15 @@
 import { useModel } from '@mcro/model-bridge'
-import { AppModel, AppType, ListsApp } from '@mcro/models'
+import { AppModel, ListsApp } from '@mcro/models'
 import * as React from 'react'
 import { SubTitle, Title } from '../../views'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import OrbitList from '../../views/Lists/OrbitList'
 import { Message } from '../../views/Message'
 import { Section } from '../../views/Section'
-import { AppProps } from '../AppProps'
 import { AppSubView } from '../views/AppSubView'
-import { loadListItem } from './ListsAppIndex'
+import { ListAppProps, loadListItem } from './ListsApp'
 
-type ListAppProps = AppProps<AppType.lists>
-
-export const ListsAppMain = React.memo(function ListsAppMain(props: ListAppProps) {
+export default React.memo(function ListsAppMain(props: ListAppProps) {
   if (!props.appConfig) {
     return null
   }

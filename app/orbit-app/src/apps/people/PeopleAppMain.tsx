@@ -2,7 +2,6 @@ import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { loadMany, loadOne, observeMany } from '@mcro/model-bridge'
 import {
-  AppType,
   Bit,
   BitModel,
   CosalTopicsModel,
@@ -20,7 +19,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace, RoundButton } from '../../views'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { SubTitle } from '../../views/SubTitle'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
@@ -35,7 +34,7 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppProps<AppType.people>
+  props: AppProps
 
   get appConfig() {
     return this.props.appConfig
@@ -99,7 +98,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export default observer(function PeopleAppMain(props: AppProps<AppType.people>) {
+export default observer(function PeopleAppMain(props: AppProps) {
   const { queryStore } = useStoresSafe()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {

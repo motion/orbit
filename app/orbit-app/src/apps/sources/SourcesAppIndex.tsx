@@ -7,15 +7,17 @@ import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
-export default observer(function SourcesAppIndex(props: AppProps<AppType.sources>) {
+export default observer(function SourcesAppIndex(_props: AppProps) {
+  const { sourcesStore } = useStoresSafe()
   const [activeSpace] = useActiveSpace()
   // const activeSpaceName = activeSpace ? activeSpace.name : ''
-  const { activeSources, allSources } = props.sourcesStore
+  const { activeSources, allSources } = sourcesStore
   const activeApps = useActiveApps()
 
   if (!activeSpace || !activeApps.length) {
@@ -34,8 +36,6 @@ export default observer(function SourcesAppIndex(props: AppProps<AppType.sources
       },
     },
     ...activeSources.map(app => ({
-      // only apply the click events to the active sources...
-      ...props.itemProps,
       id: `${app.source.id}`,
       title: app.display.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,

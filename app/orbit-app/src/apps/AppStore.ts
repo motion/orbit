@@ -1,11 +1,10 @@
 import { ensure, react } from '@mcro/black'
-import { AppType } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { AppProps } from './AppProps'
+import { AppProps } from './AppTypes'
 
-export class AppStore<Type extends AppType> {
-  props: AppProps<Type>
+export class AppStore {
+  props: AppProps
   stores = useHook(() =>
     useStoresSafe({ optional: ['selectionStore', 'subPaneStore', 'paneManagerStore'] }),
   )

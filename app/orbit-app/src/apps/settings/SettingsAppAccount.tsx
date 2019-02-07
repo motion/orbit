@@ -1,12 +1,11 @@
-import { AppType } from '@mcro/models'
 import { Button, Row, SegmentedRow, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { InputRow, IntroText, Title, VerticalSpace } from '../../views'
 import { Section } from '../../views/Section'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
-export default observer(function SettingsAppAccount(_props: AppProps<AppType.settings>) {
+export default observer(function SettingsAppAccount(_props: AppProps) {
   // const [user] = useActiveUser()
 
   return (

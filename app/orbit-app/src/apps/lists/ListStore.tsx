@@ -1,16 +1,16 @@
 import { react } from '@mcro/black'
 import { loadMany, observeOne } from '@mcro/model-bridge'
-import { AppModel, AppType, ListAppDataItemFolder, ListsApp, SearchResultModel } from '@mcro/models'
+import { AppModel, ListAppDataItemFolder, ListsApp, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { searchGroupsToResults } from '../../stores/SearchStore'
-import { AppProps } from '../AppProps'
+import { ListAppProps } from './ListsApp'
 
 export class ListStore {
-  props: AppProps<AppType.lists>
+  props: ListAppProps
 
   stores = useHook(useStoresSafe)
   query = ''

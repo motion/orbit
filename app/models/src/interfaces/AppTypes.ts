@@ -1,3 +1,5 @@
+import { IntegrationType } from './IntegrationType'
+
 export enum AppType {
   search = 'search',
   people = 'people',
@@ -22,7 +24,7 @@ export type AppConfig = {
   data?: any
   icon?: string
   iconLight?: string
-  integration?: string
+  integration?: IntegrationType
   subType?: string
   viewType?: 'main' | 'index' | 'setup'
   // allow various things to be passed as config

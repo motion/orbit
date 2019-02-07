@@ -1,11 +1,10 @@
-import { AppType } from '@mcro/models'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 
-export default observer(function SettingsAppMain(props: AppProps<AppType.settings>) {
+export default observer(function SettingsAppMain(props: AppProps) {
   if (!props.appConfig) {
     return null
   }

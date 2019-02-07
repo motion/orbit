@@ -1,5 +1,3 @@
 import OrbitOnboard from './OrbitOnboard'
 
-export const onboard = {
-  main: OrbitOnboard,
-}
+export const onboard = OrbitOnboard

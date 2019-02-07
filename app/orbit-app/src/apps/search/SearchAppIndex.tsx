@@ -15,8 +15,8 @@ import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
-import { AppProps } from '../AppProps'
-import { listRootID, lists } from '../lists'
+import { AppProps } from '../AppTypes'
+import { listRootID, lists } from '../lists/ListsApp'
 import './calendar.css' // theme css file
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
@@ -62,7 +62,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   )
 })
 
-export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
+export default observer(function SearchAppIndex(props: AppProps) {
   const { searchStore, queryStore } = useStoresSafe()
   const { queryFilters } = queryStore
   const items = searchStore.searchState.results

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 26
+export const tabHeight = 28
 const inactiveOpacity = 0.45
 const border = 3
 
@@ -72,6 +72,9 @@ export function OrbitTab({
             thicc={thicc}
             size={iconSize}
             iconAdjustOpacity={iconAdjustOpacity}
+            transform={{
+              y: -0.5,
+            }}
             {...iconProps}
           />
         )}
@@ -124,7 +127,9 @@ function OrbitTabIcon(props: IconProps) {
     <Icon
       color={invertLightness(theme.color, 0.8)}
       opacity={opacity}
-      className="tab-icon"
+      className={`tab-icon-${props.thicc ? 'pinned' : 'unpinned'} tab-icon-${
+        props.isActive ? 'active' : 'inactive'
+      }`}
       // transform={{ y: tabHeight % 2 === 0 ? 0.5 : -0.5 }}
       // marginLeft={-(props.size + +props.marginRight)}
       {...props}
@@ -189,8 +194,12 @@ const NavButtonChrome = gloss<TabProps>({
         ]
       : null,
     '&:hover': glowStyle,
-    '&:hover .tab-icon': {
-      opacity: '1 !important',
+    '& .tab-icon-inactive.tab-icon-unpinned': {
+      opacity: '0.4 !important',
+      transition: 'all ease-in 100ms',
+    },
+    '&:hover .tab-icon-inactive.tab-icon-unpinned': {
+      opacity: '0.6 !important',
     },
     '&:hover .tab-label': {
       opacity: 1,

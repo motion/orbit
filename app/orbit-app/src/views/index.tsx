@@ -18,6 +18,7 @@ export const TableCell = gloss(View, {
 
 export const FormTableRow = gloss(Row, {
   width: '100%',
+  maxWidth: 500,
   minHeight: 32,
   alignItems: 'center',
 })

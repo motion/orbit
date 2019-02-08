@@ -13,7 +13,7 @@ import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import VerticalSplitPane from '../views/VerticalSplitPane'
 import AppsMainNew from './apps/AppsMainNew'
-import { AppProps } from './AppTypes'
+import { AppProps, AppType } from './AppTypes'
 import { AppView } from './AppView'
 import PreviewApp from './views/PreviewApp'
 
@@ -58,7 +58,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
 
   useEffect(
     () => {
-      newAppStore.setApp(subType)
+      newAppStore.setApp(AppType[subType])
     },
     [subType],
   )
@@ -89,7 +89,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
         </Section>
 
         <Section paddingTop={0}>
-          <AppView type={type} appConfig={{}} viewType="settings" />
+          <AppView type={subType} appConfig={{}} viewType="settings" />
         </Section>
       </View>
 

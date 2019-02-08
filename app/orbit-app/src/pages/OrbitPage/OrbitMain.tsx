@@ -9,6 +9,7 @@ import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { useInspectViews } from './OrbitSidebar'
+import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitControlsHeight } from './OrbitToolBar'
 
 export default function OrbitMain() {
@@ -54,16 +55,23 @@ function OrbitPageMainView(props: { pane: Pane }) {
       if (!appViews) {
         return null
       }
+      const key = `${JSON.stringify(props.pane)}${
+        activeConfig ? `${activeConfig.id}${activeConfig.type}` : 'none'
+      }`
       return (
-        <AppView
-          key={`${props.pane.id}${props.pane.type}${JSON.stringify(activeConfig)}`}
-          before={appViews.toolBar && <OrbitControlsHeight />}
-          after={appViews.statusBar && <OrbitControlsHeight />}
-          viewType="main"
-          id={props.pane.id}
-          type={props.pane.type}
-          appConfig={activeConfig}
-        />
+        <React.Fragment key={key}>
+          {appViews.toolBar && <OrbitControlsHeight />}
+          <OrbitMainBackground>
+            <AppView
+              viewType="main"
+              id={props.pane.id}
+              type={props.pane.type}
+              appConfig={activeConfig}
+            />
+          </OrbitMainBackground>
+
+          {appViews.statusBar && <OrbitStatusBarHeight />}
+        </React.Fragment>
       )
     },
     [activeConfig, appViews],
@@ -73,6 +81,11 @@ function OrbitPageMainView(props: { pane: Pane }) {
 }
 
 const OrbitMainView = gloss(View, {
+  flex: 1,
+  position: 'relative',
+})
+
+const OrbitMainBackground = gloss({
   flex: 1,
   position: 'relative',
 }).theme((_, theme) => ({

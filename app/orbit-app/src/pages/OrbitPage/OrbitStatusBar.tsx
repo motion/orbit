@@ -5,7 +5,9 @@ import { useApp } from '../../apps/AppView'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderTop } from '../../views/Border'
 
-export const statusBarHeight = 32
+export const statusBarHeight = 26
+
+export const OrbitStatusBarHeight = () => <div style={{ height: statusBarHeight }} />
 
 export default observer(function OrbitStatusBar() {
   const { orbitStore } = useStoresSafe()
@@ -34,5 +36,5 @@ const StatusBarChrome = gloss(Row, {
   justifyContent: 'center',
   zIndex: 1000000000,
 }).theme((_, theme) => ({
-  background: theme.tabBackgroundBottom || theme.background,
+  background: theme.background.darken(0.1).alpha(0.2),
 }))

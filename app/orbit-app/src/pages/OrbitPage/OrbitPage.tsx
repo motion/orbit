@@ -25,7 +25,7 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
-import OrbitContent from './OrbitMain'
+import OrbitMain from './OrbitMain'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
 import OrbitStatusBar from './OrbitStatusBar'
@@ -116,7 +116,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
                 <OrbitToolBar />
                 <Row flex={1}>
                   <OrbitSidebar />
-                  <OrbitContent />
+                  <OrbitMain />
                 </Row>
                 <OrbitStatusBar />
               </InnerChrome>

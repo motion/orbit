@@ -9,8 +9,9 @@ import { AppView, AppViewRef, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import { BorderTop } from '../../views/Border'
+import { BorderRight, BorderTop } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
+import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitControlsHeight } from './OrbitToolBar'
 
 type AppViewRefDictionary = { [key: string]: AppViewRef }
@@ -74,8 +75,15 @@ export default observer(function OrbitSidebar() {
   }
 
   return (
-    <Sidebar width={actualWidth} onResize={handleResize} minWidth={100} maxWidth={500}>
-      <OrbitIndexView>
+    <Sidebar
+      background="transparent"
+      width={actualWidth}
+      onResize={handleResize}
+      minWidth={100}
+      maxWidth={500}
+      noBorder
+    >
+      <SidebarContainer>
         <BorderTop />
         {paneManagerStore.panes.map(pane => {
           return (
@@ -88,7 +96,7 @@ export default observer(function OrbitSidebar() {
             />
           )
         })}
-      </OrbitIndexView>
+      </SidebarContainer>
     </Sidebar>
   )
 })
@@ -106,25 +114,35 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        <AppView
-          key={pane.id}
-          ref={state => {
-            if (isEqual(state, indexRef[pane.id])) return
-            setIndexRef({ ...indexRef, [pane.id]: state })
-          }}
-          viewType="index"
-          id={pane.id}
-          type={pane.type}
-          appConfig={{}}
-          before={appViews.toolBar && <OrbitControlsHeight />}
-          after={appViews.statusBar && <OrbitControlsHeight />}
-        />
+        {appViews.toolBar && <OrbitControlsHeight />}
+        <SidebarBackground>
+          <BorderRight />
+          <AppView
+            key={pane.id}
+            ref={state => {
+              if (isEqual(state, indexRef[pane.id])) return
+              setIndexRef({ ...indexRef, [pane.id]: state })
+            }}
+            viewType="index"
+            id={pane.id}
+            type={pane.type}
+            appConfig={{}}
+          />
+        </SidebarBackground>
+        {appViews.statusBar && <OrbitStatusBarHeight />}
       </ProvideSelectableHandlers>
     </SubPane>
   )
 })
 
-const OrbitIndexView = gloss(View, {
+const SidebarBackground = gloss({
+  flex: 1,
+  position: 'relative',
+}).theme((_, theme) => ({
+  background: theme.sidebarBackground,
+}))
+
+const SidebarContainer = gloss(View, {
   flex: 1,
   position: 'relative',
 })

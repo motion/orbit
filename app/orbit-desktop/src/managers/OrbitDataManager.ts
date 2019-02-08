@@ -1,8 +1,8 @@
-import { getGlobalConfig } from '@mcro/config'
 import { SettingEntity, UserEntity } from '@mcro/models'
 import { DesktopActions } from '@mcro/stores'
 import { pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
+import { homedir } from 'os'
 import { join } from 'path'
 import { getRepository } from 'typeorm'
 import { ensureHomeDir } from './OrbitDataManager/helpers'
@@ -10,8 +10,9 @@ import { ensureHomeDir } from './OrbitDataManager/helpers'
 // this manages the user configuration and data
 // we are using git to start
 // but we can dump into JSON to make it easy to migrate however
-export const dataDir = getGlobalConfig().paths.userData
-export const dataPrivateDir = join(dataDir, '.orbit')
+
+export const dataDir = join(homedir(), '.orbit')
+export const dataPrivateDir = join(dataDir, '.private')
 export const dataSettingsDir = join(dataPrivateDir, 'settings')
 export const dataSpacesDir = join(dataDir, 'spaces')
 
@@ -24,7 +25,7 @@ export class OrbitDataManager {
     this.dispose()
 
     // setup homedir
-    await ensureHomeDir(dataDir, [dataSettingsDir, dataSpacesDir])
+    await ensureHomeDir(dataDir, dataPrivateDir, [dataSettingsDir, dataSpacesDir])
 
     // validate homedir
     const subDirsExist = await Promise.all([pathExists(dataSettingsDir), pathExists(dataSpacesDir)])

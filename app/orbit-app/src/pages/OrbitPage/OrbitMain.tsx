@@ -43,13 +43,22 @@ function OrbitPageMainView(props: { pane: Pane }) {
     }
   })
 
+  // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
+  // we have a delay between select and show main sometimes
+  // for example when you move down a list quickly it has to be debounced
+  // so theres a gap there where its mismatched props
+  // THE SOLUTION:
+  // we have to basically keep the "old" main view in memory during that transition
+  // were mid-transition in some structural stuff so perhaps this can be done more cleanly
+  // but for now something like this needs to happen
+
   // only ever render once!
   const element = React.useMemo(
     () => {
       console.log('rendering app view', activeConfig)
       return (
         <AppView
-          key={activeConfig ? activeConfig.id : -1}
+          key={Math.random()}
           before={hasBars && <OrbitControlsHeight />}
           viewType="main"
           id={props.pane.id}

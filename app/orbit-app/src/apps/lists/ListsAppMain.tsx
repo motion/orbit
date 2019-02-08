@@ -7,7 +7,6 @@ import { SubTitle, Title } from '../../views'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import OrbitList from '../../views/Lists/OrbitList'
-import { Message } from '../../views/Message'
 import { Section } from '../../views/Section'
 import { AppSubView } from '../views/AppSubView'
 import { loadListItem } from './helpers'
@@ -43,10 +42,6 @@ const ListsAppMainFolder = observer(function ListsAppMainFolder(props: ListAppPr
     },
     [selectedItem && selectedItem.id],
   )
-
-  if (!selectedItem) {
-    return <Message>Not found!</Message>
-  }
 
   return (
     <Section>

@@ -1,11 +1,14 @@
-import { AppConfig } from '@mcro/models'
 import React from 'react'
-import { AppView } from '../AppView'
+import { AppView, AppViewProps } from '../AppView'
 
-export function AppSubView({ appConfig }: { appConfig: AppConfig }) {
+export function AppSubView({
+  viewType = 'main',
+  appConfig,
+}: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
   return (
     <AppView
-      viewType="main"
+      key={appConfig.id}
+      viewType={viewType}
       id={appConfig.id}
       title={appConfig.title}
       type={appConfig.type}

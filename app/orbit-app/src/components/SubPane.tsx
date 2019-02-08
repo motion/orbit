@@ -11,7 +11,6 @@ export type SubPaneProps = CSSPropertySetStrict & {
   id: any
   type?: AppType
   fullHeight?: boolean
-  preventScroll?: boolean
   style?: Object
   after?: React.ReactNode
   before?: React.ReactNode
@@ -27,7 +26,6 @@ type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 export const SubPane = observer(function SubPane(props: Props) {
   const {
     fullHeight,
-    preventScroll,
     style,
     after,
     before,
@@ -50,7 +48,6 @@ export const SubPane = observer(function SubPane(props: Props) {
           style={style}
           height={height}
           ref={subPaneStore.paneRef}
-          preventScroll={preventScroll}
           transition={transition}
           {...fullHeight && { bottom: 0 }}
           {...rest}

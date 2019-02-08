@@ -1,18 +1,18 @@
-import * as React from 'react'
-import { AppProps } from '../AppProps'
-import { Title } from '../../views'
-import { View } from '@mcro/ui'
-import { useStore, useHook } from '@mcro/use-store'
-import { react, ensure } from '@mcro/black'
-import { BitsNearTopicModel, AppType } from '@mcro/models'
+import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import ListItem from '../../views/ListItems/ListItem'
-import ScrollableContent from '../../sources/views/layout/ScrollableContent'
+import { BitsNearTopicModel } from '@mcro/models'
+import { View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import ScrollableContent from '../../sources/views/layout/ScrollableContent'
+import { Title } from '../../views'
+import ListItem from '../../views/ListItems/ListItem'
+import { AppProps } from '../AppTypes'
 
 class TopicsMainStore {
-  props: AppProps<AppType.topics>
+  props: AppProps
   stores = useHook(useStoresSafe)
 
   get appConfig() {
@@ -34,7 +34,7 @@ class TopicsMainStore {
   )
 }
 
-export default observer(function TopicsAppMain(props: AppProps<AppType.topics>) {
+export default observer(function TopicsAppMain(props: AppProps) {
   const store = useStore(TopicsMainStore, props)
 
   return (

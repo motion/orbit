@@ -1,5 +1,5 @@
 import { useModels } from '@mcro/model-bridge'
-import { AppType, PersonBitModel } from '@mcro/models'
+import { PersonBitModel } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
@@ -13,9 +13,9 @@ import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import SelectableList from '../../views/Lists/SelectableList'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
-export default observer(function PeopleAppIndex(props: AppProps<AppType.people>) {
+export default observer(function PeopleAppIndex(props: AppProps) {
   // people and query
   const { queryStore } = useStoresSafe()
   const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters

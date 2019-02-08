@@ -1,4 +1,3 @@
-import { AppType } from '@mcro/models'
 import { BorderLeft, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
@@ -7,7 +6,7 @@ import { Title } from '../../views'
 import { DateFormat } from '../../views/DateFormat'
 import ReactiveCheckBox from '../../views/ReactiveCheckBox'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
 const channels = [...new Array(50000)].map(() => ({
   name: faker.name.firstName(),
@@ -56,7 +55,7 @@ function CustomAppTree() {
   )
 }
 
-export function CustomAppMain(_props: AppProps<AppType.custom>) {
+export function CustomAppMain(_props: AppProps) {
   return (
     <Row flex={1}>
       <VerticalSplitPane>

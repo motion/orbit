@@ -6,9 +6,9 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_MINIMAL } from '../../constants'
 import { Icon } from '../../views/Icon'
-import ListItem from '../../views/ListItems/ListItem'
+import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { default as Slider, SliderPane } from '../../views/Slider'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 import { TopicEdit } from './TopicEdit'
 
 const icons = {
@@ -18,7 +18,7 @@ const icons = {
 }
 
 class TopicsIndexStore {
-  props: AppProps<AppType.topics>
+  props: AppProps
   activeTab = 'trend'
   tabs = ['trend', 'topics', 'terms']
 
@@ -47,7 +47,7 @@ function TopicList({ results, offset = 0, ...props }) {
   return (
     <>
       {results.map((res, index) => (
-        <ListItem
+        <OrbitListItem
           key={res.title}
           padding={[IS_MINIMAL ? 5 : 7, 11]}
           {...{ '&:hover': activeStyle }}
@@ -56,7 +56,7 @@ function TopicList({ results, offset = 0, ...props }) {
           appConfig={{
             id: res.id,
             title: res.title,
-            type: 'topics',
+            type: AppType.topics,
           }}
           {...props}
         >
@@ -70,7 +70,7 @@ function TopicList({ results, offset = 0, ...props }) {
               </Text>
             </View>
           </Row>
-        </ListItem>
+        </OrbitListItem>
       ))}
     </>
   )
@@ -90,52 +90,50 @@ const buttonProps = (store: TopicsIndexStore, type: string) => {
 
 const size = IS_MINIMAL ? 0.9 : 0.95
 
-export const TopicsAppIndex = observer(
-  (props: AppProps<AppType.topics> & { store?: TopicsIndexStore }) => {
-    const store = useStore(TopicsIndexStore, props)
-    return (
-      <>
-        <SegmentedRow
-          margin={8}
-          itemProps={{ background: 'transparent', width: '33.3%', size, sizeHeight: size }}
-        >
-          <Button {...buttonProps(store, 'trend')}>Trend</Button>
-          <Button {...buttonProps(store, 'topics')}>Topics</Button>
-          <Button {...buttonProps(store, 'terms')}>Terms</Button>
-        </SegmentedRow>
-        <Slider fixHeightToTallest curFrame={store.tabs.indexOf(store.activeTab)} transition="none">
-          <SliderPane>
-            <ScrollableContent>
-              {!!store.results.length && (
-                <>
-                  <TopicList results={store.results} />
-                </>
-              )}
-            </ScrollableContent>
-          </SliderPane>
+export const TopicsAppIndex = observer((props: AppProps & { store?: TopicsIndexStore }) => {
+  const store = useStore(TopicsIndexStore, props)
+  return (
+    <>
+      <SegmentedRow
+        margin={8}
+        itemProps={{ background: 'transparent', width: '33.3%', size, sizeHeight: size }}
+      >
+        <Button {...buttonProps(store, 'trend')}>Trend</Button>
+        <Button {...buttonProps(store, 'topics')}>Topics</Button>
+        <Button {...buttonProps(store, 'terms')}>Terms</Button>
+      </SegmentedRow>
+      <Slider fixHeightToTallest curFrame={store.tabs.indexOf(store.activeTab)} transition="none">
+        <SliderPane>
+          <ScrollableContent>
+            {!!store.results.length && (
+              <>
+                <TopicList results={store.results} />
+              </>
+            )}
+          </ScrollableContent>
+        </SliderPane>
 
-          <SliderPane>
-            <ScrollableContent>
-              <TopicList results={store.results} />
-            </ScrollableContent>
-            <SidebarBottom>
-              <TopicEdit type="topic" />
-            </SidebarBottom>
-          </SliderPane>
+        <SliderPane>
+          <ScrollableContent>
+            <TopicList results={store.results} />
+          </ScrollableContent>
+          <SidebarBottom>
+            <TopicEdit type="topic" />
+          </SidebarBottom>
+        </SliderPane>
 
-          <SliderPane>
-            <ScrollableContent>
-              <TopicList results={store.results} />
-            </ScrollableContent>
-            <SidebarBottom>
-              <TopicEdit type="term" />
-            </SidebarBottom>
-          </SliderPane>
-        </Slider>
-      </>
-    )
-  },
-)
+        <SliderPane>
+          <ScrollableContent>
+            <TopicList results={store.results} />
+          </ScrollableContent>
+          <SidebarBottom>
+            <TopicEdit type="term" />
+          </SidebarBottom>
+        </SliderPane>
+      </Slider>
+    </>
+  )
+})
 
 const SidebarBottom = gloss({
   padding: [12, IS_MINIMAL ? 6 : 12],

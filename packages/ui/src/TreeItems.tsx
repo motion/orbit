@@ -531,7 +531,6 @@ export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsStat
 
   render() {
     const items = this.state.flatTreeItems
-    console.log('items are', items)
     return (
       <TreeItemsBox>
         <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>

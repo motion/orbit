@@ -6,7 +6,7 @@ import { once } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
-import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
+import AppsLoader from '../../apps/AppsLoader'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -23,12 +23,13 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
-import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
 import OrbitContent from './OrbitMain'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
+import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
+import OrbitToolBar from './OrbitToolBar'
 
 export default React.memo(function OrbitPage() {
   // keep activeSpace.paneSort in sync with activeApps
@@ -78,36 +79,37 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <OrbitToolBarProvider>
-      <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
-        <MainShortcutHandler
-          handlers={{
-            closeTab: () => {
-              shortcutState.current.closeTab = Date.now()
-            },
-            closeApp: () => {
-              shortcutState.current.closeApp = Date.now()
-            },
-          }}
-        >
-          <Theme name={theme}>
-            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
+      <MainShortcutHandler
+        handlers={{
+          closeTab: () => {
+            shortcutState.current.closeTab = Date.now()
+          },
+          closeApp: () => {
+            shortcutState.current.closeApp = Date.now()
+          },
+        }}
+      >
+        <Theme name={theme}>
+          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+            <AppsLoader views={paneManagerStore.panes}>
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
-                <OrbitControls />
+                <OrbitToolBar />
                 <Row flex={1}>
                   <OrbitSidebar />
                   <OrbitContent />
                 </Row>
+                <OrbitStatusBar />
               </InnerChrome>
-            </AppWrapper>
-          </Theme>
-        </MainShortcutHandler>
-      </MergeContext>
-    </OrbitToolBarProvider>
+            </AppsLoader>
+          </AppWrapper>
+        </Theme>
+      </MainShortcutHandler>
+    </MergeContext>
   )
 })
 
@@ -120,12 +122,12 @@ const OrbitHeaderContainer = gloss(View, {
 }))
 
 const defaultPanes = [
-  { id: 'app-sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
-  { id: 'app-spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
-  { id: 'app-settings', name: 'Settings', type: 'settings', isHidden: true, keyable: true },
-  { id: 'app-apps', name: 'Apps', type: 'apps' },
-  { id: 'app-createApp', name: 'Add app', type: 'createApp' },
-  { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
+  { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
+  { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
+  { id: 'settings', name: 'Settings', type: 'settings', isHidden: true, keyable: true },
+  { id: 'apps', name: 'Apps', type: 'apps' },
+  { id: 'createApp', name: 'Add app', type: 'createApp' },
+  { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 
 function useOnce(fn: Function, reset = []) {
@@ -150,6 +152,7 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
       ...app,
       id: `${app.id}`,
       keyable: true,
+      subType: 'app',
     })),
   ]
 

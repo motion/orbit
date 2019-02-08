@@ -1,4 +1,3 @@
-import { AppType } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme } from '@mcro/ui'
 import { capitalize } from 'lodash'
@@ -10,7 +9,7 @@ import { Divider } from '../../views/Divider'
 import { Input } from '../../views/Input'
 import { Section } from '../../views/Section'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -54,7 +53,7 @@ const blurShortcut = () => {
   App.setOrbitState({ shortcutInputFocused: false })
 }
 
-export function SettingsAppGeneral(_props: AppProps<AppType.settings>) {
+export function SettingsAppGeneral(_props: AppProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user
   const updateSettings = settings => updateUser({ settings: { ...user.settings, ...settings } })

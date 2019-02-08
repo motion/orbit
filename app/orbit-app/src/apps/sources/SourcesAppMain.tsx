@@ -1,14 +1,29 @@
 import { useModel } from '@mcro/model-bridge'
-import { IntegrationType, SourceModel } from '@mcro/models'
+import { SourceModel } from '@mcro/models'
 import * as React from 'react'
-import { AppProps } from '../AppProps'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { AppProps } from '../AppTypes'
+import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
-export const SourcesAppMain = (props: AppProps<any>) => {
+export function SourcesAppMain(props: AppProps) {
   if (!props.appConfig) {
     return null
   }
 
+  if (props.appConfig.subType === 'manage-apps') {
+    return <ManageApps />
+  }
+
+  if (props.appConfig.type === 'sources') {
+    return <SourceMain {...props} />
+  }
+
+  return <AppSubView appConfig={props.appConfig} />
+}
+
+function SourceMain(props: AppProps) {
+  const { sourcesStore } = useStoresSafe()
   const [source] = useModel(
     SourceModel,
     props.appConfig.viewType !== 'setup' && {
@@ -16,16 +31,12 @@ export const SourcesAppMain = (props: AppProps<any>) => {
     },
   )
 
-  if (props.appConfig.subType === 'manage-apps') {
-    return <ManageApps />
-  }
-
   if (!source) {
     return null
   }
 
-  const type = props.appConfig.integration as IntegrationType
-  const View = props.sourcesStore.getView(type, 'setting')
+  const type = props.appConfig.integration
+  const View = sourcesStore.getView(type, 'setting')
 
   if (!View) {
     console.log(props.appConfig)

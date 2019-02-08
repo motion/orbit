@@ -76,7 +76,6 @@ export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
         }
         const nextItemID = history.current[props.depth]
         if (typeof nextItemID === 'number' && nextItemID !== currentItemID) {
-          console.log('updating current item from props change')
           setCurrentItemID(nextItemID)
         }
       },

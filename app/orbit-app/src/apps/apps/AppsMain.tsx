@@ -1,10 +1,9 @@
-import { AppType } from '@mcro/models'
 import React from 'react'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 import AppsMainManage from './AppsMainManage'
 import AppsMainNew from './AppsMainNew'
 
-export default function AppsAppsMain(props: AppProps<AppType.apps>) {
+export default function AppsAppsMain(props: AppProps) {
   if (!props.appConfig || props.appConfig.subType === 'new') {
     return <AppsMainNew />
   }

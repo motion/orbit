@@ -1,39 +1,34 @@
-import { AppType } from '@mcro/models'
 import * as React from 'react'
-import { GenericComponent } from '../types'
-import { AppProps } from './AppProps'
-import { apps as appsApps } from './apps/index'
+import AppsAppsMain from './apps/AppsMain'
+import { AppDefinition } from './AppTypes'
 import { bit } from './bit'
 import { createApp } from './createApp'
 import { custom } from './custom/custom'
-import { lists } from './lists'
-import { onboard } from './onboard'
+import { ListsApp } from './lists/ListsApp'
+import OrbitOnboardMain from './onboard/OrbitOnboardMain'
 import { people } from './people/people'
-import { search } from './search'
-import { settings } from './settings'
-import { sources } from './sources'
-import { spaces } from './spaces'
-import { topics } from './topics'
+import { SearchApp } from './search/SearchApp'
+import { SettingsApp } from './settings/SettingsApp'
+import { SourcesApp } from './sources/SourcesApp'
+import { SpacesApp } from './spaces/SpacesApp'
 import { MessageViewMain } from './views/MessageViewMain'
 
-type App = {
-  index?: GenericComponent<AppProps<any>>
-  main?: GenericComponent<AppProps<any>>
-}
-
-type AppsIndex = { [key in AppType]: App }
+type AppsIndex = { [key: string]: AppDefinition }
 
 export const apps: AppsIndex = {
-  spaces,
-  search,
+  spaces: SpacesApp,
+  search: SearchApp,
   people,
-  topics,
-  lists,
-  sources,
-  settings,
+  lists: ListsApp,
+  sources: SourcesApp,
+  settings: SettingsApp,
   bit,
-  apps: appsApps,
-  onboard,
+  apps: {
+    main: AppsAppsMain,
+  },
+  onboard: {
+    main: OrbitOnboardMain,
+  },
   createApp,
   custom,
   message: {

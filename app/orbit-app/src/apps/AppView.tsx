@@ -1,23 +1,23 @@
 import { Contents } from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
+import { useObserver } from 'mobx-react-lite'
+import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { findDOMNode } from 'react-dom'
+import isEqual from 'react-fast-compare'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { StoreContext } from '../contexts'
+import { AllStores } from '../contexts/StoreContext'
 import { useStoresSafe } from '../hooks/useStoresSafe'
-import { GenericComponent } from '../types'
 import { MergeContext } from '../views/MergeContext'
-import { AppProps } from './AppProps'
-import { apps } from './apps'
 import { AppStore } from './AppStore'
+import { AppProps, AppViews } from './AppTypes'
 
 export type AppViewProps = Pick<
-  AppProps<any>,
-  'id' | 'title' | 'viewType' | 'type' | 'isActive' | 'appConfig'
+  AppProps,
+  'id' | 'title' | 'viewType' | 'isActive' | 'appConfig'
 > & {
+  type: string
   title?: string
-  appStore?: AppStore<any>
-  onAppStore?: Function
+  appStore?: AppStore
   after?: React.ReactNode
   before?: React.ReactNode
 }
@@ -26,33 +26,71 @@ export type AppViewRef = {
   hasView?: boolean
 }
 
+// needs either an id or a type
+type GetAppViewProps = { id: string; appStore?: AppStore }
+
+type AppState = {
+  appViews: AppViews
+  appStore: AppStore
+}
+
+function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
+  const next = {
+    appStore: props.appStore || stores.appStore || null,
+    appViews: {},
+  }
+
+  // set store
+  if (!next.appStore && stores.appsStore) {
+    next.appStore = stores.appsStore.appStores[props.id]
+  }
+
+  // set view
+  if (stores.appsStore) {
+    next.appViews = stores.appsStore.appViews[props.id] || {}
+  }
+
+  return next
+}
+
+export function useApp(props: GetAppViewProps | false) {
+  const stores = useStoresSafe({ optional: ['appStore', 'appsStore'] })
+  const currentState = useRef<AppState>({
+    appViews: {},
+    appStore: null,
+  })
+  const [version, update] = useState(0)
+
+  if (version === 0 && props) {
+    currentState.current = getAppViewProps(props, stores)
+  }
+
+  useObserver(() => {
+    if (!props) return
+    const next = getAppViewProps(props, stores)
+    // set if necessary
+    if (!isEqual(next, currentState.current)) {
+      currentState.current = next
+      update(Math.random())
+    }
+  })
+
+  return currentState.current
+}
+
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
-    const stores = useStoresSafe({ optional: ['appStore', 'subPaneStore'] })
-    // ensure just one appStore ever is set in this tree
-    // warning should never change it if you pass in a prop
-    const appStore = props.appStore || useStore(AppStore, props)
     const rootRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-      if (props.onAppStore) {
-        props.onAppStore(appStore)
-      }
-    }, [])
-
-    if (!apps[props.type]) {
-      console.error('AppView: no app of type', props.type, props)
-      return null
-    }
-
-    const AppView = apps[props.type][props.viewType] as GenericComponent<AppProps<any>>
+    const { appViews, appStore } = useApp({ id: props.id || props.type })
+    const AppView = appViews[props.viewType]
 
     // handle ref
     useEffect(
       () => {
         if (!ref) return
         if (!rootRef.current) return
-        const hasView = !!AppView && !!findDOMNode(rootRef.current).firstChild
+        const domNode = findDOMNode(rootRef.current)
+        const hasView = !!domNode.firstChild
         const current = { hasView }
         if (typeof ref === 'function') {
           ref(current)
@@ -68,45 +106,42 @@ export const AppView = memo(
       [ref, rootRef.current],
     )
 
-    const appElement = useMemo(() => {
-      if (!AppView) {
-        return null
-      }
+    const appElement = useMemo(
+      () => {
+        if (!AppView || !appStore) {
+          return null
+        }
 
-      const appElement = (
-        <Contents ref={rootRef}>
-          {before}
-          <AppView
-            appStore={props.appStore || appStore}
-            sourcesStore={stores.sourcesStore}
-            settingStore={stores.settingStore}
-            subPaneStore={stores.subPaneStore}
-            queryStore={stores.queryStore}
-            spaceStore={stores.spaceStore}
-            paneManagerStore={stores.paneManagerStore}
-            {...props}
-          />
-          {after}
-        </Contents>
-      )
+        const appElement = (
+          <Contents ref={rootRef}>
+            {before || null}
+            <AppView appStore={props.appStore || appStore} {...props} />
+            {after || null}
+          </Contents>
+        )
 
-      // small rendering for index views
-      if (props.viewType === 'index') {
-        return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
-      }
+        // small rendering for index views
+        if (props.viewType === 'index') {
+          console.log(props, appElement)
+          return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
+        }
 
-      // regular rendering for others
-      return appElement
-    }, Object.values(props))
+        // regular rendering for others
+        return appElement
+      },
+      // never update, once we have our stuff
+      [appStore, AppView],
+    )
 
-    if (!props.appStore) {
-      return (
-        <MergeContext Context={StoreContext} value={{ appStore }}>
-          {appElement}
-        </MergeContext>
-      )
+    if (!appElement) {
+      console.debug('AppView: no app of type', props.type, props.viewType)
+      return null
     }
 
-    return appElement
+    return (
+      <MergeContext Context={StoreContext} value={{ appStore }}>
+        {appElement}
+      </MergeContext>
+    )
   }),
 )

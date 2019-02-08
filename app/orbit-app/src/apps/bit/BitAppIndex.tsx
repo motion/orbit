@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { AppProps } from '../AppProps'
-import { AppType } from '@mcro/models'
+import { AppProps } from '../AppTypes'
 
-export function BitAppIndex(props: AppProps<AppType.bit>) {
+export function BitAppIndex(props: AppProps) {
   return <>hi {props.id}</>
 }

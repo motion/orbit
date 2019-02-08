@@ -1,7 +1,8 @@
+import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
-import { Source, SourceModel, Space, SpaceModel, AppType, AppModel } from '@mcro/models'
+import { AppModel, Source, SourceModel, Space, SpaceModel } from '@mcro/models'
+import { AppType } from '../apps/AppTypes'
 import { getAppFromSource } from './SourcesStore'
-import { react, ensure } from '@mcro/black'
 
 export type Pane = {
   id: string

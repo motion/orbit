@@ -4,7 +4,7 @@ import { UserModel } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import { AppConfig } from '../../apps/AppTypes'
+import { AppConfig, AppType } from '../../apps/AppTypes'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 

@@ -94,6 +94,11 @@ export interface Bit {
   people?: Person[]
 
   /**
+   * Related to this Bit number of people.
+   */
+  peopleCount?: number
+
+  /**
    * Source is a Bit's owner.
    */
   source?: Source

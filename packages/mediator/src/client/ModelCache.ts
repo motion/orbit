@@ -8,31 +8,39 @@ export type ModelCacheEntry = {
   model: Model<any>
   value: any
   removeTimer: number
+  subscriptionObservers: ZenObservable.SubscriptionObserver<any>[]
+  initialized: boolean
 }
 
 export const ModelCache = {
   entries: [] as ModelCacheEntry[],
 
-  add(model: Model<any>, type: ModelCacheType, query: any, value: any) {
+  add(model: Model<any>, type: ModelCacheType, query: any, value: any, initialized: boolean) {
     // if there is entry remove it, add it to the cache again
     // and create a new entry and store it in the cache
-    const entry = this.findEntryByQuery(model, type, query)
+    let entry = this.findEntryByQuery(model, type, query)
     if (entry) {
       entry.value = value
+      entry.initialized = true
       if (entry.removeTimer) clearTimeout(entry.removeTimer)
     } else {
-      this.entries.push({
+      entry = {
         model,
         type,
         query: JSON.stringify(query || {}),
         value,
-      })
+        subscriptionObservers: [],
+        initialized
+      }
+      this.entries.push(entry)
     }
+    return entry
   },
 
   remove(model: Model<any>, type: ModelCacheType, query: any) {
     const entry = this.findEntryByQuery(model, type, query)
     if (!entry) return
+    if (entry.subscriptionObservers.length > 0) return
 
     // console.log(`removing in 5 seconds`)
     if (entry.removeTimer) {

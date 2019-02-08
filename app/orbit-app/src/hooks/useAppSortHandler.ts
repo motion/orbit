@@ -8,6 +8,7 @@ export function useAppSortHandler() {
 
   const handleSortEnd = ({ oldIndex, newIndex }) => {
     const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
+    // console.log('paneSort', paneSort)
     const { activePaneIndex } = orbitWindowStore
     // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
     const activePaneId = space.paneSort[activePaneIndex]
@@ -16,6 +17,7 @@ export function useAppSortHandler() {
       orbitWindowStore.activePaneIndex = paneSort.indexOf(activePaneId)
       console.log('updating active index to', orbitWindowStore.activePaneIndex)
     }
+    // console.log(`updating space`, paneSort)
     updateSpace({ paneSort })
   }
 

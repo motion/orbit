@@ -1,5 +1,5 @@
-import icon from '!raw-loader!../../../../public/icons/confluence.svg'
 import { Source } from '@mcro/models'
+import icon from '../../../../public/icons/confluence.svg'
 import { findManyType } from '../../helpers/queries'
 import { GetOrbitIntegration } from '../../types'
 import { ConfluenceApp } from './views/ConfluenceApp'

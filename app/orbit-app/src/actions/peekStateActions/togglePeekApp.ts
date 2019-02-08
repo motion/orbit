@@ -1,8 +1,9 @@
-import { AppConfig } from '@mcro/models'
-import { App } from '@mcro/stores'
-import { AppActions } from '../AppActions'
-import { setPeekApp } from './setPeekApp'
-import { Logger } from '@mcro/logger'
+
+import { Logger } from '@mcro/logger';
+import { App } from '@mcro/stores';
+import { AppConfig } from '../../apps/AppTypes';
+import { AppActions } from '../AppActions';
+import { setPeekApp } from './setPeekApp';
 
 const log = new Logger('togglePeekApp')
 const id = x => `${x.type}${x.id}${x.subType}${x.title}`

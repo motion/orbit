@@ -1,4 +1,4 @@
-import { AppBit, AppType } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import React from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
 import { Title } from '../../views'
@@ -15,9 +15,12 @@ export default function PreviewApp(props: { app: AppBit }) {
       </Section>
       <AppView
         viewType="index"
-        id={`${props.app.id}`}
-        type={AppType[props.app.type]}
-        appConfig={appToAppConfig(props.app)}
+        id={`preview-${props.app.id}`}
+        type={props.app.type}
+        appConfig={{
+          ...appToAppConfig(props.app),
+          id: `preview-${props.app.id}`,
+        }}
       />
     </>
   )

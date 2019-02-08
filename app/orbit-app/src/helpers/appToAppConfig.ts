@@ -1,6 +1,7 @@
-import { App, AppConfig, AppType } from '@mcro/models'
+import { AppBit } from '@mcro/models'
+import { AppConfig, AppType } from '../apps/AppTypes'
 
-export function appToAppConfig(app: App): AppConfig {
+export function appToAppConfig(app: AppBit): AppConfig {
   return {
     id: `${app.id}`,
     title: app.name,

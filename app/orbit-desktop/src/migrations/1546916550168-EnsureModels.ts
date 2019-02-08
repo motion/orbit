@@ -1,7 +1,6 @@
 import {
   AppBit,
   AppEntity,
-  AppType,
   SettingEntity,
   SpaceEntity,
   userDefaultValue,
@@ -61,7 +60,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Search',
-              type: AppType.search,
+              type: 'search',
               colors: ['#D48D48', '#ACEACE'],
               pinned: true,
               editable: false,
@@ -71,7 +70,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Directory',
-              type: AppType.people,
+              type: 'people',
               colors: ['#0F1453', '#449878'],
               spaceId: space.id,
               pinned: true,
@@ -80,7 +79,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Home',
-              type: AppType.lists,
+              type: 'lists',
               spaceId: space.id,
               colors: ['#353353', '#EADEAD'],
               pinned: true,

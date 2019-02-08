@@ -1,5 +1,5 @@
-import icon from '!raw-loader!../../../../public/icons/website.svg'
 import { Source } from '@mcro/models'
+import icon from '../../../../public/icons/website.svg'
 import { findManyType } from '../../helpers/queries'
 import { GetOrbitIntegration } from '../../types'
 import { WebsiteApp } from './views/WebsiteApp'

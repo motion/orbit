@@ -118,7 +118,7 @@ export const AppView = memo(
         const appElement = (
           <Contents ref={rootRef}>
             {before || null}
-            <AppView appStore={props.appStore || appStore} {...props} />
+            <AppView appStore={appStore} {...props} />
             {after || null}
           </Contents>
         )
@@ -136,7 +136,6 @@ export const AppView = memo(
     )
 
     if (!appElement) {
-      console.debug('AppView: no app of type', props.type, props.viewType)
       return null
     }
 

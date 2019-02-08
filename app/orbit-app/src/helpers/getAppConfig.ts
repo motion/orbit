@@ -1,7 +1,8 @@
-import { AppConfig } from '@mcro/models'
-import { allIntegrations } from '../sources'
-import { sourceToAppConfig } from '../stores/SourcesStore'
-import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+
+import { AppConfig } from '../apps/AppTypes';
+import { allIntegrations } from '../sources';
+import { sourceToAppConfig } from '../stores/SourcesStore';
+import { OrbitListItemProps } from '../views/ListItems/OrbitListItem';
 
 // this is mid-refactor in a sense
 // appConfig is a weird setup, its used basically to pass from a index over to a main view
@@ -38,8 +39,9 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   return {
     id: props.id,
     type: props.type,
+    // dont accept react elements
     title: typeof props.title === 'string' ? props.title : undefined,
-    icon: props.icon,
+    icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
     ...props.appConfig,
   }

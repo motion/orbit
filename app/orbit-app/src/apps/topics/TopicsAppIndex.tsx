@@ -1,5 +1,4 @@
 import { gloss } from '@mcro/gloss'
-import { AppType } from '@mcro/models'
 import { Button, Row, SegmentedRow, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
@@ -8,7 +7,7 @@ import { IS_MINIMAL } from '../../constants'
 import { Icon } from '../../views/Icon'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { default as Slider, SliderPane } from '../../views/Slider'
-import { AppProps } from '../AppTypes'
+import { AppProps, AppType } from '../AppTypes'
 import { TopicEdit } from './TopicEdit'
 
 const icons = {

@@ -1,4 +1,4 @@
-import { AppBit, AppType } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
@@ -32,7 +32,7 @@ export const ManageApps = function ManageApps() {
             items={apps.map(app => ({
               title: app.name,
               icon: <AppIcon app={app} />,
-              type: AppType[app.type],
+              type: app.type,
               iconBefore: true,
             }))}
             onSelect={setIndex}

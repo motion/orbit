@@ -1,9 +1,9 @@
 import { SaveOptions } from '@mcro/mediator'
 import { save } from '@mcro/model-bridge'
-import { App, AppModel, AppType } from '@mcro/models'
+import { AppBit, AppModel } from '@mcro/models'
 import { Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useActiveSpace } from '../hooks/useActiveSpace'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { defaultApps } from '../stores/NewAppStore'
@@ -29,9 +29,9 @@ function CreateAppIndex() {
       <SelectableList
         items={defaultApps.map(app => ({
           title: app.name,
+          subType: app.type,
           subtitle: descriptions[app.type],
           icon: <AppIcon app={app} />,
-          type: AppType[app.type],
           iconBefore: true,
         }))}
       />
@@ -42,23 +42,28 @@ function CreateAppIndex() {
 const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
   const { newAppStore } = useStoresSafe()
   const [activeSpace] = useActiveSpace()
+  const [showPreviewApp, setShowPreviewApp] = useState(false)
+
+  useEffect(() => {
+    setShowPreviewApp(true)
+  }, [])
 
   if (!props.appConfig) {
     return null
   }
 
-  const { type } = props.appConfig
+  const { subType } = props.appConfig
+
+  console.log('subType', subType)
 
   useEffect(
     () => {
-      newAppStore.setApp(type)
+      newAppStore.setApp(subType)
     },
-    [type],
+    [subType],
   )
 
-  const app = {
-    type,
-  } as App
+  const app = { type: subType } as AppBit
 
   const createApp = async () => {
     const app = {
@@ -89,7 +94,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
       </View>
 
       <VerticalSplitPane>
-        <PreviewApp app={app} />
+        {showPreviewApp && <PreviewApp app={app} />}
 
         <View flex={1} />
 

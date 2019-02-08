@@ -1,9 +1,9 @@
 import { gloss } from '@mcro/gloss'
-import { AppConfig, AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { isEqual } from 'lodash'
-import { observer, useObserver } from 'mobx-react-lite'
+import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { AppConfig, AppType } from '../../apps/AppTypes'
 import { AppView, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -11,13 +11,9 @@ import { Pane } from '../../stores/PaneManagerStore'
 import { useInspectViews } from './OrbitSidebar'
 import { OrbitControlsHeight } from './OrbitToolBar'
 
-export default observer(function OrbitMain() {
+export default function OrbitMain() {
   const { paneManagerStore } = useStoresSafe()
   const { hasMain } = useInspectViews()
-
-  if (!paneManagerStore.activePane) {
-    return null
-  }
 
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
@@ -28,7 +24,7 @@ export default observer(function OrbitMain() {
       ))}
     </OrbitMainView>
   )
-})
+}
 
 // separate view prevents big re-renders
 function OrbitPageMainView(props: { pane: Pane }) {
@@ -60,7 +56,7 @@ function OrbitPageMainView(props: { pane: Pane }) {
       }
       return (
         <AppView
-          key={Math.random()}
+          key={`${props.pane.id}${props.pane.type}${JSON.stringify(activeConfig)}`}
           before={appViews.toolBar && <OrbitControlsHeight />}
           after={appViews.statusBar && <OrbitControlsHeight />}
           viewType="main"

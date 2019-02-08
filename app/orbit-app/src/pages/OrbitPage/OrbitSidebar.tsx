@@ -23,7 +23,7 @@ export function useInspectViews() {
   let hasIndex = false
   let hasMain = false
 
-  if (activePane.subType === 'app') {
+  if (appsStore.appViews[activePane.id]) {
     // dynamic app view
     hasMain = !!appsStore.appViews[activePane.id].main
     hasIndex = !!appsStore.appViews[activePane.id].index

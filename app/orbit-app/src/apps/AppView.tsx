@@ -128,13 +128,14 @@ export const AppView = memo(
 
         // small rendering for index views
         if (props.viewType === 'index') {
+          console.log(props, appElement)
           return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
         }
 
         // regular rendering for others
         return appElement
-        // never update
       },
+      // never update, once we have our stuff
       [appStore, AppView],
     )
 

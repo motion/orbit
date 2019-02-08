@@ -58,7 +58,6 @@ function OrbitPageMainView(props: { pane: Pane }) {
       if (!appViews) {
         return null
       }
-      console.log('renderin main', activeConfig)
       return (
         <AppView
           key={Math.random()}

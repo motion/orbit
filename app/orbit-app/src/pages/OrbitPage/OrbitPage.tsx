@@ -149,7 +149,7 @@ function useOnce(fn: Function, reset = []) {
   return React.useCallback(once(fn as any), reset)
 }
 
-const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
+function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -206,7 +206,7 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
       {props.children}
     </MergeContext>
   )
-})
+}
 
 const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,

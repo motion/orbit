@@ -112,7 +112,6 @@ export const AppView = memo(
     const appElement = useMemo(
       () => {
         if (!AppView || !appStore) {
-          console.log('no dice', props)
           return null
         }
 
@@ -126,7 +125,6 @@ export const AppView = memo(
 
         // small rendering for index views
         if (props.viewType === 'index') {
-          console.log(props, appElement)
           return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
         }
 

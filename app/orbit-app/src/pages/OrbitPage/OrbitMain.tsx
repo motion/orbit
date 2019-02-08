@@ -70,7 +70,7 @@ function OrbitPageMainView(props: { pane: Pane }) {
         />
       )
     },
-    [JSON.stringify(activeConfig), appViews],
+    [activeConfig, appViews],
   )
 
   return element

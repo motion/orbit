@@ -1,15 +1,10 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import {
-  AppType,
-  IntegrationType,
-  SearchQuery,
-  SearchResult,
-  SearchResultModel,
-} from '@mcro/models'
+import { IntegrationType, SearchQuery, SearchResult, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
 import React from 'react'
+import { AppType } from '../apps/AppTypes'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { AppIcon } from '../views/AppIcon'
 import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'

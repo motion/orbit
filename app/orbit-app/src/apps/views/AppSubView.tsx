@@ -9,7 +9,6 @@ export function AppSubView({
     <AppView
       key={appConfig.id}
       viewType={viewType}
-      id={appConfig.id}
       title={appConfig.title}
       type={appConfig.type}
       appConfig={appConfig}

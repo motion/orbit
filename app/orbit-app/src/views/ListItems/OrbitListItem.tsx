@@ -1,5 +1,5 @@
 import { gloss } from '@mcro/gloss'
-import { AppConfig, AppType, Bit, Person, PersonBit } from '@mcro/models'
+import { AppConfig, Bit, Person, PersonBit } from '@mcro/models'
 import * as React from 'react'
 import PeopleRow from '../../components/PeopleRow'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
@@ -20,7 +20,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
   index?: number
   // for appconfig merge
   id?: string
-  type?: AppType
+  type?: string
   subType?: string
   // extra props for orbit list items
   people?: Person[]

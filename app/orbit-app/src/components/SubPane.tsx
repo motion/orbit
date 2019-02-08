@@ -1,10 +1,10 @@
 import { CSSPropertySetStrict } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
-import { AppType } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { AppType } from '../apps/AppTypes'
 import { SubPaneStore } from './SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {

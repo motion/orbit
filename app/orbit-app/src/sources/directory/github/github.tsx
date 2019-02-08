@@ -1,6 +1,6 @@
-import iconLight from '!raw-loader!../../../../public/icons/github-white.svg'
-import icon from '!raw-loader!../../../../public/icons/github.svg'
 import { Source } from '@mcro/models'
+import iconLight from '../../../../public/icons/github-white.svg'
+import icon from '../../../../public/icons/github.svg'
 import { findManyType } from '../../helpers/queries'
 import { GetOrbitIntegration } from '../../types'
 import { GithubApp } from './views/GithubApp'

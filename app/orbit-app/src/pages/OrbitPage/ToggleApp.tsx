@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { AppActions } from '../../actions/AppActions'
-import { findDOMNode } from 'react-dom'
-import { AppConfig } from '@mcro/models'
+import * as React from 'react';
+import { findDOMNode } from 'react-dom';
+import { AppActions } from '../../actions/AppActions';
+import { AppConfig } from '../../apps/AppTypes';
 
 export class ToggleApp extends React.Component<{
   appConfig: AppConfig

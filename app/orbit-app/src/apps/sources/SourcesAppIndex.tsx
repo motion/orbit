@@ -1,5 +1,4 @@
 import { sleep } from '@mcro/black'
-import { AppType } from '@mcro/models'
 import { Icon, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -10,7 +9,7 @@ import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
-import { AppProps } from '../AppTypes'
+import { AppProps, AppType } from '../AppTypes'
 
 export default observer(function SourcesAppIndex(_props: AppProps) {
   const { sourcesStore } = useStoresSafe()

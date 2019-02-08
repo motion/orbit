@@ -1,9 +1,10 @@
 import { ensure, react } from '@mcro/black'
 import { observeOne } from '@mcro/model-bridge'
-import { AppConfig, AppType, UserModel } from '@mcro/models'
+import { UserModel } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
+import { AppConfig, AppType } from '../../apps/AppTypes'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
@@ -67,15 +68,17 @@ export class OrbitStore {
   updateSelectedItem = react(
     () => this.nextItem,
     async ({ appConfig }, { sleep }) => {
+      console.log('updating selected item', this.activePane.type, appConfig)
+      // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()
-      // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
-      if (Date.now() - last < 50) {
+      if (Date.now() - last < 80) {
         await sleep(50)
       }
       ensure('app config', !!appConfig)
       const paneType = this.activePane.type
       if (!isEqual(this.activeConfig[paneType], appConfig)) {
+        console.log('update', paneType, appConfig)
         this.activeConfig = {
           ...this.activeConfig,
           [paneType]: appConfig,

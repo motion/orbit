@@ -1,12 +1,11 @@
-import { deep, store } from '@mcro/black'
-import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
-import { AppConfig } from '@mcro/models'
+import { deep, store } from '@mcro/black';
+import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge';
 
 export let App = null as AppStore
 
 export type AppState = {
   id: number
-  appConfig: AppConfig
+  appConfig: any // TODO
   viewType?: 'index' | 'main' | 'setup'
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }

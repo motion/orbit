@@ -2,10 +2,11 @@ import { gloss, Row, View, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { once } from 'lodash'
+import { once, uniqBy } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
+import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
@@ -78,6 +79,20 @@ const OrbitPageInner = observer(function OrbitPageInner() {
     })
   }, [])
 
+  const allViews = uniqBy(
+    [
+      ...paneManagerStore.panes.map(pane => ({
+        id: pane.id,
+        type: pane.type,
+      })),
+      ...Object.keys(apps).map(type => ({
+        id: type,
+        type,
+      })),
+    ],
+    x => x.id,
+  )
+
   return (
     <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
       <MainShortcutHandler
@@ -92,7 +107,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
       >
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <AppsLoader views={paneManagerStore.panes}>
+            <AppsLoader views={allViews}>
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
@@ -134,7 +149,7 @@ function useOnce(fn: Function, reset = []) {
   return React.useCallback(once(fn as any), reset)
 }
 
-const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: any) {
+function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const spaceStore = useStore(SpaceStore)
@@ -191,7 +206,7 @@ const OrbitPageProvideStores = observer(function OrbitPageProvideStores(props: a
       {props.children}
     </MergeContext>
   )
-})
+}
 
 const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
   flex: 1,

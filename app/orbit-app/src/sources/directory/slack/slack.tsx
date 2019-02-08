@@ -1,5 +1,5 @@
-import iconSlack from '!raw-loader!../../../../public/icons/slack.svg'
 import { Source } from '@mcro/models'
+import iconSlack from '../../../../public/icons/slack.svg'
 import { findManyType } from '../../helpers/queries'
 import { GetOrbitIntegration } from '../../types'
 import SlackApp from './views/SlackApp'

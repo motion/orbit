@@ -1,5 +1,6 @@
-import { AppConfig } from '@mcro/models'
-import { isEqual } from 'lodash'
+
+import { isEqual } from 'lodash';
+import { AppConfig } from '../apps/AppTypes';
 
 const MIN_Y = 60
 const EDGE_PAD = 20

@@ -1,5 +1,5 @@
-import icon from '!raw-loader!../../../../public/icons/drive.svg'
 import { Source } from '@mcro/models'
+import icon from '../../../../public/icons/drive.svg'
 import { findManyType } from '../../helpers/queries'
 import { GetOrbitIntegration, OrbitIntegration } from '../../types'
 import { DriveApp } from './views/DriveApp'

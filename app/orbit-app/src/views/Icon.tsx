@@ -1,5 +1,5 @@
 import * as UI from '@mcro/ui'
-import { IconProps, ThemeContext, View } from '@mcro/ui'
+import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
 import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
 import { AppIconInner } from './AppIcon'
@@ -21,12 +21,34 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   // image based integration icons
   const integrationIcon = useIntegrationIcon({ icon: name })
 
+  if (integrationIcon) {
+    const sizeProps = {
+      width: size,
+      height: size,
+    }
+    return (
+      <View
+        className={`icon ${props.className || ''}`}
+        display="inline-block"
+        textAlign="center"
+        justifyContent="center"
+        style={style}
+        opacity={opacity}
+        {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+        {...sizeProps}
+        {...props}
+      >
+        <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
+      </View>
+    )
+  }
+
   if (appIcons[name]) {
     return <AppIconInner {...props} />
   }
 
   // find our custom streamline icons...
-  const icon = icons[name] || integrationIcon
+  const icon = icons[name]
 
   // ...or fallback to @mcro/ui icon
   if (!icon) {
@@ -67,41 +89,41 @@ export const Icon = React.memo((props: OrbitIconProps) => {
 
 Icon['acceptsIconProps'] = true
 
-// const adjust = {
-//   icon: {
-//     transform: {
-//       x: -7,
-//       y: 2,
-//     },
-//   },
-//   slack: {
-//     transform: {
-//       scale: 0.92,
-//     },
-//   },
-//   gmail: {
-//     transform: {
-//       scale: 0.95,
-//       x: '-1%',
-//       y: '-1%',
-//     },
-//   },
-//   github: {
-//     transform: {
-//       // x: '-1%',
-//     },
-//   },
-//   confluence: {
-//     transform: {
-//       // y: '-31%',
-//       scale: 1.4,
-//     },
-//   },
-//   jira: {
-//     transform: {
-//       y: '5%',
-//       x: '-8%',
-//       scale: 1.4,
-//     },
-//   },
-// }
+const adjust = {
+  icon: {
+    transform: {
+      x: -7,
+      y: 2,
+    },
+  },
+  slack: {
+    transform: {
+      scale: 0.92,
+    },
+  },
+  gmail: {
+    transform: {
+      scale: 0.95,
+      x: '-1%',
+      y: '-1%',
+    },
+  },
+  github: {
+    transform: {
+      // x: '-1%',
+    },
+  },
+  confluence: {
+    transform: {
+      // y: '-31%',
+      scale: 1.4,
+    },
+  },
+  jira: {
+    transform: {
+      y: '5%',
+      x: '-8%',
+      scale: 1.4,
+    },
+  },
+}

@@ -12,6 +12,8 @@ const tabIconProps = {
   color: 'inherit',
 }
 
+const insetShadow = theme => [[0, 0, 0, 0.5, theme.borderColor]]
+
 export function OrbitSettingsToolbar() {
   const { paneManagerStore } = useStoresSafe()
   const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
@@ -32,7 +34,7 @@ export function OrbitSettingsToolbar() {
 
   return (
     <View margin="auto" width={420}>
-      <SegmentedRow borderRadius={200} boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]}>
+      <SegmentedRow borderRadius={200} boxShadow={insetShadow}>
         <Tabs active={activePaneKey} height={22} onActive={onActive}>
           <Tab
             key="sources"

@@ -1,10 +1,10 @@
 import { gloss } from '@mcro/gloss'
-import { AppType } from '@mcro/models'
 import { Sidebar, View } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { apps } from '../../apps/apps'
+import { AppType } from '../../apps/AppTypes'
 import { AppView, AppViewRef, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -101,7 +101,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
 }) {
   const { orbitStore } = useStoresSafe()
   const { pane, indexRef, setIndexRef, hasMain } = props
-  const { appViews } = useApp({ id: pane.id || pane.type })
+  const { appViews } = useApp(pane)
 
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>

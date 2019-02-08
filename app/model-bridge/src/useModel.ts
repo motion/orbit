@@ -15,7 +15,7 @@ function use<ModelType, Args>(
   options: UseModelOptions = {},
 ): any {
   const observeEnabled = options.observe === undefined || options.observe === true
-  const [value, setValue] = useState(
+  const [value, originalSetValue] = useState(
     options.defaultValue ||
       {
         one: null,
@@ -23,6 +23,10 @@ function use<ModelType, Args>(
         count: 0,
       }[type],
   )
+  const setValue = (value: any) => {
+    // console.log(`set value was called`, value)
+    return originalSetValue(value)
+  }
   const subscription = useRef(null)
   const curQuery = useRef(null)
 
@@ -53,6 +57,7 @@ function use<ModelType, Args>(
 
       if (observeEnabled) {
         if (type === 'one') {
+          // console.log('subscribing...')
           subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(
             setValue,
           )
@@ -90,6 +95,8 @@ function use<ModelType, Args>(
 
   const valueUpdater = (next: any) => {
     const nextValue = merge(type === 'many' ? [...value] : { ...value }, next)
+    // console.log(`value in updator`, value)
+    // console.log(`set next value`, nextValue)
     setValue(nextValue)
     save(model, nextValue, {
       type,

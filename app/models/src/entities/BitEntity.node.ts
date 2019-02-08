@@ -98,4 +98,6 @@ export class BitEntity extends BaseEntity implements Bit {
 
   @ManyToOne(() => SpaceEntity)
   space?: Space
+
+  peopleCount?: number
 }

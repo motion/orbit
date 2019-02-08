@@ -4,6 +4,7 @@ import {
   Bit,
   BitContentType,
   BitContentTypes,
+  PersonEntity,
   SearchQuery,
   SearchResult,
   Source,
@@ -46,7 +47,7 @@ export class SearchResultResolver {
 
     for (let contentType of BitContentTypes) {
       // this.log.timer('loading ' + contentType)
-      const [bits, bitsTotalCount] = await this.search(contentType)
+      const [bits, bitsTotalCount] = await this.searchBits(contentType)
       if (bits.length) {
         const bitSourceIds = uniq(bits.map(bit => bit.sourceId))
         const bitSources = this.sources.filter(source => bitSourceIds.indexOf(source.id) !== -1)
@@ -60,6 +61,23 @@ export class SearchResultResolver {
           bits.map(bit => bit.body),
         )
         const firstBits = this.args.maxBitsCount ? bits.slice(0, this.args.maxBitsCount) : bits
+
+        // loading person bits count and person bits
+        for (let bit of firstBits) {
+          bit.people = await getRepository(PersonEntity).find({
+            where: {
+              bits: {
+                id: bit.id
+              }
+            },
+            take: 10
+          })
+          bit.peopleCount = await getRepository(PersonEntity).count({
+            bits: {
+              id: bit.id
+            }
+          })
+        }
 
         if (contentType === 'conversation') {
           const title = SearchResultUtils.buildSearchResultTitle(
@@ -152,9 +170,9 @@ export class SearchResultResolver {
   }
 
   /**
-   * Performs an actual database search.
+   * Performs a database search on bits.
    */
-  private async search(contentType: BitContentType): Promise<[Bit[], number]> {
+  private async searchBits(contentType: BitContentType): Promise<[Bit[], number]> {
     const sourceIds = this.sources.map(source => source.id)
     this.log.info(`search`, this.sources, this.args)
 

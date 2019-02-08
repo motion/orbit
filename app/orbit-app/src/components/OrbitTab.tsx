@@ -1,14 +1,6 @@
-import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
+import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
-import {
-  Button,
-  ButtonProps,
-  Glint,
-  IconProps,
-  MenuTemplate,
-  Tooltip,
-  useContextMenu,
-} from '@mcro/ui'
+import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { BorderBottom } from '../views/Border'
@@ -59,6 +51,7 @@ export function OrbitTab({
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
   const iconSize = iconSizeProp || (thicc ? 12 : 10)
+  const theme = useTheme()
 
   const button = (
     <NavButtonChrome
@@ -73,7 +66,16 @@ export function OrbitTab({
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
         {isActive && (
           <>
-            <Glint borderRadius={borderSize} y={1} />
+            <Absolute
+              borderTopRadius={borderSize}
+              height={100}
+              top={0}
+              left={0}
+              right={0}
+              overflow="hidden"
+              boxShadow={[['inset', 0, 1, theme.glintColor || theme.backgroundColor.alpha(0.5)]]}
+              transform={{ y: -0.5 }}
+            />
             <BorderBottom opacity={0.5} transform={{ y: 0 }} />
           </>
         )}

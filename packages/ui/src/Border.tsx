@@ -1,7 +1,7 @@
 import { Absolute, gloss } from '@mcro/gloss'
 
-const Border = gloss(Absolute).theme((_, theme) => ({
-  background: theme.borderColor,
+const Border = gloss(Absolute).theme((p, theme) => ({
+  background: p.borderColor || theme.borderColor,
 }))
 
 export const BorderTop = gloss(Border, {

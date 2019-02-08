@@ -1,6 +1,6 @@
 import { AppBit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { StoreContext } from '../contexts'
 import { useActiveApps } from '../hooks/useActiveApps'
 import { MergeContext } from '../views/MergeContext'
@@ -10,11 +10,19 @@ import { AppViews } from './AppTypes'
 
 export class AppsStore {
   appViews: { [key: number]: AppViews } = {}
+  appStores: { [key: number]: AppStore } = {}
 
   handleAppViews = (id: number, views: AppViews) => {
     this.appViews = {
       ...this.appViews,
       [id]: views,
+    }
+  }
+
+  handleAppStore = (id: number, store: AppStore) => {
+    this.appStores = {
+      ...this.appStores,
+      [id]: store,
     }
   }
 }
@@ -63,10 +71,14 @@ function AppLoader(props: AppLoaderProps) {
   return element
 }
 
-function AppLoadDynamicView({ app }: AppLoaderProps) {
+function AppLoadDynamicView({ app, store }: AppLoaderProps) {
   const AppView = apps[app.type]
   const appViewProps = { id: `${app.id}` }
   const appStore = useStore(AppStore, appViewProps)
+
+  useEffect(() => {
+    store.handleAppStore(app.id, appStore)
+  })
 
   if (typeof AppView === 'function') {
     return (

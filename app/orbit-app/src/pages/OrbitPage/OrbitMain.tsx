@@ -8,8 +8,8 @@ import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import { OrbitControlsHeight } from './OrbitControls'
 import { useHasToolbar, useInspectViews } from './OrbitSidebar'
+import { OrbitControlsHeight } from './OrbitToolBar'
 
 export default observer(function OrbitMain() {
   const { paneManagerStore } = useStoresSafe()
@@ -46,9 +46,10 @@ function OrbitPageMainView(props: { pane: Pane }) {
   // only ever render once!
   const element = React.useMemo(
     () => {
+      console.log('rendering app view', activeConfig)
       return (
         <AppView
-          key={activeConfig ? activeConfig.id : Math.random()}
+          key={activeConfig ? activeConfig.id : -1}
           before={hasBars && <OrbitControlsHeight />}
           viewType="main"
           id={props.pane.id}

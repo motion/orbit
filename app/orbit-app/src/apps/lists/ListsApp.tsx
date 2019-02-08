@@ -7,6 +7,7 @@ import { App } from '../App'
 import { AppProps } from '../AppTypes'
 import ListsAppIndex from './ListsAppIndex'
 import ListsAppMain from './ListsAppMain'
+import ListsAppStatusBar from './ListsAppStatusBar'
 import { ListStore } from './ListStore'
 import { ListsAppBit } from './types'
 
@@ -19,7 +20,10 @@ export type ListAppProps = AppProps & {
 export function ListsApp(props: AppProps) {
   const store = useStore(ListStore, props)
   return (
-    <App index={<ListsAppIndex {...props} store={store} />}>
+    <App
+      index={<ListsAppIndex {...props} store={store} />}
+      statusBar={<ListsAppStatusBar {...props} store={store} />}
+    >
       <ListsAppMain {...props} store={store} />
     </App>
   )

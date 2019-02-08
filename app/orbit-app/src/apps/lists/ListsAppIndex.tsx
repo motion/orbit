@@ -1,29 +1,13 @@
 import { save } from '@mcro/model-bridge'
 import { AppModel, ListAppDataItem } from '@mcro/models'
-import {
-  Absolute,
-  Breadcrumbs,
-  Button,
-  ButtonProps,
-  Input,
-  Panel,
-  PassProps,
-  Row,
-  Text,
-  useBreadcrumb,
-  View,
-} from '@mcro/ui'
+import { Absolute, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
 import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
-import pluralize from 'pluralize'
 import * as React from 'react'
 import { arrayMove } from 'react-sortable-hoc'
-import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
 import { BorderBottom } from '../../views/Border'
-import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { loadListItem } from './helpers'
@@ -31,38 +15,8 @@ import { ListAppProps, ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
 
 export default observer(function ListsAppIndex({ store }: ListAppProps) {
-  const numItems = Object.keys(store.items).length
-
   return (
     <>
-      <OrbitToolbar
-        before={
-          <>
-            {store.depth > 0 && (
-              <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={store.back}>
-                Back
-              </FloatingBarButtonSmall>
-            )}
-          </>
-        }
-        center={
-          <ListAppBreadcrumbs
-            items={[
-              {
-                id: 0,
-                name: <Icon name="home" size={12} opacity={0.5} />,
-              },
-              ...store.history
-                .slice(1)
-                .filter(Boolean)
-                .map(id => store.items[id]),
-              store.selectedItem,
-            ].filter(Boolean)}
-          />
-        }
-        after={`${numItems} ${pluralize('item', numItems)}`}
-      />
-
       {/* Search/add bar */}
       <ListAdd store={store} />
 
@@ -180,32 +134,6 @@ const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
     </Row>
   )
 })
-
-function ListCrumb(props: ButtonProps) {
-  const { isLast } = useBreadcrumb()
-  return (
-    <>
-      <FloatingBarButtonSmall chromeless {...props} />
-      {!isLast ? (
-        <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
-          {' · '}
-        </Text>
-      ) : null}
-    </>
-  )
-}
-
-function ListAppBreadcrumbs(props: { items: { id: any; name: React.ReactNode }[] }) {
-  return (
-    <View flex={1}>
-      <Breadcrumbs>
-        {props.items.map((item, index) => (
-          <ListCrumb key={`${item.id}${index}`}>{item.name}</ListCrumb>
-        ))}
-      </Breadcrumbs>
-    </View>
-  )
-}
 
 const ListSearchResults = observer(function ListSearchResults({ store }: { store: ListStore }) {
   const { searchCollapsed, searchResults, query } = store

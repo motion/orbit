@@ -5,15 +5,17 @@ import { AppStore } from './AppStore'
 export type AppProps = {
   appConfig?: AppConfig
   id?: string
-  viewType?: 'index' | 'main' | 'setup' | 'settings'
+  viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   title?: string
   appStore: AppStore
   isActive?: boolean | (() => boolean)
 }
 
 export type AppViews = {
-  index?: GenericComponent<AppProps>
-  main?: GenericComponent<AppProps>
+  index?: GenericComponent<AppProps> | false
+  main?: GenericComponent<AppProps> | false
+  toolBar?: GenericComponent<AppProps> | false
+  statusBar?: GenericComponent<AppProps> | false
 }
 
 export type AppDefinition =

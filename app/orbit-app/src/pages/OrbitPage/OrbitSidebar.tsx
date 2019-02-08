@@ -12,7 +12,7 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { BorderTop } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
-import { OrbitControlsHeight } from './OrbitControls'
+import { OrbitControlsHeight } from './OrbitToolBar'
 
 type AppViewRefDictionary = { [key: string]: AppViewRef }
 
@@ -111,6 +111,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
         <AppView
+          key={pane.id}
           ref={state => {
             if (isEqual(state, indexRef[pane.id])) return
             setIndexRef({ ...indexRef, [pane.id]: state })

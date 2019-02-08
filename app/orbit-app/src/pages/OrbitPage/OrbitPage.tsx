@@ -24,12 +24,13 @@ import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
-import OrbitControls from './OrbitControls'
 import OrbitHeader from './OrbitHeader'
 import OrbitContent from './OrbitMain'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
+import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
+import OrbitToolBar from './OrbitToolBar'
 
 export default React.memo(function OrbitPage() {
   // keep activeSpace.paneSort in sync with activeApps
@@ -99,11 +100,12 @@ const OrbitPageInner = observer(function OrbitPageInner() {
                   <OrbitNav />
                 </OrbitHeaderContainer>
                 <InnerChrome torn={orbitStore.isTorn}>
-                  <OrbitControls />
+                  <OrbitToolBar />
                   <Row flex={1}>
                     <OrbitSidebar />
                     <OrbitContent />
                   </Row>
+                  <OrbitStatusBar />
                 </InnerChrome>
               </AppsLoader>
             </AppWrapper>

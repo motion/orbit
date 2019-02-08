@@ -6,7 +6,6 @@ import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { AppActions } from '../../actions/AppActions'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
-import { useOrbitToolbars } from '../../components/OrbitToolbar'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
@@ -18,7 +17,6 @@ export default observer(function OrbitHeader() {
   const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
   const { isTorn, isEditing } = orbitStore
-  const toolbars = useOrbitToolbars()
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
   const theme = useTheme()
@@ -45,12 +43,12 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <View flex={1} />
 
-          {isTorn && toolbars && (
+          {/* {isTorn && toolbars && (
             <>
               {toolbars.before}
               <View flex={1} />
             </>
-          )}
+          )} */}
           <HeaderContain>
             <View width={24} alignItems="center" justifyContent="center">
               <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
@@ -58,12 +56,12 @@ export default observer(function OrbitHeader() {
 
             <OrbitHeaderInput />
 
-            {isTorn && toolbars && (
+            {/* {isTorn && toolbars && (
               <>
                 <View flex={1} />
                 {toolbars.after}
               </>
-            )}
+            )} */}
 
             <SegmentedRow>
               <Popover

@@ -1,6 +1,6 @@
-import { App, AppType, BaseApp } from '@mcro/models'
+import { AppBit, AppType } from '@mcro/models'
 
-export const defaultApps: App[] = [
+export const defaultApps: AppBit[] = [
   {
     target: 'app',
     name: 'Search',
@@ -34,8 +34,6 @@ export const defaultApps: App[] = [
   },
 ]
 
-type GenericApp = BaseApp & { data: any; type: string }
-
 export class NewAppStore {
   showCreateNew = false
 
@@ -43,9 +41,9 @@ export class NewAppStore {
     this.showCreateNew = val
   }
 
-  app: GenericApp = defaultApps[0]
+  app: AppBit = defaultApps[0]
 
-  update(app: Partial<App>) {
+  update(app: Partial<AppBit>) {
     this.app = {
       ...this.app,
       ...app,

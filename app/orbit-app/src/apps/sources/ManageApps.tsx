@@ -1,4 +1,4 @@
-import { App, AppType } from '@mcro/models'
+import { AppBit, AppType } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
@@ -11,7 +11,7 @@ import { AppView } from '../AppView'
 import PreviewApp from '../views/PreviewApp'
 
 export const ManageApps = function ManageApps() {
-  const apps = useActiveApps() as App[]
+  const apps = useActiveApps() as AppBit[]
   const [index, setIndex] = useState(0)
   const selectedApp = apps[index]
 

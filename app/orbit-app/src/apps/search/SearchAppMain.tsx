@@ -1,9 +1,8 @@
-import { AppType } from '@mcro/models'
 import * as React from 'react'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 import { AppSubView } from '../views/AppSubView'
 
-export default function SearchAppMain({ appConfig }: AppProps<AppType.search>) {
+export default function SearchAppMain({ appConfig }: AppProps) {
   if (appConfig.type === 'search') {
     return <div>todo: search</div>
   }

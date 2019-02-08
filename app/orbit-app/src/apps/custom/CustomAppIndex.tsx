@@ -1,6 +1,5 @@
-import { AppType } from '@mcro/models'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
-export function CustomAppIndex(_props: AppProps<AppType.custom>) {
+export function CustomAppIndex(_props: AppProps) {
   return null
 }

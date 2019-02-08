@@ -1,11 +1,12 @@
 import { useModel } from '@mcro/model-bridge'
-import { AppType, BitModel } from '@mcro/models'
+import { BitModel } from '@mcro/models'
 import * as React from 'react'
 import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'
 import { normalizeItem } from '../../helpers/normalizeItem'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
 const defaultItemProps = {
   itemProps: {
@@ -16,13 +17,14 @@ const defaultItemProps = {
   },
 }
 
-export default function BitAppMain(props: AppProps<AppType.bit>) {
+export default function BitAppMain(props: AppProps) {
+  const { sourcesStore } = useStoresSafe()
   const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
   console.log('hello bit', bit)
   if (!bit) {
     return null
   }
-  const View = props.sourcesStore.getView(bit.integration, 'main')
+  const View = sourcesStore.getView(bit.integration, 'main')
   const normalizedItem = normalizeItem(bit)
   return (
     <ItemPropsProvider value={defaultItemProps}>

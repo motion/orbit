@@ -4,21 +4,18 @@ import { Popover, View } from '@mcro/ui'
 import { flatten, flow, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import ListItem from '../../views/ListItems/ListItem'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
-import { AppProps } from '../AppProps'
-import { listRootID, lists } from '../lists'
+import { AppProps } from '../AppTypes'
+import { listRootID, ListsApp } from '../lists/ListsApp'
 import './calendar.css' // theme css file
-import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
 const ItemActionContext = React.createContext<{ item: Bit }>({ item: null })
 
@@ -39,7 +36,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
               subtitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction.item)
-                lists.actions.receive(app, listRootID, itemAction.item)
+                ListsApp.api.receive(app, listRootID, itemAction.item)
               },
             },
           ]
@@ -62,9 +59,8 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   )
 })
 
-export default observer(function SearchAppIndex(props: AppProps<AppType.search>) {
-  const { searchStore, queryStore } = useStoresSafe()
-  const { queryFilters } = queryStore
+export default observer(function SearchAppIndex(props: AppProps) {
+  const { searchStore } = useStoresSafe()
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
@@ -115,16 +111,6 @@ export default observer(function SearchAppIndex(props: AppProps<AppType.search>)
 
   return (
     <>
-      <OrbitToolbar
-        before={
-          <FloatingBarButton
-            onClick={queryFilters.toggleSortBy}
-            tooltip={`Sort by: ${queryFilters.sortBy}`}
-            icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
-          />
-        }
-        center={<OrbitSuggestionBar />}
-      />
       <SelectableList
         minSelected={0}
         items={items}

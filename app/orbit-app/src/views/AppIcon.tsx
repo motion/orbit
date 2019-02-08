@@ -1,12 +1,12 @@
 import { useTheme } from '@mcro/gloss'
-import { App } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { color } from '@mcro/ui'
 import React from 'react'
 import { OrbitIconProps } from './Icon'
 import { appIcons } from './icons'
 import { SVG } from './SVG'
 
-export type AppIconProps = { app: App; removeStroke?: boolean } & Partial<OrbitIconProps>
+export type AppIconProps = { app: AppBit; removeStroke?: boolean } & Partial<OrbitIconProps>
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 

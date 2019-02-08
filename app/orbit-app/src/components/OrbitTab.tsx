@@ -1,5 +1,5 @@
 import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
-import { App } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
@@ -10,7 +10,7 @@ const inactiveOpacity = 0.45
 const border = 3
 
 export type TabProps = ViewProps & {
-  app?: App
+  app?: AppBit
   separator?: boolean
   isActive?: boolean
   label?: string
@@ -90,6 +90,7 @@ export function OrbitTab({
             opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={400}
             {...textProps}
+            transition={isActive ? 'none' : tabTransition}
           >
             {label}
           </SimpleText>
@@ -160,6 +161,8 @@ export function OrbitTabButton(props: ButtonProps) {
   )
 }
 
+const tabTransition = 'all ease-out 350ms'
+
 const NavButtonChrome = gloss<TabProps>({
   position: 'relative',
   flexFlow: 'row',
@@ -176,7 +179,7 @@ const NavButtonChrome = gloss<TabProps>({
 
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
-    transition: isActive ? 'none' : 'all ease-out 500ms',
+    transition: isActive ? 'none' : tabTransition,
   }
 
   return {
@@ -188,7 +191,7 @@ const NavButtonChrome = gloss<TabProps>({
     borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
     boxShadow: isActive
       ? [
-          [0, 2, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
+          [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
           ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
@@ -196,7 +199,7 @@ const NavButtonChrome = gloss<TabProps>({
     '&:hover': glowStyle,
     '& .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.4 !important',
-      transition: 'all ease-in 100ms',
+      transition: isActive ? 'none' : tabTransition,
     },
     '&:hover .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.6 !important',

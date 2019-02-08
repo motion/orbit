@@ -12,8 +12,8 @@ import { BorderTop } from '../views/Border'
 import SelectableList from '../views/Lists/SelectableList'
 import { Section } from '../views/Section'
 import VerticalSplitPane from '../views/VerticalSplitPane'
-import { AppProps } from './AppProps'
 import AppsMainNew from './apps/AppsMainNew'
+import { AppProps } from './AppTypes'
 import { AppView } from './AppView'
 import PreviewApp from './views/PreviewApp'
 
@@ -39,7 +39,7 @@ function CreateAppIndex() {
   )
 }
 
-const CreateAppMain = observer(function CreateAppMain(props: AppProps<AppType.createApp>) {
+const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
   const { newAppStore } = useStoresSafe()
   const [activeSpace] = useActiveSpace()
 

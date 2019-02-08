@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/model-bridge'
-import { AppType, SpaceModel } from '@mcro/models'
+import { SpaceModel } from '@mcro/models'
 import { Col, Row, Text, Theme } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import randomColor from 'randomcolor'
@@ -19,11 +19,11 @@ import ListItem from '../../views/ListItems/ListItem'
 import { OrbitOrb } from '../../views/OrbitOrb'
 import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
-import { AppProps } from '../AppProps'
+import { AppProps } from '../AppTypes'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
-export default observer(function SpacesAppMain({ appConfig }: AppProps<AppType.settings>) {
+export default observer(function SpacesAppMain({ appConfig }: AppProps) {
   if (!appConfig) {
     return null
   }

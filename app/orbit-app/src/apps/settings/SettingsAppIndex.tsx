@@ -2,9 +2,8 @@ import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import SelectableList from '../../views/Lists/SelectableList'
-import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
-export default function StetingsAppIndex() {
+export default function SettingsAppIndex() {
   const [user] = useActiveUser()
   const results = useOrbitFilterableResults({
     items: [
@@ -31,10 +30,5 @@ export default function StetingsAppIndex() {
     return null
   }
 
-  return (
-    <>
-      <OrbitSettingsToolbar />
-      <SelectableList minSelected={0} items={results} />
-    </>
-  )
+  return <SelectableList minSelected={0} items={results} />
 }

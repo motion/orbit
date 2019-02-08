@@ -1,17 +1,17 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
+import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
+import { IntegrationType } from './interfaces/IntegrationType'
 import { Job } from './interfaces/Job'
 import { Person } from './interfaces/Person'
 import { PersonBit } from './interfaces/PersonBit'
 import { SearchResult } from './interfaces/Search'
-import { Source } from './interfaces/Source'
 import { Setting } from './interfaces/Setting'
+import { Source } from './interfaces/Source'
 import { Space } from './interfaces/Space'
-import { IntegrationType } from './interfaces/IntegrationType'
-import { App } from './interfaces/App'
-import { User } from './interfaces/User';
+import { User } from './interfaces/User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
@@ -33,15 +33,13 @@ export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptions
 
 export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>('Space')
 
-export const AppModel = new Model<App, FindOptions<App>, FindOptionsWhere<App>>('App')
+export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<AppBit>>('App')
 
 export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(
   'Source',
 )
 
-export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>(
-  'User',
-)
+export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
 
 export const GithubRepositoryModel = new Model<any, { sourceId: number }>('GithubRepository')
 

@@ -1,6 +1,13 @@
-import { SettingEntity, UserEntity } from '@mcro/models'
+import {
+  AppEntity,
+  SettingEntity,
+  SourceEntity,
+  Space,
+  SpaceEntity,
+  UserEntity,
+} from '@mcro/models'
 import { DesktopActions } from '@mcro/stores'
-import { pathExists, writeJSON } from 'fs-extra'
+import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
 import { homedir } from 'os'
 import { join } from 'path'
@@ -61,23 +68,77 @@ export class OrbitDataManager {
 
     const persist = debounce(() => writeJSON(join(dataSettingsDir, 'settings.json'), state), 300)
 
-    addObserver(this.subscriptions, SettingEntity, values => {
+    addObserveMany(this.subscriptions, SettingEntity, {}, values => {
       state.settings = values
       persist()
     })
 
-    addObserver(this.subscriptions, UserEntity, value => {
+    addObserveMany(this.subscriptions, UserEntity, {}, value => {
       state.user = value
       persist()
     })
   }
 
-  observeSpaces() {}
+  observeSpaces() {
+    let disposers = new Set<Function>()
+
+    addObserveMany(this.subscriptions, SpaceEntity, {}, spaces => {
+      // unsubscribe last
+      ;[...disposers].forEach(o => o())
+
+      // watch spaces
+      for (const space of spaces) {
+        const subs = this.observeSpace(space)
+        disposers.add(() => [...subs].forEach(sub => sub.unsubscribe()))
+      }
+    })
+  }
+
+  observeSpace(space: Space) {
+    const subscribers = new Set<ZenObservable.Subscription>()
+
+    const state = {
+      space: null,
+      apps: null,
+      sources: null,
+    }
+
+    const persist = debounce(async () => {
+      await ensureDir(join(dataSpacesDir, space.name))
+      writeJSON(join(dataSpacesDir, space.name, 'orbit-data.json'), state)
+    }, 300)
+
+    addObserveOne(this.subscriptions, SpaceEntity, { where: { id: space.id } }, space => {
+      state.space = space
+      persist()
+    })
+
+    addObserveMany(this.subscriptions, AppEntity, { where: { spaceId: space.id } }, apps => {
+      state.apps = apps
+      persist()
+    })
+
+    addObserveMany(this.subscriptions, SourceEntity, { where: { spaceId: space.id } }, sources => {
+      state.sources = sources
+      persist()
+    })
+
+    return subscribers
+  }
 }
 
-function addObserver(subs: Set<any>, entity: Function, cb: any) {
+// TODO @umed can you type this?
+
+function addObserveMany(subs: Set<any>, entity: any, query: any, cb: any) {
   const sub = getRepository(entity)
-    .observe({})
+    .observe(query)
+    .subscribe(cb)
+  subs.add(sub)
+}
+
+function addObserveOne(subs: Set<any>, entity: any, query: any, cb: any) {
+  const sub = getRepository(entity)
+    .observeOne(query)
     .subscribe(cb)
   subs.add(sub)
 }

@@ -1,17 +1,13 @@
 import { useModels } from '@mcro/model-bridge'
 import { PersonBitModel } from '@mcro/models'
-import { Text, View } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'
-import pluralize from 'pluralize'
 import * as React from 'react'
 import NoResultsDialog from '../../components/NoResultsDialog'
-import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { groupByLetter } from '../../helpers/groupByFirstLetter'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBar } from '../../views/FloatingBar/FloatingBar'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppTypes'
 
@@ -46,14 +42,14 @@ export default observer(function PeopleAppIndex(props: AppProps) {
 
   return (
     <>
-      <FloatingBar>
+      {/* <FloatingBar>
         <Text fontWeight={500} alpha={0.6} size={0.9}>
           {people.length} {pluralize('people', people.length)}{' '}
           {hasIntegrationFilters ? ` (filtered)` : ''}
         </Text>
         <View flex={1} />
         <OrbitFilterIntegrationButton />
-      </FloatingBar>
+      </FloatingBar> */}
       <SelectableList
         key={0}
         getItemProps={results.length > 12 ? groupByLetter('name') : null}

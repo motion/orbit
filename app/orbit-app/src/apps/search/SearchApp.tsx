@@ -23,10 +23,13 @@ function SearchToolBar() {
   return (
     <>
       <FloatingBarButton
+        size={0.9}
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
         icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
-      />
+      >
+        Sort
+      </FloatingBarButton>
       <View flex={1} />
       <OrbitSuggestionBar />
     </>

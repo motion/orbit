@@ -2,7 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { save } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
-import { View } from '@mcro/ui'
+import { BorderBottom, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
@@ -15,12 +15,11 @@ import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApp } from '../../hooks/useActiveApp'
-import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import { BorderBottom } from '../../views/Border'
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -41,7 +40,7 @@ export default observer(function OrbitNav() {
   const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
-  const activeApps = useActiveApps()
+  const activeAppsSorted = useActiveAppsSorted()
   const activeApp = useActiveApp()
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
@@ -55,7 +54,7 @@ export default observer(function OrbitNav() {
 
   // after hooks
 
-  if (!activeApps.length || !space || !space.paneSort || !activeApp) {
+  if (!activeAppsSorted.length || !space || !space.paneSort || !activeApp) {
     return (
       <OrbitNavClip>
         <OrbitNavChrome />
@@ -66,14 +65,14 @@ export default observer(function OrbitNav() {
   const items = space.paneSort
     .map(
       (id, index): TabProps => {
-        const app = activeApps.find(x => x.id === id)
+        const app = activeAppsSorted.find(x => x.id === id)
         if (!app) {
           return null
         }
-        const isLast = index === activeApps.length
+        const isLast = index === activeAppsSorted.length
         const isActive = !showCreateNew && activeApp.id === id
-        const nextIsActive =
-          activeApps[index + 1] && paneManagerStore.activePane.id === `${activeApps[index + 1].id}`
+        const next = activeAppsSorted[index + 1]
+        const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
         const isPinned = app.pinned
         return {
           app,
@@ -207,6 +206,7 @@ export default observer(function OrbitNav() {
         />
       </OrbitNavChrome>
       <BorderBottom zIndex={-1} />
+      <BorderBottom zIndex={-1} transform={{ y: 1 }} background="red" />
     </OrbitNavClip>
   )
 })

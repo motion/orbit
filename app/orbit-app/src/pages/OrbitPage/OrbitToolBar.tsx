@@ -39,6 +39,7 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
+  alignItems: 'center',
   height,
   hasToolbars: {
     padding: [0, 12],

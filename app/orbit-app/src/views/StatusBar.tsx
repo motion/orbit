@@ -5,9 +5,8 @@ import { RoundButtonSmall } from './RoundButtonSmall'
 
 const statusBarProps = {
   alignItems: 'center',
-  fontWeight: 500,
-  alpha: 0.8,
-  size: 1.1,
+  alpha: 0.7,
+  size: 0.95,
 }
 
 export const StatusBar = gloss({

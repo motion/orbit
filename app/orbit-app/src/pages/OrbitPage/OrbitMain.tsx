@@ -4,12 +4,13 @@ import { isEqual } from 'lodash'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppConfig, AppType } from '../../apps/AppTypes'
-import { AppView, useApp } from '../../apps/AppView'
+import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { useInspectViews } from './OrbitSidebar'
-import { OrbitControlsHeight } from './OrbitToolBar'
+import { OrbitStatusBarHeight } from './OrbitStatusBar'
+import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default function OrbitMain() {
   const { paneManagerStore } = useStoresSafe()
@@ -30,7 +31,6 @@ export default function OrbitMain() {
 function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
-  const { appViews } = useApp(activeConfig)
 
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[props.pane.type]
@@ -51,27 +51,27 @@ function OrbitPageMainView(props: { pane: Pane }) {
   // only ever render once!
   const element = React.useMemo(
     () => {
-      if (!appViews) {
-        return null
-      }
+      const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
+      const key = `${JSON.stringify(props.pane)}${confKey}`
       return (
         <AppView
-          key={`${props.pane.id}${props.pane.type}${JSON.stringify(activeConfig)}`}
-          before={appViews.toolBar && <OrbitControlsHeight />}
-          after={appViews.statusBar && <OrbitControlsHeight />}
+          key={key}
           viewType="main"
           id={props.pane.id}
           type={props.pane.type}
           appConfig={activeConfig}
+          before={<OrbitToolBarHeight id={props.pane.id} />}
+          after={<OrbitStatusBarHeight id={props.pane.id} />}
         />
       )
     },
-    [activeConfig, appViews],
+    [activeConfig],
   )
 
   return element
 }
 
+// background above so it doest flicker on change
 const OrbitMainView = gloss(View, {
   flex: 1,
   position: 'relative',

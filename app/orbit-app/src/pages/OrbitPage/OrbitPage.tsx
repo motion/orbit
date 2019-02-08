@@ -1,4 +1,4 @@
-import { gloss, Row, View, ViewProps } from '@mcro/gloss'
+import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -25,7 +25,7 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
-import OrbitContent from './OrbitMain'
+import OrbitMain from './OrbitMain'
 import OrbitNav from './OrbitNav'
 import OrbitSidebar from './OrbitSidebar'
 import OrbitStatusBar from './OrbitStatusBar'
@@ -111,13 +111,15 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
+                {/* above bottom below active tab */}
+                {/* <BorderBottom zIndex={10000000} /> */}
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
                 <OrbitToolBar />
-                <Row flex={1}>
+                <OrbitContentArea>
                   <OrbitSidebar />
-                  <OrbitContent />
-                </Row>
+                  <OrbitMain />
+                </OrbitContentArea>
                 <OrbitStatusBar />
               </InnerChrome>
             </AppsLoader>
@@ -127,6 +129,13 @@ const OrbitPageInner = observer(function OrbitPageInner() {
     </MergeContext>
   )
 })
+
+const OrbitContentArea = gloss({
+  flexFlow: 'row',
+  flex: 1,
+}).theme((_, theme) => ({
+  background: theme.sidebarBackground,
+}))
 
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',

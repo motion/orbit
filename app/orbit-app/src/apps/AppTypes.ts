@@ -1,7 +1,16 @@
-
-import { IntegrationType } from '@mcro/models';
+import { AppBit, IntegrationType } from '@mcro/models';
+import { FunctionComponent } from 'react';
 import { GenericComponent } from '../types';
 import { AppStore } from './AppStore';
+
+type AppBitOf<A> = AppBit & { data: A }
+
+export interface App<A> extends FunctionComponent<AppProps> {
+  defaultValue: A
+  api: {
+    receive(bit: AppBitOf<A>, ...args: any[]): any
+  }
+}
 
 export type AppProps = {
   appConfig?: AppConfig

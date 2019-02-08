@@ -6,6 +6,7 @@ import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
@@ -62,6 +63,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 export default function AppsMainManage() {
+  const { paneManagerStore } = useStoresSafe()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const results = [
@@ -99,6 +101,10 @@ export default function AppsMainManage() {
           app={activeApps.find(x => x.id === item.id)}
           isSelected={isSelected}
           onClick={select}
+          onDoubleClick={() => {
+            paneManagerStore.setActivePane(`${item.id}`)
+            console.log('double 2', item)
+          }}
         />
       )
     },
@@ -112,6 +118,7 @@ export default function AppsMainManage() {
         margin="auto"
         items={results}
         getItem={getItem}
+        distance={10}
         onSortEnd={handleSortEnd}
         getSortableItemProps={item => {
           if (item.disabled) {

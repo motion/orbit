@@ -24,6 +24,8 @@ const borderByPosition = {
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
 type SidebarProps = {
+  noBorder?: boolean
+
   /**
    * Position of the sidebar.
    */
@@ -107,7 +109,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 
   render() {
-    const { background, onResize, position, children } = this.props
+    const { background, onResize, position, children, noBorder } = this.props
     let height, minHeight, maxHeight, width, minWidth, maxWidth
 
     const resizable: { [key: string]: boolean } = {}
@@ -150,7 +152,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         onResize={this.onResize}
       >
         <SidebarContainer position={position} background={background}>
-          {borderByPosition[position]}
+          {!noBorder && borderByPosition[position]}
           {children}
         </SidebarContainer>
       </SidebarInteractiveContainer>

@@ -82,6 +82,11 @@ class DesktopStore {
       restoreWords: null,
       paused: true,
     },
+    errorState: {
+      title: '',
+      message: '',
+      type: 'null' as 'warning' | 'error' | 'null',
+    },
     searchState: {
       indexStatus: '',
       searchResults: [],

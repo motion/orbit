@@ -1,5 +1,6 @@
-import { AppBit } from '@mcro/models'
-import { AppType } from '../apps/AppTypes'
+import { AppBit } from '@mcro/models';
+import { apps } from '../apps/apps';
+import { App, AppType } from '../apps/AppTypes';
 
 export const defaultApps: AppBit[] = [
   {
@@ -14,10 +15,7 @@ export const defaultApps: AppBit[] = [
     name: 'List',
     type: AppType.lists,
     colors: ['blue'],
-    data: {
-      rootItemID: 0,
-      items: {},
-    },
+    data: {},
   },
   {
     target: 'app',
@@ -53,6 +51,8 @@ export class NewAppStore {
 
   setApp(type: AppType) {
     const nextApp = defaultApps.find(x => x.type === type)
+
+    // update name and colors if unedited
     let name = this.app.name
     let colors = this.app.colors
     const neverChangedName = name === defaultApps.find(x => x.type === this.app.type).name
@@ -60,6 +60,14 @@ export class NewAppStore {
       name = nextApp.name
       colors = nextApp.colors
     }
+
+    // get data from defaultValue
+    let data = nextApp.data
+    const app = apps[type] as App<any>
+    if (app.defaultValue) {
+      data = app.defaultValue
+    }
+
     this.app = {
       ...this.app,
       // update if not changed
@@ -67,7 +75,7 @@ export class NewAppStore {
       colors,
       // always update
       type,
-      data: nextApp.data,
+      data,
     }
   }
 

@@ -1,5 +1,5 @@
+import { on, store } from '@mcro/black'
 import { Screen } from '@mcro/screen'
-import { store, on } from '@mcro/black'
 import { Desktop } from '@mcro/stores'
 
 // handles the screen blur window as well as any information relating to the current
@@ -15,7 +15,7 @@ export class ScreenManager {
     this.screen = screen
   }
 
-  start = () => {
+  start = async () => {
     this.isStarted = true
 
     // space move

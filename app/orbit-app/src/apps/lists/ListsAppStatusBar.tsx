@@ -4,6 +4,7 @@ import pluralize from 'pluralize'
 import React from 'react'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
+import { StatusBarText } from '../../views/StatusBar'
 import { ListAppProps } from './ListsApp'
 
 export default observer(function ListAppStatusBar({ store }: ListAppProps) {
@@ -25,9 +26,9 @@ export default observer(function ListAppStatusBar({ store }: ListAppProps) {
         ].filter(Boolean)}
       />
       <View flex={1} />
-      <Text>
-        ${numItems} {pluralize('item', numItems)}
-      </Text>
+      <StatusBarText>
+        {numItems} {pluralize('item', numItems)}
+      </StatusBarText>
     </>
   )
 })

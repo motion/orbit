@@ -53,5 +53,5 @@ const SortableGridInner = SortableContainer(
 )
 
 export function SortableGrid(props: SortableGridProps<any>) {
-  return <SortableGridInner shouldCancelStart={isRightClick} axis="xy" pressDelay={50} {...props} />
+  return <SortableGridInner shouldCancelStart={isRightClick} axis="xy" {...props} />
 }

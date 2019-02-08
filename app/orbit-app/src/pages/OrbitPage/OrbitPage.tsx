@@ -1,6 +1,6 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Theme } from '@mcro/ui'
+import { BorderBottom, Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { once, uniqBy } from 'lodash'
 import { observer } from 'mobx-react-lite'
@@ -111,6 +111,8 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                 <OrbitHeader />
                 <OrbitNav />
+                {/* above bottom below active tab */}
+                <BorderBottom zIndex={10000000} />
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
                 <OrbitToolBar />

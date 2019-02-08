@@ -1,5 +1,5 @@
 import { gloss } from '@mcro/gloss'
-import { Sidebar, View } from '@mcro/ui'
+import { Sidebar } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -9,7 +9,7 @@ import { AppView, AppViewRef, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import { BorderRight, BorderTop } from '../../views/Border'
+import { BorderRight } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitControlsHeight } from './OrbitToolBar'
@@ -83,20 +83,17 @@ export default observer(function OrbitSidebar() {
       maxWidth={500}
       noBorder
     >
-      <SidebarContainer>
-        <BorderTop />
-        {paneManagerStore.panes.map(pane => {
-          return (
-            <SidebarSubPane
-              key={pane.id}
-              hasMain={hasMain}
-              setIndexRef={setIndexRef}
-              indexRef={indexRef}
-              pane={pane}
-            />
-          )
-        })}
-      </SidebarContainer>
+      {paneManagerStore.panes.map(pane => {
+        return (
+          <SidebarSubPane
+            key={pane.id}
+            hasMain={hasMain}
+            setIndexRef={setIndexRef}
+            indexRef={indexRef}
+            pane={pane}
+          />
+        )
+      })}
     </Sidebar>
   )
 })
@@ -136,13 +133,6 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
 })
 
 const SidebarBackground = gloss({
-  flex: 1,
-  position: 'relative',
-}).theme((_, theme) => ({
-  background: theme.sidebarBackground,
-}))
-
-const SidebarContainer = gloss(View, {
   flex: 1,
   position: 'relative',
 })

@@ -120,7 +120,7 @@ const dark = {
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [255, 255, 255, 0.015],
     tabInactiveHover: [0, 0, 0, 0.2],
-    sidebarBackground: [25, 25, 25, 0.62],
+    sidebarBackground: [22, 22, 22, 0.58],
     sidebarBorderColor: '#444',
     glintColor: [255, 255, 255, 0.2],
     inputBackground: [100, 100, 100, 0.5],

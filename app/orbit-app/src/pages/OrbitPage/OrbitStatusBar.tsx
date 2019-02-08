@@ -36,5 +36,5 @@ const StatusBarChrome = gloss(Row, {
   justifyContent: 'center',
   zIndex: 1000000000,
 }).theme((_, theme) => ({
-  background: theme.background.darken(0.1).alpha(0.2),
+  // background: theme.background.darken(0.1).alpha(0.2),
 }))

@@ -1,4 +1,4 @@
-import { gloss, Row, View, ViewProps } from '@mcro/gloss'
+import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -114,10 +114,10 @@ const OrbitPageInner = observer(function OrbitPageInner() {
               </OrbitHeaderContainer>
               <InnerChrome torn={orbitStore.isTorn}>
                 <OrbitToolBar />
-                <Row flex={1}>
+                <OrbitContentArea>
                   <OrbitSidebar />
                   <OrbitMain />
-                </Row>
+                </OrbitContentArea>
                 <OrbitStatusBar />
               </InnerChrome>
             </AppsLoader>
@@ -127,6 +127,13 @@ const OrbitPageInner = observer(function OrbitPageInner() {
     </MergeContext>
   )
 })
+
+const OrbitContentArea = gloss({
+  flexFlow: 'row',
+  flex: 1,
+}).theme((_, theme) => ({
+  background: theme.sidebarBackground,
+}))
 
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',

@@ -21,7 +21,7 @@ client:
   - [ ] test to be sure you can add tabs when syncing is running and fix if not
 
 - settings panes fixes:
-  - [ ] drive syncer not showing anything in their setting pane, some simple solutin we can discuss
+
   - [ ] settings pane are loading/reloading their content every time
     - problem: slack/github have to load the table content every time you look @ them
     - solution:
@@ -34,21 +34,19 @@ client:
   - [ ] some settings panes are broken
     - check over them all and fix bugs
     - this is actually a medium size task because each pane needs some work
-- easier migration story:
-  - [ ] way to add a column to models without needing them to be recreated
-  - [ ] add a simple `bin` command to add a migration please
-  - [ ] in our recovery script, lets do step 1 of migrations where you:
-    - [ ] dump all models to JSON file in the dataDir directory
-    - [ ] re-create tables
-    - [ ] import JSON into tables and hope it gets the default values
-    - [ ] if it fails just leave a comment for me i'll pick it up
+
 - backend:
+
   - [ ] 🐛 small: in Desktop, observable findOne queries don't have exceptions properly handled so its hard to know what query it was and debug args - "Desktop: Possibly Unhandled Rejection: Wrong arguments supplied. You must provide valid options to findOne method." - adding a try/catch that works and shows the arguments passed would be helpful
-        search:
+
+- search:
+
   - [ ] 🐛 People aren't returning from the new SearchResult resolver, we should join in a summary of people:
     - have three people joined (just name + avatar)
     - have a count of the total people
+
 - syncers:
+
   - [ ] throttle them
     - honestly just do it in a dumb way, please, it will take 5 minutes to do and works fine (await sleep(~ms) in the loops)
   - [ ] smart sync
@@ -73,20 +71,12 @@ client:
   - github:
     - [ ] limit the total amount it syncs
   - debug why gdrive syncer items show "empty" in frontend and clean that view up
-  - gmail:
-    - [ ] HTML stuff is a mess, its too heavy. theres got to be a faster one
-      - do we even need to parse it using an html parser isn't it already in HTML? lets discuss
-      - ideally we would just keep some recent ones in HTML and the rest just plain text (heavy/light)
-      - and then even better we would then fetch the HTML bodies as needed when they search
-      - got an out of memory issue during multiple syncs (due to html processing)
-        - command:setting-force-sync:gmail:3 updating last cursor in settings {cursor: "11381717841944942365"}
-    - [ ] is syncing my spam folder :/
-    - [ ]syncer bodies are getting cut off early when they are just text
-      - for example i see one where it just shows the first two sentences but nothing else
   - website crawler:
     - depending on how hard this is we may cut it out
     - just check into if its working and spend max a day on cleaning it up
+
 - non-syncing sources:
+
   - we need sources where it just lets you hook into a database essentially
     - all they really have is a `type`, and some credentials
     - [ ] add schema for this in Source
@@ -95,3 +85,12 @@ client:
       - [ ] migration to automatically add that postgres source
       - [ ] find icon, add it to frontend code so you can configure it like Website Crawler
     - thats all for now, i will then build a simple app that lets us explore it easily
+
+- easier migration story:
+
+  - [ ] way to add a column to models without needing them to be recreated
+  - [ ] in our "model startup failed, recovery" script, lets
+    - [ ] dump models to JSON file in the dataDir directory so they are backed up
+    - [ ] re-create tables using new schema (but see if maybe default values changed)
+    - [ ] try and use that dumbed JSON to re-set up models using
+    - [ ] if it fails just leave a comment for me i'll pick it up

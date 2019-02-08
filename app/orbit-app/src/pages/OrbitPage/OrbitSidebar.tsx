@@ -24,7 +24,6 @@ export function useInspectViews() {
   let hasMain = false
 
   const views = appsStore.appViews[activePane.id]
-
   if (views) {
     // dynamic app view
     hasMain = !!views.main
@@ -49,6 +48,8 @@ export default observer(function OrbitSidebar() {
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
   const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
   const { hasMain, hasIndex } = useInspectViews()
+
+  console.log({ hasMain, hasIndex })
 
   if (!activePane) {
     return null
@@ -120,8 +121,8 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
           id={pane.id}
           type={pane.type}
           appConfig={{}}
-          before={<OrbitToolBarHeight />}
-          after={<OrbitStatusBarHeight />}
+          before={<OrbitToolBarHeight id={props.pane.id} />}
+          after={<OrbitStatusBarHeight id={props.pane.id} />}
         />
       </ProvideSelectableHandlers>
     </SubPane>

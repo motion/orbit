@@ -61,8 +61,8 @@ function OrbitPageMainView(props: { pane: Pane }) {
           id={props.pane.id}
           type={props.pane.type}
           appConfig={activeConfig}
-          before={<OrbitToolBarHeight />}
-          after={<OrbitStatusBarHeight />}
+          before={<OrbitToolBarHeight id={props.pane.id} />}
+          after={<OrbitStatusBarHeight id={props.pane.id} />}
         />
       )
     },

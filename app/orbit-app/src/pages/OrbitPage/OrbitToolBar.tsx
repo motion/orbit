@@ -7,11 +7,10 @@ import { BorderBottom } from '../../views/Border'
 
 const toolBarHeight = 32
 
-export const OrbitToolBarHeight = observer(() => {
-  const { paneManagerStore } = useStoresSafe()
-  const { appViews } = useApp(paneManagerStore.activePane)
+export const OrbitToolBarHeight = ({ id }: { id: string }) => {
+  const { appViews } = useApp({ id })
   return <div style={{ height: appViews.toolBar ? toolBarHeight : 0 }} />
-})
+}
 
 export default observer(function OrbitToolBar() {
   const { paneManagerStore } = useStoresSafe()

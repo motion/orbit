@@ -7,11 +7,10 @@ import { BorderTop } from '../../views/Border'
 
 const statusBarHeight = 26
 
-export const OrbitStatusBarHeight = observer(() => {
-  const { paneManagerStore } = useStoresSafe()
-  const { appViews } = useApp(paneManagerStore.activePane)
+export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
+  const { appViews } = useApp({ id })
   return <div style={{ height: appViews.statusBar ? statusBarHeight : 0 }} />
-})
+}
 
 export default observer(function OrbitStatusBar() {
   const { orbitStore } = useStoresSafe()

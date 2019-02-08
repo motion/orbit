@@ -129,7 +129,7 @@ const dark = {
     tabInactiveHover: [0, 0, 0, 0.2],
     sidebarBackground: [22, 22, 22, 0.58],
     sidebarBorderColor: '#444',
-    glintColor: [255, 255, 255, 0.2],
+    glintColor: [255, 255, 255, 0.135],
     inputBackground: [100, 100, 100, 0.5],
     inputBorderColor: 'transparent',
     inputBackgroundHover: [110, 110, 110, 0.5],

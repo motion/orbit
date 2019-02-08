@@ -1,10 +1,9 @@
 import { gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
 import {
-  BorderRight,
-  BorderTop,
   Button,
   ButtonProps,
+  Glint,
   IconProps,
   MenuTemplate,
   Tooltip,
@@ -12,12 +11,12 @@ import {
 } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { BorderLeft } from '../views/Border'
+import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 28
 const inactiveOpacity = 0.45
-const border = 3
+const borderSize = 5
 
 export type TabProps = ViewProps & {
   app?: AppBit
@@ -68,57 +67,56 @@ export function OrbitTab({
       } undraggable ${className || ''}`}
       isActive={isActive}
       thicc={thicc}
-      sidePad={sidePad}
       {...contextMenuProps}
       {...props}
     >
-      {isActive && (
-        <>
-          <BorderRight />
-          <BorderTop />
-          <BorderLeft />
-        </>
-      )}
-
-      <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
-        {!React.isValidElement(icon) && !!icon && (
-          <OrbitTabIcon
-            isActive={isActive}
-            name={`${icon}`}
-            marginRight={!!label ? sidePad * 0.6 : 0}
-            thicc={thicc}
-            size={iconSize}
-            iconAdjustOpacity={iconAdjustOpacity}
-            transform={{
-              y: -0.5,
-            }}
-            {...iconProps}
-          />
+      <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
+        {isActive && (
+          <>
+            <Glint borderRadius={borderSize} y={1} />
+            <BorderBottom opacity={0.5} transform={{ y: 0 }} />
+          </>
         )}
-        {React.isValidElement(icon) &&
-          React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
-        {!!label && (
-          <SimpleText
-            ellipse
-            className="tab-label"
-            display="flex"
-            flex={1}
-            size={0.95}
-            opacity={isActive ? 1 : inactiveOpacity}
-            fontWeight={400}
-            {...textProps}
-            transition={isActive ? 'none' : tabTransition}
-          >
-            {label}
-          </SimpleText>
-        )}
-      </Row>
 
-      {separator && <Separator />}
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+          {!React.isValidElement(icon) && !!icon && (
+            <OrbitTabIcon
+              isActive={isActive}
+              name={`${icon}`}
+              marginRight={!!label ? sidePad * 0.6 : 0}
+              thicc={thicc}
+              size={iconSize}
+              iconAdjustOpacity={iconAdjustOpacity}
+              transform={{
+                y: -0.5,
+              }}
+              {...iconProps}
+            />
+          )}
+          {React.isValidElement(icon) &&
+            React.cloneElement(icon, { size: iconSize, ...iconProps } as any)}
+          {!!label && (
+            <SimpleText
+              ellipse
+              className="tab-label"
+              display="flex"
+              flex={1}
+              size={0.95}
+              opacity={isActive ? 1 : inactiveOpacity}
+              fontWeight={400}
+              {...textProps}
+              transition={isActive ? 'none' : tabTransition}
+            >
+              {label}
+            </SimpleText>
+          )}
+        </Row>
 
-      {after}
+        {separator && <Separator />}
 
-      {/* {isActive && !!onClickPopout && (
+        {after}
+
+        {/* {isActive && !!onClickPopout && (
           <OrbitTabButton
             className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
             tooltip="Open"
@@ -129,6 +127,7 @@ export function OrbitTab({
             }}
           />
         )} */}
+      </NavButtonChromeInner>
     </NavButtonChrome>
   )
   if (tooltip) {
@@ -180,18 +179,30 @@ export function OrbitTabButton(props: ButtonProps) {
 
 const tabTransition = 'all ease-out 350ms'
 
+const NavButtonChromeInner = gloss({
+  flexFlow: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flex: 1,
+  height: '100%',
+  borderTop: [1, 'transparent'],
+}).theme(({ isActive, sidePad }, theme) => ({
+  borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
+  padding: [0, sidePad],
+}))
+
 const NavButtonChrome = gloss<TabProps>({
   position: 'relative',
   flexFlow: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-  borderTopRadius: border,
+  borderTopRadius: borderSize,
   overflow: 'hidden',
   height: tabHeight,
   transform: {
-    y: 0.5,
+    y: 1.5,
   },
-}).theme(({ isActive, stretch, sidePad }, theme) => {
+}).theme(({ isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
 
   const glowStyle = {
@@ -200,7 +211,6 @@ const NavButtonChrome = gloss<TabProps>({
   }
 
   return {
-    padding: [0, sidePad],
     width: stretch ? 150 : 'auto',
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
@@ -209,7 +219,7 @@ const NavButtonChrome = gloss<TabProps>({
     boxShadow: isActive
       ? [
           [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
-          ['inset', 0, 0.5, 0, 0, theme.tabBorderColor || theme.borderColor],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,

@@ -4,13 +4,13 @@ import { isEqual } from 'lodash'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppConfig, AppType } from '../../apps/AppTypes'
-import { AppView, useApp } from '../../apps/AppView'
+import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { useInspectViews } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitControlsHeight } from './OrbitToolBar'
+import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default function OrbitMain() {
   const { paneManagerStore } = useStoresSafe()
@@ -31,7 +31,6 @@ export default function OrbitMain() {
 function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
-  const { appViews } = useApp(activeConfig)
 
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[props.pane.type]
@@ -52,26 +51,22 @@ function OrbitPageMainView(props: { pane: Pane }) {
   // only ever render once!
   const element = React.useMemo(
     () => {
-      if (!appViews) {
-        return null
-      }
       const key = `${JSON.stringify(props.pane)}${
         activeConfig ? `${activeConfig.id}${activeConfig.type}` : 'none'
       }`
       return (
-        <React.Fragment key={key}>
-          {appViews.toolBar && <OrbitControlsHeight />}
-          <AppView
-            viewType="main"
-            id={props.pane.id}
-            type={props.pane.type}
-            appConfig={activeConfig}
-          />
-          {appViews.statusBar && <OrbitStatusBarHeight />}
-        </React.Fragment>
+        <AppView
+          key={key}
+          viewType="main"
+          id={props.pane.id}
+          type={props.pane.type}
+          appConfig={activeConfig}
+          before={<OrbitToolBarHeight />}
+          after={<OrbitStatusBarHeight />}
+        />
       )
     },
-    [activeConfig, appViews],
+    [activeConfig],
   )
 
   return element

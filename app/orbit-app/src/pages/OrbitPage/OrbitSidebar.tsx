@@ -1,18 +1,17 @@
-import { gloss } from '@mcro/gloss'
 import { Sidebar } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { apps } from '../../apps/apps'
 import { AppType } from '../../apps/AppTypes'
-import { AppView, AppViewRef, useApp } from '../../apps/AppView'
+import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
 import { BorderRight } from '../../views/Border'
 import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitControlsHeight } from './OrbitToolBar'
+import { OrbitToolBarHeight } from './OrbitToolBar'
 
 type AppViewRefDictionary = { [key: string]: AppViewRef }
 
@@ -106,12 +105,11 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
 }) {
   const { orbitStore } = useStoresSafe()
   const { pane, indexRef, setIndexRef, hasMain } = props
-  const { appViews } = useApp(pane)
 
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        <BorderRight />
+        <BorderRight opacity={0.5} />
         <AppView
           key={pane.id}
           ref={state => {
@@ -122,15 +120,10 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
           id={pane.id}
           type={pane.type}
           appConfig={{}}
-          before={appViews.toolBar && <OrbitControlsHeight />}
-          after={appViews.statusBar && <OrbitStatusBarHeight />}
+          before={<OrbitToolBarHeight />}
+          after={<OrbitStatusBarHeight />}
         />
       </ProvideSelectableHandlers>
     </SubPane>
   )
-})
-
-const SidebarBackground = gloss({
-  flex: 1,
-  position: 'relative',
 })

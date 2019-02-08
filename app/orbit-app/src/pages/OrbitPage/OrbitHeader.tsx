@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss, linearGradient, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, PassProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -124,11 +124,10 @@ const HeaderContain = gloss({
 const HeaderFade = gloss(FullScreen, {
   zIndex: -1,
 }).theme((_, theme) => {
-  const lighterBg = theme.headerBackground.getColors()[0]
-  lighterBg[3] = 0.1
-  const background = linearGradient('to right', lighterBg, 'transparent', lighterBg)
-  return {
-    background,
+  if (theme.headerFadeBackground) {
+    return {
+      background: theme.headerFadeBackground,
+    }
   }
 })
 

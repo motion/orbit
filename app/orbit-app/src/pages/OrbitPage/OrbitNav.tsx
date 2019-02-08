@@ -206,7 +206,6 @@ export default observer(function OrbitNav() {
         />
       </OrbitNavChrome>
       <BorderBottom zIndex={-1} />
-      <BorderBottom zIndex={-1} transform={{ y: 1 }} background="red" />
     </OrbitNavClip>
   )
 })

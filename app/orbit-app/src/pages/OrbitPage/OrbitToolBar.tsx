@@ -5,20 +5,27 @@ import { useApp } from '../../apps/AppView'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderBottom } from '../../views/Border'
 
-const height = 32
+const toolBarHeight = 32
 
-export const OrbitControlsHeight = () => <div style={{ height }} />
+export const OrbitToolBarHeight = observer(() => {
+  const { paneManagerStore } = useStoresSafe()
+  const { appViews } = useApp(paneManagerStore.activePane)
+  return <div style={{ height: appViews.toolBar ? toolBarHeight : 0 }} />
+})
 
 export default observer(function OrbitToolBar() {
-  const { orbitStore } = useStoresSafe()
-  const { appViews, appStore } = useApp(orbitStore.activePane)
+  const { paneManagerStore } = useStoresSafe()
+  const { appViews, appStore } = useApp(paneManagerStore.activePane)
+  const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar
 
+  console.log('hasToolBar', hasToolBar)
+
   return (
-    <ToolbarChrome hasToolbars={!!AppView}>
-      <ToolbarInner hasToolbars={!!AppView}>
-        {!!AppView && <AppView key={orbitStore.activePane.id} appStore={appStore} />}
-        {!!AppView && <BorderBottom opacity={0.25} />}
+    <ToolbarChrome hasToolbars={hasToolBar}>
+      <ToolbarInner hasToolbars={hasToolBar}>
+        {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
+        {hasToolBar && <BorderBottom opacity={0.25} />}
       </ToolbarInner>
     </ToolbarChrome>
   )
@@ -40,8 +47,9 @@ const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
   alignItems: 'center',
-  height,
+  toolBarHeight,
   hasToolbars: {
+    height: toolBarHeight,
     padding: [0, 12],
   },
 })

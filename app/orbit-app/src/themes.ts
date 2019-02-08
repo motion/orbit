@@ -67,10 +67,10 @@ const light = {
     borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-    headerBackground: linearGradient([255, 255, 255, 0.48], [255, 255, 255, 0.75]),
+    headerBackground: linearGradient([255, 255, 255, 0.7], [255, 255, 255, 0.86]),
     sidebarBackground: [255, 255, 255, 0.85],
-    tabBackgroundTop: lightBackground.alpha(0.6),
-    tabBackgroundBottom: lightBackground.alpha(0.95),
+    tabBackgroundTop: lightBackground.alpha(0.65),
+    tabBackgroundBottom: lightBackground,
     tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
     buttonBackground: '#f2f2f2',
@@ -96,6 +96,7 @@ const light = {
 }
 
 const darkBackground = color([60, 60, 60])
+const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
@@ -106,6 +107,12 @@ const dark = {
     color: [250, 250, 250],
     borderColor: '#464646',
     headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.38]),
+    headerFadeBackground: linearGradient(
+      'to right',
+      darkFadeBackground,
+      'transparent',
+      darkFadeBackground,
+    ),
     buttonBackground: [60, 60, 60, 0.8],
     buttonBackgroundActive: [45, 45, 45, 0.8],
     buttonBackgroundHover: [70, 70, 70, 0.8],

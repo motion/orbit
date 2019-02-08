@@ -10,10 +10,7 @@ export const statusBarHeight = 32
 export default observer(function OrbitStatusBar() {
   const { orbitStore } = useStoresSafe()
   const id = orbitStore.activePane.id
-  const { appViews, appStore } = useApp({
-    type: orbitStore.activePane.type,
-    id,
-  })
+  const { appViews, appStore } = useApp({ id: id || orbitStore.activePane.type })
   const AppView = appViews.statusBar
 
   if (!AppView) {

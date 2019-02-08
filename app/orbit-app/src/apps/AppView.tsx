@@ -8,7 +8,6 @@ import { StoreContext } from '../contexts'
 import { AllStores } from '../contexts/StoreContext'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { MergeContext } from '../views/MergeContext'
-import { apps } from './apps'
 import { AppStore } from './AppStore'
 import { AppProps, AppViews } from './AppTypes'
 
@@ -28,9 +27,7 @@ export type AppViewRef = {
 }
 
 // needs either an id or a type
-type GetAppViewProps =
-  | { id: string; type?: string; appStore?: AppStore }
-  | { id?: string; type: string; appStore?: AppStore }
+type GetAppViewProps = { id: string; appStore?: AppStore }
 
 type AppState = {
   appViews: AppViews
@@ -40,7 +37,7 @@ type AppState = {
 function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
   const next = {
     appStore: props.appStore || stores.appStore || null,
-    appViews: null,
+    appViews: {},
   }
 
   // set store
@@ -50,10 +47,7 @@ function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
 
   // set view
   if (stores.appsStore) {
-    next.appViews = stores.appsStore.appViews[props.id]
-  }
-  if (!next.appViews) {
-    next.appViews = apps[props.type] || {}
+    next.appViews = stores.appsStore.appViews[props.id] || {}
   }
 
   return next
@@ -62,13 +56,15 @@ function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
 export function useApp(props: GetAppViewProps | false) {
   const stores = useStoresSafe({ optional: ['appStore', 'appsStore'] })
   const currentState = useRef<AppState>({
-    appViews: null,
+    appViews: {},
     appStore: null,
   })
   const [version, update] = useState(0)
 
   if (version === 0 && props) {
-    currentState.current = getAppViewProps(props, stores)
+    const next = getAppViewProps(props, stores)
+    console.log('setting to', next)
+    currentState.current = next
   }
 
   useObserver(() => {
@@ -87,7 +83,7 @@ export function useApp(props: GetAppViewProps | false) {
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { appViews, appStore } = useApp(props)
+    const { appViews, appStore } = useApp({ id: props.id || props.type })
     const AppView = appViews[props.viewType]
 
     // handle ref

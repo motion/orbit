@@ -1,32 +1,36 @@
-import { SaveOptions } from '@mcro/mediator'
-import { save } from '@mcro/model-bridge'
-import { AppBit, AppModel, Bit } from '@mcro/models'
-import { useStore } from '@mcro/use-store'
-import React from 'react'
-import { App } from '../App'
-import { AppProps } from '../AppTypes'
-import ListsAppIndex from './ListsAppIndex'
-import ListsAppMain from './ListsAppMain'
-import ListsAppStatusBar from './ListsAppStatusBar'
-import { ListStore } from './ListStore'
-import { ListsAppBit } from './types'
+import { SaveOptions } from '@mcro/mediator';
+import { save } from '@mcro/model-bridge';
+import { AppBit, AppModel, Bit } from '@mcro/models';
+import { useStore } from '@mcro/use-store';
+import React from 'react';
+import { AppContainer } from '../AppContainer';
+import { App, AppProps } from '../AppTypes';
+import ListsAppIndex from './ListsAppIndex';
+import ListsAppMain from './ListsAppMain';
+import ListsAppStatusBar from './ListsAppStatusBar';
+import { ListStore } from './ListStore';
+import { ListsAppBit, ListsAppData } from './types';
 
 export const listRootID = 0
-
 export type ListAppProps = AppProps & {
   store: ListStore
 }
 
-export function ListsApp(props: AppProps) {
+export const ListsApp: App<ListsAppData> = (props) => {
   const store = useStore(ListStore, props)
   return (
-    <App
+    <AppContainer
       index={<ListsAppIndex {...props} store={store} />}
       statusBar={<ListsAppStatusBar {...props} store={store} />}
     >
       <ListsAppMain {...props} store={store} />
-    </App>
+    </AppContainer>
   )
+}
+
+ListsApp.defaultValue = {
+  rootItemID: 0,
+  items: {}
 }
 
 ListsApp.api = {
@@ -37,8 +41,9 @@ ListsApp.api = {
   ) {
     const listApp = app as ListsAppBit
     const item = listApp.data.items[parentID]
-    if (item.type !== 'folder' && item.type !== 'root') {
-      throw new Error('Invalid parent to add')
+    if (!item || (item.type !== 'folder' && item.type !== 'root')) {
+      console.error('NO VALID THING', item, parentID, listApp)
+      return
     }
 
     const id = child.id || Math.random()

@@ -1,18 +1,18 @@
-import { View } from '@mcro/ui'
-import React from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
-import { App } from '../App'
-import { AppProps } from '../AppTypes'
-import SearchAppIndex from './SearchAppIndex'
-import SearchAppMain from './SearchAppMain'
-import OrbitSuggestionBar from './views/OrbitSuggestionBar'
+import { View } from '@mcro/ui';
+import React from 'react';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton';
+import { AppContainer } from '../AppContainer';
+import { AppProps } from '../AppTypes';
+import SearchAppIndex from './SearchAppIndex';
+import SearchAppMain from './SearchAppMain';
+import OrbitSuggestionBar from './views/OrbitSuggestionBar';
 
 export function SearchApp(props: AppProps) {
   return (
-    <App index={<SearchAppIndex {...props} />} toolBar={<SearchToolBar />}>
+    <AppContainer index={<SearchAppIndex {...props} />} toolBar={<SearchToolBar />}>
       <SearchAppMain {...props} />
-    </App>
+    </AppContainer>
   )
 }
 

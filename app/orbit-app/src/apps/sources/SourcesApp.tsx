@@ -1,14 +1,14 @@
-import React from 'react'
-import { App } from '../App'
-import { AppProps } from '../AppTypes'
-import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
-import SourcesAppIndex from './SourcesAppIndex'
-import { SourcesAppMain } from './SourcesAppMain'
+import React from 'react';
+import { AppContainer } from '../AppContainer';
+import { AppProps } from '../AppTypes';
+import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar';
+import SourcesAppIndex from './SourcesAppIndex';
+import { SourcesAppMain } from './SourcesAppMain';
 
 export function SourcesApp(props: AppProps) {
   return (
-    <App index={<SourcesAppIndex {...props} />} toolBar={<OrbitSettingsToolbar />}>
+    <AppContainer index={<SourcesAppIndex {...props} />} toolBar={<OrbitSettingsToolbar />}>
       <SourcesAppMain {...props} />
-    </App>
+    </AppContainer>
   )
 }

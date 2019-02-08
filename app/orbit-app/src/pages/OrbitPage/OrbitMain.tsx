@@ -51,9 +51,8 @@ function OrbitPageMainView(props: { pane: Pane }) {
   // only ever render once!
   const element = React.useMemo(
     () => {
-      const key = `${JSON.stringify(props.pane)}${
-        activeConfig ? `${activeConfig.id}${activeConfig.type}` : 'none'
-      }`
+      const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
+      const key = `${JSON.stringify(props.pane)}${confKey}`
       return (
         <AppView
           key={key}

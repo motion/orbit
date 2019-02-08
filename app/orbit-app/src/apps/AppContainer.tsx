@@ -1,10 +1,10 @@
-import { cloneElement, useEffect } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { AppElements } from './AppTypes'
+import { cloneElement, useEffect } from 'react';
+import { useStoresSafe } from '../hooks/useStoresSafe';
+import { AppElements } from './AppTypes';
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar']
 
-export function App(props: AppElements) {
+export function AppContainer(props: AppElements) {
   for (const key in props) {
     if (!appViews.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)

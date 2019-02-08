@@ -90,6 +90,7 @@ export function OrbitTab({
             opacity={isActive ? 1 : inactiveOpacity}
             fontWeight={400}
             {...textProps}
+            transition={isActive ? 'none' : tabTransition}
           >
             {label}
           </SimpleText>
@@ -160,6 +161,8 @@ export function OrbitTabButton(props: ButtonProps) {
   )
 }
 
+const tabTransition = 'all ease-out 350ms'
+
 const NavButtonChrome = gloss<TabProps>({
   position: 'relative',
   flexFlow: 'row',
@@ -176,7 +179,7 @@ const NavButtonChrome = gloss<TabProps>({
 
   const glowStyle = {
     background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
-    transition: isActive ? 'none' : 'all ease-out 500ms',
+    transition: isActive ? 'none' : tabTransition,
   }
 
   return {
@@ -196,7 +199,7 @@ const NavButtonChrome = gloss<TabProps>({
     '&:hover': glowStyle,
     '& .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.4 !important',
-      transition: 'all ease-in 100ms',
+      transition: isActive ? 'none' : tabTransition,
     },
     '&:hover .tab-icon-inactive.tab-icon-unpinned': {
       opacity: '0.6 !important',

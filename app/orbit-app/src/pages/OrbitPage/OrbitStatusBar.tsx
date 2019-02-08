@@ -20,7 +20,7 @@ export default observer(function OrbitStatusBar() {
   return (
     <StatusBarChrome>
       <AppView key={id} appStore={appStore} />
-      <BorderTop opacity={0.25} />
+      <BorderTop />
     </StatusBarChrome>
   )
 })

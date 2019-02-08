@@ -1,9 +1,9 @@
 import { useModel } from '@mcro/model-bridge'
 import { AppModel } from '@mcro/models'
-import { Row } from '@mcro/ui'
+import { BorderBottom, Row } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { SubTitle, Title } from '../../views'
+import { HorizontalSpace, SubTitle, Title } from '../../views'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import OrbitList from '../../views/Lists/OrbitList'
@@ -45,13 +45,19 @@ const ListsAppMainFolder = observer(function ListsAppMainFolder(props: ListAppPr
 
   return (
     <Section>
-      <Row alignItems="center">
+      <Row position="relative" alignItems="center" height={42}>
         {props.store.depth > 0 && (
-          <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={props.store.back}>
-            Back
-          </FloatingBarButtonSmall>
+          <>
+            <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={props.store.back}>
+              Back
+            </FloatingBarButtonSmall>
+            <HorizontalSpace />
+          </>
         )}
-        <Title>{props.appConfig.title}</Title>
+        <Title marginBottom={4} ellipse>
+          {props.appConfig.title}
+        </Title>
+        <BorderBottom />
       </Row>
       <OrbitList items={children} placeholder={<SubTitle>No items</SubTitle>} />
     </Section>

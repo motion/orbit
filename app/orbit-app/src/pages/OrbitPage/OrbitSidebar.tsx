@@ -5,8 +5,7 @@ import { isEqual } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { apps } from '../../apps/apps'
-import { AppView, AppViewRef } from '../../apps/AppView'
-import { OrbitToolBarContext } from '../../components/OrbitToolbar'
+import { AppView, AppViewRef, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
@@ -92,11 +91,6 @@ export default observer(function OrbitSidebar() {
   )
 })
 
-export function useHasToolbar(paneId: string) {
-  const { toolbarStore } = React.useContext(OrbitToolBarContext)
-  return toolbarStore && !!toolbarStore.bars[paneId]
-}
-
 const SidebarSubPane = React.memo(function SidebarSubPane(props: {
   pane: Pane
   setIndexRef: Function
@@ -105,7 +99,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
 }) {
   const { orbitStore } = useStoresSafe()
   const { pane, indexRef, setIndexRef, hasMain } = props
-  const hasBars = useHasToolbar(pane.id)
+  const hasBars = useApp({ id: pane.id })
 
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
@@ -119,7 +113,6 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
           viewType="index"
           id={pane.id}
           type={pane.type}
-          onAppStore={orbitStore.setAppStore(pane.id)}
           appConfig={{}}
           before={hasBars && <OrbitControlsHeight />}
         />

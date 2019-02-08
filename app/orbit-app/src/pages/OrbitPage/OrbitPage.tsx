@@ -94,7 +94,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
         >
           <Theme name={theme}>
             <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-              <AppsLoader>
+              <AppsLoader views={paneManagerStore.panes}>
                 <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
                   <OrbitHeader />
                   <OrbitNav />
@@ -125,12 +125,12 @@ const OrbitHeaderContainer = gloss(View, {
 }))
 
 const defaultPanes = [
-  { id: 'app-sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
-  { id: 'app-spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
-  { id: 'app-settings', name: 'Settings', type: 'settings', isHidden: true, keyable: true },
-  { id: 'app-apps', name: 'Apps', type: 'apps' },
-  { id: 'app-createApp', name: 'Add app', type: 'createApp' },
-  { id: 'app-onboard', name: 'Onboard', type: 'onboard' },
+  { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
+  { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
+  { id: 'settings', name: 'Settings', type: 'settings', isHidden: true, keyable: true },
+  { id: 'apps', name: 'Apps', type: 'apps' },
+  { id: 'createApp', name: 'Add app', type: 'createApp' },
+  { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 
 function useOnce(fn: Function, reset = []) {

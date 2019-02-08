@@ -1,25 +1,23 @@
-import { AppBit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React, { useEffect, useMemo } from 'react'
 import { StoreContext } from '../contexts'
-import { useActiveApps } from '../hooks/useActiveApps'
 import { MergeContext } from '../views/MergeContext'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
 
 export class AppsStore {
-  appViews: { [key: number]: AppViews } = {}
-  appStores: { [key: number]: AppStore } = {}
+  appViews: { [key: string]: AppViews } = {}
+  appStores: { [key: string]: AppStore } = {}
 
-  handleAppViews = (id: number, views: AppViews) => {
+  handleAppViews = (id: string, views: AppViews) => {
     this.appViews = {
       ...this.appViews,
       [id]: views,
     }
   }
 
-  handleAppStore = (id: number, store: AppStore) => {
+  handleAppStore = (id: string, store: AppStore) => {
     this.appStores = {
       ...this.appStores,
       [id]: store,
@@ -27,12 +25,13 @@ export class AppsStore {
   }
 }
 
-export default function AppsLoader(props: { children?: any }) {
-  const appsStore = useStore(AppsStore)
-  const activeApps = useActiveApps()
+type AppViewDefinition = { id: string; type: string }
 
-  const appLoadViews = activeApps.map(app => {
-    return <AppLoader key={app.id} app={app} store={appsStore} />
+export default function AppsLoader(props: { children?: any; views: AppViewDefinition[] }) {
+  const appsStore = useStore(AppsStore)
+
+  const appLoadViews = props.views.map(view => {
+    return <AppLoader key={view.id} view={view} store={appsStore} />
   })
 
   return (
@@ -43,41 +42,29 @@ export default function AppsLoader(props: { children?: any }) {
   )
 }
 
-type AppLoaderProps = { app: AppBit; store: AppsStore }
+type AppLoaderProps = { view: AppViewDefinition; store: AppsStore }
 
 function AppLoader(props: AppLoaderProps) {
-  const AppView = apps[props.app.type]
+  const AppView = apps[props.view.type]
 
   if (!AppView) {
-    throw new Error(`App not found ${props.app.type}`)
+    throw new Error(`App not found ${props.view.type}`)
   }
 
   // never run more than once
-  const element = useMemo(() => {
-    // functional app
-    if (typeof AppView === 'function') {
-      return <AppLoadDynamicView {...props} />
-    }
-
-    // legacy
-    if (AppView.index || AppView.main) {
-      props.store.handleAppViews(props.app.id, AppView)
-      return null
-    } else {
-      throw new Error(`Invalid definition ${AppView}`)
-    }
-  }, [])
+  // sub-view so we can use hooks
+  const element = useMemo(() => <AppLoadView {...props} />, [])
 
   return element
 }
 
-function AppLoadDynamicView({ app, store }: AppLoaderProps) {
-  const AppView = apps[app.type]
-  const appViewProps = { id: `${app.id}` }
+function AppLoadView({ view, store }: AppLoaderProps) {
+  const AppView = apps[view.type]
+  const appViewProps = { id: view.id }
   const appStore = useStore(AppStore, appViewProps)
 
   useEffect(() => {
-    store.handleAppStore(app.id, appStore)
+    store.handleAppStore(view.id, appStore)
   })
 
   if (typeof AppView === 'function') {
@@ -88,7 +75,10 @@ function AppLoadDynamicView({ app, store }: AppLoaderProps) {
     )
   }
 
-  // should never get here just for typscript
-  console.warn('weird')
-  return null
+  if (AppView.index || AppView.main) {
+    store.handleAppViews(view.id, AppView)
+    return null
+  } else {
+    throw new Error(`Invalid definition ${AppView}`)
+  }
 }

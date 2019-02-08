@@ -5,8 +5,8 @@ import { Direction } from './SelectionStore'
 
 export type Pane = {
   id: string
+  type: string
   name?: string
-  type?: string
   keyable?: boolean
   isHidden?: boolean
   // lets you use this a bit more dynamically

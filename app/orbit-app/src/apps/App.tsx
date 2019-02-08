@@ -21,7 +21,7 @@ export function App(props: AppViews) {
 
   useEffect(() => {
     console.log('setting app store views', props)
-    appsStore.handleAppViews(+appStore.id, {
+    appsStore.handleAppViews(appStore.id, {
       index: props.index && (mergeProps => cloneElement(props.index, mergeProps)),
       main: props.children && (mergeProps => cloneElement(props.children, mergeProps)),
       statusBar: props.statusBar && (mergeProps => cloneElement(props.statusBar, mergeProps)),

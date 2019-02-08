@@ -19,7 +19,7 @@ export function OrbitSettingsToolbar() {
   const [activeSpace] = useActiveSpace()
 
   useObserver(() => {
-    const next = paneManagerStore.activePane.type.replace('app-', '')
+    const next = paneManagerStore.activePane.type
     if (next !== activePaneKey) {
       setActivePaneKey(next)
     }

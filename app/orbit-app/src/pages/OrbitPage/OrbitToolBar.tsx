@@ -1,7 +1,7 @@
 import { gloss, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { useAppView } from '../../apps/AppView'
+import { useApp } from '../../apps/AppView'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderBottom } from '../../views/Border'
 
@@ -12,11 +12,11 @@ export const OrbitControlsHeight = () => <div style={{ height }} />
 export default observer(function OrbitToolBar() {
   const { orbitStore } = useStoresSafe()
   const id = orbitStore.activePane.id
-  const { AppView, appStore } = useAppView({
-    viewType: 'toolBar',
+  const { appViews, appStore } = useApp({
     type: orbitStore.activePane.type,
     id,
   })
+  const AppView = appViews.toolBar
   const exists = !!AppView
 
   return (

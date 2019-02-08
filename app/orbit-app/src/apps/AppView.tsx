@@ -8,6 +8,7 @@ import { StoreContext } from '../contexts'
 import { AllStores } from '../contexts/StoreContext'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { MergeContext } from '../views/MergeContext'
+import { AppViews } from './App'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
 import { AppProps } from './AppTypes'
@@ -19,7 +20,6 @@ export type AppViewProps = Pick<
   type: string
   title?: string
   appStore?: AppStore
-  onAppStore?: Function
   after?: React.ReactNode
   before?: React.ReactNode
 }
@@ -28,60 +28,74 @@ export type AppViewRef = {
   hasView?: boolean
 }
 
-type GetAppViewProps = Partial<Pick<AppProps, 'id' | 'viewType' | 'appStore'>> & { type?: string }
+// needs either an id or a type
+type GetAppViewProps =
+  | { id: string; type?: string; appStore?: AppStore }
+  | { id?: string; type: string; appStore?: AppStore }
 
-function getAppViewProps(props: GetAppViewProps, stores: AllStores) {
+type AppState = {
+  appViews: AppViews
+  appStore: AppStore
+}
+
+function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
   const next = {
-    appStore: props.appStore || stores.appStore,
-    AppView: null,
+    appStore: props.appStore || stores.appStore || null,
+    appViews: null,
   }
+
+  // set store
   if (!next.appStore && stores.appsStore) {
     next.appStore = stores.appsStore.appStores[props.id]
   }
-  let views: any
+
+  // set view
   if (stores.appsStore) {
-    views = stores.appsStore.appViews[props.id]
+    next.appViews = stores.appsStore.appViews[props.id]
   }
-  if (!views) {
-    views = apps[props.type] || {}
+  if (!next.appViews) {
+    next.appViews = apps[props.type] || {}
   }
-  // get view type
-  next.AppView = views[props.viewType]
+
   return next
 }
 
-export function useAppView(props: GetAppViewProps) {
+export function useApp(props: GetAppViewProps | false) {
   const stores = useStoresSafe({ optional: ['appStore', 'appsStore'] })
-  const currentState = useRef(null)
-  const [_, update] = useState(0)
+  const currentState = useRef<AppState>({
+    appViews: null,
+    appStore: null,
+  })
+  const [version, update] = useState(0)
 
-  if (!currentState.current) {
+  console.log('1', props, currentState.current)
+
+  if (version === 0 && props) {
+    console.log('1', props, currentState.current)
     currentState.current = getAppViewProps(props, stores)
   }
 
   useObserver(() => {
+    if (!props) return
     const next = getAppViewProps(props, stores)
     // set if necessary
     if (!isEqual(next, currentState.current)) {
+      console.log('UPDATE', next)
       currentState.current = next
       update(Math.random())
     }
   })
 
   console.log('return', currentState.current)
+
   return currentState.current
 }
 
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { AppView, appStore } = useAppView(props)
-
-    useEffect(() => {
-      if (appStore && props.onAppStore) {
-        props.onAppStore(appStore)
-      }
-    }, [])
+    const { appViews, appStore } = useApp(props)
+    const AppView = appViews[props.viewType]
 
     // handle ref
     useEffect(
@@ -128,7 +142,7 @@ export const AppView = memo(
         return appElement
         // never update
       },
-      [appStore],
+      [appStore, AppView],
     )
 
     if (!appElement) {

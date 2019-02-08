@@ -1,14 +1,14 @@
 import { gloss } from '@mcro/gloss'
-import { AppType } from '@mcro/models'
+import { AppConfig, AppType } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { observer, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { AppView } from '../../apps/AppView'
+import { AppView, useApp } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Pane } from '../../stores/PaneManagerStore'
-import { useHasToolbar, useInspectViews } from './OrbitSidebar'
+import { useInspectViews } from './OrbitSidebar'
 import { OrbitControlsHeight } from './OrbitToolBar'
 
 export default observer(function OrbitMain() {
@@ -33,8 +33,8 @@ export default observer(function OrbitMain() {
 // separate view prevents big re-renders
 function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
-  const [activeConfig, setActiveConfig] = React.useState(null)
-  const hasBars = useHasToolbar(props.pane.id)
+  const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
+  const { appViews } = useApp(activeConfig && { id: activeConfig.id, type: activeConfig.type })
 
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[props.pane.type]
@@ -55,11 +55,14 @@ function OrbitPageMainView(props: { pane: Pane }) {
   // only ever render once!
   const element = React.useMemo(
     () => {
-      console.log('rendering app view', activeConfig)
+      if (!appViews) {
+        return null
+      }
       return (
         <AppView
           key={Math.random()}
-          before={hasBars && <OrbitControlsHeight />}
+          before={appViews.toolBar && <OrbitControlsHeight />}
+          after={appViews.statusBar && <OrbitControlsHeight />}
           viewType="main"
           id={props.pane.id}
           type={props.pane.type}
@@ -67,7 +70,7 @@ function OrbitPageMainView(props: { pane: Pane }) {
         />
       )
     },
-    [activeConfig],
+    [JSON.stringify(activeConfig), appViews],
   )
 
   return element

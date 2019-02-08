@@ -3,8 +3,7 @@ import { observeOne } from '@mcro/model-bridge'
 import { AppConfig, AppType, UserModel } from '@mcro/models'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
-import { isEqual, memoize } from 'lodash'
-import { AppStore } from '../../apps/AppStore'
+import { isEqual } from 'lodash'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
@@ -39,7 +38,6 @@ export class OrbitStore {
     },
   )
 
-  appStores: { [key: string]: AppStore } = {}
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
   }
@@ -85,13 +83,4 @@ export class OrbitStore {
       }
     },
   )
-
-  setAppStore = memoize((id: string) => (store: AppStore<any>) => {
-    if (this.appStores[id] !== store) {
-      this.appStores = {
-        ...this.appStores,
-        [id]: store,
-      }
-    }
-  })
 }

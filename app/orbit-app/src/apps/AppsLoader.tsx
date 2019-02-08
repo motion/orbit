@@ -3,27 +3,8 @@ import React, { useEffect, useMemo } from 'react'
 import { StoreContext } from '../contexts'
 import { MergeContext } from '../views/MergeContext'
 import { apps } from './apps'
+import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
-import { AppViews } from './AppTypes'
-
-export class AppsStore {
-  appViews: { [key: string]: AppViews } = {}
-  appStores: { [key: string]: AppStore } = {}
-
-  handleAppViews = (id: string, views: AppViews) => {
-    this.appViews = {
-      ...this.appViews,
-      [id]: views,
-    }
-  }
-
-  handleAppStore = (id: string, store: AppStore) => {
-    this.appStores = {
-      ...this.appStores,
-      [id]: store,
-    }
-  }
-}
 
 type AppViewDefinition = { id: string; type: string }
 

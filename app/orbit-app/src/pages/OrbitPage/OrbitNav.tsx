@@ -172,7 +172,7 @@ export default observer(function OrbitNav() {
             onClick={async () => {
               newAppStore.setShowCreateNew(true)
               await sleep(10) // panemanager is heavy and this helps the ui from lagging
-              paneManagerStore.setActivePane('app-createApp')
+              paneManagerStore.setActivePane('createApp')
             }}
           />
         )}

@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { AppsStore } from '../apps/AppsLoader'
+import { AppsStore } from '../apps/AppsStore'
 import { AppStore } from '../apps/AppStore'
 import { SubPaneStore } from '../components/SubPaneStore'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'

@@ -23,10 +23,12 @@ export function useInspectViews() {
   let hasIndex = false
   let hasMain = false
 
-  if (appsStore.appViews[activePane.id]) {
+  const views = appsStore.appViews[activePane.id]
+
+  if (views) {
     // dynamic app view
-    hasMain = !!appsStore.appViews[activePane.id].main
-    hasIndex = !!appsStore.appViews[activePane.id].index
+    hasMain = !!views.main
+    hasIndex = !!views.index
   } else {
     // static view we provide for alternate panes like settings/onboarding
     const app = apps[activePane.type]

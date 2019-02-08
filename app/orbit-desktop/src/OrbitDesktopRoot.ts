@@ -73,6 +73,7 @@ import { OCRManager } from './managers/OCRManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OracleManager } from './managers/OracleManager'
+import { OrbitDataManager } from './managers/OrbitDataManager'
 import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
@@ -102,6 +103,7 @@ export class OrbitDesktopRoot {
   private cosal: Cosal
 
   // managers
+  private orbitDataManager: OrbitDataManager
   private oracleManager: OracleManager
   private cosalManager: CosalManager
   private ocrManager: OCRManager
@@ -183,6 +185,8 @@ export class OrbitDesktopRoot {
     this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
     this.appWindowsManager = new AppWindowsManager()
+    this.orbitDataManager = new OrbitDataManager()
+    await this.orbitDataManager.start()
 
     new ContextManager({ screen: this.screen })
     new MousePositionManager({
@@ -196,12 +200,13 @@ export class OrbitDesktopRoot {
     try {
       // start screen after passing into screenManager
       await this.screen.start()
-      // then start screenmanager after screen.start
-      // no need to await
-      this.screenManager.start()
-      // start screen related managers once its started
-      // no need to await
-      this.ocrManager.start()
+
+      // after screen.start:
+
+      // then start screenmanager
+      await this.screenManager.start()
+      // start screen related managers
+      await this.ocrManager.start()
     } catch (err) {
       console.error('Error starting a manager', err)
     }

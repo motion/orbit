@@ -68,10 +68,7 @@ export function useApp(props: GetAppViewProps | false) {
   })
   const [version, update] = useState(0)
 
-  console.log('1', props, currentState.current)
-
   if (version === 0 && props) {
-    console.log('1', props, currentState.current)
     currentState.current = getAppViewProps(props, stores)
   }
 
@@ -80,13 +77,10 @@ export function useApp(props: GetAppViewProps | false) {
     const next = getAppViewProps(props, stores)
     // set if necessary
     if (!isEqual(next, currentState.current)) {
-      console.log('UPDATE', next)
       currentState.current = next
       update(Math.random())
     }
   })
-
-  console.log('return', currentState.current)
 
   return currentState.current
 }

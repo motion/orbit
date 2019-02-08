@@ -84,7 +84,6 @@ export function useApp(props: GetAppViewProps | false) {
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    console.log('looking up', props.id, props.type)
     const { appViews, appStore } = useApp(props)
     const AppView = appViews[props.viewType]
 

@@ -27,27 +27,30 @@ export type AppViewRef = {
 }
 
 // needs either an id or a type
-type GetAppViewProps = { id: string; appStore?: AppStore }
+type GetAppViewProps = { id?: string; type?: string; appStore?: AppStore }
 
 type AppState = {
   appViews: AppViews
   appStore: AppStore
 }
 
+// apps can be "static" like onboarding/settings
+// or dynamic like an instantiated list/search/custom app
+// so we use type for static, id for dynamic.
 function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
   const next = {
     appStore: props.appStore || stores.appStore || null,
     appViews: {},
   }
 
-  // set store
-  if (!next.appStore && stores.appsStore) {
-    next.appStore = stores.appsStore.appStores[props.id]
-  }
-
-  // set view
   if (stores.appsStore) {
-    next.appViews = stores.appsStore.appViews[props.id] || {}
+    const { appStores, appViews } = stores.appsStore
+    // set store
+    if (!next.appStore) {
+      next.appStore = appStores[props.id] || appStores[props.type]
+    }
+    // set view
+    next.appViews = appViews[props.id] || appViews[props.type] || {}
   }
 
   return next
@@ -81,7 +84,8 @@ export function useApp(props: GetAppViewProps | false) {
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { appViews, appStore } = useApp({ id: props.id || props.type })
+    console.log('looking up', props.id, props.type)
+    const { appViews, appStore } = useApp(props)
     const AppView = appViews[props.viewType]
 
     // handle ref
@@ -109,6 +113,7 @@ export const AppView = memo(
     const appElement = useMemo(
       () => {
         if (!AppView || !appStore) {
+          console.log('no dice', props)
           return null
         }
 

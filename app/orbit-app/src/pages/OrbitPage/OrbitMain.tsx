@@ -34,7 +34,7 @@ export default observer(function OrbitMain() {
 function OrbitPageMainView(props: { pane: Pane }) {
   const { orbitStore } = useStoresSafe()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
-  const { appViews } = useApp(activeConfig && { id: activeConfig.id || activeConfig.type })
+  const { appViews } = useApp(activeConfig)
 
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[props.pane.type]

@@ -11,14 +11,13 @@ export const OrbitControlsHeight = () => <div style={{ height }} />
 
 export default observer(function OrbitToolBar() {
   const { orbitStore } = useStoresSafe()
-  const id = orbitStore.activePane.id
-  const { appViews, appStore } = useApp({ id: id || orbitStore.activePane.type })
+  const { appViews, appStore } = useApp(orbitStore.activePane)
   const AppView = appViews.toolBar
 
   return (
     <ToolbarChrome hasToolbars={!!AppView}>
       <ToolbarInner hasToolbars={!!AppView}>
-        {!!AppView && <AppView key={id} appStore={appStore} />}
+        {!!AppView && <AppView key={orbitStore.activePane.id} appStore={appStore} />}
         {!!AppView && <BorderBottom opacity={0.25} />}
       </ToolbarInner>
     </ToolbarChrome>

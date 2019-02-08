@@ -62,9 +62,7 @@ export function useApp(props: GetAppViewProps | false) {
   const [version, update] = useState(0)
 
   if (version === 0 && props) {
-    const next = getAppViewProps(props, stores)
-    console.log('setting to', next)
-    currentState.current = next
+    currentState.current = getAppViewProps(props, stores)
   }
 
   useObserver(() => {

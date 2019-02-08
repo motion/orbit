@@ -23,10 +23,10 @@ export async function ensureHomeDir(
     return false
   }
 
-  let success = await ensureDir(orbitParentDir)
+  let success = await ensureDir(path)
   if (!success) return false
 
-  success = await ensureDir(path)
+  success = await ensureDir(orbitParentDir)
   if (!success) return false
 
   success = await setupSubDirectories(subDirectories)

@@ -7,7 +7,6 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import AppsLoader from '../../apps/AppsLoader'
-import { OrbitToolBarProvider } from '../../components/OrbitToolbar'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -80,39 +79,37 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <OrbitToolBarProvider>
-      <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
-        <MainShortcutHandler
-          handlers={{
-            closeTab: () => {
-              shortcutState.current.closeTab = Date.now()
-            },
-            closeApp: () => {
-              shortcutState.current.closeApp = Date.now()
-            },
-          }}
-        >
-          <Theme name={theme}>
-            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-              <AppsLoader views={paneManagerStore.panes}>
-                <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
-                  <OrbitHeader />
-                  <OrbitNav />
-                </OrbitHeaderContainer>
-                <InnerChrome torn={orbitStore.isTorn}>
-                  <OrbitToolBar />
-                  <Row flex={1}>
-                    <OrbitSidebar />
-                    <OrbitContent />
-                  </Row>
-                  <OrbitStatusBar />
-                </InnerChrome>
-              </AppsLoader>
-            </AppWrapper>
-          </Theme>
-        </MainShortcutHandler>
-      </MergeContext>
-    </OrbitToolBarProvider>
+    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
+      <MainShortcutHandler
+        handlers={{
+          closeTab: () => {
+            shortcutState.current.closeTab = Date.now()
+          },
+          closeApp: () => {
+            shortcutState.current.closeApp = Date.now()
+          },
+        }}
+      >
+        <Theme name={theme}>
+          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+            <AppsLoader views={paneManagerStore.panes}>
+              <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+                <OrbitHeader />
+                <OrbitNav />
+              </OrbitHeaderContainer>
+              <InnerChrome torn={orbitStore.isTorn}>
+                <OrbitToolBar />
+                <Row flex={1}>
+                  <OrbitSidebar />
+                  <OrbitContent />
+                </Row>
+                <OrbitStatusBar />
+              </InnerChrome>
+            </AppsLoader>
+          </AppWrapper>
+        </Theme>
+      </MainShortcutHandler>
+    </MergeContext>
   )
 })
 

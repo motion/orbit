@@ -36,7 +36,7 @@ const StatusBarChrome = gloss(Row, {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
-}).theme(({ hasToolbars }, theme) => ({
-  zIndex: hasToolbars ? 1000000000 : -1,
-  background: hasToolbars ? theme.tabBackgroundBottom || theme.background : 'transparent',
+  zIndex: 1000000000,
+}).theme((_, theme) => ({
+  background: theme.tabBackgroundBottom || theme.background,
 }))

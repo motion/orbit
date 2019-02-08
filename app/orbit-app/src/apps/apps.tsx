@@ -7,21 +7,21 @@ import { custom } from './custom/custom'
 import { ListsApp } from './lists/ListsApp'
 import OrbitOnboardMain from './onboard/OrbitOnboardMain'
 import { people } from './people/people'
-import { search } from './search'
-import { settings } from './settings'
-import { sources } from './sources'
-import { spaces } from './spaces'
+import { SearchApp } from './search/SearchApp'
+import { SettingsApp } from './settings/SettingsApp'
+import { SourcesApp } from './sources/SourcesApp'
+import { SpacesApp } from './spaces/SpacesApp'
 import { MessageViewMain } from './views/MessageViewMain'
 
 type AppsIndex = { [key: string]: AppDefinition }
 
 export const apps: AppsIndex = {
-  spaces,
-  search,
+  spaces: SpacesApp,
+  search: SearchApp,
   people,
   lists: ListsApp,
-  sources,
-  settings,
+  sources: SourcesApp,
+  settings: SettingsApp,
   bit,
   apps: {
     main: AppsAppsMain,

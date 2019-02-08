@@ -8,10 +8,9 @@ import { StoreContext } from '../contexts'
 import { AllStores } from '../contexts/StoreContext'
 import { useStoresSafe } from '../hooks/useStoresSafe'
 import { MergeContext } from '../views/MergeContext'
-import { AppViews } from './App'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
-import { AppProps } from './AppTypes'
+import { AppProps, AppViews } from './AppTypes'
 
 export type AppViewProps = Pick<
   AppProps,

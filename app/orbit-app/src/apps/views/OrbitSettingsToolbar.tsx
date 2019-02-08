@@ -1,7 +1,6 @@
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
 import { useObserver } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
@@ -32,40 +31,38 @@ export function OrbitSettingsToolbar() {
   }, [])
 
   return (
-    <OrbitToolbar>
-      <View margin="auto" width={420}>
-        <SegmentedRow borderRadius={200} boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]}>
-          <Tabs active={activePaneKey} height={22} onActive={onActive}>
-            <Tab
-              key="sources"
-              label={
-                <>
-                  {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
-                  Current Space
-                </>
-              }
-            />
-            <Tab
-              key="spaces"
-              label={
-                <>
-                  <Icon name="layer" {...tabIconProps} />
-                  Spaces
-                </>
-              }
-            />
-            <Tab
-              key="settings"
-              label={
-                <>
-                  <Icon name="gear" {...tabIconProps} />
-                  Settings
-                </>
-              }
-            />
-          </Tabs>
-        </SegmentedRow>
-      </View>
-    </OrbitToolbar>
+    <View margin="auto" width={420}>
+      <SegmentedRow borderRadius={200} boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]}>
+        <Tabs active={activePaneKey} height={22} onActive={onActive}>
+          <Tab
+            key="sources"
+            label={
+              <>
+                {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
+                Current Space
+              </>
+            }
+          />
+          <Tab
+            key="spaces"
+            label={
+              <>
+                <Icon name="layer" {...tabIconProps} />
+                Spaces
+              </>
+            }
+          />
+          <Tab
+            key="settings"
+            label={
+              <>
+                <Icon name="gear" {...tabIconProps} />
+                Settings
+              </>
+            }
+          />
+        </Tabs>
+      </SegmentedRow>
+    </View>
   )
 }

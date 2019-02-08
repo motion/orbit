@@ -99,7 +99,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
 }) {
   const { orbitStore } = useStoresSafe()
   const { pane, indexRef, setIndexRef, hasMain } = props
-  const hasBars = useApp({ id: pane.id })
+  const { appViews } = useApp({ id: pane.subType === 'app' ? pane.id : null, type: pane.type })
 
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
@@ -114,7 +114,8 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
           id={pane.id}
           type={pane.type}
           appConfig={{}}
-          before={hasBars && <OrbitControlsHeight />}
+          before={appViews.toolBar && <OrbitControlsHeight />}
+          after={appViews.statusBar && <OrbitControlsHeight />}
         />
       </ProvideSelectableHandlers>
     </SubPane>

@@ -11,6 +11,13 @@ export type AppProps = {
   isActive?: boolean | (() => boolean)
 }
 
+export type AppElements = {
+  index?: React.ReactElement<any>
+  children?: React.ReactElement<any>
+  statusBar?: React.ReactElement<any>
+  toolBar?: React.ReactElement<any>
+}
+
 export type AppViews = {
   index?: GenericComponent<AppProps> | false
   main?: GenericComponent<AppProps> | false

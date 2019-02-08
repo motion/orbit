@@ -4,11 +4,9 @@ import { Popover, View } from '@mcro/ui'
 import { flatten, flow, memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { OrbitToolbar } from '../../components/OrbitToolbar'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import ListItem from '../../views/ListItems/ListItem'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
@@ -18,7 +16,6 @@ import { Separator } from '../../views/Separator'
 import { AppProps } from '../AppTypes'
 import { listRootID, ListsApp } from '../lists/ListsApp'
 import './calendar.css' // theme css file
-import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
 const ItemActionContext = React.createContext<{ item: Bit }>({ item: null })
 
@@ -63,8 +60,7 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
 })
 
 export default observer(function SearchAppIndex(props: AppProps) {
-  const { searchStore, queryStore } = useStoresSafe()
-  const { queryFilters } = queryStore
+  const { searchStore } = useStoresSafe()
   const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
@@ -115,16 +111,6 @@ export default observer(function SearchAppIndex(props: AppProps) {
 
   return (
     <>
-      <OrbitToolbar
-        before={
-          <FloatingBarButton
-            onClick={queryFilters.toggleSortBy}
-            tooltip={`Sort by: ${queryFilters.sortBy}`}
-            icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
-          />
-        }
-        center={<OrbitSuggestionBar />}
-      />
       <SelectableList
         minSelected={0}
         items={items}

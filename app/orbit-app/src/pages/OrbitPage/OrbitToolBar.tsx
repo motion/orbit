@@ -17,13 +17,12 @@ export default observer(function OrbitToolBar() {
     id,
   })
   const AppView = appViews.toolBar
-  const exists = !!AppView
 
   return (
-    <ToolbarChrome hasToolbars={exists}>
-      <ToolbarInner hasToolbars={exists}>
-        {exists && <AppView key={id} appStore={appStore} />}
-        {exists && <BorderBottom opacity={0.25} />}
+    <ToolbarChrome hasToolbars={!!AppView}>
+      <ToolbarInner hasToolbars={!!AppView}>
+        {!!AppView && <AppView key={id} appStore={appStore} />}
+        {!!AppView && <BorderBottom opacity={0.25} />}
       </ToolbarInner>
     </ToolbarChrome>
   )

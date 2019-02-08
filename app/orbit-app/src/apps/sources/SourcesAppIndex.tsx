@@ -11,7 +11,6 @@ import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppTypes'
-import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 
 export default observer(function SourcesAppIndex(_props: AppProps) {
   const { sourcesStore } = useStoresSafe()
@@ -78,10 +77,5 @@ export default observer(function SourcesAppIndex(_props: AppProps) {
     })),
   ]
 
-  return (
-    <>
-      <OrbitSettingsToolbar />
-      <SelectableList minSelected={0} items={results} />
-    </>
-  )
+  return <SelectableList minSelected={0} items={results} />
 })

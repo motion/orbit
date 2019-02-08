@@ -111,22 +111,20 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
   return (
     <SubPane id={pane.id} type={AppType[pane.type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        {appViews.toolBar && <OrbitControlsHeight />}
-        <SidebarBackground>
-          <BorderRight />
-          <AppView
-            key={pane.id}
-            ref={state => {
-              if (isEqual(state, indexRef[pane.id])) return
-              setIndexRef({ ...indexRef, [pane.id]: state })
-            }}
-            viewType="index"
-            id={pane.id}
-            type={pane.type}
-            appConfig={{}}
-          />
-        </SidebarBackground>
-        {appViews.statusBar && <OrbitStatusBarHeight />}
+        <BorderRight />
+        <AppView
+          key={pane.id}
+          ref={state => {
+            if (isEqual(state, indexRef[pane.id])) return
+            setIndexRef({ ...indexRef, [pane.id]: state })
+          }}
+          viewType="index"
+          id={pane.id}
+          type={pane.type}
+          appConfig={{}}
+          before={appViews.toolBar && <OrbitControlsHeight />}
+          after={appViews.statusBar && <OrbitStatusBarHeight />}
+        />
       </ProvideSelectableHandlers>
     </SubPane>
   )

@@ -61,15 +61,12 @@ function OrbitPageMainView(props: { pane: Pane }) {
       return (
         <React.Fragment key={key}>
           {appViews.toolBar && <OrbitControlsHeight />}
-          <OrbitMainBackground>
-            <AppView
-              viewType="main"
-              id={props.pane.id}
-              type={props.pane.type}
-              appConfig={activeConfig}
-            />
-          </OrbitMainBackground>
-
+          <AppView
+            viewType="main"
+            id={props.pane.id}
+            type={props.pane.type}
+            appConfig={activeConfig}
+          />
           {appViews.statusBar && <OrbitStatusBarHeight />}
         </React.Fragment>
       )
@@ -80,12 +77,8 @@ function OrbitPageMainView(props: { pane: Pane }) {
   return element
 }
 
+// background above so it doest flicker on change
 const OrbitMainView = gloss(View, {
-  flex: 1,
-  position: 'relative',
-})
-
-const OrbitMainBackground = gloss({
   flex: 1,
   position: 'relative',
 }).theme((_, theme) => ({

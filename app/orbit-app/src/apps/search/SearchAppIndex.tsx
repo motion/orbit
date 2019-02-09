@@ -1,4 +1,4 @@
-import { AppType, Bit } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
 import { flatten, flow, memoize } from 'lodash'
@@ -13,7 +13,7 @@ import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
-import { AppProps } from '../AppTypes'
+import { AppProps, AppType } from '../AppTypes'
 import { listRootID, ListsApp } from '../lists/ListsApp'
 import './calendar.css' // theme css file
 

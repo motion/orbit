@@ -5,11 +5,12 @@ import { useApp } from '../../apps/AppView'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { BorderBottom } from '../../views/Border'
 
-const toolBarHeight = 32
+const height = 32
+const minHeight = 3
 
 export const OrbitToolBarHeight = ({ id }: { id: string }) => {
   const { appViews } = useApp({ id })
-  return <div style={{ height: appViews.toolBar ? toolBarHeight : 0 }} />
+  return <div style={{ height: appViews.toolBar ? height : minHeight }} />
 }
 
 export default observer(function OrbitToolBar() {
@@ -17,8 +18,6 @@ export default observer(function OrbitToolBar() {
   const { appViews, appStore } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar
-
-  console.log('hasToolBar', hasToolBar)
 
   return (
     <ToolbarChrome hasToolbars={hasToolBar}>
@@ -37,18 +36,18 @@ const ToolbarChrome = gloss(Row, {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
-}).theme(({ hasToolbars }, theme) => ({
-  zIndex: hasToolbars ? 1000000000 : -1,
-  background: hasToolbars ? theme.tabBackgroundBottom || theme.background : 'transparent',
+  zIndex: 1000000000,
+  minHeight,
+}).theme((_, theme) => ({
+  background: theme.tabBackgroundBottom || theme.background,
 }))
 
 const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
   alignItems: 'center',
-  toolBarHeight,
   hasToolbars: {
-    height: toolBarHeight,
+    height: height,
     padding: [0, 12],
   },
 })

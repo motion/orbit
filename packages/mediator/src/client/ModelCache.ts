@@ -30,7 +30,7 @@ export const ModelCache = {
         query: JSON.stringify(query || {}),
         value,
         subscriptionObservers: [],
-        initialized
+        initialized,
       }
       this.entries.push(entry)
     }
@@ -60,4 +60,8 @@ export const ModelCache = {
       )
     })
   },
+}
+
+if (typeof window !== 'undefined') {
+  window['ModelCache'] = ModelCache
 }

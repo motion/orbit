@@ -2,13 +2,14 @@ import { AppBit } from '@mcro/models'
 import { Row, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
+import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
-import { BorderTop } from '../../views/Border'
+import { BorderLeft } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import { Section, SectionTitle } from '../../views/Section'
+import { SubTitle } from '../../views/SubTitle'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
 import { AppView } from '../AppView'
-import PreviewApp from '../views/PreviewApp'
 
 export const ManageApps = function ManageApps() {
   const apps = useActiveApps() as AppBit[]
@@ -37,15 +38,15 @@ export const ManageApps = function ManageApps() {
             }))}
             onSelect={setIndex}
           />
-
-          <Section>
-            <BorderTop />
-            <AppView type={selectedApp.type} viewType="settings" />
-          </Section>
         </View>
 
         <VerticalSplitPane>
-          <PreviewApp app={selectedApp} />
+          <BorderLeft />
+          <Section>
+            <SubTitle>Settings</SubTitle>
+            <Title>{selectedApp.name}</Title>
+            <AppView type={selectedApp.type} viewType="settings" />
+          </Section>
         </VerticalSplitPane>
       </Row>
     </>

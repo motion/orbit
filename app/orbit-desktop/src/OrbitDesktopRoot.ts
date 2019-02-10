@@ -62,19 +62,18 @@ import { AuthServer } from './auth-server/AuthServer'
 import { checkAuthProxy } from './auth-server/checkAuthProxy'
 import { startAuthProxy } from './auth-server/startAuthProxy'
 import { COSAL_DB, screenOptions } from './constants'
-import { AppWindowsManager } from './managers/AppWindowsManager'
 import { ContextManager } from './managers/ContextManager'
 import { CosalManager } from './managers/CosalManager'
 import { DatabaseManager } from './managers/DatabaseManager'
 import { GeneralSettingManager } from './managers/GeneralSettingManager'
 import { KeyboardManager } from './managers/KeyboardManager'
 import { MousePositionManager } from './managers/MousePositionManager'
-import { OCRManager } from './managers/OCRManager'
+// import { OCRManager } from './managers/OCRManager'
 import { OnboardManager } from './managers/OnboardManager'
 import { OperatingSystemManager } from './managers/OperatingSystemManager'
 import { OracleManager } from './managers/OracleManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
-import { ScreenManager } from './managers/ScreenManager'
+// import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
@@ -106,9 +105,8 @@ export class OrbitDesktopRoot {
   private orbitDataManager: OrbitDataManager
   private oracleManager: OracleManager
   private cosalManager: CosalManager
-  private ocrManager: OCRManager
-  private appWindowsManager: AppWindowsManager
-  private screenManager: ScreenManager
+  // private ocrManager: OCRManager
+  // private screenManager: ScreenManager
   private generalSettingManager: GeneralSettingManager
   private databaseManager: DatabaseManager
   private keyboardManager: KeyboardManager
@@ -181,10 +179,9 @@ export class OrbitDesktopRoot {
       await this.oracleManager.start()
     }
 
-    this.ocrManager = new OCRManager({ cosal: this.cosal })
-    this.screenManager = new ScreenManager({ screen: this.screen })
+    // this.ocrManager = new OCRManager({ cosal: this.cosal })
+    // this.screenManager = new ScreenManager({ screen: this.screen })
     this.keyboardManager = new KeyboardManager({ screen: this.screen })
-    this.appWindowsManager = new AppWindowsManager()
     this.orbitDataManager = new OrbitDataManager()
     await this.orbitDataManager.start()
 
@@ -197,19 +194,19 @@ export class OrbitDesktopRoot {
     // depends on cosal
     this.registerMediatorServer()
 
-    try {
-      // start screen after passing into screenManager
-      await this.screen.start()
+    // try {
+    //   // start screen after passing into screenManager
+    //   // await this.screen.start()
 
-      // after screen.start:
+    //   // after screen.start:
 
-      // then start screenmanager
-      await this.screenManager.start()
-      // start screen related managers
-      await this.ocrManager.start()
-    } catch (err) {
-      console.error('Error starting a manager', err)
-    }
+    //   // then start screenmanager
+    //   // await this.screenManager.start()
+    //   // start screen related managers
+    //   await this.ocrManager.start()
+    // } catch (err) {
+    //   console.error('Error starting a manager', err)
+    // }
 
     // this watches for store mounts/unmounts and attaches them here for debugging
     debugState(({ stores }) => {
@@ -231,10 +228,7 @@ export class OrbitDesktopRoot {
     console.log('writing orbit config...')
     await writeJSON(this.config.paths.orbitConfig, this.config)
     Desktop.dispose()
-    if (this.appWindowsManager) {
-      await this.appWindowsManager.dispose()
-    }
-    await this.ocrManager.dispose()
+    // await this.ocrManager.dispose()
     if (this.authServer.isRunning()) {
       await this.authServer.stop()
     }

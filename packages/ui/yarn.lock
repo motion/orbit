@@ -739,12 +739,11 @@ rc@^1.2.1:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-debounce-render@4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-debounce-render/-/react-debounce-render-4.0.3.tgz#ce58026578d73b81f1f990d7c4bfd3fa038b5620"
-  integrity sha512-bjbpWHE0gRhkZoH0F+G3Azc7Zceb/Et1fwMJuKYagRnd0LqwcaC/JuECyPlFKK36HiRhzMO9kQplGLF/nlt7Lg==
+react-debounce-render@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-debounce-render/-/react-debounce-render-5.0.0.tgz#ed5a30b40b0f1e52da83c7add33334a6cde7cead"
+  integrity sha512-3u4oUcZ1i9bOtENfnHW5f2x74b+01teKG24+NbuKSklCQhknWq/euyYiBnuRFhyJdaniVmtNqtLL66+2jCHXLw==
   dependencies:
-    lodash "^4.17.10"
     lodash.debounce "^4.0.8"
 
 react-fast-compare@2.0.4:
@@ -752,7 +751,7 @@ react-fast-compare@2.0.4:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-tilt@^0.1.4:
+react-tilt@0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/react-tilt/-/react-tilt-0.1.4.tgz#0ac1f33674a3fff6c617cf411002d7ecdd2ebcb1"
   integrity sha512-bVeRumg+RIn6QN8S92UmubGqX/BG6/QeQISBeAcrS/70dpo/jVj+sjikIawDl5wTuPdubFH8zH0EMulWIctsnw==

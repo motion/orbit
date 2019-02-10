@@ -1,7 +1,7 @@
 import { Popover } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { animated, interpolate, useSpring } from 'react-spring/hooks'
+import { animated, interpolate, useSpring } from 'react-spring'
 import { MENU_WIDTH } from '../../../constants'
 import { useStoresSafe } from '../../../hooks/useStoresSafe'
 

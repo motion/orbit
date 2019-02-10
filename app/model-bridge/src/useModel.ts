@@ -1,11 +1,16 @@
 import { Model } from '@mcro/mediator'
-import { merge } from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
 
 type UseModelOptions = {
   defaultValue?: any
   observe?: true
+}
+
+const defaultValues = {
+  one: null,
+  many: [],
+  count: 0,
 }
 
 function use<ModelType, Args>(
@@ -15,20 +20,12 @@ function use<ModelType, Args>(
   options: UseModelOptions = {},
 ): any {
   const observeEnabled = options.observe === undefined || options.observe === true
-  const [value, originalSetValue] = useState(
-    options.defaultValue ||
-      {
-        one: null,
-        many: [],
-        count: 0,
-      }[type],
-  )
-  const setValue = (value: any) => {
-    // console.log(`set value was called`, value)
-    return originalSetValue(value)
-  }
+  const [, forceUpdate] = useState(0)
+  const valueRef = useRef(options.defaultValue || defaultValues[type])
+  const value = valueRef.current
   const subscription = useRef(null)
   const curQuery = useRef(null)
+  const queryKey = JSON.stringify(query)
 
   const dispose = () => {
     if (subscription.current) {
@@ -37,7 +34,12 @@ function use<ModelType, Args>(
   }
 
   // unmount
-  useEffect(dispose, [])
+  useEffect(() => dispose, [])
+
+  const update = next => {
+    valueRef.current = next
+    forceUpdate(Math.random())
+  }
 
   // on new query: subscribe, update
   useEffect(
@@ -46,7 +48,7 @@ function use<ModelType, Args>(
 
       if (query === false) return
 
-      const isQueryChanged = JSON.stringify(curQuery.current) !== JSON.stringify(query)
+      const isQueryChanged = JSON.stringify(curQuery.current) !== queryKey
       if (isQueryChanged === false) return
 
       // unsubscribe from previous subscription
@@ -57,31 +59,30 @@ function use<ModelType, Args>(
 
       if (observeEnabled) {
         if (type === 'one') {
-          // console.log('subscribing...')
           subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(
-            setValue,
+            update,
           )
         } else if (type === 'many') {
           subscription.current = observeMany(model, { args: query, cacheValue: value }).subscribe(
-            setValue,
+            update,
           )
         } else if (type === 'count') {
           subscription.current = observeCount(model, { args: query, cacheValue: value }).subscribe(
-            setValue,
+            update,
           )
         }
       } else {
         if (type === 'one') {
           loadOne(model, { args: query }).then(nextValue => {
-            if (!cancelled) setValue(nextValue)
+            if (!cancelled) update(nextValue)
           })
         } else if (type === 'many') {
           loadMany(model, { args: query }).then(nextValue => {
-            if (!cancelled) setValue(nextValue)
+            if (!cancelled) update(nextValue)
           })
         } else if (type === 'count') {
           loadCount(model, { args: query }).then(nextValue => {
-            if (!cancelled) setValue(nextValue)
+            if (!cancelled) update(nextValue)
           })
         }
       }
@@ -90,19 +91,17 @@ function use<ModelType, Args>(
         cancelled = true
       }
     },
-    [JSON.stringify(query), observeEnabled],
+    [queryKey, observeEnabled],
   )
 
-  const valueUpdater = (next: any) => {
-    const nextValue = merge(type === 'many' ? [...value] : { ...value }, next)
-    // console.log(`value in updator`, value)
-    // console.log(`set next value`, nextValue)
-    setValue(nextValue)
-    save(model, nextValue, {
-      type,
-      args: query,
-    })
-  }
+  const valueUpdater = useCallback(
+    next => {
+      const nextMerged = { ...valueRef.current, ...next }
+      update(nextMerged)
+      save(model, nextMerged, { type, args: query })
+    },
+    [queryKey],
+  )
 
   if (type === 'one' || type === 'many') {
     return [value, valueUpdater]

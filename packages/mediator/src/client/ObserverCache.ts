@@ -1,4 +1,3 @@
-import Observable from 'zen-observable'
 import { Model } from '../common'
 
 export type ObserverCacheType = 'one' | 'many' | string
@@ -10,9 +9,7 @@ export type ObserverCacheArgs = {
 
 type ObserverCacheEntry = {
   args: ObserverCacheArgs
-  observable: Observable<any>
-  subscription: ZenObservable.SubscriptionObserver<any>
-  removeTimer: any
+  subscriptions: Set<ZenObservable.SubscriptionObserver<any>>
   rawValue: any
   value: any
   denormalizedValues: {}
@@ -32,9 +29,7 @@ export const ObserverCache = {
     if (!entry) {
       entry = {
         args,
-        observable: null,
-        subscription: null,
-        removeTimer: 0,
+        subscriptions: new Set(),
         denormalizedValues: {},
         rawValue: null,
         // we only update denormalized values
@@ -65,18 +60,7 @@ export const ObserverCache = {
       }
       ObserverCache.entries.set(key, entry)
     }
-    if (entry.removeTimer) {
-      clearTimeout(entry.removeTimer)
-    }
     return entry
-  },
-
-  remove(args: ObserverCacheArgs) {
-    const entry = ObserverCache.get(args)
-    if (!entry) return
-    entry.removeTimer = setTimeout(() => {
-      ObserverCache.entries.delete(ObserverCache.getKey(args))
-    }, 5000)
   },
 
   nextUpdates: new Set<ObserverCacheEntry>(),
@@ -88,8 +72,10 @@ export const ObserverCache = {
     }
     ObserverCache.nextUpdate = setTimeout(() => {
       for (const entry of [...ObserverCache.nextUpdates]) {
-        console.log('now send new value', JSON.stringify(entry.value))
-        entry.subscription.next(entry.value)
+        console.log('flush', [...entry.subscriptions])
+        for (const sub of [...entry.subscriptions]) {
+          sub.next(entry.value)
+        }
       }
       ObserverCache.nextUpdates = new Set()
     }, 0)

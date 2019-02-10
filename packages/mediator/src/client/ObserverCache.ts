@@ -104,5 +104,3 @@ export const ObserverCache = {
     }
   },
 }
-
-window['ObserverCache'] = ObserverCache

@@ -1,11 +1,4 @@
-import {
-  AppEntity,
-  SettingEntity,
-  SourceEntity,
-  Space,
-  SpaceEntity,
-  UserEntity,
-} from '@mcro/models'
+import { AppEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@mcro/models'
 import { DesktopActions } from '@mcro/stores'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
@@ -95,6 +88,7 @@ export class OrbitDataManager {
   }
 
   observeSpace(space: Space) {
+    console.log('observing space', space)
     const subscribers = new Set<ZenObservable.Subscription>()
 
     const state = {
@@ -118,10 +112,16 @@ export class OrbitDataManager {
       persist()
     })
 
-    addObserveMany(this.subscriptions, SourceEntity, { where: { spaceId: space.id } }, sources => {
-      state.sources = sources
-      persist()
-    })
+    // TODO @umed
+    // addObserveMany(
+    //   this.subscriptions,
+    //   SourceEntity,
+    //   { where: { space: { $in: space } } },
+    //   sources => {
+    //     state.sources = sources
+    //     persist()
+    //   },
+    // )
 
     return subscribers
   }

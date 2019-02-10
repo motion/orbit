@@ -41,13 +41,7 @@ export class MediatorClient {
   ): Promise<ModelType> {
     if (!options) options = {}
 
-    if (Array.isArray(values)) {
-      for (const value of values) {
-        ObserverCache.updateModel(model, value.id, value)
-      }
-    } else {
-      ObserverCache.updateModel(model, values['id'], values)
-    }
+    ObserverCache.updateModels(model, Array.isArray(values) ? values : [values])
 
     return this.options.transports[0].execute('save', {
       model: model.name,

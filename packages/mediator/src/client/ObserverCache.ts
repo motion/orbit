@@ -37,6 +37,7 @@ export const ObserverCache = {
         removeTimer: 0,
         denormalizedValues: {},
         rawValue: null,
+        // we only update denormalized values
         get value() {
           if (entry.args.type === 'one') {
             return entry.rawValue
@@ -53,12 +54,12 @@ export const ObserverCache = {
               entry.rawValue = next
               entry.denormalizedValues = { [next.id]: next }
             }
-            return
-          }
-          entry.rawValue = next
-          entry.denormalizedValues = {}
-          for (const val of next) {
-            entry.denormalizedValues[val.id] = val
+          } else {
+            entry.rawValue = next
+            entry.denormalizedValues = {}
+            for (const val of next) {
+              entry.denormalizedValues[val.id] = val
+            }
           }
         },
       }
@@ -87,21 +88,25 @@ export const ObserverCache = {
     }
     ObserverCache.nextUpdate = setTimeout(() => {
       for (const entry of [...ObserverCache.nextUpdates]) {
-        console.log('flushign cache update', entry)
+        console.log('now send new value', JSON.stringify(entry.value))
         entry.subscription.next(entry.value)
       }
       ObserverCache.nextUpdates = new Set()
-    })
+    }, 0)
   },
 
-  updateModel(model: Model<any>, id: number, value: any) {
-    for (const entry of ObserverCache.entries.values()) {
-      if (entry.args.model !== model) continue
-      // fast lookup here
-      if (entry.denormalizedValues[id]) {
-        entry.denormalizedValues[id] = value
-        ObserverCache.nextUpdates.add(entry)
-        ObserverCache.flush()
+  updateModels(model: Model<any>, values: any[]) {
+    for (const value of values) {
+      const { id } = value
+      for (const entry of ObserverCache.entries.values()) {
+        if (entry.args.model !== model) continue
+        // fast lookup here
+        if (entry.denormalizedValues[id]) {
+          console.log('hit, update', entry)
+          entry.denormalizedValues[id] = value
+          ObserverCache.nextUpdates.add(entry)
+          ObserverCache.flush()
+        }
       }
     }
   },

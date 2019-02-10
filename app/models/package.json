@@ -19,7 +19,7 @@
     "reflect-metadata": "^0.1.12",
     "slack": "^11.0.0",
     "typeorm": "^0.3.0-alpha.22",
-    "zen-observable": "^0.8.10"
+    "zen-observable": "0.8.13"
   },
   "devDependencies": {
     "@types/zen-observable": "0.8.0"

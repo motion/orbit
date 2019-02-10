@@ -15,6 +15,9 @@ export type ObserverCacheEntry = {
   value: any
   denormalizedValues: {}
   update: (value: any) => void
+  removeTimeout?: any
+  key: string
+  onDispose?: Function
 }
 
 export const ObserverCache = {
@@ -30,6 +33,7 @@ export const ObserverCache = {
     // create empty entry if not
     if (!entry) {
       entry = {
+        key,
         args,
         subscriptions: new Set(),
         denormalizedValues: {},
@@ -100,5 +104,9 @@ export const ObserverCache = {
         sub.next(entry.value)
       }
     }
+  },
+
+  delete(entry: ObserverCacheEntry) {
+    ObserverCache.entries.delete(entry.key)
   },
 }

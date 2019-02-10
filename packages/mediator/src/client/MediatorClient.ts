@@ -16,29 +16,31 @@ function cachedObservable(
   options: MediatorClientOptions,
   cached: ObserverCacheEntry,
 ) {
-  return (subscriptionObserver: ZenObservable.SubscriptionObserver<any>) => {
-    let masterSubscription
-    cached.subscriptions.add(subscriptionObserver)
+  return (sub: ZenObservable.SubscriptionObserver<any>) => {
+    clearTimeout(cached.removeTimeout)
+    cached.subscriptions.add(sub)
 
     if (cached.subscriptions.size > 1) {
-      subscriptionObserver.next(cached.value)
+      sub.next(cached.value)
     } else {
-      masterSubscription = options.transports.map(transport => {
+      const subs = options.transports.map(transport => {
         return transport
           .observe(name, args)
-          .subscribe(
-            cached.update,
-            error => subscriptionObserver.error(error),
-            () => subscriptionObserver.complete(),
-          )
+          .subscribe(cached.update, error => sub.error(error), () => sub.complete())
       })
+      cached.onDispose = () => {
+        subs.forEach(subscription => subscription.unsubscribe())
+      }
     }
 
     // remove subscription on cancellation
     return () => {
-      cached.subscriptions.delete(subscriptionObserver)
+      cached.subscriptions.delete(sub)
       if (cached.subscriptions.size === 0) {
-        masterSubscription.forEach(subscription => subscription.unsubscribe())
+        cached.removeTimeout = setTimeout(() => {
+          cached.onDispose()
+          ObserverCache.delete(cached)
+        }, 5000)
       }
     }
   }

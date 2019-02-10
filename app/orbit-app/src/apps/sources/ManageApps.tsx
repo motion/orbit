@@ -36,7 +36,7 @@ export const ManageApps = function ManageApps() {
               type: app.type,
               iconBefore: true,
             }))}
-            onSelect={setIndex}
+            onSelect={i => setIndex(i)}
           />
         </View>
 

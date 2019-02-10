@@ -101,7 +101,6 @@ function use<ModelType, Args>(
     save(model, nextValue, {
       type,
       args: query,
-      cacheValue: value,
     })
   }
 

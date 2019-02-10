@@ -1,9 +1,6 @@
 import { Model } from '../common'
 
-export type ModelCacheType = 'one' | 'many' | 'count'
-
 export type ModelCacheEntry = {
-  type: ModelCacheType
   query: string
   model: Model<any>
   value: any
@@ -15,53 +12,39 @@ export type ModelCacheEntry = {
 export const ModelCache = {
   entries: [] as ModelCacheEntry[],
 
-  add(model: Model<any>, type: ModelCacheType, query: any, value: any, initialized: boolean) {
-    // if there is entry remove it, add it to the cache again
-    // and create a new entry and store it in the cache
-    let entry = this.findEntryByQuery(model, type, query)
+  add(model: Model<any>, id: number, value: any) {
+    let entry = this.findEntryByQuery(model, id)
     if (entry) {
       entry.value = value
       entry.initialized = true
-      if (entry.removeTimer) clearTimeout(entry.removeTimer)
+
+      console.log('SHOULD UPDATE FELLOW MODELS', id, value)
     } else {
       entry = {
         model,
-        type,
-        query: JSON.stringify(query || {}),
+        id,
         value,
         subscriptionObservers: [],
-        initialized,
       }
       this.entries.push(entry)
     }
     return entry
   },
 
-  remove(model: Model<any>, type: ModelCacheType, query: any) {
-    const entry = this.findEntryByQuery(model, type, query)
+  remove(model: Model<any>, id: number) {
+    const entry = this.findEntryByQuery(model, id)
     if (!entry) return
-    if (entry.subscriptionObservers.length > 0) return
-
-    // console.log(`removing in 5 seconds`)
-    if (entry.removeTimer) {
-      clearTimeout(entry.removeTimer)
+    if (entry.subscriptionObservers.length === 0) {
+      console.warn('remove more than necessary?')
+      return
     }
-    entry.removeTimer = setTimeout(() => {
-      const index = this.entries.indexOf(entry)
-      if (index !== -1) this.entries.splice(index, 1)
-      // console.log(`removed from cache!`)
-    }, 5000)
+    const index = this.entries.indexOf(entry)
+    if (index !== -1) {
+      this.entries.splice(index, 1)
+    }
   },
 
-  findEntryByQuery(model: Model<any>, type: ModelCacheType, query: Object) {
-    return this.entries.find(entry => {
-      return (
-        entry.type === type && entry.model === model && entry.query === JSON.stringify(query || {})
-      )
-    })
+  findEntryByQuery(model: Model<any>, id: number) {
+    return this.entries.find(entry => entry.model === model && entry.id === id)
   },
-}
-
-if (typeof window !== 'undefined') {
-  window['ModelCache'] = ModelCache
 }

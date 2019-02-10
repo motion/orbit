@@ -2,6 +2,7 @@
 // we set it up once with setGlobalConfig() and then import the rest of the app
 
 import { debugEmit } from '@mcro/black'
+import { IS_ELECTRON } from '@mcro/black/_/constants'
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
 import { configureGloss } from '@mcro/gloss'
 import { App } from '@mcro/stores'
@@ -84,14 +85,20 @@ async function main() {
   await App.start()
   if (Date.now() - x > 200) console.log('long start....', Date.now() - x)
 
+  // setup some development helpers
   if (process.env.NODE_ENV === 'development') {
-    require('./helpers/setupTestApp').setupTestApp()
     const { DevStore } = require('./stores/DevStore')
     const devStore = new DevStore()
     window['Root'] = devStore
     devStore['rerender'] = () => {
       startApp(true)
     }
+  }
+
+  // setup test app if needed
+  const testAppID = window.location.search ? window.location.search.match(/app=([a-z]+)/)[1] : null
+  if (process.env.NODE_ENV === 'development' && !IS_ELECTRON && testAppID) {
+    require('./helpers/setupTestApp').setupTestApp(testAppID)
   }
 
   // now run app..
@@ -109,10 +116,10 @@ async function startApp(force = false) {
 }
 
 // hot reloading
-// if (process.env.NODE_ENV === 'development') {
-//   if (typeof module['hot'] !== 'undefined') {
-//     module['hot'].accept(startApp)
-//   }
-// }
+if (process.env.NODE_ENV === 'development') {
+  if (typeof module['hot'] !== 'undefined') {
+    module['hot'].accept(startApp)
+  }
+}
 
 main()

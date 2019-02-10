@@ -28,9 +28,7 @@ function hasDifference(a: number[], b: number[]) {
 }
 
 export function useManagePaneSort() {
-  // TODO @umed why do i have to pass undefined here to get just the App[] type?
-  // if you take off undefined you'll see the bug, see useActiveApps for bad type defs
-  const activeApps = useActiveApps(undefined)
+  const activeApps = useActiveApps()
   const [space, updateSpace] = useActiveSpace()
   const paneSort = (space && space.paneSort) || []
   const hasMismatchedIds = hasDifference(paneSort, activeApps.map(x => x.id))

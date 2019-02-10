@@ -77,7 +77,6 @@ export class OrbitStore {
       ensure('app config', !!appConfig)
       const paneType = this.activePane.type
       if (!isEqual(this.activeConfig[paneType], appConfig)) {
-        console.log('update', paneType, appConfig)
         this.activeConfig = {
           ...this.activeConfig,
           [paneType]: appConfig,

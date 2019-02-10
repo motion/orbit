@@ -1,13 +1,47 @@
 import Observable from 'zen-observable'
-import { Command, Model } from '../common'
+import { Command, Model, TransportRequestType } from '../common'
 import { ClientTransport } from './ClientTransport'
-import { ObserverCache } from './ObserverCache'
+import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
+}
+
+function cachedObservable(
+  name: TransportRequestType,
+  args: any,
+  options: MediatorClientOptions,
+  cached: ObserverCacheEntry,
+) {
+  return (subscriptionObserver: ZenObservable.SubscriptionObserver<any>) => {
+    let masterSubscription
+    cached.subscriptions.add(subscriptionObserver)
+
+    if (cached.subscriptions.size > 1) {
+      subscriptionObserver.next(cached.value)
+    } else {
+      masterSubscription = options.transports.map(transport => {
+        return transport
+          .observe(name, args)
+          .subscribe(
+            cached.update,
+            error => subscriptionObserver.error(error),
+            () => subscriptionObserver.complete(),
+          )
+      })
+    }
+
+    // remove subscription on cancellation
+    return () => {
+      cached.subscriptions.delete(subscriptionObserver)
+      if (cached.subscriptions.size === 0) {
+        masterSubscription.forEach(subscription => subscription.unsubscribe())
+      }
+    }
+  }
 }
 
 export class MediatorClient {
@@ -189,52 +223,19 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-
-    const key = { model, query: args, type: 'one' }
-    const cached = ObserverCache.get(key)
-
-    return new Observable(subscriptionObserver => {
-      let masterSubscription
-      cached.subscriptions.add(subscriptionObserver)
-
-      if (cached.subscriptions.size > 1) {
-        subscriptionObserver.next(cached.value)
-      } else {
-        console.log('create', key)
-        masterSubscription = this.options.transports.map(transport => {
-          return transport
-            .observe('observeOne', {
-              model: model.name,
-              args: args,
-              resolvers: qm instanceof Query ? qm.args : options.resolvers,
-            })
-            .subscribe(
-              value => {
-                // TODO move this all into cached
-                // can have ObserverCache.update(cached, value)
-                // have it do the stringify and subscriptions triggers
-                if (JSON.stringify(value) === JSON.stringify(cached.value)) {
-                  return
-                }
-                cached.value = value
-                for (const sub of cached.subscriptions) {
-                  sub.next(value)
-                }
-              },
-              error => subscriptionObserver.error(error),
-              () => subscriptionObserver.complete(),
-            )
-        })
-      }
-
-      // remove subscription on cancellation
-      return () => {
-        cached.subscriptions.delete(subscriptionObserver)
-        if (cached.subscriptions.size === 0) {
-          masterSubscription.forEach(subscription => subscription.unsubscribe())
-        }
-      }
-    })
+    const cached = ObserverCache.get({ model, query: args, type: 'one', defaultValue: null })
+    return new Observable(
+      cachedObservable(
+        'observeOne',
+        {
+          model: model.name,
+          args: args,
+          resolvers: qm instanceof Query ? qm.args : options.resolvers,
+        },
+        this.options,
+        cached,
+      ),
+    )
   }
 
   observeMany<ModelType, Args>(query: Query<ModelType, Args>): Observable<ModelType[]>
@@ -257,36 +258,19 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-
-    const observerKey = { model, query: args, type: 'many' }
-    const cached = ObserverCache.get(observerKey)
-
-    return new Observable(subscriptionObserver => {
-      cached.subscriptions.add(subscriptionObserver)
-
-      const subscriptions = this.options.transports.map(transport => {
-        return transport
-          .observe('observeMany', {
-            model: model.name,
-            args: args,
-            resolvers: qm instanceof Query ? qm.args : options.resolvers,
-          })
-          .subscribe(
-            values => {
-              cached.value = values
-              subscriptionObserver.next(values)
-            },
-            error => subscriptionObserver.error(error),
-            () => subscriptionObserver.complete(),
-          )
-      })
-
-      // remove subscription on cancellation
-      return () => {
-        cached.subscriptions.delete(subscriptionObserver)
-        subscriptions.forEach(subscription => subscription.unsubscribe())
-      }
-    })
+    const cached = ObserverCache.get({ model, query: args, type: 'many', defaultValue: [] })
+    return new Observable(
+      cachedObservable(
+        'observeMany',
+        {
+          model: model.name,
+          args: args,
+          resolvers: qm instanceof Query ? qm.args : options.resolvers,
+        },
+        this.options,
+        cached,
+      ),
+    )
   }
 
   observeManyAndCount<ModelType, Args>(

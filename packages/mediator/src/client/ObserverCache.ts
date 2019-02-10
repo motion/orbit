@@ -5,14 +5,16 @@ export type ObserverCacheArgs = {
   model: Model<any>
   type: ObserverCacheType
   query: Object
+  defaultValue: any
 }
 
-type ObserverCacheEntry = {
+export type ObserverCacheEntry = {
   args: ObserverCacheArgs
   subscriptions: Set<ZenObservable.SubscriptionObserver<any>>
   rawValue: any
   value: any
   denormalizedValues: {}
+  update: (value: any) => void
 }
 
 export const ObserverCache = {
@@ -31,9 +33,10 @@ export const ObserverCache = {
         args,
         subscriptions: new Set(),
         denormalizedValues: {},
-        rawValue: null,
+        rawValue: args.defaultValue,
         // we only update denormalized values
         get value() {
+          if (!entry.rawValue) return entry.rawValue
           if (entry.args.type === 'one') {
             return entry.rawValue
           } else {
@@ -50,11 +53,20 @@ export const ObserverCache = {
               entry.denormalizedValues = { [next.id]: next }
             }
           } else {
+            if (!next) return
             entry.rawValue = next
             entry.denormalizedValues = {}
             for (const val of next) {
               entry.denormalizedValues[val.id] = val
             }
+          }
+        },
+        update: value => {
+          const isEqual = JSON.stringify(value) === JSON.stringify(entry.value)
+          if (isEqual) return
+          entry.value = value
+          for (const sub of entry.subscriptions) {
+            sub.next(value)
           }
         },
       }
@@ -63,43 +75,29 @@ export const ObserverCache = {
     return entry
   },
 
-  nextUpdates: new Set<ObserverCacheEntry>(),
-  nextUpdate: null,
-
-  flush() {
-    if (ObserverCache.nextUpdate) {
-      clearTimeout(ObserverCache.nextUpdate)
-    }
-    ObserverCache.nextUpdate = setTimeout(() => {
-      for (const entry of [...ObserverCache.nextUpdates]) {
-        console.log('flush', entry, [...entry.subscriptions])
-        for (const sub of [...entry.subscriptions]) {
-          sub.next(entry.value)
-        }
-      }
-      ObserverCache.nextUpdates = new Set()
-    }, 0)
-  },
-
   updateModels(model: Model<any>, values: any[]) {
+    const toUpdate = new Set<ObserverCacheEntry>()
+
     for (const value of values) {
       const { id } = value
       for (const entry of ObserverCache.entries.values()) {
         if (entry.args.model !== model) continue
         // fast lookup here
         if (entry.denormalizedValues[id]) {
-          console.log('hit, update', entry)
-
           // update in caches
           if (entry.args.type === 'one') {
             entry.value = value
           } else {
             entry.denormalizedValues[id] = value
           }
-
-          ObserverCache.nextUpdates.add(entry)
-          ObserverCache.flush()
         }
+        toUpdate.add(entry)
+      }
+    }
+
+    for (const entry of [...toUpdate]) {
+      for (const sub of [...entry.subscriptions]) {
+        sub.next(entry.value)
       }
     }
   },

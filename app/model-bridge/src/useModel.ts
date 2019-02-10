@@ -1,5 +1,5 @@
 import { Model } from '@mcro/mediator'
-import { cloneDeep, merge } from 'lodash'
+import { merge } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
 
@@ -39,8 +39,6 @@ function use<ModelType, Args>(
 
   const update = next => {
     if (next === valueRef.current) return
-    if (JSON.stringify(next) === JSON.stringify(valueRef.current)) return
-    console.log('update', JSON.stringify(valueRef.current), '=>', JSON.stringify(next))
     valueRef.current = next
     forceUpdate(Math.random())
   }
@@ -100,10 +98,7 @@ function use<ModelType, Args>(
 
   const valueUpdater = useCallback(
     next => {
-      const nextMerged = merge(cloneDeep(valueRef.current), next)
-      console.log('update from here......', nextMerged)
-      // update(nextMerged)
-      save(model, nextMerged)
+      save(model, merge({}, valueRef.current, next))
     },
     [queryKey],
   )

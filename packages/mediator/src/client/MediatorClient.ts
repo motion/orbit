@@ -211,6 +211,8 @@ export class MediatorClient {
     }
 
     const res = new Observable(subscriptionObserver => {
+      cached.subscription = subscriptionObserver
+
       const subscriptions = this.options.transports.map(transport => {
         return transport
           .observe('observeOne', {
@@ -221,9 +223,7 @@ export class MediatorClient {
           .subscribe(
             value => {
               subscriptionObserver.next(value)
-              if (value) {
-                ObserverCache.updateModel(model, value.id, value)
-              }
+              cached.value = value
             },
             error => subscriptionObserver.error(error),
             () => subscriptionObserver.complete(),
@@ -272,6 +272,8 @@ export class MediatorClient {
     }
 
     const res = new Observable(subscriptionObserver => {
+      cached.subscription = subscriptionObserver
+
       const subscriptions = this.options.transports.map(transport => {
         return transport
           .observe('observeMany', {
@@ -281,10 +283,8 @@ export class MediatorClient {
           })
           .subscribe(
             values => {
+              cached.value = values
               subscriptionObserver.next(values)
-              for (const value of values) {
-                ObserverCache.updateModel(model, value.id, value)
-              }
             },
             error => subscriptionObserver.error(error),
             () => subscriptionObserver.complete(),

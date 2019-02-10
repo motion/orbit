@@ -1,3 +1,8 @@
+data sync story:
+
+- code/spaces: github
+- keys/configs: initially github, but move to bittorrent-dht (step 2)
+
 prioritized:
 
 - get custom apps working ~2 weeks

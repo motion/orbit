@@ -24,6 +24,8 @@ type ThemeProps = {
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
 export function Theme({ theme, name, select, children }: ThemeProps) {
+  const contextTheme = React.useContext(ThemeContext)
+
   if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
   }
@@ -51,8 +53,6 @@ export function Theme({ theme, name, select, children }: ThemeProps) {
     nextTheme = MakeTheme.fromStyles(theme)
     uniqThemeName = makeName()
   }
-
-  const contextTheme = React.useContext(ThemeContext)
 
   // function to select a sub-theme object
   if (select) {
@@ -82,10 +82,10 @@ export function Theme({ theme, name, select, children }: ThemeProps) {
 
 export const ChangeThemeByName = React.memo(
   ({ name, children }: { name: string; children: any }) => {
+    const { allThemes } = React.useContext(ThemeContext)
     if (!name) {
       return children
     }
-    const { allThemes } = React.useContext(ThemeContext)
     if (!allThemes || !allThemes[name]) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }

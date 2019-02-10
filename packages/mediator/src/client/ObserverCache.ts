@@ -72,7 +72,7 @@ export const ObserverCache = {
     }
     ObserverCache.nextUpdate = setTimeout(() => {
       for (const entry of [...ObserverCache.nextUpdates]) {
-        console.log('flush', [...entry.subscriptions])
+        console.log('flush', entry, [...entry.subscriptions])
         for (const sub of [...entry.subscriptions]) {
           sub.next(entry.value)
         }
@@ -89,7 +89,14 @@ export const ObserverCache = {
         // fast lookup here
         if (entry.denormalizedValues[id]) {
           console.log('hit, update', entry)
-          entry.denormalizedValues[id] = value
+
+          // update in caches
+          if (entry.args.type === 'one') {
+            entry.value = value
+          } else {
+            entry.denormalizedValues[id] = value
+          }
+
           ObserverCache.nextUpdates.add(entry)
           ObserverCache.flush()
         }
@@ -97,3 +104,5 @@ export const ObserverCache = {
     }
   },
 }
+
+window['ObserverCache'] = ObserverCache

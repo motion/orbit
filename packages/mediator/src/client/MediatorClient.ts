@@ -1,10 +1,10 @@
-import Observable from 'zen-observable'
-import { Command, Model } from '../common'
-import { ClientTransport } from './ClientTransport'
-import { ObserverCache } from './ObserverCache'
-import { Query } from './Query'
-import { QueryOptions } from './QueryOptions'
-import { SaveOptions } from './SaveOptions'
+import Observable from 'zen-observable';
+import { Command, Model } from '../common';
+import { ClientTransport } from './ClientTransport';
+import { ObserverCache } from './ObserverCache';
+import { Query } from './Query';
+import { QueryOptions } from './QueryOptions';
+import { SaveOptions } from './SaveOptions';
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -33,14 +33,7 @@ export class MediatorClient {
   async save<ModelType, Args, CountArgs>(
     model: Model<ModelType, Args, CountArgs>,
     values: SaveOptions<ModelType>,
-    options?: {
-      type?: 'one' | 'many' | 'count'
-      args?: any
-      value?: any
-    },
   ): Promise<ModelType> {
-    if (!options) options = {}
-
     ObserverCache.updateModels(model, Array.isArray(values) ? values : [values])
 
     return this.options.transports[0].execute('save', {
@@ -204,11 +197,11 @@ export class MediatorClient {
       let masterSubscription
       cached.subscriptions.add(subscriptionObserver)
 
-      console.log(key, cached.subscriptions.size)
-      if (cached.subscriptions.size === 1) {
-        console.log('dedupe...')
+      if (cached.subscriptions.size > 1) {
+        console.log('sending cached', cached)
         subscriptionObserver.next(cached.value)
       } else {
+        console.log('create', key)
         masterSubscription = this.options.transports.map(transport => {
           return transport
             .observe('observeOne', {
@@ -222,9 +215,11 @@ export class MediatorClient {
                 //   console.log('no change', value, cached.value)
                 //   return
                 // }
-                console.log('update subscriptionObserver', subscriptionObserver, value)
-                subscriptionObserver.next(value)
+                console.log('update subscriptionObserver', key, value, subscriptionObserver)
                 cached.value = value
+                for (const sub of cached.subscriptions) {
+                  sub.next(value)
+                }
               },
               error => subscriptionObserver.error(error),
               () => subscriptionObserver.complete(),

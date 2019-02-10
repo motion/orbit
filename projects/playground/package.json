@@ -9,9 +9,9 @@
     "@babel/runtime": "7.2.0",
     "@mcro/ui": "^2.3.10",
     "@mcro/use-store": "^2.3.10",
-    "mobx-react-lite": "0.3.5",
-    "react": "16.8.0-alpha.1",
-    "react-dom": "16.8.0-alpha.1",
+    "mobx-react-lite": "1.0.0",
+    "react": "16.8.1",
+    "react-dom": "16.8.1",
     "react-hot-loader": "4.6.5",
     "lodash": "^4.17.10"
   }

@@ -1,4 +1,5 @@
 import { Model } from '@mcro/mediator'
+import { cloneDeep, merge } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
 
@@ -19,13 +20,13 @@ function use<ModelType, Args>(
   query: Args | false,
   options: UseModelOptions = {},
 ): any {
+  const queryKey = JSON.stringify(query)
   const observeEnabled = options.observe === undefined || options.observe === true
-  const [, forceUpdate] = useState(0)
+  const forceUpdate = useState(0)[1]
   const valueRef = useRef(options.defaultValue || defaultValues[type])
   const value = valueRef.current
   const subscription = useRef(null)
   const curQuery = useRef(null)
-  const queryKey = JSON.stringify(query)
 
   const dispose = () => {
     if (subscription.current) {
@@ -37,6 +38,9 @@ function use<ModelType, Args>(
   useEffect(() => dispose, [])
 
   const update = next => {
+    if (next === valueRef.current) return
+    if (JSON.stringify(next) === JSON.stringify(valueRef.current)) return
+    console.log('update', JSON.stringify(valueRef.current), '=>', JSON.stringify(next))
     valueRef.current = next
     forceUpdate(Math.random())
   }
@@ -96,9 +100,10 @@ function use<ModelType, Args>(
 
   const valueUpdater = useCallback(
     next => {
-      const nextMerged = { ...valueRef.current, ...next }
-      update(nextMerged)
-      save(model, nextMerged, { type, args: query })
+      const nextMerged = merge(cloneDeep(valueRef.current), next)
+      console.log('update from here......', nextMerged)
+      // update(nextMerged)
+      save(model, nextMerged)
     },
     [queryKey],
   )

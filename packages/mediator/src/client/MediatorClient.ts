@@ -1,10 +1,10 @@
-import Observable from 'zen-observable';
-import { Command, Model } from '../common';
-import { ClientTransport } from './ClientTransport';
-import { ObserverCache } from './ObserverCache';
-import { Query } from './Query';
-import { QueryOptions } from './QueryOptions';
-import { SaveOptions } from './SaveOptions';
+import Observable from 'zen-observable'
+import { Command, Model } from '../common'
+import { ClientTransport } from './ClientTransport'
+import { ObserverCache } from './ObserverCache'
+import { Query } from './Query'
+import { QueryOptions } from './QueryOptions'
+import { SaveOptions } from './SaveOptions'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -198,7 +198,6 @@ export class MediatorClient {
       cached.subscriptions.add(subscriptionObserver)
 
       if (cached.subscriptions.size > 1) {
-        console.log('sending cached', cached)
         subscriptionObserver.next(cached.value)
       } else {
         console.log('create', key)
@@ -211,11 +210,12 @@ export class MediatorClient {
             })
             .subscribe(
               value => {
-                // if (JSON.stringify(value) === JSON.stringify(cached.value)) {
-                //   console.log('no change', value, cached.value)
-                //   return
-                // }
-                console.log('update subscriptionObserver', key, value, subscriptionObserver)
+                // TODO move this all into cached
+                // can have ObserverCache.update(cached, value)
+                // have it do the stringify and subscriptions triggers
+                if (JSON.stringify(value) === JSON.stringify(cached.value)) {
+                  return
+                }
                 cached.value = value
                 for (const sub of cached.subscriptions) {
                   sub.next(value)

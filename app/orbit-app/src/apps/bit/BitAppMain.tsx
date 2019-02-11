@@ -20,6 +20,7 @@ const defaultItemProps = {
 export default function BitAppMain(props: AppProps) {
   const { sourcesStore } = useStoresSafe()
   const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
+  console.log('got bit', bit)
   if (!bit) {
     return null
   }

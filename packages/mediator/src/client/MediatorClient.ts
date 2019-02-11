@@ -20,7 +20,7 @@ function cachedObservable(
     clearTimeout(cached.removeTimeout)
     cached.subscriptions.add(sub)
 
-    if (cached.subscriptions.size > 1) {
+    if (cached.subscriptions.size >= 1) {
       sub.next(cached.value)
     } else {
       const subs = options.transports.map(transport => {

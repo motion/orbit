@@ -84,14 +84,14 @@ export default function AtlassianSettingLogin(props: Props) {
   }
 
   return (
-    <UI.Col tagName="form" onSubmit={addIntegration} padding={20}>
+    <UI.Col tagName="form" onSubmit={addIntegration}>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
       <Views.VerticalSpace />
       <UI.Col margin="auto" width={370}>
-        <UI.Col padding={[0, 10]}>
+        <UI.Col>
           <Views.Table>
             <Views.InputRow
               label="Domain"

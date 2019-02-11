@@ -57,13 +57,17 @@ class OrbitWindowStore {
     screenSize => {
       ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
-      let scl = 0.72
+      let scl = 0.76
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide
       w = Math.min(h * 1.4, w)
-      const maxSize = [1600, 1000]
-      this.size = [w, h].map(x => Math.round(x)).map((x, i) => Math.min(maxSize[i], x))
+      const maxSize = [1600, 1100]
+      const minSize = [900, 720]
+      this.size = [w, h]
+        .map(x => Math.round(x))
+        .map((x, i) => Math.min(maxSize[i], x))
+        .map((x, i) => Math.max(minSize[i], x))
       // centered
       const TOOLBAR_HEIGHT = 23
       this.position = [

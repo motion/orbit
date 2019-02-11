@@ -6,16 +6,16 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { Icon } from '../../views/Icon'
 import ListItem from '../../views/ListItems/ListItem'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import SelectableList from '../../views/Lists/SelectableList'
 import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
-import { AppProps, AppType } from '../AppTypes'
+import { AppType } from '../AppTypes'
 import { listRootID, ListsApp } from '../lists/ListsApp'
 import './calendar.css' // theme css file
+import { SearchAppProps } from './SearchApp'
 
 const ItemActionContext = React.createContext<{ item: Bit }>({ item: null })
 
@@ -59,9 +59,8 @@ const ItemActionDropdown = React.memo(function ItemActionDropdown() {
   )
 })
 
-export default observer(function SearchAppIndex(props: AppProps) {
-  const { searchStore } = useStoresSafe()
-  const items = searchStore.searchState.results
+export default observer(function SearchAppIndex(props: SearchAppProps) {
+  const items = props.searchStore.searchState.results
 
   const getItemProps = React.useCallback(
     memoize(({ item }) => {

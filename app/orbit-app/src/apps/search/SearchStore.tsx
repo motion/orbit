@@ -1,8 +1,8 @@
 import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/model-bridge'
-import { IntegrationType, SearchQuery, SearchResult, SearchResultModel } from '@mcro/models'
+import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
-import { flatten, uniq } from 'lodash'
+import { uniq } from 'lodash'
 import React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
@@ -11,40 +11,12 @@ import { AppIcon } from '../../views/AppIcon'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import { SpaceIcon } from '../../views/SpaceIcon'
 import { AppType } from '../AppTypes'
+import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchState = {
   results: OrbitListItemProps[]
   finished?: boolean
   query: string
-}
-
-const groupToName = {
-  'last-day': 'Recently',
-  'last-week': 'Recently',
-  'last-month': 'Last Month',
-  overall: 'Overall',
-}
-
-export function searchGroupsToResults(results: SearchResult[], { max = 6 }: { max?: number } = {}) {
-  const res = results.map(result => {
-    const group = groupToName[result.group]
-    const firstFew = result.bits.slice(0, max).map(bit => ({
-      item: bit,
-      group,
-    }))
-    const showMore =
-      result.bitsTotalCount > max - 1
-        ? [
-            {
-              title: result.title,
-              subtitle: result.text,
-              group,
-            },
-          ]
-        : []
-    return [...firstFew, ...showMore]
-  })
-  return flatten(res)
 }
 
 export class SearchStore {

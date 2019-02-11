@@ -11,13 +11,20 @@ import SearchAppMain from './SearchAppMain'
 import { SearchStore } from './SearchStore'
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
+export type SearchAppProps = AppProps & {
+  searchStore: SearchStore
+}
+
 export function SearchApp(props: AppProps) {
   const { paneManagerStore } = useStoresSafe()
   const searchStore = useStore(SearchStore, { paneManagerStore })
 
   return (
     <ProvideStores stores={{ searchStore }}>
-      <AppContainer index={<SearchAppIndex {...props} />} toolBar={<SearchToolBar />}>
+      <AppContainer
+        index={<SearchAppIndex searchStore={searchStore} {...props} />}
+        toolBar={<SearchToolBar />}
+      >
         <SearchAppMain {...props} />
       </AppContainer>
     </ProvideStores>

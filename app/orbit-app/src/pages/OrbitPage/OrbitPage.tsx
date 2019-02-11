@@ -4,7 +4,7 @@ import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { isEqual, once, uniqBy } from 'lodash'
-import { observer, useObservable, useObserver } from 'mobx-react-lite'
+import { observer, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
@@ -212,7 +212,7 @@ function OrbitPageProvideStores(props: any) {
   const newAppStore = useStore(NewAppStore)
   const [panes, setPanes] = React.useState(defaultPanes)
 
-  useObservable(() => {
+  useObserver(() => {
     const next = getPanes(orbitWindowStore, activeApps)
     if (!isEqual(next, panes)) {
       setPanes(next)

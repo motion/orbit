@@ -20,7 +20,7 @@ function useActivePane() {
 }
 
 export default observer(function OrbitHeaderInput() {
-  const { orbitStore, orbitWindowStore, queryStore, headerStore } = useStoresSafe()
+  const { orbitWindowStore, queryStore, headerStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()
@@ -29,7 +29,7 @@ export default observer(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Space: ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = orbitStore.isTorn ? 16 : 18
+  const fontSize = orbitWindowStore.isTorn ? 16 : 18
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

@@ -17,16 +17,23 @@ import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 
 export default observer(function OrbitHeader() {
-  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const {
+    queryStore,
+    newAppStore,
+    orbitStore,
+    orbitWindowStore,
+    paneManagerStore,
+  } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const { isTorn, isEditing } = orbitStore
+  const { isTorn } = orbitWindowStore
+  const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
   const theme = useTheme()
 
   return (
     <>
-      <HeaderTop padding={isTorn ? [2, 10] : [7, 10]}>
+      <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
           <WindowControls
             itemProps={{ size: 10 }}

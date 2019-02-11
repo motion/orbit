@@ -96,9 +96,12 @@ async function main() {
   }
 
   // setup test app if needed
-  const testAppID = window.location.search ? window.location.search.match(/app=([a-z]+)/)[1] : null
-  if (process.env.NODE_ENV === 'development' && !IS_ELECTRON && testAppID) {
-    require('./helpers/setupTestApp').setupTestApp(testAppID)
+  const testAppMatch = window.location.search
+    ? window.location.search.match(/testAppId=([a-z]+)/)
+    : null
+  if (process.env.NODE_ENV === 'development' && !IS_ELECTRON && testAppMatch) {
+    console.log('testing app, testAppMatch', testAppMatch[1])
+    require('./helpers/setupTestApp').setupTestApp(testAppMatch[1])
   }
 
   // now run app..

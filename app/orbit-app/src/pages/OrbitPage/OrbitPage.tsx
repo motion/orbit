@@ -1,5 +1,5 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
-import { App } from '@mcro/stores'
+import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { once, uniqBy } from 'lodash'
@@ -9,7 +9,9 @@ import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
+import { APP_ID } from '../../constants'
 import { StoreContext } from '../../contexts'
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -55,17 +57,37 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   React.useEffect(() => {
     // prevent close on the main window
     window.onbeforeunload = function(e) {
-      console.log(shortcutState.current)
-      alert('unloading!')
+      const { closeTab, closeApp } = shortcutState.current
+      const shouldCloseTab = Date.now() - closeTab < 100
+      const shouldCloseApp = Date.now() - closeApp < 100
 
-      // prevent on command+w
-      if (Date.now() - shortcutState.current.closeTab < 100) {
-        e.returnValue = false
-        return
-      }
+      console.log('unloading!', orbitStore.isTorn, shortcutState.current)
+
       if (orbitStore.isTorn) {
-        e.returnValue = false
-        return
+        // TORN AWAY APP
+        if (shouldCloseApp || shouldCloseTab) {
+          e.returnValue = false
+          App.sendMessage(Electron, Electron.messages.CLOSE_APP, { appId: APP_ID })
+          return
+        }
+      } else {
+        // MAIN APP
+        // prevent on command+w
+        if (shouldCloseTab) {
+          e.returnValue = false
+        }
+        if (shouldCloseApp) {
+          if (
+            showConfirmDialog({
+              title: 'Close Orbit?',
+              message: 'This will close all sub-windows as well.',
+            })
+          ) {
+            console.log('Bye all of orbit...')
+          } else {
+            e.returnValue = false
+          }
+        }
       }
     }
   }, [])

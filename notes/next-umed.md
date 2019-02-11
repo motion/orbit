@@ -5,20 +5,12 @@ NEXT
 
 client:
 
-- [ ] client side query cache
-
-  - redo so its only touching `@mcro/model-bridge` observeOne/Many and save
-    - [ ] dedupe same queries
-    - [ ] keep queries alive after an unsubscribe, clean up after X (~5) seconds inactive
-      - this helps react hooks which will call subscribe/unsubscribe over and over
-    - [ ] 🐛 for some reason observeOne commands are being resolved by both Syncers and Desktop process
-      - check to be sure were not doing duplicate work there and fix if so
-  - this should just go from client => desktop right?
-
 - [ ] syncers are choking up app speed
 
   - [ ] simple throttle
   - [ ] test to be sure you can add tabs when syncing is running and fix if not
+
+- [ ] add a mediator with example command for Electron process
 
 - settings panes fixes:
 
@@ -34,6 +26,18 @@ client:
   - [ ] some settings panes are broken
     - check over them all and fix bugs
     - this is actually a medium size task because each pane needs some work
+
+- cache improvements:
+
+  - [ ] can you make `remove()` work with the cache
+    - test case: removing a tab by right click > remove
+  - [ ] can you look at why creating a new app is slow to update the tabs
+    - steps to reproduce:
+      1.  click the "+" button in tab bar
+      2.  select "Custom"
+      3.  "Create"
+      4.  notice it takes about a second before it shows up in the tab bar
+      5.  see if thats caused by SQL speed. It can be delayed a little bit but updating sqlite and sending over socket should be super quick, so we don't need fancy caching here just to be sure the sql/subscription is fast
 
 - backend:
 

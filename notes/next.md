@@ -12,9 +12,7 @@ So,
    1. Just do minimal version
       1. Setting up a space
       2. Creating a new app
-3. In settings, add a Keyboard Shortcuts
-   1. Show shortcuts for reference
-4.
+3.
 
 data sync story:
 

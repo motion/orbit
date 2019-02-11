@@ -72,6 +72,10 @@ export async function main() {
     // setup process error watching before doing most stuff
     require('./helpers/handleErrors').handleErrors()
     // exit handling
+
+    // TODO move this into orbit-fork-process
+    // and make it work with other areas where we fork from orbit-fork-process
+
     const { handleExit, setupHandleExit } = require('./helpers/handleExit')
 
     if (process.env.NODE_ENV === 'development') {

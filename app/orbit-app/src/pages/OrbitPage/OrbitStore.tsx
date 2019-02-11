@@ -50,8 +50,12 @@ export class OrbitStore {
   setTorn = () => {
     this.isTorn = true
     console.log('Tearing away app', this.activePane.type)
-    App.setState({ appCount: App.state.appCount + 1 })
-    App.sendMessage(Electron, Electron.messages.TEAR, this.activePane.type)
+    const appCount = App.state.appCount + 1
+    App.setState({ appCount })
+    App.sendMessage(Electron, Electron.messages.TEAR_APP, {
+      appType: this.activePane.type,
+      appId: appCount,
+    })
     // set App.orbitState.docked false so next orbit window is hidden on start
     // TODO clean up tearing a bit, including this settimeout
     // for now its just happening becuase i dont want to deal with having a proper system

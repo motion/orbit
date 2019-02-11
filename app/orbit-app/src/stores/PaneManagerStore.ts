@@ -38,7 +38,7 @@ export class PaneManagerStore {
   }
 
   get activePane() {
-    return this.panes[this.paneIndex]
+    return this.panes[this.paneIndex] || this.lastActivePane
   }
 
   lastActivePane = react(() => this.activePane, _ => _, {

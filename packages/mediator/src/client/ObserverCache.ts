@@ -88,6 +88,7 @@ export const ObserverCache = {
         if (entry.args.model !== model) continue
         // fast lookup here
         if (entry.denormalizedValues[id]) {
+          toUpdate.add(entry)
           // update in caches
           if (entry.args.type === 'one') {
             entry.value = value
@@ -95,7 +96,6 @@ export const ObserverCache = {
             entry.denormalizedValues[id] = value
           }
         }
-        toUpdate.add(entry)
       }
     }
 

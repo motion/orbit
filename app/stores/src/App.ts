@@ -42,6 +42,7 @@ const defaultMenuState = (index: number): MenuState => ({
 export type AppStateEntry = {
   id: number
   type: string
+  appId: number
 }
 
 @store
@@ -76,6 +77,7 @@ class AppStore {
     allApps: [
       {
         id: 0,
+        appId: 0,
         type: 'root',
       },
     ] as AppStateEntry[],

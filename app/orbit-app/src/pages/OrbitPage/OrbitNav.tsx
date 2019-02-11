@@ -11,6 +11,7 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
+import { getIsTorn } from '../../helpers/getAppHelpers'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -42,10 +43,9 @@ export default observer(function OrbitNav() {
   const activePaneId = paneManagerStore.activePane.id
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
+  const isTorn = getIsTorn()
 
-  console.debug('OrbitNa')
-
-  if (orbitWindowStore.isTorn) {
+  if (isTorn) {
     if (!paneManagerStore.activePane) {
       console.error('no active pane?')
     }

@@ -106,7 +106,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.error(`no pane found! this.props.panes`, this.panes, index)
+      console.error(`no pane found at index ${index}! this.props.panes`, this.panes)
       return
     }
     if (index !== this.paneIndex) {

@@ -4,9 +4,11 @@ import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
+import { useActions } from '../../actions'
 import { AppActions } from '../../actions/AppActions'
 import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HorizontalSpace } from '../../views'
@@ -17,15 +19,9 @@ import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 
 export default observer(function OrbitHeader() {
-  const {
-    queryStore,
-    newAppStore,
-    orbitStore,
-    orbitWindowStore,
-    paneManagerStore,
-  } = useStoresSafe()
+  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const { isTorn } = orbitWindowStore
+  const isTorn = getIsTorn()
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
@@ -150,6 +146,7 @@ function OrbitEditAppButton() {
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
   const show = activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing
+  const Actions = useActions()
 
   if (!show) {
     return null
@@ -161,7 +158,7 @@ function OrbitEditAppButton() {
         icon="tool"
         tooltip="Edit app"
         onClick={async () => {
-          orbitWindowStore.setTorn(paneManagerStore.activePane.type)
+          Actions.tearApp()
           orbitStore.setEditing()
         }}
       >

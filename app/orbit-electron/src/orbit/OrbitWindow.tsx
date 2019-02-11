@@ -33,7 +33,7 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
-  appId = last(App.state.allApps).id
+  appId = last(App.state.allApps).appId
 
   didMount() {
     // screen events

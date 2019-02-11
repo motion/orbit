@@ -187,7 +187,7 @@ export default observer(function OrbitWindow() {
         const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
         if (!(await pathExists(iconPath))) {
           dialog.showErrorBox('No icon found for app...', 'Oops')
-          console.error('no icon!')
+          console.error('no icon!', iconPath)
           return
         }
         app.dock.setIcon(iconPath)

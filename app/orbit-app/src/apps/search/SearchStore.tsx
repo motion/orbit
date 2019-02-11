@@ -98,6 +98,7 @@ export class SearchStore {
         icon: <AppIcon app={app} />,
         group: 'Apps',
         appConfig: {
+          icon: `orbit-${app.type}-full`,
           type: AppType.message,
           title: `Open ${app.name}`,
         },
@@ -113,7 +114,7 @@ export class SearchStore {
 
     return [
       this.homeItem,
-      ...apps.slice(0, 2).map(appToResult),
+      ...apps.slice(0, Math.min(apps.length - 1, 5)).map(appToResult),
       {
         title: 'Create new app...',
         icon: 'orbit-custom-full',

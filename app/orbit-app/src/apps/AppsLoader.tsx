@@ -1,7 +1,6 @@
 import { useStore } from '@mcro/use-store'
 import React, { useEffect, useMemo } from 'react'
-import { StoreContext } from '../contexts'
-import { MergeContext } from '../views/MergeContext'
+import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
 import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
@@ -16,10 +15,10 @@ export default function AppsLoader(props: { children?: any; views: AppViewDefini
   })
 
   return (
-    <MergeContext Context={StoreContext} value={{ appsStore }}>
+    <ProvideStores stores={{ appsStore }}>
       {appLoadViews}
       {props.children}
-    </MergeContext>
+    </ProvideStores>
   )
 }
 
@@ -50,9 +49,9 @@ function AppLoadView({ view, store }: AppLoaderProps) {
 
   if (typeof AppView === 'function') {
     return (
-      <MergeContext Context={StoreContext} value={{ appStore }}>
+      <ProvideStores stores={{ appStore }}>
         <AppView {...appViewProps} appStore={appStore} />
-      </MergeContext>
+      </ProvideStores>
     )
   }
 

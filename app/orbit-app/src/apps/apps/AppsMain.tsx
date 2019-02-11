@@ -4,7 +4,11 @@ import AppsMainManage from './AppsMainManage'
 import AppsMainNew from './AppsMainNew'
 
 export default function AppsAppsMain(props: AppProps) {
-  if (!props.appConfig || props.appConfig.subType === 'new') {
+  if (!props.appConfig) {
+    return <AppsMainManage />
+  }
+
+  if (props.appConfig.subType === 'new') {
     return <AppsMainNew />
   }
 

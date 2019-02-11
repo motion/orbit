@@ -25,15 +25,15 @@
     "memoize-weak": "1.0.2",
     "prop-types": "^15.6.0",
     "raf-throttle": "2.0.3",
-    "react-debounce-render": "4.0.3",
+    "react-debounce-render": "5.0.0",
     "react-fast-compare": "2.0.4",
-    "react-tilt": "^0.1.4",
+    "react-tilt": "0.1.4",
     "react-virtualized-auto-sizer": "1.0.2",
     "react-window": "1.5.1"
   },
   "peerDependencies": {
     "electron": "*",
-    "mobx": "5.8.0",
+    "mobx": "5.9.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

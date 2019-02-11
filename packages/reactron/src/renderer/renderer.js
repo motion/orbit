@@ -16,6 +16,11 @@ const noop = () => {}
 //   return traceWrappedHostConfig
 // }
 
+let scheduledCallback = null
+let scheduledCallbackTimeout = -1
+let scheduledPassiveCallback = null
+let elapsedTimeInMs = 0
+
 const HostConfig = {
   now: Date.now,
   supportsMutation: true,
@@ -94,6 +99,40 @@ const HostConfig = {
 
   commitTextUpdate(textInstance, oldText, newText) {
     textInstance.children = newText
+  },
+
+  schedulePassiveEffects(callback) {
+    if (scheduledCallback) {
+      throw new Error(
+        'Scheduling a callback twice is excessive. Instead, keep track of ' +
+          'whether the callback has already been scheduled.',
+      )
+    }
+    scheduledPassiveCallback = callback
+  },
+
+  cancelPassiveEffects() {
+    if (scheduledPassiveCallback === null) {
+      throw new Error('No passive effects callback is scheduled.')
+    }
+    scheduledPassiveCallback = null
+  },
+
+  scheduleDeferredCallback(callback, options) {
+    if (scheduledCallback) {
+      throw new Error(
+        'Scheduling a callback twice is excessive. Instead, keep track of ' +
+          'whether the callback has already been scheduled.',
+      )
+    }
+    scheduledCallback = callback
+    if (typeof options === 'object' && options !== null && typeof options.timeout === 'number') {
+      const newTimeout = options.timeout
+      if (scheduledCallbackTimeout === -1 || scheduledCallbackTimeout > newTimeout) {
+        scheduledCallbackTimeout = elapsedTimeInMs + newTimeout
+      }
+    }
+    return 0
   },
 }
 

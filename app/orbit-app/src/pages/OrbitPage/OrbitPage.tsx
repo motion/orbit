@@ -18,7 +18,6 @@ import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SearchStore } from '../../stores/SearchStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
@@ -45,7 +44,6 @@ export default React.memo(function OrbitPage() {
 
 const OrbitPageInner = observer(function OrbitPageInner() {
   const { paneManagerStore } = useStoresSafe()
-  const searchStore = useStore(SearchStore, { paneManagerStore })
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'
@@ -94,7 +92,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   )
 
   return (
-    <MergeContext Context={StoreContext} value={{ searchStore, orbitStore, headerStore }}>
+    <MergeContext Context={StoreContext} value={{ orbitStore, headerStore }}>
       <MainShortcutHandler
         handlers={{
           closeTab: () => {

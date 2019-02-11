@@ -17,8 +17,8 @@ export default function SpacesAppIndex() {
       id: `${space.id}`,
       subType: 'space',
       title: space.name,
-      subtitle: '10 members',
       before: <OrbitOrb size={16} colors={space.colors} marginRight={12} />,
+      height: 50,
       after: activeSpaceId === space.id && (
         <Button chromeless circular icon="check" iconSize={12} />
       ),
@@ -27,7 +27,7 @@ export default function SpacesAppIndex() {
       },
     })),
     {
-      group: 'Manage',
+      // group: 'Manage',
       title: 'New',
       subtitle: 'Create new space...',
       icon: 'add',

@@ -11,13 +11,13 @@
     "@mcro/logger": "^2.3.10",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
-    "zen-observable": "^0.8.10"
+    "zen-observable": "0.8.13"
   },
   "devDependencies": {
     "@types/webpack-env": "*"
   },
   "peerDependencies": {
-    "mobx": "5.8.0"
+    "mobx": "5.9.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

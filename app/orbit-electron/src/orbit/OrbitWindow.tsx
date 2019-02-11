@@ -64,7 +64,13 @@ class OrbitWindowStore {
       const maxSize = [1600, 1000]
       this.size = [w, h].map(x => Math.round(x)).map((x, i) => Math.min(maxSize[i], x))
       // centered
-      this.position = [screenSize[0] / 2 - w / 2, screenSize[1] / 2 - h / 2].map(x => Math.round(x))
+      const TOOLBAR_HEIGHT = 23
+      this.position = [
+        // width
+        screenSize[0] / 2 - w / 2,
+        // height
+        screenSize[1] / 2 - h / 2 + TOOLBAR_HEIGHT,
+      ].map(x => Math.round(x))
     },
   )
 

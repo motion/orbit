@@ -7,17 +7,22 @@ export function useAppSortHandler() {
   const [space, updateSpace] = useActiveSpace()
 
   const handleSortEnd = ({ oldIndex, newIndex }) => {
-    const paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
+    let paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
     // console.log('paneSort', paneSort)
     const { activePaneIndex } = orbitWindowStore
     // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
     const activePaneId = space.paneSort[activePaneIndex]
+
     console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
     if (activePaneId !== paneSort[activePaneIndex]) {
       orbitWindowStore.activePaneIndex = paneSort.indexOf(activePaneId)
       console.log('updating active index to', orbitWindowStore.activePaneIndex)
     }
-    // console.log(`updating space`, paneSort)
+
+    // bug fix we had multiple of the same, we need to figure out why this can happen though...
+    paneSort = [...new Set(paneSort)]
+
+    // update
     updateSpace({ paneSort })
   }
 

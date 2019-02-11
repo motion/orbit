@@ -49,8 +49,6 @@ export default observer(function OrbitSidebar() {
   const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
   const { hasMain, hasIndex } = useInspectViews()
 
-  console.log({ hasMain, hasIndex })
-
   if (!activePane) {
     return null
   }

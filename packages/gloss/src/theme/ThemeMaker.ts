@@ -1,6 +1,5 @@
 import { color } from '@mcro/color'
-import { Color } from '@mcro/css'
-import { ThemeObject } from '@mcro/css'
+import { Color, LinearGradient, ThemeObject } from '@mcro/css'
 
 type ColorObject = { [a: string]: Color }
 
@@ -61,6 +60,10 @@ export class ThemeMaker {
     const res = {}
     for (const key in obj) {
       const val = obj[key]
+      if (val instanceof LinearGradient) {
+        res[key] = val
+        continue
+      }
       if (isPlainObj(val)) {
         // recurse into objects
         res[key] = this.colorize(val)

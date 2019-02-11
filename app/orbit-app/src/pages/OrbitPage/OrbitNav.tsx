@@ -14,7 +14,6 @@ import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
-import { useActiveApp } from '../../hooks/useActiveApp'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
@@ -41,9 +40,12 @@ export default observer(function OrbitNav() {
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeAppsSorted = useActiveAppsSorted()
-  const activeApp = useActiveApp()
+  const activePaneId = paneManagerStore.activePane.id
+  const activeApp = activeAppsSorted.find(app => activePaneId === `${app.id}`)
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
+
+  console.debug('OrbitNa')
 
   if (orbitStore.isTorn) {
     if (!paneManagerStore.activePane) {
@@ -54,7 +56,7 @@ export default observer(function OrbitNav() {
 
   // after hooks
 
-  if (!activeAppsSorted.length || !space || !space.paneSort || !activeApp) {
+  if (!activeAppsSorted.length || !space || !space.paneSort) {
     return (
       <OrbitNavClip>
         <OrbitNavChrome />
@@ -64,13 +66,13 @@ export default observer(function OrbitNav() {
 
   const items = space.paneSort
     .map(
-      (id, index): TabProps => {
-        const app = activeAppsSorted.find(x => x.id === id)
+      (paneId, index): TabProps => {
+        const app = activeAppsSorted.find(x => x.id === paneId)
         if (!app) {
           return null
         }
         const isLast = index === activeAppsSorted.length
-        const isActive = !showCreateNew && activeApp.id === id
+        const isActive = !showCreateNew && `${paneId}` === activePaneId
         const next = activeAppsSorted[index + 1]
         const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
         const isPinned = app.pinned
@@ -142,6 +144,7 @@ export default observer(function OrbitNav() {
           opacity={onSettings ? 0.5 : 1}
           transition="opacity ease 300ms"
         />
+
         {showCreateNew && (
           <OrbitTab
             stretch
@@ -163,6 +166,7 @@ export default observer(function OrbitNav() {
             }
           />
         )}
+
         {!showCreateNew && (
           <OrbitTab
             tooltip={showCreateNew ? 'Cancel' : 'Add'}
@@ -179,7 +183,7 @@ export default observer(function OrbitNav() {
 
         <View flex={1} />
 
-        {activeApp.type === AppType.custom && !orbitStore.isEditing && (
+        {activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing && (
           <OrbitTab
             thicc
             icon="tool"
@@ -190,6 +194,25 @@ export default observer(function OrbitNav() {
             }}
           />
         )}
+
+        {activeAppsSorted.length > 5 && (
+          <OrbitTab
+            isActive={paneManagerStore.activePane.id === 'apps'}
+            onClick={() => {
+              newAppStore.setShowCreateNew(false)
+              if (paneManagerStore.activePane.id === 'apps') {
+                paneManagerStore.setActivePane(store.previousTabID)
+              } else {
+                paneManagerStore.setActivePaneByType('apps')
+              }
+            }}
+            iconSize={11}
+            icon="grid48"
+            tooltip="Apps"
+            thicc
+          />
+        )}
+
         <OrbitTab
           isActive={onSettings}
           onClick={() => {
@@ -200,8 +223,9 @@ export default observer(function OrbitNav() {
               paneManagerStore.setActivePaneByType('sources')
             }
           }}
-          iconSize={14}
+          iconSize={12}
           icon="gear"
+          tooltip="Settings"
           thicc
         />
       </OrbitNavChrome>

@@ -14,5 +14,6 @@ export function useActiveApps(type?: string): AppBit[] {
       where,
     },
   )
+
   return apps
 }

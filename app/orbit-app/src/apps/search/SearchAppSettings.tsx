@@ -4,7 +4,7 @@ import React from 'react'
 import { FormRow, HorizontalSpace, SubTitle } from '../../views'
 import { Input } from '../../views/Input'
 
-export default function SearchAppSettings(props: { app: SearchApp }) {
+export default function SearchAppSettings(_: { app: SearchApp }) {
   return (
     <>
       <SubTitle>Filters</SubTitle>

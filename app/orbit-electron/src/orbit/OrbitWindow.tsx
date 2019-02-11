@@ -215,6 +215,12 @@ export default observer(function OrbitWindow() {
         forceKillProcess(app.process)
       }),
     )
+
+    return () => {
+      for (const disposer of disposers) {
+        disposer()
+      }
+    }
   }, [])
 
   if (!store.size[0]) {

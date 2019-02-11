@@ -7,8 +7,6 @@ import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {
-  console.log('props', props)
-
   const { sourcesStore } = useStoresSafe()
 
   if (!props.appConfig) {

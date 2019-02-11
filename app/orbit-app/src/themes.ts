@@ -11,7 +11,7 @@ const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const macModernTheme = Theme.colorize({
-  shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
+  // shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
   borderSelected: '#90b1e4ee',
 
   white: '#fff',
@@ -34,7 +34,6 @@ const macModernTheme = Theme.colorize({
     tabBackground: '#dfdfdf',
     tabBackgroundHover: '#bfbfbf',
     background: '#efefef',
-    backgroundGradient: 'linear-gradient(#efefef, #e2e2e2)',
     backgroundBottom: '#e2e2e2',
     backgroundBlur: '#f6f6f6',
     borderColor: '#ccc',
@@ -44,12 +43,13 @@ const macModernTheme = Theme.colorize({
     icon: '#6f6f6f',
     iconBlur: '#acacac',
     iconSelected: '#4d84f5',
+    // backgroundGradient: 'linear-gradient(#efefef, #e2e2e2)',
+    // buttonBackground: 'linear-gradient(#FDFDFD, #F3F3F3)',
     iconSelectedBlur: '#80a6f5',
     iconActive: '#4c4c4c',
     buttonBorderColor: '#d3d2d3',
     buttonBorderBottom: '#b0afb0',
     buttonBorderBlur: '#dbdbdb',
-    buttonBackground: 'linear-gradient(#FDFDFD, #F3F3F3)',
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   },

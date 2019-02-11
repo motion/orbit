@@ -210,22 +210,20 @@ function OrbitPageProvideStores(props: any) {
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
-  const [panes, setPanes] = React.useState(defaultPanes)
 
   useObserver(() => {
     const next = getPanes(orbitWindowStore, activeApps)
-    console.log('panes', next)
-    if (!isEqual(next, panes)) {
-      setPanes(next)
+    if (!isEqual(next, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(next)
     }
   })
 
   const paneManagerStore = useStore(PaneManagerStore, {
+    defaultPanes,
     defaultIndex: orbitWindowStore.activePaneIndex,
     onPaneChange(index: number) {
       orbitWindowStore.activePaneIndex = index
     },
-    panes,
   })
 
   // keep this in sync

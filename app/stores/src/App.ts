@@ -73,7 +73,12 @@ class AppStore {
   source = 'App'
 
   state = deep({
-    allApps: [] as AppStateEntry[],
+    allApps: [
+      {
+        id: 0,
+        type: 'root',
+      },
+    ] as AppStateEntry[],
     isDark: false,
     orbitState: {
       blurred: false,

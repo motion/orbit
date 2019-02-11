@@ -1,6 +1,7 @@
 import { react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { App, Electron } from '@mcro/stores'
+import { last } from 'lodash'
 import { getIsTorn } from '../helpers/getIsTorn'
 import { AppReactions } from './AppReactions'
 import { Pane } from './PaneManagerStore'
@@ -38,20 +39,33 @@ export class OrbitWindowStore {
   setTorn = (type: string) => {
     this.isTorn = true
     console.log('Tearing away app', type)
-    const id = App.state.allApps.length
+    const allApps = [...App.state.allApps]
+    const previousApps = allApps.slice(allApps.length - 1)
+
+    // update current app to persist the type
+    const currentApp = {
+      ...last(allApps),
+      type: this.lastActivePane.type,
+    }
+
+    const nextId = allApps.length
+
     App.setState({
       allApps: [
-        ...App.state.allApps,
+        ...previousApps,
+        currentApp,
         {
-          type,
-          id,
+          type: 'root',
+          id: nextId,
         },
       ],
     })
+
     App.sendMessage(Electron, Electron.messages.TEAR_APP, {
       appType: type,
-      appId: id,
+      appId: nextId,
     })
+
     // set App.orbitState.docked false so next orbit window is hidden on start
     // TODO clean up tearing a bit, including this settimeout
     // for now its just happening becuase i dont want to deal with having a proper system

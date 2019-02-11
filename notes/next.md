@@ -1,3 +1,21 @@
+Goal by end of February - deployable alpha 2
+
+Strategy: work up to it "Start to Finish", so basically start with the very first thing they will see, and move towards the last thing they need to use the Alpha.
+
+So,
+
+1. Onboarding
+   1. Setup with Github
+   2. Create your Space step
+   3. Design a better explanation before you go in app
+2. Guided intro
+   1. Just do minimal version
+      1. Setting up a space
+      2. Creating a new app
+3. In settings, add a Keyboard Shortcuts
+   1. Show shortcuts for reference
+4.
+
 data sync story:
 
 - code/spaces: github

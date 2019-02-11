@@ -1,6 +1,6 @@
 import { always, ensure, react, store } from '@mcro/black'
 import { IntegrationType } from '@mcro/models'
-import { memoize } from 'lodash'
+import { memoize, uniqBy } from 'lodash'
 import { SourcesStore } from '../SourcesStore'
 import { NLPStore } from './NLPStore'
 import { QueryStore } from './QueryStore'
@@ -20,7 +20,13 @@ type DateSelections = {
   key?: string
 }
 
-const suggestedDates = [
+type Filter = {
+  type: MarkType
+  text: string
+  active?: boolean
+}
+
+const suggestedDates: Filter[] = [
   { text: 'Last Week', type: MarkType.Date },
   { text: 'Last Month', type: MarkType.Date },
 ]
@@ -79,34 +85,38 @@ export class QueryFilterStore {
       .trim()
   }
 
-  get allFilters() {
-    return [
-      // keep them in the order of the query so they dont jump around
-      ...this.queryFilters,
-      ...this.suggestedFilters,
-    ]
+  get allFilters(): Filter[] {
+    return uniqBy(
+      [
+        // keep them in the order of the query so they dont jump around
+        ...this.queryFilters,
+        ...this.suggestedFilters,
+      ],
+      x => `${x.type}${x.text}`,
+    )
   }
 
-  get activeFilters() {
+  get activeFilters(): Filter[] {
     return this.queryFilters.filter(x => x.active)
   }
 
-  get inactiveFilters() {
+  get inactiveFilters(): Filter[] {
     return this.queryFilters.filter(x => !x.active)
   }
 
-  get hasDateFilter() {
+  get hasDateFilter(): boolean {
     return !!this.dateState.endDate || !!this.dateState.startDate
   }
 
-  get activeDateFilters() {
+  get activeDateFilters(): Filter[] {
     return this.activeFilters.filter(part => part.type === MarkType.Date)
   }
 
-  get queryFilters() {
+  get queryFilters(): Filter[] {
     this.disabledFilters
     return this.parsedQuery.filter(this.isFilter).map(x => ({
       ...x,
+      type: x.type,
       active: this.isActive(x),
     }))
   }
@@ -134,14 +144,14 @@ export class QueryFilterStore {
     }))
   }
 
-  get suggestedPeople() {
+  get suggestedPeople(): Filter[] {
     return (this.nlpStore.peopleNames || []).slice(0, 2).map(name => ({
       text: name,
       type: MarkType.Person,
     }))
   }
 
-  get suggestedFilters() {
+  get suggestedFilters(): Filter[] {
     if (!this.parsedQuery) {
       return suggestedDates
     }

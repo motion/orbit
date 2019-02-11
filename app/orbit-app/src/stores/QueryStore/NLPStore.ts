@@ -1,10 +1,10 @@
-import { store, react, ensure } from '@mcro/black'
-import { PersonBitModel } from '@mcro/models'
+import { ensure, react, store } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
-import { NLPResponse } from './types'
+import { PersonBitModel } from '@mcro/models'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
 import { QueryStore } from './QueryStore'
+import { NLPResponse } from './types'
 const { parseSearchQuery, setUserNames } = initNlp()
 
 // to run it on thread
@@ -26,7 +26,7 @@ export class NLPStore {
     this.queryStore = queryStore
   }
 
-  peopleNames = null
+  peopleNames: string[] = null
   peopleNames$ = observeMany(PersonBitModel, {
     args: {
       select: {

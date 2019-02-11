@@ -35,8 +35,6 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
 export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
   return (
-    // TODO @umed type issue with dispatch
-    // @ts-ignore
     <MergeContext Context={BreadcrumbsContext} value={{ dispatch, children: [...state.children] }}>
       <Row alignItems="center" {...props} />
     </MergeContext>

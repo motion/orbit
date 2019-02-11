@@ -1,12 +1,15 @@
 import { Absolute, FullScreen, gloss, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, PassProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { AppActions } from '../../actions/AppActions'
+import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HorizontalSpace } from '../../views'
 import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
@@ -91,16 +94,15 @@ export default observer(function OrbitHeader() {
           <View flex={1} />
         </Row>
 
+        <OrbitEditAppButton />
+
         {isEditing && (
           <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
-            <SegmentedRow>
-              <PassProps size={0.9} sizeHeight={0.9}>
-                <Button icon="edit" tooltip="Open in VSCode">
-                  Open
-                </Button>
-                <Button tooltip="Deploy to space">Save</Button>
-              </PassProps>
-            </SegmentedRow>
+            <Row>
+              <HeaderButton icon="edit" tooltip="Open in VSCode" />
+              <HorizontalSpace small />
+              <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+            </Row>
           </Absolute>
         )}
 
@@ -110,6 +112,37 @@ export default observer(function OrbitHeader() {
     </>
   )
 })
+
+function HeaderButton(props: ButtonProps) {
+  return <Button size={0.9} sizeHeight={0.9} {...props} />
+}
+
+function OrbitEditAppButton() {
+  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const activePaneId = paneManagerStore.activePane.id
+  const activeApps = useActiveApps()
+  const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
+  const show = activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing
+
+  if (!show) {
+    return null
+  }
+
+  return (
+    <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+      <HeaderButton
+        icon="tool"
+        tooltip="Edit app"
+        onClick={async () => {
+          orbitStore.setTorn()
+          orbitStore.setEditing()
+        }}
+      >
+        Edit
+      </HeaderButton>
+    </Absolute>
+  )
+}
 
 const HeaderContain = gloss({
   margin: 'auto',

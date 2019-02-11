@@ -8,7 +8,6 @@ import { flow } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { AppType } from '../../apps/AppTypes'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
@@ -41,7 +40,6 @@ export default observer(function OrbitNav() {
   const { showCreateNew } = newAppStore
   const activeAppsSorted = useActiveAppsSorted()
   const activePaneId = paneManagerStore.activePane.id
-  const activeApp = activeAppsSorted.find(app => activePaneId === `${app.id}`)
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
@@ -182,18 +180,6 @@ export default observer(function OrbitNav() {
         )}
 
         <View flex={1} />
-
-        {activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing && (
-          <OrbitTab
-            thicc
-            icon="tool"
-            tooltip="Edit app"
-            onClick={async () => {
-              orbitStore.setTorn()
-              orbitStore.setEditing()
-            }}
-          />
-        )}
 
         {activeAppsSorted.length > 5 && (
           <OrbitTab

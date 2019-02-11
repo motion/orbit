@@ -18,6 +18,7 @@ export type ObserverCacheEntry = {
   removeTimeout?: any
   key: string
   onDispose?: Function
+  isActive?: boolean
 }
 
 export const ObserverCache = {

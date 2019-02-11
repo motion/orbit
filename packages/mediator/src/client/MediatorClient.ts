@@ -20,7 +20,7 @@ function cachedObservable(
     clearTimeout(cached.removeTimeout)
     cached.subscriptions.add(sub)
 
-    if (cached.subscriptions.size >= 1) {
+    if (cached.isActive) {
       sub.next(cached.value)
     } else {
       const subs = options.transports.map(transport => {
@@ -28,6 +28,7 @@ function cachedObservable(
           .observe(name, args)
           .subscribe(cached.update, error => sub.error(error), () => sub.complete())
       })
+      cached.isActive = true
       cached.onDispose = () => {
         subs.forEach(subscription => subscription.unsubscribe())
       }

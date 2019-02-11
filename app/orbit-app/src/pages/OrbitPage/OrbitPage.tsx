@@ -205,7 +205,8 @@ function getPanes(apps: AppBit[]): Pane[] {
     // torn window panes, remove the others besides active app + settings
     const app = apps.find(app => app.id === APP_ID)
     if (!app) {
-      throw new Error(`No app found! ${APP_ID}, ${JSON.stringify(apps)}`)
+      console.warn(`No app found! ${APP_ID}, ${JSON.stringify(apps)}`)
+      return [settingsPane]
     }
     return [appToPane(app), settingsPane]
   } else {

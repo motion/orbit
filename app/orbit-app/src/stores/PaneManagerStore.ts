@@ -21,6 +21,7 @@ export class PaneManagerStore {
     defaultPaneIndex?: number
   }
 
+  isTorn = false
   paneIndex = this.props.defaultPaneIndex || 0
 
   syncPaneIndexProp = react(
@@ -33,11 +34,11 @@ export class PaneManagerStore {
     },
   )
 
-  get panes() {
-    return this.props.panes
-  }
+  panes = react(() => (this.isTorn ? [this.activePane] : this.props.panes), val => val, {
+    defaultValue: this.props.panes,
+  })
 
-  get activePane() {
+  get activePane(): Pane {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
@@ -47,6 +48,10 @@ export class PaneManagerStore {
 
   didMount() {
     on(this, autoTrack(this, ['paneIndex']))
+  }
+
+  setTorn() {
+    this.isTorn = true
   }
 
   back = () => {

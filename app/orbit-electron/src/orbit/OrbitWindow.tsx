@@ -9,6 +9,7 @@ import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'electron'
 import { pathExists } from 'fs-extra'
 import root from 'global'
+import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
@@ -32,7 +33,7 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
-  appId = App.state.appCount
+  appId = last(App.state.allApps).id
 
   didMount() {
     // screen events

@@ -214,6 +214,7 @@ function OrbitPageProvideStores(props: any) {
 
   useObserver(() => {
     const next = getPanes(orbitWindowStore, activeApps)
+    console.log('panes', next)
     if (!isEqual(next, panes)) {
       setPanes(next)
     }

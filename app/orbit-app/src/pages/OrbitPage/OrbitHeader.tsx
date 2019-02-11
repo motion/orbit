@@ -113,6 +113,26 @@ export default observer(function OrbitHeader() {
           </Absolute>
         )}
 
+        {isTorn && (
+          <Absolute top={3} right={3}>
+            <Button
+              chromeless
+              opacity={0.6}
+              hoverStyle={{
+                opacity: 1,
+              }}
+              icon="gear"
+              onClick={() => {
+                if (paneManagerStore.activePane.type === 'settings') {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
+            />
+          </Absolute>
+        )}
+
         {isTorn && <BorderBottom opacity={0.35} />}
       </HeaderTop>
       <HeaderFade />

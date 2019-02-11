@@ -1,6 +1,7 @@
 import { react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { App, Electron } from '@mcro/stores'
+import { getIsTorn } from '../helpers/getIsTorn'
 import { AppReactions } from './AppReactions'
 import { Pane } from './PaneManagerStore'
 import { QueryStore } from './QueryStore/QueryStore'
@@ -13,7 +14,7 @@ export class OrbitWindowStore {
   activePaneIndex = 0
   contentHeight = 0
   inputFocused = false
-  isTorn = false
+  isTorn = getIsTorn() // for HMR and reloading, persists torn state
   lastActivePane: Pane | null = null
 
   onFocus = () => {
@@ -37,11 +38,19 @@ export class OrbitWindowStore {
   setTorn = (type: string) => {
     this.isTorn = true
     console.log('Tearing away app', type)
-    const appCount = App.state.appCount + 1
-    App.setState({ appCount })
+    const id = App.state.allApps.length
+    App.setState({
+      allApps: [
+        ...App.state.allApps,
+        {
+          type,
+          id,
+        },
+      ],
+    })
     App.sendMessage(Electron, Electron.messages.TEAR_APP, {
       appType: type,
-      appId: appCount,
+      appId: id,
     })
     // set App.orbitState.docked false so next orbit window is hidden on start
     // TODO clean up tearing a bit, including this settimeout

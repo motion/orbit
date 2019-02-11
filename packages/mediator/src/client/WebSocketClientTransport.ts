@@ -207,7 +207,6 @@ export class WebSocketClientTransport implements ClientTransport {
       })
     }
 
-    console.log('success!', subscription, data)
     subscription.onSuccess(data.result)
   }
 }

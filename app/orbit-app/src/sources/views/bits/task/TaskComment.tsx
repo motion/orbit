@@ -1,11 +1,11 @@
+import { Icon, Row, Text } from '@mcro/ui'
 import * as React from 'react'
-import { Row, Icon, Text } from '@mcro/ui'
-import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
-import { handleClickPerson } from '../../../../views/RoundButtonPerson'
 import { AppActions } from '../../../../actions/AppActions'
 import { HorizontalSpace, VerticalSpace } from '../../../../views'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Markdown } from '../../../../views/Markdown'
+import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
+import { handleClickPerson } from '../../../../views/RoundButtonPerson'
 
 export type TaskCommentLike = {
   author: {
@@ -18,6 +18,10 @@ export type TaskCommentLike = {
 }
 
 export const TaskComment = ({ author, createdAt, children }: TaskCommentLike) => {
+  if (!author) {
+    console.warn('error! no author')
+    return null
+  }
   const { avatarUrl, login, email } = author
   return (
     <React.Fragment>

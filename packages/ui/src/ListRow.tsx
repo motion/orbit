@@ -101,7 +101,7 @@ export class SegmentedRow extends React.Component<SegmentedRowProps> {
           if (!child) {
             return false
           }
-          const finalChild =
+          const finalChild: any =
             typeof child === 'string' || typeof child === 'number' ? <span>{child}</span> : child
 
           return (

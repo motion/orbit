@@ -4,7 +4,10 @@ export const MENU_WIDTH = 300
 
 export const IS_MENU = window.location.pathname === '/chrome'
 export const IS_APP = window.location.pathname === '/app'
-export const PEEK_ID = IS_APP ? +window.location.search.match(/peekId=([0-9]+)/)[1] : null
+
+export const PEEK_ID = IS_APP
+  ? window.location.search && +window.location.search.match(/peekId=([0-9]+)/)[1]
+  : null
 
 const appMatch = window.location.search.match(/appId=([0-9]+)/)
 export const APP_ID = appMatch && appMatch[1] ? appMatch[1] : null

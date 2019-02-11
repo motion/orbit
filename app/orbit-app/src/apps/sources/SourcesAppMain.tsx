@@ -7,12 +7,21 @@ import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {
+  const { sourcesStore } = useStoresSafe()
+
   if (!props.appConfig) {
     return null
   }
 
   if (props.appConfig.subType === 'manage-apps') {
     return <ManageApps />
+  }
+
+  if (props.appConfig.viewType === 'setup') {
+    const type = props.appConfig.integration
+    const View = sourcesStore.getView(type, 'setup')
+    console.log('getting view', type, View)
+    return <View {...props} />
   }
 
   if (props.appConfig.type === 'sources') {
@@ -24,12 +33,9 @@ export function SourcesAppMain(props: AppProps) {
 
 function SourceMain(props: AppProps) {
   const { sourcesStore } = useStoresSafe()
-  const [source] = useModel(
-    SourceModel,
-    props.appConfig.viewType !== 'setup' && {
-      where: { id: +props.appConfig.id },
-    },
-  )
+  const [source] = useModel(SourceModel, {
+    where: { id: +props.appConfig.id },
+  })
 
   if (!source) {
     return null

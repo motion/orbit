@@ -1,10 +1,11 @@
 import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { forkProcess } from '@mcro/orbit-fork-process'
+import { forceKillProcess, forkProcess } from '@mcro/orbit-fork-process'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
+import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'electron'
 import { pathExists } from 'fs-extra'
 import root from 'global'
@@ -174,25 +175,52 @@ export default observer(function OrbitWindow() {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
     }
 
+    let appProcesses: { appId: number; process: ChildProcess }[] = []
+
+    let disposers: Function[] = []
+
     // handle tear away
-    return Electron.onMessage(Electron.messages.TEAR, async (appType: string) => {
-      const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
-      if (!(await pathExists(iconPath))) {
-        dialog.showErrorBox('No icon found for app...', 'Oops')
-        console.error('no icon!')
-        return
+    disposers.push(
+      Electron.onMessage(Electron.messages.TEAR_APP, async ({ appType, appId }) => {
+        console.log('Tearing app', appType, appId)
+
+        const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
+        if (!(await pathExists(iconPath))) {
+          dialog.showErrorBox('No icon found for app...', 'Oops')
+          console.error('no icon!', iconPath)
+          return
+        }
+        app.dock.setIcon(iconPath)
+        Electron.setIsTorn()
+        orbitShortcutsStore.dispose()
+
+        const proc = forkProcess({
+          name: 'orbit',
+          // TODO we can increment for each new orbit sub-process, need a counter here
+          // inspectPort: 9006,
+          // inspectPortRemote: 9007,
+        })
+
+        appProcesses.push({ appId, process: proc })
+      }),
+    )
+
+    disposers.push(
+      Electron.onMessage(Electron.messages.CLOSE_APP, ({ appId }) => {
+        const app = appProcesses.find(x => x.appId === appId)
+        if (!app) {
+          console.error('No process found for id', appId)
+          return
+        }
+        forceKillProcess(app.process)
+      }),
+    )
+
+    return () => {
+      for (const disposer of disposers) {
+        disposer()
       }
-      app.dock.setIcon(iconPath)
-      Electron.setIsTorn()
-      orbitShortcutsStore.dispose()
-      forkProcess({
-        name: 'orbit',
-        // TODO we can increment for each new orbit sub-process, need a counter here
-        // inspectPort: 9006,
-        // inspectPortRemote: 9007,
-      })
-      require('@mcro/orbit').main({ subOrbit: true })
-    })
+    }
   }, [])
 
   if (!store.size[0]) {

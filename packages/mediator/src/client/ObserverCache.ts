@@ -18,6 +18,7 @@ export type ObserverCacheEntry = {
   removeTimeout?: any
   key: string
   onDispose?: Function
+  isActive?: boolean
 }
 
 export const ObserverCache = {
@@ -36,7 +37,9 @@ export const ObserverCache = {
         key,
         args,
         subscriptions: new Set(),
+        // store this so its quick to check for updates
         denormalizedValues: {},
+        // store this so we keep the sort order
         rawValue: args.defaultValue,
         // we only update denormalized values
         get value() {

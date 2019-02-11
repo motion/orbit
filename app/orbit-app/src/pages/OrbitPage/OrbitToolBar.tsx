@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useApp } from '../../apps/AppView'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { BorderBottom } from '../../views/Border'
 
 const height = 32
 const minHeight = 3
@@ -23,7 +22,7 @@ export default observer(function OrbitToolBar() {
     <ToolbarChrome hasToolbars={hasToolBar}>
       <ToolbarInner hasToolbars={hasToolBar}>
         {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-        {hasToolBar && <BorderBottom opacity={0.5} />}
+        {/* {hasToolBar && <BorderBottom opacity={0.5} />} */}
       </ToolbarInner>
     </ToolbarChrome>
   )

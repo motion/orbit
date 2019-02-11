@@ -6,7 +6,7 @@ import { useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { searchGroupsToResults } from '../../stores/SearchStore'
+import { searchGroupsToResults } from '../search/SearchStore'
 import { ListAppProps } from './ListsApp'
 import { ListAppDataItemFolder, ListsAppBit } from './types'
 

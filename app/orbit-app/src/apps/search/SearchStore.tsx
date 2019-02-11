@@ -4,13 +4,13 @@ import { IntegrationType, SearchQuery, SearchResult, SearchResultModel } from '@
 import { useHook } from '@mcro/use-store'
 import { flatten, uniq } from 'lodash'
 import React from 'react'
-import { AppType } from '../apps/AppTypes'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { AppIcon } from '../views/AppIcon'
-import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
-import { SpaceIcon } from '../views/SpaceIcon'
-import { PaneManagerStore } from './PaneManagerStore'
-import { MarkType } from './QueryStore/types'
+import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
+import { MarkType } from '../../stores/QueryStore/types'
+import { AppIcon } from '../../views/AppIcon'
+import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import { SpaceIcon } from '../../views/SpaceIcon'
+import { AppType } from '../AppTypes'
 
 type SearchState = {
   results: OrbitListItemProps[]

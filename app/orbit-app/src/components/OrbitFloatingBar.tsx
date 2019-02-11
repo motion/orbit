@@ -1,12 +1,10 @@
 import { gloss } from '@mcro/gloss'
 import { Absolute, Row, Theme } from '@mcro/ui'
 import React, { useState } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
 import { HorizontalSpace } from '../views'
 import { FloatingBarButtonLarge } from '../views/FloatingBar/FloatingBarButtonLarge'
 
 export default function OrbitFloatingBar(props: { showSearch?: boolean; children?: any }) {
-  const { searchStore } = useStoresSafe()
   const [isShown, setIsShown] = useState(false)
   const [barHeight, setBarHeight] = useState(300)
   const topBarHeight = 60

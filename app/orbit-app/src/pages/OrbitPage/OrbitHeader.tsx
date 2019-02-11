@@ -118,7 +118,7 @@ function HeaderButton(props: ButtonProps) {
 }
 
 function OrbitEditAppButton() {
-  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const { orbitWindowStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
@@ -134,7 +134,7 @@ function OrbitEditAppButton() {
         icon="tool"
         tooltip="Edit app"
         onClick={async () => {
-          orbitStore.setTorn()
+          orbitWindowStore.setTorn(paneManagerStore.activePane.type)
           orbitStore.setEditing()
         }}
       >

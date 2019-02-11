@@ -1,22 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { observeMany } from '@mcro/model-bridge'
 import { AppModel, Source, SourceModel, Space, SpaceModel } from '@mcro/models'
-import { AppType } from '../apps/AppTypes'
 import { getAppFromSource } from './SourcesStore'
-
-export type Pane = {
-  id: string
-  type: AppType
-  title: string
-  icon: string
-  show?: boolean
-  trigger?: string
-  static?: boolean
-  isHidden?: boolean
-  props?: {
-    preventScroll?: boolean
-  }
-}
 
 export class SpaceStore {
   spaces: Space[] = []

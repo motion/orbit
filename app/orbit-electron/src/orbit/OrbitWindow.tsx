@@ -211,6 +211,7 @@ export default observer(function OrbitWindow() {
 
     disposers.push(
       Electron.onMessage(Electron.messages.CLOSE_APP, ({ appId }) => {
+        console.log('got close app', appProcesses, appId)
         const app = appProcesses.find(x => x.appId === appId)
         if (!app) {
           console.error('No process found for id', appId)

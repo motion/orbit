@@ -35,7 +35,7 @@ class OrbitNavStore {
 }
 
 export default observer(function OrbitNav() {
-  const { spaceStore, orbitStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { spaceStore, orbitWindowStore, paneManagerStore, newAppStore } = useStoresSafe()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeAppsSorted = useActiveAppsSorted()
@@ -45,7 +45,7 @@ export default observer(function OrbitNav() {
 
   console.debug('OrbitNa')
 
-  if (orbitStore.isTorn) {
+  if (orbitWindowStore.isTorn) {
     if (!paneManagerStore.activePane) {
       console.error('no active pane?')
     }
@@ -113,7 +113,7 @@ export default observer(function OrbitNav() {
           onClickPopout:
             !isPinned &&
             (() => {
-              orbitStore.setTorn()
+              orbitWindowStore.setTorn(paneManagerStore.activePane.type)
             }),
         }
       },

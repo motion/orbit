@@ -51,6 +51,7 @@ export class PaneManagerStore {
   }
 
   setTorn() {
+    this.paneIndex = 0
     this.isTorn = true
   }
 

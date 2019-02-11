@@ -41,13 +41,13 @@ export default observer(function MainShortcutHandler(props: {
   children?: React.ReactNode
   handlers?: any
 }) {
-  const { newAppStore, orbitStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { newAppStore, orbitWindowStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
 
   let handlers: any = {
     commandNew: () => newAppStore.setShowCreateNew(true),
     commandOpen: () => {
-      orbitStore.setTorn()
+      orbitWindowStore.setTorn(paneManagerStore.activePane.type)
     },
     switchSpaces: () => {
       paneManagerStore.setActivePaneByType('spaces')

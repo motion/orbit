@@ -8,7 +8,7 @@ export function tearApp(stores: AllStores) {
     const { allApps } = App.state
 
     console.log('Tearing away app', type)
-    const previousApps = allApps.slice(allApps.length - 1)
+    const previousApps = allApps.slice(0, allApps.length - 1)
 
     // update current app to persist the type
     const currentApp = {

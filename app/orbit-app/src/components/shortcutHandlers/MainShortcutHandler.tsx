@@ -3,7 +3,7 @@ import { PopoverState } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useActions } from '../../actions'
+import { useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -42,14 +42,15 @@ export default observer(function MainShortcutHandler(props: {
   children?: React.ReactNode
   handlers?: any
 }) {
-  const { newAppStore, orbitWindowStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { newAppStore, queryStore, paneManagerStore } = useStoresSafe()
   const shortcutStore = useStore(ShortcutStore)
-  const actions = useActions()
+  const Actions = useActions()
 
   let handlers: any = {
     commandNew: () => newAppStore.setShowCreateNew(true),
     commandOpen: () => {
-      // actions.
+      console.log('tear app', Actions.tearApp)
+      Actions.tearApp()
     },
     switchSpaces: () => {
       paneManagerStore.setActivePaneByType('spaces')

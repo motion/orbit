@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { isEqual, once, uniqBy } from 'lodash'
 import { observer, useObservable, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Actions, ActionsContext } from '../../actions'
+import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
@@ -14,7 +14,7 @@ import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutH
 import { APP_ID } from '../../constants'
 import { StoreContext } from '../../contexts'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
-import { getIsTorn } from '../../helpers/getAppHelpers'
+import { getAppState, getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
@@ -41,7 +41,7 @@ export default React.memo(function OrbitPage() {
   useManagePaneSort()
 
   return (
-    <ActionsContext.Provider value={Actions}>
+    <ActionsContext.Provider value={defaultActions}>
       <OrbitPageProvideStores>
         <OrbitPageInner />
       </OrbitPageProvideStores>
@@ -50,7 +50,7 @@ export default React.memo(function OrbitPage() {
 })
 
 const OrbitPageInner = observer(function OrbitPageInner() {
-  const { orbitWindowStore, paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStoresSafe()
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'
   const shortcutState = React.useRef({
@@ -138,7 +138,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
                 {/* above bottom below active tab */}
                 {/* <BorderBottom zIndex={10000000} /> */}
               </OrbitHeaderContainer>
-              <InnerChrome torn={orbitWindowStore.isTorn}>
+              <InnerChrome torn={getIsTorn()}>
                 <OrbitToolBar />
                 <OrbitContentArea>
                   <OrbitSidebar />
@@ -203,9 +203,10 @@ function getPanes(apps: AppBit[]): Pane[] {
   const isTorn = getIsTorn()
   if (isTorn) {
     // torn window panes, remove the others besides active app + settings
-    const app = apps.find(app => app.id === APP_ID)
+    const appState = getAppState()
+    const app = apps.find(app => app.id === appState.appId)
     if (!app) {
-      console.warn(`No app found! ${APP_ID}, ${JSON.stringify(apps)}`)
+      console.warn(`No app found! ${JSON.stringify(appState)}`)
       return [settingsPane]
     }
     return [appToPane(app), settingsPane]

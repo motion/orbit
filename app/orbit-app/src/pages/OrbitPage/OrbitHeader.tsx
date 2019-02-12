@@ -4,8 +4,7 @@ import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
-import { useActions } from '../../actions'
-import { AppActions } from '../../actions/AppActions'
+import { useActions } from '../../actions/Actions'
 import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { getIsTorn } from '../../helpers/getAppHelpers'
@@ -30,12 +29,12 @@ export default observer(function OrbitHeader() {
   return (
     <>
       <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
-        <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
+        <OrbitClose dontDim={isTorn}>
           <WindowControls
             itemProps={{ size: 10 }}
             onClose={() => {
               if (isTorn) {
-                console.log('close me')
+                console.log('close me...app')
               } else {
                 App.setOrbitState({ docked: !App.orbitState.docked })
               }
@@ -141,7 +140,7 @@ function HeaderButton(props: ButtonProps) {
 }
 
 function OrbitEditAppButton() {
-  const { orbitWindowStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)

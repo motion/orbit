@@ -144,7 +144,7 @@ const dark = {
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
-    background: '#353353',
+    background: '#35335399',
     backgroundHover: '#555',
     backgroundActive: '#444',
     color: '#fff',

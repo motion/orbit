@@ -33,7 +33,7 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
-  appId = last(App.state.allApps).appId
+  windowID = last(App.state.allApps).id
 
   didMount() {
     // screen events
@@ -153,8 +153,8 @@ export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const appQuery = `/?id=${store.appId}`
-  const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
+  const appQuery = `/?id=${store.windowID}`
+  const url = `${Config.urls.server}${store.windowID > 0 ? appQuery : ''}`
   const vibrancy = App.state.isDark ? 'ultra-dark' : 'light'
 
   log.info(

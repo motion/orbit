@@ -99,7 +99,7 @@ export default observer(function OrbitHeader() {
         <OrbitEditAppButton />
 
         {isEditing && (
-          <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+          <Absolute top={0} right={32} bottom={0} alignItems="center" justifyContent="center">
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
               <HorizontalSpace small />
@@ -109,12 +109,12 @@ export default observer(function OrbitHeader() {
         )}
 
         {isTorn && (
-          <Absolute top={3} right={3}>
+          <Absolute top={0} right={3} bottom={0} alignItems="center" justifyContent="center">
             <Button
               chromeless
-              opacity={0.6}
+              opacity={0.3}
               hoverStyle={{
-                opacity: 1,
+                opacity: 8,
               }}
               icon="gear"
               onClick={() => {

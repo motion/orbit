@@ -1,17 +1,21 @@
 import { gloss, Row } from '@mcro/gloss'
-import { SegmentedRow, View } from '@mcro/ui'
+import { Bit } from '@mcro/models'
+import { Popover, SegmentedRow, View } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'
+import SearchItemShare, { SearchItemShareProvide } from '../../../apps/search/SearchItemShare'
 import { NormalItem } from '../../../helpers/normalizeItem'
+import { HorizontalSpace } from '../../../views'
 import { TitleBarButton } from './TitleBarButton'
 import { TitleBarSpace } from './TitleBarSpace'
 
 export class BitTitleBar extends React.Component<{
   searchBar: any
+  bit: Bit
   normalizedItem: NormalItem
 }> {
   render() {
-    const { searchBar, normalizedItem } = this.props
+    const { bit, searchBar, normalizedItem } = this.props
     return (
       <ToolbarChrome>
         {searchBar}
@@ -33,10 +37,29 @@ export class BitTitleBar extends React.Component<{
               AppActions.setOrbitDocked(false)
             }}
             tooltip="Open"
+            iconAfter
           >
             Open
           </TitleBarButton>
         </SegmentedRow>
+
+        <HorizontalSpace />
+
+        <SearchItemShareProvide item={bit}>
+          <Popover
+            openOnClick
+            closeOnClickAway
+            distance={5}
+            width={250}
+            height={300}
+            target={<TitleBarButton tooltip="Open" icon="dots" />}
+            background
+            borderRadius={10}
+            elevation={1}
+          >
+            {isShown => isShown && <SearchItemShare />}
+          </Popover>
+        </SearchItemShareProvide>
       </ToolbarChrome>
     )
   }

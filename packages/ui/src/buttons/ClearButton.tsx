@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Icon } from '../Icon'
 
 const ClearClickableArea = gloss(View, {
+  height: '100%',
   padding: 5,
   transition: 'all ease 450ms 100ms',
   opacity: 1,

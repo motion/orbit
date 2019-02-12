@@ -11,7 +11,7 @@ type SearchChildProps = {
 }
 
 type Props = {
-  appStore: AppStore<any>
+  appStore: AppStore
   selectionStore?: SelectionStore
   children: (a: SearchChildProps) => React.ReactNode
 }

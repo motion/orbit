@@ -145,7 +145,7 @@ export class Logger {
       ]
 
     const isTrace = this.opts.trace && process.env.NODE_ENV === 'development'
-    const loggingEnabled = !process.env.DISABLE_LOGGING || process.env.PROCESS_NAME === 'syncers'
+    const loggingEnabled = !process.env.DISABLE_LOGGING || process.env.PROCESS_NAME !== 'syncers'
 
     // adds a stack trace
     // only do this in development it adds a decent amount of overhead

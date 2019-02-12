@@ -80,7 +80,7 @@ export function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={!label ? -8 : 0}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}

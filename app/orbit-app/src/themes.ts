@@ -67,7 +67,7 @@ const light = {
     borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-    headerBackground: linearGradient([255, 255, 255, 0.6], [255, 255, 255, 0.6]),
+    headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.85]),
     sidebarBackground: [255, 255, 255, 0.85],
     tabBackgroundTop: lightBackground.alpha(0.65),
     tabBackgroundBottom: lightBackground,

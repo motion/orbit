@@ -109,13 +109,11 @@ export default observer(function SearchAppIndex(props: SearchAppProps) {
   )
 
   return (
-    <>
-      <SelectableList
-        minSelected={0}
-        items={items}
-        query={props.appStore.activeQuery}
-        getItemProps={getItemProps}
-      />
-    </>
+    <SelectableList
+      minSelected={0}
+      items={items}
+      query={props.appStore.activeQuery}
+      getItemProps={getItemProps}
+    />
   )
 })

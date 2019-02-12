@@ -43,7 +43,7 @@ function SearchToolBar() {
         tooltip={`Sort by: ${queryFilters.sortBy}`}
         icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
       >
-        Sort
+        {queryFilters.sortBy}
       </FloatingBarButton>
       <View flex={1} />
       <OrbitSuggestionBar />

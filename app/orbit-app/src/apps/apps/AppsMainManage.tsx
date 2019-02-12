@@ -7,10 +7,10 @@ import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { Title } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
+import { TitleRow } from '../../views/TitleRow'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode
@@ -113,7 +113,7 @@ export default function AppsMainManage() {
 
   return (
     <Section sizePadding={2}>
-      <Title>Apps</Title>
+      <TitleRow bordered>Apps</TitleRow>
       <SelectableGrid
         margin="auto"
         items={results}

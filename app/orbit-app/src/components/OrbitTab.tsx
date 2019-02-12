@@ -204,7 +204,7 @@ const NavButtonChrome = gloss<TabProps>({
   transform: {
     y: 1.5,
   },
-}).theme(({ isActive, stretch }, theme) => {
+}).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
 
   const glowStyle = {
@@ -213,7 +213,7 @@ const NavButtonChrome = gloss<TabProps>({
   }
 
   return {
-    width: stretch ? 150 : 'auto',
+    width: stretch ? width || 150 : 'auto',
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],

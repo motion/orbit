@@ -80,7 +80,7 @@ export function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={!label ? -8 : 0}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-2%' : 0}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}
@@ -213,6 +213,7 @@ const NavButtonChrome = gloss<TabProps>({
   }
 
   return {
+    zIndex: isActive ? 1000000000 : 0,
     width: stretch ? width || 150 : 'auto',
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,

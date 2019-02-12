@@ -89,7 +89,7 @@ export default observer(function OrbitNav() {
           isActive,
           icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
-          iconSize: isPinned ? 16 : 12,
+          iconSize: isPinned ? 18 : 12,
           getContext() {
             return [
               {
@@ -232,14 +232,14 @@ export default observer(function OrbitNav() {
           thicc
         />
       </OrbitNavChrome>
-      <BorderBottom zIndex={-1} opacity={0.65} />
+      <BorderBottom zIndex={100} />
     </OrbitNavClip>
   )
 })
 
 const OrbitNavClip = gloss({
   flex: 1,
-  zIndex: 10000000000,
+  // zIndex: 10000000000,
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],

@@ -1,5 +1,5 @@
-import { observeOne, save } from '@mcro/model-bridge'
-import { SettingModel, Setting } from '@mcro/models'
+import { observeOne, save } from '../mediator'
+import { Setting, SettingModel } from '@mcro/models'
 import { generalSettingQuery } from '../helpers/queries'
 
 export class SettingStore {

@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { save } from '@mcro/model-bridge'
+import { save } from '../mediator'
 import { AppModel, ListsApp, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'

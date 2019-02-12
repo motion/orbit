@@ -1,4 +1,4 @@
-import { loadOne } from '@mcro/model-bridge'
+import { loadOne } from '../mediator'
 import { Person, PersonBitModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'

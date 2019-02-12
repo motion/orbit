@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { observeMany } from '@mcro/model-bridge'
+import { observeMany } from '../mediator'
 import { IntegrationType, Source, SourceModel } from '@mcro/models'
 import { keyBy } from 'lodash'
 import { AppConfig, AppType } from '../apps/AppTypes'

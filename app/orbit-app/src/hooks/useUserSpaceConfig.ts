@@ -1,4 +1,4 @@
-import { loadOne, save } from '@mcro/model-bridge'
+import { loadOne, save } from '../mediator'
 import { Space, SpaceModel, User, UserModel } from '@mcro/models'
 import immer from 'immer'
 import { useEffect } from 'react'

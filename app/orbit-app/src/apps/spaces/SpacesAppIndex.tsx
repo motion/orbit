@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../../useModel'
 import { SpaceModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import * as React from 'react'

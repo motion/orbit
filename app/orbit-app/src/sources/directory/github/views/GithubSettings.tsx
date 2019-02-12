@@ -1,4 +1,4 @@
-import { loadMany } from '@mcro/model-bridge'
+import { loadMany } from '../../../../mediator'
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import * as React from 'react'

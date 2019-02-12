@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { save } from '@mcro/model-bridge'
+import { save } from '../../mediator'
 import { AppModel } from '@mcro/models'
 import { BorderBottom, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'

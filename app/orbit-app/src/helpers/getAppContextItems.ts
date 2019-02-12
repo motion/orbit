@@ -1,4 +1,4 @@
-import { remove } from '@mcro/model-bridge'
+import { remove } from '../mediator'
 import { App, AppModel } from '@mcro/models'
 import { showConfirmDialog } from './electron/showConfirmDialog'
 

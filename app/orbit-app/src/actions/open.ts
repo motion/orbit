@@ -1,4 +1,4 @@
-import { command } from '@mcro/model-bridge'
+import { command } from '../mediator'
 import { Bit, OpenCommand, PersonBit } from '@mcro/models'
 import { App, Electron } from '@mcro/stores'
 import { AppActions } from './AppActions'

@@ -1,6 +1,6 @@
 import { sleep } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { command } from '@mcro/model-bridge'
+import { command } from '../../mediator'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'

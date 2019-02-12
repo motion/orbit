@@ -1,10 +1,11 @@
 import { ensure, react, store } from '@mcro/black'
-import { observeMany } from '@mcro/model-bridge'
+import { observeMany } from '../../mediator'
 import { PersonBitModel } from '@mcro/models'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
 import { QueryStore } from './QueryStore'
 import { NLPResponse } from './types'
+
 const { parseSearchQuery, setUserNames } = initNlp()
 
 // to run it on thread

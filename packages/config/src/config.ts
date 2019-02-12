@@ -28,6 +28,7 @@ export type GlobalConfig = {
     mediator: number
     desktopMediator: number
     syncersMediator: number
+    electronMediator: number
     auth: number
     authProxy: number
     apps: number[]

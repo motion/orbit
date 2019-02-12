@@ -14,5 +14,4 @@ export function installGlobals(syncersRoot: OrbitSyncersRoot) {
   root['Mobx'] = Mobx
   root['toJS'] = Mobx.toJS
   root['Models'] = Models
-  root['Bridge'] = require('@mcro/model-bridge')
 }

@@ -1,4 +1,4 @@
-import { useModel } from '@mcro/model-bridge'
+import { useModel } from '../useModel'
 import { userDefaultValue, UserModel } from '@mcro/models'
 
 export function useActiveUser() {

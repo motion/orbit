@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { loadMany, observeOne } from '@mcro/model-bridge'
+import { loadMany, observeOne } from '../../mediator'
 import { AppModel, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'

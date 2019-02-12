@@ -11,7 +11,7 @@ export class WebSocketClientTransport implements ClientTransport {
     id: number
     type: string
     name: string
-    onSuccess: Function
+    onSuccess: (response: TransportResponse) => any
     onError: Function
   }[] = []
   private onConnectedCallbacks: (() => void)[] = []
@@ -58,7 +58,7 @@ export class WebSocketClientTransport implements ClientTransport {
   /**
    * Creates a new observable that listens to the server events for the requested operation.
    */
-  observe(type: TransportRequestType, values: TransportRequestValues): Observable<any> {
+  observe(type: TransportRequestType, values: TransportRequestValues): Observable<TransportResponse> {
     const id = ++this.operationsCounter // don't change - can lead to wrong id
     const data = {
       id: this.name + '_' + id,
@@ -126,12 +126,12 @@ export class WebSocketClientTransport implements ClientTransport {
   /**
    * Executes a single-time command and returns results emitted by the server.
    */
-  execute(type: TransportRequestType, values: TransportRequestValues): Promise<any> {
+  execute(type: TransportRequestType, values: TransportRequestValues): Promise<TransportResponse> {
     const id = ++this.operationsCounter // don't change - will lead to wrong id
     const query = {
+      ...values,
       id: this.name + '_' + id,
       type,
-      ...values,
     }
     return new Promise((resolve, fail) => {
       // we need to send request to the server - here we create a function that does it
@@ -207,6 +207,6 @@ export class WebSocketClientTransport implements ClientTransport {
       })
     }
 
-    subscription.onSuccess(data.result)
+    subscription.onSuccess(data)
   }
 }

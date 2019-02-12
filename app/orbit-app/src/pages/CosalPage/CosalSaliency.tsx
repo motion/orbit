@@ -2,7 +2,7 @@ import * as React from 'react'
 import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
-import { loadMany } from '@mcro/model-bridge'
+import { loadMany } from '../../mediator'
 import { CosalSaliencyModel } from '@mcro/models'
 import { gloss } from '@mcro/gloss'
 

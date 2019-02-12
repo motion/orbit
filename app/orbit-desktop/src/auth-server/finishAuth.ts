@@ -1,4 +1,3 @@
-import { SourceEntity, SpaceEntity } from '@mcro/models'
 import {
   DriveSource,
   GmailSource,
@@ -6,6 +5,8 @@ import {
   SlackSource,
   SlackSourceValues,
   Source,
+  SourceEntity,
+  SpaceEntity,
 } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
@@ -26,7 +27,7 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
     type = 'drive'
   }
 
-  const setting: Source = {
+  const source: Source = {
     spaces: [await getRepository(SpaceEntity).findOne(1)], // todo: we need to receive space id instead of hard codding it
     target: 'source',
     category: 'integration',
@@ -38,32 +39,40 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
     } as any,
   }
 
-  if (setting.type === 'slack') {
-    const loader = new SlackLoader(setting as SlackSource)
+  if (source.type === 'slack') {
+    const loader = new SlackLoader(source as SlackSource)
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = setting.values as SlackSourceValues
+    const values = source.values as SlackSourceValues
     values.team = {
       id: team.id,
       name: team.name,
       domain: team.domain,
       icon: team.icon.image_132,
     }
-    setting.name = team.name
-  } else if (setting.type === 'github') {
-    setting.name = values.info.username
-  } else if (setting.type === 'drive') {
+    source.name = team.name
+  } else if (source.type === 'github') {
+    source.name = values.info.username
+  } else if (source.type === 'drive') {
     // load account info
-    const loader = new DriveLoader(setting as DriveSource)
+    const loader = new DriveLoader(source as DriveSource)
     const about = await loader.loadAbout()
-    setting.name = about.user.emailAddress
-  } else if (setting.type === 'gmail') {
+    source.name = about.user.emailAddress
+  } else if (source.type === 'gmail') {
     // load account info
-    const loader = new GMailLoader(setting as GmailSource)
+    const loader = new GMailLoader(source as GmailSource)
     const profile = await loader.loadProfile()
-    setting.name = profile.emailAddress
+    source.name = profile.emailAddress
   }
 
-  await getRepository(SourceEntity).save(setting)
+  // check if we already have a source with the same name and type - then just ignore it
+  const sourceWithSameName = await getRepository(SourceEntity).findOne({
+    name: source.name,
+    type: source.type
+  })
+  if (!sourceWithSameName) {
+    await getRepository(SourceEntity).save(source)
+  }
+
 }

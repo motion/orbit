@@ -27,6 +27,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
     mediator,
     desktopMediator,
     syncersMediator,
+    electronMediator,
     screenBridge,
     ocrBridge,
     auth,
@@ -65,6 +66,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
       authProxy,
       apps,
       syncersMediator,
+      electronMediator,
     },
   }
 

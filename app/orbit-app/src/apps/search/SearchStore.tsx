@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany } from '@mcro/model-bridge'
+import { loadMany } from '../../mediator'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'

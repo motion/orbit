@@ -1,4 +1,4 @@
-import { loadOne } from '@mcro/model-bridge'
+import { loadOne } from '../../mediator'
 import { BitModel, ListAppDataItem, PersonBitModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import React from 'react'

@@ -76,7 +76,7 @@ export function OrbitTab({
               boxShadow={[['inset', 0, 1, theme.glintColor || theme.background.alpha(0.5)]]}
               transform={{ y: -0.5 }}
             />
-            <BorderBottom opacity={0.5} transform={{ y: 0 }} />
+            <BorderBottom opacity={0.15} transform={{ y: 0 }} />
           </>
         )}
 
@@ -221,7 +221,7 @@ const NavButtonChrome = gloss<TabProps>({
     boxShadow: isActive
       ? [
           [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
-          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.85)],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,

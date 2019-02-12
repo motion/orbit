@@ -215,7 +215,7 @@ export default observer(function OrbitNav() {
           thicc
         />
       </OrbitNavChrome>
-      <BorderBottom zIndex={-1} />
+      <BorderBottom zIndex={-1} opacity={0.5} />
     </OrbitNavClip>
   )
 })

@@ -50,25 +50,17 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <View flex={1} />
 
-          {/* {isTorn && toolbars && (
-            <>
-              {toolbars.before}
-              <View flex={1} />
-            </>
-          )} */}
           <HeaderContain>
             <View width={24} alignItems="center" justifyContent="center">
-              <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
+              <Icon
+                color={theme.color}
+                name={`orbit-${icon}`}
+                size={20}
+                opacity={theme.color.isDark() ? 0.4 : 0.2}
+              />
             </View>
 
             <OrbitHeaderInput />
-
-            {/* {isTorn && toolbars && (
-              <>
-                <View flex={1} />
-                {toolbars.after}
-              </>
-            )} */}
 
             <SegmentedRow>
               <Popover

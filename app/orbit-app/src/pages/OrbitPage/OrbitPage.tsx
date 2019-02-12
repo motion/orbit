@@ -182,6 +182,7 @@ function appToPane(app: AppBit): Pane {
     id: `${app.id}`,
     keyable: true,
     subType: 'app',
+    name: app.name,
   }
 }
 

@@ -4,22 +4,23 @@ import { createElement, getHostContextNode } from '../utils/createElement'
 const emptyObject = {}
 const noop = () => {}
 
-// function traceWrap(hostConfig) {
-//   let traceWrappedHostConfig = {}
-//   Object.keys(hostConfig).map(key => {
-//     const func = hostConfig[key]
-//     traceWrappedHostConfig[key] = (...args) => {
-//       console.trace(key)
-//       return func(...args)
-//     }
-//   })
-//   return traceWrappedHostConfig
-// }
-
 let scheduledCallback = null
-let scheduledCallbackTimeout = -1
-let scheduledPassiveCallback = null
-let elapsedTimeInMs = 0
+function setTimeoutCallback() {
+  const callback = scheduledCallback
+  scheduledCallback = null
+  if (callback !== null) {
+    callback()
+  }
+}
+function scheduleDeferredCallback(callback) {
+  scheduledCallback = callback
+  const timeoutId = setTimeout(setTimeoutCallback, 1)
+  return timeoutId
+}
+function cancelDeferredCallback(callbackID) {
+  scheduledCallback = null
+  clearTimeout(callbackID)
+}
 
 const HostConfig = {
   now: Date.now,
@@ -101,39 +102,8 @@ const HostConfig = {
     textInstance.children = newText
   },
 
-  schedulePassiveEffects(callback) {
-    if (scheduledCallback) {
-      throw new Error(
-        'Scheduling a callback twice is excessive. Instead, keep track of ' +
-          'whether the callback has already been scheduled.',
-      )
-    }
-    scheduledPassiveCallback = callback
-  },
-
-  cancelPassiveEffects() {
-    if (scheduledPassiveCallback === null) {
-      throw new Error('No passive effects callback is scheduled.')
-    }
-    scheduledPassiveCallback = null
-  },
-
-  scheduleDeferredCallback(callback, options) {
-    if (scheduledCallback) {
-      throw new Error(
-        'Scheduling a callback twice is excessive. Instead, keep track of ' +
-          'whether the callback has already been scheduled.',
-      )
-    }
-    scheduledCallback = callback
-    if (typeof options === 'object' && options !== null && typeof options.timeout === 'number') {
-      const newTimeout = options.timeout
-      if (scheduledCallbackTimeout === -1 || scheduledCallbackTimeout > newTimeout) {
-        scheduledCallbackTimeout = elapsedTimeInMs + newTimeout
-      }
-    }
-    return 0
-  },
+  schedulePassiveEffects: scheduleDeferredCallback,
+  cancelPassiveEffects: cancelDeferredCallback,
 }
 
 export default Reconciler(HostConfig)

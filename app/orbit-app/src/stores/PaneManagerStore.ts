@@ -16,12 +16,13 @@ export type Pane = {
 export class PaneManagerStore {
   props: {
     disabled?: boolean
-    panes: Pane[]
+    defaultPanes: Pane[]
     onPaneChange: (index: number, pane: Pane) => any
     defaultPaneIndex?: number
   }
 
   paneIndex = this.props.defaultPaneIndex || 0
+  panes = this.props.defaultPanes
 
   syncPaneIndexProp = react(
     () => this.props.defaultPaneIndex,
@@ -33,11 +34,11 @@ export class PaneManagerStore {
     },
   )
 
-  get panes() {
-    return this.props.panes
+  setPanes(panes: Pane[]) {
+    this.panes = panes
   }
 
-  get activePane() {
+  get activePane(): Pane {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
@@ -105,7 +106,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.error(`no pane found! this.props.panes`, this.panes, index)
+      console.error(`no pane found at index ${index}! this.props.panes`, this.panes)
       return
     }
     if (index !== this.paneIndex) {

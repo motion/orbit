@@ -154,5 +154,5 @@ export const SearchBox = gloss(View, {
   },
 }).theme((_, theme) => ({
   background: theme.background,
-  border: [1, theme.borderColor.alpha(0.5)],
+  border: [1, theme.borderColor.alpha(a => a * 0.5)],
 }))

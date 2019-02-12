@@ -15,6 +15,7 @@
     "jsx": "react",
     "allowJs": true,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "lib": ["es2017", "es2018", "dom"]
   },
   "typeAcquisition": {

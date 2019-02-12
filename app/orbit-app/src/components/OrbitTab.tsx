@@ -6,7 +6,7 @@ import { invertLightness } from '../../../../packages/color/_/color'
 import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 28
+export const tabHeight = 30
 const inactiveOpacity = 0.45
 const borderSize = 5
 
@@ -50,7 +50,7 @@ export function OrbitTab({
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
-  const iconSize = iconSizeProp || (thicc ? 12 : 10)
+  const iconSize = iconSizeProp || (thicc ? 12 : 11)
   const theme = useTheme()
 
   const button = (
@@ -76,7 +76,7 @@ export function OrbitTab({
               boxShadow={[['inset', 0, 1, theme.glintColor || theme.background.alpha(0.5)]]}
               transform={{ y: -0.5 }}
             />
-            <BorderBottom opacity={0.5} transform={{ y: 0 }} />
+            <BorderBottom opacity={0.15} transform={{ y: 0 }} />
           </>
         )}
 
@@ -85,7 +85,7 @@ export function OrbitTab({
             <OrbitTabIcon
               isActive={isActive}
               name={`${icon}`}
-              marginRight={!!label ? sidePad * 0.6 : 0}
+              marginRight={!!label ? sidePad * 0.7 : 0}
               thicc={thicc}
               size={iconSize}
               iconAdjustOpacity={iconAdjustOpacity}
@@ -221,7 +221,7 @@ const NavButtonChrome = gloss<TabProps>({
     boxShadow: isActive
       ? [
           [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
-          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor],
+          ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.6)],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]
       : null,
@@ -250,5 +250,5 @@ const Separator = gloss({
   },
   width: 1,
 }).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.borderColor.alpha(0.65)})`,
+  background: `linear-gradient(transparent, ${theme.borderColor.alpha(alpha => alpha * 0.65)})`,
 }))

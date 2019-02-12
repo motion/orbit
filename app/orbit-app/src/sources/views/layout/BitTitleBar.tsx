@@ -47,5 +47,5 @@ const ToolbarChrome = gloss(Row, {
   height: 38,
   padding: [5, 10],
 }).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.2)],
+  borderBottom: [1, theme.borderColor.alpha(a => a * 0.2)],
 }))

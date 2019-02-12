@@ -9,6 +9,7 @@ import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'electron'
 import { pathExists } from 'fs-extra'
 import root from 'global'
+import { last } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
@@ -32,7 +33,7 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
-  appId = App.state.appCount
+  windowID = last(App.state.allApps).id
 
   didMount() {
     // screen events
@@ -57,13 +58,17 @@ class OrbitWindowStore {
     screenSize => {
       ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
-      let scl = 0.72
+      let scl = 0.76
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide
       w = Math.min(h * 1.4, w)
-      const maxSize = [1600, 1000]
-      this.size = [w, h].map(x => Math.round(x)).map((x, i) => Math.min(maxSize[i], x))
+      const maxSize = [1600, 1100]
+      const minSize = [900, 720]
+      this.size = [w, h]
+        .map(x => Math.round(x))
+        .map((x, i) => Math.min(maxSize[i], x))
+        .map((x, i) => Math.max(minSize[i], x))
       // centered
       const TOOLBAR_HEIGHT = 23
       this.position = [
@@ -148,8 +153,8 @@ export default observer(function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const appQuery = `/?appId=${store.appId}`
-  const url = `${Config.urls.server}${store.appId > 0 ? appQuery : ''}`
+  const appQuery = `/?id=${store.windowID}`
+  const url = `${Config.urls.server}${store.windowID > 0 ? appQuery : ''}`
   const vibrancy = App.state.isDark ? 'ultra-dark' : 'light'
 
   log.info(
@@ -207,6 +212,7 @@ export default observer(function OrbitWindow() {
 
     disposers.push(
       Electron.onMessage(Electron.messages.CLOSE_APP, ({ appId }) => {
+        console.log('got close app', appProcesses, appId)
         const app = appProcesses.find(x => x.appId === appId)
         if (!app) {
           console.error('No process found for id', appId)

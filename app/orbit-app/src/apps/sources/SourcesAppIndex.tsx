@@ -24,7 +24,7 @@ export default observer(function SourcesAppIndex(_props: AppProps) {
 
   const results = [
     {
-      title: 'Manage Apps',
+      title: 'App Settings',
       group: activeSpace.name,
       icon: 'orbit-apps-full',
       iconBefore: true,

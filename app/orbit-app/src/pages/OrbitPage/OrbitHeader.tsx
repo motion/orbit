@@ -1,35 +1,42 @@
-import { Absolute, FullScreen, gloss, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, PassProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { DateRangePicker } from 'react-date-range'
-import { AppActions } from '../../actions/AppActions'
+import { useActions } from '../../actions/Actions'
+import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
+import { getIsTorn } from '../../helpers/getAppHelpers'
+import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { HorizontalSpace } from '../../views'
 import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
+import OrbitNav from './OrbitNav'
 
 export default observer(function OrbitHeader() {
-  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
-  const { isTorn, isEditing } = orbitStore
+  const isTorn = getIsTorn()
+  const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore
   const theme = useTheme()
 
   return (
-    <>
-      <HeaderTop padding={isTorn ? [2, 10] : [7, 10]}>
-        <OrbitClose dontDim={isTorn} onClick={AppActions.closeOrbit}>
+    <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+      <OrbitHeaderEditingBg isActive={isEditing} />
+      <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
+        <OrbitClose dontDim={isTorn}>
           <WindowControls
             itemProps={{ size: 10 }}
             onClose={() => {
               if (isTorn) {
-                console.log('close me')
+                console.log('close me...app')
               } else {
                 App.setOrbitState({ docked: !App.orbitState.docked })
               }
@@ -43,25 +50,17 @@ export default observer(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <View flex={1} />
 
-          {/* {isTorn && toolbars && (
-            <>
-              {toolbars.before}
-              <View flex={1} />
-            </>
-          )} */}
           <HeaderContain>
             <View width={24} alignItems="center" justifyContent="center">
-              <Icon color={theme.color} name={`orbit-${icon}`} size={20} opacity={0.12} />
+              <Icon
+                color={theme.color}
+                name={`orbit-${icon}`}
+                size={20}
+                opacity={theme.color.isDark() ? 0.4 : 0.2}
+              />
             </View>
 
             <OrbitHeaderInput />
-
-            {/* {isTorn && toolbars && (
-              <>
-                <View flex={1} />
-                {toolbars.after}
-              </>
-            )} */}
 
             <SegmentedRow>
               <Popover
@@ -91,25 +90,96 @@ export default observer(function OrbitHeader() {
           <View flex={1} />
         </Row>
 
+        <OrbitEditAppButton />
+
         {isEditing && (
-          <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
-            <SegmentedRow>
-              <PassProps size={0.9} sizeHeight={0.9}>
-                <Button icon="edit" tooltip="Open in VSCode">
-                  Open
-                </Button>
-                <Button tooltip="Deploy to space">Save</Button>
-              </PassProps>
-            </SegmentedRow>
+          <Absolute top={0} right={32} bottom={0} alignItems="center" justifyContent="center">
+            <Row>
+              <HeaderButton icon="edit" tooltip="Open in VSCode" />
+              <HorizontalSpace small />
+              <Theme name="selected">
+                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+              </Theme>
+            </Row>
           </Absolute>
         )}
 
-        {isTorn && <BorderBottom opacity={0.35} />}
+        {isTorn && (
+          <Absolute top={0} right={3} bottom={0} alignItems="center" justifyContent="center">
+            <Button
+              chromeless
+              opacity={0.3}
+              hoverStyle={{
+                opacity: 8,
+              }}
+              icon="gear"
+              onClick={() => {
+                if (paneManagerStore.activePane.type === 'settings') {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
+            />
+          </Absolute>
+        )}
+
+        {isTorn && <BorderBottom opacity={0.25} />}
       </HeaderTop>
       <HeaderFade />
-    </>
+      <OrbitNav />
+    </OrbitHeaderContainer>
   )
 })
+
+function HeaderButton(props: ButtonProps) {
+  return <Button size={0.9} sizeHeight={0.9} {...props} />
+}
+
+function OrbitEditAppButton() {
+  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const activePaneId = paneManagerStore.activePane.id
+  const activeApps = useActiveApps()
+  const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
+  const show = activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing
+  const Actions = useActions()
+
+  if (!show) {
+    return null
+  }
+
+  return (
+    <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+      <HeaderButton
+        icon="tool"
+        tooltip="Edit app"
+        onClick={async () => {
+          Actions.tearApp()
+          orbitStore.setEditing()
+        }}
+      >
+        Edit
+      </HeaderButton>
+    </Absolute>
+  )
+}
+
+const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
+  zIndex: -1,
+  transition: 'all ease-in 500ms',
+}).theme(({ isActive }, theme) => ({
+  background: isActive
+    ? linearGradient(theme.selected.background, theme.selected.background.darken(0.1))
+    : 'transparent',
+}))
+
+const OrbitHeaderContainer = gloss(View, {
+  position: 'relative',
+  zIndex: 400,
+}).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor],
+  background: theme.headerBackground || theme.background.alpha(a => a * 0.65),
+}))
 
 const HeaderContain = gloss({
   margin: 'auto',

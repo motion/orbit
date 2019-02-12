@@ -1,23 +1,21 @@
 import { ensure, react } from '@mcro/black'
 import { observeOne } from '@mcro/model-bridge'
 import { UserModel } from '@mcro/models'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import { AppConfig, AppType } from '../../apps/AppTypes'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { Pane } from '../../stores/PaneManagerStore'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
 export class OrbitStore {
-  isTorn = false
+  props: { activePane: Pane }
+
   stores = useHook(useStoresSafe)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
   isEditing = false
-
-  get activePane() {
-    return this.stores.paneManagerStore.activePane
-  }
 
   // sync settings to App.state.isDark for now until we migrate
   activeUser = null
@@ -47,24 +45,6 @@ export class OrbitStore {
     this.isEditing = true
   }
 
-  setTorn = () => {
-    this.isTorn = true
-    console.log('Tearing away app', this.activePane.type)
-    const appCount = App.state.appCount + 1
-    App.setState({ appCount })
-    App.sendMessage(Electron, Electron.messages.TEAR_APP, {
-      appType: this.activePane.type,
-      appId: appCount,
-    })
-    // set App.orbitState.docked false so next orbit window is hidden on start
-    // TODO clean up tearing a bit, including this settimeout
-    // for now its just happening becuase i dont want to deal with having a proper system
-    // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
-    setTimeout(() => {
-      App.setOrbitState({ docked: false })
-    }, 150)
-  }
-
   handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
     this.nextItem = { index, appConfig }
   }
@@ -79,7 +59,7 @@ export class OrbitStore {
         await sleep(50)
       }
       ensure('app config', !!appConfig)
-      const paneType = this.activePane.type
+      const paneType = this.props.activePane.type
       if (!isEqual(this.activeConfig[paneType], appConfig)) {
         this.activeConfig = {
           ...this.activeConfig,

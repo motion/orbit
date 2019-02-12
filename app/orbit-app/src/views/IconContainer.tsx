@@ -6,8 +6,8 @@ export const IconContainer = gloss({
 }).theme((_, theme) => ({
   background: theme.background,
   boxShadow: [
-    ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(0.5)],
-    [0, 0, 0, 3, theme.borderColor.alpha(0.25)],
+    ['inset', 0, 0, 0, 0.5, theme.borderColor.alpha(a => a * 0.5)],
+    [0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.25)],
   ],
   '&:hover': {
     background: theme.backgroundHover,

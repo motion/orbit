@@ -11,7 +11,7 @@ export const BarInner = gloss(View, {
   flex: 1,
   borderRadius: 100,
 }).theme((_, theme) => ({
-  background: theme.borderColor.alpha(0.35),
+  background: theme.borderColor.alpha(a => a * 0.35),
 }))
 
 export function Divider({ background = null, height = 1, ...props }) {

@@ -1,3 +1,29 @@
+# Counting Lines of Code is Actually a Great Metric
+
+(for a startup)
+
+- Ok listen, dont be dumb enough to just count them, its "one" metric that you need to have various restrictions on
+- But its actually really great for a startup that involves schlep, which is just about any of them
+- My advice would be to pair it with two:
+  - How often you have to redo the code
+  - How bloated your code is
+- NOTE this really works only for product features
+- If you look at your startup when its in development, theres a certain amount of code you need to write. Its unavoidable.
+- So if you write X amount of code wiht Y amount of rewrites, and keep your bloat to Z%, then you can basically figure out how long it will take to be done
+- And if you track your personal metrics there, you can set a goal:
+  - "lines of productive code per day"
+- And if you estimate the whole product is, say, 50k lines of code, and your rate is 500/day, and your churn is about 20% of that, and bloat is 15%, then you know how long it will take, in a rough sense
+- NOW, what is this useful for?
+  - NOT useful for estimating deadlines
+  - NOT useful for improving "TEAM LEVEL" productivity
+  - NOT useful for comparing with other team members
+  - NOT useful if you change the "difficulty" of your code amounts really often
+  - IS useful for yourself, to push yourself to be better
+  - IS useful if you are isolated in one general complexity level
+  - IS useful if you are doing mostly product level stuff:
+    - Frontend components, building pages for your website, new forms/pages in your app, etc
+- You can now easily find your moving average of productivity and motivate yourself to improve it
+
 # Why Orbit
 
 this can be a pretty intense and long article tbh, with a lot of detail for every section. think like other popular longform articles that go about 50 pages or so and really dive into detail

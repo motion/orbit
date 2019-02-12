@@ -1,5 +1,5 @@
-import { deep, store } from '@mcro/black';
-import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge';
+import { deep, store } from '@mcro/black'
+import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
 
 export let App = null as AppStore
 
@@ -39,6 +39,12 @@ const defaultMenuState = (index: number): MenuState => ({
   size: [0, 0],
 })
 
+export type AppStateEntry = {
+  id: number
+  type: string
+  appId: number
+}
+
 @store
 class AppStore {
   // TODO proxySetters should auto-type this
@@ -68,7 +74,13 @@ class AppStore {
   source = 'App'
 
   state = deep({
-    appCount: 0,
+    allApps: [
+      {
+        id: 0,
+        appId: 0,
+        type: 'root',
+      },
+    ] as AppStateEntry[],
     isDark: false,
     orbitState: {
       blurred: false,

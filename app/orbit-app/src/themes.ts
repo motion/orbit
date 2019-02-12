@@ -67,7 +67,7 @@ const light = {
     borderColor: [215, 215, 215],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
-    headerBackground: linearGradient([255, 255, 255, 0.7], [255, 255, 255, 0.86]),
+    headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.85]),
     sidebarBackground: [255, 255, 255, 0.85],
     tabBackgroundTop: lightBackground.alpha(0.65),
     tabBackgroundBottom: lightBackground,
@@ -105,7 +105,7 @@ const dark = {
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
-    borderColor: '#464646',
+    borderColor: [180, 180, 180, 0.25],
     headerBackground: linearGradient([0, 0, 0, 0.3], [0, 0, 0, 0.44]),
     headerFadeBackground: linearGradient(
       'to right',
@@ -144,7 +144,7 @@ const dark = {
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
-    background: [10, 10, 10, 0.35],
+    background: '#12112166',
     backgroundHover: '#555',
     backgroundActive: '#444',
     color: '#fff',

@@ -121,6 +121,9 @@ export const HorizontalScroll = gloss(Row, {
 
 export const HorizontalSpace = gloss({
   width: 10,
+  small: {
+    width: 6,
+  },
 })
 
 export const VerticalSpace = gloss<{ small?: boolean }>({

@@ -184,7 +184,8 @@ export class Color {
     return new Color(this.color.map(roundToPlace(places)).concat(this.valpha), this.model)
   }
 
-  alpha(val?) {
+  alpha(rawVal?) {
+    const val = typeof rawVal === 'function' ? rawVal(this.valpha) : rawVal
     if (arguments.length) {
       return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model)
     }

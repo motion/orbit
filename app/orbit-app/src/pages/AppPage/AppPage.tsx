@@ -60,7 +60,7 @@ const TitleBar = gloss({
   padding: [0, 8],
   position: 'relative',
 }).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor.alpha(0.5)],
+  borderBottom: [1, theme.borderColor.alpha(alpha => alpha * 0.5)],
 }))
 
 const CenteredTitle = gloss({

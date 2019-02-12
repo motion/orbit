@@ -2,6 +2,7 @@ import { gloss } from '@mcro/gloss'
 import { ClearButton, ThemeContext, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStoresSafe } from '../../hooks/useStoresSafe'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
@@ -20,16 +21,17 @@ function useActivePane() {
 }
 
 export default observer(function OrbitHeaderInput() {
-  const { orbitStore, orbitWindowStore, queryStore, headerStore } = useStoresSafe()
+  const { orbitWindowStore, queryStore, headerStore } = useStoresSafe()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()
   const placeholder =
     (activePane &&
       activeSpace &&
-      (activePane.type === 'sources' ? `Space: ${activeSpace.name}` : activePane.name)) ||
+      (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = orbitStore.isTorn ? 16 : 18
+  const fontSize = getIsTorn() ? 16 : 18
+  console.log('placeholder', placeholder, activePane)
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

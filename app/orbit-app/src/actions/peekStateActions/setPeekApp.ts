@@ -23,7 +23,7 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   integration: '',
 }
 
-export const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {
+const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {
   dimensions: null,
   initialState: null,
 }

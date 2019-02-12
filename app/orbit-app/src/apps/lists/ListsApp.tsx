@@ -1,15 +1,15 @@
-import { SaveOptions } from '@mcro/mediator';
-import { save } from '@mcro/model-bridge';
-import { AppBit, AppModel, Bit } from '@mcro/models';
-import { useStore } from '@mcro/use-store';
-import React from 'react';
-import { AppContainer } from '../AppContainer';
-import { App, AppProps } from '../AppTypes';
-import ListsAppIndex from './ListsAppIndex';
-import ListsAppMain from './ListsAppMain';
-import ListsAppStatusBar from './ListsAppStatusBar';
-import { ListStore } from './ListStore';
-import { ListsAppBit, ListsAppData } from './types';
+import { SaveOptions } from '@mcro/mediator'
+import { save } from '../../mediator'
+import { AppBit, AppModel, Bit } from '@mcro/models'
+import { useStore } from '@mcro/use-store'
+import React from 'react'
+import { AppContainer } from '../AppContainer'
+import { App, AppProps } from '../AppTypes'
+import ListsAppIndex from './ListsAppIndex'
+import ListsAppMain from './ListsAppMain'
+import ListsAppStatusBar from './ListsAppStatusBar'
+import { ListStore } from './ListStore'
+import { ListsAppBit, ListsAppData } from './types'
 
 export const listRootID = 0
 export type ListAppProps = AppProps & {

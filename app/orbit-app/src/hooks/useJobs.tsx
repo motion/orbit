@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../useModel'
 import { JobModel } from '@mcro/models'
 
 export const useJobs = (sourceId: number | false) => {

@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../../../../useModel'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
 import { Button, Row, SegmentedRow } from '@mcro/ui'
 import * as React from 'react'

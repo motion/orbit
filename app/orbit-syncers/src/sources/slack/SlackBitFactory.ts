@@ -1,8 +1,7 @@
-import { loadMany } from '@mcro/model-bridge'
-import { BitUtils } from '@mcro/models'
-import { Bit, CosalTopWordsModel, Person, SlackBitData, SlackSource } from '@mcro/models'
-import { SlackChannel, SlackMessage, SlackAttachment } from '@mcro/services'
+import { Bit, BitUtils, CosalTopWordsModel, Person, SlackBitData, SlackSource } from '@mcro/models'
+import { SlackAttachment, SlackChannel, SlackMessage } from '@mcro/services'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
+import { Mediator } from '../../mediator'
 
 const Autolinker = require('autolinker')
 
@@ -60,8 +59,7 @@ export class SlackBitFactory {
     const flatBody = data.messages.map(x => x.text).join(' ')
     // gets the most interesting 10 for title
 
-    console.log('load cosal top words...')
-    const title = (await loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
+    const title = (await Mediator.loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
       ' ',
     )
 

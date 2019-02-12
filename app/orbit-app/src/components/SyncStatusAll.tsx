@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../useModel'
 import { JobModel } from '@mcro/models'
 import * as React from 'react'
 import { SubTitle } from '../views/SubTitle'

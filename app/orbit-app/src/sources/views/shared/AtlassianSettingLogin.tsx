@@ -1,10 +1,5 @@
-import { command } from '@mcro/model-bridge'
-import {
-  AtlassianSource,
-  AtlassianSourceValuesCredentials,
-  Source,
-  SourceSaveCommand,
-} from '@mcro/models'
+import { command } from '../../../mediator'
+import { AtlassianSource, AtlassianSourceValuesCredentials, Source, SourceSaveCommand } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'

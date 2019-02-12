@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../../useModel'
 import { PersonBitModel } from '@mcro/models'
 import { capitalize } from 'lodash'
 import { observer } from 'mobx-react-lite'

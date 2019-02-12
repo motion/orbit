@@ -26,7 +26,15 @@ function cachedObservable(
       const subs = options.transports.map(transport => {
         return transport
           .observe(name, args)
-          .subscribe(cached.update, error => sub.error(error), () => sub.complete())
+          .subscribe(
+            response => {
+              if (response.notFound !== true) {
+                cached.update(response.result)
+              }
+            },
+            error => sub.error(error),
+            () => sub.complete()
+          )
       })
       cached.isActive = true
       cached.onDispose = () => {
@@ -53,18 +61,22 @@ export class MediatorClient {
   }
 
   async command<Args, ReturnType>(
-    command: Command<ReturnType, Args>,
+    command: Command<ReturnType, Args>|string,
     args?: Args,
   ): Promise<ReturnType> {
-    const results = await Promise.all(
-      this.options.transports.map(transport => {
-        return transport.execute('command', {
-          command: command.name,
-          args,
-        })
-      }),
-    )
-    return results.filter(result => result !== undefined)[0]
+    const name = typeof command === "string" ? command : command.name
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('command', {
+        command: name,
+        args,
+      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`Command ${name} was not found`)
   }
 
   async save<ModelType, Args, CountArgs>(
@@ -73,20 +85,35 @@ export class MediatorClient {
   ): Promise<ModelType> {
     ObserverCache.updateModels(model, Array.isArray(values) ? values : [values])
 
-    return this.options.transports[0].execute('save', {
-      model: model.name,
-      args: values,
-    })
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('save', {
+        model: model.name,
+        args: values,
+      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`save resolver for ${model.name} was not found`)
   }
 
   async remove<ModelType, Args, CountArgs>(
     model: Model<ModelType, Args, CountArgs>,
     instance: ModelType,
   ): Promise<boolean> {
-    return this.options.transports[0].execute('remove', {
-      model: model.name,
-      args: instance,
-    })
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('remove', {
+        model: model.name,
+        args: instance,
+      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`remove resolver for ${model.name} was not found`)
   }
 
   loadOne<ModelType, Args>(query: Query<ModelType, Args>): Promise<ModelType>
@@ -98,7 +125,7 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     },
   ): Promise<ModelType>
-  loadOne<ModelType, Args, CountArgs>(
+  async loadOne<ModelType, Args, CountArgs>(
     qm: Query<ModelType, Args> | Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
@@ -109,16 +136,19 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0]
-      .execute('loadOne', {
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('loadOne', {
         model: model.name,
         args,
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
-      .then(value => {
-        // ModelCache.add(model, 'one', args, value)
-        return value
-      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`loadOne resolver for ${model.name} was not found`)
   }
 
   loadMany<ModelType, Args>(query: Query<ModelType, Args>): Promise<ModelType[]>
@@ -129,7 +159,7 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     },
   ): Promise<ModelType[]>
-  loadMany<ModelType, Args, CountArgs>(
+  async loadMany<ModelType, Args, CountArgs>(
     qm: Query<ModelType, Args> | Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
@@ -139,16 +169,19 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0]
-      .execute('loadMany', {
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('loadMany', {
         model: model.name,
         args,
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
-      .then(value => {
-        // ModelCache.add(model, 'many', args, value)
-        return value
-      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`loadMany resolver for ${model.name} was not found`)
   }
 
   loadManyAndCount<ModelType, Args>(query: Query<ModelType, Args>): Promise<[ModelType[], number]>
@@ -159,7 +192,7 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     },
   ): Promise<[ModelType[], number]>
-  loadManyAndCount<ModelType, Args, CountArgs>(
+  async loadManyAndCount<ModelType, Args, CountArgs>(
     qm: Query<ModelType, Args> | Model<ModelType, Args, CountArgs>,
     options?: {
       args?: Args
@@ -167,11 +200,19 @@ export class MediatorClient {
     },
   ): Promise<[ModelType[], number]> {
     if (!options) options = {}
-    return this.options.transports[0].execute('loadManyAndCount', {
-      model: qm instanceof Query ? qm.model.name : qm.name,
-      args: qm instanceof Query ? qm.args : options.args,
-      resolvers: qm instanceof Query ? qm.args : options.resolvers,
-    })
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('loadManyAndCount', {
+        model: qm instanceof Query ? qm.model.name : qm.name,
+        args: qm instanceof Query ? qm.args : options.args,
+        resolvers: qm instanceof Query ? qm.args : options.resolvers,
+      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`loadManyAndCount resolver for ${qm instanceof Query ? qm.model.name : qm.name} was not found`)
   }
 
   loadCount<ModelType, Args, CountArgs>(
@@ -184,7 +225,7 @@ export class MediatorClient {
       resolvers?: QueryOptions<ModelType>
     },
   ): Promise<[ModelType[], number]>
-  loadCount<ModelType, Args, CountArgs>(
+  async loadCount<ModelType, Args, CountArgs>(
     qm: Query<ModelType, CountArgs> | Model<ModelType, Args, CountArgs>,
     options?: {
       args?: CountArgs
@@ -194,16 +235,19 @@ export class MediatorClient {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
     const args = qm instanceof Query ? qm.args : options.args || {}
-    return this.options.transports[0]
-      .execute('loadCount', {
+
+    for (let transport of this.options.transports) {
+      const response = await transport.execute('loadCount', {
         model: model.name,
         args,
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
-      .then(value => {
-        // ModelCache.add(model, 'count', args, value)
-        return value
-      })
+      if (response.notFound !== true) {
+        return response.result
+      }
+    }
+
+    throw new Error(`loadCount resolver for ${model.name} was not found`)
   }
 
   observeOne<ModelType, Args>(query: Query<ModelType, Args>): Observable<ModelType>
@@ -303,7 +347,11 @@ export class MediatorClient {
             resolvers: qm instanceof Query ? qm.args : options.resolvers,
           })
           .subscribe(
-            value => subscriptionObserver.next(value),
+            response => {
+              if (response.notFound !== true) {
+                subscriptionObserver.next(response.result)
+              }
+            },
             error => subscriptionObserver.error(error),
             () => subscriptionObserver.complete(),
           )
@@ -340,7 +388,11 @@ export class MediatorClient {
             args: qm instanceof Query ? qm.args : options.args,
           })
           .subscribe(
-            subscriptionObserver.next,
+            response => {
+              if (response.notFound !== true) {
+                subscriptionObserver.next(response.result)
+              }
+            },
             error => subscriptionObserver.error(error),
             () => subscriptionObserver.complete(),
           )

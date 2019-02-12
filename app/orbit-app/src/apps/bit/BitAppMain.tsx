@@ -1,4 +1,4 @@
-import { useModel } from '@mcro/model-bridge'
+import { useModel } from '../../useModel'
 import { BitModel } from '@mcro/models'
 import * as React from 'react'
 import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'

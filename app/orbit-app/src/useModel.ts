@@ -1,7 +1,7 @@
 import { Model } from '@mcro/mediator'
 import { merge } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from './mediator'
 
 type UseModelOptions = {
   defaultValue?: any

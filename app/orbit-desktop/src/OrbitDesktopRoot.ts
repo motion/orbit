@@ -3,10 +3,12 @@ import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
 import {
+  MediatorClient,
   MediatorServer,
   resolveCommand,
   resolveMany,
   typeormResolvers,
+  WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@mcro/mediator'
 import {
@@ -87,6 +89,7 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { WebServer } from './WebServer'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class OrbitDesktopRoot {
   // public
@@ -253,6 +256,25 @@ export class OrbitDesktopRoot {
    * for communication between processes.
    */
   private registerMediatorServer() {
+
+    const electronTransport = new WebSocketClientTransport(
+      'electron',
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.electronMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      }),
+    )
+
+    const syncersTransport = new WebSocketClientTransport(
+      'syncers',
+      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
+        WebSocket,
+        minReconnectionDelay: 1,
+      })
+    )
+
+    const client = new MediatorClient({ transports: [syncersTransport, electronTransport] })
+
     this.mediatorServer = new MediatorServer({
       models: [
         AppModel,
@@ -291,6 +313,7 @@ export class OrbitDesktopRoot {
       transport: new WebSocketServerTransport({
         port: this.config.ports.desktopMediator,
       }),
+      fallbackClient: client,
       resolvers: [
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },

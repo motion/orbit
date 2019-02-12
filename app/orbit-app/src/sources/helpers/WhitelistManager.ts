@@ -1,5 +1,5 @@
 import { react, store } from '@mcro/black'
-import { save } from '@mcro/model-bridge'
+import { save } from '../../mediator'
 import { GithubSource, GmailSource, SlackSource, SourceModel } from '@mcro/models'
 import produce from 'immer'
 import { memoize } from 'lodash'

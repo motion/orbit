@@ -1,11 +1,12 @@
 import { Command, Model, TransportRequest } from '../common'
 import { ServerTransport } from './ServerTransport'
 import { ResolveInterface } from './ResolveInterface'
-import { Subscription } from '..'
+import { MediatorClient, Subscription } from '..'
 import { log } from '../common/logger'
 
 export interface MediatorServerOptions {
   transport: ServerTransport
+  fallbackClient?: MediatorClient
   resolvers: ResolveInterface<any, any, any>[]
   commands: Command<any, any>[]
   models: Model<any, any>[]
@@ -23,14 +24,21 @@ export class MediatorServer {
     this.options.transport.onMessage(data => this.handleMessage(data))
   }
 
-  private handleMessage(data: TransportRequest) {
+  private async handleMessage(data: TransportRequest) {
     log.verbose('message', data)
+    const onSuccess = result => {
+      this.options.transport.send({
+        id: data.id,
+        result: result,
+      })
+    }
+    const onError = (error: any) => log.error(`error in mediator: `, error)
 
     if (data.type === 'unsubscribe') {
-      const subscription = this.subscriptions.find(subscription => {
+      const subscriptions = this.subscriptions.filter(subscription => {
         return subscription.id === data.id
       })
-      if (subscription && subscription.subscription) {
+      for (let subscription of subscriptions) {
         subscription.subscription.unsubscribe()
       }
       return
@@ -42,14 +50,23 @@ export class MediatorServer {
       command = this.options.commands.find(command => {
         return command.name === data.command
       })
-      // simply ignore if command was not found - maybe some other server has it defined
+      // if command was not found - try fallback servers
       if (!command) {
-        log.verbose(`command ${data.command} was not found`, data)
-        this.options.transport.send({
-          id: data.id,
-          result: undefined,
-          notFound: true,
-        })
+        if (this.options.fallbackClient) {
+          log.verbose(`command ${data.command} was not found, trying fallback clients`, data)
+          this.options.fallbackClient
+            .command(data.command, data.args)
+            .then(onSuccess)
+            .catch(onError)
+
+        } else {
+          log.verbose(`command ${data.command} was not found, no fallback client, ignoring`, data)
+          this.options.transport.send({
+            id: data.id,
+            result: undefined,
+            notFound: true,
+          })
+        }
         return
       }
     } else {
@@ -58,12 +75,51 @@ export class MediatorServer {
       })
       // simply ignore if model was not found - maybe some other server has it defined
       if (!model) {
-        log.verbose(`model ${data.model} was not found`, data)
-        this.options.transport.send({
-          id: data.id,
-          result: undefined,
-          notFound: true,
-        })
+
+        if (this.options.fallbackClient) {
+          log.verbose(`model ${data.model} was not found, trying fallback clients`, data)
+
+          if (data.type === 'save') {
+            this.options.fallbackClient
+              .save(model, data.value)
+              .then(onSuccess, onError)
+
+          } else if (data.type === 'remove') {
+            this.options.fallbackClient
+              .remove(model, data.value)
+              .then(onSuccess, onError)
+
+          } else if (data.type === 'loadOne') {
+            this.options.fallbackClient
+              .loadOne(model, { args: data.args })
+              .then(onSuccess, onError)
+
+          } else if (data.type === 'loadMany') {
+            this.options.fallbackClient
+              .loadMany(model, { args: data.args })
+              .then(onSuccess, onError)
+
+          } else if (data.type === 'loadManyAndCount') {
+            this.options.fallbackClient
+              .loadManyAndCount(model, { args: data.args })
+              .then(onSuccess, onError)
+
+          } else if (data.type === 'loadCount') {
+            this.options.fallbackClient
+              .loadCount(model, { args: data.args })
+              .then(onSuccess, onError)
+          }
+
+        } else {
+
+          log.verbose(`model ${data.model} was not found`, data)
+          this.options.transport.send({
+            id: data.id,
+            result: undefined,
+            notFound: true,
+          })
+
+        }
         return
       }
     }
@@ -106,66 +162,81 @@ export class MediatorServer {
       return false
     })
 
-    if (!resolver) {
-      if (command) {
-        throw new Error(
-          `No "${data.type}" resolver for the given ${command.name} command was found`,
-        )
+    if (resolver) {
+
+      // resolve a value
+      let result = null
+      try {
+        result = resolver.resolve(data.args)
+      } catch (error) {
+        log.error('error executing resolver', error)
+        throw error
+      }
+
+      // additionally resolve properties
+
+      // send result back over transport based on returned value
+      if (
+        data.type === 'observeOne' ||
+        data.type === 'observeMany' ||
+        data.type === 'observeManyAndCount' ||
+        data.type === 'observeCount'
+      ) {
+        this.subscriptions.push({
+          id: data.id,
+          subscription: result.subscribe(onSuccess, onError)
+        })
+
+      } else if (result instanceof Promise) {
+        result.then(onSuccess, onError)
+
       } else {
-        throw new Error(`No "${data.type}" resolver for the given ${model.name} model was found`)
+        onSuccess(result)
+      }
+
+      // if (command) {
+      //   throw new Error(
+      //     `No "${data.type}" resolver for the given ${command.name} command was found`,
+      //   )
+      // } else {
+      //   throw new Error(`No "${data.type}" resolver for the given ${model.name} model was found`)
+      // }
+    }
+
+    if (this.options.fallbackClient) {
+      if (data.type === 'observeOne') {
+        this.subscriptions.push({
+          id: data.id,
+          subscription: this.options.fallbackClient
+            .observeOne(model, { args: data.args })
+            .subscribe(onSuccess, onError)
+        })
+
+      } else if (data.type === 'observeMany') {
+        this.subscriptions.push({
+          id: data.id,
+          subscription: this.options.fallbackClient
+            .observeMany(model, { args: data.args })
+            .subscribe(onSuccess, onError)
+        })
+
+      } else if (data.type === 'observeManyAndCount') {
+        this.subscriptions.push({
+          id: data.id,
+          subscription: this.options.fallbackClient
+            .observeManyAndCount(model, { args: data.args })
+            .subscribe(onSuccess, onError)
+        })
+
+      } else if (data.type === 'observeCount') {
+        this.subscriptions.push({
+          id: data.id,
+          subscription: this.options.fallbackClient
+            .observeCount(model, { args: data.args })
+            .subscribe(onSuccess, onError)
+        })
       }
     }
 
-    // resolve a value
-    let result = null
-    try {
-      result = resolver.resolve(data.args)
-    } catch (error) {
-      console.error('error executing resolver', error)
-      throw error
-    }
-
-    // additionally resolve properties
-
-    // send result back over transport based on returned value
-    if (
-      data.type === 'observeOne' ||
-      data.type === 'observeMany' ||
-      data.type === 'observeManyAndCount' ||
-      data.type === 'observeCount'
-    ) {
-      this.subscriptions.push({
-        id: data.id,
-        subscription: result.subscribe(
-          result => {
-            this.options.transport.send({
-              id: data.id,
-              result: result,
-            })
-          },
-          error => {
-            console.error('error in subscription result', error)
-            throw error
-          },
-        ),
-      })
-    } else if (result instanceof Promise) {
-      result
-        .then(result => {
-          this.options.transport.send({
-            id: data.id,
-            result: result,
-          })
-        })
-        .catch(error => {
-          console.error('error in promise result', error)
-          throw error
-        })
-    } else {
-      this.options.transport.send({
-        id: data.id,
-        result: result,
-      })
-    }
   }
 }

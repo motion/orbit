@@ -1,4 +1,4 @@
-import { useModel } from '@mcro/model-bridge'
+import { useModel } from '../../useModel'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { useStoresSafe } from '../../hooks/useStoresSafe'

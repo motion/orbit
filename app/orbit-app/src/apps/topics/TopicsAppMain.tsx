@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { loadMany } from '@mcro/model-bridge'
+import { loadMany } from '../../mediator'
 import { BitsNearTopicModel } from '@mcro/models'
 import { View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'

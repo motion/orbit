@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { observeMany } from '@mcro/model-bridge'
+import { observeMany } from '../mediator'
 import { AppModel, Source, SourceModel, Space, SpaceModel } from '@mcro/models'
 import { getAppFromSource } from './SourcesStore'
 

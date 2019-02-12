@@ -1,5 +1,5 @@
 // import dev helpers
-import { command } from '@mcro/model-bridge'
+import { command } from './mediator'
 import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'

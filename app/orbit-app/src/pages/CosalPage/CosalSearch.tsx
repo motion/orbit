@@ -3,8 +3,8 @@ import { react } from '@mcro/black'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@mcro/use-store'
 import CosalSaliency from './CosalSaliency'
-import { loadMany } from '@mcro/model-bridge'
-import { SearchByTopicModel, CosalTopWordsModel, CosalTopicsModel, BitUtils } from '@mcro/models'
+import { loadMany } from '../../mediator'
+import { BitUtils, CosalTopicsModel, CosalTopWordsModel, SearchByTopicModel } from '@mcro/models'
 
 class SearchStore {
   query = 'blast me off'

@@ -1,4 +1,4 @@
-import { loadMany } from '@mcro/model-bridge'
+import { loadMany } from '../../../../mediator'
 import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { orderBy } from 'lodash'

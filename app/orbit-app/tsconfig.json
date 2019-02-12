@@ -7,7 +7,6 @@
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../model-bridge" },
     { "path": "../../packages/config" },
     { "path": "../../packages/mediator" }
   ]

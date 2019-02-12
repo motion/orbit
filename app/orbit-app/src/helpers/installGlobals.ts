@@ -19,7 +19,6 @@ import { getGlobalConfig } from '@mcro/config'
 import { color } from '@mcro/gloss'
 import { stringify } from '@mcro/helpers'
 import { LoggerSettings } from '@mcro/logger'
-import * as Repositories from '@mcro/model-bridge'
 import * as Models from '@mcro/models'
 import r2 from '@mcro/r2'
 import { App, Desktop, Electron } from '@mcro/stores'
@@ -81,9 +80,4 @@ window['reactFastCompareDebug'] = (a, b) => {
     }
   }
   return true
-}
-
-// make the various model/repositories global
-for (const repo in Repositories) {
-  window[repo] = Repositories[repo]
 }

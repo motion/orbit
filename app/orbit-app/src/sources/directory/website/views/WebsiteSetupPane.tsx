@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { command } from '@mcro/model-bridge'
+import { command } from '../../../../mediator'
 import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'

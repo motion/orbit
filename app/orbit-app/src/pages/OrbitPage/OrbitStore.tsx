@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { observeOne } from '@mcro/model-bridge'
+import { observeOne } from '../../mediator'
 import { UserModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'

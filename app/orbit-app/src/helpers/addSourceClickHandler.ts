@@ -1,5 +1,5 @@
 import { getGlobalConfig } from '@mcro/config'
-import { command } from '@mcro/model-bridge'
+import { command } from '../mediator'
 import { OpenCommand, SetupProxyCommand } from '@mcro/models'
 import { memoize } from 'lodash'
 import { OrbitIntegration } from '../sources/types'

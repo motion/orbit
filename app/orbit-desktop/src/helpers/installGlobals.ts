@@ -25,7 +25,6 @@ export function installGlobals(AppRoot: OrbitDesktopRoot) {
   root['toJS'] = Mobx.toJS
   root['Cosal'] = Cosal
   root['Models'] = require('@mcro/models')
-  root['Bridge'] = require('@mcro/model-bridge')
 
   for (const model of Entities) {
     root[`${model.name}`] = model

@@ -1,9 +1,10 @@
-import { command } from '@mcro/model-bridge'
+import { command } from '../../../mediator'
 import {
   Source,
   SourceForceCancelCommand,
   SourceForceSyncCommand,
   SourceRemoveCommand,
+  TearAppCommand,
 } from '@mcro/models'
 import { Row, SegmentedRow, Text, View } from '@mcro/ui'
 import * as React from 'react'
@@ -21,6 +22,9 @@ const handleRefresh = async (sourceId: number) => {
   command(SourceForceSyncCommand, {
     sourceId,
   })
+  // command(TearAppCommand).then(() => {
+  //   console.log('success tear')
+  // })
 }
 
 const removeIntegration = async (source: Source) => {

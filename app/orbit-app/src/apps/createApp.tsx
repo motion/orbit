@@ -1,5 +1,5 @@
 import { SaveOptions } from '@mcro/mediator'
-import { save } from '@mcro/model-bridge'
+import { save } from '../mediator'
 import { AppBit, AppModel } from '@mcro/models'
 import { Button, Row, Theme, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'

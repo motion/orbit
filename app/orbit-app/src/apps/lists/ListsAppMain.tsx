@@ -1,4 +1,4 @@
-import { useModel } from '@mcro/model-bridge'
+import { useModel } from '../../useModel'
 import { AppModel } from '@mcro/models'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'

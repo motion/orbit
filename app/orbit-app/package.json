@@ -22,7 +22,6 @@
     "@mcro/logger": "^2.3.10",
     "@mcro/mediator": "^2.3.10",
     "@mcro/mobx-logger": "^2.3.10",
-    "@mcro/model-bridge": "^2.3.10",
     "@mcro/models": "^2.3.10",
     "@mcro/r2": "^2.3.10",
     "@mcro/router": "^2.3.10",

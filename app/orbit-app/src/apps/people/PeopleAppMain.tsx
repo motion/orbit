@@ -1,14 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { loadMany, loadOne, observeMany } from '@mcro/model-bridge'
-import {
-  Bit,
-  BitModel,
-  CosalTopicsModel,
-  PersonBitModel,
-  SlackBitData,
-  SlackPersonData,
-} from '@mcro/models'
+import { loadMany, loadOne, observeMany } from '../../mediator'
+import { Bit, BitModel, CosalTopicsModel, PersonBitModel, SlackBitData, SlackPersonData } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'

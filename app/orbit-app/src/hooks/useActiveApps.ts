@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/model-bridge'
+import { useModels } from '../useModel'
 import { AppBit, AppModel } from '@mcro/models'
 import { useActiveSpace } from './useActiveSpace'
 

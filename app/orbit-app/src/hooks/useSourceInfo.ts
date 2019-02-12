@@ -1,4 +1,4 @@
-import { useModel, useModelCount } from '@mcro/model-bridge'
+import { useModel, useModelCount } from '../useModel'
 import { BitModel, JobModel, SourceModel } from '@mcro/models'
 
 export function useSourceInfo(sourceId: number | false) {

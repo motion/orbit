@@ -26,3 +26,6 @@ export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')
 export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
+
+export const TearAppCommand = new Command<void, void>('tear-app')
+export const CloseAppCommand = new Command<void, void>('close-app')

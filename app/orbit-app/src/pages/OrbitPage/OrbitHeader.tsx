@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
@@ -16,9 +16,10 @@ import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
+import OrbitNav from './OrbitNav'
 
 export default observer(function OrbitHeader() {
-  const { queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+  const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
   const activePaneType = paneManagerStore.activePane.type
   const isTorn = getIsTorn()
   const { isEditing } = orbitStore
@@ -27,7 +28,8 @@ export default observer(function OrbitHeader() {
   const theme = useTheme()
 
   return (
-    <>
+    <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+      {isEditing && <OrbitHeaderEditingBg />}
       <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn}>
           <WindowControls
@@ -103,7 +105,9 @@ export default observer(function OrbitHeader() {
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
               <HorizontalSpace small />
-              <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+              <Theme name="selected">
+                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+              </Theme>
             </Row>
           </Absolute>
         )}
@@ -131,7 +135,8 @@ export default observer(function OrbitHeader() {
         {isTorn && <BorderBottom opacity={0.35} />}
       </HeaderTop>
       <HeaderFade />
-    </>
+      <OrbitNav />
+    </OrbitHeaderContainer>
   )
 })
 
@@ -166,6 +171,20 @@ function OrbitEditAppButton() {
     </Absolute>
   )
 }
+
+const OrbitHeaderEditingBg = gloss(FullScreen, {
+  zIndex: -1,
+}).theme((_, theme) => ({
+  background: linearGradient(theme.selected.background, theme.selected.background.darken(0.1)),
+}))
+
+const OrbitHeaderContainer = gloss(View, {
+  position: 'relative',
+  zIndex: 400,
+}).theme((_, theme) => ({
+  // borderBottom: [1, theme.borderColor],
+  background: theme.headerBackground || theme.background.alpha(0.65),
+}))
 
 const HeaderContain = gloss({
   margin: 'auto',

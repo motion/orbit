@@ -1,40 +1,39 @@
-import { gloss, View, ViewProps } from '@mcro/gloss'
-import { AppBit } from '@mcro/models'
-import { App, Electron } from '@mcro/stores'
-import { Theme } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { isEqual, once, uniqBy } from 'lodash'
-import { observer, useObservable, useObserver } from 'mobx-react-lite'
-import * as React from 'react'
-import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { AppActions } from '../../actions/AppActions'
-import { apps } from '../../apps/apps'
-import AppsLoader from '../../apps/AppsLoader'
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
-import { APP_ID } from '../../constants'
-import { StoreContext } from '../../contexts'
-import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
-import { getAppState, getIsTorn } from '../../helpers/getAppHelpers'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useManagePaneSort } from '../../hooks/useManagePaneSort'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { HeaderStore } from '../../stores/HeaderStore'
-import { NewAppStore } from '../../stores/NewAppStore'
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { Pane, PaneManagerStore } from '../../stores/PaneManagerStore'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SourcesStore } from '../../stores/SourcesStore'
-import { SpaceStore } from '../../stores/SpaceStore'
-import { AppWrapper } from '../../views'
-import { MergeContext } from '../../views/MergeContext'
-import OrbitHeader from './OrbitHeader'
-import OrbitMain from './OrbitMain'
-import OrbitNav from './OrbitNav'
-import OrbitSidebar from './OrbitSidebar'
-import OrbitStatusBar from './OrbitStatusBar'
-import { OrbitStore } from './OrbitStore'
-import OrbitToolBar from './OrbitToolBar'
+import { gloss, View, ViewProps } from '@mcro/gloss';
+import { AppBit } from '@mcro/models';
+import { App, Electron } from '@mcro/stores';
+import { Theme } from '@mcro/ui';
+import { useStore } from '@mcro/use-store';
+import { isEqual, once, uniqBy } from 'lodash';
+import { observer, useObservable, useObserver } from 'mobx-react-lite';
+import * as React from 'react';
+import { ActionsContext, defaultActions } from '../../actions/Actions';
+import { AppActions } from '../../actions/AppActions';
+import { apps } from '../../apps/apps';
+import AppsLoader from '../../apps/AppsLoader';
+import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler';
+import { APP_ID } from '../../constants';
+import { StoreContext } from '../../contexts';
+import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog';
+import { getAppState, getIsTorn } from '../../helpers/getAppHelpers';
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
+import { useManagePaneSort } from '../../hooks/useManagePaneSort';
+import { useStoresSafe } from '../../hooks/useStoresSafe';
+import { HeaderStore } from '../../stores/HeaderStore';
+import { NewAppStore } from '../../stores/NewAppStore';
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore';
+import { Pane, PaneManagerStore } from '../../stores/PaneManagerStore';
+import { QueryStore } from '../../stores/QueryStore/QueryStore';
+import { SettingStore } from '../../stores/SettingStore';
+import { SourcesStore } from '../../stores/SourcesStore';
+import { SpaceStore } from '../../stores/SpaceStore';
+import { AppWrapper } from '../../views';
+import { MergeContext } from '../../views/MergeContext';
+import OrbitHeader from './OrbitHeader';
+import OrbitMain from './OrbitMain';
+import OrbitSidebar from './OrbitSidebar';
+import OrbitStatusBar from './OrbitStatusBar';
+import { OrbitStore } from './OrbitStore';
+import OrbitToolBar from './OrbitToolBar';
 
 export default React.memo(function OrbitPage() {
   // keep activeSpace.paneSort in sync with activeApps
@@ -132,12 +131,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
         <Theme name={theme}>
           <AppWrapper className={`theme-${theme} app-parent-bounds`}>
             <AppsLoader views={allViews}>
-              <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
-                <OrbitHeader />
-                <OrbitNav />
-                {/* above bottom below active tab */}
-                {/* <BorderBottom zIndex={10000000} /> */}
-              </OrbitHeaderContainer>
+              <OrbitHeader />
               <InnerChrome torn={getIsTorn()}>
                 <OrbitToolBar />
                 <OrbitContentArea>
@@ -159,14 +153,6 @@ const OrbitContentArea = gloss({
   flex: 1,
 }).theme((_, theme) => ({
   background: theme.sidebarBackground,
-}))
-
-const OrbitHeaderContainer = gloss(View, {
-  position: 'relative',
-  zIndex: 400,
-}).theme((_, theme) => ({
-  // borderBottom: [1, theme.borderColor],
-  background: theme.headerBackground || theme.background.alpha(0.65),
 }))
 
 const settingsPane = {

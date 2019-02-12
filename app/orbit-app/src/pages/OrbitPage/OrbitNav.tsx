@@ -141,6 +141,7 @@ export default observer(function OrbitNav() {
             ))}
 
           <SortableTabs
+            className="hide-scrollbars"
             axis="x"
             lockAxis="x"
             distance={8}
@@ -149,8 +150,8 @@ export default observer(function OrbitNav() {
             onSortEnd={handleSortEnd}
             flex={1}
             // let shadows from tabs go up above
-            padding={[10, 0]}
-            margin={[-10, 0]}
+            padding={[16, 0]}
+            margin={[-16, 0]}
             height={tabHeight + 20}
             overflowX="auto"
             overflowY="hidden"

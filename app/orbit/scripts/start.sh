@@ -12,6 +12,11 @@ if [[ "$FLAGS" =~ "--ignore-syncers" ]]; then
   export DISABLE_SYNCERS="true"
 fi
 
+if [[ "$FLAGS" =~ "--no-logging" ]]; then
+  echo "DISABLE LOGGING"
+  export DISABLE_LOGGING="true"
+fi
+
 if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
   echo "DISABLE ELECTRON"
   export IGNORE_ELECTRON="true"

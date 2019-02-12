@@ -50,7 +50,7 @@ export function OrbitTab({
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
-  const iconSize = iconSizeProp || (thicc ? 12 : 10)
+  const iconSize = iconSizeProp || (thicc ? 12 : 11)
   const theme = useTheme()
 
   const button = (
@@ -85,7 +85,7 @@ export function OrbitTab({
             <OrbitTabIcon
               isActive={isActive}
               name={`${icon}`}
-              marginRight={!!label ? sidePad * 0.6 : 0}
+              marginRight={!!label ? sidePad * 0.7 : 0}
               thicc={thicc}
               size={iconSize}
               iconAdjustOpacity={iconAdjustOpacity}

@@ -132,7 +132,7 @@ export default observer(function OrbitHeader() {
           </Absolute>
         )}
 
-        {isTorn && <BorderBottom opacity={0.35} />}
+        {isTorn && <BorderBottom opacity={0.25} />}
       </HeaderTop>
       <HeaderFade />
       <OrbitNav />
@@ -186,7 +186,7 @@ const OrbitHeaderContainer = gloss(View, {
   zIndex: 400,
 }).theme((_, theme) => ({
   // borderBottom: [1, theme.borderColor],
-  background: theme.headerBackground || theme.background.alpha(0.65),
+  background: theme.headerBackground || theme.background.alpha(a => a * 0.65),
 }))
 
 const HeaderContain = gloss({

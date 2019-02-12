@@ -5,7 +5,7 @@ import { Cancelable, debounce, isEqual, isNumber, last, pick } from 'lodash'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Arrow } from './Arrow'
-import { ResetBreadcrumb } from './Breadcrumbs'
+import { BreadcrumbReset } from './Breadcrumbs'
 import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
@@ -1002,7 +1002,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                 />
               </ArrowContain>
             )}
-            <ResetBreadcrumb>
+            <BreadcrumbReset>
               <SizedSurface
                 className="popover-inner-surface"
                 sizeRadius
@@ -1019,7 +1019,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                   ? (children as PopoverChildrenFn)(showPopover)
                   : children}
               </SizedSurface>
-            </ResetBreadcrumb>
+            </BreadcrumbReset>
           </PopoverInner>
         </PopoverWrap>
       </PopoverContainer>

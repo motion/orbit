@@ -12,7 +12,7 @@ import {
   View,
 } from '@mcro/gloss'
 import * as React from 'react'
-import { useBreadcrumb } from './Breadcrumbs'
+import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { configure } from './helpers/configure'
@@ -84,7 +84,7 @@ export type SurfaceProps = CSSPropertySetStrict & {
 }
 
 export const Surface = React.memo(function Surface(props: SurfaceProps) {
-  const breadcrumb = useBreadcrumb()
+  const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
 
   React.useEffect(() => {
@@ -126,7 +126,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
   } = props
 
   const Icon = configure.useIcon || UIIcon
-  const segmentedStyle = getSegmentRadius(props, breadcrumb)
+  const segmentedStyle = getSegmentRadius(props, crumb)
 
   const stringIcon = typeof icon === 'string'
 
@@ -218,7 +218,16 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  return <SurfaceFrame ref={forwardRef} themeSelect={themeSelect} {...surfaceProps} />
+  return (
+    <BreadcrumbReset>
+      <SurfaceFrame
+        ref={forwardRef}
+        themeSelect={themeSelect}
+        {...surfaceProps}
+        opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
+      />
+    </BreadcrumbReset>
+  )
 })
 
 // fontFamily: inherit on both fixes elements

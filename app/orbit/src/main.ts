@@ -15,7 +15,7 @@ require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 root['WebSocket'] = WebSocket
 Error.stackTraceLimit = Infinity
 
-const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_SYNCERS, IGNORE_ELECTRON } = process.env
+const { SUB_PROCESS, PROCESS_NAME, ORBIT_CONFIG, DISABLE_SYNCERS, DISABLE_ELECTRON } = process.env
 
 export async function main() {
   console.log(`starting ${PROCESS_NAME}`)
@@ -119,7 +119,7 @@ export async function main() {
 
     console.log('Desktop has started, continuing starting electron processes...')
 
-    if (IGNORE_ELECTRON !== 'true') {
+    if (DISABLE_ELECTRON !== 'true') {
       // start main electron process inside this thread (no forking)
       require('./startElectron').startElectron({ mainProcess: true })
 
@@ -128,7 +128,7 @@ export async function main() {
 
       await new Promise(res => setTimeout(res, 500))
 
-      if (!process.env.IGNORE_MENU) {
+      if (!process.env.DISABLE_MENU) {
         setupProcess({
           name: 'electron-menus',
           inspectPort: 9006,
@@ -137,7 +137,7 @@ export async function main() {
 
         await new Promise(res => setTimeout(res, 500))
 
-        if (!process.env.IGNORE_APPS) {
+        if (!process.env.DISABLE_APPS) {
           setupProcess({
             name: 'electron-apps',
             inspectPort: 9004,

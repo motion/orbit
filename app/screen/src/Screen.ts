@@ -1,11 +1,11 @@
-import Path from 'path'
-import { spawn, ChildProcess } from 'child_process'
-import macosVersion from 'macos-version'
-import electronUtil from 'electron-util/node'
 import { Logger } from '@mcro/logger'
-import { ScreenBridge, SocketSender } from './ScreenBridge'
+import { ChildProcess, spawn } from 'child_process'
+import electronUtil from 'electron-util/node'
 import { mkdir } from 'fs'
+import macosVersion from 'macos-version'
+import Path from 'path'
 import { promisify } from 'util'
+import { ScreenBridge, SocketSender } from './ScreenBridge'
 
 const log = new Logger('screen')
 const idFn = _ => _
@@ -170,7 +170,7 @@ export class Screen {
       RUN_OCR: `${this.options.ocr}`,
       RUN_APP_WINDOW: `${this.options.appWindow}`,
       SOCKET_PORT: `${this.socketPort}`,
-      SHOW_TRAY: `${this.options.showTray && !process.env.IGNORE_ELECTRON}`,
+      SHOW_TRAY: `${this.options.showTray && !process.env.DISABLE_ELECTRON}`,
       NODE_ENV: process.env.NODE_ENV,
       ...this.env,
     }

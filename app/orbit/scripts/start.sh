@@ -7,7 +7,7 @@ FLAGS=$@
 # FLAGS
 #
 
-if [[ "$FLAGS" =~ "--ignore-syncers" ]]; then
+if [[ "$FLAGS" =~ "--no-syncers" ]]; then
   echo "DISABLE SYNCERS"
   export DISABLE_SYNCERS="true"
 fi
@@ -17,26 +17,26 @@ if [[ "$FLAGS" =~ "--no-logging" ]]; then
   export DISABLE_LOGGING="true"
 fi
 
-if [[ "$FLAGS" =~ "--ignore-electron" ]]; then
+if [[ "$FLAGS" =~ "--no-electron" ]]; then
   echo "DISABLE ELECTRON"
-  export IGNORE_ELECTRON="true"
+  export DISABLE_ELECTRON="true"
 fi
 
-if [[ "$FLAGS" =~ "--ignore-menu" ]]; then
+if [[ "$FLAGS" =~ "--no-menu" ]]; then
   echo "DISABLE MENU"
-  export IGNORE_MENU="true"
+  export DISABLE_MENU="true"
 fi
 
-if [[ "$FLAGS" =~ "--ignore-apps" ]]; then
+if [[ "$FLAGS" =~ "--no-apps" ]]; then
   echo "DISABLE APPS"
-  export IGNORE_APPS="true"
+  export DISABLE_APPS="true"
 fi
 
 #
 # START repl debugger
 #
 
-if [[ "$FLAGS" =~ "--ignore-repl" ]]; then
+if [[ "$FLAGS" =~ "--no-repl" ]]; then
   echo "DISABLE REPL"
 else
 
@@ -50,7 +50,7 @@ fi
 # START orbit-app
 #
 
-if [[ "$FLAGS" =~ "--ignore-app" ]]; then
+if [[ "$FLAGS" =~ "--no-app" ]]; then
   echo "DISABLE APP"
 else
   if [ "$1" = "start-prod" ]; then
@@ -64,7 +64,7 @@ fi
 # START orbit-electron (and orbit-desktop via that)
 #
 
-if [[ "$FLAGS" =~ "--disable-watch" ]]; then
+if [[ "$FLAGS" =~ "--no-watch" ]]; then
   echo "DISABLE WATCH"
   ./scripts/run-orbit.sh
 else

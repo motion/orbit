@@ -13,7 +13,7 @@ export const Input = gloss(View, {
   background: theme.background.alpha(0.5),
   border: [1, theme.borderColor.desaturate(0.1)],
   '&:focus-within': {
-    boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(0.5)]],
+    boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(a => a * 0.5)]],
   },
   '&::selection': {
     color: theme.color.lighten(0.1),

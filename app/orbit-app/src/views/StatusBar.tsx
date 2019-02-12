@@ -25,7 +25,7 @@ export const StatusBar = gloss({
   // backdropFilter: 'blur(10px)',
 }).theme((_, theme) => ({
   background: theme.background.alpha(0.97),
-  border: [1, theme.borderColor.alpha(0.75)],
+  border: [1, theme.borderColor.alpha(a => a * 0.75)],
   boxShadow: [[0, 0, 18, [0, 0, 0, 0.06]]],
 }))
 

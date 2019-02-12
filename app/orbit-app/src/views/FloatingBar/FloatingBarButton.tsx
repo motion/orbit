@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from '@mcro/ui'
 import * as React from 'react'
 
-const borderColor = theme => theme.borderColor.alpha(0.75)
+const borderColor = theme => theme.borderColor.alpha(a => a * 0.75)
 const background = theme => theme.background.alpha(0.1)
 
 export const FloatingBarButton = React.forwardRef(function FloatingBarButtonSmall(

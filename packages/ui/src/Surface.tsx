@@ -189,13 +189,20 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
             }
           />
         )}
-        <div style={{ opacity: typeof props.alpha === 'number' ? props.alpha : 1 }}>
+        <div
+          style={{
+            opacity: typeof props.alpha === 'number' ? props.alpha : 1,
+            order: icon && iconAfter ? 3 : 'inherit',
+          }}
+        >
           {icon && !stringIcon && <div>{icon}</div>}
           {icon && stringIcon && (
             <Icon
-              order={icon && iconAfter ? 3 : 'auto'}
               name={`${icon}`}
               size={getIconSize(props)}
+              transform={{
+                y: 0.5,
+              }}
               {...iconProps}
             />
           )}

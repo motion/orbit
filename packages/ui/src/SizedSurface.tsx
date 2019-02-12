@@ -21,7 +21,7 @@ const num = (x: number | boolean) => (x === true ? 1 : +x)
 // always return even so things are always centered
 const getHeight = (size: number, sizeHeight: number | boolean) => {
   const height = Math.round(LINE_HEIGHT * num(sizeHeight) * size)
-  return height % 2 === 0 ? height : height + 1
+  return height % 2 === 1 ? height : height + 1
 }
 
 export function SizedSurface(props: SizedSurfaceProps) {

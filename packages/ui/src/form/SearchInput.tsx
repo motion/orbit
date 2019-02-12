@@ -75,8 +75,6 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
             opacity={1}
             position="relative"
             zIndex={2}
-            // weirdly this fixes a strange overlap bug
-            flex={1}
             marginLeft={5}
           />
         </SearchBox>

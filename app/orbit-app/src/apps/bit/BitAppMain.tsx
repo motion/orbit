@@ -30,7 +30,7 @@ export default function BitAppMain(props: AppProps) {
       <AppSearchable appStore={props.appStore}>
         {({ searchBar }) => (
           <>
-            <BitTitleBar normalizedItem={normalizedItem} searchBar={searchBar} />
+            <BitTitleBar bit={bit} normalizedItem={normalizedItem} searchBar={searchBar} />
             <View item={bit} normalizedItem={normalizedItem} {...props} />
           </>
         )}

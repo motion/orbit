@@ -29,7 +29,7 @@ export default observer(function OrbitHeader() {
 
   return (
     <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
-      {isEditing && <OrbitHeaderEditingBg />}
+      <OrbitHeaderEditingBg isActive={isEditing} />
       <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn}>
           <WindowControls
@@ -172,10 +172,13 @@ function OrbitEditAppButton() {
   )
 }
 
-const OrbitHeaderEditingBg = gloss(FullScreen, {
+const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
-}).theme((_, theme) => ({
-  background: linearGradient(theme.selected.background, theme.selected.background.darken(0.1)),
+  transition: 'all ease-in 500ms',
+}).theme(({ isActive }, theme) => ({
+  background: isActive
+    ? linearGradient(theme.selected.background, theme.selected.background.darken(0.1))
+    : 'transparent',
 }))
 
 const OrbitHeaderContainer = gloss(View, {

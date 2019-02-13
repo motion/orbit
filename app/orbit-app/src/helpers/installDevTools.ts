@@ -38,7 +38,7 @@ window['StoreState'] = {}
 const StoreState = window['StoreState']
 
 function addEvent(component, key, event) {
-  const id = component.__componentId
+  const id = event.componentId
   StoreState[component.displayName] = StoreState[component.displayName] || {}
   StoreState[component.displayName][id] = StoreState[component.displayName][id] || {
     observes: [],
@@ -57,6 +57,15 @@ debugUseStore(event => {
       return
     case 'reactiveKeys':
       addEvent(event.component, 'reactiveKeys', event)
+      return
+    case 'unmount':
+      for (const key in StoreState) {
+        for (const id in StoreState[key]) {
+          if (+id === event.componentId) {
+            delete StoreState[key][id]
+          }
+        }
+      }
       return
     // case 'prop':
     // case 'render':

@@ -47,6 +47,10 @@ type UseStoreDebugEvent =
       componentId: number
       store: any
     }
+  | {
+      type: 'unmount'
+      componentId: number
+    }
 
 let debugFns = new Set()
 export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
@@ -297,7 +301,7 @@ export function useStore<P, A extends { props?: P } | any>(
   let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
   const component = getCurrentComponent()
-  const componentId = useRef(Math.random())
+  const componentId = useRef(++nextId)
 
   if (process.env.NODE_ENV === 'development') {
     store = useTrackableStore(
@@ -323,6 +327,12 @@ export function useStore<P, A extends { props?: P } | any>(
     store.didMount && store.didMount()
     return () => {
       disposeStore(store)
+      if (process.env.NODE_ENV === 'development') {
+        debugEmit({
+          type: 'unmount',
+          componentId: componentId.current,
+        })
+      }
     }
   }, [])
 
@@ -373,6 +383,12 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
       return () => {
         for (const { dispose } of stateRef.current.values()) {
           dispose()
+        }
+        if (process.env.NODE_ENV === 'development') {
+          debugEmit({
+            type: 'unmount',
+            componentId: componentId.current,
+          })
         }
       }
     }, [])

@@ -72,15 +72,22 @@ export function decorate<A extends any>(obj: A): A {
 
       for (const key of keys) {
         if (IGNORE[key]) continue
-        if (getters[key]) {
-          delete instance[key]
-          continue
-        }
+        if (getters[key]) continue
         const value = instance[key]
         if (typeof value === 'function') {
           if (value.isAutomagicReaction) {
-            reactions[key] = value(instance, key)
             delete instance[key]
+            Object.defineProperty(instance, key, {
+              get() {
+                const r = reactions[key]
+                if (!r.value) r.value = r.initializer(proxiedStore, key)
+                return r.value.get()
+              },
+            })
+            reactions[key] = {
+              initializer: value,
+              value: null,
+            }
           } else {
             instDecor[key] = Mobx.action
           }
@@ -89,20 +96,19 @@ export function decorate<A extends any>(obj: A): A {
         }
       }
 
-      const proxiedStore = new Proxy(Mobx.decorate(instance, instDecor), {
+      const decoratedInstance = Mobx.decorate(instance, instDecor)
+
+      const proxiedStore = new Proxy(decoratedInstance, {
         get(target, method) {
-          if (method !== 'constructor' && getters[method]) {
-            const getObj = getters[method]
-            if (!getObj.value) {
-              getObj.value = getObj.initializer.call(proxiedStore)
+          if (method !== 'constructor') {
+            const g = getters[method]
+            if (g) {
+              if (!g.value) g.value = g.initializer.call(proxiedStore)
+              return g.value.get()
             }
-            return getObj.value.get()
           }
           if (Reflect.has(target, method)) {
             return Reflect.get(target, method)
-          }
-          if (reactions[method]) {
-            return reactions[method].get()
           }
         },
       })

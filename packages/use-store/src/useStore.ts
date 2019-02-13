@@ -36,6 +36,13 @@ type UseStoreDebugEvent =
       key: string
       oldValue: any
       newValue: any
+      store: any
+    }
+  | {
+      type: 'reactiveKeys'
+      keys: Set<string>
+      component: any
+      store: any
     }
 
 let debugFns = new Set()
@@ -80,14 +87,14 @@ export function disposeStore(store: any) {
 
 // updateProps
 // granular set so reactions can be efficient
-const updateProps = (props: Object, nextProps: Object) => {
+const updateProps = (store: any, nextProps: Object) => {
   const nextPropsKeys = Object.keys(nextProps)
-  const curPropKeys = Object.keys(props)
+  const curPropKeys = Object.keys(store.props)
 
   // changes
   transaction(() => {
     for (const prop of nextPropsKeys) {
-      const a = props[prop]
+      const a = store.props[prop]
       const b = nextProps[prop]
       if (!isEqualReact(a, b)) {
         if (process.env.NODE_ENV === 'development') {
@@ -96,16 +103,17 @@ const updateProps = (props: Object, nextProps: Object) => {
             key: prop,
             oldValue: a,
             newValue: b,
+            store,
           })
         }
-        props[prop] = b
+        store.props[prop] = b
       }
     }
 
     // removes
     for (const key of curPropKeys) {
       if (typeof nextProps[key] === 'undefined') {
-        delete props[key]
+        delete store.props[key]
       }
     }
   })
@@ -179,7 +187,7 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
 
   // update props after first run
   if (props && !!storeRef.current) {
-    storeRef.current.__updateProps(storeRef.current.props, props)
+    storeRef.current.__updateProps(storeRef.current, props)
   }
 
   return storeRef.current
@@ -203,14 +211,15 @@ function setupTrackableStore(store: any, rerender: Function) {
     track() {
       reactiveKeys.clear()
       rendering = true
-    },
-    untrack() {
-      rendering = false
       if (!dispose) {
         try {
           dispose = observe(store, change => {
+            if (component.displayName === 'SubPane') {
+              console.log('i see a change', change, rendering, reactiveKeys)
+            }
             if (rendering) return
             if (change.type !== 'update') return
+            if (!reactiveKeys.size) return
             if (!reactiveKeys.has(change['name'])) return
             if (process.env.NODE_ENV === 'development') {
               debugEmit({
@@ -226,6 +235,19 @@ function setupTrackableStore(store: any, rerender: Function) {
           })
         } catch (err) {
           console.error(err)
+        }
+      }
+    },
+    untrack() {
+      rendering = false
+      if (process.env.NODE_ENV === 'development') {
+        if (reactiveKeys.size) {
+          debugEmit({
+            type: 'reactiveKeys',
+            keys: reactiveKeys,
+            component,
+            store,
+          })
         }
       }
     },

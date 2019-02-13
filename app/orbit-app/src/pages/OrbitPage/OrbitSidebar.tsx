@@ -49,7 +49,7 @@ export function useInspectViews() {
 }
 
 export default memo(function OrbitSidebar() {
-  const { paneManagerStore } = useStores({ debug: true })
+  const { paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const [indexRef, setIndexRef] = useState<AppViewRefDictionary>({})
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
@@ -111,7 +111,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   indexRef: AppViewRefDictionary
   hasMain: boolean
 }) {
-  const { orbitStore } = useStores({ debug: true })
+  const { orbitStore } = useStores()
   const { pane, indexRef, setIndexRef, hasMain } = props
 
   console.log('rendering sidebar')

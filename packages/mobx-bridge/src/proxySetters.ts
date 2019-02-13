@@ -22,5 +22,8 @@ export function proxySetters(klass) {
         }
       }
     },
+    set(target, key, value) {
+      return Reflect.set(target, key, value)
+    },
   })
 }

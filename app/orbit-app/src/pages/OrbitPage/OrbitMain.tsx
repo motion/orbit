@@ -13,7 +13,7 @@ import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default memo(function OrbitMain() {
-  const { paneManagerStore } = useStores({ debug: true })
+  const { paneManagerStore } = useStores()
   const { hasMain } = useInspectViews()
 
   console.log('render main root')
@@ -41,7 +41,7 @@ function OrbitPageMainView(props: { pane: Pane }) {
     }
   })
 
-  console.log('rendering main')
+  // console.log('rendering main')
 
   // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
   // we have a delay between select and show main sometimes

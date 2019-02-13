@@ -1,5 +1,5 @@
 import { cloneElement, useEffect } from 'react'
-import { useStores } from '../hooks/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from './AppTypes'
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
@@ -11,7 +11,7 @@ export function AppContainer(props: AppElements) {
     }
   }
 
-  const { appStore, appsStore } = useStores()
+  const { appStore, appsStore } = useStoresSimple()
 
   useEffect(() => {
     const views = {

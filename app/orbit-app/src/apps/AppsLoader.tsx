@@ -33,7 +33,9 @@ function AppLoader(props: AppLoaderProps) {
 
   // never run more than once
   // sub-view so we can use hooks
-  const element = useMemo(() => <AppLoadView {...props} />, [])
+  const element = useMemo(() => {
+    return <AppLoadView {...props} />
+  }, [])
 
   return element
 }

@@ -1,4 +1,4 @@
-import { decorate, dispose } from '@mcro/automagical'
+import { decorate } from '@mcro/automagical'
 import { throttle } from 'lodash'
 import { observable, transaction } from 'mobx'
 import {
@@ -30,6 +30,7 @@ type UseGlobalStoreOptions = {
 type UseStoreOptions = {
   debug?: boolean
   conditionalUse?: boolean
+  react?: boolean
 }
 
 let globalOptions = {
@@ -44,7 +45,7 @@ export function disposeStore(store: any) {
   if (globalOptions.onUnmount) {
     globalOptions.onUnmount(store)
   }
-  dispose(store)
+  store.disposeAutomagic()
 }
 
 // updateProps
@@ -162,25 +163,27 @@ export function useStore<P, A extends { props?: P } | any>(
   const component = getCurrentComponent()
   const componentId = useRef(++nextId)
 
-  if (process.env.NODE_ENV === 'development') {
-    store = useTrackableStore(
-      store,
-      () => {
-        debugEmit(
-          {
-            type: 'render',
-            store,
-            component,
-            componentId: componentId.current,
-          },
-          options,
-        )
-        rerender()
-      },
-      { ...options, component, componentId: componentId.current },
-    )
-  } else {
-    store = useTrackableStore(store, rerender)
+  if (!options || options.react !== false) {
+    if (process.env.NODE_ENV === 'development') {
+      store = useTrackableStore(
+        store,
+        () => {
+          debugEmit(
+            {
+              type: 'render',
+              store,
+              component,
+              componentId: componentId.current,
+            },
+            options,
+          )
+          rerender()
+        },
+        { ...options, component, componentId: componentId.current },
+      )
+    } else {
+      store = useTrackableStore(store, rerender)
+    }
   }
 
   // TODO this can be refactored so it just does the global options probably

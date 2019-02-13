@@ -36,7 +36,7 @@ class OrbitNavStore {
 }
 
 export default memo(function OrbitNav() {
-  const { spaceStore, paneManagerStore, newAppStore } = useStores({ debug: true })
+  const { spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore

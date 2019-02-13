@@ -78,7 +78,7 @@ function OrbitManagers() {
 }
 
 const OrbitPageInner = memo(() => {
-  const { paneManagerStore } = useStores({ debug: true })
+  const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
   const [theme, setTheme] = useState('light')
   const shortcutState = useRef({

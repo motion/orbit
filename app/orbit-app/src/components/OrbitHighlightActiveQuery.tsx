@@ -1,4 +1,3 @@
-import { useObserver } from 'mobx-react-lite'
 import React, { useRef, useState } from 'react'
 import {
   MergeHighlightsContext,
@@ -11,18 +10,18 @@ export function OrbitHighlightActiveQuery(props: Partial<MergeHighlightsContextP
 
   // initialQuery prevents two renders on mount by just storing the first value of query
   const initialQuery = useRef(null)
-  if (initialQuery.current === null) {
-    initialQuery.current = appStore.activeQuery
-  }
+  // if (initialQuery.current === null) {
+  //   initialQuery.current = appStore.activeQuery
+  // }
 
-  const [activeQuery, setActiveQuery] = useState(initialQuery.current)
+  const [activeQuery, setActiveQuery] = useState('')
 
   // keep it in sync
-  useObserver(() => {
-    if (appStore.activeQuery !== activeQuery) {
-      setActiveQuery(appStore.activeQuery)
-    }
-  })
+  // useObserver(() => {
+  //   if (appStore.activeQuery !== activeQuery) {
+  //     setActiveQuery(appStore.activeQuery)
+  //   }
+  // })
 
   return (
     <MergeHighlightsContext

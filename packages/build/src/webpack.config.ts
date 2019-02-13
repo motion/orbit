@@ -193,6 +193,7 @@ const config = {
 
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
+      'process.env.TARGET': JSON.stringify(target),
       'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
       'process.env.DISABLE_SYNCERS': JSON.stringify(process.env.DISABLE_SYNCERS || false),
       'process.env.DISABLE_LOGGING': JSON.stringify(process.env.DISABLE_LOGGING || false),

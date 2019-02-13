@@ -43,7 +43,6 @@ import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
-import contextMenu from 'electron-context-menu'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import './helpers/installDevelopmentHelpers'
@@ -87,7 +86,7 @@ function getOrbitBrowser() {
       // Chrome: props => (
       //   <AsyncPage page={() => import('./pages/ChromePage/ChromePage')} {...props} />
       // ),
-      Cosal: props => <AsyncPage page={() => import('./pages/CosalPage/CosalPage')} {...props} />,
+      // Cosal: props => <AsyncPage page={() => import('./pages/CosalPage/CosalPage')} {...props} />,
     }),
     {},
   )
@@ -120,11 +119,14 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   // context menu
   const contextMenuItems = React.useRef([])
   React.useEffect(() => {
-    contextMenu({
-      prepend: (/* params, browserWindow */) => {
-        return contextMenuItems.current
-      },
-    })
+    if (process.env.TARGET !== 'web') {
+      console.log(require('electron-context-menu'))
+      require('electron-context-menu')({
+        prepend: (/* params, browserWindow */) => {
+          return contextMenuItems.current
+        },
+      })
+    }
   }, [])
 
   return (

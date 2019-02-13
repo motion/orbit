@@ -22,24 +22,20 @@ export function configureAutomagical(opts: { isSubscribable?: (val: any) => bool
   automagicConfig = Object.freeze(Object.assign(automagicConfig, opts))
 }
 
-export function dispose(store: any) {
-  if (store.__automagicSubscriptions) {
-    console.log('dispsing2..')
-    store.__automagicSubscriptions.dispose()
-  }
-}
+const Getters = new WeakMap()
 
-export function decorate<A extends any>(obj: A): A {
-  if (obj.prototype.__hasAutomagic) {
-    return obj
-  }
-  Object.defineProperty(obj.prototype, '__hasAutomagic', {
+// decorates the prototype
+function decorateStore(obj) {
+  Object.defineProperty(obj, 'disposeAutomagic', {
     enumerable: false,
     configurable: false,
-    value: true,
+    get() {
+      return () => {
+        this.__automagicSubscriptions.dispose()
+      }
+    },
   })
 
-  // decorate prototype first
   const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
@@ -47,20 +43,25 @@ export function decorate<A extends any>(obj: A): A {
     if (IGNORE[key] || key[0] === '_') continue
     const descriptor = descriptors[key]
     if (descriptor && !!descriptor.get) {
-      getterDesc[key] = {
-        initializer: function() {
-          return Mobx.computed(descriptor.get.bind(this))
-        },
-        value: null,
-      }
+      getterDesc[key] = descriptor.get
     }
     if (typeof descriptor.value === 'function') {
       decor[key] = Mobx.action
     }
   }
   Mobx.decorate(obj, decor)
+  return getterDesc
+}
 
-  // decorate instance values and react() functions
+export function decorate<T>(obj: {
+  new (...args: any[]): T
+}): { new (...args: any[]): T & { dispose: Function } } {
+  if (!Getters.get(obj)) {
+    const getters = decorateStore(obj)
+    Getters.set(obj, getters)
+  }
+
+  const getterDesc = Getters.get(obj)
 
   return new Proxy(obj as any, {
     construct(Target, args) {
@@ -71,24 +72,38 @@ export function decorate<A extends any>(obj: A): A {
       const reactions = {}
       const getters = {}
 
+      for (const key in getterDesc) {
+        Object.defineProperty(instance, key, {
+          enumerable: true,
+          get() {
+            if (!getters[key]) {
+              getters[key] = Mobx.computed(getterDesc[key].bind(decoratedInstance))
+            }
+            return getters[key].get()
+          },
+        })
+      }
+
       for (const key of keys) {
         if (IGNORE[key]) continue
-        if (getterDesc[key]) continue
         const value = instance[key]
         if (typeof value === 'function') {
           if (value.isAutomagicReaction) {
             delete instance[key]
-            Object.defineProperty(instance, key, {
-              get() {
-                const r = reactions[key]
-                if (!r.value) r.value = r.initializer(proxiedStore, key)
-                return r.value.get()
-              },
-            })
             reactions[key] = {
               initializer: value,
               value: null,
             }
+            Object.defineProperty(instance, key, {
+              enumerable: true,
+              get() {
+                const r = reactions[key]
+                if (!r.value) {
+                  r.value = r.initializer(decoratedInstance, key)
+                }
+                return r.value.get()
+              },
+            })
           } else {
             instDecor[key] = Mobx.action
           }
@@ -99,23 +114,7 @@ export function decorate<A extends any>(obj: A): A {
 
       const decoratedInstance = Mobx.decorate(instance, instDecor)
 
-      const proxiedStore = new Proxy(decoratedInstance, {
-        get(target, method) {
-          if (method !== 'constructor') {
-            if (getterDesc[method]) {
-              if (!getters[method]) {
-                getters[method] = getterDesc[method].initializer.call(proxiedStore)
-              }
-              return getters[method].get()
-            }
-          }
-          if (Reflect.has(target, method)) {
-            return Reflect.get(target, method)
-          }
-        },
-      })
-
-      return proxiedStore
+      return decoratedInstance
     },
   })
 }

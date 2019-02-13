@@ -50,10 +50,6 @@ const HostConfig = {
     return instance
   },
 
-  // prepareUpdate() {
-  //   return true
-  // },
-
   prepareUpdate(instance, type, oldProps, newProps) {
     instance.applyProps(newProps, oldProps)
     return emptyObject

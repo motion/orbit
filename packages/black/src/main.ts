@@ -11,5 +11,5 @@ export const Constants = Constants_
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export const deep = <X>(x: X) => {
-  return (observable.box(x, { deep: true }) as unknown) as X
+  return (observable(x) as unknown) as X
 }

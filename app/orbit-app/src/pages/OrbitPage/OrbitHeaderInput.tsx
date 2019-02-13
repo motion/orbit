@@ -30,7 +30,6 @@ export default memo(function OrbitHeaderInput() {
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
   const fontSize = getIsTorn() ? 16 : 18
-  console.log('placeholder', placeholder, activePane)
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

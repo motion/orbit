@@ -8,13 +8,12 @@ import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStores } from '../../hooks/useStores'
 import { Pane } from '../../stores/PaneManagerStore'
-import { useInspectViews } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default memo(function OrbitMain() {
-  const { paneManagerStore } = useStores({ debug: true })
-  const { hasMain } = useInspectViews()
+  const { paneManagerStore, appsStore } = useStores()
+  const { hasMain } = appsStore.currentView
 
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
@@ -35,11 +34,10 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[type]
     if (!isEqual(appConfig, activeConfig)) {
+      console.log('update actige')
       setActiveConfig(appConfig)
     }
   })
-
-  console.log('rendering main')
 
   // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
   // we have a delay between select and show main sometimes

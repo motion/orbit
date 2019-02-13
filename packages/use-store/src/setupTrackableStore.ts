@@ -1,6 +1,5 @@
 import { observable, Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { debugEmit } from './debugUseStore'
 import { getCurrentComponent } from './useStore'
 
 type TrackableStoreOptions = {
@@ -53,18 +52,19 @@ export function setupTrackableStore(
       firstRun = true
       rendering.set(false)
 
-      if (process.env.NODE_ENV === 'development') {
-        debugEmit(
-          {
-            type: 'reactiveKeys',
-            keys: reactiveKeys,
-            component: options.component,
-            store,
-            componentId: options.componentId,
-          },
-          options,
-        )
-      }
+      // TODO only emit if its changed
+      // if (process.env.NODE_ENV === 'development') {
+      //   debugEmit(
+      //     {
+      //       type: 'reactiveKeys',
+      //       keys: reactiveKeys,
+      //       component: options.component,
+      //       store,
+      //       componentId: options.componentId,
+      //     },
+      //     options,
+      //   )
+      // }
     },
     dispose: reaction.getDisposer(),
     reactiveKeys,

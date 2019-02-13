@@ -146,8 +146,6 @@ export const AppView = memo(
       return null
     }
 
-    console.log('rendering ap2p', provideStores)
-
     return <ProvideStores stores={{ ...provideStores, appStore }}>{appElement}</ProvideStores>
   }),
 )

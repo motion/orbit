@@ -10,14 +10,14 @@ import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
+import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
-import { StoreContext } from '../../contexts'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { getAppState, getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
@@ -27,7 +27,6 @@ import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
-import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
 import OrbitSidebar from './OrbitSidebar'
@@ -49,7 +48,7 @@ export default React.memo(function OrbitPage() {
 })
 
 const OrbitPageInner = observer(function OrbitPageInner() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
   const theme = App.state.isDark ? 'dark' : 'light'
   const shortcutState = React.useRef({
@@ -117,7 +116,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <MergeContext Context={StoreContext} value={{ headerStore }}>
+    <ProvideStores stores={{ headerStore }}>
       <MainShortcutHandler
         handlers={{
           closeTab: () => {
@@ -144,7 +143,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
           </AppWrapper>
         </Theme>
       </MainShortcutHandler>
-    </MergeContext>
+    </ProvideStores>
   )
 })
 
@@ -285,11 +284,7 @@ function OrbitPageProvideStores(props: any) {
     orbitStore,
   }
 
-  return (
-    <MergeContext Context={StoreContext} value={stores}>
-      {props.children}
-    </MergeContext>
-  )
+  return <ProvideStores stores={stores}>{props.children}</ProvideStores>
 }
 
 const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {

@@ -1,7 +1,22 @@
 import { automagicClass } from '@mcro/automagical'
-import { observable, transaction } from 'mobx'
-import { createContext, isValidElement, useEffect, useRef } from 'react'
-import isEqual from 'react-fast-compare'
+import { isEqual, throttle } from 'lodash'
+import { observable, reaction, transaction } from 'mobx'
+import {
+  createContext,
+  isValidElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  // @ts-ignore
+  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
+} from 'react'
+import isEqualReact from 'react-fast-compare'
+
+const { ReactCurrentOwner } = __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
 
 type UseGlobalStoreOptions = {
   onMount: (store: any) => void
@@ -58,7 +73,7 @@ const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions
     for (const prop of nextPropsKeys) {
       const a = props[prop]
       const b = nextProps[prop]
-      if (!isEqual(a, b)) {
+      if (!isEqualReact(a, b)) {
         if (process.env.NODE_ENV === 'development' && options && options.debug) {
           console.log('has changed prop', prop, nextProps[prop])
         }
@@ -83,9 +98,8 @@ export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<
   return cb()
 }
 
-const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
+function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   Store.prototype.automagic = automagicClass
-
   let storeInstance: A
 
   // capture hooks for this store
@@ -123,17 +137,17 @@ const setupStoreReactiveProps = <A>(Store: new () => A, props?: Object) => {
   }
 }
 
-const useReactiveStore = <A extends any>(
+function useReactiveStore<A extends any>(
   Store: new () => A,
   props?: any,
   options?: UseStoreOptions,
-): A => {
+): A {
   const storeHooks = useRef<Function[] | null>(null)
   const storeRef = useRef<A>(null)
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
 
   if (!storeRef.current || hasChangedSource) {
-    const { hooks, store } = setupStoreReactiveProps(Store, props)
+    const { hooks, store } = setupReactiveStore(Store, props)
     storeRef.current = store
     storeHooks.current = hooks
   } else {
@@ -154,12 +168,84 @@ const useReactiveStore = <A extends any>(
   return storeRef.current
 }
 
+function setupTrackableStore(store: any, rerender: Function) {
+  let tracking = false
+  let lastReactiveKeys = new Set()
+  let reactiveKeys = new Set()
+  let unwatch = null
+
+  const watchForUpdates = () => {
+    if (isEqual(lastReactiveKeys, reactiveKeys)) {
+      return
+    }
+    const reactiveKeyArr = [...reactiveKeys]
+    lastReactiveKeys = new Set(reactiveKeyArr)
+    if (unwatch) {
+      unwatch()
+    }
+    if (reactiveKeyArr.length) {
+      unwatch = reaction(
+        () => {
+          for (const key of reactiveKeyArr) {
+            store[key]
+          }
+          return Math.random()
+        },
+        () => {
+          rerender()
+        },
+      )
+    }
+  }
+
+  return {
+    store: new Proxy(store as any, {
+      get(target, key) {
+        if (tracking && typeof key === 'string' && key !== '$$typeof') {
+          reactiveKeys.add(key)
+        }
+        return Reflect.get(target, key)
+      },
+    }),
+    track() {
+      reactiveKeys.clear()
+      tracking = true
+    },
+    untrack() {
+      tracking = false
+      watchForUpdates()
+    },
+  }
+}
+
+export function useTrackableStore<A>(plainStore: A): A {
+  const trackableStore = useRef({
+    store: null,
+    track: null,
+    untrack: null,
+  })
+  const rerenderComponent = useForceRerender()
+
+  if (!trackableStore.current.store) {
+    const throttledRerender = throttle(rerenderComponent)
+    trackableStore.current = setupTrackableStore(plainStore, throttledRerender)
+  }
+
+  const { store, track, untrack } = trackableStore.current
+
+  track()
+  useLayoutEffect(untrack)
+
+  return store
+}
+
 export function useStore<P, A extends { props?: P } | any>(
   Store: new () => A,
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  const store = useReactiveStore(Store, props, options)
+  let store = useReactiveStore(Store, props, options)
+  store = useTrackableStore(store)
 
   // TODO this can be refactored so it just does the global options probably
   // stores can use didMount and willUnmount
@@ -188,36 +274,74 @@ function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }
 
-// export function useStores<P, A extends { props?: P } | any>(
-//   Stores: (new () => A)[],
-//   options: UseStoreOptions & {
-//     getProps?: (index: number) => P
-//   } = {},
-//   conditions: any[]
-// ): A[] {
-//   const stores = useRef<A[]>([])
+export function useCurrentComponent() {
+  return ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
+    ? ReactCurrentOwner.current.elementType
+    : {}
+}
 
-//   useEffect(() => {
-//     let next = stores.current
+export function useForceRerender() {
+  const [, setState] = useState(0)
+  return useCallback(() => setState(Math.random()), [])
+}
 
-//     // delete
-//     next = next.map(store => {
-//       if (paneManagerStore.panes.some(x => stores.some(a => `${a.id}` === x.id)) === false) {
-//         disposeStore(store)
-//         return null
-//       }
-//       return store
-//     }).filter(Boolean)
+// for use in children
+export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
+  return function useStores(options?: { optional?: (keyof A)[] }): A {
+    const stores = useContext(StoreContext)
+    const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
+    const state = stateRef.current
+    const rerender = useForceRerender()
+    const rerenderThrottled = useMemo(() => throttle(rerender), [])
+    const storesRef = useRef(null)
 
-//     // add
-//     for (const pane of paneManagerStore.panes) {
-//       if (pane.subType !== 'app') continue
-//       if (stores.some(x => `${x.id}` === pane.id)) continue
-//       next.push(
+    if (!storesRef.current) {
+      // this will throw if they try and access a store thats not provided
+      // should give us runtime safety without as much type overhead everywhere
+      storesRef.current = new Proxy(stores, {
+        get(target, key) {
+          const val = Reflect.get(target, key)
 
-//       )
-//     }
-//   }, conditions)
+          // found a store, wrap it for tracking
+          if (typeof val !== 'undefined') {
+            // wrap each store with trackable
+            if (state.has(val)) {
+              return state.get(val).store
+            }
+            const next = setupTrackableStore(val, rerenderThrottled)
+            // track once immedaitely one because it will be missed by track block below
+            next.track()
+            state.set(val, next)
+            return next.store
+          }
 
-//   return []
-// }
+          // check if didn't find a store!
+          if (typeof key === 'string') {
+            if (options && options.optional && options.optional.find(x => x === key)) {
+              return
+            }
+            if (key.indexOf('isMobX') === 0 || key.indexOf('_') === 0) {
+              return
+            }
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(`Attempted to get store ${String(key)} which is not in context`)
+            }
+          }
+        },
+      })
+    }
+
+    // track and untrack
+    for (const { track } of state.values()) {
+      track()
+    }
+
+    useLayoutEffect(() => {
+      for (const { untrack } of state.values()) {
+        untrack()
+      }
+    })
+
+    return storesRef.current
+  }
+}

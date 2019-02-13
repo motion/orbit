@@ -1,7 +1,6 @@
 import { Button, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import * as Views from '../views'
 import { VerticalSpace } from '../views'
@@ -11,8 +10,8 @@ type Props = {
   subName: string
 }
 
-export default observer(function NoResultsDialog(props: Props) {
-  const { paneManagerStore } = useStoresSafe()
+export default function NoResultsDialog(props: Props) {
+  const { paneManagerStore } = useStores()
   return (
     <>
       <View alignItems="center" justifyContent="center" padding={25}>
@@ -24,4 +23,4 @@ export default observer(function NoResultsDialog(props: Props) {
       </View>
     </>
   )
-})
+}

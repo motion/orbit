@@ -12,7 +12,7 @@ import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortc
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../contexts'
 import { useActiveApps } from '../../../hooks/useActiveApps'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 import { PaneManagerStore } from '../../../stores/PaneManagerStore'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { MergeContext } from '../../../views/MergeContext'
@@ -466,7 +466,7 @@ function useMenuApps() {
 }
 
 export function Menu() {
-  const stores = useStoresSafe()
+  const stores = useStores()
   const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
   const menuApps = useMenuApps()
 
@@ -559,7 +559,7 @@ export function Menu() {
 // }
 
 const MenuLayerContent = React.memo(() => {
-  const { menuStore, queryStore } = useStoresSafe()
+  const { menuStore, queryStore } = useStores()
   const menuApps = useMenuApps()
   return (
     <View className="app-parent-bounds">

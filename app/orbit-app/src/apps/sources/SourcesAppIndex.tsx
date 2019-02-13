@@ -1,18 +1,17 @@
 import { sleep } from '@mcro/black'
 import { Icon, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps, AppType } from '../AppTypes'
 
-export default observer(function SourcesAppIndex(_props: AppProps) {
-  const { sourcesStore } = useStoresSafe()
+export default function SourcesAppIndex(_props: AppProps) {
+  const { sourcesStore } = useStores()
   const [activeSpace] = useActiveSpace()
   // const activeSpaceName = activeSpace ? activeSpace.name : ''
   const { activeSources, allSources } = sourcesStore
@@ -78,4 +77,4 @@ export default observer(function SourcesAppIndex(_props: AppProps) {
   ]
 
   return <SelectableList minSelected={0} items={results} />
-})
+}

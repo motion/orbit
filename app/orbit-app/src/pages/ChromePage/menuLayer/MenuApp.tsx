@@ -5,7 +5,7 @@ import * as React from 'react'
 import { AppView, AppViewProps } from '../../../apps/AppView'
 import { SubPane } from '../../../components/SubPane'
 import { MENU_WIDTH } from '../../../constants'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 
 type MenuAppProps = AppViewProps
 
@@ -22,7 +22,7 @@ const menuHeightSetter = memoize((index: number) => (height: number) => {
 })
 
 export default observer(function MenuApp(props: MenuAppProps & { index: number }) {
-  const { menuStore } = useStoresSafe()
+  const { menuStore } = useStores()
   // memo to prevent expensive renders on height changes
   const menuApp = React.useMemo(
     () => {

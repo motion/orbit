@@ -2,7 +2,7 @@ import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 
 const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
@@ -22,7 +22,7 @@ const ContentInner = gloss(UI.Col, {
 })
 
 export default observer(function ScrollableContent(props: { scrollTo?: string; children: any }) {
-  const { appPageStore } = useStoresSafe({ optional: ['appPageStore'] })
+  const { appPageStore } = useStores({ optional: ['appPageStore'] })
 
   React.useEffect(() => {
     if (props.scrollTo && appPageStore) {

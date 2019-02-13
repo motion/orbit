@@ -1,5 +1,33 @@
+// import { useStore } from '@mcro/use-store'
+// import React from 'react'
+// import { hot } from 'react-hot-loader'
+// import { ProvideStores } from './components/ProvideStores'
+// import { useStores } from './hooks/useStores'
+
+// class Ok {
+//   x = 1
+// }
+
+// export const OrbitRoot = hot(module)(function OrbitRoot() {
+//   const store = useStore(Ok)
+
+//   return (
+//     <div>
+//       <ProvideStores stores={{ store }}>
+//         {store.x} <button onClick={() => store.x++}>up</button>
+//         <SubView />
+//       </ProvideStores>
+//     </div>
+//   )
+// })
+
+// function SubView() {
+//   // @ts-ignore
+//   const { store } = useStores()
+//   return <div>sub sub {store.x}</div>
+// }
+
 // import dev helpers
-import { command } from './mediator'
 import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
@@ -8,6 +36,7 @@ import contextMenu from 'electron-context-menu'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import './helpers/installDevelopmentHelpers'
+import { command } from './mediator'
 import ChromePage from './pages/ChromePage/ChromePage'
 import OrbitPage from './pages/OrbitPage/OrbitPage'
 import { themes } from './themes'

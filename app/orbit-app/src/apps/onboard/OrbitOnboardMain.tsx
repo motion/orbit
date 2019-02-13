@@ -1,13 +1,12 @@
 import { sleep } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { command } from '../../mediator'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
+import { command } from '../../mediator'
 import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { ItemType, OrbitIntegration } from '../../sources/types'
 import { Title, VerticalSpace } from '../../views'
@@ -19,7 +18,7 @@ const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStores)
   acceptedMessage = ''
   accepted = null
   curFrame = 0
@@ -77,8 +76,8 @@ class OnboardStore {
 const filterApps = (app: OrbitIntegration<ItemType>) =>
   !!app.integration && app.integration !== 'website'
 
-export default observer(function OrbitOnboardMain() {
-  const stores = useStoresSafe()
+export default function OrbitOnboardMain() {
+  const stores = useStores()
   const store = useStore(OnboardStore)
 
   if (stores.paneManagerStore.activePane.type !== 'onboard') {
@@ -246,7 +245,7 @@ export default observer(function OrbitOnboardMain() {
       </BottomControls>
     </>
   )
-})
+}
 
 const Centered = gloss({
   margin: 'auto',

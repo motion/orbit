@@ -6,14 +6,14 @@ import * as React from 'react'
 import { AppConfig, AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { Pane } from '../../stores/PaneManagerStore'
 import { useInspectViews } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default function OrbitMain() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const { hasMain } = useInspectViews()
 
   return (
@@ -29,7 +29,7 @@ export default function OrbitMain() {
 
 // separate view prevents big re-renders
 function OrbitPageMainView(props: { pane: Pane }) {
-  const { orbitStore } = useStoresSafe()
+  const { orbitStore } = useStores()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
 
   useObserver(() => {

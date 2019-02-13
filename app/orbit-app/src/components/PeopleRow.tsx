@@ -2,7 +2,7 @@ import * as UI from '@mcro/ui'
 import { flow } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from '../helpers/preventDefault'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 
 const shortName = name => {
   const names = name.split(' ')
@@ -18,7 +18,7 @@ const Person = props => (
 )
 
 export default function PeopleRow({ people }) {
-  const { queryStore } = useStoresSafe()
+  const { queryStore } = useStores()
   const { activeTheme } = React.useContext(UI.ThemeContext)
   const total = (people || []).length
   if (total === 0) {

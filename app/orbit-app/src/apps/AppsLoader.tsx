@@ -56,7 +56,7 @@ function AppLoadView({ view, store }: AppLoaderProps) {
   }
 
   if (AppView.index || AppView.main) {
-    store.handleAppViews(view.id, AppView)
+    store.setupApp(view.id, AppView)
     return null
   } else {
     throw new Error(`Invalid definition ${AppView}`)

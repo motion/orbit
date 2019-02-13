@@ -9,7 +9,7 @@ import Resizable, { ResizeCallback } from 're-resizable'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import * as Constants from '../../constants'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import AppFrameArrow from './AppFrameArrow'
 import { AppPageStore } from './AppPageStore'
 
@@ -49,7 +49,7 @@ const arrToObj = size => {
 const initialAppState = App.getAppState(Constants.PEEK_ID)
 
 export class AppFrameStore {
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStores)
 
   // frame position and size
   ogSize = arrToObj(initialAppState.size)
@@ -238,7 +238,7 @@ const PeekFrameContainer = gloss(UI.View, {
 
 export default observer(function AppFrame({ children }: { children: any }) {
   const { activeTheme } = React.useContext(UI.ThemeContext)
-  const { appPageStore } = useStoresSafe()
+  const { appPageStore } = useStores()
   const appFrameStore = useStore(AppFrameStore)
   const { isShown, willShow, willHide, state, willStayShown } = appPageStore
   const borderShadow = ['inset', 0, 0, 0, 0.5, activeTheme.frameBorderColor]

@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { BORDER_RADIUS, CHROME_PAD } from '../../constants'
-import * as UI from '@mcro/ui'
-import { Desktop } from '@mcro/stores'
-import { observer } from 'mobx-react-lite'
-import { gloss } from '@mcro/gloss'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { gloss } from '@mcro/gloss';
+import { Desktop } from '@mcro/stores';
+import * as UI from '@mcro/ui';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { BORDER_RADIUS, CHROME_PAD } from '../../constants';
+import { useStores } from '../../hooks/useStores';
 
 const extraShadow = -20
 const SHADOW_PAD = 100 + extraShadow
@@ -12,7 +12,7 @@ const SHADOW_PAD = 100 + extraShadow
 // this view has two halves so it can animate smoothly without causing layout reflows
 
 export default observer(function OrbitChrome() {
-  const { orbitWindowStore, queryStore } = useStoresSafe()
+  const { orbitWindowStore, queryStore } = useStores()
   return (
     <>
       <BlockTop height={60} overflow={SHADOW_PAD}>

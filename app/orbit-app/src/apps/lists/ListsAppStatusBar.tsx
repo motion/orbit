@@ -1,5 +1,4 @@
 import { Breadcrumbs, ButtonProps, Text, useBreadcrumb, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import pluralize from 'pluralize'
 import React from 'react'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
@@ -7,7 +6,7 @@ import { Icon } from '../../views/Icon'
 import { StatusBarText } from '../../views/StatusBar'
 import { ListAppProps } from './ListsApp'
 
-export default observer(function ListAppStatusBar({ store }: ListAppProps) {
+export default function ListAppStatusBar({ store }: ListAppProps) {
   const numItems = Object.keys(store.items).length
 
   return (
@@ -31,7 +30,7 @@ export default observer(function ListAppStatusBar({ store }: ListAppProps) {
       </StatusBarText>
     </>
   )
-})
+}
 
 function ListCrumb(props: ButtonProps) {
   const { isLast } = useBreadcrumb()

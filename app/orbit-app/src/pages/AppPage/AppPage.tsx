@@ -8,7 +8,7 @@ import { AppView } from '../../apps/AppView'
 import Searchable from '../../components/Searchable'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
@@ -76,7 +76,7 @@ const CenteredTitle = gloss({
 })
 
 const AppPageContent = observer(() => {
-  const { appPageStore, appFrameStore, queryStore } = useStoresSafe()
+  const { appPageStore, appFrameStore, queryStore } = useStores()
   if (!appPageStore.state) {
     return <div>no state</div>
   }

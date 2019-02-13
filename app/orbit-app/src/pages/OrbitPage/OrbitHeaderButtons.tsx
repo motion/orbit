@@ -2,7 +2,7 @@ import { gloss } from '@mcro/gloss'
 import { ClearButton, Icon } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 
 const Section = gloss('section', {
   flexFlow: 'row',
@@ -30,7 +30,7 @@ const Interactive = gloss({
 })
 
 export default observer(function OrbitHeaderButtons() {
-  const { paneManagerStore, queryStore } = useStoresSafe()
+  const { paneManagerStore, queryStore } = useStores()
 
   const clearSearch = () => {
     queryStore.clearQuery()

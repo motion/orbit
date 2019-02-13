@@ -63,6 +63,7 @@ export const ObserverCache = {
             if (!next) return
             entry.rawValue = next
             entry.denormalizedValues = {}
+            console.log('next', next)
             for (const val of next) {
               entry.denormalizedValues[val.id] = val
             }

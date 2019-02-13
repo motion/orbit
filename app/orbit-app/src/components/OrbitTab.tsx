@@ -80,7 +80,7 @@ export function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-2%' : 0}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-5%' : 0}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}
@@ -248,6 +248,7 @@ const Separator = gloss({
   bottom: 0,
   transform: {
     x: 0.5,
+    y: -1,
   },
   width: 1,
 }).theme((_, theme) => ({

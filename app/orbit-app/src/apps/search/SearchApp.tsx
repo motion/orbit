@@ -1,8 +1,7 @@
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
-import { ProvideStores } from '../../components/ProvideStores'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { AppContainer } from '../AppContainer'
 import { AppProps } from '../AppTypes'
@@ -11,28 +10,22 @@ import SearchAppMain from './SearchAppMain'
 import { SearchStore } from './SearchStore'
 import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 
-export type SearchAppProps = AppProps & {
-  searchStore: SearchStore
-}
-
 export function SearchApp(props: AppProps) {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const searchStore = useStore(SearchStore, { paneManagerStore })
-
   return (
-    <ProvideStores stores={{ searchStore }}>
-      <AppContainer
-        index={<SearchAppIndex searchStore={searchStore} {...props} />}
-        toolBar={<SearchToolBar />}
-      >
-        <SearchAppMain {...props} />
-      </AppContainer>
-    </ProvideStores>
+    <AppContainer
+      provideStores={{ searchStore }}
+      index={<SearchAppIndex {...props} />}
+      toolBar={<SearchToolBar />}
+    >
+      <SearchAppMain {...props} />
+    </AppContainer>
   )
 }
 
 function SearchToolBar() {
-  const { queryStore } = useStoresSafe()
+  const { queryStore } = useStores()
   const { queryFilters } = queryStore
 
   return (

@@ -2,7 +2,7 @@ import { gloss, Row } from '@mcro/gloss'
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useApp } from '../../apps/AppView'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { BorderTop } from '../../views/Border'
 
 const statusBarHeight = 26
@@ -13,7 +13,7 @@ export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
 }
 
 export default observer(function OrbitStatusBar() {
-  const { orbitStore } = useStoresSafe()
+  const { orbitStore } = useStores()
   const { appViews, appStore } = useApp(orbitStore.activePane)
   const AppView = appViews.statusBar
 

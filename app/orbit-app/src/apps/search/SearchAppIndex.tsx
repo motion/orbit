@@ -1,17 +1,18 @@
 import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
 import { flow, memoize } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useStores } from '../../hooks/useStores'
 import { Icon } from '../../views/Icon'
 import SelectableList from '../../views/Lists/SelectableList'
+import { AppProps } from '../AppTypes'
 import './calendar.css' // theme css file
-import { SearchAppProps } from './SearchApp'
 import SearchItemShare, { SearchItemShareProvide } from './SearchItemShare'
 
-export default observer(function SearchAppIndex(props: SearchAppProps) {
-  const items = props.searchStore.searchState.results
+export default function SearchAppIndex(props: AppProps) {
+  const { searchStore } = useStores()
+  const items = searchStore.searchState.results
 
   const getItemProps = React.useCallback(
     memoize(({ item }) => {
@@ -67,4 +68,4 @@ export default observer(function SearchAppIndex(props: SearchAppProps) {
       getItemProps={getItemProps}
     />
   )
-})
+}

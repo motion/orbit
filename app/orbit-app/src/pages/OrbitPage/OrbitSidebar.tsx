@@ -1,23 +1,23 @@
-import { Sidebar } from '@mcro/ui'
-import { isEqual } from 'lodash'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { apps } from '../../apps/apps'
-import { AppType } from '../../apps/AppTypes'
-import { AppView, AppViewRef } from '../../apps/AppView'
-import { SubPane } from '../../components/SubPane'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
-import { Pane } from '../../stores/PaneManagerStore'
-import { BorderRight } from '../../views/Border'
-import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
-import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitToolBarHeight } from './OrbitToolBar'
+import { Sidebar } from '@mcro/ui';
+import { isEqual } from 'lodash';
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import { apps } from '../../apps/apps';
+import { AppType } from '../../apps/AppTypes';
+import { AppView, AppViewRef } from '../../apps/AppView';
+import { SubPane } from '../../components/SubPane';
+import { useStores } from '../../hooks/useStores';
+import { Pane } from '../../stores/PaneManagerStore';
+import { BorderRight } from '../../views/Border';
+import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList';
+import { OrbitStatusBarHeight } from './OrbitStatusBar';
+import { OrbitToolBarHeight } from './OrbitToolBar';
 
 type AppViewRefDictionary = { [key: string]: AppViewRef }
 
 // needs to be in observer for now, we can refactor later
 export function useInspectViews() {
-  const { appsStore, paneManagerStore } = useStoresSafe()
+  const { appsStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
 
   let hasIndex = false
@@ -42,7 +42,7 @@ export function useInspectViews() {
 }
 
 export default observer(function OrbitSidebar() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
@@ -102,7 +102,7 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
   indexRef: AppViewRefDictionary
   hasMain: boolean
 }) {
-  const { orbitStore } = useStoresSafe()
+  const { orbitStore } = useStores()
   const { pane, indexRef, setIndexRef, hasMain } = props
 
   return (

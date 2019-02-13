@@ -4,10 +4,10 @@ import {
   MergeHighlightsContext,
   MergeHighlightsContextProps,
 } from '../helpers/contexts/HighlightsContext'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 
 export function OrbitHighlightActiveQuery(props: Partial<MergeHighlightsContextProps>) {
-  const { appStore } = useStoresSafe()
+  const { appStore } = useStores()
 
   // initialQuery prevents two renders on mount by just storing the first value of query
   const initialQuery = useRef(null)

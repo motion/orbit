@@ -56,7 +56,6 @@ const FILTER_KEYS = {
   constructor: true,
   dispose: true,
   props: true,
-  render: true,
   subscriptions: true,
 }
 

@@ -1,13 +1,13 @@
-import { useModel } from '../../useModel'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
+import { useModel } from '../../useModel'
 import { AppProps } from '../AppTypes'
 import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {
-  const { sourcesStore } = useStoresSafe()
+  const { sourcesStore } = useStores()
 
   if (!props.appConfig) {
     return null
@@ -32,7 +32,7 @@ export function SourcesAppMain(props: AppProps) {
 }
 
 function SourceMain(props: AppProps) {
-  const { sourcesStore } = useStoresSafe()
+  const { sourcesStore } = useStores()
   const [source] = useModel(SourceModel, {
     where: { id: +props.appConfig.id },
   })

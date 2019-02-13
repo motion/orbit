@@ -3,7 +3,7 @@ import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppStore } from '../../apps/AppStore'
 import { StoreContext } from '../../contexts'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { Direction, SelectEvent, SelectionStore } from '../../stores/SelectionStore'
 import { MergeContext } from '../MergeContext'
 import { orbitItemsKey } from './orbitItemsKey'
@@ -92,7 +92,7 @@ class SelectableStore {
 
 export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
   const newNamespace = !!props.createNewSelectionStore
-  const stores = useStoresSafe({ optional: ['selectionStore', 'appStore'] })
+  const stores = useStores({ optional: ['selectionStore', 'appStore'] })
   const selectionStore =
     props.selectionStore ||
     (newNamespace == false && stores.selectionStore) ||

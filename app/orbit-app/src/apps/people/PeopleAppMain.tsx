@@ -1,14 +1,20 @@
 import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { loadMany, loadOne, observeMany } from '../../mediator'
-import { Bit, BitModel, CosalTopicsModel, PersonBitModel, SlackBitData, SlackPersonData } from '@mcro/models'
+import {
+  Bit,
+  BitModel,
+  CosalTopicsModel,
+  PersonBitModel,
+  SlackBitData,
+  SlackPersonData,
+} from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { PEEK_BORDER_RADIUS } from '../../constants'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
+import { loadMany, loadOne, observeMany } from '../../mediator'
 import { HorizontalSpace, RoundButton } from '../../views'
 import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
 import { SubTitle } from '../../views/SubTitle'
@@ -91,8 +97,8 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export default observer(function PeopleAppMain(props: AppProps) {
-  const { queryStore } = useStoresSafe()
+export default function PeopleAppMain(props: AppProps) {
+  const { queryStore } = useStores()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
@@ -176,7 +182,7 @@ export default observer(function PeopleAppMain(props: AppProps) {
       </Content>
     </Frame>
   )
-})
+}
 
 const mapW = 700
 const mapH = 200

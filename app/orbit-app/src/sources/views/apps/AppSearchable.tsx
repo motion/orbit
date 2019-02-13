@@ -1,9 +1,9 @@
-import { Searchable, SearchBarType } from '@mcro/ui'
-import * as React from 'react'
-import { AppStore } from '../../../apps/AppStore'
-import { MergeHighlightsContext } from '../../../helpers/contexts/HighlightsContext'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
-import { SelectionStore } from '../../../stores/SelectionStore'
+import { Searchable, SearchBarType } from '@mcro/ui';
+import * as React from 'react';
+import { AppStore } from '../../../apps/AppStore';
+import { MergeHighlightsContext } from '../../../helpers/contexts/HighlightsContext';
+import { useStores } from '../../../hooks/useStores';
+import { SelectionStore } from '../../../stores/SelectionStore';
 
 type SearchChildProps = {
   searchBar: SearchBarType
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const AppSearchable = (props: Props) => {
-  const { queryStore } = useStoresSafe()
+  const { queryStore } = useStores()
   return (
     <Searchable
       defaultValue={queryStore ? queryStore.query : ''}

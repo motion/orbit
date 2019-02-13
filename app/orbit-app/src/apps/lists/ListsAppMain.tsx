@@ -1,7 +1,6 @@
-import { useModel } from '../../useModel'
 import { AppModel } from '@mcro/models'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
+import { useModel } from '../../useModel'
 import { SubTitle } from '../../views'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
@@ -23,7 +22,7 @@ export default React.memo(function ListsAppMain(props: ListAppProps) {
   return <AppSubView appConfig={props.appConfig} />
 })
 
-const ListsAppMainFolder = observer(function ListsAppMainFolder(props: ListAppProps) {
+function ListsAppMainFolder(props: ListAppProps) {
   const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
@@ -60,4 +59,4 @@ const ListsAppMainFolder = observer(function ListsAppMainFolder(props: ListAppPr
       <OrbitList items={children} placeholder={<SubTitle>No items</SubTitle>} />
     </Section>
   )
-})
+}

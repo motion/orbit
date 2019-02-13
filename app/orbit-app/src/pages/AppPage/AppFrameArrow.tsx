@@ -1,11 +1,10 @@
-import * as React from 'react'
-import { react, ensure } from '@mcro/black'
-import * as UI from '@mcro/ui'
-import * as Constants from '../../constants'
-import { App } from '@mcro/stores'
-import { observer } from 'mobx-react-lite'
-import { useStore, useHook } from '@mcro/use-store'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { ensure, react } from '@mcro/black';
+import { App } from '@mcro/stores';
+import * as UI from '@mcro/ui';
+import { useHook, useStore } from '@mcro/use-store';
+import * as React from 'react';
+import * as Constants from '../../constants';
+import { useStores } from '../../hooks/useStores';
 
 type Props = {
   borderShadow: any
@@ -17,7 +16,7 @@ const peekOnRight = false
 
 class AppArrowStore {
   props: Props
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStores)
 
   hide = react(() => this.stores.appPageStore.isTorn, _ => _)
 
@@ -37,7 +36,7 @@ class AppArrowStore {
   )
 }
 
-export default observer(function AppFrameArrow({ borderShadow }: Props) {
+export default function AppFrameArrow({ borderShadow }: Props) {
   const { activeTheme } = React.useContext(UI.ThemeContext)
   const store = useStore(AppArrowStore)
   if (store.hide) {
@@ -64,4 +63,4 @@ export default observer(function AppFrameArrow({ borderShadow }: Props) {
       }}
     />
   )
-})
+}

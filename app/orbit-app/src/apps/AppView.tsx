@@ -3,11 +3,10 @@ import { useObserver } from 'mobx-react-lite'
 import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { findDOMNode } from 'react-dom'
 import isEqual from 'react-fast-compare'
+import { ProvideStores } from '../components/ProvideStores'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
-import { StoreContext } from '../contexts'
 import { AllStores } from '../contexts/StoreContext'
-import { useStoresSafe } from '../hooks/useStoresSafe'
-import { MergeContext } from '../views/MergeContext'
+import { useStores } from '../hooks/useStores'
 import { AppStore } from './AppStore'
 import { AppProps, AppViews } from './AppTypes'
 
@@ -27,50 +26,54 @@ export type AppViewRef = {
 }
 
 // needs either an id or a type
-type GetAppViewProps = { id?: string; type?: string; appStore?: AppStore }
+type GetApp = { id?: string; type?: string; appStore?: AppStore }
 
 type AppState = {
   appViews: AppViews
   appStore: AppStore
+  provideStores: Object
 }
 
 // apps can be "static" like onboarding/settings
 // or dynamic like an instantiated list/search/custom app
 // so we use type for static, id for dynamic.
-function getAppViewProps(props: GetAppViewProps, stores: AllStores): AppState {
+function getApp(props: GetApp, stores: AllStores): AppState {
   const next = {
     appStore: props.appStore || stores.appStore || null,
     appViews: {},
+    provideStores: null,
   }
 
   if (stores.appsStore) {
-    const { appStores, appViews } = stores.appsStore
+    const { appStores, appViews, provideStores } = stores.appsStore
     // set store
     if (!next.appStore) {
       next.appStore = appStores[props.id] || appStores[props.type]
     }
     // set view
     next.appViews = appViews[props.id] || appViews[props.type] || {}
+    next.provideStores = provideStores[props.id] || provideStores[props.type] || null
   }
 
   return next
 }
 
-export function useApp(props: GetAppViewProps | false) {
-  const stores = useStoresSafe({ optional: ['appStore', 'appsStore'] })
+export function useApp(props: GetApp | false) {
+  const stores = useStores({ optional: ['appStore', 'appsStore'] })
   const currentState = useRef<AppState>({
     appViews: {},
     appStore: null,
+    provideStores: null,
   })
   const [version, update] = useState(0)
 
   if (version === 0 && props) {
-    currentState.current = getAppViewProps(props, stores)
+    currentState.current = getApp(props, stores)
   }
 
   useObserver(() => {
     if (!props) return
-    const next = getAppViewProps(props, stores)
+    const next = getApp(props, stores)
     // set if necessary
     if (!isEqual(next, currentState.current)) {
       currentState.current = next
@@ -84,7 +87,7 @@ export function useApp(props: GetAppViewProps | false) {
 export const AppView = memo(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { appViews, appStore } = useApp(props)
+    const { appViews, appStore, provideStores } = useApp(props)
     const AppView = appViews[props.viewType]
 
     // handle ref
@@ -139,10 +142,8 @@ export const AppView = memo(
       return null
     }
 
-    return (
-      <MergeContext Context={StoreContext} value={{ appStore }}>
-        {appElement}
-      </MergeContext>
-    )
+    console.log('rendering ap2p', provideStores)
+
+    return <ProvideStores stores={{ ...provideStores, appStore }}>{appElement}</ProvideStores>
   }),
 )

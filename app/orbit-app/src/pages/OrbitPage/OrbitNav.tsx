@@ -17,7 +17,7 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { save } from '../../mediator'
 import { Pane } from '../../stores/PaneManagerStore'
 
@@ -25,7 +25,7 @@ const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStores)
 
   previousTabID = react(
     () => this.stores.paneManagerStore.activePane,
@@ -37,7 +37,7 @@ class OrbitNavStore {
 }
 
 export default observer(function OrbitNav() {
-  const { spaceStore, paneManagerStore, newAppStore } = useStoresSafe()
+  const { spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore

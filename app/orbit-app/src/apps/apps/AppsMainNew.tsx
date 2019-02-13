@@ -1,15 +1,14 @@
 import { AppBit } from '@mcro/models'
 import { Popover, Row, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { HorizontalSpace } from '../../views'
 import { AppIcon } from '../../views/AppIcon'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Input } from '../../views/Input'
 
-export default observer(function AppsMainNew() {
-  const { newAppStore } = useStoresSafe()
+export default function AppsMainNew() {
+  const { newAppStore } = useStores()
   const { app } = newAppStore
   const inputRef = useRef(null)
 
@@ -69,4 +68,4 @@ export default observer(function AppsMainNew() {
       </Row>
     </>
   )
-})
+}

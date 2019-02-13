@@ -1,9 +1,9 @@
 import { arrayMove } from 'react-sortable-hoc'
 import { useActiveSpace } from './useActiveSpace'
-import { useStoresSafe } from './useStoresSafe'
+import { useStoresSimple } from './useStores'
 
 export function useAppSortHandler() {
-  const { orbitWindowStore } = useStoresSafe()
+  const { orbitWindowStore } = useStoresSimple()
   const [space, updateSpace] = useActiveSpace()
 
   const handleSortEnd = ({ oldIndex, newIndex }) => {

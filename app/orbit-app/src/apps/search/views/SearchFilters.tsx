@@ -1,7 +1,6 @@
 import { Col } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 import { QueryStore } from '../../../stores/QueryStore/QueryStore'
 import { Icon } from '../../../views/Icon'
 import ListItem from '../../../views/ListItems/ListItem'
@@ -11,8 +10,8 @@ type Props = {
   width?: number
 }
 
-export default observer(function SearchFilters(props: Props) {
-  const { queryStore } = useStoresSafe()
+export default function SearchFilters(props: Props) {
+  const { queryStore } = useStores()
   const { queryFilters } = queryStore
   if (!queryFilters.integrationFilters.length) {
     return null
@@ -35,4 +34,4 @@ export default observer(function SearchFilters(props: Props) {
       })}
     </Col>
   )
-})
+}

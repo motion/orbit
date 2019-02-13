@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
 import { default as SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
@@ -14,7 +14,7 @@ type Props = SelectableCarouselProps & {
 
 export const OrbitCarouselSection = observer(
   ({ offset, items, categoryName, cardProps, margin, ...props }: Props) => {
-    const { subPaneStore } = useStoresSafe()
+    const { subPaneStore } = useStores()
     if (!items || !items.length) {
       return null
     }

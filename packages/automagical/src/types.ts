@@ -1,3 +1,5 @@
+import { CompositeDisposable } from 'event-kit'
+
 // how to have a more flexible Function?
 // this often complains when used as callbacks from eventListener or mutationobserver
 export type EffectCallback = ((resolve: any, reject: any) => Function | void)
@@ -29,12 +31,8 @@ export type ReactionOptions = {
   deferFirstRun?: boolean
 }
 
-export type MagicalObject = Object & {
-  subscriptions: { add: ({ dispose: Function }) => void }
-  __automagical: {
-    watchers?: [any] | undefined[]
-    deep?: {}
-    started?: boolean
-  }
+export interface MagicalObject {
+  __automagicSubscriptions: CompositeDisposable
+  automagicDispose: Function
   props?: { [key: string]: any }
 }

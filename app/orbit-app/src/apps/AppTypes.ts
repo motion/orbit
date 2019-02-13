@@ -1,7 +1,7 @@
-import { AppBit, IntegrationType } from '@mcro/models';
-import { FunctionComponent } from 'react';
-import { GenericComponent } from '../types';
-import { AppStore } from './AppStore';
+import { AppBit, IntegrationType } from '@mcro/models'
+import { FunctionComponent } from 'react'
+import { GenericComponent } from '../types'
+import { AppStore } from './AppStore'
 
 type AppBitOf<A> = AppBit & { data: A }
 
@@ -26,6 +26,7 @@ export type AppElements = {
   children?: React.ReactElement<any>
   statusBar?: React.ReactElement<any>
   toolBar?: React.ReactElement<any>
+  provideStores?: Object
 }
 
 export type AppViews = {

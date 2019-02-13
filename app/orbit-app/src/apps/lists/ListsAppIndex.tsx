@@ -1,12 +1,11 @@
-import { save } from '../../mediator'
 import { AppModel } from '@mcro/models'
 import { Absolute, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
 import { flow } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { arrayMove } from 'react-sortable-hoc'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
+import { save } from '../../mediator'
 import { BorderBottom } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
@@ -15,7 +14,7 @@ import { ListAppProps, ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
 import { ListAppDataItem } from './types'
 
-export default observer(function ListsAppIndex({ store }: ListAppProps) {
+export default function ListsAppIndex({ store }: ListAppProps) {
   return (
     <>
       {/* Search/add bar */}
@@ -28,9 +27,9 @@ export default observer(function ListsAppIndex({ store }: ListAppProps) {
       <ListSearchResults store={store} />
     </>
   )
-})
+}
 
-const ListCurrentFolder = observer(function ListCurrentFolder(props: { store: ListStore }) {
+const ListCurrentFolder = function ListCurrentFolder(props: { store: ListStore }) {
   const { store } = props
   const { items, currentFolder } = store
 
@@ -89,7 +88,7 @@ const ListCurrentFolder = observer(function ListCurrentFolder(props: { store: Li
       depth={store.depth}
     />
   )
-})
+}
 
 const addFolder = (store: ListStore) => {
   ListsApp.api.receive(store.app, store.parentId, {
@@ -99,7 +98,7 @@ const addFolder = (store: ListStore) => {
   store.setQuery('')
 }
 
-const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
+const ListAdd = function ListAdd({ store }: { store: ListStore }) {
   return (
     <Row position="relative">
       <BorderBottom opacity={0.25} />
@@ -134,9 +133,9 @@ const ListAdd = observer(function ListAdd({ store }: { store: ListStore }) {
       </Absolute>
     </Row>
   )
-})
+}
 
-const ListSearchResults = observer(function ListSearchResults({ store }: { store: ListStore }) {
+const ListSearchResults = function ListSearchResults({ store }: { store: ListStore }) {
   const { searchCollapsed, searchResults, query } = store
 
   return (
@@ -153,4 +152,4 @@ const ListSearchResults = observer(function ListSearchResults({ store }: { store
       <SelectableList query={query} items={searchResults || []} />
     </Panel>
   )
-})
+}

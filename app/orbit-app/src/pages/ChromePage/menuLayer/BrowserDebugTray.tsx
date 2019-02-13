@@ -3,14 +3,14 @@ import { Absolute, Row, View } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 
 export default function BrowserDebugTray({ children }: any) {
   if (IS_ELECTRON) {
     return children
   }
 
-  const { menuStore } = useStoresSafe()
+  const { menuStore } = useStores()
 
   // set open the first menu by default for dev
   React.useEffect(() => {
@@ -44,7 +44,7 @@ export default function BrowserDebugTray({ children }: any) {
 }
 
 const Target = observer((props: { id: number }) => {
-  const { menuStore } = useStoresSafe()
+  const { menuStore } = useStores()
   return (
     <View
       onMouseEnter={() => {

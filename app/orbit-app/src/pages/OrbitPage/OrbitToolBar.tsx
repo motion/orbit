@@ -1,8 +1,7 @@
 import { gloss, Row } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
-import React from 'react'
+import React, { memo } from 'react'
 import { useApp } from '../../apps/AppView'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 
 const height = 32
 const minHeight = 3
@@ -12,8 +11,8 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
   return <div style={{ height: appViews.toolBar ? height : minHeight }} />
 }
 
-export default observer(function OrbitToolBar() {
-  const { paneManagerStore } = useStoresSafe()
+export default memo(function OrbitToolBar() {
+  const { paneManagerStore } = useStores()
   const { appViews, appStore } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar

@@ -2,12 +2,12 @@ import { AppBit } from '@mcro/models'
 import { useObserver } from 'mobx-react-lite'
 import { useState } from 'react'
 import { useActiveApps } from './useActiveApps'
-import { useStoresSafe } from './useStoresSafe'
+import { useStores } from './useStores'
 
 // defaults to using the appstore active query
 
 export function useActiveApp(): AppBit {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const activeApps = useActiveApps()
   const [state, setState] = useState({ id: -1, app: null as AppBit })
 

@@ -28,7 +28,7 @@ export function SelectableGrid({ items, getItem, ...props }: SelectableGridProps
           selectionStore.setActiveIndex(index)
         }
         // this is complex so we can do single updates on selection move
-        return observer(() => {
+        return observer(function GridItem() {
           return getItem(item, {
             isSelected: selectionStore.activeIndex === index,
             select,

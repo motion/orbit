@@ -80,7 +80,7 @@ export function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-5%' : 0}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}
@@ -204,7 +204,7 @@ const NavButtonChrome = gloss<TabProps>({
   transform: {
     y: 1.5,
   },
-}).theme(({ isActive, stretch }, theme) => {
+}).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
 
   const glowStyle = {
@@ -213,7 +213,8 @@ const NavButtonChrome = gloss<TabProps>({
   }
 
   return {
-    width: stretch ? 150 : 'auto',
+    zIndex: isActive ? 1000000000 : 0,
+    width: stretch ? width || 150 : 'auto',
     background: isActive ? background : 'transparent',
     // textShadow: isActive ? 'none' : `0 -1px 0 #ffffff55`,
     // border: [1, isActive ? theme.borderColor : 'transparent'],
@@ -247,6 +248,7 @@ const Separator = gloss({
   bottom: 0,
   transform: {
     x: 0.5,
+    y: -1,
   },
   width: 1,
 }).theme((_, theme) => ({

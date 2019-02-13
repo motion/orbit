@@ -1,15 +1,14 @@
 import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
 import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { HorizontalSpace } from '../../views'
 import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
@@ -18,8 +17,8 @@ import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
-export default observer(function OrbitHeader() {
-  const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStoresSafe()
+export default memo(function OrbitHeader() {
+  const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
   const isTorn = getIsTorn()
   const { isEditing } = orbitStore
@@ -137,7 +136,7 @@ function HeaderButton(props: ButtonProps) {
 }
 
 function OrbitEditAppButton() {
-  const { orbitStore, paneManagerStore } = useStoresSafe()
+  const { orbitStore, paneManagerStore } = useStores()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)

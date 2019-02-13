@@ -1,6 +1,6 @@
 import { ensure, react, store } from '@mcro/black'
-import { observeMany } from '../../mediator'
 import { PersonBitModel } from '@mcro/models'
+import { observeMany } from '../../mediator'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
 import { QueryStore } from './QueryStore'

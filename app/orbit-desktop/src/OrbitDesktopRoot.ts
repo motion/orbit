@@ -58,6 +58,7 @@ import { writeJSON } from 'fs-extra'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 import * as typeorm from 'typeorm'
 import { getConnection } from 'typeorm'
 import { AuthServer } from './auth-server/AuthServer'
@@ -89,7 +90,6 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { WebServer } from './WebServer'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class OrbitDesktopRoot {
   // public
@@ -177,7 +177,7 @@ export class OrbitDesktopRoot {
 
     // start managers...
 
-    if (!process.env.IGNORE_MENU) {
+    if (!process.env.DISABLE_MENU) {
       this.oracleManager = new OracleManager()
       await this.oracleManager.start()
     }
@@ -256,7 +256,6 @@ export class OrbitDesktopRoot {
    * for communication between processes.
    */
   private registerMediatorServer() {
-
     const electronTransport = new WebSocketClientTransport(
       'electron',
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.electronMediator}`, [], {
@@ -270,7 +269,7 @@ export class OrbitDesktopRoot {
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {
         WebSocket,
         minReconnectionDelay: 1,
-      })
+      }),
     )
 
     const client = new MediatorClient({ transports: [syncersTransport, electronTransport] })

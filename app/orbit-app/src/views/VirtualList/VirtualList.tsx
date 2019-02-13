@@ -2,7 +2,6 @@ import { always, ensure, react } from '@mcro/black'
 import { ContextMenu, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
-import { observer } from 'mobx-react-lite'
 import React, { Component, createContext, createRef, useContext, useEffect, useMemo } from 'react'
 import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc'
 import {
@@ -228,7 +227,7 @@ export const VirtualListDefaultProps = createContext({
   maxHeight: window.innerHeight,
 } as Partial<VirtualListProps<any>>)
 
-export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
+export default function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
@@ -362,4 +361,4 @@ export default observer(function VirtualList(rawProps: VirtualListProps<any>) {
   )
 
   return <>{element}</>
-})
+}

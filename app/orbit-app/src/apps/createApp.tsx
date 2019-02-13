@@ -1,11 +1,10 @@
 import { SaveOptions } from '@mcro/mediator'
-import { save } from '../mediator'
 import { AppBit, AppModel } from '@mcro/models'
 import { Button, Row, Theme, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import React, { useEffect, useState } from 'react'
 import { useActiveSpace } from '../hooks/useActiveSpace'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
+import { save } from '../mediator'
 import { defaultApps } from '../stores/NewAppStore'
 import { AppIcon } from '../views/AppIcon'
 import { BorderTop } from '../views/Border'
@@ -39,8 +38,8 @@ function CreateAppIndex() {
   )
 }
 
-const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
-  const { newAppStore } = useStoresSafe()
+function CreateAppMain(props: AppProps) {
+  const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
   const [showPreviewApp, setShowPreviewApp] = useState(false)
 
@@ -110,7 +109,7 @@ const CreateAppMain = observer(function CreateAppMain(props: AppProps) {
       </VerticalSplitPane>
     </Row>
   )
-})
+}
 
 export const createApp = {
   index: CreateAppIndex,

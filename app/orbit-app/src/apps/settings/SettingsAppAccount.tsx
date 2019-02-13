@@ -1,11 +1,10 @@
 import { Button, Row, SegmentedRow, Theme, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { InputRow, IntroText, Title, VerticalSpace } from '../../views'
 import { Section } from '../../views/Section'
 import { AppProps } from '../AppTypes'
 
-export default observer(function SettingsAppAccount(_props: AppProps) {
+export default function SettingsAppAccount(_props: AppProps) {
   // const [user] = useActiveUser()
 
   return (
@@ -36,4 +35,4 @@ export default observer(function SettingsAppAccount(_props: AppProps) {
       </Section>
     </Section>
   )
-})
+}

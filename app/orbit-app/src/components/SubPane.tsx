@@ -2,8 +2,7 @@ import { CSSPropertySetStrict } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { AppType } from '../apps/AppTypes'
 import { SubPaneStore } from './SubPaneStore'
 
@@ -23,7 +22,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export const SubPane = observer(function SubPane(props: Props) {
+export const SubPane = memo((props: Props) => {
   const {
     fullHeight,
     style,
@@ -35,7 +34,7 @@ export const SubPane = observer(function SubPane(props: Props) {
     ...rest
   } = props
   const subPaneStore = useStore(SubPaneStore, props)
-  const { isActive, isLeft } = subPaneStore.positionState
+  const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
   return (
     <SubPaneFrame isActive={isActive}>

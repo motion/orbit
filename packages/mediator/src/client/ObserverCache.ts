@@ -69,8 +69,11 @@ export const ObserverCache = {
           }
         },
         update: value => {
-          const isEqual = JSON.stringify(value) === JSON.stringify(entry.value)
-          if (isEqual) return
+          // weird perf opt but works for our cases....
+          if (value && Object.keys(value).length < 40) {
+            const isEqual = JSON.stringify(value) === JSON.stringify(entry.value)
+            if (isEqual) return
+          }
           entry.value = value
           for (const sub of entry.subscriptions) {
             sub.next(value)

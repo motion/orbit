@@ -33,7 +33,7 @@ export const OrbitRoot = () => {
     return null
   }
 
-  console.log('electron success, rendering...')
+  console.log('orbit success, rendering...')
 
   return (
     <App

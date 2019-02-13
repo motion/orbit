@@ -1,6 +1,7 @@
 import { createContext } from 'react'
 import { AppsStore } from '../apps/AppsStore'
 import { AppStore } from '../apps/AppStore'
+import { SearchStore } from '../apps/search/SearchStore'
 import { SubPaneStore } from '../components/SubPaneStore'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
@@ -35,6 +36,7 @@ export type AllStores = {
   orbitStore?: OrbitStore
   newAppStore?: NewAppStore
   headerStore?: HeaderStore
+  searchStore?: SearchStore
 }
 
 export const StoreContext = createContext({} as AllStores)

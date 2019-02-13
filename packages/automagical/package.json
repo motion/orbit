@@ -11,7 +11,8 @@
     "@mcro/logger": "^2.3.10",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
-    "zen-observable": "0.8.13"
+    "zen-observable": "0.8.13",
+    "event-kit": "2.5.3"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

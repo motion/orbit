@@ -4,12 +4,12 @@ import { useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
 import { AppActions } from '../actions/AppActions'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from './SubPane'
 
 export class SubPaneStore {
   props: SubPaneProps
-  stores = useHook(() => useStoresSafe({ optional: ['selectionStore'] }))
+  stores = useHook(useStoresSimple)
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
   aboveContentHeight = 0
@@ -26,32 +26,20 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  get isLeft() {
-    const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
-    return thisIndex < this.stores.paneManagerStore.paneIndex
-  }
-
-  get isActive() {
-    return this.positionState.isActive
-  }
-
-  positionState = react(
+  isLeft = react(
     () => {
-      const { id } = this.props
-      const { paneManagerStore } = this.stores
-      const isActive = paneManagerStore.activePane && id === paneManagerStore.activePane.id
-      return {
-        isActive,
-        isLeft: this.isLeft,
-      }
+      const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
+      return thisIndex === this.stores.paneManagerStore.paneIndex - 1
     },
     _ => _,
-    {
-      defaultValue: {
-        isActive: false,
-        isLeft: this.isLeft,
-      },
+  )
+
+  isActive = react(
+    () => {
+      const { paneManagerStore } = this.stores
+      return paneManagerStore.activePane && this.props.id === paneManagerStore.activePane.id
     },
+    _ => _,
   )
 
   triggerRewatch = 0

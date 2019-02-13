@@ -9,7 +9,7 @@ import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
 import { fuzzyQueryFilter } from '../../helpers'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 import { Icon } from '../../views/Icon'
 import { OrbitOrb } from '../../views/OrbitOrb'
@@ -82,7 +82,7 @@ const createNewSpace = () => {
 }
 
 export default observer(function OrbitSpaceSwitch(props: Props) {
-  const stores = useStoresSafe()
+  const stores = useStores()
   const store = useStore(SpaceSwitchStore, props)
   const [activeSpace] = useActiveSpace()
 

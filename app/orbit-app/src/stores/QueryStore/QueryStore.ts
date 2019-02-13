@@ -39,8 +39,8 @@ export class QueryStore {
   })
 
   willUnmount() {
-    this.nlpStore['subscriptions'].dispose()
-    this.queryFilters['subscriptions'].dispose()
+    this.nlpStore['dispose']()
+    this.queryFilters['dispose']()
   }
 
   hasQuery = react(() => !!this.queryInstant.length, _ => _)

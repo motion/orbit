@@ -1,19 +1,18 @@
-import { useModels } from '../../useModel'
 import { PersonBitModel } from '@mcro/models'
 import { capitalize } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import NoResultsDialog from '../../components/NoResultsDialog'
 import { groupByLetter } from '../../helpers/groupByFirstLetter'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
+import { useModels } from '../../useModel'
 import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppTypes'
 
-export default observer(function PeopleAppIndex(props: AppProps) {
+export default function PeopleAppIndex(props: AppProps) {
   // people and query
-  const { queryStore } = useStoresSafe()
+  const { queryStore } = useStores()
   const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters
 
   let where = null
@@ -59,4 +58,4 @@ export default observer(function PeopleAppIndex(props: AppProps) {
       />
     </>
   )
-})
+}

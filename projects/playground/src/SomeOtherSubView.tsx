@@ -1,14 +1,8 @@
-import * as React from 'react'
 import { useStore } from '@mcro/use-store'
+import * as React from 'react'
 
 class TestStore2 {
   state = 'wut2'
-
-  willMount() {
-    setTimeout(() => {
-      this.state = 'yeeeeee2'
-    }, 1000)
-  }
 }
 
 export const SomeOtherSubView = ({ id }) => {

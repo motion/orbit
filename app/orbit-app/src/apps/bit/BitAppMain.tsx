@@ -1,11 +1,11 @@
-import { useModel } from '../../useModel'
 import { BitModel } from '@mcro/models'
 import * as React from 'react'
 import { ItemPropsProvider } from '../../contexts/ItemPropsProvider'
 import { normalizeItem } from '../../helpers/normalizeItem'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { AppSearchable } from '../../sources/views/apps/AppSearchable'
 import { BitTitleBar } from '../../sources/views/layout/BitTitleBar'
+import { useModel } from '../../useModel'
 import { AppProps } from '../AppTypes'
 
 const defaultItemProps = {
@@ -18,7 +18,7 @@ const defaultItemProps = {
 }
 
 export default function BitAppMain(props: AppProps) {
-  const { sourcesStore } = useStoresSafe()
+  const { sourcesStore } = useStores()
   const [bit] = useModel(BitModel, { where: { id: +props.appConfig.id } })
   if (!bit) {
     return null

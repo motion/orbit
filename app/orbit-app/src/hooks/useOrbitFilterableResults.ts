@@ -1,19 +1,19 @@
-import { useObserver } from 'mobx-react-lite'
 import { useCallback, useState } from 'react'
 import { FilterableProps, useFilterableResults } from './pureHooks/useFilterableResults'
-import { useStoresSafe } from './useStoresSafe'
+import { useStoresSimple } from './useStores'
 
 // defaults to using the appstore active query
 
 export function useOrbitFilterableResults<A>(props: FilterableProps<A>): A[] {
-  const { appStore } = useStoresSafe()
+  const { appStore } = useStoresSimple()
   const [activeQuery, setActiveQuery] = useState('')
 
-  useObserver(() => {
-    if (appStore.activeQuery !== activeQuery) {
-      setActiveQuery(appStore.activeQuery)
-    }
-  })
+  // useObserver(() => {
+  //   console.log('get appstpore', appStore)
+  //   if (appStore.activeQuery !== activeQuery) {
+  //     setActiveQuery(appStore.activeQuery)
+  //   }
+  // })
 
   const sortBy = useCallback(props.sortBy, [])
 

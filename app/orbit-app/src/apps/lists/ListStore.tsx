@@ -1,11 +1,11 @@
 import { react } from '@mcro/black'
-import { loadMany, observeOne } from '../../mediator'
 import { AppModel, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStoresSimple } from '../../hooks/useStores'
+import { loadMany, observeOne } from '../../mediator'
 import { searchGroupsToResults } from '../search/searchGroupsToResults'
 import { ListAppProps } from './ListsApp'
 import { ListAppDataItemFolder, ListsAppBit } from './types'
@@ -13,7 +13,8 @@ import { ListAppDataItemFolder, ListsAppBit } from './types'
 export class ListStore {
   props: ListAppProps
 
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStoresSimple)
+
   query = ''
   selectedIndex = 0
   depth = 0

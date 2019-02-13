@@ -106,7 +106,7 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: [180, 180, 180, 0.25],
-    headerBackground: linearGradient([0, 0, 0, 0.3], [0, 0, 0, 0.44]),
+    headerBackground: linearGradient([0, 0, 0, 0.25], [0, 0, 0, 0.4]),
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,

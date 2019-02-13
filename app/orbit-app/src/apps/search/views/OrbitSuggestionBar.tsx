@@ -1,9 +1,8 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')
@@ -78,8 +77,8 @@ const SuggestionButton = (props: ButtonProps) => (
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export default observer(function OrbitSuggestionBar() {
-  const { queryStore } = useStoresSafe()
+export default function OrbitSuggestionBar() {
+  const { queryStore } = useStores()
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length
@@ -105,4 +104,4 @@ export default observer(function OrbitSuggestionBar() {
       ))}
     </SuggestionBar>
   )
-})
+}

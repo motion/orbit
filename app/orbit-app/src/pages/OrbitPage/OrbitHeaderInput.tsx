@@ -1,10 +1,9 @@
 import { gloss } from '@mcro/gloss'
 import { ClearButton, ThemeContext, View } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
 const handleKeyDown = e => {
@@ -16,12 +15,12 @@ const handleKeyDown = e => {
 }
 
 function useActivePane() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   return paneManagerStore.activePane
 }
 
-export default observer(function OrbitHeaderInput() {
-  const { orbitWindowStore, queryStore, headerStore } = useStoresSafe()
+export default memo(function OrbitHeaderInput() {
+  const { orbitWindowStore, queryStore, headerStore } = useStores()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
   const activePane = useActivePane()
@@ -31,7 +30,6 @@ export default observer(function OrbitHeaderInput() {
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
   const fontSize = getIsTorn() ? 16 : 18
-  console.log('placeholder', placeholder, activePane)
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

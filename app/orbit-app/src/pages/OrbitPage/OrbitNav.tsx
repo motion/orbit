@@ -1,13 +1,12 @@
 import { ensure, react } from '@mcro/black'
-import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { save } from '../../mediator'
+import { gloss, Row, View, ViewProps } from '@mcro/gloss'
 import { AppModel } from '@mcro/models'
-import { BorderBottom, View } from '@mcro/ui'
+import { BorderBottom } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
@@ -17,14 +16,15 @@ import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { save } from '../../mediator'
 import { Pane } from '../../stores/PaneManagerStore'
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStoresSimple)
 
   previousTabID = react(
     () => this.stores.paneManagerStore.activePane,
@@ -35,10 +35,12 @@ class OrbitNavStore {
   )
 }
 
-export default observer(function OrbitNav() {
-  const { spaceStore, orbitWindowStore, paneManagerStore, newAppStore } = useStoresSafe()
+export default memo(function OrbitNav() {
+  const { spaceStore, paneManagerStore, newAppStore } = useStores()
+  const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
+  const activeSpaceName = spaceStore.activeSpace.name
   const activeAppsSorted = useActiveAppsSorted()
   const activePaneId = paneManagerStore.activePane.id
   const [space] = useActiveSpace()
@@ -62,6 +64,8 @@ export default observer(function OrbitNav() {
     )
   }
 
+  const numUnpinned = activeAppsSorted.filter(x => !x.pinned).length
+
   const items = space.paneSort
     .map(
       (paneId, index): TabProps => {
@@ -76,14 +80,16 @@ export default observer(function OrbitNav() {
         const isPinned = app.pinned
         return {
           app,
+          width: numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150,
           separator: !isActive && !isLast && !nextIsActive,
-          label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+          isPinned,
+          label: isPinned ? '' : app.type === 'search' ? activeSpaceName : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
           icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
-          iconSize: isPinned ? 16 : 12,
+          iconSize: isPinned ? 18 : 12,
           getContext() {
             return [
               {
@@ -110,78 +116,89 @@ export default observer(function OrbitNav() {
             newAppStore.setShowCreateNew(false)
             paneManagerStore.setActivePane(`${app.id}`)
           },
-          onClickPopout:
-            !isPinned &&
-            (() => {
-              orbitWindowStore.setTorn(paneManagerStore.activePane.type)
-            }),
+          onClickPopout: !isPinned && Actions.tearApp,
         }
       },
     )
     .filter(Boolean)
 
   const onSettings = isOnSettings(paneManagerStore.activePane)
+  const showAppsTray = activeAppsSorted.length > 5
 
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
-        <SortableTabs
-          axis="x"
-          lockAxis="x"
-          distance={8}
-          items={items}
-          maxWidth={`calc(100% - ${showCreateNew ? 220 : 120}px)`}
-          shouldCancelStart={isRightClick}
-          onSortEnd={handleSortEnd}
+        <Row
+          height={tabHeight}
+          flex={200}
           overflow="hidden"
-          // let shadows from tabs go up above
-          padding={10}
-          height={tabHeight + 20}
-          margin={[0, -10, -10]}
-          flexWrap="wrap"
-          opacity={onSettings ? 0.5 : 1}
-          transition="opacity ease 300ms"
-        />
+          maxWidth={`calc(100% - ${(showCreateNew ? 120 : 80) + (showAppsTray ? 20 : 0)}px)`}
+        >
+          {items
+            .filter(x => x.isPinned)
+            .map(props => (
+              <OrbitTab key={props.app.id} {...props} />
+            ))}
 
-        {showCreateNew && (
-          <OrbitTab
-            stretch
-            iconSize={12}
-            isActive
-            label={newAppStore.app.name || 'New app'}
-            after={
-              <OrbitTabButton
-                icon="remove"
-                opacity={0.5}
-                onClick={flow(
-                  preventDefault,
-                  () => {
-                    newAppStore.setShowCreateNew(false)
-                    paneManagerStore.back()
-                  },
-                )}
-              />
-            }
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            items={items.filter(x => !x.isPinned)}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            flex={1}
+            // let shadows from tabs go up above
+            padding={[16, 0]}
+            margin={[-16, 0]}
+            height={tabHeight + 20}
+            overflowX="auto"
+            overflowY="hidden"
+            opacity={onSettings ? 0.5 : 1}
+            transition="opacity ease 300ms"
           />
-        )}
 
-        {!showCreateNew && (
-          <OrbitTab
-            tooltip={showCreateNew ? 'Cancel' : 'Add'}
-            thicc
-            icon={showCreateNew ? 'remove' : 'add'}
-            iconAdjustOpacity={-0.1}
-            onClick={async () => {
-              newAppStore.setShowCreateNew(true)
-              await sleep(10) // panemanager is heavy and this helps the ui from lagging
-              paneManagerStore.setActivePane('createApp')
-            }}
-          />
-        )}
+          {showCreateNew && (
+            <OrbitTab
+              stretch
+              iconSize={12}
+              isActive
+              label={newAppStore.app.name || 'New app'}
+              after={
+                <OrbitTabButton
+                  icon="remove"
+                  opacity={0.5}
+                  onClick={flow(
+                    preventDefault,
+                    () => {
+                      newAppStore.setShowCreateNew(false)
+                      paneManagerStore.back()
+                    },
+                  )}
+                />
+              }
+            />
+          )}
+
+          {!showCreateNew && (
+            <OrbitTab
+              tooltip={showCreateNew ? 'Cancel' : 'Add'}
+              thicc
+              icon={showCreateNew ? 'remove' : 'add'}
+              iconAdjustOpacity={-0.1}
+              onClick={async () => {
+                newAppStore.setShowCreateNew(true)
+                await sleep(10) // panemanager is heavy and this helps the ui from lagging
+                paneManagerStore.setActivePane('createApp')
+              }}
+            />
+          )}
+        </Row>
 
         <View flex={1} />
 
-        {activeAppsSorted.length > 5 && (
+        {showAppsTray && (
           <OrbitTab
             isActive={paneManagerStore.activePane.id === 'apps'}
             onClick={() => {
@@ -215,13 +232,14 @@ export default observer(function OrbitNav() {
           thicc
         />
       </OrbitNavChrome>
-      <BorderBottom zIndex={-1} opacity={0.65} />
+      <BorderBottom zIndex={100} />
     </OrbitNavClip>
   )
 })
 
 const OrbitNavClip = gloss({
-  zIndex: 10000000000,
+  flex: 1,
+  // zIndex: 10000000000,
   overflow: 'hidden',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],

@@ -6,7 +6,7 @@ import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { AppIcon } from '../../views/AppIcon'
 import { Icon } from '../../views/Icon'
 import { Section } from '../../views/Section'
@@ -63,7 +63,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 export default function AppsMainManage() {
-  const { paneManagerStore } = useStoresSafe()
+  const { paneManagerStore } = useStores()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const results = [

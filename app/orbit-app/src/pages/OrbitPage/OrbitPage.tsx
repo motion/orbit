@@ -3,21 +3,22 @@ import { AppBit } from '@mcro/models'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { isEqual, once, uniqBy } from 'lodash'
-import { observer, useObservable, useObserver } from 'mobx-react-lite'
-import * as React from 'react'
+import { once, uniqBy } from 'lodash'
+import { comparer } from 'mobx'
+import { useObservable, useObserver } from 'mobx-react-lite'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
+import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
-import { StoreContext } from '../../contexts'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { getAppState, getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
@@ -27,7 +28,6 @@ import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
-import { MergeContext } from '../../views/MergeContext'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
 import OrbitSidebar from './OrbitSidebar'
@@ -35,29 +35,69 @@ import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
 
-export default React.memo(function OrbitPage() {
-  // keep activeSpace.paneSort in sync with activeApps
-  useManagePaneSort()
+class ThemeStore {
+  get theme() {
+    return App.state.isDark ? 'dark' : 'light'
+  }
+}
+
+export default memo(function OrbitPage() {
+  const { theme } = useStore(ThemeStore)
 
   return (
-    <ActionsContext.Provider value={defaultActions}>
-      <OrbitPageProvideStores>
-        <OrbitPageInner />
-      </OrbitPageProvideStores>
-    </ActionsContext.Provider>
+    <Theme name={theme}>
+      <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+        <ActionsContext.Provider value={defaultActions}>
+          <OrbitPageProvideStores>
+            <OrbitPageInner />
+            <OrbitManagers />
+          </OrbitPageProvideStores>
+        </ActionsContext.Provider>
+      </AppWrapper>
+    </Theme>
   )
 })
 
-const OrbitPageInner = observer(function OrbitPageInner() {
-  const { paneManagerStore } = useStoresSafe()
+function useManagePanes() {
+  const activeApps = useActiveAppsSorted()
+  const { paneManagerStore } = useStores()
+  const appsId = activeApps.map(x => x.id).join('')
+  const appsState = useObservable({ ids: '' })
+
+  // trigger observer... :/
+  useEffect(
+    () => {
+      appsState.ids = appsId
+    },
+    [appsId],
+  )
+
+  // keeps pane index + panes in sync with apps
+  useObserver(() => {
+    appsState.ids // watch for changes in apps :/
+    const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
+    if (!comparer.structural(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+  })
+}
+
+function OrbitManagers() {
+  useManagePaneSort()
+  useManagePanes()
+  return null
+}
+
+const OrbitPageInner = memo(() => {
+  const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
-  const theme = App.state.isDark ? 'dark' : 'light'
-  const shortcutState = React.useRef({
+  const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
       paneManagerStore.setActivePaneByType('settings')
@@ -78,7 +118,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
     x => x.id,
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     // prevent close on the main window
     window.onbeforeunload = function(e) {
       const { closeTab, closeApp } = shortcutState.current
@@ -117,36 +157,40 @@ const OrbitPageInner = observer(function OrbitPageInner() {
   }, [])
 
   return (
-    <MergeContext Context={StoreContext} value={{ headerStore }}>
-      <MainShortcutHandler
-        handlers={{
-          closeTab: () => {
-            shortcutState.current.closeTab = Date.now()
-          },
-          closeApp: () => {
-            shortcutState.current.closeApp = Date.now()
-          },
-        }}
-      >
-        <Theme name={theme}>
-          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <AppsLoader views={allViews}>
-              <OrbitHeader />
-              <InnerChrome torn={getIsTorn()}>
-                <OrbitToolBar />
-                <OrbitContentArea>
-                  <OrbitSidebar />
-                  <OrbitMain />
-                </OrbitContentArea>
-                <OrbitStatusBar />
-              </InnerChrome>
-            </AppsLoader>
-          </AppWrapper>
-        </Theme>
-      </MainShortcutHandler>
-    </MergeContext>
+    <ProvideStores stores={{ headerStore }}>
+      <ProvideOrbitStore>
+        <MainShortcutHandler
+          handlers={{
+            closeTab: () => {
+              shortcutState.current.closeTab = Date.now()
+            },
+            closeApp: () => {
+              shortcutState.current.closeApp = Date.now()
+            },
+          }}
+        >
+          <AppsLoader views={allViews}>
+            <OrbitHeader />
+            <InnerChrome torn={getIsTorn()}>
+              <OrbitToolBar />
+              <OrbitContentArea>
+                <OrbitSidebar />
+                <OrbitMain />
+              </OrbitContentArea>
+              <OrbitStatusBar />
+            </InnerChrome>
+          </AppsLoader>
+        </MainShortcutHandler>
+      </ProvideOrbitStore>
+    </ProvideStores>
   )
 })
+
+function ProvideOrbitStore(props: { children: any }) {
+  const { paneManagerStore } = useStores()
+  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
+  return <ProvideStores stores={{ orbitStore }}>{props.children}</ProvideStores>
+}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',
@@ -163,7 +207,7 @@ const settingsPane = {
   keyable: true,
 }
 
-const defaultPanes: Pane[] = [
+export const defaultPanes: Pane[] = [
   { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
@@ -173,7 +217,7 @@ const defaultPanes: Pane[] = [
 ]
 
 function useOnce(fn: Function, reset = []) {
-  return React.useCallback(once(fn as any), reset)
+  return useCallback(once(fn as any), reset)
 }
 
 function appToPane(app: AppBit): Pane {
@@ -231,16 +275,6 @@ function OrbitPageProvideStores(props: any) {
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
-  const appsId = activeApps.map(x => x.id).join('')
-  const appsState = useObservable({ ids: '' })
-
-  // trigger observer... :/
-  React.useEffect(
-    () => {
-      appsState.ids = appsId
-    },
-    [appsId],
-  )
 
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultPanes,
@@ -250,24 +284,12 @@ function OrbitPageProvideStores(props: any) {
     },
   })
 
-  // keeps pane index + panes in sync with apps
-  useObserver(() => {
-    appsState.ids // watch for changes in apps :/
-    const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-      paneManagerStore.setPaneIndex(paneIndex)
-    }
-  })
-
-  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
-
   // move to first app pane on first run
   const hasLoadedApps = !!activeApps.length
   const setToFirstAppPane = useOnce(() => {
     paneManagerStore.setPaneIndex(defaultPanes.length)
   })
-  React.useEffect(
+  useEffect(
     () => {
       hasLoadedApps && setToFirstAppPane()
     },
@@ -282,14 +304,9 @@ function OrbitPageProvideStores(props: any) {
     queryStore,
     paneManagerStore,
     newAppStore,
-    orbitStore,
   }
 
-  return (
-    <MergeContext Context={StoreContext} value={stores}>
-      {props.children}
-    </MergeContext>
-  )
+  return <ProvideStores stores={stores}>{props.children}</ProvideStores>
 }
 
 const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {

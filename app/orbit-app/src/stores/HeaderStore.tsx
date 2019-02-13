@@ -3,7 +3,7 @@ import { App } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { createRef } from 'react'
 import { AppActions } from '../actions/AppActions'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStoresSimple } from '../hooks/useStores'
 
 const moveCursorToEndOfTextarea = el => {
   el.setSelectionRange(el.value.length, el.value.length)
@@ -13,7 +13,7 @@ const selectTextarea = el => {
 }
 
 export class HeaderStore {
-  stores = useHook(useStoresSafe)
+  stores = useHook(useStoresSimple)
   mouseUpAt = 0
   inputRef = createRef<HTMLDivElement>()
   iconHovered = false

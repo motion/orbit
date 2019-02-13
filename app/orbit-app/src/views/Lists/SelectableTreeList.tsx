@@ -2,7 +2,7 @@ import { ListAppDataItem, ListsAppData } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { Omit } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { OrbitListItemProps } from '../ListItems/OrbitListItem'
 import SelectableList, { SelectableListProps } from './SelectableList'
@@ -33,7 +33,7 @@ export type SelectableTreeRef = {
 
 export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
   function SelectableTreeList(props, ref) {
-    const stores = useStoresSafe({ optional: ['selectionStore', 'shortcutStore'] })
+    const stores = useStores({ optional: ['selectionStore', 'shortcutStore'] })
     const selectionStore =
       props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
 

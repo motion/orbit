@@ -2,13 +2,12 @@ import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { Col, Row, Sidebar, Text } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppView } from '../../apps/AppView'
 import Searchable from '../../components/Searchable'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
@@ -75,8 +74,8 @@ const CenteredTitle = gloss({
   textAlign: 'center',
 })
 
-const AppPageContent = observer(() => {
-  const { appPageStore, appFrameStore, queryStore } = useStoresSafe()
+const AppPageContent = () => {
+  const { appPageStore, appFrameStore, queryStore } = useStores()
   if (!appPageStore.state) {
     return <div>no state</div>
   }
@@ -147,4 +146,4 @@ const AppPageContent = observer(() => {
       </Row>
     </>
   )
-})
+}

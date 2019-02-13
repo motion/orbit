@@ -1,5 +1,6 @@
 import { debugState } from '@mcro/black'
 import { enableLogging } from '@mcro/mobx-logger'
+import { debugUseStore } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
 
@@ -31,6 +32,43 @@ enableLogging({
   reaction: true,
   transaction: true,
   compute: true,
+})
+
+window['StoreState'] = {}
+const StoreState = window['StoreState']
+
+function addEvent(name: string, key: string, event: any) {
+  const id = event.componentId
+  StoreState[name] = StoreState[name] || {}
+  StoreState[name][id] = StoreState[name][id] || {
+    observes: [],
+    reactiveKeys: [],
+  }
+  StoreState[name][id][key].push(event)
+}
+
+debugUseStore(event => {
+  if (!window['enableLog']) return
+  console.log('useStore', event)
+  switch (event.type) {
+    case 'observe':
+      addEvent(event.componentName, 'observes', event)
+      return
+    case 'reactiveKeys':
+      addEvent(event.componentName, 'reactiveKeys', event)
+      return
+    case 'unmount':
+      for (const key in StoreState) {
+        for (const id in StoreState[key]) {
+          if (+id === event.componentId) {
+            delete StoreState[key][id]
+          }
+        }
+      }
+      return
+    // case 'prop':
+    // case 'render':
+  }
 })
 
 debugState(({ stores, views }) => {

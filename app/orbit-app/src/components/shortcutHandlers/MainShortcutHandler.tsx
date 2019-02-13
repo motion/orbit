@@ -1,12 +1,11 @@
 import { App } from '@mcro/stores'
 import { PopoverState } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { Direction } from '../../stores/SelectionStore'
 import { ShortcutStore } from '../../stores/ShortcutStore'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
@@ -38,11 +37,11 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-export default observer(function MainShortcutHandler(props: {
+export default memo(function MainShortcutHandler(props: {
   children?: React.ReactNode
   handlers?: any
 }) {
-  const { newAppStore, queryStore, paneManagerStore } = useStoresSafe()
+  const { newAppStore, queryStore, paneManagerStore } = useStores()
   const shortcutStore = useStore(ShortcutStore)
   const Actions = useActions()
 

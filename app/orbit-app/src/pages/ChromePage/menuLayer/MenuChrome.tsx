@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { animated, interpolate, useSpring } from 'react-spring'
 import { MENU_WIDTH } from '../../../constants'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
 
 const springyConfig = {
   mass: 0.8,
@@ -14,7 +14,7 @@ const springyConfig = {
 const noAnimationConfig = { duration: 1 }
 
 export const MenuChrome = observer(function MenuChrome(props: { children: any }) {
-  const { menuStore } = useStoresSafe()
+  const { menuStore } = useStores()
   const { menuCenter, menuHeight, openState } = menuStore
 
   React.useEffect(() => {

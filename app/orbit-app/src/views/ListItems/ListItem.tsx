@@ -4,8 +4,7 @@ import * as UI from '@mcro/ui'
 import { Row, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { HorizontalSpace } from '..'
 import { BorderBottom } from '../Border'
 import { DateFormat } from '../DateFormat'
@@ -117,7 +116,7 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   )
 }
 
-export default observer(function ListItem(props: ListItemProps) {
+export default memo(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
   const {
     date,

@@ -1,28 +1,27 @@
-import { useObserver } from 'mobx-react-lite'
 import React, { useRef, useState } from 'react'
 import {
   MergeHighlightsContext,
   MergeHighlightsContextProps,
 } from '../helpers/contexts/HighlightsContext'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 
 export function OrbitHighlightActiveQuery(props: Partial<MergeHighlightsContextProps>) {
-  const { appStore } = useStoresSafe()
+  const { appStore } = useStores()
 
   // initialQuery prevents two renders on mount by just storing the first value of query
   const initialQuery = useRef(null)
-  if (initialQuery.current === null) {
-    initialQuery.current = appStore.activeQuery
-  }
+  // if (initialQuery.current === null) {
+  //   initialQuery.current = appStore.activeQuery
+  // }
 
-  const [activeQuery, setActiveQuery] = useState(initialQuery.current)
+  const [activeQuery, setActiveQuery] = useState('')
 
   // keep it in sync
-  useObserver(() => {
-    if (appStore.activeQuery !== activeQuery) {
-      setActiveQuery(appStore.activeQuery)
-    }
-  })
+  // useObserver(() => {
+  //   if (appStore.activeQuery !== activeQuery) {
+  //     setActiveQuery(appStore.activeQuery)
+  //   }
+  // })
 
   return (
     <MergeHighlightsContext

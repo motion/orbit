@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStoresSimple } from '../hooks/useStores'
 import { tearApp } from './tearApp'
 
 export const defaultActions = {
@@ -14,7 +14,7 @@ type ActionsBound<A> = {
 
 export function useActions() {
   const actions = useContext(ActionsContext)
-  const stores = useStoresSafe()
+  const stores = useStoresSimple()
   const boundActions = (actions as unknown) as ActionsBound<typeof actions>
   return new Proxy(boundActions, {
     get(_, key) {

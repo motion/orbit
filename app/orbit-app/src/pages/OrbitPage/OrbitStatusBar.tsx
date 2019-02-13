@@ -1,8 +1,7 @@
 import { gloss, Row } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useApp } from '../../apps/AppView'
-import { useStoresSafe } from '../../hooks/useStoresSafe'
+import { useStores } from '../../hooks/useStores'
 import { BorderTop } from '../../views/Border'
 
 const statusBarHeight = 26
@@ -12,9 +11,9 @@ export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
   return <div style={{ height: appViews.statusBar ? statusBarHeight : 0 }} />
 }
 
-export default observer(function OrbitStatusBar() {
-  const { orbitStore } = useStoresSafe()
-  const { appViews, appStore } = useApp(orbitStore.activePane)
+export default function OrbitStatusBar() {
+  const { paneManagerStore } = useStores()
+  const { appViews, appStore } = useApp(paneManagerStore.activePane)
   const AppView = appViews.statusBar
 
   if (!AppView) {
@@ -23,11 +22,11 @@ export default observer(function OrbitStatusBar() {
 
   return (
     <StatusBarChrome>
-      <AppView key={orbitStore.activePane.id} appStore={appStore} />
+      <AppView key={paneManagerStore.activePane.id} appStore={appStore} />
       <BorderTop />
     </StatusBarChrome>
   )
-})
+}
 
 const StatusBarChrome = gloss(Row, {
   height: statusBarHeight,

@@ -1,16 +1,15 @@
 import { Col, Popover, ViewProps } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import React from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryStore/QueryFiltersStore'
 import { FloatingBarButton } from '../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../views/Icon'
 import ListItem from '../views/ListItems/ListItem'
 
-export default observer(function OrbitFilterIntegrationButton(
+export default function OrbitFilterIntegrationButton(
   props: ViewProps & { queryFilterStore?: QueryFilterStore },
 ) {
-  const stores = useStoresSafe()
+  const stores = useStores()
   const queryFilterStore = props.queryFilterStore || stores.queryStore.queryFilters
   const { hasIntegrationFilters, integrationFilters, integrationFilterToggler } = queryFilterStore
   return (
@@ -49,4 +48,4 @@ export default observer(function OrbitFilterIntegrationButton(
       </Col>
     </Popover>
   )
-})
+}

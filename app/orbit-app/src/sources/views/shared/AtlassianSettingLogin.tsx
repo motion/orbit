@@ -1,9 +1,14 @@
-import { command } from '../../../mediator'
-import { AtlassianSource, AtlassianSourceValuesCredentials, Source, SourceSaveCommand } from '@mcro/models'
+import {
+  AtlassianSource,
+  AtlassianSourceValuesCredentials,
+  Source,
+  SourceSaveCommand,
+} from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/AppActions'
-import { useStoresSafe } from '../../../hooks/useStoresSafe'
+import { useStores } from '../../../hooks/useStores'
+import { command } from '../../../mediator'
 import * as Views from '../../../views'
 import { Message } from '../../../views/Message'
 
@@ -25,7 +30,7 @@ const buttonThemes = {
 }
 
 export default function AtlassianSettingLogin(props: Props) {
-  const { spaceStore } = useStoresSafe()
+  const { spaceStore } = useStores()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
   const [source] = React.useState(

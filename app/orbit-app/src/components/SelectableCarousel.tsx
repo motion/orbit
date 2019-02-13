@@ -3,7 +3,7 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { useStoresSafe } from '../hooks/useStoresSafe'
+import { useStores } from '../hooks/useStores'
 import { SelectionStore } from '../stores/SelectionStore'
 import { Carousel, CarouselProps } from '../views/Carousel'
 
@@ -69,7 +69,7 @@ class CarouselStore {
 }
 
 export default observer(function SelectableCarousel(props: SelectableCarouselProps) {
-  const { selectionStore } = useStoresSafe()
+  const { selectionStore } = useStores()
   const store = useStore(CarouselStore, { ...props, selectionStore })
   const { cardWidth = 180, cardHeight = 95, afterSpace = true, ...rest } = props
   const afterWidth = typeof afterSpace === 'number' ? afterSpace : ORBIT_WIDTH - cardWidth - 26

@@ -32,9 +32,8 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
 
   useObserver(() => {
-    const appConfig = orbitStore.activeConfig[type]
+    const appConfig = orbitStore.activeConfig[type] || null
     if (!isEqual(appConfig, activeConfig)) {
-      console.log('update actige')
       setActiveConfig(appConfig)
     }
   })

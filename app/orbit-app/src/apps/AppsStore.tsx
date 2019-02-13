@@ -29,8 +29,6 @@ export class AppsStore {
       const { paneManagerStore } = this.stores
       const { activePane } = paneManagerStore
 
-      console.log('react me', activePane)
-
       if (!this.appsState) {
         return {
           hasMain: false,
@@ -58,10 +56,7 @@ export class AppsStore {
         hasIndex,
       }
     },
-    async (next, { sleep }) => {
-      await sleep()
-      return next
-    },
+    _ => _,
     {
       defaultValue: {
         hasMain: true,

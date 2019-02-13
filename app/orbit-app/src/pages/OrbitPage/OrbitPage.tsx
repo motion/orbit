@@ -97,8 +97,6 @@ const OrbitPageInner = memo(() => {
     closeApp: 0,
   })
 
-  console.log('rendering orbit page inner')
-
   useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)

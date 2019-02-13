@@ -39,7 +39,10 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
   return () => debugFns.delete(cb)
 }
 
-export function debugEmit(event: UseStoreDebugEvent) {
+export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
+  if (options && options.debug) {
+    console.log(event)
+  }
   if (debugFns.size) {
     ;[...debugFns].map(fn => fn(event))
   }

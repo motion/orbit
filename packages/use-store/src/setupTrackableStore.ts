@@ -1,36 +1,40 @@
-import { Reaction } from 'mobx'
+import { observable, Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import isEqual from 'react-fast-compare'
 import { debugEmit } from './debugUseStore'
 import { getCurrentComponent } from './useStore'
+
+type TrackableStoreOptions = {
+  componentId?: number
+  component: any
+  debug?: boolean
+}
 
 export function setupTrackableStore(
   store: any,
   rerender: Function,
-  component?: any,
-  componentId?: number,
+  options?: TrackableStoreOptions,
 ) {
+  const name = options && options.component.displayName
   const reactiveKeys = new Set()
-  let rendering = false
-  let value = null
+  let rendering = observable.box(false)
   let firstRun = true
 
-  const reaction = new Reaction(`track(${component.displayName})`, () => {
-    let changed = false
-    console.log('reaction', component.displayName, reactiveKeys)
-
+  const reaction = new Reaction(`track(${name})`, () => {
     reaction.track(() => {
-      if (rendering) return
+      if (rendering.get()) return
       if (reactiveKeys.size === 0) return
-      const nextValue = [...reactiveKeys].map(k => store[k])
-      changed = !firstRun && !isEqual(nextValue, value)
-      console.log('changed', changed, component.displayName, reactiveKeys)
-      value = nextValue
-      firstRun = false
+      for (const key of [...reactiveKeys]) {
+        store[key]
+      }
+      if (firstRun) {
+        firstRun = false
+        return
+      }
+      rerender()
     })
-
-    if (changed) rerender()
   })
+
+  reaction.schedule()
 
   return {
     store: new Proxy(store as any, {
@@ -42,35 +46,36 @@ export function setupTrackableStore(
       },
     }),
     track() {
-      console.log('track', component.displayName)
-      value = null
       reactiveKeys.clear()
-      rendering = true
+      rendering.set(true)
     },
     untrack() {
-      rendering = false
       firstRun = true
-      reaction.schedule()
+      rendering.set(false)
 
       if (process.env.NODE_ENV === 'development') {
-        debugEmit({
-          type: 'reactiveKeys',
-          keys: reactiveKeys,
-          component,
-          store,
-          componentId,
-        })
+        debugEmit(
+          {
+            type: 'reactiveKeys',
+            keys: reactiveKeys,
+            component: options.component,
+            store,
+            componentId: options.componentId,
+          },
+          options,
+        )
       }
     },
-    dispose: () => {
-      console.log('disposing', component.displayName)
-      reaction.dispose()
-    },
+    dispose: reaction.getDisposer(),
     reactiveKeys,
   }
 }
 
-export function useTrackableStore<A>(plainStore: A, rerenderCb: Function, componentId?: number): A {
+export function useTrackableStore<A>(
+  plainStore: A,
+  rerenderCb: Function,
+  options?: TrackableStoreOptions,
+): A {
   const component = getCurrentComponent()
   const trackableStore = useRef({
     store: null,
@@ -80,14 +85,12 @@ export function useTrackableStore<A>(plainStore: A, rerenderCb: Function, compon
     reactiveKeys: null,
   })
   if (!trackableStore.current.store) {
-    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, component, componentId)
+    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...options })
   }
   useEffect(() => {
     return () => {
       const bye = trackableStore.current.dispose
-      if (bye) {
-        bye()
-      }
+      if (bye) bye()
     }
   }, [])
   const { store, track, untrack } = trackableStore.current

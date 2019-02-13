@@ -2,7 +2,7 @@ import { gloss } from '@mcro/gloss'
 import { View } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { useObserver } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { AppConfig, AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -12,7 +12,7 @@ import { useInspectViews } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
-export default function OrbitMain() {
+export default memo(function OrbitMain() {
   const { paneManagerStore } = useStores({ debug: true })
   const { hasMain } = useInspectViews()
 
@@ -25,7 +25,7 @@ export default function OrbitMain() {
       ))}
     </OrbitMainView>
   )
-}
+})
 
 // separate view prevents big re-renders
 function OrbitPageMainView(props: { pane: Pane }) {
@@ -38,6 +38,8 @@ function OrbitPageMainView(props: { pane: Pane }) {
       setActiveConfig(appConfig)
     }
   })
+
+  console.log('rendering main')
 
   // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
   // we have a delay between select and show main sometimes

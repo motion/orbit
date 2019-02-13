@@ -171,15 +171,18 @@ export function useStore<P, A extends { props?: P } | any>(
     store = useTrackableStore(
       store,
       () => {
-        debugEmit({
-          type: 'render',
-          store,
-          component,
-          componentId: componentId.current,
-        })
+        debugEmit(
+          {
+            type: 'render',
+            store,
+            component,
+            componentId: componentId.current,
+          },
+          options,
+        )
         rerender()
       },
-      componentId.current,
+      { ...options, component, componentId: componentId.current },
     )
   } else {
     store = useTrackableStore(store, rerender)
@@ -192,10 +195,13 @@ export function useStore<P, A extends { props?: P } | any>(
     return () => {
       disposeStore(store)
       if (process.env.NODE_ENV === 'development') {
-        debugEmit({
-          type: 'unmount',
-          componentId: componentId.current,
-        })
+        debugEmit(
+          {
+            type: 'unmount',
+            componentId: componentId.current,
+          },
+          options,
+        )
       }
     }
   }, [])
@@ -254,10 +260,13 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
           dispose()
         }
         if (process.env.NODE_ENV === 'development') {
-          debugEmit({
-            type: 'unmount',
-            componentId: componentId.current,
-          })
+          debugEmit(
+            {
+              type: 'unmount',
+              componentId: componentId.current,
+            },
+            options,
+          )
         }
       }
     }, [])
@@ -277,7 +286,11 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
             }
             const next =
               process.env.NODE_ENV === 'development'
-                ? setupTrackableStore(store, rerender, component, componentId.current)
+                ? setupTrackableStore(store, rerender, {
+                    ...options,
+                    component,
+                    componentId: componentId.current,
+                  })
                 : setupTrackableStore(store, rerender)
 
             // track immediately because it will be missed by track block below
@@ -300,10 +313,6 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
           }
         },
       })
-    }
-
-    if (options && options.debug) {
-      console.log('Debug', component.displayName, 'render', state, componentId)
     }
 
     // track and untrack

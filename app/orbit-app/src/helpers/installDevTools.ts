@@ -48,9 +48,8 @@ function addEvent(component, key, event) {
 }
 
 debugUseStore(event => {
-  if (window['enableLog']) {
-    console.log('useStore', event)
-  }
+  if (!window['enableLog']) return
+  console.log('useStore', event)
   switch (event.type) {
     case 'observe':
       addEvent(event.component, 'observes', event)

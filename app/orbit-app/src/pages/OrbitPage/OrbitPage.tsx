@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { once, uniqBy } from 'lodash'
 import { comparer } from 'mobx'
 import { useObservable, useObserver } from 'mobx-react-lite'
-import * as React from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
@@ -35,7 +35,7 @@ import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
 
-export default React.memo(function OrbitPage() {
+export default memo(function OrbitPage() {
   return (
     <ActionsContext.Provider value={defaultActions}>
       <OrbitPageProvideStores>
@@ -53,7 +53,7 @@ function useManagePanes() {
   const appsState = useObservable({ ids: '' })
 
   // trigger observer... :/
-  React.useEffect(
+  useEffect(
     () => {
       appsState.ids = appsId
     },
@@ -77,11 +77,11 @@ function OrbitManagers() {
   return null
 }
 
-function OrbitPageInner() {
+const OrbitPageInner = memo(() => {
   const { paneManagerStore } = useStores({ debug: true })
   const headerStore = useStore(HeaderStore)
-  const [theme, setTheme] = React.useState('light')
-  const shortcutState = React.useRef({
+  const [theme, setTheme] = useState('light')
+  const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
   })
@@ -95,7 +95,7 @@ function OrbitPageInner() {
     }
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
       paneManagerStore.setActivePaneByType('settings')
@@ -116,7 +116,7 @@ function OrbitPageInner() {
     x => x.id,
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     // prevent close on the main window
     window.onbeforeunload = function(e) {
       const { closeTab, closeApp } = shortcutState.current
@@ -186,7 +186,7 @@ function OrbitPageInner() {
       </ProvideOrbitStore>
     </ProvideStores>
   )
-}
+})
 
 function ProvideOrbitStore(props: { children: any }) {
   const { paneManagerStore } = useStores()
@@ -219,7 +219,7 @@ export const defaultPanes: Pane[] = [
 ]
 
 function useOnce(fn: Function, reset = []) {
-  return React.useCallback(once(fn as any), reset)
+  return useCallback(once(fn as any), reset)
 }
 
 function appToPane(app: AppBit): Pane {
@@ -291,7 +291,7 @@ function OrbitPageProvideStores(props: any) {
   const setToFirstAppPane = useOnce(() => {
     paneManagerStore.setPaneIndex(defaultPanes.length)
   })
-  React.useEffect(
+  useEffect(
     () => {
       hasLoadedApps && setToFirstAppPane()
     },

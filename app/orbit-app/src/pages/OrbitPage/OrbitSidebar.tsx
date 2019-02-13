@@ -1,6 +1,7 @@
 import { Sidebar } from '@mcro/ui'
 import { isEqual } from 'lodash'
-import * as React from 'react'
+import React, { memo, useState } from 'react'
+import isEqualDeep from 'react-fast-compare'
 import { apps } from '../../apps/apps'
 import { AppType } from '../../apps/AppTypes'
 import { AppView, AppViewRef } from '../../apps/AppView'
@@ -47,12 +48,12 @@ export function useInspectViews() {
   }
 }
 
-export default function OrbitSidebar() {
-  const { paneManagerStore } = useStores()
+export default memo(function OrbitSidebar() {
+  const { paneManagerStore } = useStores({ debug: true })
   const { activePane } = paneManagerStore
-  const [indexRef, setIndexRef] = React.useState<AppViewRefDictionary>({})
+  const [indexRef, setIndexRef] = useState<AppViewRefDictionary>({})
   const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
-  const [sidebarWidth, setSidebarWidth] = React.useState(defaultWidth)
+  const [sidebarWidth, setSidebarWidth] = useState(defaultWidth)
   const { hasMain, hasIndex } = useInspectViews()
 
   if (!activePane) {
@@ -78,6 +79,8 @@ export default function OrbitSidebar() {
     setSidebarWidth(width)
   }
 
+  console.log('redering sidebar')
+
   return (
     <Sidebar
       background="transparent"
@@ -100,15 +103,15 @@ export default function OrbitSidebar() {
       })}
     </Sidebar>
   )
-}
+})
 
-const SidebarSubPane = React.memo(function SidebarSubPane(props: {
+const SidebarSubPane = memo(function SidebarSubPane(props: {
   pane: Pane
   setIndexRef: Function
   indexRef: AppViewRefDictionary
   hasMain: boolean
 }) {
-  const { orbitStore } = useStores()
+  const { orbitStore } = useStores({ debug: true })
   const { pane, indexRef, setIndexRef, hasMain } = props
 
   console.log('rendering sidebar')
@@ -133,4 +136,5 @@ const SidebarSubPane = React.memo(function SidebarSubPane(props: {
       </ProvideSelectableHandlers>
     </SubPane>
   )
-})
+},
+isEqualDeep)

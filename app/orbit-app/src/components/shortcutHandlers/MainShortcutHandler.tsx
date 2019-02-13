@@ -1,7 +1,7 @@
 import { App } from '@mcro/stores'
 import { PopoverState } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { StoreContext } from '../../contexts'
@@ -37,7 +37,10 @@ const rootShortcuts = {
   9: 'command+9',
 }
 
-export default function MainShortcutHandler(props: { children?: React.ReactNode; handlers?: any }) {
+export default memo(function MainShortcutHandler(props: {
+  children?: React.ReactNode
+  handlers?: any
+}) {
   const { newAppStore, queryStore, paneManagerStore } = useStores()
   const shortcutStore = useStore(ShortcutStore)
   const Actions = useActions()
@@ -115,4 +118,4 @@ export default function MainShortcutHandler(props: { children?: React.ReactNode;
       </FocusableShortcutHandler>
     </MergeContext>
   )
-}
+})

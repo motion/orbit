@@ -1,8 +1,10 @@
-// import { useStore } from '@mcro/use-store'
+// import { debugUseStore, useStore } from '@mcro/use-store'
 // import React from 'react'
 // import { hot } from 'react-hot-loader'
 // import { ProvideStores } from './components/ProvideStores'
 // import { useStores } from './hooks/useStores'
+
+// debugUseStore(x => console.log(x))
 
 // class Ok {
 //   x = 1
@@ -20,6 +22,7 @@
 //         <button onClick={() => store.x++}>up</button>
 //         <button onClick={() => (store.y = store.y)}>222</button>
 //         <SubView />
+//         <Sibling />
 //       </ProvideStores>
 //     </div>
 //   )
@@ -30,6 +33,11 @@
 //   const { store } = useStores()
 //   return <div>sub sub {store.x}</div>
 // }
+
+// const Sibling = React.memo(function Sibling() {
+//   console.log('no render subling')
+//   return <div>sibling</div>
+// })
 
 import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'

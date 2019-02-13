@@ -4,7 +4,7 @@ import { AppModel } from '@mcro/models'
 import { BorderBottom } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
@@ -35,7 +35,7 @@ class OrbitNavStore {
   )
 }
 
-export default function OrbitNav() {
+export default memo(function OrbitNav() {
   const { spaceStore, paneManagerStore, newAppStore } = useStores({ debug: true })
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
@@ -235,7 +235,7 @@ export default function OrbitNav() {
       <BorderBottom zIndex={100} />
     </OrbitNavClip>
   )
-}
+})
 
 const OrbitNavClip = gloss({
   flex: 1,

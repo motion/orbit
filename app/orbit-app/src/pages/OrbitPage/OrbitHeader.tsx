@@ -1,7 +1,7 @@
 import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
 import { AppType } from '../../apps/AppTypes'
@@ -17,7 +17,7 @@ import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
-export default function OrbitHeader() {
+export default memo(function OrbitHeader() {
   const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
   const isTorn = getIsTorn()
@@ -129,7 +129,7 @@ export default function OrbitHeader() {
       <OrbitNav />
     </OrbitHeaderContainer>
   )
-}
+})
 
 function HeaderButton(props: ButtonProps) {
   return <Button size={0.9} sizeHeight={0.9} {...props} />

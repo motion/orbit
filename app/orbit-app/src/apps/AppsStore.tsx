@@ -29,6 +29,8 @@ export class AppsStore {
       const { paneManagerStore } = this.stores
       const { activePane } = paneManagerStore
 
+      console.log('react me', activePane)
+
       if (!this.appsState) {
         return {
           hasMain: false,
@@ -69,7 +71,6 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    console.warn('setting up app', id, views, provideStores)
     this.appViews = {
       ...this.appViews,
       [id]: views,

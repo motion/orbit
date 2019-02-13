@@ -1,30 +1,28 @@
 import Reconciler from 'react-reconciler'
+import {
+  unstable_cancelCallback as cancelDeferredCallback,
+  unstable_scheduleCallback as scheduleDeferredCallback,
+} from 'scheduler'
 import { createElement, getHostContextNode } from '../utils/createElement'
+export {
+  unstable_cancelCallback as cancelDeferredCallback,
+  unstable_now as now,
+  unstable_scheduleCallback as scheduleDeferredCallback,
+  unstable_shouldYield as shouldYield,
+} from 'scheduler'
 
 const emptyObject = {}
 const noop = () => {}
 
-let scheduledCallback = null
-function setTimeoutCallback() {
-  const callback = scheduledCallback
-  scheduledCallback = null
-  if (callback !== null) {
-    callback()
-  }
-}
-function scheduleDeferredCallback(callback) {
-  scheduledCallback = callback
-  const timeoutId = setTimeout(setTimeoutCallback, 1)
-  return timeoutId
-}
-function cancelDeferredCallback(callbackID) {
-  scheduledCallback = null
-  clearTimeout(callbackID)
-}
-
 const HostConfig = {
   now: Date.now,
   supportsMutation: true,
+
+  // hooks stuff:
+  noTimeout: -1,
+  scheduleTimeout: setTimeout,
+  schedulePassiveEffects: scheduleDeferredCallback,
+  cancelPassiveEffects: cancelDeferredCallback,
 
   appendInitialChild(parent, child) {
     parent.appendChild(child)
@@ -101,9 +99,6 @@ const HostConfig = {
   commitTextUpdate(textInstance, oldText, newText) {
     textInstance.children = newText
   },
-
-  schedulePassiveEffects: scheduleDeferredCallback,
-  cancelPassiveEffects: cancelDeferredCallback,
 }
 
 export default Reconciler(HostConfig)

@@ -10,7 +10,6 @@ import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'ele
 import { pathExists } from 'fs-extra'
 import root from 'global'
 import { last } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
 import { ROOT } from '../constants'
@@ -147,9 +146,13 @@ class OrbitWindowStore {
   setInitialShow = () => {
     this.initialShow = true
   }
+
+  get showDevTools() {
+    return Electron.state.showDevTools.app
+  }
 }
 
-export default observer(function OrbitWindow() {
+export default function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
@@ -247,7 +250,7 @@ export default observer(function OrbitWindow() {
       onMove={store.setPosition}
       onFocus={store.handleFocus}
       onBlur={store.handleBlur}
-      showDevTools={Electron.state.showDevTools.app}
+      showDevTools={store.showDevTools}
       transparent
       background="#00000000"
       vibrancy={vibrancy}
@@ -255,4 +258,4 @@ export default observer(function OrbitWindow() {
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />
   )
-})
+}

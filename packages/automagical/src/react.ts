@@ -182,6 +182,9 @@ export function setupReact(
   }
 
   // auto add subscription so it disposes on unmount
+  if (!obj.__automagicSubscriptions) {
+    console.log('obj', obj)
+  }
   obj.__automagicSubscriptions.add({ dispose })
 
   // state used outside each watch/reaction
@@ -427,13 +430,7 @@ export function setupReact(
     }
   }
 
-  // setTimeout so all react functions are "set up" before they start running
-  // this is helpful because they probably all depend on each other
   setTimeout(() => {
-    if (disposed) {
-      // this avoids work/bugs by cancelling reactions after disposed
-      return
-    }
     if (typeof reaction !== 'function') {
       throw new Error(`Reaction requires function. ${name.simple} got ${typeof reaction}`)
     }

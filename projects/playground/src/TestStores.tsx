@@ -23,6 +23,7 @@ class TestStore {
 
 export function TestStores() {
   const store = useStore(TestStore, { x: 1 })
+  console.log('store', (window.store = store))
   return (
     <div>
       <h2>y: {store.y}</h2>

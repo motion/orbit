@@ -10,6 +10,7 @@ export function useOrbitFilterableResults<A>(props: FilterableProps<A>): A[] {
   const [activeQuery, setActiveQuery] = useState('')
 
   useObserver(() => {
+    console.log('get appstpore', appStore)
     if (appStore.activeQuery !== activeQuery) {
       setActiveQuery(appStore.activeQuery)
     }

@@ -37,11 +37,14 @@ enableLogging({
 window['StoreState'] = {}
 const StoreState = window['StoreState']
 
-const setupStore = name => {
-  StoreState[name] = {
+function addEvent(component, key, event) {
+  const id = component.__componentId
+  StoreState[component.displayName] = StoreState[component.displayName] || {}
+  StoreState[component.displayName][id] = StoreState[component.displayName][id] || {
     observes: [],
     reactiveKeys: [],
   }
+  StoreState[component.displayName][id][key].push(event)
 }
 
 debugUseStore(event => {
@@ -50,14 +53,10 @@ debugUseStore(event => {
   }
   switch (event.type) {
     case 'observe':
-      const name = event.component.displayName
-      setupStore(name)
-      StoreState[name].observes.push(event)
+      addEvent(event.component, 'observes', event)
       return
     case 'reactiveKeys':
-      const name2 = event.component.displayName
-      setupStore(name2)
-      StoreState[name2].reactiveKeys.push(event)
+      addEvent(event.component, 'reactiveKeys', event)
       return
     // case 'prop':
     // case 'render':

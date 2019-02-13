@@ -25,11 +25,13 @@ type UseStoreDebugEvent =
       newValue: any
       store: any
       component: any
+      componentId: number
     }
   | {
       type: 'render'
       store: any
       component: any
+      componentId: number
     }
   | {
       type: 'prop'
@@ -42,6 +44,7 @@ type UseStoreDebugEvent =
       type: 'reactiveKeys'
       keys: Set<string>
       component: any
+      componentId: number
       store: any
     }
 
@@ -193,7 +196,7 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   return storeRef.current
 }
 
-function setupTrackableStore(store: any, rerender: Function) {
+function setupTrackableStore(store: any, rerender: Function, componentId?: number) {
   const component = getCurrentComponent()
   const reactiveKeys = new Set()
   let rendering = false
@@ -229,6 +232,7 @@ function setupTrackableStore(store: any, rerender: Function) {
                 oldValue: change.oldValue,
                 newValue: change.newValue,
                 component,
+                componentId,
               })
             }
             rerender()
@@ -247,6 +251,7 @@ function setupTrackableStore(store: any, rerender: Function) {
             keys: reactiveKeys,
             component,
             store,
+            componentId,
           })
         }
       }
@@ -255,7 +260,7 @@ function setupTrackableStore(store: any, rerender: Function) {
   }
 }
 
-export function useTrackableStore<A>(plainStore: A, rerenderCb: Function): A {
+export function useTrackableStore<A>(plainStore: A, rerenderCb: Function, componentId?: number): A {
   const trackableStore = useRef({
     store: null,
     track: null,
@@ -264,7 +269,7 @@ export function useTrackableStore<A>(plainStore: A, rerenderCb: Function): A {
   })
 
   if (!trackableStore.current.store) {
-    trackableStore.current = setupTrackableStore(plainStore, rerenderCb)
+    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, componentId)
   }
 
   useEffect(() => {
@@ -292,16 +297,22 @@ export function useStore<P, A extends { props?: P } | any>(
   let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
   const component = getCurrentComponent()
+  const componentId = useRef(Math.random())
 
   if (process.env.NODE_ENV === 'development') {
-    store = useTrackableStore(store, () => {
-      debugEmit({
-        type: 'render',
-        store,
-        component,
-      })
-      rerender()
-    })
+    store = useTrackableStore(
+      store,
+      () => {
+        debugEmit({
+          type: 'render',
+          store,
+          component,
+          componentId: componentId.current,
+        })
+        rerender()
+      },
+      componentId.current,
+    )
   } else {
     store = useTrackableStore(store, rerender)
   }
@@ -344,6 +355,8 @@ export function useThrottledForceUpdate() {
   return useCallback(throttle(() => setState(Math.random())), [])
 }
 
+let nextId = 0
+
 // for use in children
 export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
   return function useStores(options?: { optional?: (keyof A)[]; debug?: boolean }): A {
@@ -352,6 +365,7 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const state = stateRef.current
     const rerender = useThrottledForceUpdate()
     const component = getCurrentComponent()
+    const componentId = useRef(++nextId)
 
     const storesRef = useRef(null)
 
@@ -378,14 +392,19 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
             }
             let next
             if (process.env.NODE_ENV === 'development') {
-              next = setupTrackableStore(store, () => {
-                debugEmit({
-                  type: 'render',
-                  store,
-                  component,
-                })
-                rerender()
-              })
+              next = setupTrackableStore(
+                store,
+                () => {
+                  debugEmit({
+                    type: 'render',
+                    store,
+                    component,
+                    componentId: componentId.current,
+                  })
+                  rerender()
+                },
+                componentId.current,
+              )
             } else {
               next = setupTrackableStore(store, rerender)
             }

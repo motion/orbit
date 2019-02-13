@@ -6,7 +6,7 @@ import { useStore } from '@mcro/use-store'
 import { once, uniqBy } from 'lodash'
 import { comparer } from 'mobx'
 import { useObservable, useObserver } from 'mobx-react-lite'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
@@ -35,14 +35,26 @@ import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
 
+class ThemeStore {
+  get theme() {
+    return App.state.isDark ? 'dark' : 'light'
+  }
+}
+
 export default memo(function OrbitPage() {
+  const { theme } = useStore(ThemeStore)
+
   return (
-    <ActionsContext.Provider value={defaultActions}>
-      <OrbitPageProvideStores>
-        <OrbitPageInner />
-        <OrbitManagers />
-      </OrbitPageProvideStores>
-    </ActionsContext.Provider>
+    <Theme name={theme}>
+      <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+        <ActionsContext.Provider value={defaultActions}>
+          <OrbitPageProvideStores>
+            <OrbitPageInner />
+            <OrbitManagers />
+          </OrbitPageProvideStores>
+        </ActionsContext.Provider>
+      </AppWrapper>
+    </Theme>
   )
 })
 
@@ -80,20 +92,12 @@ function OrbitManagers() {
 const OrbitPageInner = memo(() => {
   const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
-  const [theme, setTheme] = useState('light')
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
   })
 
   console.log('rendering orbit page inner')
-
-  useObserver(() => {
-    const next = App.state.isDark ? 'dark' : 'light'
-    if (next !== theme) {
-      setTheme(next)
-    }
-  })
 
   useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
@@ -167,21 +171,17 @@ const OrbitPageInner = memo(() => {
             },
           }}
         >
-          <Theme name={theme}>
-            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-              <AppsLoader views={allViews}>
-                <OrbitHeader />
-                <InnerChrome torn={getIsTorn()}>
-                  <OrbitToolBar />
-                  <OrbitContentArea>
-                    <OrbitSidebar />
-                    <OrbitMain />
-                  </OrbitContentArea>
-                  <OrbitStatusBar />
-                </InnerChrome>
-              </AppsLoader>
-            </AppWrapper>
-          </Theme>
+          <AppsLoader views={allViews}>
+            <OrbitHeader />
+            <InnerChrome torn={getIsTorn()}>
+              <OrbitToolBar />
+              <OrbitContentArea>
+                <OrbitSidebar />
+                <OrbitMain />
+              </OrbitContentArea>
+              <OrbitStatusBar />
+            </InnerChrome>
+          </AppsLoader>
         </MainShortcutHandler>
       </ProvideOrbitStore>
     </ProvideStores>

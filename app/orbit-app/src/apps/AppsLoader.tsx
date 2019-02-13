@@ -11,8 +11,7 @@ export default function AppsLoader(props: { children?: any; views: AppViewDefini
   const appsStore = useStore(AppsStore)
 
   const appLoadViews = props.views.map(view => {
-    console.log('loading view', view.id)
-    return <AppLoader key={view.id} view={view} store={appsStore} />
+    return <AppLoader key={view.id} id={view.id} type={view.type} store={appsStore} />
   })
 
   return (
@@ -23,13 +22,13 @@ export default function AppsLoader(props: { children?: any; views: AppViewDefini
   )
 }
 
-type AppLoaderProps = { view: AppViewDefinition; store: AppsStore }
+type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
 function AppLoader(props: AppLoaderProps) {
-  const AppView = apps[props.view.type]
+  const AppView = apps[props.type]
 
   if (!AppView) {
-    throw new Error(`App not found ${props.view.type}`)
+    throw new Error(`App not found ${props.type}`)
   }
 
   // never run more than once
@@ -41,14 +40,20 @@ function AppLoader(props: AppLoaderProps) {
   return element
 }
 
-function AppLoadView({ view, store }: AppLoaderProps) {
-  const AppView = apps[view.type]
-  const appViewProps = { id: view.id }
+function AppLoadView({ id, type, store }: AppLoaderProps) {
+  const AppView = apps[type]
+  const appViewProps = { id: id }
   const appStore = useStore(AppStore, appViewProps)
 
   useEffect(() => {
-    store.handleAppStore(view.id, appStore)
-  })
+    if (typeof AppView !== 'function') {
+      if (AppView.index || AppView.main) {
+        store.setupApp(id, AppView)
+      }
+    }
+
+    store.handleAppStore(id, appStore)
+  }, [])
 
   if (typeof AppView === 'function') {
     return (
@@ -59,7 +64,6 @@ function AppLoadView({ view, store }: AppLoaderProps) {
   }
 
   if (AppView.index || AppView.main) {
-    store.setupApp(view.id, AppView)
     return null
   } else {
     throw new Error(`Invalid definition ${AppView}`)

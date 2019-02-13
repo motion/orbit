@@ -34,25 +34,12 @@ export class SubPaneStore {
     _ => _,
   )
 
-  isActive = react(() => this.positionState.isActive, _ => _)
-
-  positionState = react(
+  isActive = react(
     () => {
-      const { id } = this.props
       const { paneManagerStore } = this.stores
-      const isActive = paneManagerStore.activePane && id === paneManagerStore.activePane.id
-      return {
-        isActive,
-        isLeft: this.isLeft,
-      }
+      return paneManagerStore.activePane && this.props.id === paneManagerStore.activePane.id
     },
     _ => _,
-    {
-      defaultValue: {
-        isActive: false,
-        isLeft: this.isLeft,
-      },
-    },
   )
 
   triggerRewatch = 0

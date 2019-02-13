@@ -14,55 +14,11 @@ import {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
 } from 'react'
 import isEqualReact from 'react-fast-compare'
+import { debugEmit } from './debugUseStore'
+
+export { debugUseStore } from './debugUseStore'
 
 const { ReactCurrentOwner } = __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
-
-type UseStoreDebugEvent =
-  | {
-      type: 'observe'
-      key: string
-      oldValue: any
-      newValue: any
-      store: any
-      component: any
-      componentId: number
-    }
-  | {
-      type: 'render'
-      store: any
-      component: any
-      componentId: number
-    }
-  | {
-      type: 'prop'
-      key: string
-      oldValue: any
-      newValue: any
-      store: any
-    }
-  | {
-      type: 'reactiveKeys'
-      keys: Set<string>
-      component: any
-      componentId: number
-      store: any
-    }
-  | {
-      type: 'unmount'
-      componentId: number
-    }
-
-let debugFns = new Set()
-export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
-  debugFns.add(cb)
-  return () => debugFns.delete(cb)
-}
-
-function debugEmit(event: UseStoreDebugEvent) {
-  if (debugFns.size) {
-    ;[...debugFns].map(fn => fn(event))
-  }
-}
 
 type UseGlobalStoreOptions = {
   onMount: (store: any) => void
@@ -200,8 +156,12 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   return storeRef.current
 }
 
-function setupTrackableStore(store: any, rerender: Function, componentId?: number) {
-  const component = getCurrentComponent()
+function setupTrackableStore(
+  store: any,
+  rerender: Function,
+  component?: any,
+  componentId?: number,
+) {
   const reactiveKeys = new Set()
   let rendering = false
   let dispose = null
@@ -221,11 +181,10 @@ function setupTrackableStore(store: any, rerender: Function, componentId?: numbe
       if (!dispose) {
         try {
           dispose = observe(store, change => {
-            if (component.displayName === 'SubPane') {
+            if (component.displayName === 'OrbitNav') {
               console.log('i see a change', change, rendering, reactiveKeys)
             }
             if (rendering) return
-            if (change.type !== 'update') return
             if (!reactiveKeys.size) return
             if (!reactiveKeys.has(change['name'])) return
             if (process.env.NODE_ENV === 'development') {
@@ -249,15 +208,13 @@ function setupTrackableStore(store: any, rerender: Function, componentId?: numbe
     untrack() {
       rendering = false
       if (process.env.NODE_ENV === 'development') {
-        if (reactiveKeys.size) {
-          debugEmit({
-            type: 'reactiveKeys',
-            keys: reactiveKeys,
-            component,
-            store,
-            componentId,
-          })
-        }
+        debugEmit({
+          type: 'reactiveKeys',
+          keys: reactiveKeys,
+          component,
+          store,
+          componentId,
+        })
       }
     },
     dispose: () => dispose && dispose(),
@@ -265,6 +222,7 @@ function setupTrackableStore(store: any, rerender: Function, componentId?: numbe
 }
 
 export function useTrackableStore<A>(plainStore: A, rerenderCb: Function, componentId?: number): A {
+  const component = getCurrentComponent()
   const trackableStore = useRef({
     store: null,
     track: null,
@@ -273,7 +231,7 @@ export function useTrackableStore<A>(plainStore: A, rerenderCb: Function, compon
   })
 
   if (!trackableStore.current.store) {
-    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, componentId)
+    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, component, componentId)
   }
 
   useEffect(() => {
@@ -419,6 +377,7 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
                   })
                   rerender()
                 },
+                component,
                 componentId.current,
               )
             } else {

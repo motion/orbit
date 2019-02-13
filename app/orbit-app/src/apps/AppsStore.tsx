@@ -71,7 +71,6 @@ export class AppsStore {
       [id]: views,
     }
     if (provideStores) {
-      console.log('provide them', this.provideStores, provideStores)
       this.provideStores = {
         ...this.provideStores,
         [id]: provideStores,

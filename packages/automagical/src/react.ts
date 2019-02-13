@@ -430,21 +430,19 @@ export function setupReact(
     }
   }
 
-  setTimeout(() => {
-    if (typeof reaction !== 'function') {
-      throw new Error(`Reaction requires function. ${name.simple} got ${typeof reaction}`)
+  if (typeof reaction !== 'function') {
+    throw new Error(`Reaction requires function. ${name.simple} got ${typeof reaction}`)
+  }
+  if (isReaction) {
+    if (typeof derive !== 'function') {
+      throw new Error(`Reaction requires second function. ${name.simple} got ${typeof derive}`)
     }
-    if (isReaction) {
-      if (typeof derive !== 'function') {
-        throw new Error(`Reaction requires second function. ${name.simple} got ${typeof derive}`)
-      }
-      // reaction
-      stopReaction = Mobx.reaction(reaction, setupReactionFn(derive), mobxOptions)
-    } else {
-      //autorun
-      stopReaction = Mobx.autorun(setupReactionFn(reaction), mobxOptions)
-    }
-  }, 0)
+    // reaction
+    stopReaction = Mobx.reaction(reaction, setupReactionFn(derive), mobxOptions)
+  } else {
+    //autorun
+    stopReaction = Mobx.autorun(setupReactionFn(reaction), mobxOptions)
+  }
 
   return current
 }

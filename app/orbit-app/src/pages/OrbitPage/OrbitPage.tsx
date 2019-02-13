@@ -5,7 +5,7 @@ import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { once, uniqBy } from 'lodash'
 import { comparer } from 'mobx'
-import { observer, useObservable, useObserver } from 'mobx-react-lite'
+import { useObservable, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
@@ -36,25 +36,38 @@ import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
 
 export default React.memo(function OrbitPage() {
-  // keep activeSpace.paneSort in sync with activeApps
-  useManagePaneSort()
-
   return (
     <ActionsContext.Provider value={defaultActions}>
       <OrbitPageProvideStores>
         <OrbitPageInner />
+        <OrbitManagers />
       </OrbitPageProvideStores>
     </ActionsContext.Provider>
   )
 })
 
-const OrbitPageInner = observer(function OrbitPageInner() {
-  const { paneManagerStore } = useStores()
+function OrbitManagers() {
+  useManagePaneSort()
+  return null
+}
+
+function OrbitPageInner() {
+  const { paneManagerStore } = useStores({ debug: true })
   const headerStore = useStore(HeaderStore)
-  const theme = App.state.isDark ? 'dark' : 'light'
+  const [theme, setTheme] = React.useState('light')
   const shortcutState = React.useRef({
     closeTab: 0,
     closeApp: 0,
+  })
+
+  console.log('rendering orbit page inner')
+
+  useObserver(() => {
+    const next = App.state.isDark ? 'dark' : 'light'
+    if (next !== theme) {
+      console.log('set theme', next)
+      setTheme(next)
+    }
   })
 
   React.useEffect(() => {
@@ -146,7 +159,7 @@ const OrbitPageInner = observer(function OrbitPageInner() {
       </MainShortcutHandler>
     </ProvideStores>
   )
-})
+}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',

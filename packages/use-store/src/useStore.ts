@@ -1,9 +1,9 @@
 import { automagicClass } from '@mcro/automagical'
-import { isEqual, throttle } from 'lodash'
-import { observable, reaction, transaction } from 'mobx'
+import { throttle } from 'lodash'
+import { observable, observe, transaction } from 'mobx'
 import {
   createContext,
-  isValidElement,
+  // isValidElement,
   useCallback,
   useContext,
   useEffect,
@@ -16,6 +16,39 @@ import {
 import isEqualReact from 'react-fast-compare'
 
 const { ReactCurrentOwner } = __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+
+type UseStoreDebugEvent =
+  | {
+      type: 'observe'
+      key: string
+      oldValue: any
+      newValue: any
+      store: any
+      component: any
+    }
+  | {
+      type: 'render'
+      store: any
+      component: any
+    }
+  | {
+      type: 'prop'
+      key: string
+      oldValue: any
+      newValue: any
+    }
+
+let debugFns = new Set()
+export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
+  debugFns.add(cb)
+  return () => debugFns.delete(cb)
+}
+
+function debugEmit(event: UseStoreDebugEvent) {
+  if (debugFns.size) {
+    ;[...debugFns].map(fn => fn(event))
+  }
+}
 
 type UseGlobalStoreOptions = {
   onMount: (store: any) => void
@@ -45,27 +78,11 @@ export function disposeStore(store: any) {
   }
 }
 
-const isReactElement = (x: any) => {
-  if (!x) {
-    return false
-  }
-  if (isValidElement(x)) {
-    return true
-  }
-  if (Array.isArray(x)) {
-    return x.some(isValidElement)
-  }
-  return false
-}
-
-const propKeysWithoutElements = (props: Object) =>
-  Object.keys(props).filter(x => !isReactElement(props[x]))
-
 // updateProps
 // granular set so reactions can be efficient
-const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions) => {
-  const nextPropsKeys = propKeysWithoutElements(nextProps)
-  const curPropKeys = propKeysWithoutElements(props)
+const updateProps = (props: Object, nextProps: Object) => {
+  const nextPropsKeys = Object.keys(nextProps)
+  const curPropKeys = Object.keys(props)
 
   // changes
   transaction(() => {
@@ -73,8 +90,13 @@ const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions
       const a = props[prop]
       const b = nextProps[prop]
       if (!isEqualReact(a, b)) {
-        if (process.env.NODE_ENV === 'development' && options && options.debug) {
-          console.log('has changed prop', options, prop, a, b)
+        if (process.env.NODE_ENV === 'development') {
+          debugEmit({
+            type: 'prop',
+            key: prop,
+            oldValue: a,
+            newValue: b,
+          })
         }
         props[prop] = b
       }
@@ -136,11 +158,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   }
 }
 
-function useReactiveStore<A extends any>(
-  Store: new () => A,
-  props?: any,
-  options?: UseStoreOptions,
-): A {
+function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   const storeHooks = useRef<Function[] | null>(null)
   const storeRef = useRef<A>(null)
   const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
@@ -161,44 +179,22 @@ function useReactiveStore<A extends any>(
 
   // update props after first run
   if (props && !!storeRef.current) {
-    storeRef.current.__updateProps(storeRef.current.props, props, options)
+    storeRef.current.__updateProps(storeRef.current.props, props)
   }
 
   return storeRef.current
 }
 
 function setupTrackableStore(store: any, rerender: Function) {
-  let tracking = false
-  let lastReactiveKeys = new Set()
-  let reactiveKeys = new Set()
-  let unwatch = null
-
-  const watchForUpdates = () => {
-    if (isEqual(lastReactiveKeys, reactiveKeys)) {
-      return
-    }
-    const reactiveKeyArr = [...reactiveKeys]
-    lastReactiveKeys = new Set(reactiveKeyArr)
-    if (unwatch) {
-      unwatch()
-    }
-    if (reactiveKeyArr.length) {
-      unwatch = reaction(
-        () => {
-          for (const key of reactiveKeyArr) {
-            store[key]
-          }
-          return Math.random()
-        },
-        rerender as any,
-      )
-    }
-  }
+  const component = getCurrentComponent()
+  const reactiveKeys = new Set()
+  let rendering = false
+  let dispose = null
 
   return {
     store: new Proxy(store as any, {
       get(target, key) {
-        if (tracking && typeof key === 'string' && key !== '$$typeof') {
+        if (rendering && typeof key === 'string') {
           reactiveKeys.add(key)
         }
         return Reflect.get(target, key)
@@ -206,12 +202,34 @@ function setupTrackableStore(store: any, rerender: Function) {
     }),
     track() {
       reactiveKeys.clear()
-      tracking = true
+      rendering = true
     },
     untrack() {
-      tracking = false
-      watchForUpdates()
+      rendering = false
+      if (!dispose) {
+        try {
+          dispose = observe(store, change => {
+            if (rendering) return
+            if (change.type !== 'update') return
+            if (!reactiveKeys.has(change['name'])) return
+            if (process.env.NODE_ENV === 'development') {
+              debugEmit({
+                type: 'observe',
+                key: change['name'],
+                store,
+                oldValue: change.oldValue,
+                newValue: change.newValue,
+                component,
+              })
+            }
+            rerender()
+          })
+        } catch (err) {
+          console.error(err)
+        }
+      }
     },
+    dispose: () => dispose && dispose(),
   }
 }
 
@@ -220,11 +238,21 @@ export function useTrackableStore<A>(plainStore: A, rerenderCb: Function): A {
     store: null,
     track: null,
     untrack: null,
+    dispose: null,
   })
 
   if (!trackableStore.current.store) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb)
   }
+
+  useEffect(() => {
+    return () => {
+      const bye = trackableStore.current.dispose
+      if (bye) {
+        bye()
+      }
+    }
+  }, [])
 
   const { store, track, untrack } = trackableStore.current
 
@@ -239,9 +267,22 @@ export function useStore<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  let store = useReactiveStore(Store, props, options)
+  let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
-  store = useTrackableStore(store, rerender)
+  const component = getCurrentComponent()
+
+  if (process.env.NODE_ENV === 'development') {
+    store = useTrackableStore(store, () => {
+      debugEmit({
+        type: 'render',
+        store,
+        component,
+      })
+      rerender()
+    })
+  } else {
+    store = useTrackableStore(store, rerender)
+  }
 
   // TODO this can be refactored so it just does the global options probably
   // stores can use didMount and willUnmount
@@ -292,28 +333,44 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
 
     const storesRef = useRef(null)
 
+    useEffect(() => {
+      return () => {
+        for (const { dispose } of stateRef.current.values()) {
+          dispose()
+        }
+      }
+    }, [])
+
     if (!storesRef.current) {
       // this will throw if they try and access a store thats not provided
       // should give us runtime safety without as much type overhead everywhere
       storesRef.current = new Proxy(stores, {
         get(target, key) {
-          const val = Reflect.get(target, key)
+          const store = Reflect.get(target, key)
 
           // found a store, wrap it for tracking
-          if (typeof val !== 'undefined') {
+          if (typeof store !== 'undefined') {
             // wrap each store with trackable
-            if (state.has(val)) {
-              return state.get(val).store
+            if (state.has(store)) {
+              return state.get(store).store
             }
-            const next = setupTrackableStore(val, () => {
-              if (options && options.debug) {
-                console.log('re-rendering component', component)
-              }
-              rerender()
-            })
+            let next
+            if (process.env.NODE_ENV === 'development') {
+              next = setupTrackableStore(store, () => {
+                debugEmit({
+                  type: 'render',
+                  store,
+                  component,
+                })
+                rerender()
+              })
+            } else {
+              next = setupTrackableStore(store, rerender)
+            }
+
             // track once immedaitely one because it will be missed by track block below
             next.track()
-            state.set(val, next)
+            state.set(store, next)
             return next.store
           }
 

@@ -26,14 +26,15 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  get isLeft() {
-    const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
-    return thisIndex < this.stores.paneManagerStore.paneIndex
-  }
+  isLeft = react(
+    () => {
+      const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
+      return thisIndex < this.stores.paneManagerStore.paneIndex
+    },
+    _ => _,
+  )
 
-  get isActive() {
-    return this.positionState.isActive
-  }
+  isActive = react(() => this.positionState.isActive, _ => _)
 
   positionState = react(
     () => {

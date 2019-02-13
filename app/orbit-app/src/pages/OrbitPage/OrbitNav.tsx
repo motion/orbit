@@ -1,25 +1,24 @@
-import { ensure, react } from '@mcro/black'
-import { gloss, Row, View, ViewProps } from '@mcro/gloss'
-import { AppModel } from '@mcro/models'
-import { BorderBottom } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
-import { flow } from 'lodash'
-import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { useActions } from '../../actions/Actions'
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
-import { sleep } from '../../helpers'
-import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { getIsTorn } from '../../helpers/getAppHelpers'
-import { isRightClick } from '../../helpers/isRightClick'
-import { preventDefault } from '../../helpers/preventDefault'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStores } from '../../hooks/useStores'
-import { save } from '../../mediator'
-import { Pane } from '../../stores/PaneManagerStore'
+import { ensure, react } from '@mcro/black';
+import { gloss, Row, View, ViewProps } from '@mcro/gloss';
+import { AppModel } from '@mcro/models';
+import { BorderBottom } from '@mcro/ui';
+import { useHook, useStore } from '@mcro/use-store';
+import { flow } from 'lodash';
+import * as React from 'react';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { useActions } from '../../actions/Actions';
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab';
+import { sleep } from '../../helpers';
+import { getAppContextItems } from '../../helpers/getAppContextItems';
+import { getIsTorn } from '../../helpers/getAppHelpers';
+import { isRightClick } from '../../helpers/isRightClick';
+import { preventDefault } from '../../helpers/preventDefault';
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
+import { useActiveSpace } from '../../hooks/useActiveSpace';
+import { useAppSortHandler } from '../../hooks/useAppSortHandler';
+import { useStores } from '../../hooks/useStores';
+import { save } from '../../mediator';
+import { Pane } from '../../stores/PaneManagerStore';
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -36,7 +35,7 @@ class OrbitNavStore {
   )
 }
 
-export default observer(function OrbitNav() {
+export default function OrbitNav() {
   const { spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
@@ -235,7 +234,7 @@ export default observer(function OrbitNav() {
       <BorderBottom zIndex={100} />
     </OrbitNavClip>
   )
-})
+}
 
 const OrbitNavClip = gloss({
   flex: 1,

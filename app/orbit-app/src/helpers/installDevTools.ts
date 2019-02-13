@@ -1,5 +1,6 @@
 import { debugState } from '@mcro/black'
 import { enableLogging } from '@mcro/mobx-logger'
+import { debugUseStore } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
 
@@ -31,6 +32,10 @@ enableLogging({
   reaction: true,
   transaction: true,
   compute: true,
+})
+
+debugUseStore(event => {
+  console.log('use-store', event)
 })
 
 debugState(({ stores, views }) => {

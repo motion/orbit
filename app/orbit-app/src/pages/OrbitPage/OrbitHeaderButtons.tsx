@@ -1,6 +1,5 @@
 import { gloss } from '@mcro/gloss'
 import { ClearButton, Icon } from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -29,7 +28,7 @@ const Interactive = gloss({
   },
 })
 
-export default observer(function OrbitHeaderButtons() {
+export default function OrbitHeaderButtons() {
   const { paneManagerStore, queryStore } = useStores()
 
   const clearSearch = () => {
@@ -55,4 +54,4 @@ export default observer(function OrbitHeaderButtons() {
       </Section>
     </>
   )
-})
+}

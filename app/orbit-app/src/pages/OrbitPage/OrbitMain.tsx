@@ -16,10 +16,6 @@ export default function OrbitMain() {
   const { paneManagerStore } = useStores({ debug: true })
   const { hasMain } = useInspectViews()
 
-  useObserver(() => {
-    console.log('i saw a thing', paneManagerStore.panes)
-  })
-
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
       {paneManagerStore.panes.map(pane => (

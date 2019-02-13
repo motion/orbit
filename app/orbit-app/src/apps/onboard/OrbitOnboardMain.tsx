@@ -80,9 +80,6 @@ export default function OrbitOnboardMain() {
   const stores = useStores()
   const store = useStore(OnboardStore)
 
-  if (stores.paneManagerStore.activePane.type !== 'onboard') {
-    return null
-  }
   // for smart finding integrations...
   // const { foundIntegrations } = Desktop.state.onboardState
   // if (!foundIntegrations) {

@@ -1,22 +1,37 @@
-import * as React from 'react'
 import { react } from '@mcro/black'
-import { now } from 'mobx-utils'
+import { FullScreen, gloss } from '@mcro/gloss'
 import { View } from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
+import { now } from 'mobx-utils'
+import * as React from 'react'
 
 class BlurryStore {
   guys = [[-40, -40], [50, -20], [0, 60]]
+  isVisible = false
+
+  handleRef(ref) {
+    new IntersectionObserver(
+      entries => {
+        this.isVisible = entries.some(e => e.isIntersecting)
+        console.log('is visible', this.isVisible)
+      },
+      {
+        root: ref,
+      },
+    )
+  }
 
   update = react(
-    () => now(3000),
+    () => this.isVisible && now(3000),
     () => {
       this.guys = this.guys.map(x =>
         x.map(y =>
           Math.min(100, Math.max(-20, y + Math.random() * 50 * (Math.random() > 0.5 ? -1 : 1))),
         ),
       )
+    },
+    {
+      deferFirstRun: true,
     },
   )
 }
@@ -46,13 +61,13 @@ const Blur = gloss(View, {
   }
 })
 
-export default observer(function BlurryGuys() {
+export default function BlurryGuys() {
   const store = useStore(BlurryStore)
   return (
-    <>
+    <FullScreen ref={store.handleRef}>
       {store.guys.map((guy, index) => {
         return <Blur key={index} at={guy} background={colors[index]} opacity={0.15} />
       })}
-    </>
+    </FullScreen>
   )
-})
+}

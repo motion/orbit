@@ -2,7 +2,6 @@ import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { Col, Row, Sidebar, Text } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppView } from '../../apps/AppView'
 import Searchable from '../../components/Searchable'
@@ -75,7 +74,7 @@ const CenteredTitle = gloss({
   textAlign: 'center',
 })
 
-const AppPageContent = observer(() => {
+const AppPageContent = () => {
   const { appPageStore, appFrameStore, queryStore } = useStores()
   if (!appPageStore.state) {
     return <div>no state</div>
@@ -147,4 +146,4 @@ const AppPageContent = observer(() => {
       </Row>
     </>
   )
-})
+}

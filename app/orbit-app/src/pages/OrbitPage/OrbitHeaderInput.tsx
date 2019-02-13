@@ -1,11 +1,10 @@
-import { gloss } from '@mcro/gloss';
-import { ClearButton, ThemeContext, View } from '@mcro/ui';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { getIsTorn } from '../../helpers/getAppHelpers';
-import { useActiveSpace } from '../../hooks/useActiveSpace';
-import { useStores } from '../../hooks/useStores';
-import { HighlightedTextArea } from '../../views/HighlightedTextArea';
+import { gloss } from '@mcro/gloss'
+import { ClearButton, ThemeContext, View } from '@mcro/ui'
+import * as React from 'react'
+import { getIsTorn } from '../../helpers/getAppHelpers'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useStores } from '../../hooks/useStores'
+import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
 const handleKeyDown = e => {
   // up/down/enter
@@ -20,7 +19,7 @@ function useActivePane() {
   return paneManagerStore.activePane
 }
 
-export default observer(function OrbitHeaderInput() {
+export default function OrbitHeaderInput() {
   const { orbitWindowStore, queryStore, headerStore } = useStores()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()
@@ -59,7 +58,7 @@ export default observer(function OrbitHeaderInput() {
       </After>
     </FakeInput>
   )
-})
+}
 
 const After = gloss({
   position: 'absolute',

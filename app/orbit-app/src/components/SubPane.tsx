@@ -2,7 +2,6 @@ import { CSSPropertySetStrict } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppType } from '../apps/AppTypes'
 import { SubPaneStore } from './SubPaneStore'
@@ -23,7 +22,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export const SubPane = observer(function SubPane(props: Props) {
+export function SubPane(props: Props) {
   const {
     fullHeight,
     style,
@@ -35,7 +34,7 @@ export const SubPane = observer(function SubPane(props: Props) {
     ...rest
   } = props
   const subPaneStore = useStore(SubPaneStore, props)
-  const { isActive, isLeft } = subPaneStore.positionState
+  const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
   return (
     <SubPaneFrame isActive={isActive}>
@@ -63,7 +62,7 @@ export const SubPane = observer(function SubPane(props: Props) {
       {after}
     </SubPaneFrame>
   )
-})
+}
 
 // we cant animate out as of yet because we are changing the height
 // so it would show overflowing content as the main pane got smaller

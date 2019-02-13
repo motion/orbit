@@ -59,7 +59,7 @@ const FILTER_KEYS = {
   subscriptions: true,
 }
 
-function collectGetterPropertyDescriptors(proto) {
+function collectPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto).filter(x => !FILTER_KEYS[x] && x[0] !== '_')
   const res = {}
   for (const key of fproto) {
@@ -69,13 +69,13 @@ function collectGetterPropertyDescriptors(proto) {
 }
 
 function getAutoRunDescriptors(obj) {
-  const protoDescriptors = collectGetterPropertyDescriptors(Object.getPrototypeOf(obj))
-  const keys = Object.keys(protoDescriptors).filter(
-    key => protoDescriptors[key].get && protoDescriptors[key].get.__IS_AUTO_RUN,
+  const descriptors = collectPropertyDescriptors(Object.getPrototypeOf(obj))
+  const keys = Object.keys(descriptors).filter(
+    key => descriptors[key].get && descriptors[key].get.__IS_AUTO_RUN,
   )
   const res = {}
   for (const key of keys) {
-    res[key] = protoDescriptors[key]
+    res[key] = descriptors[key]
   }
   return res
 }

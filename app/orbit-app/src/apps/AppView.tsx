@@ -45,7 +45,11 @@ function getApp(props: GetApp, stores: AllStores): AppState {
   }
 
   if (stores.appsStore) {
-    const { appStores, appViews, provideStores } = stores.appsStore
+    const state = stores.appsStore.appsState
+    if (!state) {
+      return next
+    }
+    const { appStores, appViews, provideStores } = state
     // set store
     if (!next.appStore) {
       next.appStore = appStores[props.id] || appStores[props.type]

@@ -1,5 +1,4 @@
 import { gloss, Row } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { useApp } from '../../apps/AppView'
 import { useStores } from '../../hooks/useStores'
@@ -12,7 +11,7 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
   return <div style={{ height: appViews.toolBar ? height : minHeight }} />
 }
 
-export default observer(function OrbitToolBar() {
+export default function OrbitToolBar() {
   const { paneManagerStore } = useStores()
   const { appViews, appStore } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
@@ -26,7 +25,7 @@ export default observer(function OrbitToolBar() {
       </ToolbarInner>
     </ToolbarChrome>
   )
-})
+}
 
 const ToolbarChrome = gloss(Row, {
   position: 'absolute',

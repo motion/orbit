@@ -3,7 +3,6 @@ import { Logger } from '@mcro/logger'
 import { App } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { BrowserWindow } from 'electron'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import AppWindow from './AppWindow'
 
@@ -22,7 +21,7 @@ class AppWindowsStore {
   )
 }
 
-export default observer(function AppsWindow() {
+export default function AppsWindow() {
   const store = useStore(AppWindowsStore)
   const peeksState = store.peeksStateDebounced
   if (!peeksState) {
@@ -32,4 +31,4 @@ export default observer(function AppsWindow() {
   return peeksState.map(({ id }, index) => {
     return <AppWindow key={id} id={id} isPeek={index === 0} />
   })
-})
+}

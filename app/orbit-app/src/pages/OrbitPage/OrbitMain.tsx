@@ -13,16 +13,14 @@ import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default memo(function OrbitMain() {
-  const { paneManagerStore } = useStores()
+  const { paneManagerStore } = useStores({ debug: true })
   const { hasMain } = useInspectViews()
-
-  console.log('render main root')
 
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
       {paneManagerStore.panes.map(pane => (
         <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-          <OrbitPageMainView pane={pane} />
+          <OrbitPageMainView {...pane} />
         </SubPane>
       ))}
     </OrbitMainView>
@@ -30,18 +28,18 @@ export default memo(function OrbitMain() {
 })
 
 // separate view prevents big re-renders
-function OrbitPageMainView(props: { pane: Pane }) {
+const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { orbitStore } = useStores()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
 
   useObserver(() => {
-    const appConfig = orbitStore.activeConfig[props.pane.type]
+    const appConfig = orbitStore.activeConfig[type]
     if (!isEqual(appConfig, activeConfig)) {
       setActiveConfig(appConfig)
     }
   })
 
-  // console.log('rendering main')
+  console.log('rendering main')
 
   // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
   // we have a delay between select and show main sometimes
@@ -56,16 +54,16 @@ function OrbitPageMainView(props: { pane: Pane }) {
   const element = React.useMemo(
     () => {
       const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
-      const key = `${JSON.stringify(props.pane)}${confKey}`
+      const key = `${type}${id}${confKey}`
       return (
         <AppView
           key={key}
           viewType="main"
-          id={props.pane.id}
-          type={props.pane.type}
+          id={id}
+          type={type}
           appConfig={activeConfig}
-          before={<OrbitToolBarHeight id={props.pane.id} />}
-          after={<OrbitStatusBarHeight id={props.pane.id} />}
+          before={<OrbitToolBarHeight id={id} />}
+          after={<OrbitStatusBarHeight id={id} />}
         />
       )
     },
@@ -73,7 +71,7 @@ function OrbitPageMainView(props: { pane: Pane }) {
   )
 
   return element
-}
+})
 
 // background above so it doest flicker on change
 const OrbitMainView = gloss(View, {

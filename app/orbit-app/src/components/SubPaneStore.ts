@@ -29,7 +29,7 @@ export class SubPaneStore {
   isLeft = react(
     () => {
       const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
-      return thisIndex < this.stores.paneManagerStore.paneIndex
+      return thisIndex === this.stores.paneManagerStore.paneIndex - 1
     },
     _ => _,
   )

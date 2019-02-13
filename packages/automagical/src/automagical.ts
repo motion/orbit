@@ -40,14 +40,14 @@ export function decorate<A extends any>(obj: A): A {
   })
 
   // decorate prototype first
-  const getters = {}
+  const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
   for (const key in descriptors) {
     if (IGNORE[key] || key[0] === '_') continue
     const descriptor = descriptors[key]
     if (descriptor && !!descriptor.get) {
-      getters[key] = {
+      getterDesc[key] = {
         initializer: function() {
           return Mobx.computed(descriptor.get.bind(this))
         },
@@ -69,10 +69,11 @@ export function decorate<A extends any>(obj: A): A {
       instance.__automagicSubscriptions = new CompositeDisposable()
       const instDecor = {}
       const reactions = {}
+      const getters = {}
 
       for (const key of keys) {
         if (IGNORE[key]) continue
-        if (getters[key]) continue
+        if (getterDesc[key]) continue
         const value = instance[key]
         if (typeof value === 'function') {
           if (value.isAutomagicReaction) {
@@ -101,10 +102,11 @@ export function decorate<A extends any>(obj: A): A {
       const proxiedStore = new Proxy(decoratedInstance, {
         get(target, method) {
           if (method !== 'constructor') {
-            const g = getters[method]
-            if (g) {
-              if (!g.value) g.value = g.initializer.call(proxiedStore)
-              return g.value.get()
+            if (getterDesc[method]) {
+              if (!getters[method]) {
+                getters[method] = getterDesc[method].initializer.call(proxiedStore)
+              }
+              return getters[method].get()
             }
           }
           if (Reflect.has(target, method)) {

@@ -26,18 +26,6 @@ const Getters = new WeakMap()
 
 // decorates the prototype
 function decorateStore(obj) {
-  if (obj.prototype.disposeAutomagic) {
-    Object.defineProperty(obj.prototype, 'disposeAutomagic', {
-      enumerable: false,
-      configurable: false,
-      get() {
-        return () => {
-          this.__automagicSubscriptions.dispose()
-        }
-      },
-    })
-  }
-
   const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
@@ -70,6 +58,7 @@ export function decorate<T>(obj: {
       const instance = new Target(...args)
       const keys = Object.keys(instance)
       instance.__automagicSubscriptions = new CompositeDisposable()
+      instance.disposeAutomagic = () => instance.__automagicSubscriptions.dispose()
       const instDecor = {}
       const reactions = {}
       const getters = {}

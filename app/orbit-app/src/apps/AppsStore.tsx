@@ -69,7 +69,7 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    console.warn('setting up app')
+    console.warn('setting up app', id, views, provideStores)
     this.appViews = {
       ...this.appViews,
       [id]: views,

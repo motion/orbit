@@ -11,6 +11,7 @@ export default function AppsLoader(props: { children?: any; views: AppViewDefini
   const appsStore = useStore(AppsStore)
 
   const appLoadViews = props.views.map(view => {
+    console.log('loading view', view.id)
     return <AppLoader key={view.id} view={view} store={appsStore} />
   })
 

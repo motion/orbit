@@ -65,7 +65,6 @@ function OrbitPageInner() {
   useObserver(() => {
     const next = App.state.isDark ? 'dark' : 'light'
     if (next !== theme) {
-      console.log('set theme', next)
       setTheme(next)
     }
   })
@@ -131,34 +130,42 @@ function OrbitPageInner() {
 
   return (
     <ProvideStores stores={{ headerStore }}>
-      <MainShortcutHandler
-        handlers={{
-          closeTab: () => {
-            shortcutState.current.closeTab = Date.now()
-          },
-          closeApp: () => {
-            shortcutState.current.closeApp = Date.now()
-          },
-        }}
-      >
-        <Theme name={theme}>
-          <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-            <AppsLoader views={allViews}>
-              <OrbitHeader />
-              <InnerChrome torn={getIsTorn()}>
-                <OrbitToolBar />
-                <OrbitContentArea>
-                  <OrbitSidebar />
-                  <OrbitMain />
-                </OrbitContentArea>
-                <OrbitStatusBar />
-              </InnerChrome>
-            </AppsLoader>
-          </AppWrapper>
-        </Theme>
-      </MainShortcutHandler>
+      <ProvideOrbitStore>
+        <MainShortcutHandler
+          handlers={{
+            closeTab: () => {
+              shortcutState.current.closeTab = Date.now()
+            },
+            closeApp: () => {
+              shortcutState.current.closeApp = Date.now()
+            },
+          }}
+        >
+          <Theme name={theme}>
+            <AppWrapper className={`theme-${theme} app-parent-bounds`}>
+              <AppsLoader views={allViews}>
+                <OrbitHeader />
+                <InnerChrome torn={getIsTorn()}>
+                  <OrbitToolBar />
+                  <OrbitContentArea>
+                    <OrbitSidebar />
+                    <OrbitMain />
+                  </OrbitContentArea>
+                  <OrbitStatusBar />
+                </InnerChrome>
+              </AppsLoader>
+            </AppWrapper>
+          </Theme>
+        </MainShortcutHandler>
+      </ProvideOrbitStore>
     </ProvideStores>
   )
+}
+
+function ProvideOrbitStore(props: { children: any }) {
+  const { paneManagerStore } = useStores()
+  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
+  return <ProvideStores stores={{ orbitStore }}>{props.children}</ProvideStores>
 }
 
 const OrbitContentArea = gloss({
@@ -274,8 +281,6 @@ function OrbitPageProvideStores(props: any) {
     }
   })
 
-  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
-
   // move to first app pane on first run
   const hasLoadedApps = !!activeApps.length
   const setToFirstAppPane = useOnce(() => {
@@ -296,7 +301,6 @@ function OrbitPageProvideStores(props: any) {
     queryStore,
     paneManagerStore,
     newAppStore,
-    orbitStore,
   }
 
   return <ProvideStores stores={stores}>{props.children}</ProvideStores>

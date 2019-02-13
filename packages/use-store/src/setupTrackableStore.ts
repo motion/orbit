@@ -1,5 +1,6 @@
-import { observe } from 'mobx'
+import { Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
+import isEqual from 'react-fast-compare'
 import { debugEmit } from './debugUseStore'
 import { getCurrentComponent } from './useStore'
 
@@ -9,12 +10,20 @@ export function setupTrackableStore(
   component?: any,
   componentId?: number,
 ) {
-  if (component.displayName === 'OrbitNav') {
-    debugger
-  }
   const reactiveKeys = new Set()
   let rendering = false
-  let dispose = null
+  let changed = false
+  let value = null
+
+  const reaction = new Reaction(`track(${component.displayName})`, () => {
+    console.log('render', component.displayName, rendering, changed)
+    if (rendering) return
+    if (changed) {
+      rerender()
+      changed = false
+    }
+  })
+
   return {
     store: new Proxy(store as any, {
       get(target, key) {
@@ -25,44 +34,21 @@ export function setupTrackableStore(
       },
     }),
     track() {
+      value = null
       reactiveKeys.clear()
       rendering = true
-      if (!dispose) {
-        try {
-          dispose = observe(store, change => {
-            if (component.displayName === 'OrbitNav') {
-              console.log(
-                'OrbitNav.observe',
-                change['name'],
-                store,
-                change.object,
-                rendering,
-                reactiveKeys,
-              )
-            }
-            if (rendering) return
-            if (!reactiveKeys.size) return
-            if (!reactiveKeys.has(change['name'])) return
-            if (process.env.NODE_ENV === 'development') {
-              debugEmit({
-                type: 'observe',
-                key: change['name'],
-                store,
-                oldValue: change.oldValue,
-                newValue: change.newValue,
-                component,
-                componentId,
-              })
-            }
-            rerender()
-          })
-        } catch (err) {
-          console.error(err)
-        }
-      }
     },
     untrack() {
-      rendering = false
+      if (reactiveKeys.size) {
+        reaction.track(() => {
+          console.log('tracking', component.displayName, reactiveKeys)
+          const nextValue = [...reactiveKeys].map(k => store[k])
+          changed = !!value && !isEqual(nextValue, value)
+          value = nextValue
+          rendering = false
+        })
+      }
+
       if (process.env.NODE_ENV === 'development') {
         debugEmit({
           type: 'reactiveKeys',
@@ -73,7 +59,7 @@ export function setupTrackableStore(
         })
       }
     },
-    dispose: () => dispose && dispose(),
+    dispose: () => reaction.dispose(),
     reactiveKeys,
   }
 }

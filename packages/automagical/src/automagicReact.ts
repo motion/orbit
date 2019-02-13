@@ -155,23 +155,25 @@ export function automagicReact(
   }
 
   function run() {
-    if (disposed) {
-      // this avoids work/bugs by cancelling reactions after disposed
-      return
-    }
-    if (isReaction) {
-      if (typeof val[1] !== 'function') {
-        throw new Error(`Reaction requires second function. ${name.simple} got ${typeof val}`)
+    setTimeout(() => {
+      if (disposed) {
+        // this avoids work/bugs by cancelling reactions after disposed
+        return
       }
-      // reaction
-      stopReaction = Mobx.reaction(val[0], setupReactionFn(val[1]), mobxOptions)
-    } else {
-      if (typeof val !== 'function') {
-        throw new Error(`Reaction requires function. ${name.simple} got ${typeof val}`)
+      if (isReaction) {
+        if (typeof val[1] !== 'function') {
+          throw new Error(`Reaction requires second function. ${name.simple} got ${typeof val}`)
+        }
+        // reaction
+        stopReaction = Mobx.reaction(val[0], setupReactionFn(val[1]), mobxOptions)
+      } else {
+        if (typeof val !== 'function') {
+          throw new Error(`Reaction requires function. ${name.simple} got ${typeof val}`)
+        }
+        //autorun
+        stopReaction = Mobx.autorun(setupReactionFn(val), mobxOptions)
       }
-      //autorun
-      stopReaction = Mobx.autorun(setupReactionFn(val), mobxOptions)
-    }
+    }, 0)
   }
 
   // state used outside each watch/reaction

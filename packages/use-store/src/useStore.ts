@@ -226,7 +226,12 @@ export function getCurrentComponent() {
 
 export function useThrottledForceUpdate() {
   const [, setState] = useState(0)
-  return useCallback(throttle(() => setState(Math.random())), [])
+  return useCallback(
+    throttle(() => {
+      setState(Math.random())
+    }),
+    [],
+  )
 }
 
 let nextId = 0

@@ -79,6 +79,7 @@ export function decorate<T>(obj: {
       for (const key of keys) {
         if (IGNORE[key]) continue
         const value = instance[key]
+        if (Mobx.isObservable(value)) continue
         if (typeof value === 'function') {
           if (value.isAutomagicReaction) {
             delete instance[key]

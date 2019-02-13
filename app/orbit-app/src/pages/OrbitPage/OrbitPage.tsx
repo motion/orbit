@@ -46,8 +46,34 @@ export default React.memo(function OrbitPage() {
   )
 })
 
+function useManagePanes() {
+  const activeApps = useActiveAppsSorted()
+  const { paneManagerStore } = useStores()
+  const appsId = activeApps.map(x => x.id).join('')
+  const appsState = useObservable({ ids: '' })
+
+  // trigger observer... :/
+  React.useEffect(
+    () => {
+      appsState.ids = appsId
+    },
+    [appsId],
+  )
+
+  // keeps pane index + panes in sync with apps
+  useObserver(() => {
+    appsState.ids // watch for changes in apps :/
+    const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
+    if (!comparer.structural(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+  })
+}
+
 function OrbitManagers() {
   useManagePaneSort()
+  useManagePanes()
   return null
 }
 
@@ -251,16 +277,6 @@ function OrbitPageProvideStores(props: any) {
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
-  const appsId = activeApps.map(x => x.id).join('')
-  const appsState = useObservable({ ids: '' })
-
-  // trigger observer... :/
-  React.useEffect(
-    () => {
-      appsState.ids = appsId
-    },
-    [appsId],
-  )
 
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultPanes,
@@ -268,17 +284,6 @@ function OrbitPageProvideStores(props: any) {
     onPaneChange(index: number) {
       orbitWindowStore.activePaneIndex = index
     },
-  })
-
-  // keeps pane index + panes in sync with apps
-  useObserver(() => {
-    appsState.ids // watch for changes in apps :/
-    const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
-    if (!comparer.structural(panes, paneManagerStore.panes)) {
-      log(panes)
-      paneManagerStore.setPanes(panes)
-      paneManagerStore.setPaneIndex(paneIndex)
-    }
   })
 
   // move to first app pane on first run

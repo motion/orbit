@@ -1,30 +1,30 @@
-import { ensure, react } from '@mcro/black';
-import { gloss, Row, View, ViewProps } from '@mcro/gloss';
-import { AppModel } from '@mcro/models';
-import { BorderBottom } from '@mcro/ui';
-import { useHook, useStore } from '@mcro/use-store';
-import { flow } from 'lodash';
-import * as React from 'react';
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useActions } from '../../actions/Actions';
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab';
-import { sleep } from '../../helpers';
-import { getAppContextItems } from '../../helpers/getAppContextItems';
-import { getIsTorn } from '../../helpers/getAppHelpers';
-import { isRightClick } from '../../helpers/isRightClick';
-import { preventDefault } from '../../helpers/preventDefault';
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
-import { useActiveSpace } from '../../hooks/useActiveSpace';
-import { useAppSortHandler } from '../../hooks/useAppSortHandler';
-import { useStores } from '../../hooks/useStores';
-import { save } from '../../mediator';
-import { Pane } from '../../stores/PaneManagerStore';
+import { ensure, react } from '@mcro/black'
+import { gloss, Row, View, ViewProps } from '@mcro/gloss'
+import { AppModel } from '@mcro/models'
+import { BorderBottom } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import { flow } from 'lodash'
+import * as React from 'react'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { useActions } from '../../actions/Actions'
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
+import { sleep } from '../../helpers'
+import { getAppContextItems } from '../../helpers/getAppContextItems'
+import { getIsTorn } from '../../helpers/getAppHelpers'
+import { isRightClick } from '../../helpers/isRightClick'
+import { preventDefault } from '../../helpers/preventDefault'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useAppSortHandler } from '../../hooks/useAppSortHandler'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { save } from '../../mediator'
+import { Pane } from '../../stores/PaneManagerStore'
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
 
   previousTabID = react(
     () => this.stores.paneManagerStore.activePane,
@@ -36,10 +36,11 @@ class OrbitNavStore {
 }
 
 export default function OrbitNav() {
-  const { spaceStore, paneManagerStore, newAppStore } = useStores()
+  const { spaceStore, paneManagerStore, newAppStore } = useStores({ debug: true })
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
+  const activeSpaceName = spaceStore.activeSpace.name
   const activeAppsSorted = useActiveAppsSorted()
   const activePaneId = paneManagerStore.activePane.id
   const [space] = useActiveSpace()
@@ -82,7 +83,7 @@ export default function OrbitNav() {
           width: numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
-          label: isPinned ? '' : app.type === 'search' ? spaceStore.activeSpace.name : app.name,
+          label: isPinned ? '' : app.type === 'search' ? activeSpaceName : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,

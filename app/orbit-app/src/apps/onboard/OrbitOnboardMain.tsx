@@ -5,7 +5,7 @@ import { Button, Icon, Text, Theme, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
-import { useStores } from '../../hooks/useStores'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { command } from '../../mediator'
 import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { ItemType, OrbitIntegration } from '../../sources/types'
@@ -18,7 +18,7 @@ const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
 
 class OnboardStore {
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
   acceptedMessage = ''
   accepted = null
   curFrame = 0

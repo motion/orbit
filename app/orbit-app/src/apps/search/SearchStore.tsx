@@ -3,7 +3,7 @@ import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
-import { useStores } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany } from '../../mediator'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { MarkType } from '../../stores/QueryStore/types'
@@ -23,7 +23,7 @@ export class SearchStore {
   props: {
     paneManagerStore?: PaneManagerStore
   }
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
 
   get activeQuery() {
     return this.stores.queryStore.query

@@ -38,7 +38,7 @@ function CreateAppIndex() {
   )
 }
 
-const CreateAppMain = function CreateAppMain(props: AppProps) {
+function CreateAppMain(props: AppProps) {
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
   const [showPreviewApp, setShowPreviewApp] = useState(false)

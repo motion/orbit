@@ -1,13 +1,11 @@
 import { ensure, react } from '@mcro/black'
 import { useHook } from '@mcro/use-store'
-import { useStores } from '../hooks/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from './AppTypes'
 
 export class AppStore {
   props: Pick<AppProps, 'id' | 'isActive'>
-  stores = useHook(() =>
-    useStores({ optional: ['selectionStore', 'subPaneStore', 'paneManagerStore'] }),
-  )
+  stores = useHook(useStoresSimple)
 
   get id() {
     return this.props.id

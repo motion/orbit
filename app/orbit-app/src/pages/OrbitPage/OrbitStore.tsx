@@ -4,7 +4,7 @@ import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import { AppConfig, AppType } from '../../apps/AppTypes'
-import { useStores } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import { observeOne } from '../../mediator'
 import { Pane } from '../../stores/PaneManagerStore'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
@@ -12,7 +12,7 @@ import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 export class OrbitStore {
   props: { activePane: Pane }
 
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
   isEditing = false

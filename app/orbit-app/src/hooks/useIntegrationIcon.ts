@@ -1,9 +1,9 @@
 import { ThemeContext } from '@mcro/ui'
 import { isValidElement, useContext } from 'react'
-import { useStores } from './useStores'
+import { useStoresSimple } from './useStores'
 
 export function useIntegrationIcon({ icon }) {
-  const { sourcesStore } = useStores()
+  const { sourcesStore } = useStoresSimple()
   const { activeTheme } = useContext(ThemeContext)
   if (isValidElement(icon)) {
     return icon

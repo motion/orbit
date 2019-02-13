@@ -9,7 +9,7 @@ import Resizable, { ResizeCallback } from 're-resizable'
 import * as React from 'react'
 import { AppActions } from '../../actions/AppActions'
 import * as Constants from '../../constants'
-import { useStores } from '../../hooks/useStores'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
 import AppFrameArrow from './AppFrameArrow'
 import { AppPageStore } from './AppPageStore'
 
@@ -49,7 +49,7 @@ const arrToObj = size => {
 const initialAppState = App.getAppState(Constants.PEEK_ID)
 
 export class AppFrameStore {
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
 
   // frame position and size
   ogSize = arrToObj(initialAppState.size)

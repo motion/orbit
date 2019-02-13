@@ -4,12 +4,12 @@ import { useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
 import { AppActions } from '../actions/AppActions'
-import { useStores } from '../hooks/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from './SubPane'
 
 export class SubPaneStore {
   props: SubPaneProps
-  stores = useHook(() => useStores({ optional: ['selectionStore'] }))
+  stores = useHook(useStoresSimple)
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()
   aboveContentHeight = 0

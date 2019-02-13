@@ -1,10 +1,10 @@
-import { ensure, react } from '@mcro/black';
-import { App } from '@mcro/stores';
-import * as UI from '@mcro/ui';
-import { useHook, useStore } from '@mcro/use-store';
-import * as React from 'react';
-import * as Constants from '../../constants';
-import { useStores } from '../../hooks/useStores';
+import { ensure, react } from '@mcro/black'
+import { App } from '@mcro/stores'
+import * as UI from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import * as React from 'react'
+import * as Constants from '../../constants'
+import { useStoresSimple } from '../../hooks/useStores'
 
 type Props = {
   borderShadow: any
@@ -16,7 +16,7 @@ const peekOnRight = false
 
 class AppArrowStore {
   props: Props
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
 
   hide = react(() => this.stores.appPageStore.isTorn, _ => _)
 

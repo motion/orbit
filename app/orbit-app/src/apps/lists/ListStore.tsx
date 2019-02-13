@@ -4,7 +4,7 @@ import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
-import { useStores } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany, observeOne } from '../../mediator'
 import { searchGroupsToResults } from '../search/searchGroupsToResults'
 import { ListAppProps } from './ListsApp'
@@ -13,7 +13,8 @@ import { ListAppDataItemFolder, ListsAppBit } from './types'
 export class ListStore {
   props: ListAppProps
 
-  stores = useHook(useStores)
+  stores = useHook(useStoresSimple)
+
   query = ''
   selectedIndex = 0
   depth = 0

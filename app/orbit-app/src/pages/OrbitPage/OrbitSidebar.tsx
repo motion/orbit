@@ -79,8 +79,6 @@ export default memo(function OrbitSidebar() {
     setSidebarWidth(width)
   }
 
-  console.log('redering sidebar')
-
   return (
     <Sidebar
       background="transparent"
@@ -111,7 +109,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   indexRef: AppViewRefDictionary
   hasMain: boolean
 }) {
-  const { orbitStore } = useStores()
+  const { orbitStore } = useStores({ debug: true })
   const { pane, indexRef, setIndexRef, hasMain } = props
 
   console.log('rendering sidebar')

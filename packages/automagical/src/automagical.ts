@@ -26,15 +26,17 @@ const Getters = new WeakMap()
 
 // decorates the prototype
 function decorateStore(obj) {
-  Object.defineProperty(obj.prototype, 'disposeAutomagic', {
-    enumerable: false,
-    configurable: false,
-    get() {
-      return () => {
-        this.__automagicSubscriptions.dispose()
-      }
-    },
-  })
+  if (obj.prototype.disposeAutomagic) {
+    Object.defineProperty(obj.prototype, 'disposeAutomagic', {
+      enumerable: false,
+      configurable: false,
+      get() {
+        return () => {
+          this.__automagicSubscriptions.dispose()
+        }
+      },
+    })
+  }
 
   const getterDesc = {}
   const decor = {}
@@ -43,7 +45,7 @@ function decorateStore(obj) {
     if (IGNORE[key] || key[0] === '_') continue
     const descriptor = descriptors[key]
     if (descriptor && !!descriptor.get) {
-      getterDesc[key] = descriptor.get
+      getterDesc[key] = descriptor
     }
     if (typeof descriptor.value === 'function') {
       decor[key] = Mobx.action
@@ -77,10 +79,11 @@ export function decorate<T>(obj: {
           enumerable: true,
           get() {
             if (!getters[key]) {
-              getters[key] = Mobx.computed(getterDesc[key].bind(decoratedInstance))
+              getters[key] = Mobx.computed(getterDesc[key].get.bind(decoratedInstance))
             }
             return getters[key].get()
           },
+          set: getterDesc[key].set,
         })
       }
 

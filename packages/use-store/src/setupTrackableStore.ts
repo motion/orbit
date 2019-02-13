@@ -12,16 +12,24 @@ export function setupTrackableStore(
 ) {
   const reactiveKeys = new Set()
   let rendering = false
-  let changed = false
   let value = null
+  let firstRun = true
 
   const reaction = new Reaction(`track(${component.displayName})`, () => {
-    console.log('render', component.displayName, rendering, changed)
-    if (rendering) return
-    if (changed) {
-      rerender()
-      changed = false
-    }
+    let changed = false
+    console.log('reaction', component.displayName, reactiveKeys)
+
+    reaction.track(() => {
+      if (rendering) return
+      if (reactiveKeys.size === 0) return
+      const nextValue = [...reactiveKeys].map(k => store[k])
+      changed = !firstRun && !isEqual(nextValue, value)
+      console.log('changed', changed, component.displayName, reactiveKeys)
+      value = nextValue
+      firstRun = false
+    })
+
+    if (changed) rerender()
   })
 
   return {
@@ -34,20 +42,15 @@ export function setupTrackableStore(
       },
     }),
     track() {
+      console.log('track', component.displayName)
       value = null
       reactiveKeys.clear()
       rendering = true
     },
     untrack() {
-      if (reactiveKeys.size) {
-        reaction.track(() => {
-          console.log('tracking', component.displayName, reactiveKeys)
-          const nextValue = [...reactiveKeys].map(k => store[k])
-          changed = !!value && !isEqual(nextValue, value)
-          value = nextValue
-          rendering = false
-        })
-      }
+      rendering = false
+      firstRun = true
+      reaction.schedule()
 
       if (process.env.NODE_ENV === 'development') {
         debugEmit({
@@ -59,7 +62,10 @@ export function setupTrackableStore(
         })
       }
     },
-    dispose: () => reaction.dispose(),
+    dispose: () => {
+      console.log('disposing', component.displayName)
+      reaction.dispose()
+    },
     reactiveKeys,
   }
 }

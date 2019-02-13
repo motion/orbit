@@ -5,13 +5,13 @@ type UseStoreDebugEvent =
       oldValue: any
       newValue: any
       store: any
-      component: any
+      componentName: string
       componentId: number
     }
   | {
       type: 'render'
       store: any
-      component: any
+      componentName: string
       componentId: number
     }
   | {
@@ -24,7 +24,7 @@ type UseStoreDebugEvent =
   | {
       type: 'reactiveKeys'
       keys: Set<string>
-      component: any
+      componentName: string
       componentId: number
       store: any
     }
@@ -39,7 +39,13 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
   return () => debugFns.delete(cb)
 }
 
-export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
+export function debugEmit(
+  { component, ...event }: UseStoreDebugEvent & { component?: any },
+  options?: { debug?: boolean },
+) {
+  if (component) {
+    event['componentName'] = component.displayName
+  }
   if (options && options.debug) {
     console.log(event)
   }

@@ -16,6 +16,8 @@ export default memo(function OrbitMain() {
   const { paneManagerStore } = useStores({ debug: true })
   const { hasMain } = useInspectViews()
 
+  console.log('render main root')
+
   return (
     <OrbitMainView width={hasMain ? 'auto' : 0}>
       {paneManagerStore.panes.map(pane => (

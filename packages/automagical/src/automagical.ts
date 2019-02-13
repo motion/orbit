@@ -1,7 +1,5 @@
+import { CompositeDisposable } from 'event-kit'
 import * as Mobx from 'mobx'
-import { automagicReact } from './automagicReact'
-import { Reaction } from './constants'
-import { MagicalObject } from './types'
 
 // export @react decorator
 export { cancel } from './cancel'
@@ -13,140 +11,82 @@ export * from './types'
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
 
-// TODO: fix deep() wrapper doesnt trigger reactions when mutating objects
-// so basically this.reactiveObj.x = 1, wont trigger react(() => this.reactiveObj)
-
-const isFunction = val => typeof val === 'function'
-const isWatch = (val: any) => val && val.__IS_AUTO_RUN
-
-export type AutomagicOptions = {
-  isSubscribable?: (a: any) => boolean
-}
-
-export function automagicClass(options: AutomagicOptions = {}) {
-  if (!this.__automagical) {
-    this.__automagical = {}
-  }
-  if (!this.__automagical.started) {
-    decorateClassWithAutomagic(this, options)
-    if (this.__automagical.watchers) {
-      for (const watcher of this.__automagical.watchers) {
-        watcher()
-      }
-    }
-    this.__automagical.started = true
-  }
-}
-
-export default function automagical() {
-  return {
-    name: 'automagical',
-    decorator: (Klass: Function) => {
-      if (!Klass.prototype.automagic) {
-        Klass.prototype.automagic = automagicClass
-      }
-      return Klass
-    },
-  }
-}
-
 const FILTER_KEYS = {
-  __automagical: true,
-  automagic: true,
-  constructor: true,
-  dispose: true,
   props: true,
-  subscriptions: true,
 }
 
-function collectPropertyDescriptors(proto) {
-  const fproto = Object.getOwnPropertyNames(proto).filter(x => !FILTER_KEYS[x] && x[0] !== '_')
-  const res = {}
-  for (const key of fproto) {
-    res[key] = Object.getOwnPropertyDescriptor(proto, key)
-  }
-  return res
+export let automagicConfig = {
+  isSubscribable: x => x && typeof x.subscribe === 'function',
+}
+export function configureAutomagical(opts: { isSubscribable?: (val: any) => boolean }) {
+  automagicConfig = Object.freeze(Object.assign(automagicConfig, opts))
 }
 
-function getAutoRunDescriptors(obj) {
-  const descriptors = collectPropertyDescriptors(Object.getPrototypeOf(obj))
-  const keys = Object.keys(descriptors).filter(
-    key => descriptors[key].get && descriptors[key].get.__IS_AUTO_RUN,
-  )
-  const res = {}
-  for (const key of keys) {
-    res[key] = descriptors[key]
+export function dispose(store: any) {
+  if (store.__automagicSubscriptions) {
+    console.log('dispsing2..')
+    store.__automagicSubscriptions.dispose()
   }
-  return res
 }
 
-function decorateClassWithAutomagic(obj: MagicalObject, options: AutomagicOptions) {
-  let descriptors = {}
-  for (const key of Object.keys(obj)) {
-    descriptors[key] = Object.getOwnPropertyDescriptor(obj, key)
+export function decorate<A extends any>(obj: A): A {
+  if (obj.prototype.__hasAutomagic) {
+    return obj
   }
-  descriptors = {
-    ...descriptors,
-    ...getAutoRunDescriptors(obj),
-  }
-  const decorations = {}
-  for (const method in descriptors) {
-    if (FILTER_KEYS[method]) {
-      continue
-    }
-    const decor = decorateMethodWithAutomagic(obj, method, descriptors[method], options)
-    if (decor) {
-      decorations[method] = decor
-    }
-  }
-  Mobx.decorate(obj, decorations)
-}
+  Object.defineProperty(obj.prototype, '__hasAutomagic', {
+    enumerable: false,
+    configurable: false,
+    value: true,
+  })
 
-// * => mobx
-function decorateMethodWithAutomagic(
-  target: MagicalObject,
-  method: string,
-  descriptor: PropertyDescriptor,
-  options: AutomagicOptions,
-) {
-  // non decorator reactions
-  if (descriptor && descriptor.value) {
-    if (descriptor.value instanceof Reaction) {
-      const reaction = descriptor.value
-      automagicReact(target, method, reaction.reaction, reaction.options, options)
-      return
+  // decorate prototype first
+
+  const protoDecorations = {}
+  const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
+  for (const key in descriptors) {
+    if (FILTER_KEYS[key] || key[0] === '_') continue
+    const descriptor = descriptors[key]
+    if (descriptor && (!!descriptor.get || !!descriptor.set)) {
+      protoDecorations[key] = Mobx.computed
     }
-    if (descriptor.value.__IS_DEEP) {
-      target.__automagical.deep = target.__automagical.deep || {}
-      target.__automagical.deep[method] = true
-      delete descriptor.value.__IS_DEEP
-      return Mobx.observable.deep
+    if (typeof descriptor.value === 'function') {
+      protoDecorations[key] = Mobx.action
     }
   }
-  if (descriptor && (!!descriptor.get || !!descriptor.set)) {
-    // testing keepAlive to see if it feels any different performance
-    return Mobx.computed({ keepAlive: true })
-  }
-  if (target.__automagical.deep && target.__automagical.deep[method]) {
-    return Mobx.observable.deep
-  }
-  let value = target[method]
-  // @watch: autorun |> automagical (value)
-  if (isWatch(value)) {
-    automagicReact(
-      target,
-      method,
-      value,
-      typeof value.__IS_AUTO_RUN === 'object' ? value.__IS_AUTO_RUN : undefined,
-      options,
-    )
-    return
-  }
-  if (isFunction(value)) {
-    return Mobx.action
-  }
-  if (Mobx.isObservable(target[method])) {
-    return
-  }
-  return Mobx.observable.ref
+  Mobx.decorate(obj, protoDecorations)
+
+  // decorate instance values and react() functions
+
+  return new Proxy(obj as any, {
+    construct(Target, args) {
+      const instance = new Target(args)
+      instance.__automagicSubscriptions = new CompositeDisposable()
+      const instDecorations = {}
+      const reactions = {}
+
+      for (const key of Object.keys(instance)) {
+        if (FILTER_KEYS[key]) continue
+        const value = instance[key]
+        if (typeof value === 'function') {
+          if (value.isAutomagicReaction) {
+            reactions[key] = value(instance, key)
+            Object.defineProperty(instance, key, {
+              enumerable: true,
+              get() {
+                return reactions[key].get()
+              },
+            })
+          } else {
+            instDecorations[key] = Mobx.action
+          }
+        } else {
+          instDecorations[key] = Mobx.observable.ref
+        }
+      }
+
+      const res = Mobx.decorate(instance, instDecorations)
+
+      return res
+    },
+  })
 }

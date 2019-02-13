@@ -1,4 +1,4 @@
-import { automagicClass } from '@mcro/automagical'
+import { decorate, dispose } from '@mcro/automagical'
 import { throttle } from 'lodash'
 import { observable, transaction } from 'mobx'
 import {
@@ -44,9 +44,7 @@ export function disposeStore(store: any) {
   if (globalOptions.onUnmount) {
     globalOptions.onUnmount(store)
   }
-  if (store.subscriptions) {
-    store.subscriptions.dispose()
-  }
+  dispose(store)
 }
 
 // updateProps
@@ -92,14 +90,16 @@ export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {
-  Store.prototype.automagic = automagicClass
+  // automagic store
+  const AutomagicStore = decorate(Store)
+
   let storeInstance: A
 
   // capture hooks for this store
   currentHooks = null
 
   if (!props) {
-    storeInstance = new Store()
+    storeInstance = new AutomagicStore()
   } else {
     // add props to the store and manage them
     const storeProps = observable({ props }, { props: observable.shallow })
@@ -108,8 +108,8 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
       get: () => storeProps.props,
       set() {},
     }
-    Object.defineProperty(Store.prototype, 'props', getProps)
-    storeInstance = new Store()
+    Object.defineProperty(AutomagicStore.prototype, 'props', getProps)
+    storeInstance = new AutomagicStore()
     Object.defineProperty(storeInstance, 'props', getProps)
     storeInstance['__updateProps'] = updateProps
   }
@@ -118,11 +118,6 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   if (globalOptions.onMount) {
     globalOptions.onMount(storeInstance)
   }
-
-  // @ts-ignore
-  storeInstance.automagic({
-    isSubscribable: x => x && typeof x.subscribe === 'function',
-  })
 
   return {
     store: storeInstance,

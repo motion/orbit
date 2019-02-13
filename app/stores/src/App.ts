@@ -142,4 +142,4 @@ class AppStore {
 }
 
 App = proxySetters(new AppStore())
-Bridge.stores[App.source] = App
+Bridge.stores['App'] = App

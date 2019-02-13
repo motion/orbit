@@ -1,12 +1,13 @@
-export { store } from './storeDecorator'
+export * from '@mcro/automagical'
+export { DecorCompiledDecorator, DecorPlugins } from '@mcro/decor'
+export { on } from '@mcro/helpers'
+export { debugEmit, debugState } from './helpers/debugState'
 export * from './helpers/log'
 export * from './helpers/mobx'
-export { deep } from './helpers/deep'
-export { on } from '@mcro/helpers'
+export { store } from './storeDecorator'
+import { observable } from 'mobx'
 import * as Constants_ from './constants'
 export const Constants = Constants_
-export { debugEmit, debugState } from './helpers/debugState'
 export const sleep = ms => new Promise(res => setTimeout(res, ms))
-export { DecorPlugins, DecorCompiledDecorator } from '@mcro/decor'
-export * from '@mcro/automagical'
-export { Store } from './classes/Store'
+
+export const deep = x => observable.box(x, { deep: true })

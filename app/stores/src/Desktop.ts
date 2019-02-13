@@ -157,4 +157,4 @@ class DesktopStore {
 }
 
 Desktop = proxySetters(new DesktopStore())
-Bridge.stores[Desktop.source] = Desktop
+Bridge.stores['Desktop'] = Desktop

@@ -124,7 +124,7 @@ const config = {
   //   cheap-source-map (no line numbers...)
   //   cheap-module-eval-source-map (line numbers in browser, no line numbers in electron potentially...)
   //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],

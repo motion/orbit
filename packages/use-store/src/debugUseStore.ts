@@ -40,7 +40,10 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
 }
 
 export function debugEmit(
-  { component, ...event }: UseStoreDebugEvent & { component?: any },
+  {
+    component,
+    ...event
+  }: Partial<UseStoreDebugEvent> & { component?: any; componentName?: string },
   options?: { debug?: boolean },
 ) {
   if (component) {

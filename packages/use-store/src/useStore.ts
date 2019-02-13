@@ -8,7 +8,6 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
   // @ts-ignore
@@ -75,9 +74,9 @@ const updateProps = (props: Object, nextProps: Object, options?: UseStoreOptions
       const b = nextProps[prop]
       if (!isEqualReact(a, b)) {
         if (process.env.NODE_ENV === 'development' && options && options.debug) {
-          console.log('has changed prop', prop, nextProps[prop])
+          console.log('has changed prop', options, prop, a, b)
         }
-        props[prop] = nextProps[prop]
+        props[prop] = b
       }
     }
 
@@ -191,9 +190,7 @@ function setupTrackableStore(store: any, rerender: Function) {
           }
           return Math.random()
         },
-        () => {
-          rerender()
-        },
+        rerender as any,
       )
     }
   }
@@ -218,17 +215,15 @@ function setupTrackableStore(store: any, rerender: Function) {
   }
 }
 
-export function useTrackableStore<A>(plainStore: A): A {
+export function useTrackableStore<A>(plainStore: A, rerenderCb: Function): A {
   const trackableStore = useRef({
     store: null,
     track: null,
     untrack: null,
   })
-  const rerenderComponent = useForceRerender()
 
   if (!trackableStore.current.store) {
-    const throttledRerender = throttle(rerenderComponent)
-    trackableStore.current = setupTrackableStore(plainStore, throttledRerender)
+    trackableStore.current = setupTrackableStore(plainStore, rerenderCb)
   }
 
   const { store, track, untrack } = trackableStore.current
@@ -245,7 +240,8 @@ export function useStore<P, A extends { props?: P } | any>(
   options?: UseStoreOptions,
 ): A {
   let store = useReactiveStore(Store, props, options)
-  store = useTrackableStore(store)
+  const rerender = useThrottledForceUpdate()
+  store = useTrackableStore(store, rerender)
 
   // TODO this can be refactored so it just does the global options probably
   // stores can use didMount and willUnmount
@@ -274,25 +270,26 @@ function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }
 
-export function useCurrentComponent() {
+export function getCurrentComponent() {
   return ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
     ? ReactCurrentOwner.current.elementType
     : {}
 }
 
-export function useForceRerender() {
+export function useThrottledForceUpdate() {
   const [, setState] = useState(0)
-  return useCallback(() => setState(Math.random()), [])
+  return useCallback(throttle(() => setState(Math.random())), [])
 }
 
 // for use in children
 export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
-  return function useStores(options?: { optional?: (keyof A)[] }): A {
+  return function useStores(options?: { optional?: (keyof A)[]; debug?: boolean }): A {
     const stores = useContext(StoreContext)
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const state = stateRef.current
-    const rerender = useForceRerender()
-    const rerenderThrottled = useMemo(() => throttle(rerender), [])
+    const rerender = useThrottledForceUpdate()
+    const component = getCurrentComponent()
+
     const storesRef = useRef(null)
 
     if (!storesRef.current) {
@@ -308,7 +305,12 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
             if (state.has(val)) {
               return state.get(val).store
             }
-            const next = setupTrackableStore(val, rerenderThrottled)
+            const next = setupTrackableStore(val, () => {
+              if (options && options.debug) {
+                console.log('re-rendering component', component)
+              }
+              rerender()
+            })
             // track once immedaitely one because it will be missed by track block below
             next.track()
             state.set(val, next)

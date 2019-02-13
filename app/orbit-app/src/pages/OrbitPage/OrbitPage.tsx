@@ -3,7 +3,8 @@ import { AppBit } from '@mcro/models'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { isEqual, once, uniqBy } from 'lodash'
+import { once, uniqBy } from 'lodash'
+import { comparer } from 'mobx'
 import { observer, useObservable, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
@@ -162,7 +163,7 @@ const settingsPane = {
   keyable: true,
 }
 
-const defaultPanes: Pane[] = [
+export const defaultPanes: Pane[] = [
   { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
@@ -253,7 +254,8 @@ function OrbitPageProvideStores(props: any) {
   useObserver(() => {
     appsState.ids // watch for changes in apps :/
     const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
+    if (!comparer.structural(panes, paneManagerStore.panes)) {
+      log(panes)
       paneManagerStore.setPanes(panes)
       paneManagerStore.setPaneIndex(paneIndex)
     }

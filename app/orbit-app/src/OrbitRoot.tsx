@@ -6,6 +6,7 @@
 
 // class Ok {
 //   x = 1
+//   y = {}
 // }
 
 // export const OrbitRoot = hot(module)(function OrbitRoot() {
@@ -14,7 +15,10 @@
 //   return (
 //     <div>
 //       <ProvideStores stores={{ store }}>
-//         {store.x} <button onClick={() => store.x++}>up</button>
+//         {store.x}
+//         {store.y[0]}
+//         <button onClick={() => store.x++}>up</button>
+//         <button onClick={() => (store.y = store.y)}>222</button>
 //         <SubView />
 //       </ProvideStores>
 //     </div>
@@ -27,7 +31,6 @@
 //   return <div>sub sub {store.x}</div>
 // }
 
-// import dev helpers
 import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'

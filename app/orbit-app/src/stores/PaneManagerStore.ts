@@ -22,7 +22,7 @@ export class PaneManagerStore {
   }
 
   paneIndex = this.props.defaultPaneIndex || 0
-  panes = this.props.defaultPanes
+  panes = [...this.props.defaultPanes]
 
   syncPaneIndexProp = react(
     () => this.props.defaultPaneIndex,

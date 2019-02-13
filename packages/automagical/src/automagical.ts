@@ -26,7 +26,7 @@ const Getters = new WeakMap()
 
 // decorates the prototype
 function decorateStore(obj) {
-  Object.defineProperty(obj, 'disposeAutomagic', {
+  Object.defineProperty(obj.prototype, 'disposeAutomagic', {
     enumerable: false,
     configurable: false,
     get() {

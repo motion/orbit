@@ -119,6 +119,8 @@ export default memo(function OrbitNav() {
     )
     .filter(Boolean)
 
+  console.log('items', items, space, activeAppsSorted)
+
   const onSettings = isOnSettings(paneManagerStore.activePane)
   const showAppsTray = activeAppsSorted.length > 5
 

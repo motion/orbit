@@ -1,79 +1,92 @@
-import { gloss } from '@mcro/gloss'
-import { View } from '@mcro/ui'
-import { isEqual } from 'lodash'
+import { react } from '@mcro/black'
+import { FullScreen } from '@mcro/gloss'
+import { useHook, useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
-import React, { memo } from 'react'
-import { AppConfig, AppType } from '../../apps/AppTypes'
+import React, { memo, useMemo, useState } from 'react'
+import { AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
-import { useStores } from '../../hooks/useStores'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { Pane } from '../../stores/PaneManagerStore'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default memo(function OrbitMain() {
-  const { paneManagerStore, appsStore } = useStores()
-  const { hasMain } = appsStore.currentView
-
+  const { paneManagerStore } = useStores()
   return (
-    <OrbitMainView width={hasMain ? 'auto' : 0}>
-      {paneManagerStore.panes.map(pane => (
-        <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-          <OrbitPageMainView {...pane} />
-        </SubPane>
-      ))}
-    </OrbitMainView>
+    <>
+      {paneManagerStore.panes.map(pane => {
+        return <OrbitMainSubPane key={pane.id} {...pane} />
+      })}
+    </>
   )
 })
 
-// separate view prevents big re-renders
-const OrbitPageMainView = memo(({ type, id }: Pane) => {
-  const { orbitStore } = useStores()
-  const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
+const OrbitMainSubPane = memo(({ type, id }: Pane) => {
+  const { sidebarStore, paneManagerStore } = useStoresSimple()
+  const { appsStore } = useStores({ debug: true })
+  const { hasMain, hasIndex } = appsStore.viewsState[id] ||
+    appsStore.viewsState[type] || {
+      hasMain: false,
+      hasIndex: false,
+    }
+  const [left, setLeft] = useState(0)
 
   useObserver(() => {
-    const appConfig = orbitStore.activeConfig[type] || null
-    if (!isEqual(appConfig, activeConfig)) {
-      setActiveConfig(appConfig)
+    const isActive = paneManagerStore.activePane.id === id
+    const next = hasIndex ? sidebarStore.width : 0
+    if (isActive && next !== left) {
+      setLeft(next)
     }
   })
 
-  // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
-  // we have a delay between select and show main sometimes
-  // for example when you move down a list quickly it has to be debounced
-  // so theres a gap there where its mismatched props
-  // THE SOLUTION:
-  // we have to basically keep the "old" main view in memory during that transition
-  // were mid-transition in some structural stuff so perhaps this can be done more cleanly
-  // but for now something like this needs to happen
-
-  // only ever render once!
-  const element = React.useMemo(
+  const element = useMemo(
     () => {
-      const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
-      const key = `${type}${id}${confKey}`
+      if (!hasMain) {
+        return null
+      }
       return (
-        <AppView
-          key={key}
-          viewType="main"
-          id={id}
-          type={type}
-          appConfig={activeConfig}
-          before={<OrbitToolBarHeight id={id} />}
-          after={<OrbitStatusBarHeight id={id} />}
-        />
+        <FullScreen left={left}>
+          <SubPane id={id} type={AppType[type]} fullHeight>
+            <OrbitPageMainView id={id} type={type} />
+          </SubPane>
+        </FullScreen>
       )
     },
-    [activeConfig],
+    [left, hasMain],
   )
 
   return element
 })
 
-// background above so it doest flicker on change
-const OrbitMainView = gloss(View, {
-  flex: 1,
-  position: 'relative',
-}).theme((_, theme) => ({
-  background: theme.background,
-}))
+class OrbitPageMainStore {
+  props: Pane
+  stores = useHook(useStoresSimple)
+
+  appConfig = react(() => this.stores.orbitStore.activeConfig[this.props.id], _ => _)
+
+  get key() {
+    return JSON.stringify(this.appConfig)
+  }
+}
+
+// separate view prevents big re-renders
+const OrbitPageMainView = memo(({ type, id }: Pane) => {
+  const { appConfig, key } = useStore(OrbitPageMainStore, { id })
+
+  if (!appConfig) {
+    return null
+  }
+
+  return (
+    <AppView
+      key={key}
+      viewType="main"
+      id={id}
+      type={type}
+      appConfig={appConfig}
+      before={<OrbitToolBarHeight id={id} />}
+      after={<OrbitStatusBarHeight id={id} />}
+    />
+  )
+})

@@ -42,15 +42,12 @@ export default memo(function OrbitNav() {
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
   const activeAppsSorted = useActiveAppsSorted()
-  const activePaneId = paneManagerStore.activePane.id
+  const { activePaneId } = paneManagerStore
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
   const isTorn = getIsTorn()
 
   if (isTorn) {
-    if (!paneManagerStore.activePane) {
-      console.error('no active pane?')
-    }
     return null
   }
 

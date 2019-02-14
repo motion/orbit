@@ -2,6 +2,7 @@ import { BorderLeft, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
+import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
 import { Title } from '../../views'
 import { DateFormat } from '../../views/DateFormat'
 import ReactiveCheckBox from '../../views/ReactiveCheckBox'
@@ -55,7 +56,9 @@ function CustomAppTree() {
   )
 }
 
-export function CustomAppMain(_props: AppProps) {
+export const CustomAppMain = memoIsEqualDeep((_props: AppProps) => {
+  console.log('why is this rendering...')
+
   return (
     <Row flex={1}>
       <VerticalSplitPane>
@@ -149,4 +152,4 @@ export function CustomAppMain(_props: AppProps) {
       </VerticalSplitPane>
     </Row>
   )
-}
+})

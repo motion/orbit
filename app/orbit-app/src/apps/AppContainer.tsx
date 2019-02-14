@@ -1,4 +1,5 @@
-import { cloneElement, useEffect } from 'react'
+import { useEffect } from 'react'
+import { superMemo } from '../helpers/memoIsEqualDeep'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from './AppTypes'
 
@@ -15,10 +16,10 @@ export function AppContainer(props: AppElements) {
 
   useEffect(() => {
     const views = {
-      index: props.index && (mergeProps => cloneElement(props.index, mergeProps)),
-      main: props.children && (mergeProps => cloneElement(props.children, mergeProps)),
-      statusBar: props.statusBar && (mergeProps => cloneElement(props.statusBar, mergeProps)),
-      toolBar: props.toolBar && (mergeProps => cloneElement(props.toolBar, mergeProps)),
+      index: props.index && superMemo(props.index),
+      main: props.children && superMemo(props.children),
+      statusBar: props.statusBar && superMemo(props.statusBar),
+      toolBar: props.toolBar && superMemo(props.toolBar),
     }
 
     appsStore.setupApp(appStore.id, views, props.provideStores)

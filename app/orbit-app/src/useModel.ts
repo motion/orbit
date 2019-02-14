@@ -1,7 +1,6 @@
 import { Model } from '@mcro/mediator'
 import { merge } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import isEqual from 'react-fast-compare'
 import {
   loadCount,
   loadMany,
@@ -36,65 +35,50 @@ function use<ModelType, Args>(
   const value = valueRef.current
   const subscription = useRef(null)
   const curQuery = useRef(null)
+  // const id = useRef(Math.random())
 
   const dispose = () => {
-    if (subscription.current) {
-      subscription.current.unsubscribe()
-    }
+    subscription.current && subscription.current.unsubscribe()
   }
 
   // unmount
   useEffect(() => dispose, [])
 
-  const update = next => {
-    if (isEqual(next, valueRef.current)) return
-    valueRef.current = next
-    forceUpdate(Math.random())
-  }
-
   // on new query: subscribe, update
   useEffect(
     () => {
-      let cancelled = false
-
       if (query === false) return
 
       const isQueryChanged = JSON.stringify(curQuery.current) !== queryKey
       if (isQueryChanged === false) return
+      curQuery.current = query
 
       // unsubscribe from previous subscription
       dispose()
 
-      // subscribe new and update
-      curQuery.current = query
+      let cancelled = false
+      const update = next => {
+        if (cancelled) return
+        if (next === valueRef.current) return
+        valueRef.current = next
+        forceUpdate(Math.random())
+      }
 
       if (observeEnabled) {
         if (type === 'one') {
-          subscription.current = observeOne(model, { args: query, cacheValue: value }).subscribe(
-            update,
-          )
+          subscription.current = observeOne(model, { args: query }).subscribe(update)
         } else if (type === 'many') {
-          subscription.current = observeMany(model, { args: query, cacheValue: value }).subscribe(
-            update,
-          )
+          subscription.current = observeMany(model, { args: query }).subscribe(update)
         } else if (type === 'count') {
-          subscription.current = observeCount(model, { args: query, cacheValue: value }).subscribe(
-            update,
-          )
+          subscription.current = observeCount(model, { args: query }).subscribe(update)
         }
       } else {
         if (type === 'one') {
-          loadOne(model, { args: query }).then(nextValue => {
-            if (!cancelled) update(nextValue)
-          })
+          loadOne(model, { args: query }).then(update)
         } else if (type === 'many') {
-          loadMany(model, { args: query }).then(nextValue => {
-            if (!cancelled) update(nextValue)
-          })
+          loadMany(model, { args: query }).then(update)
         } else if (type === 'count') {
-          loadCount(model, { args: query }).then(nextValue => {
-            if (!cancelled) update(nextValue)
-          })
+          loadCount(model, { args: query }).then(update)
         }
       }
 

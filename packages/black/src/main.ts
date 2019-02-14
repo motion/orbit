@@ -12,3 +12,7 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms))
 export const deep = <X>(x: X) => {
   return (observable(x) as unknown) as X
 }
+
+export const shallow = <X>(x: X) => {
+  return (observable.object(x, null, { deep: false }) as unknown) as X
+}

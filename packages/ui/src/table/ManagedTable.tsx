@@ -9,7 +9,6 @@ import { gloss } from '@mcro/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
-import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { getSortedRows } from './getSortedRows'
@@ -26,6 +25,35 @@ import {
   TableRows,
   TableRowSortOrder,
 } from './types'
+
+function useComponentSize() {
+  const [state, setState] = React.useState({ width: 0, height: 0 })
+  const measureRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const node = measureRef.current
+
+    // @ts-ignore
+    const observer = new ResizeObserver(entries => {
+      const { width, height } = entries[0].contentRect
+      const next = { width, height }
+      if (!isEqual(next, state)) {
+        setState(next)
+      }
+    })
+
+    observer.observe(node)
+
+    return () => {
+      observer.disconnect()
+    }
+  })
+
+  return {
+    ...state,
+    measureRef,
+  }
+}
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -68,6 +96,9 @@ const filterRows = (
 }
 
 export type ManagedTableProps = {
+  width?: number
+  height?: number
+
   /**
    * Column definitions.
    */
@@ -160,7 +191,10 @@ const Container = gloss({
   flex: 1,
 })
 
-class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
+class ManagedTableInner extends React.Component<
+  ManagedTableProps & { measureRef?: any },
+  ManagedTableState
+> {
   static defaultProps = {
     highlightableRows: true,
     multiHighlight: false,
@@ -525,7 +559,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   render() {
-    const { columns, rowLineHeight } = this.props
+    const { columns, rowLineHeight, width, height, measureRef } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
@@ -539,13 +573,12 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        <Container>
+        <Container ref={measureRef}>
           {(!sortedRows.length && this.props.bodyPlaceholder) || null}
-          {this.props.autoHeight ? (
-            sortedRows.map((_, index) => this.renderRow({ index, style: {} }))
-          ) : (
-            <AutoSizer>
-              {({ width, height }) => (
+          {this.props.autoHeight
+            ? sortedRows.map((_, index) => this.renderRow({ index, style: {} }))
+            : width &&
+              height && (
                 <ContextMenu buildItems={this.buildContextMenuItems}>
                   <List
                     itemCount={sortedRows.length}
@@ -556,24 +589,27 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
                     }
                     ref={this.tableRef}
                     width={width}
+                    height={height}
                     estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
                     overscanCount={5}
                     forwardRef={this.scrollRef}
                     onScroll={this.onScroll}
-                    height={height}
                   >
                     {this.renderRow}
                   </List>
                 </ContextMenu>
               )}
-            </AutoSizer>
-          )}
         </Container>
       </Container>
     )
   }
 }
 
-export const ManagedTable = debounceRender(ManagedTableInner, 150, {
+export const DebouncedManagedTable = debounceRender(ManagedTableInner, 150, {
   maxWait: 250,
 })
+
+export function ManagedTable(props: ManagedTableProps) {
+  const { width, height, measureRef } = useComponentSize()
+  return <DebouncedManagedTable measureRef={measureRef} width={width} height={height} {...props} />
+}

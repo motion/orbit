@@ -1,23 +1,37 @@
 import { ensure, react } from '@mcro/black'
-import { observeMany } from '../mediator'
-import { AppModel, Source, SourceModel, Space, SpaceModel } from '@mcro/models'
+import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
+import { isEqual, once } from 'lodash'
+import { observeMany, observeOne } from '../mediator'
+import { defaultPanes, getPanes } from './getPanes'
+import { PaneManagerStore } from './PaneManagerStore'
 import { getAppFromSource } from './SourcesStore'
 
 export class SpaceStore {
-  spaces: Space[] = []
-  sources: Source[] = []
-  activeIndex = 0
+  props: { paneManagerStore: PaneManagerStore }
+  spaces = react(() => 1, () => observeMany(SpaceModel, { args: {} }), {
+    defaultValue: [],
+  })
 
-  get activeSortedSpaces() {
-    return this.spaces.length ? [this.activeSpace, ...this.inactiveSpaces] : []
-  }
+  sources = react(
+    () => 1,
+    () =>
+      observeMany(SourceModel, {
+        args: {
+          relations: ['spaces'],
+        },
+      }),
+    {
+      defaultValue: [],
+    },
+  )
+
+  user = react(() => 1, () => observeOne(UserModel, {}))
 
   get activeSpace() {
-    return this.spaces[this.activeIndex] || { id: 0 }
-  }
-
-  get inactiveSpaces() {
-    return this.spaces.filter((_, i) => i !== this.activeIndex)
+    if (this.user && this.spaces.length) {
+      return this.spaces.find(x => x.id === this.user.activeSpace)
+    }
+    return { id: -1 }
   }
 
   apps = react(
@@ -28,6 +42,25 @@ export class SpaceStore {
     },
     {
       defaultValue: [],
+    },
+  )
+
+  setInitialPaneIndex = once(() => {
+    this.props.paneManagerStore.setPaneIndex(defaultPanes.length)
+  })
+
+  managePaneSort = react(
+    () => this.apps,
+    apps => {
+      ensure('apps', !!apps)
+      const { paneManagerStore } = this.props
+      const { panes, paneIndex } = getPanes(paneManagerStore, this.apps)
+      console.log('managePaneSort', paneManagerStore, this.props, panes, paneIndex)
+      paneManagerStore.setPaneIndex(paneIndex)
+      if (!isEqual(panes, paneManagerStore.panes)) {
+        paneManagerStore.setPanes(panes)
+        this.setInitialPaneIndex()
+      }
     },
   )
 
@@ -46,21 +79,4 @@ export class SpaceStore {
       })
       .map(getAppFromSource) // todo: this is temporary to make things working, Nate should change that
   }
-
-  willUnmount() {
-    this.spaces$.unsubscribe()
-    this.sources$.unsubscribe()
-  }
-
-  private spaces$ = observeMany(SpaceModel, { args: {} }).subscribe(spaces => {
-    this.spaces = spaces
-  })
-
-  private sources$ = observeMany(SourceModel, {
-    args: {
-      relations: ['spaces'],
-    },
-  }).subscribe(sources => {
-    this.sources = sources
-  })
 }

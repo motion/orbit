@@ -1,45 +1,27 @@
+import { GmailSource } from '@mcro/models'
+import { SearchableTable, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
-import { SearchableTable, Text, View } from '@mcro/ui'
-import { OrbitSourceSettingProps } from '../../../types'
-import { GmailSource } from '@mcro/models'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
+import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 
 type Props = OrbitSourceSettingProps<GmailSource>
 
-class GmailSettingStore {
-  props: Props
-  syncing = {}
-  whitelist = new WhitelistManager({
-    source: this.props.source,
-    getAll: this.getAllFilterIds.bind(this),
+export default function GmailSettings(props: Props) {
+  const whitelist = useStore(WhitelistManager, {
+    source: props.source,
+    getAll: () => props.source.values.foundEmails,
   })
-
-  willUnmount() {
-    this.whitelist.dispose()
-  }
-
-  private getAllFilterIds() {
-    if (!this.props.source || !this.props.source.values) {
-      return []
-    }
-    return this.props.source.values.foundEmails
-  }
-}
-
-export default observer(function GmailSettings(props: Props) {
-  const store = useStore(GmailSettingStore, props)
   const { source } = props
   return (
     <>
-      <SettingManageRow source={source} whitelist={store.whitelist} />
+      <SettingManageRow source={source} whitelist={whitelist} />
       <View
         flex={1}
-        opacity={store.whitelist.isWhitelisting ? 0.5 : 1}
-        pointerEvents={store.whitelist.isWhitelisting ? 'none' : 'inherit'}
+        opacity={whitelist.isWhitelisting ? 0.5 : 1}
+        pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
           virtual
@@ -62,7 +44,7 @@ export default observer(function GmailSettings(props: Props) {
           }}
           multiHighlight
           rows={(source.values.foundEmails || []).map((email, index) => {
-            const isActive = store.whitelist.whilistStatusGetter(email)
+            const isActive = whitelist.whilistStatusGetter(email)
             return {
               key: `${index}`,
               columns: {
@@ -74,7 +56,7 @@ export default observer(function GmailSettings(props: Props) {
                   sortValue: isActive,
                   value: (
                     <ReactiveCheckBox
-                      onChange={store.whitelist.updateWhitelistValueSetter(email)}
+                      onChange={whitelist.updateWhitelistValueSetter(email)}
                       isActive={isActive}
                     />
                   ),
@@ -91,4 +73,4 @@ export default observer(function GmailSettings(props: Props) {
       </View>
     </>
   )
-})
+}

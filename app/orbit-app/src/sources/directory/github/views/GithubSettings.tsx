@@ -1,8 +1,9 @@
-import { loadMany } from '../../../../mediator'
 import { GithubRepositoryModel, GithubSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+import { loadMany } from '../../../../mediator'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
@@ -10,6 +11,10 @@ import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
+  const whitelist = useStore(WhitelistManager, {
+    source,
+    getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
+  }) as WhitelistManager<GithubSource>
   // setup state
   const [repositories, setRepositories] = useState(null)
   // console.log('repositories', repositories)
@@ -17,29 +22,6 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
     key: 'lastCommit',
     direction: 'up',
   })
-  const [whitelist, setWhitelist] = useState(
-    new WhitelistManager({
-      source,
-      getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
-    }),
-  )
-
-  // refresh whitelist when source or repositories change
-  useEffect(
-    () => {
-      setWhitelist(
-        new WhitelistManager({
-          source,
-          getAll: () => {
-            return (repositories || []).map(repository => repository.nameWithOwner)
-          },
-        }),
-      )
-
-      return () => whitelist.dispose()
-    },
-    [source.id, JSON.stringify(repositories)],
-  )
 
   // load and set repositories when source changes
   useEffect(

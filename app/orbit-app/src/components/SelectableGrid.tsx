@@ -10,7 +10,7 @@ type SelectableGridProps<A> = SortableGridProps<A> & {
 }
 
 export function SelectableGrid({ items, getItem, ...props }: SelectableGridProps<any>) {
-  const selectionStore = props.selectionStore || useStore(SelectionStore)
+  const selectionStore = props.selectionStore || useStore(SelectionStore, props)
   const moves = items.map((_, i) => i)
   const itemsKey = JSON.stringify(items.map(i => i.id))
 

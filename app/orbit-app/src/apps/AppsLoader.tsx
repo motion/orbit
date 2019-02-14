@@ -42,7 +42,7 @@ function AppLoader(props: AppLoaderProps) {
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
   const AppView = apps[type]
-  const appViewProps = { id: id }
+  const appViewProps = { id }
   const appStore = useStore(AppStore, appViewProps)
 
   useEffect(() => {

@@ -1,8 +1,9 @@
 import { deep } from '@mcro/black'
+import { Absolute, gloss } from '@mcro/gloss'
 import { Sidebar } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
+import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { memo, useMemo } from 'react'
 import { AppType } from '../../apps/AppTypes'
 import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -12,10 +13,15 @@ import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
-class OrbitSidebarStore {
+export class SidebarStore {
   stores = useHook(useStoresSimple)
+  width = Math.min(450, Math.max(240, window.innerWidth / 3))
 
   viewRefs: { [key: string]: AppViewRef } = deep({})
+
+  handleResize = next => {
+    this.width = next
+  }
 
   get activeViewRef() {
     return this.viewRefs[this.stores.paneManagerStore.activePane.id]
@@ -27,62 +33,71 @@ class OrbitSidebarStore {
 }
 
 export default memo(function OrbitSidebar() {
-  const { paneManagerStore, appsStore } = useStores()
-  const { hasMain, hasIndex } = appsStore.currentView
+  const { paneManagerStore, appsStore, sidebarStore } = useStores()
   const { activePane } = paneManagerStore
-  const sidebarStore = useStore(OrbitSidebarStore)
-  const defaultWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
-  const [sidebarWidth, setSidebarWidth] = useState(defaultWidth)
+  const { hasMain, hasIndex } = appsStore.currentView || {
+    hasMain: false,
+    hasIndex: false,
+  }
+  const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
 
-  if (!activePane) {
+  const elements = useMemo(
+    () => {
+      return (
+        <>
+          {paneManagerStore.panes.map(pane => {
+            return (
+              <SidebarSubPane
+                key={pane.id}
+                hasMain={hasMain}
+                sidebarStore={sidebarStore}
+                id={pane.id}
+                type={pane.type}
+              />
+            )
+          })}
+        </>
+      )
+    },
+    [paneManagerStore.panes, hasMain],
+  )
+
+  if (!appsStore.currentView || !activePane) {
     return null
   }
 
-  const actualWidth = (() => {
-    let next = 0
-    if (hasIndex && sidebarStore.hasIndexContent) {
-      if (hasMain) {
-        next = sidebarWidth
-      } else {
-        next = window.innerWidth
-      }
-    }
-    return next
-  })()
-
-  const handleResize = width => {
-    console.log('set widht', width)
-    setSidebarWidth(width)
-  }
-
   return (
-    <Sidebar
-      background="transparent"
-      width={actualWidth}
-      onResize={handleResize}
-      minWidth={100}
-      maxWidth={500}
-      noBorder
-    >
-      {paneManagerStore.panes.map(pane => {
-        return (
-          <SidebarSubPane
-            key={pane.id}
-            hasMain={hasMain}
-            sidebarStore={sidebarStore}
-            id={pane.id}
-            type={pane.type}
-          />
-        )
-      })}
-    </Sidebar>
+    <SidebarContainer hideSidebar={hideSidebar} width={sidebarStore.width}>
+      <Sidebar
+        background="transparent"
+        width={sidebarStore.width}
+        onResize={sidebarStore.handleResize}
+        minWidth={100}
+        maxWidth={500}
+        noBorder
+      >
+        {elements}
+      </Sidebar>
+    </SidebarContainer>
   )
+})
+
+const SidebarContainer = gloss(Absolute, {
+  top: 0,
+  left: 0,
+  bottom: 0,
+  zIndex: 10000000,
+  hideSidebar: {
+    zIndex: -1,
+    pointerEvents: 'none',
+    opacity: 0,
+  },
 })
 
 const SidebarSubPane = memo(function SidebarSubPane(props: {
   id: string
   type: string
-  sidebarStore: OrbitSidebarStore
+  sidebarStore: SidebarStore
   hasMain: boolean
 }) {
   const { orbitStore } = useStores()

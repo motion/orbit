@@ -65,10 +65,7 @@ debugUseStore(event => {
 })
 
 function setStoreStateOntoWindow(stores) {
-  const Root = window['Root']
-  if (Root) {
-    Root.stores = stores
-  }
+  window['Stores'] = stores
   // if we can just put the store right on window
   for (const key in stores) {
     if (typeof window[key] === 'undefined' || window[key].__isAStore) {

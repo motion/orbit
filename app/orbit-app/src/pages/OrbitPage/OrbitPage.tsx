@@ -1,12 +1,9 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
-import { AppBit } from '@mcro/models'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { once, uniqBy } from 'lodash'
-import { comparer } from 'mobx'
-import { useObservable, useObserver } from 'mobx-react-lite'
-import React, { memo, useCallback, useEffect, useRef } from 'react'
+import { uniqBy } from 'lodash'
+import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
@@ -15,14 +12,14 @@ import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
-import { getAppState, getIsTorn } from '../../helpers/getAppHelpers'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStores } from '../../hooks/useStores'
+import { defaultPanes } from '../../stores/getPanes'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { Pane, PaneManagerStore } from '../../stores/PaneManagerStore'
+import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
@@ -30,7 +27,7 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
-import OrbitSidebar from './OrbitSidebar'
+import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
 import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
@@ -58,40 +55,15 @@ export default memo(function OrbitPage() {
   )
 })
 
-function useManagePanes() {
-  const activeApps = useActiveAppsSorted()
-  const { paneManagerStore } = useStores()
-  const appsId = activeApps.map(x => x.id).join('')
-  const appsState = useObservable({ ids: '' })
-
-  // trigger observer... :/
-  useEffect(
-    () => {
-      appsState.ids = appsId
-    },
-    [appsId],
-  )
-
-  // keeps pane index + panes in sync with apps
-  useObserver(() => {
-    appsState.ids // watch for changes in apps :/
-    const { panes, paneIndex } = getPaneSettings(paneManagerStore, activeApps)
-    if (!comparer.structural(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-    }
-    paneManagerStore.setPaneIndex(paneIndex)
-  })
-}
-
 function OrbitManagers() {
   useManagePaneSort()
-  useManagePanes()
   return null
 }
 
 const OrbitPageInner = memo(() => {
   const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
+  const sidebarStore = useStore(SidebarStore, null, { react: false })
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
@@ -157,7 +129,7 @@ const OrbitPageInner = memo(() => {
   }, [])
 
   return (
-    <ProvideStores stores={{ headerStore }}>
+    <ProvideStores stores={{ headerStore, sidebarStore }}>
       <ProvideOrbitStore>
         <MainShortcutHandler
           handlers={{
@@ -187,8 +159,7 @@ const OrbitPageInner = memo(() => {
 })
 
 function ProvideOrbitStore(props: { children: any }) {
-  const { paneManagerStore } = useStores()
-  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
+  const orbitStore = useStore(OrbitStore)
   return <ProvideStores stores={{ orbitStore }}>{props.children}</ProvideStores>
 }
 
@@ -199,81 +170,11 @@ const OrbitContentArea = gloss({
   background: theme.sidebarBackground,
 }))
 
-const settingsPane = {
-  id: 'settings',
-  name: 'Settings',
-  type: 'settings',
-  isHidden: true,
-  keyable: true,
-}
-
-export const defaultPanes: Pane[] = [
-  { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
-  { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
-  settingsPane,
-  { id: 'apps', name: 'Apps', type: 'apps' },
-  { id: 'createApp', name: 'Add app', type: 'createApp' },
-  { id: 'onboard', name: 'Onboard', type: 'onboard' },
-]
-
-function useOnce(fn: Function, reset = []) {
-  return useCallback(once(fn as any), reset)
-}
-
-function appToPane(app: AppBit): Pane {
-  return {
-    type: app.type,
-    id: `${app.id}`,
-    keyable: true,
-    subType: 'app',
-    name: app.name,
-  }
-}
-
-function getPanes(apps: AppBit[]): Pane[] {
-  const isTorn = getIsTorn()
-  if (isTorn) {
-    // torn window panes, remove the others besides active app + settings
-    const appState = getAppState()
-    const app = apps.find(app => +app.id === +appState.appId)
-    if (!app) {
-      console.warn(`No app found! ${JSON.stringify(appState)} ${JSON.stringify(apps)}`)
-      return [settingsPane]
-    }
-    return [appToPane(app), settingsPane]
-  } else {
-    const appPanes = apps.map(appToPane)
-    return [...defaultPanes, ...appPanes]
-  }
-}
-
-function getPaneSettings(paneManagerStore: PaneManagerStore, apps: AppBit[]) {
-  let paneIndex = 0
-  const currentPaneId = paneManagerStore.activePane.id
-  const panes = getPanes(apps)
-  paneIndex = panes.findIndex(pane => pane.id === currentPaneId)
-  // move left one tab if were removing current tab
-  if (paneIndex === -1) {
-    const prevPane = paneManagerStore.panes[paneManagerStore.paneIndex - 1]
-    const prevIndex = prevPane
-      ? paneManagerStore.panes.findIndex(pane => pane.id === prevPane.id)
-      : 0
-    paneIndex = prevIndex === -1 ? 0 : prevIndex
-    console.warn('removing pane you are currently on! moving to a different one')
-  }
-  return {
-    panes,
-    paneIndex,
-  }
-}
-
 function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
-  const spaceStore = useStore(SpaceStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
 
   const paneManagerStore = useStore(PaneManagerStore, {
@@ -284,17 +185,7 @@ function OrbitPageProvideStores(props: any) {
     },
   })
 
-  // move to first app pane on first run
-  const hasLoadedApps = !!activeApps.length
-  const setToFirstAppPane = useOnce(() => {
-    paneManagerStore.setPaneIndex(defaultPanes.length)
-  })
-  useEffect(
-    () => {
-      hasLoadedApps && setToFirstAppPane()
-    },
-    [hasLoadedApps],
-  )
+  const spaceStore = useStore(SpaceStore, { paneManagerStore })
 
   const stores = {
     settingStore,

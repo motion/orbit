@@ -62,10 +62,6 @@ export class AppStore {
     return this.stores.queryStore
   }
 
-  get paneNode() {
-    return this.stores.subPaneStore.paneNode
-  }
-
   get toggleSelected() {
     if (this.stores.selectionStore) {
       return this.stores.selectionStore.toggleSelected

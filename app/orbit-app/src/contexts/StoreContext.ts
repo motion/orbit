@@ -6,6 +6,7 @@ import { SubPaneStore } from '../components/SubPaneStore'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'
 import { MenuStore } from '../pages/ChromePage/menuLayer/Menu'
+import { SidebarStore } from '../pages/OrbitPage/OrbitSidebar'
 import { OrbitStore } from '../pages/OrbitPage/OrbitStore'
 import { HeaderStore } from '../stores/HeaderStore'
 import { NewAppStore } from '../stores/NewAppStore'
@@ -37,6 +38,7 @@ export type AllStores = {
   newAppStore?: NewAppStore
   headerStore?: HeaderStore
   searchStore?: SearchStore
+  sidebarStore?: SidebarStore
 }
 
 export const StoreContext = createContext({} as AllStores)

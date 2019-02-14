@@ -30,7 +30,7 @@ import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
-import OrbitSidebar from './OrbitSidebar'
+import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
 import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
@@ -92,6 +92,7 @@ function OrbitManagers() {
 const OrbitPageInner = memo(() => {
   const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
+  const sidebarStore = useStore(SidebarStore)
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
@@ -157,7 +158,7 @@ const OrbitPageInner = memo(() => {
   }, [])
 
   return (
-    <ProvideStores stores={{ headerStore }}>
+    <ProvideStores stores={{ headerStore, sidebarStore }}>
       <ProvideOrbitStore>
         <MainShortcutHandler
           handlers={{

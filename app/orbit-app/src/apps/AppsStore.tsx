@@ -1,9 +1,37 @@
-import { react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { apps } from './apps'
 import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
+
+function getViewInformation(type: string, views?: AppViews) {
+  if (!views) {
+    return {
+      hasMain: false,
+      hasIndex: false,
+    }
+  }
+
+  let hasIndex = false
+  let hasMain = false
+
+  if (views) {
+    // dynamic app view
+    hasMain = !!views.main
+    hasIndex = !!views.index
+  } else {
+    // static view we provide for alternate panes like settings/onboarding
+    const app = apps[type]
+    hasIndex = !!app['index']
+    hasMain = !!app['main']
+  }
+
+  return {
+    hasMain,
+    hasIndex,
+  }
+}
 
 export class AppsStore {
   stores = useHook(useStoresSimple)
@@ -15,7 +43,7 @@ export class AppsStore {
   appsState = react(
     () => [this.provideStores, this.appViews, this.appStores],
     async ([provideStores, appViews, appStores], { sleep }) => {
-      await sleep(40)
+      await sleep()
       return {
         provideStores,
         appViews,
@@ -24,37 +52,26 @@ export class AppsStore {
     },
   )
 
+  viewsState = react(
+    () => this.appsState,
+    appsState => {
+      ensure('appsState', !!appsState)
+      const res: { [key: string]: ReturnType<typeof getViewInformation> } = {}
+      for (const key in appsState.appViews) {
+        res[key] = getViewInformation(key, appsState.appViews[key])
+      }
+      return res
+    },
+    {
+      defaultValue: {},
+    },
+  )
+
   currentView = react(
     () => {
       const { paneManagerStore } = this.stores
-      const { activePane } = paneManagerStore
-
-      if (!this.appsState) {
-        return {
-          hasMain: false,
-          hasIndex: false,
-        }
-      }
-
-      let hasIndex = false
-      let hasMain = false
-
-      const views = this.appsState.appViews[activePane.id]
-      if (views) {
-        // dynamic app view
-        hasMain = !!views.main
-        hasIndex = !!views.index
-      } else {
-        // static view we provide for alternate panes like settings/onboarding
-        const app = apps[activePane.type]
-        hasIndex = !!app['index']
-        hasMain = !!app['main']
-      }
-
-      return {
-        hasMain,
-        hasIndex,
-      }
+      const { id } = paneManagerStore.activePane
+      return this.viewsState[id]
     },
     _ => _,
     {

@@ -111,7 +111,7 @@ const COLOR_WHEEL = [
 let seenNames = new Set()
 
 export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) => {
-  if (window['enableLog'] === 0) {
+  if (!window['enableLog']) {
     return
   }
   const hasChanges = !!changed

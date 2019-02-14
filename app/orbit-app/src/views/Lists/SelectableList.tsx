@@ -63,7 +63,6 @@ class SelectableStore {
   updateSelectionResults = react(
     () => this.props.itemsKey,
     () => {
-      console.log('got em', this.props.itemsKey)
       this.props.selectionStore.setResults([
         { type: 'column', indices: this.props.getItems().map((_, index) => index) },
       ])

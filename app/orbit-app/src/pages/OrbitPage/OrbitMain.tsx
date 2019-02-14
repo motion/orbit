@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { FullScreen, gloss } from '@mcro/gloss'
 import { View } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import { useObserver } from 'mobx-react-lite'
@@ -12,17 +12,32 @@ import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export default memo(function OrbitMain() {
-  const { paneManagerStore, appsStore } = useStores()
-  const { hasMain } = appsStore.currentView
-
+  const { paneManagerStore } = useStores()
   return (
-    <OrbitMainView width={hasMain ? 'auto' : 0}>
-      {paneManagerStore.panes.map(pane => (
-        <SubPane key={pane.id} id={pane.id} type={AppType[pane.type]} fullHeight>
-          <OrbitPageMainView {...pane} />
-        </SubPane>
-      ))}
-    </OrbitMainView>
+    <>
+      {paneManagerStore.panes.map(pane => {
+        return <OrbitMainSubPane key={pane.id} {...pane} />
+      })}
+    </>
+  )
+})
+
+const OrbitMainSubPane = memo(({ type, id }: Pane) => {
+  const { appsStore, sidebarStore } = useStores()
+  const { hasMain, hasIndex } = appsStore.viewsState[id] ||
+    appsStore.viewsState[type] || {
+      hasMain: false,
+      hasIndex: false,
+    }
+  if (!hasMain) {
+    return null
+  }
+  return (
+    <FullScreen left={hasIndex ? sidebarStore.width : 0}>
+      <SubPane id={id} type={AppType[type]} fullHeight>
+        <OrbitPageMainView id={id} type={type} />
+      </SubPane>
+    </FullScreen>
   )
 })
 
@@ -30,6 +45,7 @@ export default memo(function OrbitMain() {
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { orbitStore } = useStores()
   const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
+  const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
 
   useObserver(() => {
     const appConfig = orbitStore.activeConfig[type] || null
@@ -38,23 +54,11 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
     }
   })
 
-  // TODO THIS IS WHY MAIN FLICKERS WITH WRONG PROPS:
-  // we have a delay between select and show main sometimes
-  // for example when you move down a list quickly it has to be debounced
-  // so theres a gap there where its mismatched props
-  // THE SOLUTION:
-  // we have to basically keep the "old" main view in memory during that transition
-  // were mid-transition in some structural stuff so perhaps this can be done more cleanly
-  // but for now something like this needs to happen
-
-  // only ever render once!
+  // only ever render once per config!
   const element = React.useMemo(
     () => {
-      const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
-      const key = `${type}${id}${confKey}`
       return (
         <AppView
-          key={key}
           viewType="main"
           id={id}
           type={type}
@@ -64,7 +68,7 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
         />
       )
     },
-    [activeConfig],
+    [confKey],
   )
 
   return element

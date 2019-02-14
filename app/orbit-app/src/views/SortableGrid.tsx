@@ -1,4 +1,5 @@
-import { Row, View, ViewProps } from '@mcro/ui'
+import { Grid, View } from '@mcro/gloss'
+import { ViewProps } from '@mcro/ui'
 import React from 'react'
 import {
   SortableContainer,
@@ -36,7 +37,7 @@ const SortableItem = SortableElement(GridItem)
 const SortableGridInner = SortableContainer(
   ({ items, getItem, getSortableItemProps, ...props }: any) => {
     return (
-      <Row overflow="hidden" flexWrap="wrap" {...props}>
+      <Grid {...props}>
         {items.map((value, index) => (
           <SortableItem
             key={`item-${value.id}`}
@@ -47,7 +48,7 @@ const SortableGridInner = SortableContainer(
             {...getSortableItemProps && getSortableItemProps(items[index], index)}
           />
         ))}
-      </Row>
+      </Grid>
     )
   },
 )

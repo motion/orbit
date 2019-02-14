@@ -16,7 +16,7 @@ export function TitleRow({ before, bordered, after, margin, ...props }: TitleRow
       alignItems="center"
       overflow="hidden"
       paddingBottom={10}
-      margin={margin || [0, 0, 20]}
+      margin={typeof margin !== 'undefined' ? margin : [0, 0, 20]}
     >
       {before && (
         <>

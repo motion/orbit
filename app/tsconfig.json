@@ -16,7 +16,6 @@
     { "path": "../packages/color" },
     { "path": "../packages/constants" },
     { "path": "../packages/logger" },
-    { "path": "../packages/gloss" },
     { "path": "../packages/helpers" },
     { "path": "../packages/r2" },
     { "path": "../packages/router" },

@@ -227,7 +227,6 @@ export function gloss<Props = GlossProps<any>>(
       const { activeTheme } = useContext(ThemeContext)
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
       const lastClassNames = useRef(null)
-      console.log('now', ThemedView.displayName, ThemedView)
       const classNames = glossify(
         id,
         ThemedView.displayName,
@@ -290,7 +289,6 @@ export function gloss<Props = GlossProps<any>>(
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   ThemedView.withConfig = config => {
     if (config.displayName) {
-      console.log('setting display name', config.displayName)
       ThemedView.displayName = config.displayName
     }
     return ThemedView

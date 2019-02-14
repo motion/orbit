@@ -103,12 +103,14 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
       `color: ${color};`,
       ...(args ? [`color: ${color};`] : []),
       `font-weight: bold;`,
-      ...changed,
+      '=>',
+      changed[1],
       ...(timings ? [timings] : []),
     )
     if (!window['enableLog']) return
-    console.debug('  ⮑ %cin  =>', 'color: orange;', reactionArgs)
-    console.debug('  ⮑ %cout =>', 'color: orange;', result)
+    console.debug('  ⮑ %cprev =>', 'color: orange;', changed[0])
+    console.debug('  ⮑ %cin   =>', 'color: orange;', reactionArgs)
+    console.debug('  ⮑ %cout  =>', 'color: orange;', result)
   } else {
     console.debug(`${name} no change, reaction args:`, reactionArgs)
   }

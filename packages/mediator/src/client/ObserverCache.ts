@@ -123,3 +123,7 @@ export const ObserverCache = {
     ObserverCache.entries.delete(entry.key)
   },
 }
+
+if (typeof window !== 'undefined') {
+  window['ObserverCache'] = ObserverCache
+}

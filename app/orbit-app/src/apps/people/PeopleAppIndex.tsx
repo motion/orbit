@@ -40,22 +40,11 @@ export default function PeopleAppIndex(props: AppProps) {
   }
 
   return (
-    <>
-      {/* <FloatingBar>
-        <Text fontWeight={500} alpha={0.6} size={0.9}>
-          {people.length} {pluralize('people', people.length)}{' '}
-          {hasIntegrationFilters ? ` (filtered)` : ''}
-        </Text>
-        <View flex={1} />
-        <OrbitFilterIntegrationButton />
-      </FloatingBar> */}
-      <SelectableList
-        key={0}
-        getItemProps={results.length > 12 ? groupByLetter('name') : null}
-        minSelected={0}
-        items={results}
-        query={removePrefixIfExists(props.appStore.activeQuery, '@')}
-      />
-    </>
+    <SelectableList
+      getItemProps={results.length > 12 ? groupByLetter('name') : null}
+      minSelected={0}
+      items={results}
+      query={removePrefixIfExists(props.appStore.activeQuery, '@')}
+    />
   )
 }

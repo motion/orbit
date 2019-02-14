@@ -165,7 +165,7 @@ export function setupReact(
 
     // dev mode logging helpers
     if (process.env.NODE_ENV === 'development') {
-      changed = ['previous', previousValue, 'next', nextValue]
+      changed = [previousValue, nextValue]
     }
 
     currentValueUnreactive = nextValue

@@ -1,7 +1,6 @@
 export * from '@mcro/automagical'
 export { DecorCompiledDecorator, DecorPlugins } from '@mcro/decor'
 export { on } from '@mcro/helpers'
-export { debugEmit, debugState } from './helpers/debugState'
 export * from './helpers/log'
 export * from './helpers/mobx'
 export { store } from './storeDecorator'

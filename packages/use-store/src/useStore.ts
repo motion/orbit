@@ -1,6 +1,5 @@
-import { decorate } from '@mcro/automagical'
+import { decorate, updateProps } from '@mcro/automagical'
 import { throttle } from 'lodash'
-import { observable, transaction } from 'mobx'
 import {
   createContext,
   // isValidElement,
@@ -13,7 +12,6 @@ import {
   // @ts-ignore
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
 } from 'react'
-import isEqualReact from 'react-fast-compare'
 import { debugEmit } from './debugUseStore'
 import { setupTrackableStore, useTrackableStore } from './setupTrackableStore'
 
@@ -33,7 +31,7 @@ type UseStoreOptions = {
   react?: boolean
 }
 
-let globalOptions = {
+let config = {
   onMount: null,
   onUnmount: null,
   context: createContext(null),
@@ -42,44 +40,13 @@ let globalOptions = {
 export function disposeStore(store: any) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
-  if (globalOptions.onUnmount) {
-    globalOptions.onUnmount(store)
+  if (process.env.NODE_ENV === 'development') {
+    debugEmit({
+      type: 'unmount',
+      store,
+    })
   }
   store.disposeAutomagic()
-}
-
-// updateProps
-// granular set so reactions can be efficient
-const updateProps = (store: any, nextProps: Object) => {
-  const nextPropsKeys = Object.keys(nextProps)
-  const curPropKeys = Object.keys(store.props)
-
-  // changes
-  transaction(() => {
-    for (const prop of nextPropsKeys) {
-      const a = store.props[prop]
-      const b = nextProps[prop]
-      if (!isEqualReact(a, b)) {
-        if (process.env.NODE_ENV === 'development') {
-          debugEmit({
-            type: 'prop',
-            key: prop,
-            oldValue: a,
-            newValue: b,
-            store,
-          })
-        }
-        store.props[prop] = b
-      }
-    }
-
-    // removes
-    for (const key of curPropKeys) {
-      if (typeof nextProps[key] === 'undefined') {
-        delete store.props[key]
-      }
-    }
-  })
 }
 
 let currentHooks = null
@@ -92,65 +59,66 @@ export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   // automagic store
-  const AutomagicStore = decorate(Store)
+  const AutomagicStore = decorate(Store, props)
 
-  let storeInstance: A
-
-  // capture hooks for this store
+  // capture hooks for this store, must be before new AutomagicStore()
   currentHooks = null
 
-  if (!props) {
-    storeInstance = new AutomagicStore()
-  } else {
-    // add props to the store and manage them
-    const storeProps = observable({ props }, { props: observable.shallow })
-    const getProps = {
-      configurable: true,
-      get: () => storeProps.props,
-      set() {},
-    }
-    Object.defineProperty(AutomagicStore.prototype, 'props', getProps)
-    storeInstance = new AutomagicStore()
-    Object.defineProperty(storeInstance, 'props', getProps)
-    storeInstance['__updateProps'] = updateProps
+  const store = new AutomagicStore()
+
+  if (config.onMount) {
+    config.onMount(store)
   }
 
-  // call this before automagic runs...
-  if (globalOptions.onMount) {
-    globalOptions.onMount(storeInstance)
+  if (process.env.NODE_ENV === 'development') {
+    debugEmit({
+      type: 'mount',
+      store,
+    })
   }
 
   return {
-    store: storeInstance,
+    store,
     hooks: currentHooks,
+    hasProps: !!props,
   }
 }
 
 function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
-  const storeHooks = useRef<Function[] | null>(null)
-  const storeRef = useRef<A>(null)
-  const hasChangedSource = storeRef.current && !isSourceEqual(storeRef.current, Store)
+  const state = useRef({
+    store: null,
+    hooks: null,
+    hasProps: null,
+  })
+  let store = state.current.store
+  const hasChangedSource = store && !isSourceEqual(store, Store)
+  const forceUpdate = useThrottledForceUpdate()
 
-  if (!storeRef.current || hasChangedSource) {
-    const { hooks, store } = setupReactiveStore(Store, props)
-    storeRef.current = store
-    storeHooks.current = hooks
+  if (!store || hasChangedSource) {
+    state.current = setupReactiveStore(Store, props)
   } else {
     // ensure we dont have different number of hooks by re-running them
-    if (storeHooks.current) {
+    if (state.current.hooks) {
       // TODO this wont actually update them :/
-      for (const hook of storeHooks.current) {
+      for (const hook of state.current.hooks) {
         hook()
       }
     }
   }
 
+  store = state.current.store
+
   // update props after first run
-  if (props && !!storeRef.current) {
-    storeRef.current.__updateProps(storeRef.current, props)
+  if (props && !!store) {
+    updateProps(store, props)
   }
 
-  return storeRef.current
+  if (hasChangedSource) {
+    console.log('HMR store', Store.name)
+    forceUpdate()
+  }
+
+  return store
 }
 
 export function useStore<P, A extends { props?: P } | any>(
@@ -186,22 +154,9 @@ export function useStore<P, A extends { props?: P } | any>(
     }
   }
 
-  // TODO this can be refactored so it just does the global options probably
-  // stores can use didMount and willUnmount
   useEffect(() => {
     store.didMount && store.didMount()
-    return () => {
-      disposeStore(store)
-      if (process.env.NODE_ENV === 'development') {
-        debugEmit(
-          {
-            type: 'unmount',
-            componentId: componentId.current,
-          },
-          options,
-        )
-      }
-    }
+    return () => disposeStore(store)
   }, [])
 
   if (options && options.conditionalUse === false) {
@@ -212,8 +167,8 @@ export function useStore<P, A extends { props?: P } | any>(
 }
 
 export const configureUseStore = (opts: UseGlobalStoreOptions) => {
-  globalOptions = Object.freeze({
-    ...globalOptions,
+  config = Object.freeze({
+    ...config,
     ...opts,
   })
 }
@@ -241,11 +196,12 @@ export function useThrottledForceUpdate() {
 let nextId = 0
 
 // for use in children
+// tracks every store used and updates if necessary
+
 export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
   return function useStores(options?: { optional?: (keyof A)[]; debug?: boolean }): A {
     const stores = useContext(StoreContext)
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
-    const state = stateRef.current
     const rerender = useThrottledForceUpdate()
     const component = getCurrentComponent()
     const componentId = useRef(++nextId)
@@ -268,6 +224,8 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
         }
       }
     }, [])
+
+    const state = stateRef.current
 
     if (!storesRef.current) {
       // this will throw if they try and access a store thats not provided

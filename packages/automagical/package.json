@@ -12,7 +12,8 @@
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
     "zen-observable": "0.8.13",
-    "event-kit": "2.5.3"
+    "event-kit": "2.5.3",
+    "react-fast-compare": "2.0.4"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

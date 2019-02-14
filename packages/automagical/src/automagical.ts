@@ -7,6 +7,7 @@ export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './consta
 export { ensure } from './ensure'
 export { react } from './react'
 export * from './types'
+export { updateProps } from './updateProps'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
@@ -43,19 +44,38 @@ function decorateStore(obj) {
   return getterDesc
 }
 
-export function decorate<T>(obj: {
-  new (...args: any[]): T
-}): { new (...args: any[]): T & { dispose: Function } } {
+function constructWithProps(Store: any, args: any[], props?: Object) {
+  if (!props) {
+    return new Store(...args)
+  }
+  const storeProps = Mobx.observable({ props }, { props: Mobx.observable.shallow })
+  const getProps = {
+    configurable: true,
+    get: () => storeProps.props,
+    set() {},
+  }
+  Object.defineProperty(Store.prototype, 'props', getProps)
+  const instance = new Store()
+  Object.defineProperty(instance, 'props', getProps)
+  return instance
+}
+
+export function decorate<T>(
+  obj: {
+    new (...args: any[]): T
+  },
+  props?: Object,
+): { new (...args: any[]): T & { dispose: Function } } {
   if (!Getters.get(obj)) {
-    const getters = decorateStore(obj)
-    Getters.set(obj, getters)
+    Getters.set(obj, decorateStore(obj))
   }
 
   const getterDesc = Getters.get(obj)
 
   return new Proxy(obj as any, {
     construct(Target, args) {
-      const instance = new Target(...args)
+      // add props to the store and manage them
+      const instance = constructWithProps(Target, args, props)
       const keys = Object.keys(instance)
       instance.__automagicSubscriptions = new CompositeDisposable()
       instance.disposeAutomagic = () => instance.__automagicSubscriptions.dispose()

@@ -38,7 +38,6 @@ function useComponentSize() {
       const { width, height } = entries[0].contentRect
       const next = { width, height }
       if (!isEqual(next, state)) {
-        console.log('got new width/hegiht', width, height)
         setState(next)
       }
     })

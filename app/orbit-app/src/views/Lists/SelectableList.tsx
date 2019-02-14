@@ -42,7 +42,7 @@ export function ProvideSelectableHandlers({
 
 class SelectableStore {
   props: {
-    appStore?: AppStore<any>
+    appStore?: AppStore
     selectionStore?: SelectionStore
     itemsKey: string
     getItems: Function
@@ -63,6 +63,7 @@ class SelectableStore {
   updateSelectionResults = react(
     () => this.props.itemsKey,
     () => {
+      console.log('got em', this.props.itemsKey)
       this.props.selectionStore.setResults([
         { type: 'column', indices: this.props.getItems().map((_, index) => index) },
       ])
@@ -143,7 +144,7 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
       <OrbitList
         items={items}
         scrollToAlignment="center"
-        itemsKey={itemsKey}
+        // itemsKey={itemsKey}
         forwardRef={selectableStore.setListRef}
         onOpen={selectableProps && selectableProps.onSelectItem}
         {...props}
@@ -165,13 +166,3 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
     </MergeContext>
   )
 })
-
-// TODO clear selection when app window closes, we really need useReaction()
-// useReaction(
-//   () => !!App.peekState && !App.peekState.target,
-//   removedTarget => {
-//     ensure('removedTarget', removedTarget)
-//     selectionStore.clearSelected()
-//   },
-//   { deferFirstRun: true }
-// )

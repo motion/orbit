@@ -331,11 +331,6 @@ const arrToDict = (obj: Object) => {
 
 const addStyles = (id: string, baseStyles: Object, nextStyles: Object) => {
   const propStyles = {}
-  if (!baseStyles) {
-    console.trace('no basestyles???')
-    console.log(id, baseStyles, nextStyles)
-    debugger
-  }
   for (const key in nextStyles) {
     // dont overwrite as we go down
     if (!baseStyles[id]) {

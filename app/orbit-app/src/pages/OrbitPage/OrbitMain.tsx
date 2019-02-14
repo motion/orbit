@@ -35,7 +35,6 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
     const isActive = paneManagerStore.activePane.id === id
     const next = hasIndex ? sidebarStore.width : 0
     if (isActive && next !== left) {
-      console.log('not equal', id, next, isActive)
       setLeft(next)
     }
   })

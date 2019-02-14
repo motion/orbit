@@ -86,9 +86,11 @@ export class SubPaneStore {
     },
   )
 
+  windowHeight = window.innerHeight
+
   get maxHeight() {
     // just leave a little extra padding
-    return window.innerHeight - this.aboveContentHeight - 20
+    return this.windowHeight - this.aboveContentHeight - 20
   }
 
   get fullHeight() {
@@ -126,6 +128,7 @@ export class SubPaneStore {
   }
 
   handlePaneChange = debounce(() => {
+    this._updateMaxHeight = Date.now()
     this.updateHeight()
     this.onPaneNearEdges()
   })

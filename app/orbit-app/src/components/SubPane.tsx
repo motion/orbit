@@ -2,7 +2,8 @@ import { CSSPropertySetStrict } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import React, { memo } from 'react'
+import { throttle } from 'lodash'
+import React, { memo, useEffect } from 'react'
 import { AppType } from '../apps/AppTypes'
 import { SubPaneStore } from './SubPaneStore'
 
@@ -36,6 +37,17 @@ export const SubPane = memo((props: Props) => {
   const subPaneStore = useStore(SubPaneStore, props)
   const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
+
+  useEffect(() => {
+    const resize = throttle(() => {
+      subPaneStore.windowHeight = window.innerHeight
+    })
+    document.addEventListener('resize', resize)
+    return () => {
+      document.removeEventListener('resize', resize)
+    }
+  })
+
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof before === 'function' ? before(isActive) : before}
@@ -53,7 +65,10 @@ export const SubPane = memo((props: Props) => {
         >
           {/* used by SubPaneStore to find real content height */}
           <PaneContentInner
-            style={{ maxHeight: subPaneStore.maxHeight, flex: fullHeight ? 1 : 'none' }}
+            style={{
+              maxHeight: fullHeight ? '100%' : subPaneStore.maxHeight,
+              flex: fullHeight ? 1 : 'none',
+            }}
           >
             {children}
           </PaneContentInner>

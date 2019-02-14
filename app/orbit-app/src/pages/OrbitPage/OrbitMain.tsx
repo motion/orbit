@@ -73,7 +73,6 @@ class OrbitPageMainStore {
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { appConfig, key } = useStore(OrbitPageMainStore, { id })
-  console.log('rendering orbit page main view', appConfig, id, key)
 
   if (!appConfig) {
     return null

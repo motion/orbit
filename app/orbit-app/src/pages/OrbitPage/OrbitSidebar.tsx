@@ -3,7 +3,7 @@ import { Absolute, gloss } from '@mcro/gloss'
 import { Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import { AppType } from '../../apps/AppTypes'
 import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -41,27 +41,6 @@ export default memo(function OrbitSidebar() {
   }
   const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
 
-  const elements = useMemo(
-    () => {
-      return (
-        <>
-          {paneManagerStore.panes.map(pane => {
-            return (
-              <SidebarSubPane
-                key={pane.id}
-                hasMain={hasMain}
-                sidebarStore={sidebarStore}
-                id={pane.id}
-                type={pane.type}
-              />
-            )
-          })}
-        </>
-      )
-    },
-    [paneManagerStore.panes.map(x => x.id).join('')],
-  )
-
   if (!appsStore.currentView || !activePane) {
     return null
   }
@@ -76,7 +55,17 @@ export default memo(function OrbitSidebar() {
         maxWidth={500}
         noBorder
       >
-        {elements}
+        {paneManagerStore.panes.map(pane => {
+          return (
+            <SidebarSubPane
+              key={pane.id}
+              hasMain={hasMain}
+              sidebarStore={sidebarStore}
+              id={pane.id}
+              type={pane.type}
+            />
+          )
+        })}
       </Sidebar>
     </SidebarContainer>
   )

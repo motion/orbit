@@ -1,4 +1,4 @@
-import { deep, ensure, react } from '@mcro/black'
+import { ensure, react, shallow } from '@mcro/black'
 import { UserModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
@@ -37,7 +37,7 @@ export class OrbitStore {
     },
   )
 
-  activeConfig: { [key: string]: AppConfig } = deep({
+  activeConfig: { [key: string]: AppConfig } = shallow({
     search: { id: '', type: AppType.search, title: '' },
   })
 

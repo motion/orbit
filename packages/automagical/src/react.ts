@@ -2,7 +2,7 @@ import * as Mobx from 'mobx'
 import Observable from 'zen-observable'
 import { automagicConfig } from './automagical'
 import { ReactionRejectionError, ReactionTimeoutError } from './constants'
-import { diffLog, getReactionName, getReactionOptions, log, logGroup, toJSDeep } from './helpers'
+import { getReactionName, getReactionOptions, log, logGroup } from './helpers'
 import { EffectCallback, MagicalObject, ReactionHelpers, ReactionOptions } from './types'
 
 export type UnwrapObservable<A> = A extends Observable<infer U> ? U : A
@@ -123,11 +123,9 @@ export function setupReact(
     if (delayValue) {
       nextValue = previousValue
       previousValue = value
-    } else if (process.env.NODE_ENV === 'development') {
-      // only care about previousValue for logging, and only log in development
-      previousValue = currentValueUnreactive
     }
 
+    previousValue = currentValueUnreactive
     state.hasResolvedOnce = true
 
     // subscribable handling
@@ -159,15 +157,18 @@ export function setupReact(
       }
     }
 
-    // return diff in dev mode
-    let changed: string
+    if (value === currentValueUnreactive) {
+      return
+    }
+
+    let changed: any
 
     // dev mode logging helpers
     if (process.env.NODE_ENV === 'development') {
-      currentValueUnreactive = nextValue
-      changed = diffLog(toJSDeep(previousValue), toJSDeep(nextValue))
+      changed = ['previous', previousValue, 'next', nextValue]
     }
 
+    currentValueUnreactive = nextValue
     current.set(nextValue)
     return changed
   }
@@ -340,7 +341,7 @@ export function setupReact(
       // async update helpers
       const updateAsyncValue = val => {
         const isValid = curID === reactionID
-        let changed
+        let changed: any
         if (isValid) {
           // more verbose logging in dev
           changed = update(val)
@@ -424,7 +425,7 @@ export function setupReact(
             logGroup({
               name: name.full,
               result,
-              changed: `${changed}`,
+              changed,
               reactionArgs: reactValArg,
             })
           }

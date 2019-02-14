@@ -7,20 +7,6 @@ export const Root = typeof window !== 'undefined' ? window : require('global')
 export const logState = new Logger('react')
 export const log = new Logger('react')
 
-// returns array because we can "spread it to nothing"
-export const logRes = (res: any) => {
-  if (typeof res === 'undefined') {
-    return []
-  }
-  if (res instanceof Promise) {
-    return ['Promise']
-  }
-  if (Mobx.isArrayLike(res)) {
-    return [res.map(x => Mobx.toJS(x))]
-  }
-  return [Mobx.toJS(res)]
-}
-
 export const getReactionName = (obj: MagicalObject) => {
   return obj.constructor.name
 }
@@ -76,19 +62,6 @@ export const diffLog = (a, b): string => {
   return null
 }
 
-export const toJSDeep = obj => {
-  try {
-    const next = Mobx.toJS(obj)
-    if (Array.isArray(next)) {
-      return next.map(toJSDeep)
-    }
-    return next
-  } catch (err) {
-    console.warn(err)
-    return obj
-  }
-}
-
 const COLOR_WHEEL = [
   '#DB0A5B',
   '#3455DB',
@@ -111,9 +84,6 @@ const COLOR_WHEEL = [
 let seenNames = new Set()
 
 export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) => {
-  if (!window['enableLog']) {
-    return
-  }
   const hasChanges = !!changed
   if (hasChanges) {
     const shortName = name.slice(0, 8)
@@ -133,12 +103,13 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
       `color: ${color};`,
       ...(args ? [`color: ${color};`] : []),
       `font-weight: bold;`,
-      changed.length > 50 ? `${changed.slice(0, 50)}...` : changed,
+      ...changed,
       ...(timings ? [timings] : []),
     )
-    console.debug('  ⮑ %cargs', 'color: orange;', toJSDeep(reactionArgs))
-    console.debug('  ⮑ %cresp', 'color: orange;', ...logRes(result))
+    if (!window['enableLog']) return
+    console.debug('  ⮑ %cin  =>', 'color: orange;', reactionArgs)
+    console.debug('  ⮑ %cout =>', 'color: orange;', result)
   } else {
-    console.debug(`${name} no change, reaction args:`, toJSDeep(reactionArgs))
+    console.debug(`${name} no change, reaction args:`, reactionArgs)
   }
 }

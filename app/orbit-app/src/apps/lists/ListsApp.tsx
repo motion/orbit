@@ -1,10 +1,10 @@
 import { SaveOptions } from '@mcro/mediator'
-import { save } from '../../mediator'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
+import { save } from '../../mediator'
 import { AppContainer } from '../AppContainer'
-import { App, AppProps } from '../AppTypes'
+import { App } from '../AppTypes'
 import ListsAppIndex from './ListsAppIndex'
 import ListsAppMain from './ListsAppMain'
 import ListsAppStatusBar from './ListsAppStatusBar'
@@ -12,25 +12,23 @@ import { ListStore } from './ListStore'
 import { ListsAppBit, ListsAppData } from './types'
 
 export const listRootID = 0
-export type ListAppProps = AppProps & {
-  store: ListStore
-}
 
-export const ListsApp: App<ListsAppData> = (props) => {
-  const store = useStore(ListStore, props)
+export const ListsApp: App<ListsAppData> = props => {
+  const listStore = useStore(ListStore, props)
   return (
     <AppContainer
-      index={<ListsAppIndex {...props} store={store} />}
-      statusBar={<ListsAppStatusBar {...props} store={store} />}
+      provideStores={{ listStore }}
+      index={<ListsAppIndex {...props} />}
+      statusBar={<ListsAppStatusBar />}
     >
-      <ListsAppMain {...props} store={store} />
+      <ListsAppMain {...props} />
     </AppContainer>
   )
 }
 
 ListsApp.defaultValue = {
   rootItemID: 0,
-  items: {}
+  items: {},
 }
 
 ListsApp.api = {

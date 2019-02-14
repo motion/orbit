@@ -1,13 +1,15 @@
 import { Breadcrumbs, ButtonProps, Text, useBreadcrumb, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import React from 'react'
+import { useStores } from '../../hooks/useStores'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { Icon } from '../../views/Icon'
 import { StatusBarText } from '../../views/StatusBar'
-import { ListAppProps } from './ListsApp'
 
-export default function ListAppStatusBar({ store }: ListAppProps) {
-  const numItems = Object.keys(store.items).length
+export default function ListAppStatusBar() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  const numItems = Object.keys(listStore.items).length
 
   return (
     <>
@@ -17,11 +19,11 @@ export default function ListAppStatusBar({ store }: ListAppProps) {
             id: 0,
             name: <Icon name="home" size={12} opacity={0.5} />,
           },
-          ...store.history
+          ...listStore.history
             .slice(1)
             .filter(Boolean)
-            .map(id => store.items[id]),
-          store.selectedItem,
+            .map(id => listStore.items[id]),
+          listStore.selectedItem,
         ].filter(Boolean)}
       />
       <View flex={1} />

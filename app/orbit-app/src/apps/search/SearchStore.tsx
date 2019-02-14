@@ -132,6 +132,10 @@ export class SearchStore {
     ]
   }
 
+  get results() {
+    return this.searchState.results
+  }
+
   private getQuickResults(query: string) {
     // TODO recent history
     return [...this.getRecentItems(query)]

@@ -12,7 +12,7 @@ import SearchItemShare, { SearchItemShareProvide } from './SearchItemShare'
 
 export default function SearchAppIndex(props: AppProps) {
   const { searchStore } = useStores()
-  const items = searchStore.searchState.results
+  const items = searchStore.results
 
   const getItemProps = React.useCallback(
     memoize(({ item }) => {

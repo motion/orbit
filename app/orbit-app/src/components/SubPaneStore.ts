@@ -128,7 +128,6 @@ export class SubPaneStore {
   }
 
   handlePaneChange = debounce(() => {
-    this._updateMaxHeight = Date.now()
     this.updateHeight()
     this.onPaneNearEdges()
   })

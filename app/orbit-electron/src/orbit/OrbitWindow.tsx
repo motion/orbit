@@ -10,7 +10,6 @@ import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'ele
 import { pathExists } from 'fs-extra'
 import root from 'global'
 import { last } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import { join } from 'path'
 import * as React from 'react'
 import { ROOT } from '../constants'
@@ -54,12 +53,8 @@ class OrbitWindowStore {
   }
 
   updateSize = react(
-    () => {
-      console.log('check it out', Electron.state.screenSize)
-      return Electron.state.screenSize
-    },
+    () => Electron.state.screenSize,
     screenSize => {
-      console.log('got screen size', screenSize)
       ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
       let scl = 0.76
@@ -157,7 +152,7 @@ class OrbitWindowStore {
   }
 }
 
-export default observer(function OrbitWindow() {
+export default function OrbitWindow() {
   const store = useStore(OrbitWindowStore)
   root['OrbitWindowStore'] = store // helper for dev
 
@@ -263,4 +258,4 @@ export default observer(function OrbitWindow() {
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />
   )
-})
+}

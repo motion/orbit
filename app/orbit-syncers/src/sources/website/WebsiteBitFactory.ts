@@ -1,6 +1,4 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, WebsiteBitData } from '@mcro/models'
-import { WebsiteSource } from '@mcro/models'
+import { Bit, BitUtils, WebsiteBitData, WebsiteSource } from '@mcro/models'
 import { WebsiteCrawledData } from './WebsiteCrawledData'
 
 /**
@@ -30,6 +28,7 @@ export class WebsiteBitFactory {
         title: crawledData.title,
         body: crawledData.textContent,
         data: {
+          url: crawledData.url,
           title: crawledData.title,
           content: crawledData.content,
         } as WebsiteBitData,
@@ -43,6 +42,7 @@ export class WebsiteBitFactory {
         people: [],
         bitCreatedAt,
         bitUpdatedAt,
+        crawled: true,
       },
       this.source.id + '_' + crawledData.url,
     )

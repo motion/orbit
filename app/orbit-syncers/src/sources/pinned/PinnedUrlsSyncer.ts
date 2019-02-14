@@ -1,7 +1,5 @@
-import { SettingEntity } from '@mcro/models'
-import { BitEntity } from '@mcro/models'
+import { Bit, BitEntity, SettingEntity, WebsiteBitData } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { Bit } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
@@ -35,9 +33,15 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
     })
     this.log.info('general settings were loaded', setting)
 
-    // check if we have any pinned url
-    if (!setting.values.pinnedUrls || !setting.values.pinnedUrls.length) {
-      this.log.info('no pinned urls found, skipping')
+    // load not crawled website bits
+    const websiteBits = await getRepository(BitEntity).find({
+      type: 'website',
+      crawled: false
+    })
+
+    // check if we have any pinned url or not crawled website bits
+    if ((!setting.values.pinnedUrls || !setting.values.pinnedUrls.length) && !websiteBits.length) {
+      this.log.info('no pinned urls or not crawled bits found, skipping')
       return
     }
 
@@ -47,27 +51,48 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
     this.log.timer('launch browser')
 
     // crawl urls
-    const apiBits: Bit[] = []
-    this.log.timer('crawl pinned urls')
-    for (let url of setting.values.pinnedUrls) {
-      await this.crawler.run({
-        url: url,
-        deep: false,
-        handler: async data => {
-          apiBits.push(this.bitFactory.create(data))
-          return true
-        },
+    if (setting.values.pinnedUrls && setting.values.pinnedUrls.length) {
+      const apiBits: Bit[] = []
+      this.log.timer('crawl pinned urls')
+      for (let url of setting.values.pinnedUrls) {
+        this.log.info('crawling', url)
+        await this.crawler.run({
+          url: url,
+          deep: false,
+          handler: async data => {
+            apiBits.push(this.bitFactory.create(data))
+            return true
+          },
+        })
+      }
+      this.log.timer('crawl pinned urls', apiBits)
+
+      // sync bits
+      const dbBits = await getRepository(BitEntity).find({
+        integration: 'pinned',
       })
+      await this.bitSyncer.sync({ apiBits, dbBits })
     }
-    this.log.timer('crawl pinned urls', apiBits)
+
+    // update website bits
+    if (websiteBits.length) {
+      for (let bit of websiteBits) {
+        const bitData = bit.data as WebsiteBitData
+        this.log.info('crawling', bitData.url)
+        await this.crawler.run({
+          url: bitData.url,
+          deep: false,
+          handler: async data => {
+            bitData.content = data.content
+            bitData.title = data.title
+            await getRepository(BitEntity).save(bit)
+            return true
+          },
+        })
+      }
+    }
 
     // close browser
     await this.crawler.close()
-
-    // sync bits
-    const dbBits = await getRepository(BitEntity).find({
-      integration: 'pinned',
-    })
-    await this.bitSyncer.sync({ apiBits, dbBits })
   }
 }

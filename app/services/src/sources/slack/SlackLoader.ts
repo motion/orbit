@@ -115,7 +115,7 @@ export class SlackLoader {
         return [...nextPageMessages, ...response.messages]
       } else {
         const nextPageMessages = await this.loadMessages(channelId, undefined, oldest) // variable order isn't a typo!
-        return [...nextPageMessages, ...response.messages]
+        return [...response.messages, ...nextPageMessages]
       }
     }
 

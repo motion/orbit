@@ -12,6 +12,7 @@ import { Syncer } from './Syncer'
 const ONE_MINUTE = 1000 * 60
 const FIVE_MINUTES = ONE_MINUTE * 5
 const TEN_MINUTES = ONE_MINUTE * 10
+const THIRTY_MINUTES = ONE_MINUTE * 30
 
 export const Syncers = [
   new Syncer({
@@ -50,7 +51,7 @@ export const Syncers = [
   }),
   new Syncer({
     constructor: PinnedUrlsSyncer,
-    interval: TEN_MINUTES,
+    interval: THIRTY_MINUTES,
   }),
   new Syncer({
     type: 'website',

@@ -1,7 +1,5 @@
-import { Bit, BitUtils, CosalTopWordsModel, Person, SlackBitData, SlackSource } from '@mcro/models'
+import { Bit, BitUtils, Person, SlackBitData, SlackSource } from '@mcro/models'
 import { SlackAttachment, SlackChannel, SlackMessage } from '@mcro/services'
-import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
-import { Mediator } from '../../mediator'
 
 const Autolinker = require('autolinker')
 
@@ -18,11 +16,11 @@ export class SlackBitFactory {
   /**
    * Creates a new slack conversation bit.
    */
-  async createConversation(
+  createConversation(
     channel: SlackChannel,
     messages: SlackMessage[],
     allPeople: Person[],
-  ): Promise<Bit> {
+  ): Bit {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -56,20 +54,13 @@ export class SlackBitFactory {
       )
     })
 
-    const flatBody = data.messages.map(x => x.text).join(' ')
-    // gets the most interesting 10 for title
-
-    const title = (await Mediator.loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
-      ' ',
-    )
-
     return BitUtils.create(
       {
         sourceId: this.source.id,
         integration: 'slack',
         type: 'conversation',
-        title,
-        body: '',
+        title: '',
+        body: data.messages.map(message => message.text).join(' ... '),
         data,
         bitCreatedAt,
         bitUpdatedAt,
@@ -94,7 +85,6 @@ export class SlackBitFactory {
     channel: SlackChannel,
     message: SlackMessage,
     attachment: SlackAttachment,
-    websiteData: WebsiteCrawledData,
     allPeople: Person[],
   ): Bit {
     const messageTime = +message.ts.split('.')[0] * 1000
@@ -113,7 +103,11 @@ export class SlackBitFactory {
         type: 'website',
         title: attachment.title,
         body: attachment.text,
-        data: websiteData,
+        data: {
+          url: attachment.original_url,
+          title: attachment.title,
+          content: ''
+        },
         bitCreatedAt: messageTime,
         bitUpdatedAt: messageTime,
         people,

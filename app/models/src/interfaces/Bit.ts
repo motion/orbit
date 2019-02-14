@@ -112,4 +112,12 @@ export interface Bit {
    * Used for filtering: slack room, github repo, google doc folder, etc
    */
   location?: Location
+
+  /**
+   * Used for website bits.
+   * Indicates if website was already crawled.
+   * If it was already crawled, crawler skips crawling this bit.
+   * We store it on entity-level to improve selection performance for crawler.
+   */
+  crawled?: boolean
 }

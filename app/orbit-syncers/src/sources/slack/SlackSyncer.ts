@@ -1,17 +1,14 @@
-import { SourceEntity } from '@mcro/models'
+import { SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { Bit, SlackSource, SlackSourceValues } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { IntegrationSyncer } from '../../core/IntegrationSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
-import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
-import { runWithTimeout } from '@mcro/utils'
 
 /**
  * Syncs Slack messages.
@@ -25,7 +22,6 @@ export class SlackSyncer implements IntegrationSyncer {
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
-  private crawler: WebsiteCrawler
 
   constructor(source: SlackSource, log?: Logger) {
     this.source = source
@@ -36,7 +32,6 @@ export class SlackSyncer implements IntegrationSyncer {
     this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(source, this.log)
     this.syncerRepository = new SyncerRepository(source)
-    this.crawler = new WebsiteCrawler(this.log)
   }
 
   /**
@@ -58,6 +53,7 @@ export class SlackSyncer implements IntegrationSyncer {
     }
     await getRepository(SourceEntity).save(this.source)
 
+    // load api users
     this.log.timer('load API users')
     const apiUsers = await this.loader.loadUsers()
     this.log.timer('load API users', apiUsers.length)
@@ -102,8 +98,6 @@ export class SlackSyncer implements IntegrationSyncer {
 
     // go through all channels
     const lastMessageSync = values.lastMessageSync || {}
-    const apiBits: Bit[] = [],
-      dbBits: Bit[] = []
 
     for (let channel of activeChannels) {
       await checkCancelled(this.source.id)
@@ -112,18 +106,17 @@ export class SlackSyncer implements IntegrationSyncer {
       // BUT we also need to support edit and remove last x messages
       // (since we can't have up-to-date edit and remove of all messages)
       const oldestMessageId = lastMessageSync[channel.id]
-        ? String(parseInt(lastMessageSync[channel.id]) - 60 * 60 * 24)
+        ? String(parseInt(lastMessageSync[channel.id]) + 1/* - 60 * 60 * 24*/)
         : undefined
 
       // we need to load all bits in the data range period we are working with (oldestMessageId)
       // because we do comparision and update bits, also we remove removed messages
       this.log.timer(`loading ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
-      const existBits = await this.syncerRepository.loadDatabaseBits({
+      const dbBits = await this.syncerRepository.loadDatabaseBits({
         locationId: channel.id,
         oldestMessageId,
       })
-      dbBits.push(...existBits)
-      this.log.timer(`loading ${channel.name}(#${channel.id}) database bits`, existBits)
+      this.log.timer(`loading ${channel.name}(#${channel.id}) database bits`, dbBits)
 
       // load messages
       this.log.timer(`loading ${channel.name}(#${channel.id}) API messages`, { oldestMessageId })
@@ -143,73 +136,42 @@ export class SlackSyncer implements IntegrationSyncer {
         this.log.info(`created conversations: ${conversations.length}`, conversations)
 
         // create bits from conversations
-        const conversationBits = await Promise.all(
-          conversations.map(messages =>
-            this.bitFactory.createConversation(channel, messages, allDbPeople),
-          ),
+        const apiBits = conversations.map(messages =>
+          this.bitFactory.createConversation(channel, messages, allDbPeople),
         )
 
-        apiBits.push(...conversationBits)
-
         // create bits from links inside messages
-        const linkBits: Bit[] = []
         for (let message of filteredMessages) {
           if (!message.attachments || !message.attachments.length) continue
 
           for (let attachment of message.attachments) {
             if (attachment.title && attachment.text && attachment.original_url) {
-              this.log.info(`crawling attachment url: ${attachment.original_url}`)
-              // we use try-catch block to prevent fails on link craw since if it fail for some reason
-              // we can afford to stop slack syncing process
-              try {
-                if (this.crawler.isOpened() === false) {
-                  await runWithTimeout(() => this.crawler.start())
-                }
-
-                await runWithTimeout(() => {
-                  return this.crawler.run({
-                    url: attachment.original_url,
-                    deep: false,
-                    handler: async data => {
-                      linkBits.push(
-                        this.bitFactory.createWebsite(
-                          channel,
-                          message,
-                          attachment,
-                          data,
-                          allDbPeople,
-                        ),
-                      )
-                      return true
-                    },
-                  })
-                }, 10000)
-              } catch (error) {
-                this.log.warning(`failed to craw a slack link's website`, attachment, error)
-              }
+              apiBits.push(
+                this.bitFactory.createWebsite(
+                  channel,
+                  message,
+                  attachment,
+                  allDbPeople,
+                ),
+              )
             }
           }
         }
-        apiBits.push(...linkBits)
+        this.log.info(`bits were created: ${apiBits.length}`, apiBits)
+
+        // sync all the bits we have
+        await this.bitSyncer.sync({ apiBits, dbBits })
 
         // update last message sync source
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
+
+        // update sources
+        this.log.info('update sources', { lastMessageSync })
+        values.lastMessageSync = lastMessageSync
+        await getRepository(SourceEntity).save(this.source)
       }
     }
-
-    // close browser if it was opened
-    if (this.crawler.isOpened()) {
-      await this.crawler.close()
-    }
-
-    // sync all the bits we have
-    await this.bitSyncer.sync({ apiBits, dbBits })
-
-    // update sources
-    this.log.info('update sources', { lastMessageSync })
-    values.lastMessageSync = lastMessageSync
-    await getRepository(SourceEntity).save(this.source)
   }
 
   /**

@@ -1,11 +1,12 @@
-import { BitEntity, PersonEntity } from '@mcro/models'
+import { Bit, BitEntity, GithubSource, PersonEntity, Source } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { Bit, GithubSource, Source } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getManager, getRepository } from 'typeorm'
 import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
+import { Mediator } from '../mediator'
+import { CosalTopWordsModel, SlackBitData } from '@mcro/models/_'
 
 /**
  * Sync Bits options.
@@ -13,8 +14,6 @@ import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 export interface BitSyncerOptions {
   apiBits: Bit[]
   dbBits: Bit[]
-  removedBits?: Bit[]
-  dropAllBits?: boolean
 }
 
 /**
@@ -75,9 +74,6 @@ export class BitSyncer {
       return insertedBits.filter(b => b.contentHash === bit.contentHash).length === 1
     })
 
-    // if we have explicitly removed bits set, add them to removing bits
-    if (options.removedBits) removedBits.push(...options.removedBits)
-
     // perform database operations on synced bits
     if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
       this.log.info('no changes were detected, no bits were synced')
@@ -98,9 +94,6 @@ export class BitSyncer {
     this.log.timer('save bits in the database', { insertedBits, updatedBits, removedBits, duplicateInsertBits })
     try {
       await getManager().transaction(async manager => {
-        // drop all exist bits if such option was specified
-        if (options.dropAllBits && this.source)
-          await manager.delete(BitEntity, { sourceId: this.source.id })
 
         // insert new bits
         if (insertedBits.length > 0) {
@@ -109,6 +102,7 @@ export class BitSyncer {
             if (this.source) {
               await checkCancelled(this.source.id)
             }
+            await this.completeBitsData(bits)
             await manager.insert(BitEntity, bits)
             // Add some small throttle
             await sleep(20)
@@ -123,6 +117,7 @@ export class BitSyncer {
         }
 
         // update changed bits
+        await this.completeBitsData(updatedBits)
         for (let bit of updatedBits) {
           if (this.source) {
             await checkCancelled(this.source.id)
@@ -176,4 +171,16 @@ export class BitSyncer {
       throw error
     }
   }
+
+  private async completeBitsData(bits: Bit[]) {
+    for (let bit of bits) {
+      if (bit.integration === 'slack' && bit.type === 'conversation') {
+        const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
+        bit.title = (await Mediator.loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
+          ' ',
+        )
+      }
+    }
+  }
+
 }

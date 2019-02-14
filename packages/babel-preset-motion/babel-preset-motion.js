@@ -19,7 +19,7 @@ module.exports = function(_, givenOpts) {
       plug('@babel/plugin-transform-runtime', {
         regenerator: false,
       }),
-      plug('@mcro/gloss-displaynames'),
+      plug('@mcro/gloss-displaynames', opts.glossDisplayNameConfig || {}),
       plug('@babel/plugin-proposal-decorators', {
         legacy: true,
       }),

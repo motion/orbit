@@ -4,6 +4,7 @@ import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
+import ContextMenu from './helpers/electron/ContextMenu.electron'
 import './helpers/installDevelopmentHelpers'
 import { command } from './mediator'
 import ChromePage from './pages/ChromePage/ChromePage'
@@ -75,22 +76,12 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
     }
   })
 
-  // context menu
-  const contextMenuItems = React.useRef([])
-  React.useEffect(() => {
-    if (process.env.TARGET !== 'web') {
-      require('electron-context-menu')({
-        prepend: (/* params, browserWindow */) => {
-          return contextMenuItems.current
-        },
-      })
-    }
-  }, [])
-
   return (
     <ContextMenuProvider
       onContextMenu={items => {
-        contextMenuItems.current = items
+        if (ContextMenu) {
+          ContextMenu.update({ prepend: items })
+        }
       }}
     >
       <ThemeProvide themes={themes}>

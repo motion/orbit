@@ -188,8 +188,7 @@ const OrbitPageInner = memo(() => {
 })
 
 function ProvideOrbitStore(props: { children: any }) {
-  const { paneManagerStore } = useStores()
-  const orbitStore = useStore(OrbitStore, { activePane: paneManagerStore.activePane })
+  const orbitStore = useStore(OrbitStore)
   return <ProvideStores stores={{ orbitStore }}>{props.children}</ProvideStores>
 }
 

@@ -91,7 +91,6 @@ export class ListItemStore {
       // delay to allow fast keyboard movement down lists
       await sleep(35)
       if (onSelect) {
-        console.log('calling on select')
         onSelect(this.index, 'key')
       } else {
         log.info('no preview event for', this.index)

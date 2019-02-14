@@ -78,22 +78,6 @@ export class SelectionStore {
     this.setActiveIndex(-1)
   }
 
-  // getHoverSettler = hoverSettler({
-  //   enterDelay: 40,
-  //   betweenDelay: 40,
-  //   onHovered(res) {
-  //     // leave
-  //     if (!res) {
-  //       if (this.activeIndex !== -1) {
-  //         this.leaveIndex = this.activeIndex
-  //       }
-  //       return
-  //     }
-  //     this.leaveIndex = -1
-  //     this.toggleSelected(res.index)
-  //   },
-  // })
-
   toggleSelected = (index: number, eventType?: 'key' | 'click') => {
     if (eventType) {
       this.setSelectEvent(SelectEvent[eventType])

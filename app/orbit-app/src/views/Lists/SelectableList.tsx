@@ -90,13 +90,16 @@ class SelectableStore {
   )
 }
 
-export default React.memo(function SelectableList({ items, ...props }: SelectableListProps) {
-  const newNamespace = !!props.createNewSelectionStore
+export default React.memo(function SelectableList({
+  items,
+  createNewSelectionStore,
+  ...props
+}: SelectableListProps) {
   const stores = useStores({ optional: ['selectionStore', 'appStore'] })
-  const selectionStore =
-    props.selectionStore ||
-    (newNamespace == false && stores.selectionStore) ||
-    useStore(SelectionStore, props)
+  const selectionStore = createNewSelectionStore
+    ? useStore(SelectionStore, props)
+    : props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = orbitItemsKey(items)
   const getItems = React.useCallback(() => items, [itemsKey])
@@ -115,7 +118,6 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
         selectionStore.setActiveIndex(props.defaultSelected)
       }
     }
-
     return stores.shortcutStore.onShortcut(shortcut => {
       if (!selectableStore.isActive()) {
         return false
@@ -149,13 +151,12 @@ export default React.memo(function SelectableList({ items, ...props }: Selectabl
         {...props}
         // overwrite props explicitly
         onSelect={(index, appConfig, eventType) => {
-          if (selectionStore && selectionStore.activeIndex !== index) {
+          // if (selectionStore && selectionStore.activeIndex === index) return
+          if (selectionStore) {
             selectionStore.toggleSelected(index, eventType)
           }
-          if (!newNamespace) {
-            if (selectableProps && selectableProps.onSelectItem) {
-              selectableProps.onSelectItem(index, appConfig, eventType)
-            }
+          if (selectableProps && selectableProps.onSelectItem) {
+            selectableProps.onSelectItem(index, appConfig, eventType)
           }
           if (props.onSelect) {
             props.onSelect(index, appConfig, eventType)

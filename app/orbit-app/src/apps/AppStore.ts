@@ -47,25 +47,8 @@ export class AppStore {
     return this.stores.queryStore.queryFilters
   }
 
-  get activeIndex() {
-    if (!this.stores.selectionStore) {
-      return -1
-    }
-    return this.stores.selectionStore.activeIndex
-  }
-
-  get spaceStore() {
-    return this.stores.spaceStore
-  }
-
   get queryStore() {
     return this.stores.queryStore
-  }
-
-  get toggleSelected() {
-    if (this.stores.selectionStore) {
-      return this.stores.selectionStore.toggleSelected
-    }
   }
 
   get maxHeight() {

@@ -1,4 +1,4 @@
-import { ensure, react, shallow } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { UserModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
@@ -6,12 +6,9 @@ import { isEqual } from 'lodash'
 import { AppConfig, AppType } from '../../apps/AppTypes'
 import { useStoresSimple } from '../../hooks/useStores'
 import { observeOne } from '../../mediator'
-import { Pane } from '../../stores/PaneManagerStore'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
 export class OrbitStore {
-  props: { activePane: Pane }
-
   stores = useHook(useStoresSimple)
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
@@ -37,9 +34,9 @@ export class OrbitStore {
     },
   )
 
-  activeConfig: { [key: string]: AppConfig } = shallow({
+  activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
-  })
+  }
 
   setEditing = () => {
     this.isEditing = true
@@ -59,9 +56,13 @@ export class OrbitStore {
         await sleep(50)
       }
       ensure('app config', !!appConfig)
-      const { id } = this.props.activePane
+      const { id } = this.stores.paneManagerStore.activePane
+      console.debug('selecting', id, appConfig)
       if (!isEqual(this.activeConfig[id], appConfig)) {
-        this.activeConfig[id] = appConfig
+        this.activeConfig = {
+          ...this.activeConfig,
+          [id]: appConfig,
+        }
       }
     },
   )

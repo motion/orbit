@@ -278,7 +278,7 @@ export class MediatorClient {
         'observeOne',
         {
           model: model.name,
-          args: args,
+          args,
           resolvers: qm instanceof Query ? qm.args : options.resolvers,
         },
         this.options,

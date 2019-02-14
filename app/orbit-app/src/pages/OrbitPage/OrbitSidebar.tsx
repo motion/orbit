@@ -45,6 +45,8 @@ export default memo(function OrbitSidebar() {
     return null
   }
 
+  console.log('rendering sidebar........')
+
   return (
     <SidebarContainer hideSidebar={hideSidebar} width={sidebarStore.width}>
       <Sidebar

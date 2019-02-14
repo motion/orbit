@@ -2,8 +2,8 @@ import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { once, uniqBy } from 'lodash'
-import React, { memo, useCallback, useEffect, useRef } from 'react'
+import { uniqBy } from 'lodash'
+import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
 import { apps } from '../../apps/apps'
@@ -13,7 +13,6 @@ import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutH
 import { APP_ID } from '../../constants'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { getIsTorn } from '../../helpers/getAppHelpers'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStores } from '../../hooks/useStores'
 import { defaultPanes } from '../../stores/getPanes'
@@ -171,16 +170,11 @@ const OrbitContentArea = gloss({
   background: theme.sidebarBackground,
 }))
 
-function useOnce(fn: Function, reset = []) {
-  return useCallback(once(fn as any), reset)
-}
-
 function OrbitPageProvideStores(props: any) {
   const settingStore = useStore(SettingStore)
   const sourcesStore = useStore(SourcesStore)
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const activeApps = useActiveAppsSorted()
   const newAppStore = useStore(NewAppStore)
 
   const paneManagerStore = useStore(PaneManagerStore, {
@@ -192,18 +186,6 @@ function OrbitPageProvideStores(props: any) {
   })
 
   const spaceStore = useStore(SpaceStore, { paneManagerStore })
-
-  // move to first app pane on first run
-  const hasLoadedApps = !!activeApps.length
-  const setToFirstAppPane = useOnce(() => {
-    paneManagerStore.setPaneIndex(defaultPanes.length)
-  })
-  useEffect(
-    () => {
-      hasLoadedApps && setToFirstAppPane()
-    },
-    [hasLoadedApps],
-  )
 
   const stores = {
     settingStore,

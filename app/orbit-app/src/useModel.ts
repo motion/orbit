@@ -35,7 +35,6 @@ function use<ModelType, Args>(
   const value = valueRef.current
   const subscription = useRef(null)
   const curQuery = useRef(null)
-  const disposed = useRef(false)
   // const id = useRef(Math.random())
 
   const dispose = () => {
@@ -43,14 +42,7 @@ function use<ModelType, Args>(
   }
 
   // unmount
-  useEffect(
-    () => () => {
-      disposed.current = true
-      // console.log('dispsing', id.current)
-      dispose()
-    },
-    [],
-  )
+  useEffect(() => dispose, [])
 
   // on new query: subscribe, update
   useEffect(
@@ -67,10 +59,8 @@ function use<ModelType, Args>(
       let cancelled = false
       const update = next => {
         if (cancelled) return
-        if (disposed.current) return
         if (next === valueRef.current) return
         valueRef.current = next
-        // console.log('update', id.current, JSON.stringify({ disposed: disposed.current }))
         forceUpdate(Math.random())
       }
 

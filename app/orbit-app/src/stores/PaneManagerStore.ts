@@ -43,6 +43,10 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
+  get activePaneId() {
+    return (this.activePane && this.activePane.id) || ''
+  }
+
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
   })
@@ -112,6 +116,7 @@ export class PaneManagerStore {
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
       console.trace(`no 09 pane found at index ${index}! this.props.panes`, this.panes)
+      debugger
       return
     }
     if (index !== this.paneIndex) {

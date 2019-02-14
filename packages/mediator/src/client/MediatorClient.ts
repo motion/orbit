@@ -27,6 +27,10 @@ function cachedObservable(
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
+              if (cached.args.type === 'many' && !Array.isArray(cached.rawValue)) {
+                console.warn('mixed up cache')
+                debugger
+              }
               cached.update(response.result)
             }
           },

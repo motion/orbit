@@ -79,7 +79,6 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   const contextMenuItems = React.useRef([])
   React.useEffect(() => {
     if (process.env.TARGET !== 'web') {
-      console.log(require('electron-context-menu'))
       require('electron-context-menu')({
         prepend: (/* params, browserWindow */) => {
           return contextMenuItems.current

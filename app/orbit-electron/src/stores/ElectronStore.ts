@@ -5,6 +5,12 @@ configureUseStore({
   debugStoreState: true,
 })
 
+debugUseStore(event => {
+  if (event.type === 'state') {
+    root.stores = event.value
+  }
+})
+
 export class ElectronStore {
   error = null
   appRef = null
@@ -17,11 +23,6 @@ export class ElectronStore {
     console.log('Electron Store did mount')
     root.Root = this
     root.restart = this.restart
-    debugUseStore(event => {
-      if (event.type === 'state') {
-        this.stores = event.value
-      }
-    })
   }
 
   restart() {

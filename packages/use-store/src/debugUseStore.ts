@@ -52,16 +52,14 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
 
 const allStores = new Set()
 const sendStateUpdate = throttle(() => {
-  ;[...debugFns].forEach(fn => fn({ type: 'state', value: simpleObject(allStores) }))
+  const value = simpleObject(allStores)
+  ;[...debugFns].forEach(fn => fn({ type: 'state', value }))
 })
 
-export function debugEmit(
-  {
-    component,
-    ...event
-  }: Partial<UseStoreDebugEvent> & { component?: any; componentName?: string },
-  options?: { debug?: boolean },
-) {
+type DebugEmitProps = Partial<UseStoreDebugEvent> & { component?: any; componentName?: string }
+
+export function debugEmit(props: DebugEmitProps, options?: { debug?: boolean }) {
+  const { component, ...event } = props
   if (component) {
     event['componentName'] = component.displayName
   }
@@ -71,6 +69,7 @@ export function debugEmit(
   if (debugFns.size) {
     ;[...debugFns].forEach(fn => fn(event))
   }
+  console.log('emit', props, config, debugFns)
   if (config.debugStoreState) {
     if (event.type === 'mount') {
       allStores.add(event.store)

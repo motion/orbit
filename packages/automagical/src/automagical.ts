@@ -26,7 +26,7 @@ export function configureAutomagical(opts: { isSubscribable?: (val: any) => bool
 const Getters = new WeakMap()
 
 // decorates the prototype
-function decorateStore(obj) {
+function decoratePrototype(obj) {
   const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
@@ -67,7 +67,7 @@ export function decorate<T>(
   props?: Object,
 ): { new (...args: any[]): T & { dispose: Function } } {
   if (!Getters.get(obj)) {
-    Getters.set(obj, decorateStore(obj))
+    Getters.set(obj, decoratePrototype(obj))
   }
 
   const getterDesc = Getters.get(obj)
@@ -110,11 +110,7 @@ export function decorate<T>(
             Object.defineProperty(instance, key, {
               enumerable: true,
               get() {
-                const r = reactions[key]
-                if (!r.value) {
-                  r.value = r.initializer(decoratedInstance, key)
-                }
-                return r.value.get()
+                return reactions[key].value.get()
               },
             })
           } else {
@@ -126,6 +122,10 @@ export function decorate<T>(
       }
 
       const decoratedInstance = Mobx.decorate(instance, instDecor)
+
+      for (const key in reactions) {
+        reactions[key].value = reactions[key].initializer(decoratedInstance, key)
+      }
 
       return decoratedInstance
     },

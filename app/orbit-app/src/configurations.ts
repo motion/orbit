@@ -32,7 +32,7 @@ if (!window['hasConfigured']) {
 if (process.env.NODE_ENV === 'development') {
   if (typeof module['hot'] !== 'undefined') {
     module['hot'].accept(() => {
-      console.log('Accepted configurations, ignoring')
+      console.log('Accepted configurations, ignoring on purpose')
     })
   }
 }

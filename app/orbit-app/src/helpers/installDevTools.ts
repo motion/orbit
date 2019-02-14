@@ -49,6 +49,7 @@ function addEvent(name: string, key: string, event: any) {
 debugUseStore(event => {
   if (event.type === 'state') {
     setStoreStateOntoWindow(event.value)
+    return
   }
 
   if (!window['enableLog']) return
@@ -60,17 +61,6 @@ debugUseStore(event => {
     case 'reactiveKeys':
       addEvent(event.componentName, 'reactiveKeys', event)
       return
-    case 'unmount':
-      for (const key in StoreState) {
-        for (const id in StoreState[key]) {
-          if (+id === event.componentId) {
-            delete StoreState[key][id]
-          }
-        }
-      }
-      return
-    // case 'prop':
-    // case 'render':
   }
 })
 

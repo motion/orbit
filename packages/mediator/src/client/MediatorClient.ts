@@ -23,14 +23,13 @@ function cachedObservable(
     if (cached.isActive) {
       sub.next(cached.value)
     } else {
+      cached.isActive = true
+      console.log('not active, start new transport', name, args, cached)
       const subs = options.transports.map(transport => {
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
-              if (cached.args.type === 'many' && !Array.isArray(cached.rawValue)) {
-                console.warn('mixed up cache')
-                debugger
-              }
+              console.log('UPDATE', name, args, cached, response.result, transport)
               cached.update(response.result)
             }
           },
@@ -38,7 +37,6 @@ function cachedObservable(
           () => sub.complete(),
         )
       })
-      cached.isActive = true
       cached.onDispose = () => {
         subs.forEach(subscription => subscription.unsubscribe())
       }

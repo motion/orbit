@@ -48,8 +48,6 @@ export const SubPane = memo((props: Props) => {
     }
   })
 
-  console.log('pane', isActive, props)
-
   return (
     <SubPaneFrame isActive={isActive}>
       {typeof before === 'function' ? before(isActive) : before}

@@ -69,7 +69,6 @@ export function debugEmit(props: DebugEmitProps, options?: { debug?: boolean }) 
   if (debugFns.size) {
     ;[...debugFns].forEach(fn => fn(event))
   }
-  console.log('emit', props, config, debugFns)
   if (config.debugStoreState) {
     if (event.type === 'mount') {
       allStores.add(event.store)

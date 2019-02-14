@@ -62,6 +62,9 @@ export class ListStore {
   }
 
   get items() {
+    if (this.app && !this.app.data) {
+      debugger
+    }
     return (this.app && this.app.data.items) || {}
   }
 

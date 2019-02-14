@@ -1,9 +1,9 @@
 import { deep } from '@mcro/black'
-import { gloss } from '@mcro/gloss'
+import { Absolute, gloss } from '@mcro/gloss'
 import { Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { AppType } from '../../apps/AppTypes'
 import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -35,16 +35,39 @@ export class SidebarStore {
 export default memo(function OrbitSidebar() {
   const { paneManagerStore, appsStore, sidebarStore } = useStores()
   const { activePane } = paneManagerStore
+  const { hasMain, hasIndex } = appsStore.currentView || {
+    hasMain: false,
+    hasIndex: false,
+  }
+  const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
+
+  const elements = useMemo(
+    () => {
+      return (
+        <>
+          {paneManagerStore.panes.map(pane => {
+            return (
+              <SidebarSubPane
+                key={pane.id}
+                hasMain={hasMain}
+                sidebarStore={sidebarStore}
+                id={pane.id}
+                type={pane.type}
+              />
+            )
+          })}
+        </>
+      )
+    },
+    [paneManagerStore.panes.map(x => x.id).join('')],
+  )
 
   if (!appsStore.currentView || !activePane) {
     return null
   }
 
-  const { hasMain, hasIndex } = appsStore.currentView
-  const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
-
   return (
-    <SidebarContainer hideSidebar={hideSidebar}>
+    <SidebarContainer hideSidebar={hideSidebar} width={sidebarStore.width}>
       <Sidebar
         background="transparent"
         width={sidebarStore.width}
@@ -53,23 +76,17 @@ export default memo(function OrbitSidebar() {
         maxWidth={500}
         noBorder
       >
-        {paneManagerStore.panes.map(pane => {
-          return (
-            <SidebarSubPane
-              key={pane.id}
-              hasMain={hasMain}
-              sidebarStore={sidebarStore}
-              id={pane.id}
-              type={pane.type}
-            />
-          )
-        })}
+        {elements}
       </Sidebar>
     </SidebarContainer>
   )
 })
 
-const SidebarContainer = gloss({
+const SidebarContainer = gloss(Absolute, {
+  top: 0,
+  left: 0,
+  bottom: 0,
+  zIndex: 10000000,
   hideSidebar: {
     zIndex: -1,
     pointerEvents: 'none',

@@ -144,10 +144,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         className={this.props.className}
         minWidth={minWidth}
         maxWidth={maxWidth}
-        width={horizontal ? (onResize ? width : this.state.width) : undefined}
+        width={horizontal ? (onResize ? width : this.state.width) : '100%'}
         minHeight={minHeight}
         maxHeight={maxHeight}
-        height={!horizontal ? (onResize ? height : this.state.height) : undefined}
+        height={!horizontal ? (onResize ? height : this.state.height) : '100%'}
         resizable={resizable}
         onResize={this.onResize}
       >

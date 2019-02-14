@@ -1,9 +1,10 @@
-import { loadMany } from '../../../../mediator'
 import { SlackChannelModel, SlackSource } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+import { loadMany } from '../../../../mediator'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
@@ -11,6 +12,10 @@ import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackSource>) {
+  const whitelist = useStore(WhitelistManager, {
+    source,
+    getAll: () => (channels || []).map(channel => channel.id),
+  })
   // setup state
   const [channels, setChannels] = useState(null)
   const [highlightedRows, setHighlightedRows] = useState([])
@@ -21,28 +26,6 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
     createdAt: '15%',
     active: '15%',
   }
-  // console.log('channels', channels)
-  const [whitelist, setWhitelist] = useState(
-    new WhitelistManager({
-      source,
-      getAll: () => (channels || []).map(channel => channel.id),
-    }),
-  )
-
-  // refresh whitelist when source or channels change
-  useEffect(
-    () => {
-      setWhitelist(
-        new WhitelistManager({
-          source,
-          getAll: () => (channels || []).map(channel => channel.id),
-        }),
-      )
-
-      return () => whitelist.dispose()
-    },
-    [source.id, JSON.stringify(channels)],
-  )
 
   // load and set channels when source changes
   useEffect(

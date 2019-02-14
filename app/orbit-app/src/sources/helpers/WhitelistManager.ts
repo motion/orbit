@@ -1,29 +1,14 @@
-import { react, store } from '@mcro/black'
-import { save } from '../../mediator'
+import { react } from '@mcro/black'
 import { GithubSource, GmailSource, SlackSource, SourceModel } from '@mcro/models'
 import produce from 'immer'
 import { memoize } from 'lodash'
+import { save } from '../../mediator'
 
 type SourceWithWhiteList = GithubSource | SlackSource | GmailSource
 
-type Options<T> = {
-  source: T
-  getAll: () => string[]
-}
-
-@store
 export class WhitelistManager<T extends SourceWithWhiteList> {
-  source: T = null
-  values: T['values'] = null
-  getAll: Options<T>['getAll']
-
-  constructor({ source, getAll }: Options<T>) {
-    this.source = source
-    this.getAll = getAll
-    // copy it onto the store so we get instant mutations in views
-    // then we react later and save it to the async model
-    this.values = { ...source.values }
-  }
+  props: { source: T; getAll: () => string[] }
+  values: T['values'] = { ...this.props.source.values }
 
   get isWhitelisting() {
     return !this.values.whitelist
@@ -32,8 +17,10 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
   saveSettingOnValuesUpdate = react(
     () => this.values,
     values => {
-      this.source.values = values
-      save(SourceModel, this.source)
+      save(SourceModel, {
+        ...this.props.source,
+        values,
+      })
     },
   )
 
@@ -52,7 +39,7 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
         values.whitelist = undefined
       } else {
         // toggle away from sync all, set each repository
-        values.whitelist = this.getAll()
+        values.whitelist = this.props.getAll()
       }
     })
   }
@@ -61,13 +48,16 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
     if (!this.values.whitelist) {
       return true
     }
-    return this.values.whitelist.indexOf(id) !== -1
+    if (Array.isArray(this.values.whitelist)) {
+      return this.values.whitelist.indexOf(id) !== -1
+    }
+    return this.values.whitelist[id]
   })
 
   updateWhitelistValueSetter = memoize((id: string) => () => {
     this.updateValues(values => {
       if (!values.whitelist) {
-        values.whitelist = this.getAll()
+        values.whitelist = this.props.getAll()
       }
       const index = values.whitelist.indexOf(id)
       if (index === -1) {
@@ -77,9 +67,4 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
       }
     })
   })
-
-  dispose() {
-    // @ts-ignore
-    this.subscriptions.dispose()
-  }
 }

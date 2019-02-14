@@ -1,5 +1,4 @@
 import { react } from '@mcro/black'
-import { FullScreen } from '@mcro/gloss'
 import { useHook, useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
 import React, { memo, useMemo, useState } from 'react'
@@ -46,11 +45,9 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
         return null
       }
       return (
-        <FullScreen left={left}>
-          <SubPane id={id} type={AppType[type]} fullHeight>
-            <OrbitPageMainView id={id} type={type} />
-          </SubPane>
-        </FullScreen>
+        <SubPane left={left} id={id} type={AppType[type]} fullHeight>
+          <OrbitPageMainView id={id} type={type} />
+        </SubPane>
       )
     },
     [left, hasMain],

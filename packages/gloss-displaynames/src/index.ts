@@ -9,23 +9,25 @@ export default function glossViewDisplayNames(babel) {
     visitor: {
       ImportDeclaration(path, state) {
         const fileName = path.hub.file.opts.filename
+
         // why does babel try and process every file so many times?
         if (references.has(fileName)) {
           return
         }
 
         // options
-        const matchNames = state.opts.matchNames || ['gloss']
-        const matchImports = state.opts.matchImports || ['@mcro/gloss']
+        const matchNames: string[] = state.opts.matchNames || ['gloss']
+        const matchImports: string[] = state.opts.matchImports || ['@mcro/gloss']
 
-        // check valid
         if (matchImports.indexOf(path.node.source.value) === -1) {
           return
         }
 
-        const importSpecifier = path.get('specifiers')[0]
-        const name = importSpecifier.node.local.name
-        if (matchNames.indexOf(name) === -1) {
+        const importSpecifiers = path.get('specifiers')
+        const names: string[] = importSpecifiers.map(x => x.node.local.name)
+        const name = matchNames.find(needle => names.indexOf(needle) !== -1)
+
+        if (!name) {
           return
         }
 

@@ -89,7 +89,7 @@ const whiteSpaceRegex = /[\s]+/g
 
 function glossify(
   id: string,
-  displayName: string,
+  displayName: string = 'g',
   themeFn: (a: Object, b: ThemeObject) => any,
   allStyles: { styles: any; propStyles: any },
   previousClassNames: string[] | null,
@@ -213,7 +213,6 @@ export function gloss<Props = GlossProps<any>>(
   const targetElement = isSimpleView ? targetConfig.targetElement : target
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles)
-  let displayName = 'GlossView'
   let themeFn = null
   let ThemedView = null
 
@@ -221,78 +220,76 @@ export function gloss<Props = GlossProps<any>>(
   // the actual view!
   //
 
-  ThemedView = forwardRef<HTMLDivElement, GlossProps<Props>>((props, ref) => {
-    // compile theme on first run to avoid extra work
-    themeFn = themeFn || compileTheme(ThemedView)
-    const { activeTheme } = useContext(ThemeContext)
-    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    const lastClassNames = useRef(null)
-    const classNames = glossify(
-      id,
-      displayName,
-      themeFn,
-      Styles,
-      lastClassNames.current,
-      props,
-      tag,
-      activeTheme,
-    )
-    lastClassNames.current = classNames
+  ThemedView = memo(
+    forwardRef<HTMLDivElement, GlossProps<Props>>((props, ref) => {
+      // compile theme on first run to avoid extra work
+      themeFn = themeFn || compileTheme(ThemedView)
+      const { activeTheme } = useContext(ThemeContext)
+      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+      const lastClassNames = useRef(null)
+      const classNames = glossify(
+        id,
+        ThemedView.displayName,
+        themeFn,
+        Styles,
+        lastClassNames.current,
+        props,
+        tag,
+        activeTheme,
+      )
+      lastClassNames.current = classNames
 
-    // unmount
-    useEffect(() => {
-      return () => {
-        const current = lastClassNames.current
-        if (current) {
-          current.forEach(gc.deregisterClassUse)
+      // unmount
+      useEffect(() => {
+        return () => {
+          const current = lastClassNames.current
+          if (current) {
+            current.forEach(gc.deregisterClassUse)
+          }
         }
+      }, [])
+
+      // if this is a plain view we can use tagName, otherwise just pass it down
+      const element =
+        typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+      const isDOMElement = typeof element === 'string'
+
+      // set up final props with filtering for various attributes
+      const finalProps = {
+        className: props.className || '',
+      } as any
+
+      if (ref) {
+        finalProps.ref = ref
       }
-    }, [])
 
-    // if this is a plain view we can use tagName, otherwise just pass it down
-    const element =
-      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
-    const isDOMElement = typeof element === 'string'
-
-    // set up final props with filtering for various attributes
-    const finalProps = {
-      className: props.className || '',
-    } as any
-
-    if (ref) {
-      finalProps.ref = ref
-    }
-
-    for (const key in props) {
-      if (ignoreAttrs && ignoreAttrs[key]) {
-        continue
-      }
-      if (isDOMElement) {
-        if (validProp(key)) {
+      for (const key in props) {
+        if (ignoreAttrs && ignoreAttrs[key]) {
+          continue
+        }
+        if (isDOMElement) {
+          if (validProp(key)) {
+            finalProps[key] = props[key]
+          }
+        } else {
           finalProps[key] = props[key]
         }
-      } else {
-        finalProps[key] = props[key]
       }
-    }
 
-    if (classNames) {
-      finalProps.className += ` ${classNames.join(' ')}`
-    }
+      if (classNames) {
+        finalProps.className += ` ${classNames.join(' ')}`
+      }
 
-    return createElement(element, finalProps, props.children)
-  })
-
-  ThemedView = memo(ThemedView)
+      return createElement(element, finalProps, props.children)
+    }),
+  )
 
   ThemedView.themeFn = null
-  ThemedView.displayName = 'SimpleView'
   ThemedView.ignoreAttrs = null
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   ThemedView.withConfig = config => {
     if (config.displayName) {
-      displayName = config.displayName
-      ThemedView.displayName = displayName
+      ThemedView.displayName = config.displayName
     }
     return ThemedView
   }
@@ -302,7 +299,7 @@ export function gloss<Props = GlossProps<any>>(
   }
   ThemedView.getConfig = () => ({
     id,
-    displayName,
+    displayName: ThemedView.displayName,
     targetElement,
     ignoreAttrs,
     styles: { ...Styles.styles },

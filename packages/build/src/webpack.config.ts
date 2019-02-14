@@ -37,8 +37,18 @@ const getFlag = flag => {
 }
 
 const target = getFlag('--target') || 'electron-renderer'
+const defines = {
+  'process.env.NODE_ENV': JSON.stringify(mode),
+  'process.env.RENDER_TARGET': JSON.stringify(target),
+  'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
+  'process.env.DISABLE_SYNCERS': JSON.stringify(process.env.DISABLE_SYNCERS || false),
+  'process.env.DISABLE_LOGGING': JSON.stringify(process.env.DISABLE_LOGGING || false),
+}
 
-console.log('webpack info', JSON.stringify({ outputPath, target, isProd, tsConfig }))
+console.log(
+  'webpack info',
+  JSON.stringify({ outputPath, target, isProd, tsConfig, defines }, null, 2),
+)
 
 // this really helps hmr speed
 const optimizeSplit = {
@@ -122,7 +132,7 @@ const config = {
   // for a faster dev mode you can do:
   //   eval-source-map (causes errors to not show stack trace in react development...)
   //   cheap-source-map (no line numbers...)
-  //   cheap-module-eval-source-map (line numbers in browser, no line numbers in electron potentially...)
+  //   cheap-module-eval-source-map (seems alright in both...)
   //   cheap-module-source-map (works well in electron, no line numbers in browser...)
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
@@ -144,6 +154,11 @@ const config = {
       // ignore .node.js modules
       {
         test: /\.node.[jt]sx?/,
+        use: 'ignore-loader',
+      },
+      // ignore .electron.js modules if in web mode
+      target !== 'electron-renderer' && {
+        test: /\.electron.[jt]sx?/,
         use: 'ignore-loader',
       },
       {
@@ -191,13 +206,7 @@ const config = {
   plugins: [
     tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
 
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(mode),
-      'process.env.TARGET': JSON.stringify(target),
-      'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),
-      'process.env.DISABLE_SYNCERS': JSON.stringify(process.env.DISABLE_SYNCERS || false),
-      'process.env.DISABLE_LOGGING': JSON.stringify(process.env.DISABLE_LOGGING || false),
-    }),
+    new webpack.DefinePlugin(defines),
 
     new webpack.IgnorePlugin(/electron-log/),
 

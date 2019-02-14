@@ -79,10 +79,10 @@ export function useApp(props: GetApp | false) {
     if (!props) return
     const next = getApp(props, stores)
     // set if necessary
-    if (!isEqual(next, currentState.current)) {
-      currentState.current = next
-      update(Math.random())
-    }
+    if (next === currentState.current) return
+    if (isEqual(next, currentState.current)) return
+    currentState.current = next
+    update(Math.random())
   })
 
   return currentState.current

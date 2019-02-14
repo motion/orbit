@@ -11,6 +11,7 @@ export { updateProps } from './updateProps'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
+export const IS_STORE = Symbol('IS_STORE')
 
 const IGNORE = {
   props: true,
@@ -69,6 +70,9 @@ export function decorate<T>(
   if (!Getters.get(obj)) {
     Getters.set(obj, decoratePrototype(obj))
   }
+
+  // allow libraries to detect
+  obj.prototype[IS_STORE] = true
 
   const getterDesc = Getters.get(obj)
 

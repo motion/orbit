@@ -1,5 +1,7 @@
+import { get } from 'lodash'
 import { observable, Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
+import { mobxProxyWorm } from './mobxProxyWorm'
 import { getCurrentComponent } from './useStore'
 
 type TrackableStoreOptions = {
@@ -8,22 +10,25 @@ type TrackableStoreOptions = {
   debug?: boolean
 }
 
+const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
+
 export function setupTrackableStore(
   store: any,
   rerender: Function,
   options?: TrackableStoreOptions,
 ) {
   const name = options && options.component.displayName
-  const reactiveKeys = new Set()
   let rendering = observable.box(false)
   let firstRun = true
+  let reactiveKeys = new Set()
 
   const reaction = new Reaction(`track(${name})`, () => {
     reaction.track(() => {
       if (rendering.get()) return
       if (reactiveKeys.size === 0) return
+      console.log('keys', [...reactiveKeys])
       for (const key of [...reactiveKeys]) {
-        store[key]
+        get(store, key)
       }
       if (firstRun) {
         firstRun = false
@@ -35,36 +40,20 @@ export function setupTrackableStore(
 
   reaction.schedule()
 
+  const config = DedupedWorms.get(store) || mobxProxyWorm(store)
+  DedupedWorms.set(store, config)
+  let done: ReturnType<typeof config['track']> = null
+
   return {
-    store: new Proxy(store, {
-      get(target, key) {
-        if (rendering && typeof key === 'string') {
-          reactiveKeys.add(key)
-        }
-        return Reflect.get(target, key)
-      },
-    }),
+    store: config.store,
     track() {
-      reactiveKeys.clear()
+      done = config.track()
       rendering.set(true)
     },
     untrack() {
       firstRun = true
+      reactiveKeys = done()
       rendering.set(false)
-
-      // TODO only emit if its changed
-      // if (process.env.NODE_ENV === 'development') {
-      //   debugEmit(
-      //     {
-      //       type: 'reactiveKeys',
-      //       keys: reactiveKeys,
-      //       component: options.component,
-      //       store,
-      //       componentId: options.componentId,
-      //     },
-      //     options,
-      //   )
-      // }
     },
     dispose: reaction.getDisposer(),
     reactiveKeys,

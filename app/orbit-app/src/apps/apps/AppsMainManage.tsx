@@ -54,6 +54,9 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
   const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
   return (
     <AppIconContainer>
+      {app.pinned && (
+        <Icon name="pin" position="absolute" top={20} left={20} size={12} opacity={0.35} />
+      )}
       <LargeIcon
         {...contextMenuProps}
         title={app.name}
@@ -67,6 +70,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 const AppIconContainer = gloss({
   padding: [15, 25],
   alignItems: 'center',
+  position: 'relative',
 }).theme((_, theme) => ({
   '&:hover': {
     background: theme.backgroundHover,

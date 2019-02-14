@@ -1,4 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
+import { BorderBottom } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useApp } from '../../apps/AppView'
 import { ProvideStores } from '../../components/ProvideStores'
@@ -23,7 +24,7 @@ export default memo(function OrbitToolBar() {
       <ToolbarChrome hasToolbars={hasToolBar}>
         <ToolbarInner hasToolbars={hasToolBar}>
           {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-          {/* {hasToolBar && <BorderBottom opacity={0.5} />} */}
+          {hasToolBar && <BorderBottom />}
         </ToolbarInner>
       </ToolbarChrome>
     </ProvideStores>
@@ -47,6 +48,8 @@ const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
   alignItems: 'center',
+  overflow: 'hidden',
+  position: 'relative',
   hasToolbars: {
     height: height,
     padding: [0, 12],

@@ -7,6 +7,7 @@ export { Reaction, ReactionRejectionError, ReactionTimeoutError } from './consta
 export { ensure } from './ensure'
 export { react } from './react'
 export * from './types'
+export { updateProps } from './updateProps'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number
@@ -25,7 +26,7 @@ export function configureAutomagical(opts: { isSubscribable?: (val: any) => bool
 const Getters = new WeakMap()
 
 // decorates the prototype
-function decorateStore(obj) {
+function decoratePrototype(obj) {
   const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)
@@ -43,19 +44,38 @@ function decorateStore(obj) {
   return getterDesc
 }
 
-export function decorate<T>(obj: {
-  new (...args: any[]): T
-}): { new (...args: any[]): T & { dispose: Function } } {
+function constructWithProps(Store: any, args: any[], props?: Object) {
+  if (!props) {
+    return new Store(...args)
+  }
+  const storeProps = Mobx.observable({ props }, { props: Mobx.observable.shallow })
+  const getProps = {
+    configurable: true,
+    get: () => storeProps.props,
+    set() {},
+  }
+  Object.defineProperty(Store.prototype, 'props', getProps)
+  const instance = new Store()
+  Object.defineProperty(instance, 'props', getProps)
+  return instance
+}
+
+export function decorate<T>(
+  obj: {
+    new (...args: any[]): T
+  },
+  props?: Object,
+): { new (...args: any[]): T & { dispose: Function } } {
   if (!Getters.get(obj)) {
-    const getters = decorateStore(obj)
-    Getters.set(obj, getters)
+    Getters.set(obj, decoratePrototype(obj))
   }
 
   const getterDesc = Getters.get(obj)
 
   return new Proxy(obj as any, {
     construct(Target, args) {
-      const instance = new Target(...args)
+      // add props to the store and manage them
+      const instance = constructWithProps(Target, args, props)
       const keys = Object.keys(instance)
       instance.__automagicSubscriptions = new CompositeDisposable()
       instance.disposeAutomagic = () => instance.__automagicSubscriptions.dispose()
@@ -90,11 +110,7 @@ export function decorate<T>(obj: {
             Object.defineProperty(instance, key, {
               enumerable: true,
               get() {
-                const r = reactions[key]
-                if (!r.value) {
-                  r.value = r.initializer(decoratedInstance, key)
-                }
-                return r.value.get()
+                return reactions[key].value.get()
               },
             })
           } else {
@@ -106,6 +122,10 @@ export function decorate<T>(obj: {
       }
 
       const decoratedInstance = Mobx.decorate(instance, instDecor)
+
+      for (const key in reactions) {
+        reactions[key].value = reactions[key].initializer(decoratedInstance, key)
+      }
 
       return decoratedInstance
     },

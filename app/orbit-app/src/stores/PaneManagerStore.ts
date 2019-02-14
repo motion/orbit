@@ -79,7 +79,11 @@ export class PaneManagerStore {
   }
 
   private setPaneBy<A extends keyof Pane>(attr: A, val: Pane[A]) {
-    this.setPaneIndex(this.panes.findIndex(pane => pane[attr] === val))
+    const index = this.panes.findIndex(pane => pane[attr] === val)
+    if (index === -1) {
+      debugger
+    }
+    this.setPaneIndex(index)
   }
 
   // set pane functions
@@ -106,7 +110,7 @@ export class PaneManagerStore {
 
   setPaneIndex = (index: number) => {
     if (!this.hasPaneIndex(index)) {
-      console.error(`no pane found at index ${index}! this.props.panes`, this.panes)
+      console.trace(`no 09 pane found at index ${index}! this.props.panes`, this.panes)
       return
     }
     if (index !== this.paneIndex) {

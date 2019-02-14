@@ -197,7 +197,6 @@ export class BridgeManager {
 
         // receive the current state once we connect to master
         if (msg.initialState) {
-          log.verbose('got initial state', msg.initialState)
           Mobx.transaction(() => {
             const state = msg.initialState
             // merge each key of state to keep the "deepness"

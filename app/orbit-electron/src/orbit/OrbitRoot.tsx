@@ -9,7 +9,8 @@ import { ElectronStore } from '../stores/ElectronStore'
 import { MenuItems } from './MenuItems'
 import OrbitWindow from './OrbitWindow'
 
-export const OrbitRoot = () => {
+export function OrbitRoot() {
+  console.log('render OrbitRoot')
   const electronStore = useStore(ElectronStore)
 
   React.useEffect(() => {
@@ -32,8 +33,6 @@ export const OrbitRoot = () => {
     }
     return null
   }
-
-  console.log('orbit success, rendering...')
 
   return (
     <App

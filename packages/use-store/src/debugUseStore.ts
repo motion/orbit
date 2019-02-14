@@ -1,3 +1,6 @@
+import { throttle } from 'lodash'
+import { config } from './configure'
+
 type UseStoreDebugEvent =
   | {
       type: 'observe'
@@ -30,7 +33,15 @@ type UseStoreDebugEvent =
     }
   | {
       type: 'unmount'
-      componentId: number
+      store: any
+    }
+  | {
+      type: 'mount'
+      store: any
+    }
+  | {
+      type: 'state'
+      value: Object
     }
 
 let debugFns = new Set()
@@ -39,13 +50,16 @@ export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
   return () => debugFns.delete(cb)
 }
 
-export function debugEmit(
-  {
-    component,
-    ...event
-  }: Partial<UseStoreDebugEvent> & { component?: any; componentName?: string },
-  options?: { debug?: boolean },
-) {
+const allStores = new Set()
+const sendStateUpdate = throttle(() => {
+  const value = simpleObject(allStores)
+  ;[...debugFns].forEach(fn => fn({ type: 'state', value }))
+})
+
+type DebugEmitProps = Partial<UseStoreDebugEvent> & { component?: any; componentName?: string }
+
+export function debugEmit(props: DebugEmitProps, options?: { debug?: boolean }) {
+  const { component, ...event } = props
   if (component) {
     event['componentName'] = component.displayName
   }
@@ -53,6 +67,34 @@ export function debugEmit(
     console.log(event)
   }
   if (debugFns.size) {
-    ;[...debugFns].map(fn => fn(event))
+    ;[...debugFns].forEach(fn => fn(event))
   }
+  if (config.debugStoreState) {
+    if (event.type === 'mount') {
+      allStores.add(event.store)
+      sendStateUpdate()
+    }
+    if (event.type === 'unmount') {
+      allStores.delete(event.store)
+      sendStateUpdate()
+    }
+  }
+}
+
+function simpleObject(storeSet) {
+  const res = {}
+  for (const fn of [...storeSet]) {
+    const key = fn.constructor.name
+    if (res[key]) {
+      if (Array.isArray(res[key])) {
+        res[key].push(fn)
+      } else {
+        // convert to array if more than one
+        res[key] = [res[key], fn]
+      }
+    } else {
+      res[key] = fn
+    }
+  }
+  return res
 }

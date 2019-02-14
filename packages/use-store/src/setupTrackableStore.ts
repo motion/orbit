@@ -36,7 +36,7 @@ export function setupTrackableStore(
   reaction.schedule()
 
   return {
-    store: new Proxy(store as any, {
+    store: new Proxy(store, {
       get(target, key) {
         if (rendering && typeof key === 'string') {
           reactiveKeys.add(key)

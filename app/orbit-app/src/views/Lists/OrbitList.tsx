@@ -1,6 +1,7 @@
-import { AppConfig, Bit, PersonBit } from '@mcro/models'
+import { Bit, PersonBit } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
 import * as React from 'react'
+import { AppConfig } from '../../apps/AppTypes'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
 import { Omit } from '../../helpers/typeHelpers/omit'

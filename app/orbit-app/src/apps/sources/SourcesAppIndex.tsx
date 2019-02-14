@@ -13,7 +13,6 @@ import { AppProps, AppType } from '../AppTypes'
 export default function SourcesAppIndex(_props: AppProps) {
   const { sourcesStore } = useStores()
   const [activeSpace] = useActiveSpace()
-  // const activeSpaceName = activeSpace ? activeSpace.name : ''
   const { activeSources, allSources } = sourcesStore
   const activeApps = useActiveApps()
 

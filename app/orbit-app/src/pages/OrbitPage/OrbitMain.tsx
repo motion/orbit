@@ -1,8 +1,7 @@
 import { FullScreen } from '@mcro/gloss'
-import { isEqual } from 'lodash'
 import { useObserver } from 'mobx-react-lite'
 import React, { memo, useMemo, useState } from 'react'
-import { AppConfig, AppType } from '../../apps/AppTypes'
+import { AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -61,25 +60,22 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { orbitStore } = useStores()
-  const [activeConfig, setActiveConfig] = React.useState<AppConfig>(null)
-  const confKey = activeConfig ? JSON.stringify(activeConfig) : 'none'
-
-  useObserver(() => {
-    const appConfig = orbitStore.activeConfig[type] || null
-    if (!isEqual(appConfig, activeConfig)) {
-      setActiveConfig(appConfig)
-    }
-  })
+  const appConfig = orbitStore.activeConfig[id] || null
+  const confKey = appConfig ? JSON.stringify(appConfig) : 'none'
 
   // only ever render once per config!
   const element = React.useMemo(
     () => {
+      if (!appConfig) {
+        return null
+      }
+      console.log('appConfig', appConfig)
       return (
         <AppView
           viewType="main"
           id={id}
           type={type}
-          appConfig={activeConfig}
+          appConfig={appConfig}
           before={<OrbitToolBarHeight id={id} />}
           after={<OrbitStatusBarHeight id={id} />}
         />

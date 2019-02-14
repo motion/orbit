@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/black'
+import { deep, ensure, react } from '@mcro/black'
 import { UserModel } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
@@ -37,9 +37,9 @@ export class OrbitStore {
     },
   )
 
-  activeConfig: { [key: string]: AppConfig } = {
+  activeConfig: { [key: string]: AppConfig } = deep({
     search: { id: '', type: AppType.search, title: '' },
-  }
+  })
 
   setEditing = () => {
     this.isEditing = true
@@ -59,12 +59,9 @@ export class OrbitStore {
         await sleep(50)
       }
       ensure('app config', !!appConfig)
-      const paneType = this.props.activePane.type
-      if (!isEqual(this.activeConfig[paneType], appConfig)) {
-        this.activeConfig = {
-          ...this.activeConfig,
-          [paneType]: appConfig,
-        }
+      const { id } = this.props.activePane
+      if (!isEqual(this.activeConfig[id], appConfig)) {
+        this.activeConfig[id] = appConfig
       }
     },
   )

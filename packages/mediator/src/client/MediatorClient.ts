@@ -24,17 +24,15 @@ function cachedObservable(
       sub.next(cached.value)
     } else {
       const subs = options.transports.map(transport => {
-        return transport
-          .observe(name, args)
-          .subscribe(
-            response => {
-              if (response.notFound !== true) {
-                cached.update(response.result)
-              }
-            },
-            error => sub.error(error),
-            () => sub.complete()
-          )
+        return transport.observe(name, args).subscribe(
+          response => {
+            if (response.notFound !== true) {
+              cached.update(response.result)
+            }
+          },
+          error => sub.error(error),
+          () => sub.complete(),
+        )
       })
       cached.isActive = true
       cached.onDispose = () => {
@@ -47,6 +45,7 @@ function cachedObservable(
       cached.subscriptions.delete(sub)
       if (cached.subscriptions.size === 0) {
         cached.removeTimeout = setTimeout(() => {
+          cached.isActive = false
           cached.onDispose()
           ObserverCache.delete(cached)
         }, 5000)
@@ -61,10 +60,10 @@ export class MediatorClient {
   }
 
   async command<Args, ReturnType>(
-    command: Command<ReturnType, Args>|string,
+    command: Command<ReturnType, Args> | string,
     args?: Args,
   ): Promise<ReturnType> {
-    const name = typeof command === "string" ? command : command.name
+    const name = typeof command === 'string' ? command : command.name
 
     for (let transport of this.options.transports) {
       const response = await transport.execute('command', {
@@ -102,7 +101,6 @@ export class MediatorClient {
     model: Model<ModelType, Args, CountArgs>,
     instance: ModelType,
   ): Promise<boolean> {
-
     for (let transport of this.options.transports) {
       const response = await transport.execute('remove', {
         model: model.name,
@@ -212,7 +210,11 @@ export class MediatorClient {
       }
     }
 
-    throw new Error(`loadManyAndCount resolver for ${qm instanceof Query ? qm.model.name : qm.name} was not found`)
+    throw new Error(
+      `loadManyAndCount resolver for ${
+        qm instanceof Query ? qm.model.name : qm.name
+      } was not found`,
+    )
   }
 
   loadCount<ModelType, Args, CountArgs>(

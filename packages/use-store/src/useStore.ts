@@ -1,7 +1,5 @@
 import { decorate, updateProps } from '@mcro/automagical'
-import { throttle } from 'lodash'
 import {
-  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -159,19 +157,32 @@ function isSourceEqual(oldStore: any, newStore: new () => any) {
 }
 
 export function getCurrentComponent() {
-  return ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
-    ? ReactCurrentOwner.current.elementType
-    : {}
+  const component =
+    ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
+      ? ReactCurrentOwner.current.elementType
+      : {}
+  component['renderName'] = component['renderName'] || getComponentName(component)
+  return component
+}
+
+function getComponentName(c) {
+  let name = c.displayName || (c.type && c.type.displayName) || (c.render && c.render.name)
+  if (c.displayName === '_default') {
+    name = c.type && c.type.displayName
+  }
+  if (name === 'Component' || name === '_default' || !name) {
+    if (c.type && c.type.__reactstandin__key) {
+      const match = c.type.__reactstandin__key.match(/\#[a-zA-Z0-9_-]+/g)
+      if (match && match.length) {
+        name = match[0].slice(1)
+      }
+    }
+  }
+  return name
 }
 
 export function useThrottledForceUpdate() {
-  const [, setState] = useState(0)
-  return useCallback(
-    throttle(() => {
-      setState(Math.random())
-    }),
-    [],
-  )
+  return useState(0)[1] as Function
 }
 
 let nextId = 0

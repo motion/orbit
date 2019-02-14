@@ -17,7 +17,7 @@ export function setupTrackableStore(
   rerender: Function,
   options?: TrackableStoreOptions,
 ) {
-  const name = options && options.component.displayName
+  const name = options && options.component.renderName
   let rendering = observable.box(false)
   let firstRun = true
   let reactiveKeys = new Set()
@@ -26,7 +26,6 @@ export function setupTrackableStore(
     reaction.track(() => {
       if (rendering.get()) return
       if (reactiveKeys.size === 0) return
-      console.log('keys', [...reactiveKeys])
       for (const key of [...reactiveKeys]) {
         get(store, key)
       }
@@ -34,6 +33,7 @@ export function setupTrackableStore(
         firstRun = false
         return
       }
+      console.log('trigger re-rendering', name, reactiveKeys)
       rerender()
     })
   })

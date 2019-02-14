@@ -61,12 +61,10 @@ export function mobxProxyWorm<A extends Function>(
 
         // reduce size for mobx to not do duplicate checks
         let lastKey: string | null = null
-        for (const key in res.values()) {
+        for (const key of [...res]) {
           if (lastKey && key.indexOf(lastKey) === 0) {
-            console.log('deleting', lastKey, res)
             res.delete(lastKey)
           }
-          console.log('key2', key, res)
           lastKey = key
         }
 

@@ -1,3 +1,6 @@
+import { throttle } from 'lodash'
+import { config } from './configure'
+
 type UseStoreDebugEvent =
   | {
       type: 'observe'
@@ -36,12 +39,21 @@ type UseStoreDebugEvent =
       type: 'mount'
       store: any
     }
+  | {
+      type: 'state'
+      value: Object
+    }
 
 let debugFns = new Set()
 export function debugUseStore(cb: (event: UseStoreDebugEvent) => any) {
   debugFns.add(cb)
   return () => debugFns.delete(cb)
 }
+
+const allStores = new Set()
+const sendStateUpdate = throttle(() => {
+  ;[...debugFns].forEach(fn => fn({ type: 'state', value: simpleObject(allStores) }))
+})
 
 export function debugEmit(
   {
@@ -57,7 +69,17 @@ export function debugEmit(
     console.log(event)
   }
   if (debugFns.size) {
-    ;[...debugFns].map(fn => fn(event))
+    ;[...debugFns].forEach(fn => fn(event))
+  }
+  if (config.debugStoreState) {
+    if (event.type === 'mount') {
+      allStores.add(event.store)
+      sendStateUpdate()
+    }
+    if (event.type === 'unmount') {
+      allStores.delete(event.store)
+      sendStateUpdate()
+    }
   }
 }
 
@@ -77,44 +99,4 @@ function simpleObject(storeSet) {
     }
   }
   return res
-}
-
-// allows easy tracking of all views/stores
-export function debugState(callback) {
-  if (typeof callback !== 'function') {
-    throw new Error('debugState requires a callback')
-  }
-
-  const stores = new Set()
-  const views = new Set()
-
-  const sendUpdate = () =>
-    callback({
-      stores: simpleObject(stores),
-      views: simpleObject(views),
-    })
-
-  let tm
-  const update = () => {
-    clearTimeout(tm)
-    tm = setTimeout(sendUpdate, 100)
-  }
-
-  const mount = set => ({ thing }) => {
-    set.add(thing)
-    update()
-  }
-
-  const unmount = set => ({ thing }) => {
-    set.delete(thing)
-    update()
-  }
-
-  debugEmit.on('store.mount', mount(stores))
-  debugEmit.on('store.unmount', unmount(stores))
-  debugEmit.on('view.mount', mount(views))
-  debugEmit.on('view.unmount', unmount(views))
-
-  // send first one right away
-  sendUpdate()
 }

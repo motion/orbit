@@ -1,8 +1,6 @@
 import { decorate, updateProps } from '@mcro/automagical'
 import { throttle } from 'lodash'
 import {
-  createContext,
-  // isValidElement,
   useCallback,
   useContext,
   useEffect,
@@ -12,29 +10,19 @@ import {
   // @ts-ignore
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
 } from 'react'
+import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { setupTrackableStore, useTrackableStore } from './setupTrackableStore'
 
+export { configureUseStore } from './configure'
 export { debugUseStore } from './debugUseStore'
 
 const { ReactCurrentOwner } = __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
-
-type UseGlobalStoreOptions = {
-  onMount: (store: any) => void
-  onUnmount: (store: any) => void
-  context?: React.Context<any>
-}
 
 type UseStoreOptions = {
   debug?: boolean
   conditionalUse?: boolean
   react?: boolean
-}
-
-let config = {
-  onMount: null,
-  onUnmount: null,
-  context: createContext(null),
 }
 
 export function disposeStore(store: any) {
@@ -166,13 +154,6 @@ export function useStore<P, A extends { props?: P } | any>(
   return store
 }
 
-export const configureUseStore = (opts: UseGlobalStoreOptions) => {
-  config = Object.freeze({
-    ...config,
-    ...opts,
-  })
-}
-
 function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }
@@ -212,15 +193,6 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
       return () => {
         for (const { dispose } of stateRef.current.values()) {
           dispose()
-        }
-        if (process.env.NODE_ENV === 'development') {
-          debugEmit(
-            {
-              type: 'unmount',
-              componentId: componentId.current,
-            },
-            options,
-          )
         }
       }
     }, [])

@@ -1,4 +1,3 @@
-import { debugState } from '@mcro/black'
 import { enableLogging } from '@mcro/mobx-logger'
 import { debugUseStore } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
@@ -48,6 +47,10 @@ function addEvent(name: string, key: string, event: any) {
 }
 
 debugUseStore(event => {
+  if (event.type === 'state') {
+    setStoreStateOntoWindow(event.value)
+  }
+
   if (!window['enableLog']) return
   console.log('useStore', event)
   switch (event.type) {
@@ -71,11 +74,10 @@ debugUseStore(event => {
   }
 })
 
-debugState(({ stores, views }) => {
+function setStoreStateOntoWindow(stores) {
   const Root = window['Root']
   if (Root) {
     Root.stores = stores
-    Root.views = views
   }
   // if we can just put the store right on window
   for (const key in stores) {
@@ -92,7 +94,7 @@ debugState(({ stores, views }) => {
       window[key] = storeOrStores
     }
   }
-})
+}
 
 // just for now since its spitting out so many
 setConfig({

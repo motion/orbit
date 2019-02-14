@@ -1,5 +1,9 @@
-import { debugState } from '@mcro/black'
+import { configureUseStore, debugUseStore } from '@mcro/use-store'
 import root from 'global'
+
+configureUseStore({
+  debugStoreState: true,
+})
 
 export class ElectronStore {
   error = null
@@ -13,9 +17,10 @@ export class ElectronStore {
     console.log('Electron Store did mount')
     root.Root = this
     root.restart = this.restart
-    debugState(({ stores, views }) => {
-      this.stores = stores
-      this.views = views
+    debugUseStore(event => {
+      if (event.type === 'state') {
+        this.stores = event.value
+      }
     })
   }
 

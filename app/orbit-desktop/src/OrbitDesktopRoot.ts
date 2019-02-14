@@ -1,4 +1,3 @@
-import { debugState } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
@@ -196,25 +195,6 @@ export class OrbitDesktopRoot {
 
     // depends on cosal
     this.registerMediatorServer()
-
-    // try {
-    //   // start screen after passing into screenManager
-    //   // await this.screen.start()
-
-    //   // after screen.start:
-
-    //   // then start screenmanager
-    //   // await this.screenManager.start()
-    //   // start screen related managers
-    //   await this.ocrManager.start()
-    // } catch (err) {
-    //   console.error('Error starting a manager', err)
-    // }
-
-    // this watches for store mounts/unmounts and attaches them here for debugging
-    debugState(({ stores }) => {
-      this.stores = stores
-    })
 
     this.registerREPLGlobals()
   }

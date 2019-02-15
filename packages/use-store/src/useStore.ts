@@ -205,6 +205,9 @@ function getComponentName(c) {
       }
     }
   }
+  if (name === '_default') {
+    debugger
+  }
   return name
 }
 

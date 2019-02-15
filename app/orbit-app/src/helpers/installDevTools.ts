@@ -46,19 +46,14 @@ function addEvent(name: string, key: string, event: any) {
 }
 
 debugUseStore(event => {
+  if (!window['enableLog']) return
   if (event.type === 'state') {
     setStoreStateOntoWindow(event.value)
     return
   }
-
-  if (!window['enableLog']) return
-  console.log('useStore', event)
   switch (event.type) {
     case 'observe':
       addEvent(event.componentName, 'observes', event)
-      return
-    case 'reactiveKeys':
-      addEvent(event.componentName, 'reactiveKeys', event)
       return
   }
 })

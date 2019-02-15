@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { useHook, useStore } from '@mcro/use-store'
+import { useHook, useStore, useStoreDebug } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
 import React, { memo, useMemo, useState } from 'react'
 import { AppType } from '../../apps/AppTypes'
@@ -70,6 +70,8 @@ class OrbitPageMainStore {
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { appConfig, key } = useStore(OrbitPageMainStore, { id })
+
+  useStoreDebug()
 
   if (!appConfig) {
     return null

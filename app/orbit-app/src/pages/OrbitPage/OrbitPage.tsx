@@ -1,12 +1,11 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore, useStoreSimple } from '@mcro/use-store'
-import { uniqBy } from 'lodash'
+import { useStore, useStoreDebug, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
-import AppsLoader from '../../apps/AppsLoader'
+import { AppsLoader } from '../../apps/AppsLoader'
 import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
@@ -61,7 +60,7 @@ function OrbitManagers() {
   return null
 }
 
-const OrbitPageInner = memo(() => {
+const OrbitPageInner = memo(function OrbitPageInner() {
   const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
   const sidebarStore = useStore(SidebarStore, null, { react: false })
@@ -70,7 +69,8 @@ const OrbitPageInner = memo(() => {
     closeApp: 0,
   })
 
-  console.log('render OrbitPageInner')
+  log('render OrbitPageInner')
+  useStoreDebug()
 
   useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
@@ -79,15 +79,12 @@ const OrbitPageInner = memo(() => {
     })
   }, [])
 
-  const allViews = uniqBy(
-    [
-      ...paneManagerStore.panes.map(pane => ({
-        id: pane.id,
-        type: pane.type,
-      })),
-    ],
-    x => x.id,
-  )
+  const allViews = [
+    ...paneManagerStore.panes.map(pane => ({
+      id: pane.id,
+      type: pane.type,
+    })),
+  ]
 
   useEffect(() => {
     // prevent close on the main window
@@ -140,7 +137,7 @@ const OrbitPageInner = memo(() => {
             },
           }}
         >
-          <AppsLoader views={allViews}>
+          <AppsLoader views={log(allViews, 'allViews')}>
             <OrbitHeader />
             <InnerChrome torn={getIsTorn()}>
               <OrbitToolBar />
@@ -175,8 +172,6 @@ function OrbitPageProvideStores(props: any) {
   const queryStore = useStoreSimple(QueryStore, { sourcesStore })
   const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
   const newAppStore = useStoreSimple(NewAppStore)
-
-  console.log('OrbitPageProvideStores')
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes,

@@ -13,7 +13,7 @@ function equal(a, b) {
   if (a === b) return true
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
-    if (a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
+    if (a[EQUALITY_KEY] && a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
 
     var arrA = isArray(a),
       arrB = isArray(b),

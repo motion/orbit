@@ -58,7 +58,7 @@ export function setupTrackableStore(
   return {
     store: config.store,
     track() {
-      done = config.track(name === 'OrbitPageInner' ? 20 : Math.random())
+      done = config.track(Math.random())
       rendering.set(true)
     },
     untrack() {

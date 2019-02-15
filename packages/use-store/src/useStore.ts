@@ -73,6 +73,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
 }
 
 function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
+  const forceUpdate = useThrottledForceUpdate()
   const state = useRef({
     store: null,
     hooks: null,
@@ -80,7 +81,6 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   })
   let store = state.current.store
   const hasChangedSource = store && !isSourceEqual(store, Store)
-  const forceUpdate = useThrottledForceUpdate()
 
   if (!store || hasChangedSource) {
     state.current = setupReactiveStore(Store, props)
@@ -94,8 +94,6 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
     }
   }
 
-  store = state.current.store
-
   // update props after first run
   if (props && !!store) {
     updateProps(store, props)
@@ -103,10 +101,11 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
 
   if (hasChangedSource) {
     console.log('HMR store', Store.name)
+    debugger
     forceUpdate()
   }
 
-  return store
+  return state.current.store
 }
 
 export function useStore<P, A extends { props?: P } | any>(

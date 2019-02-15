@@ -17,18 +17,19 @@ export class SidebarStore {
   stores = useHook(useStoresSimple)
   width = Math.min(450, Math.max(240, window.innerWidth / 3))
 
-  viewRefs: { [key: string]: AppViewRef } = deep({})
+  indexViews: { [key: string]: AppViewRef } = deep({})
 
   handleResize = next => {
     this.width = next
   }
 
-  get activeViewRef() {
-    return this.viewRefs[this.stores.paneManagerStore.activePane.id]
+  get indexView() {
+    return this.indexViews[this.stores.paneManagerStore.activePane.id]
   }
 
   get hasIndexContent() {
-    return !this.activeViewRef || this.activeViewRef.hasView === true
+    console.log('1212')
+    return this.indexView && this.indexView.hasView === true
   }
 }
 
@@ -63,7 +64,6 @@ export default memo(function OrbitSidebar() {
   )
 
   if (!appsStore.currentView || !activePane) {
-    console.warn('when does empty sidebar render?')
     return null
   }
 
@@ -105,8 +105,8 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   const { id, type, sidebarStore, hasMain } = props
 
   const handleAppRef = state => {
-    if (isEqual(state, sidebarStore.viewRefs[id])) return
-    sidebarStore.viewRefs[id] = state
+    if (isEqual(state, sidebarStore.indexViews[id])) return
+    sidebarStore.indexViews[id] = state
   }
 
   return (

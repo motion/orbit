@@ -1,4 +1,3 @@
-import { App } from '@mcro/stores'
 import { Popover, View } from '@mcro/ui'
 import { flow, memoize } from 'lodash'
 import * as React from 'react'
@@ -11,7 +10,7 @@ import './calendar.css' // theme css file
 import SearchItemShare, { SearchItemShareProvide } from './SearchItemShare'
 
 export default function SearchAppIndex(props: AppProps) {
-  const { searchStore } = useStores({ debug: true })
+  const { searchStore, themeStore } = useStores({ debug: true })
   const items = searchStore.results
 
   const getItemProps = React.useCallback(
@@ -23,7 +22,7 @@ export default function SearchAppIndex(props: AppProps) {
               <Popover
                 towards="right"
                 // selected would otherwise override this theme
-                themeName={App.state.isDark ? 'light' : 'dark'}
+                themeName={themeStore.isDark ? 'light' : 'dark'}
                 distance={5}
                 width={250}
                 height={300}

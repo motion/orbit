@@ -1,5 +1,7 @@
 import { deep, store } from '@mcro/black'
 import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
+import { User } from '@mcro/models'
+import { Desktop } from './Desktop'
 
 export let App = null as AppStore
 
@@ -74,6 +76,8 @@ class AppStore {
   source = 'App'
 
   state = deep({
+    // for use syncing them to electron
+    userSettings: {} as User['settings'],
     allApps: [
       {
         id: 0,
@@ -81,7 +85,6 @@ class AppStore {
         type: 'root',
       },
     ] as AppStateEntry[],
-    isDark: false,
     orbitState: {
       blurred: false,
       pinned: false,
@@ -111,6 +114,25 @@ class AppStore {
     contextMessage: '',
     showSpaceSwitcher: 0,
   })
+
+  get isDark() {
+    const preference = App.state.userSettings.theme
+    const osTheme = Desktop.state.operatingSystem.theme
+    return preference === 'dark' || (preference === 'automatic' && osTheme === 'dark')
+  }
+
+  get vibrancy() {
+    const { vibrancy } = App.state.userSettings
+    if (vibrancy === 'none') {
+      return 'none'
+    }
+    if (vibrancy === 'some') {
+      return App.isDark ? 'ultra-dark' : 'light'
+    }
+    if (vibrancy === 'more') {
+      return App.isDark ? 'dark' : 'light'
+    }
+  }
 
   get peekState() {
     return this.state.peeksState[0]

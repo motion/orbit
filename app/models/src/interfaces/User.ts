@@ -31,6 +31,7 @@ export interface User {
     autoUpdate?: boolean
     autoLaunch?: boolean
     theme?: 'dark' | 'light' | 'automatic'
+    vibrancy?: 'some' | 'more' | 'none'
     openShortcut?: string
     recentSearches?: string[]
   }

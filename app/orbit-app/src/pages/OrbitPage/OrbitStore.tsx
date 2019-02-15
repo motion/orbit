@@ -1,12 +1,9 @@
 import { ensure, react } from '@mcro/black'
-import { UserModel } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import { AppConfig, AppType } from '../../apps/AppTypes'
 import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useStoresSimple } from '../../hooks/useStores'
-import { observeOne } from '../../mediator'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
 export class OrbitStore {
@@ -14,26 +11,6 @@ export class OrbitStore {
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
   isEditing = false
-
-  // sync settings to App.state.isDark for now until we migrate
-  activeUser = null
-  activeUser$ = observeOne(UserModel, {}).subscribe(x => (this.activeUser = x))
-
-  syncThemeToAppState = react(
-    () => [this.activeUser && this.activeUser.settings.theme, Desktop.state.operatingSystem.theme],
-    ([theme, osTheme]) => {
-      ensure('active user', !!this.activeUser)
-      const shouldBeDark = theme === 'dark' || (theme === 'automatic' && osTheme === 'dark')
-      if (shouldBeDark) {
-        App.setState({ isDark: true })
-      } else {
-        App.setState({ isDark: false })
-      }
-    },
-    {
-      defaultValue: Desktop.state.operatingSystem.theme,
-    },
-  )
 
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },

@@ -30,12 +30,20 @@ export class SpaceStore {
 
   user = react(() => 1, () => observeOne(UserModel, {}))
 
+  hasStarted = false
+
   syncUserSettings = react(
     () => this.user,
-    user => {
+    async (user, { sleep }) => {
       ensure('has user', !!user)
       if (!isEqual(user.settings, App.state.userSettings)) {
         App.setState({ userSettings: user.settings })
+      }
+      if (!this.hasStarted) {
+        await sleep(10)
+        console.log('show orbit first time after theme is set')
+        this.hasStarted = true
+        App.setOrbitState({ docked: true })
       }
     },
   )

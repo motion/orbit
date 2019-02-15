@@ -88,7 +88,7 @@ class AppStore {
     orbitState: {
       blurred: false,
       pinned: false,
-      docked: true,
+      docked: false,
       orbitOnLeft: false,
       position: [0, 0],
       size: [0, 0],

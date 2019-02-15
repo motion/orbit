@@ -1,5 +1,4 @@
 import { decorate, updateProps } from '@mcro/automagical'
-import { debounce } from 'lodash'
 import {
   useCallback,
   useContext,
@@ -74,7 +73,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
 }
 
 function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
-  const forceUpdate = useThrottledForceUpdate()
+  const forceUpdate = useForceUpdate()
   const state = useRef({
     store: null,
     hooks: null,
@@ -115,7 +114,7 @@ export function useStore<P, A extends { props?: P } | any>(
 ): A {
   const component = getCurrentComponent()
   let store = useReactiveStore(Store, props)
-  const rerender = useThrottledForceUpdate()
+  const rerender = useForceUpdate()
 
   if (!options || options.react !== false) {
     store = useTrackableStore(store, rerender)
@@ -184,14 +183,11 @@ function getComponentName(c) {
   return name
 }
 
-export function useThrottledForceUpdate() {
+export function useForceUpdate() {
   const setState = useState(0)[1]
-  return useCallback(
-    debounce(() => {
-      setState(Math.random())
-    }),
-    [],
-  )
+  return useCallback(() => {
+    setState(Math.random())
+  }, [])
 }
 
 let nextId = 0
@@ -203,11 +199,22 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
   return function useStores(options?: { optional?: (keyof A)[]; debug?: boolean }): A {
     const stores = useContext(StoreContext)
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
-    const rerender = useThrottledForceUpdate()
+    const render = useForceUpdate()
     const component = getCurrentComponent()
     const componentId = useRef(++nextId)
-
     const storesRef = useRef(null)
+
+    // debounce without going into next frame
+    let willRender = false
+    const rerender = () => {
+      if (!willRender) {
+        process.nextTick(() => {
+          render()
+          willRender = false
+        })
+        willRender = true
+      }
+    }
 
     useEffect(() => {
       return () => {

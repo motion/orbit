@@ -1,4 +1,4 @@
-import { debounce, get, isEqual } from 'lodash'
+import { get, isEqual } from 'lodash'
 import { Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
@@ -23,7 +23,8 @@ export function setupTrackableStore(
   let paused = true
   let reactiveKeys = new Set()
 
-  const rerenderDebounce = debounce(() => {
+  const doRender = () => {
+    willRender = false
     if (options.component && process.env.NODE_ENV === 'development') {
       debugEmit({
         type: 'render',
@@ -33,8 +34,9 @@ export function setupTrackableStore(
       })
     }
     rerender()
-  })
+  }
 
+  let willRender = false
   const reaction = new Reaction(`track(${name})`, () => {
     if (paused) return
     reaction.track(() => {
@@ -42,8 +44,10 @@ export function setupTrackableStore(
       for (const key of [...reactiveKeys]) {
         get(store, key)
       }
-      rerenderDebounce()
+      doRender()
     })
+    willRender = true
+    if (!willRender) process.nextTick(doRender)
   })
 
   const config = DedupedWorms.get(store) || mobxProxyWorm(store)
@@ -65,7 +69,10 @@ export function setupTrackableStore(
         reaction.schedule()
       }
     },
-    dispose: reaction.getDisposer(),
+    dispose() {
+      reaction.dispose()
+      clearImmediate(tm)
+    },
   }
 }
 

@@ -1,6 +1,6 @@
-import { AppBit } from '@mcro/models';
-import { apps } from '../apps/apps';
-import { App, AppType } from '../apps/AppTypes';
+import { AppBit } from '@mcro/models'
+import { apps } from '../apps/apps'
+import { App, AppType } from '../apps/AppTypes'
 
 export const defaultApps: AppBit[] = [
   {
@@ -51,6 +51,11 @@ export class NewAppStore {
 
   setApp(type: AppType) {
     const nextApp = defaultApps.find(x => x.type === type)
+    if (!nextApp) {
+      console.warn('no next app?')
+      debugger
+      return
+    }
 
     // update name and colors if unedited
     let name = this.app.name

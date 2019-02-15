@@ -6,7 +6,6 @@ var hasProp = Object.prototype.hasOwnProperty
 var hasElementType = typeof Element !== 'undefined'
 
 const EQUALITY_KEY = Symbol('EQUALITY_KEY')
-exports.EQUALITY_KEY = EQUALITY_KEY
 
 function equal(a, b) {
   // fast-deep-equal index.js 2.0.1
@@ -76,7 +75,7 @@ function equal(a, b) {
 }
 // end fast-deep-equal
 
-module.exports = function exportedEqual(a, b) {
+function exportedEqual(a, b) {
   try {
     return equal(a, b)
   } catch (error) {
@@ -100,3 +99,7 @@ module.exports = function exportedEqual(a, b) {
     throw error
   }
 }
+
+exportedEqual.EQUALITY_KEY = EQUALITY_KEY
+
+module.exports = exportedEqual

@@ -829,7 +829,6 @@ export class HomeWrapper extends React.Component {
 
   render() {
     const { homeStore, sectionHeight } = this.props
-    console.log('props', this.props)
     return (
       <Media query={Constants.screen.tall}>
         {isTall => (

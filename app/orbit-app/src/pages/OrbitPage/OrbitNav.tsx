@@ -47,8 +47,6 @@ export default memo(function OrbitNav() {
   const handleSortEnd = useAppSortHandler()
   const isTorn = getIsTorn()
 
-  console.log('render now')
-
   if (isTorn) {
     return null
   }
@@ -120,8 +118,6 @@ export default memo(function OrbitNav() {
       },
     )
     .filter(Boolean)
-
-  console.log('items', items, space, activeAppsSorted)
 
   const onSettings = isOnSettings(paneManagerStore.activePane)
   const showAppsTray = activeAppsSorted.length > 5

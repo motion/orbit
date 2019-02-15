@@ -63,6 +63,7 @@ export default memo(function OrbitSidebar() {
   )
 
   if (!appsStore.currentView || !activePane) {
+    console.warn('when does empty sidebar render?')
     return null
   }
 

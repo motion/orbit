@@ -132,8 +132,8 @@ export default function AppsMainManage() {
   )
 
   return (
-    <Section sizePadding={2}>
-      <TitleRow bordered margin={0}>
+    <Section sizePadding={0}>
+      <TitleRow bordered sizePadding={2} margin={0}>
         Apps
       </TitleRow>
       <SelectableGrid

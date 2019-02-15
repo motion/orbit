@@ -1,7 +1,7 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore, useStoreDebug, useStoreSimple } from '@mcro/use-store'
+import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
@@ -39,8 +39,6 @@ class ThemeStore {
 export default memo(function OrbitPage() {
   const { theme } = useStore(ThemeStore)
 
-  console.log('render OrbitPage')
-
   return (
     <Theme name={theme}>
       <AppWrapper className={`theme-${theme} app-parent-bounds`}>
@@ -69,9 +67,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     closeApp: 0,
   })
 
-  log('render OrbitPageInner')
-  useStoreDebug()
-
   useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
       AppActions.setOrbitDocked(true)
@@ -79,12 +74,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     })
   }, [])
 
-  const allViews = [
-    ...paneManagerStore.panes.map(pane => ({
-      id: pane.id,
-      type: pane.type,
-    })),
-  ]
+  const allViews = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    type: pane.type,
+  }))
 
   useEffect(() => {
     // prevent close on the main window
@@ -137,7 +130,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
             },
           }}
         >
-          <AppsLoader views={log(allViews, 'allViews')}>
+          <AppsLoader views={allViews}>
             <OrbitHeader />
             <InnerChrome torn={getIsTorn()}>
               <OrbitToolBar />

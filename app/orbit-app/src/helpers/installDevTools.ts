@@ -46,14 +46,17 @@ function addEvent(name: string, key: string, event: any) {
 }
 
 debugUseStore(event => {
-  if (!window['enableLog']) return
   if (event.type === 'state') {
     setStoreStateOntoWindow(event.value)
     return
   }
+  if (!window['enableLog']) return
   switch (event.type) {
     case 'observe':
       addEvent(event.componentName, 'observes', event)
+      return
+    case 'render':
+      console.log(event)
       return
   }
 })

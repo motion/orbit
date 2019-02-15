@@ -14,7 +14,6 @@ import { ListsAppBit, ListsAppData } from './types'
 export const listRootID = 0
 
 export const ListsApp: App<ListsAppData> = props => {
-  console.log('props', props)
   const listStore = useStore(ListStore, props)
   return (
     <AppContainer

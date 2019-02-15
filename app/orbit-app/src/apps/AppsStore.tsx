@@ -2,6 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { apps } from './apps'
+import { appsStatic } from './appsStatic'
 import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
 
@@ -36,7 +37,9 @@ function getViewInformation(type: string, views?: AppViews) {
 export class AppsStore {
   stores = useHook(useStoresSimple)
   provideStores = {}
-  appViews: { [key: string]: AppViews } = {}
+  appViews: { [key: string]: AppViews } = {
+    ...appsStatic,
+  }
   appStores: { [key: string]: AppStore } = {}
 
   // debounced because things mount in waterfall

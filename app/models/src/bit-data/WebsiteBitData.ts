@@ -4,6 +4,11 @@
 export interface WebsiteBitData {
 
   /**
+   * Website page url.
+   */
+  url: string
+
+  /**
    * Rendered page's title.
    */
   title: string

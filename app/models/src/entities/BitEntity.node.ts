@@ -78,6 +78,9 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column()
   bitUpdatedAt?: number
 
+  @Column({ default: false })
+  crawled?: boolean
+
   @Index()
   @CreateDateColumn()
   createdAt?: Date

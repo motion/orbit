@@ -126,12 +126,10 @@ class AppStore {
     if (vibrancy === 'none') {
       return 'none'
     }
-    if (vibrancy === 'some') {
-      return App.isDark ? 'ultra-dark' : 'light'
-    }
     if (vibrancy === 'more') {
       return App.isDark ? 'dark' : 'light'
     }
+    return App.isDark ? 'ultra-dark' : 'light'
   }
 
   get peekState() {

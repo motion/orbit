@@ -204,16 +204,11 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const componentId = useRef(++nextId)
     const storesRef = useRef(null)
 
-    // debounce without going into next frame
-    let willRender = false
+    // debounce all the different store renders
+    let tm = null
     const rerender = () => {
-      if (!willRender) {
-        process.nextTick(() => {
-          render()
-          willRender = false
-        })
-        willRender = true
-      }
+      clearTimeout(tm)
+      tm = setImmediate(render)
     }
 
     useEffect(() => {

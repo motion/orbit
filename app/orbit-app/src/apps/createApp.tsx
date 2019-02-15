@@ -53,11 +53,11 @@ function CreateAppMain(props: AppProps) {
 
   const { subType } = props.appConfig
 
-  console.log('subType', subType)
-
   useEffect(
     () => {
-      newAppStore.setApp(AppType[subType])
+      if (subType) {
+        newAppStore.setApp(AppType[subType])
+      }
     },
     [subType],
   )

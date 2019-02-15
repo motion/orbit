@@ -38,8 +38,8 @@ export function setupTrackableStore(
         debugEmit({
           type: 'render',
           component: options.component,
-          componentName: name,
           reactiveKeys,
+          store,
         })
       }
       rerender()

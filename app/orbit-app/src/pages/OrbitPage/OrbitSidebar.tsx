@@ -28,7 +28,6 @@ export class SidebarStore {
   }
 
   get hasIndexContent() {
-    console.log('1212')
     return this.indexView && this.indexView.hasView === true
   }
 }

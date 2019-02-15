@@ -69,9 +69,6 @@ export function setupReact(
 
   // name for logs
   const delayName = options && options.delay >= 0 ? ` ..${options.delay}ms ` : ''
-  if (!obj) {
-    debugger
-  }
   const storeName = getReactionName(obj)
   const name = {
     simple: `${storeName}.${methodName}${delayName}`,
@@ -186,9 +183,6 @@ export function setupReact(
   }
 
   // auto add subscription so it disposes on unmount
-  if (!obj.__automagicSubscriptions) {
-    debugger
-  }
   obj.__automagicSubscriptions.add({ dispose })
 
   // state used outside each watch/reaction

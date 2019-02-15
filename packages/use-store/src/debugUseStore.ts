@@ -1,6 +1,13 @@
 import { throttle } from 'lodash'
 import { config } from './configure'
 
+export interface DebugComponent {
+  (): any
+  renderName: string
+  renderId: number
+  __debug?: boolean
+}
+
 type UseStoreDebugEvent =
   | {
       type: 'observe'
@@ -8,14 +15,12 @@ type UseStoreDebugEvent =
       oldValue: any
       newValue: any
       store: any
-      componentName: string
-      componentId: number
+      component: DebugComponent
     }
   | {
       type: 'render'
       store: any
-      componentName: string
-      componentId: number
+      component: DebugComponent
       reactiveKeys: Set<string>
     }
   | {
@@ -28,10 +33,12 @@ type UseStoreDebugEvent =
   | {
       type: 'unmount'
       store: any
+      component: DebugComponent
     }
   | {
       type: 'mount'
       store: any
+      component: DebugComponent
     }
   | {
       type: 'state'
@@ -50,15 +57,12 @@ const sendStateUpdate = throttle(() => {
   ;[...debugFns].forEach(fn => fn({ type: 'state', value }))
 })
 
-type DebugEmitProps = Partial<UseStoreDebugEvent> & { component?: any; componentName?: string }
-
-export function debugEmit(props: DebugEmitProps, options?: { debug?: boolean }) {
-  const { component, ...event } = props
+export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
+  const component: DebugComponent = event['component']
   if (component) {
     if (component.__debug) {
       console.log(`%c${component['renderName']}`, 'color: green;', event)
     }
-    event['componentName'] = component['renderName']
   }
   if (options && options.debug) {
     console.log(event)

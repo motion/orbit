@@ -80,7 +80,6 @@ export default memo(function OrbitSidebar() {
       >
         {elements}
       </Sidebar>
-      <BorderRight />
     </SidebarContainer>
   )
 })
@@ -130,6 +129,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           type={type}
           before={<OrbitToolBarHeight id={id} />}
           after={<OrbitStatusBarHeight id={id} />}
+          inside={<BorderRight />}
         />
       </ProvideSelectableHandlers>
     </SubPane>

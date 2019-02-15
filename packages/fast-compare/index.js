@@ -5,7 +5,8 @@ var keyList = Object.keys
 var hasProp = Object.prototype.hasOwnProperty
 var hasElementType = typeof Element !== 'undefined'
 
-export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
+const EQUALITY_KEY = Symbol('EQUALITY_KEY')
+exports.EQUALITY_KEY = EQUALITY_KEY
 
 function equal(a, b) {
   // fast-deep-equal index.js 2.0.1

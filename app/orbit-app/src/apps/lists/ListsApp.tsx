@@ -14,6 +14,7 @@ import { ListsAppBit, ListsAppData } from './types'
 export const listRootID = 0
 
 export const ListsApp: App<ListsAppData> = props => {
+  console.log('props', props)
   const listStore = useStore(ListStore, props)
   return (
     <AppContainer
@@ -41,6 +42,7 @@ ListsApp.api = {
     const item = listApp.data.items[parentID]
     if (!item || (item.type !== 'folder' && item.type !== 'root')) {
       console.error('NO VALID THING', item, parentID, listApp)
+      debugger
       return
     }
 

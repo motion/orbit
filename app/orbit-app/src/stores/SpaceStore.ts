@@ -63,6 +63,7 @@ export class SpaceStore {
       console.log('managePaneSort', paneManagerStore, this.props, panes, paneIndex)
       paneManagerStore.setPaneIndex(paneIndex)
       if (!isEqual(panes, paneManagerStore.panes)) {
+        debugger
         paneManagerStore.setPanes(panes)
         this.setInitialPaneIndex()
       }

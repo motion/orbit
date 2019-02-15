@@ -6,7 +6,6 @@ import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
-import { apps } from '../../apps/apps'
 import AppsLoader from '../../apps/AppsLoader'
 import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -85,10 +84,6 @@ const OrbitPageInner = memo(() => {
       ...paneManagerStore.panes.map(pane => ({
         id: pane.id,
         type: pane.type,
-      })),
-      ...Object.keys(apps).map(type => ({
-        id: type,
-        type,
       })),
     ],
     x => x.id,

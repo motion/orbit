@@ -119,6 +119,7 @@ export default memo(function OrbitNav() {
 
   const onSettings = isOnSettings(paneManagerStore.activePane)
   const showAppsTray = activeAppsSorted.length > 5
+  const appsTrayWidth = showAppsTray ? 20 : 0
 
   return (
     <OrbitNavClip>
@@ -127,7 +128,7 @@ export default memo(function OrbitNav() {
           height={tabHeight}
           flex={1}
           overflow="hidden"
-          maxWidth={`calc(100% - ${(showCreateNew ? 75 : 40) + (showAppsTray ? 20 : 0)}px)`}
+          maxWidth={`calc(100% - ${(showCreateNew ? 48 : 0) - appsTrayWidth}px)`}
         >
           {items
             .filter(x => x.isPinned)
@@ -140,7 +141,7 @@ export default memo(function OrbitNav() {
             axis="x"
             lockAxis="x"
             distance={8}
-            maxWidth={showCreateNew ? `calc(100% - 260px)` : '100%'}
+            maxWidth={showCreateNew ? `calc(100% - ${280 - appsTrayWidth}px)` : '100%'}
             items={items.filter(x => !x.isPinned)}
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}

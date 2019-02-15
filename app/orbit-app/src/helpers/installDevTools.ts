@@ -1,4 +1,3 @@
-import { enableLogging } from '@mcro/mobx-logger'
 import { debugUseStore } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
@@ -8,30 +7,30 @@ import './installGlobals'
 // instead of this global
 window['enableLog'] = localStorage.getItem('enableLog')
 
-enableLogging({
-  predicate: ({ name }) => {
-    if (!window['enableLog'] || window['enableLog'] === 1) {
-      return false
-    }
-    if (!name) {
-      return false
-    }
-    if (name.indexOf('.render()') >= 0) {
-      return false
-    }
-    if (name.indexOf('__updateProps') >= 0) {
-      return false
-    }
-    if (name.indexOf('updateIsSelected') >= 0) {
-      return false
-    }
-    return true
-  },
-  action: true,
-  reaction: true,
-  transaction: true,
-  compute: true,
-})
+// enableLogging({
+//   predicate: ({ name }) => {
+//     if (window['enableLog'] !== 1) {
+//       return false
+//     }
+//     if (!name) {
+//       return false
+//     }
+//     if (name.indexOf('.render()') >= 0) {
+//       return false
+//     }
+//     if (name.indexOf('__updateProps') >= 0) {
+//       return false
+//     }
+//     if (name.indexOf('updateIsSelected') >= 0) {
+//       return false
+//     }
+//     return true
+//   },
+//   action: true,
+//   reaction: true,
+//   transaction: true,
+//   compute: true,
+// })
 
 window['StoreState'] = {}
 const StoreState = window['StoreState']

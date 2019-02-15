@@ -16,19 +16,13 @@ type UseStoreDebugEvent =
       store: any
       componentName: string
       componentId: number
+      reactiveKeys: Set<string>
     }
   | {
       type: 'prop'
       key: string
       oldValue: any
       newValue: any
-      store: any
-    }
-  | {
-      type: 'reactiveKeys'
-      keys: Set<string>
-      componentName: string
-      componentId: number
       store: any
     }
   | {

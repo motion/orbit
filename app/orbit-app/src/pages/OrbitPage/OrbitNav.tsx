@@ -47,6 +47,8 @@ export default memo(function OrbitNav() {
   const handleSortEnd = useAppSortHandler()
   const isTorn = getIsTorn()
 
+  console.log('render now')
+
   if (isTorn) {
     return null
   }

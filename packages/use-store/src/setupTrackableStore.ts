@@ -1,6 +1,7 @@
 import { get } from 'lodash'
 import { observable, Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
+import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
 import { getCurrentComponent } from './useStore'
 
@@ -33,7 +34,17 @@ export function setupTrackableStore(
         firstRun = false
         return
       }
-      console.log('trigger re-rendering', name, reactiveKeys)
+      if (options.component && process.env.NODE_ENV === 'development') {
+        if (options.component.__debug) {
+          console.log('useStore forceUpdate', name, reactiveKeys)
+        }
+        debugEmit({
+          type: 'render',
+          component: options.component,
+          componentName: name,
+          reactiveKeys,
+        })
+      }
       rerender()
     })
   })
@@ -47,7 +58,7 @@ export function setupTrackableStore(
   return {
     store: config.store,
     track() {
-      done = config.track()
+      done = config.track(name === 'OrbitPageInner' ? 20 : Math.random())
       rendering.set(true)
     },
     untrack() {

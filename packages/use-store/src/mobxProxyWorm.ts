@@ -1,13 +1,15 @@
 import { IS_STORE } from '@mcro/automagical'
+import { last } from 'lodash'
 
 const IS_PROXY = Symbol('IS_PROXY')
 
 type ProxyWorm<A extends Function> = {
   store: A
-  track(): () => Set<string>
+  track(id: number): () => Set<string>
 }
 
 type ProxyWormState = {
+  ids: Set<number>
   loops: WeakMap<any, any>
   keys: Map<number, Set<string>>
   add: (s: string) => void
@@ -19,9 +21,13 @@ export function mobxProxyWorm<A extends Function>(
   parentState?: ProxyWormState,
 ): ProxyWorm<A> {
   const state: ProxyWormState = parentState || {
+    ids: new Set(),
     loops: new WeakMap(),
     keys: new Map<number, Set<string>>(),
-    add: (next: string) => [...state.keys.values()].forEach(set => set.add(next)),
+    add: (next: string) => {
+      if (state.ids.size === 0) return
+      state.keys.get(last([...state.ids])).add(next)
+    },
   }
 
   const store = new Proxy(obj, {
@@ -52,10 +58,11 @@ export function mobxProxyWorm<A extends Function>(
 
   return {
     store,
-    track() {
-      const id = Math.random()
+    track(id: number) {
+      state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
+        state.ids.delete(id)
         const res = state.keys.get(id)
         state.keys.delete(id)
 

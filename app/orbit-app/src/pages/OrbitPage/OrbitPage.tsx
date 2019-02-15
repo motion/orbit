@@ -1,7 +1,7 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useStore, useStoreDebug } from '@mcro/use-store'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
@@ -41,6 +41,8 @@ class ThemeStore {
 export default memo(function OrbitPage() {
   const { theme } = useStore(ThemeStore)
 
+  console.log('render OrbitPage')
+
   return (
     <Theme name={theme}>
       <AppWrapper className={`theme-${theme} app-parent-bounds`}>
@@ -68,6 +70,8 @@ const OrbitPageInner = memo(() => {
     closeTab: 0,
     closeApp: 0,
   })
+
+  console.log('render OrbitPageInner')
 
   useEffect(() => {
     return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
@@ -176,6 +180,8 @@ function OrbitPageProvideStores(props: any) {
   const queryStore = useStore(QueryStore, { sourcesStore })
   const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
   const newAppStore = useStore(NewAppStore)
+
+  useStoreDebug()
 
   const paneManagerStore = useStore(PaneManagerStore, {
     defaultPanes,

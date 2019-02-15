@@ -1,5 +1,7 @@
 import { decorate, updateProps } from '@mcro/automagical'
+import { throttle } from 'lodash'
 import {
+  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -115,26 +117,21 @@ export function useStore<P, A extends { props?: P } | any>(
   let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
   const component = getCurrentComponent()
-  const componentId = useRef(++nextId)
 
   if (!options || options.react !== false) {
     if (process.env.NODE_ENV === 'development') {
-      store = useTrackableStore(
-        store,
-        () => {
-          debugEmit(
-            {
-              type: 'render',
-              store,
-              component,
-              componentId: componentId.current,
-            },
-            options,
-          )
-          rerender()
-        },
-        { ...options, component, componentId: componentId.current },
-      )
+      store = useTrackableStore(store, () => {
+        debugEmit(
+          {
+            type: 'render',
+            store,
+            component,
+            componentName: component.renderName,
+          },
+          options,
+        )
+        rerender()
+      })
     } else {
       store = useTrackableStore(store, rerender)
     }
@@ -154,6 +151,16 @@ export function useStore<P, A extends { props?: P } | any>(
 
 function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
+}
+
+export function useStoreDebug() {
+  const component = getCurrentComponent()
+  component.__debug = true
+  // use setTimeout so we dont use hooks
+  // this is so we can HMR it nicely without hooks complaining
+  setTimeout(() => {
+    component.__debug = false
+  }, 1000)
 }
 
 export function getCurrentComponent() {
@@ -182,7 +189,8 @@ function getComponentName(c) {
 }
 
 export function useThrottledForceUpdate() {
-  return useState(0)[1] as Function
+  const setState = useState(0)[1]
+  return useCallback(throttle(() => setState(Math.random())), [])
 }
 
 let nextId = 0

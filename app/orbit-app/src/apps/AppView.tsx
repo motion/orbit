@@ -1,8 +1,8 @@
+import isEqual from '@mcro/fast-compare'
 import { Contents } from '@mcro/gloss'
 import { useObserver } from 'mobx-react-lite'
 import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { findDOMNode } from 'react-dom'
-import isEqual from 'react-fast-compare'
 import { ProvideStores } from '../components/ProvideStores'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { AllStores } from '../contexts/StoreContext'
@@ -46,9 +46,7 @@ function getApp(props: GetApp, stores: AllStores): AppState {
 
   if (stores.appsStore) {
     const state = stores.appsStore.appsState
-    if (!state) {
-      return next
-    }
+    if (!state) return next
     const { appStores, appViews, provideStores } = state
     // set store
     if (!next.appStore) {
@@ -79,10 +77,10 @@ export function useApp(props: GetApp | false) {
     if (!props) return
     const next = getApp(props, stores)
     // set if necessary
-    if (!isEqual(next, currentState.current)) {
-      currentState.current = next
-      update(Math.random())
-    }
+    if (next === currentState.current) return
+    if (isEqual(next, currentState.current)) return
+    currentState.current = next
+    update(Math.random())
   })
 
   return currentState.current

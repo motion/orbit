@@ -1,7 +1,7 @@
+import isEqualReact from '@mcro/fast-compare'
 import { difference } from 'lodash'
-import isEqualReact from 'react-fast-compare'
-import { getNonReactElementProps } from './getNonReactElementProps'
 import { isValidElement } from 'react'
+import { getNonReactElementProps } from './getNonReactElementProps'
 
 export const updateProps = (props, nextProps) => {
   const nextPropsFinal = getNonReactElementProps(nextProps)

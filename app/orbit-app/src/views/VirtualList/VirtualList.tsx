@@ -1,8 +1,8 @@
-import { always, ensure, react } from '@mcro/black'
+import { always, react } from '@mcro/black'
 import { ContextMenu, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
-import React, { Component, createContext, createRef, useContext, useEffect, useMemo } from 'react'
+import React, { Component, createContext, createRef, useContext, useMemo } from 'react'
 import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc'
 import {
   CellMeasurer,
@@ -65,18 +65,6 @@ class VirtualListStore {
   isSorting = false
   observing = false
   cache: CellMeasurerCache = null
-
-  resizeOnChange = react(
-    () => always(this.props.items, this.cache),
-    () => {
-      ensure('this.listRef', !!this.listRef)
-      // this.listRef.recomputeRowHeights()
-      this.resizeAll()
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
 
   setFrameRef = (ref: HTMLDivElement) => {
     if (this.frameRef || !ref) {
@@ -173,6 +161,7 @@ class VirtualListStore {
   }
 
   resizeAll = () => {
+    console.trace('resize all')
     this.cache.clearAll()
     this.measureHeight()
   }
@@ -231,21 +220,6 @@ export default function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, props)
-
-  useEffect(() => {
-    if (!store.listRef) {
-      return
-    }
-
-    let tm = setTimeout(() => {
-      store.resizeAll()
-      store.listRef.forceUpdateGrid()
-    })
-
-    return () => {
-      clearTimeout(tm)
-    }
-  })
 
   // memo this whole thing because react is rendering things even when props dont change
   // which is a bit odd given React.memo supposedly prevents that

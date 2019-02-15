@@ -1,5 +1,5 @@
+import isEqualReact from '@mcro/fast-compare'
 import { transaction } from 'mobx'
-import isEqualReact from 'react-fast-compare'
 
 // updateProps
 // granular set so reactions can be efficient
@@ -12,6 +12,7 @@ export function updateProps(store: any, nextProps: Object) {
     for (const prop of nextPropsKeys) {
       const a = store.props[prop]
       const b = nextProps[prop]
+      if (a === b) continue
       if (!isEqualReact(a, b)) {
         store.props[prop] = b
       }

@@ -1,10 +1,9 @@
-
-import { PassProps } from '@mcro/ui';
-import * as React from 'react';
-import { Title, VerticalSpace } from '../../views';
-import { Center } from '../../views/Center';
-import { Icon } from '../../views/Icon';
-import { AppConfig } from '../AppTypes';
+import { PassProps } from '@mcro/ui'
+import * as React from 'react'
+import { Title, VerticalSpace } from '../../views'
+import { Center } from '../../views/Center'
+import { Icon } from '../../views/Icon'
+import { AppConfig } from '../AppTypes'
 
 export function MessageViewMain(props: AppConfig) {
   return (

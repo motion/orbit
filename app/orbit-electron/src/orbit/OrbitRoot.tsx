@@ -10,7 +10,6 @@ import { MenuItems } from './MenuItems'
 import OrbitWindow from './OrbitWindow'
 
 export function OrbitRoot() {
-  console.log('render OrbitRoot')
   const electronStore = useStore(ElectronStore)
 
   React.useEffect(() => {

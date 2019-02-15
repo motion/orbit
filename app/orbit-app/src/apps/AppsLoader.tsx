@@ -2,21 +2,22 @@ import { useStore } from '@mcro/use-store'
 import React, { useEffect, useMemo } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
+import { appsStatic } from './appsStatic'
 import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
 
 type AppViewDefinition = { id: string; type: string }
 
-export default function AppsLoader(props: { children?: any; views: AppViewDefinition[] }) {
+export function AppsLoader(props: { children?: any; views: AppViewDefinition[] }) {
   const appsStore = useStore(AppsStore)
 
-  const appLoadViews = props.views.map(view => {
+  const appViews = props.views.map(view => {
     return <AppLoader key={view.id} id={view.id} type={view.type} store={appsStore} />
   })
 
   return (
     <ProvideStores stores={{ appsStore }}>
-      {appLoadViews}
+      {appViews}
       {props.children}
     </ProvideStores>
   )
@@ -24,24 +25,24 @@ export default function AppsLoader(props: { children?: any; views: AppViewDefini
 
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
-function AppLoader(props: AppLoaderProps) {
-  const AppView = apps[props.type]
+function getAppViews(type: string) {
+  return apps[type] || appsStatic[type]
+}
 
+function AppLoader(props: AppLoaderProps) {
+  const AppView = getAppViews(props.type)
   if (!AppView) {
     throw new Error(`App not found ${props.type}`)
   }
-
-  // never run more than once
-  // sub-view so we can use hooks
-  const element = useMemo(() => {
+  return useMemo(() => {
+    // never run more than once
+    // sub-view so we can use hooks
     return <AppLoadView {...props} />
   }, [])
-
-  return element
 }
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
-  const AppView = apps[type]
+  const AppView = getAppViews(type)
   const appViewProps = { id }
   const appStore = useStore(AppStore, appViewProps)
 

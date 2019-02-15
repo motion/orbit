@@ -5,9 +5,9 @@
  * @format
  */
 
+import deepEqual from '@mcro/fast-compare'
 import { View } from '@mcro/gloss'
 import * as React from 'react'
-import deepEqual from 'react-fast-compare'
 import textContent from '../helpers/textContent'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'

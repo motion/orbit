@@ -81,8 +81,6 @@ function CreateAppMain(props: AppProps) {
   return (
     <Row flex={1}>
       <View width="50%">
-        {/* <SectionTitle>Setup</SectionTitle> */}
-
         <Section paddingTop={0}>
           <AppsMainNew />
         </Section>
@@ -99,7 +97,6 @@ function CreateAppMain(props: AppProps) {
 
         <Section>
           <BorderTop />
-
           <Theme name="selected">
             <Button elevation={2} size={1.4} onClick={createApp}>
               Create

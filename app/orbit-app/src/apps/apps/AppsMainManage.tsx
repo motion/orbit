@@ -1,4 +1,4 @@
-import { Absolute, ViewProps } from '@mcro/gloss'
+import { Absolute, gloss, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
 import { Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
@@ -53,14 +53,29 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
 function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelected?: boolean }) {
   const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
   return (
-    <LargeIcon
-      {...contextMenuProps}
-      title={app.name}
-      icon={<AppIcon app={app} size={58} />}
-      {...props}
-    />
+    <AppIconContainer>
+      {app.pinned && (
+        <Icon name="pin" position="absolute" top={20} left={20} size={12} opacity={0.35} />
+      )}
+      <LargeIcon
+        {...contextMenuProps}
+        title={app.name}
+        icon={<AppIcon app={app} size={58} />}
+        {...props}
+      />
+    </AppIconContainer>
   )
 }
+
+const AppIconContainer = gloss({
+  padding: [15, 25],
+  alignItems: 'center',
+  position: 'relative',
+}).theme((_, theme) => ({
+  '&:hover': {
+    background: theme.backgroundHover,
+  },
+}))
 
 export default function AppsMainManage() {
   const { paneManagerStore } = useStores()
@@ -73,6 +88,10 @@ export default function AppsMainManage() {
       type: 'installed',
       group: 'Installed Apps',
       disabled: x.pinned || x.editable === false,
+      onDoubleClick: () => {
+        paneManagerStore.setActivePane(`${x.id}`)
+        console.log('double 2', x)
+      },
     })),
     {
       id: '10000',
@@ -91,20 +110,21 @@ export default function AppsMainManage() {
   const resultsKey = results.map(x => x.id).join('')
 
   const getItem = React.useCallback(
-    (item, { isSelected, select }) => {
+    ({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
       if (item.type === 'add') {
         // TODO on click to new app pane
-        return <LargeIcon {...item} />
+        return (
+          <AppIconContainer onClick={onClick} onDoubleClick={onDoubleClick}>
+            <LargeIcon {...item} />
+          </AppIconContainer>
+        )
       }
       return (
         <OrbitAppIcon
           app={activeApps.find(x => x.id === item.id)}
           isSelected={isSelected}
           onClick={select}
-          onDoubleClick={() => {
-            paneManagerStore.setActivePane(`${item.id}`)
-            console.log('double 2', item)
-          }}
+          onDoubleClick={onDoubleClick}
         />
       )
     },
@@ -112,10 +132,16 @@ export default function AppsMainManage() {
   )
 
   return (
-    <Section sizePadding={2}>
-      <TitleRow bordered>Apps</TitleRow>
+    <Section sizePadding={0}>
+      <TitleRow bordered sizePadding={2} margin={0}>
+        Apps
+      </TitleRow>
       <SelectableGrid
-        margin="auto"
+        autoFitColumns
+        minWidth={160}
+        style={{
+          gridTemplateRows: 'repeat(1000, 180px, [col-start])',
+        }}
         items={results}
         getItem={getItem}
         distance={10}

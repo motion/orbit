@@ -24,12 +24,10 @@ function cachedObservable(
       sub.next(cached.value)
     } else {
       cached.isActive = true
-      console.log('not active, start new transport', name, args, cached)
       const subs = options.transports.map(transport => {
         return transport.observe(name, args).subscribe(
           response => {
             if (response.notFound !== true) {
-              console.log('UPDATE', name, args, cached, response.result, transport)
               cached.update(response.result)
             }
           },

@@ -5,33 +5,36 @@ import * as React from 'react'
 import { arrayMove } from 'react-sortable-hoc'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
+import { useStores } from '../../hooks/useStores'
 import { save } from '../../mediator'
 import { BorderBottom } from '../../views/Border'
 import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
+import { AppProps } from '../AppTypes'
 import { loadListItem } from './helpers'
-import { ListAppProps, ListsApp } from './ListsApp'
+import { ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
 import { ListAppDataItem } from './types'
 
-export default function ListsAppIndex({ store }: ListAppProps) {
+export default function ListsAppIndex(_: AppProps) {
   return (
     <>
       {/* Search/add bar */}
-      <ListAdd store={store} />
+      <ListAdd />
 
       {/* List items */}
-      <ListCurrentFolder store={store} />
+      <ListCurrentFolder />
 
       {/* Search results */}
-      <ListSearchResults store={store} />
+      <ListSearchResults />
     </>
   )
 }
 
-const ListCurrentFolder = function ListCurrentFolder(props: { store: ListStore }) {
-  const { store } = props
-  const { items, currentFolder } = store
+const ListCurrentFolder = function ListCurrentFolder() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  const { items, currentFolder } = listStore
 
   const getContextMenu = React.useCallback(index => {
     return [
@@ -45,32 +48,32 @@ const ListCurrentFolder = function ListCurrentFolder(props: { store: ListStore }
   }, [])
 
   const onChangeDepth = React.useCallback((depth, history) => {
-    store.depth = depth
-    store.history = history
+    listStore.depth = depth
+    listStore.history = history
   }, [])
 
   const loadItemProps = React.useCallback((item: ListAppDataItem) => {
-    return loadListItem(item, +store.props.id)
+    return loadListItem(item, +listStore.props.id)
   }, [])
 
   const handleSortEnd = React.useCallback(
     ({ oldIndex, newIndex }) => {
       const children = arrayMove(currentFolder.children, oldIndex, newIndex)
       console.log('updating sort for list folder', currentFolder, children)
-      store.app.data.items = {
-        ...store.app.data.items,
+      listStore.app.data.items = {
+        ...listStore.app.data.items,
         [currentFolder.id]: {
           ...currentFolder,
           children,
         },
       }
-      save(AppModel, store.app)
+      save(AppModel, listStore.app)
     },
     [JSON.stringify(currentFolder)],
   )
 
   const handleSelect = React.useCallback(index => {
-    store.selectedIndex = index
+    listStore.selectedIndex = index
   }, [])
 
   return (
@@ -85,7 +88,7 @@ const ListCurrentFolder = function ListCurrentFolder(props: { store: ListStore }
       getContextMenu={getContextMenu}
       onSelect={handleSelect}
       onChangeDepth={onChangeDepth}
-      depth={store.depth}
+      depth={listStore.depth}
     />
   )
 }
@@ -98,7 +101,9 @@ const addFolder = (store: ListStore) => {
   store.setQuery('')
 }
 
-const ListAdd = function ListAdd({ store }: { store: ListStore }) {
+function ListAdd() {
+  // @ts-ignore
+  const { listStore } = useStores()
   return (
     <Row position="relative">
       <BorderBottom opacity={0.25} />
@@ -108,13 +113,13 @@ const ListAdd = function ListAdd({ store }: { store: ListStore }) {
         paddingLeft={12}
         paddingRight={40}
         height={33}
-        value={store.query}
+        value={listStore.query}
         onChange={flow(
           preventDefault,
           getTargetValue,
-          store.setQuery,
+          listStore.setQuery,
         )}
-        onEnter={() => addFolder(store)}
+        onEnter={() => addFolder(listStore)}
         flex={1}
         placeholder="Add..."
       />
@@ -122,12 +127,12 @@ const ListAdd = function ListAdd({ store }: { store: ListStore }) {
         <Row flex={1} alignItems="center">
           <PassProps chromeless opacity={0.35} hoverOpacity={1}>
             <Button
-              active={!store.searchCollapsed}
+              active={!listStore.searchCollapsed}
               tooltip="Search to add"
               icon="zoom"
-              onClick={store.toggleSearchCollapsed}
+              onClick={listStore.toggleSearchCollapsed}
             />
-            <Button tooltip="Create folder" icon="folder-15" onClick={() => addFolder(store)} />
+            <Button tooltip="Create folder" icon="folder-15" onClick={() => addFolder(listStore)} />
           </PassProps>
         </Row>
       </Absolute>
@@ -135,8 +140,10 @@ const ListAdd = function ListAdd({ store }: { store: ListStore }) {
   )
 }
 
-const ListSearchResults = function ListSearchResults({ store }: { store: ListStore }) {
-  const { searchCollapsed, searchResults, query } = store
+function ListSearchResults() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  const { searchCollapsed, searchResults, query } = listStore
 
   return (
     <Panel
@@ -146,7 +153,7 @@ const ListSearchResults = function ListSearchResults({ store }: { store: ListSto
       padded={false}
       collapsable
       collapsed={searchCollapsed}
-      onCollapse={store.setSearchCollapsed}
+      onCollapse={listStore.setSearchCollapsed}
       heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
     >
       <SelectableList query={query} items={searchResults || []} />

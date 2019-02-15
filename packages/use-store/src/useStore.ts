@@ -117,26 +117,21 @@ export function useStore<P, A extends { props?: P } | any>(
   let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
   const component = getCurrentComponent()
-  const componentId = useRef(++nextId)
 
   if (!options || options.react !== false) {
     if (process.env.NODE_ENV === 'development') {
-      store = useTrackableStore(
-        store,
-        () => {
-          debugEmit(
-            {
-              type: 'render',
-              store,
-              component,
-              componentId: componentId.current,
-            },
-            options,
-          )
-          rerender()
-        },
-        { ...options, component, componentId: componentId.current },
-      )
+      store = useTrackableStore(store, () => {
+        debugEmit(
+          {
+            type: 'render',
+            store,
+            component,
+            componentName: component.renderName,
+          },
+          options,
+        )
+        rerender()
+      })
     } else {
       store = useTrackableStore(store, rerender)
     }
@@ -154,24 +149,71 @@ export function useStore<P, A extends { props?: P } | any>(
   return store
 }
 
+// no tracking
+export function useStoreSimple<P, A extends { props?: P } | any>(
+  Store: new () => A,
+  props?: P,
+  options?: UseStoreOptions,
+): A {
+  let store = useReactiveStore(Store, props)
+
+  useEffect(() => {
+    store.didMount && store.didMount()
+    return () => disposeStore(store)
+  }, [])
+
+  if (options && options.conditionalUse === false) {
+    return null
+  }
+
+  return store
+}
+
 function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }
 
+export function useStoreDebug() {
+  const component = getCurrentComponent()
+  component.__debug = true
+  // use setTimeout so we dont use hooks
+  // this is so we can HMR it nicely without hooks complaining
+  setTimeout(() => {
+    component.__debug = false
+  }, 1000)
+}
+
 export function getCurrentComponent() {
-  return ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
-    ? ReactCurrentOwner.current.elementType
-    : {}
+  const component =
+    ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
+      ? ReactCurrentOwner.current.elementType
+      : {}
+  component['renderName'] = component['renderName'] || getComponentName(component)
+  return component
+}
+
+function getComponentName(c) {
+  let name = c.displayName || (c.type && c.type.displayName) || (c.render && c.render.name)
+  if (c.displayName === '_default') {
+    name = c.type && c.type.displayName
+  }
+  if (name === 'Component' || name === '_default' || !name) {
+    if (c.type && c.type.__reactstandin__key) {
+      const match = c.type.__reactstandin__key.match(/\#[a-zA-Z0-9_-]+/g)
+      if (match && match.length) {
+        name = match[0].slice(1)
+      }
+    }
+  }
+  if (name === '_default') {
+    debugger
+  }
+  return name
 }
 
 export function useThrottledForceUpdate() {
-  const [, setState] = useState(0)
-  return useCallback(
-    throttle(() => {
-      setState(Math.random())
-    }),
-    [],
-  )
+  const setState = useState(0)[1]
+  return useCallback(throttle(() => setState(Math.random())), [])
 }
 
 let nextId = 0

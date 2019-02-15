@@ -155,6 +155,7 @@ export const CAMEL_TO_SNAKE = {
   zIndex: 'z-index',
   gridGap: 'grid-gap',
   gridTemplateColumns: 'grid-template-columns',
+  gridTemplateRows: 'grid-template-rows',
   gridAutoRows: 'grid-auto-rows',
 }
 

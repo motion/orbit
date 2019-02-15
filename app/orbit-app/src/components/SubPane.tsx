@@ -23,7 +23,7 @@ export type SubPaneProps = CSSPropertySetStrict & {
 
 type Props = SubPaneProps & { subPaneStore?: SubPaneStore; children: any }
 
-export const SubPane = memo((props: Props) => {
+export const SubPane = memo(function SubPane(props: Props) {
   const {
     fullHeight,
     style,

@@ -57,7 +57,7 @@ function CustomAppTree() {
 }
 
 export const CustomAppMain = memoIsEqualDeep((_props: AppProps) => {
-  console.log('why is this rendering...')
+  console.warn('???? rendering...')
 
   return (
     <Row flex={1}>

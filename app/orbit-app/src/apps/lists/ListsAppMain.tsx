@@ -1,5 +1,6 @@
 import { AppModel } from '@mcro/models'
 import * as React from 'react'
+import { useStores } from '../../hooks/useStores'
 import { useModel } from '../../useModel'
 import { SubTitle } from '../../views'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
@@ -7,12 +8,12 @@ import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import OrbitList from '../../views/Lists/OrbitList'
 import { Section } from '../../views/Section'
 import { TitleRow } from '../../views/TitleRow'
+import { AppProps } from '../AppTypes'
 import { AppSubView } from '../views/AppSubView'
 import { loadListItem } from './helpers'
-import { ListAppProps } from './ListsApp'
 import { ListsAppBit } from './types'
 
-export default React.memo(function ListsAppMain(props: ListAppProps) {
+export default React.memo(function ListsAppMain(props: AppProps) {
   if (!props.appConfig) {
     return null
   }
@@ -22,7 +23,9 @@ export default React.memo(function ListsAppMain(props: ListAppProps) {
   return <AppSubView appConfig={props.appConfig} />
 })
 
-function ListsAppMainFolder(props: ListAppProps) {
+function ListsAppMainFolder(props: AppProps) {
+  // @ts-ignore
+  const { listStore } = useStores()
   const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
@@ -47,8 +50,8 @@ function ListsAppMainFolder(props: ListAppProps) {
       <TitleRow
         bordered
         before={
-          props.store.depth > 0 && (
-            <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={props.store.back}>
+          listStore.depth > 0 && (
+            <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={listStore.back}>
               Back
             </FloatingBarButtonSmall>
           )

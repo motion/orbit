@@ -1,6 +1,8 @@
 import { gloss, Row } from '@mcro/gloss'
+import { BorderBottom } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useApp } from '../../apps/AppView'
+import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
 const height = 32
@@ -13,17 +15,19 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
 
 export default memo(function OrbitToolBar() {
   const { paneManagerStore } = useStores()
-  const { appViews, appStore } = useApp(paneManagerStore.activePane)
+  const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar
 
   return (
-    <ToolbarChrome hasToolbars={hasToolBar}>
-      <ToolbarInner hasToolbars={hasToolBar}>
-        {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-        {/* {hasToolBar && <BorderBottom opacity={0.5} />} */}
-      </ToolbarInner>
-    </ToolbarChrome>
+    <ProvideStores stores={provideStores}>
+      <ToolbarChrome hasToolbars={hasToolBar}>
+        <ToolbarInner hasToolbars={hasToolBar}>
+          {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
+          {hasToolBar && <BorderBottom />}
+        </ToolbarInner>
+      </ToolbarChrome>
+    </ProvideStores>
   )
 })
 
@@ -44,6 +48,8 @@ const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
   alignItems: 'center',
+  overflow: 'hidden',
+  position: 'relative',
   hasToolbars: {
     height: height,
     padding: [0, 12],

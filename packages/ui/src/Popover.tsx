@@ -725,12 +725,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       console.log('no node!', name)
       return null
     }
+    // because debouncing things is dangerous, lets track last event
+    // and use it as source of truth for "is hovered or isnt"
+    let lastEvent: 'enter' | 'leave' = 'leave'
     const listeners = []
     const { delay, noHoverOnChildren } = this.props
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
-    const setHovered = () => this.hoverStateSet(name, true)
-    const setUnhovered = () => this.hoverStateSet(name, false)
+    const setHovered = () => {
+      if (lastEvent === 'enter') this.hoverStateSet(name, true)
+    }
+    const setUnhovered = () => {
+      if (lastEvent === 'leave') this.hoverStateSet(name, false)
+    }
     const openIfOver = () => {
       if (this.isNodeHovered(node)) {
         setHovered()
@@ -779,6 +786,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     // logic for enter/leave
     listeners.push(
       on(this, node, 'mouseenter', () => {
+        lastEvent = 'enter'
         onEnter()
         // insanity, but mouseleave is horrible
         if (this.props.target) {
@@ -788,7 +796,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     )
     // if noHoverOnChildren it reduces bugs to just not check hovered state
     const onMouseLeave = noHoverOnChildren ? setUnhovered : onLeave
-    listeners.push(on(this, node, 'mouseleave', onMouseLeave))
+    listeners.push(
+      on(this, node, 'mouseleave', () => {
+        lastEvent = 'leave'
+        onMouseLeave()
+      }),
+    )
     this.listeners = [...this.listeners, ...listeners]
   }
 

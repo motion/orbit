@@ -1,13 +1,11 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { uniqBy } from 'lodash'
+import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/AppActions'
-import { apps } from '../../apps/apps'
-import AppsLoader from '../../apps/AppsLoader'
+import { AppsLoader } from '../../apps/AppsLoader'
 import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
@@ -60,7 +58,7 @@ function OrbitManagers() {
   return null
 }
 
-const OrbitPageInner = memo(() => {
+const OrbitPageInner = memo(function OrbitPageInner() {
   const { paneManagerStore } = useStores()
   const headerStore = useStore(HeaderStore)
   const sidebarStore = useStore(SidebarStore, null, { react: false })
@@ -76,19 +74,10 @@ const OrbitPageInner = memo(() => {
     })
   }, [])
 
-  const allViews = uniqBy(
-    [
-      ...paneManagerStore.panes.map(pane => ({
-        id: pane.id,
-        type: pane.type,
-      })),
-      ...Object.keys(apps).map(type => ({
-        id: type,
-        type,
-      })),
-    ],
-    x => x.id,
-  )
+  const allViews = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    type: pane.type,
+  }))
 
   useEffect(() => {
     // prevent close on the main window
@@ -171,13 +160,13 @@ const OrbitContentArea = gloss({
 }))
 
 function OrbitPageProvideStores(props: any) {
-  const settingStore = useStore(SettingStore)
-  const sourcesStore = useStore(SourcesStore)
-  const queryStore = useStore(QueryStore, { sourcesStore })
-  const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const newAppStore = useStore(NewAppStore)
+  const settingStore = useStoreSimple(SettingStore)
+  const sourcesStore = useStoreSimple(SourcesStore)
+  const queryStore = useStoreSimple(QueryStore, { sourcesStore })
+  const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
+  const newAppStore = useStoreSimple(NewAppStore)
 
-  const paneManagerStore = useStore(PaneManagerStore, {
+  const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes,
     defaultIndex: 0,
     onPaneChange(index: number) {
@@ -185,7 +174,7 @@ function OrbitPageProvideStores(props: any) {
     },
   })
 
-  const spaceStore = useStore(SpaceStore, { paneManagerStore })
+  const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })
 
   const stores = {
     settingStore,

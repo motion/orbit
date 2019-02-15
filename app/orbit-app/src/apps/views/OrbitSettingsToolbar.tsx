@@ -1,7 +1,6 @@
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
 import { useObserver } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStores } from '../../hooks/useStores'
 import { Icon } from '../../views/Icon'
@@ -16,10 +15,9 @@ const tabIconProps = {
 const insetShadow = theme => [[0, 0, 0, 0.5, theme.borderColor]]
 
 export function OrbitSettingsToolbar() {
-  const { paneManagerStore } = useStores()
+  const { orbitStore, paneManagerStore } = useStores()
   const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
   const [activeSpace] = useActiveSpace()
-  const isTorn = getIsTorn()
 
   useObserver(() => {
     const next = paneManagerStore.activePane.type
@@ -34,7 +32,7 @@ export function OrbitSettingsToolbar() {
     }
   }, [])
 
-  if (isTorn) {
+  if (orbitStore.isTorn) {
     return null
   }
 

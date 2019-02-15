@@ -2,7 +2,7 @@ import { AppBit } from '@mcro/models'
 import { getAppState, getIsTorn } from '../helpers/getAppHelpers'
 import { Pane, PaneManagerStore } from './PaneManagerStore'
 
-const settingsPane = {
+export const settingsPane = {
   id: 'settings',
   name: 'Settings',
   type: 'settings',
@@ -35,6 +35,7 @@ function getAppsPanes(apps: AppBit[]): Pane[] {
     // torn window panes, remove the others besides active app + settings
     const appState = getAppState()
     const app = apps.find(app => +app.id === +appState.appId)
+    console.log('setting panes by torn')
     if (!app) {
       console.warn(`No app found! ${JSON.stringify(appState)} ${JSON.stringify(apps)}`)
       return [settingsPane]
@@ -58,7 +59,11 @@ export function getPanes(paneManagerStore: PaneManagerStore, apps: AppBit[]) {
       ? paneManagerStore.panes.findIndex(pane => pane.id === prevPane.id)
       : 0
     paneIndex = prevIndex === -1 ? 0 : prevIndex
-    console.warn('removing pane you are currently on! moving to a different one')
+    console.warn(
+      'removing pane you are currently on! moving to a different one',
+      prevIndex,
+      paneIndex,
+    )
   }
   return {
     panes,

@@ -6,7 +6,6 @@ import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
 import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStores } from '../../hooks/useStores'
 import { HorizontalSpace } from '../../views'
@@ -18,9 +17,9 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
 export default memo(function OrbitHeader() {
-  const { headerStore, queryStore, newAppStore, orbitStore, paneManagerStore } = useStores()
+  const { orbitStore, headerStore, queryStore, newAppStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
-  const isTorn = getIsTorn()
+  const { isTorn } = orbitStore
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
   const { queryFilters } = queryStore

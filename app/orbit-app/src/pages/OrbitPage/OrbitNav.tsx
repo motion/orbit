@@ -10,7 +10,6 @@ import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -36,7 +35,7 @@ class OrbitNavStore {
 }
 
 export default memo(function OrbitNav() {
-  const { spaceStore, paneManagerStore, newAppStore } = useStores()
+  const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
@@ -45,9 +44,10 @@ export default memo(function OrbitNav() {
   const { activePaneId } = paneManagerStore
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
-  const isTorn = getIsTorn()
 
-  if (isTorn) {
+  console.log(orbitStore.isTorn, activeAppsSorted.length, space)
+
+  if (orbitStore.isTorn) {
     return null
   }
 

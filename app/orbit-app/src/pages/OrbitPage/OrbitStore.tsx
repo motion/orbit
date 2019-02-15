@@ -4,6 +4,7 @@ import { App, Desktop } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import { AppConfig, AppType } from '../../apps/AppTypes'
+import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useStoresSimple } from '../../hooks/useStores'
 import { observeOne } from '../../mediator'
 import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
@@ -36,6 +37,10 @@ export class OrbitStore {
 
   activeConfig: { [key: string]: AppConfig } = {
     search: { id: '', type: AppType.search, title: '' },
+  }
+
+  get isTorn() {
+    return getIsTorn()
   }
 
   setEditing = () => {

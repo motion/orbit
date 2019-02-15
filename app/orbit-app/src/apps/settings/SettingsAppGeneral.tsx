@@ -102,11 +102,14 @@ export function SettingsAppGeneral(_props: AppProps) {
       </FormRow>
 
       <FormRow label="Vibrancy">
-        <select value={settings.vibrancy} onChange={e => updateSettings({ theme: e.target.value })}>
+        <select
+          value={settings.vibrancy}
+          onChange={e => updateSettings({ vibrancy: e.target.value })}
+        >
           {[
             { key: 'some', name: 'Less Transparent' },
-            { key: 'more', value: 'More Transparent' },
-            { key: 'None', value: 'none' },
+            { key: 'more', name: 'More Transparent' },
+            { key: 'none', name: 'none' },
           ].map(({ key, name }) => (
             <option key={key} value={key}>
               {capitalize(name)}

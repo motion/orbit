@@ -1,13 +1,33 @@
 import { react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { App } from '@mcro/stores'
+import { useHook } from '@mcro/use-store'
+import { useStoresSimple } from '../hooks/useStores'
 import { AppReactions } from './AppReactions'
 import { QueryStore } from './QueryStore/QueryStore'
 
 export class OrbitWindowStore {
+  stores = useHook(useStoresSimple)
+
   props: {
     queryStore: QueryStore
   }
+
+  get themeStore() {
+    return this.stores.themeStore
+  }
+
+  syncBackgroundToVibrancy = react(
+    () => this.themeStore.vibrancy === 'none',
+    disabled => {
+      if (disabled) {
+        const bg = this.themeStore.themeColor === 'dark' ? '#111' : '#fff'
+        document.body.style.background = bg
+      } else {
+        document.body.style.background = 'transparent'
+      }
+    },
+  )
 
   activePaneIndex = 0
   contentHeight = 0

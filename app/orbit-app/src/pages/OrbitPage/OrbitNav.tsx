@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { gloss, Row, View, ViewProps } from '@mcro/gloss'
+import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { AppModel } from '@mcro/models'
 import { BorderBottom } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -127,9 +127,9 @@ export default memo(function OrbitNav() {
       <OrbitNavChrome>
         <Row
           height={tabHeight}
-          flex={200}
+          flex={1}
           overflow="hidden"
-          maxWidth={`calc(100% - ${(showCreateNew ? 120 : 80) + (showAppsTray ? 20 : 0)}px)`}
+          maxWidth={`calc(100% - ${(showCreateNew ? 75 : 40) + (showAppsTray ? 20 : 0)}px)`}
         >
           {items
             .filter(x => x.isPinned)
@@ -142,10 +142,10 @@ export default memo(function OrbitNav() {
             axis="x"
             lockAxis="x"
             distance={8}
+            maxWidth={showCreateNew ? `calc(100% - 260px)` : '100%'}
             items={items.filter(x => !x.isPinned)}
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}
-            flex={1}
             // let shadows from tabs go up above
             padding={[16, 0]}
             margin={[-16, 0]}
@@ -192,8 +192,6 @@ export default memo(function OrbitNav() {
             />
           )}
         </Row>
-
-        <View flex={1} />
 
         {showAppsTray && (
           <OrbitTab

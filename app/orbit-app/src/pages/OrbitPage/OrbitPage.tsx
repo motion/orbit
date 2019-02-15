@@ -13,7 +13,7 @@ import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStores } from '../../hooks/useStores'
-import { defaultPanes } from '../../stores/getPanes'
+import { defaultPanes, settingsPane } from '../../stores/getPanes'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
@@ -60,6 +60,7 @@ function OrbitManagers() {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { paneManagerStore } = useStores()
+  const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
   const sidebarStore = useStoreSimple(SidebarStore)
   const shortcutState = useRef({
@@ -88,7 +89,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
       console.log('unloading!', shouldCloseApp, shouldCloseTab)
 
-      if (getIsTorn()) {
+      if (orbitStore.isTorn) {
         // TORN AWAY APP
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
@@ -118,39 +119,32 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }, [])
 
   return (
-    <ProvideStores stores={{ headerStore, sidebarStore }}>
-      <ProvideOrbitStore>
-        <MainShortcutHandler
-          handlers={{
-            closeTab: () => {
-              shortcutState.current.closeTab = Date.now()
-            },
-            closeApp: () => {
-              shortcutState.current.closeApp = Date.now()
-            },
-          }}
-        >
-          <AppsLoader views={allViews}>
-            <OrbitHeader />
-            <InnerChrome torn={getIsTorn()}>
-              <OrbitToolBar />
-              <OrbitContentArea>
-                <OrbitSidebar />
-                <OrbitMain />
-              </OrbitContentArea>
-              <OrbitStatusBar />
-            </InnerChrome>
-          </AppsLoader>
-        </MainShortcutHandler>
-      </ProvideOrbitStore>
+    <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
+      <MainShortcutHandler
+        handlers={{
+          closeTab: () => {
+            shortcutState.current.closeTab = Date.now()
+          },
+          closeApp: () => {
+            shortcutState.current.closeApp = Date.now()
+          },
+        }}
+      >
+        <AppsLoader views={allViews}>
+          <OrbitHeader />
+          <InnerChrome torn={orbitStore.isTorn}>
+            <OrbitToolBar />
+            <OrbitContentArea>
+              <OrbitSidebar />
+              <OrbitMain />
+            </OrbitContentArea>
+            <OrbitStatusBar />
+          </InnerChrome>
+        </AppsLoader>
+      </MainShortcutHandler>
     </ProvideStores>
   )
 })
-
-function ProvideOrbitStore(props: { children: any }) {
-  const orbitStore = useStore(OrbitStore)
-  return <ProvideStores stores={{ orbitStore }}>{props.children}</ProvideStores>
-}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',
@@ -167,7 +161,7 @@ function OrbitPageProvideStores(props: any) {
   const newAppStore = useStoreSimple(NewAppStore)
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
-    defaultPanes,
+    defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
     onPaneChange(index: number) {
       orbitWindowStore.activePaneIndex = index

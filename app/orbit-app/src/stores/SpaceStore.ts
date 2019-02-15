@@ -1,6 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
 import { isEqual, once } from 'lodash'
+import { getIsTorn } from '../helpers/getAppHelpers'
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { observeMany, observeOne } from '../mediator'
 import { defaultPanes, getPanes } from './getPanes'
@@ -51,6 +52,7 @@ export class SpaceStore {
   })
 
   setInitialPaneIndex = once(() => {
+    if (getIsTorn()) return
     this.props.paneManagerStore.setPaneIndex(defaultPanes.length)
   })
 
@@ -59,12 +61,12 @@ export class SpaceStore {
     apps => {
       ensure('apps', !!apps)
       const { paneManagerStore } = this.props
-      const { panes, paneIndex } = getPanes(paneManagerStore, this.apps)
-      paneManagerStore.setPaneIndex(paneIndex)
+      const { panes, paneIndex } = getPanes(paneManagerStore, apps)
       if (!isEqual(panes, paneManagerStore.panes)) {
         paneManagerStore.setPanes(panes)
         this.setInitialPaneIndex()
       }
+      paneManagerStore.setPaneIndex(paneIndex)
     },
   )
 

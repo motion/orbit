@@ -11,7 +11,7 @@ import './calendar.css' // theme css file
 import SearchItemShare, { SearchItemShareProvide } from './SearchItemShare'
 
 export default function SearchAppIndex(props: AppProps) {
-  const { searchStore } = useStores()
+  const { searchStore } = useStores({ debug: true })
   const items = searchStore.results
 
   const getItemProps = React.useCallback(

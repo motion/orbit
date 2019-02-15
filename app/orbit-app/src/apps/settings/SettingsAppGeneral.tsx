@@ -55,7 +55,7 @@ const blurShortcut = () => {
 
 export function SettingsAppGeneral(_props: AppProps) {
   const [user, updateUser] = useActiveUser()
-  const { settings } = user
+  const { settings } = user || { settings: {} }
   const updateSettings = settings => updateUser({ settings: { ...user.settings, ...settings } })
 
   const handleClearAllData = () => {

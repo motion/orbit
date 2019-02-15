@@ -1,3 +1,4 @@
+import { IS_STORE } from '@mcro/black'
 import { debugUseStore } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
@@ -35,47 +36,37 @@ window['enableLog'] = localStorage.getItem('enableLog')
 window['StoreState'] = {}
 const StoreState = window['StoreState']
 
-function addEvent(name: string, key: string, event: any) {
-  const id = event.componentId
-  StoreState[name] = StoreState[name] || {}
-  StoreState[name][id] = StoreState[name][id] || {
-    observes: [],
-    reactiveKeys: [],
-  }
-  StoreState[name][id][key].push(event)
+function addEvent({ renderName }, event: any) {
+  StoreState[renderName] = StoreState[renderName] || []
+  StoreState[renderName].push(event)
 }
 
 debugUseStore(event => {
   if (event.type === 'state') {
-    setStoreStateOntoWindow(event.value)
+    globalizeStores(event.value)
     return
   }
-  if (!window['enableLog']) return
+  if (event.store && event.store.constructor.name === 'SubPaneStore') {
+    console.log('event', event, event.store.isActive)
+  }
   switch (event.type) {
     case 'observe':
-      addEvent(event.componentName, 'observes', event)
-      return
     case 'render':
-      console.log(event)
+    case 'unmount':
+    case 'mount':
+      addEvent(event.component, event)
       return
   }
 })
 
-function setStoreStateOntoWindow(stores) {
+function globalizeStores(stores: Object) {
   window['Stores'] = stores
-  // if we can just put the store right on window
+  // if we can, put store right on window
   for (const key in stores) {
-    if (typeof window[key] === 'undefined' || window[key].__isAStore) {
-      const storeOrStores = stores[key]
-      if (window[key]) {
-        // could be array of stores or just one, but either way we can define this to help check for replacements
-        Object.defineProperty(storeOrStores.prototype, '__isAStore', {
-          enumerable: false,
-          configurable: true,
-          value: true,
-        })
-      }
-      window[key] = storeOrStores
+    if (window[key]) {
+      if (Array.isArray(window[key]) && !window[key][0][IS_STORE]) return
+      if (!window[key][IS_STORE]) return
+      window[key] = stores[key]
     }
   }
 }

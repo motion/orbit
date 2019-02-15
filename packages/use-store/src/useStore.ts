@@ -11,7 +11,7 @@ import {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
 } from 'react'
 import { config } from './configure'
-import { debugEmit } from './debugUseStore'
+import { DebugComponent, debugEmit } from './debugUseStore'
 import { setupTrackableStore, useTrackableStore } from './setupTrackableStore'
 
 export { configureUseStore } from './configure'
@@ -25,13 +25,14 @@ type UseStoreOptions = {
   react?: boolean
 }
 
-export function disposeStore(store: any) {
+export function disposeStore(store: any, component: DebugComponent) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
   if (process.env.NODE_ENV === 'development') {
     debugEmit({
       type: 'unmount',
       store,
+      component,
     })
   }
   store.disposeAutomagic()
@@ -46,12 +47,11 @@ export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {
-  // automagic store
+  const component = getCurrentComponent()
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
   currentHooks = null
-
   const store = new AutomagicStore()
 
   if (config.onMount) {
@@ -62,6 +62,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
     debugEmit({
       type: 'mount',
       store,
+      component,
     })
   }
 
@@ -101,7 +102,6 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
 
   if (hasChangedSource) {
     console.log('HMR store', Store.name)
-    debugger
     forceUpdate()
   }
 
@@ -113,32 +113,17 @@ export function useStore<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
+  const component = getCurrentComponent()
   let store = useReactiveStore(Store, props)
   const rerender = useThrottledForceUpdate()
-  const component = getCurrentComponent()
 
   if (!options || options.react !== false) {
-    if (process.env.NODE_ENV === 'development') {
-      store = useTrackableStore(store, () => {
-        debugEmit(
-          {
-            type: 'render',
-            store,
-            component,
-            componentName: component.renderName,
-          },
-          options,
-        )
-        rerender()
-      })
-    } else {
-      store = useTrackableStore(store, rerender)
-    }
+    store = useTrackableStore(store, rerender)
   }
 
   useEffect(() => {
     store.didMount && store.didMount()
-    return () => disposeStore(store)
+    return () => disposeStore(store, component)
   }, [])
 
   if (options && options.conditionalUse === false) {
@@ -154,18 +139,7 @@ export function useStoreSimple<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  let store = useReactiveStore(Store, props)
-
-  useEffect(() => {
-    store.didMount && store.didMount()
-    return () => disposeStore(store)
-  }, [])
-
-  if (options && options.conditionalUse === false) {
-    return null
-  }
-
-  return store
+  return useStore(Store, props, { ...options, react: false })
 }
 
 function isSourceEqual(oldStore: any, newStore: new () => any) {
@@ -182,7 +156,7 @@ export function useStoreDebug() {
   }, 1000)
 }
 
-export function getCurrentComponent() {
+export function getCurrentComponent(): DebugComponent {
   const component =
     ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
       ? ReactCurrentOwner.current.elementType

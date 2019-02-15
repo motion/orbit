@@ -131,6 +131,9 @@ export function decorate<T>(
         reactions[key].value = reactions[key].initializer(decoratedInstance, key)
       }
 
+      // if (Target.name === 'SubPaneStore' && reactions['isActive'].value.get() === undefined)
+      //   debugger
+
       return decoratedInstance
     },
   })

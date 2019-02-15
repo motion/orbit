@@ -60,10 +60,8 @@ export class SpaceStore {
       ensure('apps', !!apps)
       const { paneManagerStore } = this.props
       const { panes, paneIndex } = getPanes(paneManagerStore, this.apps)
-      console.log('managePaneSort', paneManagerStore, this.props, panes, paneIndex)
       paneManagerStore.setPaneIndex(paneIndex)
       if (!isEqual(panes, paneManagerStore.panes)) {
-        debugger
         paneManagerStore.setPanes(panes)
         this.setInitialPaneIndex()
       }

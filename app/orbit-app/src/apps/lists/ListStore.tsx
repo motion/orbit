@@ -6,12 +6,12 @@ import { dropRight, last } from 'lodash'
 import React from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany, observeOne } from '../../mediator'
+import { AppProps } from '../AppTypes'
 import { searchGroupsToResults } from '../search/searchGroupsToResults'
-import { ListAppProps } from './ListsApp'
 import { ListAppDataItemFolder, ListsAppBit } from './types'
 
 export class ListStore {
-  props: ListAppProps
+  props: AppProps
 
   stores = useHook(useStoresSimple)
 

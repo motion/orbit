@@ -1,4 +1,5 @@
 import { react } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 import { useHook, useStore } from '@mcro/use-store'
 import { useObserver } from 'mobx-react-lite'
 import React, { memo, useMemo, useState } from 'react'
@@ -69,16 +70,25 @@ class OrbitPageMainStore {
 
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
+  const { orbitStore } = useStores()
   const { appConfig, key } = useStore(OrbitPageMainStore, { id })
   return (
-    <AppView
-      key={key}
-      viewType="main"
-      id={id}
-      type={type}
-      appConfig={appConfig || { type: AppType[type], id }}
-      before={<OrbitToolBarHeight id={id} />}
-      after={<OrbitStatusBarHeight id={id} />}
-    />
+    <OrbitMainContainer isTorn={orbitStore.isTorn}>
+      <AppView
+        key={key}
+        viewType="main"
+        id={id}
+        type={type}
+        appConfig={appConfig || { type: AppType[type], id }}
+        before={<OrbitToolBarHeight id={id} />}
+        after={<OrbitStatusBarHeight id={id} />}
+      />
+    </OrbitMainContainer>
   )
 })
+
+const OrbitMainContainer = gloss<{ isTorn: boolean }>({
+  flex: 1,
+}).theme(({ isTorn }, theme) => ({
+  background: isTorn ? theme.background : 'transparent',
+}))

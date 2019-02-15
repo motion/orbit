@@ -1,4 +1,4 @@
-import { debounce, get, isEqual } from 'lodash'
+import { get, isEqual } from 'lodash'
 import { Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
@@ -19,11 +19,11 @@ export function setupTrackableStore(
   options?: TrackableStoreOptions,
 ) {
   const name = options && options.component.renderName
-  // const shouldLog = store.constructor.name === 'NewAppStore'
   let paused = true
   let reactiveKeys = new Set()
+  let tm = null
 
-  const rerenderDebounce = debounce(() => {
+  const rerenderOnce = () => {
     if (options.component && process.env.NODE_ENV === 'development') {
       debugEmit({
         type: 'render',
@@ -33,7 +33,7 @@ export function setupTrackableStore(
       })
     }
     rerender()
-  })
+  }
 
   const reaction = new Reaction(`track(${name})`, () => {
     if (paused) return
@@ -42,7 +42,8 @@ export function setupTrackableStore(
       for (const key of [...reactiveKeys]) {
         get(store, key)
       }
-      rerenderDebounce()
+      clearImmediate(tm)
+      setImmediate(rerenderOnce)
     })
   })
 
@@ -53,6 +54,7 @@ export function setupTrackableStore(
   return {
     store: config.store,
     track() {
+      clearImmediate(tm)
       paused = true
       done = config.track(Math.random())
     },
@@ -65,7 +67,10 @@ export function setupTrackableStore(
         reaction.schedule()
       }
     },
-    dispose: reaction.getDisposer(),
+    dispose() {
+      clearImmediate(tm)
+      reaction.dispose()
+    },
   }
 }
 

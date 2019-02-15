@@ -19,6 +19,7 @@ export class SidebarStore {
   indexViews: { [key: string]: AppViewRef } = deep({})
 
   handleResize = next => {
+    console.log('set widht', next)
     this.width = next
   }
 
@@ -39,6 +40,8 @@ export default memo(function OrbitSidebar() {
     hasIndex: false,
   }
   const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
+  const width = sidebarStore.width
+  console.log('waht?', width)
 
   const elements = useMemo(
     () => {
@@ -66,10 +69,10 @@ export default memo(function OrbitSidebar() {
   }
 
   return (
-    <SidebarContainer hideSidebar={hideSidebar} width={sidebarStore.width}>
+    <SidebarContainer hideSidebar={hideSidebar} width={width}>
       <Sidebar
         background="transparent"
-        width={sidebarStore.width}
+        width={width}
         onResize={sidebarStore.handleResize}
         minWidth={100}
         maxWidth={500}
@@ -77,6 +80,7 @@ export default memo(function OrbitSidebar() {
       >
         {elements}
       </Sidebar>
+      <BorderRight />
     </SidebarContainer>
   )
 })
@@ -86,6 +90,8 @@ const SidebarContainer = gloss(Absolute, {
   left: 0,
   bottom: 0,
   zIndex: 10000000,
+  overflow: 'hidden',
+  position: 'relative',
   hideSidebar: {
     zIndex: -1,
     pointerEvents: 'none',
@@ -116,7 +122,6 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   return (
     <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        <BorderRight opacity={0.5} />
         <AppView
           key={id}
           ref={handleAppRef}

@@ -46,6 +46,9 @@ debugUseStore(event => {
     globalizeStores(event.value)
     return
   }
+  if (window['enableLog']) {
+    console.log(event)
+  }
   switch (event.type) {
     case 'observe':
     case 'render':

@@ -160,6 +160,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 }
 
+// const SidebarChildrenDebounce = debounceRender(Contents)
+
 const SidebarContainer = gloss({
   height: '100%',
   overflowX: 'hidden',

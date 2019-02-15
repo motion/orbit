@@ -46,9 +46,6 @@ debugUseStore(event => {
     globalizeStores(event.value)
     return
   }
-  if (event.store && event.store.constructor.name === 'SubPaneStore') {
-    console.log('event', event, event.store.isActive)
-  }
   switch (event.type) {
     case 'observe':
     case 'render':

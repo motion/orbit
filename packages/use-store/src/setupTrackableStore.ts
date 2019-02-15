@@ -1,5 +1,5 @@
-import { get } from 'lodash'
-import { observable, Reaction } from 'mobx'
+import { debounce, get, isEqual } from 'lodash'
+import { Reaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
@@ -19,34 +19,32 @@ export function setupTrackableStore(
   options?: TrackableStoreOptions,
 ) {
   const name = options && options.component.renderName
-  let rendering = observable.box(false)
-  let firstRun = true
+  // const shouldLog = store.constructor.name === 'NewAppStore'
+  let paused = true
   let reactiveKeys = new Set()
 
+  const rerenderDebounce = debounce(() => {
+    if (options.component && process.env.NODE_ENV === 'development') {
+      debugEmit({
+        type: 'render',
+        component: options.component,
+        reactiveKeys,
+        store,
+      })
+    }
+    rerender()
+  })
+
   const reaction = new Reaction(`track(${name})`, () => {
+    if (paused) return
     reaction.track(() => {
-      if (rendering.get()) return
       if (reactiveKeys.size === 0) return
       for (const key of [...reactiveKeys]) {
         get(store, key)
       }
-      if (firstRun) {
-        firstRun = false
-        return
-      }
-      if (options.component && process.env.NODE_ENV === 'development') {
-        debugEmit({
-          type: 'render',
-          component: options.component,
-          reactiveKeys,
-          store,
-        })
-      }
-      rerender()
+      rerenderDebounce()
     })
   })
-
-  reaction.schedule()
 
   const config = DedupedWorms.get(store) || mobxProxyWorm(store)
   DedupedWorms.set(store, config)
@@ -55,13 +53,17 @@ export function setupTrackableStore(
   return {
     store: config.store,
     track() {
+      paused = true
       done = config.track(Math.random())
-      rendering.set(true)
     },
     untrack() {
-      firstRun = true
-      reactiveKeys = done()
-      rendering.set(false)
+      let nextKeys = done()
+      paused = false
+      if (!isEqual(nextKeys, reactiveKeys)) {
+        reactiveKeys = nextKeys
+        store['__useStoreKeys'] = nextKeys
+        reaction.schedule()
+      }
     },
     dispose: reaction.getDisposer(),
   }

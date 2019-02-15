@@ -45,7 +45,7 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
         return null
       }
       return (
-        <SubPane left={left} id={id} type={AppType[type]} fullHeight>
+        <SubPane left={left} id={id} /* debug={id === 'createApp'} */ fullHeight>
           <OrbitPageMainView id={id} type={type} />
         </SubPane>
       )
@@ -70,7 +70,6 @@ class OrbitPageMainStore {
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { appConfig, key } = useStore(OrbitPageMainStore, { id })
-
   return (
     <AppView
       key={key}

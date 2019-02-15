@@ -215,7 +215,7 @@ export class SearchStore {
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
-        console.log(loadMany, SearchResultModel, args)
+
         const nextResults = await loadMany(SearchResultModel, { args })
         console.log('nextResults', nextResults)
         if (!nextResults) {

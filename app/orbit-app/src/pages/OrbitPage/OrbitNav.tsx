@@ -45,8 +45,6 @@ export default memo(function OrbitNav() {
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
-  console.log(orbitStore.isTorn, activeAppsSorted.length, space)
-
   if (orbitStore.isTorn) {
     return null
   }

@@ -33,6 +33,7 @@ class OrbitWindowStore {
   size = [0, 0]
   position = [0, 0]
   windowID = last(App.state.allApps).id
+  vibrancy = 'light'
 
   didMount() {
     // screen events
@@ -43,14 +44,21 @@ class OrbitWindowStore {
     })
 
     // theme events
-    const updateTheme = () => {
+    const setOSTheme = () => {
       const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
-      console.log('sending theme', theme)
       Electron.sendMessage(Desktop, Desktop.messages.OS_THEME, theme)
     }
-    updateTheme()
-    systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', updateTheme)
+    setOSTheme()
+    systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', setOSTheme)
   }
+
+  // use reaction to allow us to modify it at runtime to test
+  updateVibrancy = react(
+    () => App.vibrancy,
+    next => {
+      this.vibrancy = next
+    },
+  )
 
   updateSize = react(
     () => Electron.state.screenSize,
@@ -158,10 +166,11 @@ export default function OrbitWindow() {
 
   const appQuery = `/?id=${store.windowID}`
   const url = `${Config.urls.server}${store.windowID > 0 ? appQuery : ''}`
-  const vibrancy = App.state.isDark ? 'ultra-dark' : 'light'
 
   log.info(
-    `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${vibrancy}`,
+    `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${
+      store.vibrancy
+    }`,
   )
 
   const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
@@ -253,7 +262,7 @@ export default function OrbitWindow() {
       showDevTools={store.showDevTools}
       transparent
       background="#00000000"
-      vibrancy={vibrancy}
+      vibrancy={store.vibrancy}
       hasShadow
       icon={join(ROOT, 'resources', 'icons', 'appicon.png')}
     />

@@ -18,6 +18,7 @@ import { SettingStore } from '../stores/SettingStore'
 import { ShortcutStore } from '../stores/ShortcutStore'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
+import { ThemeStore } from '../stores/ThemeStore'
 
 export type AllStores = {
   queryStore?: QueryStore
@@ -39,6 +40,7 @@ export type AllStores = {
   headerStore?: HeaderStore
   searchStore?: SearchStore
   sidebarStore?: SidebarStore
+  themeStore?: ThemeStore
 }
 
 export const StoreContext = createContext({} as AllStores)

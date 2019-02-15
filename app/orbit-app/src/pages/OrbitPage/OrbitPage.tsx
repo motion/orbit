@@ -22,6 +22,7 @@ import { QueryStore } from '../../stores/QueryStore/QueryStore'
 import { SettingStore } from '../../stores/SettingStore'
 import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
+import { ThemeStore } from '../../stores/ThemeStore'
 import { AppWrapper } from '../../views'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
@@ -30,26 +31,22 @@ import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
 
-class ThemeStore {
-  get theme() {
-    return App.state.isDark ? 'dark' : 'light'
-  }
-}
-
 export default memo(function OrbitPage() {
-  const { theme } = useStore(ThemeStore)
+  const themeStore = useStore(ThemeStore)
 
   return (
-    <Theme name={theme}>
-      <AppWrapper className={`theme-${theme} app-parent-bounds`}>
-        <ActionsContext.Provider value={defaultActions}>
-          <OrbitPageProvideStores>
-            <OrbitPageInner />
-            <OrbitManagers />
-          </OrbitPageProvideStores>
-        </ActionsContext.Provider>
-      </AppWrapper>
-    </Theme>
+    <ProvideStores stores={{ themeStore }}>
+      <Theme name={themeStore.theme}>
+        <AppWrapper className={`theme-${themeStore.theme} app-parent-bounds`}>
+          <ActionsContext.Provider value={defaultActions}>
+            <OrbitPageProvideStores>
+              <OrbitPageInner />
+              <OrbitManagers />
+            </OrbitPageProvideStores>
+          </ActionsContext.Provider>
+        </AppWrapper>
+      </Theme>
+    </ProvideStores>
   )
 })
 

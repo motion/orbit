@@ -8,7 +8,6 @@ import {
   SlackBitData,
   SlackPersonData,
 } from '@mcro/models'
-import { App } from '@mcro/stores'
 import { Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -98,7 +97,7 @@ class PeopleAppStore {
 const PersonHeader = gloss()
 
 export default function PeopleAppMain(props: AppProps) {
-  const { queryStore } = useStores()
+  const { queryStore, themeStore } = useStores()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
   if (!person) {
     return <div>No one selected</div>
@@ -136,7 +135,7 @@ export default function PeopleAppMain(props: AppProps) {
             </Links>
           </Info>
         </CardContent>
-        {!App.state.isDark && (
+        {!themeStore.isDark && (
           <Map>
             <FadeMap />
             <FadeMapRight />

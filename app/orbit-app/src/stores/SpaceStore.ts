@@ -1,5 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
+import { App } from '@mcro/stores'
 import { isEqual, once } from 'lodash'
 import { getIsTorn } from '../helpers/getAppHelpers'
 import { sortApps } from '../hooks/useActiveAppsSorted'
@@ -28,6 +29,24 @@ export class SpaceStore {
   )
 
   user = react(() => 1, () => observeOne(UserModel, {}))
+
+  hasStarted = false
+
+  syncUserSettings = react(
+    () => this.user,
+    async (user, { sleep }) => {
+      ensure('has user', !!user)
+      if (!isEqual(user.settings, App.state.userSettings)) {
+        App.setState({ userSettings: user.settings })
+      }
+      if (!this.hasStarted) {
+        await sleep(10)
+        console.log('show orbit first time after theme is set')
+        this.hasStarted = true
+        App.setOrbitState({ docked: true })
+      }
+    },
+  )
 
   get activeSpace() {
     if (this.user && this.spaces.length) {

@@ -56,7 +56,12 @@ const blurShortcut = () => {
 export function SettingsAppGeneral(_props: AppProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user || { settings: {} }
-  const updateSettings = settings => updateUser({ settings: { ...user.settings, ...settings } })
+
+  const updateSettings = settings => {
+    const next = { ...user.settings, ...settings }
+    App.setState({ userSettings: next })
+    updateUser({ settings: next })
+  }
 
   const handleClearAllData = () => {
     if (
@@ -91,6 +96,20 @@ export function SettingsAppGeneral(_props: AppProps) {
           {['automatic', 'light', 'dark'].map(theme => (
             <option key={theme} value={theme}>
               {capitalize(theme)}
+            </option>
+          ))}
+        </select>
+      </FormRow>
+
+      <FormRow label="Vibrancy">
+        <select value={settings.vibrancy} onChange={e => updateSettings({ theme: e.target.value })}>
+          {[
+            { key: 'some', name: 'Less Transparent' },
+            { key: 'more', value: 'More Transparent' },
+            { key: 'None', value: 'none' },
+          ].map(({ key, name }) => (
+            <option key={key} value={key}>
+              {capitalize(name)}
             </option>
           ))}
         </select>

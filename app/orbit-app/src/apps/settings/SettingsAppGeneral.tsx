@@ -1,6 +1,6 @@
 import { App, Desktop } from '@mcro/stores'
 import { Button, Theme } from '@mcro/ui'
-import { capitalize, isEqual } from 'lodash'
+import { capitalize } from 'lodash'
 import * as React from 'react'
 import { showConfirmDialog } from '../../helpers/electron/showConfirmDialog'
 import { useActiveUser } from '../../hooks/useActiveUser'
@@ -56,16 +56,6 @@ const blurShortcut = () => {
 export function SettingsAppGeneral(_props: AppProps) {
   const [user, updateUser] = useActiveUser()
   const { settings } = user || { settings: {} }
-
-  // sync user settings to App store
-  React.useEffect(
-    () => {
-      if (!isEqual(user.settings, App.state.userSettings)) {
-        App.setState({ userSettings: user.settings })
-      }
-    },
-    [user],
-  )
 
   const updateSettings = settings => {
     const next = { ...user.settings, ...settings }

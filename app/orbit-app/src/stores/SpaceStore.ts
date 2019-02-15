@@ -1,5 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
+import { App } from '@mcro/stores'
 import { isEqual, once } from 'lodash'
 import { getIsTorn } from '../helpers/getAppHelpers'
 import { sortApps } from '../hooks/useActiveAppsSorted'
@@ -28,6 +29,16 @@ export class SpaceStore {
   )
 
   user = react(() => 1, () => observeOne(UserModel, {}))
+
+  syncUserSettings = react(
+    () => this.user,
+    user => {
+      ensure('has user', !!user)
+      if (!isEqual(user.settings, App.state.userSettings)) {
+        App.setState({ userSettings: user.settings })
+      }
+    },
+  )
 
   get activeSpace() {
     if (this.user && this.spaces.length) {

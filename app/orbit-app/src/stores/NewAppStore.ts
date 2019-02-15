@@ -69,6 +69,10 @@ export class NewAppStore {
     // get data from defaultValue
     let data = nextApp.data
     const app = apps[type] as App<any>
+    if (!app) {
+      console.warn('no wapp?')
+      debugger
+    }
     if (app.defaultValue) {
       data = app.defaultValue
     }

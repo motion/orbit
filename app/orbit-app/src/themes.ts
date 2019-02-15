@@ -59,7 +59,7 @@ const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: '#f6f7f9',
+    backgroundAlternate: '#f6f7f9aa',
     background: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
@@ -89,7 +89,7 @@ const light = {
     background: orbitColor,
     backgroundHover: orbitColor,
     backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.35),
+    listItemBackground: orbitColor.alpha(0.25),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),

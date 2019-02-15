@@ -14,7 +14,7 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
 }
 
 export default memo(function OrbitToolBar() {
-  const { paneManagerStore } = useStores()
+  const { paneManagerStore, orbitStore } = useStores()
   const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar
@@ -24,7 +24,7 @@ export default memo(function OrbitToolBar() {
       <ToolbarChrome hasToolbars={hasToolBar}>
         <ToolbarInner hasToolbars={hasToolBar}>
           {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-          {hasToolBar && <BorderBottom />}
+          {!orbitStore.isTorn && hasToolBar && <BorderBottom />}
         </ToolbarInner>
       </ToolbarChrome>
     </ProvideStores>

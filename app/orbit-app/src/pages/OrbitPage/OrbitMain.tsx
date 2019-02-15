@@ -70,7 +70,7 @@ class OrbitPageMainStore {
 
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
-  const { themeStore, orbitStore } = useStores()
+  const { orbitStore } = useStores()
   const { appConfig, key } = useStore(OrbitPageMainStore, { id })
   return (
     <OrbitMainContainer isTorn={orbitStore.isTorn}>
@@ -89,6 +89,6 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
 
 const OrbitMainContainer = gloss<{ isTorn: boolean }>({
   flex: 1,
-}).theme((_, theme) => ({
-  background: theme.background,
+}).theme(({ isTorn }, theme) => ({
+  background: isTorn ? theme.background : 'transparent',
 }))

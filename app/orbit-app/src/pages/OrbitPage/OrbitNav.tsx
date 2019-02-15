@@ -1,7 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
 import { AppModel } from '@mcro/models'
-import { BorderBottom } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
@@ -226,7 +225,6 @@ export default memo(function OrbitNav() {
           thicc
         />
       </OrbitNavChrome>
-      <BorderBottom zIndex={100} />
     </OrbitNavClip>
   )
 })

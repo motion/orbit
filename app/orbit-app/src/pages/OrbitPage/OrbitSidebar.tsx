@@ -77,6 +77,7 @@ export default memo(function OrbitSidebar() {
       >
         {elements}
       </Sidebar>
+      <BorderRight />
     </SidebarContainer>
   )
 })
@@ -86,6 +87,8 @@ const SidebarContainer = gloss(Absolute, {
   left: 0,
   bottom: 0,
   zIndex: 10000000,
+  overflow: 'hidden',
+  position: 'relative',
   hideSidebar: {
     zIndex: -1,
     pointerEvents: 'none',
@@ -116,7 +119,6 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   return (
     <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        <BorderRight opacity={0.5} />
         <AppView
           key={id}
           ref={handleAppRef}

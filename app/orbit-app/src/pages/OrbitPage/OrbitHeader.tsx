@@ -1,6 +1,6 @@
 import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { BorderBottom, Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import React, { memo } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
@@ -9,7 +9,6 @@ import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegratio
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStores } from '../../hooks/useStores'
 import { HorizontalSpace } from '../../views'
-import { BorderBottom } from '../../views/Border'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
@@ -26,7 +25,11 @@ export default memo(function OrbitHeader() {
   const theme = useTheme()
 
   return (
-    <OrbitHeaderContainer className="draggable" onMouseUp={headerStore.handleMouseUp}>
+    <OrbitHeaderContainer
+      isTorn={isTorn}
+      className="draggable"
+      onMouseUp={headerStore.handleMouseUp}
+    >
       <OrbitHeaderEditingBg isActive={isEditing} />
       <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn}>
@@ -121,10 +124,10 @@ export default memo(function OrbitHeader() {
             />
           </Absolute>
         )}
-
-        {isTorn && <BorderBottom opacity={0.25} />}
       </HeaderTop>
-      <HeaderFade />
+      {!isTorn && <HeaderFade />}
+      {/* this stays slightly below the active tab and looks nice */}
+      <BorderBottom zIndex={0} />
       <OrbitNav />
     </OrbitHeaderContainer>
   )
@@ -173,10 +176,14 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
 
 const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
+  overflow: 'hidden',
   zIndex: 400,
-}).theme((_, theme) => ({
+}).theme(({ isTorn }, theme) => ({
   // borderBottom: [1, theme.borderColor],
-  background: theme.headerBackground || theme.background.alpha(a => a * 0.65),
+  background:
+    (isTorn && theme.headerBackgroundOpaque) ||
+    theme.headerBackground ||
+    theme.background.alpha(a => a * 0.65),
 }))
 
 const HeaderContain = gloss({

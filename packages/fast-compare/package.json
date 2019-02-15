@@ -1,0 +1,7 @@
+{
+  "name": "@mcro/fast-compare",
+  "version": "2.3.10",
+  "description": "none",
+  "main": "index.js",
+  "sideEffects": false
+}

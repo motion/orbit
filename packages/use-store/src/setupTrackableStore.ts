@@ -67,7 +67,6 @@ export function setupTrackableStore(
       rendering.set(false)
     },
     dispose: reaction.getDisposer(),
-    reactiveKeys,
   }
 }
 
@@ -82,7 +81,6 @@ export function useTrackableStore<A>(
     track: null,
     untrack: null,
     dispose: null,
-    reactiveKeys: null,
   })
   if (!trackableStore.current.store) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...options })

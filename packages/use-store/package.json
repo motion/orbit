@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mcro/automagical": "^2.3.10",
-    "react-fast-compare": "2.0.4"
+    "@mcro/fast-compare": "*"
   },
   "peerDependencies": {
     "react": "16.8.1"

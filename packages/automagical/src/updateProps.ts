@@ -1,5 +1,5 @@
+import isEqualReact from '@mcro/fast-compare'
 import { transaction } from 'mobx'
-import isEqualReact from 'react-fast-compare'
 
 // updateProps
 // granular set so reactions can be efficient

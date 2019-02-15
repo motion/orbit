@@ -1,5 +1,5 @@
+import isEqual from '@mcro/fast-compare'
 import React, { memo, useContext } from 'react'
-import isEqual from 'react-fast-compare'
 
 // heavily memoized to avoid updates...
 

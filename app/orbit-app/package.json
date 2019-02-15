@@ -53,7 +53,7 @@
     "react": "16.8.1",
     "react-dom": "16.8.1",
     "react-date-range": "1.0.0-beta",
-    "react-fast-compare": "2.0.4",
+    "@mcro/fast-compare": "*",
     "react-hot-loader": "4.6.5",
     "faker": "4.1.0",
     "react-hotkeys": "1.1.4",

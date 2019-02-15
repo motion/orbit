@@ -14,7 +14,7 @@ import { Icon } from './Icon'
 import { Image } from './Image'
 import { Text } from './Text'
 import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
-// import isEqual from 'react-fast-compare'
+// import isEqual from '@mcro/fast-compare'
 
 const ROW_HEIGHT = 23
 

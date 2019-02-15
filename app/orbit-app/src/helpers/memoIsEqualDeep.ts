@@ -1,5 +1,5 @@
+import isEqual from '@mcro/fast-compare'
 import { cloneElement, memo, useMemo } from 'react'
-import isEqual from 'react-fast-compare'
 
 export function memoIsEqualDeep<A>(a: A): A {
   return (memo(a as any, isEqual) as unknown) as A

@@ -62,10 +62,7 @@ export class ListStore {
   }
 
   get items() {
-    if (this.app && !this.app.data) {
-      debugger
-    }
-    return (this.app && this.app.data.items) || {}
+    return (this.app && this.app.data && this.app.data.items) || {}
   }
 
   searchResults = react(

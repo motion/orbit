@@ -55,7 +55,10 @@ type DebugEmitProps = Partial<UseStoreDebugEvent> & { component?: any; component
 export function debugEmit(props: DebugEmitProps, options?: { debug?: boolean }) {
   const { component, ...event } = props
   if (component) {
-    event['componentName'] = component.displayName
+    if (component.__debug) {
+      console.log(`%c${component['renderName']}`, 'color: green;', event)
+    }
+    event['componentName'] = component['renderName']
   }
   if (options && options.debug) {
     console.log(event)

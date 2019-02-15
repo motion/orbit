@@ -35,9 +35,6 @@ export function setupTrackableStore(
         return
       }
       if (options.component && process.env.NODE_ENV === 'development') {
-        if (options.component.__debug) {
-          console.log('useStore forceUpdate', name, reactiveKeys)
-        }
         debugEmit({
           type: 'render',
           component: options.component,

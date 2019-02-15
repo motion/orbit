@@ -85,6 +85,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
           handler: async data => {
             bitData.content = data.content
             bitData.title = data.title
+            bit.crawled = true
             await getRepository(BitEntity).save(bit)
             return true
           },

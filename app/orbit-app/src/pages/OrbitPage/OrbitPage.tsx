@@ -36,8 +36,8 @@ export default memo(function OrbitPage() {
 
   return (
     <ProvideStores stores={{ themeStore }}>
-      <Theme name={themeStore.theme}>
-        <AppWrapper className={`theme-${themeStore.theme} app-parent-bounds`}>
+      <Theme name={themeStore.themeColor}>
+        <AppWrapper className={`theme-${themeStore.themeColor} app-parent-bounds`}>
           <ActionsContext.Provider value={defaultActions}>
             <OrbitPageProvideStores>
               <OrbitPageInner />

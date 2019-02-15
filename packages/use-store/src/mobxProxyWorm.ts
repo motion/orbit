@@ -9,6 +9,8 @@ type ProxyWorm<A extends Function> = {
   track(id: number): () => Set<string>
 }
 
+window['EQUALITY_KEY'] = EQUALITY_KEY
+
 type ProxyWormState = {
   ids: Set<number>
   loops: WeakMap<any, any>

@@ -19,6 +19,7 @@ export class SidebarStore {
   indexViews: { [key: string]: AppViewRef } = deep({})
 
   handleResize = next => {
+    console.log('set widht', next)
     this.width = next
   }
 
@@ -39,6 +40,8 @@ export default memo(function OrbitSidebar() {
     hasIndex: false,
   }
   const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
+  const width = sidebarStore.width
+  console.log('waht?', width)
 
   const elements = useMemo(
     () => {
@@ -66,10 +69,10 @@ export default memo(function OrbitSidebar() {
   }
 
   return (
-    <SidebarContainer hideSidebar={hideSidebar} width={sidebarStore.width}>
+    <SidebarContainer hideSidebar={hideSidebar} width={width}>
       <Sidebar
         background="transparent"
-        width={sidebarStore.width}
+        width={width}
         onResize={sidebarStore.handleResize}
         minWidth={100}
         maxWidth={500}

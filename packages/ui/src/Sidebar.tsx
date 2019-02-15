@@ -5,9 +5,8 @@
  * @format
  */
 
-import { Contents, gloss } from '@mcro/gloss'
+import { gloss } from '@mcro/gloss'
 import * as React from 'react'
-import debounceRender from 'react-debounce-render'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive } from './Interactive'
 
@@ -154,14 +153,14 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       >
         <SidebarContainer position={position} background={background}>
           {!noBorder && borderByPosition[position]}
-          <SidebarChildrenDebounce>{children}</SidebarChildrenDebounce>
+          {children}
         </SidebarContainer>
       </SidebarInteractiveContainer>
     )
   }
 }
 
-const SidebarChildrenDebounce = debounceRender(Contents)
+// const SidebarChildrenDebounce = debounceRender(Contents)
 
 const SidebarContainer = gloss({
   height: '100%',

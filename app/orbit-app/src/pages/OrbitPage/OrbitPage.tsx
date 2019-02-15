@@ -1,7 +1,7 @@
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useStore, useStoreDebug } from '@mcro/use-store'
+import { useStore, useStoreSimple } from '@mcro/use-store'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
@@ -170,15 +170,15 @@ const OrbitContentArea = gloss({
 }))
 
 function OrbitPageProvideStores(props: any) {
-  const settingStore = useStore(SettingStore)
-  const sourcesStore = useStore(SourcesStore)
-  const queryStore = useStore(QueryStore, { sourcesStore })
-  const orbitWindowStore = useStore(OrbitWindowStore, { queryStore })
-  const newAppStore = useStore(NewAppStore)
+  const settingStore = useStoreSimple(SettingStore)
+  const sourcesStore = useStoreSimple(SourcesStore)
+  const queryStore = useStoreSimple(QueryStore, { sourcesStore })
+  const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
+  const newAppStore = useStoreSimple(NewAppStore)
 
-  useStoreDebug()
+  console.log('OrbitPageProvideStores')
 
-  const paneManagerStore = useStore(PaneManagerStore, {
+  const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes,
     defaultIndex: 0,
     onPaneChange(index: number) {
@@ -186,7 +186,7 @@ function OrbitPageProvideStores(props: any) {
     },
   })
 
-  const spaceStore = useStore(SpaceStore, { paneManagerStore })
+  const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })
 
   const stores = {
     settingStore,

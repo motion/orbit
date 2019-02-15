@@ -149,6 +149,26 @@ export function useStore<P, A extends { props?: P } | any>(
   return store
 }
 
+// no tracking
+export function useStoreSimple<P, A extends { props?: P } | any>(
+  Store: new () => A,
+  props?: P,
+  options?: UseStoreOptions,
+): A {
+  let store = useReactiveStore(Store, props)
+
+  useEffect(() => {
+    store.didMount && store.didMount()
+    return () => disposeStore(store)
+  }, [])
+
+  if (options && options.conditionalUse === false) {
+    return null
+  }
+
+  return store
+}
+
 function isSourceEqual(oldStore: any, newStore: new () => any) {
   return oldStore.constructor.toString() === newStore.toString()
 }

@@ -103,6 +103,8 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   const { orbitStore } = useStores()
   const { id, type, sidebarStore, hasMain } = props
 
+  console.log('renderingasdasd?')
+
   const handleAppRef = state => {
     if (isEqual(state, sidebarStore.viewRefs[id])) return
     sidebarStore.viewRefs[id] = state

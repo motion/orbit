@@ -3,8 +3,7 @@ import { Absolute, gloss } from '@mcro/gloss'
 import { Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import React, { memo, useMemo } from 'react'
-import { AppType } from '../../apps/AppTypes'
+import React, { memo, useEffect, useMemo } from 'react'
 import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -108,8 +107,14 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
     sidebarStore.indexViews[id] = state
   }
 
+  useEffect(() => {
+    return () => {
+      console.log('shouldnt unmount', id, props.id)
+    }
+  }, [])
+
   return (
-    <SubPane id={id} type={AppType[type]} fullHeight padding={!hasMain ? [25, 80] : 0}>
+    <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
       <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
         <BorderRight opacity={0.5} />
         <AppView

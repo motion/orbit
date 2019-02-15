@@ -23,18 +23,17 @@ const descriptions = {
 }
 
 function CreateAppIndex() {
+  log('createAPp index', defaultApps)
   return (
-    <>
-      <SelectableList
-        items={defaultApps.map(app => ({
-          title: app.name,
-          subType: app.type,
-          subtitle: descriptions[app.type],
-          icon: <AppIcon app={app} />,
-          iconBefore: true,
-        }))}
-      />
-    </>
+    <SelectableList
+      items={defaultApps.map(app => ({
+        title: app.name,
+        subType: app.type,
+        subtitle: descriptions[app.type],
+        icon: <AppIcon app={app} />,
+        iconBefore: true,
+      }))}
+    />
   )
 }
 
@@ -42,6 +41,8 @@ function CreateAppMain(props: AppProps) {
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
   const [showPreviewApp, setShowPreviewApp] = useState(false)
+
+  console.log('createAPp main', props.appConfig)
 
   useEffect(() => {
     setShowPreviewApp(true)

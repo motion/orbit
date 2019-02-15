@@ -1,5 +1,5 @@
 import { decorate, updateProps } from '@mcro/automagical'
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 import {
   useCallback,
   useContext,
@@ -186,7 +186,12 @@ function getComponentName(c) {
 
 export function useThrottledForceUpdate() {
   const setState = useState(0)[1]
-  return useCallback(throttle(() => setState(Math.random())), [])
+  return useCallback(
+    debounce(() => {
+      setState(Math.random())
+    }),
+    [],
+  )
 }
 
 let nextId = 0

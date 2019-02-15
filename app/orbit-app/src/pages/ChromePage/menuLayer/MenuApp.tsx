@@ -34,7 +34,6 @@ export default observer(function MenuApp(props: MenuAppProps & { index: number }
   return (
     <SubPane
       id={props.id}
-      type={props.type}
       paddingLeft={0}
       paddingRight={0}
       offsetY={menuStore.aboveHeight}

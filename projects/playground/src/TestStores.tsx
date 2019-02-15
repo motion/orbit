@@ -14,11 +14,9 @@ class TestStore {
 
   z2 = react(
     () => {
-      console.log('REACT z2', this.z2, this)
       return this.z
     },
     z => {
-      console.log('ok', z)
       return z * 100
     },
   )
@@ -34,7 +32,7 @@ class TestStore {
 
 export function TestStores() {
   const store = useStore(TestStore, { x: 1 })
-  console.log('store', (window.store = store))
+  window.store = store
   return (
     <div>
       <h2>y: {store.y}</h2>
@@ -47,4 +45,3 @@ export function TestStores() {
 }
 
 window['TestStore'] = TestStore
-console.log(TestStore)

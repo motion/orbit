@@ -4,12 +4,10 @@ import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { throttle } from 'lodash'
 import React, { memo, useEffect } from 'react'
-import { AppType } from '../apps/AppTypes'
 import { SubPaneStore } from './SubPaneStore'
 
 export type SubPaneProps = CSSPropertySetStrict & {
   id: any
-  type?: AppType
   fullHeight?: boolean
   style?: Object
   after?: React.ReactNode
@@ -35,6 +33,9 @@ export const SubPane = memo(function SubPane(props: Props) {
     ...rest
   } = props
   const subPaneStore = useStore(SubPaneStore, props)
+  // if (props.debug) {
+  //   debugger
+  // }
   const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
 

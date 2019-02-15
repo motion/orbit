@@ -47,8 +47,8 @@
     "wait-port": "^0.2.2"
   },
   "peerDependencies": {
-    "react": "16.8.1",
-    "react-dom": "16.8.1",
+    "react": "16.8.2",
+    "react-dom": "16.8.2",
     "electron": "*",
     "mobx": "*"
   },

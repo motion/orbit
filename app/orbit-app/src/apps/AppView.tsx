@@ -1,11 +1,12 @@
 import isEqual from '@mcro/fast-compare'
 import { Contents } from '@mcro/gloss'
 import { useObserver } from 'mobx-react-lite'
-import React, { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { findDOMNode } from 'react-dom'
 import { ProvideStores } from '../components/ProvideStores'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
 import { AllStores } from '../contexts/StoreContext'
+import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { useStores } from '../hooks/useStores'
 import { AppStore } from './AppStore'
 import { AppProps, AppViews } from './AppTypes'
@@ -86,7 +87,7 @@ export function useApp(props: GetApp | false) {
   return currentState.current
 }
 
-export const AppView = memo(
+export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
     const { appViews, appStore, provideStores } = useApp(props)

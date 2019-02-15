@@ -100,7 +100,7 @@ const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: darkBackground.lighten(0.1),
+    backgroundAlternate: darkBackground.lighten(0.1).alpha(0.25),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],

@@ -60,8 +60,8 @@ function OrbitManagers() {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const { paneManagerStore } = useStores()
-  const headerStore = useStore(HeaderStore)
-  const sidebarStore = useStore(SidebarStore, null, { react: false })
+  const headerStore = useStoreSimple(HeaderStore)
+  const sidebarStore = useStoreSimple(SidebarStore)
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,

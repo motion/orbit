@@ -6,6 +6,7 @@ export function useResizeObserver<T extends React.RefObject<HTMLDivElement>>(
 ) {
   useEffect(
     () => {
+      if (!node.current) return
       // @ts-ignore
       let resizeObserver = new ResizeObserver(() => {
         onChange(node.current)

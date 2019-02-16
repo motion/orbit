@@ -1,12 +1,11 @@
 import { get, isEqual } from 'lodash'
-import { Reaction } from 'mobx'
+import { Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
 import { getCurrentComponent } from './useStore'
 
 type TrackableStoreOptions = {
-  componentId?: number
   component: any
   debug?: boolean
 }
@@ -21,16 +20,17 @@ export function setupTrackableStore(
   const name = options && options.component.renderName
   let paused = true
   let reactiveKeys = new Set()
-  let tm = null
 
-  const rerenderOnce = () => {
-    if (options.component && process.env.NODE_ENV === 'development') {
-      debugEmit({
-        type: 'render',
-        component: options.component,
-        reactiveKeys,
-        store,
-      })
+  const update = () => {
+    if (process.env.NODE_ENV === 'development') {
+      if (options && options.component) {
+        debugEmit({
+          type: 'render',
+          component: options.component,
+          reactiveKeys,
+          store,
+        })
+      }
     }
     rerender()
   }
@@ -39,11 +39,12 @@ export function setupTrackableStore(
     if (paused) return
     reaction.track(() => {
       if (reactiveKeys.size === 0) return
-      for (const key of [...reactiveKeys]) {
-        get(store, key)
-      }
-      clearImmediate(tm)
-      setImmediate(rerenderOnce)
+      transaction(() => {
+        for (const key of [...reactiveKeys]) {
+          get(store, key)
+        }
+      })
+      update()
     })
   })
 
@@ -54,7 +55,6 @@ export function setupTrackableStore(
   return {
     store: config.store,
     track() {
-      clearImmediate(tm)
       paused = true
       done = config.track(Math.random())
     },
@@ -68,7 +68,6 @@ export function setupTrackableStore(
       }
     },
     dispose() {
-      clearImmediate(tm)
       reaction.dispose()
     },
   }

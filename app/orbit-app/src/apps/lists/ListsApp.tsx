@@ -1,15 +1,15 @@
-import { SaveOptions } from '@mcro/mediator'
-import { AppBit, AppModel, Bit } from '@mcro/models'
-import { useStore } from '@mcro/use-store'
-import React from 'react'
-import { save } from '../../mediator'
-import { AppContainer } from '../AppContainer'
-import { App } from '../AppTypes'
-import ListsAppIndex from './ListsAppIndex'
-import ListsAppMain from './ListsAppMain'
-import ListsAppStatusBar from './ListsAppStatusBar'
-import { ListStore } from './ListStore'
-import { ListsAppBit, ListsAppData } from './types'
+import { SaveOptions } from '@mcro/mediator';
+import { AppBit, AppModel, Bit } from '@mcro/models';
+import { useStore } from '@mcro/use-store';
+import React from 'react';
+import { save } from '../../mediator';
+import { AppContainer } from '../AppContainer';
+import { App } from '../AppTypes';
+import { ListsAppIndex } from './ListsAppIndex';
+import { ListsAppMain } from './ListsAppMain';
+import { ListAppStatusBar } from './ListsAppStatusBar';
+import { ListStore } from './ListStore';
+import { ListsAppBit, ListsAppData } from './types';
 
 export const listRootID = 0
 
@@ -19,7 +19,7 @@ export const ListsApp: App<ListsAppData> = props => {
     <AppContainer
       provideStores={{ listStore }}
       index={<ListsAppIndex {...props} />}
-      statusBar={<ListsAppStatusBar />}
+      statusBar={<ListAppStatusBar />}
     >
       <ListsAppMain {...props} />
     </AppContainer>

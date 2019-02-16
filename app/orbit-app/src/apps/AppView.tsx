@@ -1,5 +1,5 @@
 import isEqual from '@mcro/fast-compare'
-import { Contents } from '@mcro/gloss'
+import { Contents, View } from '@mcro/gloss'
 import { useObserver } from 'mobx-react-lite'
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -20,6 +20,7 @@ export type AppViewProps = Pick<
   appStore?: AppStore
   after?: React.ReactNode
   before?: React.ReactNode
+  inside?: React.ReactNode
 }
 
 export type AppViewRef = {
@@ -88,7 +89,7 @@ export function useApp(props: GetApp | false) {
 }
 
 export const AppView = memoIsEqualDeep(
-  forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, ...props }, ref) {
+  forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
     const { appViews, appStore, provideStores } = useApp(props)
     const AppView = appViews[props.viewType]
@@ -124,7 +125,10 @@ export const AppView = memoIsEqualDeep(
         const appElement = (
           <Contents ref={rootRef}>
             {before || null}
-            <AppView appStore={appStore} {...props} />
+            <View position="relative" overflow="hidden" flex={1}>
+              {inside}
+              <AppView appStore={appStore} {...props} />
+            </View>
             {after || null}
           </Contents>
         )

@@ -7,9 +7,9 @@ import * as Path from 'path'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+const TerserPlugin = require('terser-webpack-plugin')
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -68,17 +68,6 @@ const optimizeSplit = {
 const optimization = {
   prod: {
     ...optimizeSplit,
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ecma: 8,
-          // toplevel: true,
-        },
-        sourceMap: true,
-        cache: true,
-        parallel: true,
-      }),
-    ],
   },
   dev: {
     noEmitOnErrors: true,
@@ -211,6 +200,14 @@ const config = {
     new webpack.IgnorePlugin(/electron-log/),
 
     target === 'web' && new webpack.IgnorePlugin(/^electron$/),
+
+    isProd &&
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
+        },
+      }),
 
     new HtmlWebpackPlugin({
       favicon: 'public/favicon.png',

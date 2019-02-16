@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { superMemo } from '../helpers/memoIsEqualDeep'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from './AppTypes'
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
-export function AppContainer(props: AppElements) {
+function AppContainerInner(props: AppElements) {
   for (const key in props) {
     if (!appViews.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
@@ -26,4 +26,25 @@ export function AppContainer(props: AppElements) {
   }, [])
 
   return null
+}
+
+export class AppContainer extends React.Component<AppElements> {
+  state = {
+    error: null,
+  }
+
+  componentDidMount() {}
+
+  componentDidCatch(error) {
+    this.setState({
+      error,
+    })
+  }
+
+  render() {
+    if (this.state.error) {
+      console.error(this.state.error)
+    }
+    return <AppContainerInner {...this.props} />
+  }
 }

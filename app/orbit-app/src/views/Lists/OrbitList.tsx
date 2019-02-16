@@ -1,10 +1,11 @@
 import { Bit, PersonBit } from '@mcro/models'
 import { Text, View } from '@mcro/ui'
-import * as React from 'react'
+import React, { useCallback } from 'react'
 import { AppConfig } from '../../apps/AppTypes'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
 import { Omit } from '../../helpers/typeHelpers/omit'
+import { useIsActive } from '../../hooks/useIsActive'
 import { Center } from '../Center'
 import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
 import { SubTitle } from '../SubTitle'
@@ -32,12 +33,14 @@ export type OrbitListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' |
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
   query?: string
+  placeholder?: React.ReactNode
 }
 
 export default function OrbitList(props: OrbitListProps) {
   const { items } = props
-  const isRowLoaded = x => x.index < items.length
-  const getItemProps = React.useCallback(
+  const isRowLoaded = useCallback(x => x.index < items.length, [items])
+  const isActive = useIsActive()
+  const getItemProps = useCallback(
     (item, index, items) => {
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
       const normalized = orbitItemToListItemProps(item)
@@ -46,7 +49,7 @@ export default function OrbitList(props: OrbitListProps) {
     },
     [props],
   )
-  const onSelect = React.useCallback(
+  const onSelect = useCallback(
     (index, eventType) => {
       if (props.onSelect) {
         props.onSelect(index, getAppConfig(orbitItemToListItemProps(items[index])), eventType)
@@ -54,7 +57,7 @@ export default function OrbitList(props: OrbitListProps) {
     },
     [props],
   )
-  const onOpen = React.useCallback(
+  const onOpen = useCallback(
     index => {
       if (props.onOpen) {
         props.onOpen(index, getAppConfig(orbitItemToListItemProps(items[index])))
@@ -63,17 +66,24 @@ export default function OrbitList(props: OrbitListProps) {
     [props],
   )
 
+  const hasItems = !!props.items.length
+
   return (
     <OrbitHighlightActiveQuery>
-      <VirtualList
-        items={items}
-        ItemView={OrbitListItem}
-        isRowLoaded={isRowLoaded}
-        {...props}
-        getItemProps={getItemProps}
-        onSelect={onSelect}
-        onOpen={onOpen}
-        placeholder={
+      {hasItems && (
+        <VirtualList
+          shouldMeasure={isActive}
+          items={items}
+          ItemView={OrbitListItem}
+          isRowLoaded={isRowLoaded}
+          {...props}
+          getItemProps={getItemProps}
+          onSelect={onSelect}
+          onOpen={onOpen}
+        />
+      )}
+      {!hasItems &&
+        (props.placeholder || (
           <View flex={1} minHeight={200} position="relative">
             <Center alignItems="center">
               <View>
@@ -86,8 +96,7 @@ export default function OrbitList(props: OrbitListProps) {
               </View>
             </Center>
           </View>
-        }
-      />
+        ))}
     </OrbitHighlightActiveQuery>
   )
 }

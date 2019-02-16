@@ -3,6 +3,7 @@ import { AppBit } from '@mcro/models'
 import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
+import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
@@ -30,7 +31,7 @@ export type TabProps = ViewProps & {
   after?: React.ReactNode
 }
 
-export function OrbitTab({
+export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   app,
   icon,
   iconSize: iconSizeProp,
@@ -136,7 +137,7 @@ export function OrbitTab({
     return <Tooltip label={tooltip}>{button}</Tooltip>
   }
   return button
-}
+})
 
 function OrbitTabIcon(props: IconProps) {
   const theme = useTheme()

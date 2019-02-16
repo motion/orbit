@@ -19,7 +19,6 @@ export class SidebarStore {
   indexViews: { [key: string]: AppViewRef } = deep({})
 
   handleResize = next => {
-    console.log('set widht', next)
     this.width = next
   }
 
@@ -41,7 +40,6 @@ export default memo(function OrbitSidebar() {
   }
   const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
   const width = sidebarStore.width
-  console.log('waht?', width)
 
   const elements = useMemo(
     () => {
@@ -80,7 +78,6 @@ export default memo(function OrbitSidebar() {
       >
         {elements}
       </Sidebar>
-      <BorderRight />
     </SidebarContainer>
   )
 })
@@ -130,6 +127,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           type={type}
           before={<OrbitToolBarHeight id={id} />}
           after={<OrbitStatusBarHeight id={id} />}
+          inside={<BorderRight />}
         />
       </ProvideSelectableHandlers>
     </SubPane>

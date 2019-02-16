@@ -16,6 +16,34 @@ fi
 echo -n "" > ./scripts/.lastbuild
 
 #
+# HANDLE package.json privacy
+#
+
+# get package.jsons to modify
+cd $(dirname $0)/../../..
+FILES=($(rg --files-with-matches -g "package.json" "private"))
+cd -
+function publicize-package-jsons() {
+  cd $(dirname $0)/../../..
+  for file in "${FILES[@]}"; do
+    echo "copy $file"
+    cp $file "$file.bak"
+    sed -i '' '/"private": true/s/true/false/' $file
+  done
+  cd -
+}
+function handle-exit() {
+  trap - EXIT
+  cd $(dirname $0)/../../..
+  for file in "${FILES[@]}"; do
+    rm $file && mv "$file.bak" $file || echo "failed $file"
+  done
+  exit 0
+}
+trap handle-exit EXIT
+publicize-package-jsons
+
+#
 # BUILD
 #
 
@@ -51,11 +79,16 @@ fi
 echo -n "--no-build-app " >> ./scripts/.lastbuild
 
 function publish-packages() {
+  # modify private stuff so we can publish
+  publicize-package-jsons
+
   # clean old one since we are re-publishing
   rm -r /tmp/.verdaccio-storage || true
+
   # run verdaccio
   ./scripts/start-verdaccio-publish.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
+
   # publish packages
   (cd ../.. && \
     npx lerna exec \
@@ -131,3 +164,4 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app
 # see stage-app/package.json for options
 echo "electron-builder..."
 (cd stage-app && npx electron-builder -p always)
+

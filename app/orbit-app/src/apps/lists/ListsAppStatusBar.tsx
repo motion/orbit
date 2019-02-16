@@ -6,7 +6,7 @@ import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButto
 import { Icon } from '../../views/Icon'
 import { StatusBarText } from '../../views/StatusBar'
 
-export default function ListAppStatusBar() {
+export function ListAppStatusBar() {
   // @ts-ignore
   const { listStore } = useStores()
   const numItems = Object.keys(listStore.items).length

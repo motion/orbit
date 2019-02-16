@@ -23,7 +23,6 @@ const descriptions = {
 }
 
 function CreateAppIndex() {
-  log('createAPp index', defaultApps)
   return (
     <SelectableList
       items={defaultApps.map(app => ({
@@ -41,8 +40,6 @@ function CreateAppMain(props: AppProps) {
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
   const [showPreviewApp, setShowPreviewApp] = useState(false)
-
-  console.log('createAPp main', props.appConfig)
 
   useEffect(() => {
     setShowPreviewApp(true)

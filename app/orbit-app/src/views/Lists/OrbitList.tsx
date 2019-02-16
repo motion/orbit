@@ -5,6 +5,7 @@ import { AppConfig } from '../../apps/AppTypes'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
 import { Omit } from '../../helpers/typeHelpers/omit'
+import { useIsActive } from '../../hooks/useIsActive'
 import { Center } from '../Center'
 import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
 import { SubTitle } from '../SubTitle'
@@ -37,6 +38,7 @@ export type OrbitListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' |
 export default function OrbitList(props: OrbitListProps) {
   const { items } = props
   const isRowLoaded = x => x.index < items.length
+  const isActive = useIsActive()
   const getItemProps = React.useCallback(
     (item, index, items) => {
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
@@ -66,6 +68,7 @@ export default function OrbitList(props: OrbitListProps) {
   return (
     <OrbitHighlightActiveQuery>
       <VirtualList
+        shouldMeasure={isActive}
         items={items}
         ItemView={OrbitListItem}
         isRowLoaded={isRowLoaded}

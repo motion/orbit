@@ -107,23 +107,34 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   return state.current.store
 }
 
+// allows us to use instantiated or non-instantiated stores
+// sets up tracking so the component auto re-renders
 export function useStore<P, A extends { props?: P } | any>(
-  Store: new () => A,
+  Store: (new () => A) | A,
   props?: P,
   options?: UseStoreOptions,
 ): A {
   const component = getCurrentComponent()
-  let store = useReactiveStore(Store, props)
   const rerender = useForceUpdate()
+  const isInstantiated = Store['constructor'].name !== 'Function'
+  let store = null
 
-  if (!options || options.react !== false) {
+  if (isInstantiated) {
+    store = (Store as unknown) as A
     store = useTrackableStore(store, rerender)
+  } else {
+    store = Store as new () => A
+    store = useReactiveStore(store, props)
+    if (!options || options.react !== false) {
+      store = useTrackableStore(store, rerender)
+    }
+    useEffect(() => {
+      if (!isInstantiated) {
+        store.didMount && store.didMount()
+      }
+      return () => disposeStore(store, component)
+    }, [])
   }
-
-  useEffect(() => {
-    store.didMount && store.didMount()
-    return () => disposeStore(store, component)
-  }, [])
 
   if (options && options.conditionalUse === false) {
     return null

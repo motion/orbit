@@ -177,3 +177,5 @@ export class SubPaneStore {
     }
   }
 }
+
+console.log(SubPaneStore)

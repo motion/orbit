@@ -95,17 +95,13 @@ class VirtualListStore {
 
   measureHeight() {
     if (this.props.dynamicHeight) {
-      if (!this.cache) {
-        return
-      }
+      if (!this.cache) return
       // height
       let height = 0
       for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
         height += this.cache.rowHeight(i)
       }
-      if (height === 0) {
-        return
-      }
+      if (height === 0) return
 
       height = Math.min(this.props.maxHeight, height)
 
@@ -118,9 +114,7 @@ class VirtualListStore {
     } else {
       if (this.frameHeight) {
         const height = Math.min(this.props.maxHeight, this.frameHeight)
-        if (height !== this.height) {
-          this.height = height
-        }
+        this.height = height
       }
     }
   }
@@ -129,20 +123,20 @@ class VirtualListStore {
 
   runMeasure = react(
     () => [this.triggerMeasure, this.props.shouldMeasure],
-    async (_, { when, sleep }) => {
-      await when(() => this.props.shouldMeasure !== false)
-      await sleep()
-      if (!this.frameRef || this.frameRef.clientWidth === 0) {
-        clearTimeout(this.measureTm)
-        this.measureTm = setTimeout(this.measure)
-        return
+    async (_, { when }) => {
+      await when(() => !!this.frameRef)
+
+      if (this.cache) {
+        await when(() => this.props.shouldMeasure !== false)
       }
 
       if (this.frameRef.clientWidth !== this.width) {
+        console.log('measure...')
         this.width = this.frameRef.clientWidth
       }
 
       if (!this.cache) {
+        console.log('update cache')
         this.cache = new CellMeasurerCache({
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
@@ -225,11 +219,11 @@ export const VirtualListDefaultProps = createContext({
   maxHeight: window.innerHeight,
 } as Partial<VirtualListProps<any>>)
 
-export default memo(function VirtualList(rawProps: VirtualListProps<any>) {
-  const defaultProps = useContext(VirtualListDefaultProps)
-  const props = useDefaultProps(rawProps, defaultProps)
-  const store = useStore(VirtualListStore, props)
+const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
+  const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
+
+  console.log('render virtual list', props.items.length)
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -342,3 +336,14 @@ export default memo(function VirtualList(rawProps: VirtualListProps<any>) {
     </div>
   )
 })
+
+// use this outer wrapper because changing shouldMeasure otherwise would trigger renders
+// renders are expensive for this component, and especially that because it happens on click
+// this lets us separate out and have the inner just react to props it should
+
+export default function VirtualList({ shouldMeasure, ...rawProps }: VirtualListProps<any>) {
+  const defaultProps = useContext(VirtualListDefaultProps)
+  const props = useDefaultProps(rawProps, defaultProps)
+  const store = useStore(VirtualListStore, { shouldMeasure, ...props })
+  return <VirtualListInner {...props} store={store} />
+}

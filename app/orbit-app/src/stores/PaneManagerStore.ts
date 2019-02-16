@@ -43,6 +43,8 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
+  activePaneLowPriority = react(() => this.activePane, _ => _, { delay: 1 })
+
   get activePaneId() {
     return (this.activePane && this.activePane.id) || ''
   }

@@ -17,29 +17,23 @@ echo -n "" > ./scripts/.lastbuild
 
 function publicize-package-jsons() {
   cd $(dirname $0)/../../..
-
   for file in $(rg -g package.json --files); do
-    echo "file $file"
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
   done
-
   cd -
 }
 
-function unpublicize-package-jsons() {
-  echo "CLEANUP"
+function handle-exit() {
+  trap - EXIT
   cd $(dirname $0)/../../..
-
-  # sed -i '' '/"sideEffects": false/s/true/false/' packages/r2/package.json
-
   for file in $(rg -g package.json --files); do
     rm $file
     mv "$file.bak" $file
   done
 }
 
-trap unpublicize-package-jsons EXIT
+trap handle-exit EXIT
 publicize-package-jsons
 
 #

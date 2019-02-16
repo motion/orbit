@@ -33,7 +33,7 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
   const [left, setLeft] = useState(0)
 
   useObserver(() => {
-    const isActive = paneManagerStore.activePane.id === id
+    const isActive = paneManagerStore.activePaneLowPriority.id === id
     const next = hasIndex ? sidebarStore.width : 0
     if (isActive && next !== left) {
       setLeft(next)

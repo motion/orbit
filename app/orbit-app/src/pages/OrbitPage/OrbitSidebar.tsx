@@ -22,8 +22,12 @@ export class SidebarStore {
     this.width = next
   }
 
+  get activePane() {
+    return this.stores.paneManagerStore.activePaneLowPriority
+  }
+
   get indexView() {
-    return this.indexViews[this.stores.paneManagerStore.activePane.id]
+    return this.indexViews[this.activePane.id]
   }
 
   get hasIndexContent() {
@@ -33,7 +37,6 @@ export class SidebarStore {
 
 export default memo(function OrbitSidebar() {
   const { paneManagerStore, appsStore, sidebarStore } = useStores()
-  const { activePane } = paneManagerStore
   const { hasMain, hasIndex } = appsStore.currentView || {
     hasMain: false,
     hasIndex: false,
@@ -62,7 +65,7 @@ export default memo(function OrbitSidebar() {
     [paneManagerStore.panes, hasMain],
   )
 
-  if (!appsStore.currentView || !activePane) {
+  if (!appsStore.currentView) {
     return null
   }
 

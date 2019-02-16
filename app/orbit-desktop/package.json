@@ -2,7 +2,7 @@
   "name": "@mcro/orbit-desktop",
   "version": "2.3.10",
   "main": "./_/main.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput",

@@ -2,7 +2,7 @@
   "name": "@mcro/services",
   "version": "2.3.10",
   "main": "_/index.js",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --build --watch --preserveWatchOutput --verbose"

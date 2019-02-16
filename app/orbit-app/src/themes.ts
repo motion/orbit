@@ -61,6 +61,7 @@ const light = {
   ...Theme.fromStyles({
     backgroundAlternate: '#f6f7f9aa',
     background: lightBackground,
+    mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
     color: '#444',

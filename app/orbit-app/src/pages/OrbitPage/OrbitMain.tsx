@@ -90,5 +90,7 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
 const OrbitMainContainer = gloss<{ isTorn: boolean }>({
   flex: 1,
 }).theme(({ isTorn }, theme) => ({
-  background: isTorn ? theme.background : 'transparent',
+  background: isTorn
+    ? theme.mainBackground || theme.background
+    : theme.mainBackground || 'transparent',
 }))

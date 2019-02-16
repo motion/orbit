@@ -16,7 +16,7 @@ import { ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
 import { ListAppDataItem } from './types'
 
-export default function ListsAppIndex(_: AppProps) {
+export function ListsAppIndex(_: AppProps) {
   return (
     <>
       {/* Search/add bar */}

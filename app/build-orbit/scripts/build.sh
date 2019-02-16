@@ -15,25 +15,31 @@ fi
 
 echo -n "" > ./scripts/.lastbuild
 
-FILES=$(rg --files-with-matches -g "package.json" "private")
+#
+# HANDLE package.json privacy
+#
+
+# get package.jsons to modify
+cd $(dirname $0)/../../..
+FILES=($(rg --files-with-matches -g "package.json" "private"))
+cd -
 function publicize-package-jsons() {
   cd $(dirname $0)/../../..
-  for file in $FILES; do
+  for file in "${FILES[@]}"; do
     echo "copy $file"
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
   done
   cd -
 }
-
 function handle-exit() {
   trap - EXIT
   cd $(dirname $0)/../../..
-  for file in $FILES; do
-    rm $file && mv "$file.bak" $file || true
+  for file in "${FILES[@]}"; do
+    rm $file && mv "$file.bak" $file || echo "failed $file"
   done
+  exit 0
 }
-
 trap handle-exit EXIT
 publicize-package-jsons
 

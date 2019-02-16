@@ -43,7 +43,7 @@ export function setupTrackableStore(
         get(store, key)
       }
       clearImmediate(tm)
-      setImmediate(rerenderOnce)
+      tm = setImmediate(rerenderOnce)
     })
   })
 

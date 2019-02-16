@@ -207,12 +207,13 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     // debounce all the different store renders
     let tm = null
     const rerender = () => {
-      clearTimeout(tm)
+      clearImmediate(tm)
       tm = setImmediate(render)
     }
 
     useEffect(() => {
       return () => {
+        clearImmediate(tm)
         for (const { dispose } of stateRef.current.values()) {
           dispose()
         }

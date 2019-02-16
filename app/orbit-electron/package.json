@@ -1,6 +1,6 @@
 {
   "name": "@mcro/orbit-electron",
-  "private": true,
+  "private": false,
   "productName": "Orbit",
   "description": "Description",
   "author": "Orbit",

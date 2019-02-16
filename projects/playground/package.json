@@ -1,6 +1,6 @@
 {
   "name": "@mcro/playground",
-  "private": true,
+  "private": false,
   "version": "2.3.10",
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5001 --target web"

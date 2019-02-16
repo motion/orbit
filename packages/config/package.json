@@ -2,6 +2,6 @@
   "name": "@mcro/config",
   "main": "_/config.js",
   "sideEffects": false,
-  "private": true,
+  "private": false,
   "version": "2.3.10"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/orbit",
   "main": "_/main.js",
-  "private": true,
+  "private": false,
   "productName": "Orbit",
   "version": "2.3.10",
   "scripts": {

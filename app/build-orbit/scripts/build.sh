@@ -15,9 +15,11 @@ fi
 
 echo -n "" > ./scripts/.lastbuild
 
+FILES=$(rg --files-with-matches -g "package.json" "private")
 function publicize-package-jsons() {
   cd $(dirname $0)/../../..
-  for file in $(rg -g package.json --files); do
+  for file in $FILES; do
+    echo "copy $file"
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
   done
@@ -27,9 +29,8 @@ function publicize-package-jsons() {
 function handle-exit() {
   trap - EXIT
   cd $(dirname $0)/../../..
-  for file in $(rg -g package.json --files); do
-    rm $file
-    mv "$file.bak" $file
+  for file in $FILES; do
+    rm $file && mv "$file.bak" $file || true
   done
 }
 

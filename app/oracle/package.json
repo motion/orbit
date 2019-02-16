@@ -1,7 +1,7 @@
 {
   "name": "@mcro/oracle",
   "version": "2.3.10",
-  "private": true,
+  "private": false,
   "main": "./_/Oracle.js",
   "scripts": {
     "install-pods": "pod install",

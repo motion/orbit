@@ -1,7 +1,7 @@
 {
 	"name": "@mcro/orbit-fork-process",
 	"main": "_/forkProcess.js",
-	"private": true,
+	"private": false,
 	"version": "2.3.10",
 	"scripts": {
     "build": "tsc || true",

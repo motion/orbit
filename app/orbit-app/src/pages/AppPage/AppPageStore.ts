@@ -46,9 +46,6 @@ export class AppPageStore {
       }
       return appState
     },
-    {
-      defaultValue: App.getAppState(PEEK_ID),
-    },
   )
 
   internalState = react(

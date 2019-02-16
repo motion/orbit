@@ -1,5 +1,4 @@
-import { IS_STORE } from '@mcro/black'
-import { debugUseStore } from '@mcro/use-store'
+import { debugUseStore, IS_STORE } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
 

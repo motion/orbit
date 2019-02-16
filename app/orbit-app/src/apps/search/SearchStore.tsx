@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/black'
+import { cancel, ensure, react } from '@mcro/black'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
@@ -199,7 +199,7 @@ export class SearchStore {
       const { startDate, endDate } = dateState
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
-        await sleep(0)
+        await sleep()
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,
@@ -215,11 +215,9 @@ export class SearchStore {
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
-
         const nextResults = await loadMany(SearchResultModel, { args })
-        console.log('nextResults', nextResults)
-        if (!nextResults) {
-          return false
+        if (!nextResults.length) {
+          throw cancel
         }
         results = [...results, ...searchGroupsToResults(nextResults)]
         setValue({

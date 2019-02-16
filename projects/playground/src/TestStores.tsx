@@ -32,6 +32,7 @@ class TestStore {
 
 export function TestStores() {
   const store = useStore(TestStore, { x: 1 })
+  debugger
   window.store = store
   return (
     <div>

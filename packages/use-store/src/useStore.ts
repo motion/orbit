@@ -13,6 +13,7 @@ import { config } from './configure'
 import { DebugComponent, debugEmit } from './debugUseStore'
 import { setupTrackableStore, useTrackableStore } from './setupTrackableStore'
 
+export { IS_STORE } from '@mcro/automagical'
 export { configureUseStore } from './configure'
 export { debugUseStore } from './debugUseStore'
 

@@ -90,15 +90,14 @@ export class MenuStore {
       }
       return { open, repositioning: false }
     },
-    { defaultValue: { open: false, repositioning: false } },
   )
 
   // the actual show/hide in the interface
   isOpenOutsideAnimation = react(
     () => this.isOpenFast,
-    async (open, { whenChanged, effect }) => {
+    async (open, { whenChanged, useEffect }) => {
       await whenChanged(() => this.didRenderState)
-      await effect(done => {
+      await useEffect(done => {
         // we wait for mutations to finish (animation)
         // debounce will wait for X ms before it considers animation complete
         const finish = debounce(done, 20)
@@ -125,9 +124,6 @@ export class MenuStore {
       const extraSpace = 4
       const offset = xOffset * 28 + leftSpacing + (id === 0 ? extraSpace : 0)
       return trayPositionX + offset
-    },
-    {
-      defaultValue: 0,
     },
   )
 
@@ -192,16 +188,7 @@ export class MenuStore {
     }
   }
 
-  activeOrLastActiveMenuIndex = react(
-    () => this.activeMenuIndex,
-    val => {
-      ensure('is active', val !== -1)
-      return val
-    },
-    {
-      defaultValue: 0,
-    },
-  )
+  activeOrLastActiveMenuIndex = react(() => this.activeMenuIndex, val => (val !== -1 ? val : 0))
 
   lastActiveMenuIndex = react(() => this.activeMenuIndex, _ => _, {
     delayValue: true,

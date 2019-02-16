@@ -11,6 +11,8 @@ export const superMemo = (element: React.ReactElement<any>) => {
   }
 }
 
+// this has to be removed, makes no sense... weakmap should always be same as === :(
+
 const Cache = new WeakMap()
 let id = 0
 export const deepEqualProps = (props: Object): any[] => {

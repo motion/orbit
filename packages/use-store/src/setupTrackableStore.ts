@@ -24,13 +24,15 @@ export function setupTrackableStore(
   let tm = null
 
   const rerenderOnce = () => {
-    if (options.component && process.env.NODE_ENV === 'development') {
-      debugEmit({
-        type: 'render',
-        component: options.component,
-        reactiveKeys,
-        store,
-      })
+    if (process.env.NODE_ENV === 'development') {
+      if (options && options.component) {
+        debugEmit({
+          type: 'render',
+          component: options.component,
+          reactiveKeys,
+          store,
+        })
+      }
     }
     rerender()
   }

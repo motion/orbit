@@ -3,6 +3,7 @@ import { App } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { createRef } from 'react'
 import { AppActions } from '../actions/AppActions'
+import { sleep } from '../helpers'
 import { useStoresSimple } from '../hooks/useStores'
 
 const moveCursorToEndOfTextarea = el => {
@@ -36,6 +37,9 @@ export class HeaderStore {
 
   focus = () => {
     if (!this.inputRef || !this.inputRef.current) {
+      return
+    }
+    if (document.activeElement === this.inputRef.current) {
       return
     }
     this.inputRef.current.focus()
@@ -96,11 +100,11 @@ export class HeaderStore {
     }
   }
 
-  handleMouseUp = () => {
-    setTimeout(() => {
-      if (this.inputRef.current) {
-        this.inputRef.current.focus()
-      }
+  handleMouseUp = async () => {
+    await sleep(10)
+    window['requestIdleCallback'](() => {
+      console.log('focus now')
+      this.focus()
     })
   }
 }

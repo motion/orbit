@@ -1,5 +1,5 @@
 import { always, react } from '@mcro/black'
-import { ContextMenu, View } from '@mcro/ui'
+import { ContextMenu } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import React, {
@@ -21,9 +21,18 @@ import {
 } from 'react-virtualized'
 import { useResizeObserver } from '../../hooks/useResizeObserver'
 import { GenericComponent } from '../../types'
-import { Banner } from '../Banner'
 import { HandleSelection } from '../ListItems/ListItem'
 import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
+
+// for some reason memo doesnt work but this does???
+export const simpleEqual = (a, b) => {
+  for (const key in b) {
+    if (a[key] !== b[key]) {
+      return false
+    }
+  }
+  return true
+}
 
 export type GetItemProps<A> = (
   item: A,
@@ -53,7 +62,6 @@ export type VirtualListProps<A> = SortableContainerProps & {
   sortable?: boolean
   dynamicHeight?: boolean
   keyMapper?: (index: number) => string | number
-  placeholder?: JSX.Element
   shouldMeasure?: boolean
 }
 
@@ -131,12 +139,10 @@ class VirtualListStore {
       }
 
       if (this.frameRef.clientWidth !== this.width) {
-        console.log('measure...')
         this.width = this.frameRef.clientWidth
       }
 
       if (!this.cache) {
-        console.log('update cache')
         this.cache = new CellMeasurerCache({
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
@@ -223,8 +229,6 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
 
-  console.log('render virtual list', props.items.length)
-
   useResizeObserver(frameRef, () => {
     store.measure()
     store.measureHeight()
@@ -238,13 +242,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
   )
 
   if (!props.items.length) {
-    return (
-      props.placeholder || (
-        <View flex={1} margin={[10, 0]}>
-          <Banner>No results</Banner>
-        </View>
-      )
-    )
+    return null
   }
 
   function rowRenderer({ key, index, parent, style }) {
@@ -295,7 +293,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
         height={store.height}
         width={store.width}
         rowHeight={store.cache.rowHeight}
-        overscanRowCount={20}
+        overscanRowCount={5}
         rowCount={props.items.length}
         estimatedRowSize={props.estimatedRowHeight}
         rowRenderer={rowRenderer}
@@ -335,7 +333,18 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
       )}
     </div>
   )
-})
+}, simpleEqual)
+
+class Test extends React.Component<any> {
+  shouldComponentUpdate(a, b) {
+    const next = simpleEqual(a, b)
+    console.log('should update', next)
+    return !next
+  }
+  render() {
+    return <VirtualListInner {...this.props as any} />
+  }
+}
 
 // use this outer wrapper because changing shouldMeasure otherwise would trigger renders
 // renders are expensive for this component, and especially that because it happens on click
@@ -345,5 +354,5 @@ export default function VirtualList({ shouldMeasure, ...rawProps }: VirtualListP
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, { shouldMeasure, ...props })
-  return <VirtualListInner {...props} store={store} />
+  return <Test {...props} store={store} />
 }

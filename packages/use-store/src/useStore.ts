@@ -201,8 +201,6 @@ export function useForceUpdate() {
   }, [])
 }
 
-let nextId = 0
-
 // for use in children
 // tracks every store used and updates if necessary
 
@@ -212,7 +210,6 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const render = useForceUpdate()
     const component = getCurrentComponent()
-    const componentId = useRef(++nextId)
     const storesRef = useRef(null)
 
     // debounce all the different store renders
@@ -251,7 +248,6 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
                 ? setupTrackableStore(store, rerender, {
                     ...options,
                     component,
-                    componentId: componentId.current,
                   })
                 : setupTrackableStore(store, rerender)
 

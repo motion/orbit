@@ -1,4 +1,5 @@
 import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
+import fastCompareDeep from '@mcro/fast-compare'
 import {
   createElement,
   forwardRef,
@@ -40,7 +41,7 @@ export interface GlossView<Props> {
 
 const tracker = new Map()
 const rulesToClass = new WeakMap()
-const sheet = new StyleSheet(process.env.NODE_ENV !== 'development')
+const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker, rulesToClass)
 
 let idCounter = 1
@@ -98,7 +99,7 @@ function glossify(
   theme: ThemeObject,
 ) {
   const hasPropStyles = !!Object.keys(allStyles.propStyles).length
-  let myStyles = { ...allStyles.styles }
+  const newStyles = {}
 
   // if passed any classes from another styled component
   // ignore that class and merge in their resolved styles
@@ -107,23 +108,14 @@ function glossify(
     for (const className of propClassNames) {
       const classInfo = tracker.get(className)
       if (classInfo) {
-        const { namespace, style } = classInfo
-        myStyles = {
-          ...myStyles,
-          [namespace]: style,
-        }
+        newStyles[classInfo.namespace] = classInfo.style
       }
     }
   }
+
   const hasDynamicStyles = themeFn || hasPropStyles
-  // if we had the exact same rules as last time and they weren't dynamic then we could bail out here
-  // if (!hasDynamicStyles && myStyles === state.lastStyles) {
-  //   return null
-  // }
-  let dynamicStyles
-  if (hasDynamicStyles) {
-    dynamicStyles = { [id]: {} }
-  }
+  const dynamicStyles = hasDynamicStyles ? { [id]: {} } : null
+
   if (hasPropStyles) {
     for (const key in allStyles.propStyles) {
       if (props[key] !== true) {
@@ -138,29 +130,30 @@ function glossify(
       }
     }
   }
+
   if (themeFn) {
     addStyles(id, dynamicStyles, themeFn(props, theme))
   }
 
   if (hasDynamicStyles) {
     for (const key in dynamicStyles) {
-      myStyles[key] = myStyles[key] || {}
-      myStyles[key] = {
-        ...myStyles[key],
-        ...dynamicStyles[key],
-      }
+      newStyles[key] = dynamicStyles[key]
     }
   }
 
   let nextClassNames: string[] | null = null
 
   // sort so we properly order pseudo keys
-  const keys = Object.keys(myStyles)
-  const sortedStyleKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
+  const keys = [...new Set([...Object.keys(allStyles.styles), ...Object.keys(newStyles)])]
+  const sortedKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
 
   // add rules
-  for (const namespace of sortedStyleKeys) {
-    const className = addRules(displayName, myStyles[namespace], namespace, tagName)
+  for (const key of sortedKeys) {
+    let style = allStyles.styles[key]
+    if (newStyles[key]) {
+      style = { ...style, ...newStyles[key] }
+    }
+    const className = addRules(displayName, style, key, tagName)
     nextClassNames = nextClassNames || []
     nextClassNames.push(className)
     // if this is the first mount render or we didn't previously have this class then add it as new
@@ -221,7 +214,7 @@ export function gloss<Props = GlossProps<any>>(
   //
 
   ThemedView = memo(
-    forwardRef<HTMLDivElement, GlossProps<Props>>((props, ref) => {
+    forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
       // compile theme on first run to avoid extra work
       themeFn = themeFn || compileTheme(ThemedView)
       const { activeTheme } = useContext(ThemeContext)
@@ -282,6 +275,7 @@ export function gloss<Props = GlossProps<any>>(
 
       return createElement(element, finalProps, props.children)
     }),
+    fastCompareDeep,
   )
 
   ThemedView.themeFn = null

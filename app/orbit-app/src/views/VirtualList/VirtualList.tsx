@@ -335,17 +335,6 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
   )
 }, simpleEqual)
 
-class Test extends React.Component<any> {
-  shouldComponentUpdate(a, b) {
-    const next = simpleEqual(a, b)
-    console.log('should update', next)
-    return !next
-  }
-  render() {
-    return <VirtualListInner {...this.props as any} />
-  }
-}
-
 // use this outer wrapper because changing shouldMeasure otherwise would trigger renders
 // renders are expensive for this component, and especially that because it happens on click
 // this lets us separate out and have the inner just react to props it should
@@ -354,5 +343,5 @@ export default function VirtualList({ shouldMeasure, ...rawProps }: VirtualListP
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, { shouldMeasure, ...props })
-  return <Test {...props} store={store} />
+  return <VirtualListInner {...props} store={store} />
 }

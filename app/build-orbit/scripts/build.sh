@@ -15,6 +15,33 @@ fi
 
 echo -n "" > ./scripts/.lastbuild
 
+function publicize-package-jsons() {
+  cd $(dirname $0)/../../..
+
+  for file in $(rg -g package.json --files); do
+    echo "file $file"
+    cp $file "$file.bak"
+    sed -i '' '/"private": true/s/true/false/' $file
+  done
+
+  cd -
+}
+
+function unpublicize-package-jsons() {
+  echo "CLEANUP"
+  cd $(dirname $0)/../../..
+
+  # sed -i '' '/"sideEffects": false/s/true/false/' packages/r2/package.json
+
+  for file in $(rg -g package.json --files); do
+    rm $file
+    mv "$file.bak" $file
+  done
+}
+
+trap unpublicize-package-jsons EXIT
+publicize-package-jsons
+
 #
 # BUILD
 #
@@ -51,11 +78,16 @@ fi
 echo -n "--no-build-app " >> ./scripts/.lastbuild
 
 function publish-packages() {
+  # modify private stuff so we can publish
+  publicize-package-jsons
+
   # clean old one since we are re-publishing
   rm -r /tmp/.verdaccio-storage || true
+
   # run verdaccio
   ./scripts/start-verdaccio-publish.sh &
   while ! nc -z localhost 4343; do sleep 0.1; done
+
   # publish packages
   (cd ../.. && \
     npx lerna exec \
@@ -131,3 +163,4 @@ mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app
 # see stage-app/package.json for options
 echo "electron-builder..."
 (cd stage-app && npx electron-builder -p always)
+

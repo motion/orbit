@@ -133,10 +133,6 @@ export function decorate<T>(
 
       const decoratedInstance = Mobx.decorate(instance, instDecor)
 
-      for (const key in reactions) {
-        reactions[key].value = reactions[key].initializer(decoratedInstance, key)
-      }
-
       for (const key in getterDesc) {
         getters[key] = Mobx.computed(getterDesc[key].get.bind(decoratedInstance))
         Object.defineProperty(instance, key, {
@@ -146,6 +142,10 @@ export function decorate<T>(
           },
           set: getterDesc[key].set,
         })
+      }
+
+      for (const key in reactions) {
+        reactions[key].value = reactions[key].initializer(decoratedInstance, key)
       }
 
       return decoratedInstance

@@ -70,16 +70,6 @@ export function mobxProxyWorm<A extends Function>(
         state.ids.delete(id)
         const res = state.keys.get(id)
         state.keys.delete(id)
-
-        // reduce size for mobx to not do duplicate checks
-        let lastKey: string | null = null
-        for (const key of [...res]) {
-          if (lastKey && key.indexOf(lastKey) === 0) {
-            res.delete(lastKey)
-          }
-          lastKey = key
-        }
-
         return res
       }
     },

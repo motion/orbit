@@ -17,7 +17,7 @@ export function setupTrackableStore(
   opts: TrackableStoreOptions = { component: {} },
 ) {
   const debug = opts.debug || (opts.component && opts.component.__debug)
-  const name = opts.component.renderName
+  const name = `>> ${opts.component.renderName}`
   const storeName = store.constructor.name
   let flushing = false
   let paused = true
@@ -48,14 +48,16 @@ export function setupTrackableStore(
   // mobx doesn't like it if we observe a non-decorated store
   // which can happen if a store is only getters
   if (Object.keys(decorations).length > 0) {
-    observe(store, change => {
-      if (flushing) return
-      const key = change['name']
-      if (reactiveKeys.has(key)) {
-        if (debug) console.log('update', name, 'from', `${storeName}.${key}`)
-        flush()
-      }
-    })
+    observers.push(
+      observe(store, change => {
+        if (flushing) return
+        const key = change['name']
+        if (reactiveKeys.has(key)) {
+          if (debug) console.log(name, 'render via', `${storeName}.${key}`)
+          flush()
+        }
+      }),
+    )
   }
 
   for (const key in getters) {
@@ -63,7 +65,7 @@ export function setupTrackableStore(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
           if (flushing) return
-          if (debug) console.log('update', name, 'from', `${storeName}.${key}`, '[get]')
+          if (debug) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
           flush()
         }
       }),
@@ -82,6 +84,7 @@ export function setupTrackableStore(
     },
     untrack() {
       reactiveKeys = done()
+      if (debug) console.log(name, storeName, reactiveKeys, '[reactive keys]')
       paused = false
     },
     dispose() {

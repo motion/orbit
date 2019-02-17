@@ -29,7 +29,11 @@ export type ReactionOptions = {
 }
 
 export interface MagicalObject {
-  __automagicSubscriptions: CompositeDisposable
-  automagicDispose: Function
+  __automagic: {
+    subscriptions: CompositeDisposable
+    reactions: {}
+    getters: {}
+  }
+  dispose: Function
   props?: { [key: string]: any }
 }

@@ -1,5 +1,6 @@
 import { gloss, Row } from '@mcro/gloss'
 import { BorderBottom } from '@mcro/ui'
+import { useStoreDebug } from '@mcro/use-store'
 import React, { memo } from 'react'
 import { useApp } from '../../apps/AppView'
 import { ProvideStores } from '../../components/ProvideStores'
@@ -14,6 +15,7 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
 }
 
 export default memo(function OrbitToolBar() {
+  useStoreDebug()
   const { paneManagerStore, orbitStore } = useStores()
   const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar

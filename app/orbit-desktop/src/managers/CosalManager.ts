@@ -27,6 +27,7 @@ export class CosalManager {
   }
 
   async start() {
+    log.info(`start()`)
     await ensureSetting('cosalIndexUpdatedTo', 0)
     this.cosal = new Cosal({
       database: this.dbPath,
@@ -34,7 +35,6 @@ export class CosalManager {
     await this.cosal.start()
     // sleep a bit, this is a heavy-ish operation and we can do it after things startup
     // TODO make this a bit better so its controlled above
-    await sleep(2000)
     this.updateSearchIndexWithNewBits()
   }
 
@@ -63,6 +63,9 @@ export class CosalManager {
   }
 
   updateSearchIndexWithNewBits = async () => {
+    // heavy so wait a little
+    await sleep(10000)
+
     const lastScanAt = await this.getLastScan()
 
     const bitsSinceLastScan = await getRepository(BitEntity).find({

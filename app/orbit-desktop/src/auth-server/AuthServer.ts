@@ -1,19 +1,19 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
+import { IntegrationType } from '@mcro/models'
+import { App, Desktop } from '@mcro/stores'
+import bodyParser from 'body-parser'
 import express from 'express'
+import session from 'express-session'
 import { Server } from 'https'
+import killPort from 'kill-port'
+import morgan from 'morgan'
+import Passport from 'passport'
 import * as Path from 'path'
+import { finishAuth } from './finishAuth'
 import OAuth from './oauth'
 import OAuthStrategies from './oauthStrategies'
-import morgan from 'morgan'
-import bodyParser from 'body-parser'
-import session from 'express-session'
-import Passport from 'passport'
 import { OauthValues } from './oauthTypes'
-import { finishAuth } from './finishAuth'
-import { IntegrationType } from '@mcro/models'
-import { Desktop, App } from '@mcro/stores'
-import killPort from 'kill-port'
 
 const Config = getGlobalConfig()
 const log = new Logger('auth-server')
@@ -45,6 +45,7 @@ export class AuthServer {
   }
 
   async start() {
+    log.info('start()')
     await killPort(Config.ports.auth)
     log.verbose('creating auth https server')
     this.setupExpressApp()

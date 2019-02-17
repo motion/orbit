@@ -49,6 +49,7 @@ export function react(a: any, b?: any, c?: any) {
     throw new Error(`Bad reaction args ${a} ${b} ${c}`)
   }
   startReaction.isAutomagicReaction = true
+  startReaction.reactionOptions = typeof b === 'object' ? b : c
   return startReaction as any
 }
 
@@ -105,10 +106,6 @@ export function setupReact(
   }
 
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue, {
-    name: name.simple,
-    deep: false,
-  })
   let currentValueUnreactive // for dev mode comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null
@@ -143,10 +140,9 @@ export function setupReact(
       // subscribe to new one and use that instead of setting directly
       if (automagicConfig.isSubscribable(value)) {
         subscriber = (value as SubscribableLike).subscribe(next => {
-          console.log('update', next)
-          current.set(next)
+          obj[methodName] = next
         })
-        obj.__automagicSubscriptions.add({
+        obj.__automagic.subscriptions.add({
           dispose: () => subscriber && subscriber.unsubscribe(),
         })
         return
@@ -165,7 +161,7 @@ export function setupReact(
     }
 
     currentValueUnreactive = nextValue
-    current.set(nextValue)
+    obj[methodName] = nextValue
     return changed
   }
 
@@ -182,7 +178,7 @@ export function setupReact(
   }
 
   // auto add subscription so it disposes on unmount
-  obj.__automagicSubscriptions.add({ dispose })
+  obj.__automagic.subscriptions.add({ dispose })
 
   // state used outside each watch/reaction
   let reactionID = null
@@ -289,7 +285,7 @@ export function setupReact(
   }
 
   const reactionHelpers: ReactionHelpers = {
-    getValue: () => current.get(),
+    getValue: () => obj[methodName],
     setValue: voidFn,
     sleep,
     when,
@@ -415,6 +411,4 @@ export function setupReact(
     //autorun
     stopReaction = Mobx.autorun(setupReactionFn(reaction), mobxOptions)
   }
-
-  return current
 }

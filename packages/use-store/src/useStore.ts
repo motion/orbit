@@ -35,7 +35,7 @@ export function disposeStore(store: any, component: DebugComponent) {
       component,
     })
   }
-  store.disposeAutomagic()
+  store.dispose()
 }
 
 let currentHooks = null
@@ -122,12 +122,12 @@ export function useStore<P, A extends { props?: P } | any>(
 
   if (isInstantiated) {
     store = (Store as unknown) as A
-    store = useTrackableStore(store, rerender)
+    store = useTrackableStore(store, rerender, { ...options, component })
   } else {
     store = Store as new () => A
     store = useReactiveStore(store, props)
     if (!options || options.react !== false) {
-      store = useTrackableStore(store, rerender)
+      store = useTrackableStore(store, rerender, { ...options, component })
     }
     useEffect(() => {
       if (!isInstantiated) {
@@ -189,8 +189,9 @@ function getComponentName(c) {
       }
     }
   }
-  if (name === '_default') {
-    debugger
+  if (name === '_default' || !name) {
+    const m = `${c}`.match(/function ([a-z0-9_]+)\(/i)
+    if (m) name = m[1]
   }
   return name
 }

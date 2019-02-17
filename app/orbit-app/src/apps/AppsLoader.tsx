@@ -1,5 +1,5 @@
 import { useStore } from '@mcro/use-store'
-import React, { useEffect, useMemo } from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
@@ -8,7 +8,10 @@ import { AppStore } from './AppStore'
 
 type AppViewDefinition = { id: string; type: string }
 
-export function AppsLoader(props: { children?: any; views: AppViewDefinition[] }) {
+export const AppsLoader = memo(function AppsLoader(props: {
+  children?: any
+  views: AppViewDefinition[]
+}) {
   const appsStore = useStore(AppsStore)
 
   const appViews = props.views.map(view => {
@@ -21,7 +24,7 @@ export function AppsLoader(props: { children?: any; views: AppViewDefinition[] }
       {props.children}
     </ProvideStores>
   )
-}
+})
 
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 

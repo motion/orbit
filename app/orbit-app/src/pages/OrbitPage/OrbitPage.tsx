@@ -34,6 +34,8 @@ import OrbitToolBar from './OrbitToolBar'
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
 
+  log('rendering orbit page root')
+
   return (
     <ProvideStores stores={{ themeStore }}>
       <Theme name={themeStore.themeColor}>
@@ -156,6 +158,8 @@ function OrbitPageProvideStores(props: any) {
   const queryStore = useStoreSimple(QueryStore, { sourcesStore })
   const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
   const newAppStore = useStoreSimple(NewAppStore)
+
+  log('why r u rendering me bro............')
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,

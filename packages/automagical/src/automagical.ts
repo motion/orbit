@@ -81,24 +81,31 @@ export function decorate<T>(
       // add props to the store and manage them
       const instance = constructWithProps(Target, args, props)
       const keys = Object.keys(instance)
-      instance.__automagicSubscriptions = new CompositeDisposable()
-      instance.disposeAutomagic = () => instance.__automagicSubscriptions.dispose()
+      const subscriptions = new CompositeDisposable()
+      const dispose = () => subscriptions.dispose()
       const instDecor = {}
       const reactions = {}
       const getters = {}
+      const decorations = {}
 
-      for (const key in getterDesc) {
-        Object.defineProperty(instance, key, {
-          enumerable: true,
-          get() {
-            if (!getters[key]) {
-              getters[key] = Mobx.computed(getterDesc[key].get.bind(decoratedInstance))
-            }
-            return getters[key].get()
-          },
-          set: getterDesc[key].set,
-        })
-      }
+      const ogDispose = instance.dispose && instance.dispose.bind(instance)
+      Object.defineProperty(instance, 'dispose', {
+        enumerable: true,
+        value: () => {
+          ogDispose && ogDispose()
+          dispose()
+        },
+      })
+
+      Object.defineProperty(instance, '__automagic', {
+        enumerable: false,
+        get: () => ({
+          getters,
+          reactions,
+          subscriptions,
+          decorations,
+        }),
+      })
 
       for (const key of keys) {
         if (IGNORE[key]) continue
@@ -111,18 +118,17 @@ export function decorate<T>(
               initializer: value,
               value: null,
             }
-            Object.defineProperty(instance, key, {
-              enumerable: true,
-              get() {
-                return reactions[key].value.get()
-              },
-            })
+            decorations[key] = 'reaction'
+            instance[key] = (value.reactionOptions && value.reactionOptions.defaultValue) || null
+            instDecor[key] = Mobx.observable.ref
           } else {
             instDecor[key] = Mobx.action
+            decorations[key] = 'action'
           }
-        } else {
-          instDecor[key] = Mobx.observable.ref
+          continue
         }
+        instDecor[key] = Mobx.observable.ref
+        decorations[key] = 'ref'
       }
 
       const decoratedInstance = Mobx.decorate(instance, instDecor)
@@ -131,8 +137,16 @@ export function decorate<T>(
         reactions[key].value = reactions[key].initializer(decoratedInstance, key)
       }
 
-      // if (Target.name === 'SubPaneStore' && reactions['isActive'].value.get() === undefined)
-      //   debugger
+      for (const key in getterDesc) {
+        getters[key] = Mobx.computed(getterDesc[key].get.bind(decoratedInstance))
+        Object.defineProperty(instance, key, {
+          enumerable: true,
+          get() {
+            return getters[key].get()
+          },
+          set: getterDesc[key].set,
+        })
+      }
 
       return decoratedInstance
     },

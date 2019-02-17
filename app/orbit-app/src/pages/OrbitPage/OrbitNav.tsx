@@ -213,7 +213,7 @@ export default memo(function OrbitNav() {
           />
         )}
 
-        <OrbitTab
+        {/* <OrbitTab
           isActive={onSettings}
           onClick={() => {
             newAppStore.setShowCreateNew(false)
@@ -227,7 +227,7 @@ export default memo(function OrbitNav() {
           icon="gear"
           tooltip="Settings"
           thicc
-        />
+        /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )

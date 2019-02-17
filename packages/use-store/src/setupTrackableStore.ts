@@ -1,5 +1,4 @@
-import { get, isEqual } from 'lodash'
-import { Reaction, transaction } from 'mobx'
+import { observe } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
@@ -15,38 +14,61 @@ const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
 export function setupTrackableStore(
   store: any,
   rerender: Function,
-  options?: TrackableStoreOptions,
+  opts: TrackableStoreOptions = { component: {} },
 ) {
-  const name = options && options.component.renderName
+  const debug = opts.debug || (opts.component && opts.component.__debug)
+  const name = opts.component.renderName
+  const storeName = store.constructor.name
+  let flushing = false
   let paused = true
   let reactiveKeys = new Set()
 
-  const update = () => {
+  const flush = () => {
+    flushing = true
+    if (paused) return
     if (process.env.NODE_ENV === 'development') {
-      if (options && options.component) {
+      if (opts.component) {
         debugEmit({
           type: 'render',
-          component: options.component,
+          component: opts.component,
           reactiveKeys,
           store,
         })
       }
     }
     rerender()
+    setImmediate(() => {
+      flushing = false
+    })
+  }
+  const { getters, decorations } = store.__automagic
+
+  const observers = []
+
+  // mobx doesn't like it if we observe a non-decorated store
+  // which can happen if a store is only getters
+  if (Object.keys(decorations).length > 0) {
+    observe(store, change => {
+      if (flushing) return
+      const key = change['name']
+      if (reactiveKeys.has(key)) {
+        if (debug) console.log('update', name, 'from', `${storeName}.${key}`)
+        flush()
+      }
+    })
   }
 
-  const reaction = new Reaction(`track(${name})`, () => {
-    if (paused) return
-    reaction.track(() => {
-      if (reactiveKeys.size === 0) return
-      transaction(() => {
-        for (const key of [...reactiveKeys]) {
-          get(store, key)
+  for (const key in getters) {
+    observers.push(
+      observe(getters[key], () => {
+        if (reactiveKeys.has(key)) {
+          if (flushing) return
+          if (debug) console.log('update', name, 'from', `${storeName}.${key}`, '[get]')
+          flush()
         }
-      })
-      update()
-    })
-  })
+      }),
+    )
+  }
 
   const config = DedupedWorms.get(store) || mobxProxyWorm(store)
   DedupedWorms.set(store, config)
@@ -56,19 +78,16 @@ export function setupTrackableStore(
     store: config.store,
     track() {
       paused = true
-      done = config.track(Math.random())
+      done = config.track(Math.random(), opts.debug || false)
     },
     untrack() {
-      let nextKeys = done()
+      reactiveKeys = done()
       paused = false
-      if (!isEqual(nextKeys, reactiveKeys)) {
-        reactiveKeys = nextKeys
-        store['__useStoreKeys'] = nextKeys
-        reaction.schedule()
-      }
     },
     dispose() {
-      reaction.dispose()
+      for (const observer of observers) {
+        observer()
+      }
     },
   }
 }
@@ -76,7 +95,7 @@ export function setupTrackableStore(
 export function useTrackableStore<A>(
   plainStore: A,
   rerenderCb: Function,
-  options?: TrackableStoreOptions,
+  opts?: TrackableStoreOptions,
 ): A {
   const component = getCurrentComponent()
   const trackableStore = useRef({
@@ -86,7 +105,7 @@ export function useTrackableStore<A>(
     dispose: null,
   })
   if (!trackableStore.current.store) {
-    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...options })
+    trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
   }
   useEffect(() => {
     return () => {

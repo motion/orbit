@@ -61,9 +61,7 @@ export default memo(function OrbitHeader() {
               />
             </View>
 
-            <OrbitHeaderInput />
-
-            <SegmentedRow>
+            <SegmentedRow width={80} justifyContent="center">
               <Popover
                 openOnClick
                 closeOnClickAway
@@ -86,6 +84,8 @@ export default memo(function OrbitHeader() {
 
               <OrbitFilterIntegrationButton />
             </SegmentedRow>
+
+            <OrbitHeaderInput />
           </HeaderContain>
 
           <View flex={1} />
@@ -105,25 +105,31 @@ export default memo(function OrbitHeader() {
           </Absolute>
         )}
 
-        {isTorn && (
-          <Absolute top={0} right={3} bottom={0} alignItems="center" justifyContent="center">
-            <Button
-              chromeless
-              opacity={0.3}
-              hoverStyle={{
-                opacity: 8,
-              }}
-              icon="gear"
-              onClick={() => {
-                if (paneManagerStore.activePane.type === 'settings') {
-                  paneManagerStore.back()
-                } else {
-                  paneManagerStore.setActivePaneByType('settings')
-                }
-              }}
-            />
-          </Absolute>
-        )}
+        <Absolute
+          top={0}
+          right={isTorn ? 3 : 6}
+          bottom={0}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Button
+            chromeless
+            opacity={0.3}
+            hoverStyle={{
+              opacity: 8,
+            }}
+            icon="gear"
+            iconSize={isTorn ? 10 : 12}
+            onClick={() => {
+              newAppStore.setShowCreateNew(false)
+              if (paneManagerStore.activePane.type === 'settings') {
+                paneManagerStore.back()
+              } else {
+                paneManagerStore.setActivePaneByType('settings')
+              }
+            }}
+          />
+        </Absolute>
       </HeaderTop>
       {!isTorn && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
@@ -191,9 +197,9 @@ const HeaderContain = gloss({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  width: '75%',
+  width: '100%',
   minWidth: 400,
-  maxWidth: 680,
+  maxWidth: 980,
 })
 
 const HeaderFade = gloss(FullScreen, {

@@ -1,9 +1,11 @@
 import { Cosal } from '@mcro/cosal'
+import { Logger } from '@mcro/logger'
 import { BitEntity, BitUtils } from '@mcro/models'
 import { flatten, zip } from 'lodash'
 import { getRepository } from 'typeorm'
-
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
+
+const log = new Logger('TopicsManager')
 
 export class TopicsManager {
   cosal: Cosal
@@ -15,6 +17,7 @@ export class TopicsManager {
   }
 
   async start() {
+    log.info(`start()`)
     await ensureSetting('topicsIndexUpdatedTo', 0)
     this.scanTopicsInt = setInterval(this.scanTopics, 1000 * 60 * 15)
     this.scanTopics()

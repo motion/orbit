@@ -44,6 +44,7 @@ export class WebServer {
   }
 
   async start() {
+    log.info('start()')
     // kill old processes
     log.verbose(`Killing old server on ${Config.ports.server}...`)
     await killPort(Config.ports.server)

@@ -112,7 +112,7 @@ const dark = {
     headerBorderBottom: '#151515',
     headerBackground: linearGradient([0, 0, 0, 0.22], [0, 0, 0, 0.38]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
-    // orbitHeaderBackgroundEditing: linearGradient([40, 40, 42], [30, 30, 34]),
+    orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,

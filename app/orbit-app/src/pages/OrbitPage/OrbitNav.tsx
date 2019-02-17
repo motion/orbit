@@ -149,8 +149,8 @@ export default memo(function OrbitNav() {
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}
             // let shadows from tabs go up above
-            padding={[16, 0]}
-            margin={[-16, 0]}
+            padding={16}
+            margin={-16}
             height={tabHeight + 20}
             overflowX="auto"
             overflowY="hidden"

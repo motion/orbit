@@ -130,8 +130,9 @@ class VirtualListStore {
   triggerMeasure = 0
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.shouldMeasure],
+    () => [this.triggerMeasure, this.props.shouldMeasure, always(this.props.items)],
     async (_, { when }) => {
+      console.warn('run measure')
       await when(() => !!this.frameRef)
 
       if (this.cache) {

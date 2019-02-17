@@ -11,6 +11,17 @@ type TrackableStoreOptions = {
 
 const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
 
+const nextRenders = new Set()
+let tm = null
+function renderComponent(rerender: Function) {
+  clearImmediate(tm)
+  nextRenders.add(rerender)
+  tm = setImmediate(() => {
+    ;[...nextRenders].forEach(fn => fn())
+    nextRenders.clear()
+  })
+}
+
 export function setupTrackableStore(
   store: any,
   rerender: Function,
@@ -19,12 +30,9 @@ export function setupTrackableStore(
   const debug = opts.debug || (opts.component && opts.component.__debug)
   const name = `>> ${opts.component.renderName}`
   const storeName = store.constructor.name
-  let flushing = false
   let paused = true
   let reactiveKeys = new Set()
-
-  const flush = () => {
-    flushing = true
+  const update = () => {
     if (paused) return
     if (process.env.NODE_ENV === 'development') {
       if (opts.component) {
@@ -37,12 +45,9 @@ export function setupTrackableStore(
       }
     }
     rerender()
-    setImmediate(() => {
-      flushing = false
-    })
   }
-  const { getters, decorations } = store.__automagic
 
+  const { getters, decorations } = store.__automagic
   const observers = []
 
   // mobx doesn't like it if we observe a non-decorated store
@@ -50,11 +55,10 @@ export function setupTrackableStore(
   if (Object.keys(decorations).length > 0) {
     observers.push(
       observe(store, change => {
-        if (flushing) return
         const key = change['name']
         if (reactiveKeys.has(key)) {
           if (debug) console.log(name, 'render via', `${storeName}.${key}`)
-          flush()
+          renderComponent(update)
         }
       }),
     )
@@ -64,9 +68,8 @@ export function setupTrackableStore(
     observers.push(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
-          if (flushing) return
           if (debug) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
-          flush()
+          renderComponent(update)
         }
       }),
     )

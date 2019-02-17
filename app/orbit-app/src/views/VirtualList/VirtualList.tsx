@@ -1,6 +1,6 @@
 import { always, react } from '@mcro/black'
 import { ContextMenu } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useStore, useStoreDebug } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import React, {
   Component,
@@ -62,7 +62,7 @@ export type VirtualListProps<A> = SortableContainerProps & {
   sortable?: boolean
   dynamicHeight?: boolean
   keyMapper?: (index: number) => string | number
-  shouldMeasure?: boolean
+  allowMeasure?: boolean
 }
 
 class SortableList extends Component<any> {
@@ -130,13 +130,12 @@ class VirtualListStore {
   triggerMeasure = 0
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.shouldMeasure /* , always(this.props.items) */],
+    () => [this.triggerMeasure, this.props.allowMeasure /* , always(this.props.items) */],
     async (_, { when }) => {
-      console.warn('run measure')
       await when(() => !!this.frameRef)
 
       if (this.cache) {
-        await when(() => this.props.shouldMeasure !== false)
+        await when(() => this.props.allowMeasure !== false)
       }
 
       if (this.frameRef.clientWidth !== this.width) {
@@ -227,8 +226,11 @@ export const VirtualListDefaultProps = createContext({
 } as Partial<VirtualListProps<any>>)
 
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
+  useStoreDebug()
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
+
+  console.log('render virtual list')
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -336,13 +338,13 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
   )
 }, simpleEqual)
 
-// use this outer wrapper because changing shouldMeasure otherwise would trigger renders
+// use this outer wrapper because changing allowMeasure otherwise would trigger renders
 // renders are expensive for this component, and especially that because it happens on click
 // this lets us separate out and have the inner just react to props it should
 
-export default function VirtualList({ shouldMeasure, ...rawProps }: VirtualListProps<any>) {
+export default function VirtualList({ allowMeasure, ...rawProps }: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
-  const store = useStore(VirtualListStore, { shouldMeasure, ...props })
+  const store = useStore(VirtualListStore, { allowMeasure, ...props })
   return <VirtualListInner {...props} store={store} />
 }

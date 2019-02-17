@@ -45,14 +45,14 @@ debugUseStore(event => {
     globalizeStores(event.value)
     return
   }
-  if (window['enableLog']) {
-    console.log(event)
-  }
   switch (event.type) {
     case 'observe':
     case 'render':
     case 'unmount':
     case 'mount':
+      if (window['enableLog']) {
+        console.log(event.component.renderName, event)
+      }
       addEvent(event.component, event)
       return
   }

@@ -119,7 +119,8 @@ export function decorate<T>(
               value: null,
             }
             decorations[key] = 'reaction'
-            instance[key] = (value.reactionOptions && value.reactionOptions.defaultValue) || null
+            const val = value.reactionOptions ? value.reactionOptions.defaultValue : undefined
+            instance[key] = val
             instDecor[key] = Mobx.observable.ref
           } else {
             instDecor[key] = Mobx.action

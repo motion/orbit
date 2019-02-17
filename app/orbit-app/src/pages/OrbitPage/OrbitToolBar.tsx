@@ -38,7 +38,15 @@ const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 1000000000,
-  minHeight,
+  transition: 'none',
+  transform: {
+    y: -height + minHeight,
+  },
+  hasToolbars: {
+    transform: {
+      y: 0,
+    },
+  },
 }).theme((_, theme) => ({
   background: theme.tabBackgroundBottom || theme.background,
 }))
@@ -49,8 +57,14 @@ const ToolbarInner = gloss({
   alignItems: 'center',
   overflow: 'hidden',
   position: 'relative',
+  height,
+  padding: [0, 12],
+  transition: 'opacity ease 100ms',
+  opacity: 0,
   hasToolbars: {
-    height: height,
-    padding: [0, 12],
+    opacity: 1,
+    transform: {
+      y: 0,
+    },
   },
 })

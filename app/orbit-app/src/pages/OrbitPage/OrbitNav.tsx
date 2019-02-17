@@ -83,7 +83,7 @@ export default memo(function OrbitNav() {
           isActive,
           icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
-          iconSize: isPinned ? 18 : 12,
+          iconSize: isPinned ? 16 : 12,
           getContext() {
             return [
               {
@@ -195,23 +195,21 @@ export default memo(function OrbitNav() {
           )}
         </Row>
 
-        {showAppsTray && (
-          <OrbitTab
-            isActive={paneManagerStore.activePane.id === 'apps'}
-            onClick={() => {
-              newAppStore.setShowCreateNew(false)
-              if (paneManagerStore.activePane.id === 'apps') {
-                paneManagerStore.setActivePane(store.previousTabID)
-              } else {
-                paneManagerStore.setActivePaneByType('apps')
-              }
-            }}
-            iconSize={11}
-            icon="grid48"
-            tooltip="Apps"
-            thicc
-          />
-        )}
+        <OrbitTab
+          isActive={paneManagerStore.activePane.id === 'apps'}
+          onClick={() => {
+            newAppStore.setShowCreateNew(false)
+            if (paneManagerStore.activePane.id === 'apps') {
+              paneManagerStore.setActivePane(store.previousTabID)
+            } else {
+              paneManagerStore.setActivePaneByType('apps')
+            }
+          }}
+          iconSize={11}
+          icon="grid48"
+          tooltip="Apps"
+          thicc
+        />
 
         {/* <OrbitTab
           isActive={onSettings}

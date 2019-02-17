@@ -52,14 +52,16 @@ export default memo(function OrbitHeader() {
           <View flex={1} />
 
           <HeaderContain>
-            <View width={24} alignItems="center" justifyContent="center">
+            <View width={20} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}
                 name={`orbit-${icon}`}
-                size={20}
+                size={18}
                 opacity={theme.color.isDark() ? 0.4 : 0.2}
               />
             </View>
+
+            <OrbitHeaderInput />
 
             <SegmentedRow width={80} justifyContent="center">
               <Popover
@@ -84,8 +86,6 @@ export default memo(function OrbitHeader() {
 
               <OrbitFilterIntegrationButton />
             </SegmentedRow>
-
-            <OrbitHeaderInput />
           </HeaderContain>
 
           <View flex={1} />
@@ -197,9 +197,8 @@ const HeaderContain = gloss({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  width: '100%',
+  maxWidth: '70%',
   minWidth: 400,
-  maxWidth: 980,
 })
 
 const HeaderFade = gloss(FullScreen, {

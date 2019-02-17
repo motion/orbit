@@ -188,9 +188,7 @@ const NavButtonChromeInner = gloss({
   alignItems: 'center',
   flex: 1,
   height: '100%',
-  borderTop: [1, 'transparent'],
-}).theme(({ isActive, sidePad }, theme) => ({
-  borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
+}).theme(({ sidePad }) => ({
   padding: [0, sidePad],
 }))
 

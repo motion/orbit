@@ -156,7 +156,7 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+    <Absolute top={0} right={42} bottom={0} alignItems="center" justifyContent="center">
       <HeaderButton
         icon="tool"
         tooltip="Edit app"

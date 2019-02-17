@@ -59,6 +59,7 @@ export default memo(function OrbitNav() {
   }
 
   const numUnpinned = activeAppsSorted.filter(x => !x.pinned).length
+  const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
 
   const items = space.paneSort
     .map(
@@ -74,7 +75,7 @@ export default memo(function OrbitNav() {
         const isPinned = app.pinned
         return {
           app,
-          width: numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150,
+          width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
           label: isPinned ? '' : app.type === 'search' ? activeSpaceName : app.name,
@@ -117,10 +118,8 @@ export default memo(function OrbitNav() {
     .filter(Boolean)
 
   const onSettings = isOnSettings(paneManagerStore.activePane)
-  const showAppsTray = activeAppsSorted.length > 5
-  const appsTrayWidth = showAppsTray ? 20 : 0
-  const showCreateNewWidth = showCreateNew ? -101 : 0
-  const extraButtonsWidth = showCreateNewWidth + appsTrayWidth
+  const showCreateNewWidth = showCreateNew ? tabWidth : 0
+  const extraButtonsWidth = showCreateNewWidth
 
   return (
     <OrbitNavClip>
@@ -160,6 +159,7 @@ export default memo(function OrbitNav() {
 
           {showCreateNew && (
             <OrbitTab
+              width={tabWidth}
               stretch
               iconSize={12}
               isActive
@@ -235,6 +235,7 @@ const OrbitNavClip = gloss({
   flex: 1,
   // zIndex: 10000000000,
   overflow: 'hidden',
+  pointerEvents: 'none',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
   transform: {
@@ -243,10 +244,12 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  pointerEvents: 'auto',
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
+  justifyContent: 'space-between',
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

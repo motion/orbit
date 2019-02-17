@@ -81,7 +81,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-5%' : 0}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}

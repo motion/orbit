@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { BorderBottom, Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import React, { memo } from 'react'
@@ -133,7 +133,10 @@ export default memo(function OrbitHeader() {
       </HeaderTop>
       {!isTorn && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
-      <BorderBottom zIndex={0} />
+      <BorderBottom
+        borderColor={(isTorn && theme.headerBorderBottom) || theme.borderColor}
+        zIndex={0}
+      />
       <OrbitNav />
     </OrbitHeaderContainer>
   )
@@ -175,9 +178,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 500ms',
 }).theme(({ isActive }, theme) => ({
-  background: isActive
-    ? linearGradient(theme.selected.background, theme.selected.background.darken(0.1))
-    : 'transparent',
+  background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
 const OrbitHeaderContainer = gloss(View, {

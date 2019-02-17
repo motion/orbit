@@ -103,7 +103,6 @@ export class HeaderStore {
   handleMouseUp = async () => {
     await sleep(10)
     window['requestIdleCallback'](() => {
-      console.log('focus now')
       this.focus()
     })
   }

@@ -64,6 +64,9 @@ class CurrentAppStore {
       await sleep(10)
       return next
     },
+    {
+      log: false,
+    },
   )
 }
 

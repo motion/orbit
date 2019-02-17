@@ -1,10 +1,8 @@
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
 import { useObserver } from 'mobx-react-lite'
 import React, { useState } from 'react'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStores } from '../../hooks/useStores'
 import { Icon } from '../../views/Icon'
-import { SpaceIcon } from '../../views/SpaceIcon'
 
 const tabIconProps = {
   size: 10,
@@ -17,7 +15,6 @@ const insetShadow = theme => [[0, 0, 0, 0.5, theme.borderColor]]
 export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
   const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
-  const [activeSpace] = useActiveSpace()
 
   useObserver(() => {
     const next = paneManagerStore.activePane.type
@@ -40,15 +37,6 @@ export function OrbitSettingsToolbar() {
     <View margin="auto" width={420}>
       <SegmentedRow borderRadius={200} boxShadow={insetShadow}>
         <Tabs active={activePaneKey} height={22} onActive={onActive}>
-          <Tab
-            key="sources"
-            label={
-              <>
-                {activeSpace && <SpaceIcon space={activeSpace} {...tabIconProps} />}
-                Current Space
-              </>
-            }
-          />
           <Tab
             key="spaces"
             label={

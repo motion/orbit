@@ -22,7 +22,7 @@ export default function AppsAppsIndex(_props: AppProps) {
 
   const results = [
     {
-      group: 'Apps',
+      group: 'Space',
       title: `Manage apps`,
       subtitle: `${activeApps.length} apps`,
       icon: 'orbit-apps-full',

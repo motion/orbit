@@ -5,7 +5,7 @@ import { useApp } from '../../apps/AppView'
 import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
-const height = 32
+const height = 30
 const minHeight = 3
 
 export const OrbitToolBarHeight = ({ id }: { id: string }) => {

@@ -59,11 +59,6 @@ class CurrentAppStore {
       }
       return next
     },
-    async (next, { sleep }) => {
-      // avoid waterfall updates no initial load
-      await sleep(10)
-      return next
-    },
     {
       log: false,
     },

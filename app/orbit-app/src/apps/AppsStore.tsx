@@ -46,7 +46,7 @@ export class AppsStore {
     () => [this.provideStores, this.appViews, this.appStores],
     async ([provideStores, appViews, appStores], { sleep }) => {
       // debounced because things mount in waterfall
-      await sleep()
+      await sleep(10)
       return {
         provideStores,
         appViews,

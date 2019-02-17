@@ -9,7 +9,7 @@ export default function AppsAppsMain(props: AppProps) {
     return <AppsMainManage />
   }
 
-  if (props.appConfig.type === 'sources') {
+  if (props.appConfig.type !== 'apps') {
     return <AppSubView appConfig={props.appConfig} />
   }
 

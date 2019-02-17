@@ -1,4 +1,5 @@
-import { observe } from 'mobx'
+import { get, isEqual } from 'lodash'
+import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
@@ -32,6 +33,8 @@ export function setupTrackableStore(
   const storeName = store.constructor.name
   let paused = true
   let reactiveKeys = new Set()
+  let deepKeys = []
+
   const update = () => {
     if (paused) return
     if (process.env.NODE_ENV === 'development') {
@@ -49,6 +52,21 @@ export function setupTrackableStore(
 
   const { getters, decorations } = store.__automagic
   const observers = []
+
+  // this lets us handle deep objects
+  const reaction = new Reaction(`track(${name})`, () => {
+    if (paused) return
+    reaction.track(() => {
+      if (deepKeys.length) {
+        transaction(() => {
+          deepKeys.forEach(key => {
+            get(store, key)
+          })
+        })
+        renderComponent(update)
+      }
+    })
+  })
 
   // mobx doesn't like it if we observe a non-decorated store
   // which can happen if a store is only getters
@@ -86,11 +104,19 @@ export function setupTrackableStore(
       done = config.track(Math.random(), opts.debug || false)
     },
     untrack() {
-      reactiveKeys = done()
-      if (debug) console.log(name, storeName, reactiveKeys, '[reactive keys]')
       paused = false
+      reactiveKeys = done()
+      const nextDeepKeys = [...reactiveKeys].filter(x => x.indexOf('.') > 0)
+      if (!isEqual(nextDeepKeys, deepKeys)) {
+        deepKeys = nextDeepKeys
+        reaction.schedule()
+      }
+      if (debug) {
+        console.log(name, storeName, reactiveKeys, '[reactive keys]', deepKeys, '[deep keys]')
+      }
     },
     dispose() {
+      reaction.dispose()
       for (const observer of observers) {
         observer()
       }

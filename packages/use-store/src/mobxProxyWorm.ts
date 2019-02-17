@@ -16,6 +16,18 @@ type ProxyWormState = {
   add: (s: string) => void
 }
 
+const filterShallowKeys = (set: Set<string>) => {
+  // reduce size for mobx to not do duplicate checks
+  let lastKey: string | null = null
+  for (const key of [...set]) {
+    if (lastKey && key.indexOf(lastKey) === 0) {
+      set.delete(lastKey)
+    }
+    lastKey = key
+  }
+  return set
+}
+
 export function mobxProxyWorm<A extends Function>(
   obj: A,
   parentPath = '',
@@ -70,6 +82,7 @@ export function mobxProxyWorm<A extends Function>(
         state.ids.delete(id)
         const res = state.keys.get(id)
         state.keys.delete(id)
+        filterShallowKeys(res)
         return res
       }
     },

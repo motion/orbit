@@ -1,4 +1,4 @@
-import { cancel, ensure, react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
@@ -26,7 +26,7 @@ export class SearchStore {
   stores = useHook(useStoresSimple)
 
   get activeQuery() {
-    return this.stores.queryStore.query
+    return this.queryFilters.activeQuery
   }
 
   get queryFilters() {
@@ -136,7 +136,7 @@ export class SearchStore {
     return this.searchState.results
   }
 
-  private getQuickResults(query: string) {
+  getQuickResults(query: string) {
     // TODO recent history
     return [...this.getRecentItems(query)]
   }
@@ -216,9 +216,6 @@ export class SearchStore {
           take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args })
-        if (!nextResults.length) {
-          throw cancel
-        }
         results = [...results, ...searchGroupsToResults(nextResults)]
         setValue({
           results,

@@ -14,9 +14,10 @@ const { parseSearchQuery, setUserNames } = initNlp()
 @store
 export class NLPStore {
   queryStore: QueryStore
+  query = ''
 
-  constructor({ queryStore }: { queryStore: QueryStore }) {
-    this.queryStore = queryStore
+  setQuery = (s: string) => {
+    this.query = s
   }
 
   peopleNames: string[] = null
@@ -39,25 +40,29 @@ export class NLPStore {
     return this.nlp.marks
   }
 
+  emptyNLP: Partial<NLPResponse> = {
+    query: '',
+    date: {
+      startDate: null,
+      endDate: null,
+    },
+  }
+
   nlp = react(
-    () => this.queryStore.queryInstant,
-    (query, { sleep }) => {
-      if (!query) {
-        return {
-          query: '',
-          date: {
-            startDate: null,
-            endDate: null,
-          },
-        } as NLPResponse
-      }
+    () => this.query,
+    async (query, { sleep }) => {
+      log('123', query)
+      if (!query) return this.emptyNLP
       // debounce a bit less than query
-      return sleep(100)
-        .then(() => parseSearchQuery(query))
-        .then(parsed => ({
-          ...parsed,
-          query,
-        }))
+      await sleep(100)
+      console.log('run me bro')
+      return {
+        ...(await parseSearchQuery(query)),
+        query,
+      }
+    },
+    {
+      defaultValue: this.emptyNLP,
     },
   )
 

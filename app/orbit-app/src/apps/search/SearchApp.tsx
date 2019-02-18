@@ -13,6 +13,7 @@ import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 export function SearchApp(props: AppProps) {
   const { paneManagerStore } = useStores()
   const searchStore = useStore(SearchStore, { paneManagerStore })
+  console.warn('rendering app')
   return (
     <AppContainer
       provideStores={{ searchStore }}

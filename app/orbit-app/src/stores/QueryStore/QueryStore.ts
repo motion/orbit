@@ -13,6 +13,9 @@ export class QueryStore {
   query = react(
     () => this.queryInstant,
     async (query, { sleep }) => {
+      // update nlp
+      this.nlpStore.setQuery(query)
+
       if (query === '') {
         return query
       }
@@ -28,9 +31,7 @@ export class QueryStore {
     },
   )
 
-  nlpStore = new NLPStore({
-    queryStore: this,
-  })
+  nlpStore = new NLPStore()
 
   queryFilters = new QueryFilterStore({
     queryStore: this,

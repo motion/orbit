@@ -14,16 +14,19 @@ function AppContainerInner(props: AppElements) {
 
   const { appStore, appsStore } = useStoresSimple()
 
-  useEffect(() => {
-    const views = {
-      index: props.index && superMemo(props.index),
-      main: props.children && superMemo(props.children),
-      statusBar: props.statusBar && superMemo(props.statusBar),
-      toolBar: props.toolBar && superMemo(props.toolBar),
-    }
+  useEffect(
+    () => {
+      const views = {
+        index: props.index && superMemo(props.index),
+        main: props.children && superMemo(props.children),
+        statusBar: props.statusBar && superMemo(props.statusBar),
+        toolBar: props.toolBar && superMemo(props.toolBar),
+      }
 
-    appsStore.setupApp(appStore.id, views, props.provideStores)
-  }, [])
+      appsStore.setupApp(appStore.id, views, props.provideStores)
+    },
+    [Object.values(props.provideStores || {})],
+  )
 
   return null
 }

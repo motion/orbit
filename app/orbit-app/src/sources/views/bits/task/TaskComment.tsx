@@ -1,4 +1,5 @@
-import { Icon, Row, Text } from '@mcro/ui'
+import { gloss, View } from '@mcro/gloss'
+import { BorderBottom, Icon, Row, Text, ViewProps } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../../actions/appActions/AppActions'
 import { HorizontalSpace, VerticalSpace } from '../../../../views'
@@ -24,7 +25,7 @@ export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
   }
   const { avatarUrl, login, email } = author
   return (
-    <React.Fragment>
+    <HighlightSection>
       <Row alignItems="center">
         <img
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
@@ -53,6 +54,21 @@ export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
       </Row>
       <VerticalSpace small />
       <Markdown source={body} />
-    </React.Fragment>
+    </HighlightSection>
   )
 }
+
+export function HighlightSection({ children, ...props }: ViewProps) {
+  return (
+    <HighlightSectionChrome {...props}>
+      <View margin={-12}>{children}</View>
+      <BorderBottom />
+    </HighlightSectionChrome>
+  )
+}
+
+const HighlightSectionChrome = gloss({
+  padding: 20,
+  overflow: 'hidden',
+  position: 'relative',
+})

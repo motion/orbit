@@ -82,6 +82,7 @@ export class SpaceStore {
       const { paneManagerStore } = this.props
       const { panes, paneIndex } = getPanes(paneManagerStore, apps)
       if (!isEqual(panes, paneManagerStore.panes)) {
+        log('updating panes', panes)
         paneManagerStore.setPanes(panes)
       }
       paneManagerStore.setPaneIndex(paneIndex)

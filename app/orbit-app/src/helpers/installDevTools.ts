@@ -66,6 +66,8 @@ function globalizeStores(stores: Object) {
       if (Array.isArray(window[key]) && !window[key][0][IS_STORE]) return
       if (!window[key][IS_STORE]) return
       window[key] = stores[key]
+    } else {
+      window[key] = stores[key]
     }
   }
 }

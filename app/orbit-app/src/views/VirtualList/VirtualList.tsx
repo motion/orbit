@@ -1,6 +1,6 @@
 import { always, react } from '@mcro/black'
 import { ContextMenu } from '@mcro/ui'
-import { useStore, useStoreDebug } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import React, {
   Component,
@@ -226,7 +226,6 @@ export const VirtualListDefaultProps = createContext({
 } as Partial<VirtualListProps<any>>)
 
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
-  useStoreDebug()
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
 

@@ -125,9 +125,10 @@ export function setupReact(
     if (delayValue) {
       nextValue = previousValue
       previousValue = value
+    } else {
+      previousValue = currentValueUnreactive
     }
 
-    previousValue = currentValueUnreactive
     state.hasResolvedOnce = true
 
     // subscribable handling
@@ -149,7 +150,11 @@ export function setupReact(
       }
     }
 
-    if (value === currentValueUnreactive) {
+    if (delayValue) {
+      console.log('set it to', nextValue)
+    }
+
+    if (nextValue === currentValueUnreactive) {
       return
     }
 

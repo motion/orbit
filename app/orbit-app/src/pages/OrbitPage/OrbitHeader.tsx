@@ -114,9 +114,9 @@ export default memo(function OrbitHeader() {
         >
           <Button
             chromeless
-            opacity={0.3}
+            opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
             hoverStyle={{
-              opacity: 8,
+              opacity: paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.4,
             }}
             icon="gear"
             iconSize={isTorn ? 10 : 12}

@@ -16,9 +16,12 @@ export async function main() {
   const dispose = once(async () => {
     console.log('Desktop exiting...')
     await appRoot.dispose()
+    console.log('Dispose children...')
     try {
       cleanupChildren()
-    } catch {}
+    } catch (err) {
+      console.log('error on children dispose', err)
+    }
     process.exit(0)
   })
   process.on('exit', dispose)

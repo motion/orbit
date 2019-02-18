@@ -205,7 +205,6 @@ export class SearchStore {
       const { startDate, endDate } = dateState
 
       const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
-        await sleep()
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,

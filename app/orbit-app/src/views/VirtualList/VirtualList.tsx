@@ -98,9 +98,6 @@ class VirtualListStore {
   }
 
   doMeasureHeight = react(() => always(this.cache, this.frameRef), this.measureHeight)
-
-  measureTm = null
-
   measureHeight() {
     if (this.props.dynamicHeight) {
       if (!this.cache) return
@@ -127,6 +124,20 @@ class VirtualListStore {
     }
   }
 
+  getKey = (rowIndex: number) => {
+    if (this.props.keyMapper) {
+      return this.props.keyMapper(rowIndex)
+    }
+    if (typeof rowIndex === 'undefined') {
+      return 0
+    }
+    const id = this.props.items[rowIndex].id
+    if (typeof id === 'undefined') {
+      return `index${rowIndex}`
+    }
+    return id
+  }
+
   triggerMeasure = 0
 
   runMeasure = react(
@@ -137,6 +148,7 @@ class VirtualListStore {
       if (this.cache) {
         await when(() => this.props.allowMeasure !== false)
       }
+      console.warn('running measure')
 
       if (this.frameRef.clientWidth !== this.width) {
         this.width = this.frameRef.clientWidth
@@ -147,19 +159,7 @@ class VirtualListStore {
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
           fixedWidth: true,
-          keyMapper: (rowIndex: number) => {
-            if (this.props.keyMapper) {
-              return this.props.keyMapper(rowIndex)
-            }
-            if (typeof rowIndex === 'undefined') {
-              return 0
-            }
-            const id = this.props.items[rowIndex].id
-            if (typeof id === 'undefined') {
-              return `index${rowIndex}`
-            }
-            return id
-          },
+          keyMapper: this.getKey,
         })
       }
     },
@@ -228,6 +228,7 @@ export const VirtualListDefaultProps = createContext({
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
+  const ElementCache = useRef(new WeakMap())
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -245,26 +246,34 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
     return null
   }
 
+  function getElement(item: Object, index: number) {
+    let next = ElementCache.current.get(item)
+    if (next) return next
+    next = (
+      <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
+        <VirtualListItem
+          // key={Math.random()}
+          ItemView={props.ItemView}
+          onSelect={props.onSelect}
+          onOpen={props.onOpen}
+          {...itemProps(props, index)}
+          {...props.itemProps}
+          {...props.getItemProps && props.getItemProps(item, index, props.items)}
+          {...item}
+          index={index}
+          realIndex={index}
+        />
+      </ContextMenu>
+    )
+    ElementCache.current.set(item, next)
+    return next
+  }
+
   function rowRenderer({ key, index, parent, style }) {
     const item = props.items[index]
     const itemElement = (
       <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
-        <div style={style}>
-          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-            <VirtualListItem
-              // key={Math.random()}
-              ItemView={props.ItemView}
-              onSelect={props.onSelect}
-              onOpen={props.onOpen}
-              {...itemProps(props, index)}
-              {...props.itemProps}
-              {...props.getItemProps && props.getItemProps(item, index, props.items)}
-              {...item}
-              index={index}
-              realIndex={index}
-            />
-          </ContextMenu>
-        </div>
+        <div style={style}>{getElement(item, index)}</div>
       </CellMeasurer>
     )
     return itemElement

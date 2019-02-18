@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { isEqual, react } from '@mcro/black'
 import { useHook, useStore } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppStore } from './AppStore'
@@ -42,7 +42,16 @@ class UseAppStore {
       }
       return next
     },
-    _ => _,
+    next => {
+      if (this.state) {
+        for (const key in next) {
+          if (!isEqual(next[key], this.state[key])) {
+            console.log('ok', key, next[key], this.state[key])
+          }
+        }
+      }
+      return next
+    },
   )
 }
 

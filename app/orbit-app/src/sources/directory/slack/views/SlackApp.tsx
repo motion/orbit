@@ -71,6 +71,8 @@ export default React.memo(function SlackApp(props: Props) {
 
   const [activePane, setActivePane] = React.useState(0)
 
+  console.log("props.item", props.item)
+
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>

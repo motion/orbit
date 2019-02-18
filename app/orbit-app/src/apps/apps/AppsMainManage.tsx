@@ -72,6 +72,7 @@ const AppIconContainer = gloss({
   height: 200,
   padding: [15, 25],
   alignItems: 'center',
+  justifyContent: 'center',
   position: 'relative',
 }).theme((_, theme) => ({
   '&:hover': {

@@ -231,7 +231,10 @@ const NavButtonChrome = gloss<TabProps>({
       transition: isActive ? 'none' : tabTransition,
     },
     '&:hover .tab-icon-inactive.tab-icon-unpinned': {
-      opacity: '0.6 !important',
+      opacity: '1 !important',
+    },
+    '&:hover .tab-icon-inactive.tab-icon-pinned': {
+      opacity: '1 !important',
     },
     '&:hover .tab-label': {
       opacity: 1,

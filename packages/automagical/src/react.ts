@@ -150,10 +150,6 @@ export function setupReact(
       }
     }
 
-    if (delayValue) {
-      console.log('set it to', nextValue)
-    }
-
     if (nextValue === currentValueUnreactive) {
       return
     }

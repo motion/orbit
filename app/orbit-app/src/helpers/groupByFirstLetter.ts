@@ -8,7 +8,7 @@ function getLetter(name: string) {
       letter = '0-9'
     }
   }
-  return letter
+  return letter.toUpperCase()
 }
 
 export const groupByLetter = memoize((key: string = 'name') => {

@@ -11,6 +11,7 @@ import {
 import { Row } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
+import { AppActions } from '../../actions/appActions/AppActions'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { useStores } from '../../hooks/useStores'
 import { loadMany, loadOne, observeMany } from '../../mediator'
@@ -167,11 +168,14 @@ export default function PeopleAppMain(props: AppProps) {
               {recentBits.map(bit => {
                 return (
                   <OrbitListItem
-                    itemViewProps={{ oneLine: false }}
+                    oneLine={false}
                     key={bit.id}
                     item={bit}
                     margin={0}
                     padding={[15, 20]}
+                    onDoubleClick={() => {
+                      AppActions.open(bit)
+                    }}
                   />
                 )
               })}

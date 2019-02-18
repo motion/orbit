@@ -3,7 +3,7 @@ import { get, isEqual } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
-import { mobxProxyWorm } from './mobxProxyWorm'
+import { GET_STORE, mobxProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
 
 type TrackableStoreOptions = {
@@ -83,15 +83,28 @@ export function setupTrackableStore(
     )
   }
 
-  const config = DedupedWorms.get(store) || mobxProxyWorm(store)
-  DedupedWorms.set(store, config)
+  // this ensures we don't look for a proxied store
+  // we want to dedupe on the original store object
+  const unwrapped = store[GET_STORE] || store
+
+  // dedupe stores so we properly track/untrack as we go down to children
+  let config = DedupedWorms.get(unwrapped)
+  if (!config) {
+    config = mobxProxyWorm(store)
+    DedupedWorms.set(store, config)
+  }
+
+  // done gives us back the keys it tracked
   let done: ReturnType<typeof config['track']> = null
 
   return {
     store: config.store,
     track() {
       paused = true
-      done = config.track(Math.random(), opts.debug || false)
+      done = config.track(Math.random(), opts.debug ? opts.component : null)
+      if (debug) {
+        console.log(name, storeName, 'start tracking', config.state)
+      }
     },
     untrack() {
       paused = false

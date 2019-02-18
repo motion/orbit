@@ -1,4 +1,3 @@
-import { CSSPropertySetStrict } from '@mcro/css'
 import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { Row, Text, View } from '@mcro/ui'
@@ -36,7 +35,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = CSSPropertySetStrict &
+export type ListItemProps = UI.ViewProps &
   ListItemHide &
   ListItemDisplayProps & {
     location?: React.ReactNode
@@ -311,10 +310,10 @@ export default memo(function ListItem(props: ListItemProps) {
               </>
             )}
             {!showPreviewInSubtitle && (
-              <Row alignItems="center" flex={1}>
+              <>
                 {locationElement}
                 {childrenElement}
-              </Row>
+              </>
             )}
           </ListItemMainContent>
           {after}

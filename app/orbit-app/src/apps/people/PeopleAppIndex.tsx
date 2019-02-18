@@ -5,6 +5,7 @@ import NoResultsDialog from '../../components/NoResultsDialog'
 import { groupByLetter } from '../../helpers/groupByFirstLetter'
 import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
+import { useShareMenu } from '../../hooks/useShareMenu'
 import { useStores } from '../../hooks/useStores'
 import { useModels } from '../../useModel'
 import SelectableList from '../../views/Lists/SelectableList'
@@ -14,6 +15,7 @@ export default function PeopleAppIndex(props: AppProps) {
   // people and query
   const { queryStore } = useStores()
   const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters
+  const { getShareMenuItemProps } = useShareMenu()
 
   let where = null
   if (hasIntegrationFilters) {
@@ -39,9 +41,16 @@ export default function PeopleAppIndex(props: AppProps) {
     return <NoResultsDialog subName="the directory" />
   }
 
+  const getItemGroupProps = results.length > 12 ? groupByLetter('name') : _ => null
+
   return (
     <SelectableList
-      getItemProps={results.length > 12 ? groupByLetter('name') : null}
+      getItemProps={(...args) => {
+        return {
+          ...getItemGroupProps(...args),
+          ...getShareMenuItemProps(...args),
+        }
+      }}
       minSelected={0}
       items={results}
       query={removePrefixIfExists(props.appStore.activeQuery, '@')}

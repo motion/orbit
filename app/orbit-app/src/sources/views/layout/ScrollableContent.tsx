@@ -1,6 +1,5 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStores } from '../../../hooks/useStores'
 
@@ -21,7 +20,10 @@ const ContentInner = gloss(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export default observer(function ScrollableContent(props: { scrollTo?: string; children: any }) {
+export default function ScrollableContent({
+  scrollTo,
+  ...props
+}: UI.ViewProps & { scrollTo?: string }) {
   const { appPageStore } = useStores({ optional: ['appPageStore'] })
 
   React.useEffect(() => {
@@ -37,7 +39,7 @@ export default observer(function ScrollableContent(props: { scrollTo?: string; c
 
   return (
     <PeekContentChrome>
-      <ContentInner ref={appPageStore && appPageStore.contentFrame}>{props.children}</ContentInner>
+      <ContentInner ref={appPageStore && appPageStore.contentFrame} {...props} />
     </PeekContentChrome>
   )
-})
+}

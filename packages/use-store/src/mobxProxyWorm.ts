@@ -1,12 +1,14 @@
-import { IS_STORE } from '@mcro/automagical'
+import { CurrentComponent, IS_STORE } from '@mcro/automagical'
 import fastEqual from '@mcro/fast-compare'
 import { last } from 'lodash'
 
 const IS_PROXY = Symbol('IS_PROXY')
+export const GET_STORE = Symbol('GET_STORE')
 
 type ProxyWorm<A extends Function> = {
+  state: ProxyWormState
   store: A
-  track(id: number, debug?: boolean): () => Set<string>
+  track(id: number, debug?: CurrentComponent): () => Set<string>
 }
 
 type ProxyWormState = {
@@ -33,7 +35,7 @@ export function mobxProxyWorm<A extends Function>(
   parentPath = '',
   parentState?: ProxyWormState,
 ): ProxyWorm<A> {
-  let debug = false
+  let debug: CurrentComponent = null
   const state: ProxyWormState = parentState || {
     ids: new Set(),
     loops: new WeakMap(),
@@ -46,16 +48,20 @@ export function mobxProxyWorm<A extends Function>(
 
   const store = new Proxy(obj, {
     get(target, key) {
+      if (key === GET_STORE) return obj
       if (key === fastEqual.EQUALITY_KEY) return obj
       if (key === IS_PROXY) return true
       const val = Reflect.get(target, key)
+      if (state.ids.size === 0) return val
       if (typeof key !== 'string' || key === 'hasOwnProperty' || key[0] === '@') {
         return val
       }
       if (typeof val === 'function') return val
       if (key.indexOf('isMobX') === 0) return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`
-      if (debug) console.log('track get key', key)
+      if (debug) {
+        console.log('track get key', key, debug, state.ids)
+      }
       state.add(nextPath)
       if (val) {
         if (val[IS_PROXY]) return val
@@ -73,9 +79,13 @@ export function mobxProxyWorm<A extends Function>(
   })
 
   return {
+    state,
     store,
-    track(id: number, dbg?: boolean) {
-      debug = !!dbg
+    track(id: number, dbg?: CurrentComponent) {
+      debug = dbg || null
+      if (debug) {
+        console.log('tracking', id, state.ids, debug)
+      }
       state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
@@ -83,6 +93,9 @@ export function mobxProxyWorm<A extends Function>(
         const res = state.keys.get(id)
         state.keys.delete(id)
         filterShallowKeys(res)
+        if (debug) {
+          console.log('done tracking', id, res, debug)
+        }
         return res
       }
     },

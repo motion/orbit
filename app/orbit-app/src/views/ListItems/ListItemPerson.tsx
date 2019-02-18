@@ -12,8 +12,8 @@ const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item:
       {!!item.photo && (
         <Avatar
           position="absolute"
-          top={-15}
-          right={-22}
+          top={-12}
+          left={-67}
           width={70}
           height={70}
           src={item.photo}
@@ -33,6 +33,7 @@ const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item:
 
 ListItemPerson['itemProps'] = {
   hideIcon: true,
+  paddingLeft: 30,
 }
 
 export default ListItemPerson

@@ -1,6 +1,7 @@
 import { gloss } from '@mcro/gloss'
-import { AppConfig, Bit, Person, PersonBit } from '@mcro/models'
+import { Bit, Person, PersonBit } from '@mcro/models'
 import * as React from 'react'
+import { AppConfig } from '../../apps/AppTypes'
 import PeopleRow from '../../components/PeopleRow'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'

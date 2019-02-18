@@ -63,19 +63,19 @@ export class QueryStore {
   }
 
   toggleLocationFilter(location: string) {
-    if (this.queryInstant.indexOf(location) === -1) {
+    if (this.queryInstant.includes(location) === false) {
       this.setQuery(`${this.queryInstant.trim()} in:${location}`)
     }
   }
 
   togglePersonFilter(person: string) {
-    if (this.queryInstant.indexOf(person) === -1) {
+    if (this.queryInstant.includes(person) === false) {
       this.setQuery(`${this.queryInstant.trim()} ${person}`)
     }
   }
 
   queryToggleFilter(str: string) {
-    if (this.queryInstant.indexOf(str) === -1) {
+    if (this.queryInstant.includes(str) === false) {
       this.setQuery(`${this.queryInstant.trim()} ${str}`)
     }
   }

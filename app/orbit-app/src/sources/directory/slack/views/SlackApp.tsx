@@ -1,7 +1,7 @@
-import { useModels } from '../../../../useModel'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
 import { Button, Row, SegmentedRow } from '@mcro/ui'
 import * as React from 'react'
+import { useModels } from '../../../../useModel'
 import { Divider } from '../../../../views/Divider'
 import { Pane } from '../../../../views/Pane'
 import { SectionTitle } from '../../../../views/Section'
@@ -88,29 +88,26 @@ export default React.memo(function SlackApp(props: Props) {
       </Row>
 
       <Pane isShown={activePane === 0}>
-        <ScrollableContent key={prevConvos.length} scrollTo="#start">
+        <ScrollableContent paddingBottom={50} key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
             {!!props.item && <ChatMessages item={props.item} />}
           </div>
         </ScrollableContent>
       </Pane>
 
-      <ScrollableContent>
-        <Pane isShown={activePane === 1}>
-          <SectionTitle>Previously</SectionTitle>
+      <Pane isShown={activePane === 1}>
+        <SectionTitle>Previously</SectionTitle>
+        <ScrollableContent paddingBottom={50}>
           <ConvoGroup bits={prevConvos.reverse()} />
-        </Pane>
+        </ScrollableContent>
+      </Pane>
 
-        <Pane isShown={activePane === 2}>
-          <SectionTitle>Afterwards</SectionTitle>
+      <Pane isShown={activePane === 2}>
+        <SectionTitle>Afterwards</SectionTitle>
+        <ScrollableContent paddingBottom={50}>
           <ConvoGroup bits={nextConvos} />
-        </Pane>
-
-        <Pane isShown={activePane === 3}>
-          <SectionTitle>Related</SectionTitle>
-          related items
-        </Pane>
-      </ScrollableContent>
+        </ScrollableContent>
+      </Pane>
 
       <BitStatusBar {...props} />
     </>

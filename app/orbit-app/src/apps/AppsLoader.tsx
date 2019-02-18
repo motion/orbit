@@ -1,5 +1,6 @@
-import { useStore, useStoreSimple } from '@mcro/use-store'
-import React, { memo, useEffect, useMemo } from 'react'
+import { useStoreDebug, useStoreSimple } from '@mcro/use-store'
+import { isEqual } from 'lodash'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
@@ -7,15 +8,25 @@ import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
 
 type AppViewDefinition = { id: string; type: string }
-
-export const AppsLoader = memo(function AppsLoader(props: {
+type AppsLoaderProps = {
   children?: any
   views: AppViewDefinition[]
-}) {
-  const appsStore = useStoreSimple(AppsStore)
+}
 
-  const appViews = props.views.map(view => {
-    return <AppLoader key={view.id} id={view.id} type={view.type} store={appsStore} />
+export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
+  const appsStore = useStoreSimple(AppsStore)
+  const stableKeys = useRef([])
+  const sortedKeys = new Set(props.views.map(v => v.id).sort())
+
+  if (!isEqual(new Set(stableKeys.current), sortedKeys)) {
+    // we are building this up over time, so once we see an id
+    // we always show it in the same order in the DOM
+    stableKeys.current = [...new Set([...stableKeys.current, ...sortedKeys])]
+  }
+
+  const appViews = stableKeys.current.map(id => {
+    const view = props.views.find(view => view.id === id)
+    return <AppLoader key={id} id={id} type={view.type} store={appsStore} />
   })
 
   return (
@@ -45,9 +56,11 @@ function AppLoader(props: AppLoaderProps) {
 }
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
+  useStoreDebug()
+
   const AppView = getAppViews(type)
   const appViewProps = { id }
-  const appStore = useStore(AppStore, appViewProps)
+  const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {
     if (typeof AppView !== 'function') {

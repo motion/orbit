@@ -7,6 +7,7 @@ import React, {
   createContext,
   createRef,
   memo,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -74,7 +75,12 @@ class SortableList extends Component<any> {
 const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
-  props: VirtualListProps<any> & { items: null }
+  props: VirtualListProps<any> & {
+    items: null
+    getItem: (i: number) => any
+    numItems: number
+  }
+
   windowScrollerRef = createRef<WindowScroller>()
   listRef: List = null
   frameRef: HTMLDivElement = null
@@ -103,7 +109,7 @@ class VirtualListStore {
       if (!this.cache) return
       // height
       let height = 0
-      for (let i = 0; i < Math.min(40, this.props.items.length); i++) {
+      for (let i = 0; i < Math.min(40, this.props.numItems); i++) {
         height += this.cache.rowHeight(i)
       }
       if (height === 0) return
@@ -131,7 +137,10 @@ class VirtualListStore {
     if (typeof rowIndex === 'undefined') {
       return 0
     }
-    const id = this.props.items[rowIndex].id
+    if (!this.props.items) {
+      return rowIndex
+    }
+    const id = this.props.getItem(rowIndex).id
     if (typeof id === 'undefined') {
       return `index${rowIndex}`
     }
@@ -141,14 +150,13 @@ class VirtualListStore {
   triggerMeasure = 0
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.allowMeasure, always(this.props.items)],
+    () => [this.triggerMeasure, this.props.allowMeasure],
     async (_, { when, sleep }) => {
       if (this.props.allowMeasure === false) {
         throw cancel
       }
       await sleep()
       await when(() => !!this.frameRef)
-      console.warn('running measure')
 
       if (this.frameRef.clientWidth !== this.width) {
         this.width = this.frameRef.clientWidth
@@ -171,9 +179,10 @@ class VirtualListStore {
     async (_, { when, sleep }) => {
       await sleep()
       await when(() => this.props.allowMeasure !== false)
+      await when(() => !!this.listRef)
       console.warn('recomputing heights for', this.props)
       this.cache.clearAll()
-      this.listRef.recomputeHeights()
+      this.listRef.recomputeRowHeights()
     },
   )
 
@@ -359,6 +368,12 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 export default function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
-  const store = useStore(VirtualListStore, { allowMeasure, ...props })
+  const getItem = useCallback(index => items[index], [items])
+  const store = useStore(VirtualListStore, {
+    numItems: items.length,
+    getItem,
+    allowMeasure,
+    ...props,
+  })
   return <VirtualListInner {...props} items={items} store={store} />
 }

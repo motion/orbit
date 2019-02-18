@@ -69,7 +69,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 const AppIconContainer = gloss({
-  height: 200,
+  height: 180,
   padding: [15, 25],
   alignItems: 'center',
   justifyContent: 'center',

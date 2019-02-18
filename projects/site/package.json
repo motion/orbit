@@ -23,7 +23,7 @@
     "query-string": "6.2.0",
     "react": "16.8.2",
     "react-dom": "16.8.2",
-    "react-hot-loader": "4.6.5",
+    "react-hot-loader": "4.7.0",
     "react-media": "1.9.2",
     "react-spring": "8.0.5",
     "react-svg-inline": "^2.1.0",

@@ -67,6 +67,7 @@ export class AppsStore {
   viewsState = react(
     () => this.appsState,
     appsState => {
+      console.warn('update views state')
       const res: { [key: string]: ReturnType<typeof getViewInformation> } = {}
       if (appsState) {
         for (const key in appsState.appViews) {
@@ -92,6 +93,7 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
+    console.warn('setup app', id)
     this.appViews = {
       ...this.appViews,
       [id]: views,

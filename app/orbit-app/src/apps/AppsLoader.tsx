@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
@@ -12,7 +12,7 @@ export const AppsLoader = memo(function AppsLoader(props: {
   children?: any
   views: AppViewDefinition[]
 }) {
-  const appsStore = useStore(AppsStore)
+  const appsStore = useStoreSimple(AppsStore)
 
   const appViews = props.views.map(view => {
     return <AppLoader key={view.id} id={view.id} type={view.type} store={appsStore} />

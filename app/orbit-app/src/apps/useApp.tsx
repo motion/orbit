@@ -20,32 +20,27 @@ type AppState = {
 class UseAppStore {
   props: UseAppProps
   stores = useHook(useStoresSimple)
-  state = react(
-    () => {
-      const { stores, props } = this
-      const next: AppState = {
-        appStore: props.appStore || stores.appStore || null,
-        appViews: {},
-        provideStores: null,
+  state = react(() => {
+    const { stores, props } = this
+    const next: AppState = {
+      appStore: props.appStore || stores.appStore || null,
+      appViews: {},
+      provideStores: null,
+    }
+    if (stores.appsStore) {
+      const state = stores.appsStore.appsState
+      if (!state) return next
+      const { appStores, appViews, provideStores } = state
+      // set store
+      if (!next.appStore) {
+        next.appStore = appStores[props.id] || appStores[props.type]
       }
-      if (stores.appsStore) {
-        const state = stores.appsStore.appsState
-        if (!state) return next
-        const { appStores, appViews, provideStores } = state
-        // set store
-        if (!next.appStore) {
-          next.appStore = appStores[props.id] || appStores[props.type]
-        }
-        // set view
-        next.appViews = appViews[props.id] || appViews[props.type] || {}
-        next.provideStores = provideStores[props.id] || provideStores[props.type] || null
-      }
-      return next
-    },
-    {
-      log: false,
-    },
-  )
+      // set view
+      next.appViews = appViews[props.id] || appViews[props.type] || {}
+      next.provideStores = provideStores[props.id] || provideStores[props.type] || null
+    }
+    return next
+  })
 }
 
 export function useApp(props: UseAppProps) {

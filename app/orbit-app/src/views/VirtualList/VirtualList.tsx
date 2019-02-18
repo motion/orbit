@@ -1,4 +1,4 @@
-import { always, cancel, react } from '@mcro/black'
+import { always, cancel, ensure, react } from '@mcro/black'
 import { ContextMenu } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
@@ -169,6 +169,7 @@ class VirtualListStore {
   runRecomputeHeights = react(
     () => [this.recomputeHeights],
     async (_, { when, sleep }) => {
+      ensure('this.listRef', !!this.listRef)
       await sleep()
       await when(() => this.props.allowMeasure !== false)
       console.warn('recomputing heights for', this.props)

@@ -235,9 +235,9 @@ export function gloss<Props = GlossProps<any>>(
       // unmount
       useEffect(() => {
         return () => {
-          const current = lastClassNames.current
-          if (current) {
-            current.forEach(gc.deregisterClassUse)
+          const names = lastClassNames.current
+          if (names) {
+            names.forEach(gc.deregisterClassUse)
           }
         }
       }, [])

@@ -91,7 +91,7 @@ const PanelHeader = gloss(Row, {
   flexShrink: 0,
   padding: [3, 10],
 }).theme((_, theme) => ({
-  backgroundColor: theme.background,
+  backgroundColor: theme.panelHeaderBackground || theme.background,
   '&:not(:first-child)': {
     borderTop: [1, theme.sidebarBorderColor || theme.borderColor],
   },

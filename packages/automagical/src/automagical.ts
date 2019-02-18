@@ -29,7 +29,7 @@ export function configureAutomagical(opts: { isSubscribable?: (val: any) => bool
 const Getters = new WeakMap()
 
 // decorates the prototype
-function decoratePrototype(obj) {
+function decoratePrototype(obj: any) {
   const getterDesc = {}
   const decor = {}
   const descriptors = Object.getOwnPropertyDescriptors(obj.prototype)

@@ -31,7 +31,7 @@ export function ListsAppIndex(_: AppProps) {
   )
 }
 
-const ListCurrentFolder = function ListCurrentFolder() {
+function ListCurrentFolder() {
   // @ts-ignore
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
@@ -76,9 +76,10 @@ const ListCurrentFolder = function ListCurrentFolder() {
     listStore.selectedIndex = index
   }, [])
 
+  console.log('rendering', listStore.depth)
+
   return (
     <SelectableTreeList
-      key={100}
       minSelected={0}
       rootItemID={0}
       items={items}

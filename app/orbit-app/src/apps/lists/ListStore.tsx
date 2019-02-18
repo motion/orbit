@@ -1,4 +1,4 @@
-import { react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { AppModel, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
@@ -66,8 +66,12 @@ export class ListStore {
   }
 
   searchResults = react(
-    () => [this.query, this.stores.spaceStore.activeSpace && this.stores.spaceStore.activeSpace.id],
-    async ([query, spaceId], { sleep }) => {
+    // TODO @umed, this type regressed for some reason
+    // see how [query, space] are both intersected? it should pick up their real type
+    // the definition is in `react.ts`, notice ReactionFn. It *was* working before
+    () => [this.query, this.stores.spaceStore.activeSpace],
+    async ([query, space], { sleep }) => {
+      ensure('space', !!space)
       if (!query) {
         return null
       }
@@ -75,7 +79,7 @@ export class ListStore {
       await sleep(130)
       const results = await loadMany(SearchResultModel, {
         args: {
-          spaceId,
+          spaceId: space.id,
           query,
           take: 20,
         },

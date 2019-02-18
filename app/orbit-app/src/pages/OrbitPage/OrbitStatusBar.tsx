@@ -1,6 +1,6 @@
 import { gloss, Row } from '@mcro/gloss'
 import React from 'react'
-import { useApp } from '../../apps/AppView'
+import { useApp } from '../../apps/useApp'
 import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 import { BorderTop } from '../../views/Border'

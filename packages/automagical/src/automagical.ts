@@ -8,6 +8,8 @@ export { ensure } from './ensure'
 export { react } from './react'
 export * from './types'
 export { updateProps } from './updateProps'
+export { CurrentComponent, useCurrentComponent } from './useCurrentComponent'
+export { useReaction } from './useReaction'
 
 // this lets you "always" react to any values you give as arguments without bugs
 export const always = ((() => Math.random()) as unknown) as (...args: any[]) => number

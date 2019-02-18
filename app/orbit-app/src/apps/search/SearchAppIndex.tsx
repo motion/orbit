@@ -13,6 +13,8 @@ export default function SearchAppIndex(props: AppProps) {
   const { searchStore, themeStore } = useStores()
   const items = searchStore.results
 
+  console.log('items', items)
+
   const getItemProps = React.useCallback(
     memoize(({ item }) => {
       if (item && item.target === 'bit') {

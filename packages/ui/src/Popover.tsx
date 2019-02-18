@@ -399,14 +399,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     if (ref) {
       this.popoverRef = ref
       const inner = ref.querySelector('.popover-inner-surface')
-      this.resizeObserver.observe(inner)
-      this.mutationObserver.observe(ref, { attributes: true })
+      on(
+        this,
+        setTimeout(() => {
+          this.resizeObserver.observe(inner)
+          this.mutationObserver.observe(ref, { attributes: true })
+        }, 300),
+      )
     }
   }
 
   // @ts-ignore
   resizeObserver = new ResizeObserver((/* ...args */) => {
-    // console.log('resize', this.props, args)
+    // console.log('resize', this.props)
     this.setPosition()
   })
   mutationObserver = new MutationObserver((/* ...args */) => {
@@ -457,7 +462,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
 
     if (this.target) {
-      this.setPosition()
+      // this.setPosition()
       this.listenForClick()
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
@@ -518,12 +523,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = debounce(() => {
-    if (this.unmounted) {
-      return
-    }
-    if (getIsManuallyPositioned(this.props)) {
-      return
-    }
+    if (this.unmounted) return
+    if (getIsManuallyPositioned(this.props)) return
     if (!this.popoverRef || !this.target) {
       throw new Error('missing popvoer ref or target')
     }
@@ -545,7 +546,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         shouldSetPosition: true,
       })
     }
-  }, 64)
+  }, 16)
 
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()

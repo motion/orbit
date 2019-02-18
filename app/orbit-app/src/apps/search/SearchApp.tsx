@@ -1,6 +1,7 @@
 import { View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import React from 'react'
+import React, { useRef } from 'react'
+import { useSearch } from '../../hooks/useSearch'
 import { useStores } from '../../hooks/useStores'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { AppContainer } from '../AppContainer'
@@ -13,6 +14,15 @@ import OrbitSuggestionBar from './views/OrbitSuggestionBar'
 export function SearchApp(props: AppProps) {
   const { paneManagerStore } = useStores()
   const searchStore = useStore(SearchStore, { paneManagerStore })
+  const id = useRef(Math.random())
+
+  console.warn('waht.......')
+
+  useSearch(state => {
+    console.log('got', state, id.current)
+    searchStore.setSearchState(state)
+  })
+
   return (
     <AppContainer
       provideStores={{ searchStore }}

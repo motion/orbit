@@ -1,23 +1,12 @@
-import { decorate, updateProps } from '@mcro/automagical'
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  // @ts-ignore
-  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
-} from 'react'
+import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@mcro/automagical'
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { config } from './configure'
-import { DebugComponent, debugEmit } from './debugUseStore'
+import { debugEmit } from './debugUseStore'
 import { setupTrackableStore, useTrackableStore } from './setupTrackableStore'
 
 export { IS_STORE } from '@mcro/automagical'
 export { configureUseStore } from './configure'
 export { debugUseStore } from './debugUseStore'
-
-const { ReactCurrentOwner } = __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
 
 type UseStoreOptions = {
   debug?: boolean
@@ -25,7 +14,7 @@ type UseStoreOptions = {
   react?: boolean
 }
 
-export function disposeStore(store: any, component: DebugComponent) {
+export function disposeStore(store: any, component: CurrentComponent) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
   if (process.env.NODE_ENV === 'development') {
@@ -47,7 +36,7 @@ export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<
 }
 
 function setupReactiveStore<A>(Store: new () => A, props?: Object) {
-  const component = getCurrentComponent()
+  const component = useCurrentComponent()
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
@@ -115,7 +104,7 @@ export function useStore<P, A extends { props?: P } | any>(
   props?: P,
   options?: UseStoreOptions,
 ): A {
-  const component = getCurrentComponent()
+  const component = useCurrentComponent()
   const rerender = useForceUpdate()
   const isInstantiated = Store['constructor'].name !== 'Function'
   let store = null
@@ -158,42 +147,13 @@ function isSourceEqual(oldStore: any, newStore: new () => any) {
 }
 
 export function useStoreDebug() {
-  const component = getCurrentComponent()
+  const component = useCurrentComponent()
   component.__debug = true
   // use setTimeout so we dont use hooks
   // this is so we can HMR it nicely without hooks complaining
   setTimeout(() => {
     component.__debug = false
   }, 1000)
-}
-
-export function getCurrentComponent(): DebugComponent {
-  const component =
-    ReactCurrentOwner && ReactCurrentOwner.current && ReactCurrentOwner.current.elementType
-      ? ReactCurrentOwner.current.elementType
-      : {}
-  component['renderName'] = component['renderName'] || getComponentName(component)
-  return component
-}
-
-function getComponentName(c) {
-  let name = c.displayName || (c.type && c.type.displayName) || (c.render && c.render.name)
-  if (c.displayName === '_default') {
-    name = c.type && c.type.displayName
-  }
-  if (name === 'Component' || name === '_default' || !name) {
-    if (c.type && c.type.__reactstandin__key) {
-      const match = c.type.__reactstandin__key.match(/\#[a-zA-Z0-9_-]+/g)
-      if (match && match.length) {
-        name = match[0].slice(1)
-      }
-    }
-  }
-  if (name === '_default' || !name) {
-    const m = `${c}`.match(/function ([a-z0-9_]+)\(/i)
-    if (m) name = m[1]
-  }
-  return name
 }
 
 export function useForceUpdate() {
@@ -211,7 +171,7 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const stores = useContext(StoreContext)
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const render = useForceUpdate()
-    const component = getCurrentComponent()
+    const component = useCurrentComponent()
     const storesRef = useRef(null)
 
     // debounce all the different store renders

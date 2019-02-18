@@ -210,9 +210,11 @@ export class OrbitDesktopRoot {
     }
     console.log('writing orbit config...')
     await writeJSON(this.config.paths.orbitConfig, this.config)
+    console.log('dispose desktop...')
     Desktop.dispose()
     // await this.ocrManager.dispose()
     if (this.authServer && this.authServer.isRunning()) {
+      console.log('stop auth server...')
       await this.authServer.stop()
     }
     this.disposed = true

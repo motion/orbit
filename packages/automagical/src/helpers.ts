@@ -1,6 +1,5 @@
 import isEqualDeep from '@mcro/fast-compare'
 import { Logger } from '@mcro/logger'
-import * as Mobx from 'mobx'
 import { MagicalObject, ReactionOptions } from './types'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
@@ -23,45 +22,7 @@ export function getReactionOptions(userOptions?: ReactionOptions) {
   return defaultOpts
 }
 
-export const niceLogObj = obj => {
-  try {
-    return JSON.stringify(obj)
-  } catch {
-    return obj
-  }
-}
-
 export const obj = a => a && typeof a === 'object'
-
-export const whatsNew = (a, b) => {
-  let final = {}
-  for (const ak in a) {
-    const av = a[ak]
-    const bv = b[ak]
-    if (Mobx.comparer.structural(av, bv)) {
-      continue
-    }
-    final[ak] = obj(av) && obj(bv) ? whatsNew(av, bv) : b[ak]
-  }
-  return final
-}
-
-// simple diff output for dev mode
-export const diffLog = (a, b): string => {
-  if (a === b || Mobx.comparer.structural(a, b)) {
-    return null
-  }
-  if (!b || typeof b !== 'object' || Array.isArray(b)) {
-    return niceLogObj(b)
-  }
-  // object
-  const diff = whatsNew(a, b)
-  if (Object.keys(diff).length) {
-    // log the diff as json if its short enough, easier to see
-    return niceLogObj(diff)
-  }
-  return null
-}
 
 const COLOR_WHEEL = [
   '#DB0A5B',

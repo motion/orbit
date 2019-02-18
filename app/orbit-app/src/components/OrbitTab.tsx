@@ -7,7 +7,7 @@ import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 30
+export const tabHeight = 29
 const inactiveOpacity = 0.45
 const borderSize = 5
 
@@ -90,9 +90,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               thicc={thicc}
               size={iconSize}
               iconAdjustOpacity={iconAdjustOpacity}
-              transform={{
-                y: -0.5,
-              }}
               {...iconProps}
             />
           )}
@@ -104,9 +101,9 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               className="tab-label"
               display="flex"
               flex={1}
-              size={0.95}
               opacity={isActive ? 1 : inactiveOpacity}
               fontWeight={400}
+              size={0.98}
               {...textProps}
               transition={isActive ? 'none' : tabTransition}
             >

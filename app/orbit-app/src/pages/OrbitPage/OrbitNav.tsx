@@ -169,10 +169,7 @@ export default memo(function OrbitNav() {
                   opacity={0.5}
                   onClick={flow(
                     preventDefault,
-                    () => {
-                      newAppStore.setShowCreateNew(false)
-                      paneManagerStore.back()
-                    },
+                    Actions.previousTab,
                   )}
                 />
               }

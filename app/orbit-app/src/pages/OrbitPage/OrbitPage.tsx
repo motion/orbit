@@ -3,7 +3,7 @@ import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useRef } from 'react'
-import { ActionsContext, defaultActions } from '../../actions/Actions'
+import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
 import { ProvideStores } from '../../components/ProvideStores'
@@ -58,6 +58,7 @@ function OrbitManagers() {
 }
 
 const OrbitPageInner = memo(function OrbitPageInner() {
+  const Actions = useActions()
   const { paneManagerStore } = useStores()
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
@@ -100,6 +101,8 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         // prevent on command+w
         if (shouldCloseTab) {
           e.returnValue = false
+          Actions.previousTab()
+          return
         }
         if (shouldCloseApp) {
           if (

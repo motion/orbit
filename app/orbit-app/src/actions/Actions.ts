@@ -1,11 +1,13 @@
 import { createContext, useContext } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
+import { previousTab } from './previousTab'
 import { setupNewApp } from './setupNewApp'
 import { tearApp } from './tearApp'
 
 export const defaultActions = {
   tearApp,
   setupNewApp,
+  previousTab,
 }
 
 export const ActionsContext = createContext(defaultActions)

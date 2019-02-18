@@ -1,10 +1,10 @@
-import { SlackChannelModel, SlackSource } from '@mcro/models'
+import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { loadMany } from '../../../../mediator'
+import { loadMany, save } from '../../../../mediator'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
@@ -74,10 +74,11 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
           channels: freshApiChannels,
         }
         // TODO @umed commented out because this is deleting spaces property
-        // save(SourceModel, {
-        //   id: source.id,
-        //   data: source.data,
-        // })
+        // todo: check what does "deleting spaces property" means
+        save(SourceModel, {
+          id: source.id,
+          data: source.data,
+        })
       })
     },
     [source.id],

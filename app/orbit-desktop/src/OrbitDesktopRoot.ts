@@ -20,6 +20,7 @@ import {
   CosalSaliencyModel,
   CosalTopicsModel,
   CosalTopWordsModel,
+  FallbackServersCountCommand,
   GithubRepositoryModel,
   GithubSourceBlacklistCommand,
   JobEntity,
@@ -30,6 +31,7 @@ import {
   PersonBitModel,
   PersonEntity,
   PersonModel,
+  RegisterFallbackServerCommand,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
@@ -88,6 +90,8 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
+import { RegisterFallbackServerResolver } from './resolvers/RegisterFallbackServerResolver'
+import { FallbackServersCountResolver } from './resolvers/FallbackServersCountResolver'
 import { WebServer } from './WebServer'
 
 export class OrbitDesktopRoot {
@@ -238,13 +242,6 @@ export class OrbitDesktopRoot {
    * for communication between processes.
    */
   private registerMediatorServer() {
-    const electronTransport = new WebSocketClientTransport(
-      'electron',
-      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.electronMediator}`, [], {
-        WebSocket,
-        minReconnectionDelay: 1,
-      }),
-    )
 
     const syncersTransport = new WebSocketClientTransport(
       'syncers',
@@ -254,7 +251,7 @@ export class OrbitDesktopRoot {
       }),
     )
 
-    const client = new MediatorClient({ transports: [syncersTransport, electronTransport] })
+    const client = new MediatorClient({ transports: [syncersTransport] })
 
     this.mediatorServer = new MediatorServer({
       models: [
@@ -283,6 +280,8 @@ export class OrbitDesktopRoot {
         CosalTopWordsModel,
       ],
       commands: [
+        FallbackServersCountCommand,
+        RegisterFallbackServerCommand,
         SourceSaveCommand,
         SourceRemoveCommand,
         GithubSourceBlacklistCommand,
@@ -309,6 +308,8 @@ export class OrbitDesktopRoot {
         ]),
         SourceRemoveResolver,
         SourceSaveResolver,
+        RegisterFallbackServerResolver,
+        FallbackServersCountResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),

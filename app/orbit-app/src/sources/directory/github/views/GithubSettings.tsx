@@ -1,9 +1,9 @@
-import { GithubRepositoryModel, GithubSource } from '@mcro/models'
+import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
 import { SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { loadMany } from '../../../../mediator'
+import { loadMany, save } from '../../../../mediator'
 import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
@@ -28,6 +28,7 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
     () => {
       // for some reason we can get any source here, so filter out everything except github
       if (source.type !== 'github') return
+      // console.log(source)
 
       // if we have repositories stored in the source - use them at first
       if (source.data.repositories) {
@@ -60,10 +61,11 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
           repositories: freshApiRepositories,
         }
         // TODO @umed commented out because this is deleting spaces property
-        // save(SourceModel, {
-        //   id: source.id,
-        //   data: source.data
-        // })
+        // todo: check what does "deleting spaces property" means
+        save(SourceModel, {
+          id: source.id,
+          data: source.data
+        })
       })
     },
     [source.id],

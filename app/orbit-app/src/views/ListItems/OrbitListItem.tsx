@@ -1,14 +1,14 @@
-import { gloss } from '@mcro/gloss';
-import { AppConfig, Bit, Person, PersonBit } from '@mcro/models';
-import * as React from 'react';
-import PeopleRow from '../../components/PeopleRow';
-import { NormalItem, normalizeItem } from '../../helpers/normalizeItem';
-import { Omit } from '../../helpers/typeHelpers/omit';
-import { useStores } from '../../hooks/useStores';
-import { ItemType, OrbitItemViewProps } from '../../sources/types';
-import { VirtualListItemProps } from '../VirtualList/VirtualListItem';
-import ListItem, { ListItemProps } from './ListItem';
-import ListItemPerson from './ListItemPerson';
+import { gloss } from '@mcro/gloss'
+import { AppConfig, Bit, Person, PersonBit } from '@mcro/models'
+import * as React from 'react'
+import PeopleRow from '../../components/PeopleRow'
+import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
+import { Omit } from '../../helpers/typeHelpers/omit'
+import { useStoresSimple } from '../../hooks/useStores'
+import { ItemType, OrbitItemViewProps } from '../../sources/types'
+import { VirtualListItemProps } from '../VirtualList/VirtualListItem'
+import ListItem, { ListItemProps } from './ListItem'
+import ListItemPerson from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
 
@@ -31,9 +31,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
 
 export const OrbitListItem = React.memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    const { appStore, selectionStore, sourcesStore } = useStores({
-      optional: ['selectionStore'],
-    })
+    const { appStore, selectionStore, sourcesStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: OrbitItemComponent<any> = null

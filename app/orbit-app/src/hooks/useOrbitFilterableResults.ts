@@ -1,22 +1,12 @@
 import { useReaction } from '@mcro/black'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { FilterableProps, useFilterableResults } from './pureHooks/useFilterableResults'
 import { useStoresSimple } from './useStores'
 
-// defaults to using the appstore active query
-
 export function useOrbitFilterableResults<A>(props: FilterableProps<A>): A[] {
   const { appStore } = useStoresSimple()
-  const [activeQuery, setActiveQuery] = useState('')
-
-  useReaction(() => {
-    if (appStore.activeQuery !== activeQuery) {
-      setActiveQuery(appStore.activeQuery)
-    }
-  })
-
+  const activeQuery = useReaction(() => appStore.activeQuery)
   const sortBy = useCallback(props.sortBy, [])
-
   return useFilterableResults({
     query: activeQuery,
     ...props,

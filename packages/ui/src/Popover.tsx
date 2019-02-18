@@ -534,8 +534,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       targetBounds: JSON.parse(JSON.stringify(this.target.getBoundingClientRect())),
       popoverBounds: {
         left: popoverBounds.left,
-        width: popoverBounds.width,
-        height: popoverBounds.height,
+        width: Math.min(window.innerWidth, popoverBounds.width),
+        height: Math.min(window.innerHeight, popoverBounds.height),
       },
     }
     // if changed, update

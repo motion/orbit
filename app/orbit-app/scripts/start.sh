@@ -3,8 +3,10 @@
 # cd to this package root
 cd $(dirname $0)/..
 
-if [ "$1" = "start-prod" ]; then
-  echo "orbit-app production mode..."
+FLAGS=$@
+
+if [[ "$FLAGS" =~ "--prod" ]]; then
+  echo "start orbit-app production mode..."
   export NODE_ENV="production"
 fi
 

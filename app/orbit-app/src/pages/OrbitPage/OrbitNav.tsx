@@ -7,7 +7,6 @@ import React, { memo } from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
-import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -59,6 +58,7 @@ export default memo(function OrbitNav() {
   }
 
   const numUnpinned = activeAppsSorted.filter(x => !x.pinned).length
+  const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
 
   const items = space.paneSort
     .map(
@@ -74,7 +74,7 @@ export default memo(function OrbitNav() {
         const isPinned = app.pinned
         return {
           app,
-          width: numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150,
+          width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
           label: isPinned ? '' : app.type === 'search' ? activeSpaceName : app.name,
@@ -83,7 +83,7 @@ export default memo(function OrbitNav() {
           isActive,
           icon: `orbit-${app.type}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
-          iconSize: isPinned ? 18 : 12,
+          iconSize: isPinned ? 16 : 12,
           getContext() {
             return [
               {
@@ -117,10 +117,8 @@ export default memo(function OrbitNav() {
     .filter(Boolean)
 
   const onSettings = isOnSettings(paneManagerStore.activePane)
-  const showAppsTray = activeAppsSorted.length > 5
-  const appsTrayWidth = showAppsTray ? 20 : 0
-  const showCreateNewWidth = showCreateNew ? -101 : 0
-  const extraButtonsWidth = showCreateNewWidth + appsTrayWidth
+  const showCreateNewWidth = showCreateNew ? tabWidth : 0
+  const extraButtonsWidth = showCreateNewWidth
 
   return (
     <OrbitNavClip>
@@ -149,8 +147,8 @@ export default memo(function OrbitNav() {
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}
             // let shadows from tabs go up above
-            padding={[16, 0]}
-            margin={[-16, 0]}
+            padding={16}
+            margin={-16}
             height={tabHeight + 20}
             overflowX="auto"
             overflowY="hidden"
@@ -160,6 +158,7 @@ export default memo(function OrbitNav() {
 
           {showCreateNew && (
             <OrbitTab
+              width={tabWidth}
               stretch
               iconSize={12}
               isActive
@@ -170,10 +169,7 @@ export default memo(function OrbitNav() {
                   opacity={0.5}
                   onClick={flow(
                     preventDefault,
-                    () => {
-                      newAppStore.setShowCreateNew(false)
-                      paneManagerStore.back()
-                    },
+                    Actions.previousTab,
                   )}
                 />
               }
@@ -186,34 +182,28 @@ export default memo(function OrbitNav() {
               thicc
               icon={showCreateNew ? 'remove' : 'add'}
               iconAdjustOpacity={-0.1}
-              onClick={async () => {
-                newAppStore.setShowCreateNew(true)
-                await sleep(10) // panemanager is heavy and this helps the ui from lagging
-                paneManagerStore.setActivePane('createApp')
-              }}
+              onClick={Actions.setupNewApp}
             />
           )}
         </Row>
 
-        {showAppsTray && (
-          <OrbitTab
-            isActive={paneManagerStore.activePane.id === 'apps'}
-            onClick={() => {
-              newAppStore.setShowCreateNew(false)
-              if (paneManagerStore.activePane.id === 'apps') {
-                paneManagerStore.setActivePane(store.previousTabID)
-              } else {
-                paneManagerStore.setActivePaneByType('apps')
-              }
-            }}
-            iconSize={11}
-            icon="grid48"
-            tooltip="Apps"
-            thicc
-          />
-        )}
-
         <OrbitTab
+          isActive={paneManagerStore.activePane.id === 'apps'}
+          onClick={() => {
+            newAppStore.setShowCreateNew(false)
+            if (paneManagerStore.activePane.id === 'apps') {
+              paneManagerStore.setActivePane(store.previousTabID)
+            } else {
+              paneManagerStore.setActivePaneByType('apps')
+            }
+          }}
+          iconSize={11}
+          icon="grid48"
+          tooltip="Apps"
+          thicc
+        />
+
+        {/* <OrbitTab
           isActive={onSettings}
           onClick={() => {
             newAppStore.setShowCreateNew(false)
@@ -227,7 +217,7 @@ export default memo(function OrbitNav() {
           icon="gear"
           tooltip="Settings"
           thicc
-        />
+        /> */}
       </OrbitNavChrome>
     </OrbitNavClip>
   )
@@ -237,6 +227,7 @@ const OrbitNavClip = gloss({
   flex: 1,
   // zIndex: 10000000000,
   overflow: 'hidden',
+  pointerEvents: 'none',
   padding: [20, 40, 0],
   margin: [-20, 0, 0],
   transform: {
@@ -245,10 +236,12 @@ const OrbitNavClip = gloss({
 })
 
 const OrbitNavChrome = gloss({
+  pointerEvents: 'auto',
   height: tabHeight,
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
+  justifyContent: 'space-between',
 })
 
 const SortableTab = SortableElement((props: TabProps) => {

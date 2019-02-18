@@ -3,7 +3,7 @@
   "productName": "Orbit",
   "author": "Orbit",
   "description": "Orbit",
-  "version": "2.2.377",
+  "version": "2.2.379",
   "dependencies": {
     "@mcro/orbit": "*"
   },
@@ -38,6 +38,7 @@
       "!**/figlet/fonts/**/*",
       "!**/node_modules/electron/**/*",
       "!**/*screen/orbit/Build/Products/Release**/*",
+      "!**/*oracle/Build/Products/Release**/*",
       "!**/*.chromium.html",
       "!**/*demo.gif",
       "!**/*.test.js",

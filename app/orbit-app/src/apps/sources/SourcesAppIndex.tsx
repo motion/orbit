@@ -22,8 +22,7 @@ export default function SourcesAppIndex(_props: AppProps) {
 
   const results = [
     {
-      title: 'App Settings',
-      group: activeSpace.name,
+      title: 'Apps',
       icon: 'orbit-apps-full',
       iconBefore: true,
       iconSize: 12,

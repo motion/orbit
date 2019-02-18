@@ -2,6 +2,7 @@ import { Absolute, gloss, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
 import { Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
+import { useActions } from '../../actions/Actions'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -68,8 +69,10 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 const AppIconContainer = gloss({
+  height: 180,
   padding: [15, 25],
   alignItems: 'center',
+  justifyContent: 'center',
   position: 'relative',
 }).theme((_, theme) => ({
   '&:hover': {
@@ -79,6 +82,7 @@ const AppIconContainer = gloss({
 
 export default function AppsMainManage() {
   const { paneManagerStore } = useStores()
+  const Actions = useActions()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const results = [
@@ -100,6 +104,7 @@ export default function AppsMainManage() {
           <Icon name="add" size={32} opacity={0.25} />
         </View>
       ),
+      onDoubleClick: Actions.setupNewApp,
       title: 'Add',
       type: 'add',
       onClick: () => {},
@@ -139,9 +144,6 @@ export default function AppsMainManage() {
       <SelectableGrid
         autoFitColumns
         minWidth={160}
-        style={{
-          gridTemplateRows: 'repeat(1000, 180px, [col-start])',
-        }}
         items={results}
         getItem={getItem}
         distance={10}

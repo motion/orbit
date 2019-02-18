@@ -1,5 +1,4 @@
-import { IS_STORE } from '@mcro/black'
-import { debugUseStore } from '@mcro/use-store'
+import { debugUseStore, IS_STORE } from '@mcro/use-store'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'
 
@@ -46,14 +45,14 @@ debugUseStore(event => {
     globalizeStores(event.value)
     return
   }
-  if (window['enableLog']) {
-    console.log(event)
-  }
   switch (event.type) {
     case 'observe':
     case 'render':
     case 'unmount':
     case 'mount':
+      if (window['enableLog']) {
+        console.log(event.component.renderName, event)
+      }
       addEvent(event.component, event)
       return
   }
@@ -66,6 +65,8 @@ function globalizeStores(stores: Object) {
     if (window[key]) {
       if (Array.isArray(window[key]) && !window[key][0][IS_STORE]) return
       if (!window[key][IS_STORE]) return
+      window[key] = stores[key]
+    } else {
       window[key] = stores[key]
     }
   }

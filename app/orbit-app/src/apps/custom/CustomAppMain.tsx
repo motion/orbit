@@ -58,7 +58,6 @@ function CustomAppTree() {
 
 export const CustomAppMain = memoIsEqualDeep((_props: AppProps) => {
   console.warn('???? rendering...')
-
   return (
     <Row flex={1}>
       <VerticalSplitPane>

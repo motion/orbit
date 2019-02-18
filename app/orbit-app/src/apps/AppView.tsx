@@ -1,13 +1,12 @@
-import isEqual from '@mcro/fast-compare'
+import { react } from '@mcro/black'
 import { Contents, View } from '@mcro/gloss'
-import { useObserver } from 'mobx-react-lite'
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import { useHook, useStore } from '@mcro/use-store'
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { ProvideStores } from '../components/ProvideStores'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
-import { AllStores } from '../contexts/StoreContext'
 import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
-import { useStores } from '../hooks/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { AppStore } from './AppStore'
 import { AppProps, AppViews } from './AppTypes'
 
@@ -28,64 +27,53 @@ export type AppViewRef = {
 }
 
 // needs either an id or a type
-type GetApp = { id?: string; type?: string; appStore?: AppStore }
-
+type UseAppProps = { id?: string; type?: string; appStore?: AppStore }
 type AppState = {
   appViews: AppViews
   appStore: AppStore
   provideStores: Object
 }
 
-// apps can be "static" like onboarding/settings
-// or dynamic like an instantiated list/search/custom app
-// so we use type for static, id for dynamic.
-function getApp(props: GetApp, stores: AllStores): AppState {
-  const next = {
-    appStore: props.appStore || stores.appStore || null,
-    appViews: {},
-    provideStores: null,
-  }
-
-  if (stores.appsStore) {
-    const state = stores.appsStore.appsState
-    if (!state) return next
-    const { appStores, appViews, provideStores } = state
-    // set store
-    if (!next.appStore) {
-      next.appStore = appStores[props.id] || appStores[props.type]
-    }
-    // set view
-    next.appViews = appViews[props.id] || appViews[props.type] || {}
-    next.provideStores = provideStores[props.id] || provideStores[props.type] || null
-  }
-
-  return next
+class CurrentAppStore {
+  props: UseAppProps
+  stores = useHook(useStoresSimple)
+  state = react(
+    () => {
+      const { stores, props } = this
+      const next: AppState = {
+        appStore: props.appStore || stores.appStore || null,
+        appViews: {},
+        provideStores: null,
+      }
+      if (stores.appsStore) {
+        const state = stores.appsStore.appsState
+        if (!state) return next
+        const { appStores, appViews, provideStores } = state
+        // set store
+        if (!next.appStore) {
+          next.appStore = appStores[props.id] || appStores[props.type]
+        }
+        // set view
+        next.appViews = appViews[props.id] || appViews[props.type] || {}
+        next.provideStores = provideStores[props.id] || provideStores[props.type] || null
+      }
+      return next
+    },
+    {
+      log: false,
+    },
+  )
 }
 
-export function useApp(props: GetApp | false) {
-  const stores = useStores({ optional: ['appStore', 'appsStore'] })
-  const currentState = useRef<AppState>({
-    appViews: {},
-    appStore: null,
-    provideStores: null,
-  })
-  const [version, update] = useState(0)
-
-  if (version === 0 && props) {
-    currentState.current = getApp(props, stores)
-  }
-
-  useObserver(() => {
-    if (!props) return
-    const next = getApp(props, stores)
-    // set if necessary
-    if (next === currentState.current) return
-    if (isEqual(next, currentState.current)) return
-    currentState.current = next
-    update(Math.random())
-  })
-
-  return currentState.current
+export function useApp(props: UseAppProps) {
+  const currentAppStore = useStore(CurrentAppStore, props)
+  return (
+    currentAppStore.state || {
+      appStore: null,
+      appViews: {},
+      provideStores: {},
+    }
+  )
 }
 
 export const AppView = memoIsEqualDeep(

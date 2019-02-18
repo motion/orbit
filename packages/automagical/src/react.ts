@@ -21,26 +21,39 @@ export type ReactVal =
   | [any, any, any, any, any, any]
   | [any, any, any, any, any, any, any]
 
-// react() function decorator
+type ReactionFn<A, B> = ((a: A, helpers: ReactionHelpers) => B | Promise<B>)
+
+// single reaction "autorun" style
+// react(() => 1, { ...opts })
 export function react<A extends ReactVal, B>(
-  a: () => A,
-  b?: ((a: A, helpers: ReactionHelpers) => B | Promise<B>) | ReactionOptions,
-  c: ReactionOptions = null,
-): UnwrapObservable<B> {
+  a: ReactionFn<A, B>,
+  b?: ReactionOptions,
+): UnwrapObservable<B>
+
+// derive first, then react "reaction" style
+// react(() => now(), t => t - 1000, { ...opts })
+export function react<A extends ReactVal, B>(
+  a: (() => A),
+  b?: ReactionFn<A, B>,
+  c?: ReactionOptions,
+): UnwrapObservable<B>
+
+export function react(a: any, b?: any, c?: any) {
   const startReaction = (obj: any, method: string) => {
-    if (b === Object) {
-      return setupReact(obj, method, a, null, b as ReactionOptions) as any
+    if (!b || b.constructor.name === 'Object') {
+      return setupReact(obj, method, a, null, b as ReactionOptions)
     }
     if (typeof b === 'function') {
-      return setupReact(obj, method, a, b, c) as any
+      return setupReact(obj, method, a, b, c)
     }
     throw new Error(`Bad reaction args ${a} ${b} ${c}`)
   }
   startReaction.isAutomagicReaction = true
+  startReaction.reactionOptions = typeof b === 'object' ? b : c
   return startReaction as any
 }
 
-const SHARED_REJECTION_ERROR = new ReactionRejectionError()
+export const SHARED_REJECTION_ERROR = new ReactionRejectionError()
 const IS_PROD = process.env.NODE_ENV !== 'development'
 const voidFn = () => void 0
 
@@ -93,13 +106,9 @@ export function setupReact(
   }
 
   let preventLog = options.log === false
-  let current = Mobx.observable.box(defaultValue, {
-    name: name.simple,
-    deep: false,
-  })
   let currentValueUnreactive // for dev mode comparing previous value without triggering reaction
-  let previousValue
-  let stopReaction
+  let previousValue: any
+  let stopReaction: Function | null = null
   let disposed = false
   let subscriber: Subscription
 
@@ -109,52 +118,39 @@ export function setupReact(
     hasResolvedOnce: false,
   }
 
-  function getCurrentValue() {
-    return current.get()
-  }
-
-  function update(value) {
+  function update(value: any) {
     let nextValue = value
 
     // delayValue option
     if (delayValue) {
       nextValue = previousValue
       previousValue = value
+    } else {
+      previousValue = currentValueUnreactive
     }
 
-    previousValue = currentValueUnreactive
     state.hasResolvedOnce = true
 
     // subscribable handling
     if (automagicConfig.isSubscribable) {
-      // for subscribable support
-      // cancel previous whenever a new one comes in
-      const newSubscriber = value as SubscribableLike
+      // cancel previous
       if (subscriber) {
         subscriber.unsubscribe()
         subscriber = null
       }
       // subscribe to new one and use that instead of setting directly
       if (automagicConfig.isSubscribable(value)) {
-        if (!obj.__automagicSubscriptions) {
-          console.error('store', obj, obj.__automagicSubscriptions)
-          throw new Error(
-            "Detected a subscribable but store doesn't have a .__automagicSubscriptions CompositeDisposable",
-          )
-        }
-        subscriber = newSubscriber.subscribe(value => {
-          current.set(value)
+        subscriber = (value as SubscribableLike).subscribe(next => {
+          obj[methodName] = next
         })
-        obj.__automagicSubscriptions.add({
-          dispose: () => {
-            if (subscriber) subscriber.unsubscribe()
-          },
+        obj.__automagic.subscriptions.add({
+          dispose: () => subscriber && subscriber.unsubscribe(),
         })
-        return 'new subscriber'
+        return
       }
     }
 
-    if (value === currentValueUnreactive) {
+    if (nextValue === currentValueUnreactive) {
       return
     }
 
@@ -166,7 +162,7 @@ export function setupReact(
     }
 
     currentValueUnreactive = nextValue
-    current.set(nextValue)
+    obj[methodName] = nextValue
     return changed
   }
 
@@ -183,7 +179,7 @@ export function setupReact(
   }
 
   // auto add subscription so it disposes on unmount
-  obj.__automagicSubscriptions.add({ dispose })
+  obj.__automagic.subscriptions.add({ dispose })
 
   // state used outside each watch/reaction
   let reactionID = null
@@ -195,15 +191,7 @@ export function setupReact(
     reactionID = null
   }
 
-  const preventLogging = () => {
-    preventLog = true
-  }
-
-  const onCancel = cb => {
-    rejections.push(cb)
-  }
-
-  const effect = (effectFn: EffectCallback) => {
+  const useEffect = (effectFn: EffectCallback) => {
     return new Promise((resolve, reject) => {
       let cancellation
       const finish = (success: boolean) => () => {
@@ -232,18 +220,6 @@ export function setupReact(
       const sleepTimeout = setTimeout(() => resolve(), ms)
       rejections.push(() => {
         clearTimeout(sleepTimeout)
-        reject(SHARED_REJECTION_ERROR)
-      })
-    })
-  }
-
-  const idle = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      // @ts-ignore
-      let handle = requestIdleCallback(resolve)
-      rejections.push(() => {
-        // @ts-ignore
-        cancelIdleCallback(handle)
         reject(SHARED_REJECTION_ERROR)
       })
     })
@@ -310,16 +286,13 @@ export function setupReact(
   }
 
   const reactionHelpers: ReactionHelpers = {
-    preventLogging,
-    getValue: getCurrentValue,
+    getValue: () => obj[methodName],
     setValue: voidFn,
     sleep,
     when,
     whenChanged,
     state,
-    idle,
-    onCancel,
-    effect,
+    useEffect,
   }
 
   function setupReactionFn(reactionFn) {
@@ -378,8 +351,7 @@ export function setupReact(
           }
           return
         }
-        console.error(err)
-        return
+        throw err
       }
 
       // handle promises
@@ -403,8 +375,7 @@ export function setupReact(
                 log.verbose(`${name.simple} [${curID}] cancelled`)
               }
             } else {
-              console.log(`reaction error in ${name.simple}`)
-              console.error(err)
+              throw err
             }
           })
         return
@@ -441,6 +412,4 @@ export function setupReact(
     //autorun
     stopReaction = Mobx.autorun(setupReactionFn(reaction), mobxOptions)
   }
-
-  return current
 }

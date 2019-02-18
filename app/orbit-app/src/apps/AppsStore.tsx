@@ -42,11 +42,11 @@ export class AppsStore {
   }
   appStores: { [key: string]: AppStore } = {}
 
-  // debounced because things mount in waterfall
   appsState = react(
     () => [this.provideStores, this.appViews, this.appStores],
     async ([provideStores, appViews, appStores], { sleep }) => {
-      await sleep()
+      // debounced because things mount in waterfall
+      await sleep(10)
       return {
         provideStores,
         appViews,
@@ -58,25 +58,22 @@ export class AppsStore {
   viewsState = react(
     () => this.appsState,
     appsState => {
-      ensure('appsState', !!appsState)
       const res: { [key: string]: ReturnType<typeof getViewInformation> } = {}
-      for (const key in appsState.appViews) {
-        res[key] = getViewInformation(key, appsState.appViews[key])
+      if (appsState) {
+        for (const key in appsState.appViews) {
+          res[key] = getViewInformation(key, appsState.appViews[key])
+        }
       }
       return res
-    },
-    {
-      defaultValue: {},
     },
   )
 
   currentView = react(
     () => {
-      const { paneManagerStore } = this.stores
-      const { id } = paneManagerStore.activePane
-      return this.viewsState[id]
+      const { activePane } = this.stores.paneManagerStore
+      ensure('activePane', !!activePane)
+      return this.viewsState[activePane.id]
     },
-    _ => _,
     {
       defaultValue: {
         hasMain: true,

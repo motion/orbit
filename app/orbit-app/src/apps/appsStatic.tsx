@@ -1,4 +1,5 @@
 import React from 'react'
+import AppsAppsIndex from './apps/AppsIndex'
 import AppsAppsMain from './apps/AppsMain'
 import { AppViews } from './AppTypes'
 import { bit } from './bit'
@@ -13,6 +14,7 @@ export const appsStatic: { [key: string]: AppViews } = {
   bit,
   apps: {
     main: AppsAppsMain,
+    index: AppsAppsIndex,
   },
   onboard: {
     main: OrbitOnboardMain,

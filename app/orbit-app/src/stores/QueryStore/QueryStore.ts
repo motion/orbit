@@ -39,10 +39,11 @@ export class QueryStore {
   })
 
   willUnmount() {
+    // TODO @umed can you check why `automagical.ts` isn't adding the dispose() to type here?
     // @ts-ignore
-    this.nlpStore.disposeAutomagic()
+    this.nlpStore.dispose()
     // @ts-ignore
-    this.queryFilters.disposeAutomagic()
+    this.queryFilters.dispose()
   }
 
   hasQuery = react(() => !!this.queryInstant.length, _ => _)

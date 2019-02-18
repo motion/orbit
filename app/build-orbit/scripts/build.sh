@@ -26,22 +26,24 @@ cd -
 function publicize-package-jsons() {
   cd $(dirname $0)/../../..
   for file in "${FILES[@]}"; do
-    echo "copy $file"
     cp $file "$file.bak"
     sed -i '' '/"private": true/s/true/false/' $file
   done
   cd -
 }
-function handle-exit() {
-  trap - EXIT
+function undo-package-jsons() {
   cd $(dirname $0)/../../..
   for file in "${FILES[@]}"; do
     rm $file && mv "$file.bak" $file || echo "failed $file"
+    sed -i '' '/"private": false/s/false/true/' $file # why is this necessary..
   done
+  cd -
+}
+function handle-exit() {
+  trap - EXIT
+  undo-package-jsons
   exit 0
 }
-trap handle-exit EXIT
-publicize-package-jsons
 
 #
 # BUILD
@@ -116,6 +118,8 @@ if [[ "$FLAGS" =~ "--no-publish" ]]; then
   echo "not publishing..."
 else
   echo "publishing packages..."
+  trap handle-exit EXIT
+  publicize-package-jsons
   publish-packages
 fi
 echo -n "--no-publish " >> ./scripts/.lastbuild
@@ -159,7 +163,7 @@ rm -r dist/mac/Orbit.app || true
 (cd stage-app && ../node_modules/.bin/electron-rebuild --version 3.0.0-beta.1)
 # so desktop node subprocess can use it
 rm -r stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || true
-mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64
+mv stage-app/node_modules/sqlite3/lib/binding/electron-v3.0-darwin-x64 stage-app/node_modules/sqlite3/lib/binding/node-v64-darwin-x64 || echo "didnt copy sqlite: ok on rebuild, error on first build"
 
 # see stage-app/package.json for options
 echo "electron-builder..."

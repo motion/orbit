@@ -1,3 +1,4 @@
+import { Logger } from '@mcro/logger'
 import { SettingEntity } from '@mcro/models'
 import { Desktop } from '@mcro/stores'
 import Fs from 'fs-extra'
@@ -19,6 +20,8 @@ const chromeDbPaths = [
 ]
 const tmpDbPath = Path.join('/tmp', `db-${Math.random()}`.replace('.', ''))
 
+const log = new Logger('OnboardManager')
+
 const integrationPatterns = [
   { name: 'atlassian', patterns: ['%atlassian.net%'] },
   { name: 'github', patterns: ['%github.com%'] },
@@ -33,9 +36,10 @@ export class OnboardManager {
   foundIntegrations = null
 
   async start() {
+    log.info('start()')
     this.generalSetting = await getRepository(SettingEntity).findOne({ name: 'general' })
     if (!this.generalSetting.values.hasOnboarded) {
-      await this.scanHistory()
+      this.scanHistory()
     }
   }
 

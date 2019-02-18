@@ -39,7 +39,7 @@ export class SpaceStore {
       if (!isEqual(user.settings, App.state.userSettings)) {
         App.setState({ userSettings: user.settings })
       }
-      if (!this.hasStarted) {
+      if (!this.hasStarted && !getIsTorn()) {
         await sleep(10)
         console.log('show orbit first time after theme is set')
         this.hasStarted = true
@@ -82,6 +82,7 @@ export class SpaceStore {
       const { paneManagerStore } = this.props
       const { panes, paneIndex } = getPanes(paneManagerStore, apps)
       if (!isEqual(panes, paneManagerStore.panes)) {
+        log('updating panes', panes)
         paneManagerStore.setPanes(panes)
       }
       paneManagerStore.setPaneIndex(paneIndex)

@@ -72,7 +72,7 @@ export default function OrbitList(props: OrbitListProps) {
     <OrbitHighlightActiveQuery>
       {hasItems && (
         <VirtualList
-          shouldMeasure={isActive}
+          allowMeasure={isActive}
           items={items}
           ItemView={OrbitListItem}
           isRowLoaded={isRowLoaded}

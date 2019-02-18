@@ -61,7 +61,11 @@ export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean
   const component: DebugComponent = event['component']
   if (component) {
     if (component.__debug) {
-      console.log(`%c${component['renderName']}`, 'color: green;', event)
+      console.log(
+        `%c${component['renderName']} ${event['store'] ? event['store'].constructor.name : ''}`,
+        'color: green;',
+        event,
+      )
     }
   }
   if (options && options.debug) {

@@ -6,7 +6,7 @@ import {
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../actions/AppActions'
+import { AppActions } from '../../../actions/appActions/AppActions'
 import { useStores } from '../../../hooks/useStores'
 import { command } from '../../../mediator'
 import * as Views from '../../../views'

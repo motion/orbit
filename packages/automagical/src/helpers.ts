@@ -1,3 +1,4 @@
+import isEqualDeep from '@mcro/fast-compare'
 import { Logger } from '@mcro/logger'
 import * as Mobx from 'mobx'
 import { MagicalObject, ReactionOptions } from './types'
@@ -12,7 +13,7 @@ export const getReactionName = (obj: MagicalObject) => {
 }
 
 const defaultOpts: ReactionOptions = {
-  equals: Mobx.comparer.structural,
+  equals: isEqualDeep,
 }
 
 export function getReactionOptions(userOptions?: ReactionOptions) {

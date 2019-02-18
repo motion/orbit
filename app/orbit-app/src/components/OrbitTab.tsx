@@ -7,7 +7,7 @@ import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
-export const tabHeight = 30
+export const tabHeight = 29
 const inactiveOpacity = 0.45
 const borderSize = 5
 
@@ -81,7 +81,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
           </>
         )}
 
-        <Row alignItems="center" maxWidth={after ? '76%' : '90%'} marginLeft={label ? '-5%' : 0}>
+        <Row alignItems="center" maxWidth={after ? '76%' : '90%'}>
           {!React.isValidElement(icon) && !!icon && (
             <OrbitTabIcon
               isActive={isActive}
@@ -90,9 +90,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               thicc={thicc}
               size={iconSize}
               iconAdjustOpacity={iconAdjustOpacity}
-              transform={{
-                y: -0.5,
-              }}
               {...iconProps}
             />
           )}
@@ -104,9 +101,9 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               className="tab-label"
               display="flex"
               flex={1}
-              size={0.95}
               opacity={isActive ? 1 : inactiveOpacity}
               fontWeight={400}
+              size={0.98}
               {...textProps}
               transition={isActive ? 'none' : tabTransition}
             >
@@ -188,9 +185,7 @@ const NavButtonChromeInner = gloss({
   alignItems: 'center',
   flex: 1,
   height: '100%',
-  borderTop: [1, 'transparent'],
-}).theme(({ isActive, sidePad }, theme) => ({
-  borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
+}).theme(({ sidePad }) => ({
   padding: [0, sidePad],
 }))
 
@@ -233,7 +228,10 @@ const NavButtonChrome = gloss<TabProps>({
       transition: isActive ? 'none' : tabTransition,
     },
     '&:hover .tab-icon-inactive.tab-icon-unpinned': {
-      opacity: '0.6 !important',
+      opacity: '1 !important',
+    },
+    '&:hover .tab-icon-inactive.tab-icon-pinned': {
+      opacity: '1 !important',
     },
     '&:hover .tab-label': {
       opacity: 1,

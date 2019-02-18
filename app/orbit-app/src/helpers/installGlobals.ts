@@ -27,9 +27,10 @@ import * as dateFns from 'date-fns'
 import * as Mobx from 'mobx'
 import * as React from 'react'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { AppActions } from '../actions/AppActions'
+import { AppActions } from '../actions/appActions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
+import * as Mediator from '../mediator'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -50,6 +51,7 @@ const toJS = obj => {
 
 // the heavy hitters
 window['ReconnectingWebSocket'] = ReconnectingWebSocket
+window['Mediator'] = Mediator
 window['PopoverState'] = PopoverState
 window['React'] = React
 window['Constants'] = Constants

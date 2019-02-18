@@ -1,5 +1,6 @@
 import React from 'react'
 import { AppProps } from '../AppTypes'
+import { AppSubView } from '../views/AppSubView'
 import AppsMainManage from './AppsMainManage'
 import AppsMainNew from './AppsMainNew'
 
@@ -8,9 +9,17 @@ export default function AppsAppsMain(props: AppProps) {
     return <AppsMainManage />
   }
 
+  if (props.appConfig.type !== 'apps') {
+    return <AppSubView appConfig={props.appConfig} />
+  }
+
   if (props.appConfig.subType === 'new') {
     return <AppsMainNew />
   }
 
-  return <AppsMainManage />
+  return (
+    <>
+      <AppsMainManage />
+    </>
+  )
 }

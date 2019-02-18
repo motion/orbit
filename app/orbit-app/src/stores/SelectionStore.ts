@@ -1,8 +1,8 @@
-import { ensure, react } from '@mcro/black'
-import { App } from '@mcro/stores'
-import { AppActions } from '../actions/AppActions'
-import { SelectionGroup } from '../apps/SelectionResults'
-import { SelectableListProps } from '../views/Lists/SelectableList'
+import { ensure, react } from '@mcro/black';
+import { App } from '@mcro/stores';
+import { AppActions } from '../actions/appActions/AppActions';
+import { SelectionGroup } from '../apps/SelectionResults';
+import { SelectableListProps } from '../views/Lists/SelectableList';
 
 const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
 

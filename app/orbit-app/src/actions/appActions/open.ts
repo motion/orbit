@@ -1,7 +1,7 @@
-import { command } from '../mediator'
-import { Bit, OpenCommand, PersonBit } from '@mcro/models'
-import { App, Electron } from '@mcro/stores'
-import { AppActions } from './AppActions'
+import { Bit, OpenCommand, PersonBit } from '@mcro/models';
+import { App, Electron } from '@mcro/stores';
+import { command } from '../../mediator';
+import { AppActions } from './AppActions';
 
 export async function open(url) {
   await command(OpenCommand, { url })

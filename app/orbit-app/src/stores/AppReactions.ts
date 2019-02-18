@@ -1,8 +1,8 @@
-import { store, react, ensure } from '@mcro/black'
+import { ensure, react, store } from '@mcro/black'
 import { App, Desktop } from '@mcro/stores'
-import { AppActions } from '../actions/AppActions'
-import { showNotification } from '../helpers/electron/showNotification'
 import { PopoverState } from '@mcro/ui'
+import { AppActions } from '../actions/appActions/AppActions'
+import { showNotification } from '../helpers/electron/showNotification'
 
 @store
 export class AppReactions {

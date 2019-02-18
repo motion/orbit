@@ -73,7 +73,7 @@ function CreateAppMain(props: AppProps) {
     // not sure why, but can you check into i?
     // @ts-ignore
     save(AppModel, app as SaveOptions<App>)
-    newAppStore.setShowCreateNew(true)
+    newAppStore.setShowCreateNew(false)
   }
 
   return (

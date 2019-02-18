@@ -1,6 +1,6 @@
 import { App, AppState, defaultPeekState } from '@mcro/stores'
-import { PEEK_ID } from '../constants'
-import { deepClone } from '../helpers'
+import { PEEK_ID } from '../../constants'
+import { deepClone } from '../../helpers'
 
 const mergeAppState = (state: AppState, next: Partial<AppState>) => {
   App.bridge.updateStateWithDiff(state, next, {

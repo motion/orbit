@@ -11,14 +11,6 @@ const { parseSearchQuery, setUserNames } = initNlp()
 // to run it on thread
 // import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'
 
-const DEFAULT_NLP: Partial<NLPResponse> = {
-  query: '',
-  date: {
-    startDate: null,
-    endDate: null,
-  },
-}
-
 @store
 export class NLPStore {
   queryStore: QueryStore
@@ -49,19 +41,23 @@ export class NLPStore {
 
   nlp = react(
     () => this.queryStore.queryInstant,
-    async (query, { sleep }) => {
+    (query, { sleep }) => {
       if (!query) {
-        return DEFAULT_NLP
+        return {
+          query: '',
+          date: {
+            startDate: null,
+            endDate: null,
+          },
+        } as NLPResponse
       }
       // debounce a bit less than query
-      await sleep(100)
-      return {
-        ...(await parseSearchQuery(query)),
-        query,
-      }
-    },
-    {
-      defaultValue: DEFAULT_NLP,
+      return sleep(100)
+        .then(() => parseSearchQuery(query))
+        .then(parsed => ({
+          ...parsed,
+          query,
+        }))
     },
   )
 

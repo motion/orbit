@@ -34,7 +34,7 @@ export class AppStore {
       return query
     },
     {
-      defaultValue: this.stores.queryStore.query,
+      defaultValue: '',
       deferFirstRun: true,
     },
   )

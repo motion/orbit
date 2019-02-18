@@ -3,7 +3,7 @@ import { App } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
-import { AppActions } from '../actions/AppActions'
+import { AppActions } from '../actions/appActions/AppActions'
 import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from './SubPane'
 
@@ -177,5 +177,3 @@ export class SubPaneStore {
     }
   }
 }
-
-console.log(SubPaneStore)

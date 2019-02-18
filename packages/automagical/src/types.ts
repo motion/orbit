@@ -5,15 +5,12 @@ import { CompositeDisposable } from 'event-kit'
 export type EffectCallback = ((resolve: any, reject: any) => Function | void)
 
 export type ReactionHelpers = {
-  preventLogging: Function
   setValue: (a: any) => void
   getValue: () => any
   sleep: (ms?: number) => Promise<void>
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
-  idle: () => Promise<void>
-  onCancel: (cb: Function) => void
-  effect: (cb: EffectCallback) => void
+  useEffect: (cb: EffectCallback) => void
   state: {
     hasResolvedOnce: boolean
     iteration?: number
@@ -32,7 +29,11 @@ export type ReactionOptions = {
 }
 
 export interface MagicalObject {
-  __automagicSubscriptions: CompositeDisposable
-  automagicDispose: Function
+  __automagic: {
+    subscriptions: CompositeDisposable
+    reactions: {}
+    getters: {}
+  }
+  dispose: Function
   props?: { [key: string]: any }
 }

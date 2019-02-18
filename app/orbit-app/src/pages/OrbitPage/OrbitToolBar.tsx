@@ -5,7 +5,7 @@ import { useApp } from '../../apps/AppView'
 import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
-const height = 32
+const height = 30
 const minHeight = 3
 
 export const OrbitToolBarHeight = ({ id }: { id: string }) => {
@@ -18,7 +18,6 @@ export default memo(function OrbitToolBar() {
   const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
   const hasToolBar = !!appViews.toolBar
   const AppView = appViews.toolBar
-
   return (
     <ProvideStores stores={provideStores}>
       <ToolbarChrome hasToolbars={hasToolBar}>
@@ -39,7 +38,15 @@ const ToolbarChrome = gloss(Row, {
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 1000000000,
-  minHeight,
+  transition: 'none',
+  transform: {
+    y: -height + minHeight,
+  },
+  hasToolbars: {
+    transform: {
+      y: 0,
+    },
+  },
 }).theme((_, theme) => ({
   background: theme.tabBackgroundBottom || theme.background,
 }))
@@ -50,8 +57,14 @@ const ToolbarInner = gloss({
   alignItems: 'center',
   overflow: 'hidden',
   position: 'relative',
+  height,
+  padding: [0, 12],
+  transition: 'opacity ease 100ms',
+  opacity: 0,
   hasToolbars: {
-    height: height,
-    padding: [0, 12],
+    opacity: 1,
+    transform: {
+      y: 0,
+    },
   },
 })

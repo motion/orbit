@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss, linearGradient, Theme, useTheme } from '@mcro/gloss'
+import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
 import { BorderBottom, Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import React, { memo } from 'react'
@@ -52,18 +52,18 @@ export default memo(function OrbitHeader() {
           <View flex={1} />
 
           <HeaderContain>
-            <View width={24} alignItems="center" justifyContent="center">
+            <View width={20} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}
                 name={`orbit-${icon}`}
-                size={20}
+                size={18}
                 opacity={theme.color.isDark() ? 0.4 : 0.2}
               />
             </View>
 
             <OrbitHeaderInput />
 
-            <SegmentedRow>
+            <SegmentedRow width={80} justifyContent="center">
               <Popover
                 openOnClick
                 closeOnClickAway
@@ -105,29 +105,38 @@ export default memo(function OrbitHeader() {
           </Absolute>
         )}
 
-        {isTorn && (
-          <Absolute top={0} right={3} bottom={0} alignItems="center" justifyContent="center">
-            <Button
-              chromeless
-              opacity={0.3}
-              hoverStyle={{
-                opacity: 8,
-              }}
-              icon="gear"
-              onClick={() => {
-                if (paneManagerStore.activePane.type === 'settings') {
-                  paneManagerStore.back()
-                } else {
-                  paneManagerStore.setActivePaneByType('settings')
-                }
-              }}
-            />
-          </Absolute>
-        )}
+        <Absolute
+          top={0}
+          right={isTorn ? 3 : 6}
+          bottom={0}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Button
+            chromeless
+            opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
+            hoverStyle={{
+              opacity: paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.4,
+            }}
+            icon="gear"
+            iconSize={isTorn ? 10 : 12}
+            onClick={() => {
+              newAppStore.setShowCreateNew(false)
+              if (paneManagerStore.activePane.type === 'settings') {
+                paneManagerStore.back()
+              } else {
+                paneManagerStore.setActivePaneByType('settings')
+              }
+            }}
+          />
+        </Absolute>
       </HeaderTop>
       {!isTorn && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
-      <BorderBottom zIndex={0} />
+      <BorderBottom
+        borderColor={(isTorn && theme.headerBorderBottom) || theme.borderColor}
+        zIndex={0}
+      />
       <OrbitNav />
     </OrbitHeaderContainer>
   )
@@ -150,7 +159,7 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <Absolute top={0} right={12} bottom={0} alignItems="center" justifyContent="center">
+    <Absolute top={0} right={42} bottom={0} alignItems="center" justifyContent="center">
       <HeaderButton
         icon="tool"
         tooltip="Edit app"
@@ -169,9 +178,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 500ms',
 }).theme(({ isActive }, theme) => ({
-  background: isActive
-    ? linearGradient(theme.selected.background, theme.selected.background.darken(0.1))
-    : 'transparent',
+  background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
 const OrbitHeaderContainer = gloss(View, {
@@ -191,9 +198,8 @@ const HeaderContain = gloss({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  width: '75%',
+  maxWidth: '70%',
   minWidth: 400,
-  maxWidth: 680,
 })
 
 const HeaderFade = gloss(FullScreen, {

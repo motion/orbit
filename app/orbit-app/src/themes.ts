@@ -96,7 +96,7 @@ const light = {
   }),
 }
 
-const darkBackground = color([60, 60, 60])
+const darkBackground = color([66, 66, 66])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
@@ -107,10 +107,12 @@ const dark = {
     backgroundActive: [30, 30, 30, 0.65],
     color: [250, 250, 250],
     borderColor: [180, 180, 180, 0.25],
-    sidebarBackground: [22, 22, 22, 0.58],
+    sidebarBackground: [22, 22, 22, 0.52],
     sidebarBorderColor: '#444',
-    headerBackground: linearGradient([0, 0, 0, 0.22], [0, 0, 0, 0.38]),
-    headerBackgroundOpaque: darkBackground || linearGradient([0, 0, 0, 0.275], [30, 30, 30, 0.5]),
+    headerBorderBottom: '#151515',
+    headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.35]),
+    headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
+    orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     headerFadeBackground: linearGradient(
       'to right',
       darkFadeBackground,

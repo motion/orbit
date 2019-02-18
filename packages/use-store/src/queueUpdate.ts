@@ -1,3 +1,5 @@
+import { unstable_batchedUpdates } from 'react-dom'
+
 const Updates = new Set()
 
 let tm = null
@@ -7,7 +9,9 @@ export function queueUpdate(fn: Function) {
   Updates.add(fn)
   tm = setImmediate(() => {
     if (!Updates.size) return
-    ;[...Updates].forEach(fn => fn())
+    unstable_batchedUpdates(() => {
+      ;[...Updates].forEach(fn => fn())
+    })
     Updates.clear()
   })
 }

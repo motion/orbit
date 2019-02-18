@@ -51,11 +51,9 @@ export class NLPStore {
   nlp = react(
     () => this.query,
     async (query, { sleep }) => {
-      log('123', query)
       if (!query) return this.emptyNLP
       // debounce a bit less than query
       await sleep(100)
-      console.log('run me bro')
       return {
         ...(await parseSearchQuery(query)),
         query,

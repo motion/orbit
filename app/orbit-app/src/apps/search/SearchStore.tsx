@@ -3,6 +3,7 @@ import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
+import { SearchState } from '../../hooks/useSearch'
 import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany } from '../../mediator'
 import { PaneManagerStore } from '../../stores/PaneManagerStore'
@@ -13,7 +14,7 @@ import { SpaceIcon } from '../../views/SpaceIcon'
 import { AppType } from '../AppTypes'
 import { searchGroupsToResults } from './searchGroupsToResults'
 
-type SearchState = {
+type SearchResults = {
   results: OrbitListItemProps[]
   finished?: boolean
   query: string
@@ -24,9 +25,14 @@ export class SearchStore {
     paneManagerStore?: PaneManagerStore
   }
   stores = useHook(useStoresSimple)
+  searchState: SearchState | null = null
+
+  setSearchState(next: SearchState) {
+    this.searchState = next
+  }
 
   get activeQuery() {
-    return this.queryFilters.activeQuery
+    return this.searchState ? this.searchState.query : ''
   }
 
   get queryFilters() {
@@ -60,7 +66,7 @@ export class SearchStore {
   )
 
   get isChanging() {
-    return this.searchState.query !== this.activeQuery
+    return this.searchState && this.searchState.query !== this.activeQuery
   }
 
   hasQuery = () => {
@@ -126,14 +132,10 @@ export class SearchStore {
           title: `Create new app`,
         },
         onOpen: () => {
-          this.stores.paneManagerStore.setActivePaneByType(`createApp`)
+          this.props.paneManagerStore.setActivePaneByType(`createApp`)
         },
       },
     ]
-  }
-
-  get results() {
-    return this.searchState.results
   }
 
   getQuickResults(query: string) {
@@ -141,17 +143,17 @@ export class SearchStore {
     return [...this.getRecentItems(query)]
   }
 
-  searchState = react(
+  get results() {
+    return this.state.results
+  }
+
+  state = react(
     () => [
       this.stores.spaceStore.activeSpace.id,
-      this.stores.queryStore.query,
-      this.queryFilters.activeFilters,
-      this.queryFilters.exclusiveFilters,
-      this.queryFilters.sortBy,
-      this.queryFilters.dateState,
+      this.activeQuery,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchState> => {
+    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchResults> => {
       if (this.props.paneManagerStore) {
         await when(() => this.props.paneManagerStore.activePane.type === 'search')
       }

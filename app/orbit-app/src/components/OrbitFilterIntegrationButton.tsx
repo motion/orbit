@@ -1,4 +1,4 @@
-import { Col, Popover, ViewProps } from '@mcro/ui'
+import { Col, Popover, Text, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryStore/QueryFiltersStore'
@@ -28,6 +28,11 @@ export default function OrbitFilterIntegrationButton(
       }
     >
       <Col {...props}>
+        {!integrationFilters.length && (
+          <View padding={20} alignItems="center" justifyContent="center">
+            <Text>No data sources.</Text>
+          </View>
+        )}
         {integrationFilters.map(filter => {
           return (
             <ListItem

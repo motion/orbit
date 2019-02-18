@@ -2,7 +2,7 @@ import { ensure, react } from '@mcro/black'
 import { App } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { createRef } from 'react'
-import { AppActions } from '../actions/AppActions'
+import { AppActions } from '../actions/appActions/AppActions'
 import { sleep } from '../helpers'
 import { useStoresSimple } from '../hooks/useStores'
 

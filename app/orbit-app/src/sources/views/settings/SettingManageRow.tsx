@@ -1,17 +1,16 @@
-import { command } from '../../../mediator'
 import {
   Source,
   SourceForceCancelCommand,
   SourceForceSyncCommand,
   SourceRemoveCommand,
-  TearAppCommand,
 } from '@mcro/models'
 import { Row, SegmentedRow, Text, View } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../actions/AppActions'
+import { AppActions } from '../../../actions/appActions/AppActions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
+import { command } from '../../../mediator'
 import { getAppFromSource } from '../../../stores/SourcesStore'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { TitleBarButton } from '../layout/TitleBarButton'

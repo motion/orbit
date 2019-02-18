@@ -7,7 +7,6 @@ import React, { memo } from 'react'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
-import { sleep } from '../../helpers'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -186,11 +185,7 @@ export default memo(function OrbitNav() {
               thicc
               icon={showCreateNew ? 'remove' : 'add'}
               iconAdjustOpacity={-0.1}
-              onClick={async () => {
-                newAppStore.setShowCreateNew(true)
-                await sleep(10) // panemanager is heavy and this helps the ui from lagging
-                paneManagerStore.setActivePane('createApp')
-              }}
+              onClick={Actions.setupNewApp}
             />
           )}
         </Row>

@@ -2,6 +2,7 @@ import { Absolute, gloss, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
 import { Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
+import { useActions } from '../../actions/Actions'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
@@ -79,6 +80,7 @@ const AppIconContainer = gloss({
 
 export default function AppsMainManage() {
   const { paneManagerStore } = useStores()
+  const Actions = useActions()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const results = [
@@ -100,6 +102,7 @@ export default function AppsMainManage() {
           <Icon name="add" size={32} opacity={0.25} />
         </View>
       ),
+      onDoubleClick: Actions.setupNewApp,
       title: 'Add',
       type: 'add',
       onClick: () => {},

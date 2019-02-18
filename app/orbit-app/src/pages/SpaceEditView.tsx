@@ -1,13 +1,13 @@
 import { react } from '@mcro/black'
-import { save } from '../mediator'
 import { AppModel, ListsApp, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import * as React from 'react'
-import { AppActions } from '../actions/AppActions'
-import * as Views from '../views'
-import { Message } from '../views/Message'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { AppActions } from '../actions/appActions/AppActions'
+import { save } from '../mediator'
+import * as Views from '../views'
+import { Message } from '../views/Message'
 
 type Props = {
   space?: Space

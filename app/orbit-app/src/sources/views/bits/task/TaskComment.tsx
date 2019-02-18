@@ -1,6 +1,6 @@
 import { Icon, Row, Text } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../../actions/AppActions'
+import { AppActions } from '../../../../actions/appActions/AppActions'
 import { HorizontalSpace, VerticalSpace } from '../../../../views'
 import { DateFormat } from '../../../../views/DateFormat'
 import { Markdown } from '../../../../views/Markdown'

@@ -1,16 +1,10 @@
-import { gloss } from '@mcro/gloss'
-import { View } from '@mcro/ui'
-import * as React from 'react'
-import { AppActions } from '../../../actions/AppActions'
-import { DateFormat } from '../../../views/DateFormat'
-import {
-  StatusBar,
-  StatusBarButton,
-  StatusBarSection,
-  StatusBarSpace,
-  StatusBarText,
-} from '../../../views/StatusBar'
-import { OrbitSourceMainProps } from '../../types'
+import { gloss } from '@mcro/gloss';
+import { View } from '@mcro/ui';
+import * as React from 'react';
+import { AppActions } from '../../../actions/appActions/AppActions';
+import { DateFormat } from '../../../views/DateFormat';
+import { StatusBar, StatusBarButton, StatusBarSection, StatusBarSpace, StatusBarText } from '../../../views/StatusBar';
+import { OrbitSourceMainProps } from '../../types';
 
 const Cmd = gloss({
   opacity: 0.6,

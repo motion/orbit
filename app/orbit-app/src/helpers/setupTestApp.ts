@@ -1,5 +1,5 @@
 import { BitModel, PersonBitModel } from '@mcro/models'
-import { AppActions } from '../actions/AppActions'
+import { AppActions } from '../actions/appActions/AppActions'
 import { AppConfig } from '../apps/AppTypes'
 
 // test page for loading in browser to isolate

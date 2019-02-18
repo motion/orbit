@@ -147,6 +147,13 @@ export class Logger {
     const isTrace = this.opts.trace && process.env.NODE_ENV === 'development'
     const loggingEnabled = !process.env.DISABLE_LOGGING // || process.env.PROCESS_NAME !== 'syncers'
 
+    // for syncer process with no-logging mode we do not log objects in messages
+    if (loggingEnabled === false && process.env.PROCESS_NAME === 'syncers') {
+      messages = messages.filter(message => {
+        return typeof message !== "object"
+      })
+    }
+
     // adds a stack trace
     // only do this in development it adds a decent amount of overhead
     let traceLog

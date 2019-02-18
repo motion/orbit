@@ -66,9 +66,13 @@ export class SpaceStore {
     },
   )
 
-  apps = react(() => this.appsUnsorted, apps => sortApps(apps, this.activeSpace.paneSort || []), {
-    defaultValue: [],
-  })
+  apps = react(
+    () => [this.appsUnsorted, this.activeSpace.paneSort || []],
+    ([apps, paneSort]) => sortApps(apps, paneSort),
+    {
+      defaultValue: [],
+    },
+  )
 
   setInitialPaneIndex = once(() => {
     if (getIsTorn()) return

@@ -80,9 +80,10 @@ export default React.memo(function SlackApp(props: Props) {
           onChange={setActivePane}
           itemProps={{ chromeless: true, fontWeight: 600, sizeFont: 1.1, size: 0.9 }}
         >
-          <Button>Conversation</Button>
-          <Button>Previously</Button>
-          <Button>Afterwards</Button>
+          <Button onClick={() => setActivePane(0)}>Conversation</Button>
+          <Button onClick={() => setActivePane(1)}>Previously</Button>
+          <Button onClick={() => setActivePane(2)}>Afterwards</Button>
+          <Button onClick={() => setActivePane(3)}>Related</Button>
         </SegmentedRow>
       </Row>
 

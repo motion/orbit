@@ -14,10 +14,10 @@ export type TaskCommentLike = {
     email: string
   }
   createdAt: string
-  children?: string
+  body?: string
 }
 
-export const TaskComment = ({ author, createdAt, children }: TaskCommentLike) => {
+export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
   if (!author) {
     console.warn('error! no author')
     return null
@@ -52,7 +52,7 @@ export const TaskComment = ({ author, createdAt, children }: TaskCommentLike) =>
         )}
       </Row>
       <VerticalSpace small />
-      <Markdown source={children} />
+      <Markdown source={body} />
     </React.Fragment>
   )
 }

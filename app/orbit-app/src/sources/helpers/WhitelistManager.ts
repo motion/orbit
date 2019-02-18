@@ -49,7 +49,7 @@ export class WhitelistManager<T extends SourceWithWhiteList> {
       return true
     }
     if (Array.isArray(this.values.whitelist)) {
-      return this.values.whitelist.indexOf(id) !== -1
+      return this.values.whitelist.includes(id)
     }
     return this.values.whitelist[id]
   })

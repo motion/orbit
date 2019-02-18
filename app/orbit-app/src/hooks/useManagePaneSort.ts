@@ -22,8 +22,8 @@ function sortPanes(space: Space, apps: AppBit[]) {
 }
 
 function hasDifference(a: number[], b: number[]) {
-  const missingInA = !!a.filter(aID => b.indexOf(aID) === -1).length
-  const missingInB = !!b.filter(bID => a.indexOf(bID) === -1).length
+  const missingInA = !!a.filter(aID => !b.includes(aID)).length
+  const missingInB = !!b.filter(bID => !a.includes(bID)).length
   return missingInA || missingInB
 }
 

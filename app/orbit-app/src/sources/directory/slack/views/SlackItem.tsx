@@ -8,7 +8,7 @@ import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
   if (searchTerm) {
-    const filtered = res.filter(m => m.text.indexOf(searchTerm) >= 0)
+    const filtered = res.filter(m => m.text.includes(searchTerm))
     if (filtered.length) {
       res = filtered
     }

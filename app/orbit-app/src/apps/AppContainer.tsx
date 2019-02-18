@@ -14,19 +14,16 @@ function AppContainerInner(props: AppElements) {
 
   const { appStore, appsStore } = useStoresSimple()
 
-  useEffect(
-    () => {
-      const views = {
-        index: props.index && superMemo(props.index),
-        main: props.children && superMemo(props.children),
-        statusBar: props.statusBar && superMemo(props.statusBar),
-        toolBar: props.toolBar && superMemo(props.toolBar),
-      }
+  useEffect(() => {
+    const views = {
+      index: props.index && superMemo(props.index),
+      main: props.children && superMemo(props.children),
+      statusBar: props.statusBar && superMemo(props.statusBar),
+      toolBar: props.toolBar && superMemo(props.toolBar),
+    }
 
-      appsStore.setupApp(appStore.id, views, props.provideStores)
-    },
-    [Object.values(props.provideStores || {})],
-  )
+    appsStore.setupApp(appStore.id, views, props.provideStores)
+  }, [])
 
   return null
 }
@@ -39,6 +36,7 @@ export class AppContainer extends React.Component<AppElements> {
   componentDidMount() {}
 
   componentDidCatch(error) {
+    console.error(this.state.error)
     this.setState({
       error,
     })
@@ -46,7 +44,7 @@ export class AppContainer extends React.Component<AppElements> {
 
   render() {
     if (this.state.error) {
-      console.error(this.state.error)
+      console.warn('has error')
     }
     return <AppContainerInner {...this.props} />
   }

@@ -97,8 +97,6 @@ export class SearchStore {
     const searchedApps =
       (query && apps.filter(x => ~x.name.toLowerCase().indexOf(query.toLowerCase()))) || []
 
-    console.log('searchedApps', searchedApps)
-
     const appToResult = app => {
       return {
         title: app.name,
@@ -142,7 +140,6 @@ export class SearchStore {
   }
 
   getQuickResults(query: string) {
-    console.warn('quick results', query)
     // TODO recent history
     return [...this.getRecentItems(query)]
   }
@@ -157,7 +154,7 @@ export class SearchStore {
       this.activeQuery,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query], { sleep, when, setValue }): Promise<SearchResults> => {
+    async ([spaceId, query], { when, setValue }): Promise<SearchResults> => {
       if (this.props.paneManagerStore) {
         await when(() => this.props.paneManagerStore.activePane.type === 'search')
       }

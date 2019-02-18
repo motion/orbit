@@ -56,7 +56,7 @@
     "react-dom": "16.8.2",
     "react-date-range": "1.0.0-beta",
     "@mcro/fast-compare": "*",
-    "react-hot-loader": "4.6.5",
+    "react-hot-loader": "4.7.0",
     "faker": "4.1.0",
     "react-hotkeys": "1.1.4",
     "react-markdown": "4.0.6",

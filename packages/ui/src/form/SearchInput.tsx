@@ -54,7 +54,7 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
         {...searchBarProps}
       >
         {before}
-        <SearchBox width={width} tabIndex={-1}>
+        <SearchBox width={width} tabIndex={-1} background={props.background}>
           <SearchIcon
             name="ui-1_zoom"
             color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
@@ -150,7 +150,7 @@ export const SearchBox = gloss(View, {
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
   },
-}).theme((_, theme) => ({
-  background: theme.background,
+}).theme((props, theme) => ({
+  background: props.background || theme.background,
   border: [1, theme.borderColor.alpha(a => a * 0.5)],
 }))

@@ -3,7 +3,7 @@ import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
 import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { Markdown } from '../../../../views/Markdown'
 import { OrbitItemViewProps } from '../../../types'
-import { TaskComment, TaskCommentLike } from './TaskComment'
+import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'
 
 export type TaskLike = {
   body: string
@@ -22,7 +22,9 @@ export function Task(rawProps: OrbitItemViewProps<any> & TaskLike) {
   }
   return (
     <>
-      <Markdown source={body} />
+      <HighlightSection>
+        <Markdown source={body} />
+      </HighlightSection>
       {comments.map((comment, index) => (
         <TaskComment key={index} {...comment} />
       ))}

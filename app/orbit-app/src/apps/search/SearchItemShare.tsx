@@ -12,13 +12,17 @@ import { listRootID, ListsApp } from '../lists/ListsApp'
 
 export const SearchItemShareContext = React.createContext<{ item: Bit }>({ item: null })
 
-export function SearchItemShareProvide(props: { item: Bit; children: any }) {
+export const SearchItemShareProvide = memo(function SearchItemShareProvide(props: {
+  item: Bit
+  children: any
+}) {
+  console.log('render me')
   return (
     <MergeContext Context={SearchItemShareContext} value={{ item: props.item }}>
       {props.children}
     </MergeContext>
   )
-}
+})
 
 export default memo(function SearchItemShare() {
   const itemAction = useContext(SearchItemShareContext)

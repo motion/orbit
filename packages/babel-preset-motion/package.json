@@ -17,7 +17,7 @@
     "@babel/preset-typescript": "7.1.0",
     "@mcro/gloss": "^2.3.10",
     "@mcro/gloss-displaynames": "^2.3.10",
-    "react-hot-loader": "4.6.5",
+    "react-hot-loader": "4.7.0",
     "@babel/plugin-transform-react-display-name": "7.2.0"
   },
   "license": "MIT",

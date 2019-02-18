@@ -1,3 +1,24 @@
+Meeting with kdy:
+
+- Fix adding to lists, set up a nice lists app
+- Fix lists drilling down
+- Show better configuration screen for new app
+- Make a fake "app code folder" with app in it
+  - Have it just symlink to the custom app folder!
+  - Can actually demo app editing in a video :)
+
+---
+
+post demo:
+
+- need to get umed on a solid path towards helping with custom apps
+- then need to work through towards a beta launch end of March
+  - onboarding
+  - app configuration and app polish
+  - p2p story / space story, solid design in place and some implemntation
+
+---
+
 Goal by end of February - deployable alpha 2
 
 Strategy: work up to it "Start to Finish", so basically start with the very first thing they will see, and move towards the last thing they need to use the Alpha.

@@ -86,7 +86,8 @@ const alias = {
   '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
   'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
   react: Path.resolve(cwd, 'node_modules', 'react'),
-  'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+  // 'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+  'react-dom': Path.resolve(buildNodeModules, '@hot-loader/react-dom'),
   'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
   lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
 }

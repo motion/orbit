@@ -1,4 +1,5 @@
 import { AppModel } from '@mcro/models'
+import { View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 import { useModel } from '../../useModel'
@@ -72,7 +73,14 @@ function ListsAppMainFolder(props: AppProps) {
       >
         {props.appConfig.title}
       </ListAppTitle>
-      <OrbitList items={children} placeholder={<SubTitle>No items</SubTitle>} />
+      <OrbitList
+        items={children}
+        placeholder={
+          <View flex={1} alignItems="center" justifyContent="center">
+            <SubTitle>No items</SubTitle>
+          </View>
+        }
+      />
     </>
   )
 }

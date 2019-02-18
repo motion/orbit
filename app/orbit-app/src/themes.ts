@@ -145,6 +145,7 @@ const dark = {
     cardBackground: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
+    panelHeaderBackground: [60, 60, 60, 0.4],
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',

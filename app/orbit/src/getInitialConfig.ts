@@ -9,9 +9,13 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
 
   // find a bunch of ports for us to use
   const ports = await findContiguousPorts(14, isProd ? 3333 : 3001)
+
+  // for electron we use ports dynamically - each new app window consumes a port from this pool
+  // todo: probably 14 is small number, we need to specify optimal number of ports we are going to use
+  const electronPorts = await findContiguousPorts(14, isProd ? 4444 : 4001)
   let config: GlobalConfig
 
-  if (!ports) {
+  if (!ports || !electronPorts) {
     throw new Error('no ports found!')
   }
 
@@ -27,7 +31,6 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
     mediator,
     desktopMediator,
     syncersMediator,
-    electronMediator,
     screenBridge,
     ocrBridge,
     auth,
@@ -66,7 +69,7 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
       authProxy,
       apps,
       syncersMediator,
-      electronMediator,
+      electronMediators: electronPorts,
     },
   }
 

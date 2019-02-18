@@ -28,6 +28,7 @@
     "@mcro/reactron": "^2.3.10",
     "@mcro/stores": "^2.3.10",
     "@mcro/use-store": "*",
+    "@mcro/utils": "^2.3.10",
     "@mcro/orbit-fork-process": "^2.3.10",
     "mobx-react-lite": "1.0.0",
     "reconnecting-websocket": "4.1.10",

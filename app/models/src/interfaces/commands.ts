@@ -1,6 +1,8 @@
 import { Command } from '@mcro/mediator'
 import { Source } from './Source'
 
+export const FallbackServersCountCommand = new Command<number, void>('fallback-servers-count')
+export const RegisterFallbackServerCommand = new Command<void, { port: number }>('register-fallback-server')
 export const SourceRemoveCommand = new Command<void, { sourceId: number }>('source-remove')
 export const SourceForceSyncCommand = new Command<void, { sourceId: number }>('source-force-sync')
 export const SourceForceCancelCommand = new Command<void, { sourceId: number }>(

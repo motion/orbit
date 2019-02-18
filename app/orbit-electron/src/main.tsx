@@ -1,6 +1,11 @@
 import { Logger } from '@mcro/logger'
 import { render } from '@mcro/reactron'
-import { CloseAppCommand, TearAppCommand } from '@mcro/models'
+import {
+  CloseAppCommand,
+  FallbackServersCountCommand,
+  RegisterFallbackServerCommand,
+  TearAppCommand,
+} from '@mcro/models'
 import { Electron } from '@mcro/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
@@ -15,17 +20,21 @@ import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
 import { getGlobalConfig } from '@mcro/config'
 import { TearAppResolver } from './resolver/TearAppResolver'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
+import { Mediator } from './mediator'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 
+  const fallbackServersCount = await Mediator.command(FallbackServersCountCommand)
+  const port = getGlobalConfig().ports.electronMediators[fallbackServersCount]
+
   const mediatorServer = new MediatorServer({
     models: [],
     commands: [TearAppCommand, CloseAppCommand],
     transport: new WebSocketServerTransport({
-      port: getGlobalConfig().ports.electronMediator,
+      port
     }),
     resolvers: [
       TearAppResolver,
@@ -33,6 +42,8 @@ export async function main() {
     ],
   })
   mediatorServer.bootstrap()
+
+  await Mediator.command(RegisterFallbackServerCommand, { port })
 
   // handle our own separate process in development
   if (!IS_SUB_ORBIT && process.env.NODE_ENV === 'development') {

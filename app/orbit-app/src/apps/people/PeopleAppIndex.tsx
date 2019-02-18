@@ -14,11 +14,11 @@ import { AppProps } from '../AppTypes'
 export default function PeopleAppIndex(props: AppProps) {
   // people and query
   const { queryStore } = useStores()
-  const { hasIntegrationFilters, integrationFilters } = queryStore.queryFilters
+  const { integrationFilters } = queryStore.queryFilters
   const { getShareMenuItemProps } = useShareMenu()
 
   let where = null
-  if (hasIntegrationFilters) {
+  if (integrationFilters.length) {
     for (const filter of integrationFilters) {
       if (filter.active) {
         where = where || []

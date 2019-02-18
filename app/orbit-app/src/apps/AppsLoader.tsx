@@ -21,7 +21,9 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   if (!isEqual(new Set(stableKeys.current), sortedKeys)) {
     // we are building this up over time, so once we see an id
     // we always show it in the same order in the DOM
-    stableKeys.current = [...new Set([...stableKeys.current, ...sortedKeys])]
+    stableKeys.current = [...new Set([...stableKeys.current, ...sortedKeys])].filter(id =>
+      props.views.find(x => x.id === id),
+    )
   }
 
   const appViews = stableKeys.current.map(id => {

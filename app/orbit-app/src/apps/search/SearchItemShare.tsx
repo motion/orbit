@@ -16,6 +16,7 @@ export const SearchItemShareProvide = memo(function SearchItemShareProvide(props
   item: Bit
   children: any
 }) {
+  console.log('render me')
   return (
     <MergeContext Context={SearchItemShareContext} value={{ item: props.item }}>
       {props.children}

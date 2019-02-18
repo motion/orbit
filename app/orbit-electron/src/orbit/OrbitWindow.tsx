@@ -161,7 +161,7 @@ class OrbitWindowStore {
 }
 
 export default function OrbitWindow() {
-  const store = useStore(OrbitWindowStore, null, { debug: true })
+  const store = useStore(OrbitWindowStore, null)
   root['OrbitWindowStore'] = store // helper for dev
 
   const appQuery = `/?id=${store.windowID}`

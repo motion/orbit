@@ -7,6 +7,11 @@ FLAGS=$@
 # FLAGS
 #
 
+if [[ "$FLAGS" =~ "--no-gpu" ]]; then
+  echo "DISABLE GPU"
+  export DISABLE_GPU="true"
+fi
+
 if [[ "$FLAGS" =~ "--no-syncers" ]]; then
   echo "DISABLE SYNCERS"
   export DISABLE_SYNCERS="true"

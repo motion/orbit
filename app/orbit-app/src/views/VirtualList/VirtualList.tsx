@@ -130,10 +130,10 @@ class VirtualListStore {
   triggerMeasure = 0
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.allowMeasure /* , always(this.props.items) */],
-    async (_, { when }) => {
+    () => [this.triggerMeasure, this.props.allowMeasure, always(this.props.items)],
+    async (_, { when, sleep }) => {
+      await sleep()
       await when(() => !!this.frameRef)
-
       if (this.cache) {
         await when(() => this.props.allowMeasure !== false)
       }

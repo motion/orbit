@@ -42,9 +42,7 @@ class UseAppStore {
       }
       return next
     },
-    {
-      log: false,
-    },
+    _ => _,
   )
 }
 

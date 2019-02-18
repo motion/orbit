@@ -93,9 +93,11 @@ export class SearchStore {
 
   getRecentItems(query: string): OrbitListItemProps[] {
     // const spaceName = this.stores.spaceStore.activeSpace.name
-    const apps = this.stores.spaceStore.apps.filter(x => x.type !== AppType.search)
+    const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
     const searchedApps =
-      (query && apps.filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)) || []
+      (query && apps.filter(x => ~x.name.toLowerCase().indexOf(query.toLowerCase()))) || []
+
+    console.log('searchedApps', searchedApps)
 
     const appToResult = app => {
       return {
@@ -140,6 +142,7 @@ export class SearchStore {
   }
 
   getQuickResults(query: string) {
+    console.warn('quick results', query)
     // TODO recent history
     return [...this.getRecentItems(query)]
   }
@@ -163,7 +166,7 @@ export class SearchStore {
       let results: OrbitListItemProps[] = []
 
       // if typing, wait a bit
-      const isChangingQuery = this.searchState.query !== query
+      const isChangingQuery = this.state.query !== query
       if (isChangingQuery) {
         // short queries we dont need to wait
         if (query.length > 3) {

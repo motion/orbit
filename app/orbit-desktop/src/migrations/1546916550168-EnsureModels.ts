@@ -95,13 +95,6 @@ export class EnsureModels1546916550168 implements MigrationInterface {
                 },
               },
             },
-            // {
-            //   target: 'app',
-            //   name: 'Topics',
-            //   type: 'topics',
-            //   spaceId: space.id,
-            //   data: {},
-            // },
           ]
           await Promise.all(
             defaultApps.map(app => {

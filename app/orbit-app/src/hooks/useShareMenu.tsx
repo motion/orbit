@@ -7,7 +7,7 @@ import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { useStores } from './useStores'
 
 const getItemShareMenu = memoize((listItem, themeStore) => {
-  const { item } = listItem
+  const item = listItem.item || listItem
   if (item && (item.target === 'bit' || item.target === 'person-bit')) {
     return {
       after: (

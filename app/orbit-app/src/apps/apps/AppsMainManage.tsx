@@ -69,6 +69,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 const AppIconContainer = gloss({
+  height: 200,
   padding: [15, 25],
   alignItems: 'center',
   position: 'relative',
@@ -142,9 +143,6 @@ export default function AppsMainManage() {
       <SelectableGrid
         autoFitColumns
         minWidth={160}
-        style={{
-          gridTemplateRows: 'repeat(1000, 180px, [col-start])',
-        }}
         items={results}
         getItem={getItem}
         distance={10}

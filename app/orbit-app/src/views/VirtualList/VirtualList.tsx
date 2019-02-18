@@ -1,4 +1,4 @@
-import { always, react } from '@mcro/black'
+import { always, cancel, react } from '@mcro/black'
 import { ContextMenu } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
@@ -74,7 +74,7 @@ class SortableList extends Component<any> {
 const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
-  props: VirtualListProps<any>
+  props: VirtualListProps<any> & { items: null }
   windowScrollerRef = createRef<WindowScroller>()
   listRef: List = null
   frameRef: HTMLDivElement = null
@@ -143,11 +143,11 @@ class VirtualListStore {
   runMeasure = react(
     () => [this.triggerMeasure, this.props.allowMeasure, always(this.props.items)],
     async (_, { when, sleep }) => {
+      if (this.props.allowMeasure === false) {
+        throw cancel
+      }
       await sleep()
       await when(() => !!this.frameRef)
-      if (this.cache) {
-        await when(() => this.props.allowMeasure !== false)
-      }
       console.warn('running measure')
 
       if (this.frameRef.clientWidth !== this.width) {
@@ -159,9 +159,21 @@ class VirtualListStore {
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
           fixedWidth: true,
-          keyMapper: this.getKey,
+          // keyMapper: this.getKey,
         })
       }
+    },
+  )
+
+  recomputeHeights = 0
+  runRecomputeHeights = react(
+    () => [this.recomputeHeights],
+    async (_, { when, sleep }) => {
+      await sleep()
+      await when(() => this.props.allowMeasure !== false)
+      console.warn('recomputing heights for', this.props)
+      this.cache.clearAll()
+      this.listRef.recomputeHeights()
     },
   )
 
@@ -228,7 +240,6 @@ export const VirtualListDefaultProps = createContext({
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
-  const ElementCache = useRef(new WeakMap())
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -242,41 +253,38 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
     [frameRef.current],
   )
 
+  useEffect(
+    () => {
+      store.recomputeHeights = Date.now()
+    },
+    [props.items],
+  )
+
   if (!props.items.length) {
     return null
   }
 
-  function getElement(item: Object, index: number) {
-    let next = ElementCache.current.get(item)
-    if (next) return next
-    next = (
-      <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-        <VirtualListItem
-          // key={Math.random()}
-          ItemView={props.ItemView}
-          onSelect={props.onSelect}
-          onOpen={props.onOpen}
-          {...itemProps(props, index)}
-          {...props.itemProps}
-          {...props.getItemProps && props.getItemProps(item, index, props.items)}
-          {...item}
-          index={index}
-          realIndex={index}
-        />
-      </ContextMenu>
-    )
-    ElementCache.current.set(item, next)
-    return next
-  }
-
   function rowRenderer({ key, index, parent, style }) {
     const item = props.items[index]
-    const itemElement = (
+    return (
       <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
-        <div style={style}>{getElement(item, index)}</div>
+        <div style={style}>
+          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
+            <VirtualListItem
+              ItemView={props.ItemView}
+              onSelect={props.onSelect}
+              onOpen={props.onOpen}
+              {...itemProps(props, index)}
+              {...props.itemProps}
+              {...props.getItemProps && props.getItemProps(item, index, props.items)}
+              {...item}
+              index={index}
+              realIndex={index}
+            />
+          </ContextMenu>
+        </div>
       </CellMeasurer>
     )
-    return itemElement
   }
 
   function getList(infiniteProps?) {
@@ -348,9 +356,9 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 // renders are expensive for this component, and especially that because it happens on click
 // this lets us separate out and have the inner just react to props it should
 
-export default function VirtualList({ allowMeasure, ...rawProps }: VirtualListProps<any>) {
+export default function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(rawProps, defaultProps)
   const store = useStore(VirtualListStore, { allowMeasure, ...props })
-  return <VirtualListInner {...props} store={store} />
+  return <VirtualListInner {...props} items={items} store={store} />
 }

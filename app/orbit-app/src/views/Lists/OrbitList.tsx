@@ -68,6 +68,8 @@ export default function OrbitList(props: OrbitListProps) {
 
   const hasItems = !!props.items.length
 
+  console.log('OrbitList.isActive', isActive, props)
+
   return (
     <OrbitHighlightActiveQuery>
       {hasItems && (

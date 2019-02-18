@@ -77,7 +77,7 @@ export default memo(function OrbitNav() {
           width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
-          label: isPinned ? '' : app.type === 'search' ? activeSpaceName : app.name,
+          label: isPinned ? '' : app.type === 'search' && index === 0 ? activeSpaceName : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,

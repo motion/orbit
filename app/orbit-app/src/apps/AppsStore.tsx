@@ -55,6 +55,15 @@ export class AppsStore {
     },
   )
 
+  getViewState(id: string) {
+    return (
+      this.viewsState[id] || {
+        hasIndex: false,
+        hasMain: false,
+      }
+    )
+  }
+
   viewsState = react(
     () => this.appsState,
     appsState => {

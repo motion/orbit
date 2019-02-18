@@ -46,7 +46,7 @@ export function createReaction(
   mobxOptions.fireImmediately = !deferFirstRun
   let id = deferFirstRun ? 1 : 0
   let preventLog = options.log === false
-  let currentValueUnreactive // for dev mode comparing previous value without triggering reaction
+  let currentValueUnreactive: any // for comparing previous value without triggering reaction
   let previousValue: any
   let stopReaction: Function | null = null
   let disposed = false
@@ -104,12 +104,8 @@ export function createReaction(
   config.addSubscription(() => {
     // clear reactionID
     reactionID = null
-    if (disposed) {
-      return
-    }
-    if (stopReaction) {
-      stopReaction()
-    }
+    if (disposed) return
+    if (stopReaction) stopReaction()
     disposed = true
   })
 
@@ -125,7 +121,7 @@ export function createReaction(
 
   const useEffect = (effectFn: EffectCallback) => {
     return new Promise((resolve, reject) => {
-      let cancellation
+      let cancellation: any
       const finish = (success: boolean) => () => {
         cancellation()
         if (success) {
@@ -190,7 +186,7 @@ export function createReaction(
 
   const whenChanged = <A>(condition: () => A, dontCompare?): Promise<A> => {
     let oldVal = condition()
-    let curVal
+    let curVal: any
     return new Promise((resolve, reject) => {
       if (!reactionID) {
         return reject(SHARED_REJECTION_ERROR)
@@ -227,8 +223,8 @@ export function createReaction(
     useEffect,
   }
 
-  function setupReactionFn(reactionFn) {
-    return function reaction(reactValArg) {
+  function setupReactionFn(reactionFn: Function) {
+    return function reaction(reactValArg: any) {
       reset()
       const start = Date.now()
       id = id + 1

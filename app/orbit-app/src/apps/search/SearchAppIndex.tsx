@@ -1,5 +1,4 @@
 import { Popover, View } from '@mcro/ui'
-import { useStoreDebug } from '@mcro/use-store'
 import { flow, memoize } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -11,7 +10,6 @@ import './calendar.css' // theme css file
 import SearchItemShare, { SearchItemShareProvide } from './SearchItemShare'
 
 export default function SearchAppIndex(props: AppProps) {
-  useStoreDebug()
   const { searchStore, themeStore } = useStores()
   const items = searchStore.results
 

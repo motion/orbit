@@ -1,7 +1,7 @@
 import { react, useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { useHook, useStore } from '@mcro/use-store'
-import React, { memo, useMemo, useState } from 'react'
+import React, { memo, useMemo } from 'react'
 import { AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
@@ -24,18 +24,15 @@ export default memo(function OrbitMain() {
 const OrbitMainSubPane = memo(({ type, id }: Pane) => {
   const { sidebarStore, paneManagerStore } = useStoresSimple()
   const { appsStore } = useStores()
-  const { hasMain, hasIndex } = appsStore.viewsState[id] ||
-    appsStore.viewsState[type] || {
-      hasMain: false,
-      hasIndex: false,
-    }
-  const [left, setLeft] = useState(0)
+  const { hasMain } = appsStore.getViewState(id)
 
-  useReaction(() => {
+  const left = useReaction(() => {
+    // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
+    const { hasIndex } = appsStore.viewsState[id] || { hasIndex: false }
     const isActive = paneManagerStore.activePaneLowPriority.id === id
     const next = hasIndex ? sidebarStore.width : 0
     if (isActive && next !== left) {
-      setLeft(next)
+      return next
     }
   })
 

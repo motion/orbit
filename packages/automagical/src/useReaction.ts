@@ -45,7 +45,10 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
       addSubscription(dispose) {
         subscriptions.add({ dispose })
       },
-      setValue: setState,
+      setValue: next => {
+        if (next === undefined) return
+        setState(next)
+      },
       getValue: () => state,
     })
 

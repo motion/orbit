@@ -1,7 +1,6 @@
-import { react } from '@mcro/black'
+import { react, useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { useHook, useStore } from '@mcro/use-store'
-import { useObserver } from 'mobx-react-lite'
 import React, { memo, useMemo, useState } from 'react'
 import { AppType } from '../../apps/AppTypes'
 import { AppView } from '../../apps/AppView'
@@ -32,7 +31,7 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
     }
   const [left, setLeft] = useState(0)
 
-  useObserver(() => {
+  useReaction(() => {
     const isActive = paneManagerStore.activePaneLowPriority.id === id
     const next = hasIndex ? sidebarStore.width : 0
     if (isActive && next !== left) {

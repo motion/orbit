@@ -1,12 +1,6 @@
+import { CurrentComponent } from '@mcro/automagical'
 import { throttle } from 'lodash'
 import { config } from './configure'
-
-export interface DebugComponent {
-  (): any
-  renderName: string
-  renderId: number
-  __debug?: boolean
-}
 
 type UseStoreDebugEvent =
   | {
@@ -15,12 +9,12 @@ type UseStoreDebugEvent =
       oldValue: any
       newValue: any
       store: any
-      component: DebugComponent
+      component: CurrentComponent
     }
   | {
       type: 'render'
       store: any
-      component: DebugComponent
+      component: CurrentComponent
       reactiveKeys: Set<string>
     }
   | {
@@ -33,12 +27,12 @@ type UseStoreDebugEvent =
   | {
       type: 'unmount'
       store: any
-      component: DebugComponent
+      component: CurrentComponent
     }
   | {
       type: 'mount'
       store: any
-      component: DebugComponent
+      component: CurrentComponent
     }
   | {
       type: 'state'
@@ -58,7 +52,7 @@ const sendStateUpdate = throttle(() => {
 })
 
 export function debugEmit(event: UseStoreDebugEvent, options?: { debug?: boolean }) {
-  const component: DebugComponent = event['component']
+  const component: CurrentComponent = event['component']
   if (component) {
     if (component.__debug) {
       console.log(

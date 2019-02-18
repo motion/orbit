@@ -1,9 +1,9 @@
+import { useCurrentComponent } from '@mcro/automagical'
 import { get, isEqual } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
-import { getCurrentComponent } from './useStore'
 
 type TrackableStoreOptions = {
   component: any
@@ -129,7 +129,7 @@ export function useTrackableStore<A>(
   rerenderCb: Function,
   opts?: TrackableStoreOptions,
 ): A {
-  const component = getCurrentComponent()
+  const component = useCurrentComponent()
   const trackableStore = useRef({
     store: null,
     track: null,

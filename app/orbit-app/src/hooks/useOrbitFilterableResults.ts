@@ -1,4 +1,4 @@
-import { useObserver } from 'mobx-react-lite'
+import { useReaction } from '@mcro/black'
 import { useCallback, useState } from 'react'
 import { FilterableProps, useFilterableResults } from './pureHooks/useFilterableResults'
 import { useStoresSimple } from './useStores'
@@ -9,7 +9,7 @@ export function useOrbitFilterableResults<A>(props: FilterableProps<A>): A[] {
   const { appStore } = useStoresSimple()
   const [activeQuery, setActiveQuery] = useState('')
 
-  useObserver(() => {
+  useReaction(() => {
     if (appStore.activeQuery !== activeQuery) {
       setActiveQuery(appStore.activeQuery)
     }

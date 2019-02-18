@@ -1,5 +1,5 @@
+import { useReaction } from '@mcro/black'
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
-import { useObserver } from 'mobx-react-lite'
 import React, { useState } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { Icon } from '../../views/Icon'
@@ -16,7 +16,7 @@ export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
   const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
 
-  useObserver(() => {
+  useReaction(() => {
     const next = paneManagerStore.activePane.type
     if (next !== activePaneKey) {
       setActivePaneKey(next)

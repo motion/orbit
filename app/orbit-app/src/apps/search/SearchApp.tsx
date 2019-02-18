@@ -16,6 +16,8 @@ export function SearchApp(props: AppProps) {
   const searchStore = useStore(SearchStore, { paneManagerStore })
   const id = useRef(Math.random())
 
+  console.warn('waht.......')
+
   useSearch(state => {
     console.log('got', state, id.current)
     searchStore.setSearchState(state)

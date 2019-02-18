@@ -174,16 +174,8 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const component = useCurrentComponent()
     const storesRef = useRef(null)
 
-    // debounce all the different store renders
-    let tm = null
-    const rerender = () => {
-      clearImmediate(tm)
-      tm = setImmediate(render)
-    }
-
     useEffect(() => {
       return () => {
-        clearImmediate(tm)
         for (const { dispose } of stateRef.current.values()) {
           dispose()
         }
@@ -207,11 +199,11 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
             }
             const next =
               process.env.NODE_ENV === 'development'
-                ? setupTrackableStore(store, rerender, {
+                ? setupTrackableStore(store, render, {
                     ...options,
                     component,
                   })
-                : setupTrackableStore(store, rerender)
+                : setupTrackableStore(store, render)
 
             // track immediately because it will be missed by track block below
             next.track()

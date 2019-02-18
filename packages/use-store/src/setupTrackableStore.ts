@@ -4,6 +4,7 @@ import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
 import { mobxProxyWorm } from './mobxProxyWorm'
+import { queueUpdate, removeUpdate } from './queueUpdate'
 
 type TrackableStoreOptions = {
   component: any
@@ -11,17 +12,6 @@ type TrackableStoreOptions = {
 }
 
 const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
-
-const nextRenders = new Set()
-let tm = null
-function renderComponent(rerender: Function) {
-  clearImmediate(tm)
-  nextRenders.add(rerender)
-  tm = setImmediate(() => {
-    ;[...nextRenders].forEach(fn => fn())
-    nextRenders.clear()
-  })
-}
 
 export function setupTrackableStore(
   store: any,
@@ -63,7 +53,7 @@ export function setupTrackableStore(
             get(store, key)
           })
         })
-        renderComponent(update)
+        queueUpdate(update)
       }
     })
   })
@@ -76,7 +66,7 @@ export function setupTrackableStore(
         const key = change['name']
         if (reactiveKeys.has(key)) {
           if (debug) console.log(name, 'render via', `${storeName}.${key}`)
-          renderComponent(update)
+          queueUpdate(update)
         }
       }),
     )
@@ -87,7 +77,7 @@ export function setupTrackableStore(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
           if (debug) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
-          renderComponent(update)
+          queueUpdate(update)
         }
       }),
     )
@@ -116,6 +106,7 @@ export function setupTrackableStore(
       }
     },
     dispose() {
+      removeUpdate(update)
       reaction.dispose()
       for (const observer of observers) {
         observer()
@@ -141,8 +132,8 @@ export function useTrackableStore<A>(
   }
   useEffect(() => {
     return () => {
-      const bye = trackableStore.current.dispose
-      if (bye) bye()
+      const { dispose } = trackableStore.current
+      dispose()
     }
   }, [])
   const { store, track, untrack } = trackableStore.current

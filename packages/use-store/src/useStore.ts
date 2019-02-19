@@ -100,9 +100,9 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
 
 // allows us to use instantiated or non-instantiated stores
 // sets up tracking so the component auto re-renders
-export function useStore<P, A extends { props?: P } | any>(
-  Store: (new () => A) | A,
-  props?: P,
+export function useStore<A>(
+  Store: { new (): A } | A,
+  props?: A extends { props: infer R } ? R : undefined,
   options?: UseStoreOptions,
 ): A {
   const component = useCurrentComponent()
@@ -135,12 +135,12 @@ export function useStore<P, A extends { props?: P } | any>(
 }
 
 // no tracking
-export function useStoreSimple<P, A extends { props?: P } | any>(
-  Store: new () => A,
-  props?: P,
+export function useStoreSimple<A>(
+  Store: { new (): A } | A,
+  props?: A extends { props: infer R } ? R : undefined,
   options?: UseStoreOptions,
 ): A {
-  return useStore(Store, props, { ...options, react: false })
+  return useStore(Store, props as any, { ...options, react: false })
 }
 
 function isSourceEqual(oldStore: any, newStore: new () => any) {

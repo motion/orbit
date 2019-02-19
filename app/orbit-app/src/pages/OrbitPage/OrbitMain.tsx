@@ -74,7 +74,7 @@ class OrbitPageMainStore {
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ type, id }: Pane) => {
   const { orbitStore } = useStores()
-  const { appConfig, key } = useStore(OrbitPageMainStore, { id })
+  const { appConfig, key } = useStore(OrbitPageMainStore, { id, type })
   return (
     <OrbitMainContainer isTorn={orbitStore.isTorn}>
       <AppView

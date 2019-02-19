@@ -20,18 +20,17 @@ import {
   CosalSaliencyModel,
   CosalTopicsModel,
   CosalTopWordsModel,
-  FallbackServersCountCommand,
   GithubRepositoryModel,
   GithubSourceBlacklistCommand,
   JobEntity,
   JobModel,
+  NewFallbackServerPortCommand,
   OpenCommand,
   PeopleNearTopicModel,
   PersonBitEntity,
   PersonBitModel,
   PersonEntity,
   PersonModel,
-  RegisterFallbackServerCommand,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
@@ -90,9 +89,8 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
-import { RegisterFallbackServerResolver } from './resolvers/RegisterFallbackServerResolver'
-import { FallbackServersCountResolver } from './resolvers/FallbackServersCountResolver'
 import { WebServer } from './WebServer'
+import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 
 export class OrbitDesktopRoot {
   // public
@@ -280,8 +278,7 @@ export class OrbitDesktopRoot {
         CosalTopWordsModel,
       ],
       commands: [
-        FallbackServersCountCommand,
-        RegisterFallbackServerCommand,
+        NewFallbackServerPortCommand,
         SourceSaveCommand,
         SourceRemoveCommand,
         GithubSourceBlacklistCommand,
@@ -308,8 +305,7 @@ export class OrbitDesktopRoot {
         ]),
         SourceRemoveResolver,
         SourceSaveResolver,
-        RegisterFallbackServerResolver,
-        FallbackServersCountResolver,
+        NewFallbackServerPortResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),

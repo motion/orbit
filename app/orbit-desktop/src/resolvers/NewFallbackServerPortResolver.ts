@@ -1,12 +1,13 @@
-import { Logger } from '@mcro/logger'
 import { MediatorServer, resolveCommand, WebSocketClientTransport } from '@mcro/mediator'
-import { RegisterFallbackServerCommand } from '@mcro/models'
+import { NewFallbackServerPortCommand } from '@mcro/models'
 import root from 'global'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { Logger } from '@mcro/logger'
 
-const log = new Logger('command:register-fallback-server')
+const log = new Logger('command:new-fallback-server-port')
 
-export const RegisterFallbackServerResolver = resolveCommand(RegisterFallbackServerCommand, ({ port }) => {
+export const NewFallbackServerPortResolver = resolveCommand(NewFallbackServerPortCommand, () => {
+  const port = (root.mediatorServer as MediatorServer).options.fallbackClient.options.transports.length
   log.info('registering new port', port)
   ;(root.mediatorServer as MediatorServer).options.fallbackClient.options.transports.push(new WebSocketClientTransport(
     'electron',
@@ -15,4 +16,5 @@ export const RegisterFallbackServerResolver = resolveCommand(RegisterFallbackSer
       minReconnectionDelay: 1,
     }),
   ))
+  return port
 })

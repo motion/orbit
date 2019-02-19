@@ -1,4 +1,3 @@
-import { SaveOptions } from '@mcro/mediator'
 import { AppBit, AppModel } from '@mcro/models'
 import { Button, Row, Theme, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
@@ -70,11 +69,7 @@ function CreateAppMain(props: AppProps) {
       spaceId: activeSpace.id,
     }
     console.log('creating new app', app)
-    // TODO @umed it complains on saving an app here
-    // because colors: string[] not assignable to colors: string
-    // not sure why, but can you check into i?
-    // @ts-ignore
-    save(AppModel, app as SaveOptions<App>)
+    save(AppModel, app)
     Actions.previousTab()
   }
 

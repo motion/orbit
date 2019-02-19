@@ -40,7 +40,7 @@ export class QueryStore {
   })
 
   willUnmount() {
-    // TODO @umed can you check why `automagical.ts` isn't adding the dispose() to type here?
+    // TODO decorators don't change the type of classes, need to fix compiler errors somehow
     // @ts-ignore
     this.nlpStore.dispose()
     // @ts-ignore

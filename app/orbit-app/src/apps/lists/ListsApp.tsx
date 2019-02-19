@@ -64,6 +64,6 @@ ListsApp.api = {
       }
     }
 
-    save(AppModel, app as any) // TODO @umed type
+    save(AppModel, app)
   },
 }

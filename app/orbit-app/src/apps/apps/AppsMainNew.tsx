@@ -1,4 +1,3 @@
-import { AppBit } from '@mcro/models'
 import { Popover, Row, View } from '@mcro/ui'
 import React, { useEffect, useRef } from 'react'
 import { useStores } from '../../hooks/useStores'
@@ -35,8 +34,7 @@ export default function AppsMainNew() {
           height={250}
           target={
             <View>
-              {/* TODO @umed type... */}
-              <AppIcon removeStroke app={app as AppBit} size={48} />
+              <AppIcon removeStroke app={app} size={48} />
             </View>
           }
           overflowY="auto"

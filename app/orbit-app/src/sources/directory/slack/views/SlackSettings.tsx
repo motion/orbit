@@ -73,8 +73,6 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
           ...source.data,
           channels: freshApiChannels,
         }
-        // TODO @umed commented out because this is deleting spaces property
-        // todo: check what does "deleting spaces property" means
         save(SourceModel, {
           id: source.id,
           data: source.data,

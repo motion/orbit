@@ -23,19 +23,19 @@ export type ReactVal =
 
 export type ReactionFn<A, B> = ((a: A, helpers: ReactionHelpers) => B | Promise<B>)
 
-// single reaction "autorun" style
-// react(() => 1, { ...opts })
-export function react<A extends ReactVal, B>(
-  a: ReactionFn<A, B>,
-  b?: ReactionOptions,
-): UnwrapObservable<B>
-
 // derive first, then react "reaction" style
 // react(() => now(), t => t - 1000, { ...opts })
 export function react<A extends ReactVal, B>(
   a: (() => A),
   b?: ReactionFn<A, B>,
   c?: ReactionOptions,
+): UnwrapObservable<B>
+
+// single reaction "autorun" style
+// react(() => 1, { ...opts })
+export function react<A extends ReactVal, B>(
+  a: ReactionFn<A, B>,
+  b?: ReactionOptions,
 ): UnwrapObservable<B>
 
 export function react(a: any, b?: any, c?: any) {

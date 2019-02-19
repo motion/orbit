@@ -1,6 +1,8 @@
 import { ensure, react } from '@mcro/black'
+import { AppModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
+import { observeOne } from '../mediator'
 import { AppProps } from './AppTypes'
 
 export class AppStore {
@@ -38,6 +40,12 @@ export class AppStore {
       deferFirstRun: true,
     },
   )
+
+  app = react(() => {
+    const numId = +this.id
+    ensure('valid id', this.id === `${numId}`)
+    return observeOne(AppModel, { args: { where: { id: numId } } })
+  })
 
   get nlp() {
     return this.stores.queryStore.nlpStore.nlp

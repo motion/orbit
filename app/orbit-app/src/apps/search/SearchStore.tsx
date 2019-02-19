@@ -6,7 +6,6 @@ import React from 'react'
 import { SearchState } from '../../hooks/useSearch'
 import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany } from '../../mediator'
-import { PaneManagerStore } from '../../stores/PaneManagerStore'
 import { MarkType } from '../../stores/QueryStore/types'
 import { AppIcon } from '../../views/AppIcon'
 import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
@@ -21,9 +20,6 @@ type SearchResults = {
 }
 
 export class SearchStore {
-  props: {
-    paneManagerStore?: PaneManagerStore
-  }
   stores = useHook(useStoresSimple)
   searchState: SearchState | null = null
 
@@ -91,7 +87,14 @@ export class SearchStore {
     }
   }
 
-  getRecentItems(query: string): OrbitListItemProps[] {
+  getApps(query: string): OrbitListItemProps[] {
+    // only show apps search results when on home
+    const { appStore } = this.stores
+    if (appStore && appStore.app && appStore.app.pinned !== true) {
+      console.warn('this should check editable but its not being set in ensureModels')
+      return []
+    }
+
     // const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
     const searchedApps =
@@ -133,7 +136,7 @@ export class SearchStore {
           title: `Create new app`,
         },
         onOpen: () => {
-          this.props.paneManagerStore.setActivePaneByType(`createApp`)
+          this.stores.paneManagerStore.setActivePaneByType(`createApp`)
         },
       },
     ]
@@ -141,7 +144,7 @@ export class SearchStore {
 
   getQuickResults(query: string) {
     // TODO recent history
-    return [...this.getRecentItems(query)]
+    return [...this.getApps(query)]
   }
 
   get results() {
@@ -152,11 +155,14 @@ export class SearchStore {
     () => [
       this.stores.spaceStore.activeSpace.id,
       this.activeQuery,
+      this.stores.appStore.app,
       this.stores.spaceStore.apps.map(x => x.id).join(' '),
     ],
-    async ([spaceId, query], { when, setValue }): Promise<SearchResults> => {
-      if (this.props.paneManagerStore) {
-        await when(() => this.props.paneManagerStore.activePane.type === 'search')
+    async ([spaceId, query, app], { when, setValue }): Promise<SearchResults> => {
+      ensure('app', !!app)
+
+      if (this.stores.paneManagerStore) {
+        await when(() => this.stores.paneManagerStore.activePane.type === 'search')
       }
 
       // RESULTS

@@ -37,7 +37,7 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
 
   useEffect(() => {
     const subscriptions = new CompositeDisposable()
-    const name = `${component.renderName} [${component.renderId}] useReaction`
+    const name = `${component.renderName} useReaction`
 
     createReaction(reaction, derive, opts, {
       name,

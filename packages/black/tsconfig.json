@@ -7,5 +7,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../automagical" }, { "path": "../decor" }, { "path": "../helpers" }]
+  "references": [{ "path": "../automagical" }, { "path": "../helpers" }]
 }

@@ -2,6 +2,9 @@
   "name": "@mcro/playground",
   "private": true,
   "version": "2.3.10",
+  "scripts": {
+    "start": "mcro-build --entry ./src/index --port 5001 --target web"
+  },
   "dependencies": {
     "@babel/runtime": "7.2.0",
     "lodash": "^4.17.10",

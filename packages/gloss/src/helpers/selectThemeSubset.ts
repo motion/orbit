@@ -19,10 +19,12 @@ export function selectThemeSubset(
   }
 
   // read from cache
-  if (cacheKey.has(theme)) {
-    const isCached = cacheKey.get(theme).has(prefix)
-    if (isCached) {
-      return cacheVal.get(theme)[prefix]
+  let key = cacheKey.get(theme)
+  if (key) {
+    const isCached = key.has(prefix)
+    const cached = cacheVal.get(theme)
+    if (isCached && cached) {
+      return cached[prefix]
     }
   }
 
@@ -48,11 +50,16 @@ export function selectThemeSubset(
   if (!cacheKey.get(theme)) {
     cacheKey.set(theme, new Set())
   }
-  cacheKey.get(theme).add(prefix)
+
+  key = cacheKey.get(theme)
+  if (key) key.add(prefix)
+
   if (!cacheVal.get(theme)) {
     cacheVal.set(theme, {})
   }
-  cacheVal.get(theme)[prefix] = fullTheme
+
+  const val = cacheVal.get(theme)
+  if (val) val[prefix] = fullTheme
 
   return fullTheme
 }

@@ -14,7 +14,7 @@ import { KeyMapper, OnScroll, RowRenderer } from './types'
 
 type RowMeasureProps = {
   id: string
-  onMount: (key: string, ref: Text | Element | undefined) => void
+  onMount: (key: string, ref: Text | Element | null) => void
   children: any
 }
 
@@ -104,7 +104,9 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
   }
 
   setContainerRef = (ref?: HTMLDivElement) => {
-    this.containerRef = ref
+    if (ref) {
+      this.containerRef = ref
+    }
   }
 
   getContainerRef(): HTMLDivElement | null {
@@ -323,7 +325,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
 
   render() {
     // add elements to be measured
-    const measureChildren = []
+    const measureChildren: JSX.Element[] = []
     for (const [key, value] of this.measureQueue) {
       measureChildren.push(
         <RowMeasure key={key} id={key} onMount={this.onRowMeasured}>
@@ -333,7 +335,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
 
     // add visible rows
-    const children = []
+    const children: Object[] = []
     for (let i = this.state.startIndex; i <= this.state.endIndex; i++) {
       const pos = this.positions.get(i)
       if (pos == null) {

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
-export type InputProps = React.HTMLProps<'input'> &
+export type InputProps = React.HTMLProps<HTMLInputElement> &
   SizedSurfaceProps & {
     sync?: { get: () => any; set: (a: any) => void }
     onEnter?: Function
@@ -63,6 +63,17 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
     }
   }
 
+  onKeyDown = e => {
+    if (e.keyCode === 13) {
+      if (this.props.onEnter) {
+        this.props.onEnter(e)
+      }
+    }
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e)
+    }
+  }
+
   syncSet = e => {
     if (this.props.sync) {
       this.props.sync.set(e.target.value)
@@ -70,7 +81,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
   }
 
   render() {
-    const { sync, onChange, value, forwardRef, uiContext, ...props } = this.props
+    const { sync, onChange, value, forwardRef, uiContext, className, ...props } = this.props
     const finalProps = {} as InputProps
     if (sync) {
       finalProps.value = sync.get()
@@ -78,6 +89,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
     }
     return (
       <SizedSurface
+        className={`ui-input ${className || ''}`}
         maxWidth="100%"
         alignItems="center"
         flexFlow="row"
@@ -89,6 +101,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
         noInnerElement
         glint={false}
         borderWidth={1}
+        onKeyDown={this.onKeyDown}
         {...{
           value,
           onChange,

@@ -1,20 +1,20 @@
-import { AppModel } from '@mcro/models';
-import { arrayMove } from '@mcro/react-sortable-hoc';
-import { Absolute, Button, Input, Panel, PassProps, Row } from '@mcro/ui';
-import { flow } from 'lodash';
-import React, { useCallback } from 'react';
-import { getTargetValue } from '../../helpers/getTargetValue';
-import { preventDefault } from '../../helpers/preventDefault';
-import { useStores } from '../../hooks/useStores';
-import { save } from '../../mediator';
-import { BorderBottom } from '../../views/Border';
-import SelectableList from '../../views/Lists/SelectableList';
-import SelectableTreeList from '../../views/Lists/SelectableTreeList';
-import { AppProps } from '../AppTypes';
-import { loadListItem } from './helpers';
-import { ListsApp } from './ListsApp';
-import { ListStore } from './ListStore';
-import { ListAppDataItem } from './types';
+import { AppModel } from '@mcro/models'
+import { arrayMove } from '@mcro/react-sortable-hoc'
+import { Absolute, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
+import { flow } from 'lodash'
+import React, { useCallback } from 'react'
+import { getTargetValue } from '../../helpers/getTargetValue'
+import { preventDefault } from '../../helpers/preventDefault'
+import { useStores } from '../../hooks/useStores'
+import { save } from '../../mediator'
+import { BorderBottom } from '../../views/Border'
+import SelectableList from '../../views/Lists/SelectableList'
+import SelectableTreeList from '../../views/Lists/SelectableTreeList'
+import { AppProps } from '../AppTypes'
+import { loadListItem } from './helpers'
+import { ListsApp } from './ListsApp'
+import { ListStore } from './ListStore'
+import { ListAppDataItem } from './types'
 
 export function ListsAppIndex(_: AppProps) {
   return (
@@ -32,7 +32,6 @@ export function ListsAppIndex(_: AppProps) {
 function ListCurrentFolder() {
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
-  console.log('rendering with', items)
 
   const getContextMenu = useCallback(index => {
     return [
@@ -113,7 +112,9 @@ function ListAdd() {
           getTargetValue,
           listStore.setQuery,
         )}
-        onEnter={() => addFolder(listStore)}
+        onEnter={() => {
+          addFolder(listStore)
+        }}
         flex={1}
         placeholder="Add..."
       />

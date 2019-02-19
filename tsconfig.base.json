@@ -8,7 +8,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strictNullChecks": false,
-    "strictFunctionTypes": true,
+    "strictFunctionTypes": false,
     "removeComments": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,

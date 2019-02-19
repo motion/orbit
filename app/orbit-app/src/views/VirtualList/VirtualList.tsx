@@ -1,29 +1,14 @@
-import { always, cancel, react } from '@mcro/black'
-import { ContextMenu } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import { MenuItem } from 'electron'
-import React, {
-  Component,
-  createContext,
-  createRef,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react'
-import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc'
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  InfiniteLoader,
-  List,
-  WindowScroller,
-} from 'react-virtualized'
-import { useResizeObserver } from '../../hooks/useResizeObserver'
-import { GenericComponent } from '../../types'
-import { HandleSelection } from '../ListItems/ListItem'
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
+import { always, cancel, react } from '@mcro/black';
+import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc';
+import { ContextMenu } from '@mcro/ui';
+import { useStore } from '@mcro/use-store';
+import { MenuItem } from 'electron';
+import React, { Component, createContext, createRef, memo, useCallback, useContext, useEffect, useRef } from 'react';
+import { CellMeasurer, CellMeasurerCache, InfiniteLoader, List, WindowScroller } from 'react-virtualized';
+import { useResizeObserver } from '../../hooks/useResizeObserver';
+import { GenericComponent } from '../../types';
+import { HandleSelection } from '../ListItems/ListItem';
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem';
 
 // for some reason memo doesnt work but this does???
 export const simpleEqual = (a, b) => {

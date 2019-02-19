@@ -1,13 +1,8 @@
-import { Grid, View } from '@mcro/gloss'
-import { ViewProps } from '@mcro/ui'
-import React from 'react'
-import {
-  SortableContainer,
-  SortableContainerProps,
-  SortableElement,
-  SortableElementProps,
-} from 'react-sortable-hoc'
-import { isRightClick } from '../helpers/isRightClick'
+import { Grid, View } from '@mcro/gloss';
+import { SortableContainer, SortableContainerProps, SortableElement, SortableElementProps } from '@mcro/react-sortable-hoc';
+import { ViewProps } from '@mcro/ui';
+import React from 'react';
+import { isRightClick } from '../helpers/isRightClick';
 
 export type GetGridItem<A> = (item: A, index: number) => any
 export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>

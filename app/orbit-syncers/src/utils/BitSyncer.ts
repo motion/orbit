@@ -6,7 +6,7 @@ import { chunk } from 'lodash'
 import { getManager, getRepository } from 'typeorm'
 import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 import { Mediator } from '../mediator'
-import { CosalTopWordsModel, SlackBitData } from '@mcro/models/_'
+import { CosalTopWordsModel, SlackBitData } from '@mcro/models/'
 
 /**
  * Sync Bits options.

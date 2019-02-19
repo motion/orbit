@@ -66,9 +66,6 @@ export class ListStore {
   }
 
   searchResults = react(
-    // TODO @umed, this type regressed for some reason
-    // see how [query, space] are both intersected? it should pick up their real type
-    // the definition is in `react.ts`, notice ReactionFn. It *was* working before
     () => [this.query, this.stores.spaceStore.activeSpace],
     async ([query, space], { sleep }) => {
       ensure('space', !!space)

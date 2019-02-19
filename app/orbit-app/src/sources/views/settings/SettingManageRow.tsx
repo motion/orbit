@@ -1,26 +1,24 @@
-import {
-  Source,
-  SourceForceCancelCommand,
-  SourceForceSyncCommand,
-  SourceRemoveCommand,
-} from '@mcro/models'
+import { Source, SourceForceCancelCommand, SourceForceSyncCommand, SourceRemoveCommand } from '@mcro/models'
 import { Row, SegmentedRow, Text, View } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/appActions/AppActions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
-import { command } from '../../../mediator'
+import { command, loadOne } from '../../../mediator'
 import { getAppFromSource } from '../../../stores/SourcesStore'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { ManageSmartSync } from './ManageSmartSync'
+import { SourceModel } from '@mcro/models/_'
 
 const handleRefresh = async (sourceId: number) => {
-  command(SourceForceSyncCommand, {
-    sourceId,
-  })
+  const source = await loadOne(SourceModel, null)
+  console.log(source)
+  // command(SourceForceSyncCommand, {
+  //   sourceId,
+  // })
   // command(TearAppCommand).then(() => {
   //   console.log('success tear')
   // })

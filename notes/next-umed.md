@@ -5,18 +5,15 @@ NEXT
 
 client:
 
-- [ ] solution for multiple mediators, seems like one works but if i launch two apps i get another error
-
-- [ ] look at some // TODO @umed and see if you can fix up some types
-
-- [ ] can you make useStore(Store, { ...props }), the "props" object accept types properly, see useStore.ts and see example usage in many places, like ListsApp.tsx and ListStore.ts
-
-- [ ] have the electron process accept mediator commands -- did you do this already?
+- [x] solution for multiple mediators, seems like one works but if i launch two apps i get another error
+- [x] look at some // TODO @umed and see if you can fix up some types
+- [x] can you make useStore(Store, { ...props }), the "props" object accept types properly, see useStore.ts and see example usage in many places, like ListsApp.tsx and ListStore.ts
+- [x] have the electron process accept mediator commands -- did you do this already?
 
 - settings panes fixes:
 
-  - [ ] i still see flickering/slow loading for slack settings, is it really using the model?
-  - [ ] settings pane are loading/reloading their content every time
+  - [x] i still see flickering/slow loading for slack settings, is it really using the model?
+  - [x] settings pane are loading/reloading their content every time
     - problem: slack/github have to load the table content every time you look @ them
     - solution:
       - new generic model prop Source.data
@@ -45,7 +42,7 @@ client:
 
 - search:
 
-  - [ ] 🐛 People aren't returning from the new SearchResult resolver, we should join in a summary of people:
+  - [x] 🐛 People aren't returning from the new SearchResult resolver, we should join in a summary of people:
     - have three people joined (just name + avatar)
     - have a count of the total people
 
@@ -55,7 +52,7 @@ client:
 
   - [ ] you can add the same exact integration twice, lets prevent that
   - slack:
-    - [ ] partial re-sync, re-syncs doing a lot of work, slow down amt of resync too
+    - [x] partial re-sync, re-syncs doing a lot of work, slow down amt of resync too
     - [ ] seems like People arent showing the slack conversations on their profile
     - [ ] crawler doesn't seem to handle links in slack for me, it was timing out / not syncing
   - github:

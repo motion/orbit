@@ -60,8 +60,6 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
           ...source.data,
           repositories: freshApiRepositories,
         }
-        // TODO @umed commented out because this is deleting spaces property
-        // todo: check what does "deleting spaces property" means
         save(SourceModel, {
           id: source.id,
           data: source.data

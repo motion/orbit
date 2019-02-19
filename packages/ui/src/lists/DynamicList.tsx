@@ -9,8 +9,8 @@ import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { Component, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import { ResizeSensor } from './helpers/ResizeSensor'
-import { KeyMapper, OnScroll, RowRenderer } from './types'
+import { ResizeSensor } from '../helpers/ResizeSensor'
+import { KeyMapper, OnScroll, RowRenderer } from '../types'
 
 type RowMeasureProps = {
   id: string

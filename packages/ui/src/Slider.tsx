@@ -1,7 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import { View } from '@mcro/ui'
+import { gloss, View } from '@mcro/gloss'
 import * as React from 'react'
-import { useResizeObserver } from '../hooks/useResizeObserver'
+import { useResizeObserver } from './hooks/useResizeObserver'
 
 type SliderProps = {
   curFrame: number
@@ -12,7 +11,7 @@ type SliderProps = {
   transition?: string
 }
 
-export default React.memo(function Slider(props: SliderProps) {
+export const Slider = React.memo(function Slider(props: SliderProps) {
   const {
     curFrame = 0,
     children,

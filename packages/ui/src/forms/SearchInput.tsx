@@ -4,9 +4,9 @@ import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { colors } from '../helpers/colors'
 import { Icon } from '../Icon'
-import { FilterToken } from '../table/FilterToken'
-import { TableInput } from '../table/TableInput'
-import { Filter } from '../table/types'
+import { FilterToken } from '../tables/FilterToken'
+import { TableInput } from '../tables/TableInput'
+import { Filter } from '../tables/types'
 
 export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
   CSSPropertySet & {

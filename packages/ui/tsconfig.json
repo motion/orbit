@@ -6,9 +6,10 @@
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../black" },
     { "path": "../color" },
     { "path": "../gloss" },
-    { "path": "../fast-compare" }
+    { "path": "../fast-compare" },
+    { "path": "../helpers" },
+    { "path": "../use-store" }
   ]
 }

@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { InputProps, Row, Text, TextProps, View } from '@mcro/ui'
+import { HorizontalSpace, InputProps, Row, Text, TextProps, View } from '@mcro/ui'
 import * as React from 'react'
 import { Input } from './Input'
 
@@ -82,7 +82,7 @@ export const CheckBoxRow = ({
   children,
   checked,
   onChange,
-}: InputProps) => (
+}: InputProps & { onChange: (checked: boolean) => any }) => (
   <FormTableRow>
     <FormTableLabel>
       <Label htmlFor={name}>{children}</Label>
@@ -116,21 +116,6 @@ export const HorizontalScroll = gloss(Row, {
   alignItems: 'center',
   '&::-webkit-scrollbar': {
     display: 'none',
-  },
-})
-
-export const HorizontalSpace = gloss({
-  width: 10,
-  small: {
-    width: 6,
-  },
-})
-
-export const VerticalSpace = gloss<{ small?: boolean }>({
-  pointerEvents: 'none',
-  height: 16,
-  small: {
-    height: 8,
   },
 })
 

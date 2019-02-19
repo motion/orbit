@@ -1,5 +1,5 @@
 import { differenceInSeconds, formatRelative } from 'date-fns'
-import { Component } from 'react'
+import React from 'react'
 
 type TimeAgoProps = {
   date?: number | Date
@@ -9,7 +9,7 @@ type TimeAgoProps = {
   timeInterval?: number
 }
 
-export class TimeAgo extends Component<TimeAgoProps> {
+export class TimeAgo extends React.Component<TimeAgoProps> {
   static defaultProps = {
     date: null,
     element: 'p',

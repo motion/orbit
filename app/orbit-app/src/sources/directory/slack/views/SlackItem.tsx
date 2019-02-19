@@ -1,7 +1,7 @@
 import { SlackBitDataMessage } from '@mcro/models'
+import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
 import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
-import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitItemViewProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
 
@@ -34,7 +34,7 @@ export function SlackItem(rawProps: OrbitItemViewProps<'slack'>) {
     return renderText(text)
   }
   if (oneLine) {
-    return <HighlightTextItem ellipse>{text.slice(0, 200)}</HighlightTextItem>
+    return <HighlightText ellipse>{text.slice(0, 200)}</HighlightText>
   }
 
   return messages.map((message, index) => {

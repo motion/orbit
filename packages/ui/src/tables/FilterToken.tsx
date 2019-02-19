@@ -10,7 +10,7 @@ import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
-import { Text } from '../Text'
+import { Text } from '../text/Text'
 import { Filter } from './types'
 
 // @ts-ignore

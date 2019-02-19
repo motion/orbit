@@ -1,4 +1,4 @@
-import isEqualDeep from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import { Logger } from '@mcro/logger'
 import { MagicalObject, ReactionOptions } from './types'
 
@@ -12,7 +12,7 @@ export const getReactionName = (obj: MagicalObject) => {
 }
 
 const defaultOpts: ReactionOptions = {
-  equals: isEqualDeep,
+  equals: isEqual,
 }
 
 export function getReactionOptions(userOptions?: ReactionOptions) {

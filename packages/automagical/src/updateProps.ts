@@ -1,4 +1,4 @@
-import isEqualReact from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import { transaction } from 'mobx'
 
 // updateProps
@@ -13,7 +13,7 @@ export function updateProps(store: any, nextProps: Object) {
       const a = store.props[prop]
       const b = nextProps[prop]
       if (a === b) continue
-      if (!isEqualReact(a, b)) {
+      if (!isEqual(a, b)) {
         store.props[prop] = b
       }
     }

@@ -1,10 +1,7 @@
 import { gloss } from '@mcro/gloss'
-import { Text } from '@mcro/ui'
+import { DateFormat, HighlightText, HorizontalSpace, Text, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../../actions/appActions/AppActions'
-import { HorizontalSpace, VerticalSpace } from '../../../../views'
-import { DateFormat } from '../../../../views/DateFormat'
-import { HighlightText } from '../../../../views/HighlightText'
 import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 
 const Message = gloss({

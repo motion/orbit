@@ -1,13 +1,14 @@
-import { Person, PersonBitModel } from '@mcro/models';
-import * as UI from '@mcro/ui';
-import { ButtonProps } from '@mcro/ui';
-import * as React from 'react';
-import { AppActions } from '../actions/appActions/AppActions';
-import { loadOne } from '../mediator';
-import { RoundButton } from './RoundButton';
+import { Person, PersonBitModel } from '@mcro/models'
+import * as UI from '@mcro/ui'
+import { ButtonProps } from '@mcro/ui'
+import * as React from 'react'
+import { AppActions } from '../actions/appActions/AppActions'
+import { loadOne } from '../mediator'
+import { RoundButton } from './RoundButton'
 
 type PersonButtonProps = ButtonProps & {
   person?: Person
+  hideAvatar?: boolean
 }
 
 export const handleClickPerson = (email: string) => async e => {

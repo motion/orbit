@@ -1,17 +1,32 @@
-import { always, cancel, react } from '@mcro/black';
-import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc';
-import { ContextMenu } from '@mcro/ui';
-import { useStore } from '@mcro/use-store';
-import { MenuItem } from 'electron';
-import React, { Component, createContext, createRef, memo, useCallback, useContext, useEffect, useRef } from 'react';
-import { CellMeasurer, CellMeasurerCache, InfiniteLoader, List, WindowScroller } from 'react-virtualized';
-import { useResizeObserver } from '../../hooks/useResizeObserver';
-import { GenericComponent } from '../../types';
-import { HandleSelection } from '../ListItems/ListItem';
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem';
+import { always, cancel, react } from '@mcro/black'
+import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
+import { useStore } from '@mcro/use-store'
+import { MenuItem } from 'electron'
+import React, {
+  Component,
+  createContext,
+  createRef,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react'
+import {
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+  List,
+  WindowScroller,
+} from 'react-virtualized'
+import { ContextMenu } from '../ContextMenu'
+import { useResizeObserver } from '../hooks/useResizeObserver'
+import { GenericComponent } from '../types'
+import { HandleSelection } from './ListItem'
+import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
 
 // for some reason memo doesnt work but this does???
-export const simpleEqual = (a, b) => {
+export const simpleEqual = (a: Object, b: Object) => {
   for (const key in b) {
     if (a[key] !== b[key]) {
       return false
@@ -26,15 +41,13 @@ export type GetItemProps<A> = (
   items: A[],
 ) => Partial<VirtualListItemProps<A>> | null
 
-export type VirtualListProps<A> = SortableContainerProps & {
+type VirtualProps = {
   onChangeHeight?: (height: number) => any
   onSelect?: HandleSelection
   onOpen?: HandleSelection
   forwardRef?: (a: any, b: VirtualListStore) => any
-  items: A[]
   itemProps?: Partial<VirtualListItemProps<any>>
   getContextMenu?: (index: number) => Partial<MenuItem>[]
-  getItemProps?: GetItemProps<A> | null | false
   ItemView?: GenericComponent<VirtualListItemProps<any>>
   infinite?: boolean
   loadMoreRows?: Function
@@ -51,6 +64,12 @@ export type VirtualListProps<A> = SortableContainerProps & {
   allowMeasure?: boolean
 }
 
+export type VirtualListProps<A> = SortableContainerProps &
+  VirtualProps & {
+    items: A[]
+    getItemProps?: GetItemProps<A> | null | false
+  }
+
 class SortableList extends Component<any> {
   render() {
     return <List {...this.props} ref={this.props.forwardRef} />
@@ -60,8 +79,7 @@ class SortableList extends Component<any> {
 const SortableListContainer = SortableContainer(SortableList, { withRef: true })
 
 class VirtualListStore {
-  props: VirtualListProps<any> & {
-    items: null
+  props: VirtualProps & {
     getItem: (i: number) => any
     numItems: number
   }
@@ -122,7 +140,7 @@ class VirtualListStore {
     if (typeof rowIndex === 'undefined') {
       return 0
     }
-    if (!this.props.items) {
+    if (!this.props.getItem(rowIndex)) {
       return rowIndex
     }
     const id = this.props.getItem(rowIndex).id
@@ -218,12 +236,6 @@ const itemProps = (
     res = { ...res, ...item }
   }
   return res
-}
-
-// TODO extract useDefaultProps + DefaultProps context into helper libs
-
-function useDefaultProps<A>(a: A, b: Partial<A>): A {
-  return { ...b, ...a }
 }
 
 export const VirtualListDefaultProps = createContext({
@@ -350,15 +362,15 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 // renders are expensive for this component, and especially that because it happens on click
 // this lets us separate out and have the inner just react to props it should
 
-export default function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
+export function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
-  const props = useDefaultProps(rawProps, defaultProps)
+  const props = { ...defaultProps, ...rawProps }
   const getItem = useCallback(index => items[index], [items])
   const store = useStore(VirtualListStore, {
     numItems: items.length,
     getItem,
     allowMeasure,
-    ...props,
+    ...(props as any),
   })
   return <VirtualListInner {...props} items={items} store={store} />
 }

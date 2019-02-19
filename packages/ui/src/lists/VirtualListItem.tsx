@@ -1,7 +1,7 @@
-import { SortableElement } from '@mcro/react-sortable-hoc';
-import * as React from 'react';
-import { GenericComponent } from '../../types';
-import ListItem, { ListItemProps } from '../ListItems/ListItem';
+import { SortableElement } from '@mcro/react-sortable-hoc'
+import * as React from 'react'
+import { GenericComponent } from '../types'
+import { ListItem, ListItemProps } from './ListItem'
 
 export type VirtualListItemProps<Item> = ListItemProps & {
   ItemView?: GenericComponent<any>
@@ -22,7 +22,3 @@ class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>
 }
 
 export default SortableElement(VirtualListItemInner)
-
-// export default memo(function VirtualListItem(props: VirtualListItemProps<any>) {
-//   return <SortableVirtualListItem {...props} />
-// }, isEqualDeep)

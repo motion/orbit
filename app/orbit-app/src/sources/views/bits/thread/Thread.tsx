@@ -1,7 +1,7 @@
 import { GmailBitData } from '@mcro/models'
+import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
 import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
-import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { OrbitItemViewProps } from '../../../types'
 import { ThreadMessage } from './ThreadMessage'
 
@@ -21,7 +21,7 @@ export const Thread = (rawProps: OrbitItemViewProps<any>) => {
     return props.renderText(props.item.body)
   }
   if (props.oneLine) {
-    return <HighlightTextItem ellipse>{props.item.body.slice(0, 200)}</HighlightTextItem>
+    return <HighlightText ellipse>{props.item.body.slice(0, 200)}</HighlightText>
   }
 
   return (

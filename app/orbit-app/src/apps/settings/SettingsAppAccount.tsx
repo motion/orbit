@@ -1,6 +1,6 @@
-import { Button, Row, SegmentedRow, Theme, View } from '@mcro/ui'
+import { Button, Row, SegmentedRow, Theme, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { InputRow, IntroText, Title, VerticalSpace } from '../../views'
+import { InputRow, IntroText, Title } from '../../views'
 import { Section } from '../../views/Section'
 import { AppProps } from '../AppTypes'
 

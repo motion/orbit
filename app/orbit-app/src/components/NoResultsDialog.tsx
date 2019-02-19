@@ -1,9 +1,8 @@
-import { Button, View } from '@mcro/ui'
+import { Button, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import * as Views from '../views'
-import { VerticalSpace } from '../views'
 
 type Props = {
   paneManagerStore?: PaneManagerStore

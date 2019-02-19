@@ -1,9 +1,16 @@
 import { gloss, View } from '@mcro/gloss'
-import { BorderBottom, Icon, Row, Text, ViewProps } from '@mcro/ui'
+import {
+  BorderBottom,
+  DateFormat,
+  HorizontalSpace,
+  Icon,
+  Row,
+  Text,
+  VerticalSpace,
+  ViewProps,
+} from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../../actions/appActions/AppActions'
-import { HorizontalSpace, VerticalSpace } from '../../../../views'
-import { DateFormat } from '../../../../views/DateFormat'
 import { Markdown } from '../../../../views/Markdown'
 import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
 import { handleClickPerson } from '../../../../views/RoundButtonPerson'

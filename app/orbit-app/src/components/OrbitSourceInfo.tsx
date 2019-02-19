@@ -1,10 +1,9 @@
-import { Row, Text, View } from '@mcro/ui'
+import { HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import * as React from 'react'
 import { useJobs } from '../hooks/useJobs'
 import { useSourceInfo } from '../hooks/useSourceInfo'
 import { OrbitIntegration } from '../sources/types'
-import { HorizontalSpace } from '../views'
 
 type Props = {
   sourceId: number

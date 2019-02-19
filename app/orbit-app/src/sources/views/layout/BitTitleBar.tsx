@@ -1,11 +1,10 @@
 import { gloss, Row } from '@mcro/gloss'
 import { Bit } from '@mcro/models'
-import { Popover, SegmentedRow, View } from '@mcro/ui'
+import { HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/appActions/AppActions'
 import SearchItemShare, { SearchItemShareProvide } from '../../../apps/search/SearchItemShare'
 import { NormalItem } from '../../../helpers/normalizeItem'
-import { HorizontalSpace } from '../../../views'
 import { TitleBarButton } from './TitleBarButton'
 import { TitleBarSpace } from './TitleBarSpace'
 

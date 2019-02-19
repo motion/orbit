@@ -5,6 +5,7 @@ import {
   SourceSaveCommand,
 } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import { VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
 import { AppActions } from '../../../actions/appActions/AppActions'
 import { useStores } from '../../../hooks/useStores'
@@ -89,7 +90,7 @@ export default function AtlassianSettingLogin(props: Props) {
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
-      <Views.VerticalSpace />
+      <VerticalSpace />
       <UI.Col margin="auto" width={370}>
         <UI.Col>
           <Views.Table>
@@ -110,7 +111,7 @@ export default function AtlassianSettingLogin(props: Props) {
               onChange={handleChange('password')}
             />
           </Views.Table>
-          <Views.VerticalSpace />
+          <VerticalSpace />
           <UI.Theme
             theme={{
               color: '#fff',
@@ -124,7 +125,7 @@ export default function AtlassianSettingLogin(props: Props) {
               </UI.Button>
             )}
           </UI.Theme>
-          <Views.VerticalSpace />
+          <VerticalSpace />
           {error && <Message>{error}</Message>}
         </UI.Col>
       </UI.Col>

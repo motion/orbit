@@ -8,6 +8,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strictNullChecks": false,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,

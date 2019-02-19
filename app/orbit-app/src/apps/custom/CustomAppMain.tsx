@@ -43,7 +43,7 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <Row flex={1}>
       <VerticalSplitPane>
-        <TitleRow bordered>Hello World</TitleRow>
+        <TitleRow bordered>Hello World Edit</TitleRow>
 
         <Section>
           <Button size={2} icon="sun">

@@ -1,5 +1,4 @@
 export * from '@mcro/automagical'
-export { DecorCompiledDecorator, DecorPlugins } from '@mcro/decor'
 export { on } from '@mcro/helpers'
 export * from './helpers/log'
 export * from './helpers/mobx'

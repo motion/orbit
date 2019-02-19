@@ -9,10 +9,6 @@
   },
   "dependencies": {
     "@mcro/automagical": "^2.3.10",
-    "@mcro/decor": "^2.3.10",
-    "@mcro/decor-classes": "^2.3.10",
-    "@mcro/decor-mobx": "^2.3.10",
-    "@mcro/decor-react": "^2.3.10",
     "@mcro/helpers": "^2.3.10",
     "event-kit": "^2.5.0",
     "global": "^4.3.0",

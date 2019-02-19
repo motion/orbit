@@ -1,4 +1,5 @@
 import { App, AppDefinition } from './AppTypes'
+import { CustomApp } from './custom/CustomApp'
 import { ListsApp } from './lists/ListsApp'
 import { SearchApp } from './search/SearchApp'
 import { SettingsApp } from './settings/SettingsApp'
@@ -8,8 +9,7 @@ import { SpacesApp } from './spaces/SpacesApp'
 // TODO move them over to new, see ListsApp
 
 type AppsIndex = {
-  [key: string]: // new
-
+  [key: string]:  // new
     | App<any>
     // legacy
     | AppDefinition
@@ -21,4 +21,5 @@ export const apps: AppsIndex = {
   settings: SettingsApp,
   spaces: SpacesApp,
   sources: SourcesApp,
+  custom: CustomApp,
 }

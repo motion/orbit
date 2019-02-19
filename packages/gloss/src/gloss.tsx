@@ -204,7 +204,7 @@ export function gloss<Props = GlossProps<any>>(
 
   const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isSimpleView) {
-    targetConfig = target.getConfig()
+    targetConfig = target.glossConfig.getConfig()
   }
 
   // shorthand: view({ ... })
@@ -373,7 +373,7 @@ const getAllStyles = (baseId: string, target: any, rawStyles: CSSPropertySet | n
   const propStyles = addStyles(baseId, styles, rawStyles)
   // merge child styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const childConfig = target.getConfig()
+    const childConfig = target.glossConfig.getConfig()
     const childPropStyles = childConfig.propStyles
     if (childPropStyles) {
       for (const key in childPropStyles) {

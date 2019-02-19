@@ -12,9 +12,11 @@ import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
+export const defaultSidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+
 export class SidebarStore {
   stores = useHook(useStoresSimple)
-  width = Math.min(450, Math.max(240, window.innerWidth / 3))
+  width = defaultSidebarWidth
 
   indexViews: { [key: string]: AppViewRef } = deep({})
 

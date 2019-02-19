@@ -7,6 +7,7 @@ import { AppView } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { Pane } from '../../stores/PaneManagerStore'
+import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
@@ -26,15 +27,21 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
   const { appsStore } = useStores()
   const { hasMain } = appsStore.getViewState(id)
 
-  const left = useReaction(() => {
-    // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
-    const { hasIndex } = appsStore.viewsState[id] || { hasIndex: false }
-    const isActive = paneManagerStore.activePaneLowPriority.id === id
-    const next = hasIndex ? sidebarStore.width : 0
-    if (isActive && next !== left) {
-      return next
-    }
-  })
+  const left = useReaction(
+    () => {
+      // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
+      const { hasIndex } = appsStore.viewsState[id] || { hasIndex: false }
+      const isActive = paneManagerStore.activePaneLowPriority.id === id
+      if (isActive) {
+        return hasIndex ? sidebarStore.width : 0
+      }
+    },
+    {
+      defaultValue: defaultSidebarWidth,
+    },
+  )
+
+  console.log('rendering', left)
 
   const element = useMemo(
     () => {

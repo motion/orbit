@@ -55,6 +55,11 @@ export default memo(function MainShortcutHandler(props: {
       paneManagerStore.setActivePaneByType('spaces')
     },
     open: () => {
+      if (document.activeElement && document.activeElement.classList.contains('ui-input')) {
+        // TODO this could be done in a more standard, nice way
+        console.log('avoid shortcuts on sub-inputs')
+        return
+      }
       shortcutStore.emit('open')
     },
     copyLink: async () => {

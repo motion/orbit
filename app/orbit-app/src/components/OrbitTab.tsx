@@ -217,7 +217,7 @@ const NavButtonChrome = gloss<TabProps>({
     borderBottom: [1, isActive ? theme.tabBackgroundBottom : 'transparent'],
     boxShadow: isActive
       ? [
-          [0, 1, 10, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
+          [0, 1, 6, [0, 0, 0, theme.background.isLight() ? 0.07 : 0.24]],
           ['inset', 0, 0, 0, 0.5, theme.tabBorderColor || theme.borderColor.alpha(a => a * 0.6)],
           // ['inset', 0, 0.5, 0, 0.5, backgroundBase.alpha(0.8)],
         ]

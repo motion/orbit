@@ -1,10 +1,11 @@
 import { react } from '@mcro/black'
-import { AppModel, ListsApp, Space, SpaceModel } from '@mcro/models'
+import { AppModel, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
+import { ListsApp } from '../apps/lists/ListsApp'
 import { save } from '../mediator'
 import * as Views from '../views'
 import { Message } from '../views/Message'
@@ -45,6 +46,7 @@ export default observer(function SpaceEditView(props: Props) {
     e.preventDefault()
 
     // create a space
+    // TODO @umed type weirdness
     const savedSpace = await save(SpaceModel, {
       ...store.space,
       ...store.values,

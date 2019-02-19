@@ -41,8 +41,6 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
     },
   )
 
-  console.log('rendering', left)
-
   const element = useMemo(
     () => {
       if (!hasMain) {

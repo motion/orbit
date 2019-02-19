@@ -823,7 +823,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         setter()
       }
       if (onMouseEnter) {
-        onMouseEnter()
+        onMouseEnter(null)
       }
     } else {
       if (openOnHover) {

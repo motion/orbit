@@ -24,64 +24,65 @@ import { Tooltip } from './Tooltip'
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceProps = CSSPropertySetStrict & {
-  hover?: boolean
-  hoverStyle?: any
-  active?: boolean
-  activeStyle?: any
-  ellipse?: boolean
-  borderRadius?: number
-  after?: React.ReactNode
-  background?: Color
-  badge?: React.ReactNode
-  badgeProps?: Object
-  children?: React.ReactNode
-  name?: string
-  chromeless?: boolean
-  circular?: boolean
-  className?: string
-  clickable?: boolean
-  dim?: boolean
-  elementProps?: Object
-  elevation?: number
-  forwardRef?: React.Ref<any>
-  glint?: boolean
-  glow?: boolean
-  glowProps?: Object
-  height?: number
-  highlight?: boolean
-  hovered?: boolean
-  icon?: React.ReactNode
-  iconAfter?: boolean
-  iconColor?: Color
-  iconProps?: Object
-  iconSize?: number
-  inline?: boolean
-  noInnerElement?: boolean
-  onClick?: any
-  size?: number
-  sizeIcon?: number
-  spaced?: boolean
-  stretch?: boolean
-  tagName?: string
-  theme?: ThemeObject
-  tooltip?: string
-  tooltipProps?: PopoverProps
-  width?: number | string
-  alpha?: number
-  alphaHover?: number
-  dimmed?: boolean
-  disabled?: boolean
-  placeholderColor?: Color
-  highlightBackground?: Color
-  highlightColor?: Color
-  style?: Object
-  ignoreSegment?: boolean
-  sizeLineHeight?: boolean | number
-  type?: string
-  themeSelect?: ThemeSelect
-  iconPad?: number
-}
+export type SurfaceProps = React.HTMLAttributes<any> &
+  CSSPropertySetStrict & {
+    hover?: boolean
+    hoverStyle?: any
+    active?: boolean
+    activeStyle?: any
+    ellipse?: boolean
+    borderRadius?: number
+    after?: React.ReactNode
+    background?: Color
+    badge?: React.ReactNode
+    badgeProps?: Object
+    children?: React.ReactNode
+    name?: string
+    chromeless?: boolean
+    circular?: boolean
+    className?: string
+    clickable?: boolean
+    dim?: boolean
+    elementProps?: Object
+    elevation?: number
+    forwardRef?: React.Ref<any>
+    glint?: boolean
+    glow?: boolean
+    glowProps?: Object
+    height?: number
+    highlight?: boolean
+    hovered?: boolean
+    icon?: React.ReactNode
+    iconAfter?: boolean
+    iconColor?: Color
+    iconProps?: Object
+    iconSize?: number
+    inline?: boolean
+    noInnerElement?: boolean
+    onClick?: any
+    size?: number
+    sizeIcon?: number
+    spaced?: boolean
+    stretch?: boolean
+    tagName?: string
+    theme?: ThemeObject
+    tooltip?: string
+    tooltipProps?: PopoverProps
+    width?: number | string
+    alpha?: number
+    alphaHover?: number
+    dimmed?: boolean
+    disabled?: boolean
+    placeholderColor?: Color
+    highlightBackground?: Color
+    highlightColor?: Color
+    style?: Object
+    ignoreSegment?: boolean
+    sizeLineHeight?: boolean | number
+    type?: string
+    themeSelect?: ThemeSelect
+    iconPad?: number
+  }
 
 export const Surface = React.memo(function Surface(props: SurfaceProps) {
   const crumb = useBreadcrumb()

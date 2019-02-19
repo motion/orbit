@@ -1,21 +1,21 @@
-import { ensure, react } from '@mcro/black';
-import { gloss, Row, ViewProps } from '@mcro/gloss';
-import { AppModel } from '@mcro/models';
-import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc';
-import { useHook, useStore } from '@mcro/use-store';
-import { flow } from 'lodash';
-import React, { memo } from 'react';
-import { useActions } from '../../actions/Actions';
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab';
-import { getAppContextItems } from '../../helpers/getAppContextItems';
-import { isRightClick } from '../../helpers/isRightClick';
-import { preventDefault } from '../../helpers/preventDefault';
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
-import { useActiveSpace } from '../../hooks/useActiveSpace';
-import { useAppSortHandler } from '../../hooks/useAppSortHandler';
-import { useStores, useStoresSimple } from '../../hooks/useStores';
-import { save } from '../../mediator';
-import { Pane } from '../../stores/PaneManagerStore';
+import { ensure, react } from '@mcro/black'
+import { gloss, Row, ViewProps } from '@mcro/gloss'
+import { AppModel } from '@mcro/models'
+import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc'
+import { useHook, useStore } from '@mcro/use-store'
+import { flow } from 'lodash'
+import React, { memo } from 'react'
+import { useActions } from '../../actions/Actions'
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
+import { getAppContextItems } from '../../helpers/getAppContextItems'
+import { isRightClick } from '../../helpers/isRightClick'
+import { preventDefault } from '../../helpers/preventDefault'
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useActiveSpace } from '../../hooks/useActiveSpace'
+import { useAppSortHandler } from '../../hooks/useAppSortHandler'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { save } from '../../mediator'
+import { Pane } from '../../stores/PaneManagerStore'
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -116,39 +116,38 @@ export default memo(function OrbitNav() {
     )
     .filter(Boolean)
 
+  const pinWidth = 52
+
   const onSettings = isOnSettings(paneManagerStore.activePane)
-  const showCreateNewWidth = showCreateNew ? tabWidth : 0
+  const showCreateNewWidth = showCreateNew ? tabWidth : 46
   const extraButtonsWidth = showCreateNewWidth
+
+  const pinnedItems = items.filter(x => x.isPinned)
+  const pinnedItemsWidth = pinWidth * pinnedItems.length
+
+  console.log('extraButtonsWidth', extraButtonsWidth)
+  const epad = showCreateNew ? 0 : 3
 
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
-        <Row
-          height={tabHeight + 10}
-          padding={5}
-          margin={-5}
-          overflow="hidden"
-          flex={1}
-          maxWidth={`calc(100% - ${extraButtonsWidth}px)`}
-        >
-          {items
-            .filter(x => x.isPinned)
-            .map(props => (
-              <OrbitTab key={props.app.id} {...props} />
-            ))}
+        <Row height={tabHeight + 10} padding={5} margin={-5} overflow="hidden" flex={1}>
+          {pinnedItems.map(props => (
+            <OrbitTab key={props.app.id} {...props} />
+          ))}
 
           <SortableTabs
             className="hide-scrollbars"
             axis="x"
             lockAxis="x"
             distance={8}
-            maxWidth={`calc(100% - ${230 - extraButtonsWidth}px)`}
+            maxWidth={`calc(100% - ${pinnedItemsWidth + extraButtonsWidth - epad * 2}px)`}
             items={items.filter(x => !x.isPinned)}
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}
             // let shadows from tabs go up above
-            padding={16}
-            margin={-16}
+            padding={epad}
+            margin={-epad}
             height={tabHeight + 20}
             overflowX="auto"
             overflowY="hidden"

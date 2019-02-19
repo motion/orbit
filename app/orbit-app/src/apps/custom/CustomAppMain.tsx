@@ -1,68 +1,70 @@
-import { BorderLeft, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
+import { BorderLeft, Button, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
-import { Title } from '../../views'
 import { DateFormat } from '../../views/DateFormat'
 import ReactiveCheckBox from '../../views/ReactiveCheckBox'
+import { Section } from '../../views/Section'
+import { TitleRow } from '../../views/TitleRow'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
 import { AppProps } from '../AppTypes'
 
-const channels = [...new Array(50000)].map(() => ({
+const channels = [...new Array(10000)].map(() => ({
   name: faker.name.firstName(),
   topic: faker.lorem.sentence(),
   members: faker.random.number(),
   created: faker.date.past(),
 }))
 
-function CustomAppTree() {
-  const [treeState, setTreeState] = useState({
-    '0': {
-      id: '0',
-      name: 'test',
-      expanded: false,
-      children: ['1', '2'],
-    },
-    '1': {
-      id: '1',
-      name: 'test one',
-      expanded: false,
-      children: [],
-    },
-    '2': {
-      id: '2',
-      name: 'test two',
-      expanded: false,
-      children: [],
-    },
-  })
-
-  return (
-    <Tree
-      root="0"
-      onTreeItemSelected={id => {
-        console.log('select', id)
-      }}
-      onTreeItemExpanded={(id /* deep */) => {
-        setTreeState(
-          immer(treeState, next => {
-            next[id].expanded = !next[id].expanded
-          }),
-        )
-      }}
-      elements={treeState}
-    />
-  )
+const treeData = {
+  '0': {
+    id: '0',
+    name: 'Root Item',
+    expanded: true,
+    children: ['1', '2'],
+  },
+  '1': {
+    id: '1',
+    name: 'test one',
+    expanded: false,
+    children: [],
+  },
+  '2': {
+    id: '2',
+    name: 'test two',
+    expanded: false,
+    children: [],
+  },
 }
 
 export function CustomAppMain(_props: AppProps) {
-  console.warn('custom app rendering ?? ...')
+  const [treeState, setTreeState] = useState(treeData)
+
   return (
     <Row flex={1}>
       <VerticalSplitPane>
-        <Title>hello world good to see you</Title>
+        <TitleRow bordered>Hello World</TitleRow>
 
-        <CustomAppTree />
+        <Section>
+          <Button size={2} icon="sun">
+            this is my button
+          </Button>
+        </Section>
+
+        <Tree
+          root="0"
+          onTreeItemSelected={id => {
+            console.log('select', id)
+          }}
+          onTreeItemExpanded={(id /* deep */) => {
+            setTreeState(
+              immer(treeState, next => {
+                next[id].expanded = !next[id].expanded
+              }),
+            )
+          }}
+          elements={treeState}
+        />
       </VerticalSplitPane>
 
       <VerticalSplitPane>

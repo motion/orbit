@@ -151,6 +151,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 const OrbitContentArea = gloss({
   flexFlow: 'row',
   flex: 1,
+  transform: {
+    z: 0,
+  },
 }).theme((_, theme) => ({
   background: theme.sidebarBackground,
 }))

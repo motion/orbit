@@ -26,6 +26,7 @@
     { "path": "../packages/mobx-logger" },
     { "path": "../packages/react-textfit" },
     { "path": "../packages/wait-for-fonts" },
-    { "path": "../packages/orbit-fork-process" }
+    { "path": "../packages/orbit-fork-process" },
+    { "path": "../packages/fast-compare" }
   ]
 }

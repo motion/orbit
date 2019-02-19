@@ -8,6 +8,7 @@
   "references": [
     { "path": "../black" },
     { "path": "../color" },
-    { "path": "../gloss" }
+    { "path": "../gloss" },
+    { "path": "../fast-compare" }
   ]
 }

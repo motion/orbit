@@ -2,6 +2,10 @@
   "name": "@mcro/fast-compare",
   "version": "2.3.10",
   "description": "none",
-  "main": "index.js",
+  "main": "_/fastCompare.js",
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput"
+  },
   "sideEffects": false
 }

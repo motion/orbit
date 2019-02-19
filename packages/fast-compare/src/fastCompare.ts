@@ -1,29 +1,51 @@
-'use strict'
+const isArray = Array.isArray
+const keyList = Object.keys
+const hasProp = Object.prototype.hasOwnProperty
+const hasElementType = typeof Element !== 'undefined'
 
-var isArray = Array.isArray
-var keyList = Object.keys
-var hasProp = Object.prototype.hasOwnProperty
-var hasElementType = typeof Element !== 'undefined'
+export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 
-const EQUALITY_KEY = Symbol('EQUALITY_KEY')
+export function isEqual(a, b) {
+  if (process.env.NODE_ENV !== 'development') {
+    return isEqualInner(a, b)
+  }
+  try {
+    return isEqualInner(a, b)
+  } catch (err) {
+    if ((err.message && err.message.match(/stack|recursion/i)) || err.number === -2146828260) {
+      // warn on circular references, don't crash
+      // browsers give this different errors name and messages:
+      // chrome/safari: "RangeError", "Maximum call stack size exceeded"
+      // firefox: "InternalError", too much recursion"
+      // edge: "Error", "Out of stack space"
+      console.warn(
+        'Warning: @mcro/fast-compare does not handle circular references.',
+        err.name,
+        err.message,
+      )
+      return false
+    }
+    throw err
+  }
+}
 
-function equal(a, b) {
+function isEqualInner(a, b) {
   // fast-deep-equal index.js 2.0.1
   if (a === b) return true
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
     if (a[EQUALITY_KEY] && a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
 
-    var arrA = isArray(a),
+    let arrA = isArray(a),
       arrB = isArray(b),
-      i,
-      length,
-      key
+      i: number,
+      length: number,
+      key: string
 
     if (arrA && arrB) {
       length = a.length
       if (length != b.length) return false
-      for (i = length; i-- !== 0; ) if (!equal(a[i], b[i])) return false
+      for (i = length; i-- !== 0; ) if (!isEqualInner(a[i], b[i])) return false
       return true
     }
 
@@ -62,44 +84,11 @@ function equal(a, b) {
         continue
       } else {
         // all other properties should be traversed as usual
-        if (!equal(a[key], b[key])) return false
+        if (!isEqualInner(a[key], b[key])) return false
       }
     }
-    // end @mcro/fast-compare
-
-    // fast-deep-equal index.js 2.0.1
     return true
   }
 
   return a !== a && b !== b
 }
-// end fast-deep-equal
-
-function exportedEqual(a, b) {
-  try {
-    return equal(a, b)
-  } catch (error) {
-    if (
-      (error.message && error.message.match(/stack|recursion/i)) ||
-      error.number === -2146828260
-    ) {
-      // warn on circular references, don't crash
-      // browsers give this different errors name and messages:
-      // chrome/safari: "RangeError", "Maximum call stack size exceeded"
-      // firefox: "InternalError", too much recursion"
-      // edge: "Error", "Out of stack space"
-      console.warn(
-        'Warning: @mcro/fast-compare does not handle circular references.',
-        error.name,
-        error.message,
-      )
-      return false
-    }
-    // some other error. we should definitely know about these
-    throw error
-  }
-}
-
-exportedEqual.EQUALITY_KEY = EQUALITY_KEY
-
-module.exports = exportedEqual

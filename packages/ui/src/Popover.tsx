@@ -1,5 +1,5 @@
 import { Color } from '@mcro/css'
-import isEqual from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import { gloss, Theme } from '@mcro/gloss'
 import { on } from '@mcro/helpers'
 import { Cancelable, debounce, isNumber, last, pick } from 'lodash'

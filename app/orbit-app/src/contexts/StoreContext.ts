@@ -1,6 +1,7 @@
 import { createContext } from 'react'
 import { AppsStore } from '../apps/AppsStore'
 import { AppStore } from '../apps/AppStore'
+import { ListStore } from '../apps/lists/ListStore'
 import { SearchStore } from '../apps/search/SearchStore'
 import { SubPaneStore } from '../components/SubPaneStore'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'
@@ -41,6 +42,7 @@ export type AllStores = {
   searchStore?: SearchStore
   sidebarStore?: SidebarStore
   themeStore?: ThemeStore
+  listStore?: ListStore
 }
 
 export const StoreContext = createContext({} as AllStores)

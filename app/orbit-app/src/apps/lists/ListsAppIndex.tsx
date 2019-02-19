@@ -1,7 +1,7 @@
 import { AppModel } from '@mcro/models'
 import { Absolute, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
 import { flow } from 'lodash'
-import * as React from 'react'
+import React, { useCallback } from 'react'
 import { arrayMove } from 'react-sortable-hoc'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
@@ -21,10 +21,8 @@ export function ListsAppIndex(_: AppProps) {
     <>
       {/* Search/add bar */}
       <ListAdd />
-
       {/* List items */}
       <ListCurrentFolder />
-
       {/* Search results */}
       <ListSearchResults />
     </>
@@ -32,11 +30,11 @@ export function ListsAppIndex(_: AppProps) {
 }
 
 function ListCurrentFolder() {
-  // @ts-ignore
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
+  console.log('rendering with', items)
 
-  const getContextMenu = React.useCallback(index => {
+  const getContextMenu = useCallback(index => {
     return [
       {
         label: 'Delete',
@@ -46,20 +44,18 @@ function ListCurrentFolder() {
       },
     ]
   }, [])
-
-  const onChangeDepth = React.useCallback((depth, history) => {
+  const onChangeDepth = useCallback((depth, history) => {
     listStore.depth = depth
     listStore.history = history
   }, [])
 
-  const loadItemProps = React.useCallback((item: ListAppDataItem) => {
+  const loadItemProps = useCallback((item: ListAppDataItem) => {
     return loadListItem(item, +listStore.props.id)
   }, [])
 
-  const handleSortEnd = React.useCallback(
+  const handleSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {
       const children = arrayMove(currentFolder.children, oldIndex, newIndex)
-      console.log('updating sort for list folder', currentFolder, children)
       listStore.app.data.items = {
         ...listStore.app.data.items,
         [currentFolder.id]: {
@@ -72,11 +68,9 @@ function ListCurrentFolder() {
     [JSON.stringify(currentFolder)],
   )
 
-  const handleSelect = React.useCallback(index => {
+  const handleSelect = useCallback(index => {
     listStore.selectedIndex = index
   }, [])
-
-  console.log('rendering', listStore.depth)
 
   return (
     <SelectableTreeList
@@ -103,7 +97,6 @@ const addFolder = (store: ListStore) => {
 }
 
 function ListAdd() {
-  // @ts-ignore
   const { listStore } = useStores()
   return (
     <Row position="relative">

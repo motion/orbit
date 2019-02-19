@@ -2,7 +2,7 @@ import { gloss, View, ViewProps } from '@mcro/gloss'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useStore, useStoreSimple } from '@mcro/use-store'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
@@ -120,18 +120,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
+  const handlers = useMemo(() => {
+    return {
+      closeTab: () => {
+        shortcutState.current.closeTab = Date.now()
+      },
+      closeApp: () => {
+        shortcutState.current.closeApp = Date.now()
+      },
+    }
+  }, [])
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
-      <MainShortcutHandler
-        handlers={{
-          closeTab: () => {
-            shortcutState.current.closeTab = Date.now()
-          },
-          closeApp: () => {
-            shortcutState.current.closeApp = Date.now()
-          },
-        }}
-      >
+      <MainShortcutHandler handlers={handlers}>
         <AppsLoader views={allViews}>
           <OrbitHeader />
           <InnerChrome torn={orbitStore.isTorn}>

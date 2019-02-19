@@ -77,6 +77,7 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   })
 
   return (
+    // <React.StrictMode>
     <ContextMenuProvider
       onContextMenu={items => {
         if (ContextMenu) {
@@ -88,5 +89,6 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
         <OrbitBrowser />
       </ThemeProvide>
     </ContextMenuProvider>
+    // </React.StrictMode>
   )
 })

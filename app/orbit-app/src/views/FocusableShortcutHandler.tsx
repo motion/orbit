@@ -1,5 +1,5 @@
+import { HotKeys } from '@mcro/react-hotkeys'
 import * as React from 'react'
-import { HotKeys } from 'react-hotkeys'
 
 type ShortcutSequence = string | string[]
 

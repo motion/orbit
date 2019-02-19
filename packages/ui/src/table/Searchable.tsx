@@ -7,7 +7,6 @@
 
 import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { on } from '@mcro/helpers'
-import PropTypes from 'prop-types'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../form/SearchInput'
@@ -58,15 +57,16 @@ type Props = {
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
 
+// TODO
+export const SearchableContext = React.createContext({
+  plugin: null,
+})
+
 @attachTheme
 export class Searchable extends React.PureComponent<Props, State> {
   static defaultProps = {
     placeholder: 'Search...',
     defaultValue: '',
-  }
-
-  static contextTypes = {
-    plugin: PropTypes.string,
   }
 
   constructor(a, b) {

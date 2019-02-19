@@ -1,21 +1,21 @@
-import { ensure, react } from '@mcro/black'
-import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { AppModel } from '@mcro/models'
-import { useHook, useStore } from '@mcro/use-store'
-import { flow } from 'lodash'
-import React, { memo } from 'react'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { useActions } from '../../actions/Actions'
-import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
-import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { isRightClick } from '../../helpers/isRightClick'
-import { preventDefault } from '../../helpers/preventDefault'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
-import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
-import { save } from '../../mediator'
-import { Pane } from '../../stores/PaneManagerStore'
+import { ensure, react } from '@mcro/black';
+import { gloss, Row, ViewProps } from '@mcro/gloss';
+import { AppModel } from '@mcro/models';
+import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc';
+import { useHook, useStore } from '@mcro/use-store';
+import { flow } from 'lodash';
+import React, { memo } from 'react';
+import { useActions } from '../../actions/Actions';
+import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab';
+import { getAppContextItems } from '../../helpers/getAppContextItems';
+import { isRightClick } from '../../helpers/isRightClick';
+import { preventDefault } from '../../helpers/preventDefault';
+import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted';
+import { useActiveSpace } from '../../hooks/useActiveSpace';
+import { useAppSortHandler } from '../../hooks/useAppSortHandler';
+import { useStores, useStoresSimple } from '../../hooks/useStores';
+import { save } from '../../mediator';
+import { Pane } from '../../stores/PaneManagerStore';
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'

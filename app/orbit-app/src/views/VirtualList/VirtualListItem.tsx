@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { SortableElement } from 'react-sortable-hoc'
-import { GenericComponent } from '../../types'
-import ListItem, { ListItemProps } from '../ListItems/ListItem'
+import { SortableElement } from '@mcro/react-sortable-hoc';
+import * as React from 'react';
+import { GenericComponent } from '../../types';
+import ListItem, { ListItemProps } from '../ListItems/ListItem';
 
 export type VirtualListItemProps<Item> = ListItemProps & {
   ItemView?: GenericComponent<any>

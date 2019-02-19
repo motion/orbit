@@ -11,7 +11,7 @@ killgroup() {
 cd app/$1
 
 if [ "$2" = "--prod" ]; then
-  npm run start-prod
+  npm run start-prod -- ${@:3}
 else
   npm run start -- ${@:2}
 fi

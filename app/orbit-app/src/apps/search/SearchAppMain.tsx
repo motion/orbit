@@ -4,7 +4,8 @@ import { AppSubView } from '../views/AppSubView'
 
 export default function SearchAppMain({ appConfig }: AppProps) {
   if (appConfig.type === 'search') {
-    return <div>todo: search</div>
+    console.warn('todo: search')
+    return null
   }
 
   return <AppSubView appConfig={appConfig} />

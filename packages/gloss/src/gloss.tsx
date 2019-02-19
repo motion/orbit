@@ -37,6 +37,18 @@ export interface GlossView<Props> {
   // extra:
   ignoreAttrs?: Object
   theme: ((cb: GlossThemeFn<Props>) => GlossView<Props>)
+  withConfig: (config: { displayName?: string }) => any
+  glossConfig: {
+    getConfig: () => {
+      id: string
+      displayName: string
+      targetElement: any
+      styles: any
+      propStyles: Object
+      child: any
+    }
+    themeFn: GlossThemeFn<Props> | null
+  }
 }
 
 const tracker = new Map()
@@ -53,7 +65,7 @@ function addRules(displayName: string, rules: BaseRules, namespace: string, tagN
   if (cachedClass) {
     return cachedClass
   }
-  const declarations = []
+  const declarations: string[] = []
   const style = css(rules)
   // generate css declarations based on the style object
   for (const key in style) {
@@ -91,7 +103,7 @@ const whiteSpaceRegex = /[\s]+/g
 function glossify(
   id: string,
   displayName: string = 'g',
-  themeFn: (a: Object, b: ThemeObject) => any,
+  themeFn: GlossThemeFn<any> | null,
   allStyles: { styles: any; propStyles: any },
   previousClassNames: string[] | null,
   props: CSSPropertySet,
@@ -114,13 +126,11 @@ function glossify(
   }
 
   const hasDynamicStyles = themeFn || hasPropStyles
-  const dynamicStyles = hasDynamicStyles ? { [id]: {} } : null
+  const dynamicStyles = { [id]: {} }
 
   if (hasPropStyles) {
     for (const key in allStyles.propStyles) {
-      if (props[key] !== true) {
-        continue
-      }
+      if (props[key] !== true) continue
       for (const styleKey in allStyles.propStyles[key]) {
         const dynKey = styleKey === 'base' ? id : styleKey
         dynamicStyles[dynKey] = {
@@ -194,7 +204,7 @@ export function gloss<Props = GlossProps<any>>(
 
   const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
   if (isSimpleView) {
-    targetConfig = target.getConfig()
+    targetConfig = target.glossConfig.getConfig()
   }
 
   // shorthand: view({ ... })
@@ -205,21 +215,16 @@ export function gloss<Props = GlossProps<any>>(
 
   const targetElement = isSimpleView ? targetConfig.targetElement : target
   const id = `${viewId()}`
-  const Styles = getAllStyles(id, target, rawStyles)
-  let themeFn = null
-  let ThemedView = null
+  const Styles = getAllStyles(id, target, rawStyles || null)
+  let themeFn: GlossThemeFn<any> | null = null
 
-  //
-  // the actual view!
-  //
-
-  ThemedView = memo(
+  const ThemedView = (memo(
     forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
       // compile theme on first run to avoid extra work
       themeFn = themeFn || compileTheme(ThemedView)
       const { activeTheme } = useContext(ThemeContext)
       const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-      const lastClassNames = useRef(null)
+      const lastClassNames = useRef<string[] | null>(null)
       const classNames = glossify(
         id,
         ThemedView.displayName,
@@ -276,10 +281,20 @@ export function gloss<Props = GlossProps<any>>(
       return createElement(element, finalProps, props.children)
     }),
     fastCompareDeep,
-  )
+  ) as unknown) as GlossView<Props>
 
-  ThemedView.themeFn = null
-  ThemedView.ignoreAttrs = null
+  ThemedView.glossConfig = {
+    themeFn: null,
+    getConfig: () => ({
+      id,
+      displayName: ThemedView.displayName || '',
+      targetElement,
+      ignoreAttrs,
+      styles: { ...Styles.styles },
+      propStyles: { ...Styles.propStyles },
+      child: isSimpleView ? target : null,
+    }),
+  }
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   ThemedView.withConfig = config => {
     if (config.displayName) {
@@ -288,18 +303,9 @@ export function gloss<Props = GlossProps<any>>(
     return ThemedView
   }
   ThemedView.theme = themeFn => {
-    ThemedView.themeFn = themeFn
+    ThemedView.glossConfig.themeFn = themeFn
     return ThemedView
   }
-  ThemedView.getConfig = () => ({
-    id,
-    displayName: ThemedView.displayName,
-    targetElement,
-    ignoreAttrs,
-    styles: { ...Styles.styles },
-    propStyles: { ...Styles.propStyles },
-    child: isSimpleView ? target : null,
-  })
 
   return ThemedView
 }
@@ -320,7 +326,7 @@ const arrToDict = (obj: Object) => {
   return obj
 }
 
-const addStyles = (id: string, baseStyles: Object, nextStyles: Object) => {
+const addStyles = (id: string, baseStyles: Object, nextStyles: CSSPropertySet | null) => {
   const propStyles = {}
   for (const key in nextStyles) {
     // dont overwrite as we go down
@@ -360,14 +366,14 @@ const addStyles = (id: string, baseStyles: Object, nextStyles: Object) => {
 }
 
 // gets childrens styles and merges them into a big object
-const getAllStyles = (baseId: string, target: any, rawStyles: Object) => {
+const getAllStyles = (baseId: string, target: any, rawStyles: CSSPropertySet | null) => {
   const styles = {
     [baseId]: {},
   }
   const propStyles = addStyles(baseId, styles, rawStyles)
   // merge child styles
   if (target[GLOSS_SIMPLE_COMPONENT_SYMBOL]) {
-    const childConfig = target.getConfig()
+    const childConfig = target.glossConfig.getConfig()
     const childPropStyles = childConfig.propStyles
     if (childPropStyles) {
       for (const key in childPropStyles) {
@@ -410,15 +416,15 @@ function getSelector(className: string, namespace: string, tagName: string = '')
 }
 
 // compiled theme from ancestors
-function compileTheme(ogView: any) {
+function compileTheme(ogView: GlossView<any>) {
   let view = ogView
-  let themes = []
+  let themes: GlossThemeFn<any>[] = []
   // collect the themes going up the tree
   while (view) {
-    if (view.themeFn) {
-      themes.push(view.themeFn)
+    if (view.glossConfig.themeFn) {
+      themes.push(view.glossConfig.themeFn)
     }
-    view = view.getConfig().child
+    view = view.glossConfig.getConfig().child
   }
   let result
   if (!themes.length) {

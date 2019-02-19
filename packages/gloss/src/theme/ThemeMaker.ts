@@ -78,7 +78,7 @@ export class ThemeMaker {
     return res
   }
 
-  fromColor = (bgName: string): ThemeObject => {
+  fromColor = (bgName: string): ThemeObject | null => {
     if (typeof bgName !== 'string') {
       return null
     }

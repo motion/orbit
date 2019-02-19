@@ -1,6 +1,6 @@
+import { isEqual } from 'lodash'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import { isEqual } from 'lodash'
 
 const idFn = _ => _
 const defaultSettings = {
@@ -39,14 +39,14 @@ export class Tilt extends React.Component<Props> {
     settings: defaultSettings,
   }
 
-  event = null
-  width = null
-  height = null
-  left = null
-  top = null
-  transitionTimeout = null
-  updateCall = null
-  element = null
+  event: any = null
+  width = 100
+  height = 100
+  left = 0
+  top = 0
+  transitionTimeout: any = 0
+  updateCall: any = null
+  element: any = null
 
   get reverse() {
     return this.state.settings.reverse ? -1 : 1
@@ -118,7 +118,9 @@ export class Tilt extends React.Component<Props> {
     this.setTransition()
     this.event = e
     setTimeout(this.update)
-    return this.props.onMouseEnter(e)
+    if (this.props.onMouseEnter) {
+      this.props.onMouseEnter(e)
+    }
   }
 
   onMouseMove = e => {
@@ -132,7 +134,9 @@ export class Tilt extends React.Component<Props> {
     }
     this.event = e
     this.updateCall = requestAnimationFrame(() => this.update())
-    return this.props.onMouseMove(e)
+    if (this.props.onMouseMove) {
+      this.props.onMouseMove(e)
+    }
   }
 
   onMouseLeave = e => {
@@ -143,7 +147,9 @@ export class Tilt extends React.Component<Props> {
         this.reset()
       }
     })
-    return this.props.onMouseLeave(e)
+    if (this.props.onMouseLeave) {
+      this.props.onMouseLeave(e)
+    }
   }
 
   setTransition(cb?) {
@@ -153,9 +159,7 @@ export class Tilt extends React.Component<Props> {
         style: {
           ...this.state.style,
           willChange: 'transform',
-          transition: `transform ${this.settings.speed}ms ${
-            this.settings.easing
-          }`,
+          transition: `transform ${this.settings.speed}ms ${this.settings.easing}`,
         },
       },
       cb,
@@ -177,14 +181,8 @@ export class Tilt extends React.Component<Props> {
     const y = (clientY - this.top) / this.height
     const _x = Math.min(Math.max(x, 0), 1)
     const _y = Math.min(Math.max(y, 0), 1)
-    const tiltX = (
-      this.reverse *
-      (this.settings.max / 2 - _x * this.settings.max)
-    ).toFixed(2)
-    const tiltY = (
-      this.reverse *
-      (_y * this.settings.max - this.settings.max / 2)
-    ).toFixed(2)
+    const tiltX = (this.reverse * (this.settings.max / 2 - _x * this.settings.max)).toFixed(2)
+    const tiltY = (this.reverse * (_y * this.settings.max - this.settings.max / 2)).toFixed(2)
     const percentageX = _x * 100
     const percentageY = _y * 100
     return {

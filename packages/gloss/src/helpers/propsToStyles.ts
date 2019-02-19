@@ -15,7 +15,7 @@ export function propsToStyles(props: any, theme: ThemeObject) {
   // loop over props turning into styles
   for (let key in props) {
     // &:hover, etc
-    const abbrev = Config.pseudoAbbreviations[key]
+    const abbrev = Config.pseudoAbbreviations ? Config.pseudoAbbreviations[key] : null
     if (key[0] === '&' || abbrev) {
       const psuedoKey = abbrev || key
       const subStyle = props[key]

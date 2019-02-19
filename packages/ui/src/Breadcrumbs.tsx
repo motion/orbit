@@ -33,14 +33,14 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
 
 export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
-  const [children, setChildren] = useState([])
+  const [children, setChildren] = useState<any[]>([])
 
   useEffect(() => {
     setChildren([...state.children])
   }, [])
 
   return (
-    <MergeContext Context={BreadcrumbsContext} value={{ dispatch, children }}>
+    <MergeContext Context={BreadcrumbsContext as any} value={{ dispatch, children }}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
@@ -72,7 +72,7 @@ export function Breadcrumb({
   return (
     <BreadcrumbReset>
       <Text {...props}>{children}</Text>
-      {crumb.isLast ? '' : separator}
+      {crumb && crumb.isLast ? '' : separator}
     </BreadcrumbReset>
   )
 }
@@ -89,7 +89,7 @@ export type BreadcrumbItem = {
   isLast: boolean
 }
 
-export function useBreadcrumb(): BreadcrumbItem {
+export function useBreadcrumb(): BreadcrumbItem | null {
   const idRef = useRef(Math.random())
   const id = idRef.current
   const context = useContext(BreadcrumbsContext)

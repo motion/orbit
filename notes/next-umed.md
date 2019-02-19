@@ -5,15 +5,17 @@ NEXT
 
 client:
 
-- [ ] syncers are choking up app speed
+- [ ] solution for multiple mediators, seems like one works but if i launch two apps i get another error
 
-  - [ ] simple throttle
-  - [ ] test to be sure you can add tabs when syncing is running and fix if not
+- [ ] look at some // TODO @umed and see if you can fix up some types
 
-- [ ] add a mediator with example command for Electron process
+- [ ] can you make useStore(Store, { ...props }), the "props" object accept types properly, see useStore.ts and see example usage in many places, like ListsApp.tsx and ListStore.ts
+
+- [ ] have the electron process accept mediator commands -- did you do this already?
 
 - settings panes fixes:
 
+  - [ ] i still see flickering/slow loading for slack settings, is it really using the model?
   - [ ] settings pane are loading/reloading their content every time
     - problem: slack/github have to load the table content every time you look @ them
     - solution:
@@ -21,8 +23,6 @@ client:
       - no need to type it yet, lets just get this working first
       - [ ] hook: `const [sourceData, updateData] = useSourceData()`
         - this is just a small function that extends current useModel
-      - [ ] useEffect that fetches/persists their data for each setting pane
-        - `useEffect(() => fetchData/updateData)`
   - [ ] some settings panes are broken
     - check over them all and fix bugs
     - this is actually a medium size task because each pane needs some work
@@ -51,22 +51,8 @@ client:
 
 - syncers:
 
-  - [ ] throttle them
-    - honestly just do it in a dumb way, please, it will take 5 minutes to do and works fine (await sleep(~ms) in the loops)
-  - [ ] smart sync
-    - [ ] heavy vs smart sync
-      - heavy sync: limit initial full sync to 40MB per-integration
-      - AFTER 40MB lets sync just some light information
-      - light mode:
-        - if content is above a certain size per-item (~2kb) use Cosal.getTopWords() to bring it down to maybe 30 words
-        - for example slack heavy has attachments
-    - make these runnable on client side:
-      - [ ] `fetchFullItem` endpoint for every syncer
-        - this basically can take a light item (item id) and return the full item (heavy)
-      - [ ] `search` endpoing for every syncer
-        - if the integration has a search endpoint we expose them all in the same manner so they return light bits
-    - once thats ready we can move to step 2 for smart sync
-  - [ ] on process exit it should clear all processing Jobs table
+* [ ] on process exit it should clear all processing Jobs table
+
   - [ ] you can add the same exact integration twice, lets prevent that
   - slack:
     - [ ] partial re-sync, re-syncs doing a lot of work, slow down amt of resync too
@@ -79,7 +65,7 @@ client:
     - depending on how hard this is we may cut it out
     - just check into if its working and spend max a day on cleaning it up
 
-- non-syncing sources:
+* non-syncing sources:
 
   - we need sources where it just lets you hook into a database essentially
     - all they really have is a `type`, and some credentials
@@ -90,7 +76,7 @@ client:
       - [ ] find icon, add it to frontend code so you can configure it like Website Crawler
     - thats all for now, i will then build a simple app that lets us explore it easily
 
-- easier migration story:
+* easier migration story:
 
   - [ ] way to add a column to models without needing them to be recreated
   - [ ] in our "model startup failed, recovery" script, lets

@@ -7,12 +7,10 @@
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/ui": "^2.3.10",
-    "@mcro/use-store": "^2.3.10",
+    "lodash": "^4.17.10",
     "mobx-react-lite": "1.0.0",
     "react": "16.8.2",
     "react-dom": "16.8.2",
-    "react-hot-loader": "4.7.0",
-    "lodash": "^4.17.10"
+    "react-hot-loader": "4.7.0"
   }
 }

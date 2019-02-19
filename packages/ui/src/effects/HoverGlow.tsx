@@ -58,6 +58,7 @@ function getScrollParent(element) {
     if (excludeStaticParent && style.position === 'static') {
       continue
     }
+    // @ts-ignore
     if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) {
       return parent
     }
@@ -222,7 +223,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
   render() {
     const {
       boundPct,
-      scale,
+      scale = 1,
       color,
       clickable,
       clickDuration,
@@ -230,7 +231,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
       backdropFilter,
       restingPosition,
       zIndex,
-      resist,
+      resist = 0,
       opacity,
       offsetTop,
       offsetLeft,
@@ -259,13 +260,13 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     } = this.props
     const show = !hide
     const durationArg = show ? durationOut : durationIn
-    const duration = durationArg >= 0 ? durationArg : _duration
+    const duration = durationArg && durationArg >= 0 ? durationArg : _duration
     if (!this.state.mounted) {
       return <Overlay key="hoverglow" ref={this.rootRef} style={{ opacity: 0 }} />
     }
     // find width / height (full == match size of container)
-    let width = size || propWidth
-    let height = size || propHeight
+    let width = size || propWidth || 0
+    let height = size || propHeight || 0
     if (full) {
       width = this.state.bounds.width
       height = this.state.bounds.height
@@ -285,7 +286,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     }
     // bounds it within box x% size of parent
     const bounded = (coord, glowSize, parentSize) => {
-      if (boundPct === null || boundPct > 100) return coord
+      if (boundPct === undefined || boundPct > 100) return coord
       const difference = parentSize - glowSize
       const direction = coord / Math.abs(coord)
       const max = (difference * (boundPct / 100)) / 2
@@ -298,7 +299,7 @@ export class HoverGlow extends React.Component<HoverGlowProps> {
     }
     const translateX = inversed(bounded(resisted(x), width * scale, this.state.bounds.width))
     const translateY = inversed(bounded(resisted(y), height * scale, this.state.bounds.height))
-    const extraScale = clicked ? clickScale : 1
+    const extraScale = clicked ? clickScale || 1 : 1
     const glow = (
       <Overlay
         key="hoverglow"

@@ -1,5 +1,5 @@
 import { CompositeDisposable } from 'event-kit'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createReaction } from './createReaction'
 import { ReactionFn, ReactVal, UnwrapObservable } from './react'
 import { ReactionOptions } from './types'
@@ -33,29 +33,34 @@ export function useReaction(a: any, b?: any, c?: any) {
 // watches values in an autorun, and resolves their results
 export function setupReact(reaction: any, derive: Function | null, opts: ReactionOptions) {
   const component = useCurrentComponent()
-  const [state, setState] = useState(null)
+  const state = useRef(opts ? opts.defaultValue : undefined)
+  const forceUpdate = useState(0)[1]
+  const subscriptions = useRef<CompositeDisposable | null>(null)
 
-  useEffect(() => {
-    const subscriptions = new CompositeDisposable()
-    const name = `${component.renderName} [${component.renderId}] useReaction`
-
+  // use ref / start synchronously so we can use them without a bunch of re-renders
+  if (!subscriptions.current) {
+    subscriptions.current = new CompositeDisposable()
+    const name = `${component.renderName} useReaction`
     createReaction(reaction, derive, opts, {
       name,
       nameFull: name,
       addSubscription(dispose) {
-        subscriptions.add({ dispose })
+        subscriptions.current.add({ dispose })
       },
       setValue: next => {
         if (next === undefined) return
-        setState(next)
+        state.current = next
+        forceUpdate(Math.random())
       },
-      getValue: () => state,
+      getValue: () => state.current,
     })
+  }
 
+  useEffect(() => {
     return () => {
-      subscriptions.dispose()
+      subscriptions.current && subscriptions.current.dispose()
     }
   }, [])
 
-  return state
+  return state.current
 }

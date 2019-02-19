@@ -7,12 +7,5 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [
-    { "path": "../automagical" },
-    { "path": "../decor" },
-    { "path": "../decor-classes" },
-    { "path": "../decor-mobx" },
-    { "path": "../decor-react" },
-    { "path": "../helpers" }
-  ]
+  "references": [{ "path": "../automagical" }, { "path": "../helpers" }]
 }

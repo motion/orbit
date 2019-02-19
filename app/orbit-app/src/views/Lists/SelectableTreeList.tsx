@@ -1,4 +1,4 @@
-import { cancel, ensure, react } from '@mcro/black'
+import { always, cancel, ensure, react } from '@mcro/black'
 import { useStore } from '@mcro/use-store'
 import React, { useCallback, useEffect } from 'react'
 import { AppConfig } from '../../apps/AppTypes'
@@ -25,8 +25,8 @@ export type SelectableTreeRef = {
 }
 
 class SelectableTreeListStore {
-  props: Omit<SelectableTreeListProps, 'items'> & {
-    getItems: () => ListsAppData['items']
+  props: SelectableTreeListProps & {
+    // getItems: () => ListsAppData['items']
     selectionStore: SelectionStore
   }
 
@@ -58,19 +58,17 @@ class SelectableTreeListStore {
   }
 
   get curFolder() {
-    return this.props.getItems()[this.currentID] as ListAppDataItemFolder
+    return this.props.items[this.currentID] as ListAppDataItemFolder
   }
 
   childrenItems = react(
-    () => [this.curFolder, this.props.getItems()],
+    () => [this.curFolder, always(this.props.items)],
     async ([curFolder]) => {
       ensure('curFolder', !!curFolder)
       this.ensureValid()
       const { props } = this
       console.log('downloading folder', curFolder)
-      return await Promise.all(
-        curFolder.children.map(id => props.loadItemProps(props.getItems()[id])),
-      )
+      return await Promise.all(curFolder.children.map(id => props.loadItemProps(props.items[id])))
     },
     {
       defaultValue: [],
@@ -81,7 +79,7 @@ class SelectableTreeListStore {
     const { curFolder, currentID, props } = this
     if (!curFolder || (curFolder.type !== 'folder' && curFolder.type !== 'root')) {
       // error if we have items
-      if (Object.keys(props.getItems()).length) {
+      if (Object.keys(props.items).length) {
         this.error = `No item found root, ${props.rootItemID} current, ${currentID}`
         throw cancel
       } else {
@@ -99,7 +97,7 @@ class SelectableTreeListStore {
       return
     }
     const nextID = curFolder.children[index]
-    const next = props.getItems()[nextID]
+    const next = props.items[nextID]
     if (next.type === 'folder') {
       const nextDepth = depth + 1
       this.history[nextDepth] = nextID
@@ -119,7 +117,9 @@ export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
     const selectionStore =
       props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
     const getItems = useCallback(() => items, [items])
-    const store = useStore(SelectableTreeListStore, { selectionStore, getItems, ...props })
+    // TODO why does getItems not trigger a change...
+    // we should just pass getItems not all items so we avoid doing large update checks
+    const store = useStore(SelectableTreeListStore, { selectionStore, items, getItems, ...props })
     const { error } = store
 
     useEffect(

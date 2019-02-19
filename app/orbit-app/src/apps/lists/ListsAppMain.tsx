@@ -39,7 +39,6 @@ function ListAppTitle(props) {
 }
 
 function ListsAppMainFolder(props: AppProps) {
-  // @ts-ignore
   const { listStore } = useStores()
   const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]

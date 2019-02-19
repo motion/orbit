@@ -2,6 +2,7 @@ import { SaveOptions } from '@mcro/mediator'
 import { AppBit, AppModel } from '@mcro/models'
 import { Button, Row, Theme, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
+import { useActions } from '../actions/Actions'
 import { useActiveSpace } from '../hooks/useActiveSpace'
 import { useStores } from '../hooks/useStores'
 import { save } from '../mediator'
@@ -37,6 +38,7 @@ function CreateAppIndex() {
 }
 
 function CreateAppMain(props: AppProps) {
+  const Actions = useActions()
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
   const [showPreviewApp, setShowPreviewApp] = useState(false)
@@ -73,7 +75,7 @@ function CreateAppMain(props: AppProps) {
     // not sure why, but can you check into i?
     // @ts-ignore
     save(AppModel, app as SaveOptions<App>)
-    newAppStore.setShowCreateNew(false)
+    Actions.previousTab()
   }
 
   return (

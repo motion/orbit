@@ -41,6 +41,6 @@ export function tearApp(stores: AllStores) {
     // for managing the torn windows so we're putting state on Electron.isTorn, here, etc
     setTimeout(() => {
       App.setOrbitState({ docked: false })
-    }, 150)
+    }, 100)
   }
 }

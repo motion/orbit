@@ -5,6 +5,8 @@ cd $(dirname $0)/..
 
 FLAGS=$@
 
+echo "flags: $FLAGS"
+
 if [[ "$FLAGS" =~ "--prod" ]]; then
   echo "start orbit-app production mode..."
   export NODE_ENV="production"
@@ -19,7 +21,7 @@ if [ "$PUNDLE" = "true" ]; then
   echo "start w pundle"
   pundle --watch --dev.port 3999 --dev.singlepage --dev.static ./public::/ --cache.reset
 else
-  npx mcro-build --entry ./src/main --port 3999
+  npx mcro-build --entry ./src/main --port 3999 $FLAGS
 fi
 
 echo "bye orbit-app"

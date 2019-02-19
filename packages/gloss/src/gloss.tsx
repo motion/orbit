@@ -1,5 +1,5 @@
 import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
-import fastCompareDeep from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import {
   createElement,
   forwardRef,
@@ -280,7 +280,7 @@ export function gloss<Props = GlossProps<any>>(
 
       return createElement(element, finalProps, props.children)
     }),
-    fastCompareDeep,
+    isEqual,
   ) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {

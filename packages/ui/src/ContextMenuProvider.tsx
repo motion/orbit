@@ -26,7 +26,7 @@ export function ContextMenuProvider(props: {
 }) {
   const template = useRef([])
 
-  const showContextMenu = (options = { direct: false }) => {
+  const showContextMenu = (options: any = { direct: false }) => {
     const currentMenu = template.current
     template.current = []
     if (!options.direct) {

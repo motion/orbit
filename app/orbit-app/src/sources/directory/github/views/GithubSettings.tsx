@@ -1,10 +1,9 @@
 import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
-import { SearchableTable, Text, View } from '@mcro/ui'
+import { DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { loadMany, save } from '../../../../mediator'
-import { DateFormat } from '../../../../views/DateFormat'
 import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
 import { OrbitSourceSettingProps } from '../../../types'
@@ -62,7 +61,7 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
         }
         save(SourceModel, {
           id: source.id,
-          data: source.data
+          data: source.data,
         })
       })
     },

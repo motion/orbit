@@ -6,5 +6,10 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "references": [{ "path": "../css" }, { "path": "../color" }, { "path": "../gloss-displaynames" }]
+  "references": [
+    { "path": "../fast-compare" },
+    { "path": "../css" },
+    { "path": "../color" },
+    { "path": "../gloss-displaynames" }
+  ]
 }

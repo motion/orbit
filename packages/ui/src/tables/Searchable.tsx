@@ -9,7 +9,7 @@ import { attachTheme, ThemeObject } from '@mcro/gloss'
 import { on } from '@mcro/helpers'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
-import { SearchInput, SearchInputProps } from '../form/SearchInput'
+import { SearchInput, SearchInputProps } from '../forms/SearchInput'
 import { Filter, FilterIncludeExclude } from './types'
 
 type State = {

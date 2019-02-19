@@ -8,7 +8,7 @@
 import { gloss, Row, ThemeObject, View, ViewProps } from '@mcro/gloss'
 import React, { useEffect, useState } from 'react'
 import { Icon } from './Icon'
-import { Text } from './Text'
+import { Text } from './text/Text'
 
 const Chevron = gloss(Icon, {
   marginRight: 4,

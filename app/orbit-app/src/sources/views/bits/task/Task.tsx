@@ -1,6 +1,6 @@
+import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
 import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
-import { HighlightTextItem } from '../../../../views/HighlightTextItem'
 import { Markdown } from '../../../../views/Markdown'
 import { OrbitItemViewProps } from '../../../types'
 import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'
@@ -18,7 +18,7 @@ export function Task(rawProps: OrbitItemViewProps<any> & TaskLike) {
     return renderText(body)
   }
   if (oneLine) {
-    return <HighlightTextItem ellipse>{body.slice(0, 200)}</HighlightTextItem>
+    return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
   }
   return (
     <>

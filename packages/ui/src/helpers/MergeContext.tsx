@@ -1,7 +1,7 @@
-import isEqual from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import React, { memo, useContext } from 'react'
 
-// heavily memoized to avoid updates...
+// memoized to avoid updates...
 
 export type MergeContextProps<A> = {
   Context: React.Context<A>

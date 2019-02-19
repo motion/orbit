@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react'
 import { MergeContext } from './helpers/MergeContext'
-import { Text, TextProps } from './Text'
+import { Text, TextProps } from './text/Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 

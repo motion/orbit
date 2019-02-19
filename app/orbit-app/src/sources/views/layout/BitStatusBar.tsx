@@ -1,10 +1,15 @@
-import { gloss } from '@mcro/gloss';
-import { View } from '@mcro/ui';
-import * as React from 'react';
-import { AppActions } from '../../../actions/appActions/AppActions';
-import { DateFormat } from '../../../views/DateFormat';
-import { StatusBar, StatusBarButton, StatusBarSection, StatusBarSpace, StatusBarText } from '../../../views/StatusBar';
-import { OrbitSourceMainProps } from '../../types';
+import { gloss } from '@mcro/gloss'
+import { DateFormat, View } from '@mcro/ui'
+import * as React from 'react'
+import { AppActions } from '../../../actions/appActions/AppActions'
+import {
+  StatusBar,
+  StatusBarButton,
+  StatusBarSection,
+  StatusBarSpace,
+  StatusBarText,
+} from '../../../views/StatusBar'
+import { OrbitSourceMainProps } from '../../types'
 
 const Cmd = gloss({
   opacity: 0.6,
@@ -31,11 +36,11 @@ export const BitStatusBar = ({ normalizedItem, item }: OrbitSourceMainProps<any>
       )}
       <View flex={1} />
       <StatusBarSection>
-        <StatusBarButton onClick={() => AppActions.copyItem(item)}>
+        <StatusBarButton onClick={() => AppActions.copy(item)}>
           Copy Link <Cmd>⌘+C</Cmd>
         </StatusBarButton>
         <View width={5} />
-        <StatusBarButton onClick={() => AppActions.openItem(item)}>
+        <StatusBarButton onClick={() => AppActions.open(item)}>
           Open <Cmd>Enter</Cmd>
         </StatusBarButton>
       </StatusBarSection>

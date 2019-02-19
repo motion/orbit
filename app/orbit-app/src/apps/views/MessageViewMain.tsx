@@ -1,6 +1,6 @@
-import { PassProps } from '@mcro/ui'
+import { PassProps, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
-import { Title, VerticalSpace } from '../../views'
+import { Title } from '../../views'
 import { Center } from '../../views/Center'
 import { Icon } from '../../views/Icon'
 import { AppConfig } from '../AppTypes'

@@ -1,5 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import { Bit, Person, PersonBit } from '@mcro/models'
+import { ListItem, ListItemProps, VirtualListItemProps } from '@mcro/ui'
 import * as React from 'react'
 import { AppConfig } from '../../apps/AppTypes'
 import PeopleRow from '../../components/PeopleRow'
@@ -7,8 +8,6 @@ import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSimple } from '../../hooks/useStores'
 import { ItemType, OrbitItemViewProps } from '../../sources/types'
-import { VirtualListItemProps } from '../VirtualList/VirtualListItem'
-import ListItem, { ListItemProps } from './ListItem'
 import ListItemPerson from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any

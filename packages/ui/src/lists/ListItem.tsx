@@ -1,16 +1,25 @@
-import { CSSPropertySet, gloss, ThemeObject } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
-import { Row, Text, View } from '@mcro/ui'
+import {
+  CSSPropertySet,
+  gloss,
+  Row,
+  SimpleText,
+  Theme,
+  ThemeContext,
+  ThemeObject,
+  View,
+  ViewProps,
+} from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import React, { memo } from 'react'
-import { HorizontalSpace } from '..'
 import { BorderBottom } from '../Border'
-import { DateFormat } from '../DateFormat'
-import { HighlightText } from '../HighlightText'
+import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { Icon } from '../Icon'
-import { RoundButtonSmall } from '../RoundButtonSmall'
+import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { Separator } from '../Separator'
+import { DateFormat } from '../text/DateFormat'
+import { HighlightText } from '../text/HighlightText'
+import { Text } from '../text/Text'
 import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
@@ -35,7 +44,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = UI.ViewProps &
+export type ListItemProps = ViewProps &
   ListItemHide &
   ListItemDisplayProps & {
     location?: React.ReactNode
@@ -115,7 +124,7 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   )
 }
 
-export default memo(function ListItem(props: ListItemProps) {
+export const ListItem = memo(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
   const {
     date,
@@ -169,19 +178,19 @@ export default memo(function ListItem(props: ListItemProps) {
   const iconElement = showIcon && getIcon(props)
 
   const childrenElement = showChildren && (
-    <UI.SimpleText size={0.9} alpha={subTextOpacity}>
+    <SimpleText size={0.9} alpha={subTextOpacity}>
       {children}
-    </UI.SimpleText>
+    </SimpleText>
   )
-  const { activeThemeName } = React.useContext(UI.ThemeContext)
+  const { activeThemeName } = React.useContext(ThemeContext)
 
   const afterHeaderElement = (
     <AfterHeader>
       <Row>
         {showDate && (
-          <UI.Text alpha={0.6} size={0.9} fontWeight={500}>
+          <Text alpha={0.6} size={0.9} fontWeight={500}>
             <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
-          </UI.Text>
+          </Text>
         )}
       </Row>
     </AfterHeader>
@@ -205,17 +214,17 @@ export default memo(function ListItem(props: ListItemProps) {
   )
 
   return (
-    <UI.Theme select={isSelected ? theme => theme.selected : null}>
+    <Theme select={isSelected ? theme => theme.selected : null}>
       <>
         {above}
         {!!separator && (
-          <UI.Theme name={activeThemeName}>
+          <Theme name={activeThemeName}>
             <Separator {...separatorProps}>
               <Text size={0.9} fontWeight={500}>
                 {separator}
               </Text>
             </Separator>
-          </UI.Theme>
+          </Theme>
         )}
       </>
       <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
@@ -320,11 +329,11 @@ export default memo(function ListItem(props: ListItemProps) {
         </ListItemChrome>
         <BorderBottom opacity={0.15} />
       </ListFrame>
-    </UI.Theme>
+    </Theme>
   )
 })
 
-const ListFrame = gloss(UI.View, {
+const ListFrame = gloss(View, {
   position: 'relative',
   userSelect: 'none',
   overflow: 'hidden',
@@ -390,7 +399,7 @@ const Preview = gloss({
   zIndex: -1,
 })
 
-const ListItemSubtitle = gloss(UI.View, {
+const ListItemSubtitle = gloss(View, {
   flexFlow: 'row',
   alignItems: 'center',
   flex: 1,

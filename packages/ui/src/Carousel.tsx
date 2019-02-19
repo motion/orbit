@@ -1,8 +1,8 @@
 import * as React from 'react'
 import scroll from 'scroll'
-import { HorizontalScrollRow, HorizontalScrollRowProps } from './HorizontalScrollRow'
-import { ListItemProps } from './ListItems/ListItem'
-import { OrbitCard } from './OrbitCard'
+import { Card } from './Card'
+import { HorizontalScrollRow, HorizontalScrollRowProps } from './layout/HorizontalScrollRow'
+import { ListItemProps } from './lists/ListItem'
 
 export type CarouselProps = HorizontalScrollRowProps & {
   CardView?: (props: ListItemProps) => JSX.Element
@@ -21,7 +21,7 @@ export type CarouselProps = HorizontalScrollRowProps & {
 
 export class Carousel extends React.PureComponent<CarouselProps> {
   static defaultProps = {
-    CardView: OrbitCard,
+    CardView: Card,
   }
 
   frameRef = React.createRef<HTMLDivElement>()

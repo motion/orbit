@@ -73,10 +73,10 @@ window['AppActions'] = AppActions
 window['Models'] = Models
 window['sherlockjs'] = require('sherlockjs')
 
-const fastCompare = require('@mcro/fast-compare')
-window['reactFastCompareDebug'] = (a, b) => {
+const { isEqual } = require('@mcro/fast-compare')
+window['isEqualDebug'] = (a, b) => {
   for (const key in a) {
-    if (!fastCompare(a[key], b[key])) {
+    if (!isEqual(a[key], b[key])) {
       console.log('falsy value', key)
       return false
     }

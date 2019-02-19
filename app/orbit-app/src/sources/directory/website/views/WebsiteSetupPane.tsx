@@ -1,12 +1,12 @@
 import { react } from '@mcro/black'
-import { command } from '../../../../mediator'
 import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import * as React from 'react'
-import { InputRow, Table, VerticalSpace } from '../../../../views'
-import { Message } from '../../../../views/Message'
-import { observer } from 'mobx-react-lite'
+import { VerticalSpace } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
+import * as React from 'react'
+import { command } from '../../../../mediator'
+import { InputRow, Table } from '../../../../views'
+import { Message } from '../../../../views/Message'
 
 /**
  * Crawled website data.
@@ -49,7 +49,7 @@ class WebsiteSetupStore {
   )
 }
 
-export default observer(function WebsiteSetupPane(props: Props) {
+export default function WebsiteSetupPane(props: Props) {
   const store = useStore(WebsiteSetupStore, props)
 
   const addIntegration = React.useCallback(
@@ -106,4 +106,4 @@ export default observer(function WebsiteSetupPane(props: Props) {
       </UI.Col>
     </UI.Col>
   )
-})
+}

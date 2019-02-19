@@ -1,5 +1,5 @@
 import { on } from '@mcro/black'
-import isEqual from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 

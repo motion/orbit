@@ -5,9 +5,9 @@
  * @format
  */
 
-import { RowRenderer, OnScroll, KeyMapper } from './types'
-import { DynamicList } from './DynamicList'
 import * as React from 'react'
+import { KeyMapper, OnScroll, RowRenderer } from '../types'
+import { DynamicList } from './DynamicList'
 
 type FixedListProps = {
   pureData: any

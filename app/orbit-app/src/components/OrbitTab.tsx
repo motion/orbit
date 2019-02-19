@@ -1,10 +1,17 @@
 import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
 import { AppBit } from '@mcro/models'
-import { Button, ButtonProps, IconProps, MenuTemplate, Tooltip, useContextMenu } from '@mcro/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  IconProps,
+  MenuTemplate,
+  Tooltip,
+  useContextMenu,
+} from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
 import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
-import { BorderBottom } from '../views/Border'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 29

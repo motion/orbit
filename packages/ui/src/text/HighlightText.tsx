@@ -1,11 +1,38 @@
 import { HighlightOptions } from '@mcro/helpers'
-import { Text, TextProps } from '@mcro/ui'
 import * as React from 'react'
-import { HighlightsContext } from '../helpers/contexts/HighlightsContext'
+import { MergeContext } from '../helpers/MergeContext'
+import { Text, TextProps } from '../text/Text'
 
 type Props = TextProps & {
   options?: Partial<HighlightOptions>
 }
+
+const defaultValue = {
+  words: [] as string[],
+  maxSurroundChars: Infinity,
+  maxChars: Infinity,
+}
+
+export type HighlightsContextValue = typeof defaultValue
+export type MergeHighlightsContextProps = {
+  value: Partial<HighlightsContextValue>
+  children: any
+}
+export const HighlightsContext = React.createContext(defaultValue)
+
+export const MergeHighlightsContext = ({ value, children }: MergeHighlightsContextProps) => (
+  <MergeContext
+    Context={HighlightsContext}
+    value={{
+      words: [],
+      maxSurroundChars: Infinity,
+      maxChars: Infinity,
+      ...value,
+    }}
+  >
+    {children}
+  </MergeContext>
+)
 
 export const HighlightText = ({ options, children, ...props }: Props) => {
   let extraProps

@@ -5,7 +5,7 @@
  * @format
  */
 
-import deepEqual from '@mcro/fast-compare'
+import { isEqual } from '@mcro/fast-compare'
 import { View } from '@mcro/gloss'
 import * as React from 'react'
 import textContent from '../helpers/textContent'
@@ -69,7 +69,7 @@ class SearchableManagedTable extends React.PureComponent<Props, State> {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.searchTerm !== state.searchTerm || !deepEqual(state.filters, props.filters)) {
+    if (props.searchTerm !== state.searchTerm || !isEqual(state.filters, props.filters)) {
       return {
         filterRows: filterRowsFactory(props.filters, props.searchTerm),
         searchTerm: props.searchTerm,

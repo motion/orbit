@@ -21,3 +21,7 @@ export type RowRenderer = (
     style: Object
   },
 ) => any
+
+export type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
+
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>

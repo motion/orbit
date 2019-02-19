@@ -1,6 +1,15 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { App } from '@mcro/stores'
-import { BorderBottom, Button, ButtonProps, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  HorizontalSpace,
+  Popover,
+  Row,
+  SegmentedRow,
+  View,
+} from '@mcro/ui'
 import React, { memo } from 'react'
 import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
@@ -8,7 +17,6 @@ import { AppType } from '../../apps/AppTypes'
 import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStores } from '../../hooks/useStores'
-import { HorizontalSpace } from '../../views'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'

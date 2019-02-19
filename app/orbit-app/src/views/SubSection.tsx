@@ -1,6 +1,5 @@
-import { View } from '@mcro/ui'
+import { VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { VerticalSpace } from '.'
 import { Divider } from './Divider'
 import { SubTitle } from './SubTitle'
 

@@ -1,8 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { Logger } from '@mcro/logger'
 import { ListItemProps } from './ListItem'
-
-const log = new Logger('OrbitItemStore')
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -21,7 +18,7 @@ export class ListItemStore {
     return Date.now() - this.clickAt < 50
   }
 
-  handleClick = (e: React.SyntheticEvent<MouseEvent>) => {
+  handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location
@@ -42,7 +39,7 @@ export class ListItemStore {
     if (this.props.onClick) {
       e.stopPropagation()
       e.preventDefault()
-      this.props.onClick(e, this.cardWrapRef)
+      this.props.onClick(e)
     }
     if (this.props.onSelect) {
       this.props.onSelect(this.index, 'click')
@@ -88,12 +85,16 @@ export class ListItemStore {
     this.isSelected = isSelected
     if (isSelected) {
       ensure('not clicked', Date.now() - this.clickAt > 10)
+
+      // TODO make this only delay if the last one was recent, otherwise be instant
       // delay to allow fast keyboard movement down lists
+      console.log('should only delay if last event was recent, store in a global and check!')
       await sleep(35)
+
       if (onSelect) {
         onSelect(this.index, 'key')
       } else {
-        log.info('no preview event for', this.index)
+        console.log('no preview event for', this.index)
       }
     }
   })

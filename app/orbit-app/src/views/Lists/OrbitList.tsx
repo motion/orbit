@@ -1,5 +1,5 @@
 import { Bit, PersonBit } from '@mcro/models'
-import { Text, View } from '@mcro/ui'
+import { Text, View, VirtualList, VirtualListProps } from '@mcro/ui'
 import React, { useCallback } from 'react'
 import { AppConfig } from '../../apps/AppTypes'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
@@ -9,7 +9,6 @@ import { useIsActive } from '../../hooks/useIsActive'
 import { Center } from '../Center'
 import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
 import { SubTitle } from '../SubTitle'
-import { default as VirtualList, VirtualListProps } from '../VirtualList/VirtualList'
 
 export type SearchableItem = Bit | PersonBit
 

@@ -8,13 +8,13 @@
 import { Col, gloss, Row } from '@mcro/gloss'
 // import { ContextMenu } from './ContextMenu'
 import * as React from 'react'
-import { FixedList } from './FixedList'
 import { colors } from './helpers/colors'
 import { Icon } from './Icon'
 import { Image } from './Image'
-import { Text } from './Text'
+import { FixedList } from './lists/FixedList'
+import { Text } from './text/Text'
 import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
-// import isEqual from '@mcro/fast-compare'
+// import { isEqual } from '@mcro/fast-compare'
 
 const ROW_HEIGHT = 23
 

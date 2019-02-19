@@ -1,5 +1,5 @@
 import { CurrentComponent, IS_STORE } from '@mcro/automagical'
-import fastEqual from '@mcro/fast-compare'
+import { EQUALITY_KEY } from '@mcro/fast-compare'
 import { last } from 'lodash'
 
 const IS_PROXY = Symbol('IS_PROXY')
@@ -49,7 +49,7 @@ export function mobxProxyWorm<A extends Function>(
   const store = new Proxy(obj, {
     get(target, key) {
       if (key === GET_STORE) return obj
-      if (key === fastEqual.EQUALITY_KEY) return obj
+      if (key === EQUALITY_KEY) return obj
       if (key === IS_PROXY) return true
       const val = Reflect.get(target, key)
       if (state.ids.size === 0) return val

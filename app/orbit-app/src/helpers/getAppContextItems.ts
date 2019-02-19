@@ -1,8 +1,8 @@
+import { AppBit, AppModel } from '@mcro/models'
 import { remove } from '../mediator'
-import { App, AppModel } from '@mcro/models'
 import { showConfirmDialog } from './electron/showConfirmDialog'
 
-export function getAppContextItems(app: App) {
+export function getAppContextItems(app: AppBit) {
   return [
     {
       label: 'Remove',

@@ -23,7 +23,7 @@ export default memo(function OrbitToolBar() {
       <ToolbarChrome hasToolbars={hasToolBar}>
         <ToolbarInner hasToolbars={hasToolBar}>
           {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-          {!orbitStore.isTorn && hasToolBar && <BorderBottom />}
+          {!orbitStore.isTorn && hasToolBar && <BorderBottom opacity={0.5} />}
         </ToolbarInner>
       </ToolbarChrome>
     </ProvideStores>

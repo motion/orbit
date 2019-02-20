@@ -1,3 +1,4 @@
+import { UIStores } from '@mcro/ui'
 import { createContext } from 'react'
 import { AppsStore } from '../apps/AppsStore'
 import { AppStore } from '../apps/AppStore'
@@ -14,17 +15,15 @@ import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { QueryStore } from '../stores/QueryStore/QueryStore'
-import { SelectionStore } from '../stores/SelectionStore'
 import { SettingStore } from '../stores/SettingStore'
 import { ShortcutStore } from '../stores/ShortcutStore'
 import { SourcesStore } from '../stores/SourcesStore'
 import { SpaceStore } from '../stores/SpaceStore'
 import { ThemeStore } from '../stores/ThemeStore'
 
-export type AllStores = {
+export type AllStores = UIStores & {
   queryStore?: QueryStore
   paneManagerStore?: PaneManagerStore
-  selectionStore?: SelectionStore
   sourcesStore?: SourcesStore
   spaceStore?: SpaceStore
   settingStore?: SettingStore

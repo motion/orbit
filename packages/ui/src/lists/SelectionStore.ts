@@ -1,30 +1,16 @@
-import { ensure, react } from '@mcro/black';
-import { App } from '@mcro/stores';
-import { AppActions } from '../actions/appActions/AppActions';
-import { SelectionGroup } from '../apps/SelectionResults';
-import { SelectableListProps } from '../views/Lists/SelectableList';
+import { ensure, react } from '@mcro/use-store'
+import {
+  Direction,
+  MovesMap,
+  SelectEvent,
+  SelectionGroup,
+  SelectionStoreProps,
+} from './SelectionProvider'
 
-const isInRow = item => item.moves.some(move => move === Direction.right || move === Direction.left)
+const isInRow = item =>
+  item.moves.some((move: string) => move === Direction.right || move === Direction.left)
 
-export enum Direction {
-  left = 'left',
-  right = 'right',
-  up = 'up',
-  down = 'down',
-}
-
-export type MovesMap = {
-  index: number
-  shouldAutoSelect?: boolean
-  moves?: Direction[]
-}
-
-export enum SelectEvent {
-  key = 'key',
-  click = 'click',
-}
-
-const getDefaultActiveIndex = (props: SelectableListProps) => {
+const getDefaultActiveIndex = (props: SelectionStoreProps) => {
   if (typeof props.defaultSelected === 'number') {
     return props.defaultSelected
   }
@@ -35,12 +21,16 @@ const getDefaultActiveIndex = (props: SelectableListProps) => {
 }
 
 export class SelectionStore {
-  props: SelectableListProps
+  props: SelectionStoreProps
 
   selectEvent: SelectEvent = SelectEvent.click
   lastSelectAt = 0
   _activeIndex = getDefaultActiveIndex(this.props)
   movesMap: MovesMap[] | null = null
+
+  get isActive() {
+    return typeof this.props.isActive === 'boolean' ? this.props.isActive : true
+  }
 
   get activeIndex() {
     this.lastSelectAt
@@ -67,7 +57,8 @@ export class SelectionStore {
     () => this.activeIndex,
     () => {
       ensure('no active index', !this.hasActiveIndex)
-      AppActions.clearPeek()
+      // AppActions.clearPeek()
+      // => this.props.onClearIndex()
     },
     {
       deferFirstRun: true,
@@ -83,10 +74,9 @@ export class SelectionStore {
       this.setSelectEvent(SelectEvent[eventType])
     }
     const isSame = this.activeIndex === index && this.activeIndex > -1
-    if (isSame && App.peekState && App.peekState.target) {
+    if (isSame) {
       if (Date.now() - this.lastSelectAt < 70) {
         // ignore really fast double clicks
-        console.log('isSame, ignore', index, this.activeIndex)
         return isSame
       }
       this.clearSelected()

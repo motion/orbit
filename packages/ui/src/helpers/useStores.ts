@@ -1,12 +1,8 @@
 import { createUseStores, UseStoresOptions } from '@mcro/use-store'
-import { SelectionStore } from '../lists/SelectionProvider'
+import { UIStores } from '../UIStores'
 import { configure } from './configure'
 
 let useStoresResolved = null
-
-export type UIStores = {
-  selectionStore?: SelectionStore
-}
 
 type GuaranteedUIStores = { [P in keyof UIStores]-?: UIStores[P] }
 

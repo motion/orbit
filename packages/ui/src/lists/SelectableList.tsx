@@ -1,12 +1,13 @@
-import { ensure, react, useStore } from '@mcro/use-store'
-import * as React from 'react'
-import { configure } from '../helpers/configure'
-import { MergeContext } from '../helpers/MergeContext'
-import { useStores } from '../helpers/useStores'
-import { getItemsKey } from './helpers'
-import { HandleSelection } from './ListItem'
-import { SelectEvent, SelectionStore } from './SelectionProvider'
-import { VirtualList, VirtualListProps } from './VirtualList'
+import { ensure, react, useStore } from '@mcro/use-store';
+import * as React from 'react';
+import { configure } from '../helpers/configure';
+import { MergeContext } from '../helpers/MergeContext';
+import { useStores } from '../helpers/useStores';
+import { getItemsKey } from './helpers';
+import { HandleSelection } from './ListItem';
+import { SelectEvent } from './SelectionProvider';
+import { SelectionStore } from './SelectionStore';
+import { VirtualList, VirtualListProps } from './VirtualList';
 
 export type SelectableListProps = VirtualListProps<any> & {
   minSelected?: number

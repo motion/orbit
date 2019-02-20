@@ -9,6 +9,7 @@ FLAGS=$@
 
 # disable menu by default
 if [[ "$FLAGS" =~ "--yes-menu" ]]; then
+  echo "ENABLE MENU"
 else
   echo "DISABLE MENU"
   export DISABLE_MENU="true"

@@ -81,6 +81,7 @@ import { TopicsManager } from './managers/TopicsManager'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
+import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
@@ -90,7 +91,6 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { WebServer } from './WebServer'
-import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 
 export class OrbitDesktopRoot {
   // public
@@ -240,7 +240,6 @@ export class OrbitDesktopRoot {
    * for communication between processes.
    */
   private registerMediatorServer() {
-
     const syncersTransport = new WebSocketClientTransport(
       'syncers',
       new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.syncersMediator}`, [], {

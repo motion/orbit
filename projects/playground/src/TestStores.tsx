@@ -1,5 +1,5 @@
 import { react } from '@mcro/black'
-import { useScreenPosition } from '@mcro/ui'
+import { Button, useScreenPosition } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
@@ -48,7 +48,9 @@ export function TestStores() {
       <h2>z: {store.z}</h2>
       <h5>z2: {store.z2}</h5>
       {JSON.stringify(store.abc)}
-      <button onClick={store.onClick}>gooo</button>
+      <Button tooltip="hi mom" onClick={store.onClick}>
+        gooo
+      </Button>
       <div style={{ flex: 1 }} />
       <div ref={ref}>hello</div>
       <div style={{ flex: 1 }} />

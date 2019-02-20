@@ -85,6 +85,7 @@ export type PopoverProps = SurfaceProps & {
   noPortal?: boolean
   // helps you see forgiveness zone
   showForgiveness?: boolean
+  popoverRef?: Function
 }
 
 const defaultProps = {
@@ -318,9 +319,9 @@ const initialState = {
   direction: 'auto' as PopoverDirection,
   delay: 16,
   props: {} as PopoverProps,
-  shouldSetPosition: false,
   closing: false,
   finishedMount: false,
+  shouldMeasure: false,
 }
 
 type State = typeof initialState & {
@@ -359,7 +360,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   popoverRef: HTMLElement
   state = initialState
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: PopoverPropsWithDefaults, state: State) {
     let nextState: Partial<State> = {}
     const isManuallyPositioned = getIsManuallyPositioned(props)
 
@@ -374,18 +375,14 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         }),
         props,
       }
-    } else if (state.shouldSetPosition) {
-      nextState = {
-        ...nextState,
-        shouldSetPosition: false,
-        ...getPositionState(props, state.popoverBounds, state.targetBounds),
-        props,
-      }
     }
 
     const nextShow = showPopover(props, state)
     if (nextShow !== state.showPopover) {
       nextState.showPopover = nextShow
+      if (nextShow) {
+        nextState.shouldMeasure = true
+      }
     }
 
     if (!Object.keys(nextState).length) {
@@ -398,26 +395,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   setPopoverRef = (ref: HTMLElement) => {
     if (ref) {
       this.popoverRef = ref
-      const inner = ref.querySelector('.popover-inner-surface')
-      on(
-        this,
-        setTimeout(() => {
-          this.resizeObserver.observe(inner)
-          this.mutationObserver.observe(ref, { attributes: true })
-        }, 300),
-      )
+      if (this.props.popoverRef) {
+        this.props.popoverRef(ref)
+      }
+      // const inner = ref.querySelector('.popover-inner-surface')
+      // on(
+      //   this,
+      //   setTimeout(() => {
+      //     this.resizeObserver.observe(inner)
+      //     this.mutationObserver.observe(ref, { attributes: true })
+      //   }, 300),
+      // )
     }
   }
-
-  // @ts-ignore
-  resizeObserver = new ResizeObserver((/* ...args */) => {
-    // console.log('resize', this.props)
-    this.setPosition()
-  })
-  mutationObserver = new MutationObserver((/* ...args */) => {
-    // console.log('mutations', this.props, args)
-    this.setPosition()
-  })
 
   get domNode() {
     return findDOMNode(this) as HTMLDivElement
@@ -426,7 +416,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   componentDidMount() {
     const { openOnClick, closeOnClick, closeOnClickAway, closeOnEsc, open, target } = this.props
 
-    this.resizeObserver.observe(document.documentElement)
+    // this.resizeObserver.observe(document.documentElement)
 
     if (openOnClick || closeOnClick || closeOnClickAway) {
       this.listenForClickAway()
@@ -462,7 +452,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
 
     if (this.target) {
-      // this.setPosition()
       this.listenForClick()
       this.listenForHover()
       on(this, this.target, 'click', this.handleTargetClick)
@@ -492,8 +481,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   componentWillUnmount() {
     PopoverState.openPopovers.delete(this)
     this.unmounted = true
-    this.mutationObserver.disconnect()
-    this.resizeObserver.disconnect()
   }
 
   get showPopover() {
@@ -504,6 +491,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
+    if (this.state.shouldMeasure) {
+      this.setPosition()
+    }
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
         this.props.onChangeVisibility(this.state.showPopover)
@@ -523,18 +513,18 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   setPosition = () => {
-    console.trace('setPosition')
+    const { props } = this
     if (this.unmounted) return
-    if (getIsManuallyPositioned(this.props)) return
+    if (getIsManuallyPositioned(props)) return
     if (!this.popoverRef || !this.target) {
       throw new Error('missing popvoer ref or target')
     }
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
     const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
-    debugger
     const nextState = {
       targetBounds: JSON.parse(JSON.stringify(this.target.getBoundingClientRect())),
       popoverBounds: {
+        top: popoverBounds.top,
         left: popoverBounds.left,
         width: Math.min(window.innerWidth, popoverBounds.width),
         height: Math.min(window.innerHeight, popoverBounds.height),
@@ -543,9 +533,22 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
     if (!isEqual(nextState, prevState)) {
+      this.setState(
+        {
+          ...nextState,
+          ...getPositionState(
+            props as PopoverPropsWithDefaults,
+            nextState.popoverBounds,
+            nextState.targetBounds,
+          ),
+        },
+        () => {
+          this.setState({ shouldMeasure: false })
+        },
+      )
+    } else {
       this.setState({
-        ...nextState,
-        shouldSetPosition: true,
+        shouldMeasure: false,
       })
     }
   }
@@ -903,7 +906,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   get isMeasuring() {
-    return this.state.shouldSetPosition || !this.state.finishedMount
+    return this.state.shouldMeasure || !this.state.finishedMount
   }
 
   render() {
@@ -960,6 +963,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const backgroundProp =
       !background || background === true ? null : { background: `${background}` }
     const isOpen = !isMeasuring && showPopover
+
+    console.log('isMeasuring', isMeasuring)
 
     const popoverContent = (
       <PopoverContainer

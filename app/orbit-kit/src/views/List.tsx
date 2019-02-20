@@ -1,7 +1,6 @@
 import { Bit, PersonBit } from '@mcro/models'
 import { SelectableList, Text, View, VirtualListProps } from '@mcro/ui'
 import React, { useCallback } from 'react'
-import { AppConfig } from '../../apps/AppTypes'
 import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
 import { getAppConfig } from '../../helpers/getAppConfig'
 import { Omit } from '../../helpers/typeHelpers/omit'
@@ -9,6 +8,7 @@ import { useIsActive } from '../../hooks/useIsActive'
 import { Center } from '../Center'
 import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
 import { SubTitle } from '../SubTitle'
+import { AppConfig } from '../types/AppConfig'
 
 export type SearchableItem = Bit | PersonBit
 
@@ -27,7 +27,7 @@ export type OrbitHandleSelect = ((
   eventType?: 'click' | 'key',
 ) => any)
 
-export type OrbitListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' | 'items'> & {
+export type ListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' | 'items'> & {
   items?: Item[]
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect
@@ -35,7 +35,7 @@ export type OrbitListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' |
   placeholder?: React.ReactNode
 }
 
-export default function OrbitList(props: OrbitListProps) {
+export function List(props: ListProps) {
   const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsActive()

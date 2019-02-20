@@ -7,7 +7,6 @@ import { useActiveApps } from '../../hooks/useActiveApps'
 import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStores } from '../../hooks/useStores'
 import { sourceToAppConfig } from '../../stores/SourcesStore'
-import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps, AppType } from '../AppTypes'
 
 export default function AppsAppsIndex(_props: AppProps) {

@@ -12,7 +12,9 @@ export {
   ensure,
   IS_STORE,
   react,
+  ReactionRejectionError,
   useCurrentComponent,
+  useReaction,
 } from '@mcro/automagical'
 export { configureUseStore } from './configure'
 export { createUseStores, UseStoresOptions } from './createUseStores'

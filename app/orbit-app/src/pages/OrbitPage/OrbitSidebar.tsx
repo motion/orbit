@@ -7,7 +7,6 @@ import React, { memo, useEffect, useMemo } from 'react'
 import { AppView, AppViewRef } from '../../apps/AppView'
 import { SubPane } from '../../components/SubPane'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
-import { ProvideSelectableHandlers } from '../../views/Lists/SelectableList'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
@@ -122,18 +121,18 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
 
   return (
     <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
-      <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
-        <AppView
-          key={id}
-          ref={handleAppRef}
-          viewType="index"
-          id={id}
-          type={type}
-          before={<OrbitToolBarHeight id={id} />}
-          after={<OrbitStatusBarHeight id={id} />}
-          inside={<BorderRight />}
-        />
-      </ProvideSelectableHandlers>
+      {/* <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}> */}
+      <AppView
+        key={id}
+        ref={handleAppRef}
+        viewType="index"
+        id={id}
+        type={type}
+        before={<OrbitToolBarHeight id={id} />}
+        after={<OrbitStatusBarHeight id={id} />}
+        inside={<BorderRight />}
+      />
+      {/* </ProvideSelectableHandlers> */}
     </SubPane>
   )
 })

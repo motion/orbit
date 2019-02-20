@@ -11,7 +11,7 @@ const Code = ({ value, ...props }) => (
   </HighlightText>
 )
 
-export const markdownOptions = {
+const markdownOptions = {
   // use this to highlight search terms more e
   plugins: [remarkEmoji],
   renderers: {
@@ -21,7 +21,9 @@ export const markdownOptions = {
   },
 }
 
-type MarkdownProps = Partial<typeof markdownOptions> & {
+type MarkdownProps = {
+  plugins?: any[]
+  renderers?: any
   source: string
   className?: string
 }

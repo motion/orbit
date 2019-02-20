@@ -1,7 +1,8 @@
+import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/gmail.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration } from '../../types'
+// @ts-ignore
+import icon from './gmail.svg'
 import { GmailApp } from './views/GmailApp'
 import { GmailItem } from './views/GmailItem'
 import GmailSettings from './views/GmailSettings'

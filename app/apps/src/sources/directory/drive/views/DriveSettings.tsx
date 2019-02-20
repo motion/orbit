@@ -1,11 +1,9 @@
-import * as React from 'react'
-import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
-import { Text, SearchableTable, View } from '@mcro/ui'
 import { DriveSource } from '@mcro/models'
+import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
+import { useStore } from '@mcro/use-store'
+import * as React from 'react'
 import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 
 type Props = OrbitSourceSettingProps<DriveSource>
 
@@ -45,7 +43,7 @@ class DriveSettingsStore {
   }
 }
 
-export default observer(function DriveSettings(props: Props) {
+export function DriveSettings(props: Props) {
   const store = useStore(DriveSettingsStore)
   const folders = store.popularFolders
 
@@ -83,7 +81,7 @@ export default observer(function DriveSettings(props: Props) {
                 },
                 active: {
                   sortValue: false,
-                  value: <ReactiveCheckBox isActive={store.onSyncSetter(file.id)} />,
+                  value: <CheckboxReactive isActive={store.onSyncSetter(file.id)} />,
                 },
               },
             }
@@ -97,4 +95,4 @@ export default observer(function DriveSettings(props: Props) {
       </View>
     </>
   )
-})
+}

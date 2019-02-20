@@ -1,12 +1,9 @@
-import { react } from '@mcro/black'
+import { command } from '@mcro/bridge'
 import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { VerticalSpace } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
+import { react, useStore } from '@mcro/use-store'
 import * as React from 'react'
-import { command } from '../../../../mediator'
-import { InputRow, Table } from '../../../../views'
-import { Message } from '../../../../views/Message'
 
 /**
  * Crawled website data.

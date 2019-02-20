@@ -17,7 +17,7 @@ type AppTypeToModelType = {
   website: Bit
   drive: Bit
   person: PersonBit
-  pinned: Bit
+  pinned: any
 }
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]

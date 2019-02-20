@@ -1,104 +1,11 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { HorizontalSpace, InputProps, Row, SubTitle, Text, TextProps, Title, View } from '@mcro/ui'
+import { Row, SubTitle, Text, TextProps, Title } from '@mcro/ui'
 import * as React from 'react'
-import { Input } from './Input'
 
 export * from './RoundButton'
 
 export const highlightColor = UI.color('#696549')
-
-export const Table = gloss(View, {
-  width: '100%',
-})
-
-export const TableCell = gloss(View, {
-  padding: [4, 0],
-})
-
-export const FormTableRow = gloss(Row, {
-  width: '100%',
-  maxWidth: 500,
-  minHeight: 32,
-  alignItems: 'center',
-})
-
-type RowProps = {
-  label?: React.ReactNode
-}
-
-export const Scrollable = gloss(View, {
-  overflowY: 'auto',
-})
-
-export const FormTableLabel = ({ children }) => (
-  <TableCell width="30%" maxWidth={125}>
-    {children}
-  </TableCell>
-)
-
-export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
-
-const Label = props => <Text tagName="label" flex={1} {...props} />
-
-export const FormRow = ({ label, children }: RowProps & { children?: React.ReactNode }) => (
-  <FormTableRow>
-    <FormTableLabel>
-      <Row flex={1} alignItems="center">
-        <Label>{label}</Label>
-        <HorizontalSpace />
-      </Row>
-    </FormTableLabel>
-    <FormTableValue>{children}</FormTableValue>
-  </FormTableRow>
-)
-
-export const InputRow = ({
-  label,
-  type = 'input',
-  value = '',
-  onChange = null,
-  ...props
-}: InputProps & RowProps) => (
-  <FormTableRow>
-    <FormTableLabel>
-      <Label>{label}</Label>
-    </FormTableLabel>
-    <FormTableValue>
-      <Input
-        value={value}
-        onChange={e => {
-          onChange(e.target.value)
-        }}
-        type={type}
-        {...props}
-      />
-    </FormTableValue>
-  </FormTableRow>
-)
-
-export const CheckBoxRow = ({
-  name = `checkbox-${Math.random()}`,
-  children,
-  checked,
-  onChange,
-}: InputProps & { onChange: (checked: boolean) => any }) => (
-  <FormTableRow>
-    <FormTableLabel>
-      <Label htmlFor={name}>{children}</Label>
-    </FormTableLabel>
-    <FormTableValue>
-      <input
-        id={name}
-        name={name}
-        checked={checked}
-        onChange={onChange && (e => onChange(e.target.checked))}
-        style={{ margin: `auto 4px` }}
-        type="checkbox"
-      />
-    </FormTableValue>
-  </FormTableRow>
-)
 
 export const SuggestionBarVerticalPad = gloss({
   height: 24,

@@ -1,12 +1,11 @@
+import { loadMany, save } from '@mcro/bridge'
+import { OrbitSourceSettingProps } from '@mcro/kit'
 import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
-import { DateFormat, SearchableTable, Text, View } from '@mcro/ui'
+import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { loadMany, save } from '../../../../mediator'
-import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
@@ -147,7 +146,7 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
                 active: {
                   sortValue: isActive,
                   value: (
-                    <ReactiveCheckBox
+                    <CheckboxReactive
                       onChange={whitelist.updateWhitelistValueSetter(repository.nameWithOwner)}
                       isActive={isActive}
                     />

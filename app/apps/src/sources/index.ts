@@ -1,3 +1,4 @@
+import { GetOrbitIntegrations, OrbitIntegrations } from '@mcro/kit'
 import { confluence } from './directory/confluence/confluence'
 import { drive } from './directory/drive/drive'
 import { github } from './directory/github/github'
@@ -16,6 +17,7 @@ export const getIntegrations: GetOrbitIntegrations = {
   drive,
   website,
   person,
+  pinned: null,
 }
 
 //

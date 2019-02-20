@@ -1,17 +1,13 @@
+import { command } from '@mcro/bridge'
+import { useActiveSpace } from '@mcro/kit'
 import {
   AtlassianSource,
   AtlassianSourceValuesCredentials,
   Source,
   SourceSaveCommand,
 } from '@mcro/models'
-import * as UI from '@mcro/ui'
-import { VerticalSpace } from '@mcro/ui'
+import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../actions/appActions/AppActions'
-import { useStores } from '../../../hooks/useStores'
-import { command } from '../../../mediator'
-import * as Views from '../../../views'
-import { Message } from '../../../views/Message'
 
 type Props = {
   type: string
@@ -31,7 +27,7 @@ const buttonThemes = {
 }
 
 export default function AtlassianSettingLogin(props: Props) {
-  const { spaceStore } = useStores()
+  const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
   const [source] = React.useState(
@@ -56,8 +52,8 @@ export default function AtlassianSettingLogin(props: Props) {
     if (!source.spaces) {
       source.spaces = []
     }
-    if (!source.spaces.find(space => space.id === spaceStore.activeSpace.id)) {
-      source.spaces.push(spaceStore.activeSpace)
+    if (!source.spaces.find(space => space.id === activeSpace.id)) {
+      source.spaces.push(activeSpace)
     }
     // send command to the desktop
     setStatus(Statuses.LOADING)
@@ -68,7 +64,8 @@ export default function AtlassianSettingLogin(props: Props) {
     if (result.success) {
       setStatus(Statuses.SUCCESS)
       setError(null)
-      AppActions.clearPeek()
+      // !TODO
+      // AppActions.clearPeek()
     } else {
       setStatus(Statuses.FAIL)
       setError(result.error)
@@ -85,50 +82,53 @@ export default function AtlassianSettingLogin(props: Props) {
   }
 
   return (
-    <UI.Col tagName="form" onSubmit={addIntegration}>
+    <Col tagName="form" onSubmit={addIntegration}>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
       <VerticalSpace />
-      <UI.Col margin="auto" width={370}>
-        <UI.Col>
-          <Views.Table>
-            <Views.InputRow
+      <Col margin="auto" width={370}>
+        <Col>
+          <Table>
+            <InputRow
               label="Domain"
               value={credentials.domain}
-              onChange={handleChange('domain')}
+              // !TODO
+              onChange={handleChange('domain') as any}
             />
-            <Views.InputRow
+            <InputRow
               label="Username"
               value={credentials.username}
-              onChange={handleChange('username')}
+              // !TODO
+              onChange={handleChange('username') as any}
             />
-            <Views.InputRow
+            <InputRow
               label="Password"
               type="password"
               value={credentials.password}
-              onChange={handleChange('password')}
+              // !TODO
+              onChange={handleChange('password') as any}
             />
-          </Views.Table>
+          </Table>
           <VerticalSpace />
-          <UI.Theme
+          <Theme
             theme={{
               color: '#fff',
               background: buttonThemes[status] || '#4C36C4',
             }}
           >
-            {status === Statuses.LOADING && <UI.Button>Saving...</UI.Button>}
+            {status === Statuses.LOADING && <Button>Saving...</Button>}
             {status !== Statuses.LOADING && (
-              <UI.Button type="submit" onClick={addIntegration}>
+              <Button type="submit" onClick={addIntegration}>
                 Save
-              </UI.Button>
+              </Button>
             )}
-          </UI.Theme>
+          </Theme>
           <VerticalSpace />
           {error && <Message>{error}</Message>}
-        </UI.Col>
-      </UI.Col>
-    </UI.Col>
+        </Col>
+      </Col>
+    </Col>
   )
 }

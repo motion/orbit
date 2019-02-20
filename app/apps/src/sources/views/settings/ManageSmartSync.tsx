@@ -1,6 +1,5 @@
-import { HorizontalSpace, Surface, Text, Theme } from '@mcro/ui'
+import { CheckboxReactive, HorizontalSpace, Surface, Text, Theme } from '@mcro/ui'
 import * as React from 'react'
-import { CheckBox } from '../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 
 export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {
@@ -12,7 +11,7 @@ export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any
         tooltip="Turning this on will let Orbit manage space"
       >
         <label style={{ flexFlow: 'row' }}>
-          <CheckBox onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
+          <CheckboxReactive onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
           <HorizontalSpace />
           <Text>Smart sync</Text>
         </label>

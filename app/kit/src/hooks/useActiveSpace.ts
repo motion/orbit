@@ -1,4 +1,4 @@
-import { useModel } from '../useModel'
+import { useModel } from '@mcro/bridge'
 import { SpaceModel, UserModel } from '@mcro/models'
 
 export function useActiveSpace() {

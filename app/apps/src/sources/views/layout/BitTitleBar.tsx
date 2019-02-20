@@ -1,10 +1,9 @@
 import { gloss, Row } from '@mcro/gloss'
+import { NormalItem, SearchItemShareProvide } from '@mcro/kit'
 import { Bit } from '@mcro/models'
 import { HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../actions/appActions/AppActions'
-import SearchItemShare, { SearchItemShareProvide } from '../../../apps/search/SearchItemShare'
-import { NormalItem } from '../../../helpers/normalizeItem'
+// import { AppActions } from '../../../actions/appActions/AppActions'
 import { TitleBarButton } from './TitleBarButton'
 import { TitleBarSpace } from './TitleBarSpace'
 
@@ -23,8 +22,9 @@ export class BitTitleBar extends React.Component<{
         <SegmentedRow spaced>
           <TitleBarButton
             onClick={() => {
-              AppActions.open(normalizedItem.locationLink)
-              AppActions.setOrbitDocked(false)
+              // !TODO
+              // AppActions.open(normalizedItem.locationLink)
+              // AppActions.setOrbitDocked(false)
             }}
             icon={normalizedItem.icon}
           >
@@ -32,8 +32,9 @@ export class BitTitleBar extends React.Component<{
           </TitleBarButton>
           <TitleBarButton
             onClick={() => {
-              AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
-              AppActions.setOrbitDocked(false)
+              // !TODO
+              // AppActions.open(normalizedItem.desktopLink || normalizedItem.webLink)
+              // AppActions.setOrbitDocked(false)
             }}
             tooltip="Open"
             iconAfter
@@ -56,7 +57,8 @@ export class BitTitleBar extends React.Component<{
             borderRadius={10}
             elevation={1}
           >
-            {isShown => isShown && <SearchItemShare />}
+            {/* !TODO we need a ShareMenu component */}
+            {/* {isShown => isShown && <SearchItemShare />} */}
           </Popover>
         </SearchItemShareProvide>
       </ToolbarChrome>

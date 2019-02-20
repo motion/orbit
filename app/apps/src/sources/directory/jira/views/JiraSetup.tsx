@@ -1,11 +1,10 @@
+import { Title } from '@mcro/ui'
 import * as React from 'react'
-import { Title } from '../../../../views'
-import { Section } from '../../../../views/Section'
 import AtlassianSettingLogin from '../../../views/shared/AtlassianSettingLogin'
 
 export const JiraSetup = () => (
-  <Section>
+  <section>
     <Title>Jira</Title>
     <AtlassianSettingLogin type="jira" />
-  </Section>
+  </section>
 )

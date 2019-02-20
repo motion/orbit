@@ -1,5 +1,5 @@
+import { OrbitItemViewProps } from '@mcro/kit'
 import * as React from 'react'
-import { OrbitItemViewProps } from '../../../types'
 import { Task } from '../../../views/bits/task/Task'
 
 export function GithubItem({ item, ...rest }: OrbitItemViewProps<'github'>) {

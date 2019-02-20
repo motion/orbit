@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { OrbitSourceMainProps } from '../../../types'
-import ScrollableContent from '../../../views/layout/ScrollableContent'
+import { OrbitSourceMainProps } from '@mcro/kit'
 import { Surface, View } from '@mcro/ui'
-import { BitStatusBar } from '../../../views/layout/BitStatusBar'
+import * as React from 'react'
 import { Document } from '../../../views/bits/document/Document'
+import { BitStatusBar } from '../../../views/layout/BitStatusBar'
+import ScrollableContent from '../../../views/layout/ScrollableContent'
 
 export class JiraApp extends React.Component<OrbitSourceMainProps<'jira'>> {
   render() {

@@ -1,16 +1,27 @@
+import { useModels } from '@mcro/bridge'
+import { gloss, View } from '@mcro/gloss'
+import { OrbitSourceMainProps } from '@mcro/kit'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
-import { Button, Row, SegmentedRow } from '@mcro/ui'
+import { Button, Divider, Row, SegmentedRow, Title } from '@mcro/ui'
 import * as React from 'react'
-import { useModels } from '../../../../useModel'
-import { Divider } from '../../../../views/Divider'
-import { Pane } from '../../../../views/Pane'
-import { SectionTitle } from '../../../../views/Section'
-import { OrbitSourceMainProps } from '../../../types'
 import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
 
 type Props = OrbitSourceMainProps<'slack'>
+
+export const Pane = gloss(View, {
+  height: 0,
+  opacity: 0,
+  pointerEvents: 'none',
+  overflow: 'hidden',
+  isShown: {
+    flex: 1,
+    height: 'auto',
+    opacity: 1,
+    pointerEvents: 'inherit',
+  },
+})
 
 const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   if (!bits) {
@@ -96,14 +107,14 @@ export default React.memo(function SlackApp(props: Props) {
       </Pane>
 
       <Pane isShown={activePane === 1}>
-        <SectionTitle>Previously</SectionTitle>
+        <Title>Previously</Title>
         <ScrollableContent paddingBottom={50}>
           <ConvoGroup bits={prevConvos.reverse()} />
         </ScrollableContent>
       </Pane>
 
       <Pane isShown={activePane === 2}>
-        <SectionTitle>Afterwards</SectionTitle>
+        <Title>Afterwards</Title>
         <ScrollableContent paddingBottom={50}>
           <ConvoGroup bits={nextConvos} />
         </ScrollableContent>

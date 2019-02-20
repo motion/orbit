@@ -1,10 +1,11 @@
+import { GetOrbitIntegration, OrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/drive.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration, OrbitIntegration } from '../../types'
+// @ts-ignore
+import icon from './drive.svg'
 import { DriveApp } from './views/DriveApp'
 import { DriveItem } from './views/DriveItem'
-import DriveSettings from './views/DriveSettings'
+import { DriveSettings } from './views/DriveSettings'
 
 export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
   modelType: 'bit',

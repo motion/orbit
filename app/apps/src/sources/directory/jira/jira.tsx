@@ -1,7 +1,8 @@
+import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/jira.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration } from '../../types'
+// @ts-ignore
+import icon from './jira.svg'
 import { JiraApp } from './views/JiraApp'
 import { JiraItem } from './views/JiraItem'
 import { JiraSettings } from './views/JiraSettings'

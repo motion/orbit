@@ -1,7 +1,8 @@
+import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import iconSlack from '../../../../public/icons/slack.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration } from '../../types'
+// @ts-ignore
+import iconSlack from './slack.svg'
 import SlackApp from './views/SlackApp'
 import { SlackItem } from './views/SlackItem'
 import SlackSettings from './views/SlackSettings'

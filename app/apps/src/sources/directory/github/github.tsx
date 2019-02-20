@@ -1,8 +1,10 @@
+import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import iconLight from '../../../../public/icons/github-white.svg'
-import icon from '../../../../public/icons/github.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration } from '../../types'
+// @ts-ignore
+import iconLight from './github-white.svg'
+// @ts-ignore
+import icon from './github.svg'
 import { GithubApp } from './views/GithubApp'
 import { GithubItem } from './views/GithubItem'
 import GithubSettings from './views/GithubSettings'

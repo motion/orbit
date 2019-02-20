@@ -1,7 +1,6 @@
 import { Setting } from '@mcro/models'
-import { Icon, Message, Row, View } from '@mcro/ui'
+import { Icon, Message, Row, SubTitle, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { SubTitle, VerticalSpace } from '../../../views'
 
 type Props = {
   setting: Setting

@@ -1,5 +1,4 @@
 import { gloss } from '@mcro/gloss'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 
 type Props = {
@@ -22,7 +21,7 @@ const preventClick = e => {
   e.stopPropagation()
 }
 
-export default observer(function ReactiveCheckBox(props: Props) {
+export default function ReactiveCheckBox(props: Props) {
   const { isActive, onChange, ...rest } = props
   const handleOnChange = React.useCallback(
     e => {
@@ -40,4 +39,4 @@ export default observer(function ReactiveCheckBox(props: Props) {
       {...rest}
     />
   )
-})
+}

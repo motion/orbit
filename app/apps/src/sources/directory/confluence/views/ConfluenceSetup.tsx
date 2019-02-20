@@ -1,11 +1,10 @@
+import { Title } from '@mcro/ui'
 import * as React from 'react'
-import { Title } from '../../../../views'
-import { Section } from '../../../../views/Section'
 import AtlassianSettingLogin from '../../../views/shared/AtlassianSettingLogin'
 
 export const ConfluenceSetup = () => (
-  <Section>
+  <section>
     <Title>Confluence</Title>
     <AtlassianSettingLogin type="confluence" />
-  </Section>
+  </section>
 )

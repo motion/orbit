@@ -7,16 +7,13 @@ type SearchChildProps = {
 }
 
 type Props = {
-  appStore: AppStore
   selectionStore?: SelectionStore
   children: (a: SearchChildProps) => React.ReactNode
 }
 
 export const AppSearchable = (props: Props) => {
-  const { queryStore } = useStores()
   return (
     <Searchable
-      defaultValue={queryStore ? queryStore.query : ''}
       placeholder="Filter..."
       // focusOnMount
       // onEnter={peekStore.goToNextHighlight}

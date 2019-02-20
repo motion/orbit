@@ -1,7 +1,8 @@
+import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import icon from '../../../../public/icons/confluence.svg'
 import { findManyType } from '../../helpers/queries'
-import { GetOrbitIntegration } from '../../types'
+// @ts-ignore
+import icon from './confluence.svg'
 import { ConfluenceApp } from './views/ConfluenceApp'
 import { ConfluenceItem } from './views/ConfluenceItem'
 import { ConfluenceSettings } from './views/ConfluenceSettings'

@@ -12,6 +12,7 @@
     "@mcro/kit": "*",
     "@mcro/gloss": "*",
     "@mcro/models": "*",
+    "@mcro/bridge": "*",
     "@mcro/use-store": "*",
     "lodash": "*",
     "typeorm": "^0.3.0-alpha.22"

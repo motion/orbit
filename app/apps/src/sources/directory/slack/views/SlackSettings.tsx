@@ -1,13 +1,12 @@
+import { loadMany, save } from '@mcro/bridge'
+import { OrbitSourceSettingProps } from '@mcro/kit'
 import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
-import { DateFormat, SearchableTable, Text, View } from '@mcro/ui'
+import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { loadMany, save } from '../../../../mediator'
-import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackSource>) {
@@ -56,10 +55,9 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
         if (
           !freshApiChannels ||
           JSON.stringify(sourceChannels) === JSON.stringify(freshApiChannels)
-        )
+        ) {
           return
-
-        // console.log(`channels changed, updating`)
+        }
 
         // then we update source data in the db
         const orderedChannels = orderBy(
@@ -154,7 +152,7 @@ export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackS
                 active: {
                   sortValue: whitelist.whilistStatusGetter(channel.id),
                   value: (
-                    <ReactiveCheckBox
+                    <CheckboxReactive
                       onChange={whitelist.updateWhitelistValueSetter(channel.id)}
                       isActive={isActive}
                     />

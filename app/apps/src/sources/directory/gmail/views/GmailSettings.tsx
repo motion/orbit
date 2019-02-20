@@ -1,10 +1,9 @@
+import { OrbitSourceSettingProps } from '@mcro/kit'
 import { GmailSource } from '@mcro/models'
-import { SearchableTable, Text, View } from '@mcro/ui'
+import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
-import ReactiveCheckBox from '../../../../views/ReactiveCheckBox'
 import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<GmailSource>
@@ -55,7 +54,7 @@ export default function GmailSettings(props: Props) {
                 active: {
                   sortValue: isActive,
                   value: (
-                    <ReactiveCheckBox
+                    <CheckboxReactive
                       onChange={whitelist.updateWhitelistValueSetter(email)}
                       isActive={isActive}
                     />

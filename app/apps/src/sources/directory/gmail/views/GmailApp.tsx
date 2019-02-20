@@ -1,7 +1,6 @@
-import { View } from '@mcro/ui'
+import { OrbitSourceMainProps } from '@mcro/kit'
+import { Title, View } from '@mcro/ui'
 import * as React from 'react'
-import { SectionTitle } from '../../../../views/Section'
-import { OrbitSourceMainProps } from '../../../types'
 import { Thread } from '../../../views/bits/thread/Thread'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
@@ -12,7 +11,7 @@ export class GmailApp extends React.Component<OrbitSourceMainProps<'gmail'>> {
     return (
       <View flex={1}>
         <ScrollableContent>
-          <SectionTitle>{item.title}</SectionTitle>
+          <Title>{item.title}</Title>
           <Thread item={item} />
         </ScrollableContent>
         <BitStatusBar {...this.props} />

@@ -1,10 +1,8 @@
+import { loadOne } from '@mcro/bridge'
 import { Person, PersonBitModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import { ButtonProps } from '@mcro/ui'
+import { ButtonProps, RoundButton } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../actions/appActions/AppActions'
-import { loadOne } from '../mediator'
-import { RoundButton } from './RoundButton'
 
 type PersonButtonProps = ButtonProps & {
   person?: Person
@@ -23,11 +21,12 @@ export const handleClickPerson = (email: string) => async e => {
   if (!personBit) {
     console.log('no personBit found', email)
   } else {
-    AppActions.togglePeekApp(personBit)
+    // !TODO
+    // AppActions.togglePeekApp(personBit)
   }
 }
 
-export const RoundButtonPerson = ({ person, hideAvatar, ...props }: PersonButtonProps) => {
+export const ButtonPerson = ({ person, hideAvatar, ...props }: PersonButtonProps) => {
   // TODO: avatar value on person
   const avatar = person.photo
   return (

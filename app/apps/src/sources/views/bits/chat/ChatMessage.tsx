@@ -1,4 +1,5 @@
 import { gloss } from '@mcro/gloss'
+import { ButtonPerson, ItemPropsContext, Markdown, OrbitItemViewProps } from '@mcro/kit'
 import { SlackBitDataMessage } from '@mcro/models'
 import { DateFormat, HighlightText, Row, Text, View } from '@mcro/ui'
 import * as React from 'react'
@@ -73,7 +74,7 @@ export function ChatMessage(rawProps: SlackMessageProps) {
         >
           {itemProps.beforeTitle || null}
           {!!person && (
-            <RoundButtonPerson
+            <ButtonPerson
               hideAvatar={itemProps.condensed}
               background="transparent"
               person={person}

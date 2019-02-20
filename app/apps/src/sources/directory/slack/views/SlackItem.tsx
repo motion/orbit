@@ -1,8 +1,7 @@
+import { ItemPropsContext, OrbitItemViewProps } from '@mcro/kit'
 import { SlackBitDataMessage } from '@mcro/models'
 import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
-import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
-import { OrbitItemViewProps } from '../../../types'
 import { ChatMessage } from '../../../views/bits/chat/ChatMessage'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {

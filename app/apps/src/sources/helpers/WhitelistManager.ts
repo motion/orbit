@@ -1,8 +1,8 @@
-import { react } from '@mcro/black'
+import { save } from '@mcro/bridge'
 import { GithubSource, GmailSource, SlackSource, SourceModel } from '@mcro/models'
+import { react } from '@mcro/use-store'
 import produce from 'immer'
 import { memoize } from 'lodash'
-import { save } from '../../mediator'
 
 type SourceWithWhiteList = GithubSource | SlackSource | GmailSource
 

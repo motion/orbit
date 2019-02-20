@@ -34,7 +34,8 @@
     "react-tilt": "0.1.4",
     "react-virtualized-auto-sizer": "1.0.2",
     "react-window": "1.5.1",
-    "react-virtualized": "9.21.0"
+    "react-virtualized": "9.21.0",
+    "hash-sum": "1.0.2"
   },
   "peerDependencies": {
     "electron": "*",

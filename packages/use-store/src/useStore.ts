@@ -15,7 +15,7 @@ export {
   useCurrentComponent,
 } from '@mcro/automagical'
 export { configureUseStore } from './configure'
-export { createUseStores } from './createUseStores'
+export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 
 type UseStoreOptions = {

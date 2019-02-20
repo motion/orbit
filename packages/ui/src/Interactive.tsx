@@ -303,7 +303,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   calculateMove(event: MouseEvent) {
     const { movingInitialCursor, movingInitialProps } = this.state
-    console.log('what', this.state)
     invariant(movingInitialProps, 'TODO')
     invariant(movingInitialCursor, 'TODO')
     const { clientX: cursorLeft, clientY: cursorTop } = event
@@ -598,6 +597,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (this.props.style) {
       Object.assign(style, this.props.style)
     }
+
     return (
       <InteractiveContainer
         className={this.props.className}

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { HorizontalSpace } from '.'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Glint } from './effects/Glint'
-import { Icon } from './Icon'
+import { ConfiguredIcon } from './Icon'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemStore } from './lists/ListItemStore'
 import PersonRow from './PersonRow'
@@ -166,7 +166,7 @@ export function Card({
               )}
 
               {!!icon && !(hide && hide.icon) && (
-                <Icon
+                <ConfiguredIcon
                   name={icon}
                   size={14}
                   {...orbitIconProps}

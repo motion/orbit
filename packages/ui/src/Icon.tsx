@@ -1,6 +1,7 @@
 import { Color, CSSPropertySet, gloss, View } from '@mcro/gloss'
 import fuzzy from 'fuzzy'
 import * as React from 'react'
+import { configure } from './helpers/configure'
 import { iconNames } from './iconNames'
 
 export type IconProps = React.HTMLAttributes<HTMLDivElement> &
@@ -44,6 +45,12 @@ const findMatch = (name: string) => {
   return match
 }
 
+// lets users wrap around icons
+export function ConfiguredIcon(props: IconProps) {
+  const ResolvedIcon = configure.useIcon || Icon
+  return <ResolvedIcon {...props} />
+}
+
 export const Icon = React.memo(
   ({
     tooltip,
@@ -58,7 +65,7 @@ export const Icon = React.memo(
     if (!name) {
       return null
     }
-    let content
+    let content: any
     if (name[0] === '/') {
       // @ts-ignore
       return <img src={name} {...props} />

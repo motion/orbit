@@ -1,8 +1,11 @@
 import { gloss } from '@mcro/gloss'
-import { ButtonPerson, ItemPropsContext, Markdown, OrbitItemViewProps } from '@mcro/kit'
 import { SlackBitDataMessage } from '@mcro/models'
 import { DateFormat, HighlightText, Row, Text, View } from '@mcro/ui'
 import * as React from 'react'
+import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
+import { ButtonPerson } from '../ButtonPerson'
+import { ItemPropsContext } from './ItemPropsContext'
+import { Markdown } from './Markdown'
 
 type SlackMessageProps = OrbitItemViewProps<'slack'> & {
   message: SlackBitDataMessage

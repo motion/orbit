@@ -4,16 +4,15 @@ import {
   DateFormat,
   HorizontalSpace,
   Icon,
+  RoundButton,
   Row,
   Text,
   VerticalSpace,
   ViewProps,
 } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../../actions/appActions/AppActions'
-import { Markdown } from '../../../../views/Markdown'
-import { RoundButtonBorderedSmall } from '../../../../views/RoundButtonBordered'
-import { handleClickPerson } from '../../../../views/RoundButtonPerson'
+import { handleClickPerson } from '../ButtonPerson'
+import { Markdown } from './Markdown'
 
 export type TaskCommentLike = {
   author: {
@@ -38,7 +37,7 @@ export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
-        <RoundButtonBorderedSmall onClick={handleClickPerson(email)}>
+        <RoundButton size={0.9} onClick={handleClickPerson(email)}>
           {login}{' '}
           <Icon
             size={8}
@@ -48,10 +47,11 @@ export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
             onClick={e => {
               e.stopPropagation()
               // TODO: make generic
-              AppActions.open(`https://github.com/${login}`)
+              // !TODO
+              // AppActions.open(`https://github.com/${login}`)
             }}
           />
-        </RoundButtonBorderedSmall>
+        </RoundButton>
         <HorizontalSpace />
         {!!createdAt && (
           <Text size={0.95} fontWeight={600} alpha={0.8}>

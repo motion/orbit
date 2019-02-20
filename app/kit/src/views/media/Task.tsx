@@ -1,8 +1,8 @@
 import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
-import { ItemPropsContext } from '../../../../helpers/contexts/ItemPropsContext'
-import { Markdown } from '../../../../views/Markdown'
-import { OrbitItemViewProps } from '../../../types'
+import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
+import { ItemPropsContext } from './ItemPropsContext'
+import { Markdown } from './Markdown'
 import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'
 
 export type TaskLike = {

@@ -1,4 +1,5 @@
 import { gloss } from '@mcro/gloss'
+import { OrbitSourceMainProps } from '@mcro/kit'
 import {
   DateFormat,
   StatusBar,

@@ -1,8 +1,13 @@
 import { gloss } from '@mcro/gloss'
-import { DateFormat, HighlightText, HorizontalSpace, Text, VerticalSpace } from '@mcro/ui'
+import {
+  DateFormat,
+  HighlightText,
+  HorizontalSpace,
+  RoundButtonSmall,
+  Text,
+  VerticalSpace,
+} from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../../actions/appActions/AppActions'
-import { RoundButtonBordered } from '../../../../views/RoundButtonBordered'
 
 const Message = gloss({
   padding: 15,
@@ -35,9 +40,11 @@ const MailBody = ({ children, ...props }) => (
   </Text>
 )
 
-const openMail = email => () => {
-  AppActions.open(`mailto:${email}`)
-}
+// !TODO
+// const openMail = (/* email */) => () => {
+//   // !TODO
+//   // AppActions.open(`mailto:${email}`)
+// }
 
 export function ThreadMessage({ message }) {
   return (
@@ -51,16 +58,16 @@ export function ThreadMessage({ message }) {
           .filter(x => x.type === 'from')
           .map(({ name, email }, index) => (
             <React.Fragment key={index}>
-              <RoundButtonBordered
+              <RoundButtonSmall
                 key={index}
-                onClick={openMail(email)}
+                // onClick={openMail(email)}
                 tooltip={email}
                 tooltipProps={{
                   noHoverOnChildren: false,
                 }}
               >
                 {name}
-              </RoundButtonBordered>
+              </RoundButtonSmall>
               <HorizontalSpace />
             </React.Fragment>
           ))}

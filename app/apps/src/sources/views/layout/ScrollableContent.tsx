@@ -1,6 +1,6 @@
-import { gloss } from '@mcro/gloss';
-import * as UI from '@mcro/ui';
-import * as React from 'react';
+import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
+import * as React from 'react'
 
 const PeekContentChrome = gloss(UI.Col, {
   flex: 1,
@@ -23,21 +23,9 @@ export default function ScrollableContent({
   scrollTo,
   ...props
 }: UI.ViewProps & { scrollTo?: string }) {
-
-  // React.useEffect(() => {
-  //   if (props.scrollTo && appPageStore) {
-  //     const node = appPageStore.contentFrame.current
-  //     if (!node) {
-  //       return
-  //     }
-  //     const div = node.querySelector(props.scrollTo) as HTMLDivElement
-  //     node.scrollTop = div.offsetTop
-  //   }
-  // }, [])
-
   return (
     <PeekContentChrome>
-      <ContentInner ref={appPageStore && appPageStore.contentFrame} {...props} />
+      <ContentInner {...props} />
     </PeekContentChrome>
   )
 }

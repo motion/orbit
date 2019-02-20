@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { Text, Row } from '@mcro/ui'
 import { gloss } from '@mcro/gloss'
+import { Row, Text } from '@mcro/ui'
+import * as React from 'react'
 
 // just the top titlebar:
 export const TitleBar = ({ children = null, before = null, after = null, ...props }) => (

@@ -1,7 +1,6 @@
-import { OrbitSourceMainProps } from '@mcro/kit'
+import { OrbitSourceMainProps, Task } from '@mcro/kit'
 import { Title, View } from '@mcro/ui'
 import * as React from 'react'
-import { Task } from '../../../views/bits/task/Task'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
 

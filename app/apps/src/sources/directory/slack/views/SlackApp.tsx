@@ -1,10 +1,9 @@
 import { useModels } from '@mcro/bridge'
 import { gloss, View } from '@mcro/gloss'
-import { OrbitSourceMainProps } from '@mcro/kit'
+import { ChatMessages, OrbitSourceMainProps } from '@mcro/kit'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
 import { Button, Divider, Row, SegmentedRow, Title } from '@mcro/ui'
 import * as React from 'react'
-import { ChatMessages } from '../../../views/bits/chat/ChatMessages'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
 

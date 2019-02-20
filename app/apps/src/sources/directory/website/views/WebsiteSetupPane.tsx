@@ -90,7 +90,12 @@ export default function WebsiteSetupPane(props: Props) {
       <UI.Col margin="auto" width={370}>
         <UI.Col padding={[0, 10]}>
           <Table>
-            <InputRow label="Website URL" value={store.values.url} onChange={handleChange('url')} />
+            <InputRow
+              label="Website URL"
+              value={store.values.url}
+              // !TODO type on handlechange
+              onChange={handleChange('url') as any}
+            />
           </Table>
           <VerticalSpace />
           <UI.Theme>

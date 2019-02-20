@@ -2,7 +2,7 @@ import { Button } from '@mcro/ui'
 import * as React from 'react'
 
 // !TODO type ButtonProps complains about cant export type
-export const TitleBarButton = React.forwardRef((props /*: ButtonProps */, ref) => {
+export const TitleBarButton = React.forwardRef((props: any /*: ButtonProps */, ref) => {
   return (
     <Button
       ref={ref}

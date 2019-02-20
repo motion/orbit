@@ -1,7 +1,6 @@
-import { OrbitSourceMainProps } from '@mcro/kit'
+import { Document, OrbitSourceMainProps } from '@mcro/kit'
 import { Surface, View } from '@mcro/ui'
 import * as React from 'react'
-import { Document } from '../../../views/bits/document/Document'
 import { BitStatusBar } from '../../../views/layout/BitStatusBar'
 import ScrollableContent from '../../../views/layout/ScrollableContent'
 

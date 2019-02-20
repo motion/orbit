@@ -1,21 +1,27 @@
-import { Source, SourceForceCancelCommand, SourceForceSyncCommand, SourceRemoveCommand } from '@mcro/models'
+import { command, loadOne } from '@mcro/bridge'
+import { OrbitIntegration, showConfirmDialog } from '@mcro/kit'
+import { Source, SourceForceCancelCommand, SourceModel, SourceRemoveCommand } from '@mcro/models'
 import { Row, SegmentedRow, Text, View } from '@mcro/ui'
 import * as React from 'react'
-import { AppActions } from '../../../actions/appActions/AppActions'
-import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
+import { getIntegrations } from '../..'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
-import { command, loadOne } from '../../../mediator'
-import { getAppFromSource } from '../../../stores/SourcesStore'
+// import { AppActions } from '../../../actions/appActions/AppActions'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { ManageSmartSync } from './ManageSmartSync'
-import { SourceModel } from '@mcro/models/_'
+
+export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
+  return {
+    ...getIntegrations[source.type](source),
+    source,
+  }
+}
 
 const handleRefresh = async (sourceId: number) => {
   const source = await loadOne(SourceModel, null)
-  console.log(source)
+  console.warn('empty function', source, sourceId)
   // command(SourceForceSyncCommand, {
   //   sourceId,
   // })
@@ -34,7 +40,6 @@ const removeIntegration = async (source: Source) => {
     command(SourceRemoveCommand, {
       sourceId: source.id,
     })
-    AppActions.clearPeek()
   }
 }
 

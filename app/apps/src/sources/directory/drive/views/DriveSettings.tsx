@@ -1,8 +1,8 @@
+import { OrbitSourceSettingProps } from '@mcro/kit'
 import { DriveSource } from '@mcro/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
-import { OrbitSourceSettingProps } from '../../../types'
 import { SettingManageRow } from '../../../views/settings/SettingManageRow'
 
 type Props = OrbitSourceSettingProps<DriveSource>

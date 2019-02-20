@@ -1,14 +1,14 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "rootDir": "src",
+    "module": "CommonJS",
     "outDir": "_",
-    "typeRoots": ["./src/globalTypes.d.ts"]
+    "rootDir": "src"
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../bridge" },
+    { "path": "../../packages/mediator" },
     { "path": "../../packages/config" },
-    { "path": "../../packages/mediator" }
+    { "path": "../../packages/utils" }
   ]
 }

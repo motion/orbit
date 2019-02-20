@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../../packages/gloss" },
+    { "path": "../../packages/use-store" },
+    { "path": "../models" },
+    { "path": "../bridge" }
+  ]
+}

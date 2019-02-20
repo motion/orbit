@@ -1,17 +1,17 @@
-import { ensure, react, store } from '@mcro/black'
+import { observeMany } from '@mcro/bridge'
 import { PersonBitModel } from '@mcro/models'
-import { observeMany } from '../../mediator'
+import { decorate, ensure, react } from '@mcro/use-store'
+import { NLPResponse } from '../../types/NLPResponse'
+import { QueryStore } from '../QueryStore'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
-import { QueryStore } from './QueryStore'
-import { NLPResponse } from './types'
 
 const { parseSearchQuery, setUserNames } = initNlp()
 
 // to run it on thread
 // import { parseSearchQuery, setUserNames } from './nlpStore/nlpQuery'
 
-@store
+@decorate
 export class NLPStore {
   queryStore: QueryStore
   query = ''

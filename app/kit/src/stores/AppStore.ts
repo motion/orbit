@@ -1,9 +1,8 @@
-import { ensure, react } from '@mcro/black'
+import { observeOne } from '@mcro/bridge'
 import { AppModel } from '@mcro/models'
-import { useHook } from '@mcro/use-store'
-import { useStoresSimple } from '../hooks/useStores'
-import { observeOne } from '../mediator'
-import { AppProps } from './AppTypes'
+import { ensure, react, useHook } from '@mcro/use-store'
+import { useStoresSimple } from '../helpers/useStores'
+import { AppProps } from '../types/AppProps'
 
 export class AppStore {
   props: Pick<AppProps, 'id' | 'isActive'>

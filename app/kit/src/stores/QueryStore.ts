@@ -1,13 +1,8 @@
-import { react } from '@mcro/black'
-import { SourcesStore } from '../SourcesStore'
-import { NLPStore } from './NLPStore'
-import { QueryFilterStore } from './QueryFiltersStore'
+import { react } from '@mcro/use-store'
+import { NLPStore } from './NLPStore/NLPStore'
+import { QueryFilterStore } from './QueryFilterStore'
 
 export class QueryStore {
-  props: {
-    sourcesStore: SourcesStore
-  }
-
   queryInstant = ''
 
   query = react(
@@ -35,9 +30,13 @@ export class QueryStore {
 
   queryFilters = new QueryFilterStore({
     queryStore: this,
-    sourcesStore: this.props.sourcesStore,
     nlpStore: this.nlpStore,
   })
+
+  // !TODO
+  setSources() {
+    this.queryFilters.setSources()
+  }
 
   willUnmount() {
     // TODO decorators don't change the type of classes, need to fix compiler errors somehow

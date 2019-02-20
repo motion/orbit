@@ -1,0 +1,24 @@
+{
+  "name": "@mcro/kit",
+  "version": "2.3.10",
+  "main": "./_/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc || true",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "build-app": "NODE_ENV=production mcro-build --build --target node"
+  },
+  "dependencies": {
+    "@mcro/ui": "*",
+    "@mcro/gloss": "*",
+    "@mcro/models": "*",
+    "@mcro/use-store": "*",
+    "@mcro/bridge": "*",
+    "compromise": "11.11.0",
+    "sherlockjs": "1.4.0",
+    "lodash": "*"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

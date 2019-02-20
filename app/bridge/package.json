@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/kit",
+  "name": "@mcro/bridge",
   "version": "2.3.10",
   "main": "./_/index.js",
   "private": true,
@@ -9,13 +9,9 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "@mcro/ui": "*",
-    "@mcro/gloss": "*",
-    "@mcro/models": "*",
-    "@mcro/use-store": "*",
-    "lodash": "*"
-  },
-  "peerDependencies": {
-    "react": "*"
+    "@mcro/config": "*",
+    "@mcro/mediator": "*",
+    "@mcro/utils": "*",
+    "reconnecting-websocket": "4.1.10"
   }
 }

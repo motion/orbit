@@ -1,12 +1,12 @@
-import { GetOrbitIntegrations, OrbitIntegrations } from './types'
-import { slack } from './directory/slack/slack'
+import { confluence } from './directory/confluence/confluence'
+import { drive } from './directory/drive/drive'
 import { github } from './directory/github/github'
 import { gmail } from './directory/gmail/gmail'
 import { jira } from './directory/jira/jira'
-import { confluence } from './directory/confluence/confluence'
-import { drive } from './directory/drive/drive'
-import { website } from './directory/website/website'
 import { person } from './directory/person/person'
+import { slack } from './directory/slack/slack'
+import { website } from './directory/website/website'
+import { GetOrbitIntegrations, OrbitIntegrations } from './types'
 
 export const getIntegrations: GetOrbitIntegrations = {
   slack,
@@ -26,7 +26,7 @@ export const getIntegrations: GetOrbitIntegrations = {
 export const allIntegrations: OrbitIntegrations = Object.keys(getIntegrations).reduce(
   (acc, key) => ({
     ...acc,
-    [key]: getIntegrations[key]({}),
+    [key]: getIntegrations[key]({} as any),
   }),
   {} as OrbitIntegrations,
 )

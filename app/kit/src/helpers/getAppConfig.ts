@@ -1,7 +1,5 @@
-import { AppConfig } from '../apps/AppTypes'
-import { allIntegrations } from '../sources'
-import { sourceToAppConfig } from '../stores/SourcesStore'
-import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
+import { AppConfig } from '../types/AppConfig'
+import { OrbitListItemProps } from '../views/ListItem'
 
 // this is mid-refactor in a sense
 // appConfig is a weird setup, its used basically to pass from a index over to a main view

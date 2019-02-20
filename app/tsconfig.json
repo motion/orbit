@@ -6,8 +6,9 @@
     { "path": "./orbit-syncers" },
     { "path": "./orbit-repl" },
     { "path": "./orbit" },
-    { "path": "./orbit-kit" },
+    { "path": "./kit" },
     { "path": "./orbit-cli" },
+    { "path": "./apps" },
     // projects necessary for orbit
     // references from orbit-app since we want to have that one empty
     // { "path": "./models" },

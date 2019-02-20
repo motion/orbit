@@ -1,10 +1,9 @@
-import { always, ensure, react, store } from '@mcro/black'
 import { IntegrationType } from '@mcro/models'
+import { always, decorate, ensure, react } from '@mcro/use-store'
 import { memoize, uniqBy } from 'lodash'
-import { SourcesStore } from '../SourcesStore'
-import { NLPStore } from './NLPStore'
+import { MarkType } from '../types/NLPTypes'
+import { NLPStore } from './NLPStore/NLPStore'
 import { QueryStore } from './QueryStore'
-import { MarkType } from './types'
 
 export type SearchFilter = {
   id: number
@@ -31,10 +30,9 @@ const suggestedDates: Filter[] = [
   { text: 'Last Month', type: MarkType.Date },
 ]
 
-@store
+@decorate
 export class QueryFilterStore {
   queryStore: QueryStore
-  sourcesStore: SourcesStore
   nlpStore: NLPStore
   disabledFilters = {}
   exclusiveFilters = {}
@@ -50,10 +48,13 @@ export class QueryFilterStore {
     endDate: null,
   }
 
-  constructor({ queryStore, sourcesStore, nlpStore }) {
-    this.sourcesStore = sourcesStore
+  constructor({ queryStore, nlpStore }) {
     this.nlpStore = nlpStore
     this.queryStore = queryStore
+  }
+
+  setSources() {
+    console.log('set sources')
   }
 
   // todo: this should replace any existing filters of same type
@@ -133,15 +134,17 @@ export class QueryFilterStore {
   }
 
   get integrationFilters(): SearchFilter[] {
-    return this.sourcesStore.activeSources.map((app, id) => ({
-      id,
-      type: 'source',
-      integration: app.integration,
-      name: app.display.name,
-      active: Object.keys(this.exclusiveFilters).length
-        ? this.exclusiveFilters[app.integration]
-        : false,
-    }))
+    // !TODO
+    // return this.sourcesStore.activeSources.map((app, id) => ({
+    //   id,
+    //   type: 'source',
+    //   integration: app.integration,
+    //   name: app.display.name,
+    //   active: Object.keys(this.exclusiveFilters).length
+    //     ? this.exclusiveFilters[app.integration]
+    //     : false,
+    // }))
+    return []
   }
 
   get suggestedPeople(): Filter[] {
@@ -194,10 +197,11 @@ export class QueryFilterStore {
       ensure('nlp', !!nlp)
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
-      this.exclusiveFilters = this.sourcesStore.activeSources.reduce((acc, app) => {
-        acc[app.integration] = nlp.integrations.some(x => x === app.integration)
-        return acc
-      }, {})
+      // !TODO
+      // this.exclusiveFilters = this.sourcesStore.activeSources.reduce((acc, app) => {
+      //   acc[app.integration] = nlp.integrations.some(x => x === app.integration)
+      //   return acc
+      // }, {})
     },
   )
 

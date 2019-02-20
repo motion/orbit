@@ -1,11 +1,10 @@
-import { Bit, GenericBit, IntegrationType, PersonBit, SearchResult, Source } from '@mcro/models';
-import { ItemRenderText, ListItemHide, SearchBarType } from '@mcro/ui';
-import * as React from 'react';
-import { FindOptions } from 'typeorm';
-import { AppConfig } from '../apps/AppTypes';
-import { NormalItem } from '../helpers/normalizeItem';
-import { AppPageStore } from '../pages/AppPage/AppPageStore';
-import { GenericComponent } from '../types';
+import { ItemType } from '@mcro/kit'
+import { Bit, GenericBit, IntegrationType, PersonBit, SearchResult, Source } from '@mcro/models'
+import { ItemRenderText, ListItemHide, SearchBarType } from '@mcro/ui'
+import * as React from 'react'
+import { FindOptions } from 'typeorm'
+
+type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 type AppTypeToModelType = {
   slack: Bit

@@ -1,7 +1,7 @@
 import compromise from 'compromise'
+import { differenceInDays, getDaysInMonth, getYear, subDays } from 'date-fns/esm'
 import Sherlockjs from 'sherlockjs'
-import { MarkType, DateRange, NLPResponse, QueryFragment, Mark } from './types'
-import { getYear, differenceInDays, subDays, getDaysInMonth } from 'date-fns/esm'
+import { DateRange, Mark, MarkType, NLPResponse, QueryFragment } from './types'
 
 const state = {
   namePattern: null,

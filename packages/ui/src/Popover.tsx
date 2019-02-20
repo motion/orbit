@@ -320,8 +320,7 @@ const initialState = {
   delay: 16,
   props: {} as PopoverProps,
   closing: false,
-  finishedMount: false,
-  shouldMeasure: false,
+  measureState: 'done' as 'done' | 'measured' | 'shouldMeasure',
 }
 
 type State = typeof initialState & {
@@ -381,7 +380,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     if (nextShow !== state.showPopover) {
       nextState.showPopover = nextShow
       if (nextShow) {
-        nextState.shouldMeasure = true
+        nextState.measureState = 'shouldMeasure'
       }
     }
 
@@ -446,11 +445,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       throw new Error('Not manually positioned and no target found.')
     }
 
-    if (isManuallyPositioned) {
-      // fix flickering on initial mount of popovers...
-      this.setState({ finishedMount: true })
-    }
-
     if (this.target) {
       this.listenForClick()
       this.listenForHover()
@@ -466,13 +460,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           }
         })
       }
-
-      // handling flickers poorly, TODO investigate why portals cause it to never hide on initial mount
-      setTimeout(() => {
-        if (!this.unmounted) {
-          this.setState({ finishedMount: true })
-        }
-      }, 500)
     }
   }
 
@@ -491,7 +478,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    if (this.state.shouldMeasure) {
+    if (this.state.measureState === 'shouldMeasure') {
       this.setPosition()
     }
     if (this.props.onChangeVisibility) {
@@ -512,7 +499,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition = () => {
+  setPosition = (cb = () => void 0) => {
     const { props } = this
     if (this.unmounted) return
     if (getIsManuallyPositioned(props)) return
@@ -530,26 +517,33 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         height: Math.min(window.innerHeight, popoverBounds.height),
       },
     }
+
     // if changed, update
     const prevState = pick(this.state, Object.keys(nextState))
     if (!isEqual(nextState, prevState)) {
+      const nextPosition = getPositionState(
+        props as PopoverPropsWithDefaults,
+        nextState.popoverBounds,
+        nextState.targetBounds,
+      )
+
       this.setState(
         {
           ...nextState,
-          ...getPositionState(
-            props as PopoverPropsWithDefaults,
-            nextState.popoverBounds,
-            nextState.targetBounds,
-          ),
+          measureState: 'measured',
+          ...nextPosition,
         },
         () => {
-          this.setState({ shouldMeasure: false })
+          this.setState({ measureState: 'done' }, cb)
         },
       )
     } else {
-      this.setState({
-        shouldMeasure: false,
-      })
+      this.setState(
+        {
+          measureState: 'done',
+        },
+        cb,
+      )
     }
   }
 
@@ -615,7 +609,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       if (this.state.isPinnedOpen) {
         this.forceClose()
       } else {
-        this.setState({ isPinnedOpen: Date.now() })
+        this.setPosition(() => {
+          this.setState({ isPinnedOpen: Date.now() })
+        })
       }
     })
   }
@@ -906,7 +902,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   get isMeasuring() {
-    return this.state.shouldMeasure || !this.state.finishedMount
+    return this.state.measureState !== 'done'
   }
 
   render() {
@@ -963,8 +959,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const backgroundProp =
       !background || background === true ? null : { background: `${background}` }
     const isOpen = !isMeasuring && showPopover
-
-    console.log('isMeasuring', isMeasuring)
+    const hasMeasuredOnce = !!this.state.popoverBounds
 
     const popoverContent = (
       <PopoverContainer
@@ -976,7 +971,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       >
         {!!overlay && (
           <Overlay
-            key={0}
             ref={this.overlayRef}
             isShown={isOpen && !closing}
             onClick={e => this.handleOverlayClick(e)}
@@ -984,7 +978,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           />
         )}
         <PopoverWrap
-          key={1}
           {...popoverProps}
           isOpen={!closing && !!isOpen}
           willReposition={isMeasuring}
@@ -1059,7 +1052,13 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       <>
         {React.isValidElement(target) && this.controlledTarget(target)}
         <Portal>
-          <span className="popover-portal" style={{ opacity: isMeasuring ? 0 : 1 }}>
+          <span
+            className="popover-portal"
+            style={{
+              opacity: isMeasuring ? 0 : 1,
+              display: hasMeasuredOnce ? 'inherit' : 'none',
+            }}
+          >
             {popoverChildren}
           </span>
         </Portal>

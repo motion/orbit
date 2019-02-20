@@ -99,7 +99,7 @@ class VirtualListStore {
     this.measure()
   }
 
-  get frameHeight() {
+  getFrameHeight() {
     if (!this.frameRef) {
       return window.innerHeight
     }
@@ -126,8 +126,8 @@ class VirtualListStore {
         }
       }
     } else {
-      if (this.frameHeight) {
-        const height = Math.min(this.props.maxHeight, this.frameHeight)
+      if (this.getFrameHeight()) {
+        const height = Math.min(this.props.maxHeight, this.getFrameHeight())
         this.height = height
       }
     }

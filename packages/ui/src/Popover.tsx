@@ -94,6 +94,7 @@ const defaultProps = {
   arrowSize: 14,
   forgiveness: 14,
   towards: 'auto',
+  transition: 'opacity ease-in 60ms, transform ease-out 100ms',
   openAnimation: 'slide 300ms',
   closeAnimation: 'bounce 300ms',
   adjust: [0, 0],
@@ -338,7 +339,7 @@ const isHovered = (props: PopoverProps, state: State) => {
   return targetHovered || menuHovered
 }
 
-const showPopover = (props: PopoverProps, state: State) => {
+const shouldShowPopover = (props: PopoverProps, state: State) => {
   const { isPinnedOpen } = state
   const { openOnHover, open } = props
   if (open || isPinnedOpen) {
@@ -376,11 +377,12 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       }
     }
 
-    const nextShow = showPopover(props, state)
+    const nextShow = shouldShowPopover(props, state)
     if (nextShow !== state.showPopover) {
-      nextState.showPopover = nextShow
       if (nextShow) {
         nextState.measureState = 'shouldMeasure'
+      } else {
+        nextState.showPopover = false
       }
     }
 
@@ -470,16 +472,11 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     this.unmounted = true
   }
 
-  get showPopover() {
-    if (typeof this.props.open === 'boolean') {
-      return this.props.open
-    }
-    return this.state.showPopover
-  }
-
   componentDidUpdate(_prevProps, prevState) {
     if (this.state.measureState === 'shouldMeasure') {
-      this.setPosition()
+      this.setPosition(() => {
+        this.setState({ showPopover: true })
+      })
     }
     if (this.props.onChangeVisibility) {
       if (prevState.showPopover !== this.state.showPopover) {
@@ -499,7 +496,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition = (cb = () => void 0) => {
+  setPosition = (afterMeasure = () => void 0) => {
     const { props } = this
     if (this.unmounted) return
     if (getIsManuallyPositioned(props)) return
@@ -534,7 +531,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
           ...nextPosition,
         },
         () => {
-          this.setState({ measureState: 'done' }, cb)
+          this.setState({ measureState: 'done' }, afterMeasure)
         },
       )
     } else {
@@ -542,12 +539,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         {
           measureState: 'done',
         },
-        cb,
+        afterMeasure,
       )
     }
   }
-
-  // setPosition = debounce(this.setPositionNow, 16)
 
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()
@@ -609,9 +604,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       if (this.state.isPinnedOpen) {
         this.forceClose()
       } else {
-        this.setPosition(() => {
-          this.setState({ isPinnedOpen: Date.now() })
-        })
+        this.setState({ isPinnedOpen: Date.now() })
       }
     })
   }
@@ -905,6 +898,16 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     return this.state.measureState !== 'done'
   }
 
+  get showPopover() {
+    if (this.isMeasuring) {
+      return false
+    }
+    if (typeof this.props.open === 'boolean') {
+      return this.props.open
+    }
+    return this.state.showPopover
+  }
+
   render() {
     const {
       adjust,
@@ -958,34 +961,32 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     const { isMeasuring, showPopover } = this
     const backgroundProp =
       !background || background === true ? null : { background: `${background}` }
-    const isOpen = !isMeasuring && showPopover
     const hasMeasuredOnce = !!this.state.popoverBounds
 
     const popoverContent = (
       <PopoverContainer
         data-towards={direction}
-        isPositioned={!isMeasuring}
-        isOpen={isOpen}
+        isOpen={showPopover}
         isClosing={closing}
         noHoverOnChildren={noHoverOnChildren}
       >
         {!!overlay && (
           <Overlay
             ref={this.overlayRef}
-            isShown={isOpen && !closing}
+            isShown={showPopover && !closing}
             onClick={e => this.handleOverlayClick(e)}
             overlay={overlay}
           />
         )}
         <PopoverWrap
           {...popoverProps}
-          isOpen={!closing && !!isOpen}
-          willReposition={isMeasuring}
           ref={this.setPopoverRef}
           distance={distance}
           forgiveness={forgiveness}
           showForgiveness={showForgiveness}
-          animation={openAnimation}
+          isOpen={!closing && showPopover}
+          // animation={!isMeasuring && openAnimation}
+          willReposition={isMeasuring}
           transition={isMeasuring ? 'none' : transition}
           width={width}
           // because things that extend downwards wont always fill all the way
@@ -1074,30 +1075,21 @@ const PopoverContainer = gloss({
   left: 0,
   right: 0,
   bottom: 0,
-  zIndex: 101,
+  zIndex: 5000,
   pointerEvents: 'none',
   '& > *': {
     pointerEvents: 'none !important',
   },
-  isPositioned: {
+  isOpen: {
     opacity: 1,
+    '& > *': {
+      pointerEvents: 'all !important',
+    },
   },
-  isClosing: {
-    zIndex: 5000 - 1,
+  noHoverOnChildren: {
+    pointerEvents: 'none',
   },
-  isMeasuring: {
-    opacity: 0,
-  },
-}).theme(({ isOpen, noHoverOnChildren }) =>
-  isOpen
-    ? {
-        zIndex: 5000,
-        '& > *': {
-          pointerEvents: noHoverOnChildren ? 'none' : 'all !important',
-        },
-      }
-    : null,
-)
+})
 
 const Overlay = gloss({
   position: 'absolute',
@@ -1127,23 +1119,21 @@ const PopoverWrap = gloss({
   if (p.isOpen && !p.noHoverOnChildren) {
     pointerEvents = p.noPortal ? 'inherit' : 'auto'
   }
+  const transform = {
+    x: p.left,
+    y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
+  }
   return {
     width: p.width,
     height: p.height,
     maxHeight: p.maxHeight,
-    transition: p.willReposition
-      ? 'none'
-      : p.transition || 'opacity ease-in 60ms, transform ease-out 100ms',
+    transition: p.willReposition ? 'none' : p.transition,
     opacity: p.isOpen && !p.willReposition ? 1 : 0,
     pointerEvents,
-    transform: {
-      x: p.left,
-      y: (p.isOpen && !p.willReposition ? 0 : -5) + p.top,
-    },
+    transform,
     padding: p.forgiveness,
     margin: -p.forgiveness,
     background: p.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-    animation: p.animation,
   }
 })
 

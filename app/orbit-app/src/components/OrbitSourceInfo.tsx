@@ -10,6 +10,11 @@ type Props = {
   app?: OrbitIntegration<any>
 }
 
+/**
+ * Cache of bitCount to prevent bitCounts from flickering.
+ */
+const bitsCountCache = {};
+
 export const OrbitSourceInfo = (props: Props) => {
   const sourceId = props.app.source ? props.app.source.id : false
   const { bitsCount } = useSourceInfo(sourceId)
@@ -20,7 +25,10 @@ export const OrbitSourceInfo = (props: Props) => {
     return null
   }
 
-  const countSubtitle = shortNumber(bitsCount)
+  if (bitsCount !== 0) {
+    bitsCountCache[sourceId] = bitsCount;
+  }
+  const countSubtitle = shortNumber(bitsCount === 0 ? (bitsCountCache[sourceId] || 0) : bitsCount);
 
   return (
     <Row alignItems="center" flex={1}>

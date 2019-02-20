@@ -6,7 +6,7 @@ export function memoIsEqualDeep<A>(a: A): A {
 }
 
 export const superMemo = (element: React.ReactElement<any>) => {
-  return props => {
-    return useMemo(() => cloneElement(element, props), isEqual)
-  }
+  return memoIsEqualDeep(props => {
+    return useMemo(() => cloneElement(element, props), [])
+  })
 }

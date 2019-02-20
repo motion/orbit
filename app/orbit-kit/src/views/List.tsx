@@ -1,20 +1,18 @@
 import { Bit, PersonBit } from '@mcro/models'
-import { SelectableList, Text, View, VirtualListProps } from '@mcro/ui'
+import { Center, SelectableList, SubTitle, Text, View, VirtualListProps } from '@mcro/ui'
 import React, { useCallback } from 'react'
-import { OrbitHighlightActiveQuery } from '../../components/OrbitHighlightActiveQuery'
-import { getAppConfig } from '../../helpers/getAppConfig'
-import { Omit } from '../../helpers/typeHelpers/omit'
-import { useIsActive } from '../../hooks/useIsActive'
-import { Center } from '../Center'
-import { OrbitListItem, OrbitListItemProps } from '../ListItems/OrbitListItem'
-import { SubTitle } from '../SubTitle'
+import { getAppConfig } from '../helpers/getAppConfig'
+import { useIsAppActive } from '../hooks/useIsAppActive'
+import { Omit } from '../types'
 import { AppConfig } from '../types/AppConfig'
+import { HighlightActiveQuery } from './HighlightActiveQuery'
+import { ListItem, OrbitListItemProps } from './ListItem'
 
 export type SearchableItem = Bit | PersonBit
 
 export type Item = SearchableItem | OrbitListItemProps
 
-export function orbitItemToListItemProps(props: any): OrbitListItemProps {
+export function toListItemProps(props: any): OrbitListItemProps {
   if (props.target) {
     return { item: props }
   }
@@ -38,11 +36,11 @@ export type ListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' | 'ite
 export function List(props: ListProps) {
   const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
-  const isActive = useIsActive()
+  const isActive = useIsAppActive()
   const getItemProps = useCallback(
     (item, index, items) => {
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
-      const normalized = orbitItemToListItemProps(item)
+      const normalized = toListItemProps(item)
       const extraProps = (props.getItemProps && props.getItemProps(item, index, items)) || null
       return { ...normalized, ...extraProps }
     },
@@ -51,7 +49,7 @@ export function List(props: ListProps) {
   const onSelect = useCallback(
     (index, eventType) => {
       if (props.onSelect) {
-        props.onSelect(index, getAppConfig(orbitItemToListItemProps(items[index])), eventType)
+        props.onSelect(index, getAppConfig(toListItemProps(items[index])), eventType)
       }
     },
     [props],
@@ -59,7 +57,7 @@ export function List(props: ListProps) {
   const onOpen = useCallback(
     index => {
       if (props.onOpen) {
-        props.onOpen(index, getAppConfig(orbitItemToListItemProps(items[index])))
+        props.onOpen(index, getAppConfig(toListItemProps(items[index])))
       }
     },
     [props],
@@ -68,12 +66,12 @@ export function List(props: ListProps) {
   const hasItems = !!props.items.length
 
   return (
-    <OrbitHighlightActiveQuery>
+    <HighlightActiveQuery>
       {hasItems && (
         <SelectableList
           allowMeasure={isActive}
           items={items}
-          ItemView={OrbitListItem}
+          ItemView={ListItem}
           isRowLoaded={isRowLoaded}
           {...props}
           getItemProps={getItemProps}
@@ -96,6 +94,6 @@ export function List(props: ListProps) {
             </Center>
           </View>
         ))}
-    </OrbitHighlightActiveQuery>
+    </HighlightActiveQuery>
   )
 }

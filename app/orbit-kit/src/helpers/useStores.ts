@@ -1,6 +1,7 @@
 import { createUseStores, UseStoresOptions } from '@mcro/use-store'
-import { KitStores } from '../KitStores'
+import { useContext } from 'react'
 import { configure } from './configureKit'
+import { KitStores } from './KitStores'
 
 // internal just for kit
 
@@ -16,3 +17,5 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): Guar
   }
   return useStoresResolved(options)
 }
+
+export const useStoresSimple = () => useContext(configure.StoreContext)

@@ -1,14 +1,14 @@
 import { gloss } from '@mcro/gloss'
 import { Bit, Person, PersonBit } from '@mcro/models'
-import { ListItem, ListItemProps, VirtualListItemProps } from '@mcro/ui'
+import { ListItem as UIListItem, ListItemProps, VirtualListItemProps } from '@mcro/ui'
 import * as React from 'react'
-import { AppConfig } from '../../apps/AppTypes'
 import PeopleRow from '../../components/PeopleRow'
 import { NormalItem, normalizeItem } from '../../helpers/normalizeItem'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStoresSimple } from '../../hooks/useStores'
 import { ItemType, OrbitItemViewProps } from '../../sources/types'
-import ListItemPerson from './ListItemPerson'
+import { AppConfig } from '../types/AppConfig'
+import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
 
@@ -29,7 +29,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
   appConfig?: AppConfig
 }
 
-export const OrbitListItem = React.memo(
+export const ListItem = React.memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
     const { appStore, selectionStore, sourcesStore } = useStoresSimple()
 
@@ -71,7 +71,7 @@ export const OrbitListItem = React.memo(
     const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
 
     return (
-      <ListItem
+      <UIListItem
         searchTerm={props.query}
         subtitleSpaceBetween={spaceBetween}
         {...ItemView && ItemView.itemProps}
@@ -95,7 +95,7 @@ export const OrbitListItem = React.memo(
             <PeopleRow people={people} />
           </Bottom>
         )}
-      </ListItem>
+      </UIListItem>
     )
   },
 )

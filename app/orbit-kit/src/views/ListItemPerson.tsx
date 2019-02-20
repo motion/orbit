@@ -1,12 +1,14 @@
 import { PersonBit } from '@mcro/models'
-import { Text } from '@mcro/ui'
+import { Avatar, memoIsEqualDeep, Text } from '@mcro/ui'
 import * as React from 'react'
-import { memoIsEqualDeep } from '../../helpers/memoIsEqualDeep'
-import { Avatar } from '../Avatar'
 
 // TODO basically just use a regular ListItem and make it support this
 
-const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item: PersonBit }) {
+export const ListItemPerson = memoIsEqualDeep(function ListItemPerson({
+  item,
+}: {
+  item: PersonBit
+}) {
   return (
     <>
       {!!item.photo && (
@@ -35,5 +37,3 @@ ListItemPerson['itemProps'] = {
   hideIcon: true,
   paddingLeft: 30,
 }
-
-export default ListItemPerson

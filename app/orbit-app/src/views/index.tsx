@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { HorizontalSpace, InputProps, Row, Text, TextProps, View } from '@mcro/ui'
+import { HorizontalSpace, InputProps, Row, SubTitle, Text, TextProps, Title, View } from '@mcro/ui'
 import * as React from 'react'
 import { Input } from './Input'
 
@@ -119,31 +119,11 @@ export const HorizontalScroll = gloss(Row, {
   },
 })
 
-export const Title = ({ verticalSpacing = 1, children, ...props }) => (
-  <UI.Text size={1.35} fontWeight={700} margin={[0, 0, 12 * verticalSpacing]} {...props}>
-    {children}
-  </UI.Text>
-)
-
 export const IntroText = (props: TextProps) => <Text size={1.2} alpha={0.8} {...props} />
 
 export const SubPaneTitle = props => {
   return <Title marginLeft={12} marginRight={12} {...props} />
 }
-
-export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
-  <UI.Text
-    alpha={0.7}
-    fontWeight={400}
-    size={1.05}
-    alignItems="center"
-    flexFlow="row"
-    padding={[4 * verticalSpacing, 0, 10 * verticalSpacing]}
-    {...props}
-  >
-    {children}
-  </UI.Text>
-)
 
 export const SubPaneSubTitle = props => {
   return <SubTitle marginLeft={12} marginRight={12} {...props} />

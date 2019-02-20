@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/orbit-kit",
+  "name": "@mcro/kit",
   "version": "2.3.10",
   "main": "./_/index.js",
   "private": true,

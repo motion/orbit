@@ -1,9 +1,10 @@
 import { Context, createContext } from 'react'
+import { KitStores } from './KitStores'
 
 let hasSet = false
 
 type ConfigureOpts = {
-  StoreContext?: Context<any>
+  StoreContext?: Context<KitStores>
 }
 
 export let configure: ConfigureOpts = {

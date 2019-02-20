@@ -1,12 +1,11 @@
-import { Bit, GenericBit, IntegrationType, PersonBit, SearchResult, Source } from '@mcro/models'
-import { SearchBarType } from '@mcro/ui'
-import * as React from 'react'
-import { FindOptions } from 'typeorm'
-import { AppConfig } from '../apps/AppTypes'
-import { NormalItem } from '../helpers/normalizeItem'
-import { AppPageStore } from '../pages/AppPage/AppPageStore'
-import { GenericComponent } from '../types'
-import { ItemRenderText, ListItemHide } from '../views/ListItems/ListItem'
+import { Bit, GenericBit, IntegrationType, PersonBit, SearchResult, Source } from '@mcro/models';
+import { ItemRenderText, ListItemHide, SearchBarType } from '@mcro/ui';
+import * as React from 'react';
+import { FindOptions } from 'typeorm';
+import { AppConfig } from '../apps/AppTypes';
+import { NormalItem } from '../helpers/normalizeItem';
+import { AppPageStore } from '../pages/AppPage/AppPageStore';
+import { GenericComponent } from '../types';
 
 type AppTypeToModelType = {
   slack: Bit
@@ -19,8 +18,6 @@ type AppTypeToModelType = {
   person: PersonBit
   pinned: Bit
 }
-
-export type ItemType = IntegrationType | 'person'
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 

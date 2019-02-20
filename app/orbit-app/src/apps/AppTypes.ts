@@ -1,7 +1,6 @@
 import { AppBit, IntegrationType } from '@mcro/models'
 import { FunctionComponent } from 'react'
 import { GenericComponent } from '../types'
-import { AppStore } from './AppStore'
 
 type AppBitOf<A> = AppBit & { data: A }
 

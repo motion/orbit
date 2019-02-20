@@ -1,6 +1,5 @@
+import { Divider, SubTitle, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
-import { Divider } from '../../../views/Divider'
-import { VerticalSpace, SubTitle } from '../../../views'
 
 export const RelatedInfiniteScroll = ({ store }) => {
   return (

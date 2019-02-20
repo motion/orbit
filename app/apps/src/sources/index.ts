@@ -6,7 +6,6 @@ import { jira } from './directory/jira/jira'
 import { person } from './directory/person/person'
 import { slack } from './directory/slack/slack'
 import { website } from './directory/website/website'
-import { GetOrbitIntegrations, OrbitIntegrations } from './types'
 
 export const getIntegrations: GetOrbitIntegrations = {
   slack,

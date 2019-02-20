@@ -1,8 +1,10 @@
-import { ItemType } from '@mcro/kit'
-import { Bit, GenericBit, IntegrationType, PersonBit, SearchResult, Source } from '@mcro/models'
-import { ItemRenderText, ListItemHide, SearchBarType } from '@mcro/ui'
+import { Bit, PersonBit, Source } from '@mcro/models'
+import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FindOptions } from 'typeorm'
+import { AppConfig } from './AppConfig'
+import { ItemType } from './ItemType'
+import { OrbitItemViewProps } from './OrbitItemViewProps'
 
 type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
@@ -20,29 +22,13 @@ type AppTypeToModelType = {
 
 type ModelFromType<A extends ItemType> = AppTypeToModelType[A]
 
-export type OrbitItemViewProps<A extends ItemType> = {
-  item?: A extends IntegrationType ? GenericBit<A> : any
-  normalizedItem?: Partial<NormalItem>
-  isExpanded?: boolean
-  shownLimit?: number
-  searchTerm?: string
-  renderText?: ItemRenderText
-  hide?: ListItemHide
-  beforeTitle?: React.ReactNode
-  oneLine?: boolean
-  condensed?: boolean
-  preventSelect?: boolean
-}
-
 export type OrbitSourceMainProps<A extends ItemType> = OrbitItemViewProps<A> & {
-  appPageStore: AppPageStore
   searchBar: SearchBarType
   searchTerm: string
 }
 
 export type OrbitSourceSettingProps<T extends Source> = {
   appConfig?: AppConfig
-  appPageStore?: AppPageStore
   source: T
 }
 
@@ -72,5 +58,3 @@ export type OrbitIntegrations = { [key in ItemType]: OrbitIntegration<ItemType> 
 export type GetOrbitIntegration<A extends ItemType> = (source: Source) => OrbitIntegration<A>
 
 export type GetOrbitIntegrations = { [key in ItemType]: GetOrbitIntegration<ItemType> }
-
-export type ResolvableModel = Bit | PersonBit | Source | SearchResult

@@ -1,7 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import { Text, View } from '@mcro/ui'
+import { gloss, View } from '@mcro/gloss'
+import { Text } from './Text'
 
-// @ts-ignore
 export const Message = gloss(Text, {
   lineHeight: '1.4rem',
   cursor: 'text',
@@ -21,7 +20,6 @@ Message.defaultProps = {
   className: 'text',
 }
 
-// @ts-ignore
 export const MessageDark = gloss(View, {
   fontSize: 16,
   lineHeight: '1.3rem',

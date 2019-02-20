@@ -1,3 +1,4 @@
+import { SelectionStore } from '@mcro/ui'
 import { AppStore } from '../stores/AppStore'
 import { PaneManagerStore } from '../stores/PaneManagerStore'
 import { QueryStore } from '../stores/QueryStore'
@@ -8,4 +9,6 @@ export type KitStores = {
   paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   queryStore?: QueryStore
+  selectionStore?: SelectionStore
+  sourcesStore?: any
 }

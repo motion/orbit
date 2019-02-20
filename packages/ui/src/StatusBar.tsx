@@ -1,7 +1,7 @@
-import { gloss } from '@mcro/gloss'
-import { Row, Text } from '@mcro/ui'
+import { gloss, Row } from '@mcro/gloss'
 import * as React from 'react'
-import { RoundButtonSmall } from './RoundButtonSmall'
+import { RoundButtonSmall } from './buttons/RoundButtonSmall'
+import { Text } from './text/Text'
 
 const statusBarProps = {
   alignItems: 'center',

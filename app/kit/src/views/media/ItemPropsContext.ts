@@ -1,6 +1,5 @@
 import { TextProps, ViewProps } from '@mcro/ui'
 import { createContext } from 'react'
-import { ContextValueOf } from '../../types'
 
 export const ItemPropsContext = createContext({
   oneLine: false,
@@ -11,5 +10,7 @@ export const ItemPropsContext = createContext({
   textProps: null as TextProps,
   renderText: null,
 })
+
+type ContextValueOf<S> = S extends React.Context<infer T> ? T : never
 
 export type ItemsPropsContextType = ContextValueOf<typeof ItemPropsContext>

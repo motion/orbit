@@ -48,6 +48,7 @@ export const ListItem = React.memo(
           itemProps = getNormalPropsForListItem(normalized)
 
           if (item.target === 'bit') {
+            // !TODO instead of using sourcesStore directly, have configuration config.getItemView()
             ItemView = sourcesStore.getView(normalized.integration, 'item')
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson

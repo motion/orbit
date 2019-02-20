@@ -1,29 +1,29 @@
 import { gloss } from '@mcro/gloss'
-import { DateFormat, View } from '@mcro/ui'
-import * as React from 'react'
-import { AppActions } from '../../../actions/appActions/AppActions'
 import {
+  DateFormat,
   StatusBar,
   StatusBarButton,
   StatusBarSection,
   StatusBarSpace,
   StatusBarText,
-} from '../../../views/StatusBar'
-import { OrbitSourceMainProps } from '../../types'
+  View,
+} from '@mcro/ui'
+import * as React from 'react'
 
 const Cmd = gloss({
   opacity: 0.6,
   marginLeft: 4,
 })
 
-export const BitStatusBar = ({ normalizedItem, item }: OrbitSourceMainProps<any>) => {
-  const { location, locationLink, updatedAt } = normalizedItem
+export const BitStatusBar = ({ normalizedItem /* , item */ }: OrbitSourceMainProps<any>) => {
+  const { location /* , locationLink */, updatedAt } = normalizedItem
   return (
     <StatusBar>
       <StatusBarButton
         onClick={e => {
           e.stopPropagation()
-          AppActions.open(locationLink)
+          // !TODO
+          // AppActions.open(locationLink)
         }}
       >
         {location}
@@ -36,11 +36,21 @@ export const BitStatusBar = ({ normalizedItem, item }: OrbitSourceMainProps<any>
       )}
       <View flex={1} />
       <StatusBarSection>
-        <StatusBarButton onClick={() => AppActions.copy(item)}>
+        <StatusBarButton
+          onClick={() => {
+            // !TODO
+            // AppActions.copy(item)
+          }}
+        >
           Copy Link <Cmd>⌘+C</Cmd>
         </StatusBarButton>
         <View width={5} />
-        <StatusBarButton onClick={() => AppActions.open(item)}>
+        <StatusBarButton
+          onClick={() => {
+            // !TODO
+            // AppActions.open(item)
+          }}
+        >
           Open <Cmd>Enter</Cmd>
         </StatusBarButton>
       </StatusBarSection>

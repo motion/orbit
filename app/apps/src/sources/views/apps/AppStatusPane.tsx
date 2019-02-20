@@ -1,9 +1,7 @@
-import * as React from 'react'
 import { Setting } from '@mcro/models'
-import { View, Row } from '@mcro/ui'
+import { Icon, Message, Row, View } from '@mcro/ui'
+import * as React from 'react'
 import { SubTitle, VerticalSpace } from '../../../views'
-import { Message } from '../../../views/Message'
-import { Icon } from '../../../views/Icon'
 
 type Props = {
   setting: Setting
@@ -13,12 +11,15 @@ type Props = {
 export class AppStatusPane extends React.Component<Props> {
   render() {
     const { setting, extraMessage } = this.props
+
+    console.log('using bad prop', setting['type'])
+
     return (
       <View flex={1} alignItems="center" justifyContent="center" padding={30}>
         <SubTitle size={2.8}>Active</SubTitle>
         <VerticalSpace />
         <Row alignItems="center">
-          <Icon size={28} icon={setting.type} />
+          <Icon size={28} name={setting['type']} />
           <div style={{ width: 20 }} />
           <Icon size={28} color="green" name="check" />
         </Row>

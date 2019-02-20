@@ -24,6 +24,7 @@ export function useActions() {
     get(_, key) {
       if (typeof key === 'string') {
         if (!actions[key]) {
+          if (key.indexOf('isMobX') === 0) return boundActions[key]
           throw new Error(`No action ${key.toString()}`)
         }
         return (...args: any[]) => {

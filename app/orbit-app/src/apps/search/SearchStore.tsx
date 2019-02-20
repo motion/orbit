@@ -3,6 +3,7 @@ import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
+import { useActions } from '../../actions/Actions'
 import { SearchState } from '../../hooks/useSearch'
 import { useStoresSimple } from '../../hooks/useStores'
 import { loadMany } from '../../mediator'
@@ -21,6 +22,7 @@ type SearchResults = {
 
 export class SearchStore {
   stores = useHook(useStoresSimple)
+  actions = useHook(useActions)
   searchState: SearchState | null = null
 
   setSearchState(next: SearchState) {
@@ -135,9 +137,7 @@ export class SearchStore {
           type: AppType.message,
           title: `Create new app`,
         },
-        onOpen: () => {
-          this.stores.paneManagerStore.setActivePaneByType(`createApp`)
-        },
+        onOpen: this.actions.setupNewApp,
       },
     ]
   }

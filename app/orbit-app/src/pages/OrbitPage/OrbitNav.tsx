@@ -165,7 +165,6 @@ export default memo(function OrbitNav() {
               after={
                 <OrbitTabButton
                   icon="remove"
-                  opacity={0.5}
                   onClick={flow(
                     preventDefault,
                     Actions.previousTab,

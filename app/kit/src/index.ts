@@ -1,5 +1,5 @@
 export * from '@mcro/ui'
-export { configureKit } from './helpers/configureKit'
+export { configureKit } from './configureKit'
 export * from './stores/AppStore'
 export * from './stores/PaneManagerStore'
 export * from './stores/SubPaneStore'

@@ -1,3 +1,5 @@
+import { DateRange, Mark, QueryFragment } from './NLPTypes'
+
 export type NLPResponse = {
   query: string
   searchQuery: string

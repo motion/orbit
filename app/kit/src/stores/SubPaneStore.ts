@@ -1,12 +1,13 @@
-import { ensure, on, react } from '@mcro/black'
-import { useHook } from '@mcro/use-store'
+import { on } from '@mcro/helpers'
+import { ensure, react, useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
-import { SubPaneProps } from './SubPane'
+import { useStoresSimple } from '../helpers/useStores'
+import { SubPaneProps } from '../views/SubPane'
 
 export class SubPaneStore {
   props: SubPaneProps
+
   stores = useHook(useStoresSimple)
   innerPaneRef = createRef<HTMLDivElement>()
   paneRef = createRef<HTMLDivElement>()

@@ -227,32 +227,34 @@ export class Logger {
       )
       log.info(this.namespace, ...messages)
     } else if (level === 'timer' || level === 'vtimer') {
-      const consoleLog =
-        level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
-      const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
-      const labelMessage = messages[0]
-      const existTimer = this.timers.find(timer => timer.message === labelMessage)
-      if (existTimer) {
-        const delta = (Date.now() - existTimer.time) / 1000
-        // reset it so we can see time since last message each message
-        existTimer.time = Date.now()
-        consoleLog(
-          `%c${this.namespace}%c${delta}ms`,
-          `color: ${color}; font-weight: bold`,
-          'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
-          ...messages,
-        )
-        defaultLog(this.namespace, delta, ...messages)
-        this.timers.splice(this.timers.indexOf(existTimer), 1)
-      } else {
-        consoleLog(
-          `%c${this.namespace}%cstarted`,
-          `color: ${color}; font-weight: bold`,
-          'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
-          ...messages,
-        )
-        defaultLog(this.namespace, 'started', ...messages)
-        this.timers.push({ time: Date.now(), message: messages[0] })
+      if (loggingEnabled || level === 'timer') {
+        const consoleLog =
+          level === 'timer' ? console.info.bind(console) : console.debug.bind(console)
+        const defaultLog = level === 'timer' ? log.info.bind(log) : log.debug.bind(log)
+        const labelMessage = messages[0]
+        const existTimer = this.timers.find(timer => timer.message === labelMessage)
+        if (existTimer) {
+          const delta = (Date.now() - existTimer.time) / 1000
+          // reset it so we can see time since last message each message
+          existTimer.time = Date.now()
+          consoleLog(
+            `%c${this.namespace}%c${delta}ms`,
+            `color: ${color}; font-weight: bold`,
+            'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
+            ...messages,
+          )
+          defaultLog(this.namespace, delta, ...messages)
+          this.timers.splice(this.timers.indexOf(existTimer), 1)
+        } else {
+          consoleLog(
+            `%c${this.namespace}%cstarted`,
+            `color: ${color}; font-weight: bold`,
+            'color: #333; background-color: #EEE; padding: 0 2px; margin: 0 2px',
+            ...messages,
+          )
+          defaultLog(this.namespace, 'started', ...messages)
+          this.timers.push({ time: Date.now(), message: messages[0] })
+        }
       }
     } else {
       if (loggingEnabled) {

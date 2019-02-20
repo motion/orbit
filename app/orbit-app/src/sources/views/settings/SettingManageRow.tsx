@@ -5,20 +5,17 @@ import { AppActions } from '../../../actions/appActions/AppActions'
 import { showConfirmDialog } from '../../../helpers/electron/showConfirmDialog'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
-import { command, loadOne } from '../../../mediator'
+import { command } from '../../../mediator'
 import { getAppFromSource } from '../../../stores/SourcesStore'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { TitleBarButton } from '../layout/TitleBarButton'
 import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { ManageSmartSync } from './ManageSmartSync'
-import { SourceModel } from '@mcro/models/_'
 
 const handleRefresh = async (sourceId: number) => {
-  const source = await loadOne(SourceModel, null)
-  console.log(source)
-  // command(SourceForceSyncCommand, {
-  //   sourceId,
-  // })
+  command(SourceForceSyncCommand, {
+    sourceId,
+  })
   // command(TearAppCommand).then(() => {
   //   console.log('success tear')
   // })

@@ -29,7 +29,7 @@ export class ServiceLoader {
   }
 
   /**
-   * Performs HTTP request to the atlassian to get requested data.
+   * Performs HTTP request to the url to get requested data.
    */
   async load<T>(
     options: ServiceLoaderLoadOptions<T>,

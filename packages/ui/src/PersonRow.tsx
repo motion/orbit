@@ -18,7 +18,7 @@ const Person = props => (
   </Inline>
 )
 
-export default function PersonRow({ people, onClickPerson = null }) {
+export function PersonRow({ people, onClickPerson = null }) {
   const { activeTheme } = React.useContext(ThemeContext)
   const total = (people || []).length
   if (total === 0) {

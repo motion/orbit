@@ -1,31 +1,8 @@
-import { Bit, IntegrationType, Person, PersonBit, Source } from '@mcro/models'
+import { Bit, PersonBit, Source } from '@mcro/models'
 import { last } from 'lodash'
 import * as React from 'react'
-import { ResolvableModel } from '../sources/types'
-
-export type NormalItem = {
-  id?: string
-  icon?: string
-  title?: string
-  type?: string
-  subType?: string
-  preview?: React.ReactNode
-  content?: any
-  location?: string
-  locationLink?: string
-  webLink?: string
-  desktopLink?: string
-  createdAt?: Date
-  updatedAt?: Date
-  comments?: React.ReactNode[]
-  people?: Person[]
-  searchTerm?: string
-  subtitle?: React.ReactNode
-  integration?: IntegrationType
-  image?: string
-  afterTitle?: React.ReactNode
-  after?: React.ReactNode
-}
+import { NormalItem } from '../types/NormalItem'
+import { ResolvableModel } from '../types/ResolvableModel'
 
 export type ItemResolverExtraProps = {
   beforeTitle?: React.ReactNode

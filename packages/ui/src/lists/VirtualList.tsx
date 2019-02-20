@@ -1,6 +1,5 @@
-import { always, cancel, react } from '@mcro/black'
 import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
-import { useStore } from '@mcro/use-store'
+import { always, cancel, react, useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import React, {
   Component,

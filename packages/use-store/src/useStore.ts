@@ -5,6 +5,7 @@ import { debugEmit } from './debugUseStore'
 import { useTrackableStore } from './setupTrackableStore'
 
 export {
+  always,
   cancel,
   configureAutomagical,
   decorate,

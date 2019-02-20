@@ -27,16 +27,6 @@ if [[ "$FLAGS" =~ "--no-electron" ]]; then
   export DISABLE_ELECTRON="true"
 fi
 
-if [[ "$FLAGS" =~ "--no-menu" ]]; then
-  echo "DISABLE MENU"
-  export DISABLE_MENU="true"
-fi
-
-if [[ "$FLAGS" =~ "--no-apps" ]]; then
-  echo "DISABLE APPS"
-  export DISABLE_APPS="true"
-fi
-
 #
 # START repl debugger
 #

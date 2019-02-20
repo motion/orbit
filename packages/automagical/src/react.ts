@@ -27,16 +27,16 @@ export type ReactionFn<A, B> = ((a: A, helpers: ReactionHelpers) => B | Promise<
 // react(() => now(), t => t - 1000, { ...opts })
 export function react<A extends ReactVal, B>(
   a: (() => A),
-  b?: ReactionFn<A, B>,
+  b: ReactionFn<A, B>,
   c?: ReactionOptions,
 ): UnwrapObservable<B>
 
 // single reaction "autorun" style
 // react(() => 1, { ...opts })
-export function react<A extends ReactVal, B>(
-  a: ReactionFn<A, B>,
+export function react<A extends ReactVal>(
+  a: (() => A),
   b?: ReactionOptions,
-): UnwrapObservable<B>
+): UnwrapObservable<A>
 
 export function react(a: any, b?: any, c?: any) {
   const startReaction = (obj: any, method: string) => {

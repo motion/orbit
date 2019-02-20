@@ -17,45 +17,69 @@ build
 ```sh
 # once per shell (or use dotenv)
 source .env
-# run once to start building all sub packages and apps
+
+# run once to start watching / building everything in a persistent terminal
 build --watch
-# run the three apps
-run desktop
-run app
-run electron
+
+# then, to run the apps you can either do:
+run orbit
+
+# or do any number of different ways. i often run webpack separate from the rest
+# this lets you see webpack errors more clearly
+
+# in one terminal:
+run orbit-app
+# in another terminal:
+run orbit --no-app
+```
+
+There are some run options:
+
+```
+run orbit \
+  --no-app \       # doesnt run webpack
+  --no-electron \  # run without electron, just desktop / syncers
+  --no-syncers \   # run without syncers process
+  --no-watch \     # dont restart electron on code changes
+  --no-logging \   # dont log out a lot (syncers log quite a bit)
+  --no-gpu         # dont render electron using gpu
+                   # (bcz occasionally you run into glitchy white bgs when debugging)
+```
+
+Some run options for orbit-app:
+
+```
+# To debug orbit in your web-browser instead of electron:
+run orbit-app --target web
+
+# To run orbit-app in prod mode:
+run orbit-app --prod
 ```
 
 ## Structure of this repo
 
 ```sh
-/apps               # top level apps
-  /app              # web app (webpack, electron loads it)
-  /desktop          # node app (syncers, oauth server, ...)
-  /electron         # electron app (very light for now, powered by reactron)
+/apps
+  /orbit            # entry, forks the orbit-* processes, then require('orbit-electron')
+  /orbit-app           # web app (webpack, electron loads it)
+  /orbit-desktop       # node app (runs server for oauth, runs a variety of backend services)
+  /orbit-electron      # electron app (one-per-window, controls electron windows and other state)
+  /orbit-syncers       # syncers app (syncs data from github, slack, etc into the app)
   /models           # TypeORM models, shared by all apps ^^
-  /oracle           # Swift, gives us deep hooks into OS state
   /services         # Oauth integration helpers (Github.getRepos, Drive.getFiles...)
-  /site             # public facing website
-  /stores           # Singleton top level stores, one per app (App, Desktop, Electron)
-
-/assets             # various files for design elements, etc
+  /stores           # Singleton *across all processess*, syncs deep reactive .state
+  /orbit-repl       # Runs Puppeteer and hooks into all processes for debugging
+  /oracle           # (inactive) OCR for reading screen, light OS level controller
+  /model-bridge     # Lets us do observeOne/loadOne/commands/etc between processes
 
 /bin                # monorepo scripts (bootstrap, build, run, deploy, etc)
-
 /notes              # ongoing notes related to project
-
 /packages           # all packages we maintain
-
-# note: only documenting interesting packages, the rest extermely minor
-
-/automagical        # powers @store and react()
-/black              # compiles and exports @view and @store decorator
-/constants          # shared static variables between apps
-/crawler            # website crawler for custom search
-/debug-apps         # the Chromium app that gives us REPL into every app
-/gloss              # our CSS-in-JS solution, see README
-/reactron           # fork of react-ionize with more features and up to date React
-/ui                 # our UI kit, built with gloss
+  # note: only documenting interesting packages, the rest extermely minor
+  /automagical        # powers react()
+  /use-store          # used for all our stores, automatically tracks changes
+  /gloss              # our sweet CSS-in-JS solution
+  /ui                 # our UI kit, built with gloss
 ```
 
 ## using the monorepo
@@ -112,9 +136,9 @@ LoggerSettings.quiet() // quiet everything, argument to narrow
 
 It may be helpful to run `LoggerSettings.list` and `LoggerSettings.loud()` in each app just to get an idea of what's going on there.
 
-### `log` from @mcro/black
+### `log` global in the app
 
-This is a nice helper to log things. It returns the first argument passed into it, so you can easily wrap it in weird places and have it log for you:
+This is a nice helper to log things. It colorizes the output nicely into terminal. It returns the first argument passed into it, so you can easily wrap it in weird places and have it log for you:
 
 ```
 {
@@ -122,46 +146,26 @@ This is a nice helper to log things. It returns the first argument passed into i
     big: [object, of, log(things)]
   }
 }
-```
 
-It will also colorful log by default, and prevent massive blocks of text. It tries to stringify things recursively, etc.
-
-```
 log.full() // will log the entire thing not cut it short
 ```
 
-### `mlog` from @mcro/black
+### Debugging stores in orbit-app
 
-This is a mobx logger we have just becausse we used this pattern so often. Use it like so:
+You can basically inspect a lot of stuff in the running app, check out:
 
-```js
-mlog(() => Desktop.state.hoverState) // Because Desktop.state is reactive, this will log whenever it changes
-mlog.clear() // stop logging things
 ```
+# All currently mounted stores:
+Stores.* (Stores.OrbitStore, etc)
 
-Saves you from typing:
+# State of recent actions in stores:
+#StoreState.*
 
-```js
-const off = Mobx.autorun(() => console.log(Desktop.state.hoverState))
-off()
-```
+# See granular updates:
+window.enableLog = true
 
-### `require`
-
-In the web app, you can do `require` from the console. Also see `installDevTools` for other helpers.
-
-### `Root`
-
-Every app exports it's base level View or Class as Root. In web you can do:
-
-```js
-Root.stores // to access every mounted store attached to any view
-```
-
-In desktop you can do, for example:
-
-```js
-Root.sync.gdocs.runAll() // run the gdocs syncer
+# Run commands and load models
+Mediator.loadOne(Models.*).then(x => console.log(x))
 ```
 
 ### The root level stores `App`, `Desktop` and `Electron` from `@mcro/stores`
@@ -223,13 +227,4 @@ To apply same operations on multiple syncers you can use following pattern:
 
 ```got an error but may not be worth reporting
 await Promise.all(Object.keys(Syncers).map(syncer => Syncers[syncer].start()))
-```
-
-### TypeORM Entities
-
-In dev mode we set up models to be globals so you can use them easily in REPL as well.
-You can use any entity from `@mcro/models` and use it in the REPL following way:
-
-```js
-await typeorm.getRepository(BitEntity).find()
 ```

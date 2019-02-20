@@ -8,7 +8,7 @@ First time:
 # bootstrap will ensure a couple deps from brew are installed, requires homebrew
 brew update
 bin/bootstrap
-# only need to do this once to get everything built out
+# do once to get everything built out
 build
 ```
 

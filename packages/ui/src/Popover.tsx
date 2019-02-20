@@ -522,7 +522,8 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
   }
 
-  setPosition = debounce(() => {
+  setPosition = () => {
+    console.trace('setPosition')
     if (this.unmounted) return
     if (getIsManuallyPositioned(this.props)) return
     if (!this.popoverRef || !this.target) {
@@ -530,6 +531,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
     }
     // get popover first child which is the inner div that doesn't deal with forgiveness padding
     const popoverBounds = this.popoverRef.children[0].getBoundingClientRect()
+    debugger
     const nextState = {
       targetBounds: JSON.parse(JSON.stringify(this.target.getBoundingClientRect())),
       popoverBounds: {
@@ -546,7 +548,9 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         shouldSetPosition: true,
       })
     }
-  }, 16)
+  }
+
+  // setPosition = debounce(this.setPositionNow, 16)
 
   forceClose = async () => {
     this.stopListeningUntilNextMouseEnter()

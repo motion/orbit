@@ -4,7 +4,15 @@ import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { useTrackableStore } from './setupTrackableStore'
 
-export { IS_STORE } from '@mcro/automagical'
+export {
+  cancel,
+  configureAutomagical,
+  decorate,
+  ensure,
+  IS_STORE,
+  react,
+  useCurrentComponent,
+} from '@mcro/automagical'
 export { configureUseStore } from './configure'
 export { createUseStores } from './createUseStores'
 export { debugUseStore } from './debugUseStore'

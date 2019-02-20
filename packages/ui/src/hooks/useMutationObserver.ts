@@ -1,7 +1,8 @@
 import { EffectCallback, useEffect, useRef } from 'react'
 
-export function useResizeObserver<T extends React.RefObject<HTMLDivElement>>(
+export function useMutationObserver<T extends React.RefObject<HTMLDivElement>>(
   ref: T,
+  attributes: MutationObserverInit,
   onChange: ((node: T['current']) => any),
 ): Function {
   const node = ref.current
@@ -10,20 +11,16 @@ export function useResizeObserver<T extends React.RefObject<HTMLDivElement>>(
   useEffect(
     () => {
       if (!node) return
-
-      // @ts-ignore
-      let resizeObserver = new ResizeObserver(() => {
+      let mutationObserver = new MutationObserver(() => {
         onChange(node)
       })
-      resizeObserver.observe(node)
-
+      mutationObserver.observe(node, attributes)
       dispose.current = () => {
-        resizeObserver.disconnect()
+        mutationObserver.disconnect()
       }
-
       return dispose.current
     },
-    [node],
+    [node, attributes],
   )
 
   return () => dispose.current && dispose.current()

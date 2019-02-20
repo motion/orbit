@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { UIContext } from './helpers/contexts'
-import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
+import { UIContext } from '../helpers/contexts'
+import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
 export type ButtonProps = SizedSurfaceProps &
   React.HTMLAttributes<HTMLButtonElement> & {

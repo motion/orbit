@@ -1,7 +1,8 @@
 import { react } from '@mcro/black'
+import { Button, useScreenPosition } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as Mobx from 'mobx'
-import React from 'react'
+import React, { useRef } from 'react'
 
 window['Mobx'] = Mobx
 
@@ -32,15 +33,31 @@ class TestStore {
 
 export function TestStores() {
   const store = useStore(TestStore, { x: 1 })
-  debugger
+  const ref = useRef<HTMLDivElement>()
+
+  console.log('render with', ref)
+
+  useScreenPosition(ref, pos => {
+    console.log('pos', pos, 'ref', ref)
+  })
+
   window.store = store
   return (
-    <div>
+    <div style={{ height: 2000 }}>
       <h2>y: {store.y}</h2>
       <h2>z: {store.z}</h2>
       <h5>z2: {store.z2}</h5>
       {JSON.stringify(store.abc)}
-      <button onClick={store.onClick}>gooo</button>
+      <Button tooltip="hi mom" onClick={store.onClick}>
+        gooo
+      </Button>
+      <div style={{ flex: 1 }} />
+      <div ref={ref}>hello</div>
+      <div style={{ flex: 1 }} />
+      <div>hello2</div>
+      <div style={{ flex: 1 }} />
+      <div>hello3</div>
+      <div style={{ flex: 1 }} />
     </div>
   )
 }

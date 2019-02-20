@@ -6,7 +6,11 @@
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
+    "core-js": "2.6.5",
+    "@babel/core": "7.2.0",
     "@babel/runtime": "7.2.0",
+    "@mcro/use-store": "*",
+    "@mcro/ui": "*",
     "lodash": "^4.17.10",
     "mobx-react-lite": "1.0.0",
     "react": "16.8.2",

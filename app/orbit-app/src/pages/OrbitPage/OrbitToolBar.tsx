@@ -36,8 +36,6 @@ const OrbitToolBarContent = memo(() => {
   const { id } = paneManagerStore.activePane
   const state = appsStore.appsState
 
-  console.warn()
-
   // memo all toolbars
   const toolbars = useMemo(
     () => {
@@ -63,8 +61,6 @@ const OrbitToolBarContent = memo(() => {
     },
     [state && Object.keys(state.appViews).join('')],
   )
-
-  console.log('key is', id, toolbars, state && Object.keys(state.appViews).join(''))
 
   return (
     <>

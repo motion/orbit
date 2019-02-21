@@ -1,7 +1,6 @@
 import { AppConfig, AppStore } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { FunctionComponent } from 'react'
-import { GenericComponent } from '../types'
 
 type AppBitOf<A> = AppBit & { data: A }
 
@@ -29,15 +28,22 @@ export type AppElements = {
   provideStores?: Object
 }
 
+type SettingsView = FunctionComponent<null> | false
+
 export type AppViews = {
-  index?: GenericComponent<AppProps> | false
-  main?: GenericComponent<AppProps> | false
-  toolBar?: GenericComponent<AppProps> | false
-  statusBar?: GenericComponent<AppProps> | false
+  index?: FunctionComponent<AppProps> | false
+  main?: FunctionComponent<AppProps> | false
+  toolBar?: FunctionComponent<AppProps> | false
+  statusBar?: FunctionComponent<AppProps> | false
+  settings?: SettingsView
+}
+
+export interface AppFnDefinition extends FunctionComponent<AppProps> {
+  settings?: SettingsView
 }
 
 export type AppDefinition =
-  // migrating to
-  | GenericComponent<AppProps>
-  // legacy, migrating away from
+  // were migrating to...
+  | AppFnDefinition
+  // ...away from
   | AppViews

@@ -10,6 +10,8 @@ export default memo(function SearchItemShare() {
   const itemAction = useContext(SearchItemShareContext)
   const listApps = useActiveApps(AppType.lists)
 
+  console.warn('render saerch item share')
+
   return (
     <View overflowX="hidden" overflowY="auto" flex={1}>
       <Separator paddingTop={10}>Send to...</Separator>

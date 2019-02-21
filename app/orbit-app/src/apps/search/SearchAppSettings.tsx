@@ -1,8 +1,7 @@
-import { SearchApp } from '@mcro/models'
-import { Button, Row } from '@mcro/ui'
+import { Button, FormRow, HorizontalSpace, Row, SubTitle } from '@mcro/ui'
 import React from 'react'
-import { FormRow, HorizontalSpace, SubTitle } from '../../views'
 import { Input } from '../../views/Input'
+import { SearchApp } from './types'
 
 export default function SearchAppSettings(_: { app: SearchApp }) {
   return (

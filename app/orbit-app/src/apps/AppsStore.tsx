@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/black'
+import { deep, ensure, react } from '@mcro/black'
 import { AppStore } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
@@ -36,16 +36,18 @@ function getViewInformation(type: string, views?: AppViews) {
 
 export class AppsStore {
   stores = useHook(useStoresSimple)
-  provideStores = {}
-  appViews: { [key: string]: AppViews } = {
-    ...appsStatic,
-  }
-  appStores: { [key: string]: AppStore } = {}
 
+  // deep objects for adding apps to:
+  provideStores = deep({})
+  appViews: { [key: string]: AppViews } = deep({
+    ...appsStatic,
+  })
+  appStores: { [key: string]: AppStore } = deep({})
+
+  // accumulated, debounced state (because things mount in waterfall)
   appsState = react(
     () => [this.provideStores, this.appViews, this.appStores],
     async ([provideStores, appViews, appStores], { sleep }) => {
-      // debounced because things mount in waterfall
       await sleep(10)
       return {
         provideStores,
@@ -92,22 +94,17 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    this.appViews = {
-      ...this.appViews,
-      [id]: views,
-    }
+    this.appViews[id] = { ...this.appViews[id], ...views }
     if (provideStores) {
-      this.provideStores = {
-        ...this.provideStores,
-        [id]: provideStores,
-      }
+      this.provideStores[id] = provideStores
     }
   }
 
+  addSettingsView(id: string, settingsView: AppViews['settings']) {
+    this.appViews[id] = { ...this.appViews[id], settings: settingsView }
+  }
+
   handleAppStore = (id: string, store: AppStore) => {
-    this.appStores = {
-      ...this.appStores,
-      [id]: store,
-    }
+    this.appStores[id] = store
   }
 }

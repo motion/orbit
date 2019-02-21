@@ -21,6 +21,7 @@ const descriptions = {
 function CreateAppIndex() {
   return (
     <List
+      minSelected={0}
       items={defaultApps.map(app => ({
         title: app.name,
         subType: app.type,

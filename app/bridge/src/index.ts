@@ -1,4 +1,3 @@
-import { getGlobalConfig } from '@mcro/config'
 import { MediatorClient, WebSocketClientTransport } from '@mcro/mediator'
 import { randomString } from '@mcro/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
@@ -7,10 +6,15 @@ export const Mediator = new MediatorClient({
   transports: [
     new WebSocketClientTransport(
       'app-client-' + randomString(5),
-      new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
-        WebSocket,
-        minReconnectionDelay: 1,
-      }),
+      new ReconnectingWebSocket(
+        // TODO get this from actual getGlobalConfig()
+        `ws://localhost:${window['GlobalConfig'].ports.desktopMediator}`,
+        [],
+        {
+          WebSocket,
+          minReconnectionDelay: 1,
+        },
+      ),
     ),
   ],
 })

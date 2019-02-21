@@ -1,9 +1,9 @@
 import { ensure, react } from '@mcro/black'
+import { AppStore } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
-import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
 
 function getViewInformation(type: string, views?: AppViews) {

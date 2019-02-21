@@ -1,15 +1,13 @@
 // Be careful not to import anything that depends on getGlobalConfig() here
 // we set it up once with setGlobalConfig() and then import the rest of the app
 
-import { IS_ELECTRON } from '@mcro/black/_/constants'
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
-import { App } from '@mcro/stores'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-hot-loader' // must be imported before react
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
-import './configurations'
+import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
 
 // because for some reason we are picking up electron process.env stuff...
@@ -34,6 +32,9 @@ async function fetchInitialConfig() {
     }
   }
   setGlobalConfig(config)
+
+  // TODO im just doing this mid-big refactor until we fix it in @mcro/bridge
+  window['GlobalConfig'] = config
 }
 
 // setup for app
@@ -45,11 +46,14 @@ async function main() {
 
   await fetchInitialConfig()
 
+  require('./configurations')
+
   // prevent scroll bounce
   document.body.style.overflow = 'hidden'
   document.documentElement.style.overflow = 'hidden'
 
   let x = Date.now()
+  const { App } = require('@mcro/stores')
   await App.start()
   if (Date.now() - x > 200) console.log('long start....', Date.now() - x)
 

@@ -23,16 +23,16 @@ const Token = gloss(Row, {
   padding: 4,
   paddingLeft: 6,
   height: 21,
-  '&:active': {
-    backgroundColor: colors.macOSHighlightActive,
-    color: colors.white,
-  },
   '&:first-of-type': {
     marginLeft: 3,
   },
-}).theme(({ focused, color }) => ({
-  backgroundColor: focused ? colors.macOSHighlightActive : color || colors.macOSHighlight,
+}).theme(({ focused, color }, theme) => ({
+  backgroundColor: focused ? theme.backgroundHighlightActive : color || theme.backgroundHighlight,
   color: focused ? 'white' : 'inherit',
+  '&:active': {
+    backgroundColor: theme.backgroundHighlightActive,
+    color: colors.white,
+  },
 }))
 
 const Key = gloss(Text, {
@@ -48,10 +48,10 @@ const Key = gloss(Text, {
     right: 0,
     fontSize: 14,
   },
+}).theme(({ type }, theme) => ({
   '&:active:after': {
-    backgroundColor: colors.macOSHighlightActive,
+    backgroundColor: theme.backgroundHighlightActive,
   },
-}).theme(({ type }) => ({
   '&:after': {
     content: type === 'exclude' ? '"≠"' : '"="',
   },

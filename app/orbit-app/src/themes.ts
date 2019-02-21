@@ -60,6 +60,8 @@ const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
     backgroundAlternate: '#f6f7f9aa',
+    backgroundHighlightActive: orbitColor.lighten(0.1),
+    backgroundHighlight: orbitColor,
     background: lightBackground,
     mainBackground: lightBackground,
     backgroundActive: '#eee',
@@ -105,6 +107,8 @@ const dark = {
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
+    backgroundHighlightActive: orbitColor.lighten(0.2),
+    backgroundHighlight: orbitColor,
     color: [250, 250, 250],
     borderColor: [180, 180, 180, 0.25],
     sidebarBackground: [22, 22, 22, 0.52],

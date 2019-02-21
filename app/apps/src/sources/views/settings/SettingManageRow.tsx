@@ -1,31 +1,23 @@
-import { command, loadOne } from '@mcro/bridge'
-import { OrbitIntegration, showConfirmDialog } from '@mcro/kit'
-import { Source, SourceForceCancelCommand, SourceModel, SourceRemoveCommand } from '@mcro/models'
+import { command } from '@mcro/bridge'
+import { showConfirmDialog } from '@mcro/kit'
+import {
+  Source,
+  SourceForceCancelCommand,
+  SourceForceSyncCommand,
+  SourceRemoveCommand,
+} from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { getIntegrations } from '../..'
+import { getAppFromSource } from '../../../getAppConfig'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
-// import { AppActions } from '../../../actions/appActions/AppActions'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 
-export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
-  return {
-    ...getIntegrations[source.type](source),
-    source,
-  }
-}
-
 const handleRefresh = async (sourceId: number) => {
-  const source = await loadOne(SourceModel, null)
-  console.warn('empty function', source, sourceId)
-  // command(SourceForceSyncCommand, {
-  //   sourceId,
-  // })
-  // command(TearAppCommand).then(() => {
-  //   console.log('success tear')
-  // })
+  command(SourceForceSyncCommand, {
+    sourceId,
+  })
 }
 
 const removeIntegration = async (source: Source) => {

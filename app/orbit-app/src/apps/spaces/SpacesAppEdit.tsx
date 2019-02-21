@@ -7,6 +7,7 @@ import {
   InputRow,
   ListItem,
   Row,
+  Section,
   SubTitle,
   Text,
   Theme,
@@ -19,7 +20,6 @@ import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { OrbitOrb } from '../../views/OrbitOrb'
-import { Section } from '../../views/Section'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppTypes'
 

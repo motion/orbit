@@ -5,6 +5,7 @@ import {
   DateFormat,
   Row,
   SearchableTable,
+  Section,
   Text,
   Tree,
   View,
@@ -12,7 +13,6 @@ import {
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
-import { Section } from '../../views/Section'
 import { TitleRow } from '../../views/TitleRow'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
 import { AppProps } from '../AppTypes'

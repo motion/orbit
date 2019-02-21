@@ -1,11 +1,19 @@
 import { showConfirmDialog } from '@mcro/kit'
 import { App, Desktop } from '@mcro/stores'
-import { Button, CheckBoxRow, Divider, FormRow, Theme, Title, VerticalSpace } from '@mcro/ui'
+import {
+  Button,
+  CheckBoxRow,
+  Divider,
+  FormRow,
+  Section,
+  Theme,
+  Title,
+  VerticalSpace,
+} from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { Input } from '../../views/Input'
-import { Section } from '../../views/Section'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { AppProps } from '../AppTypes'
 

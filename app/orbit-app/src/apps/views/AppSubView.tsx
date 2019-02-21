@@ -7,7 +7,6 @@ export function AppSubView({
 }: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
   return (
     <AppView
-      debug
       key={JSON.stringify(appConfig)}
       viewType={viewType}
       title={appConfig.title}

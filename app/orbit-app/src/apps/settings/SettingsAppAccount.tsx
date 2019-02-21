@@ -1,7 +1,16 @@
-import { Button, InputRow, Row, SegmentedRow, Theme, Title, VerticalSpace, View } from '@mcro/ui'
+import {
+  Button,
+  InputRow,
+  Row,
+  Section,
+  SegmentedRow,
+  Theme,
+  Title,
+  VerticalSpace,
+  View,
+} from '@mcro/ui'
 import * as React from 'react'
 import { IntroText } from '../../views'
-import { Section } from '../../views/Section'
 import { AppProps } from '../AppTypes'
 
 export default function SettingsAppAccount(_props: AppProps) {

@@ -1,7 +1,7 @@
 import { Absolute, gloss, ViewProps } from '@mcro/gloss'
 import { AppIcon } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
-import { Icon, Text, useContextMenu, View } from '@mcro/ui'
+import { Icon, Section, Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
 import { useActions } from '../../actions/Actions'
 import { SelectableGrid } from '../../components/SelectableGrid'
@@ -9,7 +9,6 @@ import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
-import { Section } from '../../views/Section'
 import { TitleRow } from '../../views/TitleRow'
 
 type LargeIconProps = ViewProps & {

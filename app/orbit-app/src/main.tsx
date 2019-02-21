@@ -54,6 +54,7 @@ async function main() {
 
   let x = Date.now()
   const { App } = require('@mcro/stores')
+  console.log("Starting App'", App)
   await App.start()
   if (Date.now() - x > 200) console.log('long start....', Date.now() - x)
 

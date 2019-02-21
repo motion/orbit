@@ -139,7 +139,7 @@ const config = {
       {
         test: /[wW]orker\.[jt]sx?$/,
         use: ['workerize-loader'],
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
       },
       // ignore .node.js modules
       {

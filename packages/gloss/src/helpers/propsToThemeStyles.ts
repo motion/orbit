@@ -79,10 +79,14 @@ export const propsToThemeStyles = (
     }
     let pseudoStyle = pseudoKey || forcedOn ? collectStylesForPseudo(theme, postfix) : null
     // add in any overrideStyles
-    if (mapPropStylesToPseudos && typeof props[extraStyleProp] === 'object') {
-      pseudoStyle = {
-        ...pseudoStyle,
-        ...props[extraStyleProp],
+    if (mapPropStylesToPseudos) {
+      if (props[extraStyleProp] === null) {
+        pseudoStyle = null
+      } else if (typeof props[extraStyleProp] === 'object') {
+        pseudoStyle = {
+          ...pseudoStyle,
+          ...props[extraStyleProp],
+        }
       }
     }
     // merge now into the psuedo state

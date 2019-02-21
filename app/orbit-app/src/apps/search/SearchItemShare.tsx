@@ -1,10 +1,9 @@
-import { OrbitListItemProps, SearchItemShareContext } from '@mcro/kit'
+import { AppType, OrbitListItemProps, SearchItemShareContext } from '@mcro/kit'
 import { ListItem, View } from '@mcro/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { Separator } from '../../views/Separator'
-import { AppType } from '../AppTypes'
 import { listRootID, ListsApp } from '../lists/ListsApp'
 
 export default memo(function SearchItemShare() {

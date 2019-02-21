@@ -3,7 +3,7 @@ import { QueryFilterStore } from '@mcro/kit/_/stores/QueryFilterStore'
 import { Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
-import { FloatingBarButton } from '../views/FloatingBar/FloatingBarButton'
+import { FloatingBarButtonSmall } from '../views/FloatingBar/FloatingBarButtonSmall'
 
 export default function OrbitFilterIntegrationButton(
   props: ViewProps & { queryFilterStore?: QueryFilterStore },
@@ -21,9 +21,9 @@ export default function OrbitFilterIntegrationButton(
       elevation={4}
       themeName="tooltip"
       target={
-        <FloatingBarButton icon="funnel">
+        <FloatingBarButtonSmall icon="funnel">
           {/* {hasIntegrationFilters ? integrationFilters.filter(x => x.active).length : 'All'} */}
-        </FloatingBarButton>
+        </FloatingBarButtonSmall>
       }
     >
       <Col {...props}>

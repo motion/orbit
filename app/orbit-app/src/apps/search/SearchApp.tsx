@@ -1,9 +1,11 @@
-import { View } from '@mcro/ui'
+import { HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
+import { DateRangePicker } from 'react-date-range'
+import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useSearch } from '../../hooks/useSearch'
 import { useStores } from '../../hooks/useStores'
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
+import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
 import { AppContainer } from '../AppContainer'
 import { AppProps } from '../AppTypes'
 import SearchAppIndex from './SearchAppIndex'
@@ -35,14 +37,40 @@ function SearchToolBar() {
 
   return (
     <>
-      <FloatingBarButton
-        size={0.9}
+      <FloatingBarButtonSmall
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
         icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
       >
         {queryFilters.sortBy}
-      </FloatingBarButton>
+      </FloatingBarButtonSmall>
+
+      <HorizontalSpace />
+
+      <SegmentedRow justifyContent="center">
+        <Popover
+          openOnClick
+          closeOnClickAway
+          group="filters"
+          target={<FloatingBarButtonSmall icon="ui-1_calendar-57" />}
+          background
+          borderRadius={10}
+          elevation={4}
+          themeName="light"
+          width={420}
+          height={310}
+        >
+          <View flex={1} className="calendar-dom theme-light" padding={10}>
+            <DateRangePicker
+              onChange={queryFilters.onChangeDate}
+              ranges={[queryFilters.dateState]}
+            />
+          </View>
+        </Popover>
+
+        <OrbitFilterIntegrationButton />
+      </SegmentedRow>
+
       <View flex={1} />
       <OrbitSuggestionBar />
     </>

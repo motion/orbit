@@ -1,6 +1,6 @@
 import { useModels } from '@mcro/bridge'
+import { List } from '@mcro/kit'
 import { PersonBitModel } from '@mcro/models'
-import { SelectableList } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import NoResultsDialog from '../../components/NoResultsDialog'
@@ -44,7 +44,7 @@ export default function PeopleAppIndex(props: AppProps) {
   const getItemGroupProps = results.length > 12 ? groupByLetter('name') : _ => null
 
   return (
-    <SelectableList
+    <List
       getItemProps={(...args) => {
         return {
           ...getItemGroupProps(...args),

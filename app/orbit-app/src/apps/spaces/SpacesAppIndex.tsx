@@ -1,6 +1,7 @@
 import { useModels } from '@mcro/bridge'
+import { List } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
-import { Button, SelectableList } from '@mcro/ui'
+import { Button } from '@mcro/ui'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
@@ -42,5 +43,5 @@ export default function SpacesAppIndex() {
     items,
   })
 
-  return <SelectableList minSelected={0} items={results} />
+  return <List minSelected={0} items={results} />
 }

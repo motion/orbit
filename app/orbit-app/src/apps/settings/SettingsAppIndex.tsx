@@ -1,4 +1,4 @@
-import { SelectableList } from '@mcro/ui'
+import { List } from '@mcro/kit'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
@@ -30,5 +30,5 @@ export default function SettingsAppIndex() {
     return null
   }
 
-  return <SelectableList minSelected={0} items={results} />
+  return <List minSelected={0} items={results} />
 }

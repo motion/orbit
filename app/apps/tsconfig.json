@@ -1,7 +1,6 @@
 {
-  "extends": "../../tsconfig.tspackage",
+  "extends": "../../tsconfig.client",
   "compilerOptions": {
-    "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },

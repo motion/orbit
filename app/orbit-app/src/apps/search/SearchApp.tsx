@@ -15,7 +15,6 @@ export function SearchApp(props: AppProps) {
   const searchStore = useStore(SearchStore)
 
   useSearch(state => {
-    console.log('state', state)
     searchStore.setSearchState(state)
   })
 

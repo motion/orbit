@@ -47,8 +47,10 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
       addSubscription(dispose) {
         subscriptions.current.add({ dispose })
       },
-      setValue: next => {
-        if (next === undefined) return
+      setValue(next: any) {
+        if (next === undefined || next === state.current) {
+          return
+        }
         state.current = next
         forceUpdate(Math.random())
       },

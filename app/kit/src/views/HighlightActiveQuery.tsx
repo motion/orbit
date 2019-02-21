@@ -1,8 +1,8 @@
 import { MergeHighlightsContext, MergeHighlightsContextProps } from '@mcro/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 
-export function HighlightActiveQuery(props: Partial<MergeHighlightsContextProps>) {
+export const HighlightActiveQuery = memo((props: Partial<MergeHighlightsContextProps>) => {
   const activeQuery = useActiveQuery()
   return (
     <MergeHighlightsContext
@@ -16,4 +16,4 @@ export function HighlightActiveQuery(props: Partial<MergeHighlightsContextProps>
       {props.children}
     </MergeHighlightsContext>
   )
-}
+})

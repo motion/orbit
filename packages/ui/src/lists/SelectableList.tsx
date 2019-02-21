@@ -1,5 +1,5 @@
 import { ensure, react, useStore } from '@mcro/use-store'
-import React, { createContext, memo, useCallback, useContext, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
 import { useStores } from '../helpers/useStores'
@@ -82,11 +82,7 @@ class SelectableStore {
   )
 }
 
-export const SelectableList = memo(function SelectableList({
-  items,
-  createNewSelectionStore,
-  ...props
-}: SelectableListProps) {
+export function SelectableList({ items, createNewSelectionStore, ...props }: SelectableListProps) {
   const stores = useStores({ optional: ['selectionStore', 'appStore'] })
   const selectionStore = createNewSelectionStore
     ? useStore(SelectionStore, props)
@@ -111,8 +107,24 @@ export const SelectableList = memo(function SelectableList({
     }
   }, [])
 
+  const onSelect = useCallback(
+    (index, eventType, element) => {
+      if (props.onSelect) {
+        return props.onSelect(index, eventType, element)
+      }
+      if (selectionStore) {
+        selectionStore.toggleSelected(index, eventType)
+      }
+      if (selectableProps && selectableProps.onSelectItem) {
+        selectableProps.onSelectItem(index, eventType, element)
+      }
+    },
+    [selectableProps, props.onSelect],
+  )
+
   return (
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
+      {/* Be sure these props are memoed */}
       <VirtualList
         items={items}
         scrollToAlignment="center"
@@ -121,18 +133,8 @@ export const SelectableList = memo(function SelectableList({
         onOpen={selectableProps && selectableProps.onSelectItem}
         {...props}
         // overwrite props explicitly
-        onSelect={(index, eventType, element) => {
-          if (props.onSelect) {
-            return props.onSelect(index, eventType, element)
-          }
-          if (selectionStore) {
-            selectionStore.toggleSelected(index, eventType)
-          }
-          if (selectableProps && selectableProps.onSelectItem) {
-            selectableProps.onSelectItem(index, eventType, element)
-          }
-        }}
+        onSelect={onSelect}
       />
     </MergeContext>
   )
-})
+}

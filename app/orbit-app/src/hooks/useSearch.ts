@@ -14,12 +14,11 @@ export function useSearch(cb: (state: SearchState) => any) {
   const last = useRef(null)
 
   useReaction(() => {
-    if (appStore.isActive) {
-      const next = {
-        query: queryStore.queryFilters.activeQuery,
-        queryFilters: queryStore.queryFilters,
-      }
-      if (isEqual(last.current, next)) return
+    const next = {
+      query: queryStore.queryFilters.activeQuery,
+      queryFilters: queryStore.queryFilters,
+    }
+    if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
       last.current = next
       cb(next)
     }

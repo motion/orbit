@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@mcro/gloss'
+import { gloss, Row } from '@mcro/gloss'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -16,8 +16,7 @@ import { Filter } from './types'
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 
-const Token = gloss(Text, {
-  display: 'inline-flex',
+const Token = gloss(Row, {
   alignItems: 'center',
   borderRadius: 4,
   marginRight: 4,
@@ -38,7 +37,7 @@ const Token = gloss(Text, {
 
 const Key = gloss(Text, {
   position: 'relative',
-  fontWeight: 500,
+  fontWeight: 400,
   paddingRight: 12,
   textTransform: 'capitalize',
   lineHeight: '21px',
@@ -58,6 +57,10 @@ const Key = gloss(Text, {
   },
 }))
 
+Key.defaultProps = {
+  size: 0.95,
+}
+
 const Value = gloss(Text, {
   whiteSpace: 'nowrap',
   maxWidth: 160,
@@ -67,30 +70,31 @@ const Value = gloss(Text, {
   paddingLeft: 3,
 })
 
-const Chevron = gloss(
-  {
+Value.defaultProps = {
+  size: 0.95,
+}
+
+const Chevron = gloss({
+  border: 0,
+  paddingLeft: 3,
+  paddingRight: 1,
+  marginRight: 0,
+  fontSize: 16,
+  backgroundColor: 'transparent',
+  position: 'relative',
+  top: -2,
+  height: 'auto',
+  lineHeight: 'initial',
+  '&:hover, &:active, &:focus': {
+    color: 'inherit',
     border: 0,
-    paddingLeft: 3,
-    paddingRight: 1,
-    marginRight: 0,
-    fontSize: 16,
     backgroundColor: 'transparent',
-    position: 'relative',
-    top: -2,
-    height: 'auto',
-    lineHeight: 'initial',
-    '&:hover, &:active, &:focus': {
-      color: 'inherit',
-      border: 0,
-      backgroundColor: 'transparent',
-    },
   },
-  {
-    ignoreAttributes: ['focused'],
-  },
-).theme(({ focused }) => ({
+}).theme(({ focused }) => ({
   color: focused ? colors.white : 'inherit',
 }))
+
+Chevron.ignoreAttrs = ['focused']
 
 type Props = {
   filter: Filter
@@ -152,13 +156,17 @@ export class FilterToken extends PureComponent {
         },
       )
     }
-    const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
-    const { bottom, left } = this._ref ? this._ref.getBoundingClientRect() : { bottom: 0, left: 0 }
-    menu.popup(Electron.remote.getCurrentWindow(), {
-      async: true,
-      x: parseInt(`${left}`, 10),
-      y: parseInt(`${bottom}`, 10) + 8,
-    })
+    if (Electron.remote) {
+      const menu = Electron.remote.Menu.buildFromTemplate(menuTemplate)
+      const { bottom, left } = this._ref
+        ? this._ref.getBoundingClientRect()
+        : { bottom: 0, left: 0 }
+      menu.popup(Electron.remote.getCurrentWindow(), {
+        async: true,
+        x: parseInt(`${left}`, 10),
+        y: parseInt(`${bottom}`, 10) + 8,
+      })
+    }
   }
 
   toggleFilter = () => {
@@ -222,6 +230,8 @@ export class FilterToken extends PureComponent {
     } else {
       value = filter.value
     }
+
+    console.log('filter', typeof filter.key, typeof value, filter.key, value)
 
     return (
       <Token

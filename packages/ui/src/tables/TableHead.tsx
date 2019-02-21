@@ -76,7 +76,7 @@ const TableHeadColumnContainer = gloss({
     position: 'absolute',
     content: '""',
     right: 0,
-    top: 5,
+    top: 4,
     height: 13,
     width: 1,
   },
@@ -88,7 +88,7 @@ const TableHeadColumnContainer = gloss({
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
   '&:after': {
-    background: theme.backgroundAlternate,
+    background: theme.borderColor,
   },
 }))
 

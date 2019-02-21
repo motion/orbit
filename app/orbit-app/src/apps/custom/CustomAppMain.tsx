@@ -1,3 +1,4 @@
+import { Icon } from '@mcro/kit'
 import {
   BorderLeft,
   Button,
@@ -45,6 +46,65 @@ const treeData = {
   },
 }
 
+const LOG_TYPES = {
+  verbose: {
+    label: 'Verbose',
+    color: 'purple',
+  },
+  debug: {
+    label: 'Debug',
+    color: 'grey',
+  },
+  info: {
+    label: 'Info',
+    icon: <Icon name="info-circle" color={'cyan'} />,
+    color: 'cyan',
+  },
+  warn: {
+    label: 'Warn',
+    style: {
+      backgroundColor: 'yellowTint',
+      color: 'yellow',
+      fontWeight: 500,
+    },
+    icon: <Icon name="caution-triangle" color={'yellow'} />,
+    color: 'yellow',
+  },
+  error: {
+    label: 'Error',
+    style: {
+      backgroundColor: 'redTint',
+      color: 'red',
+      fontWeight: 500,
+    },
+    icon: <Icon name="caution-octagon" color={'red'} />,
+    color: 'red',
+  },
+  fatal: {
+    label: 'Fatal',
+    style: {
+      backgroundColor: 'redTint',
+      color: 'red',
+      fontWeight: 700,
+    },
+    icon: <Icon name="stop" color={'red'} />,
+    color: 'red',
+  },
+}
+
+const DEFAULT_FILTERS = [
+  {
+    type: 'enum',
+    enum: Object.keys(LOG_TYPES).map(value => ({
+      label: LOG_TYPES[value].label,
+      value,
+    })),
+    key: 'type',
+    value: [],
+    persistent: true,
+  },
+]
+
 export function CustomAppMain(_props: AppProps) {
   const [treeState, setTreeState] = useState(treeData)
 
@@ -82,6 +142,7 @@ export function CustomAppMain(_props: AppProps) {
             virtual
             rowLineHeight={28}
             floating={false}
+            defaultFilters={DEFAULT_FILTERS}
             columnSizes={{
               name: '25%',
               topic: '25%',

@@ -69,14 +69,11 @@ export class Searchable extends React.PureComponent<Props, State> {
     defaultValue: '',
   }
 
-  constructor(a, b) {
-    super(a, b)
-    this.state = {
-      filters: [],
-      focusedToken: -1,
-      searchTerm: this.props.defaultValue,
-      hasFocus: false,
-    }
+  state = {
+    filters: this.props.defaultFilters || [],
+    focusedToken: -1,
+    searchTerm: this.props.defaultValue,
+    hasFocus: false,
   }
 
   inputRef = React.createRef<HTMLTextAreaElement>()
@@ -125,6 +122,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           }
         })
       }
+      console.log('setting', savedState.filters)
       this.setState({
         searchTerm: savedState.searchTerm || '',
         filters: savedState.filters || [],
@@ -327,6 +325,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           visible={!!this.state.searchTerm || this.state.filters.length > 0}
           onClickClear={this.clear}
           focusedToken={this.state.focusedToken}
+          filters={this.state.filters}
           filterProps={{
             onFocus: this.onTokenFocus,
             onDelete: this.removeFilter,

@@ -11,7 +11,6 @@ import {
   useSelectionStore,
   View,
 } from '@mcro/ui'
-import { useStoreDebug } from '@mcro/use-store'
 import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useStoresSimple } from '../helpers/useStores'
@@ -68,8 +67,6 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
 }
 
 export function List(props: ListProps) {
-  useStoreDebug()
-
   const { shortcutStore } = useStoresSimple()
   const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])

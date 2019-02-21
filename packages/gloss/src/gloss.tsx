@@ -406,13 +406,11 @@ function getSelector(className: string, namespace: string, tagName: string = '')
   if (namespace[0] === '@') {
     return tagName + '.' + className
   }
-  const sub = namespace.indexOf('&')
-  if (sub === 0) {
-    return '.' + className + namespace.slice(1)
-  } else if (sub > 0) {
-    return '.' + className + namespace.slice(sub + 1)
+  const classSelect = `.${className}`
+  if (namespace.indexOf('&') !== -1) {
+    return namespace.replace(/&/g, classSelect)
   }
-  return '.' + className
+  return classSelect
 }
 
 // compiled theme from ancestors

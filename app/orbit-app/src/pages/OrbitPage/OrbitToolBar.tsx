@@ -28,7 +28,8 @@ export default memo(function OrbitToolBar() {
   )
 })
 
-// keeping all toolbars in context for now
+// keeping all toolbars alive at all times for now
+// we really need some sort of reparenting/pausing in react
 
 const OrbitToolBarContent = memo(() => {
   const { appsStore, paneManagerStore } = useStores()

@@ -1,5 +1,5 @@
 import { Bit, PersonBit } from '@mcro/models'
-import { Center, SelectableList, SubTitle, Text, View, VirtualListProps } from '@mcro/ui'
+import { Center, SelectableList, SelectableListProps, SubTitle, Text, View } from '@mcro/ui'
 import React, { useCallback } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useIsAppActive } from '../hooks/useIsAppActive'
@@ -16,7 +16,7 @@ export function toListItemProps(props: any): OrbitListItemProps {
   if (props.target) {
     return { item: props }
   }
-  return props as any
+  return props
 }
 
 export type OrbitHandleSelect = ((
@@ -25,7 +25,7 @@ export type OrbitHandleSelect = ((
   eventType?: 'click' | 'key',
 ) => any)
 
-export type ListProps = Omit<VirtualListProps<any>, 'onSelect' | 'onOpen' | 'items'> & {
+export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
   items?: Item[]
   onSelect?: OrbitHandleSelect
   onOpen?: OrbitHandleSelect

@@ -1,4 +1,4 @@
-import { SelectableList } from '@mcro/ui'
+import { List } from '@mcro/kit'
 import * as React from 'react'
 import { useShareMenu } from '../../hooks/useShareMenu'
 import { useStores } from '../../hooks/useStores'
@@ -10,5 +10,5 @@ export default function SearchAppIndex(_: AppProps) {
   const items = searchStore.results
   const { getShareMenuItemProps } = useShareMenu()
 
-  return <SelectableList minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
+  return <List minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
 }

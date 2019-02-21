@@ -74,13 +74,7 @@ export class SelectionStore {
       this.setSelectEvent(SelectEvent[eventType])
     }
     const isSame = this.activeIndex === index && this.activeIndex > -1
-    if (isSame) {
-      if (Date.now() - this.lastSelectAt < 70) {
-        // ignore really fast double clicks
-        return isSame
-      }
-      this.clearSelected()
-    } else {
+    if (!isSame) {
       if (typeof index !== 'number') {
         console.error('index is not a number', index)
       } else {

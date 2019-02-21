@@ -1,6 +1,6 @@
+import { OrbitIconProps } from '@mcro/kit'
 import { Space } from '@mcro/models'
 import React from 'react'
-import { OrbitIconProps } from './Icon'
 import { OrbitOrb } from './OrbitOrb'
 
 export function SpaceIcon({

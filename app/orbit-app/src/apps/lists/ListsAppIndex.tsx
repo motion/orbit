@@ -79,6 +79,8 @@ function ListCurrentFolder() {
     listStore.selectedIndex = index
   }, [])
 
+  console.log('list', items)
+
   return (
     <View flex={1}>
       <SelectableTreeList

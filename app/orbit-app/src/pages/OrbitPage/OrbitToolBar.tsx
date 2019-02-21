@@ -1,4 +1,4 @@
-import { Contents, gloss, Row } from '@mcro/gloss'
+import { FullScreen, gloss, Row } from '@mcro/gloss'
 import { BorderBottom } from '@mcro/ui'
 import React, { memo, useMemo } from 'react'
 import { useApp } from '../../apps/useApp'
@@ -36,14 +36,17 @@ const OrbitToolBarContent = memo(() => {
   const { id } = paneManagerStore.activePane
   const state = appsStore.appsState
 
+  console.warn()
+
   // memo all toolbars
   const toolbars = useMemo(
     () => {
-      const appKeys = state && state.appViews ? Object.keys(state.appViews) : []
+      if (!state || !state.appViews) {
+        return {}
+      }
       const views = {}
-      for (const key in appKeys) {
+      for (const key in state.appViews) {
         if (!state.appViews[key]) continue
-        console.log('loading toolbar', key, state)
         const { toolBar } = state.appViews[key]
         const appStore = state.appStores[key]
         views[key] = null
@@ -58,8 +61,10 @@ const OrbitToolBarContent = memo(() => {
       }
       return views
     },
-    [state],
+    [state && Object.keys(state.appViews).join('')],
   )
+
+  console.log('key is', id, toolbars, state && Object.keys(state.appViews).join(''))
 
   return (
     <>
@@ -75,7 +80,11 @@ const OrbitToolBarContent = memo(() => {
   )
 })
 
-const ToolbarContent = gloss(Contents, {
+const ToolbarContent = gloss(FullScreen, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  padding: [0, 12],
+  overflow: 'hidden',
   pointerEvents: 'none',
   opacity: 0,
   isActive: {
@@ -108,11 +117,7 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
-  alignItems: 'center',
-  overflow: 'hidden',
-  position: 'relative',
   height,
-  padding: [0, 12],
   transition: 'opacity ease 100ms',
   opacity: 0,
   hasToolbars: {

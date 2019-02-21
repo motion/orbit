@@ -1,4 +1,4 @@
-import { deep, ensure, react } from '@mcro/black'
+import { ensure, react } from '@mcro/black'
 import { AppStore } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
@@ -38,11 +38,11 @@ export class AppsStore {
   stores = useHook(useStoresSimple)
 
   // deep objects for adding apps to:
-  provideStores = deep({})
-  appViews: { [key: string]: AppViews } = deep({
+  provideStores = {}
+  appViews: { [key: string]: AppViews } = {
     ...appsStatic,
-  })
-  appStores: { [key: string]: AppStore } = deep({})
+  }
+  appStores: { [key: string]: AppStore } = {}
 
   // accumulated, debounced state (because things mount in waterfall)
   appsState = react(
@@ -94,9 +94,15 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    this.appViews[id] = { ...this.appViews[id], ...views }
+    this.appViews = {
+      ...this.appViews,
+      [id]: { ...this.appViews[id], ...views },
+    }
     if (provideStores) {
-      this.provideStores[id] = provideStores
+      this.provideStores = {
+        ...this.provideStores,
+        [id]: provideStores,
+      }
     }
   }
 
@@ -105,6 +111,9 @@ export class AppsStore {
   }
 
   handleAppStore = (id: string, store: AppStore) => {
-    this.appStores[id] = store
+    this.appStores = {
+      ...this.appStores,
+      [id]: store,
+    }
   }
 }

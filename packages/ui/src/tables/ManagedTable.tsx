@@ -281,7 +281,7 @@ class ManagedTableInner extends React.Component<
   }
 
   tableRef: {
-    current: null | List
+    current: null | VariableSizeList
   } = React.createRef()
   scrollRef: {
     current: null | HTMLDivElement

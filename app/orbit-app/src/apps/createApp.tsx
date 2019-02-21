@@ -1,7 +1,7 @@
 import { save } from '@mcro/bridge'
-import { AppIcon, AppType, useActiveSpace } from '@mcro/kit'
+import { AppIcon, AppType, List, useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
-import { BorderTop, Button, Row, Section, SelectableList, Theme, View } from '@mcro/ui'
+import { BorderTop, Button, Row, Section, Theme, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../actions/Actions'
 import { useStores } from '../hooks/useStores'
@@ -20,7 +20,7 @@ const descriptions = {
 
 function CreateAppIndex() {
   return (
-    <SelectableList
+    <List
       items={defaultApps.map(app => ({
         title: app.name,
         subType: app.type,

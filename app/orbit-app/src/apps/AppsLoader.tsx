@@ -1,5 +1,5 @@
 import { AppStore } from '@mcro/kit'
-import { useStoreDebug, useStoreSimple } from '@mcro/use-store'
+import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
@@ -58,8 +58,6 @@ function AppLoader(props: AppLoaderProps) {
 }
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
-  useStoreDebug()
-
   const AppView = getAppViews(type)
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)

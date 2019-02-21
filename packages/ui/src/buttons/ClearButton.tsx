@@ -1,4 +1,4 @@
-import { color, gloss, View } from '@mcro/gloss'
+import { gloss, View } from '@mcro/gloss'
 import * as React from 'react'
 import { ConfiguredIcon } from '../Icon'
 
@@ -25,9 +25,7 @@ const ClearFrame = gloss(View, {
   justifyContent: 'center',
   cursor: 'default',
 }).theme((_, theme) => ({
-  background:
-    (theme.buttonBackground && color(theme.buttonBackground).alpha(0.25)) ||
-    theme.background.alpha(0.25),
+  background: theme.buttonBackground || theme.background.alpha(0.25),
 }))
 
 export const ClearButton = ({

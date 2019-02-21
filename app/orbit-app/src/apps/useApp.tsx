@@ -1,7 +1,7 @@
 import { react } from '@mcro/black'
+import { AppStore } from '@mcro/kit'
 import { useHook, useStore } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppStore } from './AppStore'
 import { AppViews } from './AppTypes'
 
 // needs either an id or a type

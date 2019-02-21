@@ -1,6 +1,6 @@
-import { gloss, Row } from '@mcro/gloss'
+import { FullScreen, gloss, Row } from '@mcro/gloss'
 import { BorderBottom } from '@mcro/ui'
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useApp } from '../../apps/useApp'
 import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
@@ -14,20 +14,79 @@ export const OrbitToolBarHeight = ({ id }: { id: string }) => {
 }
 
 export default memo(function OrbitToolBar() {
-  const { paneManagerStore, orbitStore } = useStores()
-  const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
-  const hasToolBar = !!appViews.toolBar
-  const AppView = appViews.toolBar
+  const { orbitStore, paneManagerStore } = useStores()
+  const { appViews } = useApp(paneManagerStore.activePane)
+  const hasToolbar = !!appViews.toolBar
+
   return (
-    <ProvideStores stores={provideStores}>
-      <ToolbarChrome hasToolbars={hasToolBar}>
-        <ToolbarInner hasToolbars={hasToolBar}>
-          {!!AppView && <AppView key={paneManagerStore.activePane.id} appStore={appStore} />}
-          {!orbitStore.isTorn && hasToolBar && <BorderBottom opacity={0.5} />}
-        </ToolbarInner>
-      </ToolbarChrome>
-    </ProvideStores>
+    <ToolbarChrome hasToolbars={hasToolbar}>
+      <ToolbarInner hasToolbars={hasToolbar}>
+        <OrbitToolBarContent />
+        {!orbitStore.isTorn && hasToolbar && <BorderBottom opacity={0.5} />}
+      </ToolbarInner>
+    </ToolbarChrome>
   )
+})
+
+// keeping all toolbars alive at all times for now
+// we really need some sort of reparenting/pausing in react
+
+const OrbitToolBarContent = memo(() => {
+  const { appsStore, paneManagerStore } = useStores()
+  const { id } = paneManagerStore.activePane
+  const state = appsStore.appsState
+
+  // memo all toolbars
+  const toolbars = useMemo(
+    () => {
+      if (!state || !state.appViews) {
+        return {}
+      }
+      const views = {}
+      for (const key in state.appViews) {
+        if (!state.appViews[key]) continue
+        const { toolBar } = state.appViews[key]
+        const appStore = state.appStores[key]
+        views[key] = null
+        if (toolBar) {
+          const AppToolbar = toolBar
+          views[key] = (
+            <ProvideStores stores={state.provideStores[key]}>
+              <AppToolbar appStore={appStore} />
+            </ProvideStores>
+          )
+        }
+      }
+      return views
+    },
+    [state && Object.keys(state.appViews).join('')],
+  )
+
+  return (
+    <>
+      {Object.keys(toolbars).map(key => {
+        const toolbarElement = toolbars[key]
+        return (
+          <ToolbarContent key={key} isActive={id === key}>
+            {toolbarElement}
+          </ToolbarContent>
+        )
+      })}
+    </>
+  )
+})
+
+const ToolbarContent = gloss(FullScreen, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  padding: [0, 12],
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  opacity: 0,
+  isActive: {
+    pointerEvents: 'auto',
+    opacity: 1,
+  },
 })
 
 const ToolbarChrome = gloss(Row, {
@@ -54,11 +113,7 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
-  alignItems: 'center',
-  overflow: 'hidden',
-  position: 'relative',
   height,
-  padding: [0, 12],
   transition: 'opacity ease 100ms',
   opacity: 0,
   hasToolbars: {

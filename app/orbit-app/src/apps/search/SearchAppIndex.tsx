@@ -10,5 +10,7 @@ export default function SearchAppIndex(_: AppProps) {
   const items = searchStore.results
   const { getShareMenuItemProps } = useShareMenu()
 
+  console.log('rendering app index')
+
   return <List minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
 }

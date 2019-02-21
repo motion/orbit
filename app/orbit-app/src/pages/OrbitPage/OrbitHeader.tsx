@@ -1,34 +1,21 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { AppType, Icon } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  HorizontalSpace,
-  Popover,
-  Row,
-  SegmentedRow,
-  View,
-} from '@mcro/ui'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, View } from '@mcro/ui'
 import React, { memo } from 'react'
-import { DateRangePicker } from 'react-date-range'
 import { useActions } from '../../actions/Actions'
-import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegrationButton'
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStores } from '../../hooks/useStores'
-import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
 export default memo(function OrbitHeader() {
-  const { orbitStore, headerStore, queryStore, newAppStore, paneManagerStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
   const { isTorn } = orbitStore
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
-  const { queryFilters } = queryStore
   const theme = useTheme()
 
   return (
@@ -69,30 +56,6 @@ export default memo(function OrbitHeader() {
             </View>
 
             <OrbitHeaderInput />
-
-            <SegmentedRow width={80} justifyContent="center">
-              <Popover
-                openOnClick
-                closeOnClickAway
-                group="filters"
-                target={<FloatingBarButton icon="ui-1_calendar-57" />}
-                background
-                borderRadius={10}
-                elevation={4}
-                themeName="light"
-                width={420}
-                height={310}
-              >
-                <View flex={1} className="calendar-dom theme-light" padding={10}>
-                  <DateRangePicker
-                    onChange={queryFilters.onChangeDate}
-                    ranges={[queryFilters.dateState]}
-                  />
-                </View>
-              </Popover>
-
-              <OrbitFilterIntegrationButton />
-            </SegmentedRow>
           </HeaderContain>
 
           <View flex={1} />

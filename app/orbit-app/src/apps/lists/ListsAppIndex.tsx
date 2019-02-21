@@ -11,6 +11,7 @@ import {
   PassProps,
   preventDefault,
   Row,
+  View,
 } from '@mcro/ui'
 import { flow } from 'lodash'
 import React, { useCallback } from 'react'
@@ -78,19 +79,23 @@ function ListCurrentFolder() {
     listStore.selectedIndex = index
   }, [])
 
+  console.log('list', items)
+
   return (
-    <SelectableTreeList
-      minSelected={0}
-      rootItemID={0}
-      items={items}
-      loadItemProps={loadItemProps}
-      sortable
-      onSortEnd={handleSortEnd}
-      getContextMenu={getContextMenu}
-      onSelect={handleSelect}
-      onChangeDepth={onChangeDepth}
-      depth={listStore.depth}
-    />
+    <View flex={1}>
+      <SelectableTreeList
+        minSelected={0}
+        rootItemID={0}
+        items={items}
+        loadItemProps={loadItemProps}
+        sortable
+        onSortEnd={handleSortEnd}
+        getContextMenu={getContextMenu}
+        onSelect={handleSelect}
+        onChangeDepth={onChangeDepth}
+        depth={listStore.depth}
+      />
+    </View>
   )
 }
 

@@ -9,6 +9,10 @@ export async function loadListItem(
   item?: ListAppDataItem,
   listId?: number,
 ): Promise<OrbitListItemProps> {
+  if (!item) {
+    console.warn('NO ITEM', item, listId)
+    return null
+  }
   switch (item.type) {
     case 'folder':
       return {

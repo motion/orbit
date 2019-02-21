@@ -1,6 +1,7 @@
 import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
 import { always, cancel, react, useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
+import { throttle } from 'lodash'
 import React, {
   Component,
   createContext,
@@ -23,16 +24,6 @@ import { useResizeObserver } from '../hooks/useResizeObserver'
 import { GenericComponent } from '../types'
 import { HandleSelection } from './ListItem'
 import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
-
-// for some reason memo doesnt work but this does???
-export const simpleEqual = (a: Object, b: Object) => {
-  for (const key in b) {
-    if (a[key] !== b[key]) {
-      return false
-    }
-  }
-  return true
-}
 
 export type GetItemProps<A> = (
   item: A,
@@ -161,7 +152,7 @@ class VirtualListStore {
       await when(() => !!this.frameRef)
 
       if (this.frameRef.clientWidth !== this.width) {
-        this.width = this.frameRef.clientWidth
+        this.setWidth(this.frameRef.clientWidth)
       }
 
       if (!this.cache) {
@@ -174,6 +165,10 @@ class VirtualListStore {
       }
     },
   )
+
+  setWidth = throttle((next: number) => {
+    this.width = next
+  }, 64)
 
   recomputeHeights = 0
   runRecomputeHeights = react(
@@ -245,6 +240,8 @@ export const VirtualListDefaultProps = createContext({
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
+
+  console.warn('render inner')
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -355,7 +352,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
       )}
     </div>
   )
-}, simpleEqual)
+})
 
 // use this outer wrapper because changing allowMeasure otherwise would trigger renders
 // renders are expensive for this component, and especially that because it happens on click

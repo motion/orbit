@@ -28,6 +28,8 @@ function AppContainerInner(props: AppElements) {
   return null
 }
 
+// handle errors per-app:
+
 export class AppContainer extends React.Component<AppElements> {
   state = {
     error: null,

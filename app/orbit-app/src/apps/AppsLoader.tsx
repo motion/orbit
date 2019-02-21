@@ -3,6 +3,7 @@ import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ProvideStores } from '../components/ProvideStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
 import { AppsStore } from './AppsStore'
@@ -58,6 +59,7 @@ function AppLoader(props: AppLoaderProps) {
 }
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
+  const { appsStore } = useStoresSimple()
   const AppView = getAppViews(type)
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
@@ -67,6 +69,10 @@ function AppLoadView({ id, type, store }: AppLoaderProps) {
       if (AppView.index || AppView.main) {
         store.setupApp(id, AppView)
       }
+    }
+
+    if (AppView.settings) {
+      appsStore.addSettingsView(id, AppView.settings)
     }
 
     store.handleAppStore(id, appStore)

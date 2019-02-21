@@ -17,17 +17,14 @@ export const getIntegrations: GetOrbitIntegrations = {
   drive,
   website,
   person,
-  pinned: null,
+  pinned: () => null,
 }
 
 //
 // All orbit app configs
 // pass in "blank" setting to get the basic information for each app
 //
-export const allIntegrations: OrbitIntegrations = Object.keys(getIntegrations).reduce(
-  (acc, key) => ({
-    ...acc,
-    [key]: getIntegrations[key]({} as any),
-  }),
-  {} as OrbitIntegrations,
-)
+export const allIntegrations = {} as OrbitIntegrations
+for (const key in getIntegrations) {
+  allIntegrations[key] = getIntegrations[key]({} as any)
+}

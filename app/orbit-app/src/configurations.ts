@@ -1,4 +1,6 @@
+import { getAppConfig } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
+import { configureKit } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
 import { StoreContext } from './contexts'
@@ -8,6 +10,11 @@ import { Icon } from './views/Icon'
 
 function setup() {
   window['hasConfigured'] = true
+
+  configureKit({
+    StoreContext,
+    getAppConfig,
+  })
 
   configureGloss({
     pseudoAbbreviations: {

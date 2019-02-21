@@ -5,7 +5,8 @@ import {
   OrbitListItemProps,
   ResolvableModel,
 } from '@mcro/kit'
-import { allIntegrations } from './sources'
+import { Source } from '@mcro/models'
+import { allIntegrations, getIntegrations } from './sources'
 
 // this is mid-refactor in a sense
 // appConfig is a weird setup, its used basically to pass from a index over to a main view
@@ -14,6 +15,13 @@ import { allIntegrations } from './sources'
 // this is sort of an awkward function to take certain things we understand and produce appConfig
 // but then it also falls back to generically mapping over ListItem props
 // works for now, but could be rethought
+
+export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
+  return {
+    ...getIntegrations[source.type](source),
+    source,
+  }
+}
 
 export const sourceToAppConfig = (
   app: OrbitIntegration<any>,

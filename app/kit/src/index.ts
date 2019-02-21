@@ -1,7 +1,7 @@
 export { configureKit } from './configureKit'
 export * from './helpers/KitStores'
 export * from './helpers/normalizeItem'
-export * from './helpers/showConfirmDialog'
+export * from './helpers/showConfirmDialog.electron'
 export * from './hooks/useActiveQuery'
 export * from './hooks/useActiveSpace'
 export * from './hooks/useIsAppActive'

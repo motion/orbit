@@ -1,8 +1,5 @@
-// @ts-ignore
-import { dialog } from 'electron'
-
 export function showConfirmDialog({ type = 'question', title = '', message = '' }): boolean {
-  const response = dialog.showMessageBox({
+  const response = require('electron').dialog.showMessageBox({
     type,
     title,
     message,

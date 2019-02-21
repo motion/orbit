@@ -1,7 +1,7 @@
 import { deep } from '@mcro/black'
 import { Absolute, gloss } from '@mcro/gloss'
-import { SubPane } from '@mcro/kit'
-import { BorderRight, ProvideSelectableHandlers, Sidebar } from '@mcro/ui'
+import { ProvideSelectionContext, SubPane } from '@mcro/kit'
+import { BorderRight, Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo } from 'react'
@@ -121,7 +121,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
 
   return (
     <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
-      <ProvideSelectableHandlers onSelectItem={orbitStore.handleSelectItem}>
+      <ProvideSelectionContext onSelectItem={orbitStore.handleSelectItem}>
         <AppView
           key={id}
           ref={handleAppRef}
@@ -132,7 +132,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           after={<OrbitStatusBarHeight id={id} />}
           inside={<BorderRight />}
         />
-      </ProvideSelectableHandlers>
+      </ProvideSelectionContext>
     </SubPane>
   )
 })

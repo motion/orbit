@@ -2,6 +2,7 @@ import { Bit, PersonBit } from '@mcro/models'
 import {
   Center,
   Direction,
+  MergeContext,
   ProvideSelectionStore,
   SelectableList,
   SelectableListProps,
@@ -10,7 +11,7 @@ import {
   useSelectionStore,
   View,
 } from '@mcro/ui'
-import React, { useCallback, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useStoresSimple } from '../helpers/useStores'
 import { useIsAppActive } from '../hooks/useIsAppActive'
@@ -30,7 +31,28 @@ export function toListItemProps(props: any): OrbitListItemProps {
   return props
 }
 
-export type OrbitHandleSelect = ((
+type SelectionContextType = {
+  onSelectItem?: HandleOrbitSelect
+  onOpenItem?: HandleOrbitSelect
+}
+
+const SelectionContext = createContext({
+  onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
+  onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
+} as SelectionContextType)
+
+export function ProvideSelectionContext({
+  children,
+  ...rest
+}: SelectionContextType & { children: any }) {
+  return (
+    <MergeContext Context={SelectionContext} value={rest}>
+      {children}
+    </MergeContext>
+  )
+}
+
+export type HandleOrbitSelect = ((
   index: number,
   appConfig: AppConfig,
   eventType?: 'click' | 'key',
@@ -38,8 +60,8 @@ export type OrbitHandleSelect = ((
 
 export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
   items?: Item[]
-  onSelect?: OrbitHandleSelect
-  onOpen?: OrbitHandleSelect
+  onSelect?: HandleOrbitSelect
+  onOpen?: HandleOrbitSelect
   query?: string
   placeholder?: React.ReactNode
 }
@@ -49,6 +71,7 @@ export function List(props: ListProps) {
   const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
+  const selectableProps = useContext(SelectionContext)
 
   // !TODO
   // @ts-ignore
@@ -84,19 +107,30 @@ export function List(props: ListProps) {
   )
   const onSelect = useCallback(
     (index, eventType) => {
+      const appConfig = getAppConfig(toListItemProps(items[index]))
       if (props.onSelect) {
-        props.onSelect(index, getAppConfig(toListItemProps(items[index])), eventType)
+        props.onSelect(index, appConfig, eventType)
+      }
+      if (selectionStore) {
+        selectionStore.toggleSelected(index, eventType)
+      }
+      if (selectableProps && selectableProps.onSelectItem) {
+        selectableProps.onSelectItem(index, appConfig, eventType)
       }
     },
-    [props],
+    [props, selectableProps],
   )
   const onOpen = useCallback(
-    index => {
+    (index, eventType) => {
+      const appConfig = getAppConfig(toListItemProps(items[index]))
       if (props.onOpen) {
-        props.onOpen(index, getAppConfig(toListItemProps(items[index])))
+        props.onOpen(index, appConfig)
+      }
+      if (selectableProps && selectableProps.onOpenItem) {
+        selectableProps.onOpenItem(index, appConfig, eventType)
       }
     },
-    [props],
+    [props, selectableProps],
   )
 
   const hasItems = !!props.items.length

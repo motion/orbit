@@ -32,9 +32,6 @@ export const SubPane = memo(function SubPane(props: Props) {
     ...rest
   } = props
   const subPaneStore = useStore(SubPaneStore, props)
-  // if (props.debug) {
-  //   debugger
-  // }
   const { isActive, isLeft } = subPaneStore
   const height = fullHeight ? 'auto' : subPaneStore.fullHeight
 

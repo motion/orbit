@@ -6,6 +6,8 @@ export const OrbitItemSingleton = {
   lastClick: Date.now(),
 }
 
+let lastSelectAt = Date.now()
+
 export class ListItemStore {
   props: ListItemProps
 
@@ -83,13 +85,16 @@ export class ListItemStore {
     ensure('new index', isSelected !== this.isSelected)
     // set this before doing callbacks to allow for instant update
     this.isSelected = isSelected
+
+    const selectedRecently = Date.now() - lastSelectAt < 80
+    lastSelectAt = Date.now()
+
     if (isSelected) {
       ensure('not clicked', Date.now() - this.clickAt > 10)
 
-      // TODO make this only delay if the last one was recent, otherwise be instant
-      // delay to allow fast keyboard movement down lists
-      console.log('should only delay if last event was recent, store in a global and check!')
-      await sleep(35)
+      if (selectedRecently) {
+        await sleep(40)
+      }
 
       if (onSelect) {
         onSelect(this.index, 'key')

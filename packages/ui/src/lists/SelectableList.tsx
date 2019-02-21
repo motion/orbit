@@ -22,7 +22,7 @@ type SelectContext = {
   onOpenItem?: HandleSelection
 }
 
-const SelectableContext = createContext({
+const SelectableListContext = createContext({
   onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
   onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
 } as SelectContext)
@@ -32,7 +32,7 @@ export function ProvideSelectableHandlers({
   ...rest
 }: SelectContext & { children: any }) {
   return (
-    <MergeContext Context={SelectableContext} value={rest}>
+    <MergeContext Context={SelectableListContext} value={rest}>
       {children}
     </MergeContext>
   )
@@ -95,12 +95,12 @@ export const SelectableList = memo(function SelectableList({
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = getItemsKey(items)
   const getItems = useCallback(() => items, [itemsKey])
-  const selectableProps = useContext(SelectableContext)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
     itemsKey,
     getItems,
   })
+  const selectableProps = useContext(SelectableListContext)
 
   useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
@@ -121,16 +121,15 @@ export const SelectableList = memo(function SelectableList({
         onOpen={selectableProps && selectableProps.onSelectItem}
         {...props}
         // overwrite props explicitly
-        onSelect={(index, appConfig, eventType) => {
-          // if (selectionStore && selectionStore.activeIndex === index) return
+        onSelect={(index, eventType, element) => {
+          if (props.onSelect) {
+            return props.onSelect(index, eventType, element)
+          }
           if (selectionStore) {
             selectionStore.toggleSelected(index, eventType)
           }
           if (selectableProps && selectableProps.onSelectItem) {
-            selectableProps.onSelectItem(index, appConfig, eventType)
-          }
-          if (props.onSelect) {
-            props.onSelect(index, appConfig, eventType)
+            selectableProps.onSelectItem(index, eventType, element)
           }
         }}
       />

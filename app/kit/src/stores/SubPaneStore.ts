@@ -31,6 +31,10 @@ export class SubPaneStore {
       return thisIndex === this.stores.paneManagerStore.paneIndex - 1
     },
     _ => _,
+    // not very time sensitive or as important as isActive
+    {
+      delay: 40,
+    },
   )
 
   isActive = react(

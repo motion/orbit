@@ -1,4 +1,5 @@
 import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
+import { Icon, OrbitIconProps } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import {
   BorderBottom,
@@ -12,7 +13,6 @@ import {
 } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 29
 const inactiveOpacity = 0.45

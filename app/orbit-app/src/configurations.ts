@@ -1,10 +1,9 @@
 import { getAppConfig } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
-import { configureKit } from '@mcro/kit'
+import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
 import { StoreContext } from './contexts'
-import { Icon } from './views/Icon'
 
 // run these only once, and avoid HMR above it
 

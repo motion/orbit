@@ -1,5 +1,5 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
-import { AppType } from '@mcro/kit'
+import { AppType, Icon } from '@mcro/kit'
 import { App } from '@mcro/stores'
 import {
   BorderBottom,
@@ -18,7 +18,6 @@ import OrbitFilterIntegrationButton from '../../components/OrbitFilterIntegratio
 import { useActiveApps } from '../../hooks/useActiveApps'
 import { useStores } from '../../hooks/useStores'
 import { FloatingBarButton } from '../../views/FloatingBar/FloatingBarButton'
-import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'

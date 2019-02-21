@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
-import { IconProps, Image, ThemeContext, View } from '@mcro/ui'
+import { IconProps, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
-import { useIntegrationIcon } from '../hooks/useIntegrationIcon'
+import { useSourceIcon } from '../hooks/useSourceIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
@@ -19,9 +19,9 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   const finalColor = color || activeTheme.color.toString()
 
   // image based integration icons
-  const integrationIcon = useIntegrationIcon({ icon: name })
+  const sourceIcon = useSourceIcon(props)
 
-  if (integrationIcon) {
+  if (sourceIcon) {
     const sizeProps = {
       width: size,
       height: size,
@@ -34,11 +34,11 @@ export const Icon = React.memo((props: OrbitIconProps) => {
         justifyContent="center"
         style={style}
         opacity={opacity}
-        {...(integrationIcon ? adjust[integrationIcon] : adjust.icon)}
+        {...(sourceIcon ? adjust[name] : adjust.icon)}
         {...sizeProps}
         {...props}
       >
-        <Image src={integrationIcon} width="100%" height="100%" {...props.imageStyle} />
+        {sourceIcon}
       </View>
     )
   }

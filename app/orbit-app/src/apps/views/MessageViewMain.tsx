@@ -1,7 +1,6 @@
+import { AppConfig, Icon } from '@mcro/kit'
 import { Center, PassProps, Title, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
-import { Icon } from '../../views/Icon'
-import { AppConfig } from '../AppTypes'
 
 export function MessageViewMain(props: AppConfig) {
   return (

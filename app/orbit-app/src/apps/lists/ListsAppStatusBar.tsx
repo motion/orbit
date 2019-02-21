@@ -1,9 +1,9 @@
+import { Icon } from '@mcro/kit'
 import { Breadcrumbs, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import { Icon } from '../../views/Icon'
 
 export function ListAppStatusBar() {
   // @ts-ignore

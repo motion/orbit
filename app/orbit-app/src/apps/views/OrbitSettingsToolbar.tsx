@@ -1,8 +1,8 @@
 import { useReaction } from '@mcro/black'
+import { Icon } from '@mcro/kit'
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
 import React, { useState } from 'react'
 import { useStores } from '../../hooks/useStores'
-import { Icon } from '../../views/Icon'
 
 const tabIconProps = {
   size: 10,

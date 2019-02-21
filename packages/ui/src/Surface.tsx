@@ -15,8 +15,7 @@ import * as React from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
-import { configure } from './helpers/configure'
-import { Icon as UIIcon } from './Icon'
+import { ConfiguredIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
 import { Tooltip } from './Tooltip'
@@ -125,8 +124,6 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     forwardRef,
     ...rest
   } = props
-
-  const Icon = configure.useIcon || UIIcon
   const segmentedStyle = getSegmentRadius(props, crumb)
 
   const stringIcon = typeof icon === 'string'
@@ -198,7 +195,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
         >
           {icon && !stringIcon && <div>{icon}</div>}
           {icon && stringIcon && (
-            <Icon
+            <ConfiguredIcon
               name={`${icon}`}
               size={getIconSize(props)}
               transform={{

@@ -65,6 +65,7 @@ run orbit-app --prod
   /orbit-desktop       # node app (runs server for oauth, runs a variety of backend services)
   /orbit-electron      # electron app (one-per-window, controls electron windows and other state)
   /orbit-syncers       # syncers app (syncs data from github, slack, etc into the app)
+  /kit              # Kit for building apps: higher level hooks, views and components that work together
   /models           # TypeORM models, shared by all apps ^^
   /services         # Oauth integration helpers (Github.getRepos, Drive.getFiles...)
   /stores           # Singleton *across all processess*, syncs deep reactive .state
@@ -79,7 +80,7 @@ run orbit-app --prod
   /automagical        # powers react()
   /use-store          # used for all our stores, automatically tracks changes
   /gloss              # our sweet CSS-in-JS solution
-  /ui                 # our UI kit, built with gloss
+  /ui                 # lower level pure UI kit, built with gloss
 ```
 
 ## using the monorepo

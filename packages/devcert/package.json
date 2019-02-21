@@ -15,7 +15,6 @@
     "@types/glob": "^5.0.34",
     "@types/lodash": "^4.14.92",
     "@types/mkdirp": "^0.5.2",
-    "@types/node": "^8.5.7",
     "@types/rimraf": "^2.0.2",
     "@types/tmp": "^0.0.33"
   },

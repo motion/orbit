@@ -1,13 +1,11 @@
 import { always, cancel, ensure, react } from '@mcro/black'
+import { AppConfig, OrbitListItemProps } from '@mcro/kit'
+import { SelectableList, SelectableListProps, SelectionStore } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import React, { useCallback, useEffect } from 'react'
-import { AppConfig } from '../../apps/AppTypes'
 import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from '../../apps/lists/types'
 import { Omit } from '../../helpers/typeHelpers/omit'
 import { useStores } from '../../hooks/useStores'
-import { SelectionStore } from '../../stores/SelectionStore'
-import { OrbitListItemProps } from '../ListItems/OrbitListItem'
-import SelectableList, { SelectableListProps } from './SelectableList'
 
 type ID = number | string
 
@@ -106,6 +104,7 @@ class SelectableTreeListStore {
       return
     }
     if (this.props.onOpen) {
+      // !TODO
       this.props.onOpen(index, appConfig, eventType)
     }
   }
@@ -119,6 +118,7 @@ export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
     const getItems = useCallback(() => items, [items])
     // TODO why does getItems not trigger a change...
     // we should just pass getItems not all items so we avoid doing large update checks
+    // !TODO
     const store = useStore(SelectableTreeListStore, { selectionStore, items, getItems, ...props })
     const { error } = store
 

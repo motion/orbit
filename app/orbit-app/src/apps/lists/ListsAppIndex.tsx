@@ -1,3 +1,5 @@
+import { save } from '@mcro/bridge'
+import { List } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import { arrayMove } from '@mcro/react-sortable-hoc'
 import { Absolute, BorderBottom, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
@@ -6,8 +8,6 @@ import React, { useCallback } from 'react'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStores } from '../../hooks/useStores'
-import { save } from '../../mediator'
-import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppTypes'
 import { loadListItem } from './helpers'
@@ -150,7 +150,7 @@ function ListSearchResults() {
       onCollapse={listStore.setSearchCollapsed}
       heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
     >
-      <SelectableList query={query} items={searchResults || []} />
+      <List query={query} items={searchResults || []} />
     </Panel>
   )
 }

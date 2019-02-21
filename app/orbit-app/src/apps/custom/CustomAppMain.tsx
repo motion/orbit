@@ -1,8 +1,17 @@
-import { BorderLeft, Button, DateFormat, Row, SearchableTable, Text, Tree, View } from '@mcro/ui'
+import {
+  BorderLeft,
+  Button,
+  CheckboxReactive,
+  DateFormat,
+  Row,
+  SearchableTable,
+  Text,
+  Tree,
+  View,
+} from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
-import ReactiveCheckBox from '../../views/ReactiveCheckBox'
 import { Section } from '../../views/Section'
 import { TitleRow } from '../../views/TitleRow'
 import VerticalSplitPane from '../../views/VerticalSplitPane'
@@ -136,7 +145,7 @@ export function CustomAppMain(_props: AppProps) {
                   },
                   active: {
                     sortValue: true,
-                    value: <ReactiveCheckBox isActive={() => true} />,
+                    value: <CheckboxReactive isActive={() => true} />,
                   },
                 },
               }

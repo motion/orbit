@@ -1,18 +1,18 @@
 import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
+import { Icon, OrbitIconProps } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import {
   BorderBottom,
   Button,
   ButtonProps,
   IconProps,
+  memoIsEqualDeep,
   MenuTemplate,
   Tooltip,
   useContextMenu,
 } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
-import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 29
 const inactiveOpacity = 0.45
@@ -165,14 +165,13 @@ export function OrbitTabButton(props: ButtonProps) {
   return (
     <Button
       glint={false}
-      top={tabHeight / 2 - 8}
+      top={tabHeight / 2 - 18 / 2}
       right={8}
       circular
       borderWidth={0}
       width={18}
       height={18}
       icon="downArrow"
-      background="transparent"
       iconProps={{ size: 8 }}
       opacity={0}
       position="absolute"

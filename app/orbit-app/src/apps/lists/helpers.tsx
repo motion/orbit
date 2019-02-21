@@ -1,8 +1,9 @@
-import { loadOne } from '../../mediator'
-import { BitModel, ListAppDataItem, PersonBitModel } from '@mcro/models'
+import { loadOne } from '@mcro/bridge'
+import { OrbitListItemProps } from '@mcro/kit'
+import { BitModel, PersonBitModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import React from 'react'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
+import { ListAppDataItem } from './types'
 
 export async function loadListItem(
   item?: ListAppDataItem,

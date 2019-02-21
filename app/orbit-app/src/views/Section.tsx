@@ -1,7 +1,6 @@
 import { gloss, ViewProps } from '@mcro/gloss'
-import { TextProps, View } from '@mcro/ui'
+import { TextProps, Title, View } from '@mcro/ui'
 import * as React from 'react'
-import { Title } from '.'
 
 export type SectionProps = ViewProps & {
   sizePadding?: number

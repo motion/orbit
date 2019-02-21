@@ -1,7 +1,7 @@
+import { AppIcon } from '@mcro/kit'
 import { HorizontalSpace, Popover, Row, View } from '@mcro/ui'
 import React, { useEffect, useRef } from 'react'
 import { useStores } from '../../hooks/useStores'
-import { AppIcon } from '../../views/AppIcon'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Input } from '../../views/Input'
 

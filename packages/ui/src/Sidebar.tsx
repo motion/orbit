@@ -10,17 +10,6 @@ import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive } from './Interactive'
 
-const SidebarInteractiveContainer = gloss(Interactive, {
-  flex: 'none',
-})
-
-const borderByPosition = {
-  left: <BorderRight />,
-  right: <BorderLeft />,
-  top: <BorderBottom />,
-  bottom: <BorderTop />,
-}
-
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
 type SidebarProps = {
@@ -79,6 +68,17 @@ type SidebarState = {
   width?: number
   height?: number
   userChange: boolean
+  minHeight?: number
+  maxHeight?: number
+  maxWidth?: number
+  minWidth?: number
+  horizontal?: boolean
+  resizable?: {
+    top?: boolean
+    bottom?: boolean
+    left?: boolean
+    right?: boolean
+  }
 }
 
 export class Sidebar extends React.Component<SidebarProps, SidebarState> {
@@ -88,13 +88,49 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
   state = {
     userChange: false,
-    width: this.props.width,
-    height: this.props.height,
+    width: null,
+    height: null,
+    minWidth: null,
+    maxWidth: null,
+    minHeight: null,
+    maxHeight: null,
+    resizable: null,
+    horizontal: false,
   }
 
   static getDerivedStateFromProps(props: SidebarProps, state: SidebarState) {
     if (!state.userChange && (state.width !== props.width || state.height !== props.height)) {
-      return { width: props.width, height: props.height }
+      const { position } = props
+      let height, minHeight, maxHeight, width, minWidth, maxWidth
+
+      const resizable: { [key: string]: boolean } = {}
+      if (position === 'left') {
+        resizable.right = true
+        ;({ width, minWidth, maxWidth } = props)
+      } else if (position === 'top') {
+        resizable.bottom = true
+        ;({ height, minHeight, maxHeight } = props)
+      } else if (position === 'right') {
+        resizable.left = true
+        ;({ width, minWidth, maxWidth } = props)
+      } else if (position === 'bottom') {
+        resizable.top = true
+        ;({ height, minHeight, maxHeight } = props)
+      }
+
+      const horizontal = position === 'left' || position === 'right'
+
+      if (horizontal) {
+        width = width == null ? 200 : width
+        minWidth = minWidth == null ? 100 : minWidth
+        maxWidth = maxWidth == null ? 600 : maxWidth
+      } else {
+        height = height == null ? 200 : height
+        minHeight = minHeight == null ? 100 : minHeight
+        maxHeight = maxHeight == null ? 600 : maxHeight
+      }
+
+      return { width, height, minWidth, maxWidth, resizable, horizontal }
     }
     return null
   }
@@ -110,34 +146,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
   render() {
     const { background, onResize, position, children, noBorder } = this.props
-    let height, minHeight, maxHeight, width, minWidth, maxWidth
-
-    const resizable: { [key: string]: boolean } = {}
-    if (position === 'left') {
-      resizable.right = true
-      ;({ width, minWidth, maxWidth } = this.props)
-    } else if (position === 'top') {
-      resizable.bottom = true
-      ;({ height, minHeight, maxHeight } = this.props)
-    } else if (position === 'right') {
-      resizable.left = true
-      ;({ width, minWidth, maxWidth } = this.props)
-    } else if (position === 'bottom') {
-      resizable.top = true
-      ;({ height, minHeight, maxHeight } = this.props)
-    }
-
-    const horizontal = position === 'left' || position === 'right'
-
-    if (horizontal) {
-      width = width == null ? 200 : width
-      minWidth = minWidth == null ? 100 : minWidth
-      maxWidth = maxWidth == null ? 600 : maxWidth
-    } else {
-      height = height == null ? 200 : height
-      minHeight = minHeight == null ? 100 : minHeight
-      maxHeight = maxHeight == null ? 600 : maxHeight
-    }
+    const {
+      minWidth,
+      maxWidth,
+      width,
+      height,
+      minHeight,
+      maxHeight,
+      resizable,
+      horizontal,
+    } = this.state
 
     return (
       <SidebarInteractiveContainer
@@ -158,6 +176,17 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       </SidebarInteractiveContainer>
     )
   }
+}
+
+const SidebarInteractiveContainer = gloss(Interactive, {
+  flex: 'none',
+})
+
+const borderByPosition = {
+  left: <BorderRight />,
+  right: <BorderLeft />,
+  top: <BorderBottom />,
+  bottom: <BorderTop />,
 }
 
 // const SidebarChildrenDebounce = debounceRender(Contents)

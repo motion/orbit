@@ -1,13 +1,13 @@
+import { getAppFromSource } from '@mcro/apps'
 import { ensure, react } from '@mcro/black'
+import { observeMany, observeOne } from '@mcro/bridge'
+import { PaneManagerStore } from '@mcro/kit'
 import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { isEqual, once } from 'lodash'
 import { getIsTorn } from '../helpers/getAppHelpers'
 import { sortApps } from '../hooks/useActiveAppsSorted'
-import { observeMany, observeOne } from '../mediator'
 import { defaultPanes, getPanes } from './getPanes'
-import { PaneManagerStore } from './PaneManagerStore'
-import { getAppFromSource } from './SourcesStore'
 
 export class SpaceStore {
   props: { paneManagerStore: PaneManagerStore }

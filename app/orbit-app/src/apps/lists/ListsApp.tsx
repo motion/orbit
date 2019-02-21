@@ -1,7 +1,7 @@
+import { save } from '@mcro/bridge'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
-import { save } from '../../mediator'
 import { AppContainer } from '../AppContainer'
 import { App } from '../AppTypes'
 import { ListsAppIndex } from './ListsAppIndex'

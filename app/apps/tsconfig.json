@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.client",
+  "compilerOptions": {
+    "outDir": "_",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../../packages/gloss" },
+    { "path": "../../packages/use-store" },
+    { "path": "../bridge" },
+    { "path": "../models" }
+  ]
+}

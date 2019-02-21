@@ -14,7 +14,7 @@ import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import React, { memo } from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
-import { Icon } from '../Icon'
+import { ConfiguredIcon } from '../Icon'
 import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
@@ -115,7 +115,7 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
       element = React.cloneElement(icon, iconPropsFinal)
     }
   } else {
-    element = <Icon name={icon} {...iconPropsFinal} />
+    element = <ConfiguredIcon name={icon} {...iconPropsFinal} />
   }
   return (
     // use a view to ensure consistent width

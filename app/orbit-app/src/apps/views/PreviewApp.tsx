@@ -1,8 +1,7 @@
 import { AppBit } from '@mcro/models'
-import { BorderLeft } from '@mcro/ui'
+import { BorderLeft, Title } from '@mcro/ui'
 import React from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
-import { Title } from '../../views'
 import { Section } from '../../views/Section'
 import { AppView } from '../AppView'
 

@@ -1,10 +1,22 @@
+import { useModel } from '@mcro/bridge'
 import { SpaceModel } from '@mcro/models'
-import { Col, HorizontalSpace, ListItem, Row, Text, Theme, VerticalSpace } from '@mcro/ui'
+import {
+  Col,
+  FormRow,
+  HorizontalSpace,
+  InputRow,
+  ListItem,
+  Row,
+  SubTitle,
+  Text,
+  Theme,
+  Title,
+  VerticalSpace,
+} from '@mcro/ui'
 import randomColor from 'randomcolor'
 import * as React from 'react'
 import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
-import { useModel } from '../../useModel'
-import { FormRow, HorizontalScroll, InputRow, SubTitle, Title } from '../../views'
+import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { OrbitOrb } from '../../views/OrbitOrb'
 import { Section } from '../../views/Section'

@@ -1,7 +1,5 @@
-import { VerticalSpace, View } from '@mcro/ui'
+import { Divider, SubTitle, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { Divider } from './Divider'
-import { SubTitle } from './SubTitle'
 
 export function SubSection({
   title,

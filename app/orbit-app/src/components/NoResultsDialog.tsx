@@ -1,8 +1,7 @@
-import { Button, VerticalSpace, View } from '@mcro/ui'
+import { PaneManagerStore } from '@mcro/kit'
+import { Button, SubTitle, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
-import { PaneManagerStore } from '../stores/PaneManagerStore'
-import * as Views from '../views'
 
 type Props = {
   paneManagerStore?: PaneManagerStore
@@ -14,7 +13,7 @@ export default function NoResultsDialog(props: Props) {
   return (
     <>
       <View alignItems="center" justifyContent="center" padding={25}>
-        <Views.SubTitle>You're searching {props.subName} & no results found.</Views.SubTitle>
+        <SubTitle>You're searching {props.subName} & no results found.</SubTitle>
         <VerticalSpace />
         <Button onClick={() => paneManagerStore.setActivePaneByType('search')} size={1.2}>
           Search Orbit Instead

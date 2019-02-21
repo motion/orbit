@@ -1,6 +1,6 @@
-import { arrayMove } from '@mcro/react-sortable-hoc';
-import { useActiveSpace } from './useActiveSpace';
-import { useStoresSimple } from './useStores';
+import { useActiveSpace } from '@mcro/kit'
+import { arrayMove } from '@mcro/react-sortable-hoc'
+import { useStoresSimple } from './useStores'
 
 export function useAppSortHandler() {
   const { orbitWindowStore } = useStoresSimple()

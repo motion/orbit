@@ -1,7 +1,7 @@
-import { AppBit, IntegrationType } from '@mcro/models'
+import { AppConfig, AppStore } from '@mcro/kit'
+import { AppBit } from '@mcro/models'
 import { FunctionComponent } from 'react'
 import { GenericComponent } from '../types'
-import { AppStore } from './AppStore'
 
 type AppBitOf<A> = AppBit & { data: A }
 
@@ -41,42 +41,3 @@ export type AppDefinition =
   | GenericComponent<AppProps>
   // legacy, migrating away from
   | AppViews
-
-export enum AppType {
-  search = 'search',
-  people = 'people',
-  topics = 'topics',
-  lists = 'lists',
-  sources = 'sources',
-  bit = 'bit',
-  settings = 'settings',
-  message = 'message',
-  apps = 'apps',
-  createApp = 'createApp',
-  onboard = 'onboard',
-  custom = 'custom',
-  spaces = 'spaces',
-}
-
-export type AppConfig = {
-  id?: string
-  subId?: string
-  title?: string
-  type?: AppType
-  data?: any
-  icon?: string
-  iconLight?: string
-  integration?: IntegrationType
-  subType?: string
-  viewType?: 'main' | 'index' | 'setup'
-  // allow various things to be passed as config
-  // to help configure the peek window
-  viewConfig?: {
-    showTitleBar?: boolean
-    viewPane?: string
-    dimensions?: [number, number]
-    // for auto measuring peek size
-    contentSize?: number
-    initialState?: { [key: string]: any }
-  }
-}

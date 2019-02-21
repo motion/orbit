@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2016",
+    "target": "es2018",
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

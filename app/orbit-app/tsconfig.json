@@ -6,5 +6,9 @@
     "typeRoots": ["./src/globalTypes.d.ts"]
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../packages/config" }, { "path": "../../packages/mediator" }]
+  "references": [
+    { "path": "../bridge" },
+    { "path": "../../packages/config" },
+    { "path": "../../packages/mediator" }
+  ]
 }

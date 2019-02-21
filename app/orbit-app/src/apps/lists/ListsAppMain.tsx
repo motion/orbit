@@ -1,12 +1,10 @@
+import { useModel } from '@mcro/bridge'
+import { List, OrbitListItemProps } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
-import { View } from '@mcro/ui'
+import { SubTitle, View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
-import { useModel } from '../../useModel'
-import { SubTitle } from '../../views'
 import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
-import OrbitList from '../../views/Lists/OrbitList'
 import { TitleRow } from '../../views/TitleRow'
 import { AppProps } from '../AppTypes'
 import { AppSubView } from '../views/AppSubView'
@@ -72,7 +70,7 @@ function ListsAppMainFolder(props: AppProps) {
       >
         {props.appConfig.title}
       </ListAppTitle>
-      <OrbitList
+      <List
         items={children}
         placeholder={
           <View flex={1} alignItems="center" justifyContent="center">

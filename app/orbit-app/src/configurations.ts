@@ -1,12 +1,19 @@
+import { getAppConfig } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
+import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
-import { Icon } from './views/Icon'
+import { StoreContext } from './contexts'
 
 // run these only once, and avoid HMR above it
 
 function setup() {
   window['hasConfigured'] = true
+
+  configureKit({
+    StoreContext,
+    getAppConfig,
+  })
 
   configureGloss({
     pseudoAbbreviations: {
@@ -18,6 +25,7 @@ function setup() {
 
   configureUI({
     useIcon: Icon,
+    StoreContext,
   })
 
   configureUseStore({

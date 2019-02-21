@@ -1,7 +1,8 @@
+import { AppType } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { apps } from '../apps/apps'
 import { appsStatic } from '../apps/appsStatic'
-import { App, AppType } from '../apps/AppTypes'
+import { App } from '../apps/AppTypes'
 
 export const defaultApps: AppBit[] = [
   {

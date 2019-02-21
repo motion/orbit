@@ -1,10 +1,9 @@
 import { ensure, react } from '@mcro/black'
+import { AppConfig, AppType, OrbitHandleSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import { AppConfig, AppType } from '../../apps/AppTypes'
 import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useStoresSimple } from '../../hooks/useStores'
-import { OrbitHandleSelect } from '../../views/Lists/OrbitList'
 
 export class OrbitStore {
   stores = useHook(useStoresSimple)

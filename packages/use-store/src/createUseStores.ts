@@ -6,8 +6,10 @@ import { useForceUpdate } from './useStore'
 // for use in children
 // tracks every store used and updates if necessary
 
+export type UseStoresOptions<A> = { optional?: (keyof A)[]; debug?: boolean }
+
 export function createUseStores<A extends Object>(StoreContext: React.Context<A>) {
-  return function useStores(options?: { optional?: (keyof A)[]; debug?: boolean }): A {
+  return function useStores(options?: UseStoresOptions<A>): A {
     const stores = useContext(StoreContext)
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const render = useForceUpdate()

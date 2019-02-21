@@ -1,3 +1,5 @@
+import { useModels } from '@mcro/bridge'
+import { List } from '@mcro/kit'
 import { PersonBitModel } from '@mcro/models'
 import { capitalize } from 'lodash'
 import * as React from 'react'
@@ -7,8 +9,6 @@ import { removePrefixIfExists } from '../../helpers/removePrefixIfExists'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 import { useShareMenu } from '../../hooks/useShareMenu'
 import { useStores } from '../../hooks/useStores'
-import { useModels } from '../../useModel'
-import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppTypes'
 
 export default function PeopleAppIndex(props: AppProps) {
@@ -44,7 +44,7 @@ export default function PeopleAppIndex(props: AppProps) {
   const getItemGroupProps = results.length > 12 ? groupByLetter('name') : _ => null
 
   return (
-    <SelectableList
+    <List
       getItemProps={(...args) => {
         return {
           ...getItemGroupProps(...args),

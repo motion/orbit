@@ -1,0 +1,15 @@
+export enum AppType {
+  search = 'search',
+  people = 'people',
+  topics = 'topics',
+  lists = 'lists',
+  sources = 'sources',
+  bit = 'bit',
+  settings = 'settings',
+  message = 'message',
+  apps = 'apps',
+  createApp = 'createApp',
+  onboard = 'onboard',
+  custom = 'custom',
+  spaces = 'spaces',
+}

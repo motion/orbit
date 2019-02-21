@@ -1,7 +1,7 @@
+import { SelectionStore } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import React, { useEffect, useMemo } from 'react'
-import { SelectionStore } from '../stores/SelectionStore'
 import { SortableGrid, SortableGridProps } from '../views/SortableGrid'
 
 type SelectableGridProps<A> = SortableGridProps<A> & {
@@ -10,6 +10,7 @@ type SelectableGridProps<A> = SortableGridProps<A> & {
 }
 
 export function SelectableGrid({ items, getItem, ...props }: SelectableGridProps<any>) {
+  // !TODO type
   const selectionStore = props.selectionStore || useStore(SelectionStore, props)
   const moves = items.map((_, i) => i)
   const itemsKey = JSON.stringify(items.map(i => i.id))

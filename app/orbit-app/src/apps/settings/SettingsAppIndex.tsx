@@ -1,7 +1,7 @@
+import { List } from '@mcro/kit'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
-import SelectableList from '../../views/Lists/SelectableList'
 
 export default function SettingsAppIndex() {
   const [user] = useActiveUser()
@@ -30,5 +30,5 @@ export default function SettingsAppIndex() {
     return null
   }
 
-  return <SelectableList minSelected={0} items={results} />
+  return <List minSelected={0} items={results} />
 }

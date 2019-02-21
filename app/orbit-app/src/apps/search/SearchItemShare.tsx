@@ -1,26 +1,11 @@
-import { Bit } from '@mcro/models'
+import { OrbitListItemProps, SearchItemShareContext } from '@mcro/kit'
 import { ListItem, View } from '@mcro/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
-import { MergeContext } from '../../views/MergeContext'
 import { Separator } from '../../views/Separator'
 import { AppType } from '../AppTypes'
 import { listRootID, ListsApp } from '../lists/ListsApp'
-
-export const SearchItemShareContext = React.createContext<{ item: Bit }>({ item: null })
-
-export const SearchItemShareProvide = memo(function SearchItemShareProvide(props: {
-  item: Bit
-  children: any
-}) {
-  return (
-    <MergeContext Context={SearchItemShareContext} value={{ item: props.item }}>
-      {props.children}
-    </MergeContext>
-  )
-})
 
 export default memo(function SearchItemShare() {
   const itemAction = useContext(SearchItemShareContext)
@@ -39,7 +24,8 @@ export default memo(function SearchItemShare() {
               subtitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction.item)
-                ListsApp.api.receive(app, listRootID, itemAction.item)
+                // !TODO @umed type issue
+                ListsApp.api.receive(app as any, listRootID, itemAction.item)
               },
             },
           ]

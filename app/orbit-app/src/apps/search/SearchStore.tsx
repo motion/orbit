@@ -1,4 +1,7 @@
 import { ensure, react } from '@mcro/black'
+import { loadMany } from '@mcro/bridge'
+import { AppIcon, AppType, OrbitListItemProps } from '@mcro/kit'
+import { MarkType } from '@mcro/kit/_/types/NLPTypes'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
@@ -6,12 +9,7 @@ import React from 'react'
 import { useActions } from '../../actions/Actions'
 import { SearchState } from '../../hooks/useSearch'
 import { useStoresSimple } from '../../hooks/useStores'
-import { loadMany } from '../../mediator'
-import { MarkType } from '../../stores/QueryStore/types'
-import { AppIcon } from '../../views/AppIcon'
-import { OrbitListItemProps } from '../../views/ListItems/OrbitListItem'
 import { SpaceIcon } from '../../views/SpaceIcon'
-import { AppType } from '../AppTypes'
 import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchResults = {
@@ -92,7 +90,7 @@ export class SearchStore {
   getApps(query: string): OrbitListItemProps[] {
     // only show apps search results when on home
     const { appStore } = this.stores
-    if (appStore && appStore.app && appStore.app.pinned !== true) {
+    if (appStore && appStore.app && appStore.app['pinned'] !== true) {
       console.warn('this should check editable but its not being set in ensureModels')
       return []
     }

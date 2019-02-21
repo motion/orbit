@@ -1,17 +1,16 @@
-import { sleep } from '@mcro/black';
-import { gloss } from '@mcro/gloss';
-import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models';
-import { Button, Icon, Slider, SliderPane, Text, Theme, VerticalSpace, View } from '@mcro/ui';
-import { useHook, useStore } from '@mcro/use-store';
-import * as React from 'react';
-import { addSourceClickHandler } from '../../helpers/addSourceClickHandler';
-import { useStores, useStoresSimple } from '../../hooks/useStores';
-import { command } from '../../mediator';
-import BlurryGuys from '../../pages/OrbitPage/BlurryGuys';
-import { ItemType, OrbitIntegration } from '../../sources/types';
-import { Title } from '../../views';
-import { BottomControls } from '../../views/BottomControls';
-import { SimpleItem } from '../../views/SimpleItem';
+import { sleep } from '@mcro/black'
+import { command } from '@mcro/bridge'
+import { gloss } from '@mcro/gloss'
+import { ItemType, OrbitIntegration } from '@mcro/kit'
+import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
+import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
+import { useHook, useStore } from '@mcro/use-store'
+import * as React from 'react'
+import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
+import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
+import { BottomControls } from '../../views/BottomControls'
+import { SimpleItem } from '../../views/SimpleItem'
 
 const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']

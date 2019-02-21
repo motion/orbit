@@ -15,6 +15,7 @@
 // ⚠️ ️
 
 import * as Black from '@mcro/black'
+import { Mediator } from '@mcro/bridge'
 import { getGlobalConfig } from '@mcro/config'
 import { color } from '@mcro/gloss'
 import { stringify } from '@mcro/helpers'
@@ -30,7 +31,6 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { AppActions } from '../actions/appActions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
-import * as Mediator from '../mediator'
 
 // add require('') to window for easy debugging
 // for example require('lodash')

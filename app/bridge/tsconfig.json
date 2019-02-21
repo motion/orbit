@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.tspackage",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "_",
+    "rootDir": "src",
+    "composite": true
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../../packages/mediator" },
+    { "path": "../../packages/config" },
+    { "path": "../../packages/utils" }
+  ]
+}

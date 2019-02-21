@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "module": "esnext",
+    "declaration": true,
+    "allowJs": false
+  }
+}

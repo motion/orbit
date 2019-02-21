@@ -1,9 +1,9 @@
+import { Icon } from '@mcro/kit'
+import { QueryFilterStore } from '@mcro/kit/_/stores/QueryFilterStore'
 import { Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
-import { QueryFilterStore } from '../stores/QueryStore/QueryFiltersStore'
 import { FloatingBarButton } from '../views/FloatingBar/FloatingBarButton'
-import { Icon } from '../views/Icon'
 
 export default function OrbitFilterIntegrationButton(
   props: ViewProps & { queryFilterStore?: QueryFilterStore },

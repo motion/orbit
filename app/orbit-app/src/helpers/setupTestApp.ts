@@ -1,11 +1,11 @@
+import { AppConfig } from '@mcro/kit'
 import { BitModel, PersonBitModel } from '@mcro/models'
 import { AppActions } from '../actions/appActions/AppActions'
-import { AppConfig } from '../apps/AppTypes'
 
 // test page for loading in browser to isolate
 export async function setupTestApp(testAppId?: string) {
   if (testAppId === 'bit') {
-    const lastBit = await require('../mediator').loadOne(BitModel, { args: {} })
+    const lastBit = await require('@mcro/bridge').loadOne(BitModel, { args: {} })
     AppActions.setPeekApp({
       position: [0, 0],
       size: [400, 400],
@@ -39,7 +39,7 @@ export async function setupTestApp(testAppId?: string) {
     })
   }
   if (testAppId === 'people') {
-    const lastPerson = await require('../mediator').loadOne(PersonBitModel, {
+    const lastPerson = await require('@mcro/bridge').loadOne(PersonBitModel, {
       args: {},
     })
     AppActions.setPeekApp({

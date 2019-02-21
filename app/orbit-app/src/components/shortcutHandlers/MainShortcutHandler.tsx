@@ -1,15 +1,13 @@
+import { ShortcutStore } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { PopoverState } from '@mcro/ui'
+import { Direction, MergeContext, PopoverState } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import React, { memo } from 'react'
 import { useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { StoreContext } from '../../contexts'
 import { useStores } from '../../hooks/useStores'
-import { Direction } from '../../stores/SelectionStore'
-import { ShortcutStore } from '../../stores/ShortcutStore'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
-import { MergeContext } from '../../views/MergeContext'
 
 const rootShortcuts = {
   closeApp: 'command+q',

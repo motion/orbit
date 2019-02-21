@@ -1,11 +1,16 @@
 import { gloss, Row } from '@mcro/gloss'
 import { NormalItem, SearchItemShareProvide } from '@mcro/kit'
 import { Bit } from '@mcro/models'
-import { HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
+import {
+  HorizontalSpace,
+  Popover,
+  SegmentedRow,
+  TitleBarButton,
+  TitleBarSpace,
+  View,
+} from '@mcro/ui'
 import * as React from 'react'
 // import { AppActions } from '../../../actions/appActions/AppActions'
-import { TitleBarButton } from './TitleBarButton'
-import { TitleBarSpace } from './TitleBarSpace'
 
 export class BitTitleBar extends React.Component<{
   searchBar: any

@@ -1,6 +1,9 @@
-import { gloss } from '@mcro/gloss'
-import { Row, Text } from '@mcro/ui'
+import { gloss, Row } from '@mcro/gloss'
 import * as React from 'react'
+import { Button, ButtonProps } from './buttons/Button'
+import { Text } from './text/Text'
+
+// TODO this is a weak view, needs thought
 
 // just the top titlebar:
 export const TitleBar = ({ children = null, before = null, after = null, ...props }) => (
@@ -32,3 +35,19 @@ const TitleBarText = props => (
     {...props}
   />
 )
+
+export const TitleBarButton = React.forwardRef((props: ButtonProps, ref) => {
+  return (
+    <Button
+      ref={ref}
+      size={0.9}
+      sizeRadius={1}
+      sizeFont={1.1}
+      sizePadding={0.95}
+      iconSize={11}
+      {...props}
+    />
+  )
+})
+
+export const TitleBarSpace = () => <div style={{ width: 10 }} />

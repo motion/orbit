@@ -1,10 +1,10 @@
 import { Contents, View } from '@mcro/gloss'
+import { AppStore } from '@mcro/kit'
+import { memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { ProvideStores } from '../components/ProvideStores'
 import { SmallListItemPropsProvider } from '../components/SmallListItemPropsProvider'
-import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
-import { AppStore } from './AppStore'
 import { AppProps } from './AppTypes'
 import { useApp } from './useApp'
 
@@ -27,6 +27,7 @@ export type AppViewRef = {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
+    // TODO @umed types not coming from useApp
     const { appViews, appStore, provideStores } = useApp(props)
     const AppView = appViews[props.viewType]
 

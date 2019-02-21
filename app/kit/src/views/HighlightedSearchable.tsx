@@ -11,7 +11,7 @@ type Props = {
   children: (a: SearchChildProps) => React.ReactNode
 }
 
-export const AppSearchable = (props: Props) => {
+export const HighlightedSearchable = (props: Props) => {
   return (
     <Searchable
       placeholder="Filter..."

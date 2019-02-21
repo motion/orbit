@@ -5,13 +5,13 @@ import {
   Button,
   ButtonProps,
   IconProps,
+  memoIsEqualDeep,
   MenuTemplate,
   Tooltip,
   useContextMenu,
 } from '@mcro/ui'
 import * as React from 'react'
 import { invertLightness } from '../../../../packages/color/_/color'
-import { memoIsEqualDeep } from '../helpers/memoIsEqualDeep'
 import { Icon, OrbitIconProps } from '../views/Icon'
 
 export const tabHeight = 29

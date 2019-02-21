@@ -1,13 +1,12 @@
+import { sourceToAppConfig } from '@mcro/apps'
 import { sleep } from '@mcro/black'
-import { Icon, View } from '@mcro/ui'
+import { useActiveSpace } from '@mcro/kit'
+import { Icon, SelectableList, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
 import { useActiveApps } from '../../hooks/useActiveApps'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useStores } from '../../hooks/useStores'
-import { sourceToAppConfig } from '../../stores/SourcesStore'
-import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps, AppType } from '../AppTypes'
 
 export default function SourcesAppIndex(_props: AppProps) {

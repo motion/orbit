@@ -1,8 +1,7 @@
 import { GetOrbitIntegration, OrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { findManyType } from '../../helpers/queries'
-// @ts-ignore
-import icon from './drive.svg'
+import { driveIcon } from './driveIcon'
 import { DriveApp } from './views/DriveApp'
 import { DriveItem } from './views/DriveItem'
 import { DriveSettings } from './views/DriveSettings'
@@ -15,7 +14,7 @@ export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
   display: {
     name: source.name,
     itemName: 'task',
-    icon,
+    icon: driveIcon,
   },
   views: {
     main: DriveApp,

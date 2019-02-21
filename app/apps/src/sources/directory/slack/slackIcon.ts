@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="124px" height="124px" viewBox="0 0 124 124" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
-    <title>slack</title>
-    <desc>Created with Sketch.</desc>
+export const slackIcon = `
+<svg width="124px" height="124px" viewBox="0 0 124 124">
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="slack">
             <g id="Group" transform="translate(0.000000, 65.000000)" fill="#E01E5A">
@@ -24,3 +21,4 @@
         </g>
     </g>
 </svg>
+`

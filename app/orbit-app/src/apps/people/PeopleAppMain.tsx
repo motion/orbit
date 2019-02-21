@@ -1,5 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
+import { ListItem } from '@mcro/kit'
 import {
   Bit,
   BitModel,
@@ -8,16 +9,13 @@ import {
   SlackBitData,
   SlackPersonData,
 } from '@mcro/models'
-import { HorizontalSpace, Row } from '@mcro/ui'
+import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { PEEK_BORDER_RADIUS } from '../../constants'
 import { useStores } from '../../hooks/useStores'
 import { loadMany, loadOne, observeMany } from '../../mediator'
-import { RoundButton } from '../../views'
-import { OrbitListItem } from '../../views/ListItems/OrbitListItem'
-import { SubTitle } from '../../views/SubTitle'
 import { AppProps } from '../AppTypes'
 
 const getBitTexts = (bits: Bit[]) => {
@@ -167,7 +165,7 @@ export default function PeopleAppMain(props: AppProps) {
             <Unpad>
               {recentBits.map(bit => {
                 return (
-                  <OrbitListItem
+                  <ListItem
                     oneLine={false}
                     key={bit.id}
                     item={bit}

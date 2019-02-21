@@ -1,8 +1,8 @@
+import { useActiveSpace } from '@mcro/kit'
 import { AppBit, Space } from '@mcro/models'
 import { isEqual } from 'lodash'
 import { useEffect } from 'react'
 import { useActiveApps } from './useActiveApps'
-import { useActiveSpace } from './useActiveSpace'
 
 function sortPanes(space: Space, apps: AppBit[]) {
   let pinned = []

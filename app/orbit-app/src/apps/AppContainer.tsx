@@ -1,5 +1,5 @@
+import { superMemo } from '@mcro/ui'
 import React, { useEffect } from 'react'
-import { superMemo } from '../helpers/memoIsEqualDeep'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from './AppTypes'
 

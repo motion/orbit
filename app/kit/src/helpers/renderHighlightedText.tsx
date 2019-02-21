@@ -1,6 +1,6 @@
 import { gloss } from '@mcro/gloss'
 import { HighlightText } from '@mcro/ui'
-import * as React from 'react'
+import React from 'react'
 
 const HighlightTextFrame = gloss({
   flex: 1,

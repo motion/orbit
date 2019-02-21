@@ -1,6 +1,6 @@
+import { MergeContext } from '@mcro/ui'
 import * as React from 'react'
-import { ItemPropsContext, ItemsPropsContextType } from '../helpers/contexts/ItemPropsContext'
-import { MergeContext } from '../views/MergeContext'
+import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 export type ItemPropsProviderProps = { children: any; value: Partial<ItemsPropsContextType> }
 

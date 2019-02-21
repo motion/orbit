@@ -1,3 +1,4 @@
+import { AppStore } from '@mcro/kit'
 import { useStoreDebug, useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
@@ -5,7 +6,6 @@ import { ProvideStores } from '../components/ProvideStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
 import { AppsStore } from './AppsStore'
-import { AppStore } from './AppStore'
 
 type AppViewDefinition = { id: string; type: string }
 type AppsLoaderProps = {

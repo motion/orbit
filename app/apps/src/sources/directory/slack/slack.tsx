@@ -1,8 +1,7 @@
 import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { findManyType } from '../../helpers/queries'
-// @ts-ignore
-import iconSlack from './slack.svg'
+import { slackIcon } from './slackIcon'
 import SlackApp from './views/SlackApp'
 import { SlackItem } from './views/SlackItem'
 import SlackSettings from './views/SlackSettings'
@@ -15,7 +14,7 @@ export const slack: GetOrbitIntegration<'slack'> = (source?: Source) => ({
   display: {
     name: source.name,
     itemName: 'conversation',
-    icon: iconSlack,
+    icon: slackIcon,
   },
   views: {
     main: SlackApp,

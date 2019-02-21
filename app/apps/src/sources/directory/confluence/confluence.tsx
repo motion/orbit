@@ -1,8 +1,7 @@
 import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { findManyType } from '../../helpers/queries'
-// @ts-ignore
-import icon from './confluence.svg'
+import { confluenceIcon } from './confluenceIcon'
 import { ConfluenceApp } from './views/ConfluenceApp'
 import { ConfluenceItem } from './views/ConfluenceItem'
 import { ConfluenceSettings } from './views/ConfluenceSettings'
@@ -16,7 +15,7 @@ export const confluence: GetOrbitIntegration<'confluence'> = (source?: Source) =
   display: {
     name: source.name,
     itemName: 'task',
-    icon,
+    icon: confluenceIcon,
   },
   views: {
     main: ConfluenceApp,

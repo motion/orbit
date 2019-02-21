@@ -1,6 +1,6 @@
 import React from 'react'
-import { ItemPropsProvider, ItemPropsProviderProps } from '../contexts/ItemPropsProvider'
-import { renderHighlightedTextSingle } from '../views/renderHighlightedText'
+import { renderHighlightedTextSingle } from '../../helpers/renderHighlightedText'
+import { ItemPropsProvider, ItemPropsProviderProps } from './ItemPropsProvider'
 
 export function SmallListItemPropsProvider({
   value,

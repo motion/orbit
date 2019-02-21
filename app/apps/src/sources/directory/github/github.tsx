@@ -1,10 +1,8 @@
 import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { findManyType } from '../../helpers/queries'
-// @ts-ignore
-import iconLight from './github-white.svg'
-// @ts-ignore
-import icon from './github.svg'
+import { githubIcon } from './githubIcon'
+import { githubIconWhite } from './githubIconWhite'
 import { GithubApp } from './views/GithubApp'
 import { GithubItem } from './views/GithubItem'
 import GithubSettings from './views/GithubSettings'
@@ -17,8 +15,8 @@ export const github: GetOrbitIntegration<'github'> = (source?: Source) => ({
   display: {
     name: source.name,
     itemName: 'task',
-    icon,
-    iconLight,
+    icon: githubIcon,
+    iconLight: githubIconWhite,
   },
   views: {
     main: GithubApp,

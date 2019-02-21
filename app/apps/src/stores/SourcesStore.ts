@@ -1,10 +1,9 @@
-import { react } from '@mcro/black'
-import { observeMany } from '../mediator'
+import { observeMany } from '@mcro/bridge'
+import { AppConfig, AppType, OrbitIntegration, ResolvableModel } from '@mcro/kit'
 import { IntegrationType, Source, SourceModel } from '@mcro/models'
+import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
-import { AppConfig, AppType } from '../apps/AppTypes'
 import { allIntegrations, getIntegrations } from '../sources'
-import { OrbitIntegration, ResolvableModel } from '../sources/types'
 
 type GenericApp = OrbitIntegration<any> & {
   isActive: boolean

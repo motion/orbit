@@ -1,8 +1,7 @@
 import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { findManyType } from '../../helpers/queries'
-// @ts-ignore
-import icon from './jira.svg'
+import { jiraIcon } from './jiraIcon'
 import { JiraApp } from './views/JiraApp'
 import { JiraItem } from './views/JiraItem'
 import { JiraSettings } from './views/JiraSettings'
@@ -16,7 +15,7 @@ export const jira: GetOrbitIntegration<'jira'> = (source?: Source) => ({
   display: {
     name: source.name,
     itemName: 'task',
-    icon,
+    icon: jiraIcon,
   },
   views: {
     main: JiraApp,

@@ -1,6 +1,6 @@
+import { MergeContext } from '@mcro/ui'
 import React from 'react'
 import { StoreContext } from '../contexts'
-import { MergeContext } from '../views/MergeContext'
 
 type ProvideStoresProps = {
   stores: Object

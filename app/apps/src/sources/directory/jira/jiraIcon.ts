@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="108px" height="108px" viewBox="0 0 108 108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
-    <title>jira</title>
-    <desc>Created with Sketch.</desc>
+export const jiraIcon = `
+<svg width="108px" height="108px" viewBox="0 0 108 108">
     <defs>
         <linearGradient x1="98.0308675%" y1="0.160599572%" x2="58.8877062%" y2="40.7655246%" id="linearGradient-1">
             <stop stop-color="#0052CC" offset="18%"></stop>
@@ -21,3 +18,4 @@
         </g>
     </g>
 </svg>
+`

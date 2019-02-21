@@ -1,7 +1,18 @@
 import { Bit, PersonBit } from '@mcro/models'
-import { Center, SelectableList, SelectableListProps, SubTitle, Text, View } from '@mcro/ui'
-import React, { useCallback } from 'react'
+import {
+  Center,
+  Direction,
+  ProvideSelectionStore,
+  SelectableList,
+  SelectableListProps,
+  SubTitle,
+  Text,
+  useSelectionStore,
+  View,
+} from '@mcro/ui'
+import React, { useCallback, useEffect } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
+import { useStoresSimple } from '../helpers/useStores'
 import { useIsAppActive } from '../hooks/useIsAppActive'
 import { Omit } from '../types'
 import { AppConfig } from '../types/AppConfig'
@@ -34,9 +45,34 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
 }
 
 export function List(props: ListProps) {
+  const { shortcutStore } = useStoresSimple()
   const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
+
+  // !TODO
+  // @ts-ignore
+  const selectionStore = useSelectionStore({ ...props, isActive })
+
+  useEffect(() => {
+    return shortcutStore.onShortcut(shortcut => {
+      if (!selectionStore.isActive) {
+        return false
+      }
+      switch (shortcut) {
+        case 'open':
+          if (props.onOpen) {
+            props.onOpen(selectionStore.activeIndex, null)
+          }
+          break
+        case 'up':
+        case 'down':
+          selectionStore.move(Direction[shortcut])
+          break
+      }
+    })
+  }, [])
+
   const getItemProps = useCallback(
     (item, index, items) => {
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
@@ -66,34 +102,36 @@ export function List(props: ListProps) {
   const hasItems = !!props.items.length
 
   return (
-    <HighlightActiveQuery>
-      {hasItems && (
-        <SelectableList
-          allowMeasure={isActive}
-          items={items}
-          ItemView={ListItem}
-          isRowLoaded={isRowLoaded}
-          {...props}
-          getItemProps={getItemProps}
-          onSelect={onSelect}
-          onOpen={onOpen}
-        />
-      )}
-      {!hasItems &&
-        (props.placeholder || (
-          <View flex={1} minHeight={200} position="relative">
-            <Center alignItems="center">
-              <View>
-                <SubTitle>No results</SubTitle>
-                {!!props.query && (
-                  <Text ellipse size={0.95} alpha={0.6}>
-                    "{props.query}"
-                  </Text>
-                )}
-              </View>
-            </Center>
-          </View>
-        ))}
-    </HighlightActiveQuery>
+    <ProvideSelectionStore selectionStore={selectionStore}>
+      <HighlightActiveQuery>
+        {hasItems && (
+          <SelectableList
+            allowMeasure={isActive}
+            items={items}
+            ItemView={ListItem}
+            isRowLoaded={isRowLoaded}
+            {...props}
+            getItemProps={getItemProps}
+            onSelect={onSelect}
+            onOpen={onOpen}
+          />
+        )}
+        {!hasItems &&
+          (props.placeholder || (
+            <View flex={1} minHeight={200} position="relative">
+              <Center alignItems="center">
+                <View>
+                  <SubTitle>No results</SubTitle>
+                  {!!props.query && (
+                    <Text ellipse size={0.95} alpha={0.6}>
+                      "{props.query}"
+                    </Text>
+                  )}
+                </View>
+              </Center>
+            </View>
+          ))}
+      </HighlightActiveQuery>
+    </ProvideSelectionStore>
   )
 }

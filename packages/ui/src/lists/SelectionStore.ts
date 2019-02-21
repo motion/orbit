@@ -5,7 +5,7 @@ import {
   SelectEvent,
   SelectionGroup,
   SelectionStoreProps,
-} from './SelectionProvider'
+} from './ProvideSelectionStore'
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)

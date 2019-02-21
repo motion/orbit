@@ -14,7 +14,6 @@ import { HeaderStore } from '../stores/HeaderStore'
 import { NewAppStore } from '../stores/NewAppStore'
 import { OrbitWindowStore } from '../stores/OrbitWindowStore'
 import { SettingStore } from '../stores/SettingStore'
-import { ShortcutStore } from '../stores/ShortcutStore'
 import { SpaceStore } from '../stores/SpaceStore'
 import { ThemeStore } from '../stores/ThemeStore'
 
@@ -26,7 +25,6 @@ export type AllStores = UIStores &
     orbitWindowStore?: OrbitWindowStore
     appsStore?: AppsStore
     appPageStore?: AppPageStore
-    shortcutStore?: ShortcutStore
     appFrameStore?: AppFrameStore
     menuStore?: MenuStore
     orbitStore?: OrbitStore

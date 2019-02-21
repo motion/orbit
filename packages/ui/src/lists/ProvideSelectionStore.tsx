@@ -42,8 +42,13 @@ export function useSelectionStore(props: SelectionStoreProps) {
   return useStore(SelectionStore, props)
 }
 
-export function SelectionProvider({ children, ...props }: SelectionStoreProps & { children: any }) {
-  const selectionStore = useSelectionStore(props)
+export function ProvideSelectionStore({
+  children,
+  selectionStore,
+}: {
+  selectionStore: SelectionStore
+  children: any
+}) {
   return (
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
       {children}

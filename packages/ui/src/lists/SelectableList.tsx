@@ -1,11 +1,11 @@
 import { ensure, react, useStore } from '@mcro/use-store'
-import * as React from 'react'
+import React, { createContext, memo, useCallback, useContext, useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
 import { useStores } from '../helpers/useStores'
 import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
-import { SelectEvent } from './SelectionProvider'
+import { SelectEvent } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -22,7 +22,7 @@ type SelectContext = {
   onOpenItem?: HandleSelection
 }
 
-const SelectableContext = React.createContext({
+const SelectableContext = createContext({
   onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
   onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
 } as SelectContext)
@@ -82,7 +82,7 @@ class SelectableStore {
   )
 }
 
-export const SelectableList = React.memo(function SelectableList({
+export const SelectableList = memo(function SelectableList({
   items,
   createNewSelectionStore,
   ...props
@@ -94,46 +94,22 @@ export const SelectableList = React.memo(function SelectableList({
 
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = getItemsKey(items)
-  const getItems = React.useCallback(() => items, [itemsKey])
-  const selectableProps = React.useContext(SelectableContext)
+  const getItems = useCallback(() => items, [itemsKey])
+  const selectableProps = useContext(SelectableContext)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
     itemsKey,
     getItems,
   })
 
-  // TODO can create a new prop here onSelectionStore
-  // then here do useEffect(() => {  onSelectionStore(selectionStore) }, [])
-  // and then in parent OrbitList do this:
-
-  // React.useEffect(() => {
-  //   if (typeof props.defaultSelected === 'number' && selectionStore) {
-  //     // only update if its on -1, to allow them to customize it in other ways
-  //     if (selectionStore.activeIndex === -1) {
-  //       selectionStore.setActiveIndex(props.defaultSelected)
-  //     }
-  //   }
-  //   return stores.shortcutStore.onShortcut(shortcut => {
-  //     if (!selectionStore.isActive) {
-  //       return false
-  //     }
-  //     switch (shortcut) {
-  //       case 'open':
-  //         if (props.onOpen) {
-  //           if (selectionStore) {
-  //             props.onOpen(selectionStore.activeIndex, null)
-  //           }
-  //         }
-  //         break
-  //       case 'up':
-  //       case 'down':
-  //         if (selectionStore) {
-  //           selectionStore.move(Direction[shortcut])
-  //         }
-  //         break
-  //     }
-  //   })
-  // }, [])
+  useEffect(() => {
+    if (typeof props.defaultSelected === 'number' && selectionStore) {
+      // only update if its on -1, to allow them to customize it in other ways
+      if (selectionStore.activeIndex === -1) {
+        selectionStore.setActiveIndex(props.defaultSelected)
+      }
+    }
+  }, [])
 
   return (
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>

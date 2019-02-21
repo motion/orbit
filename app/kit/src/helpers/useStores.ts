@@ -1,7 +1,7 @@
 import { createUseStores, UseStoresOptions } from '@mcro/use-store'
 import { useContext } from 'react'
 import { config } from '../configureKit'
-import { KitStores } from './KitStores'
+import { KitStores } from '../stores'
 
 // internal just for kit
 

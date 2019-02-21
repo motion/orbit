@@ -1,5 +1,5 @@
 import { Context, createContext } from 'react'
-import { KitStores } from './helpers/KitStores'
+import { KitStores } from './stores'
 import { AppConfig } from './types/AppConfig'
 import { OrbitListItemProps } from './views/ListItem'
 

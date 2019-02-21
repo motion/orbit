@@ -1,21 +1,14 @@
+import { SelectableList } from '@mcro/ui'
 import * as React from 'react'
 import { useShareMenu } from '../../hooks/useShareMenu'
 import { useStores } from '../../hooks/useStores'
-import SelectableList from '../../views/Lists/SelectableList'
 import { AppProps } from '../AppTypes'
 import './calendar.css' // theme css file
 
-export default function SearchAppIndex(props: AppProps) {
+export default function SearchAppIndex(_: AppProps) {
   const { searchStore } = useStores()
   const items = searchStore.results
   const { getShareMenuItemProps } = useShareMenu()
 
-  return (
-    <SelectableList
-      minSelected={0}
-      items={items}
-      query={props.appStore.activeQuery}
-      getItemProps={getShareMenuItemProps}
-    />
-  )
+  return <SelectableList minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
 }

@@ -1,7 +1,7 @@
+import { useModel } from '@mcro/bridge'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
-import { useModel } from '../../useModel'
 import { AppProps } from '../AppTypes'
 import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'

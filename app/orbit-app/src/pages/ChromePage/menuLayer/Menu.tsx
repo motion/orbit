@@ -1,21 +1,19 @@
 import { always, ensure, react } from '@mcro/black'
+import { PaneManagerStore, QueryStore } from '@mcro/kit'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { View, VirtualListDefaultProps } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { MergeContext, View, VirtualListDefaultProps } from '@mcro/ui'
+import { useReaction, useStore } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
 import { AppActions } from '../../../actions/appActions/AppActions'
 import { AppType } from '../../../apps/AppTypes'
-import Searchable from '../../../components/Searchable'
 import MainShortcutHandler from '../../../components/shortcutHandlers/MainShortcutHandler'
 import { IS_ELECTRON, MENU_WIDTH } from '../../../constants'
 import { StoreContext } from '../../../contexts'
 import { useActiveApps } from '../../../hooks/useActiveApps'
 import { useStores } from '../../../hooks/useStores'
-import { PaneManagerStore } from '../../../stores/PaneManagerStore'
-import { QueryStore } from '../../../stores/QueryStore/QueryStore'
-import { MergeContext } from '../../../views/MergeContext'
+import { AppSearchable } from '../../AppPage/AppSearchable'
 import BrowserDebugTray from './BrowserDebugTray'
 import { setTrayFocused } from './helpers'
 import MenuApp from './MenuApp'
@@ -452,9 +450,13 @@ function useMenuApps() {
 }
 
 export function Menu() {
-  const stores = useStores()
-  const queryStore = useStore(QueryStore, { sourcesStore: stores.sourcesStore })
+  const { sourcesStore } = useStores()
+  const queryStore = useStore(QueryStore)
   const menuApps = useMenuApps()
+
+  useReaction(() => {
+    queryStore.setSources(sourcesStore.activeSources)
+  })
 
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,
@@ -549,8 +551,7 @@ const MenuLayerContent = React.memo(() => {
   const menuApps = useMenuApps()
   return (
     <View className="app-parent-bounds">
-      <Searchable
-        queryStore={queryStore}
+      <AppSearchable
         inputProps={{
           ref: menuStore.handleSearchInput,
           onChange: queryStore.onChangeQuery,
@@ -566,7 +567,7 @@ const MenuLayerContent = React.memo(() => {
             type={app.type}
           />
         ))}
-      </Searchable>
+      </AppSearchable>
     </View>
   )
 })

@@ -1,4 +1,4 @@
-import { useModels } from '../useModel'
+import { useModels } from '@mcro/bridge'
 import { SourceModel } from '@mcro/models'
 
 export function useIntegrationsForSpace(props: { spaceId: number } | false) {

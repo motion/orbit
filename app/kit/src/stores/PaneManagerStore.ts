@@ -17,14 +17,14 @@ export class PaneManagerStore {
     disabled?: boolean
     defaultPanes: Pane[]
     onPaneChange: (index: number, pane: Pane) => any
-    defaultPaneIndex?: number
+    defaultIndex?: number
   }
 
-  paneIndex = this.props.defaultPaneIndex || 0
+  paneIndex = this.props.defaultIndex || 0
   panes = [...this.props.defaultPanes]
 
   syncPaneIndexProp = react(
-    () => this.props.defaultPaneIndex,
+    () => this.props.defaultIndex,
     index => {
       this.paneIndex = index
     },

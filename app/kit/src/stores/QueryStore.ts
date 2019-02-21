@@ -1,4 +1,5 @@
 import { react } from '@mcro/use-store'
+import { OrbitIntegration } from '../types/SourceTypes'
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryFilterStore } from './QueryFilterStore'
 
@@ -34,8 +35,8 @@ export class QueryStore {
   })
 
   // !TODO
-  setSources() {
-    this.queryFilters.setSources()
+  setSources(sources: OrbitIntegration<any>[]) {
+    this.queryFilters.setSources(sources)
   }
 
   willUnmount() {

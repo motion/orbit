@@ -1,6 +1,6 @@
+import { command } from '@mcro/bridge'
 import { Bit, OpenCommand, PersonBit } from '@mcro/models'
 import { App, Electron } from '@mcro/stores'
-import { command } from '../../mediator'
 
 export async function open(item: Bit | PersonBit | string) {
   let url = ''

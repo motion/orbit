@@ -2,6 +2,7 @@ import { IntegrationType } from '@mcro/models'
 import { always, decorate, ensure, react } from '@mcro/use-store'
 import { memoize, uniqBy } from 'lodash'
 import { MarkType } from '../types/NLPTypes'
+import { OrbitIntegration } from '../types/SourceTypes'
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryStore } from './QueryStore'
 
@@ -42,6 +43,7 @@ export class QueryFilterStore {
   // search by
   searchOptions = ['Bit', 'Topic'] as ('Topic' | 'Bit')[]
   searchBy = this.searchOptions[0]
+  activeSources: OrbitIntegration<any>[] = []
 
   dateState: DateSelections = {
     startDate: null,
@@ -53,8 +55,8 @@ export class QueryFilterStore {
     this.queryStore = queryStore
   }
 
-  setSources() {
-    console.log('set sources')
+  setSources(sources: OrbitIntegration<any>[]) {
+    this.activeSources = sources
   }
 
   // todo: this should replace any existing filters of same type
@@ -135,16 +137,15 @@ export class QueryFilterStore {
 
   get integrationFilters(): SearchFilter[] {
     // !TODO
-    // return this.sourcesStore.activeSources.map((app, id) => ({
-    //   id,
-    //   type: 'source',
-    //   integration: app.integration,
-    //   name: app.display.name,
-    //   active: Object.keys(this.exclusiveFilters).length
-    //     ? this.exclusiveFilters[app.integration]
-    //     : false,
-    // }))
-    return []
+    return this.activeSources.map((app, id) => ({
+      id,
+      type: 'source',
+      integration: app.integration,
+      name: app.display.name,
+      active: Object.keys(this.exclusiveFilters).length
+        ? this.exclusiveFilters[app.integration]
+        : false,
+    }))
   }
 
   get suggestedPeople(): Filter[] {
@@ -198,10 +199,11 @@ export class QueryFilterStore {
       // reset integration inactive filters
       ensure('integrations', nlp.integrations && !!nlp.integrations.length)
       // !TODO
-      // this.exclusiveFilters = this.sourcesStore.activeSources.reduce((acc, app) => {
-      //   acc[app.integration] = nlp.integrations.some(x => x === app.integration)
-      //   return acc
-      // }, {})
+      this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
+        // !TODO
+        acc[app.integration] = nlp.integrations.some(x => x === app.integration)
+        return acc
+      }, {})
     },
   )
 

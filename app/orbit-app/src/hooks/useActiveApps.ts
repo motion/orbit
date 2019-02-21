@@ -1,6 +1,6 @@
+import { useModels } from '@mcro/bridge'
 import { useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
-import { useModels } from '../useModel'
 
 export function useActiveApps(type?: string): AppBit[] {
   const [activeSpace] = useActiveSpace()

@@ -1,15 +1,13 @@
 import { command, loadOne } from '@mcro/bridge'
 import { OrbitIntegration, showConfirmDialog } from '@mcro/kit'
 import { Source, SourceForceCancelCommand, SourceModel, SourceRemoveCommand } from '@mcro/models'
-import { Row, SegmentedRow, Text, View } from '@mcro/ui'
+import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
 import { getIntegrations } from '../..'
 import { useJobs } from '../../../hooks/useJobs'
 import { useSourceInfo } from '../../../hooks/useSourceInfo'
 // import { AppActions } from '../../../actions/appActions/AppActions'
 import { WhitelistManager } from '../../helpers/WhitelistManager'
-import { TitleBarButton } from '../layout/TitleBarButton'
-import { TitleBarSpace } from '../layout/TitleBarSpace'
 import { ManageSmartSync } from './ManageSmartSync'
 
 export const getAppFromSource = (source: Source): OrbitIntegration<any> => {

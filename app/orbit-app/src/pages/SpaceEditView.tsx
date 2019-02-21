@@ -1,14 +1,13 @@
 import { react } from '@mcro/black'
+import { save } from '@mcro/bridge'
 import { AppModel, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
 import { ListsApp } from '../apps/lists/ListsApp'
-import { save } from '../mediator'
-import * as Views from '../views'
-import { Message } from '../views/Message'
 
 type Props = {
   space?: Space
@@ -85,13 +84,14 @@ export default observer(function SpaceEditView(props: Props) {
   return (
     <UI.Col tagName="form" onSubmit={handleSave} padding={20}>
       <Message>Enter space name and choose the color.</Message>
-      <Views.VerticalSpace />
+      <VerticalSpace />
       <UI.Col margin="auto" width={370}>
         <UI.Col padding={[0, 10]}>
-          <Views.Table>
-            <Views.InputRow label="Name" value={values.name} onChange={handleChange('name')} />
-          </Views.Table>
-          <Views.VerticalSpace />
+          <Table>
+            {/* !TODO */}
+            <InputRow label="Name" value={values.name} onChange={handleChange('name') as any} />
+          </Table>
+          <VerticalSpace />
           <UI.Theme
             theme={{
               color: '#fff',
@@ -100,7 +100,7 @@ export default observer(function SpaceEditView(props: Props) {
           >
             <UI.Button type="submit">Save</UI.Button>
           </UI.Theme>
-          <Views.VerticalSpace />
+          <VerticalSpace />
         </UI.Col>
       </UI.Col>
     </UI.Col>

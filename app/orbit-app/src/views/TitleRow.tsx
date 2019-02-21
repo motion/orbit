@@ -1,6 +1,5 @@
-import { BorderBottom, HorizontalSpace, Row, TextProps } from '@mcro/ui'
+import { BorderBottom, HorizontalSpace, Row, TextProps, Title } from '@mcro/ui'
 import React from 'react'
-import { Title } from '.'
 
 type TitleRowProps = TextProps & {
   before?: React.ReactNode

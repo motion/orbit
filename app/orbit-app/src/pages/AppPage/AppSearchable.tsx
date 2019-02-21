@@ -1,14 +1,13 @@
-import { Button, Input, InputProps, MergeHighlightsContext, Row } from '@mcro/ui'
+import { Button, Icon, Input, InputProps, MergeHighlightsContext, Row } from '@mcro/ui'
 import * as React from 'react'
-import { useStores } from '../hooks/useStores'
-import { Icon } from '../views/Icon'
+import { useStores } from '../../hooks/useStores'
 
 export type SearchableProps = {
   children: React.ReactNode
   inputProps?: InputProps
 }
 
-export default React.memo(function Searchable(props: SearchableProps) {
+export const AppSearchable = React.memo(function AppSearchable(props: SearchableProps) {
   const { queryStore } = useStores()
 
   return (

@@ -1,8 +1,8 @@
+import { command } from '@mcro/bridge'
 import { getGlobalConfig } from '@mcro/config'
-import { command } from '../mediator'
+import { OrbitIntegration } from '@mcro/kit'
 import { OpenCommand, SetupProxyCommand } from '@mcro/models'
 import { memoize } from 'lodash'
-import { OrbitIntegration } from '../sources/types'
 
 export const addSourceClickHandler = memoize(
   (app: OrbitIntegration<any>) => async (e: MouseEvent) => {

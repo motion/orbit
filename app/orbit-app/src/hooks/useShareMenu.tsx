@@ -1,9 +1,9 @@
+import { OrbitListItemProps, SearchItemShareProvide } from '@mcro/kit'
 import { Icon, Popover, View } from '@mcro/ui'
 import { flow, memoize } from 'lodash'
 import React from 'react'
-import SearchItemShare, { SearchItemShareProvide } from '../apps/search/SearchItemShare'
+import SearchItemShare from '../apps/search/SearchItemShare'
 import { preventDefault } from '../helpers/preventDefault'
-import { OrbitListItemProps } from '../views/ListItems/OrbitListItem'
 import { useStores } from './useStores'
 
 const getItemShareMenu = memoize((listItem, themeStore) => {

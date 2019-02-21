@@ -1,13 +1,21 @@
+import { save } from '@mcro/bridge'
 import { AppModel } from '@mcro/models'
 import { arrayMove } from '@mcro/react-sortable-hoc'
-import { Absolute, BorderBottom, Button, Input, Panel, PassProps, Row } from '@mcro/ui'
+import {
+  Absolute,
+  BorderBottom,
+  Button,
+  Input,
+  Panel,
+  PassProps,
+  Row,
+  SelectableList,
+} from '@mcro/ui'
 import { flow } from 'lodash'
 import React, { useCallback } from 'react'
 import { getTargetValue } from '../../helpers/getTargetValue'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useStores } from '../../hooks/useStores'
-import { save } from '../../mediator'
-import SelectableList from '../../views/Lists/SelectableList'
 import SelectableTreeList from '../../views/Lists/SelectableTreeList'
 import { AppProps } from '../AppTypes'
 import { loadListItem } from './helpers'

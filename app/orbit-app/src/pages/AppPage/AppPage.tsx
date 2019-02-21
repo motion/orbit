@@ -1,23 +1,22 @@
+import { SourcesStore } from '@mcro/apps'
 import { gloss } from '@mcro/gloss'
+import { QueryStore } from '@mcro/kit'
 import * as UI from '@mcro/ui'
-import { Col, HorizontalSpace, Row, Sidebar, Text } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@mcro/ui'
+import { useReaction, useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { AppView } from '../../apps/AppView'
-import Searchable from '../../components/Searchable'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useStores } from '../../hooks/useStores'
-import { QueryStore } from '../../stores/QueryStore/QueryStore'
-import { SelectionStore } from '../../stores/SelectionStore'
 import { SettingStore } from '../../stores/SettingStore'
-import { SourcesStore } from '../../stores/SourcesStore'
 import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { Icon } from '../../views/Icon'
 import { WindowControls } from '../../views/WindowControls'
 import AppFrame from './AppFrame'
 import { AppPageStore } from './AppPageStore'
+import { AppSearchable } from './AppSearchable'
 
 // see main.ts for setup for testing this in browser
 
@@ -26,8 +25,14 @@ export default React.memo(() => {
   const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
-  const queryStore = useStore(QueryStore, { sourcesStore })
+  const queryStore = useStore(QueryStore)
+
+  useReaction(() => {
+    queryStore.setSources(sourcesStore.activeSources)
+  })
+
   const selectionStore = useStore(SelectionStore)
+
   return (
     <StoreContext.Provider
       value={{
@@ -123,7 +128,7 @@ const AppPageContent = () => {
           minWidth={200}
         >
           {appPageStore.isTorn && (
-            <Searchable queryStore={queryStore}>
+            <AppSearchable>
               <AppView
                 id={appConfig.id}
                 viewType="index"
@@ -131,7 +136,7 @@ const AppPageContent = () => {
                 type={appConfig.type}
                 isActive
               />
-            </Searchable>
+            </AppSearchable>
           )}
         </Sidebar>
         <Col flex={1} overflow="hidden">

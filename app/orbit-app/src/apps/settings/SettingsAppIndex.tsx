@@ -1,7 +1,7 @@
+import { SelectableList } from '@mcro/ui'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
-import SelectableList from '../../views/Lists/SelectableList'
 
 export default function SettingsAppIndex() {
   const [user] = useActiveUser()

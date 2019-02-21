@@ -1,9 +1,8 @@
+import { useJobs, useSourceInfo } from '@mcro/apps'
+import { OrbitIntegration } from '@mcro/kit'
 import { HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import * as React from 'react'
-import { useJobs } from '../hooks/useJobs'
-import { useSourceInfo } from '../hooks/useSourceInfo'
-import { OrbitIntegration } from '../sources/types'
 
 type Props = {
   sourceId: number
@@ -13,7 +12,7 @@ type Props = {
 /**
  * Cache of bitCount to prevent bitCounts from flickering.
  */
-const bitsCountCache = {};
+const bitsCountCache = {}
 
 export const OrbitSourceInfo = (props: Props) => {
   const sourceId = props.app.source ? props.app.source.id : false
@@ -26,9 +25,9 @@ export const OrbitSourceInfo = (props: Props) => {
   }
 
   if (bitsCount !== 0) {
-    bitsCountCache[sourceId] = bitsCount;
+    bitsCountCache[sourceId] = bitsCount
   }
-  const countSubtitle = shortNumber(bitsCount === 0 ? (bitsCountCache[sourceId] || 0) : bitsCount);
+  const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[sourceId] || 0 : bitsCount)
 
   return (
     <Row alignItems="center" flex={1}>

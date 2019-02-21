@@ -1,5 +1,7 @@
 import { ensure, react } from '@mcro/black'
+import { save } from '@mcro/bridge'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
+import { Pane, useActiveSpace } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc'
 import { useHook, useStore } from '@mcro/use-store'
@@ -11,11 +13,8 @@ import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
-import { useActiveSpace } from '../../hooks/useActiveSpace'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
-import { save } from '../../mediator'
-import { Pane } from '../../stores/PaneManagerStore'
 
 const isOnSettings = (pane?: Pane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
@@ -99,7 +98,7 @@ export default memo(function OrbitNav() {
               {
                 label: isPinned ? 'Unpin' : 'Pin',
                 click() {
-                  // TODO umed type not accepting
+                  // TODO @umed type not accepting
                   save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },

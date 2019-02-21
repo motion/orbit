@@ -1,11 +1,11 @@
 import { deep } from '@mcro/black'
 import { Absolute, gloss } from '@mcro/gloss'
+import { SubPane } from '@mcro/kit'
 import { BorderRight, Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo } from 'react'
 import { AppView, AppViewRef } from '../../apps/AppView'
-import { SubPane } from '../../components/SubPane'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
@@ -105,7 +105,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
   sidebarStore: SidebarStore
   hasMain: boolean
 }) {
-  const { orbitStore } = useStores()
+  // const { orbitStore } = useStores()
   const { id, type, sidebarStore, hasMain } = props
 
   const handleAppRef = state => {

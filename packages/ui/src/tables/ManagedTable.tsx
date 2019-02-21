@@ -9,7 +9,7 @@ import { gloss } from '@mcro/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
-import { VariableSizeList as List } from 'react-window'
+import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
@@ -580,7 +580,7 @@ class ManagedTableInner extends React.Component<
             : width &&
               height && (
                 <ContextMenu buildItems={this.buildContextMenuItems}>
-                  <List
+                  <VariableSizeList
                     itemCount={sortedRows.length}
                     itemSize={index =>
                       (sortedRows[index] && sortedRows[index].height) ||
@@ -591,12 +591,12 @@ class ManagedTableInner extends React.Component<
                     width={width}
                     height={height}
                     estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
-                    overscanCount={5}
+                    overscanCount={25}
                     forwardRef={this.scrollRef}
                     onScroll={this.onScroll}
                   >
                     {this.renderRow}
-                  </List>
+                  </VariableSizeList>
                 </ContextMenu>
               )}
         </Container>

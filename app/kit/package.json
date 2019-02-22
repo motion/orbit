@@ -11,10 +11,13 @@
   "dependencies": {
     "@mcro/ui": "*",
     "@mcro/gloss": "*",
+    "@mcro/stores": "*",
     "@mcro/models": "*",
     "@mcro/use-store": "*",
     "@mcro/helpers": "*",
     "@mcro/bridge": "*",
+    "@mcro/fast-compare": "*",
+    "fuzzysort": "1.1.4",
     "compromise": "11.11.0",
     "sherlockjs": "1.4.0",
     "lodash": "*",

@@ -1,5 +1,5 @@
 import { Context, createContext } from 'react'
-import { AppsStores } from './hooks/AppsStores'
+import { AppsStores } from './stores'
 
 let hasSet = false
 

@@ -1,11 +1,9 @@
-import { ensure, react } from '@mcro/black'
 import { AppStore } from '@mcro/kit'
-import { useHook } from '@mcro/use-store'
+import { ensure, react, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { apps } from './apps'
-import { appsStatic } from './appsStatic'
+import { AppViews } from '../types'
 
-function getViewInformation(type: string, views?: AppViews) {
+function getViewInformation(_type: string, views?: AppViews) {
   if (!views) {
     return {
       hasMain: false,
@@ -22,9 +20,10 @@ function getViewInformation(type: string, views?: AppViews) {
     hasIndex = !!views.index
   } else {
     // static view we provide for alternate panes like settings/onboarding
-    const app = apps[type]
-    hasIndex = !!app['index']
-    hasMain = !!app['main']
+    console.warn('lets get rid of static views in refactor')
+    // const app = apps[type]
+    // hasIndex = !!app['index']
+    // hasMain = !!app['main']
   }
 
   return {
@@ -38,9 +37,7 @@ export class AppsStore {
 
   // deep objects for adding apps to:
   provideStores = {}
-  appViews: { [key: string]: AppViews } = {
-    ...appsStatic,
-  }
+  appViews: { [key: string]: AppViews } = {}
   appStores: { [key: string]: AppStore } = {}
 
   // accumulated, debounced state (because things mount in waterfall)
@@ -55,6 +52,20 @@ export class AppsStore {
       }
     },
   )
+
+  // !TODO load apps from appsStatic
+  setupApp = (id: string, views: AppViews, provideStores?: Object) => {
+    this.appViews = {
+      ...this.appViews,
+      [id]: { ...this.appViews[id], ...views },
+    }
+    if (provideStores) {
+      this.provideStores = {
+        ...this.provideStores,
+        [id]: provideStores,
+      }
+    }
+  }
 
   getViewState(id: string) {
     return (
@@ -91,19 +102,6 @@ export class AppsStore {
       },
     },
   )
-
-  setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    this.appViews = {
-      ...this.appViews,
-      [id]: { ...this.appViews[id], ...views },
-    }
-    if (provideStores) {
-      this.provideStores = {
-        ...this.provideStores,
-        [id]: provideStores,
-      }
-    }
-  }
 
   addSettingsView(id: string, settingsView: AppViews['settings']) {
     this.appViews[id] = { ...this.appViews[id], settings: settingsView }

@@ -1,11 +1,10 @@
-import { List } from '@mcro/kit'
+import { List, useActiveQueryFilter } from '@mcro/kit'
+import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
 import * as React from 'react'
-import { useActiveUser } from '../../hooks/useActiveUser'
-import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
 
-export default function SettingsAppIndex() {
+export function SettingsAppIndex() {
   const [user] = useActiveUser()
-  const results = useOrbitFilterableResults({
+  const results = useActiveQueryFilter({
     items: [
       {
         group: 'Settings',

@@ -1,9 +1,8 @@
-import { loadOne, save } from '../mediator'
+import { loadOne } from '@mcro/bridge'
+import { useActiveSpace, useActiveUser } from '@mcro/kit'
 import { Space, SpaceModel, User, UserModel } from '@mcro/models'
 import immer from 'immer'
 import { useEffect } from 'react'
-import { useActiveSpace } from './useActiveSpace'
-import { useActiveUser } from './useActiveUser'
 
 type SpaceConfig = User['spaceConfig'][any]
 

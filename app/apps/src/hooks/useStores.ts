@@ -1,9 +1,9 @@
 import { createUseStores, UseStoresOptions } from '@mcro/use-store'
 import { useContext } from 'react'
 import { config } from '../configureApps'
-import { AppsStores } from './AppsStores'
+import { AppsStores } from '../stores'
 
-// internal just for kit
+// internal just for apps
 
 let useStoresResolved = null
 

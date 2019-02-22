@@ -9,6 +9,7 @@
     { "path": "../../packages/gloss" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/helpers" },
+    { "path": "../../packages/fast-compare" },
     { "path": "../models" },
     { "path": "../bridge" }
   ]

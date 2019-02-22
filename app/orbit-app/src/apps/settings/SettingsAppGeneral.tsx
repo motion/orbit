@@ -1,4 +1,5 @@
 import { showConfirmDialog } from '@mcro/kit'
+import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
 import { App, Desktop } from '@mcro/stores'
 import {
   Button,
@@ -12,7 +13,6 @@ import {
 } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
-import { useActiveUser } from '../../hooks/useActiveUser'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { AppProps } from '../AppTypes'

@@ -1,4 +1,5 @@
 import { command } from '@mcro/bridge'
+import { OrbitSourceSettingProps } from '@mcro/kit'
 import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
@@ -16,9 +17,7 @@ export interface WebsiteCrawledData {
   content: string
 }
 
-type Props = {
-  source?: WebsiteSource
-}
+type Props = OrbitSourceSettingProps<WebsiteSource>
 
 class WebsiteSetupStore {
   props: Props

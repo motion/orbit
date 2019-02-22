@@ -1,12 +1,10 @@
 import { save } from '@mcro/bridge'
-import { GithubSource, GmailSource, SlackSource, SourceModel } from '@mcro/models'
+import { SourceModel } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
-type SourceWithWhiteList = GithubSource | SlackSource | GmailSource
-
-export class WhitelistManager<T extends SourceWithWhiteList> {
+export class WhitelistManager<T extends { values?: { whitelist?: string[] } }> {
   props: { source: T; getAll: () => string[] }
   values: T['values'] = { ...this.props.source.values }
 

@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
+    "declarationMap": true,
     "module": "esnext",
     "declaration": true,
     "allowJs": false

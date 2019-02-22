@@ -1,7 +1,13 @@
 import { useModel, useModelCount } from '@mcro/bridge'
-import { BitModel, JobModel, SourceModel } from '@mcro/models'
+import { BitModel, Job, JobModel, Source, SourceModel } from '@mcro/models'
 
-export function useSourceInfo(sourceId: number | false) {
+export function useSourceInfo(
+  sourceId: number | false,
+): {
+  source: Source
+  bitsCount: number
+  lastJob: Job
+} {
   const hasSourceId = sourceId !== false
   const [source] = useModel(
     SourceModel,

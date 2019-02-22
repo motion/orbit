@@ -6,9 +6,6 @@ import { PersonItem } from './PersonItem'
 export const person: GetOrbitIntegration<'person'> = (_source?: Source) => ({
   modelType: 'person-bit',
   appName: 'People',
-  defaultQuery: {
-    take: 30,
-  },
   display: {
     name: 'Directory',
     icon: 'person',

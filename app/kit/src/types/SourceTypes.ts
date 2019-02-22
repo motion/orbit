@@ -1,7 +1,6 @@
 import { Bit, PersonBit, Source } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
-import { FindOptions } from 'typeorm'
 import { AppConfig } from './AppConfig'
 import { ItemType } from './ItemType'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
@@ -43,7 +42,6 @@ export type OrbitIntegration<A extends ItemType> = {
   modelType: ModelFromType<A>['target']
   integration?: A
   appName?: string
-  defaultQuery?: FindOptions<ModelFromType<A>>
   viewConfig?: AppConfig['viewConfig']
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>

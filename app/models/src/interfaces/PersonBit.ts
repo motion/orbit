@@ -1,5 +1,5 @@
-import { IntegrationTypeValues } from './IntegrationType'
 import { Person } from './Person'
+import { SourceTypeValues } from './SourceType'
 
 export interface PersonBit {
   /**
@@ -25,7 +25,7 @@ export interface PersonBit {
   /**
    * All known person names.
    */
-  allNames?: IntegrationTypeValues
+  allNames?: SourceTypeValues
 
   /**
    * Person's profile photo.
@@ -35,40 +35,40 @@ export interface PersonBit {
   /**
    * All known person photos.
    */
-  allPhotos?: IntegrationTypeValues
+  allPhotos?: SourceTypeValues
 
   /**
-   * People from integrations.
+   * People from Sources.
    */
   people?: Person[]
 
   /**
-   * Indicates if person has integrations with Slack.
+   * Indicates if person has Sources with Slack.
    */
   hasSlack?: boolean
 
   /**
-   * Indicates if person has integrations with Github.
+   * Indicates if person has Sources with Github.
    */
   hasGithub?: boolean
 
   /**
-   * Indicates if person has integrations with Drive.
+   * Indicates if person has Sources with Drive.
    */
   hasDrive?: boolean
 
   /**
-   * Indicates if person has integrations with Jira.
+   * Indicates if person has Sources with Jira.
    */
   hasJira?: boolean
 
   /**
-   * Indicates if person has integrations with Confluence.
+   * Indicates if person has Sources with Confluence.
    */
   hasConfluence?: boolean
 
   /**
-   * Indicates if person has integrations with Gmail.
+   * Indicates if person has Sources with Gmail.
    */
   hasGmail?: boolean
 }

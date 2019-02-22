@@ -80,9 +80,9 @@ export class SearchQueryExecutor {
       conditions.push('"bit"."bitCreatedAt" < ?')
       conditionParameters.push(new Date(args.endDate).getTime())
     }
-    if (args.integrationFilters && args.integrationFilters.length) {
-      conditions.push(`"bit"."integration" IN (${args.integrationFilters.map(() => '?')}`)
-      conditionParameters.push(...args.integrationFilters)
+    if (args.sourceFilters && args.sourceFilters.length) {
+      conditions.push(`"bit"."source" IN (${args.sourceFilters.map(() => '?')}`)
+      conditionParameters.push(...args.sourceFilters)
     }
     if (args.sourceId) {
       conditions.push('"bit"."sourceId" = ?')
@@ -175,7 +175,7 @@ export class SearchQueryExecutor {
       data: string
       desktopLink: string
       id: number
-      integration: string
+      sourceType: string
       locationDesktoplink: string
       locationId: string
       locationName: string
@@ -199,7 +199,7 @@ export class SearchQueryExecutor {
         data: rawBit.data ? JSON.parse(rawBit.data) : undefined,
         desktopLink: rawBit.desktopLink,
         id: rawBit.id,
-        integration: rawBit.integration,
+        sourceType: rawBit.sourceType,
         location: {
           id: rawBit.locationId,
           name: rawBit.locationName,

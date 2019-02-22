@@ -1,18 +1,18 @@
-import { GetOrbitIntegrations, OrbitIntegrations } from '@mcro/kit'
+import { GetOrbitSources, OrbitSources } from '@mcro/kit'
 import { confluence } from './confluence/main'
 import * as CustomApp from './custom/main'
-import { drive } from './drive/drive'
-import { github } from './github/github'
-import { gmail } from './gmail/gmail'
-import { jira } from './jira/jira'
+import { drive } from './drive/main'
+import { github } from './github/main'
+import { gmail } from './gmail/main'
+import { jira } from './jira/main'
 import * as ListsApp from './lists/main'
 import * as PeopleApp from './people/main'
 import * as SearchApp from './search/main'
 // import { people } from './people/people'
-import { slack } from './slack/slack'
-import { website } from './website/website'
+import { slack } from './slack/main'
+import { website } from './website/main'
 
-export const getIntegrations: GetOrbitIntegrations = {
+export const getSources: GetOrbitSources = {
   slack,
   github,
   gmail,
@@ -25,9 +25,9 @@ export const getIntegrations: GetOrbitIntegrations = {
   pinned: () => null,
 }
 
-export const allIntegrations = {} as OrbitIntegrations
-for (const key in getIntegrations) {
-  allIntegrations[key] = getIntegrations[key]({} as any)
+export const allSources = {} as OrbitSources
+for (const key in getSources) {
+  allSources[key] = getSources[key]({} as any)
 }
 
 export const allApps = {

@@ -1,20 +1,19 @@
-import { BitEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { JiraSource } from '@mcro/models'
+import { BitEntity, JiraSource, SourceEntity } from '@mcro/models'
 import { JiraLoader, JiraUser } from '@mcro/services'
+import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
 import { JiraBitFactory } from './JiraBitFactory'
 import { JiraPersonFactory } from './JiraPersonFactory'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
-import { sleep } from '@mcro/utils'
 
 /**
  * Syncs Jira issues.
  */
-export class JiraSyncer implements IntegrationSyncer {
+export class JiraSyncer implements SourceSyncer {
   private log: Logger
   private source: JiraSource
   private loader: JiraLoader

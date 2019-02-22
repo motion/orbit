@@ -1,20 +1,20 @@
 import { Logger } from '@mcro/logger'
-import { IntegrationType, Source } from '@mcro/models'
+import { Source, SourceType } from '@mcro/models'
 
 /**
- * Interface for integration syncers.
+ * Interface for Source syncers.
  */
-export interface IntegrationSyncer {
+export interface SourceSyncer {
   /**
-   * Runs sync process of the integration.
+   * Runs sync process of the Source.
    */
   run(): Promise<void>
 }
 
 /**
- * Constructor of the integration syncer instance.
+ * Constructor of the Source syncer instance.
  */
-export type SyncerConstructor = new (setting?: Source, log?: Logger) => IntegrationSyncer
+export type SyncerConstructor = new (setting?: Source, log?: Logger) => SourceSyncer
 
 /**
  * Options to be passed to Syncer.
@@ -27,14 +27,14 @@ export interface SyncerOptions {
   name?: string
 
   /**
-   * Integration type.
+   * Source type.
    * Used to get syncer settings.
    * If type is not specified then syncer will be executed once without any setting specified.
    */
-  type?: IntegrationType
+  type?: SourceType
 
   /**
-   * Constructor of the integration syncer instance.
+   * Constructor of the Source syncer instance.
    */
   constructor: SyncerConstructor
 

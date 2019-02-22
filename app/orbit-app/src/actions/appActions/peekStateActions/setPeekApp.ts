@@ -20,7 +20,7 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   title: '',
   icon: '',
   subType: '',
-  integration: '',
+  Source: '',
 }
 
 const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {

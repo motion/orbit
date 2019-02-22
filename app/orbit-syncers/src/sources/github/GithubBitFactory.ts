@@ -1,6 +1,5 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, GithubBitData, GithubSource } from '@mcro/models'
-import { GithubIssue, GithubComment, GithubPullRequest } from '@mcro/services'
+import { Bit, BitUtils, GithubBitData, GithubSource } from '@mcro/models'
+import { GithubComment, GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 
 /**
@@ -56,7 +55,7 @@ export class GithubBitFactory {
     return BitUtils.create({
       id,
       sourceId: this.source.id,
-      integration: 'github',
+      sourceType: 'github',
       type: 'task',
       title: issue.title,
       body: issue.bodyText,

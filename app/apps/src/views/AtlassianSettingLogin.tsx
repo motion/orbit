@@ -33,7 +33,7 @@ export default function AtlassianSettingLogin(props: Props) {
   const [source] = React.useState(
     props.source ||
       ({
-        category: 'integration',
+        category: 'source',
         type: props.type,
         token: null,
       } as Source),
@@ -46,7 +46,7 @@ export default function AtlassianSettingLogin(props: Props) {
     },
   )
 
-  const addIntegration = async e => {
+  const addSource = async e => {
     e.preventDefault()
     source.values = { ...source.values, credentials }
     if (!source.spaces) {
@@ -82,7 +82,7 @@ export default function AtlassianSettingLogin(props: Props) {
   }
 
   return (
-    <Col tagName="form" onSubmit={addIntegration}>
+    <Col tagName="form" onSubmit={addSource}>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
@@ -120,7 +120,7 @@ export default function AtlassianSettingLogin(props: Props) {
           >
             {status === Statuses.LOADING && <Button>Saving...</Button>}
             {status !== Statuses.LOADING && (
-              <Button type="submit" onClick={addIntegration}>
+              <Button type="submit" onClick={addSource}>
                 Save
               </Button>
             )}

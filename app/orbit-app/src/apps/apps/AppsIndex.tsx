@@ -33,7 +33,7 @@ export default function AppsAppsIndex(_props: AppProps) {
       id: `${app.source.id}`,
       title: app.display.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
-      icon: app.integration,
+      icon: app.source,
       iconBefore: true,
       total: activeSources.length,
       appConfig: sourceToAppConfig(app),
@@ -41,9 +41,9 @@ export default function AppsAppsIndex(_props: AppProps) {
     })),
     ...allSources.map((source, index) => ({
       // ...these have their own onClick
-      id: `${source.integration}${index}`,
+      id: `${source.source}${index}`,
       title: source.name,
-      icon: source.integration,
+      icon: source.source,
       onClick:
         !source.views.setup &&
         (async e => {

@@ -1,4 +1,4 @@
-export type IntegrationType =
+export type SourceType =
   | 'slack'
   | 'gmail'
   | 'drive'
@@ -8,7 +8,7 @@ export type IntegrationType =
   | 'website'
   | 'pinned'
 
-export type IntegrationTypeValues = {
+export type SourceTypeValues = {
   slack?: string
   gmail?: string
   drive?: string

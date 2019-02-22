@@ -13,10 +13,10 @@ export function useSourceIcon(props: IconProps) {
   const allSourcesMap = sourcesStore.allSourcesMap
   let iconImg = extImg
   if (allSourcesMap[name]) {
-    const display = allSourcesMap[name].display
-    if (display) {
+    const source = allSourcesMap[name]
+    if (source) {
       const isDark = activeTheme.background.isDark && activeTheme.background.isDark()
-      iconImg = isDark ? display.iconLight || display.icon : display.icon
+      iconImg = isDark ? source.iconLight || source.icon : source.icon
     } else {
       console.log('no config for...', name)
     }

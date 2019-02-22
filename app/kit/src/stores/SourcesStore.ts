@@ -1,12 +1,12 @@
 import { observeMany } from '@mcro/bridge'
-import { IntegrationType, Source, SourceModel } from '@mcro/models'
+import { Source, SourceModel, SourceType } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
 import { config } from '../configureKit'
 import { getAppFromSource } from '../helpers/getAppConfig'
-import { OrbitIntegration } from '../types/SourceTypes'
+import { OrbitSource } from '../types/SourceTypes'
 
-type GenericApp = OrbitIntegration<any> & {
+type GenericApp = OrbitSource<any> & {
   isActive: boolean
 }
 
@@ -16,7 +16,7 @@ export class SourcesStore {
   activeSources = react(
     () => this.appSources,
     appSources => {
-      return appSources.filter(x => !!config.sources.allIntegrations[x.type]).map(getAppFromSource)
+      return appSources.filter(x => !!config.sources.allSources[x.type]).map(getAppFromSource)
     },
     {
       defaultValue: [],
@@ -24,9 +24,9 @@ export class SourcesStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get sources(): OrbitIntegration<any>[] {
-    return Object.keys(config.sources.allIntegrations)
-      .map(x => config.sources.allIntegrations[x])
+  get sources(): OrbitSource<any>[] {
+    return Object.keys(config.sources.allSources)
+      .map(x => config.sources.allSources[x])
       .filter(x => x && x.modelType === 'bit')
   }
 
@@ -38,7 +38,7 @@ export class SourcesStore {
         app =>
           ({
             ...app,
-            isActive: !!activeApps.find(x => x.integration === app.integration),
+            isActive: !!activeApps.find(x => x.source === app.source),
           } as GenericApp),
       )
     },
@@ -47,11 +47,11 @@ export class SourcesStore {
     },
   )
 
-  allSourcesMap = react(() => this.allSources, x => keyBy(x, 'integration'), {
+  allSourcesMap = react(() => this.allSources, x => keyBy(x, 'source'), {
     defaultValue: {},
   })
 
-  getView = (type: IntegrationType, viewType: 'main' | 'source' | 'item' | 'setup' | 'setting') => {
+  getView = (type: SourceType, viewType: 'main' | 'source' | 'item' | 'setup' | 'setting') => {
     if (!this.allSourcesMap[type]) {
       return null
     }

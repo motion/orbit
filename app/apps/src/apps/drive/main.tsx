@@ -1,14 +1,14 @@
-import { GetOrbitIntegration, OrbitIntegration } from '@mcro/kit'
+import { GetOrbitSource, OrbitSource } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { DriveApp } from './DriveApp'
 import { driveIcon } from './driveIcon'
 import { DriveItem } from './DriveItem'
 import { DriveSettings } from './DriveSettings'
 
-export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
+export const drive: GetOrbitSource<'drive'> = (source?: Source) => ({
   name: 'Drive',
   modelType: 'bit',
-  integration: 'drive',
+  source: 'drive',
   display: {
     name: source.name,
     itemName: 'task',
@@ -21,4 +21,4 @@ export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
   },
 })
 
-export type DriveOrbitApp = OrbitIntegration<'drive'>
+export type DriveOrbitApp = OrbitSource<'drive'>

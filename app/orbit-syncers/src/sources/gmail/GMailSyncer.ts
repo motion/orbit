@@ -1,22 +1,28 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/models'
-import { BitUtils } from '@mcro/models'
-import { GmailBitDataParticipant, GmailSource } from '@mcro/models'
+import {
+  BitEntity,
+  BitUtils,
+  GmailBitDataParticipant,
+  GmailSource,
+  PersonBitEntity,
+  PersonBitUtils,
+  PersonEntity,
+  SourceEntity,
+} from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { GMailBitFactory } from './GMailBitFactory'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GMailPersonFactory } from './GMailPersonFactory'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs GMail.
  */
-export class GMailSyncer implements IntegrationSyncer {
+export class GMailSyncer implements SourceSyncer {
   private log: Logger
   private source: GmailSource
   private loader: GMailLoader
@@ -221,7 +227,7 @@ export class GMailSyncer implements IntegrationSyncer {
     // for people without emails we create "virtual" email
     for (let person of bit.people) {
       if (!person.email) {
-        person.email = person.name + ' from ' + person.integration
+        person.email = person.name + ' from ' + person.Source
       }
     }
 

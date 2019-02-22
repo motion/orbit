@@ -1,6 +1,6 @@
-import { useModels } from '../useModel'
 import { JobModel } from '@mcro/models'
 import * as React from 'react'
+import { useModels } from '../useModel'
 import { SubTitle } from '../views/SubTitle'
 
 export const SyncStatusAll = () => {
@@ -12,5 +12,5 @@ export const SyncStatusAll = () => {
   if (!activeJobs) {
     return <SubTitle>Sync idle.</SubTitle>
   }
-  return <SubTitle>Syncing {activeJobs.length} integrations...</SubTitle>
+  return <SubTitle>Syncing {activeJobs.length} sources...</SubTitle>
 }

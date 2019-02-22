@@ -1,13 +1,12 @@
-import { PersonBitEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { GmailSourceValues } from '@mcro/models'
+import { GmailSourceValues, PersonBitEntity, SourceEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
 
 /**
  * Whitelists emails from person bits.
  */
-export class MailWhitelisterSyncer implements IntegrationSyncer {
+export class MailWhitelisterSyncer implements SourceSyncer {
   private log: Logger
 
   constructor() {
@@ -34,17 +33,17 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
     const emails = personBits.map(person => person.email).filter(email => email.indexOf('@') !== -1)
     this.log.info('emails from the person bits', emails)
 
-    // next we find all gmail integrations to add those emails to their whitelists
-    this.log.info('loading gmail integrations')
-    const integrations = await getRepository(SourceEntity).find({
+    // next we find all gmail Sources to add those emails to their whitelists
+    this.log.info('loading gmail Sources')
+    const Sources = await getRepository(SourceEntity).find({
       where: { type: 'gmail' },
     })
-    this.log.info('loaded gmail integrations', integrations)
+    this.log.info('loaded gmail Sources', Sources)
 
-    // update whitelist settings in integrations
+    // update whitelist settings in Sources
     const newWhiteListedEmails: string[] = []
-    for (let integration of integrations) {
-      const values = integration.values as GmailSourceValues
+    for (let Source of Sources) {
+      const values = Source.values as GmailSourceValues
       const foundEmails = values.foundEmails || []
       const whitelist = {}
       for (let email of emails) {
@@ -54,7 +53,7 @@ export class MailWhitelisterSyncer implements IntegrationSyncer {
         }
       }
       values.whitelist = whitelist
-      await getRepository(SourceEntity).save(integration)
+      await getRepository(SourceEntity).save(Source)
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }

@@ -8,7 +8,7 @@ import {
   SpaceIcon,
   useStoresSimple,
 } from '@mcro/kit'
-import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
+import { SearchQuery, SearchResultModel, SourceType } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -197,12 +197,12 @@ export class SearchStore {
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
 
-      const integrationFilters = [
+      const sourceFilters = [
         // these come from the text string
-        ...activeFilters.filter(x => x.type === MarkType.Integration).map(x => x.text),
+        ...activeFilters.filter(x => x.type === MarkType.Source).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
-      ] as IntegrationType[]
+      ] as SourceType[]
 
       const locationFilters = activeFilters
         .filter(x => x.type === MarkType.Location)
@@ -218,7 +218,7 @@ export class SearchStore {
           sortBy,
           startDate,
           endDate,
-          integrationFilters,
+          sourceFilters,
           peopleFilters,
           locationFilters,
           group,

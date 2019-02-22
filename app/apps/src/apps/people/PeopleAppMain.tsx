@@ -17,7 +17,7 @@ import * as React from 'react'
 const getBitTexts = (bits: Bit[]) => {
   return bits
     .map(x => {
-      if (x.integration === 'slack') {
+      if (x.sourceType === 'slack') {
         const data = x.data as SlackBitData
         return data.messages.map(m => m.text).join(' ')
       }
@@ -108,25 +108,22 @@ export function PeopleAppMain(props: AppProps) {
             <Email href={`mailto:${person.email}`}>{person.email}</Email>
             <br />
             <Links>
-              {/* <IntegrationButton
+              {/* <SourceButton
             icon="slack"
-            href={`slack://user?team=${setting.values.oauth.info.team.id}&id=${person.integrationId}`}
+            href={`slack://user?team=${setting.values.oauth.info.team.id}&id=${person.sourceId}`}
           >
             Slack
-          </IntegrationButton> */}
-              <IntegrationButton
+          </SourceButton> */}
+              <SourceButton
                 icon="zoom"
                 onClick={() => queryStore.setQuery(`${person.name} documents`)}
               >
                 Documents
-              </IntegrationButton>
+              </SourceButton>
               <HorizontalSpace />
-              <IntegrationButton
-                icon="zoom"
-                onClick={() => queryStore.setQuery(`${person.name} tasks`)}
-              >
+              <SourceButton icon="zoom" onClick={() => queryStore.setQuery(`${person.name} tasks`)}>
                 Tasks
-              </IntegrationButton>
+              </SourceButton>
             </Links>
           </Info>
         </CardContent>
@@ -304,4 +301,4 @@ const Links = gloss({
   flexFlow: 'row',
 })
 
-const IntegrationButton = props => <RoundButton {...props} />
+const SourceButton = props => <RoundButton {...props} />

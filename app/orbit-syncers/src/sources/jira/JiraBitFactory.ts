@@ -1,5 +1,4 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, JiraBitData, JiraSourceValues, Person, JiraSource } from '@mcro/models'
+import { Bit, BitUtils, JiraBitData, JiraSource, JiraSourceValues, Person } from '@mcro/models'
 import { JiraIssue } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
 
@@ -33,18 +32,18 @@ export class JiraBitFactory {
     if (issue.fields.reporter) peopleIds.push(issue.fields.reporter.accountId)
 
     const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.integrationId) !== -1
+      return peopleIds.indexOf(person.SourceId) !== -1
     })
 
     // find original content creator
     const author = allPeople.find(person => {
-      return person.integrationId === issue.fields.creator.accountId
+      return person.SourceId === issue.fields.creator.accountId
     })
 
     // create or update a bit
     return BitUtils.create(
       {
-        integration: 'jira',
+        Source: 'jira',
         sourceId: this.source.id,
         type: 'document',
         title: issue.fields.summary,

@@ -16,17 +16,17 @@ import NoResultsDialog from '../../views/NoResultsDialog'
 export function PeopleAppIndex() {
   // people and query
   const { queryStore } = useStores()
-  const { integrationFilters } = queryStore.queryFilters
+  const { sourceFilters } = queryStore.queryFilters
   const { getShareMenuItemProps } = useShareMenu()
   const activeQuery = useActiveQuery()
 
   let where = null
-  if (integrationFilters.length) {
-    for (const filter of integrationFilters) {
+  if (sourceFilters.length) {
+    for (const filter of sourceFilters) {
       if (filter.active) {
         where = where || []
         where.push({
-          [`has${capitalize(filter.integration)}`]: true,
+          [`has${capitalize(filter.source)}`]: true,
         })
       }
     }

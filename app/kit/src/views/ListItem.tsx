@@ -49,7 +49,7 @@ export const ListItem = React.memo(
 
           if (item.target === 'bit') {
             // !TODO instead of using sourcesStore directly, have configuration config.getItemView()
-            ItemView = sourcesStore.getView(normalized.integration, 'item')
+            ItemView = sourcesStore.getView(normalized.source, 'item')
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson
           }
@@ -115,7 +115,7 @@ export const getNormalPropsForListItem = (normalized: NormalItem): OrbitListItem
   location: normalized.location,
   // webLink: normalized.webLink,
   // desktopLink: normalized.desktopLink,
-  // integration: normalized.integration,
+  // source: normalized.source,
   people: normalized.people,
   date: normalized.updatedAt,
   icon: normalized.icon,

@@ -1,12 +1,12 @@
-import { getConnection, getRepository } from 'typeorm'
-import { DATABASE_PATH, COSAL_DB } from '../constants'
+import { sleep } from '@mcro/helpers'
 import { Logger } from '@mcro/logger'
-import { Desktop, Electron, App } from '@mcro/stores'
+import { Entities, SettingEntity } from '@mcro/models'
+import { App, Desktop, Electron } from '@mcro/stores'
 import { CompositeDisposable } from 'event-kit'
 import { remove } from 'fs-extra'
+import { getConnection, getRepository } from 'typeorm'
+import { COSAL_DB, DATABASE_PATH } from '../constants'
 import connectModels from '../helpers/connectModels'
-import { Entities, SettingEntity } from '@mcro/models'
-import { sleep } from '@mcro/helpers'
 
 const log = new Logger('database')
 
@@ -77,13 +77,13 @@ export class DatabaseManager {
       'CREATE INDEX IF NOT EXISTS "searchIndex1" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId");',
     )
     await getConnection().query(
-      'CREATE INDEX IF NOT EXISTS "searchIndex2" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration");',
+      'CREATE INDEX IF NOT EXISTS "searchIndex2" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "sourceType");',
     )
     await getConnection().query(
       'CREATE INDEX IF NOT EXISTS "searchIndex3" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "locationName");',
     )
     await getConnection().query(
-      'CREATE INDEX IF NOT EXISTS "searchIndex4" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "integration", "locationName");',
+      'CREATE INDEX IF NOT EXISTS "searchIndex4" ON "bit_entity" ("type", "bitCreatedAt" DESC, "sourceId", "sourceType", "locationName");',
     )
   }
 

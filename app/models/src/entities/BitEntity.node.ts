@@ -10,17 +10,17 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { BitData } from '../bit-data/BitData'
+import { Bit } from '../interfaces/Bit'
+import { BitContentType } from '../interfaces/BitContentType'
+import { Person } from '../interfaces/Person'
+import { Source } from '../interfaces/Source'
+import { SourceType } from '../interfaces/SourceType'
+import { Space } from '../interfaces/Space'
 import { LocationEntity } from './LocationEntity.node'
 import { PersonEntity } from './PersonEntity.node'
 import { SourceEntity } from './SourceEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
-import { Bit } from '../interfaces/Bit'
-import { IntegrationType } from '../interfaces/IntegrationType'
-import { BitContentType } from '../interfaces/BitContentType'
-import { BitData } from '../bit-data/BitData'
-import { Person } from '../interfaces/Person'
-import { Source } from '../interfaces/Source'
-import { Space } from '../interfaces/Space'
 
 @Entity()
 @Index('searchIndex1', { synchronize: false })
@@ -38,7 +38,7 @@ export class BitEntity extends BaseEntity implements Bit {
   contentHash?: number
 
   @Column({ type: String })
-  integration?: IntegrationType
+  sourceType?: SourceType
 
   /**
    * Source id can be null only for pinned urls.

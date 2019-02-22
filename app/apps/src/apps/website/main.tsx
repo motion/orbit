@@ -1,13 +1,13 @@
-import { GetOrbitIntegration } from '@mcro/kit'
+import { GetOrbitSource } from '@mcro/kit'
 import { Source } from '@mcro/models'
 import { WebsiteApp } from './WebsiteApp'
 import { WebsiteItem } from './WebsiteItem'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
-export const website: GetOrbitIntegration<'website'> = (source?: Source) => ({
+export const website: GetOrbitSource<'website'> = (source?: Source) => ({
   name: 'Website',
   modelType: 'bit',
-  integration: 'website',
+  source: 'website',
   display: {
     name: source.name,
     itemName: 'task',

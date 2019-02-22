@@ -1,7 +1,7 @@
-import { IntegrationType } from './IntegrationType'
 import { PersonData } from '../person-data/PersonData'
 import { PersonBit } from './PersonBit'
 import { Source } from './Source'
+import { SourceType } from './SourceType'
 
 export interface Person {
   /**
@@ -11,15 +11,15 @@ export interface Person {
 
   id?: number
   contentHash?: number
-  integration?: IntegrationType
-  integrationId?: string
+  userId?: string
+  sourceType?: SourceType
+  sourceId?: number
   createdAt?: Date
   updatedAt?: Date
   email?: string
   photo?: string
   name?: string
   source?: Source
-  sourceId?: number
   data?: PersonData
   personBit?: PersonBit
   webLink?: string

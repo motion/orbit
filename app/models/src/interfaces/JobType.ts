@@ -1,3 +1,1 @@
-export type JobType =
-  | 'INTEGRATION_SYNC'
-  | 'INTEGRATION_REMOVE'
+export type JobType = 'SOURCE_SYNC' | 'SOURCE_REMOVE'

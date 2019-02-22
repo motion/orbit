@@ -18,7 +18,7 @@ export function SourcesAppMain(props: AppProps) {
   }
 
   if (props.appConfig.viewType === 'setup') {
-    const type = props.appConfig.integration
+    const type = props.appConfig.source
     const View = sourcesStore.getView(type, 'setup')
     console.log('getting view', type, View)
     return <View {...props} />
@@ -41,7 +41,7 @@ function SourceMain(props: AppProps) {
     return null
   }
 
-  const type = props.appConfig.integration
+  const type = props.appConfig.source
   const View = sourcesStore.getView(type, 'setting')
 
   if (!View) {

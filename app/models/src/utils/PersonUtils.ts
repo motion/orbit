@@ -12,8 +12,8 @@ export class PersonUtils {
     const person: Person = { target: 'person', ...properties }
     person.contentHash = this.contentHash(person)
     if (!person.sourceId && person.source) person.sourceId = person.source.id
-    if (person.integration && person.sourceId && person.email)
-      person.id = hash(`${person.integration}-${person.sourceId}-${person.email}`)
+    if (person.userId && person.sourceId && person.email)
+      person.id = hash(`${person.userId}-${person.sourceId}-${person.email}`)
     return person
   }
 
@@ -24,8 +24,8 @@ export class PersonUtils {
     return hash(
       [
         person.id,
-        person.integration,
-        person.integrationId,
+        person.sourceType,
+        person.userId,
         person.source ? person.source.id : person.sourceId,
         person.email,
         person.photo,

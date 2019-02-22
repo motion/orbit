@@ -1,4 +1,4 @@
-import { IntegrationType } from '@mcro/models'
+import { SourceType } from '@mcro/models'
 import { AppType } from './AppType'
 
 export type AppConfig = {
@@ -9,7 +9,7 @@ export type AppConfig = {
   data?: any
   icon?: string
   iconLight?: string
-  integration?: IntegrationType
+  source?: SourceType
   subType?: string
   viewType?: 'main' | 'index' | 'setup'
   // allow various things to be passed as config

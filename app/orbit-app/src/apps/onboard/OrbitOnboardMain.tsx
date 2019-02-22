@@ -1,7 +1,7 @@
 import { sleep } from '@mcro/black'
 import { command } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
-import { ItemType, OrbitIntegration } from '@mcro/kit'
+import { ItemType, OrbitSource } from '@mcro/kit'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -71,27 +71,26 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: OrbitIntegration<ItemType>) =>
-  !!app.integration && app.integration !== 'website'
+const filterApps = (app: OrbitSource<ItemType>) => !!app.source && app.sourceType !== 'website'
 
 export default function OrbitOnboardMain() {
   const stores = useStores()
   const store = useStore(OnboardStore)
 
-  // for smart finding integrations...
-  // const { foundIntegrations } = Desktop.state.onboardState
-  // if (!foundIntegrations) {
-  //   console.log('no found integrations...')
+  // for smart finding sources...
+  // const { foundSources } = Desktop.state.onboardState
+  // if (!foundSources) {
+  //   console.log('no found sources...')
   //   return null
   // }
-  // const { atlassian, ...rest } = foundIntegrations
-  // let finalIntegrations = Object.keys(rest)
+  // const { atlassian, ...rest } = foundSources
+  // let finalSources = Object.keys(rest)
   // if (atlassian) {
-  //   finalIntegrations = ['jira', 'confluence', ...finalIntegrations]
+  //   finalSources = ['jira', 'confluence', ...finalSources]
   // }
   const allAppsSorted = stores.sourcesStore.allSources
     .filter(filterApps)
-    .sort((a, b) => a.integration.localeCompare(b.integration))
+    .sort((a, b) => a.source.localeCompare(b.source))
 
   return (
     <>
@@ -181,9 +180,9 @@ export default function OrbitOnboardMain() {
             {allAppsSorted.map(item => {
               return (
                 <SimpleItem
-                  key={item.integration}
+                  key={item.source}
                   title={item.name}
-                  icon={item.integration}
+                  icon={item.source}
                   inactive={item.isActive}
                   onClick={item.isActive ? null : addSourceClickHandler(item)}
                   after={

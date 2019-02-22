@@ -1,10 +1,10 @@
-import { Source } from '@mcro/models'
-import { config } from '../configureKit'
-import { AppConfig } from '../types/AppConfig'
-import { AppType } from '../types/AppType'
-import { ResolvableModel } from '../types/ResolvableModel'
-import { OrbitIntegration } from '../types/SourceTypes'
-import { OrbitListItemProps } from '../views/ListItem'
+import { Source } from '@mcro/models';
+import { config } from '../configureKit';
+import { AppConfig } from '../types/AppConfig';
+import { AppType } from '../types/AppType';
+import { ResolvableModel } from '../types/ResolvableModel';
+import { OrbitSource } from '../types/SourceTypes';
+import { OrbitListItemProps } from '../views/ListItem';
 
 export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
   const { item } = props
@@ -12,7 +12,7 @@ export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig 
   if (item) {
     switch (item.target) {
       case 'bit':
-        type = item.integration
+        type = item.source
         break
       case 'person-bit':
         type = 'person'
@@ -40,16 +40,13 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   }
 }
 
-export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
-  return {
-    ...config.sources.getIntegrations[source.type](source),
-    source,
-  }
+export const getAppFromSource = (source: Source): OrbitSource<any> => {
+  return config.sources.getSources[source.type](source)
 }
 
 export function getSourceAppConfig({ item }: OrbitListItemProps): AppConfig {
   if (item && item.type) {
-    const app = config.sources.allIntegrations[item.type]
+    const app = config.sources.allSources[item.type]
     return sourceToAppConfig(app, item)
   }
 }
@@ -65,7 +62,7 @@ const modelTargetToAppType = (model: ResolvableModel): AppType => {
 }
 
 export const sourceToAppConfig = (
-  app: OrbitIntegration<any>,
+  app: OrbitSource<any>,
   model?: ResolvableModel,
 ): AppConfig => {
   if (!app) {
@@ -73,11 +70,11 @@ export const sourceToAppConfig = (
   }
   return {
     id: `${(model && model.id) || (app.source && app.source.id) || Math.random()}`,
-    icon: app.display.icon,
-    iconLight: app.display.iconLight,
-    title: app.display.name,
+    icon: app.icon,
+    iconLight: app.iconLight,
+    title: app.name,
     type: model ? modelTargetToAppType(model) : AppType.sources,
-    integration: app.integration,
+    source: app.source,
     viewConfig: app.viewConfig,
   }
 }

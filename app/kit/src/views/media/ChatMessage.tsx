@@ -35,7 +35,7 @@ export function ChatMessage(rawProps: SlackMessageProps) {
   if (!message.text || !item) {
     return null
   }
-  const person = (item.people || []).find(person => person.integrationId === message.user)
+  const person = (item.people || []).find(person => person.userId === message.user)
   let previousBySameAuthor = false
   let previousWithinOneMinute = false
   if (previousMessage) {

@@ -21,7 +21,7 @@ export const SourceForceCancelResolver: any = resolveCommand(
     log.info('canceling', sourceId)
     const lastJob = await getRepository(JobEntity).findOne({
       where: {
-        type: 'INTEGRATION_SYNC',
+        type: 'SOURCE_SYNC',
         status: 'PROCESSING',
         sourceId: sourceId,
       },

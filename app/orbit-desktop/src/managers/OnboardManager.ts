@@ -22,7 +22,7 @@ const tmpDbPath = Path.join('/tmp', `db-${Math.random()}`.replace('.', ''))
 
 const log = new Logger('OnboardManager')
 
-const integrationPatterns = [
+const sourcePatterns = [
   { name: 'atlassian', patterns: ['%atlassian.net%'] },
   { name: 'github', patterns: ['%github.com%'] },
   { name: 'gmail', patterns: ['%gmail.com%', '%mail.google.com/mail%'] },
@@ -33,7 +33,7 @@ const integrationPatterns = [
 export class OnboardManager {
   generalSetting: SettingEntity
   history = []
-  foundIntegrations = null
+  foundSources = null
 
   async start() {
     log.info('start()')
@@ -62,31 +62,31 @@ export class OnboardManager {
   }
 
   async scanChrome(dbPath: string) {
-    console.log('Scanning chrome db for integration sites...')
+    console.log('Scanning chrome db for source sites...')
     // first copy it so it's not getting locked by active chrome
     // @ts-ignore it has wrong types
     await Fs.copyFile(dbPath, tmpDbPath)
 
     const db = await sqlite.open(tmpDbPath)
-    const foundIntegrations = {}
+    const foundSources = {}
 
-    for (const { name, patterns } of integrationPatterns) {
+    for (const { name, patterns } of sourcePatterns) {
       for (const pattern of patterns) {
         const found = await this.getTopUrlsLike(db, pattern)
         if (found) {
-          foundIntegrations[name] = foundIntegrations[name] || []
-          foundIntegrations[name].push(found)
+          foundSources[name] = foundSources[name] || []
+          foundSources[name].push(found)
         }
       }
     }
 
     await Fs.remove(tmpDbPath)
 
-    this.foundIntegrations = foundIntegrations
+    this.foundSources = foundSources
 
     Desktop.setState({
       onboardState: {
-        foundIntegrations,
+        foundSources,
       },
     })
   }

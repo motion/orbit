@@ -17,11 +17,11 @@ const handleRefresh = async (sourceId: number) => {
   })
 }
 
-const removeIntegration = async (source: Source) => {
+const removeSource = async (source: Source) => {
   if (
     showConfirmDialog({
-      title: 'Remove integration?',
-      message: `Are you sure you want to remove ${getAppFromSource(source).display.name}?`,
+      title: 'Remove source?',
+      message: `Are you sure you want to remove ${getAppFromSource(source).name}?`,
     })
   ) {
     command(SourceRemoveCommand, {
@@ -81,7 +81,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
         <TitleBarButton
           icon="boldremove"
           tooltip={`Remove ${props.source.name}`}
-          onClick={() => removeIntegration(props.source)}
+          onClick={() => removeSource(props.source)}
         />
       </SegmentedRow>
     </Row>

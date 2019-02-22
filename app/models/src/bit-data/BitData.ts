@@ -1,13 +1,13 @@
+import { Bit } from '../interfaces/Bit'
+import { SourceType } from '../interfaces/SourceType'
 import { ConfluenceBitData } from './ConfluenceBitData'
-import { PinnedBitData } from './PinnedBitData'
-import { WebsiteBitData } from './WebsiteBitData'
 import { DriveBitData } from './DriveBitData'
 import { GithubBitData } from './GithubBitData'
 import { GmailBitData } from './GmailBitData'
 import { JiraBitData } from './JiraBitData'
+import { PinnedBitData } from './PinnedBitData'
 import { SlackBitData } from './SlackBitData'
-import { IntegrationType } from '../interfaces/IntegrationType'
-import { Bit } from '../interfaces/Bit'
+import { WebsiteBitData } from './WebsiteBitData'
 
 /**
  * What Bit.data property can be.
@@ -33,7 +33,7 @@ export type AllBitData = {
   pinned: PinnedBitData
 }
 
-export type GenericBit<A extends IntegrationType> = Bit & {
+export type GenericBit<A extends SourceType> = Bit & {
   type: A
   data: AllBitData[A]
 }

@@ -23,8 +23,8 @@ export const useJobs = (
       removeJobs: [],
     }
   }
-  const activeJobs = jobs.filter(job => job.type === 'INTEGRATION_SYNC')
-  const removeJobs = jobs.filter(job => job.type === 'INTEGRATION_REMOVE')
+  const activeJobs = jobs.filter(job => job.type === 'SOURCE_SYNC')
+  const removeJobs = jobs.filter(job => job.type === 'SOURCE_REMOVE')
   return {
     activeJobs,
     removeJobs,

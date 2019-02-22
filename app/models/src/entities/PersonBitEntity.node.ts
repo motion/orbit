@@ -1,8 +1,8 @@
 import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm'
-import { PersonEntity } from './PersonEntity.node'
-import { IntegrationTypeValues } from '../interfaces/IntegrationType'
 import { Person } from '../interfaces/Person'
 import { PersonBit } from '../interfaces/PersonBit'
+import { SourceTypeValues } from '../interfaces/SourceType'
+import { PersonEntity } from './PersonEntity.node'
 
 @Entity()
 export class PersonBitEntity extends BaseEntity implements PersonBit {
@@ -20,14 +20,14 @@ export class PersonBitEntity extends BaseEntity implements PersonBit {
 
   @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allNames?: IntegrationTypeValues
+  allNames?: SourceTypeValues
 
   @Column({ nullable: true })
   photo?: string
 
   @Column({ type: 'simple-json', default: '{}' })
   @Index()
-  allPhotos?: IntegrationTypeValues
+  allPhotos?: SourceTypeValues
 
   @Column({ default: false })
   hasSlack?: boolean

@@ -1,15 +1,13 @@
-import { IntegrationType } from '@mcro/models'
 import { always, decorate, ensure, react } from '@mcro/use-store'
 import { memoize, uniqBy } from 'lodash'
 import { MarkType } from '../types/NLPTypes'
-import { OrbitIntegration } from '../types/SourceTypes'
 import { NLPStore } from './NLPStore/NLPStore'
 import { QueryStore } from './QueryStore'
 
 export type SearchFilter = {
   id: number
   type: string
-  integration: IntegrationType
+  source: string
   name: string
   active: boolean
 }
@@ -31,6 +29,8 @@ const suggestedDates: Filter[] = [
   { text: 'Last Month', type: MarkType.Date },
 ]
 
+type SourceDesc = { name: string; type: string }
+
 @decorate
 export class QueryFilterStore {
   queryStore: QueryStore
@@ -43,7 +43,7 @@ export class QueryFilterStore {
   // search by
   searchOptions = ['Bit', 'Topic'] as ('Topic' | 'Bit')[]
   searchBy = this.searchOptions[0]
-  activeSources: OrbitIntegration<any>[] = []
+  activeSources: SourceDesc[] = []
 
   dateState: DateSelections = {
     startDate: null,
@@ -55,7 +55,7 @@ export class QueryFilterStore {
     this.queryStore = queryStore
   }
 
-  setSources(sources: OrbitIntegration<any>[]) {
+  setSources(sources: SourceDesc[]) {
     this.activeSources = sources
   }
 
@@ -69,7 +69,7 @@ export class QueryFilterStore {
   }
 
   // this contains the segments we found via nlp in order of search
-  // like [{ text: 'hey' }, { text: 'world', type: 'integration }]
+  // like [{ text: 'hey' }, { text: 'world', type: 'source }]
   get parsedQuery() {
     return this.nlpStore.nlp.parsedQuery || []
   }
@@ -131,20 +131,18 @@ export class QueryFilterStore {
     return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3].toLowerCase()])
   }
 
-  get hasIntegrationFilters() {
-    return this.integrationFilters.some(x => x.active)
+  get hasSourceFilters() {
+    return this.sourceFilters.some(x => x.active)
   }
 
-  get integrationFilters(): SearchFilter[] {
+  get sourceFilters(): SearchFilter[] {
     // !TODO
     return this.activeSources.map((app, id) => ({
       id,
       type: 'source',
-      integration: app.integration,
-      name: app.display.name,
-      active: Object.keys(this.exclusiveFilters).length
-        ? this.exclusiveFilters[app.integration]
-        : false,
+      source: app.type,
+      name: app.name,
+      active: Object.keys(this.exclusiveFilters).length ? this.exclusiveFilters[app.type] : false,
     }))
   }
 
@@ -191,17 +189,17 @@ export class QueryFilterStore {
     },
   )
 
-  resetIntegrationFiltersOnNLPChange = react(
+  resetSourceFiltersOnNLPChange = react(
     () => always(this.nlpStore.nlp),
     () => {
       const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)
-      // reset integration inactive filters
-      ensure('integrations', nlp.integrations && !!nlp.integrations.length)
+      // reset source inactive filters
+      ensure('sources', nlp.sources && !!nlp.sources.length)
       // !TODO
       this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
         // !TODO
-        acc[app.integration] = nlp.integrations.some(x => x === app.integration)
+        acc[app.source] = nlp.sources.some(x => x === app.source)
         return acc
       }, {})
     },
@@ -249,14 +247,14 @@ export class QueryFilterStore {
     this.sortBy = this.sortOptions[(cur + 1) % this.sortOptions.length]
   }
 
-  integrationFilterToggler = memoize((filter: SearchFilter) => {
-    return () => this.toggleIntegrationFilter(filter)
+  sourceFilterToggler = memoize((filter: SearchFilter) => {
+    return () => this.toggleSourceFilter(filter)
   })
 
-  toggleIntegrationFilter = (filter: SearchFilter) => {
+  toggleSourceFilter = (filter: SearchFilter) => {
     this.exclusiveFilters = {
       ...this.exclusiveFilters,
-      [filter.integration]: !this.exclusiveFilters[filter.integration],
+      [filter.source]: !this.exclusiveFilters[filter.source],
     }
   }
 

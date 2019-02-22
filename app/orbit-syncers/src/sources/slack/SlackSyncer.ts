@@ -1,19 +1,19 @@
-import { SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
+import { SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
 import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
 import { SlackBitFactory } from './SlackBitFactory'
 import { SlackPersonFactory } from './SlackPersonFactory'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs Slack messages.
  */
-export class SlackSyncer implements IntegrationSyncer {
+export class SlackSyncer implements SourceSyncer {
   private log: Logger
   private source: SlackSource
   private loader: SlackLoader
@@ -106,7 +106,7 @@ export class SlackSyncer implements IntegrationSyncer {
       // BUT we also need to support edit and remove last x messages
       // (since we can't have up-to-date edit and remove of all messages)
       const oldestMessageId = lastMessageSync[channel.id]
-        ? String(parseInt(lastMessageSync[channel.id]) + 1/* - 60 * 60 * 24*/)
+        ? String(parseInt(lastMessageSync[channel.id]) + 1 /* - 60 * 60 * 24*/)
         : undefined
 
       // we need to load all bits in the data range period we are working with (oldestMessageId)
@@ -146,14 +146,7 @@ export class SlackSyncer implements IntegrationSyncer {
 
           for (let attachment of message.attachments) {
             if (attachment.title && attachment.text && attachment.original_url) {
-              apiBits.push(
-                this.bitFactory.createWebsite(
-                  channel,
-                  message,
-                  attachment,
-                  allDbPeople,
-                ),
-              )
+              apiBits.push(this.bitFactory.createWebsite(channel, message, attachment, allDbPeople))
             }
           }
         }

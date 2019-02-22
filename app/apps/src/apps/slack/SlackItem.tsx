@@ -38,7 +38,7 @@ export function SlackItem(rawProps: OrbitItemViewProps<'slack'>) {
   return messages.map((message, index) => {
     for (let person of people || []) {
       message.text = message.text.replace(
-        new RegExp(`<@${person.integrationId}>`, 'g'),
+        new RegExp(`<@${person.sourceId}>`, 'g'),
         '@' + person.name,
       )
     }

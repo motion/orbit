@@ -1,10 +1,8 @@
-import { PersonBitEntity, PersonEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/models'
-import { Person, PersonBit } from '@mcro/models'
+import { Person, PersonBit, PersonBitEntity, PersonBitUtils, PersonEntity } from '@mcro/models'
+import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
 import { getManager } from 'typeorm'
-import { hash } from '@mcro/utils'
 
 /**
  * Sync Person options.
@@ -40,7 +38,7 @@ export class PersonSyncer {
     // for people without emails we create "virtual" email
     for (let person of apiPeople) {
       if (!person.email) {
-        person.email = person.name + ' from ' + person.integration
+        person.email = person.name + ' from ' + person.Source
       }
     }
 
@@ -123,7 +121,7 @@ export class PersonSyncer {
       return
     }
 
-    // there is one problematic use case - if user removes integration during synchronization
+    // there is one problematic use case - if user removes Source during synchronization
     // we should not sync anything (shouldn't write any new person or bit into the database)
     // that's why we check if we have job for this particular setting registered
     // and we do it twice - before saving anything to prevent further operations

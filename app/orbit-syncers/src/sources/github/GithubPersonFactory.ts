@@ -1,5 +1,4 @@
-import { PersonUtils } from '@mcro/models'
-import { GithubPersonData, Person, GithubSource } from '@mcro/models'
+import { GithubPersonData, GithubSource, Person, PersonUtils } from '@mcro/models'
 import { GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
@@ -15,7 +14,7 @@ export class GithubPersonFactory {
   }
 
   /**
-   * Finds all participated people in a github issue and creates integration
+   * Finds all participated people in a github issue and creates source
    * people from them.
    */
   createFromIssue(issue: GithubIssue): Person[] {
@@ -26,7 +25,7 @@ export class GithubPersonFactory {
   }
 
   /**
-   * Finds all participated people in a github pull request and creates integration
+   * Finds all participated people in a github pull request and creates source
    * people from them.
    */
   createFromPullRequest(pr: GithubPullRequest): Person[] {
@@ -54,7 +53,7 @@ export class GithubPersonFactory {
   }
 
   /**
-   * Creates a single integration person from given Github user.
+   * Creates a single source person from given Github user.
    */
   createFromGithubUser(githubPerson: GithubPerson): Person {
     const id = hash(`github-${this.source.id}-${githubPerson.id}`)
@@ -63,8 +62,8 @@ export class GithubPersonFactory {
     return PersonUtils.create({
       id,
       source: this.source,
-      integrationId: githubPerson.id,
-      integration: 'github',
+      sourceId: githubPerson.id,
+      source: 'github',
       name: githubPerson.login,
       webLink: `https://github.com/${githubPerson.login}`,
       email: githubPerson.email,
@@ -74,7 +73,7 @@ export class GithubPersonFactory {
   }
 
   /**
-   * Creates a single integration person from a commit.
+   * Creates a single source person from a commit.
    */
   createFromCommit(commit: GithubCommit): Person {
     const id = hash(`github-${this.source.id}-commit-user-${commit.email}`)
@@ -83,8 +82,8 @@ export class GithubPersonFactory {
     return PersonUtils.create({
       id,
       source: this.source,
-      integrationId: undefined,
-      integration: 'github',
+      sourceId: undefined,
+      source: 'github',
       name: commit.name,
       webLink: undefined,
       email: commit.email,

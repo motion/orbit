@@ -17,7 +17,7 @@ const prefixes = {
   co: 'confluence',
 }
 
-const integrationFilters = {
+const sourceFilters = {
   slack: 'slack',
   gmail: 'gmail',
   drive: 'drive',
@@ -115,12 +115,12 @@ export function parseSearchQuery(query: string): NLPResponse {
     .map(word => word.normal)
   const nouns = filterNouns(nlp.nouns().out('frequency')).map(word => word.normal)
   const words = query.toLowerCase().split(' ')
-  const integrations = []
+  const sources = []
 
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
   if (prefix) {
-    const mark: Mark = [0, words[0].length, MarkType.Integration, words[0]]
+    const mark: Mark = [0, words[0].length, MarkType.Source, words[0]]
     marks.push(mark)
   }
 
@@ -140,9 +140,9 @@ export function parseSearchQuery(query: string): NLPResponse {
       highlightIfClear(word, MarkType.Type)
       continue
     }
-    if (integrationFilters[word]) {
-      integrations.push(word)
-      highlightIfClear(word, MarkType.Integration)
+    if (sourceFilters[word]) {
+      sources.push(word)
+      highlightIfClear(word, MarkType.Source)
       continue
     }
     // location filter segment
@@ -259,7 +259,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     date,
     marks,
     people,
-    integrations,
+    sources,
     startDate: date.startDate || null,
     endDate: date.endDate || null,
   }

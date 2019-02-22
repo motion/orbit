@@ -1,9 +1,9 @@
-import { Job, JobEntity, Source, SourceEntity, SourceModel } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
+import { Job, JobEntity, Source, SourceEntity, SourceModel } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SyncerOptions } from './IntegrationSyncer'
 import { Mediator } from '../mediator'
+import { SyncerOptions } from './SourceSyncer'
 import Timer = NodeJS.Timer
 
 /**
@@ -16,7 +16,7 @@ interface SyncerInterval {
 }
 
 /**
- * Runs given integration syncer.
+ * Runs given source syncer.
  * Sync is interval-based, it sync data each x period of times.
  *
  * Some of the syncer requirements:
@@ -140,7 +140,7 @@ export class Syncer {
     if (force === false) {
       const lastJob = await getRepository(JobEntity).findOne({
         where: {
-          type: 'INTEGRATION_SYNC',
+          type: 'SOURCE_SYNC',
           syncer: this.name,
           sourceId: source ? source.id : undefined,
         },
@@ -238,7 +238,7 @@ export class Syncer {
       syncer: this.name,
       source,
       time: new Date().getTime(),
-      type: 'INTEGRATION_SYNC',
+      type: 'SOURCE_SYNC',
       status: 'PROCESSING',
       message: '',
     }

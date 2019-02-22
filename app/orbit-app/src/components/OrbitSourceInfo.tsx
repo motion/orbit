@@ -1,11 +1,11 @@
-import { OrbitIntegration, useJobs, useSourceInfo } from '@mcro/kit'
+import { OrbitSource, useJobs, useSourceInfo } from '@mcro/kit'
 import { HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import * as React from 'react'
 
 type Props = {
   sourceId: number
-  app?: OrbitIntegration<any>
+  app?: OrbitSource<any>
 }
 
 /**
@@ -32,8 +32,8 @@ export const OrbitSourceInfo = (props: Props) => {
     <Row alignItems="center" flex={1}>
       <View flex={1} justifyContent="center">
         <Text size={0.9} alpha={0.5} ellipse>
-          {props.app.appName}&nbsp;·&nbsp;
-          {countSubtitle}&nbsp;{pluralize(props.app.display.itemName || 'item', countSubtitle)}
+          {props.app.name}&nbsp;·&nbsp;
+          {countSubtitle}&nbsp;{pluralize(props.app.itemName || 'item', countSubtitle)}
         </Text>
       </View>
       <HorizontalSpace />

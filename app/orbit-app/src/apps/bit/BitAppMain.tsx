@@ -24,7 +24,7 @@ export default function BitAppMain(props: AppProps) {
   if (!bit) {
     return null
   }
-  const View = sourcesStore.getView(bit.integration, 'main')
+  const View = sourcesStore.getView(bit.sourceType, 'main')
   const normalizedItem = normalizeItem(bit)
   return (
     <ItemPropsProvider value={defaultItemProps}>

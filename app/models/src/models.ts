@@ -3,13 +3,13 @@ import { FindOptions, FindOptionsWhere } from 'typeorm'
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
-import { IntegrationType } from './interfaces/IntegrationType'
 import { Job } from './interfaces/Job'
 import { Person } from './interfaces/Person'
 import { PersonBit } from './interfaces/PersonBit'
 import { SearchResult } from './interfaces/Search'
 import { Setting } from './interfaces/Setting'
 import { Source } from './interfaces/Source'
+import { SourceType } from './interfaces/SourceType'
 import { Space } from './interfaces/Space'
 import { User } from './interfaces/User'
 
@@ -55,7 +55,7 @@ export type SearchQuery = {
   searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
-  integrationFilters?: IntegrationType[]
+  sourceFilters?: SourceType[]
   peopleFilters?: string[]
   locationFilters?: string[]
   take: number
@@ -74,7 +74,7 @@ export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchRes
 export type GroupResult = {
   title: string
   locations: string[]
-  integrations: string[]
+  Sources: string[]
   topics: string[]
   count: number
   people: { id: number; icon: string; name: string }

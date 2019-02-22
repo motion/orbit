@@ -37,7 +37,7 @@ class WebsiteSetupStore {
       }
       // create a new empty source
       return {
-        category: 'integration',
+        category: 'source',
         type: 'website',
         token: null,
       } as Source
@@ -48,13 +48,13 @@ class WebsiteSetupStore {
 export default function WebsiteSetupPane(props: Props) {
   const store = useStore(WebsiteSetupStore, props)
 
-  const addIntegration = React.useCallback(
+  const addSource = React.useCallback(
     async e => {
       e.preventDefault()
       const { source, values } = store
       source.values = { ...source.values, ...values }
       source.name = values.url
-      console.log(`adding integration!`, source)
+      console.log(`adding source!`, source)
       const result = await command(SourceSaveCommand, {
         source,
       })
@@ -83,7 +83,7 @@ export default function WebsiteSetupPane(props: Props) {
   )
 
   return (
-    <UI.Col tagName="form" onSubmit={addIntegration} padding={20}>
+    <UI.Col tagName="form" onSubmit={addSource} padding={20}>
       <Message>Enter website URL</Message>
       <VerticalSpace />
       <UI.Col margin="auto" width={370}>
@@ -98,7 +98,7 @@ export default function WebsiteSetupPane(props: Props) {
           </Table>
           <VerticalSpace />
           <UI.Theme>
-            <UI.Button type="submit" onClick={addIntegration}>
+            <UI.Button type="submit" onClick={addSource}>
               Save
             </UI.Button>
           </UI.Theme>

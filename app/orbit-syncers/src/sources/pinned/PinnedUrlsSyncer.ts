@@ -1,7 +1,7 @@
-import { Bit, BitEntity, SettingEntity, WebsiteBitData } from '@mcro/models'
 import { Logger } from '@mcro/logger'
+import { Bit, BitEntity, SettingEntity, WebsiteBitData } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { PinnedBitFactory } from './PinnedBitFactory'
@@ -9,7 +9,7 @@ import { PinnedBitFactory } from './PinnedBitFactory'
 /**
  * Crawls pinned websites.
  */
-export class PinnedUrlsSyncer implements IntegrationSyncer {
+export class PinnedUrlsSyncer implements SourceSyncer {
   private log: Logger
   private crawler: WebsiteCrawler
   private bitFactory: PinnedBitFactory
@@ -36,7 +36,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
     // load not crawled website bits
     const websiteBits = await getRepository(BitEntity).find({
       type: 'website',
-      crawled: false
+      crawled: false,
     })
 
     // check if we have any pinned url or not crawled website bits
@@ -69,7 +69,7 @@ export class PinnedUrlsSyncer implements IntegrationSyncer {
 
       // sync bits
       const dbBits = await getRepository(BitEntity).find({
-        integration: 'pinned',
+        Source: 'pinned',
       })
       await this.bitSyncer.sync({ apiBits, dbBits })
     }

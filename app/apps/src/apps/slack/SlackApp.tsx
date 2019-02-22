@@ -43,7 +43,7 @@ export default React.memo(function SlackApp(props: Props) {
 
   const [nextConvos] = useModels(BitModel, {
     where: {
-      integration: item.integration,
+      source: item.source,
       type: item.type,
       location: {
         name: item.location.name,
@@ -61,7 +61,7 @@ export default React.memo(function SlackApp(props: Props) {
 
   const [prevConvos] = useModels(BitModel, {
     where: {
-      integration: item.integration,
+      source: item.source,
       type: item.type,
       location: {
         name: item.location.name,

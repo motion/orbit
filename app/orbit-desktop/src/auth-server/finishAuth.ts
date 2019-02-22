@@ -1,22 +1,22 @@
 import {
   DriveSource,
   GmailSource,
-  IntegrationType,
   SlackSource,
   SlackSourceValues,
   Source,
   SourceEntity,
+  SourceType,
   SpaceEntity,
 } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
 
-export const finishAuth = (type: IntegrationType, values: OauthValues) => {
+export const finishAuth = (type: SourceType, values: OauthValues) => {
   createSource(type, values)
 }
 
-const createSource = async (type: IntegrationType, values: OauthValues) => {
+const createSource = async (type: SourceType, values: OauthValues) => {
   console.log('createSource', values)
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
@@ -30,7 +30,7 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
   const source: Source = {
     spaces: [await getRepository(SpaceEntity).findOne(1)], // todo: we need to receive space id instead of hard codding it
     target: 'source',
-    category: 'integration',
+    category: 'Source',
     identifier: type + (await getRepository(SourceEntity).count()), // adding count temporary to prevent unique constraint error
     type: type as any,
     token: values.token,
@@ -69,10 +69,9 @@ const createSource = async (type: IntegrationType, values: OauthValues) => {
   // check if we already have a source with the same name and type - then just ignore it
   const sourceWithSameName = await getRepository(SourceEntity).findOne({
     name: source.name,
-    type: source.type
+    type: source.type,
   })
   if (!sourceWithSameName) {
     await getRepository(SourceEntity).save(source)
   }
-
 }

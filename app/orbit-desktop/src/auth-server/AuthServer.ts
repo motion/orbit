@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { IntegrationType } from '@mcro/models'
+import { SourceType } from '@mcro/models'
 import { App, Desktop } from '@mcro/stores'
 import bodyParser from 'body-parser'
 import express from 'express'
@@ -19,7 +19,7 @@ const Config = getGlobalConfig()
 const log = new Logger('auth-server')
 
 /**
- * Runs https server that responses to oauth returned by integrations.
+ * Runs https server that responses to oauth returned by Sources.
  */
 export class AuthServer {
   private server: Server
@@ -154,7 +154,7 @@ export class AuthServer {
         Passport.authenticate(name, options, null),
         (req, res) => {
           const values: OauthValues = req.user || req['currentUser']
-          finishAuth(name as IntegrationType, values)
+          finishAuth(name as SourceType, values)
           Desktop.sendMessage(App, App.messages.SHOW_APPS, name)
           res.send(`
 <html>
@@ -179,7 +179,7 @@ export class AuthServer {
       <div style="width: 400px; padding: 20px; margin: auto;">
         <h2>All set!</h2>
         <p>
-          Orbit will now start scanning this integration privately on your device. You can close this tab.
+          Orbit will now start scanning this Source privately on your device. You can close this tab.
         </p>
       </div>
     </div>

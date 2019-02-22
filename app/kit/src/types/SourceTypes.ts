@@ -31,15 +31,15 @@ export type OrbitSourceSettingProps<T extends Source> = {
   source: T
 }
 
-export type OrbitIntegration<A extends ItemType> = {
+export type OrbitSource<A extends ItemType> = {
   name?: string
   app?: AppBit
-  source?: Source
+  sourceType?: Source
   itemName?: string
   icon?: string
   iconLight?: string
   modelType: ModelFromType<A>['target']
-  integration?: A
+  source?: A
   viewConfig?: AppConfig['viewConfig']
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>
@@ -49,8 +49,8 @@ export type OrbitIntegration<A extends ItemType> = {
   }
 }
 
-export type OrbitIntegrations = { [key in ItemType]: OrbitIntegration<ItemType> }
+export type OrbitSources = { [key in ItemType]: OrbitSource<ItemType> }
 
-export type GetOrbitIntegration<A extends ItemType> = (source: Source) => OrbitIntegration<A>
+export type GetOrbitSource<A extends ItemType> = (source: Source) => OrbitSource<A>
 
-export type GetOrbitIntegrations = { [key in ItemType]: GetOrbitIntegration<ItemType> }
+export type GetOrbitSources = { [key in ItemType]: GetOrbitSource<ItemType> }

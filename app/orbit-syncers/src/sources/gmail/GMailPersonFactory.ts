@@ -1,5 +1,10 @@
-import { PersonUtils } from '@mcro/models'
-import { GmailBitDataParticipant, GmailPersonData, Person, GmailSource } from '@mcro/models'
+import {
+  GmailBitDataParticipant,
+  GmailPersonData,
+  GmailSource,
+  Person,
+  PersonUtils,
+} from '@mcro/models'
 
 /**
  * Creates a GMail Person.
@@ -16,8 +21,8 @@ export class GMailPersonFactory {
    */
   create(participant: GmailBitDataParticipant): Person {
     return PersonUtils.create({
-      integrationId: participant.email,
-      integration: 'gmail',
+      SourceId: participant.email,
+      Source: 'gmail',
       name: participant.name || '',
       sourceId: this.source.id,
       webLink: 'mailto:' + participant.email,

@@ -1,11 +1,10 @@
 import { loadMany, observeOne } from '@mcro/bridge'
-import { AppProps } from '@mcro/kit'
+import { AppProps, useStoresSimple } from '@mcro/kit'
 import { AppModel, SearchResultModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
-import { useStoresSimple } from '../../hooks/useStores'
 import { searchGroupsToResults } from '../search/searchGroupsToResults'
 import { ListAppDataItemFolder, ListsAppBit } from './types'
 

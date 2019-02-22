@@ -1,8 +1,7 @@
 import { ensure, react } from '@mcro/black'
-import { AppConfig, AppType, OrbitHandleSelect } from '@mcro/kit'
+import { AppConfig, AppType, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {
@@ -23,7 +22,7 @@ export class OrbitStore {
     this.isEditing = true
   }
 
-  handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
+  handleSelectItem: HandleOrbitSelect = (index, appConfig) => {
     this.nextItem = { index, appConfig }
   }
 

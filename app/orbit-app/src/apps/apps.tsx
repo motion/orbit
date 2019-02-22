@@ -1,7 +1,4 @@
-import { AppFnDefinition } from './AppTypes'
-import { CustomApp } from './custom/CustomApp'
-import { ListsApp } from './lists/ListsApp'
-import { SearchApp } from './search/SearchApp'
+import { AppFnDefinition } from '@mcro/kit'
 import { SettingsApp } from './settings/SettingsApp'
 import { SourcesApp } from './sources/SourcesApp'
 import { SpacesApp } from './spaces/SpacesApp'
@@ -13,10 +10,7 @@ type AppsIndex = {
 }
 
 export const apps: AppsIndex = {
-  search: SearchApp,
-  lists: ListsApp,
   settings: SettingsApp,
   spaces: SpacesApp,
   sources: SourcesApp,
-  custom: CustomApp,
 }

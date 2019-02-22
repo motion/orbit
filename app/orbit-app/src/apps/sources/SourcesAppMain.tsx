@@ -1,9 +1,9 @@
 import { useModel } from '@mcro/bridge'
+import { AppSubView } from '@mcro/kit'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
-import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {

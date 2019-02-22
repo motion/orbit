@@ -1,12 +1,10 @@
 import { observeMany } from '@mcro/bridge'
-import { OrbitIntegration } from '@mcro/kit'
 import { IntegrationType, Source, SourceModel } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
-import { allIntegrations } from '../apps'
-import { getAppFromSource } from '../getAppConfig'
-
-console.log('allIntegrations', allIntegrations)
+import { config } from '../configureKit'
+import { getAppFromSource } from '../helpers/getAppConfig'
+import { OrbitIntegration } from '../types/SourceTypes'
 
 type GenericApp = OrbitIntegration<any> & {
   isActive: boolean
@@ -18,7 +16,7 @@ export class SourcesStore {
   activeSources = react(
     () => this.appSources,
     appSources => {
-      return appSources.filter(x => !!allIntegrations[x.type]).map(getAppFromSource)
+      return appSources.filter(x => !!config.sources.allIntegrations[x.type]).map(getAppFromSource)
     },
     {
       defaultValue: [],
@@ -27,8 +25,8 @@ export class SourcesStore {
 
   // this is every possible app (that uses a bit), just turned into array
   get sources(): OrbitIntegration<any>[] {
-    return Object.keys(allIntegrations)
-      .map(x => allIntegrations[x])
+    return Object.keys(config.sources.allIntegrations)
+      .map(x => config.sources.allIntegrations[x])
       .filter(x => x && x.modelType === 'bit')
   }
 

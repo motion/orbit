@@ -1,7 +1,5 @@
-import { AppProps, List, useShareMenu } from '@mcro/kit'
+import { AppProps, List, useShareMenu, useStores } from '@mcro/kit'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
-import './calendar.css' // theme css file
 
 export function SearchAppIndex(_: AppProps) {
   // @ts-ignore

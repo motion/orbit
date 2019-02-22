@@ -1,8 +1,8 @@
+import { AppView } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { BorderLeft, Section, Title } from '@mcro/ui'
 import React from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
-import { AppView } from '../AppView'
 
 export default function PreviewApp(props: { app: AppBit }) {
   return (

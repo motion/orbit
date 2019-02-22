@@ -1,11 +1,18 @@
 import { loadMany } from '@mcro/bridge'
-import { AppIcon, AppType, MarkType, OrbitListItemProps, SearchState, SpaceIcon } from '@mcro/kit'
+import {
+  AppIcon,
+  AppType,
+  MarkType,
+  OrbitListItemProps,
+  SearchState,
+  SpaceIcon,
+  useStoresSimple,
+} from '@mcro/kit'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'
-import { useStoresSimple } from '../../hooks/useStores'
 import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchResults = {

@@ -5,6 +5,7 @@ import { PaneManagerStore } from './PaneManagerStore'
 import { QueryStore } from './QueryStore'
 import { SettingStore } from './SettingStore'
 import { ShortcutStore } from './ShortcutStore'
+import { SourcesStore } from './SourcesStore'
 import { SpaceStore } from './SpaceStore'
 import { SubPaneStore } from './SubPaneStore'
 import { ThemeStore } from './ThemeStore'
@@ -18,6 +19,7 @@ export { QueryFilterStore } from './QueryFilterStore'
 export { QueryStore } from './QueryStore'
 export { SettingStore } from './SettingStore'
 export { ShortcutStore } from './ShortcutStore'
+export { SourcesStore } from './SourcesStore'
 export { SpaceStore } from './SpaceStore'
 export { SubPaneStore } from './SubPaneStore'
 export { ThemeStore } from './ThemeStore'
@@ -28,7 +30,7 @@ export type KitStores = {
   subPaneStore?: SubPaneStore
   queryStore?: QueryStore
   selectionStore?: SelectionStore
-  sourcesStore?: any
+  sourcesStore?: SourcesStore
   shortcutStore?: ShortcutStore
   themeStore?: ThemeStore
   spaceStore?: SpaceStore

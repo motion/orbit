@@ -1,4 +1,5 @@
 import { useModel } from '@mcro/bridge'
+import { OrbitOrb } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import {
   Col,
@@ -19,7 +20,6 @@ import * as React from 'react'
 import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
-import { OrbitOrb } from '../../views/OrbitOrb'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppTypes'
 

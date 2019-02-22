@@ -1,7 +1,7 @@
 import { AppBit } from '@mcro/models'
 import { getAppState } from '../helpers/getAppState'
 import { getIsTorn } from '../helpers/getIsTorn'
-import { Pane, PaneManagerStore } from './PaneManagerStore'
+import { PaneManagerPane, PaneManagerStore } from './PaneManagerStore'
 
 export const settingsPane = {
   id: 'settings',
@@ -11,7 +11,7 @@ export const settingsPane = {
   keyable: true,
 }
 
-export const defaultPanes: Pane[] = [
+export const defaultPanes: PaneManagerPane[] = [
   { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
@@ -20,7 +20,7 @@ export const defaultPanes: Pane[] = [
   { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 
-function appToPane(app: AppBit): Pane {
+function appToPane(app: AppBit): PaneManagerPane {
   return {
     type: app.type,
     id: `${app.id}`,
@@ -30,7 +30,7 @@ function appToPane(app: AppBit): Pane {
   }
 }
 
-function getAppsPanes(apps: AppBit[]): Pane[] {
+function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
   const isTorn = getIsTorn()
   if (isTorn) {
     // torn window panes, remove the others besides active app + settings

@@ -1,13 +1,19 @@
-import { AppIcon } from '@mcro/kit';
-import { AppBit } from '@mcro/models';
-import { BorderLeft, Row, Section, SectionTitle, SelectableList, SubTitle, Title, View } from '@mcro/ui';
-import React, { useState } from 'react';
-import { useActiveApps } from '../../hooks/useActiveApps';
-import VerticalSplitPane from '../../views/VerticalSplitPane';
-import { AppView } from '../AppView';
+import { AppIcon, AppView, useActiveApps } from '@mcro/kit'
+import {
+  BorderLeft,
+  Row,
+  Section,
+  SectionTitle,
+  SelectableList,
+  SubTitle,
+  Title,
+  VerticalSplitPane,
+  View,
+} from '@mcro/ui'
+import React, { useState } from 'react'
 
 export const ManageApps = function ManageApps() {
-  const apps = useActiveApps() as AppBit[]
+  const apps = useActiveApps()
   const [index, setIndex] = useState(0)
   const selectedApp = apps[index]
 

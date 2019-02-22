@@ -1,8 +1,7 @@
 import { gloss, Row } from '@mcro/gloss'
+import { ProvideStores, useApp } from '@mcro/kit'
 import { BorderTop } from '@mcro/ui'
 import React from 'react'
-import { useApp } from '../../apps/useApp'
-import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
 const statusBarHeight = 26

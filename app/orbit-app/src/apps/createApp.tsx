@@ -1,15 +1,13 @@
 import { save } from '@mcro/bridge'
-import { AppIcon, AppType, List, useActiveSpace } from '@mcro/kit'
+import { AppIcon, AppType, AppView, List, useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
-import { BorderTop, Button, Row, Section, Theme, View } from '@mcro/ui'
+import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../actions/Actions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import VerticalSplitPane from '../views/VerticalSplitPane'
 import AppsMainNew from './apps/AppsMainNew'
 import { AppProps } from './AppTypes'
-import { AppView } from './AppView'
 import PreviewApp from './views/PreviewApp'
 
 const descriptions = {

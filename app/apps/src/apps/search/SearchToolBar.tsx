@@ -1,35 +1,9 @@
-import { App, AppProps, SourceFilterButton, useSearch } from '@mcro/kit'
+import { SourceFilterButton, useStores } from '@mcro/kit'
 import { BarButtonSmall, Calendar, HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
 import React from 'react'
-import { useStores } from '../../hooks/useStores'
-import { SearchAppIndex } from './SearchAppIndex'
-import { SearchAppMain } from './SearchAppMain'
-import { SearchAppSettings } from './SearchAppSettings'
-import { SearchStore } from './SearchStore'
 import { SearchSuggestionBar } from './SearchSuggestionBar'
 
-export function SearchApp(props: AppProps) {
-  const searchStore = useStore(SearchStore)
-
-  useSearch(state => {
-    searchStore.setSearchState(state)
-  })
-
-  return (
-    <App
-      provideStores={{ searchStore }}
-      index={<SearchAppIndex {...props} />}
-      toolBar={<SearchToolBar />}
-    >
-      <SearchAppMain {...props} />
-    </App>
-  )
-}
-
-SearchApp.settings = SearchAppSettings
-
-function SearchToolBar() {
+export function SearchToolBar() {
   const { queryStore } = useStores()
   const { queryFilters } = queryStore
 

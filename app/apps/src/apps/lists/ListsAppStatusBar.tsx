@@ -1,4 +1,4 @@
-import { Icon } from '@mcro/kit'
+import { Icon, useStores } from '@mcro/kit'
 import {
   BarButtonSmall,
   Breadcrumbs,
@@ -10,7 +10,6 @@ import {
 } from '@mcro/ui'
 import pluralize from 'pluralize'
 import React from 'react'
-import { useStores } from '../../hooks/useStores'
 
 export function ListAppStatusBar() {
   // @ts-ignore

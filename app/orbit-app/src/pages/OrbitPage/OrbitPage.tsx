@@ -1,6 +1,17 @@
 import { SourcesStore } from '@mcro/apps'
 import { gloss, View, ViewProps } from '@mcro/gloss'
-import { PaneManagerStore, QueryStore, showConfirmDialog } from '@mcro/kit'
+import {
+  defaultPanes,
+  getIsTorn,
+  PaneManagerStore,
+  ProvideStores,
+  QueryStore,
+  settingsPane,
+  SettingStore,
+  showConfirmDialog,
+  SpaceStore,
+  ThemeStore,
+} from '@mcro/kit'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useReaction, useStore, useStoreSimple } from '@mcro/use-store'
@@ -8,19 +19,13 @@ import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
-import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStores } from '../../hooks/useStores'
-import { defaultPanes, settingsPane } from '../../stores/getPanes'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SpaceStore } from '../../stores/SpaceStore'
-import { ThemeStore } from '../../stores/ThemeStore'
 import { AppWrapper } from '../../views'
 import OrbitHeader from './OrbitHeader'
 import OrbitMain from './OrbitMain'
@@ -169,8 +174,6 @@ function OrbitPageProvideStores(props: any) {
     queryStore.setSources(sourcesStore.activeSources)
   })
 
-  log('why r u rendering me bro............')
-
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
@@ -190,6 +193,8 @@ function OrbitPageProvideStores(props: any) {
     paneManagerStore,
     newAppStore,
   }
+
+  console.log('providing stores', stores)
 
   return <ProvideStores stores={stores}>{props.children}</ProvideStores>
 }

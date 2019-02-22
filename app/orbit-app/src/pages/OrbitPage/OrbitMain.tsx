@@ -1,9 +1,8 @@
 import { react, useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { AppType, Pane, SubPane } from '@mcro/kit'
+import { AppView, PaneManagerPane, SubPane } from '@mcro/kit'
 import { useHook, useStore } from '@mcro/use-store'
 import React, { memo, useMemo } from 'react'
-import { AppView } from '../../apps/AppView'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
@@ -20,7 +19,7 @@ export default memo(function OrbitMain() {
   )
 })
 
-const OrbitMainSubPane = memo(({ type, id }: Pane) => {
+const OrbitMainSubPane = memo(({ type, id }: PaneManagerPane) => {
   const { sidebarStore, paneManagerStore } = useStoresSimple()
   const { appsStore } = useStores()
   const { hasMain } = appsStore.getViewState(id)
@@ -57,7 +56,7 @@ const OrbitMainSubPane = memo(({ type, id }: Pane) => {
 })
 
 class OrbitPageMainStore {
-  props: Pane
+  props: PaneManagerPane
   stores = useHook(useStoresSimple)
 
   appConfig = react(() => this.stores.orbitStore.activeConfig[this.props.id], _ => _)
@@ -68,7 +67,7 @@ class OrbitPageMainStore {
 }
 
 // separate view prevents big re-renders
-const OrbitPageMainView = memo(({ type, id }: Pane) => {
+const OrbitPageMainView = memo(({ type, id }: PaneManagerPane) => {
   const { orbitStore } = useStores()
   const { appConfig, key } = useStore(OrbitPageMainStore, { id, type })
   return (
@@ -78,7 +77,7 @@ const OrbitPageMainView = memo(({ type, id }: Pane) => {
         viewType="main"
         id={id}
         type={type}
-        appConfig={appConfig || { type: AppType[type], id }}
+        appConfig={appConfig || { type, id }}
         before={<OrbitToolBarHeight id={id} />}
         after={<OrbitStatusBarHeight id={id} />}
       />

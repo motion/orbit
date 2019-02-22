@@ -1,12 +1,11 @@
-import { AppStore } from '@mcro/kit'
+import { allApps } from '@mcro/apps'
+import { AppsStore, AppStore, ProvideStores } from '@mcro/kit'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { ProvideStores } from '../components/ProvideStores'
 import { useStoresSimple } from '../hooks/useStores'
 import { apps } from './apps'
 import { appsStatic } from './appsStatic'
-import { AppsStore } from './AppsStore'
 
 type AppViewDefinition = { id: string; type: string }
 type AppsLoaderProps = {
@@ -43,7 +42,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
 function getAppViews(type: string) {
-  return apps[type] || appsStatic[type]
+  return apps[type] || appsStatic[type] || allApps[type]
 }
 
 function AppLoader(props: AppLoaderProps) {
@@ -78,10 +77,14 @@ function AppLoadView({ id, type, store }: AppLoaderProps) {
     store.handleAppStore(id, appStore)
   }, [])
 
-  if (typeof AppView === 'function') {
+  console.log('AppView', AppView)
+
+  const AppEntryView = AppView.default || AppView
+
+  if (typeof AppEntryView === 'function') {
     return (
       <ProvideStores stores={{ appStore }}>
-        <AppView {...appViewProps} appStore={appStore} />
+        <AppEntryView {...appViewProps} appStore={appStore} />
       </ProvideStores>
     )
   }

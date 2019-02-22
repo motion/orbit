@@ -1,9 +1,8 @@
-import { SubPane } from '@mcro/kit'
+import { AppView, AppViewProps, SubPane } from '@mcro/kit'
 import { App } from '@mcro/stores'
 import { memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
-import { AppView, AppViewProps } from '../../../apps/AppView'
 import { MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 

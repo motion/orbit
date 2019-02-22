@@ -1,6 +1,6 @@
 import { loadMany, loadOne, observeMany } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
-import { AppProps, ListItem } from '@mcro/kit'
+import { AppProps, ListItem, useStores } from '@mcro/kit'
 import {
   Bit,
   BitModel,
@@ -13,7 +13,6 @@ import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
 // import { AppActions } from '../../actions/appActions/AppActions'
-import { useStores } from '../../hooks/useStores'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits

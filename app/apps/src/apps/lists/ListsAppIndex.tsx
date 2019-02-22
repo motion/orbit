@@ -1,5 +1,5 @@
 import { save } from '@mcro/bridge'
-import { AppProps, getTargetValue, List } from '@mcro/kit'
+import { AppProps, getTargetValue, List, useStores } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import {
   Absolute,
@@ -16,10 +16,9 @@ import {
 } from '@mcro/ui'
 import { flow } from 'lodash'
 import React, { useCallback } from 'react'
-import { useStores } from '../../hooks/useStores'
 import { loadListItem } from './helpers'
-import { ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
+import { API } from './main'
 import { ListAppDataItem } from './types'
 
 export function ListsAppIndex(_: AppProps) {
@@ -97,7 +96,7 @@ function ListCurrentFolder() {
 }
 
 const addFolder = (store: ListStore) => {
-  ListsApp.api.receive(store.app, store.parentId, {
+  API.receive(store.app, store.parentId, {
     target: 'folder',
     name: store.query,
   })

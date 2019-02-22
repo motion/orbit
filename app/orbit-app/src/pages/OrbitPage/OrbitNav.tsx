@@ -1,7 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { save } from '@mcro/bridge'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { Pane, useActiveSpace } from '@mcro/kit'
+import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc'
 import { useHook, useStore } from '@mcro/use-store'
@@ -12,11 +12,10 @@ import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 
-const isOnSettings = (pane?: Pane) =>
+const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {

@@ -1,8 +1,7 @@
 import { FullScreen, gloss, Row } from '@mcro/gloss'
+import { ProvideStores, useApp } from '@mcro/kit'
 import { BorderBottom } from '@mcro/ui'
 import React, { memo, useMemo } from 'react'
-import { useApp } from '../../apps/useApp'
-import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
 const height = 30

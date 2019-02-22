@@ -5,7 +5,7 @@ import { Omit } from '../types'
 import { ListItemProps } from './ListItem'
 import { SelectableList, SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
-// import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from '../../apps/lists/types'
+// import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from ''
 
 // !TODO restore types
 type ListsAppData = {

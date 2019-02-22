@@ -1,8 +1,8 @@
 import { gloss } from '@mcro/gloss'
+import { useStores } from '@mcro/kit'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')

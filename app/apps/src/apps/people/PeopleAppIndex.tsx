@@ -6,11 +6,11 @@ import {
   removePrefixIfExists,
   useActiveQueryFilter,
   useShareMenu,
+  useStores,
 } from '@mcro/kit'
 import { PersonBitModel } from '@mcro/models'
 import { capitalize } from 'lodash'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
 import NoResultsDialog from '../../views/NoResultsDialog'
 
 export function PeopleAppIndex(props: AppProps) {

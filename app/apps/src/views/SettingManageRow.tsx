@@ -1,5 +1,7 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog } from '@mcro/kit'
+import { getAppFromSource, showConfirmDialog } from '@mcro/kit'
+import { useJobs } from '@mcro/kit/src/hooks/useJobs'
+import { useSourceInfo } from '@mcro/kit/src/hooks/useSourceInfo'
 import {
   Source,
   SourceForceCancelCommand,
@@ -8,9 +10,6 @@ import {
 } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { getAppFromSource } from '../getAppConfig'
-import { useJobs } from '../hooks/useJobs'
-import { useSourceInfo } from '../hooks/useSourceInfo'
 import { WhitelistManager } from '../WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 

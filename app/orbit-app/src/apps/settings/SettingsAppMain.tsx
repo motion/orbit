@@ -3,7 +3,7 @@ import { AppProps } from '../AppTypes'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 
-export default function SettingsAppMain(props: AppProps) {
+export function SettingsAppMain(props: AppProps) {
   if (!props.appConfig) {
     return null
   }

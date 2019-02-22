@@ -4,14 +4,15 @@ import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
 import { PersonItem } from './PersonItem'
 
+export default function Main(props: AppProps) {
+  return (
+    <App index={<PeopleAppIndex {...props} />}>
+      <PeopleAppMain {...props} />
+    </App>
+  )
+}
+
 export const people = {
-  app: function PeopleApp(props: AppProps) {
-    return (
-      <App index={<PeopleAppIndex {...props} />}>
-        <PeopleAppMain {...props} />
-      </App>
-    )
-  },
   views: {
     main: PeopleAppMain,
     item: PersonItem,

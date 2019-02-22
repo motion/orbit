@@ -1,5 +1,5 @@
 import { save } from '@mcro/bridge'
-import { App } from '@mcro/kit'
+import { App, AppProps } from '@mcro/kit'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
@@ -9,9 +9,7 @@ import { ListAppStatusBar } from './ListsAppStatusBar'
 import { ListStore } from './ListStore'
 import { ListsAppBit } from './types'
 
-export const listRootID = 0
-
-export const ListsApp /*: App<ListsAppData> */ = props => {
+export default function ListsApp(props: AppProps) {
   const listStore = useStore(ListStore, props)
   return (
     <App
@@ -24,12 +22,14 @@ export const ListsApp /*: App<ListsAppData> */ = props => {
   )
 }
 
-ListsApp.defaultValue = {
-  rootItemID: 0,
-  items: {},
+export const config = {
+  defaultValue: {
+    rootItemID: 0,
+    items: {},
+  },
 }
 
-ListsApp.api = {
+export const API = {
   receive(
     app: AppBit,
     parentID: number,

@@ -1,9 +1,8 @@
 import { useModel } from '@mcro/bridge'
-import { AppProps, AppSubView, List, OrbitListItemProps } from '@mcro/kit'
+import { AppProps, AppSubView, List, OrbitListItemProps, useStores } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import { BarButtonSmall, SubTitle, Title, View } from '@mcro/ui'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
 import { loadListItem } from './helpers'
 import { ListsAppBit } from './types'
 

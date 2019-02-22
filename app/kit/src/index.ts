@@ -1,6 +1,6 @@
 export { configureKit } from './configureKit'
 export * from './helpers/fuzzyFilter'
-export { getAppFromSource } from './helpers/getAppConfig'
+export { getAppFromSource, sourceToAppConfig } from './helpers/getAppConfig'
 export * from './helpers/getAppState'
 export * from './helpers/getIsTorn'
 export * from './helpers/getTargetValue'

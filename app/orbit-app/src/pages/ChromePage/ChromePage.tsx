@@ -1,5 +1,4 @@
-import { SourcesStore } from '@mcro/apps'
-import { SettingStore, SpaceStore } from '@mcro/kit'
+import { SettingStore, SourcesStore, SpaceStore } from '@mcro/kit'
 import { FullScreen, Theme } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'

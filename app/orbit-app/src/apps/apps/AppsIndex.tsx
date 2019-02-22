@@ -1,6 +1,5 @@
-import { sourceToAppConfig } from '@mcro/apps'
 import { sleep } from '@mcro/black'
-import { AppType, List, useActiveApps, useActiveSpace } from '@mcro/kit'
+import { AppType, List, sourceToAppConfig, useActiveApps, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'

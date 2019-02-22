@@ -1,6 +1,5 @@
-import { SourcesStore } from '@mcro/apps'
 import { gloss } from '@mcro/gloss'
-import { Icon, QueryStore, SettingStore, SpaceStore } from '@mcro/kit'
+import { Icon, QueryStore, SettingStore, SourcesStore, SpaceStore } from '@mcro/kit'
 import * as UI from '@mcro/ui'
 import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@mcro/ui'
 import { useReaction, useStore } from '@mcro/use-store'

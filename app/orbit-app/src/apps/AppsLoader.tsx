@@ -77,8 +77,6 @@ function AppLoadView({ id, type, store }: AppLoaderProps) {
     store.handleAppStore(id, appStore)
   }, [])
 
-  console.log('AppView', AppView)
-
   const AppEntryView = AppView.default || AppView
 
   if (typeof AppEntryView === 'function') {

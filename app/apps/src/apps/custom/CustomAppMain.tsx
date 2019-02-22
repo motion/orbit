@@ -1,4 +1,4 @@
-import { Icon } from '@mcro/kit'
+import { AppProps, Icon } from '@mcro/kit'
 import {
   BorderLeft,
   Button,
@@ -8,15 +8,14 @@ import {
   SearchableTable,
   Section,
   Text,
+  Title,
   Tree,
+  VerticalSplitPane,
   View,
 } from '@mcro/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'
-import { TitleRow } from '../../views/TitleRow'
-import VerticalSplitPane from '../../views/VerticalSplitPane'
-import { AppProps } from '../AppTypes'
 
 const channels = [...new Array(10000)].map(() => ({
   name: faker.name.firstName(),
@@ -111,7 +110,7 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <Row flex={1}>
       <VerticalSplitPane>
-        <TitleRow bordered>Hello World Edit</TitleRow>
+        <Title bordered>Hello World Edit</Title>
 
         <Section>
           <Button size={2} icon="sun">

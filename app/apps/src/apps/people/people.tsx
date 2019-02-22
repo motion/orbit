@@ -12,8 +12,10 @@ export const people = {
       </App>
     )
   },
-  main: PeopleAppMain,
-  item: PersonItem,
+  views: {
+    main: PeopleAppMain,
+    item: PersonItem,
+  },
   modelType: 'person-bit',
   appName: 'People',
   display: {

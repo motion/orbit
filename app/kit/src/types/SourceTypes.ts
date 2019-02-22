@@ -1,6 +1,7 @@
 import { Bit, PersonBit, Source } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
+import { App } from '../views/App'
 import { AppConfig } from './AppConfig'
 import { ItemType } from './ItemType'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
@@ -15,7 +16,7 @@ type AppTypeToModelType = {
   confluence: Bit
   website: Bit
   drive: Bit
-  person: PersonBit
+  people: PersonBit
   pinned: any
 }
 
@@ -32,6 +33,7 @@ export type OrbitSourceSettingProps<T extends Source> = {
 }
 
 export type OrbitIntegration<A extends ItemType> = {
+  app?: App
   source?: Source
   display?: {
     name: string

@@ -4,7 +4,7 @@ import { drive } from './drive/drive'
 import { github } from './github/github'
 import { gmail } from './gmail/gmail'
 import { jira } from './jira/jira'
-import { person } from './person/person'
+// import { people } from './people/people'
 import { slack } from './slack/slack'
 import { website } from './website/website'
 
@@ -16,7 +16,8 @@ export const getIntegrations: GetOrbitIntegrations = {
   confluence,
   drive,
   website,
-  person,
+  // people,
+  people: () => null,
   pinned: () => null,
 }
 

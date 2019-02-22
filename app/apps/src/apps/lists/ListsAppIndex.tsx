@@ -1,8 +1,9 @@
 import { save } from '@mcro/bridge'
-import { List } from '@mcro/kit'
+import { AppProps, getTargetValue, List } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import {
   Absolute,
+  arrayMove,
   BorderBottom,
   Button,
   Input,
@@ -10,14 +11,12 @@ import {
   PassProps,
   preventDefault,
   Row,
+  SelectableTreeList,
   View,
 } from '@mcro/ui'
 import { flow } from 'lodash'
 import React, { useCallback } from 'react'
-import { getTargetValue } from '../../helpers/getTargetValue'
 import { useStores } from '../../hooks/useStores'
-import SelectableTreeList from '../../views/Lists/SelectableTreeList'
-import { AppProps } from '../AppTypes'
 import { loadListItem } from './helpers'
 import { ListsApp } from './ListsApp'
 import { ListStore } from './ListStore'
@@ -79,8 +78,6 @@ function ListCurrentFolder() {
     listStore.selectedIndex = index
   }, [])
 
-  console.log('list', items)
-
   return (
     <View flex={1}>
       <SelectableTreeList
@@ -108,6 +105,7 @@ const addFolder = (store: ListStore) => {
 }
 
 function ListAdd() {
+  // @ts-ignore
   const { listStore } = useStores()
   return (
     <Row position="relative">

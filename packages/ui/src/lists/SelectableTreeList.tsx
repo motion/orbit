@@ -3,9 +3,8 @@ import React, { forwardRef, useCallback, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
 import { Omit } from '../types'
 import { ListItemProps } from './ListItem'
-import { SelectableList } from './SelectableList'
+import { SelectableList, SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
-import { VirtualListProps } from './VirtualList'
 // import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from '../../apps/lists/types'
 
 // !TODO restore types
@@ -17,7 +16,7 @@ type ListAppDataItemFolder = { type: 'folder'; children: number[] }
 
 type ID = number | string
 
-type SelectableTreeListProps = Omit<VirtualListProps<any>, 'items'> & {
+type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
   depth: number
   onChangeDepth?: (depth: number, history: ID[]) => any
   rootItemID: ID

@@ -17,7 +17,7 @@ import {
 } from '@mcro/ui'
 import randomColor from 'randomcolor'
 import * as React from 'react'
-import { useSourceForSpace } from '../../hooks/useSourceForSpace'
+import { useSourcesForSpace } from '../../hooks/useSourcesForSpace'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { SubSection } from '../../views/SubSection'
@@ -28,7 +28,7 @@ const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 export default function SpacesAppEdit(props: AppProps) {
   const id = +props.appConfig.id
   const [space] = useModel(SpaceModel, { where: { id } })
-  const sources = useSourceForSpace({ spaceId: id })
+  const sources = useSourcesForSpace({ spaceId: id })
   const [colors, setColors] = React.useState(defaultColors)
 
   return (

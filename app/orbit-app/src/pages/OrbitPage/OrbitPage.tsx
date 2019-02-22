@@ -1,4 +1,3 @@
-import { SourcesStore } from '@mcro/apps'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
   defaultPanes,
@@ -9,6 +8,7 @@ import {
   settingsPane,
   SettingStore,
   showConfirmDialog,
+  SourcesStore,
   SpaceStore,
   ThemeStore,
 } from '@mcro/kit'

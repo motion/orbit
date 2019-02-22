@@ -1,7 +1,5 @@
 import { command } from '@mcro/bridge'
-import { getAppFromSource, showConfirmDialog } from '@mcro/kit'
-import { useJobs } from '@mcro/kit/src/hooks/useJobs'
-import { useSourceInfo } from '@mcro/kit/src/hooks/useSourceInfo'
+import { getAppFromSource, showConfirmDialog, useJobs, useSourceInfo } from '@mcro/kit'
 import {
   Source,
   SourceForceCancelCommand,

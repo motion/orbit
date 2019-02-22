@@ -1,5 +1,4 @@
-import { useJobs, useSourceInfo } from '@mcro/apps'
-import { OrbitIntegration } from '@mcro/kit'
+import { OrbitIntegration, useJobs, useSourceInfo } from '@mcro/kit'
 import { HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import pluralize from 'pluralize'
 import * as React from 'react'

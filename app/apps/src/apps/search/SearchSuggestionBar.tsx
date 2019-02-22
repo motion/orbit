@@ -2,7 +2,7 @@ import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import { ButtonProps } from '@mcro/ui'
 import * as React from 'react'
-import { useStores } from '../../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = UI.color('#ffb049')
@@ -77,7 +77,7 @@ const SuggestionButton = (props: ButtonProps) => (
 const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
-export default function OrbitSuggestionBar() {
+export function SearchSuggestionBar() {
   const { queryStore } = useStores()
   const filterStore = queryStore.queryFilters
   const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)

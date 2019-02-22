@@ -2,7 +2,7 @@ import { Button, FormRow, HorizontalSpace, Input, Row, SubTitle } from '@mcro/ui
 import React from 'react'
 import { SearchApp } from './types'
 
-export default function SearchAppSettings(_: { app: SearchApp }) {
+export function SearchAppSettings(_: { app: SearchApp }) {
   return (
     <>
       <SubTitle>Filters</SubTitle>

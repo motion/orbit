@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 import './calendar.css' // theme css file
 
-export default function SearchAppIndex(_: AppProps) {
+export function SearchAppIndex(_: AppProps) {
   // @ts-ignore
   const { searchStore } = useStores()
   const items = searchStore.results

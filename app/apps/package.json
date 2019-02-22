@@ -4,9 +4,11 @@
   "main": "./_/index.js",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "build-app": "NODE_ENV=production mcro-build --build --target node"
+    "build": "npm run build-js & npm run build-types",
+    "watch": "npm run build-js -- --watch & npm run build-types-watch",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly || true",
+    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@mcro/kit": "*",

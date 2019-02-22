@@ -3,11 +3,11 @@ import { BarButtonSmall, Calendar, HorizontalSpace, Popover, SegmentedRow, View 
 import { useStore } from '@mcro/use-store'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
-import SearchAppIndex from './SearchAppIndex'
-import SearchAppMain from './SearchAppMain'
-import SearchAppSettings from './SearchAppSettings'
+import { SearchAppIndex } from './SearchAppIndex'
+import { SearchAppMain } from './SearchAppMain'
+import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
-import OrbitSuggestionBar from './views/OrbitSuggestionBar'
+import { SearchSuggestionBar } from './SearchSuggestionBar'
 
 export function SearchApp(props: AppProps) {
   const searchStore = useStore(SearchStore)
@@ -67,7 +67,7 @@ function SearchToolBar() {
       </SegmentedRow>
 
       <View flex={1} />
-      <OrbitSuggestionBar />
+      <SearchSuggestionBar />
     </>
   )
 }

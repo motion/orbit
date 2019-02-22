@@ -34,7 +34,6 @@ export class PaneManagerStore {
   )
 
   setPanes(panes: PaneManagerPane[]) {
-    console.log('panes', panes)
     this.panes = panes
   }
 

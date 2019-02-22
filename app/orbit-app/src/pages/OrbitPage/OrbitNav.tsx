@@ -123,7 +123,6 @@ export default memo(function OrbitNav() {
   const pinnedItems = items.filter(x => x.isPinned)
   const pinnedItemsWidth = pinWidth * pinnedItems.length
 
-  console.log('extraButtonsWidth', extraButtonsWidth)
   const epad = showCreateNew ? 0 : 3
 
   return (

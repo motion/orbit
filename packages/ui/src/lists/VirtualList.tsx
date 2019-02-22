@@ -177,7 +177,6 @@ class VirtualListStore {
       await sleep()
       await when(() => this.props.allowMeasure !== false)
       await when(() => !!this.listRef)
-      console.warn('recomputing heights for', this.props)
       this.cache.clearAll()
       this.listRef.recomputeRowHeights()
     },
@@ -240,8 +239,6 @@ export const VirtualListDefaultProps = createContext({
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
-
-  console.warn('render inner')
 
   useResizeObserver(frameRef, () => {
     store.measure()

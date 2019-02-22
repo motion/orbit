@@ -194,8 +194,6 @@ function OrbitPageProvideStores(props: any) {
     newAppStore,
   }
 
-  console.log('providing stores', stores)
-
   return <ProvideStores stores={stores}>{props.children}</ProvideStores>
 }
 

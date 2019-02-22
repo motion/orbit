@@ -43,7 +43,6 @@ export class SpaceStore {
       }
       if (!this.hasStarted) {
         await sleep(10)
-        console.log('show orbit first time after theme is set')
         this.hasStarted = true
         if (!getIsTorn()) {
           App.setOrbitState({ docked: true })

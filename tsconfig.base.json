@@ -18,6 +18,7 @@
     "allowJs": true,
     "sourceMap": true,
     "resolveJsonModule": true,
+    "declarationMap": true,
     "lib": ["es2017", "es2018", "dom"]
   },
   "typeAcquisition": {

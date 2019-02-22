@@ -1,3 +1,4 @@
+import { allApps } from '@mcro/apps'
 import { AppType } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { apps } from '../apps/apps'
@@ -70,7 +71,7 @@ export class NewAppStore {
 
     // get data from defaultValue
     let data = nextApp.data
-    const app = (apps[type] || appsStatic[type]) as App<any>
+    const app = (apps[type] || appsStatic[type] || allApps[type]) as App<any>
     if (!app) {
       console.warn('no wapp?')
       debugger

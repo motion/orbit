@@ -41,12 +41,12 @@ export class ConfluenceBitFactory {
       ...content.history.contributors.publishers.userAccountIds,
     ]
     const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.sourceId) !== -1
+      return peopleIds.indexOf(person.userId) !== -1
     })
 
     // find original content creator
     const author = allPeople.find(person => {
-      return person.sourceId === content.history.createdBy.accountId
+      return person.userId === content.history.createdBy.accountId
     })
 
     // create or update a bit

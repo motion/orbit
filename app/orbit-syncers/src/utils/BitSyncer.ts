@@ -178,7 +178,7 @@ export class BitSyncer {
 
   private async completeBitsData(bits: Bit[]) {
     for (let bit of bits) {
-      if (bit.Source === 'slack' && bit.type === 'conversation') {
+      if (bit.sourceType === 'slack' && bit.type === 'conversation') {
         const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
         bit.title = (await Mediator.loadMany(CosalTopWordsModel, {
           args: { text: flatBody, max: 6 },

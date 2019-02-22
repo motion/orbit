@@ -29,7 +29,7 @@ const suggestedDates: Filter[] = [
   { text: 'Last Month', type: MarkType.Date },
 ]
 
-type SourceDesc = { name: string; type: string }
+export type SourceDesc = { name: string; type: string }
 
 @decorate
 export class QueryFilterStore {
@@ -196,10 +196,8 @@ export class QueryFilterStore {
       ensure('nlp', !!nlp)
       // reset source inactive filters
       ensure('sources', nlp.sources && !!nlp.sources.length)
-      // !TODO
       this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
-        // !TODO
-        acc[app.source] = nlp.sources.some(x => x === app.source)
+        acc[app.type] = nlp.sources.some(x => x === app.type)
         return acc
       }, {})
     },

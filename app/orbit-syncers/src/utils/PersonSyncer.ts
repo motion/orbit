@@ -38,7 +38,7 @@ export class PersonSyncer {
     // for people without emails we create "virtual" email
     for (let person of apiPeople) {
       if (!person.email) {
-        person.email = person.name + ' from ' + person.Source
+        person.email = person.name + ' from ' + person.sourceType
       }
     }
 

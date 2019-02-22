@@ -16,9 +16,9 @@ export class JiraPersonFactory {
    */
   create(user: JiraUser): Person {
     return PersonUtils.create({
-      Source: 'jira',
+      sourceType: 'jira',
       source: this.source,
-      SourceId: user.accountId,
+      userId: user.accountId,
       name: user.displayName,
       email: user.emailAddress,
       photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),

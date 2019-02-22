@@ -32,18 +32,18 @@ export class JiraBitFactory {
     if (issue.fields.reporter) peopleIds.push(issue.fields.reporter.accountId)
 
     const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.SourceId) !== -1
+      return peopleIds.indexOf(person.userId) !== -1
     })
 
     // find original content creator
     const author = allPeople.find(person => {
-      return person.SourceId === issue.fields.creator.accountId
+      return person.userId === issue.fields.creator.accountId
     })
 
     // create or update a bit
     return BitUtils.create(
       {
-        Source: 'jira',
+        sourceType: 'jira',
         sourceId: this.source.id,
         type: 'document',
         title: issue.fields.summary,

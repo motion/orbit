@@ -16,7 +16,7 @@ export class PinnedBitFactory {
     // create or update a bit
     return BitUtils.create(
       {
-        Source: 'pinned',
+        sourceType: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,

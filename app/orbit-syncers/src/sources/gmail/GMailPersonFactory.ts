@@ -21,8 +21,8 @@ export class GMailPersonFactory {
    */
   create(participant: GmailBitDataParticipant): Person {
     return PersonUtils.create({
-      SourceId: participant.email,
-      Source: 'gmail',
+      userId: participant.email,
+      sourceType: 'gmail',
       name: participant.name || '',
       sourceId: this.source.id,
       webLink: 'mailto:' + participant.email,

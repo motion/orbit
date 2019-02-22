@@ -31,7 +31,7 @@ export class SyncerRepository {
 
     const jobs = await getRepository(JobEntity).find({
       sourceId: this.source.id,
-      type: 'Source_REMOVE',
+      type: 'SOURCE_REMOVE',
       status: 'PROCESSING',
     })
     if (jobs.length > 0) return true

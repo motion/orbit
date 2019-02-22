@@ -62,8 +62,8 @@ export class GithubPersonFactory {
     return PersonUtils.create({
       id,
       source: this.source,
-      sourceId: githubPerson.id,
-      source: 'github',
+      userId: githubPerson.id,
+      sourceType: 'github',
       name: githubPerson.login,
       webLink: `https://github.com/${githubPerson.login}`,
       email: githubPerson.email,
@@ -82,8 +82,8 @@ export class GithubPersonFactory {
     return PersonUtils.create({
       id,
       source: this.source,
-      sourceId: undefined,
-      source: 'github',
+      userId: undefined,
+      sourceType: 'github',
       name: commit.name,
       webLink: undefined,
       email: commit.email,

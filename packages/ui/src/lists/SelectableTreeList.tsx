@@ -73,7 +73,6 @@ class SelectableTreeListStore {
       ensure('curFolder', !!curFolder)
       this.ensureValid()
       const { props } = this
-      console.log('downloading folder', curFolder.children, props.items)
       return await Promise.all(
         curFolder.children
           .filter(x => !!props.items[x])

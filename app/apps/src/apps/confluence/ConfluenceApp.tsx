@@ -2,7 +2,7 @@ import { BitStatusBar, Document, OrbitSourceMainProps } from '@mcro/kit'
 import { ScrollableContent, View } from '@mcro/ui'
 import * as React from 'react'
 
-export class ConfluenceApp extends React.Component<OrbitSourceMainProps<'confluence'>> {
+export class ConfluenceApp extends React.Component<OrbitSourceMainProps> {
   render() {
     return (
       <>

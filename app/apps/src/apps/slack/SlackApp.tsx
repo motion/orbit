@@ -5,8 +5,6 @@ import { Bit, BitModel, GenericBit } from '@mcro/models'
 import { Button, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui'
 import * as React from 'react'
 
-type Props = OrbitSourceMainProps<'slack'>
-
 const Pane = gloss(View, {
   height: 0,
   opacity: 0,
@@ -38,7 +36,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-export default React.memo(function SlackApp(props: Props) {
+export default React.memo(function SlackApp(props: OrbitSourceMainProps) {
   const { item } = props
 
   const [nextConvos] = useModels(BitModel, {

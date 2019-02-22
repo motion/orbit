@@ -1,4 +1,4 @@
-import { allSources, getSources } from '@mcro/apps'
+import { allSources } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
 import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
@@ -14,7 +14,6 @@ function setup() {
     StoreContext,
     sources: {
       allSources: allSources,
-      getSources: getSources,
     },
   })
 

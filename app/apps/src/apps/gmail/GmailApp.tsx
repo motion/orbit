@@ -2,7 +2,7 @@ import { BitStatusBar, OrbitSourceMainProps, Thread } from '@mcro/kit'
 import { ScrollableContent, Title, View } from '@mcro/ui'
 import * as React from 'react'
 
-export class GmailApp extends React.Component<OrbitSourceMainProps<'gmail'>> {
+export class GmailApp extends React.Component<OrbitSourceMainProps> {
   render() {
     const { item } = this.props
     return (

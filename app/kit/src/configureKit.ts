@@ -5,7 +5,7 @@ let hasSet = false
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
-  sources: { allSources: any; getSources: any }
+  sources: { allSources: any }
 }
 
 export let config: ConfigureOpts = {

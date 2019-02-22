@@ -2,7 +2,7 @@ import { BitStatusBar, Markdown, OrbitSourceMainProps } from '@mcro/kit'
 import { ScrollableContent, Surface, View } from '@mcro/ui'
 import * as React from 'react'
 
-export class DriveApp extends React.Component<OrbitSourceMainProps<'drive'>> {
+export class DriveApp extends React.Component<OrbitSourceMainProps> {
   render() {
     const { item } = this.props
     return (

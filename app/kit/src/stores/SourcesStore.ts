@@ -6,7 +6,7 @@ import { config } from '../configureKit'
 import { getAppFromSource } from '../helpers/getAppConfig'
 import { OrbitSource } from '../types/SourceTypes'
 
-type GenericApp = OrbitSource<any> & {
+type GenericApp = OrbitSource & {
   isActive: boolean
 }
 
@@ -24,7 +24,7 @@ export class SourcesStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get sources(): OrbitSource<any>[] {
+  get sources(): OrbitSource[] {
     return Object.keys(config.sources.allSources)
       .map(x => config.sources.allSources[x])
       .filter(x => x && x.modelType === 'bit')
@@ -38,7 +38,7 @@ export class SourcesStore {
         app =>
           ({
             ...app,
-            isActive: !!activeApps.find(x => x.source === app.source),
+            isActive: !!activeApps.find(x => x.sourceType === app.sourceType),
           } as GenericApp),
       )
     },

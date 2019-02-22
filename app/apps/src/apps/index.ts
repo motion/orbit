@@ -12,7 +12,7 @@ import * as SearchApp from './search/main'
 import { slack } from './slack/main'
 import { website } from './website/main'
 
-export const getSources: OrbitSources = {
+export const allSources: OrbitSources = {
   slack,
   github,
   gmail,
@@ -23,11 +23,6 @@ export const getSources: OrbitSources = {
   // people,
   people: null,
   pinned: null,
-}
-
-export const allSources = {} as OrbitSources
-for (const key in getSources) {
-  allSources[key] = getSources[key]({} as any)
 }
 
 export const allApps = {

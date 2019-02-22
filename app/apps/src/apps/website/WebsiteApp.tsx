@@ -2,7 +2,7 @@ import { BitStatusBar, OrbitSourceMainProps, Readability } from '@mcro/kit'
 import { ScrollableContent, Title, View } from '@mcro/ui'
 import * as React from 'react'
 
-export class WebsiteApp extends React.Component<OrbitSourceMainProps<'website'>> {
+export class WebsiteApp extends React.Component<OrbitSourceMainProps> {
   render() {
     const { item } = this.props
     return (

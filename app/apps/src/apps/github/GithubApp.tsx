@@ -2,7 +2,7 @@ import { BitStatusBar, OrbitSourceMainProps, Task } from '@mcro/kit'
 import { ScrollableContent, Title, View } from '@mcro/ui'
 import * as React from 'react'
 
-export class GithubApp extends React.Component<OrbitSourceMainProps<'github'>> {
+export class GithubApp extends React.Component<OrbitSourceMainProps> {
   render() {
     const { item } = this.props
     return (

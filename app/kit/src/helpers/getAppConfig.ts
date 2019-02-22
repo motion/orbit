@@ -42,7 +42,7 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
 }
 
 export const getAppFromSource = (source: Source): OrbitSource => {
-  return config.sources.getSources[source.type](source)
+  return config.sources.allSources[source.type]
 }
 
 export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<AppConfig> {

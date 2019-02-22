@@ -6,7 +6,7 @@ import {
   ResolvableModel,
 } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import { allIntegrations, getIntegrations } from './sources'
+import { allIntegrations, getIntegrations } from './apps'
 
 // this is mid-refactor in a sense
 // appConfig is a weird setup, its used basically to pass from a index over to a main view

@@ -1,5 +1,5 @@
-import { AppProps } from '@mcro/kit'
 import { FunctionComponent } from 'react'
+import { AppProps } from './AppProps'
 
 type SettingsView = FunctionComponent<null> | false
 

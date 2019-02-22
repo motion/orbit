@@ -1,8 +1,8 @@
 import { AppBit } from '@mcro/models'
 import { useReaction } from '@mcro/use-store'
 import { useState } from 'react'
-import { useStores } from '../../../orbit-app/src/hooks/useStores'
 import { useActiveApps } from './useActiveApps'
+import { useStores } from './useStores'
 
 export function useActiveApp(): AppBit {
   const { paneManagerStore } = useStores()

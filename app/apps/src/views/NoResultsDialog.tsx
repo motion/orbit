@@ -1,10 +1,8 @@
-import { PaneManagerStore } from '@mcro/kit'
 import { Button, SubTitle, VerticalSpace, View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
 
 type Props = {
-  paneManagerStore?: PaneManagerStore
   subName: string
 }
 

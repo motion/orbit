@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppView, AppViewProps } from '../AppView'
+import { AppView, AppViewProps } from './AppView'
 
 export function AppSubView({
   viewType = 'main',

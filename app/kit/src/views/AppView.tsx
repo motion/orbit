@@ -1,11 +1,12 @@
 import { Contents, View } from '@mcro/gloss'
-import { AppStore, SmallListItemPropsProvider } from '@mcro/kit'
 import { memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
-import { ProvideStores } from '../components/ProvideStores'
-import { AppProps } from './AppTypes'
-import { useApp } from './useApp'
+import { useApp } from '../hooks/useApp'
+import { AppStore } from '../stores'
+import { AppProps } from '../types/AppProps'
+import { SmallListItemPropsProvider } from './media/ItemPropsProviderSmall'
+import { ProvideStores } from './ProvideStores'
 
 export type AppViewProps = Pick<
   AppProps,

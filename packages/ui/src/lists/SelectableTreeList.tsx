@@ -1,20 +1,29 @@
-import { always, cancel, ensure, react } from '@mcro/black'
-import { AppConfig, List, ListProps, OrbitListItemProps } from '@mcro/kit'
-import { SelectionStore } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
-import React, { useCallback, useEffect } from 'react'
-import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from '../../apps/lists/types'
-import { Omit } from '../../helpers/typeHelpers/omit'
-import { useStores } from '../../hooks/useStores'
+import { always, cancel, ensure, react, useStore } from '@mcro/use-store'
+import React, { forwardRef, useCallback, useEffect } from 'react'
+import { useStores } from '../helpers/useStores'
+import { Omit } from '../types'
+import { ListItemProps } from './ListItem'
+import { SelectableList } from './SelectableList'
+import { SelectionStore } from './SelectionStore'
+import { VirtualListProps } from './VirtualList'
+// import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from '../../apps/lists/types'
+
+// !TODO restore types
+type ListsAppData = {
+  items?: any
+}
+type ListAppDataItem = { type: string }
+type ListAppDataItemFolder = { type: 'folder'; children: number[] }
 
 type ID = number | string
 
-type SelectableTreeListProps = Omit<ListProps, 'items'> & {
+type SelectableTreeListProps = Omit<VirtualListProps<any>, 'items'> & {
   depth: number
   onChangeDepth?: (depth: number, history: ID[]) => any
   rootItemID: ID
   items: ListsAppData['items']
-  loadItemProps: (item: ListAppDataItem) => Promise<OrbitListItemProps>
+  loadItemProps: (item: ListAppDataItem) => Promise<ListItemProps>
+  selectionStore?: SelectionStore
 }
 
 export type SelectableTreeRef = {
@@ -89,7 +98,7 @@ class SelectableTreeListStore {
     this.error = null
   }
 
-  handleOpen = (index: number, appConfig?: AppConfig, eventType?: any) => {
+  handleOpen = (index: number, appConfig?: any, eventType?: any) => {
     const { curFolder, props, depth } = this
     if (curFolder.type !== 'folder' && curFolder.type !== 'root') {
       console.log('cant open', curFolder, 'not folder or root')
@@ -111,7 +120,7 @@ class SelectableTreeListStore {
   }
 }
 
-export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
+export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeListProps>(
   function SelectableTreeList({ items, ...props }, ref) {
     const stores = useStores({ optional: ['selectionStore', 'shortcutStore'] })
     const selectionStore =
@@ -147,7 +156,7 @@ export default React.forwardRef<SelectableTreeRef, SelectableTreeListProps>(
       <>
         {error && <div>SelectableTreeListError: {error}</div>}
         {!error && (
-          <List
+          <SelectableList
             {...props}
             selectionStore={selectionStore}
             onOpen={store.handleOpen}

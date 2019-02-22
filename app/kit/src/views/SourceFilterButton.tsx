@@ -1,6 +1,6 @@
 import { BarButton, Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
 import React from 'react'
-import { useStores } from '../helpers/useStores'
+import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
 import { Icon } from './Icon'
 

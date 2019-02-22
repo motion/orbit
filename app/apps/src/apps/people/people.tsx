@@ -1,13 +1,14 @@
+import { App, AppProps } from '@mcro/kit'
 import React from 'react'
 import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
 import { PersonItem } from './PersonItem'
 
 export const people = {
-  app: function PeopleApp() {
+  app: function PeopleApp(props: AppProps) {
     return (
-      <App index={<PeopleAppIndex />}>
-        <PeopleAppMain />
+      <App index={<PeopleAppIndex {...props} />}>
+        <PeopleAppMain {...props} />
       </App>
     )
   },

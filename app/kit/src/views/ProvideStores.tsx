@@ -1,6 +1,6 @@
 import { MergeContext } from '@mcro/ui'
 import React from 'react'
-import { StoreContext } from '../contexts'
+import { config } from '../configureKit'
 
 type ProvideStoresProps = {
   stores: Object
@@ -9,7 +9,7 @@ type ProvideStoresProps = {
 
 export function ProvideStores(props: ProvideStoresProps) {
   return (
-    <MergeContext Context={StoreContext} value={props.stores}>
+    <MergeContext Context={config.StoreContext} value={props.stores}>
       {props.children}
     </MergeContext>
   )

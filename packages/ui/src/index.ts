@@ -16,6 +16,7 @@ export {
   View,
   ViewProps,
 } from '@mcro/gloss'
+export { arrayMove } from '@mcro/react-sortable-hoc'
 export * from './Arrow'
 export * from './Avatar'
 export * from './Border'
@@ -71,6 +72,7 @@ export * from './lists/FixedList'
 export * from './lists/ListItem'
 export * from './lists/ProvideSelectionStore'
 export * from './lists/SelectableList'
+export * from './lists/SelectableTreeList'
 export * from './lists/SelectionStore'
 export * from './lists/VirtualList'
 export * from './lists/VirtualListItem'

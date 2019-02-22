@@ -1,5 +1,5 @@
+import { AppConfig } from '@mcro/kit'
 import invariant from 'invariant'
-import { AppConfig } from '../../../apps/AppTypes'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { setAppState } from '../setAppState'

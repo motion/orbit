@@ -1,4 +1,5 @@
 import { SelectionStore } from '@mcro/ui'
+import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { QueryStore } from './QueryStore'
@@ -9,6 +10,7 @@ import { SubPaneStore } from './SubPaneStore'
 import { ThemeStore } from './ThemeStore'
 
 export { SelectionStore } from '@mcro/ui'
+export { AppsStore } from './AppsStore'
 export { AppStore } from './AppStore'
 export { NLPStore } from './NLPStore/NLPStore'
 export { PaneManagerStore } from './PaneManagerStore'
@@ -31,4 +33,5 @@ export type KitStores = {
   themeStore?: ThemeStore
   spaceStore?: SpaceStore
   settingStore?: SettingStore
+  appsStore?: AppsStore
 }

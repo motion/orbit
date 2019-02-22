@@ -1,13 +1,9 @@
 import { useModel } from '@mcro/bridge'
-import { List, OrbitListItemProps } from '@mcro/kit'
+import { AppProps, AppSubView, List, OrbitListItemProps } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
-import { SubTitle, View } from '@mcro/ui'
+import { BarButtonSmall, SubTitle, Title, View } from '@mcro/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
-import { FloatingBarButtonSmall } from '../../views/FloatingBar/FloatingBarButtonSmall'
-import { TitleRow } from '../../views/TitleRow'
-import { AppProps } from '../AppTypes'
-import { AppSubView } from '../views/AppSubView'
 import { loadListItem } from './helpers'
 import { ListsAppBit } from './types'
 
@@ -30,13 +26,15 @@ function ListAppTitle(props) {
   // @ts-ignore
   const { listStore } = useStores()
   return (
-    <TitleRow bordered sizePadding={2} margin={0} {...props}>
+    // !TODO merge TitleRow into Title so we have bordered/padded
+    <Title bordered sizePadding={2} margin={0} {...props}>
       {(listStore.app && listStore.app.title) || 'No Title'}
-    </TitleRow>
+    </Title>
   )
 }
 
 function ListsAppMainFolder(props: AppProps) {
+  // @ts-ignore
   const { listStore } = useStores()
   const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
   const selectedItem = list && list.data.items[+props.appConfig.subId]
@@ -62,9 +60,9 @@ function ListsAppMainFolder(props: AppProps) {
       <ListAppTitle
         before={
           listStore.depth > 0 && (
-            <FloatingBarButtonSmall icon="arrows-1_bold-left" onClick={listStore.back}>
+            <BarButtonSmall icon="arrows-1_bold-left" onClick={listStore.back}>
               Back
-            </FloatingBarButtonSmall>
+            </BarButtonSmall>
           )
         }
       >

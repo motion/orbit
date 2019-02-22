@@ -1,6 +1,6 @@
-import { useActiveSpace } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { useActiveApps } from './useActiveApps'
+import { useActiveSpace } from './useActiveSpace'
 
 export function sortApps(apps: AppBit[], sort: number[]) {
   return sort.map(id => apps.find(x => x.id === id)).filter(Boolean)

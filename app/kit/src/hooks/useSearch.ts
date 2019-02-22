@@ -1,8 +1,8 @@
 import { isEqual } from '@mcro/fast-compare'
 import { useReaction } from '@mcro/use-store'
 import { useRef } from 'react'
-import { useStores } from '../helpers/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
+import { useStores } from './useStores'
 
 export type SearchState = {
   query: string

@@ -1,7 +1,7 @@
 import { IconProps, ThemeContext } from '@mcro/ui'
 import React, { isValidElement, useContext } from 'react'
-import { useStoresSimple } from '../helpers/useStores'
 import { SVG } from '../views/SVG'
+import { useStoresSimple } from './useStores'
 
 export function useSourceIcon(props: IconProps) {
   const { name } = props

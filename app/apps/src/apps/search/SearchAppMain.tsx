@@ -1,6 +1,5 @@
+import { AppProps, AppSubView } from '@mcro/kit'
 import * as React from 'react'
-import { AppProps } from '../AppTypes'
-import { AppSubView } from '../views/AppSubView'
 
 export default function SearchAppMain({ appConfig }: AppProps) {
   if (appConfig.type === 'search') {

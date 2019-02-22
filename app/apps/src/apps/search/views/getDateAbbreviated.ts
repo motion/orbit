@@ -5,7 +5,7 @@ type DateRange = {
   endDate?: Date
 }
 
-export const getDateAbbreviated = ({ startDate, endDate }: DateRange) => {
+export const getDateAbbreviated = ({ startDate /* , endDate */ }: DateRange) => {
   if (!startDate) {
     return ''
   }

@@ -11,7 +11,7 @@ function getLetter(name: string) {
   return letter.toUpperCase()
 }
 
-export const groupByLetter = memoize((key: string = 'name') => {
+export const groupByFirstLetter = memoize((key: string = 'name') => {
   return function groupByLetter<A>(item: A, index: number, items: A[]): { separator?: string } {
     if (items[index - 1]) {
       const lastLetter = getLetter(items[index - 1][key])

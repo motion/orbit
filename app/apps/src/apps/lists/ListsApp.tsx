@@ -1,27 +1,26 @@
 import { save } from '@mcro/bridge'
+import { App } from '@mcro/kit'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React from 'react'
-import { AppContainer } from '../AppContainer'
-import { App } from '../AppTypes'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'
 import { ListAppStatusBar } from './ListsAppStatusBar'
 import { ListStore } from './ListStore'
-import { ListsAppBit, ListsAppData } from './types'
+import { ListsAppBit } from './types'
 
 export const listRootID = 0
 
-export const ListsApp: App<ListsAppData> = props => {
+export const ListsApp /*: App<ListsAppData> */ = props => {
   const listStore = useStore(ListStore, props)
   return (
-    <AppContainer
+    <App
       provideStores={{ listStore }}
       index={<ListsAppIndex {...props} />}
       statusBar={<ListAppStatusBar />}
     >
       <ListsAppMain {...props} />
-    </AppContainer>
+    </App>
   )
 }
 

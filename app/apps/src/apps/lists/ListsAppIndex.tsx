@@ -1,7 +1,6 @@
 import { save } from '@mcro/bridge'
 import { List } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
-import { arrayMove } from '@mcro/react-sortable-hoc'
 import {
   Absolute,
   BorderBottom,
@@ -38,6 +37,7 @@ export function ListsAppIndex(_: AppProps) {
 }
 
 function ListCurrentFolder() {
+  // @ts-ignore
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
 

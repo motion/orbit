@@ -5,13 +5,7 @@
     "outDir": "_",
     "typeRoots": ["./src/globalTypes.d.ts"]
   },
-  "include": [
-    "src/**/*",
-    "../kit/src/hooks/useFilterableResults.ts",
-    "../kit/src/hooks/useOrbitFilterableResults.ts",
-    "../kit/src/hooks/useActiveUser.ts",
-    "../kit/src/hooks/useActiveApp.ts"
-  ],
+  "include": ["src/**/*"],
   "references": [
     { "path": "../bridge" },
     { "path": "../../packages/config" },

@@ -1,7 +1,7 @@
 import { useReaction } from '@mcro/use-store'
 import { useCallback } from 'react'
-import { useStoresSimple } from '../../../orbit-app/src/hooks/useStores'
 import { useFilter, UseFilterProps } from './useFilter'
+import { useStoresSimple } from './useStores'
 
 export function useActiveQueryFilter<A>(props: UseFilterProps<A>): A[] {
   const { appStore } = useStoresSimple()

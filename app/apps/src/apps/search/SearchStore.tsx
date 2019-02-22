@@ -1,14 +1,11 @@
-import { ensure, react } from '@mcro/black'
 import { loadMany } from '@mcro/bridge'
-import { AppIcon, AppType, MarkType, OrbitListItemProps } from '@mcro/kit'
+import { AppIcon, AppType, MarkType, OrbitListItemProps, SearchState, SpaceIcon } from '@mcro/kit'
 import { IntegrationType, SearchQuery, SearchResultModel } from '@mcro/models'
-import { useHook } from '@mcro/use-store'
+import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
-import { useActions } from '../../actions/Actions'
-import { SearchState } from '../../hooks/useSearch'
+// import { useActions } from '../../actions/Actions'
 import { useStoresSimple } from '../../hooks/useStores'
-import { SpaceIcon } from '../../views/SpaceIcon'
 import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchResults = {
@@ -19,7 +16,7 @@ type SearchResults = {
 
 export class SearchStore {
   stores = useHook(useStoresSimple)
-  actions = useHook(useActions)
+  // actions = useHook(useActions)
   searchState: SearchState | null = null
 
   setSearchState(next: SearchState) {
@@ -133,7 +130,10 @@ export class SearchStore {
           type: AppType.message,
           title: `Create new app`,
         },
-        onOpen: this.actions.setupNewApp,
+        onOpen: () => {
+          console.warn('TODO restore this')
+          // this.actions.setupNewApp
+        },
       },
     ]
   }

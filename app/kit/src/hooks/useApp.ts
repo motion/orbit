@@ -1,8 +1,7 @@
-import { react } from '@mcro/black'
-import { AppStore } from '@mcro/kit'
-import { useHook, useStore } from '@mcro/use-store'
-import { useStoresSimple } from '../hooks/useStores'
-import { AppViews } from './AppTypes'
+import { react, useHook, useStore } from '@mcro/use-store'
+import { AppStore } from '../stores'
+import { AppViews } from '../types/AppViews'
+import { useStoresSimple } from './useStores'
 
 // needs either an id or a type
 type UseAppProps = {
@@ -20,6 +19,7 @@ type AppState = {
 class UseAppStore {
   props: UseAppProps
   stores = useHook(useStoresSimple)
+
   state = react(() => {
     const { stores, props } = this
     const next: AppState = {

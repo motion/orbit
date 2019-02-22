@@ -12,7 +12,7 @@ export type UseFilterProps<A> = {
   groupMinimum?: number
 }
 
-export function useFilter({ filterKey = 'id', groupMinimum, ...props }: FilterableProps<any>) {
+export function useFilter({ filterKey = 'id', groupMinimum, ...props }: UseFilterProps<any>) {
   const query = props.removePrefix
     ? removePrefixIfExists(props.query || '', props.removePrefix)
     : props.query || ''

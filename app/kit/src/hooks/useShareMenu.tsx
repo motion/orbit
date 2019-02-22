@@ -1,8 +1,10 @@
-import { OrbitListItemProps, SearchItemShareProvide } from '@mcro/kit'
-import { Icon, Popover, View, preventDefault } from '@mcro/ui'
+import { Icon, Popover, preventDefault, View } from '@mcro/ui'
 import { flow, memoize } from 'lodash'
 import React from 'react'
-import { useStores } from '../helpers/useStores';
+import { OrbitListItemProps } from '../views/ListItem'
+import { SearchItemShareProvide } from '../views/SearchItemProvide'
+import { ShareMenu } from '../views/ShareMenu'
+import { useStores } from './useStores'
 
 const getItemShareMenu = memoize((listItem, themeStore) => {
   const item = listItem.item || listItem
@@ -39,7 +41,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
             borderRadius={10}
             elevation={1}
           >
-            {isShown => isShown && <SearchItemShare />}
+            {isShown => isShown && <ShareMenu />}
           </Popover>
         </SearchItemShareProvide>
       ),

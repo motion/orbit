@@ -2,7 +2,7 @@ import { on } from '@mcro/helpers'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
-import { useStoresSimple } from '../helpers/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from '../views/SubPane'
 
 export class SubPaneStore {

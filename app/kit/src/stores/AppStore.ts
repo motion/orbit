@@ -1,7 +1,7 @@
 import { observeOne } from '@mcro/bridge'
 import { AppModel } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
-import { useStoresSimple } from '../helpers/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
 
 export class AppStore {

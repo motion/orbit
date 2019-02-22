@@ -3,8 +3,8 @@ import { OrbitIntegration } from '@mcro/kit'
 import { IntegrationType, Source, SourceModel } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
+import { allIntegrations } from '../apps'
 import { getAppFromSource } from '../getAppConfig'
-import { allIntegrations } from '../sources'
 
 console.log('allIntegrations', allIntegrations)
 

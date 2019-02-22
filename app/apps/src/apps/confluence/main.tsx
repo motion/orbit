@@ -1,17 +1,17 @@
+import { AppDefinition } from '@mcro/kit'
 import { ConfluenceApp } from './ConfluenceApp'
 import { confluenceIcon } from './confluenceIcon'
 import { ConfluenceItem } from './ConfluenceItem'
 import { ConfluenceSettings } from './ConfluenceSettings'
 import { ConfluenceSetup } from './ConfluenceSetup'
 
-export const confluence = {
+export const app: AppDefinition = {
   name: 'Confluence',
-  itemName: 'task',
-  modelType: 'bit',
+  itemType: 'task',
   sourceType: 'confluence',
   icon: confluenceIcon,
   views: {
-    main: ConfluenceApp,
+    app: ConfluenceApp,
     item: ConfluenceItem,
     setting: ConfluenceSettings,
     setup: ConfluenceSetup,

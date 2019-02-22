@@ -1,7 +1,7 @@
 import { superMemo } from '@mcro/ui'
 import React, { useEffect } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppElements } from '../types/AppViews'
+import { AppElements } from '../types/AppDefinition'
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 

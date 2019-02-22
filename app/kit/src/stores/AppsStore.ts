@@ -1,6 +1,6 @@
 import { ensure, react, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppViews } from '../types/AppViews'
+import { AppViews } from '../types/AppDefinition'
 import { AppStore } from './AppStore'
 
 function getViewInformation(_type: string, views?: AppViews) {

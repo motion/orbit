@@ -19,11 +19,13 @@ function SearchApp(props: AppProps) {
   )
 }
 
-const context = createContext({
+export const context = createContext({
   searchStore: null as SearchStore,
 })
 
 export const app: AppDefinition = {
+  name: 'Search',
+  icon: '',
   context,
   views: {
     app: SearchApp,

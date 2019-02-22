@@ -26,13 +26,16 @@ export type AppViews = {
 
 export type AppDefinition = {
   name: string
-  itemType: 'task' | 'document' | 'webpage' | 'thread' | 'chat' | 'markdown' | 'text' | 'task'
-  // TODO remove and just use bit
-  modelType: 'person-bit' | 'bit'
-  sourceType: string
   icon: string
   iconLight?: string
   defaultViewConfig?: AppConfig['viewConfig']
+  context?: React.Context<any>
+  sync?: {
+    itemType: 'task' | 'document' | 'webpage' | 'thread' | 'chat' | 'markdown' | 'text' | 'task'
+    // TODO remove and just use bit
+    modelType: 'person-bit' | 'bit'
+    sourceType: string
+  }
   views: {
     app?: FunctionComponent<AppProps>
     main?: FunctionComponent<OrbitSourceMainProps>

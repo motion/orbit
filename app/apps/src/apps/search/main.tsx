@@ -1,7 +1,6 @@
 import { App, AppDefinition, AppProps, useSearch } from '@mcro/kit'
 import { useStore } from '@mcro/use-store'
-import React from 'react'
-import { createContext } from 'vm'
+import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
 import { SearchAppMain } from './SearchAppMain'
 import { SearchAppSettings } from './SearchAppSettings'
@@ -20,10 +19,12 @@ function SearchApp(props: AppProps) {
   )
 }
 
+const context = createContext({
+  searchStore: null as SearchStore,
+})
+
 export const app: AppDefinition = {
-  context: createContext({
-    searchStore: null as SearchStore,
-  }),
+  context,
   views: {
     app: SearchApp,
     settings: SearchAppSettings,

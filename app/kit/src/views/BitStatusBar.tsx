@@ -1,5 +1,4 @@
 import { gloss } from '@mcro/gloss'
-import { OrbitSourceMainProps } from '@mcro/kit'
 import {
   DateFormat,
   StatusBar,
@@ -10,6 +9,7 @@ import {
   View,
 } from '@mcro/ui'
 import * as React from 'react'
+import { OrbitSourceMainProps } from '../types/SourceTypes'
 
 const Cmd = gloss({
   opacity: 0.6,

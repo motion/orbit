@@ -5,8 +5,8 @@ import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { WhitelistManager } from '../../../helpers/WhitelistManager'
-import { SettingManageRow } from '../../../views/settings/SettingManageRow'
+import { SettingManageRow } from '../../../views/SettingManageRow'
+import { WhitelistManager } from '../../../WhitelistManager'
 
 export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
   const whitelist = useStore(WhitelistManager, {

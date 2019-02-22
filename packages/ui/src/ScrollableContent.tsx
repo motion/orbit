@@ -1,8 +1,9 @@
-import { gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { Col, gloss, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
 
-const PeekContentChrome = gloss(UI.Col, {
+// TODO not a great view
+
+const PeekContentChrome = gloss(Col, {
   flex: 1,
   position: 'relative',
   zIndex: 0,
@@ -10,7 +11,7 @@ const PeekContentChrome = gloss(UI.Col, {
   overflow: 'hidden',
 })
 
-const ContentInner = gloss(UI.Col, {
+const ContentInner = gloss(Col, {
   overflowX: 'auto',
   overflowY: 'auto',
   flex: 1,
@@ -19,10 +20,7 @@ const ContentInner = gloss(UI.Col, {
   wordBreak: 'break-word',
 })
 
-export default function ScrollableContent({
-  scrollTo,
-  ...props
-}: UI.ViewProps & { scrollTo?: string }) {
+export function ScrollableContent({ scrollTo, ...props }: ViewProps & { scrollTo?: string }) {
   return (
     <PeekContentChrome>
       <ContentInner {...props} />

@@ -1,17 +1,15 @@
 import { GetOrbitIntegration } from '@mcro/kit'
 import { Source } from '@mcro/models'
-import { findManyType } from '../../helpers/queries'
+import { JiraApp } from './JiraApp'
 import { jiraIcon } from './jiraIcon'
-import { JiraApp } from './views/JiraApp'
-import { JiraItem } from './views/JiraItem'
-import { JiraSettings } from './views/JiraSettings'
-import { JiraSetup } from './views/JiraSetup'
+import { JiraItem } from './JiraItem'
+import { JiraSettings } from './JiraSettings'
+import { JiraSetup } from './JiraSetup'
 
 export const jira: GetOrbitIntegration<'jira'> = (source?: Source) => ({
   modelType: 'bit',
   integration: 'jira',
   appName: 'Jira',
-  defaultQuery: findManyType('jira'),
   display: {
     name: source.name,
     itemName: 'task',

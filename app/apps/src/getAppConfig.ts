@@ -23,6 +23,23 @@ export const getAppFromSource = (source: Source): OrbitIntegration<any> => {
   }
 }
 
+export function getAppConfig({ item }: OrbitListItemProps): AppConfig {
+  if (item && item.type) {
+    const app = allIntegrations[item.type]
+    return sourceToAppConfig(app, item)
+  }
+}
+
+const modelTargetToAppType = (model: ResolvableModel): AppType => {
+  if (model.target === 'person-bit') {
+    return AppType.people
+  }
+  if (model.target === 'search-group') {
+    return AppType.search
+  }
+  return AppType[model.target]
+}
+
 export const sourceToAppConfig = (
   app: OrbitIntegration<any>,
   model?: ResolvableModel,
@@ -38,50 +55,5 @@ export const sourceToAppConfig = (
     type: model ? modelTargetToAppType(model) : AppType.sources,
     integration: app.integration,
     viewConfig: app.viewConfig,
-  }
-}
-
-const modelTargetToAppType = (model: ResolvableModel): AppType => {
-  if (model.target === 'person-bit') {
-    return AppType.people
-  }
-  if (model.target === 'search-group') {
-    return AppType.search
-  }
-  return AppType[model.target]
-}
-
-export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
-  const { item } = props
-  let type: string = ''
-  if (item) {
-    switch (item.target) {
-      case 'bit':
-        type = item.integration
-        break
-      case 'person-bit':
-        type = 'person'
-        break
-    }
-    if (type) {
-      const app = allIntegrations[type]
-      return sourceToAppConfig(app, item)
-    }
-  }
-  return {
-    id,
-    ...listItemToAppConfig(props),
-  }
-}
-
-function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
-  return {
-    id: props.id,
-    type: AppType[props.type],
-    // dont accept react elements
-    title: typeof props.title === 'string' ? props.title : undefined,
-    icon: typeof props.icon === 'string' ? props.icon : undefined,
-    subType: props.subType,
-    ...props.appConfig,
   }
 }

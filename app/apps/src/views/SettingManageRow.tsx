@@ -8,10 +8,10 @@ import {
 } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { getAppFromSource } from '../../../getAppConfig'
-import { useJobs } from '../../../hooks/useJobs'
-import { useSourceInfo } from '../../../hooks/useSourceInfo'
-import { WhitelistManager } from '../../helpers/WhitelistManager'
+import { getAppFromSource } from '../getAppConfig'
+import { useJobs } from '../hooks/useJobs'
+import { useSourceInfo } from '../hooks/useSourceInfo'
+import { WhitelistManager } from '../WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 
 const handleRefresh = async (sourceId: number) => {

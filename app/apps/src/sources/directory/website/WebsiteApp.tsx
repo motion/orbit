@@ -1,8 +1,6 @@
-import { OrbitSourceMainProps, Readability } from '@mcro/kit'
-import { Title, View } from '@mcro/ui'
+import { BitStatusBar, OrbitSourceMainProps, Readability } from '@mcro/kit'
+import { ScrollableContent, Title, View } from '@mcro/ui'
 import * as React from 'react'
-import { BitStatusBar } from '../../../views/layout/BitStatusBar'
-import ScrollableContent from '../../../views/layout/ScrollableContent'
 
 export class WebsiteApp extends React.Component<OrbitSourceMainProps<'website'>> {
   render() {

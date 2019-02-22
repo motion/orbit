@@ -1,15 +1,13 @@
 import { useModels } from '@mcro/bridge'
 import { gloss, View } from '@mcro/gloss'
-import { ChatMessages, OrbitSourceMainProps } from '@mcro/kit'
+import { BitStatusBar, ChatMessages, OrbitSourceMainProps } from '@mcro/kit'
 import { Bit, BitModel, GenericBit } from '@mcro/models'
-import { Button, Divider, Row, SegmentedRow, Title } from '@mcro/ui'
+import { Button, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui'
 import * as React from 'react'
-import { BitStatusBar } from '../../../views/layout/BitStatusBar'
-import ScrollableContent from '../../../views/layout/ScrollableContent'
 
 type Props = OrbitSourceMainProps<'slack'>
 
-export const Pane = gloss(View, {
+const Pane = gloss(View, {
   height: 0,
   opacity: 0,
   pointerEvents: 'none',

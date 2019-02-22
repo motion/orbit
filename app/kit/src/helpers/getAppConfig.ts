@@ -1,12 +1,13 @@
-import { Source } from '@mcro/models';
-import { config } from '../configureKit';
-import { AppConfig } from '../types/AppConfig';
-import { AppType } from '../types/AppType';
-import { ResolvableModel } from '../types/ResolvableModel';
-import { OrbitSource } from '../types/SourceTypes';
-import { OrbitListItemProps } from '../views/ListItem';
+import { loadOne } from '@mcro/bridge'
+import { Source, SourceModel, SourceType } from '@mcro/models'
+import { config } from '../configureKit'
+import { AppConfig } from '../types/AppConfig'
+import { AppType } from '../types/AppType'
+import { ResolvableModel } from '../types/ResolvableModel'
+import { OrbitSource } from '../types/SourceTypes'
+import { OrbitListItemProps } from '../views/ListItem'
 
-export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
+export async function getAppConfig(props: OrbitListItemProps, id?: string): Promise<AppConfig> {
   const { item } = props
   let type: string = ''
   if (item) {
@@ -40,14 +41,13 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   }
 }
 
-export const getAppFromSource = (source: Source): OrbitSource<any> => {
+export const getAppFromSource = (source: Source): OrbitSource => {
   return config.sources.getSources[source.type](source)
 }
 
-export function getSourceAppConfig({ item }: OrbitListItemProps): AppConfig {
+export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<AppConfig> {
   if (item && item.type) {
-    const app = config.sources.allSources[item.type]
-    return sourceToAppConfig(app, item)
+    return sourceToAppConfig(config.sources.allSources[item.type], item)
   }
 }
 
@@ -61,20 +61,27 @@ const modelTargetToAppType = (model: ResolvableModel): AppType => {
   return AppType[model.target]
 }
 
-export const sourceToAppConfig = (
-  app: OrbitSource<any>,
+export async function sourceToAppConfig(
+  sourceConfig: OrbitSource,
   model?: ResolvableModel,
-): AppConfig => {
-  if (!app) {
-    throw new Error(`No app given: ${JSON.stringify(app)}`)
+): Promise<AppConfig> {
+  if (!sourceConfig) {
+    throw new Error(`No source given: ${JSON.stringify(sourceConfig)}`)
+  }
+  let source = null
+  if (model.target === 'bit') {
+    source = await loadOne(SourceModel, { args: { where: { id: model.sourceId } } })
   }
   return {
-    id: `${(model && model.id) || (app.source && app.source.id) || Math.random()}`,
-    icon: app.icon,
-    iconLight: app.iconLight,
-    title: app.name,
+    id: `${(model && model.id) || (source && source.id) || Math.random()}`,
+    icon: sourceConfig.icon,
+    iconLight: sourceConfig.iconLight,
+    title: source.name,
     type: model ? modelTargetToAppType(model) : AppType.sources,
-    source: app.source,
-    viewConfig: app.viewConfig,
+    source: sourceConfig.sourceType as SourceType,
+    viewConfig: sourceConfig.viewConfig,
   }
+
+  console.warn('person needs to switch to bit...')
+  return {}
 }

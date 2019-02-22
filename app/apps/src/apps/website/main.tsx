@@ -1,27 +1,23 @@
-import { GetOrbitSource } from '@mcro/kit'
-import { Source } from '@mcro/models'
 import { WebsiteApp } from './WebsiteApp'
 import { WebsiteItem } from './WebsiteItem'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
-export const website: GetOrbitSource<'website'> = (source?: Source) => ({
+export const website = {
   name: 'Website',
   modelType: 'bit',
-  source: 'website',
-  display: {
-    name: source.name,
-    itemName: 'task',
-    icon: websiteIcon,
-  },
+  sourceType: 'website',
+  itemName: 'task',
+  icon: websiteIcon(),
   views: {
     main: WebsiteApp,
     item: WebsiteItem,
     setting: WebsiteSetupPane,
     setup: WebsiteSetupPane,
   },
-})
+}
 
-const websiteIcon = `
+function websiteIcon() {
+  return `
 <svg version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 58 58">
   <rect style="fill:#ECF0F1;" width="58" height="58" />
   <rect style="fill:#546A79;" width="58" height="12" />
@@ -63,3 +59,4 @@ const websiteIcon = `
   />
 </svg>
     `
+}

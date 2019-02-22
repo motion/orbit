@@ -1,22 +1,17 @@
-import { GetOrbitSource } from '@mcro/kit'
-import { Source } from '@mcro/models'
 import SlackApp from './SlackApp'
 import { slackIcon } from './slackIcon'
 import { SlackItem } from './SlackItem'
 import SlackSettings from './SlackSettings'
 
-export const slack: GetOrbitSource<'slack'> = (source?: Source) => ({
+export const slack = {
   name: 'Slack',
   modelType: 'bit',
-  source: 'slack',
-  display: {
-    name: source.name,
-    itemName: 'conversation',
-    icon: slackIcon,
-  },
+  sourceType: 'slack',
+  itemName: 'conversation',
+  icon: slackIcon,
   views: {
     main: SlackApp,
     item: SlackItem,
     setting: SlackSettings,
   },
-})
+}

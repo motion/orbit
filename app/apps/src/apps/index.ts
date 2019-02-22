@@ -1,4 +1,4 @@
-import { GetOrbitSources, OrbitSources } from '@mcro/kit'
+import { OrbitSources } from '@mcro/kit'
 import { confluence } from './confluence/main'
 import * as CustomApp from './custom/main'
 import { drive } from './drive/main'
@@ -12,7 +12,7 @@ import * as SearchApp from './search/main'
 import { slack } from './slack/main'
 import { website } from './website/main'
 
-export const getSources: GetOrbitSources = {
+export const getSources: OrbitSources = {
   slack,
   github,
   gmail,
@@ -21,8 +21,8 @@ export const getSources: GetOrbitSources = {
   drive,
   website,
   // people,
-  people: () => null,
-  pinned: () => null,
+  people: null,
+  pinned: null,
 }
 
 export const allSources = {} as OrbitSources

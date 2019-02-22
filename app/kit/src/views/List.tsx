@@ -106,8 +106,8 @@ export function List(props: ListProps) {
     [props],
   )
   const onSelect = useCallback(
-    (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(items[index]))
+    async (index, eventType) => {
+      const appConfig = await getAppConfig(toListItemProps(items[index]))
       if (props.onSelect) {
         props.onSelect(index, appConfig, eventType)
       }
@@ -121,8 +121,8 @@ export function List(props: ListProps) {
     [props, selectableProps],
   )
   const onOpen = useCallback(
-    (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(items[index]))
+    async (index, eventType) => {
+      const appConfig = await getAppConfig(toListItemProps(items[index]))
       if (props.onOpen) {
         props.onOpen(index, appConfig)
       }

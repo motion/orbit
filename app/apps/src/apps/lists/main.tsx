@@ -22,11 +22,9 @@ export default function ListsApp(props: AppProps) {
   )
 }
 
-export const config = {
-  defaultValue: {
-    rootItemID: 0,
-    items: {},
-  },
+export const defaultValue = {
+  rootItemID: 0,
+  items: {},
 }
 
 export const API = {

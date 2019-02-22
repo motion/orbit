@@ -16,7 +16,7 @@ const Cmd = gloss({
   marginLeft: 4,
 })
 
-export const BitStatusBar = ({ normalizedItem /* , item */ }: OrbitSourceMainProps<any>) => {
+export const BitStatusBar = ({ normalizedItem /* , item */ }: OrbitSourceMainProps) => {
   const { location /* , locationLink */, updatedAt } = normalizedItem
   return (
     <StatusBar>

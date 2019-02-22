@@ -6,9 +6,9 @@ import { DriveItem } from './DriveItem'
 import { DriveSettings } from './DriveSettings'
 
 export const drive: GetOrbitIntegration<'drive'> = (source?: Source) => ({
+  name: 'Drive',
   modelType: 'bit',
   integration: 'drive',
-  appName: 'Drive',
   display: {
     name: source.name,
     itemName: 'task',

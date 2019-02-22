@@ -7,9 +7,9 @@ import { JiraSettings } from './JiraSettings'
 import { JiraSetup } from './JiraSetup'
 
 export const jira: GetOrbitIntegration<'jira'> = (source?: Source) => ({
+  name: 'Jira',
   modelType: 'bit',
   integration: 'jira',
-  appName: 'Jira',
   display: {
     name: source.name,
     itemName: 'task',

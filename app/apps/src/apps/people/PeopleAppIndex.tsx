@@ -1,9 +1,9 @@
 import { useModels } from '@mcro/bridge'
 import {
-  AppProps,
   groupByFirstLetter,
   List,
   removePrefixIfExists,
+  useActiveQuery,
   useActiveQueryFilter,
   useShareMenu,
   useStores,
@@ -13,11 +13,12 @@ import { capitalize } from 'lodash'
 import * as React from 'react'
 import NoResultsDialog from '../../views/NoResultsDialog'
 
-export function PeopleAppIndex(props: AppProps) {
+export function PeopleAppIndex() {
   // people and query
   const { queryStore } = useStores()
   const { integrationFilters } = queryStore.queryFilters
   const { getShareMenuItemProps } = useShareMenu()
+  const activeQuery = useActiveQuery()
 
   let where = null
   if (integrationFilters.length) {
@@ -55,7 +56,7 @@ export function PeopleAppIndex(props: AppProps) {
       }}
       minSelected={0}
       items={results}
-      query={removePrefixIfExists(props.appStore.activeQuery, '@')}
+      query={removePrefixIfExists(activeQuery, '@')}
     />
   )
 }

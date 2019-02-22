@@ -182,7 +182,7 @@ export default function OrbitOnboardMain() {
               return (
                 <SimpleItem
                   key={item.integration}
-                  title={item.appName}
+                  title={item.name}
                   icon={item.integration}
                   inactive={item.isActive}
                   onClick={item.isActive ? null : addSourceClickHandler(item)}

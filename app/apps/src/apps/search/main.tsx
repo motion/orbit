@@ -15,11 +15,7 @@ export default function SearchApp(props: AppProps) {
   })
 
   return (
-    <App
-      provideStores={{ searchStore }}
-      index={<SearchAppIndex {...props} />}
-      toolBar={<SearchToolBar />}
-    >
+    <App provideStores={{ searchStore }} index={<SearchAppIndex />} toolBar={<SearchToolBar />}>
       <SearchAppMain {...props} />
     </App>
   )

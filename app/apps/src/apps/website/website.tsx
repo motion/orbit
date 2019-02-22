@@ -5,13 +5,23 @@ import { WebsiteItem } from './WebsiteItem'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
 export const website: GetOrbitIntegration<'website'> = (source?: Source) => ({
+  name: 'Website',
   modelType: 'bit',
   integration: 'website',
-  appName: 'Website',
   display: {
     name: source.name,
     itemName: 'task',
-    icon: `
+    icon: websiteIcon,
+  },
+  views: {
+    main: WebsiteApp,
+    item: WebsiteItem,
+    setting: WebsiteSetupPane,
+    setup: WebsiteSetupPane,
+  },
+})
+
+const websiteIcon = `
 <svg version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 58 58">
   <rect style="fill:#ECF0F1;" width="58" height="58" />
   <rect style="fill:#546A79;" width="58" height="12" />
@@ -52,12 +62,4 @@ export const website: GetOrbitIntegration<'website'> = (source?: Source) => ({
     d="M54,53H40c-0.553,0-1-0.447-1-1s0.447-1,1-1h14c0.553,0,1,0.447,1,1S54.553,53,54,53z"
   />
 </svg>
-    `,
-  },
-  views: {
-    main: WebsiteApp,
-    item: WebsiteItem,
-    setting: WebsiteSetupPane,
-    setup: WebsiteSetupPane,
-  },
-})
+    `

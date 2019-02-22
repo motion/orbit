@@ -7,9 +7,9 @@ import { GithubItem } from './GithubItem'
 import GithubSettings from './GithubSettings'
 
 export const github: GetOrbitIntegration<'github'> = (source?: Source) => ({
+  name: 'Github',
   modelType: 'bit',
   integration: 'github',
-  appName: 'Github',
   display: {
     name: source.name,
     itemName: 'task',

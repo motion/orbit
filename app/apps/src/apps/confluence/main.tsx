@@ -7,9 +7,9 @@ import { ConfluenceSettings } from './ConfluenceSettings'
 import { ConfluenceSetup } from './ConfluenceSetup'
 
 export const confluence: GetOrbitIntegration<'confluence'> = (source?: Source) => ({
+  name: 'Confluence',
   modelType: 'bit',
   integration: 'confluence',
-  appName: 'Confluence',
   display: {
     name: source.name,
     itemName: 'task',

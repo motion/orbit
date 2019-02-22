@@ -4,24 +4,18 @@ import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
 import { PersonItem } from './PersonItem'
 
-export default function Main(props: AppProps) {
+export default function PeopleApp(props: AppProps) {
   return (
-    <App index={<PeopleAppIndex {...props} />}>
+    <App index={<PeopleAppIndex />}>
       <PeopleAppMain {...props} />
     </App>
   )
 }
 
-export const people = {
-  views: {
-    main: PeopleAppMain,
-    item: PersonItem,
-  },
+export const config = {
+  name: 'People',
+  icon: 'person',
+  itemView: PersonItem,
+  itemName: 'person',
   modelType: 'person-bit',
-  appName: 'People',
-  display: {
-    name: 'Directory',
-    icon: 'person',
-    itemName: 'person',
-  },
 }

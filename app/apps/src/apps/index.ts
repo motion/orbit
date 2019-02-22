@@ -1,5 +1,5 @@
 import { GetOrbitIntegrations, OrbitIntegrations } from '@mcro/kit'
-import { confluence } from './confluence/confluence'
+import { confluence } from './confluence/main'
 import * as CustomApp from './custom/main'
 import { drive } from './drive/drive'
 import { github } from './github/github'

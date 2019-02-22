@@ -1,7 +1,6 @@
-import { Bit, PersonBit, Source } from '@mcro/models'
+import { AppBit, Bit, PersonBit, Source } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
-import { App } from '../views/App'
 import { AppConfig } from './AppConfig'
 import { ItemType } from './ItemType'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
@@ -33,17 +32,14 @@ export type OrbitSourceSettingProps<T extends Source> = {
 }
 
 export type OrbitIntegration<A extends ItemType> = {
-  app?: App
+  name?: string
+  app?: AppBit
   source?: Source
-  display?: {
-    name: string
-    itemName?: string
-    icon?: string
-    iconLight?: string
-  }
+  itemName?: string
+  icon?: string
+  iconLight?: string
   modelType: ModelFromType<A>['target']
   integration?: A
-  appName?: string
   viewConfig?: AppConfig['viewConfig']
   views: {
     main: GenericComponent<OrbitSourceMainProps<A>>

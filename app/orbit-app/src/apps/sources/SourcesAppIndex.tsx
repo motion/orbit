@@ -41,7 +41,7 @@ export default function SourcesAppIndex(_props: AppProps) {
     ...allSources.map((source, index) => ({
       // ...these have their own onClick
       id: `${source.integration}${index}`,
-      title: source.appName,
+      title: source.name,
       icon: source.integration,
       onClick:
         !source.views.setup &&
@@ -65,7 +65,7 @@ export default function SourcesAppIndex(_props: AppProps) {
           }
         : {
             type: AppType.message,
-            title: `Opening private authentication for ${source.appName}...`,
+            title: `Opening private authentication for ${source.name}...`,
           },
       group: 'Add source',
     })),

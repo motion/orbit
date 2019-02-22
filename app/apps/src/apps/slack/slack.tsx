@@ -6,8 +6,8 @@ import { SlackItem } from './SlackItem'
 import SlackSettings from './SlackSettings'
 
 export const slack: GetOrbitIntegration<'slack'> = (source?: Source) => ({
+  name: 'Slack',
   modelType: 'bit',
-  appName: 'Slack',
   integration: 'slack',
   display: {
     name: source.name,

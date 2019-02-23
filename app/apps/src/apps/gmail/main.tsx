@@ -1,17 +1,13 @@
-import { GmailApp } from './GmailApp'
+import { AppDefinition } from '@mcro/kit'
 import { gmailIcon } from './gmailIcon'
-import { GmailItem } from './GmailItem'
 import GmailSettings from './GmailSettings'
 
-export const gmail = {
+export const app: AppDefinition = {
   name: 'Gmail',
-  modelType: 'bit',
-  sourceType: 'gmail',
-  itemName: 'thread',
   icon: gmailIcon,
-  views: {
-    main: GmailApp,
-    item: GmailItem,
-    setting: GmailSettings,
+  itemType: 'thread',
+  sync: {
+    sourceType: 'gmail',
+    settings: GmailSettings,
   },
 }

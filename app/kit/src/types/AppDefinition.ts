@@ -30,18 +30,24 @@ export type AppDefinition = {
   iconLight?: string
   defaultViewConfig?: AppConfig['viewConfig']
   context?: React.Context<any>
+  itemType?:
+    | 'task'
+    | 'document'
+    | 'webpage'
+    | 'thread'
+    | 'conversation'
+    | 'markdown'
+    | 'text'
+    | 'task'
+    | 'person'
+  app?: FunctionComponent<AppProps>
+  settings?: FunctionComponent<null>
+  appData?: Object
   sync?: {
-    itemType: 'task' | 'document' | 'webpage' | 'thread' | 'chat' | 'markdown' | 'text' | 'task'
+    sourceType?: string
     // TODO remove and just use bit
-    modelType: 'person-bit' | 'bit'
-    sourceType: string
-  }
-  views: {
-    app?: FunctionComponent<AppProps>
-    main?: FunctionComponent<OrbitSourceMainProps>
-    item?: FunctionComponent<OrbitItemViewProps<any>>
-    settings?: FunctionComponent<null>
-    sourceSettings?: FunctionComponent<OrbitSourceSettingProps<Source>>
+    modelType?: 'person-bit' | 'bit'
+    settings?: FunctionComponent<OrbitSourceSettingProps<Source>>
     setup?: FunctionComponent<any>
   }
 }

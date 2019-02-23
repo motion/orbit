@@ -1,17 +1,13 @@
-import { WebsiteApp } from './WebsiteApp'
-import { WebsiteItem } from './WebsiteItem'
+import { AppDefinition } from '@mcro/kit'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
-export const website = {
+export const app: AppDefinition = {
   name: 'Website',
-  modelType: 'bit',
-  sourceType: 'website',
-  itemName: 'task',
   icon: websiteIcon(),
-  views: {
-    main: WebsiteApp,
-    item: WebsiteItem,
-    setting: WebsiteSetupPane,
+  itemType: 'task',
+  sync: {
+    sourceType: 'website',
+    settings: WebsiteSetupPane,
     setup: WebsiteSetupPane,
   },
 }

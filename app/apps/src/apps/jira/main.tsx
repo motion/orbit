@@ -1,19 +1,15 @@
-import { JiraApp } from './JiraApp'
+import { AppDefinition } from '@mcro/kit'
 import { jiraIcon } from './jiraIcon'
-import { JiraItem } from './JiraItem'
 import { JiraSettings } from './JiraSettings'
 import { JiraSetup } from './JiraSetup'
 
-export const jira = {
+export const app: AppDefinition = {
   name: 'Jira',
-  modelType: 'bit',
-  sourceType: 'jira',
-  itemName: 'task',
   icon: jiraIcon,
-  views: {
-    main: JiraApp,
-    item: JiraItem,
-    setting: JiraSettings,
+  itemType: 'task',
+  sync: {
+    sourceType: 'jira',
+    settings: JiraSettings,
     setup: JiraSetup,
   },
 }

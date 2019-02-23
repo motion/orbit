@@ -1,17 +1,13 @@
-import { DriveApp } from './DriveApp'
+import { AppDefinition } from '@mcro/kit'
 import { driveIcon } from './driveIcon'
-import { DriveItem } from './DriveItem'
 import { DriveSettings } from './DriveSettings'
 
-export const drive = {
+export const app: AppDefinition = {
   name: 'Drive',
-  modelType: 'bit',
-  sourceType: 'drive',
-  itemName: 'task',
   icon: driveIcon,
-  views: {
-    main: DriveApp,
-    item: DriveItem,
-    setting: DriveSettings,
+  itemType: 'task',
+  sync: {
+    sourceType: 'drive',
+    settings: DriveSettings,
   },
 }

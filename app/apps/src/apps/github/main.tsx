@@ -1,19 +1,15 @@
-import { GithubApp } from './GithubApp'
+import { AppDefinition } from '@mcro/kit'
 import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
-import { GithubItem } from './GithubItem'
 import GithubSettings from './GithubSettings'
 
-export const github = {
+export const app: AppDefinition = {
   name: 'Github',
-  modelType: 'bit',
-  sourceType: 'github',
-  itemName: 'task',
   icon: githubIcon,
   iconLight: githubIconWhite,
-  views: {
-    main: GithubApp,
-    item: GithubItem,
-    setting: GithubSettings,
+  itemType: 'task',
+  sync: {
+    sourceType: 'github',
+    settings: GithubSettings,
   },
 }

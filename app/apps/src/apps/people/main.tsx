@@ -1,10 +1,9 @@
-import { App, AppProps } from '@mcro/kit'
+import { App, AppDefinition, AppProps } from '@mcro/kit'
 import React from 'react'
 import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
-import { PersonItem } from './PersonItem'
 
-export default function PeopleApp(props: AppProps) {
+function PeopleApp(props: AppProps) {
   return (
     <App index={<PeopleAppIndex />}>
       <PeopleAppMain {...props} />
@@ -12,10 +11,12 @@ export default function PeopleApp(props: AppProps) {
   )
 }
 
-export const config = {
+export const app: AppDefinition = {
   name: 'People',
   icon: 'person',
-  itemView: PersonItem,
-  itemName: 'person',
-  modelType: 'person-bit',
+  itemType: 'person',
+  app: PeopleApp,
+  sync: {
+    modelType: 'person-bit',
+  },
 }

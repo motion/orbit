@@ -27,8 +27,6 @@ export const app: AppDefinition = {
   name: 'Search',
   icon: '',
   context,
-  views: {
-    app: SearchApp,
-    settings: SearchAppSettings,
-  },
+  app: SearchApp,
+  settings: SearchAppSettings,
 }

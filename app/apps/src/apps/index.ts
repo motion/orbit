@@ -1,33 +1,35 @@
-import { OrbitSources } from '@mcro/kit'
-import { confluence } from './confluence/main'
+import { AppDefinition } from '@mcro/kit'
+import { AppBit } from '@mcro/models'
+import * as ConfluenceApp from './confluence/main'
 import * as CustomApp from './custom/main'
-import { drive } from './drive/main'
-import { github } from './github/main'
-import { gmail } from './gmail/main'
-import { jira } from './jira/main'
+import * as DriveApp from './drive/main'
+import * as GithubApp from './github/main'
+import * as GmailApp from './gmail/main'
+import * as JiraApp from './jira/main'
 import * as ListsApp from './lists/main'
 import * as PeopleApp from './people/main'
 import * as SearchApp from './search/main'
-// import { people } from './people/people'
-import { slack } from './slack/main'
-import { website } from './website/main'
+import * as SlackApp from './slack/main'
+import * as WebsiteApp from './website/main'
 
-export const allSources: OrbitSources = {
-  slack,
-  github,
-  gmail,
-  jira,
-  confluence,
-  drive,
-  website,
-  // people,
-  people: null,
-  pinned: null,
+type FullAppDefinition = {
+  app: AppDefinition
+  context?: React.Context<any>
+  API?: {
+    recieve(app: AppBit, parentID: number, child: any): any
+  }
 }
 
-export const allApps = {
-  lists: ListsApp,
-  search: SearchApp,
-  people: PeopleApp,
-  custom: CustomApp,
-}
+export const apps: FullAppDefinition[] = [
+  ListsApp,
+  SearchApp,
+  PeopleApp,
+  CustomApp,
+  ConfluenceApp,
+  JiraApp,
+  GmailApp,
+  DriveApp,
+  GithubApp,
+  SlackApp,
+  WebsiteApp,
+]

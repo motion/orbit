@@ -1,11 +1,17 @@
-import { App, AppProps } from '@mcro/kit'
+import { App, AppDefinition, AppProps } from '@mcro/kit'
 import React from 'react'
 import { CustomAppMain } from './CustomAppMain'
 
-export default function CustomApp(props: AppProps) {
+function CustomApp(props: AppProps) {
   return (
     <App>
       <CustomAppMain {...props} />
     </App>
   )
+}
+
+export const app: AppDefinition = {
+  name: 'Custom',
+  icon: '',
+  app: CustomApp,
 }

@@ -3,11 +3,6 @@ import { AtlassianSource } from '@mcro/models'
 import * as React from 'react'
 import AtlassianSettingLogin from '../../views/AtlassianSettingLogin'
 
-type Props = OrbitSourceSettingProps<AtlassianSource>
-
-export class ConfluenceSettings extends React.Component<Props> {
-  render() {
-    const { source } = this.props
-    return <AtlassianSettingLogin type="confluence" source={source} />
-  }
+export function ConfluenceSettings(props: OrbitSourceSettingProps<AtlassianSource>) {
+  return <AtlassianSettingLogin type="confluence" {...props} />
 }

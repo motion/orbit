@@ -4,9 +4,9 @@ import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
 import { config } from '../configureKit'
 import { getAppFromSource } from '../helpers/getAppConfig'
-import { OrbitSource } from '../types/SourceTypes'
+import { AppDefinition } from '../types/AppDefinition'
 
-type GenericApp = OrbitSource & {
+type GenericApp = AppDefinition & {
   isActive: boolean
 }
 
@@ -24,7 +24,7 @@ export class SourcesStore {
   )
 
   // this is every possible app (that uses a bit), just turned into array
-  get sources(): OrbitSource[] {
+  get sources(): AppDefinition[] {
     return Object.keys(config.sources.allSources)
       .map(x => config.sources.allSources[x])
       .filter(x => x && x.modelType === 'bit')
@@ -38,7 +38,7 @@ export class SourcesStore {
         app =>
           ({
             ...app,
-            isActive: !!activeApps.find(x => x.sourceType === app.sourceType),
+            isActive: !!activeApps.find(x => x.sourceType === app.sync.sourceType),
           } as GenericApp),
       )
     },

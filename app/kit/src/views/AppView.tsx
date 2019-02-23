@@ -12,7 +12,6 @@ export type AppViewProps = Pick<
   AppProps,
   'id' | 'title' | 'viewType' | 'isActive' | 'appConfig'
 > & {
-  type: string
   title?: string
   appStore?: AppStore
   after?: React.ReactNode
@@ -27,7 +26,7 @@ export type AppViewRef = {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { appViews, appStore, provideStores } = useApp(props)
+    const { appViews, appStore, provideStores } = useApp({ id: props.id })
     const AppView = appViews[props.viewType]
 
     // handle ref

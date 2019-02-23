@@ -2,23 +2,21 @@ import { observeMany, observeOne } from '@mcro/bridge'
 import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { ensure, react } from '@mcro/use-store'
-import { isEqual, once } from 'lodash'
+import { isEqual } from 'lodash'
 import { getIsTorn } from '../helpers/getIsTorn'
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { PaneManagerStore } from './PaneManagerStore'
-import { defaultPanes, getPanes } from './PaneManagerStoreHelpers'
 
 export class SpaceStore {
   props: {
     paneManagerStore: PaneManagerStore
   }
 
-  spaces = react(() => 1, () => observeMany(SpaceModel, { args: {} }), {
+  spaces = react(() => observeMany(SpaceModel, { args: {} }), {
     defaultValue: [],
   })
 
   sources = react(
-    () => 1,
     () =>
       observeMany(SourceModel, {
         args: {
@@ -30,7 +28,7 @@ export class SpaceStore {
     },
   )
 
-  user = react(() => 1, () => observeOne(UserModel, {}))
+  user = react(() => observeOne(UserModel, {}))
 
   hasStarted = false
 
@@ -74,25 +72,6 @@ export class SpaceStore {
     ([apps, paneSort]) => sortApps(apps, paneSort),
     {
       defaultValue: [],
-    },
-  )
-
-  setInitialPaneIndex = once(() => {
-    if (getIsTorn()) return
-    this.props.paneManagerStore.setPaneIndex(defaultPanes.length)
-  })
-
-  managePaneSort = react(
-    () => this.apps,
-    apps => {
-      ensure('apps', !!apps.length)
-      const { paneManagerStore } = this.props
-      const { panes, paneIndex } = getPanes(paneManagerStore, apps)
-      if (!isEqual(panes, paneManagerStore.panes)) {
-        paneManagerStore.setPanes(panes)
-      }
-      paneManagerStore.setPaneIndex(paneIndex)
-      this.setInitialPaneIndex()
     },
   )
 

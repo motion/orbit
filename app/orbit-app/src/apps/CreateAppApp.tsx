@@ -3,7 +3,7 @@ import { App, AppDefinition, AppIcon, AppType, AppView, List, useActiveSpace } f
 import { AppBit, AppModel } from '@mcro/models'
 import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
-import { useActions } from '../actions/Actions'
+import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
 import AppsMainNew from './apps/AppsMainNew'
@@ -76,7 +76,7 @@ function CreateAppMain(props: AppProps) {
         </Section>
 
         <Section paddingTop={0}>
-          <AppView type={subType} appConfig={{}} viewType="settings" />
+          <AppView appId={subType} appConfig={{}} viewType="settings" />
         </Section>
       </View>
 

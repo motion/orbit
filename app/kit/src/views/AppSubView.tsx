@@ -10,7 +10,7 @@ export function AppSubView({
       key={JSON.stringify(appConfig)}
       viewType={viewType}
       title={appConfig.title}
-      type={appConfig.type}
+      id={appConfig.id}
       appConfig={appConfig}
     />
   )

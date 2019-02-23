@@ -1,7 +1,9 @@
+import { isEqual } from '@mcro/fast-compare'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
   defaultPanes,
   getIsTorn,
+  getPanes,
   PaneManagerStore,
   ProvideStores,
   QueryStore,
@@ -14,13 +16,14 @@ import {
 } from '@mcro/kit'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
-import { useReaction, useStore, useStoreSimple } from '@mcro/use-store'
+import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
+import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
+import { useActions } from '../../hooks/useActions'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
@@ -62,7 +65,7 @@ function OrbitManagers() {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const Actions = useActions()
-  const { paneManagerStore } = useStores()
+  const { paneManagerStore, spaceStore } = useStores()
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
   const sidebarStore = useStoreSimple(SidebarStore)
@@ -77,6 +80,17 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       paneManagerStore.setActivePaneByType('settings')
     })
   }, [])
+
+  useReaction(() => spaceStore.apps, function managePanes(apps) {
+    ensure('apps', !!apps.length)
+    const { paneManagerStore } = this.props
+    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+    if (!isEqual(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+    this.setInitialPaneIndex()
+  })
 
   const allViews = paneManagerStore.panes.map(pane => ({
     id: pane.id,

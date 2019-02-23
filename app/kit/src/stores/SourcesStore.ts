@@ -1,5 +1,5 @@
 import { observeMany } from '@mcro/bridge'
-import { Source, SourceModel, SourceType } from '@mcro/models'
+import { SourceModel, SourceType } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import { keyBy } from 'lodash'
 import { config } from '../configureKit'
@@ -11,12 +11,14 @@ type GenericApp = AppDefinition & {
 }
 
 export class SourcesStore {
-  appSources: Source[] = []
+  loadedSources = react(() => observeMany(SourceModel), {
+    defaultValue: [],
+  })
 
   activeSources = react(
-    () => this.appSources,
-    appSources => {
-      return appSources.filter(x => !!config.sources.allSources[x.type]).map(getAppFromSource)
+    () => this.loadedSources,
+    loadedSources => {
+      return loadedSources.filter(x => !!config.sources.allSources[x.type]).map(getAppFromSource)
     },
     {
       defaultValue: [],
@@ -56,13 +58,5 @@ export class SourcesStore {
       return null
     }
     return this.allSourcesMap[type].views[viewType]
-  }
-
-  private appSources$ = observeMany(SourceModel).subscribe(values => {
-    this.appSources = values
-  })
-
-  willUnmount() {
-    this.appSources$.unsubscribe()
   }
 }

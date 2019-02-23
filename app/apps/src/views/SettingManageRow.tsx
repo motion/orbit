@@ -1,5 +1,5 @@
 import { command } from '@mcro/bridge'
-import { getAppFromSource, showConfirmDialog, useJobs, useSourceInfo } from '@mcro/kit'
+import { showConfirmDialog, useJobs, useSourceInfo } from '@mcro/kit'
 import {
   Source,
   SourceForceCancelCommand,
@@ -21,7 +21,7 @@ const removeSource = async (source: Source) => {
   if (
     showConfirmDialog({
       title: 'Remove source?',
-      message: `Are you sure you want to remove ${getAppFromSource(source).name}?`,
+      message: `Are you sure you want to remove ${source.name}?`,
     })
   ) {
     command(SourceRemoveCommand, {

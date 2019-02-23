@@ -1,3 +1,4 @@
+import { apps } from '@mcro/apps'
 import { AppModuleExported } from '@mcro/kit'
 import * as AppsApp from './apps/main'
 import * as BitApp from './bit/main'
@@ -8,6 +9,12 @@ import * as SettingsApp from './settings/main'
 import * as SourcesApp from './sources/main'
 import * as SpacesApp from './spaces/main'
 
+// TODO make these loadable dynamically
+const appsWithId = apps.map(app => ({
+  ...app,
+  id: app.app.id || app.app.name.toLowerCase().replace(' ', '-'),
+}))
+
 export const orbitApps: AppModuleExported[] = [
   SettingsApp,
   SpacesApp,
@@ -17,4 +24,5 @@ export const orbitApps: AppModuleExported[] = [
   OnboardApp,
   CreateAppApp,
   MessageApp,
+  ...appsWithId,
 ]

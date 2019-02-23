@@ -1,11 +1,8 @@
-import { allApps } from '@mcro/apps'
-import { AppsStore, AppStore, ProvideStores } from '@mcro/kit'
+import { AppDefinition, AppsStore, AppStore, ProvideStores } from '@mcro/kit'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
-import { apps } from './apps'
-import { appsStatic } from './appsStatic'
+import { orbitApps } from './orbitApps'
 
 type AppViewDefinition = { id: string; type: string }
 type AppsLoaderProps = {
@@ -41,15 +38,18 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
 
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
-function getAppViews(type: string) {
-  return apps[type] || appsStatic[type] || allApps[type]
+export function getAppDefinition(id: string): AppDefinition | null {
+  const module = orbitApps.find(app => app.id === id)
+  return (module.app && module.app) || null
 }
 
 function AppLoader(props: AppLoaderProps) {
-  const AppView = getAppViews(props.type)
-  if (!AppView) {
-    throw new Error(`App not found ${props.type}`)
+  const appDefinition = getAppDefinition(props.type)
+
+  if (!appDefinition.app) {
+    console.warn(`App doesnt have a view ${props.type}`)
   }
+
   return useMemo(() => {
     // never run more than once
     // sub-view so we can use hooks
@@ -58,38 +58,30 @@ function AppLoader(props: AppLoaderProps) {
 }
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
-  const { appsStore } = useStoresSimple()
-  const AppView = getAppViews(type)
+  // const { appsStore } = useStoresSimple()
+  const appDefinition = getAppDefinition(type)
+
+  if (!appDefinition.app) {
+    throw new Error(`Invalid definition ${id} ${type}`)
+  }
+
+  const AppView = appDefinition.app
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {
-    if (typeof AppView !== 'function') {
-      if (AppView.index || AppView.main) {
-        store.setupApp(id, AppView)
-      }
-    }
-
-    if (AppView.settings) {
-      appsStore.addSettingsView(id, AppView.settings)
-    }
-
+    console.warn('!TODO we can load settings view here')
+    // if (AppView.settings) {
+    //   appsStore.addSettingsView(id, AppView.settings)
+    // }
     store.handleAppStore(id, appStore)
   }, [])
 
-  const AppEntryView = AppView.default || AppView
-
-  if (typeof AppEntryView === 'function') {
+  if (typeof AppView === 'function') {
     return (
       <ProvideStores stores={{ appStore }}>
-        <AppEntryView {...appViewProps} appStore={appStore} />
+        <AppView {...appViewProps} appStore={appStore} />
       </ProvideStores>
     )
-  }
-
-  if (AppView.index || AppView.main) {
-    return null
-  } else {
-    throw new Error(`Invalid definition ${AppView}`)
   }
 }

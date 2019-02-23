@@ -1,6 +1,7 @@
 import { AppDefinition } from '@mcro/kit'
+import React from 'react'
+import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { jiraIcon } from './jiraIcon'
-import { JiraSettings } from './JiraSettings'
 import { JiraSetup } from './JiraSetup'
 
 export const app: AppDefinition = {
@@ -9,7 +10,7 @@ export const app: AppDefinition = {
   itemType: 'task',
   sync: {
     sourceType: 'jira',
-    settings: JiraSettings,
+    settings: props => <AtlassianSettingLogin type="jira" {...props} />,
     setup: JiraSetup,
   },
 }

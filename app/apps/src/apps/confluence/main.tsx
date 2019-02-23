@@ -1,6 +1,7 @@
 import { AppDefinition } from '@mcro/kit'
+import React from 'react'
+import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { confluenceIcon } from './confluenceIcon'
-import { ConfluenceSettings } from './ConfluenceSettings'
 import { ConfluenceSetup } from './ConfluenceSetup'
 
 export const app: AppDefinition = {
@@ -9,7 +10,7 @@ export const app: AppDefinition = {
   itemType: 'markdown',
   sync: {
     sourceType: 'confluence',
-    settings: ConfluenceSettings,
+    settings: props => <AtlassianSettingLogin type="confluence" {...props} />,
     setup: ConfluenceSetup,
   },
 }

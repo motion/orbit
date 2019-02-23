@@ -11,7 +11,7 @@ import * as React from 'react'
 
 type Props = {
   type: string
-  source?: AtlassianSource
+  source?: Source
 }
 
 const Statuses = {
@@ -26,20 +26,20 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-export default function AtlassianSettingLogin(props: Props) {
+export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
   const [source] = React.useState(
-    props.source ||
+    (props.source as AtlassianSource) ||
       ({
         category: 'source',
         type: props.type,
         token: null,
-      } as Source),
+      } as AtlassianSource),
   )
-  const [credentials, setCredentials] = React.useState<AtlassianSource['values']['credentials']>(
-    (props.source && props.source.values.credentials) || {
+  const [credentials, setCredentials] = React.useState(
+    source.values.credentials || {
       username: '',
       password: '',
       domain: '',

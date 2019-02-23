@@ -1,7 +1,7 @@
 import { sleep } from '@mcro/black'
 import { command } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
-import { ItemType, OrbitSource } from '@mcro/kit'
+import { AppDefinition } from '@mcro/kit'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -71,9 +71,9 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: OrbitSource<ItemType>) => !!app.source && app.sourceType !== 'website'
+const filterApps = (app: AppDefinition) => !!app.sync && app.sync.sourceType !== 'website'
 
-export default function OrbitOnboardMain() {
+export function OnboardMain() {
   const stores = useStores()
   const store = useStore(OnboardStore)
 

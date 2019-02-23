@@ -1,5 +1,5 @@
 import { save } from '@mcro/bridge'
-import { AppIcon, AppType, AppView, List, useActiveSpace } from '@mcro/kit'
+import { App, AppDefinition, AppIcon, AppType, AppView, List, useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
 import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
@@ -98,7 +98,14 @@ function CreateAppMain(props: AppProps) {
   )
 }
 
-export const createApp = {
-  index: CreateAppIndex,
-  main: CreateAppMain,
+export const id = 'createApp'
+
+export const app: AppDefinition = {
+  name: 'Create App',
+  icon: '',
+  app: props => (
+    <App index={<CreateAppIndex />}>
+      <CreateAppMain {...props} />
+    </App>
+  ),
 }

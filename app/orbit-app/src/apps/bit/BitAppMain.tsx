@@ -15,7 +15,7 @@ const defaultItemProps = {
   },
 }
 
-export default function BitAppMain(props: AppProps) {
+export function BitAppMain(props: AppProps) {
   const { sourcesStore } = useStores()
   const [bit] = useModel(BitModel, {
     where: { id: +props.appConfig.id },

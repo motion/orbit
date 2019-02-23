@@ -25,6 +25,7 @@ export type AppViews = {
 }
 
 export type AppDefinition = {
+  id?: string
   name: string
   icon: string
   iconLight?: string

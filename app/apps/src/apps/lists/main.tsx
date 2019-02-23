@@ -23,7 +23,7 @@ function ListsApp(props: AppProps) {
 }
 
 export const app: AppDefinition = {
-  name: 'List',
+  name: 'Lists',
   icon: '',
   app: ListsApp,
   appData: {

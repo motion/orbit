@@ -39,6 +39,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
 export function getAppDefinition(id: string): AppDefinition | null {
+  console.log('find app', id)
   const module = orbitApps.find(app => app.id === id)
   return (module.app && module.app) || null
 }

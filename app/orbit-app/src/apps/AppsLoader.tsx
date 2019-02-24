@@ -1,11 +1,12 @@
-import { AppsStore, AppStore, ProvideStores, useAppPackage } from '@mcro/kit'
+import { AppLoadContext, AppsStore, AppStore, ProvideStores, useAppPackage } from '@mcro/kit'
+import { MergeContext } from '@mcro/ui'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 
 type AppsLoaderProps = {
   children?: any
-  apps: { id: string; type: string }[]
+  apps: { id: string; appId: string }[]
 }
 
 export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
@@ -20,11 +21,13 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
     )
   }
 
+  console.log('loading apps', props.apps)
+
   // a little weird
   useEffect(
     () => {
-      for (const { type } of props.apps) {
-        appsStore.setAppDefinition(type, useAppPackage(type).app)
+      for (const { appId } of props.apps) {
+        appsStore.setAppDefinition(appId, useAppPackage(appId).app)
       }
     },
     [props.apps],
@@ -32,7 +35,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
 
   const appViews = stableKeys.current.map(id => {
     const view = props.apps.find(view => view.id === id)
-    return <AppLoader key={id} id={id} type={view.type} store={appsStore} />
+    return <AppLoader key={id} id={id} appId={view.appId} store={appsStore} />
   })
 
   return (
@@ -43,31 +46,19 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   )
 })
 
-type AppLoaderProps = { id: string; type: string; store: AppsStore }
+type AppLoaderProps = { id: string; appId: string; store: AppsStore }
 
+// never run more than once
 function AppLoader(props: AppLoaderProps) {
-  const appDefinition = useAppPackage(props.type)
-
-  if (!appDefinition.app.app) {
-    console.warn(`App doesnt have a view ${props.type}`)
-  }
-
-  // never run more than once
   return useMemo(() => {
-    // sub-view so we can use hooks
     return <AppLoadView {...props} />
   }, [])
 }
 
-function AppLoadView({ id, type, store }: AppLoaderProps) {
-  // const { appsStore } = useStoresSimple()
-  const appDefinition = useAppPackage(type)
-
-  if (!appDefinition.app) {
-    throw new Error(`Invalid definition ${id} ${type}`)
-  }
-
-  const AppView = appDefinition.app.app
+function AppLoadView({ id, appId, store }: AppLoaderProps) {
+  const appDefinition = useAppPackage(appId)
+  // this is the <App index={} /> view inside that app...
+  const AppApp = appDefinition.app.app as any
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 
@@ -79,11 +70,16 @@ function AppLoadView({ id, type, store }: AppLoaderProps) {
     store.handleAppStore(id, appStore)
   }, [])
 
-  if (typeof AppView === 'function') {
+  if (typeof AppApp === 'function') {
     return (
       <ProvideStores stores={{ appStore }}>
-        <AppView {...appViewProps} appStore={appStore} />
+        <MergeContext Context={AppLoadContext} value={{ appId }}>
+          <AppApp {...appViewProps} appStore={appStore} />
+        </MergeContext>
       </ProvideStores>
     )
+  } else {
+    console.warn('no app view...', appId, appDefinition)
+    return null
   }
 }

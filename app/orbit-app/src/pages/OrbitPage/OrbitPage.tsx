@@ -168,7 +168,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         <AppsLoader
           apps={paneManagerStore.panes.map(pane => ({
             id: pane.id,
-            type: pane.type,
+            appId: pane.type,
           }))}
         >
           <OrbitHeader />

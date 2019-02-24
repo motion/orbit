@@ -1,5 +1,5 @@
 import { sleep, useReaction } from '@mcro/black'
-import { AppType, List, sourceToAppConfig, useActiveApps, useActiveSpace } from '@mcro/kit'
+import { List, sourceToAppConfig, useActiveApps, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
@@ -54,11 +54,11 @@ export default function SourcesAppIndex(_props: AppProps) {
       appConfig: source.views.setup
         ? {
             ...(await sourceToAppConfig(source)),
-            type: AppType.sources,
+            type: 'sources',
             viewType: 'setup' as 'setup',
           }
         : {
-            type: AppType.message,
+            type: 'message',
             title: `Opening private authentication for ${source.name}...`,
           },
       group: 'Add source',
@@ -71,7 +71,7 @@ export default function SourcesAppIndex(_props: AppProps) {
         iconBefore: true,
         iconSize: 12,
         appConfig: {
-          type: AppType.sources,
+          type: 'sources',
           subType: 'manage-apps',
         },
       },

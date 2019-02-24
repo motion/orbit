@@ -1,6 +1,7 @@
 import { useModel } from '@mcro/bridge'
-import { HighlightedSearchable, ItemPropsProvider, normalizeItem } from '@mcro/kit'
+import { HighlightedSearchable, normalizeItem } from '@mcro/kit'
 import { BitModel } from '@mcro/models'
+import { ItemPropsProvider } from '@mcro/ui'
 import * as React from 'react'
 import { AppProps } from '../AppTypes'
 import { BitTitleBar } from './BitTitlebar'
@@ -29,6 +30,7 @@ export function BitAppMain(props: AppProps) {
         {({ searchBar }) => (
           <>
             <BitTitleBar bit={bit} normalizedItem={normalizedItem} searchBar={searchBar} />
+            {/* !TODO */}
             <MediaView item={bit} normalizedItem={normalizedItem} {...props} />
           </>
         )}

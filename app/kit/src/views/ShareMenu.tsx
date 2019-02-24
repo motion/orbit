@@ -2,13 +2,12 @@ import { ListItem, Separator, View } from '@mcro/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { useActiveApps } from '../hooks/useActiveApps'
-import { AppType } from '../types/AppType'
 import { OrbitListItemProps } from './ListItem'
 import { SearchItemShareContext } from './SearchItemProvide'
 
 export const ShareMenu = memo(function ShareMenu() {
   const itemAction = useContext(SearchItemShareContext)
-  const listApps = useActiveApps(AppType.lists)
+  const listApps = useActiveApps('lists')
 
   console.warn(
     'need to make this work generically to share between apps now, before was hardcoded to ListsApp',

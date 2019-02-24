@@ -1,5 +1,5 @@
 import { ensure, react } from '@mcro/black'
-import { AppConfig, AppType, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
+import { AppConfig, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -11,7 +11,7 @@ export class OrbitStore {
   isEditing = false
 
   activeConfig: { [key: string]: AppConfig } = {
-    search: { id: '', type: AppType.search, title: '' },
+    search: { id: '', type: 'search', title: '' },
   }
 
   get isTorn() {

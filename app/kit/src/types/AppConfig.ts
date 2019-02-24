@@ -1,8 +1,7 @@
 import { SourceType } from '@mcro/models'
-import { AppType } from './AppType'
 
 export type AppConfig = {
-  appId?: AppType
+  appId?: string
   id?: string
   subId?: string
   title?: string

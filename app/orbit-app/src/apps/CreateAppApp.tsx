@@ -1,5 +1,5 @@
 import { save } from '@mcro/bridge'
-import { App, AppDefinition, AppIcon, AppType, AppView, List, useActiveSpace } from '@mcro/kit'
+import { App, AppDefinition, AppIcon, AppView, List, useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
 import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ function CreateAppIndex() {
       minSelected={0}
       items={defaultApps.map(app => ({
         title: app.name,
-        subType: app.type,
+        appId: app.type,
         subtitle: descriptions[app.type],
         icon: <AppIcon app={app} />,
         iconBefore: true,
@@ -45,18 +45,18 @@ function CreateAppMain(props: AppProps) {
     return null
   }
 
-  const { subType } = props.appConfig
+  const { appId } = props.appConfig
 
   useEffect(
     () => {
-      if (subType) {
-        newAppStore.setApp(AppType[subType])
+      if (appId) {
+        newAppStore.setApp(appId)
       }
     },
-    [subType],
+    [appId],
   )
 
-  const app = { type: subType } as AppBit
+  const app = { type: appId } as AppBit
 
   const createApp = async () => {
     const app = {
@@ -76,7 +76,7 @@ function CreateAppMain(props: AppProps) {
         </Section>
 
         <Section paddingTop={0}>
-          <AppView appId={subType} appConfig={{}} viewType="settings" />
+          <AppView appConfig={{ appId }} viewType="settings" />
         </Section>
       </View>
 

@@ -10,7 +10,7 @@ function AppsMain(props: AppProps) {
     return <AppsMainManage />
   }
 
-  if (props.appConfig.type !== 'apps') {
+  if (props.appConfig.appId !== 'apps') {
     return <AppSubView appConfig={props.appConfig} />
   }
 

@@ -103,7 +103,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       paneManagerStore.setPanes(panes)
     }
     paneManagerStore.setPaneIndex(paneIndex)
-    this.setInitialPaneIndex()
+    Actions.setInitialPaneIndex()
   })
 
   const allViews = paneManagerStore.panes.map(pane => ({

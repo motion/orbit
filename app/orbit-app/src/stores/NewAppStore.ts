@@ -1,4 +1,3 @@
-import { AppType } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { getAppDefinition } from '../apps/AppsLoader'
 
@@ -6,28 +5,28 @@ export const defaultApps: AppBit[] = [
   {
     target: 'app',
     name: 'Search',
-    type: AppType.search,
+    type: 'search',
     colors: ['red'],
     data: {},
   },
   {
     target: 'app',
     name: 'List',
-    type: AppType.lists,
+    type: 'lists',
     colors: ['blue'],
     data: {},
   },
   {
     target: 'app',
     name: 'Directory',
-    type: AppType.people,
+    type: 'people',
     colors: ['green'],
     data: {},
   },
   {
     target: 'app',
     name: 'Custom',
-    type: AppType.custom,
+    type: 'custom',
     colors: ['gray'],
     data: {},
   },
@@ -49,8 +48,8 @@ export class NewAppStore {
     }
   }
 
-  setApp(type: AppType) {
-    const nextApp = defaultApps.find(x => x.type === type)
+  setApp(appId: string) {
+    const nextApp = defaultApps.find(x => x.type === appId)
     if (!nextApp) {
       console.warn('no next app?')
       debugger
@@ -68,7 +67,7 @@ export class NewAppStore {
 
     // get data from defaultValue
     let data = nextApp.data
-    const app = getAppDefinition(type)
+    const app = getAppDefinition(appId)
     if (!app) {
       console.warn('no wapp?')
       debugger
@@ -85,7 +84,7 @@ export class NewAppStore {
       name,
       colors,
       // always update
-      type,
+      type: appId,
       data,
     }
   }

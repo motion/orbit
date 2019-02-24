@@ -1,5 +1,5 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
-import { AppType, Icon, useActiveApps } from '@mcro/kit'
+import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
 import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, View } from '@mcro/ui'
 import React, { memo } from 'react'
@@ -120,7 +120,7 @@ function OrbitEditAppButton() {
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing
+  const show = activeApp && activeApp.type === 'custom' && !orbitStore.isEditing
   const Actions = useActions()
 
   if (!show) {

@@ -3,7 +3,6 @@ import { SourceModel, SourceType } from '@mcro/models'
 import { config } from '../configureKit'
 import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
-import { AppType } from '../types/AppType'
 import { ResolvableModel } from '../types/ResolvableModel'
 import { OrbitListItemProps } from '../views/ListItem'
 
@@ -32,7 +31,7 @@ export async function getAppConfig(props: OrbitListItemProps, id?: string): Prom
 function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   return {
     id: props.id,
-    appId: AppType[props.type],
+    appId: props.type,
     // dont accept react elements
     title: typeof props.title === 'string' ? props.title : undefined,
     icon: typeof props.icon === 'string' ? props.icon : undefined,
@@ -43,18 +42,18 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
 
 export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<AppConfig> {
   if (item && item.type) {
-    return sourceToAppConfig(config.sources.allSources[item.type], item)
+    return sourceToAppConfig(config.getApps().find(x => x.id === item.type).app, item)
   }
 }
 
-const modelTargetToAppType = (model: ResolvableModel): AppType => {
+const modelTargetToAppType = (model: ResolvableModel) => {
   if (model.target === 'person-bit') {
-    return AppType.people
+    return 'people'
   }
   if (model.target === 'search-group') {
-    return AppType.search
+    return 'search'
   }
-  return AppType[model.target]
+  return model.target
 }
 
 export async function sourceToAppConfig(
@@ -73,7 +72,7 @@ export async function sourceToAppConfig(
     icon: appDef.icon,
     iconLight: appDef.iconLight,
     title: source.name,
-    appId: model ? modelTargetToAppType(model) : AppType.sources,
+    appId: model ? modelTargetToAppType(model) : 'sources',
     source: appDef.sync.sourceType as SourceType,
     viewConfig: appDef.defaultViewConfig,
   }

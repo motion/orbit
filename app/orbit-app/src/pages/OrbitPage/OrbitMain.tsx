@@ -77,7 +77,7 @@ const OrbitPageMainView = memo(({ type, id }: PaneManagerPane) => {
         viewType="main"
         id={id}
         type={type}
-        appConfig={appConfig || { type, id }}
+        appConfig={appConfig || { appId: type, id }}
         before={<OrbitToolBarHeight id={id} />}
         after={<OrbitStatusBarHeight id={id} />}
       />

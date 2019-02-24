@@ -1,7 +1,6 @@
 import { loadMany } from '@mcro/bridge'
 import {
   AppIcon,
-  AppType,
   MarkType,
   OrbitListItemProps,
   SearchState,
@@ -84,7 +83,7 @@ export class SearchStore {
       // slim: true,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
-      type: AppType.apps,
+      type: 'apps',
       group: 'Home',
     }
   }
@@ -111,7 +110,7 @@ export class SearchStore {
         group: 'Apps',
         appConfig: {
           icon: `orbit-${app.type}-full`,
-          type: AppType.message,
+          type: 'message',
           title: `Open ${app.name}`,
         },
         onOpen: () => {
@@ -134,7 +133,7 @@ export class SearchStore {
         iconBefore: true,
         // group: 'Home',
         appConfig: {
-          type: AppType.message,
+          type: 'message',
           title: `Create new app`,
         },
         onOpen: () => {

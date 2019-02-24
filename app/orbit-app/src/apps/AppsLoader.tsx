@@ -1,8 +1,7 @@
-import { AppDefinition, AppsStore, AppStore, ProvideStores } from '@mcro/kit'
+import { AppDefinition, AppsStore, AppStore, ProvideStores, useAppPackages } from '@mcro/kit'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { orbitApps } from './orbitApps'
 
 export const AppsLoader = memo(function AppsLoader(props: {
   children?: any
@@ -22,8 +21,8 @@ export const AppsLoader = memo(function AppsLoader(props: {
   // a little weird
   useEffect(
     () => {
-      for (const { id } of props.views) {
-        appsStore.setAppDefinition(id, getAppDefinition(id))
+      for (const { id, type } of props.views) {
+        appsStore.setAppDefinition(id, getAppDefinition(type))
       }
     },
     [props.views],
@@ -43,8 +42,8 @@ export const AppsLoader = memo(function AppsLoader(props: {
 })
 
 export function getAppDefinition(id: string): AppDefinition | null {
-  console.log('find app', id)
-  const module = orbitApps.find(app => app.id === id)
+  const module = useAppPackages().find(app => app.id === id)
+  console.log('looking for', id, useAppPackages())
   return (module.app && module.app) || null
 }
 

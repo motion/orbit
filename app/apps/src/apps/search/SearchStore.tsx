@@ -1,18 +1,11 @@
-import { loadMany } from '@mcro/bridge'
-import {
-  AppIcon,
-  MarkType,
-  OrbitListItemProps,
-  SearchState,
-  SpaceIcon,
-  useStoresSimple,
-} from '@mcro/kit'
-import { SearchQuery, SearchResultModel, SourceType } from '@mcro/models'
-import { ensure, react, useHook } from '@mcro/use-store'
-import { uniq } from 'lodash'
-import React from 'react'
+import { loadMany } from '@mcro/bridge';
+import { AppIcon, MarkType, OrbitListItemProps, SearchState, SpaceIcon, useActiveApps, useStoresSimple } from '@mcro/kit';
+import { AppBit, SearchQuery, SearchResultModel, SourceType } from '@mcro/models';
+import { ensure, react, useHook } from '@mcro/use-store';
+import { uniq } from 'lodash';
+import React from 'react';
 // import { useActions } from '../../actions/Actions'
-import { searchGroupsToResults } from './searchGroupsToResults'
+import { searchGroupsToResults } from './searchGroupsToResults';
 
 type SearchResults = {
   results: OrbitListItemProps[]
@@ -76,11 +69,6 @@ export class SearchStore {
   get homeItem() {
     return {
       title: this.stores.spaceStore.activeSpace.name,
-      // subtitle: `${this.stores.spaceStore.apps
-      //   .map(x => x.name)
-      //   .slice(0, 2)
-      //   .join(', ')}`,
-      // slim: true,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
       type: 'apps',
@@ -97,11 +85,11 @@ export class SearchStore {
     }
 
     // const spaceName = this.stores.spaceStore.activeSpace.name
-    const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
+    const apps = useActiveApps().filter(x => x.editable !== false)
     const searchedApps =
       (query && apps.filter(x => ~x.name.toLowerCase().indexOf(query.toLowerCase()))) || []
 
-    const appToResult = app => {
+    const appToResult = (app: AppBit) => {
       return {
         title: app.name,
         slim: true,
@@ -109,7 +97,7 @@ export class SearchStore {
         icon: <AppIcon app={app} />,
         group: 'Apps',
         appConfig: {
-          icon: `orbit-${app.type}-full`,
+          icon: `orbit-${app.appId}-full`,
           type: 'message',
           title: `Open ${app.name}`,
         },

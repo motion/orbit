@@ -54,6 +54,7 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
       },
       setValue(next: any) {
         const isSync = testSync.current === 0
+        testSync.current === 2
         const wasFirstRun = firstRun
         firstRun = false
         if (next === undefined || next === state.current) {
@@ -66,6 +67,11 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
       },
       getValue: () => state.current,
     })
+  }
+
+  if (testSync.current === 0) {
+    console.warn('didnt run sync')
+    console.debug('reactino', reaction, derive)
   }
 
   testSync.current = 1

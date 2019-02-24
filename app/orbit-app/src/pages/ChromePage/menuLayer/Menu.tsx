@@ -557,7 +557,7 @@ const MenuLayerContent = React.memo(() => {
             key={app.id}
             viewType="index"
             title={app.name}
-            type={app.type}
+            appId={app.appId}
           />
         ))}
       </AppSearchable>

@@ -22,8 +22,8 @@ function CreateAppIndex() {
       minSelected={0}
       items={defaultApps.map(app => ({
         title: app.name,
-        appId: app.type,
-        subtitle: descriptions[app.type],
+        appId: app.appId,
+        subtitle: descriptions[app.appId],
         icon: <AppIcon app={app} />,
         iconBefore: true,
       }))}
@@ -56,7 +56,7 @@ function CreateAppMain(props: AppProps) {
     [appId],
   )
 
-  const app = { type: appId } as AppBit
+  const app = { appId } as AppBit
 
   const createApp = async () => {
     const app = {

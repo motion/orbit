@@ -1,5 +1,6 @@
 import { superMemo } from '@mcro/ui'
 import React, { useEffect } from 'react'
+import { useActiveApps } from '../hooks/useActiveApps'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from '../types/AppDefinition'
 
@@ -13,6 +14,7 @@ function AppContainerInner(props: AppElements) {
   }
 
   const { appStore, appsStore } = useStoresSimple()
+  const apps = useActiveApps()
 
   useEffect(() => {
     const views = {
@@ -22,6 +24,7 @@ function AppContainerInner(props: AppElements) {
       toolBar: props.toolBar && superMemo(props.toolBar),
     }
 
+    const appId = apps.find(x => x.id === appStore.id)
     appsStore.setupApp(appStore.id, views, props.provideStores)
   }, [])
 

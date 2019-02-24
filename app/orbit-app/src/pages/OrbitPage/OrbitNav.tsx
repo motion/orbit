@@ -75,11 +75,11 @@ export default memo(function OrbitNav() {
           width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
-          label: isPinned ? '' : app.type === 'search' && index === 0 ? activeSpaceName : app.name,
+          label: isPinned ? '' : app.appId === 'search' && index === 0 ? activeSpaceName : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
-          icon: `orbit-${app.type}`,
+          icon: `orbit-${app.appId}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {

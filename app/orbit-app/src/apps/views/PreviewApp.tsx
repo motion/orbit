@@ -12,7 +12,7 @@ export default function PreviewApp(props: { app: AppBit }) {
         <Title>Preview</Title>
       </Section>
       <AppView
-        appId={props.app.type}
+        appId={props.app.appId}
         viewType="index"
         appConfig={{
           ...appToAppConfig(props.app),

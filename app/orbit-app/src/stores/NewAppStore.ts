@@ -59,7 +59,7 @@ export class NewAppStore {
     // update name and colors if unedited
     let name = this.app.name
     let colors = this.app.colors
-    const neverChangedName = name === defaultApps.find(x => x.type === this.app.type).name
+    const neverChangedName = name === defaultApps.find(x => x.type === this.app.appId).name
     if (neverChangedName) {
       name = nextApp.name
       colors = nextApp.colors

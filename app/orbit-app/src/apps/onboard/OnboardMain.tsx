@@ -1,13 +1,13 @@
 import { sleep } from '@mcro/black'
 import { command } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
-import { AppDefinition } from '@mcro/kit'
+import { useAppPackages } from '@mcro/kit'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../../views/BottomControls'
 import { SimpleItem } from '../../views/SimpleItem'
@@ -71,10 +71,7 @@ class OnboardStore {
   }
 }
 
-const filterApps = (app: AppDefinition) => !!app.sync && app.sync.sourceType !== 'website'
-
 export function OnboardMain() {
-  const stores = useStores()
   const store = useStore(OnboardStore)
 
   // for smart finding sources...
@@ -88,9 +85,7 @@ export function OnboardMain() {
   // if (atlassian) {
   //   finalSources = ['jira', 'confluence', ...finalSources]
   // }
-  const allAppsSorted = stores.sourcesStore.allSources
-    .filter(filterApps)
-    .sort((a, b) => a.source.localeCompare(b.source))
+  const allAppsSorted = useAppPackages().filter(x => !!x.app.sync)
 
   return (
     <>
@@ -180,14 +175,15 @@ export function OnboardMain() {
             {allAppsSorted.map(item => {
               return (
                 <SimpleItem
-                  key={item.source}
-                  title={item.name}
-                  icon={item.source}
-                  inactive={item.isActive}
-                  onClick={item.isActive ? null : addSourceClickHandler(item)}
+                  key={item.id}
+                  title={item.app.name}
+                  icon={item.app.icon}
+                  // !TODO true === item.isActive
+                  inactive={true}
+                  onClick={true ? null : addSourceClickHandler(item)}
                   after={
-                    <AddButton size={0.9} disabled={item.isActive}>
-                      {item.isActive ? <Icon size={16} name="check" color="green" /> : 'Add'}
+                    <AddButton size={0.9} disabled={true}>
+                      {true ? <Icon size={16} name="check" color="green" /> : 'Add'}
                     </AddButton>
                   }
                 />

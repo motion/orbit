@@ -1,9 +1,10 @@
 import { Row } from '@mcro/gloss'
-import { ButtonProps, RoundButton } from '@mcro/ui'
 import * as React from 'react'
 import { Image } from '../Image'
 import { Text } from '../text/Text'
 import { Omit } from '../types'
+import { ButtonProps } from './Button'
+import { RoundButton } from './RoundButton'
 
 type PersonButtonProps = Omit<ButtonProps, 'children'> & {
   photo?: string

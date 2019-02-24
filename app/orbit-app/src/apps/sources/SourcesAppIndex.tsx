@@ -1,44 +1,38 @@
-import { sleep } from '@mcro/black'
+import { sleep, useReaction } from '@mcro/black'
 import { AppType, List, sourceToAppConfig, useActiveApps, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
-import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
 
 export default function SourcesAppIndex(_props: AppProps) {
-  const { sourcesStore } = useStores()
   const [activeSpace] = useActiveSpace()
-  const { activeSources, allSources } = sourcesStore
   const activeApps = useActiveApps()
+
+  // !TODO get a nice way to query active/inactive apps/sources
+  const activeSources = []
+  const allSources = []
 
   if (!activeSpace || !activeApps.length) {
     return null
   }
 
-  const results = [
-    {
-      title: 'Apps',
-      icon: 'orbit-apps-full',
-      iconBefore: true,
-      iconSize: 12,
-      appConfig: {
-        type: AppType.sources,
-        subType: 'manage-apps',
-      },
-    },
-    ...activeSources.map(app => ({
+  // !TODO just started migrating this over...
+
+  const results = useReaction(async () => {
+    const getSourceItem = async app => ({
       id: `${app.source.id}`,
       title: app.display.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
       icon: app.source,
       iconBefore: true,
       total: activeSources.length,
-      appConfig: sourceToAppConfig(app),
+      appConfig: await sourceToAppConfig(app),
       group: 'Sources',
-    })),
-    ...allSources.map((source, index) => ({
+    })
+
+    const getInactiveSourceItem = async (source, index) => ({
       // ...these have their own onClick
       id: `${source.source}${index}`,
       title: source.name,
@@ -59,7 +53,7 @@ export default function SourcesAppIndex(_props: AppProps) {
       ),
       appConfig: source.views.setup
         ? {
-            ...sourceToAppConfig(source),
+            ...(await sourceToAppConfig(source)),
             type: AppType.sources,
             viewType: 'setup' as 'setup',
           }
@@ -68,8 +62,23 @@ export default function SourcesAppIndex(_props: AppProps) {
             title: `Opening private authentication for ${source.name}...`,
           },
       group: 'Add source',
-    })),
-  ]
+    })
+
+    return [
+      {
+        title: 'Apps',
+        icon: 'orbit-apps-full',
+        iconBefore: true,
+        iconSize: 12,
+        appConfig: {
+          type: AppType.sources,
+          subType: 'manage-apps',
+        },
+      },
+      ...(await Promise.all(activeSources.map(getSourceItem))),
+      ...(await Promise.all(allSources.map(getInactiveSourceItem))),
+    ]
+  })
 
   return <List minSelected={0} items={results} />
 }

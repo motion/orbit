@@ -1,5 +1,5 @@
 import { apps } from '@mcro/apps'
-import { AppModuleExported } from '@mcro/kit'
+import { AppPackage } from '@mcro/kit'
 import * as AppsApp from './apps/main'
 import * as BitApp from './bit/main'
 import * as CreateAppApp from './CreateAppApp'
@@ -15,7 +15,7 @@ const appsWithId = apps.map(app => ({
   id: app.app.id || app.app.name.toLowerCase().replace(' ', '-'),
 }))
 
-export const orbitApps: AppModuleExported[] = [
+export const orbitApps: AppPackage[] = [
   SettingsApp,
   SpacesApp,
   SourcesApp,

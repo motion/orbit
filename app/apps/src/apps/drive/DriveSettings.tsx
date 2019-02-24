@@ -38,8 +38,9 @@ class DriveSettingsStore {
 
   get service(): any {
     // todo: broken by umed please fix me
-    // console.log('get service again')
-    return {} // this.props.sourcesStore.services.drive
+    // !TODO this should come from first class api for fetching from sources
+    console.warn('todo: broken by umed please fix me')
+    return {}
   }
 }
 

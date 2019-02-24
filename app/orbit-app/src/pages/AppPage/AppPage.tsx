@@ -1,8 +1,8 @@
 import { gloss } from '@mcro/gloss'
-import { Icon, QueryStore, SettingStore, SourcesStore, SpaceStore } from '@mcro/kit'
+import { AppView, Icon, QueryStore, SettingStore, SpaceStore } from '@mcro/kit'
 import * as UI from '@mcro/ui'
 import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@mcro/ui'
-import { useReaction, useStore } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
@@ -16,22 +16,15 @@ import { AppSearchable } from './AppSearchable'
 // see main.ts for setup for testing this in browser
 
 export default React.memo(() => {
-  const sourcesStore = useStore(SourcesStore)
   const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
   const queryStore = useStore(QueryStore)
-
-  useReaction(() => {
-    queryStore.setSources(sourcesStore.activeSources)
-  })
-
   const selectionStore = useStore(SelectionStore)
 
   return (
     <StoreContext.Provider
       value={{
-        sourcesStore,
         settingStore,
         spaceStore,
         appPageStore,

@@ -2,7 +2,7 @@ import { always, ensure, react } from '@mcro/black'
 import { AppType, PaneManagerStore, QueryStore, useActiveApps } from '@mcro/kit'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { MergeContext, View, VirtualListDefaultProps } from '@mcro/ui'
-import { useReaction, useStore } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
@@ -436,10 +436,10 @@ function useMenuApps() {
   const listsApp = allApps.find(x => x.type === 'lists')
   return [
     // indices start at 1 because 0 = orbit O
-    { ...searchApp, index: 1 },
-    { ...listsApp, index: 2 },
+    { ...searchApp, id: `${searchApp.id}`, index: 1 },
+    { ...listsApp, id: `${listsApp.id}`, index: 2 },
     {
-      id: 100,
+      id: '100',
       index: 3,
       type: 'actions',
       name: 'Actions',
@@ -448,13 +448,8 @@ function useMenuApps() {
 }
 
 export function Menu() {
-  const { sourcesStore } = useStores()
   const queryStore = useStore(QueryStore)
   const menuApps = useMenuApps()
-
-  useReaction(() => {
-    queryStore.setSources(sourcesStore.activeSources)
-  })
 
   const paneManagerStore = useStore(PaneManagerStore, {
     panes: menuApps,

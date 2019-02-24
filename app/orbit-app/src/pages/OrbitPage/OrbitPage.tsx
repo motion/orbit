@@ -10,9 +10,10 @@ import {
   settingsPane,
   SettingStore,
   showConfirmDialog,
-  SourcesStore,
   SpaceStore,
   ThemeStore,
+  useActiveSources,
+  useStoresSimple,
 } from '@mcro/kit'
 import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
@@ -58,8 +59,21 @@ export default memo(function OrbitPage() {
   )
 })
 
+function useManageQuerySources() {
+  const { queryStore } = useStoresSimple()
+  const activeSources = useActiveSources()
+  useEffect(
+    () => {
+      // TODO @umed type
+      queryStore.setSources(activeSources as any[])
+    },
+    [activeSources],
+  )
+}
+
 function OrbitManagers() {
   useManagePaneSort()
+  useManageQuerySources()
   return null
 }
 
@@ -179,14 +193,9 @@ const OrbitContentArea = gloss({
 
 function OrbitPageProvideStores(props: any) {
   const settingStore = useStoreSimple(SettingStore)
-  const sourcesStore = useStoreSimple(SourcesStore)
   const queryStore = useStoreSimple(QueryStore)
   const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
   const newAppStore = useStoreSimple(NewAppStore)
-
-  useReaction(() => {
-    queryStore.setSources(sourcesStore.activeSources)
-  })
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
@@ -200,7 +209,6 @@ function OrbitPageProvideStores(props: any) {
 
   const stores = {
     settingStore,
-    sourcesStore,
     orbitWindowStore,
     spaceStore,
     queryStore,

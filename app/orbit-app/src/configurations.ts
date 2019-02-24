@@ -1,8 +1,8 @@
-import { allSources } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
 import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
+import { orbitApps } from './apps/orbitApps'
 import { StoreContext } from './contexts'
 
 // run these only once, and avoid HMR above it
@@ -12,9 +12,7 @@ function setup() {
 
   configureKit({
     StoreContext,
-    sources: {
-      allSources: allSources,
-    },
+    getApps: () => orbitApps,
   })
 
   configureGloss({

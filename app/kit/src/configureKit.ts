@@ -1,16 +1,17 @@
 import { Context, createContext } from 'react'
 import { KitStores } from './stores'
+import { AppPackage } from './types/AppPackage'
 
 let hasSet = false
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
-  sources: { allSources: any }
+  getApps: () => AppPackage[]
 }
 
 export let config: ConfigureOpts = {
   StoreContext: createContext(null),
-  sources: null,
+  getApps: null,
 }
 
 export function configureKit(opts: ConfigureOpts) {

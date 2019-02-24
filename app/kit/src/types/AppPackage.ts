@@ -9,6 +9,6 @@ export type AppModule = {
   }
 }
 
-export type AppModuleExported = AppModule & {
+export type AppPackage = AppModule & {
   id: string
 }

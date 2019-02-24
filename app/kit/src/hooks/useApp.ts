@@ -34,7 +34,6 @@ export function useApp(
       next.appStore = next.appStore || appStores[props.id]
       next.views = appViews[props.id] || {}
       next.provideStores = provideStores[props.id] || null
-      console.log('useApp3', next, appsStore.appsState)
       return next
     }) || next
   )

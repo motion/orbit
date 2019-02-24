@@ -1,10 +1,10 @@
 import { useModels } from '@mcro/bridge';
 import { gloss, View } from '@mcro/gloss';
 import { Bit, BitModel, GenericBit } from '@mcro/models';
-import { Button, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui';
+import { Button, ChatMessages, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui';
 import * as React from 'react';
 import { OrbitSourceMainProps } from '../types/AppDefinition';
-import { ChatMessages } from './ChatMessages';
+import { BitStatusBar } from '../views/BitStatusBar';
 
 const Pane = gloss(View, {
   height: 0,
@@ -28,7 +28,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
       {bits.map(bit => {
         return (
           <React.Fragment key={bit.id}>
-            <ChatMessages key={bit.id} item={bit as GenericBit<'slack'>} />
+            <ChatMessages key={bit.id} messages={(bit as GenericBit<'slack'>).data.messages} />
             <Divider />
           </React.Fragment>
         )
@@ -97,7 +97,7 @@ export function Conversation(props: OrbitSourceMainProps) {
       <Pane isShown={activePane === 0}>
         <ScrollableContent paddingBottom={50} key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-            {!!props.item && <ChatMessages item={props.item} />}
+            {!!props.item && <ChatMessages {...props.item} />}
           </div>
         </ScrollableContent>
       </Pane>

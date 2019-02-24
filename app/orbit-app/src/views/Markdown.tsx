@@ -1,5 +1,6 @@
+import { ItemPropsContext } from '@mcro/kit'
 import { HighlightText, Text } from '@mcro/ui'
-import * as React from 'react'
+import React, { useContext } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkEmoji from 'remark-emoji'
 
@@ -21,11 +22,19 @@ export const markdownOptions = {
 }
 
 type MarkdownProps = Partial<typeof markdownOptions> & {
-  source: string
+  body: string
   className?: string
 }
 
-export function Markdown({ className, ...props }: MarkdownProps) {
+export function Markdown(rawProps: MarkdownProps) {
+  const itemProps = useContext(ItemPropsContext)
+  const { oneLine, renderText, body, className, ...props } = { ...itemProps, ...rawProps }
+  if (renderText) {
+    return renderText(body)
+  }
+  if (oneLine) {
+    return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
+  }
   return (
     <Text>
       <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />

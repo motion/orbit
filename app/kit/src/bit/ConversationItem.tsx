@@ -1,9 +1,7 @@
 import { SlackBitDataMessage } from '@mcro/models'
-import { HighlightText } from '@mcro/ui'
+import { ChatMessage, HighlightText, ItemPropsContext } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
-import { ChatMessage } from './ChatMessage'
-import { ItemPropsContext } from './ItemPropsContext'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)

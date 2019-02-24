@@ -76,7 +76,7 @@ function CreateAppMain(props: AppProps) {
         </Section>
 
         <Section paddingTop={0}>
-          <AppView appConfig={{ appId }} viewType="settings" />
+          <AppView appId={appId} viewType="settings" />
         </Section>
       </View>
 

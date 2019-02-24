@@ -16,8 +16,7 @@ export function SourcesAppMain(props: AppProps) {
 
   if (props.appConfig.viewType === 'setup') {
     const type = props.appConfig.source
-    console.log('getting view', type)
-    return <AppView viewType="setup" {...props} />
+    return <AppView appId={props.appConfig.appId} viewType="setup" {...props} />
   }
 
   if (props.appConfig.appId === 'sources') {

@@ -1,17 +1,14 @@
 import { Contents, View } from '@mcro/gloss'
-import { memoIsEqualDeep } from '@mcro/ui'
+import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useApp } from '../hooks/useApp'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
-import { SmallListItemPropsProvider } from './media/ItemPropsProviderSmall'
 import { ProvideStores } from './ProvideStores'
 
-export type AppViewProps = Pick<
-  AppProps,
-  'id' | 'title' | 'viewType' | 'isActive' | 'appConfig'
-> & {
+export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
+  appId: string
   title?: string
   appStore?: AppStore
   after?: React.ReactNode
@@ -26,7 +23,7 @@ export type AppViewRef = {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { views, appStore, provideStores } = useApp({ id: props.id })
+    const { views, appStore, provideStores } = useApp({ id: props.appId })
     const AppView = views[props.viewType]
 
     // handle ref
@@ -70,7 +67,7 @@ export const AppView = memoIsEqualDeep(
 
         // small rendering for index views
         if (props.viewType === 'index') {
-          return <SmallListItemPropsProvider>{appElement}</SmallListItemPropsProvider>
+          return <ItemPropsProviderSmall>{appElement}</ItemPropsProviderSmall>
         }
 
         // regular rendering for others

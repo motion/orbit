@@ -14,16 +14,16 @@ export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
 export default function OrbitStatusBar() {
   const { paneManagerStore } = useStores()
   const { views, appStore, provideStores } = useApp(paneManagerStore.activePane)
-  const AppView = views.statusBar
+  const StatusBarView = views.statusBar
 
-  if (!AppView) {
+  if (!StatusBarView) {
     return null
   }
 
   return (
     <ProvideStores stores={provideStores}>
       <StatusBarChrome>
-        <AppView key={paneManagerStore.activePane.id} appStore={appStore} />
+        <StatusBarView key={paneManagerStore.activePane.id} appStore={appStore} />
         <BorderTop />
       </StatusBarChrome>
     </ProvideStores>

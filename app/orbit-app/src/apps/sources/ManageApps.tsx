@@ -46,7 +46,7 @@ export const ManageApps = function ManageApps() {
           <Section>
             <SubTitle>Settings</SubTitle>
             <Title>{selectedApp.name}</Title>
-            <AppView type={selectedApp.type} viewType="settings" />
+            <AppView appId={selectedApp.type} viewType="settings" />
           </Section>
         </VerticalSplitPane>
       </Row>

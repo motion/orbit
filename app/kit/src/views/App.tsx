@@ -1,8 +1,8 @@
-import { superMemo } from '@mcro/ui';
-import React, { useEffect } from 'react';
-import { useActiveApps } from '../hooks/useActiveApps';
-import { useStoresSimple } from '../hooks/useStores';
-import { AppElements } from '../types/AppDefinition';
+import { superMemo } from '@mcro/ui'
+import React, { useEffect } from 'react'
+import { useActiveApps } from '../hooks/useActiveApps'
+import { useStoresSimple } from '../hooks/useStores'
+import { AppElements } from '../types/AppDefinition'
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
@@ -15,18 +15,21 @@ function AppContainerInner(props: AppElements) {
 
   const { appStore, appsStore } = useStoresSimple()
   const apps = useActiveApps()
+  const app = apps.find(x => `${x.id}` === appStore.id)
 
-  useEffect(() => {
-    const views = {
-      index: props.index && superMemo(props.index),
-      main: props.children && superMemo(props.children),
-      statusBar: props.statusBar && superMemo(props.statusBar),
-      toolBar: props.toolBar && superMemo(props.toolBar),
-    }
-
-    const appId = apps.find(x => `${x.id}` === appStore.id).appId
-    appsStore.setupApp(appId, views, props.provideStores)
-  }, [apps])
+  useEffect(
+    () => {
+      if (!app) return
+      const views = {
+        index: props.index && superMemo(props.index),
+        main: props.children && superMemo(props.children),
+        statusBar: props.statusBar && superMemo(props.statusBar),
+        toolBar: props.toolBar && superMemo(props.toolBar),
+      }
+      appsStore.setupApp(app.appId, views, props.provideStores)
+    },
+    [app],
+  )
 
   return null
 }

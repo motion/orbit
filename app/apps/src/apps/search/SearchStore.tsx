@@ -1,11 +1,18 @@
-import { loadMany } from '@mcro/bridge';
-import { AppIcon, MarkType, OrbitListItemProps, SearchState, SpaceIcon, useActiveApps, useStoresSimple } from '@mcro/kit';
-import { AppBit, SearchQuery, SearchResultModel, SourceType } from '@mcro/models';
-import { ensure, react, useHook } from '@mcro/use-store';
-import { uniq } from 'lodash';
-import React from 'react';
+import { loadMany } from '@mcro/bridge'
+import {
+  AppIcon,
+  MarkType,
+  OrbitListItemProps,
+  SearchState,
+  SpaceIcon,
+  useStoresSimple,
+} from '@mcro/kit'
+import { AppBit, SearchQuery, SearchResultModel, SourceType } from '@mcro/models'
+import { ensure, react, useHook } from '@mcro/use-store'
+import { uniq } from 'lodash'
+import React from 'react'
 // import { useActions } from '../../actions/Actions'
-import { searchGroupsToResults } from './searchGroupsToResults';
+import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchResults = {
   results: OrbitListItemProps[]
@@ -85,7 +92,7 @@ export class SearchStore {
     }
 
     // const spaceName = this.stores.spaceStore.activeSpace.name
-    const apps = useActiveApps().filter(x => x.editable !== false)
+    const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
     const searchedApps =
       (query && apps.filter(x => ~x.name.toLowerCase().indexOf(query.toLowerCase()))) || []
 

@@ -133,6 +133,11 @@ export function List(props: ListProps) {
     [props, selectableProps],
   )
 
+  if (!props.items) {
+    console.log('props are', props)
+    debugger
+  }
+
   const hasItems = !!props.items.length
 
   return (

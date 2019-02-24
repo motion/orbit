@@ -36,14 +36,11 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
   const state = useRef(opts ? opts.defaultValue : undefined)
   const forceUpdate = useState(0)[1]
   const subscriptions = useRef<CompositeDisposable | null>(null)
-  const testSync = useRef(0)
-  testSync.current === 0
 
   // use ref / start synchronously so we can use them without a bunch of re-renders,
   // sometimes... sometimes not :( see: https://github.com/mobxjs/mobx/issues/1911
   if (!subscriptions.current) {
     subscriptions.current = new CompositeDisposable()
-    let firstRun = true
     const name = `${component.renderName} useReaction`
 
     createReaction(reaction, derive, opts, {
@@ -53,28 +50,15 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
         subscriptions.current.add({ dispose })
       },
       setValue(next: any) {
-        const isSync = testSync.current === 0
-        testSync.current === 2
-        const wasFirstRun = firstRun
-        firstRun = false
         if (next === undefined || next === state.current) {
           return
         }
         state.current = next
-        // avoid double render when sync
-        if (wasFirstRun && isSync) return
         forceUpdate(Math.random())
       },
       getValue: () => state.current,
     })
   }
-
-  if (testSync.current === 0) {
-    console.warn('didnt run sync')
-    console.debug('reactino', reaction, derive)
-  }
-
-  testSync.current = 1
 
   useEffect(() => {
     return () => {

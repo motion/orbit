@@ -1,5 +1,5 @@
 import { always, ensure, react } from '@mcro/black'
-import { AppType, PaneManagerStore, QueryStore, useActiveApps } from '@mcro/kit'
+import { PaneManagerStore, QueryStore, useActiveApps } from '@mcro/kit'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { MergeContext, View, VirtualListDefaultProps } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -17,7 +17,7 @@ import { setTrayFocused } from './helpers'
 import MenuApp from './MenuApp'
 import { MenuChrome } from './MenuChrome'
 
-export const menuApps = ['search', 'topics', 'people'] as AppType[]
+export const menuApps = ['search', 'topics', 'people']
 
 export class MenuStore {
   props: {
@@ -432,8 +432,8 @@ export class MenuStore {
 
 function useMenuApps() {
   const allApps = useActiveApps()
-  const searchApp = allApps.find(x => x.type === 'search')
-  const listsApp = allApps.find(x => x.type === 'lists')
+  const searchApp = allApps.find(x => x.appId === 'search')
+  const listsApp = allApps.find(x => x.appId === 'lists')
   return [
     // indices start at 1 because 0 = orbit O
     { ...searchApp, id: `${searchApp.id}`, index: 1 },
@@ -441,7 +441,7 @@ function useMenuApps() {
     {
       id: '100',
       index: 3,
-      type: 'actions',
+      appId: 'actions',
       name: 'Actions',
     },
   ]
@@ -552,12 +552,11 @@ const MenuLayerContent = React.memo(() => {
       >
         {menuApps.map(app => (
           <MenuApp
-            id={app.id}
+            appId={app.id}
             index={app.index}
             key={app.id}
             viewType="index"
             title={app.name}
-            appId={app.appId}
           />
         ))}
       </AppSearchable>

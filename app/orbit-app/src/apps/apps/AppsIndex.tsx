@@ -1,5 +1,5 @@
 import { sleep } from '@mcro/black'
-import { AppType, List, useActiveApps, useActiveSources, useActiveSpace } from '@mcro/kit'
+import { List, useActiveApps, useActiveSources, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
@@ -28,7 +28,7 @@ export default function AppsAppsIndex(_props: AppProps) {
       icon: 'orbit-apps-full',
       iconBefore: true,
       appConfig: {
-        type: AppType.apps,
+        appId: 'apps',
         subType: 'manage-apps',
       },
     },
@@ -64,11 +64,11 @@ export default function AppsAppsIndex(_props: AppProps) {
       ),
       appConfig: app.app.sync.setup
         ? {
-            type: AppType.sources,
+            appId: 'sources',
             viewType: 'setup' as 'setup',
           }
         : {
-            type: AppType.message,
+            appId: 'message',
             title: `Opening private authentication for ${app.app.name}...`,
           },
     })),

@@ -10,6 +10,7 @@ import { Markdown } from './Markdown'
 export type ChatMessage = {
   person?: {
     id?: any
+    photo?: string
   }
   text?: string
   updatedAt?: number
@@ -70,13 +71,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           padding={[itemProps.condensed ? 0 : 3, 0]}
         >
           {itemProps.beforeTitle || null}
-          {!!person && (
-            <ButtonPerson
-              hideAvatar={itemProps.condensed}
-              background="transparent"
-              person={person}
-            />
-          )}
+          {!!person && <ButtonPerson background="transparent" photo={person.photo} />}
           {!itemProps.condensed && (
             <>
               <div style={{ width: 6 }} />

@@ -21,8 +21,6 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
     )
   }
 
-  console.log('loading apps', props.apps)
-
   // a little weird
   useEffect(
     () => {
@@ -63,7 +61,6 @@ function AppLoadView({ id, appId, store }: AppLoaderProps) {
   const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {
-    console.warn('!TODO we can load settings view here')
     // if (AppView.settings) {
     //   appsStore.addSettingsView(id, AppView.settings)
     // }

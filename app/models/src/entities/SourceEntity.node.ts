@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { SpaceEntity } from './SpaceEntity.node'
 import { Space } from '../interfaces/Space'
 import { SourceData } from '../source-data/SourceData'
+import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
 export class SourceEntity extends BaseEntity {
@@ -28,6 +28,9 @@ export class SourceEntity extends BaseEntity {
 
   @Column()
   name?: string
+
+  @Column()
+  appId?: string
 
   @Column()
   category?: string

@@ -1,34 +1,12 @@
 import { ensure, react, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppViews } from '../types/AppDefinition'
+import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { AppStore } from './AppStore'
 
 function getViewInformation(_type: string, views?: AppViews) {
-  if (!views) {
-    return {
-      hasMain: false,
-      hasIndex: false,
-    }
-  }
-
-  let hasIndex = false
-  let hasMain = false
-
-  if (views) {
-    // dynamic app view
-    hasMain = !!views.main
-    hasIndex = !!views.index
-  } else {
-    // static view we provide for alternate panes like settings/onboarding
-    console.warn('lets get rid of static views in refactor')
-    // const app = apps[type]
-    // hasIndex = !!app['index']
-    // hasMain = !!app['main']
-  }
-
   return {
-    hasMain,
-    hasIndex,
+    hasMain: views && !!views.main,
+    hasIndex: views && !!views.index,
   }
 }
 
@@ -39,6 +17,7 @@ export class AppsStore {
   provideStores = {}
   appViews: { [key: string]: AppViews } = {}
   appStores: { [key: string]: AppStore } = {}
+  definitions: { [key: string]: AppDefinition }
 
   // accumulated, debounced state (because things mount in waterfall)
   appsState = react(
@@ -53,7 +32,6 @@ export class AppsStore {
     },
   )
 
-  // !TODO load apps from appsStatic
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
     this.appViews = {
       ...this.appViews,
@@ -64,6 +42,13 @@ export class AppsStore {
         ...this.provideStores,
         [id]: provideStores,
       }
+    }
+  }
+
+  setAppDefinition(id: string, definition: AppDefinition) {
+    this.definitions = {
+      ...this.definitions,
+      [id]: definition,
     }
   }
 

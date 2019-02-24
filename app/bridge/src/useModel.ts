@@ -1,7 +1,7 @@
-import { Model } from '@mcro/mediator'
-import { merge } from 'lodash'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.'
+import { Model } from '@mcro/mediator';
+import { merge } from 'lodash';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, save } from '.';
 
 type UseModelOptions = {
   defaultValue?: any
@@ -99,7 +99,7 @@ export function useModel<ModelType, Args>(
   model: Model<ModelType, Args, any>,
   query: Args | false,
   options: UseModelOptions = {},
-): [ModelType, ((next: Partial<ModelType>) => any)] {
+): [ModelType | null, ((next: Partial<ModelType>) => any)] {
   return use('one', model, query, options)
 }
 

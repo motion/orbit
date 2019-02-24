@@ -1,7 +1,7 @@
 import { GmailBitData } from '@mcro/models'
 import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
+import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { ItemPropsContext } from './ItemPropsContext'
 import { ThreadMessage } from './ThreadMessage'
 

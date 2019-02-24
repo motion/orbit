@@ -1,5 +1,6 @@
-import { TextProps, ViewProps } from '@mcro/ui'
+import { ViewProps } from '@mcro/gloss'
 import { createContext } from 'react'
+import { TextProps } from '../text/Text'
 
 export const ItemPropsContext = createContext({
   oneLine: false,

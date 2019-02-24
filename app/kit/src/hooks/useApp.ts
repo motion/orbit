@@ -1,6 +1,6 @@
-import { react, useHook, useStore } from '@mcro/use-store'
+import { useReaction } from '@mcro/use-store'
 import { AppStore } from '../stores'
-import { AppViews } from '../types/AppDefinition'
+import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { useStoresSimple } from './useStores'
 
 type UseAppProps = {
@@ -8,46 +8,31 @@ type UseAppProps = {
   appStore?: AppStore
 }
 
-type UseAppResponse = {
-  appViews: AppViews
+export function useApp(
+  props: UseAppProps,
+): {
+  views: AppViews
   appStore: AppStore
   provideStores: Object
-}
-
-class UseAppStore {
-  props: UseAppProps
-  stores = useHook(useStoresSimple)
-
-  state = react(() => {
-    const { stores, props } = this
-    const next: UseAppResponse = {
+  definition: AppDefinition
+} {
+  const stores = useStoresSimple()
+  return useReaction(() => {
+    const next = {
       appStore: props.appStore || stores.appStore || null,
-      appViews: {},
+      views: {},
       provideStores: null,
+      definition: null,
     }
     if (stores.appsStore) {
       const state = stores.appsStore.appsState
       if (!state) return next
       const { appStores, appViews, provideStores } = state
-      // set store
-      if (!next.appStore) {
-        next.appStore = appStores[props.id]
-      }
-      // set view
-      next.appViews = appViews[props.id] || {}
+      next.appStore = next.appStore || appStores[props.id]
+      next.views = appViews[props.id] || {}
       next.provideStores = provideStores[props.id] || null
+      next.definition = stores.appsStore.definitions[props.id] || null
     }
     return next
   })
-}
-
-export function useApp(props: UseAppProps) {
-  const useAppStore = useStore(UseAppStore, props)
-  return (
-    useAppStore.state || {
-      appStore: null,
-      appViews: {},
-      provideStores: {},
-    }
-  )
 }

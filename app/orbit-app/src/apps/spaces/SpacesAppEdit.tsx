@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/bridge'
-import { OrbitOrb } from '@mcro/kit'
+import { OrbitOrb, useSourcesForSpace } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import {
   Col,
@@ -17,7 +17,6 @@ import {
 } from '@mcro/ui'
 import randomColor from 'randomcolor'
 import * as React from 'react'
-import { useSourcesForSpace } from '../../hooks/useSourcesForSpace'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { SubSection } from '../../views/SubSection'
@@ -28,7 +27,7 @@ const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 export default function SpacesAppEdit(props: AppProps) {
   const id = +props.appConfig.id
   const [space] = useModel(SpaceModel, { where: { id } })
-  const sources = useSourcesForSpace({ spaceId: id })
+  const sources = useSourcesForSpace(id)
   const [colors, setColors] = React.useState(defaultColors)
 
   return (

@@ -1,9 +1,10 @@
-import { HighlightText, Text } from '@mcro/ui'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkEmoji from 'remark-emoji'
+import { HighlightText } from '../text/HighlightText'
+import { Text } from '../text/Text'
 
-const ListItem = props => <HighlightText tagName="li" display="list-item" {...props} />
+const ListItem = (props: any) => <HighlightText tagName="li" display="list-item" {...props} />
 
 const Code = ({ value, ...props }) => (
   <HighlightText tagName="code" {...props}>

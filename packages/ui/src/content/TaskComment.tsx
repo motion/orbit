@@ -1,35 +1,33 @@
-import { gloss, View } from '@mcro/gloss'
-import {
-  BorderBottom,
-  DateFormat,
-  HorizontalSpace,
-  Icon,
-  RoundButton,
-  Row,
-  Text,
-  VerticalSpace,
-  ViewProps,
-} from '@mcro/ui'
+import { gloss, Row, View, ViewProps } from '@mcro/gloss'
 import * as React from 'react'
-import { handleClickPerson } from '../ButtonPerson'
+import { BorderBottom } from '../Border'
+import { RoundButton } from '../buttons/RoundButton'
+import { Icon } from '../Icon'
+import { HorizontalSpace } from '../layout/HorizontalSpace'
+import { VerticalSpace } from '../layout/VerticalSpace'
+import { DateFormat } from '../text/DateFormat'
+import { Text } from '../text/Text'
 import { Markdown } from './Markdown'
 
 export type TaskCommentLike = {
   author: {
     avatarUrl: string
     login: string
-    email: string
   }
   createdAt: string
   body?: string
 }
 
-export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
+export type TaskCommentProps = TaskCommentLike & {
+  onClickPerson?: any
+}
+
+export function TaskComment({ author, createdAt, body, onClickPerson }: TaskCommentProps) {
   if (!author) {
     console.warn('error! no author')
     return null
   }
-  const { avatarUrl, login, email } = author
+  const { avatarUrl, login } = author
   return (
     <HighlightSection>
       <Row alignItems="center">
@@ -37,20 +35,8 @@ export const TaskComment = ({ author, createdAt, body }: TaskCommentLike) => {
           style={{ borderRadius: 100, width: 24, height: 24, marginRight: 10 }}
           src={avatarUrl}
         />
-        <RoundButton size={0.9} onClick={handleClickPerson(email)}>
-          {login}{' '}
-          <Icon
-            size={8}
-            name="link"
-            opacity={0.8}
-            marginLeft={2}
-            onClick={e => {
-              e.stopPropagation()
-              // TODO: make generic
-              // !TODO
-              // AppActions.open(`https://github.com/${login}`)
-            }}
-          />
+        <RoundButton size={0.9} onClick={onClickPerson}>
+          {login} <Icon size={8} name="link" opacity={0.8} marginLeft={2} />
         </RoundButton>
         <HorizontalSpace />
         {!!createdAt && (

@@ -1,7 +1,6 @@
-import { HighlightText } from '@mcro/ui'
-import * as React from 'react'
-import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
-import { ItemPropsContext } from './ItemPropsContext'
+import React, { useContext } from 'react'
+import { HighlightText } from '../text/HighlightText'
+import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 import { HighlightSection, TaskComment, TaskCommentLike } from './TaskComment'
 
@@ -10,10 +9,9 @@ export type TaskLike = {
   comments: TaskCommentLike[]
 }
 
-export function Task(rawProps: OrbitItemViewProps<any> & TaskLike) {
-  const itemProps = React.useContext(ItemPropsContext)
+export function Task(rawProps: TaskLike & ItemsPropsContextType) {
+  const itemProps = useContext(ItemPropsContext)
   const { body, oneLine, renderText, comments } = { ...itemProps, ...rawProps }
-
   if (renderText) {
     return renderText(body)
   }

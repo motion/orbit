@@ -77,7 +77,4 @@ export async function sourceToAppConfig(
     source: appDef.sync.sourceType as SourceType,
     viewConfig: appDef.defaultViewConfig,
   }
-
-  console.warn('person needs to switch to bit...')
-  return {}
 }

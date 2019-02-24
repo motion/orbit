@@ -19,6 +19,16 @@ export const AppsLoader = memo(function AppsLoader(props: {
     )
   }
 
+  // a little weird
+  useEffect(
+    () => {
+      for (const { id } of props.views) {
+        appsStore.setAppDefinition(id, getAppDefinition(id))
+      }
+    },
+    [props.views],
+  )
+
   const appViews = stableKeys.current.map(id => {
     const view = props.views.find(view => view.id === id)
     return <AppLoader key={id} id={id} type={view.type} store={appsStore} />

@@ -1,10 +1,10 @@
 import { Title } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
+import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { ItemPropsContext } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 
-export const MarkdownDocument = (rawProps: OrbitItemViewProps<any>) => {
+export const MarkdownItem = (rawProps: OrbitItemViewProps<any>) => {
   const itemProps = React.useContext(ItemPropsContext)
   const { item, renderText } = { ...itemProps, ...rawProps }
 

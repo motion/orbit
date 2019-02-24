@@ -1,7 +1,9 @@
-import { ChatMessage, ItemPropsContext, OrbitItemViewProps } from '@mcro/kit'
 import { SlackBitDataMessage } from '@mcro/models'
 import { HighlightText } from '@mcro/ui'
 import * as React from 'react'
+import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
+import { ChatMessage } from './ChatMessage'
+import { ItemPropsContext } from './ItemPropsContext'
 
 const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
   let res = messages.slice(0, shownLimit)
@@ -14,7 +16,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
   return res
 }
 
-export function SlackItem(rawProps: OrbitItemViewProps<'slack'>) {
+export function ConversationItem(rawProps: OrbitItemViewProps<'slack'>) {
   const itemProps = React.useContext(ItemPropsContext)
   const { item, searchTerm, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
   const { data, people } = item
@@ -55,7 +57,7 @@ export function SlackItem(rawProps: OrbitItemViewProps<'slack'>) {
   })
 }
 
-SlackItem.itemProps = {
+ConversationItem.itemProps = {
   // hideTitle: true,
   // slim: true,
 }

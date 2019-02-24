@@ -9,7 +9,7 @@ import {
   View,
 } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitSourceMainProps } from '../types/SourceTypes'
+import { OrbitSourceMainProps } from '../types/AppDefinition'
 
 const Cmd = gloss({
   opacity: 0.6,

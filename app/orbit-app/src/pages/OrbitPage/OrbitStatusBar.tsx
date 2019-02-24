@@ -7,14 +7,14 @@ import { useStores } from '../../hooks/useStores'
 const statusBarHeight = 26
 
 export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
-  const { appViews } = useApp({ id })
-  return <div style={{ height: appViews.statusBar ? statusBarHeight : 0 }} />
+  const { views } = useApp({ id })
+  return <div style={{ height: views.statusBar ? statusBarHeight : 0 }} />
 }
 
 export default function OrbitStatusBar() {
   const { paneManagerStore } = useStores()
-  const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
-  const AppView = appViews.statusBar
+  const { views, appStore, provideStores } = useApp(paneManagerStore.activePane)
+  const AppView = views.statusBar
 
   if (!AppView) {
     return null

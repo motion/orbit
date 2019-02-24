@@ -26,8 +26,8 @@ export type AppViewRef = {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { appViews, appStore, provideStores } = useApp({ id: props.id })
-    const AppView = appViews[props.viewType]
+    const { views, appStore, provideStores } = useApp({ id: props.id })
+    const AppView = views[props.viewType]
 
     // handle ref
     useEffect(

@@ -32,8 +32,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
 
 export const ListItem = React.memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    // !TODO
-    const { appStore, selectionStore, sourcesStore } = useStoresSimple()
+    const { appsStore, appStore, selectionStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: OrbitItemComponent<any> = null
@@ -48,8 +47,8 @@ export const ListItem = React.memo(
           itemProps = getNormalPropsForListItem(normalized)
 
           if (item.target === 'bit') {
-            // !TODO instead of using sourcesStore directly, have configuration config.getItemView()
-            ItemView = sourcesStore.getView(normalized.sourceType, 'item')
+            const itemType = appsStore.definitions[normalized.sourceType].itemType
+            ItemView = ItemViews[itemType]
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson
           }

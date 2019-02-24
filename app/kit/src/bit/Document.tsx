@@ -1,6 +1,6 @@
 import { HighlightText, Title } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitItemViewProps } from '../../types/OrbitItemViewProps'
+import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { ItemPropsContext } from './ItemPropsContext'
 
 export function Document({ item, renderText }: OrbitItemViewProps<any>) {

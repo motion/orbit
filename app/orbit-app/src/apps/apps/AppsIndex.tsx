@@ -1,17 +1,20 @@
 import { sleep } from '@mcro/black'
-import { AppType, List, sourceToAppConfig, useActiveApps, useActiveSpace } from '@mcro/kit'
+import { AppType, List, useActiveApps, useActiveSources, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
-import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
+import { orbitApps } from '../orbitApps'
 
 export default function AppsAppsIndex(_props: AppProps) {
-  const { sourcesStore } = useStores()
   const [activeSpace] = useActiveSpace()
-  const { activeSources, allSources } = sourcesStore
   const activeApps = useActiveApps()
+  const allSourceApps = orbitApps.filter(x => !!x.app.sync)
+  const activeSources = useActiveSources().map(source => ({
+    ...orbitApps.find(app => app.id === source.type),
+    source,
+  }))
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -29,46 +32,45 @@ export default function AppsAppsIndex(_props: AppProps) {
         subType: 'manage-apps',
       },
     },
+
     ...activeSources.map(app => ({
+      group: 'Sources',
       id: `${app.source.id}`,
-      title: app.display.name,
+      title: app.app.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
       icon: app.source,
       iconBefore: true,
       total: activeSources.length,
-      appConfig: sourceToAppConfig(app),
-      group: 'Sources',
     })),
-    ...allSources.map((source, index) => ({
-      // ...these have their own onClick
-      id: `${source.source}${index}`,
-      title: source.name,
-      icon: source.source,
+
+    ...allSourceApps.map(app => ({
+      group: 'Add Source',
+      id: `${app.id}`,
+      title: app.app.name,
+      icon: app.app.icon,
       onClick:
-        !source.views.setup &&
+        !app.app.sync.setup &&
         (async e => {
           e.preventDefault()
           e.stopPropagation()
           await sleep(700)
-          addSource(source)
+          addSource(app)
         }),
       // disableSelect: !source.views.setup,
-      after: source.views.setup ? null : (
+      after: app.app.sync.setup ? null : (
         <View marginTop={4}>
           <Icon size={12} opacity={0.5} name="uilink6" />
         </View>
       ),
-      appConfig: source.views.setup
+      appConfig: app.app.sync.setup
         ? {
-            ...sourceToAppConfig(source),
             type: AppType.sources,
             viewType: 'setup' as 'setup',
           }
         : {
             type: AppType.message,
-            title: `Opening private authentication for ${source.name}...`,
+            title: `Opening private authentication for ${app.app.name}...`,
           },
-      group: 'Add Source',
     })),
   ]
 

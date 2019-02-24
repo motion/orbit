@@ -81,9 +81,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     })
   }, [])
 
+  // update PaneManager panes
   useReaction(() => spaceStore.apps, function managePanes(apps) {
     ensure('apps', !!apps.length)
-    const { paneManagerStore } = this.props
     const { panes, paneIndex } = getPanes(paneManagerStore, apps)
     if (!isEqual(panes, paneManagerStore.panes)) {
       paneManagerStore.setPanes(panes)

@@ -54,8 +54,8 @@ export class Syncer {
           await this.runInterval(source, true)
         }
       } else {
-        // @ts-ignore
         this.subscription = Mediator.observeMany(SourceModel, {
+          // TODO @umed type
           // @ts-ignore
           args: { where: { type: this.options.type } },
         }).subscribe(async sources => this.reactOnSettingsChanges(sources))

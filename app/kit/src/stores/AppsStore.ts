@@ -17,22 +17,32 @@ export class AppsStore {
   provideStores = {}
   appViews: { [key: string]: AppViews } = {}
   appStores: { [key: string]: AppStore } = {}
-  definitions: { [key: string]: AppDefinition }
+  definitions: { [key: string]: AppDefinition } = {}
 
   // accumulated, debounced state (because things mount in waterfall)
   appsState = react(
-    () => [this.provideStores, this.appViews, this.appStores],
-    async ([provideStores, appViews, appStores], { sleep }) => {
+    () => [this.provideStores, this.appViews, this.appStores, this.definitions],
+    async ([provideStores, appViews, appStores, definitions], { sleep }) => {
       await sleep(10)
       return {
         provideStores,
         appViews,
         appStores,
+        definitions,
       }
+    },
+    {
+      defaultValue: {
+        provideStores: {},
+        appViews: {},
+        appStores: {},
+        definitions: {},
+      },
     },
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
+    console.log('setting up app', id, views, provideStores)
     this.appViews = {
       ...this.appViews,
       [id]: { ...this.appViews[id], ...views },

@@ -71,7 +71,23 @@ function useManageQuerySources() {
   )
 }
 
+function useManagePanes() {
+  const Actions = useActions()
+  const { paneManagerStore, spaceStore } = useStores()
+
+  useReaction(() => spaceStore.apps, function managePanes(apps) {
+    ensure('apps', !!apps.length)
+    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+    if (!isEqual(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+    Actions.setInitialPaneIndex()
+  })
+}
+
 function OrbitManagers() {
+  useManagePanes()
   useManagePaneSort()
   useManageQuerySources()
   return null
@@ -79,7 +95,7 @@ function OrbitManagers() {
 
 const OrbitPageInner = memo(function OrbitPageInner() {
   const Actions = useActions()
-  const { paneManagerStore, spaceStore } = useStores()
+  const { paneManagerStore } = useStores()
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
   const sidebarStore = useStoreSimple(SidebarStore)
@@ -94,22 +110,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
       paneManagerStore.setActivePaneByType('settings')
     })
   }, [])
-
-  // update PaneManager panes
-  useReaction(() => spaceStore.apps, function managePanes(apps) {
-    ensure('apps', !!apps.length)
-    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-    }
-    paneManagerStore.setPaneIndex(paneIndex)
-    Actions.setInitialPaneIndex()
-  })
-
-  const allViews = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    type: pane.type,
-  }))
 
   useEffect(() => {
     // prevent close on the main window
@@ -165,7 +165,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
       <MainShortcutHandler handlers={handlers}>
-        <AppsLoader views={allViews}>
+        <AppsLoader
+          apps={paneManagerStore.panes.map(pane => ({
+            id: pane.id,
+            type: pane.type,
+          }))}
+        >
           <OrbitHeader />
           <InnerChrome torn={orbitStore.isTorn}>
             <OrbitToolBar />

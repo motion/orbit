@@ -9,6 +9,7 @@ import { AppConfig } from '../types/AppConfig'
 import { ItemType } from '../types/ItemType'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
+import { itemViewsListItem } from './itemViews'
 import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
@@ -48,7 +49,7 @@ export const ListItem = React.memo(
 
           if (item.target === 'bit') {
             const itemType = appsStore.definitions[normalized.sourceType].itemType
-            ItemView = ItemViews[itemType]
+            ItemView = itemViewsListItem[itemType]
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson
           }

@@ -1,35 +1,37 @@
-import { AppDefinition, AppsStore, AppStore, ProvideStores, useAppPackages } from '@mcro/kit'
+import { AppsStore, AppStore, ProvideStores, useAppPackage } from '@mcro/kit'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 
-export const AppsLoader = memo(function AppsLoader(props: {
+type AppsLoaderProps = {
   children?: any
-  views: { id: string; type: string }[]
-}) {
+  apps: { id: string; type: string }[]
+}
+
+export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   const appsStore = useStoreSimple(AppsStore)
   const stableKeys = useRef([])
-  const sortedKeys = new Set(props.views.map(v => v.id).sort())
+  const sortedKeys = new Set(props.apps.map(v => v.id).sort())
   if (!isEqual(new Set(stableKeys.current), sortedKeys)) {
     // we are building this up over time, so once we see an id
     // we always show it in the same order in the DOM
     stableKeys.current = [...new Set([...stableKeys.current, ...sortedKeys])].filter(id =>
-      props.views.find(x => x.id === id),
+      props.apps.find(x => x.id === id),
     )
   }
 
   // a little weird
   useEffect(
     () => {
-      for (const { id, type } of props.views) {
-        appsStore.setAppDefinition(id, getAppDefinition(type))
+      for (const { type } of props.apps) {
+        appsStore.setAppDefinition(type, useAppPackage(type).app)
       }
     },
-    [props.views],
+    [props.apps],
   )
 
   const appViews = stableKeys.current.map(id => {
-    const view = props.views.find(view => view.id === id)
+    const view = props.apps.find(view => view.id === id)
     return <AppLoader key={id} id={id} type={view.type} store={appsStore} />
   })
 
@@ -41,19 +43,15 @@ export const AppsLoader = memo(function AppsLoader(props: {
   )
 })
 
-export function getAppDefinition(id: string): AppDefinition | null {
-  const module = useAppPackages().find(app => app.id === id)
-  console.log('looking for', id, useAppPackages())
-  return (module.app && module.app) || null
-}
-
 type AppLoaderProps = { id: string; type: string; store: AppsStore }
 
 function AppLoader(props: AppLoaderProps) {
-  const appDefinition = getAppDefinition(props.type)
-  if (!appDefinition.app) {
+  const appDefinition = useAppPackage(props.type)
+
+  if (!appDefinition.app.app) {
     console.warn(`App doesnt have a view ${props.type}`)
   }
+
   // never run more than once
   return useMemo(() => {
     // sub-view so we can use hooks
@@ -63,13 +61,13 @@ function AppLoader(props: AppLoaderProps) {
 
 function AppLoadView({ id, type, store }: AppLoaderProps) {
   // const { appsStore } = useStoresSimple()
-  const appDefinition = getAppDefinition(type)
+  const appDefinition = useAppPackage(type)
 
   if (!appDefinition.app) {
     throw new Error(`Invalid definition ${id} ${type}`)
   }
 
-  const AppView = appDefinition.app
+  const AppView = appDefinition.app.app
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 

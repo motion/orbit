@@ -1,10 +1,7 @@
-import { ConversationItem } from '../media/ConversationItem'
-import { Conversation } from './media/Conversation'
-import { Document } from './media/Document'
-import { Markdown } from './media/Markdown'
-import { Readability } from './media/Readability'
-import { Task } from './media/Task'
-import { Thread } from './media/Thread'
+import { Document, Markdown, Task, Thread } from '@mcro/ui'
+import { Conversation } from '../bit/BitConversation'
+import { ConversationItem } from '../bit/BitConversationItem'
+import { Readability } from '../bit/Readability'
 
 export const itemViewsApp = {
   conversation: Conversation,

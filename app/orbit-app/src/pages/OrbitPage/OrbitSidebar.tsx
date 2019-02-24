@@ -126,8 +126,8 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           viewType="index"
           appId={type}
           ref={handleAppRef}
-          before={<OrbitToolBarHeight id={id} />}
-          after={<OrbitStatusBarHeight id={id} />}
+          before={<OrbitToolBarHeight appId={id} />}
+          after={<OrbitStatusBarHeight appId={id} />}
           inside={<BorderRight />}
         />
       </ProvideSelectionContext>

@@ -7,14 +7,16 @@ import { useStores } from '../../hooks/useStores'
 const height = 30
 const minHeight = 3
 
-export const OrbitToolBarHeight = ({ id }: { id: string }) => {
-  const { views } = useApp({ id })
+export const OrbitToolBarHeight = ({ appId }: { appId: string }) => {
+  console.log('load toolbar', appId)
+  const { views } = useApp({ id: appId })
   return <div style={{ height: views.toolBar ? height : minHeight }} />
 }
 
 export default memo(function OrbitToolBar() {
   const { orbitStore, paneManagerStore } = useStores()
-  const { views } = useApp(paneManagerStore.activePane)
+  console.log('load', paneManagerStore.activePane.type)
+  const { views } = useApp({ id: paneManagerStore.activePane.type })
   const hasToolbar = !!views.toolBar
 
   return (

@@ -1,10 +1,18 @@
-import { useModels } from '@mcro/bridge';
-import { gloss, View } from '@mcro/gloss';
-import { Bit, BitModel, GenericBit } from '@mcro/models';
-import { Button, ChatMessages, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui';
-import * as React from 'react';
-import { OrbitSourceMainProps } from '../types/AppDefinition';
-import { BitStatusBar } from '../views/BitStatusBar';
+import { useModels } from '@mcro/bridge'
+import { gloss, View } from '@mcro/gloss'
+import { Bit, BitModel, GenericBit } from '@mcro/models'
+import {
+  Button,
+  ChatMessages,
+  Divider,
+  Row,
+  ScrollableContent,
+  SegmentedRow,
+  Title,
+} from '@mcro/ui'
+import * as React from 'react'
+import { OrbitSourceMainProps } from '../types/AppDefinition'
+import { BitStatusBar } from '../views/BitStatusBar'
 
 const Pane = gloss(View, {
   height: 0,
@@ -119,4 +127,4 @@ export function Conversation(props: OrbitSourceMainProps) {
       <BitStatusBar {...props} />
     </>
   )
-})
+}

@@ -1,3 +1,4 @@
+import React from 'react'
 import { itemViewsApp } from './itemViews'
 
 export function MediaView(props: { type: string }) {

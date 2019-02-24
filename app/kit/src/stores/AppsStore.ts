@@ -43,6 +43,10 @@ export class AppsStore {
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
     console.log('setting up app', id, views, provideStores)
+    if (this.appViews[id]) {
+      console.log('already set up')
+      return
+    }
     this.appViews = {
       ...this.appViews,
       [id]: { ...this.appViews[id], ...views },

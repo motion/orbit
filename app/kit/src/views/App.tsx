@@ -1,8 +1,8 @@
-import { superMemo } from '@mcro/ui'
-import React, { useEffect } from 'react'
-import { useActiveApps } from '../hooks/useActiveApps'
-import { useStoresSimple } from '../hooks/useStores'
-import { AppElements } from '../types/AppDefinition'
+import { superMemo } from '@mcro/ui';
+import React, { useEffect } from 'react';
+import { useActiveApps } from '../hooks/useActiveApps';
+import { useStoresSimple } from '../hooks/useStores';
+import { AppElements } from '../types/AppDefinition';
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
@@ -24,9 +24,9 @@ function AppContainerInner(props: AppElements) {
       toolBar: props.toolBar && superMemo(props.toolBar),
     }
 
-    const appId = apps.find(x => x.id === appStore.id)
-    appsStore.setupApp(appStore.id, views, props.provideStores)
-  }, [])
+    const appId = apps.find(x => `${x.id}` === appStore.id).appId
+    appsStore.setupApp(appId, views, props.provideStores)
+  }, [apps])
 
   return null
 }

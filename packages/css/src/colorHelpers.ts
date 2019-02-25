@@ -1,24 +1,8 @@
 import { isColor, toColor } from './toColor'
 import { Color } from './types'
+import { GradientArg, LinearGradient } from './utils/LinearGradient'
 
-export type GradientArg = string | Color
-
-export class LinearGradient {
-  items: GradientArg[]
-
-  constructor(items: GradientArg[]) {
-    this.items = items
-  }
-
-  getColors() {
-    return this.items.filter(isColor)
-  }
-
-  toString() {
-    const args = this.items.map(item => (isColor(item) ? toColor(item) : item)).join(', ')
-    return `linear-gradient(${args})`
-  }
-}
+export { GradientArg } from './LinearGradient'
 
 export function linearGradient(...args: GradientArg[]) {
   return new LinearGradient(args)

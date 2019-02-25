@@ -60,19 +60,30 @@ export type HandleOrbitSelect = ((
 ) => any)
 
 export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
+  query?: string
   items?: Item[]
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
 }
 
+let last
+
+let debug = false
+setTimeout(() => {
+  debug = true
+}, 4000)
+
 export function List(rawProps: ListProps) {
-  const { items, onSelect, onOpen, placeholder, getItemProps, ...props } = rawProps
+  const { items, onSelect, onOpen, placeholder, getItemProps, query, ...props } = rawProps
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
   let selectionStore
+
+  console.warn(last === rawProps)
+  last = rawProps
 
   useEffect(
     () => {
@@ -100,6 +111,8 @@ export function List(rawProps: ListProps) {
   // a bit risky but otherwise this is really  hard
   const getItemPropsInner = useCallback(
     (item, index, items) => {
+      if (debug) debugger
+
       console.log('changing this', items)
 
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
@@ -150,7 +163,7 @@ export function List(rawProps: ListProps) {
 
   return (
     <ProvideSelectionStore selectionStore={selectionStore}>
-      <HighlightActiveQuery>
+      <HighlightActiveQuery query={query}>
         {hasItems && (
           <SelectableList
             allowMeasure={isActive}

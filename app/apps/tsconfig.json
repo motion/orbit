@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.client",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
     "rootDir": "src"
   },
@@ -8,7 +9,9 @@
   "references": [
     { "path": "../../packages/gloss" },
     { "path": "../../packages/use-store" },
+    { "path": "../../packages/ui" },
     { "path": "../bridge" },
+    { "path": "../kit" },
     { "path": "../models" }
   ]
 }

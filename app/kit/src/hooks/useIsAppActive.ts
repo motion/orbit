@@ -3,5 +3,8 @@ import { useStoresSimple } from './useStores'
 
 export function useIsAppActive() {
   const { appStore } = useStoresSimple()
-  return useReaction(() => appStore.isActive)
+  return useReaction(() => {
+    console.log('run reaction')
+    return appStore.isActive
+  })
 }

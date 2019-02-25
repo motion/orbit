@@ -47,10 +47,16 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { views, appStore, provideStores } = useApp(props.appId, props.id)
-    const AppView = views[props.viewType]
+    const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
 
-    console.log('looking at', props.appId, views)
+    let AppView = views[props.viewType]
+
+    console.log('what', props.appId, props.viewType, props.id, definition, AppView)
+
+    if (!AppView && definition && definition.sync) {
+      console.log('looking at', definition.sync, props.viewType)
+      AppView = definition.sync[props.viewType]
+    }
 
     // handle ref
     useHandleAppViewRef(ref, rootRef)

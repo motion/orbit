@@ -36,20 +36,21 @@ const OrbitToolBarContent = memo(() => {
   const { appsStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
 
-  const toolbars = useReaction(() => {
-    const res = {}
-    for (const { type, id } of paneManagerStore.panes) {
-      const state = appsStore.getApp(type, id)
-      if (!state) continue
-      const AppToolbar = state.views.toolBar
-      res[id] = AppToolbar && (
-        <ProvideStores stores={state.provideStores}>
-          <AppToolbar appStore={state.appStore} />
-        </ProvideStores>
-      )
-    }
-    return res
-  })
+  const toolbars =
+    useReaction(() => {
+      const res = {}
+      for (const { type, id } of paneManagerStore.panes) {
+        const state = appsStore.getApp(type, id)
+        if (!state) continue
+        const AppToolbar = state.views.toolBar
+        res[id] = AppToolbar && (
+          <ProvideStores stores={state.provideStores}>
+            <AppToolbar appStore={state.appStore} />
+          </ProvideStores>
+        )
+      }
+      return res
+    }) || {}
 
   return (
     <>

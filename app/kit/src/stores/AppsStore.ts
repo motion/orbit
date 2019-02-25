@@ -14,15 +14,15 @@ type LoadedApp = {
 export class AppsStore {
   stores = useHook(useStoresSimple)
 
-  loadedApps: { [key: string]: LoadedApp } = {}
+  _apps: { [key: string]: LoadedApp } = {}
   definitions: { [key: string]: AppDefinition } = {}
 
   // because these load in waterfall, we debounce
   apps = react(
-    () => always(this.loadedApps),
+    () => always(this._apps),
     async (_, { sleep }) => {
       await sleep(16)
-      return this.loadedApps
+      return this._apps
     },
     {
       defaultValue: {},
@@ -30,14 +30,14 @@ export class AppsStore {
   )
 
   setApp = (app: { appId: string; id: string; views: AppViews; provideStores?: Object }) => {
-    this.loadedApps = {
-      ...this.loadedApps,
+    this._apps = {
+      ...this._apps,
       [app.id]: app,
     }
   }
 
   setAppStore = (id: string, appStore: AppStore) => {
-    this.loadedApps[id].appStore = appStore
+    this._apps[id].appStore = appStore
   }
 
   setAppDefinition(id: string, definition: AppDefinition) {
@@ -54,7 +54,9 @@ export class AppsStore {
   getApp(appId: string, id: string) {
     const appState = id ? this.apps[id] : this.getAppByAppId(appId)
     if (!appState) {
-      return null
+      return {
+        definition: this.definitions[appId],
+      }
     }
     if (appState.appId !== appId) {
       throw new Error(`You called getApp with a mismatched id/appId`)

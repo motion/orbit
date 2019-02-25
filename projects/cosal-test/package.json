@@ -19,8 +19,8 @@
     "cors": "2.8.5",
     "express": "*",
     "json-stream-stringify": "2.0.1",
-    "react": "16.8.2",
-    "react-dom": "16.8.2",
+    "react": "16.8.3",
+    "react-dom": "16.8.3",
     "react-hot-loader": "4.7.0"
   }
 }

@@ -68,7 +68,7 @@ const CenteredTitle = gloss({
 })
 
 const AppPageContent = () => {
-  const { appPageStore, appFrameStore, queryStore } = useStores()
+  const { appPageStore, appFrameStore } = useStores()
   if (!appPageStore.state) {
     return <div>no state</div>
   }
@@ -121,7 +121,7 @@ const AppPageContent = () => {
                 id={appConfig.id}
                 viewType="index"
                 title={appConfig.title}
-                type={appConfig.type}
+                appId={appConfig.appId}
                 isActive
               />
             </AppSearchable>
@@ -132,7 +132,7 @@ const AppPageContent = () => {
             id={appConfig.id}
             viewType={appConfig.viewType || 'main'}
             title={appConfig.title}
-            type={appConfig.type}
+            appId={appConfig.appId}
             isActive
           />
         </Col>

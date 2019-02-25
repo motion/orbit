@@ -7,7 +7,7 @@ import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
 
-export type AppViewProps = Pick<AppProps, 'viewType' | 'isActive' | 'appConfig'> & {
+export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
   id?: string
   appId: string
   appStore?: AppStore
@@ -82,9 +82,7 @@ export const AppView = memoIsEqualDeep(
       [appStore, AppView],
     )
 
-    if (props.viewType === 'main') {
-      console.log('loading main', props, views, appElement)
-    }
+    console.log('render app view', AppView, props.viewType, appElement)
 
     if (!appElement) {
       return null

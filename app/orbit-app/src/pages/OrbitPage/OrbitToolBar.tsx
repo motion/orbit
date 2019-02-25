@@ -5,18 +5,20 @@ import { BorderBottom } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useStores } from '../../hooks/useStores'
 
-const height = 30
+const toolbarHeight = 30
 const minHeight = 3
 
 export const OrbitToolBarHeight = ({ appId }: { appId: string }) => {
   const { views } = useApp(appId)
-  return <div style={{ height: views.toolBar ? height : minHeight }} />
+  const height = views.toolBar ? toolbarHeight : minHeight
+  return <div style={{ height }} />
 }
 
 export const OrbitToolBar = memo(function OrbitToolBar() {
   const { orbitStore, paneManagerStore } = useStores()
   const { views } = useApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
+  console.log('render toolbar', hasToolbar, paneManagerStore.activePane.type, views)
   return (
     <ToolbarChrome hasToolbars={hasToolbar}>
       <ToolbarInner hasToolbars={hasToolbar}>
@@ -34,24 +36,20 @@ const OrbitToolBarContent = memo(() => {
   const { appsStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
 
-  const toolbars = useReaction(
-    () => [appsStore.apps, paneManagerStore.panes],
-    ([apps, panes]) => {
-      const res = {}
-      for (const { id } of panes) {
-        const state = apps[id]
-        if (!state) continue
-        console.log('state is', state)
-        const AppToolbar = state.views.toolBar
-        res[id] = AppToolbar && (
-          <ProvideStores stores={state.provideStores}>
-            <AppToolbar appStore={state.store} />
-          </ProvideStores>
-        )
-      }
-      return res
-    },
-  )
+  const toolbars = useReaction(() => {
+    const res = {}
+    for (const { type, id } of paneManagerStore.panes) {
+      const state = appsStore.getApp(type, id)
+      if (!state) continue
+      const AppToolbar = state.views.toolBar
+      res[id] = AppToolbar && (
+        <ProvideStores stores={state.provideStores}>
+          <AppToolbar appStore={state.appStore} />
+        </ProvideStores>
+      )
+    }
+    return res
+  })
 
   return (
     <>
@@ -89,7 +87,7 @@ const ToolbarChrome = gloss(Row, {
   zIndex: 1000000000,
   transition: 'none',
   transform: {
-    y: -height + minHeight,
+    y: -toolbarHeight + minHeight,
   },
   hasToolbars: {
     transform: {
@@ -103,7 +101,7 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss({
   flex: 2,
   flexFlow: 'row',
-  height,
+  height: toolbarHeight,
   transition: 'opacity ease 100ms',
   opacity: 0,
   hasToolbars: {

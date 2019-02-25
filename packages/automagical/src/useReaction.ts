@@ -43,21 +43,26 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
     subscriptions.current = new CompositeDisposable()
     const name = `${component.renderName} useReaction`
 
-    createReaction(reaction, derive, opts, {
-      name,
-      nameFull: name,
-      addSubscription(dispose) {
-        subscriptions.current.add({ dispose })
+    createReaction(
+      reaction,
+      derive,
+      { log: false, ...opts },
+      {
+        name,
+        nameFull: name,
+        addSubscription(dispose) {
+          subscriptions.current.add({ dispose })
+        },
+        setValue(next: any) {
+          if (next === undefined || next === state.current) {
+            return
+          }
+          state.current = next
+          forceUpdate(Math.random())
+        },
+        getValue: () => state.current,
       },
-      setValue(next: any) {
-        if (next === undefined || next === state.current) {
-          return
-        }
-        state.current = next
-        forceUpdate(Math.random())
-      },
-      getValue: () => state.current,
-    })
+    )
   }
 
   useEffect(() => {

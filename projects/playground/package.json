@@ -12,9 +12,9 @@
     "@mcro/use-store": "*",
     "@mcro/ui": "*",
     "lodash": "^4.17.10",
-    "mobx-react-lite": "1.0.0",
-    "react": "16.8.2",
-    "react-dom": "16.8.2",
+    "mobx-react-lite": "1.1.0",
+    "react": "16.8.3",
+    "react-dom": "16.8.3",
     "react-hot-loader": "4.7.0"
   }
 }

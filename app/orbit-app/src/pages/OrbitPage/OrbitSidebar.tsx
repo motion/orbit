@@ -114,7 +114,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
 
   return (
     <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
-      <ProvideSelectionContext onSelectItem={orbitStore.handleSelectItem}>
+      <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
         <AppView
           key={id}
           id={id}

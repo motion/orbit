@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import AppsMainNew from './apps/AppsMainNew'
+import { AppsMainNew } from './apps/AppsMainNew'
 import { AppProps } from './AppTypes'
 import PreviewApp from './views/PreviewApp'
 

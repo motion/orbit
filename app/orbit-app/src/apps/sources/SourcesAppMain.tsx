@@ -6,6 +6,8 @@ import { AppProps } from '../AppTypes'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {
+  console.log('rendering me', props)
+
   if (!props.appConfig) {
     return null
   }

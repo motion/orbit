@@ -57,6 +57,12 @@ function AppLoadView({ id, appId, store }: AppLoaderProps) {
   const appDefinition = useAppPackage(appId)
   // this is the <App index={} /> view inside that app...
   const AppApp = appDefinition.app.app as any
+
+  // this branch should never change it's static
+  if (!AppApp) {
+    return null
+  }
+
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 

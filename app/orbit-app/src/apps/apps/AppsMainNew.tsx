@@ -5,7 +5,7 @@ import { useStores } from '../../hooks/useStores'
 import { ColorPicker } from '../../views/ColorPicker'
 import { Input } from '../../views/Input'
 
-export default function AppsMainNew() {
+export function AppsMainNew() {
   const { newAppStore } = useStores()
   const { app } = newAppStore
   const inputRef = useRef(null)

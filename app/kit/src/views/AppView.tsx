@@ -50,12 +50,15 @@ export const AppView = memoIsEqualDeep(
     const { views, appStore, provideStores } = useApp(props.appId, props.id)
     const AppView = views[props.viewType]
 
+    console.log('looking at', props.appId, views)
+
     // handle ref
     useHandleAppViewRef(ref, rootRef)
 
     const appElement = useMemo(
       () => {
         if (!AppView) {
+          console.warn('no app view', props)
           return null
         }
 

@@ -77,7 +77,7 @@ const AppIconContainer = gloss({
   },
 }))
 
-export default function AppsMainManage() {
+export function AppsMainManage() {
   const { paneManagerStore } = useStores()
   const Actions = useActions()
   const activeApps = useActiveAppsSorted()

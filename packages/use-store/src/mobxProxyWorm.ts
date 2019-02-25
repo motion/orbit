@@ -1,6 +1,7 @@
 import { CurrentComponent, IS_STORE } from '@mcro/automagical'
 import { EQUALITY_KEY } from '@mcro/fast-compare'
 import { last } from 'lodash'
+import { isAction } from 'mobx'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -52,16 +53,27 @@ export function mobxProxyWorm<A extends Function>(
       if (key === EQUALITY_KEY) return obj
       if (key === IS_PROXY) return true
       const val = Reflect.get(target, key)
-      if (state.ids.size === 0) return val
-      if (typeof key !== 'string' || key === 'hasOwnProperty' || key[0] === '@') {
+      if (state.ids.size === 0) return val // not tracking
+      if (key === 'constructor') return val
+      if (
+        typeof key !== 'string' ||
+        key === 'hasOwnProperty' ||
+        key[0] === '@' ||
+        key === 'dispose'
+      ) {
         return val
       }
-      if (typeof val === 'function') return val
+      const isFunction = typeof val === 'function'
+      if (isFunction && isAction(val)) return val
       if (key.indexOf('isMobX') === 0) return val
       if (key[0] === '_') return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`
       if (debug) {
         console.log('track get key', key, debug, state.ids)
+      }
+      if (isFunction) {
+        // this will ensure prototypical fns will still move through proxyWorm
+        return (...args: any[]) => val.call(store, ...args)
       }
       state.add(nextPath)
       if (val) {
@@ -69,7 +81,9 @@ export function mobxProxyWorm<A extends Function>(
         // only POJOs or explicitly trackable things
         if (val.constructor.name === 'Object' || val[IS_STORE]) {
           // prevent cycles...
-          if (state.loops.has(val)) return state.loops.get(val)
+          if (state.loops.has(val)) {
+            return state.loops.get(val)
+          }
           const next = mobxProxyWorm(val, nextPath, state).store
           state.loops.set(val, next)
           return next

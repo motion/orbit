@@ -7,7 +7,7 @@ import { addSource } from '../../helpers/addSourceClickHandler'
 import { AppProps } from '../AppTypes'
 import { orbitApps } from '../orbitApps'
 
-export default function AppsAppsIndex(_props: AppProps) {
+export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceApps = orbitApps.filter(x => !!x.app.sync)

@@ -1,25 +1,7 @@
-import { App, AppDefinition, AppSubView } from '@mcro/kit'
+import { App, AppDefinition } from '@mcro/kit'
 import React from 'react'
-import { AppProps } from '../AppTypes'
-import AppsAppsIndex from './AppsIndex'
-import AppsMainManage from './AppsMainManage'
-import AppsMainNew from './AppsMainNew'
-
-function AppsMain(props: AppProps) {
-  if (!props.appConfig) {
-    return <AppsMainManage />
-  }
-
-  if (props.appConfig.appId !== 'apps') {
-    return <AppSubView appConfig={props.appConfig} />
-  }
-
-  if (props.appConfig.subType === 'new') {
-    return <AppsMainNew />
-  }
-
-  return <AppsMainManage />
-}
+import { AppsIndex } from './AppsIndex'
+import { AppsMain } from './AppsMain'
 
 export const id = 'apps'
 
@@ -27,7 +9,7 @@ export const app: AppDefinition = {
   name: 'Apps',
   icon: '',
   app: props => (
-    <App index={<AppsAppsIndex {...props} />}>
+    <App index={<AppsIndex {...props} />}>
       <AppsMain {...props} />
     </App>
   ),

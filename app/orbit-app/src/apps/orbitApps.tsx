@@ -18,6 +18,8 @@ export const orbitStaticApps: AppPackage[] = [
   OnboardApp,
   CreateAppApp,
   MessageApp,
+  // get our "bit/source" apps for now...
+  ...apps.filter(x => !x.app.app),
 ]
 
 export const orbitApps: AppPackage[] = [...orbitStaticApps, ...apps]

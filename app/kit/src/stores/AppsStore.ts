@@ -24,7 +24,6 @@ export class AppsStore {
     () => [this.provideStores, this.appViews, this.appStores, this.definitions],
     async ([provideStores, appViews, appStores, definitions], { sleep }) => {
       await sleep(16)
-      console.log('returning appsState...')
       return {
         provideStores,
         appViews,

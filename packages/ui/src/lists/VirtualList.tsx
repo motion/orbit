@@ -149,8 +149,6 @@ class VirtualListStore {
       await sleep()
       await when(() => !!this.frameRef)
 
-      console.log('run measre.......')
-
       if (this.frameRef.clientWidth !== this.width) {
         this.setWidth(this.frameRef.clientWidth)
       }

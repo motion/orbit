@@ -3,12 +3,12 @@ module.exports = function(_, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
 
-  const plug = (name, opts) => {
+  const plug = (name, plOpts) => {
     if (disable.find(x => x === name)) {
       return null
     }
     const plugin = require.resolve(name)
-    return opts ? [plugin, opts] : plugin
+    return plOpts ? [plugin, plOpts] : plugin
   }
 
   const config = {
@@ -33,8 +33,9 @@ module.exports = function(_, givenOpts) {
       }),
       plug('@babel/preset-env', {
         loose: true,
+        modules: false,
         targets: {
-          chrome: '66',
+          chrome: '72',
           esmodules: true,
         },
       }),

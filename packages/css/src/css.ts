@@ -1,4 +1,3 @@
-import { LinearGradient } from './colorHelpers'
 import {
   COLOR_KEYS,
   FALSE_VALUES,
@@ -10,6 +9,7 @@ import {
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 import { toColor } from './toColor'
+import { LinearGradient } from './utils/LinearGradient'
 
 export * from './colorHelpers'
 // exports
@@ -19,6 +19,7 @@ export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
 export { Color, ThemeObject, Transform } from './types'
+export { LinearGradient } from './utils/LinearGradient'
 
 export type CSSOptions = {
   errorMessage?: string

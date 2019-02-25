@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.client",
   "compilerOptions": {
+    "composite": true,
     "outDir": "_",
     "rootDir": "src"
   },

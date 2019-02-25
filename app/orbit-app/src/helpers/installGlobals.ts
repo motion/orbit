@@ -71,7 +71,6 @@ window['toJS'] = toJS
 window['stringify'] = stringify
 window['AppActions'] = AppActions
 window['Models'] = Models
-window['sherlockjs'] = require('sherlockjs')
 
 const { isEqual } = require('@mcro/fast-compare')
 window['isEqualDebug'] = (a, b) => {

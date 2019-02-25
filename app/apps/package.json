@@ -16,6 +16,7 @@
     "@mcro/models": "*",
     "@mcro/bridge": "*",
     "@mcro/use-store": "*",
+    "@mcro/ui": "*",
     "faker": "4.1.0",
     "immer": "1.7.2",
     "lodash": "*",

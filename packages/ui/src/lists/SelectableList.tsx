@@ -107,7 +107,9 @@ export function SelectableList({
   // in an effect because this.listRef.scrollToRow errors if not done outside render
   useEffect(
     () => {
-      selectableStore.listRef.scrollToRow(selectionStore.activeIndex)
+      if (selectableStore.listRef) {
+        selectableStore.listRef.scrollToRow(selectionStore.activeIndex)
+      }
     },
     [selectableStore.scrollId],
   )

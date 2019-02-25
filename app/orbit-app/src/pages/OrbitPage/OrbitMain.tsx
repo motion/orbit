@@ -2,6 +2,7 @@ import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { AppView, SubPane } from '@mcro/kit'
 import { useStoreDebug } from '@mcro/use-store'
+import { toJS } from 'mobx'
 import React, { memo, useMemo } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
@@ -61,7 +62,7 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
 const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
   useStoreDebug()
   const { orbitStore } = useStores()
-  const appConfig = orbitStore.activeConfig[id]
+  const appConfig = toJS(orbitStore.activeConfig[id])
   console.log('123, load main', appId, id, appConfig)
   return (
     <OrbitMainContainer isTorn={orbitStore.isTorn}>

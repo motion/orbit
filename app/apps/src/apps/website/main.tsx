@@ -1,6 +1,8 @@
 import { AppDefinition } from '@mcro/kit'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
+export const id = 'website'
+
 export const app: AppDefinition = {
   name: 'Website',
   icon: websiteIcon(),

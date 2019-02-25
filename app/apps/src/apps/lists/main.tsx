@@ -22,6 +22,8 @@ function ListsApp(props: AppProps) {
   )
 }
 
+export const id = 'lists'
+
 export const app: AppDefinition = {
   name: 'Lists',
   icon: '',

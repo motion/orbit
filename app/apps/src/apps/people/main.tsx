@@ -11,6 +11,8 @@ function PeopleApp(props: AppProps) {
   )
 }
 
+export const id = 'people'
+
 export const app: AppDefinition = {
   name: 'People',
   icon: 'person',

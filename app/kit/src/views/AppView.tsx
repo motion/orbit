@@ -7,10 +7,9 @@ import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
 
-export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
+export type AppViewProps = Pick<AppProps, 'viewType' | 'isActive' | 'appConfig'> & {
   id: string
   appId: string
-  title?: string
   appStore?: AppStore
   after?: React.ReactNode
   before?: React.ReactNode
@@ -26,6 +25,8 @@ export const AppView = memoIsEqualDeep(
     const rootRef = useRef<HTMLDivElement>(null)
     const { views, appStore, provideStores } = useApp(props.appId, props.id)
     const AppView = views[props.viewType]
+
+    if (props['debug']) console.log('rendering AppView', props, AppView)
 
     // handle ref
     useEffect(
@@ -51,10 +52,12 @@ export const AppView = memoIsEqualDeep(
 
     const appElement = useMemo(
       () => {
-        if (!AppView || !appStore) {
+        if (!AppView) {
           return null
         }
-
+        if (!appStore) {
+          console.warn('shouldnt sub-views not need appStore?')
+        }
         const appElement = (
           <Contents ref={rootRef}>
             {before || null}

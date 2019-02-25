@@ -9,13 +9,7 @@ import * as SettingsApp from './settings/main'
 import * as SourcesApp from './sources/main'
 import * as SpacesApp from './spaces/main'
 
-// TODO make these loadable dynamically
-const appsWithId = apps.map(app => ({
-  ...app,
-  id: app.app.id || app.app.name.toLowerCase().replace(' ', '-'),
-}))
-
-export const orbitApps: AppPackage[] = [
+export const orbitStaticApps: AppPackage[] = [
   SettingsApp,
   SpacesApp,
   SourcesApp,
@@ -24,5 +18,6 @@ export const orbitApps: AppPackage[] = [
   OnboardApp,
   CreateAppApp,
   MessageApp,
-  ...appsWithId,
 ]
+
+export const orbitApps: AppPackage[] = [...orbitStaticApps, ...apps]

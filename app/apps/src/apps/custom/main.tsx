@@ -10,6 +10,8 @@ function CustomApp(props: AppProps) {
   )
 }
 
+export const id = 'custom'
+
 export const app: AppDefinition = {
   name: 'Custom',
   icon: '',

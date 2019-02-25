@@ -5,15 +5,14 @@ export function AppSubView({
   viewType = 'main',
   appConfig,
 }: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
-  console.log('sub view', appConfig)
   return (
     <AppView
       key={JSON.stringify(appConfig)}
       id={appConfig.id}
       appId={appConfig.appId}
       viewType={viewType}
-      title={appConfig.title}
       appConfig={appConfig}
+      {...{ ['debug']: true }}
     />
   )
 }

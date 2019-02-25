@@ -22,7 +22,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
   index?: number
   // for appconfig merge
   id?: string
-  type?: string
+  appId?: string
   subType?: string
   // extra props for orbit list items
   people?: Person[]

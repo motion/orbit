@@ -2,9 +2,9 @@ import { AppProps, AppSubView } from '@mcro/kit'
 import * as React from 'react'
 
 export function SearchAppMain({ appConfig }: AppProps) {
-  console.log('wut', appConfig)
+  console.log('rendering sub view', appConfig)
 
-  if (appConfig.id === 'search') {
+  if (appConfig.appId === 'search') {
     console.warn('todo: search')
     return null
   }

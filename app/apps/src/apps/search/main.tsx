@@ -23,6 +23,8 @@ export const context = createContext({
   searchStore: null as SearchStore,
 })
 
+export const id = 'search'
+
 export const app: AppDefinition = {
   name: 'Search',
   icon: '',

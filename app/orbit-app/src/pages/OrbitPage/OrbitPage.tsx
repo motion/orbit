@@ -22,6 +22,7 @@ import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
+import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { useActions } from '../../hooks/useActions'
@@ -162,15 +163,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
+  const activeApps = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    appId: pane.type,
+  }))
+
+  const staticApps = orbitStaticApps.map(app => ({
+    id: app.id,
+    appId: app.id,
+  }))
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
       <MainShortcutHandler handlers={handlers}>
-        <AppsLoader
-          apps={paneManagerStore.panes.map(pane => ({
-            id: pane.id,
-            appId: pane.type,
-          }))}
-        >
+        <AppsLoader apps={[...activeApps, ...staticApps]}>
           <OrbitHeader />
           <InnerChrome torn={orbitStore.isTorn}>
             <OrbitToolBar />

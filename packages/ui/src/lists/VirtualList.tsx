@@ -1,5 +1,5 @@
 import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
-import { always, cancel, react, useStore } from '@mcro/use-store'
+import { always, ensure, react, useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import { throttle } from 'lodash'
 import React, {
@@ -145,11 +145,11 @@ class VirtualListStore {
   runMeasure = react(
     () => [this.triggerMeasure, this.props.allowMeasure],
     async (_, { when, sleep }) => {
-      if (this.props.allowMeasure === false) {
-        throw cancel
-      }
+      ensure('this.props.allowMeasure', this.props.allowMeasure)
       await sleep()
       await when(() => !!this.frameRef)
+
+      console.log('run measre.......')
 
       if (this.frameRef.clientWidth !== this.width) {
         this.setWidth(this.frameRef.clientWidth)
@@ -183,6 +183,7 @@ class VirtualListStore {
   )
 
   measure() {
+    console.log('measure me now')
     this.triggerMeasure = Date.now()
   }
 
@@ -365,5 +366,6 @@ export function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListPro
     allowMeasure,
     ...(props as any),
   })
+
   return <VirtualListInner {...props} items={items} store={store} />
 }

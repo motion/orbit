@@ -53,6 +53,7 @@ export function setupReact(reaction: any, derive: Function | null, opts: Reactio
         if (next === undefined || next === state.current) {
           return
         }
+        console.log('set value', next, state.current)
         state.current = next
         forceUpdate(Math.random())
       },

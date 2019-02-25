@@ -123,8 +123,9 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
       <ProvideSelectionContext onSelectItem={orbitStore.handleSelectItem}>
         <AppView
           key={id}
-          viewType="index"
+          id={id}
           appId={appId}
+          viewType="index"
           ref={handleAppRef}
           before={<OrbitToolBarHeight appId={id} />}
           after={<OrbitStatusBarHeight appId={id} />}

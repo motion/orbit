@@ -1,16 +1,14 @@
+import { isEqual } from '@mcro/fast-compare'
 import { useReaction } from '@mcro/use-store'
+import { trace } from 'mobx'
 import { useState } from 'react'
 import { AppStore } from '../stores'
 import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { useStoresSimple } from './useStores'
 
-type UseAppProps = {
-  id: string
-  appStore?: AppStore
-}
-
 export function useApp(
-  props: UseAppProps,
+  appId: string,
+  id?: string,
 ): {
   views: AppViews
   appStore: AppStore
@@ -18,8 +16,8 @@ export function useApp(
   definition: AppDefinition
 } {
   const { appsStore, appStore } = useStoresSimple()
-  const [appsState, setAppsState] = useState({
-    appStore: props.appStore || appStore || null,
+  const [state, setState] = useState({
+    appStore: appStore || null,
     views: {},
     provideStores: null,
     definition: null,
@@ -27,17 +25,25 @@ export function useApp(
 
   useReaction(() => {
     const { appsState } = appsStore
-    if (!appsState) return
+    if (appsState) {
+      const { appStores, appViews, provideStores, definitions } = appsState
 
-    const { appStores, appViews, provideStores } = appsState
+      trace()
 
-    setAppsState({
-      definition: appsState.definitions[props.id] || null,
-      appStore: props.appStore || appStore || appStores[props.id],
-      views: appViews[props.id] || {},
-      provideStores: provideStores[props.id] || null,
-    })
+      const next = {
+        // definition and views are static
+        definition: definitions[appId] || null,
+        views: appViews[appId] || {},
+        // these are dynamic (per id) but we need to fix loading so falling back to appId for now
+        appStore: appStore || appStores[id] || appStores[appId] || null,
+        provideStores: provideStores[id] || provideStores[appId] || null,
+      }
+      if (!isEqual(state, next)) {
+        console.log('not equal update', state, next)
+        setState(next)
+      }
+    }
   })
 
-  return appsState
+  return state
 }

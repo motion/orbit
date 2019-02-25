@@ -74,6 +74,7 @@ const OrbitPageMainView = memo(({ type, id }: PaneManagerPane) => {
     <OrbitMainContainer isTorn={orbitStore.isTorn}>
       <AppView
         key={key}
+        id={id}
         appId={type}
         viewType="main"
         appConfig={appConfig}

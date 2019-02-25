@@ -23,7 +23,8 @@ export class AppsStore {
   appsState = react(
     () => [this.provideStores, this.appViews, this.appStores, this.definitions],
     async ([provideStores, appViews, appStores, definitions], { sleep }) => {
-      await sleep(10)
+      await sleep(16)
+      console.log('returning appsState...')
       return {
         provideStores,
         appViews,
@@ -42,6 +43,7 @@ export class AppsStore {
   )
 
   setupApp = (id: string, views: AppViews, provideStores?: Object) => {
+    console.log('seting up app', id)
     if (this.appViews[id]) {
       console.log('already set up')
       return

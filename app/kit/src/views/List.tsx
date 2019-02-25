@@ -13,6 +13,7 @@ import {
 } from '@mcro/ui'
 import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
+import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -62,54 +63,58 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
   items?: Item[]
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
-  query?: string
   placeholder?: React.ReactNode
 }
 
-export function List(props: ListProps) {
+export function List(rawProps: ListProps) {
+  const { items, onSelect, onOpen, placeholder, getItemProps, ...props } = rawProps
   const { shortcutStore } = useStoresSimple()
-  const { items } = props
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
+  let selectionStore
 
-  // !TODO
-  // @ts-ignore
-  const selectionStore = useSelectionStore({ ...props, isActive })
+  useEffect(
+    () => {
+      return shortcutStore.onShortcut(shortcut => {
+        if (!selectionStore.isActive) {
+          return false
+        }
+        switch (shortcut) {
+          case 'open':
+            if (onOpen) {
+              onOpen(selectionStore.activeIndex, null)
+            }
+            break
+          case 'up':
+          case 'down':
+            selectionStore.move(Direction[shortcut])
+            break
+        }
+      })
+    },
+    [onOpen],
+  )
 
-  useEffect(() => {
-    return shortcutStore.onShortcut(shortcut => {
-      if (!selectionStore.isActive) {
-        return false
-      }
-      switch (shortcut) {
-        case 'open':
-          if (props.onOpen) {
-            props.onOpen(selectionStore.activeIndex, null)
-          }
-          break
-        case 'up':
-        case 'down':
-          selectionStore.move(Direction[shortcut])
-          break
-      }
-    })
-  }, [])
-
-  const getItemProps = useCallback(
+  // only update this on props.items change....
+  // a bit risky but otherwise this is really  hard
+  const getItemPropsInner = useCallback(
     (item, index, items) => {
+      console.log('changing this', items)
+
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
       const normalized = toListItemProps(item)
-      const extraProps = (props.getItemProps && props.getItemProps(item, index, items)) || null
+      const extraProps = (getItemProps && getItemProps(item, index, items)) || null
       return { ...normalized, ...extraProps }
     },
-    [props],
+    [items],
   )
-  const onSelect = useCallback(
+
+  const onSelectInner = useCallback(
     async (index, eventType) => {
       const appConfig = await getAppConfig(toListItemProps(items[index]))
-      if (props.onSelect) {
-        props.onSelect(index, appConfig, eventType)
+      if (onSelect) {
+        onSelect(index, appConfig, eventType)
       }
       if (selectionStore) {
         selectionStore.toggleSelected(index, eventType)
@@ -118,27 +123,30 @@ export function List(props: ListProps) {
         selectableProps.onSelectItem(index, appConfig, eventType)
       }
     },
-    [props, selectableProps],
+    [onSelect, selectableProps],
   )
-  const onOpen = useCallback(
+
+  const onOpenInner = useCallback(
     async (index, eventType) => {
       const appConfig = await getAppConfig(toListItemProps(items[index]))
-      if (props.onOpen) {
-        props.onOpen(index, appConfig)
+      if (onOpen) {
+        onOpen(index, appConfig)
       }
       if (selectableProps && selectableProps.onOpenItem) {
         selectableProps.onOpenItem(index, appConfig, eventType)
       }
     },
-    [props, selectableProps],
+    [onOpen, selectableProps],
   )
 
-  if (!props.items) {
-    console.log('props are', props)
-    debugger
-  }
+  selectionStore = useSelectionStore({
+    ...props,
+    onOpen: onOpenInner,
+    onSelect: onSelectInner,
+    isActive,
+  })
 
-  const hasItems = !!props.items.length
+  const hasItems = !!items.length
 
   return (
     <ProvideSelectionStore selectionStore={selectionStore}>
@@ -150,27 +158,31 @@ export function List(props: ListProps) {
             ItemView={ListItem}
             isRowLoaded={isRowLoaded}
             {...props}
-            getItemProps={getItemProps}
-            onSelect={onSelect}
-            onOpen={onOpen}
+            getItemProps={getItemPropsInner}
+            onSelect={onSelectInner}
+            onOpen={onOpenInner}
           />
         )}
-        {!hasItems &&
-          (props.placeholder || (
-            <View flex={1} minHeight={200} position="relative">
-              <Center alignItems="center">
-                <View>
-                  <SubTitle>No results</SubTitle>
-                  {!!props.query && (
-                    <Text ellipse size={0.95} alpha={0.6}>
-                      "{props.query}"
-                    </Text>
-                  )}
-                </View>
-              </Center>
-            </View>
-          ))}
+        {!hasItems && (placeholder || <ListPlaceholder />)}
       </HighlightActiveQuery>
     </ProvideSelectionStore>
+  )
+}
+
+function ListPlaceholder() {
+  const query = useActiveQuery()
+  return (
+    <View flex={1} minHeight={200} position="relative">
+      <Center alignItems="center">
+        <View>
+          <SubTitle>No results</SubTitle>
+          {!!query && (
+            <Text ellipse size={0.95} alpha={0.6}>
+              "{query}"
+            </Text>
+          )}
+        </View>
+      </Center>
+    </View>
   )
 }

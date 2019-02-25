@@ -8,13 +8,13 @@ const height = 30
 const minHeight = 3
 
 export const OrbitToolBarHeight = ({ appId }: { appId: string }) => {
-  const { views } = useApp({ id: appId })
+  const { views } = useApp(appId)
   return <div style={{ height: views.toolBar ? height : minHeight }} />
 }
 
 export default memo(function OrbitToolBar() {
   const { orbitStore, paneManagerStore } = useStores()
-  const { views } = useApp({ id: paneManagerStore.activePane.type })
+  const { views } = useApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
   return (
     <ToolbarChrome hasToolbars={hasToolbar}>
@@ -33,6 +33,8 @@ const OrbitToolBarContent = memo(() => {
   const { appsStore, paneManagerStore } = useStores()
   const { id } = paneManagerStore.activePane
   const state = appsStore.appsState
+
+  console.warn('toolbarcontent')
 
   // memo all toolbars
   const toolbars = useMemo(

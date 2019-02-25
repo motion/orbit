@@ -15,7 +15,6 @@ export function SourcesAppMain(props: AppProps) {
   }
 
   if (props.appConfig.viewType === 'setup') {
-    const type = props.appConfig.source
     return <AppView appId={props.appConfig.appId} viewType="setup" {...props} />
   }
 
@@ -36,5 +35,5 @@ function SourceMain(props: AppProps) {
   }
 
   // !TODO
-  return <AppView viewType="settings" appConfig={props.appConfig} />
+  return <AppView appId={props.appConfig.appId} viewType="settings" appConfig={props.appConfig} />
 }

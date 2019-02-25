@@ -26,6 +26,7 @@ export class SearchStore {
   searchState: SearchState | null = null
 
   setSearchState(next: SearchState) {
+    console.log('setting search state')
     this.searchState = next
   }
 
@@ -55,7 +56,6 @@ export class SearchStore {
         return
       }
       const recentSearches = uniq([...settingStore.values.recentSearches, query]).slice(0, 50)
-
       // TODO need to have recently opened as well so we can use that for search
       settingStore.update({
         recentSearches,

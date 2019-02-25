@@ -8,6 +8,7 @@ import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
 
 export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
+  id: string
   appId: string
   title?: string
   appStore?: AppStore
@@ -23,8 +24,10 @@ export type AppViewRef = {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const { views, appStore, provideStores } = useApp({ id: props.appId })
+    const { views, appStore, provideStores } = useApp(props.appId, props.id)
     const AppView = views[props.viewType]
+
+    console.log('AppView', props.appId, props.id, { views, appStore, provideStores })
 
     // handle ref
     useEffect(

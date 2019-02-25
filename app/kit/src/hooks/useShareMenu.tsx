@@ -1,6 +1,6 @@
 import { Icon, Popover, preventDefault, View } from '@mcro/ui'
 import { flow, memoize } from 'lodash'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { OrbitListItemProps } from '../views/ListItem'
 import { SearchItemShareProvide } from '../views/SearchItemProvide'
 import { ShareMenu } from '../views/ShareMenu'
@@ -52,9 +52,11 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
 
 export function useShareMenu() {
   const { themeStore } = useStores()
-  return {
-    getShareMenuItemProps(item: OrbitListItemProps, _index?, _items?) {
+  const getShareMenuItemProps = useCallback(
+    (item: OrbitListItemProps, _index?, _items?) => {
       return getItemShareMenu(item, themeStore)
     },
-  }
+    [themeStore],
+  )
+  return { getShareMenuItemProps }
 }

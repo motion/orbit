@@ -67,13 +67,6 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
   placeholder?: React.ReactNode
 }
 
-let last
-
-let debug = false
-setTimeout(() => {
-  debug = true
-}, 4000)
-
 export function List(rawProps: ListProps) {
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...props } = rawProps
   const { shortcutStore } = useStoresSimple()
@@ -81,9 +74,6 @@ export function List(rawProps: ListProps) {
   const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
   let selectionStore
-
-  console.warn(last === rawProps)
-  last = rawProps
 
   useEffect(
     () => {

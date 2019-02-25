@@ -183,7 +183,6 @@ class VirtualListStore {
   )
 
   measure() {
-    console.log('measure me now')
     this.triggerMeasure = Date.now()
   }
 

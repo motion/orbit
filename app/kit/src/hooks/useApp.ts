@@ -1,6 +1,5 @@
 import { isEqual } from '@mcro/fast-compare'
 import { useReaction } from '@mcro/use-store'
-import { trace } from 'mobx'
 import { useState } from 'react'
 import { AppStore } from '../stores'
 import { AppDefinition, AppViews } from '../types/AppDefinition'
@@ -27,9 +26,6 @@ export function useApp(
     const { appsState } = appsStore
     if (appsState) {
       const { appStores, appViews, provideStores, definitions } = appsState
-
-      trace()
-
       const next = {
         // definition and views are static
         definition: definitions[appId] || null,
@@ -39,7 +35,6 @@ export function useApp(
         provideStores: provideStores[id] || provideStores[appId] || null,
       }
       if (!isEqual(state, next)) {
-        console.log('not equal update', state, next)
         setState(next)
       }
     }

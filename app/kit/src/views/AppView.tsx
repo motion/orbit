@@ -27,8 +27,6 @@ export const AppView = memoIsEqualDeep(
     const { views, appStore, provideStores } = useApp(props.appId, props.id)
     const AppView = views[props.viewType]
 
-    console.log('AppView', props.appId, props.id, { views, appStore, provideStores })
-
     // handle ref
     useEffect(
       () => {

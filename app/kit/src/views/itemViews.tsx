@@ -1,4 +1,5 @@
 import { Document, Markdown, Task, Thread } from '@mcro/ui'
+import React from 'react'
 import { Conversation } from '../bit/BitConversation'
 import { ConversationItem } from '../bit/BitConversationItem'
 import { Readability } from '../bit/Readability'
@@ -14,9 +15,9 @@ export const itemViewsApp = {
 
 export const itemViewsListItem = {
   conversation: ConversationItem,
-  document: Document,
-  markdown: Markdown,
-  text: Readability,
-  task: Task,
-  thread: Thread,
+  document: ({ item }) => <Document {...item} />,
+  markdown: ({ item }) => <Markdown {...item} />,
+  text: ({ item }) => <Readability {...item} />,
+  task: ({ item }) => <Task {...item} />,
+  thread: ({ item }) => <Thread {...item} />,
 }

@@ -41,7 +41,7 @@ const OrbitToolBarContent = memo(() => {
       const res = {}
       for (const { type, id } of paneManagerStore.panes) {
         const state = appsStore.getApp(type, id)
-        if (!state) continue
+        if (!state || !state.views) continue
         const AppToolbar = state.views.toolBar
         res[id] = AppToolbar && (
           <ProvideStores stores={state.provideStores}>

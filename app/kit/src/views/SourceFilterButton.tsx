@@ -1,4 +1,4 @@
-import { BarButton, Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
+import { BarButtonSmall, Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
@@ -18,9 +18,9 @@ export function SourceFilterButton(props: ViewProps & { queryFilterStore?: Query
       elevation={4}
       themeName="tooltip"
       target={
-        <BarButton icon="funnel">
+        <BarButtonSmall icon="funnel">
           {/* {hasSourceFilters ? sourceFilters.filter(x => x.active).length : 'All'} */}
-        </BarButton>
+        </BarButtonSmall>
       }
     >
       <Col {...props}>

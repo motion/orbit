@@ -1,17 +1,17 @@
 {
   "extends": "../../tsconfig.client",
   "compilerOptions": {
-    "composite": true,
+    // "composite": true,
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../../packages/gloss" },
-    { "path": "../../packages/use-store" },
-    { "path": "../../packages/ui" },
-    { "path": "../bridge" },
-    { "path": "../kit" },
-    { "path": "../models" }
-  ]
+  "include": ["src/**/*"]
+  // "references": [
+  //   { "path": "../../packages/gloss" },
+  //   { "path": "../../packages/use-store" },
+  //   { "path": "../../packages/ui" },
+  //   { "path": "../bridge" },
+  //   { "path": "../kit" },
+  //   { "path": "../models" }
+  // ]
 }

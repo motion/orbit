@@ -5,7 +5,6 @@ export function AppSubView({
   viewType = 'main',
   appConfig,
 }: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
-  console.log('subview', JSON.stringify(appConfig))
   return (
     <AppView
       key={JSON.stringify(appConfig)}

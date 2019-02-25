@@ -138,8 +138,6 @@ export function setupReact(
       // remove old reaction
       subscriptions.current.dispose()
 
-      console.log('got new mount args!!!!!!! rerunning', mountArgs)
-
       // create new one
       createReaction(
         reaction,

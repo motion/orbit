@@ -18,7 +18,6 @@ export const OrbitToolBar = memo(function OrbitToolBar() {
   const { orbitStore, paneManagerStore } = useStores()
   const { views } = useApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
-  console.log('render toolbar', hasToolbar, paneManagerStore.activePane.type, views)
   return (
     <ToolbarChrome hasToolbars={hasToolbar}>
       <ToolbarInner hasToolbars={hasToolbar}>

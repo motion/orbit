@@ -11,7 +11,7 @@ import {
   useSelectionStore,
   View,
 } from '@mcro/ui'
-import React, { createContext, useCallback, useContext, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useIsAppActive } from '../hooks/useIsAppActive'
@@ -26,6 +26,9 @@ export type SearchableItem = Bit | PersonBit
 export type Item = SearchableItem | OrbitListItemProps
 
 export function toListItemProps(props: any): OrbitListItemProps {
+  if (!props) {
+    debugger
+  }
   if (props.target) {
     return { item: props }
   }
@@ -73,6 +76,8 @@ export function List(rawProps: ListProps) {
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
+  const itemsRef = useRef([])
+  itemsRef.current = items
   let selectionStore
 
   useEffect(
@@ -106,12 +111,12 @@ export function List(rawProps: ListProps) {
       const extraProps = (getItemProps && getItemProps(item, index, items)) || null
       return { ...normalized, ...extraProps }
     },
-    [items],
+    [getItemProps],
   )
 
   const onSelectInner = useCallback(
     async (index, eventType) => {
-      const appConfig = await getAppConfig(toListItemProps(items[index]))
+      const appConfig = await getAppConfig(toListItemProps(itemsRef.current[index]))
       if (onSelect) {
         onSelect(index, appConfig, eventType)
       }
@@ -127,7 +132,7 @@ export function List(rawProps: ListProps) {
 
   const onOpenInner = useCallback(
     async (index, eventType) => {
-      const appConfig = await getAppConfig(toListItemProps(items[index]))
+      const appConfig = await getAppConfig(toListItemProps(itemsRef.current[index]))
       if (onOpen) {
         onOpen(index, appConfig)
       }

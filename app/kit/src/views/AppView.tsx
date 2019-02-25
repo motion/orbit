@@ -52,7 +52,6 @@ export const AppView = memoIsEqualDeep(
     let AppView = views[props.viewType]
 
     if (!AppView && definition && definition.sync) {
-      console.log('looking at', definition.sync, props.viewType)
       AppView = definition.sync[props.viewType]
     }
 
@@ -62,7 +61,6 @@ export const AppView = memoIsEqualDeep(
     const appElement = useMemo(
       () => {
         if (!AppView) {
-          console.warn('no app view', props)
           return null
         }
 

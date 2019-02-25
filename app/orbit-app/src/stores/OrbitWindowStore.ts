@@ -3,7 +3,6 @@ import { ORBIT_WIDTH } from '@mcro/constants'
 import { App } from '@mcro/stores'
 import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppReactions } from './AppReactions'
 import { QueryStore } from './QueryStore/QueryStore'
 
 export class OrbitWindowStore {
@@ -45,12 +44,6 @@ export class OrbitWindowStore {
     // always leave x room at bottom
     // leaving a little room at the bottom makes it feel much lighter
     return window.innerHeight - this.contentHeight
-  }
-
-  appReactionsStore = new AppReactions()
-
-  willUnmount() {
-    this.appReactionsStore.dispose()
   }
 
   updateAppOrbitStateOnResize = react(

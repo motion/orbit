@@ -127,12 +127,15 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
+    // mainFields: isProd ? ['module', 'browser', 'main'] : ['main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },
   resolveLoader: {
     modules: [buildNodeModules],
+  },
+  node: {
+    setImmediate: false,
   },
   module: {
     rules: [

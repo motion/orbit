@@ -1,7 +1,8 @@
+import { useReaction } from '@mcro/black'
 import { FullScreen, gloss, Row } from '@mcro/gloss'
 import { ProvideStores, useApp } from '@mcro/kit'
 import { BorderBottom } from '@mcro/ui'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import { useStores } from '../../hooks/useStores'
 
 const height = 30
@@ -12,7 +13,7 @@ export const OrbitToolBarHeight = ({ appId }: { appId: string }) => {
   return <div style={{ height: views.toolBar ? height : minHeight }} />
 }
 
-export default memo(function OrbitToolBar() {
+export const OrbitToolBar = memo(function OrbitToolBar() {
   const { orbitStore, paneManagerStore } = useStores()
   const { views } = useApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
@@ -31,44 +32,33 @@ export default memo(function OrbitToolBar() {
 
 const OrbitToolBarContent = memo(() => {
   const { appsStore, paneManagerStore } = useStores()
-  const { id } = paneManagerStore.activePane
-  const state = appsStore.appsState
+  const { activePane } = paneManagerStore
 
-  console.warn('toolbarcontent')
-
-  // memo all toolbars
-  const toolbars = useMemo(
-    () => {
-      if (!state || !state.appViews) {
-        return {}
+  const toolbars = useReaction(
+    () => [appsStore.apps, paneManagerStore.panes],
+    ([apps, panes]) => {
+      const res = {}
+      for (const { id } of panes) {
+        const state = apps[id]
+        if (!state) continue
+        console.log('state is', state)
+        const AppToolbar = state.views.toolBar
+        res[id] = AppToolbar && (
+          <ProvideStores stores={state.provideStores}>
+            <AppToolbar appStore={state.store} />
+          </ProvideStores>
+        )
       }
-      const views = {}
-      for (const key in state.appViews) {
-        if (!state.appViews[key]) continue
-        const { toolBar } = state.appViews[key]
-        const appStore = state.appStores[key]
-        views[key] = null
-        if (toolBar) {
-          const AppToolbar = toolBar
-          views[key] = (
-            <ProvideStores stores={state.provideStores[key]}>
-              <AppToolbar appStore={appStore} />
-            </ProvideStores>
-          )
-        }
-      }
-      return views
+      return res
     },
-    [state && Object.keys(state.appViews).join('')],
   )
 
   return (
     <>
-      {Object.keys(toolbars).map(key => {
-        const toolbarElement = toolbars[key]
+      {Object.keys(toolbars).map(id => {
         return (
-          <ToolbarContent key={key} isActive={id === key}>
-            {toolbarElement}
+          <ToolbarContent key={id} isActive={id === activePane.id}>
+            {toolbars[id]}
           </ToolbarContent>
         )
       })}

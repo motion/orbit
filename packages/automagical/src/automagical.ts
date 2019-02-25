@@ -40,7 +40,10 @@ function decoratePrototype(obj: any) {
       getterDesc[key] = descriptor
     }
     if (typeof descriptor.value === 'function') {
-      decor[key] = Mobx.action
+      // only make `set` prefixed functions into actions
+      if (key.indexOf('set') === 0) {
+        decor[key] = Mobx.action
+      }
     }
   }
   Mobx.decorate(obj, decor)

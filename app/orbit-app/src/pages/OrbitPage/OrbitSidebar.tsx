@@ -36,10 +36,8 @@ export class SidebarStore {
 
 export default memo(function OrbitSidebar() {
   const { paneManagerStore, appsStore, sidebarStore } = useStores()
-  const { hasMain, hasIndex } = appsStore.currentView || {
-    hasMain: false,
-    hasIndex: false,
-  }
+  const { type } = paneManagerStore.activePane
+  const { hasMain, hasIndex } = appsStore.getViewState(type)
   const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
   const width = sidebarStore.width
 
@@ -63,10 +61,6 @@ export default memo(function OrbitSidebar() {
     },
     [paneManagerStore.panes, hasMain],
   )
-
-  if (!appsStore.currentView) {
-    return null
-  }
 
   return (
     <SidebarContainer hideSidebar={hideSidebar} width={width}>
@@ -127,8 +121,8 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           appId={appId}
           viewType="index"
           ref={handleAppRef}
-          before={<OrbitToolBarHeight appId={id} />}
-          after={<OrbitStatusBarHeight appId={id} />}
+          before={<OrbitToolBarHeight appId={appId} />}
+          after={<OrbitStatusBarHeight appId={appId} />}
           inside={<BorderRight />}
         />
       </ProvideSelectionContext>

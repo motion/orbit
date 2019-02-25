@@ -32,12 +32,12 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
-import OrbitHeader from './OrbitHeader'
-import OrbitMain from './OrbitMain'
+import { OrbitHeader } from './OrbitHeader'
+import { OrbitMain } from './OrbitMain'
 import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
-import OrbitStatusBar from './OrbitStatusBar'
+import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
-import OrbitToolBar from './OrbitToolBar'
+import { OrbitToolBar } from './OrbitToolBar'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)

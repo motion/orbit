@@ -64,13 +64,13 @@ function AppLoadView({ id, appId, store }: AppLoaderProps) {
     // if (AppView.settings) {
     //   appsStore.addSettingsView(id, AppView.settings)
     // }
-    store.handleAppStore(id, appStore)
+    store.setAppStore(id, appStore)
   }, [])
 
   if (typeof AppApp === 'function') {
     return (
       <ProvideStores stores={{ appStore }}>
-        <MergeContext Context={AppLoadContext} value={{ appId }}>
+        <MergeContext Context={AppLoadContext} value={{ appId, id }}>
           <AppApp {...appViewProps} appStore={appStore} />
         </MergeContext>
       </ProvideStores>

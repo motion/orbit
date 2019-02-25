@@ -8,7 +8,7 @@ import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
 
 export type AppViewProps = Pick<AppProps, 'viewType' | 'isActive' | 'appConfig'> & {
-  id: string
+  id?: string
   appId: string
   appStore?: AppStore
   after?: React.ReactNode
@@ -20,44 +20,45 @@ export type AppViewRef = {
   hasView?: boolean
 }
 
+// !TODO make this nice
+function useHandleAppViewRef(ref: any, rootRef: any) {
+  useEffect(
+    () => {
+      if (!ref) return
+      if (!rootRef.current) return
+      const domNode = findDOMNode(rootRef.current)
+      const hasView = !!domNode.firstChild
+      const current = { hasView }
+      if (typeof ref === 'function') {
+        ref(current)
+      } else {
+        // @ts-ignore
+        ref.current = current
+        return () => {
+          // @ts-ignore
+          ref.current = null
+        }
+      }
+    },
+    [ref, rootRef.current],
+  )
+}
+
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
     const { views, appStore, provideStores } = useApp(props.appId, props.id)
     const AppView = views[props.viewType]
 
-    if (props['debug']) console.log('rendering AppView', props, AppView)
-
     // handle ref
-    useEffect(
-      () => {
-        if (!ref) return
-        if (!rootRef.current) return
-        const domNode = findDOMNode(rootRef.current)
-        const hasView = !!domNode.firstChild
-        const current = { hasView }
-        if (typeof ref === 'function') {
-          ref(current)
-        } else {
-          // @ts-ignore
-          ref.current = current
-          return () => {
-            // @ts-ignore
-            ref.current = null
-          }
-        }
-      },
-      [ref, rootRef.current],
-    )
+    useHandleAppViewRef(ref, rootRef)
 
     const appElement = useMemo(
       () => {
         if (!AppView) {
           return null
         }
-        if (!appStore) {
-          console.warn('shouldnt sub-views not need appStore?')
-        }
+
         const appElement = (
           <Contents ref={rootRef}>
             {before || null}
@@ -80,6 +81,10 @@ export const AppView = memoIsEqualDeep(
       // never update, once we have our stuff
       [appStore, AppView],
     )
+
+    if (props.viewType === 'main') {
+      console.log('loading main', props, views, appElement)
+    }
 
     if (!appElement) {
       return null

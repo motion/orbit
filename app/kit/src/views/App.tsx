@@ -7,6 +7,7 @@ const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
 export const AppLoadContext = createContext({
   appId: '',
+  id: '',
 })
 
 function AppContainerInner(props: AppElements) {
@@ -16,21 +17,25 @@ function AppContainerInner(props: AppElements) {
     }
   }
 
-  const { appId } = useContext(AppLoadContext)
+  const { id, appId } = useContext(AppLoadContext)
   const { appsStore } = useStoresSimple()
 
-  if (!appId) {
-    throw new Error('Internal bug, we didnt set context appId')
+  if (!appId || !id) {
+    throw new Error('Internal bug, we didnt set context id + appId')
   }
 
   useEffect(() => {
-    const views = {
-      index: props.index && superMemo(props.index),
-      main: props.children && superMemo(props.children),
-      statusBar: props.statusBar && superMemo(props.statusBar),
-      toolBar: props.toolBar && superMemo(props.toolBar),
-    }
-    appsStore.setupApp(appId, views, props.provideStores)
+    appsStore.setApp({
+      id,
+      appId,
+      views: {
+        index: props.index && superMemo(props.index),
+        main: props.children && superMemo(props.children),
+        statusBar: props.statusBar && superMemo(props.statusBar),
+        toolBar: props.toolBar && superMemo(props.toolBar),
+      },
+      provideStores: props.provideStores,
+    })
   }, [])
 
   return null

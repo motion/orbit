@@ -11,9 +11,10 @@ export const OrbitStatusBarHeight = ({ appId }: { appId: string }) => {
   return <div style={{ height: views.statusBar ? statusBarHeight : 0 }} />
 }
 
-export default function OrbitStatusBar() {
+export function OrbitStatusBar() {
   const { paneManagerStore } = useStores()
-  const { views, appStore, provideStores } = useApp(paneManagerStore.activePane)
+  const { type, id } = paneManagerStore.activePane
+  const { views, appStore, provideStores } = useApp(type, id)
   const StatusBarView = views.statusBar
 
   if (!StatusBarView) {

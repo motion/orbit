@@ -1,61 +1,43 @@
-import { ensure, react, useHook } from '@mcro/use-store'
+import { always, react, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { AppStore } from './AppStore'
 
-function getViewInformation(_type: string, views?: AppViews) {
-  return {
-    hasMain: views && !!views.main,
-    hasIndex: views && !!views.index,
-  }
+type LoadedApp = {
+  id: string
+  appId: string
+  views: AppViews
+  provideStores?: any
+  appStore?: AppStore
 }
 
 export class AppsStore {
   stores = useHook(useStoresSimple)
 
-  // deep objects for adding apps to:
-  provideStores = {}
-  appViews: { [key: string]: AppViews } = {}
-  appStores: { [key: string]: AppStore } = {}
+  loadedApps: { [key: string]: LoadedApp } = {}
   definitions: { [key: string]: AppDefinition } = {}
 
-  // accumulated, debounced state (because things mount in waterfall)
-  appsState = react(
-    () => [this.provideStores, this.appViews, this.appStores, this.definitions],
-    async ([provideStores, appViews, appStores, definitions], { sleep }) => {
+  // because these load in waterfall, we debounce
+  apps = react(
+    () => always(this.loadedApps),
+    async (_, { sleep }) => {
       await sleep(16)
-      return {
-        provideStores,
-        appViews,
-        appStores,
-        definitions,
-      }
+      return this.loadedApps
     },
     {
-      defaultValue: {
-        provideStores: {},
-        appViews: {},
-        appStores: {},
-        definitions: {},
-      },
+      defaultValue: {},
     },
   )
 
-  setupApp = (id: string, views: AppViews, provideStores?: Object) => {
-    if (this.appViews[id]) {
-      console.log('already set up')
-      return
+  setApp = (app: { appId: string; id: string; views: AppViews; provideStores?: Object }) => {
+    this.loadedApps = {
+      ...this.loadedApps,
+      [app.id]: app,
     }
-    this.appViews = {
-      ...this.appViews,
-      [id]: { ...this.appViews[id], ...views },
-    }
-    if (provideStores) {
-      this.provideStores = {
-        ...this.provideStores,
-        [id]: provideStores,
-      }
-    }
+  }
+
+  setAppStore = (id: string, appStore: AppStore) => {
+    this.loadedApps[id].appStore = appStore
   }
 
   setAppDefinition(id: string, definition: AppDefinition) {
@@ -65,50 +47,39 @@ export class AppsStore {
     }
   }
 
-  getViewState(id: string) {
-    return (
-      this.viewsState[id] || {
-        hasIndex: false,
-        hasMain: false,
-      }
-    )
+  // setSettingsView(id: string, settingsView: AppViews['settings']) {
+  //   this.appViews[id] = { ...this.appViews[id], settings: settingsView }
+  // }
+
+  getApp(appId: string, id: string) {
+    const appState = id ? this.apps[id] : this.getAppByAppId(appId)
+    if (!appState) {
+      return null
+    }
+    if (appState.appId !== appId) {
+      throw new Error(`You called getApp with a mismatched id/appId`)
+    }
+    return {
+      ...appState,
+      definition: this.definitions[appId],
+    }
   }
 
-  viewsState = react(
-    () => this.appsState,
-    appsState => {
-      const res: { [key: string]: ReturnType<typeof getViewInformation> } = {}
-      if (appsState) {
-        for (const key in appsState.appViews) {
-          res[key] = getViewInformation(key, appsState.appViews[key])
-        }
+  getAppByAppId(appId: string) {
+    for (const id in this.apps) {
+      const app = this.apps[id]
+      if (app.appId === appId) {
+        return app
       }
-      return res
-    },
-  )
-
-  currentView = react(
-    () => {
-      const { activePane } = this.stores.paneManagerStore
-      ensure('activePane', !!activePane)
-      return this.viewsState[activePane.id]
-    },
-    {
-      defaultValue: {
-        hasMain: true,
-        hasIndex: true,
-      },
-    },
-  )
-
-  addSettingsView(id: string, settingsView: AppViews['settings']) {
-    this.appViews[id] = { ...this.appViews[id], settings: settingsView }
+    }
+    return null
   }
 
-  handleAppStore = (id: string, store: AppStore) => {
-    this.appStores = {
-      ...this.appStores,
-      [id]: store,
+  getViewState(appId: string) {
+    const app = this.getAppByAppId(appId)
+    return {
+      hasMain: app && app.views && !!app.views.main,
+      hasIndex: app && app.views && !!app.views.index,
     }
   }
 }

@@ -1,15 +1,14 @@
 import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { AppView, SubPane } from '@mcro/kit'
-import { useStoreDebug } from '@mcro/use-store'
 import { toJS } from 'mobx'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
-export default memo(function OrbitMain() {
+export const OrbitMain = memo(function OrbitMain() {
   const { paneManagerStore } = useStores()
   return (
     <>
@@ -30,7 +29,7 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
   const left = useReaction(
     () => {
       // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
-      const { hasIndex } = appsStore.viewsState[id] || { hasIndex: false }
+      const { hasIndex } = appsStore.getViewState(appId)
       const isActive = paneManagerStore.activePaneLowPriority.id === id
       if (isActive) {
         return hasIndex ? sidebarStore.width : 0
@@ -41,29 +40,22 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
     },
   )
 
-  const element = useMemo(
-    () => {
-      if (!hasMain) {
-        return null
-      }
-      return (
-        <SubPane left={left} id={id} /* debug={id === 'createApp'} */ fullHeight>
-          <OrbitPageMainView id={id} appId={appId} />
-        </SubPane>
-      )
-    },
-    [left, hasMain],
-  )
+  if (hasMain) {
+    return null
+  }
 
-  return element
+  return (
+    <SubPane left={left} id={id} fullHeight>
+      <OrbitPageMainView id={id} appId={appId} />
+    </SubPane>
+  )
 })
 
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
-  useStoreDebug()
   const { orbitStore } = useStores()
-  const appConfig = toJS(orbitStore.activeConfig[id])
-  console.log('123, load main', appId, id, appConfig)
+  const appConfig = toJS(orbitStore.activeConfig[id]) || {}
+  console.log('rendering main', appId, id, appConfig)
   return (
     <OrbitMainContainer isTorn={orbitStore.isTorn}>
       <AppView

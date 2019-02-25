@@ -19,6 +19,7 @@
     "@mcro/helpers": "*",
     "@mcro/bridge": "*",
     "@mcro/fast-compare": "*",
+    "immer": "1.7.2",
     "fuzzysort": "1.1.4",
     "compromise": "11.11.0",
     "sherlockjs": "1.4.0",

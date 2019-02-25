@@ -9,7 +9,7 @@ import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
-export default memo(function OrbitHeader() {
+export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
   const { isTorn } = orbitStore

@@ -30,16 +30,13 @@ export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  const [source] = React.useState(
-    (props.source as AtlassianSource) ||
-      ({
-        category: 'source',
-        type: props.type,
-        token: null,
-      } as AtlassianSource),
-  )
+  const [source] = React.useState<Partial<AtlassianSource>>({
+    category: 'source',
+    type: props.type as any,
+    token: null,
+  })
   const [credentials, setCredentials] = React.useState(
-    source.values.credentials || {
+    (source.values && source.values.credentials) || {
       username: '',
       password: '',
       domain: '',
@@ -58,6 +55,8 @@ export function AtlassianSettingLogin(props: Props) {
     // send command to the desktop
     setStatus(Statuses.LOADING)
     const result = await command(SourceSaveCommand, {
+      // TODO @umed
+      // @ts-ignore
       source,
     })
     // update status on success of fail

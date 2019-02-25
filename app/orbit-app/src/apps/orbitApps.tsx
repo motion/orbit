@@ -22,4 +22,8 @@ export const orbitStaticApps: AppPackage[] = [
   ...apps.filter(x => !x.app.app),
 ]
 
-export const orbitApps: AppPackage[] = [...orbitStaticApps, ...apps]
+export const orbitApps: AppPackage[] = [
+  ...orbitStaticApps,
+  // TODO figure this out
+  ...apps.filter(x => !!x.app.app),
+]

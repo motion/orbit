@@ -45,7 +45,6 @@ export function AppsIndex(_props: AppProps) {
 
     ...allSourceApps.map(app => ({
       group: 'Add Source',
-      id: `${app.id}`,
       title: app.app.name,
       icon: app.app.icon,
       onClick:
@@ -64,11 +63,12 @@ export function AppsIndex(_props: AppProps) {
       ),
       appConfig: app.app.sync.setup
         ? {
-            appId: 'sources',
+            appId: app.id,
             viewType: 'setup' as 'setup',
           }
         : {
             appId: 'message',
+            viewType: 'main',
             title: `Opening private authentication for ${app.app.name}...`,
           },
     })),

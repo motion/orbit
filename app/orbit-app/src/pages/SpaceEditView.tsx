@@ -56,7 +56,7 @@ export default observer(function SpaceEditView(props: Props) {
     const listsApp: AppBit = {
       target: 'app',
       name: 'Lists',
-      type: 'lists',
+      appId: 'lists',
       spaceId: savedSpace.id,
       // data: {
       //   lists: [

@@ -1,7 +1,7 @@
-import { ensure, react } from '@mcro/black'
+import { deep, ensure, react } from '@mcro/black'
 import { AppConfig, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
-import { isEqual } from 'lodash'
+import { comparer } from 'mobx'
 import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {
@@ -10,9 +10,9 @@ export class OrbitStore {
   nextItem = { index: -1, appConfig: null }
   isEditing = false
 
-  activeConfig: { [key: string]: AppConfig } = {
-    search: { id: '', type: 'search', title: '' },
-  }
+  activeConfig: { [key: string]: AppConfig } = deep({
+    search: { id: '', appId: 'search', title: '' },
+  })
 
   get isTorn() {
     return getIsTorn()
@@ -37,12 +37,8 @@ export class OrbitStore {
       }
       ensure('app config', !!appConfig)
       const { id } = this.stores.paneManagerStore.activePane
-      console.debug('selecting', id, appConfig)
-      if (!isEqual(this.activeConfig[id], appConfig)) {
-        this.activeConfig = {
-          ...this.activeConfig,
-          [id]: appConfig,
-        }
+      if (!comparer.structural(this.activeConfig[id], appConfig)) {
+        this.activeConfig[id] = appConfig
       }
     },
   )

@@ -72,12 +72,10 @@ const shortcuts = {
 const createNewSpace = () => {
   AppActions.togglePeekApp({
     appConfig: {
-      type: 'newSpace',
+      appId: 'newSpace',
       title: 'New Space',
       icon: 'orbit',
     },
-    // TODO
-    target: [0, 0],
   })
 }
 

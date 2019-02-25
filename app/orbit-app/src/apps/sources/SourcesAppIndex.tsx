@@ -50,11 +50,11 @@ export default function SourcesAppIndex(_props: AppProps) {
         appConfig: source.views.setup
           ? {
               ...(await sourceToAppConfig(source)),
-              type: 'sources',
+              appId: 'sources',
               viewType: 'setup' as 'setup',
             }
           : {
-              type: 'message',
+              appId: 'message',
               title: `Opening private authentication for ${source.name}...`,
             },
         group: 'Add source',
@@ -67,7 +67,7 @@ export default function SourcesAppIndex(_props: AppProps) {
           iconBefore: true,
           iconSize: 12,
           appConfig: {
-            type: 'sources',
+            appId: 'sources',
             subType: 'manage-apps',
           },
         },

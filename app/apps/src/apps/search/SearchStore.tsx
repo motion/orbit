@@ -78,7 +78,7 @@ export class SearchStore {
       title: this.stores.spaceStore.activeSpace.name,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
-      type: 'apps',
+      appId: 'apps',
       group: 'Home',
     }
   }
@@ -105,7 +105,7 @@ export class SearchStore {
         group: 'Apps',
         appConfig: {
           icon: `orbit-${app.appId}-full`,
-          type: 'message',
+          appId: 'message',
           title: `Open ${app.name}`,
         },
         onOpen: () => {
@@ -128,7 +128,7 @@ export class SearchStore {
         iconBefore: true,
         // group: 'Home',
         appConfig: {
-          type: 'message',
+          appId: 'message',
           title: `Create new app`,
         },
         onOpen: () => {

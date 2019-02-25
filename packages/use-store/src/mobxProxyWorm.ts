@@ -58,6 +58,7 @@ export function mobxProxyWorm<A extends Function>(
       }
       if (typeof val === 'function') return val
       if (key.indexOf('isMobX') === 0) return val
+      if (key[0] === '_') return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`
       if (debug) {
         console.log('track get key', key, debug, state.ids)

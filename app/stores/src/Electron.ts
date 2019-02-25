@@ -36,14 +36,6 @@ export type PinKeyType =
 
 @store
 class ElectronStore {
-  messages = {
-    CLEAR: 'CLEAR',
-    FOCUS: 'FOCUS',
-    COPY: 'COPY',
-    RESTART: 'RESTART',
-    TEAR_APP: 'TEAR_APP',
-    CLOSE_APP: 'CLOSE_APP',
-  }
 
   bridge = Bridge
   setState = Bridge.setState

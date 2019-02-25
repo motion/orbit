@@ -1,21 +1,16 @@
 import { showConfirmDialog } from '@mcro/kit'
-import { App, Desktop } from '@mcro/stores'
-import {
-  Button,
-  CheckBoxRow,
-  Divider,
-  FormRow,
-  Section,
-  Theme,
-  Title,
-  VerticalSpace,
-} from '@mcro/ui'
+import { App } from '@mcro/stores'
+import { Button, CheckBoxRow, Divider, FormRow, Section, Theme, Title, VerticalSpace } from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { useActiveUser } from '../../hooks/useActiveUser'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { AppProps } from '../AppTypes'
+import { command } from '@mcro/bridge'
+import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
+import { showNotification } from '../../helpers/electron/showNotification'
+import { sleep } from '../../helpers'
 
 const eventCharsToNiceChars = {
   alt: '⌥',
@@ -69,14 +64,20 @@ export function SettingsAppGeneral(_props: AppProps) {
     updateUser({ settings: next })
   }
 
-  const handleClearAllData = () => {
+  const handleClearAllData = async () => {
     if (
       showConfirmDialog({
         title: 'Delete all Orbit local data?',
         message: 'This will delete all Orbit data and restart Orbit.',
       })
     ) {
-      App.sendMessage(Desktop, Desktop.messages.RESET_DATA)
+      await command(ResetDataCommand)
+      showNotification({
+        title: 'Deleted successfully!',
+        message: 'Restarting...',
+      })
+      await sleep(2000)
+      await command(RestartAppCommand)
     }
   }
 

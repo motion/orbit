@@ -59,6 +59,7 @@ function cachedObservable(
 }
 
 export class MediatorClient {
+
   constructor(public options: MediatorClientOptions) {
     this.options = options
   }
@@ -410,4 +411,26 @@ export class MediatorClient {
       }
     })
   }
+
+  onData(): Observable<{ name: string, value: any }> {
+    return new Observable(subscriptionObserver => {
+      const subscriptions = this.options.transports.map(transport => {
+        return transport
+          .observe('data', {})
+          .subscribe(
+            response => {
+              if (response.notFound !== true) {
+                subscriptionObserver.next(response.result)
+              }
+            },
+            error => subscriptionObserver.error(error),
+            () => subscriptionObserver.complete(),
+          )
+      })
+
+      // remove subscription on cancellation
+      return () => subscriptions.forEach(subscription => subscription.unsubscribe())
+    })
+  }
+
 }

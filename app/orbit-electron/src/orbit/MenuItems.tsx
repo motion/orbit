@@ -2,6 +2,8 @@ import { Menu, MenuItem, MenuItemsExtra, SubMenu } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import * as React from 'react'
 import { ElectronStore } from '../stores/ElectronStore'
+import { Mediator } from '../mediator'
+import { SendClientDataCommand } from '@mcro/models'
 
 export class MenuItems extends React.Component<{ electronStore: ElectronStore }> {
   isClosing = false
@@ -20,11 +22,15 @@ export class MenuItems extends React.Component<{ electronStore: ElectronStore }>
 
   handleClose = () => {
     console.log('close event?')
-    Electron.sendMessage(App, App.messages.HIDE)
+    Mediator.command(SendClientDataCommand, {
+      name: 'HIDE'
+    })
   }
 
   handlePreferences = () => {
-    Electron.sendMessage(App, App.messages.TOGGLE_SETTINGS)
+    Mediator.command(SendClientDataCommand, {
+      name: 'TOGGLE_SETTINGS'
+    })
   }
 
   handleMinimize = (_menuItem, _window, event) => {

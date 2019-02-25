@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
 import { debounce } from 'lodash'
-import { store, on } from '@mcro/black'
+import { on, store } from '@mcro/black'
 import { Desktop } from '@mcro/stores'
 import { Logger } from '@mcro/logger'
 import macosVersion from 'macos-version'
@@ -73,9 +73,10 @@ export class OCRManager {
     this.started = true
 
     // listen for start toggle
-    Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
-      this.toggleOCR()
-    })
+    // commented because message sent code is commented
+    // Desktop.onMessage(Desktop.messages.TOGGLE_OCR, () => {
+    //   this.toggleOCR()
+    // })
 
     // poll for now for updated transparency setting...
     const listener2 = setInterval(this.screen.getInfo, 1000 * 5)

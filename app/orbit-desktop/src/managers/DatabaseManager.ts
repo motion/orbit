@@ -1,8 +1,7 @@
 import { getConnection, getRepository } from 'typeorm'
-import { DATABASE_PATH, COSAL_DB } from '../constants'
+import { COSAL_DB, DATABASE_PATH } from '../constants'
 import { Logger } from '@mcro/logger'
-import { Desktop, Electron, App } from '@mcro/stores'
-import { CompositeDisposable } from 'event-kit'
+import { Desktop } from '@mcro/stores'
 import { remove } from 'fs-extra'
 import connectModels from '../helpers/connectModels'
 import { Entities, SettingEntity } from '@mcro/models'
@@ -14,7 +13,6 @@ const log = new Logger('database')
 // and run migration from here
 
 export class DatabaseManager {
-  subscriptions = new CompositeDisposable()
   searchIndexListener: ReturnType<typeof Desktop.onMessage>
 
   async start() {
@@ -48,28 +46,16 @@ export class DatabaseManager {
     // create some custom indices
     log.info('Ensure other indices...')
     await this.createIndices()
-
-    // TODO move to command
-    // watch for reset all data command
-    const dispose = Desktop.onMessage(Desktop.messages.RESET_DATA, async () => {
-      await this.resetAllData()
-      Desktop.sendMessage(
-        App,
-        App.messages.NOTIFICATION,
-        JSON.stringify({
-          title: 'Deleted successfully!',
-          message: 'Restarting...',
-        }),
-      )
-      await sleep(500)
-      Desktop.sendMessage(Electron, Electron.messages.RESTART)
-    })
-    this.subscriptions.add({ dispose })
   }
 
   dispose() {
-    this.subscriptions.dispose()
     this.searchIndexListener()
+  }
+
+  async resetAllData() {
+    log.info(`Removing all data from database at: ${DATABASE_PATH}`)
+    await remove(COSAL_DB)
+    await remove(DATABASE_PATH)
   }
 
   private async createIndices() {
@@ -141,12 +127,6 @@ export class DatabaseManager {
         DELETE FROM search_index WHERE rowid = old.rowid;
       END;
     `)
-  }
-
-  private async resetAllData() {
-    log.info(`Removing all data from database at: ${DATABASE_PATH}`)
-    await remove(COSAL_DB)
-    await remove(DATABASE_PATH)
   }
 
   removeSearchIndex = async () => {

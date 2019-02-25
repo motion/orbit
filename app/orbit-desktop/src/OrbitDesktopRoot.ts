@@ -16,6 +16,7 @@ import {
   BitEntity,
   BitModel,
   BitsNearTopicModel,
+  ChangeDesktopThemeCommand,
   CheckProxyCommand,
   CosalSaliencyModel,
   CosalTopicsModel,
@@ -31,11 +32,13 @@ import {
   PersonBitModel,
   PersonEntity,
   PersonModel,
+  ResetDataCommand,
   SalientWordsModel,
   SearchByTopicModel,
   SearchLocationsModel,
   SearchPinnedResultModel,
   SearchResultModel,
+  SendClientDataCommand,
   SettingEntity,
   SettingModel,
   SetupProxyCommand,
@@ -91,10 +94,15 @@ import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
 import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
 import { WebServer } from './WebServer'
+import { ResetDataResolver } from './resolvers/ResetDataResolver'
+import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
+import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 
 export class OrbitDesktopRoot {
   // public
   stores = null
+  databaseManager: DatabaseManager
+  mediatorServer: MediatorServer
 
   private config = getGlobalConfig()
   private screen: Screen
@@ -102,7 +110,6 @@ export class OrbitDesktopRoot {
   private onboardManager: OnboardManager
   private disposed = false
   private webServer: WebServer
-  private mediatorServer: MediatorServer
   private cosal: Cosal
 
   // managers
@@ -112,7 +119,6 @@ export class OrbitDesktopRoot {
   // private ocrManager: OCRManager
   // private screenManager: ScreenManager
   private generalSettingManager: GeneralSettingManager
-  private databaseManager: DatabaseManager
   private keyboardManager: KeyboardManager
   private topicsManager: TopicsManager
   private operatingSystemManager: OperatingSystemManager
@@ -285,6 +291,9 @@ export class OrbitDesktopRoot {
         SetupProxyCommand,
         CheckProxyCommand,
         OpenCommand,
+        ResetDataCommand,
+        SendClientDataCommand,
+        ChangeDesktopThemeCommand,
       ],
       transport: new WebSocketServerTransport({
         port: this.config.ports.desktopMediator,
@@ -316,6 +325,9 @@ export class OrbitDesktopRoot {
         getSalientWordsResolver(this.cosal),
         SearchLocationsResolver,
         SearchPinnedResolver,
+        ResetDataResolver,
+        SendClientDataResolver,
+        ChangeDesktopThemeResolver,
         resolveCommand(CheckProxyCommand, checkAuthProxy),
         resolveCommand(SetupProxyCommand, async () => {
           const success = (await checkAuthProxy()) || (await startAuthProxy())

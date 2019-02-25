@@ -13,13 +13,5 @@ export class OperatingSystemManager {
         macVersion: macosVersion(),
       },
     })
-
-    Desktop.onMessage(Desktop.messages.OS_THEME, theme => {
-      Desktop.setState({
-        operatingSystem: {
-          theme,
-        },
-      })
-    })
   }
 }

@@ -1,12 +1,10 @@
 import { SourcesStore } from '@mcro/apps'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import { PaneManagerStore, QueryStore, showConfirmDialog } from '@mcro/kit'
-import { App, Electron } from '@mcro/stores'
 import { Theme } from '@mcro/ui'
 import { useReaction, useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
-import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
 import { ProvideStores } from '../../components/ProvideStores'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -28,6 +26,9 @@ import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
 import OrbitStatusBar from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import OrbitToolBar from './OrbitToolBar'
+import { CloseAppCommand } from '@mcro/models'
+import { command } from '@mcro/bridge'
+import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
@@ -52,6 +53,7 @@ export default memo(function OrbitPage() {
 
 function OrbitManagers() {
   useManagePaneSort()
+  useMessageHandlers()
   return null
 }
 
@@ -65,13 +67,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     closeTab: 0,
     closeApp: 0,
   })
-
-  useEffect(() => {
-    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      AppActions.setOrbitDocked(true)
-      paneManagerStore.setActivePaneByType('settings')
-    })
-  }, [])
 
   const allViews = paneManagerStore.panes.map(pane => ({
     id: pane.id,
@@ -91,7 +86,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         // TORN AWAY APP
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          App.sendMessage(Electron, Electron.messages.CLOSE_APP, { appId: APP_ID })
+          command(CloseAppCommand, { appId: APP_ID })
           return
         }
       } else {

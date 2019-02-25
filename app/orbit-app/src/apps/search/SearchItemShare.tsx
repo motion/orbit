@@ -25,8 +25,7 @@ export default memo(function SearchItemShare() {
               subtitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction.item)
-                // !TODO @umed type issue
-                ListsApp.api.receive(app as any, listRootID, itemAction.item)
+                ListsApp.api.receive(app, listRootID, itemAction.item)
               },
             },
           ]

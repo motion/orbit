@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { render } from '@mcro/reactron'
-import { CloseAppCommand, NewFallbackServerPortCommand, TearAppCommand } from '@mcro/models'
+import { CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, TearAppCommand } from '@mcro/models'
 import { Electron } from '@mcro/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
@@ -15,6 +15,7 @@ import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
 import { TearAppResolver } from './resolver/TearAppResolver'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { Mediator } from './mediator'
+import { RestartAppResolver } from './resolver/RestartAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -25,11 +26,16 @@ export async function main() {
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [TearAppCommand, CloseAppCommand],
+    commands: [
+      TearAppCommand,
+      CloseAppCommand,
+      RestartAppCommand,
+    ],
     transport: new WebSocketServerTransport({ port }),
     resolvers: [
       TearAppResolver,
       CloseAppResolver,
+      RestartAppResolver,
     ],
   })
   mediatorServer.bootstrap()

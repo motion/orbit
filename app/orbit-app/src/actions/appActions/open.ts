@@ -1,6 +1,5 @@
 import { command } from '@mcro/bridge'
 import { Bit, OpenCommand, PersonBit } from '@mcro/models'
-import { App, Electron } from '@mcro/stores'
 
 export async function open(item: Bit | PersonBit | string) {
   let url = ''
@@ -18,13 +17,4 @@ export async function open(item: Bit | PersonBit | string) {
   }
 
   await command(OpenCommand, { url })
-}
-
-export async function copyLink(item?: Bit | PersonBit) {
-  if (!item) return
-  let link
-  if (item.target === 'bit') {
-    link = item.webLink
-  }
-  App.sendMessage(Electron, Electron.messages.COPY, link)
 }

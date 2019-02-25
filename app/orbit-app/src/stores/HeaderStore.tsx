@@ -86,8 +86,9 @@ export class HeaderStore {
     this.iconHovered = false
   }
 
+  // this function isn't used
   onClickOrb = () => {
-    App.sendMessage(App, App.messages.HIDE)
+    // App.sendMessage(App, App.messages.HIDE)
     // App.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
   }
 

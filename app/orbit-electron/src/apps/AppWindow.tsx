@@ -9,6 +9,8 @@ import global from 'global'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { WEB_PREFERENCES } from '../constants'
+import { Mediator } from '../mediator'
+import { SendClientDataCommand } from '@mcro/models'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -90,7 +92,10 @@ class AppWindowStore {
 
   handleClose = () => {
     if (this.closed) return
-    Electron.sendMessage(App, App.messages.CLOSE_APP, `${this.props.id}`)
+    Mediator.command(SendClientDataCommand, {
+      name: 'CLOSE_APP',
+      value: this.props.id
+    })
     this.closeApp()
   }
 

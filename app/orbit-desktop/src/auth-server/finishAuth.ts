@@ -33,6 +33,7 @@ const createSource = async (type: SourceType, values: OauthValues) => {
     category: 'Source',
     identifier: type + (await getRepository(SourceEntity).count()), // adding count temporary to prevent unique constraint error
     type: type as any,
+    appId: type,
     token: values.token,
     values: {
       oauth: { ...values },

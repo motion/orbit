@@ -111,10 +111,6 @@ export function List(rawProps: ListProps) {
   // a bit risky but otherwise this is really  hard
   const getItemPropsInner = useCallback(
     (item, index, items) => {
-      if (debug) debugger
-
-      console.log('changing this', items)
-
       // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
       const normalized = toListItemProps(item)
       const extraProps = (getItemProps && getItemProps(item, index, items)) || null

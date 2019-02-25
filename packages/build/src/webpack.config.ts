@@ -134,9 +134,6 @@ const config = {
   resolveLoader: {
     modules: [buildNodeModules],
   },
-  node: {
-    setImmediate: false,
-  },
   module: {
     rules: [
       {

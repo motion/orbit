@@ -82,8 +82,6 @@ export const AppView = memoIsEqualDeep(
       [appStore, AppView],
     )
 
-    console.log('render app view', AppView, props.viewType, appElement)
-
     if (!appElement) {
       return null
     }

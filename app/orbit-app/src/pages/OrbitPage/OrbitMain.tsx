@@ -1,9 +1,7 @@
 import { useReaction } from '@mcro/black'
-import { isEqual } from '@mcro/fast-compare'
 import { gloss } from '@mcro/gloss'
 import { AppView, SubPane } from '@mcro/kit'
-import { autorun, toJS } from 'mobx'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
@@ -11,12 +9,11 @@ import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export const OrbitMain = memo(function OrbitMain() {
   const { paneManagerStore } = useStores()
-  console.log('render main with', paneManagerStore.panes)
   return (
     <>
-      {paneManagerStore.panes.map(pane => {
-        return <OrbitMainSubPane key={pane.id} id={pane.id} appId={pane.type} />
-      })}
+      {paneManagerStore.panes.map(pane => (
+        <OrbitMainSubPane key={pane.id} id={pane.id} appId={pane.type} />
+      ))}
     </>
   )
 })
@@ -42,7 +39,7 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
     },
   )
 
-  if (hasMain) {
+  if (hasMain === false) {
     return null
   }
 
@@ -55,26 +52,8 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
 
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
-  const { orbitStore } = useStoresSimple()
-  const [appConfig, setAppConfig] = useState({})
-
-  console.log('mounting main view', id)
-
-  useEffect(() => {
-    let tm = setTimeout(() => {
-      autorun(() => {
-        const next = orbitStore.activeConfig[id] || {}
-        if (!isEqual(next, appConfig)) {
-          console.log('next is', id, next)
-          setAppConfig(toJS(next))
-        }
-      })
-    }, 2000)
-    return () => clearTimeout(tm)
-  }, [])
-
-  console.log('render with', JSON.stringify(appConfig))
-
+  const { orbitStore } = useStores()
+  const appConfig = orbitStore.activeConfig[id] || {}
   return (
     <OrbitMainContainer isTorn={orbitStore.isTorn}>
       <AppView

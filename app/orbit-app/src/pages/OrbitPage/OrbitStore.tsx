@@ -1,6 +1,6 @@
-import { ensure, react } from '@mcro/black'
+import { ensure, react, shallow } from '@mcro/black'
 import { AppConfig, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
-import { deep, useHook } from '@mcro/use-store'
+import { useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {
@@ -9,7 +9,7 @@ export class OrbitStore {
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
   isEditing = false
-  activeConfig: { [key: string]: AppConfig } = deep({})
+  activeConfig: { [key: string]: AppConfig } = shallow({})
 
   get isTorn() {
     return getIsTorn()
@@ -34,7 +34,6 @@ export class OrbitStore {
       }
       ensure('app config', !!appConfig)
       const { id } = this.stores.paneManagerStore.activePane
-      console.log('update this', id, appConfig)
       this.activeConfig[id] = appConfig
     },
   )

@@ -133,7 +133,7 @@ export function hoverSettler({
       handleHover(e.currentTarget)
     }
 
-    function onMouseLeave(e) {
+    function onMouseLeave() {
       if (stuck.get()) return
       clearTimeout(itemLastLeaveTm)
       clearTimeout(fullyLeaveTm)

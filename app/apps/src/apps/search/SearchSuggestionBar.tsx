@@ -84,7 +84,6 @@ export function SearchSuggestionBar() {
   const hasTextualDateFilter = !!filterStore.activeDateFilters.length
   return (
     <SuggestionBar visible>
-      123
       {!!dateFilter && !hasTextualDateFilter && (
         <SuggestionButton
           onClick={filterStore.clearDate}

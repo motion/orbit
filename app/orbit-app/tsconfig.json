@@ -1,6 +1,7 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.client",
   "compilerOptions": {
+    "baseUrl": "./src",
     "rootDir": "src",
     "outDir": "_",
     "typeRoots": ["./src/globalTypes.d.ts"]

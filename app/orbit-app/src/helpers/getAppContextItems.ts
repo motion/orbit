@@ -14,7 +14,7 @@ export function getAppContextItems(app: AppBit) {
           })
         ) {
           // TODO @umed type off
-          remove(AppModel, app)
+          remove(AppModel, app as any)
         }
       },
     },

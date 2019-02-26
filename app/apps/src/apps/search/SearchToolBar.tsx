@@ -16,9 +16,7 @@ export function SearchToolBar() {
       >
         {queryFilters.sortBy}
       </BarButtonSmall>
-
       <HorizontalSpace />
-
       <SegmentedRow justifyContent="center">
         <Popover
           openOnClick
@@ -39,7 +37,6 @@ export function SearchToolBar() {
 
         <SourceFilterButton />
       </SegmentedRow>
-
       <View flex={1} />
       <SearchSuggestionBar />
     </>

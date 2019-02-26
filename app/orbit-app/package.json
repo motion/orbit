@@ -60,7 +60,7 @@
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-date-range": "1.0.0-beta",
-    "react-hot-loader": "4.7.0",
+    "react-hot-loader": "4.7.1",
     "react-spring": "8.0.7",
     "react-svg-inline": "2.1.1",
     "react-virtualized": "9.21.0",
@@ -78,7 +78,8 @@
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
-    "@mcro/build": "^2.3.10"
+    "@mcro/build": "^2.3.10",
+    "@mcro/babel-preset-motion": "*"
   },
   "peerDependencies": {
     "electron": "*",

@@ -40,13 +40,14 @@ module.exports = function(_, givenOpts) {
         },
         ...opts.env,
       }),
-      plug('@babel/preset-typescript'),
+      !opts.disableTypeScript && plug('@babel/preset-typescript'),
     ],
   }
 
   config.plugins = config.plugins.filter(Boolean)
   config.presets = config.presets.filter(Boolean)
 
-  // console.log('babel config', config)
+  console.log('Using babel config', config)
+
   return config
 }

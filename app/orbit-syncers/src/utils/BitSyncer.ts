@@ -1,6 +1,13 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, GithubSource, PersonEntity, Source } from '@mcro/models'
-import { CosalTopWordsModel, SlackBitData } from '@mcro/models/'
+import {
+  Bit,
+  BitEntity,
+  CosalTopWordsModel,
+  GithubSource,
+  PersonEntity,
+  SlackBitData,
+  Source,
+} from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'

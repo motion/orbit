@@ -1,13 +1,11 @@
 import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { forceKillProcess, forkProcess } from '@mcro/orbit-fork-process'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { ChildProcess } from 'child_process'
-import { app, BrowserWindow, dialog, Menu, screen, systemPreferences } from 'electron'
-import { pathExists } from 'fs-extra'
+import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron'
 import root from 'global'
 import { last } from 'lodash'
 import { join } from 'path'
@@ -15,12 +13,23 @@ import * as React from 'react'
 import { ROOT } from '../constants'
 import { getScreenSize } from '../helpers/getScreenSize'
 import { OrbitShortcutsStore } from './OrbitShortcutsStore'
+import { Mediator } from '../mediator'
+import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@mcro/models'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
 
 const setScreenSize = () => {
   Electron.setState({ screenSize: getScreenSize() })
+}
+
+export const appProcesses: { appId: number; process: ChildProcess }[] = []
+
+// this is just temporary to get TearAppResolver to work
+// @nate please help to fix it if following approach won't work
+let orbitShortcutsStore
+export const getOrbitShortcutsStore = () => {
+  return orbitShortcutsStore
 }
 
 class OrbitWindowStore {
@@ -46,7 +55,7 @@ class OrbitWindowStore {
     // theme events
     const setOSTheme = () => {
       const theme = systemPreferences.isDarkMode() ? 'dark' : 'light'
-      Electron.sendMessage(Desktop, Desktop.messages.OS_THEME, theme)
+      Mediator.command(ChangeDesktopThemeCommand, { theme })
     }
     setOSTheme()
     systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', setOSTheme)
@@ -173,7 +182,7 @@ export default function OrbitWindow() {
     }`,
   )
 
-  const orbitShortcutsStore = useStore(OrbitShortcutsStore, {
+  orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
       const shown = App.orbitState.docked
       console.log('ok', store.blurred, shown)
@@ -181,7 +190,9 @@ export default function OrbitWindow() {
         store.orbitRef.focus()
         return
       }
-      Electron.sendMessage(App, shown ? App.messages.HIDE : App.messages.SHOW)
+      Mediator.command(SendClientDataCommand, {
+        name: shown ? 'HIDE' : 'SHOW'
+      })
     },
   })
 
@@ -190,54 +201,6 @@ export default function OrbitWindow() {
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))
-    }
-
-    let appProcesses: { appId: number; process: ChildProcess }[] = []
-
-    let disposers: Function[] = []
-
-    // handle tear away
-    disposers.push(
-      Electron.onMessage(Electron.messages.TEAR_APP, async ({ appType, appId }) => {
-        console.log('Tearing app', appType, appId)
-
-        const iconPath = join(ROOT, 'resources', 'icons', `appicon-${appType}.png`)
-        if (!(await pathExists(iconPath))) {
-          dialog.showErrorBox('No icon found for app...', 'Oops')
-          console.error('no icon!', iconPath)
-          return
-        }
-        app.dock.setIcon(iconPath)
-        Electron.setIsTorn()
-        orbitShortcutsStore.dispose()
-
-        const proc = forkProcess({
-          name: 'orbit',
-          // TODO we can increment for each new orbit sub-process, need a counter here
-          // inspectPort: 9006,
-          // inspectPortRemote: 9007,
-        })
-
-        appProcesses.push({ appId, process: proc })
-      }),
-    )
-
-    disposers.push(
-      Electron.onMessage(Electron.messages.CLOSE_APP, ({ appId }) => {
-        console.log('got close app', appProcesses, appId)
-        const app = appProcesses.find(x => x.appId === appId)
-        if (!app) {
-          console.error('No process found for id', appId)
-          return
-        }
-        forceKillProcess(app.process)
-      }),
-    )
-
-    return () => {
-      for (const disposer of disposers) {
-        disposer()
-      }
     }
   }, [])
 

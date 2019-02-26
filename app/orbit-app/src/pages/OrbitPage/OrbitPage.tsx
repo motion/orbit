@@ -1,3 +1,4 @@
+import { command } from '@mcro/bridge'
 import { isEqual } from '@mcro/fast-compare'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
@@ -15,18 +16,18 @@ import {
   useActiveSources,
   useStoresSimple,
 } from '@mcro/kit'
-import { App, Electron } from '@mcro/stores'
+import { CloseAppCommand } from '@mcro/models'
 import { Theme } from '@mcro/ui'
 import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { AppActions } from '../../actions/appActions/AppActions'
 import { AppsLoader } from '../../apps/AppsLoader'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { useActions } from '../../hooks/useActions'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
+import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
@@ -91,6 +92,7 @@ function OrbitManagers() {
   useManagePanes()
   useManagePaneSort()
   useManageQuerySources()
+  useMessageHandlers()
   return null
 }
 
@@ -106,13 +108,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   })
 
   useEffect(() => {
-    return App.onMessage(App.messages.TOGGLE_SETTINGS, () => {
-      AppActions.setOrbitDocked(true)
-      paneManagerStore.setActivePaneByType('settings')
-    })
-  }, [])
-
-  useEffect(() => {
     // prevent close on the main window
     window.onbeforeunload = function(e) {
       const { closeTab, closeApp } = shortcutState.current
@@ -125,7 +120,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         // TORN AWAY APP
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          App.sendMessage(Electron, Electron.messages.CLOSE_APP, { appId: APP_ID })
+          command(CloseAppCommand, { appId: APP_ID })
           return
         }
       } else {

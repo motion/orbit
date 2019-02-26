@@ -1,6 +1,8 @@
-import { App, Electron } from '@mcro/stores'
+import { App } from '@mcro/stores'
 import { last } from 'lodash'
 import { AllStores } from '../contexts/StoreContext'
+import { command } from '@mcro/bridge'
+import { TearAppCommand } from '@mcro/models'
 
 export function tearApp(stores: AllStores) {
   return () => {
@@ -30,7 +32,7 @@ export function tearApp(stores: AllStores) {
       ],
     })
 
-    App.sendMessage(Electron, Electron.messages.TEAR_APP, {
+    command(TearAppCommand, {
       appType: type,
       appId: nextId,
     })

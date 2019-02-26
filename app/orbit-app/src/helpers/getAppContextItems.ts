@@ -1,6 +1,6 @@
+import { remove } from '@mcro/bridge'
 import { showConfirmDialog } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
-import { remove } from 'mobx'
 
 export function getAppContextItems(app: AppBit) {
   return [

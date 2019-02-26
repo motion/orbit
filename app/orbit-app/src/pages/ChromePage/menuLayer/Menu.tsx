@@ -506,9 +506,10 @@ export function Menu() {
   // )
 
   // Handle tray enter/leave/click events
-  React.useEffect(() => {
-    return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
-  }, [])
+  // commented since app sends message to itself
+  // React.useEffect(() => {
+  //   return App.onMessage(App.messages.TRAY_EVENT, menuStore.handleTrayEvent)
+  // }, [])
 
   return (
     <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>

@@ -62,8 +62,14 @@ export default memo(function MainShortcutHandler(props: {
     },
     copyLink: async () => {
       console.log('copyLink')
+      require('electron').remote.clipboard.writeText('http://example.com')
+      // let link
+      // if (item.target === 'bit') {
+      //   link = item.webLink
+      // }
       // Actions.copySelectedItemLink()
       // Actions.copyLink(searchStore.selectedItem)
+
     },
     escape: () => {
       console.log('escape')

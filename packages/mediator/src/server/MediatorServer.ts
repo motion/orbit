@@ -17,6 +17,7 @@ export class MediatorServer {
     id: string
     subscription: Subscription
   }[] = []
+  dataIds: string[] = []
 
   constructor(public options: MediatorServerOptions) {}
 
@@ -41,6 +42,12 @@ export class MediatorServer {
       for (let subscription of subscriptions) {
         subscription.subscription.unsubscribe()
       }
+      return
+    }
+
+    // we just store data ids for data type, then we use later to send message to those ids
+    if (data.type === 'data') {
+      this.dataIds.push(data.id)
       return
     }
 

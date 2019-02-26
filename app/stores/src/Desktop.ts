@@ -42,15 +42,6 @@ class DesktopStore {
   setPaused: DesktopStore['setState']
   setLastScreenChange: DesktopStore['setState']
 
-  messages = {
-    TOGGLE_OCR: 'TOGGLE_OCR',
-    OPEN: 'OPEN',
-    CLEAR_OPTION: 'CLEAR_OPTION',
-    RESET_DATA: 'RESET_DATA',
-    PROXY_FN: 'PROXY_FN',
-    OS_THEME: 'OS_THEME',
-  }
-
   bridge = Bridge
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage

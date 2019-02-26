@@ -11,6 +11,7 @@ export type TransportRequestType =
   | 'observeMany'
   | 'observeManyAndCount'
   | 'observeCount'
+  | 'data'
 
 export type TransportRequestValues = {
   command?: string

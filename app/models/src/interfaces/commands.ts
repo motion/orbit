@@ -28,5 +28,19 @@ export const SetupProxyCommand = new Command<boolean, void>('SetupProxyCommand')
 
 export const OpenCommand = new Command<boolean, { url: string }>('OpenCommand')
 
-export const TearAppCommand = new Command<void, void>('tear-app')
-export const CloseAppCommand = new Command<void, void>('close-app')
+export const TearAppCommand = new Command<void, { appType: string; appId: number }>('tear-app')
+export const CloseAppCommand = new Command<void, { appId: number }>('close-app')
+export const RestartAppCommand = new Command<void, void>('restart-app')
+export const ResetDataCommand = new Command<void, void>('reset-data')
+export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'light' }>(
+  'change-desktop-theme',
+)
+
+export const SendClientDataCommand = new Command<
+  void,
+  {
+    name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS'
+    value: any
+  }
+>('send-client-data')
+// export const TrayEventCommand = new Command<{ type: string, value: string }, void>('tray-event')

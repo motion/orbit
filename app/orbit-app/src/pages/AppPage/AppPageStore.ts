@@ -1,9 +1,9 @@
-import { ensure, react, sleep } from '@mcro/black';
-import { Bit, PersonBit, Setting } from '@mcro/models';
-import { App, AppState } from '@mcro/stores';
-import * as React from 'react';
-import { AppActions } from '../../actions/appActions/AppActions';
-import { PEEK_ID } from '../../constants';
+import { ensure, react, sleep } from '@mcro/black'
+import { Bit, PersonBit, Setting } from '@mcro/models'
+import { App, AppState } from '@mcro/stores'
+import * as React from 'react'
+import { AppActions } from '../../actions/appActions/AppActions'
+import { PEEK_ID } from '../../constants'
 
 type AppPageItemState = AppState & {
   model: PersonBit | Bit | Setting
@@ -114,7 +114,6 @@ export class AppPageStore {
     }
     AppActions.tearPeek()
     await sleep(16)
-    App.sendMessage(App, App.messages.CLEAR_SELECTED)
   }
 
   handleClose = () => {

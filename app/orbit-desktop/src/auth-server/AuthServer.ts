@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { SourceType } from '@mcro/models'
-import { App, Desktop } from '@mcro/stores'
 import bodyParser from 'body-parser'
 import express from 'express'
 import session from 'express-session'
@@ -155,7 +154,6 @@ export class AuthServer {
         (req, res) => {
           const values: OauthValues = req.user || req['currentUser']
           finishAuth(name as SourceType, values)
-          Desktop.sendMessage(App, App.messages.SHOW_APPS, name)
           res.send(`
 <html>
   <head>

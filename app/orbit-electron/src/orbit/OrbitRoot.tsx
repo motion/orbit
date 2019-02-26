@@ -1,7 +1,5 @@
 import { App } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
-import { app, clipboard } from 'electron'
 import * as React from 'react'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'
@@ -11,20 +9,6 @@ import OrbitWindow from './OrbitWindow'
 
 export function OrbitRoot() {
   const electronStore = useStore(ElectronStore)
-
-  React.useEffect(() => {
-    return Electron.onMessage(msg => {
-      switch (msg) {
-        case Electron.messages.COPY:
-          clipboard.writeText(msg)
-          return
-        case Electron.messages.RESTART:
-          app.relaunch()
-          app.exit()
-          return
-      }
-    })
-  }, [])
 
   if (electronStore.error) {
     if (electronStore.error) {

@@ -57,18 +57,6 @@ class AppStore {
   setOrbitState: Function
   setAuthState: Function
 
-  messages = {
-    SHOW_APPS: 'SHOW_APPS',
-    TOGGLE_SETTINGS: 'TOGGLE_SETTINGS',
-    SHOW: 'SHOW',
-    HIDE: 'HIDE',
-    CLEAR_SELECTED: 'CLEAR_SELECTED',
-    NOTIFICATION: 'NOTIFICATION',
-    CLOSE_APP: 'CLOSE_APP',
-    PROXY_FN_RESPONSE: 'PROXY_FN_RESPONSE',
-    TRAY_EVENT: 'TRAY_EVENT',
-  }
-
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage
   onMessage = Bridge.onMessage

@@ -44,7 +44,6 @@ export default observer(function SpaceEditView(props: Props) {
     e.preventDefault()
 
     // create a space
-    // TODO @umed type weirdness
     const savedSpace = await save(SpaceModel, {
       ...store.space,
       ...store.values,

@@ -1,5 +1,11 @@
 import { sleep } from '@mcro/black'
-import { List, useActiveApps, useActiveSourcesWithDefinition, useActiveSpace } from '@mcro/kit'
+import {
+  List,
+  OrbitListItemProps,
+  useActiveApps,
+  useActiveSourcesWithDefinition,
+  useActiveSpace,
+} from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
@@ -17,7 +23,9 @@ export function AppsIndex(_props: AppProps) {
     return null
   }
 
-  const results = [
+  log(sourceInfo)
+
+  const results: OrbitListItemProps[] = [
     {
       group: 'Space',
       title: `Manage apps`,
@@ -32,7 +40,8 @@ export function AppsIndex(_props: AppProps) {
 
     ...sourceInfo.map(app => ({
       group: 'Sources',
-      id: `${app.source.id}`,
+      id: `${app.definition.id}`,
+      appId: 'sources',
       title: app.definition.name,
       subtitle: <OrbitSourceInfo {...app} />,
       icon: app.definition.icon,

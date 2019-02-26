@@ -45,6 +45,15 @@ export class AppsStore {
     },
   )
 
+  hasLoaded = react(
+    () => always(this._apps),
+    async (_, { sleep, setValue }) => {
+      setValue(false)
+      await sleep(16)
+      return true
+    },
+  )
+
   setApp = (app: { appId: string; id: string; views: AppViews; provideStores?: Object }) => {
     this._apps[app.id] = app
   }
@@ -64,7 +73,7 @@ export class AppsStore {
   getApp(appId: string, id: string) {
     const appState = id ? this.apps[id] : this.getAppByAppId(appId)
     if (appState && appState.appId !== appId) {
-      throw new Error(`You called getApp with a mismatched id/appId`)
+      throw new Error(`You called getApp with a mismatched id/appId: appId ${appId}, id: ${id}`)
     }
     return appState
   }

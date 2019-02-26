@@ -1,11 +1,11 @@
-import { Contents, View } from '@mcro/gloss';
-import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui';
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
-import { findDOMNode } from 'react-dom';
-import { useApp } from '../hooks/useApp';
-import { AppStore } from '../stores';
-import { AppProps } from '../types/AppProps';
-import { ProvideStores } from './ProvideStores';
+import { Contents, View } from '@mcro/gloss'
+import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
+import { findDOMNode } from 'react-dom'
+import { useApp } from '../hooks/useApp'
+import { AppStore } from '../stores'
+import { AppProps } from '../types/AppProps'
+import { ProvideStores } from './ProvideStores'
 
 export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
   id?: string
@@ -47,16 +47,21 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
+
+    if (!props.appId) {
+      throw new Error('No app id')
+    }
+
     const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
 
     let AppView = views[props.viewType]
 
-    if (!AppView) {
-      console.warn('loading alternate view', props, definition)
-    }
-
     if (!AppView && definition && definition.sync) {
       AppView = definition.sync[props.viewType]
+    }
+
+    if (!AppView) {
+      console.warn('loading alternate view failed', props, definition)
     }
 
     // handle ref

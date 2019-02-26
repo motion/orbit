@@ -22,3 +22,9 @@ Goal by end of February
 - initial syncing of config p2p
 - onboarding
 - postgres example
+
+---
+
+Bugs
+
+- AppsIndex and other app views no longer HMR, need fix

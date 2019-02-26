@@ -1,7 +1,5 @@
 import { App, AppDefinition } from '@mcro/kit'
 import React from 'react'
-import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
-import SourcesAppIndex from './SourcesAppIndex'
 import { SourcesAppMain } from './SourcesAppMain'
 
 export const SourcesApp: AppDefinition = {
@@ -9,7 +7,7 @@ export const SourcesApp: AppDefinition = {
   name: 'Sources',
   icon: '',
   app: props => (
-    <App index={<SourcesAppIndex {...props} />} toolBar={<OrbitSettingsToolbar />}>
+    <App>
       <SourcesAppMain {...props} />
     </App>
   ),

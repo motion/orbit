@@ -9,12 +9,12 @@ import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
  * Loads the data from the Slack API.
  */
 export class SlackLoader {
-  private source: SlackApp
+  private app: SlackApp
   private log: Logger
 
-  constructor(source: SlackApp, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('service:slack:loader:' + source.id)
+  constructor(app: SlackApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('service:slack:loader:' + app.id)
   }
 
   /**
@@ -23,7 +23,7 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/team.info
    */
   async loadTeam(): Promise<SlackTeam> {
-    const options = { token: this.source.token }
+    const options = { token: this.app.token }
     this.log.verbose('request to team.info', options)
     const response = await team.info(options)
     return response.team
@@ -38,7 +38,7 @@ export class SlackLoader {
     await sleep(ServiceLoadThrottlingOptions.slack.users)
 
     const options = {
-      token: this.source.token,
+      token: this.app.token,
       limit: 1000,
       cursor: cursor,
     }
@@ -63,7 +63,7 @@ export class SlackLoader {
     await sleep(ServiceLoadThrottlingOptions.slack.channels)
 
     const options = {
-      token: this.source.token,
+      token: this.app.token,
       cursor: cursor,
     }
     this.log.verbose('request to channels.list', options)
@@ -98,7 +98,7 @@ export class SlackLoader {
     await sleep(ServiceLoadThrottlingOptions.slack.messages)
 
     const options = {
-      token: this.source.token,
+      token: this.app.token,
       channel: channelId,
       count: 1000,
       oldest: oldestMessageId,

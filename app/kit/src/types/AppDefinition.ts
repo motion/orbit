@@ -45,7 +45,6 @@ export type AppDefinition = {
   settings?: FunctionComponent<null>
   appData?: Object
   sync?: {
-    sourceType?: string
     // TODO remove and just use bit
     modelType?: 'person-bit' | 'bit'
     settings?: FunctionComponent<AppSettingsProps<AppBit>>
@@ -63,5 +62,5 @@ export type AppBitMainProps = OrbitItemViewProps<any> & {
 
 export type AppSettingsProps<T extends AppBit> = {
   appConfig?: AppConfig
-  source: T
+  app: T
 }

@@ -7,7 +7,7 @@ import { QueryStore } from './QueryStore'
 export type SearchFilter = {
   id: number
   type: string
-  source: string
+  app: string
   name: string
   active: boolean
 }

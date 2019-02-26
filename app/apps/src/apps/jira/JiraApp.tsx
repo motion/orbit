@@ -10,7 +10,6 @@ export const JiraApp: AppDefinition = {
   icon: jiraIcon,
   itemType: 'task',
   sync: {
-    sourceType: 'jira',
     settings: props => <AtlassianSettingLogin type="jira" {...props} />,
     setup: JiraSetup,
   },

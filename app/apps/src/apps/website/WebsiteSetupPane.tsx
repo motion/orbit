@@ -1,6 +1,6 @@
 import { command } from '@mcro/bridge'
 import { AppSettingsProps } from '@mcro/kit'
-import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
+import { AppBit, AppSaveCommand, WebsiteApp } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
 import { react, useStore } from '@mcro/use-store'
@@ -17,30 +17,31 @@ export interface WebsiteCrawledData {
   content: string
 }
 
-type Props = AppSettingsProps<WebsiteSource>
+type Props = AppSettingsProps<WebsiteApp>
 
 class WebsiteSetupStore {
   props: Props
-  // source: Source
+  // app: App
 
-  values: WebsiteSourceValues = {
+  values: WebsiteApp['data']['values'] = {
     url: '',
   }
 
-  source = react(
-    () => this.props.source,
-    async propSource => {
-      // if source was sent via component props then use it
-      if (propSource) {
-        this.values = propSource.values
-        return propSource
+  app = react(
+    () => this.props.app,
+    async propApp => {
+      // if app was sent via component props then use it
+      if (propApp) {
+        this.values = propApp.data.values
+        return propApp
       }
-      // create a new empty source
+      // create a new empty app
       return {
-        category: 'source',
-        type: 'website',
-        token: null,
-      } as Source
+        appId: 'website',
+        // TODO
+        // token: null,
+        // category: 'app',
+      } as AppBit
     },
   )
 }
@@ -48,15 +49,15 @@ class WebsiteSetupStore {
 export default function WebsiteSetupPane(props: Props) {
   const store = useStore(WebsiteSetupStore, props)
 
-  const addSource = React.useCallback(
+  const addApp = React.useCallback(
     async e => {
       e.preventDefault()
-      const { source, values } = store
-      source.values = { ...source.values, ...values }
-      source.name = values.url
-      console.log(`adding source!`, source)
-      const result = await command(SourceSaveCommand, {
-        source,
+      const { app, values } = store
+      app.data.values = { ...app.data.values, ...values }
+      app.name = values.url
+      console.log(`adding app!`, app)
+      const result = await command(AppSaveCommand, {
+        app,
       })
 
       // update status on success of fail
@@ -83,7 +84,7 @@ export default function WebsiteSetupPane(props: Props) {
   )
 
   return (
-    <UI.Col tagName="form" onSubmit={addSource} padding={20}>
+    <UI.Col tagName="form" onSubmit={addApp} padding={20}>
       <Message>Enter website URL</Message>
       <VerticalSpace />
       <UI.Col margin="auto" width={370}>
@@ -98,7 +99,7 @@ export default function WebsiteSetupPane(props: Props) {
           </Table>
           <VerticalSpace />
           <UI.Theme>
-            <UI.Button type="submit" onClick={addSource}>
+            <UI.Button type="submit" onClick={addApp}>
               Save
             </UI.Button>
           </UI.Theme>

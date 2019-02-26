@@ -1,6 +1,6 @@
 import { loadMany, save } from '@mcro/bridge'
 import { AppSettingsProps } from '@mcro/kit'
-import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
+import { AppModel, SlackApp, SlackChannelModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
@@ -9,9 +9,9 @@ import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 import { WhitelistManager } from '../../WhitelistManager'
 
-export default function SlackSettings({ source }: AppSettingsProps<SlackSource>) {
+export default function SlackSettings({ app }: AppSettingsProps<SlackApp>) {
   const whitelist = useStore(WhitelistManager, {
-    source,
+    app,
     getAll: () => (channels || []).map(channel => channel.id),
   })
   // setup state
@@ -25,17 +25,17 @@ export default function SlackSettings({ source }: AppSettingsProps<SlackSource>)
     active: '15%',
   }
 
-  // load and set channels when source changes
+  // load and set channels when app changes
   useEffect(
     () => {
-      // for some reason we can get any source here, so filter out everything except slack
-      if (source.type !== 'slack') return
+      // for some reason we can get any app here, so filter out everything except slack
+      if (app.type !== 'slack') return
 
-      // if we have channels stored in the source - use them at first
-      if (source.data.channels) {
-        // console.log(`set channels from source`, props.source.data.channels)
+      // if we have channels stored in the app - use them at first
+      if (app.data.channels) {
+        // console.log(`set channels from app`, props.app.data.channels)
         const orderedChannels = orderBy(
-          source.data.channels,
+          app.data.channels,
           ['is_private', 'num_members'],
           ['asc', 'desc'],
         )
@@ -45,43 +45,40 @@ export default function SlackSettings({ source }: AppSettingsProps<SlackSource>)
       // to make sure we always have a fresh channels we load them form API
       loadMany(SlackChannelModel, {
         args: {
-          sourceId: source.id,
+          appId: app.id,
         },
       }).then(freshApiChannels => {
         // console.log(`loaded channels from remote`, freshApiRepositories)
 
         // we check if api channels are changed
-        const sourceChannels = source.data.channels
-        if (
-          !freshApiChannels ||
-          JSON.stringify(sourceChannels) === JSON.stringify(freshApiChannels)
-        ) {
+        const appChannels = app.data.channels
+        if (!freshApiChannels || JSON.stringify(appChannels) === JSON.stringify(freshApiChannels)) {
           return
         }
 
-        // then we update source data in the db
+        // then we update app data in the db
         const orderedChannels = orderBy(
           freshApiChannels,
           ['is_private', 'num_members'],
           ['asc', 'desc'],
         )
         setChannels(orderedChannels)
-        source.data = {
-          ...source.data,
+        app.data = {
+          ...app.data,
           channels: freshApiChannels,
         }
-        save(SourceModel, {
-          id: source.id,
-          data: source.data,
+        save(AppModel, {
+          id: app.id,
+          data: app.data,
         })
       })
     },
-    [source.id],
+    [app.id],
   )
 
   return (
     <>
-      <SettingManageRow source={source} whitelist={whitelist} />
+      <SettingManageRow app={app} whitelist={whitelist} />
       <View
         flex={1}
         opacity={whitelist.isWhitelisting ? 0.5 : 1}

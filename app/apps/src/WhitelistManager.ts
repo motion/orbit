@@ -1,12 +1,12 @@
 import { save } from '@mcro/bridge'
-import { SourceModel } from '@mcro/models'
+import { AppModel } from '@mcro/models'
 import { react } from '@mcro/use-store'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
-export class WhitelistManager<T extends { values?: { whitelist?: string[] } }> {
-  props: { source: T; getAll: () => string[] }
-  values: T['values'] = { ...this.props.source.values }
+export class WhitelistManager<T extends { data?: { values?: { whitelist?: string[] } } }> {
+  props: { app: T; getAll: () => string[] }
+  values: T['data']['values'] = { ...this.props.app.data.values }
 
   get isWhitelisting() {
     return !this.values.whitelist
@@ -19,9 +19,12 @@ export class WhitelistManager<T extends { values?: { whitelist?: string[] } }> {
   saveSettingOnValuesUpdate = react(
     () => this.values,
     values => {
-      save(SourceModel, {
-        ...this.props.source,
-        values,
+      save(AppModel, {
+        ...this.props.app,
+        data: {
+          ...this.props.app.data,
+          values,
+        },
       })
     },
   )

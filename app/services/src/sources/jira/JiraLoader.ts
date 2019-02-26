@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
+import { JiraApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import { JiraSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
@@ -10,14 +10,14 @@ import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private source: JiraSource
+  private app: JiraApp
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(source: JiraSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('service:jira:loader:' + source.id)
-    this.loader = new ServiceLoader(this.source, this.log)
+  constructor(app: JiraApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('service:jira:loader:' + app.id)
+    this.loader = new ServiceLoader(this.app, this.log)
   }
 
   /**
@@ -71,7 +71,6 @@ export class JiraLoader {
     for (let i = 0; i < response.issues.length; i++) {
       const issue = response.issues[i]
       try {
-
         // load content comments
         if (issue.fields.comment.total > 0) {
           issue.comments = await this.loadComments(issue.id)
@@ -80,7 +79,12 @@ export class JiraLoader {
         }
 
         const isLast = i === response.issues.length - 1 && hasNextPage === false
-        const result = await handler(issue, cursor + maxResults, loadedCount + response.issues.length, isLast)
+        const result = await handler(
+          issue,
+          cursor + maxResults,
+          loadedCount + response.issues.length,
+          isLast,
+        )
 
         // if callback returned true we don't continue syncing
         if (result === false) {
@@ -123,5 +127,4 @@ export class JiraLoader {
 
     return response.comments
   }
-
 }

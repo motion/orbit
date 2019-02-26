@@ -9,7 +9,7 @@ export type SearchAppFilter =
       }
     }
   | {
-      type: 'source'
+      type: 'app'
       value: 'string'
     }
   | {

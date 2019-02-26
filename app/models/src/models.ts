@@ -23,9 +23,9 @@ export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<
 
 export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
 
-export const GithubRepositoryModel = new Model<any, { sourceId: number }>('GithubRepository')
+export const GithubRepositoryModel = new Model<any, { appId: number }>('GithubRepository')
 
-export const SlackChannelModel = new Model<any, { sourceId: number }>('SlackChannel')
+export const SlackChannelModel = new Model<any, { appId: number }>('SlackChannel')
 
 export const SearchPinnedResultModel = new Model<Bit, { query: string }>('SearchPinnedResultModel')
 
@@ -40,8 +40,8 @@ export type SearchQuery = {
   locationFilters?: string[]
   take: number
   skip?: number
-  sourceId?: number
-  sourceIds?: number[]
+  appId?: number
+  appIds?: number[]
   group?: string
   maxBitsCount?: number
   spaceId?: number
@@ -54,7 +54,7 @@ export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchRes
 export type GroupResult = {
   title: string
   locations: string[]
-  Sources: string[]
+  Apps: string[]
   topics: string[]
   count: number
   people: { id: number; icon: string; name: string }

@@ -8,7 +8,6 @@ export const SlackApp: AppDefinition = {
   icon: slackIcon,
   itemType: 'conversation',
   sync: {
-    sourceType: 'slack',
     settings: SlackSettings,
   },
 }

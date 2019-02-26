@@ -1,9 +1,9 @@
-import { Source } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 
 /**
- * Callback to be executed to save a source.
+ * Callback to be executed to save a app.
  */
-export type ServiceLoaderSourceSaveCallback = (source: Source) => any
+export type ServiceLoaderAppSaveCallback = (app: AppBit) => any
 
 /**
  * Common type for key-value values like headers, query parameters, etc.

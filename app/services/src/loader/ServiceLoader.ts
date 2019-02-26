@@ -5,9 +5,9 @@ import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
 import {
+  ServiceLoaderAppSaveCallback,
   ServiceLoaderDownloadFileOptions,
   ServiceLoaderLoadOptions,
-  ServiceLoaderSourceSaveCallback,
 } from './ServiceLoaderTypes'
 
 /**
@@ -16,13 +16,9 @@ import {
 export class ServiceLoader {
   private source: Source
   private log: Logger
-  private saveCallback?: ServiceLoaderSourceSaveCallback
+  private saveCallback?: ServiceLoaderAppSaveCallback
 
-  constructor(
-    source: Source,
-    log: Logger,
-    saveCallback?: ServiceLoaderSourceSaveCallback,
-  ) {
+  constructor(source: Source, log: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.source = source
     this.log = log
     this.saveCallback = saveCallback
@@ -178,13 +174,10 @@ export class ServiceLoader {
   private buildBaseUrl() {
     if (this.source.type === 'jira' || this.source.type === 'confluence') {
       return this.source.values.credentials.domain
-
     } else if (this.source.type === 'drive') {
       return 'https://content.googleapis.com/drive/v3'
-
     } else if (this.source.type === 'github') {
       return 'https://api.github.com/graphql'
-
     } else if (this.source.type === 'gmail') {
       return 'https://www.googleapis.com/gmail/v1'
     }
@@ -198,19 +191,16 @@ export class ServiceLoader {
       const { username, password } = this.source.values.credentials
       const credentials = Buffer.from(`${username}:${password}`).toString('base64')
       return { Authorization: `Basic ${credentials}` }
-
     } else if (this.source.type === 'drive') {
       return {
         Authorization: `Bearer ${this.source.token}`,
         'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
         'Access-Control-Allow-Methods': 'GET',
       }
-
     } else if (this.source.type === 'github') {
       return {
         Authorization: `Bearer ${this.source.token}`,
       }
-
     } else if (this.source.type === 'gmail') {
       return {
         Authorization: `Bearer ${this.source.token}`,

@@ -3,13 +3,13 @@ import {
   List,
   OrbitListItemProps,
   useActiveApps,
-  useActiveSourcesWithDefinition,
+  useActiveAppsWithDefinition,
   useActiveSpace,
 } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
-import { addSource } from '../../helpers/addSourceClickHandler'
+import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { addSource } from '../../helpers/addAppClickHandler'
 import { AppProps } from '../AppProps'
 import { orbitApps } from '../orbitApps'
 
@@ -17,7 +17,7 @@ export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
-  const sourceInfo = useActiveSourcesWithDefinition()
+  const sourceInfo = useActiveAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -41,11 +41,11 @@ export function AppsIndex(_props: AppProps) {
     ...sourceInfo.map(app => ({
       group: 'Sources',
       // TODO once we get rid of Source model we can remove this and just use id
-      subId: app.source.id,
+      subId: app.app.id,
       subType: app.definition.id,
       appId: 'sources',
       title: app.definition.name,
-      subtitle: <OrbitSourceInfo {...app} />,
+      subtitle: <OrbitAppInfo {...app} />,
       icon: app.definition.icon,
       iconBefore: true,
       total: sourceInfo.length,

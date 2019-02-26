@@ -1,5 +1,5 @@
 import { Row, View } from '@mcro/gloss'
-import { AppWithSource, getItemName, useJobs, useSourceInfo } from '@mcro/kit'
+import { AppWithDefinition, getItemName, useAppInfo, useJobs } from '@mcro/kit'
 import { HorizontalSpace, Text } from '@mcro/ui'
 import pluralize from 'pluralize'
 import React from 'react'
@@ -9,20 +9,20 @@ import React from 'react'
  */
 const bitsCountCache = {}
 
-export const OrbitSourceInfo = ({ definition, source }: AppWithSource) => {
-  const sourceId = source ? source.id : false
-  const { bitsCount } = useSourceInfo(source)
-  const allJobs = useJobs(sourceId)
+export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
+  const appId = app ? app.id : false
+  const { bitsCount } = useAppInfo(app)
+  const allJobs = useJobs(appId)
   const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
 
-  if (!sourceId) {
+  if (!appId) {
     return null
   }
 
   if (bitsCount !== 0) {
-    bitsCountCache[sourceId] = bitsCount
+    bitsCountCache[appId] = bitsCount
   }
-  const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[sourceId] || 0 : bitsCount)
+  const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[appId] || 0 : bitsCount)
 
   return (
     <Row alignItems="center" flex={1}>

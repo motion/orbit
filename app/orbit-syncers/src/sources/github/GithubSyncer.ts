@@ -9,11 +9,18 @@ import {
   GithubSourceValuesLastSyncRepositoryInfo,
   SourceEntity,
 } from '@mcro/models'
-import { GithubComment, GithubCommit, GithubIssue, GithubLoader, GithubPerson, GithubPullRequest } from '@mcro/services'
+import {
+  GithubComment,
+  GithubCommit,
+  GithubIssue,
+  GithubLoader,
+  GithubPerson,
+  GithubPullRequest,
+} from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
 import { uniqBy } from 'lodash'
+import { getRepository } from 'typeorm'
+import { AppSyncer } from '../../core/AppSyncer'
 
 /**
  * Syncs Github.
@@ -22,7 +29,7 @@ import { uniqBy } from 'lodash'
  * which means we never remove github bits during regular sync.
  * We only remove when some source change (for example user don't sync specific repository anymore).
  */
-export class GithubSyncer implements SourceSyncer {
+export class GithubSyncer implements AppSyncer {
   private log: Logger
   private source: GithubSource
   private loader: GithubLoader
@@ -288,10 +295,10 @@ export class GithubSyncer implements SourceSyncer {
         return {
           author: comment.author
             ? {
-              avatarUrl: comment.author.avatarUrl,
-              login: comment.author.login,
-              email: comment.author.email,
-            }
+                avatarUrl: comment.author.avatarUrl,
+                login: comment.author.login,
+                email: comment.author.email,
+              }
             : undefined,
           createdAt: comment.createdAt,
           body: comment.body,
@@ -299,10 +306,10 @@ export class GithubSyncer implements SourceSyncer {
       }),
       author: issue.author
         ? {
-          avatarUrl: issue.author.avatarUrl,
-          login: issue.author.login,
-          email: issue.author.email,
-        }
+            avatarUrl: issue.author.avatarUrl,
+            login: issue.author.login,
+            email: issue.author.email,
+          }
         : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,

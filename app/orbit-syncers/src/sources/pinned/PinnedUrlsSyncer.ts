@@ -8,7 +8,7 @@ import {
   WebsiteBitData,
 } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 import { WebsiteCrawler } from '../website/WebsiteCrawler'
@@ -16,7 +16,7 @@ import { WebsiteCrawler } from '../website/WebsiteCrawler'
 /**
  * Crawls pinned websites.
  */
-export class PinnedUrlsSyncer implements SourceSyncer {
+export class PinnedUrlsSyncer implements AppSyncer {
   private log: Logger
   private crawler: WebsiteCrawler
   private bitSyncer: BitSyncer

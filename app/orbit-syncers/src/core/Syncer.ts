@@ -3,7 +3,7 @@ import { Subscription } from '@mcro/mediator'
 import { Job, JobEntity, Source, SourceEntity, SourceModel } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Mediator } from '../mediator'
-import { SyncerOptions } from './SourceSyncer'
+import { SyncerOptions } from './AppSyncer'
 import Timer = NodeJS.Timer
 
 /**

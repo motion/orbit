@@ -1,8 +1,23 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitUtils, PersonData, SlackBitData, SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
-import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
+import {
+  Bit,
+  BitUtils,
+  PersonData,
+  SlackBitData,
+  SlackSource,
+  SlackSourceValues,
+  SourceEntity,
+} from '@mcro/models'
+import {
+  SlackAttachment,
+  SlackChannel,
+  SlackLoader,
+  SlackMessage,
+  SlackTeam,
+  SlackUser,
+} from '@mcro/services'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
@@ -13,7 +28,7 @@ const Autolinker = require('autolinker')
 /**
  * Syncs Slack messages.
  */
-export class SlackSyncer implements SourceSyncer {
+export class SlackSyncer implements AppSyncer {
   private log: Logger
   private source: SlackSource
   private loader: SlackLoader
@@ -231,7 +246,7 @@ export class SlackSyncer implements SourceSyncer {
         data: {
           tz: user.tz,
           team: user.id,
-        } as PersonData
+        } as PersonData,
       },
       user.id,
     )
@@ -251,10 +266,10 @@ export class SlackSyncer implements SourceSyncer {
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const webLink = `https://${this.source.values.team.domain}.slack.com/archives/${
       channel.id
-      }/p${firstMessage.ts.replace('.', '')}`
+    }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
       this.source.values.team.id
-      }`
+    }`
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({

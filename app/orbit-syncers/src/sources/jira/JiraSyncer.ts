@@ -1,18 +1,26 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, BitUtils, JiraBitData, JiraSource, JiraSourceValues, SourceEntity } from '@mcro/models'
+import {
+  Bit,
+  BitEntity,
+  BitUtils,
+  JiraBitData,
+  JiraSource,
+  JiraSourceValues,
+  SourceEntity,
+} from '@mcro/models'
 import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
+import { SyncerUtils } from '../../core/SyncerUtils'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
-import { SyncerUtils } from '../../core/SyncerUtils'
 
 /**
  * Syncs Jira issues.
  */
-export class JiraSyncer implements SourceSyncer {
+export class JiraSyncer implements AppSyncer {
   private log: Logger
   private source: JiraSource
   private loader: JiraLoader
@@ -209,5 +217,4 @@ export class JiraSyncer implements SourceSyncer {
       user.accountId,
     )
   }
-
 }

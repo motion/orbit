@@ -4,7 +4,7 @@ import { AppBit, AppBitType } from '@mcro/models'
 /**
  * Interface for Source syncers.
  */
-export interface SourceSyncer {
+export interface AppSyncer {
   /**
    * Runs sync process of the Source.
    */
@@ -14,7 +14,7 @@ export interface SourceSyncer {
 /**
  * Constructor of the Source syncer instance.
  */
-export type SyncerConstructor = new (setting?: AppBit, log?: Logger) => SourceSyncer
+export type SyncerConstructor = new (setting?: AppBit, log?: Logger) => AppSyncer
 
 /**
  * Options to be passed to Syncer.

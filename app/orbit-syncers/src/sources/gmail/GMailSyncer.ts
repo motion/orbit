@@ -12,14 +12,14 @@ import { GMailLoader, GMailThread } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { GMailMessageParser } from './GMailMessageParser'
 
 /**
  * Syncs GMail.
  */
-export class GMailSyncer implements SourceSyncer {
+export class GMailSyncer implements AppSyncer {
   private log: Logger
   private source: GmailSource
   private loader: GMailLoader
@@ -323,5 +323,4 @@ export class GMailSyncer implements SourceSyncer {
       participant.email,
     )
   }
-
 }

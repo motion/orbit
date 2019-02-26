@@ -1,14 +1,14 @@
 import { Logger } from '@mcro/logger'
 import { BitEntity, WebsiteSource } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
 
 /**
  * Syncs crawled websites.
  */
-export class WebsiteSyncer implements SourceSyncer {
+export class WebsiteSyncer implements AppSyncer {
   private source: WebsiteSource
   private log: Logger
   private crawler: WebsiteCrawler

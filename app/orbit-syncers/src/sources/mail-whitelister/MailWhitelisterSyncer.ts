@@ -1,12 +1,12 @@
 import { Logger } from '@mcro/logger'
 import { BitEntity, GmailSourceValues, SourceEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 
 /**
  * Whitelists emails from person bits.
  */
-export class MailWhitelisterSyncer implements SourceSyncer {
+export class MailWhitelisterSyncer implements AppSyncer {
   private log: Logger
 
   constructor() {
@@ -22,7 +22,7 @@ export class MailWhitelisterSyncer implements SourceSyncer {
     const people = await getRepository(BitEntity).find({
       where: {
         type: 'person',
-        sourceType: ['slack', 'github', 'drive', 'jira', 'confluence']
+        sourceType: ['slack', 'github', 'drive', 'jira', 'confluence'],
       },
     })
     this.log.info('person bits were loaded', people)

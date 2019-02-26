@@ -3,13 +3,13 @@ import { Bit, BitEntity, BitUtils, DriveBitData, DriveSource, SourceEntity } fro
 import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs Google Drive files.
  */
-export class DriveSyncer implements SourceSyncer {
+export class DriveSyncer implements AppSyncer {
   private source: DriveSource
   private log: Logger
   private loader: DriveLoader
@@ -127,11 +127,11 @@ export class DriveSyncer implements SourceSyncer {
         webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
         location: file.parent
           ? {
-            id: file.parent.id,
-            name: file.parent.name,
-            webLink: file.file.webViewLink || file.parent.webContentLink,
-            desktopLink: '',
-          }
+              id: file.parent.id,
+              name: file.parent.name,
+              webLink: file.file.webViewLink || file.parent.webContentLink,
+              desktopLink: '',
+            }
           : undefined,
         bitCreatedAt: new Date(file.file.createdTime).getTime(),
         bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
@@ -143,5 +143,4 @@ export class DriveSyncer implements SourceSyncer {
       file.file.id,
     )
   }
-
 }

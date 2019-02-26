@@ -1,14 +1,13 @@
 import { Logger } from '@mcro/logger'
-import { BitEntity, JiraSource, SourceEntity } from '@mcro/models'
-import { JiraLoader, JiraUser } from '@mcro/services'
+import { Bit, BitEntity, BitUtils, JiraBitData, JiraSource, JiraSourceValues, SourceEntity } from '@mcro/models'
+import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
-import { JiraBitFactory } from './JiraBitFactory'
-import { JiraPersonFactory } from './JiraPersonFactory'
+import { SyncerUtils } from '../../core/SyncerUtils'
 
 /**
  * Syncs Jira issues.
@@ -17,8 +16,6 @@ export class JiraSyncer implements SourceSyncer {
   private log: Logger
   private source: JiraSource
   private loader: JiraLoader
-  private bitFactory: JiraBitFactory
-  private personFactory: JiraPersonFactory
   private personSyncer: PersonSyncer
   private syncerRepository: SyncerRepository
 
@@ -26,8 +23,6 @@ export class JiraSyncer implements SourceSyncer {
     this.log = log || new Logger('syncer:jira:' + source.id)
     this.source = source
     this.loader = new JiraLoader(source, this.log)
-    this.bitFactory = new JiraBitFactory(source)
-    this.personFactory = new JiraPersonFactory(source)
     this.personSyncer = new PersonSyncer(this.log)
     this.syncerRepository = new SyncerRepository(source)
   }
@@ -42,7 +37,6 @@ export class JiraSyncer implements SourceSyncer {
     // load database data
     this.log.timer('load people, person bits and bits from the database')
     const dbPeople = await this.syncerRepository.loadDatabasePeople()
-    const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
     this.log.timer('load people, person bits and bits from the database', dbPeople)
 
     // load users from jira API
@@ -58,11 +52,11 @@ export class JiraSyncer implements SourceSyncer {
 
     // create people for loaded user
     this.log.info('creating people for api users')
-    const apiPeople = filteredUsers.map(user => this.personFactory.create(user))
+    const apiPeople = filteredUsers.map(user => this.createPersonBit(user))
     this.log.info('people created', apiPeople)
 
     // saving people and person bits
-    await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
+    await this.personSyncer.sync(apiPeople, dbPeople)
 
     // load all people (once again after sync)
     const allDbPeople = await this.syncerRepository.loadDatabasePeople()
@@ -103,7 +97,7 @@ export class JiraSyncer implements SourceSyncer {
           await getRepository(SourceEntity).save(this.source)
         }
 
-        const bit = this.bitFactory.create(issue, allDbPeople)
+        const bit = this.createDocumentBit(issue, allDbPeople)
         this.log.verbose('syncing', { issue, bit, people: bit.people })
         await getRepository(BitEntity).save(bit, { listeners: false })
 
@@ -142,4 +136,78 @@ export class JiraSyncer implements SourceSyncer {
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
   }
+
+  /**
+   * Builds a bit from the given jira issue.
+   */
+  private createDocumentBit(issue: JiraIssue, allPeople: Bit[]): Bit {
+    const bitCreatedAt = new Date(issue.fields.created).getTime()
+    const bitUpdatedAt = new Date(issue.fields.updated).getTime()
+    const values = this.source.values as JiraSourceValues
+    const domain = values.credentials.domain
+    const body = SyncerUtils.stripHtml(issue.renderedFields.description)
+    const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
+
+    // get people contributed to this bit (content author, editors, commentators)
+    const peopleIds = []
+    if (issue.fields.comment)
+      peopleIds.push(...issue.comments.map(comment => comment.author.accountId))
+    if (issue.fields.assignee) peopleIds.push(issue.fields.assignee.accountId)
+    if (issue.fields.creator) peopleIds.push(issue.fields.creator.accountId)
+    if (issue.fields.reporter) peopleIds.push(issue.fields.reporter.accountId)
+
+    const people = allPeople.filter(person => {
+      return peopleIds.indexOf(person.originalId) !== -1
+    })
+
+    // find original content creator
+    const author = allPeople.find(person => {
+      return person.originalId === issue.fields.creator.accountId
+    })
+
+    // create or update a bit
+    return BitUtils.create(
+      {
+        sourceType: 'jira',
+        sourceId: this.source.id,
+        type: 'document',
+        title: issue.fields.summary,
+        body,
+        author,
+        data: {
+          content: cleanHtml,
+        } as JiraBitData,
+        location: {
+          id: issue.fields.project.id,
+          name: issue.fields.project.name,
+          webLink: domain + '/browse/' + issue.fields.project.key,
+          desktopLink: '',
+        },
+        webLink: domain + '/browse/' + issue.key,
+        people,
+        bitCreatedAt,
+        bitUpdatedAt,
+      },
+      issue.id,
+    )
+  }
+
+  /**
+   * Creates person entity from a given Jira user.
+   */
+  createPersonBit(user: JiraUser): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'jira',
+        sourceId: this.source.id,
+        type: 'person',
+        originalId: user.accountId,
+        title: user.displayName,
+        email: user.emailAddress,
+        photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
+      },
+      user.accountId,
+    )
+  }
+
 }

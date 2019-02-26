@@ -8,10 +8,9 @@ import {
   useShareMenu,
   useStores,
 } from '@mcro/kit'
-import { PersonBitModel } from '@mcro/models'
-import { capitalize } from 'lodash'
 import * as React from 'react'
 import NoResultsDialog from '../../views/NoResultsDialog'
+import { BitModel } from '@mcro/models'
 
 export function PeopleAppIndex() {
   // people and query
@@ -20,23 +19,25 @@ export function PeopleAppIndex() {
   const { getShareMenuItemProps } = useShareMenu()
   const activeQuery = useActiveQuery()
 
-  let where = null
+  let where = []
   if (sourceFilters.length) {
     for (const filter of sourceFilters) {
       if (filter.active) {
-        where = where || []
         where.push({
-          [`has${capitalize(filter.source)}`]: true,
+          type: 'person',
+          sourceType: filter.source // todo: make sure it works
         })
       }
     }
   }
+  if (!where.length)
+    where.push({ type: 'person' })
 
-  const [people] = useModels(PersonBitModel, { take: 50000, where })
+  const [people] = useModels(BitModel, { take: 50000, where })
   const results = useActiveQueryFilter({
     items: people,
     filterKey: 'name',
-    sortBy: x => x.name.toLowerCase(),
+    sortBy: x => x.title.toLowerCase(),
     removePrefix: '@',
   })
 
@@ -44,7 +45,7 @@ export function PeopleAppIndex() {
     return <NoResultsDialog subName="the directory" />
   }
 
-  const getItemGroupProps = results.length > 12 ? groupByFirstLetter('name') : _ => null
+  const getItemGroupProps = results.length > 12 ? groupByFirstLetter('name') : () => null
 
   return (
     <List

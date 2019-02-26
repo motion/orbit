@@ -1,10 +1,10 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, SettingEntity, WebsiteBitData } from '@mcro/models'
+import { Bit, BitEntity, BitUtils, PinnedBitData, SettingEntity, WebsiteBitData } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { WebsiteCrawler } from '../website/WebsiteCrawler'
-import { PinnedBitFactory } from './PinnedBitFactory'
+import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 
 /**
  * Crawls pinned websites.
@@ -12,13 +12,11 @@ import { PinnedBitFactory } from './PinnedBitFactory'
 export class PinnedUrlsSyncer implements SourceSyncer {
   private log: Logger
   private crawler: WebsiteCrawler
-  private bitFactory: PinnedBitFactory
   private bitSyncer: BitSyncer
 
   constructor() {
     this.log = new Logger('syncer:pinned-urls')
     this.crawler = new WebsiteCrawler(this.log)
-    this.bitFactory = new PinnedBitFactory()
     this.bitSyncer = new BitSyncer(undefined, this.log)
   }
 
@@ -60,7 +58,7 @@ export class PinnedUrlsSyncer implements SourceSyncer {
           url: url,
           deep: false,
           handler: async data => {
-            apiBits.push(this.bitFactory.create(data))
+            apiBits.push(this.createWebsiteBit(data))
             return true
           },
         })
@@ -95,5 +93,39 @@ export class PinnedUrlsSyncer implements SourceSyncer {
 
     // close browser
     await this.crawler.close()
+  }
+
+  /**
+   * Builds a bit from the given crawled data.
+   */
+  private createWebsiteBit(crawledData: WebsiteCrawledData): Bit {
+    const bitCreatedAt = new Date().getTime()
+    const bitUpdatedAt = new Date().getTime()
+    // const values = this.source.values as CrawlerSettingValues
+
+    // create or update a bit
+    return BitUtils.create(
+      {
+        sourceType: 'pinned',
+        type: 'website',
+        title: crawledData.title,
+        body: crawledData.textContent,
+        data: {
+          title: crawledData.title,
+          content: crawledData.content,
+        } as PinnedBitData,
+        // location: {
+        //   id: undefined,
+        //   name: undefined,
+        //   webLink: undefined,
+        //   desktopLink: undefined,
+        // },
+        webLink: crawledData.url,
+        people: [],
+        bitCreatedAt,
+        bitUpdatedAt,
+      },
+      'pinned_' + crawledData.url,
+    )
   }
 }

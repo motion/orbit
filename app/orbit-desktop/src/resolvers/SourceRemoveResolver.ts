@@ -1,16 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import {
-  BitEntity,
-  Job,
-  JobEntity,
-  PersonBitEntity,
-  PersonEntity,
-  SourceEntity,
-  SourceRemoveCommand,
-} from '@mcro/models'
-import { hash } from '@mcro/utils'
-import { getManager, getRepository, In } from 'typeorm'
+import { BitEntity, Job, JobEntity, SourceEntity, SourceRemoveCommand } from '@mcro/models'
+import { getManager, getRepository } from 'typeorm'
 
 const log = new Logger('command:source-remove')
 
@@ -46,32 +37,6 @@ export const SourceRemoveResolver = resolveCommand(SourceRemoveCommand, async ({
       log.info('removing bits...', bits)
       await manager.remove(bits, { chunk: 100 })
       log.info('bits were removed')
-
-      // removing all source people
-      const persons = await manager.find(PersonEntity, { sourceId })
-      log.info('removing source people...', persons)
-      await manager.remove(persons, { chunk: 100 })
-      log.info('source people were removed')
-
-      // get person bits which we are going to filter and find which ones we will remove
-      log.info('loading person bits related to persons', persons)
-      const personBitIds = persons.map(person => hash(person.email))
-      const personBits = await manager.find(PersonBitEntity, {
-        relations: {
-          people: true,
-        },
-        where: {
-          id: In(personBitIds),
-        },
-      })
-      log.info('loaded person bits', personBits)
-
-      // find out which of person bits we will remove
-      const removedPersonBits = personBits.filter(personBit => personBit.people.length === 0)
-      log.info('person bits to be removed', removedPersonBits)
-      await manager.remove(PersonBitEntity, removedPersonBits, { chunk: 100 })
-      log.info('person were removed')
-      // todo: update person bit's "hasGmail", "hasSlack", etc. flags too.
 
       // removing jobs (including that one we created just now)
       const jobs = await manager.find(JobEntity, { sourceId })

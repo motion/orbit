@@ -1,8 +1,7 @@
 import { resolveMany } from '@mcro/mediator'
-import { SearchPinnedResultModel } from '@mcro/models'
+import { BitEntity, SearchPinnedResultModel } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { PersonBitEntity, BitEntity } from '@mcro/models'
-import { uniqBy, zip, flatten } from 'lodash'
+import { flatten, uniqBy, zip } from 'lodash'
 import fuzzySort from 'fuzzysort'
 
 const max = 15
@@ -36,19 +35,25 @@ const sortByQuerySubSets = <T extends any[]>(query, results: T): T => {
 const searchPeople = async query => {
   console.time(`searchPeople ${query}`)
   const words = query.split(' ')
-  const res = await getRepository(PersonBitEntity).find({
+  const res = await getRepository(BitEntity).find({
     take: 12,
     where: [
-      ...words.map(word => ({
-        name: {
-          $like: `%${word}%`,
-        },
-      })),
-      ...words.map(word => ({
-        email: {
-          $like: `%${word}%`,
-        },
-      })),
+      {
+        type: 'person',
+        ...words.map(word => ({
+          name: {
+            $like: `%${word}%`,
+          },
+        }))
+      },
+      {
+        type: 'person',
+        ...words.map(word => ({
+          email: {
+            $like: `%${word}%`,
+          },
+        })),
+      }
     ],
   })
   console.timeEnd(`searchPeople ${query}`)

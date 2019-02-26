@@ -4,8 +4,6 @@ import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
-import { Person } from './interfaces/Person'
-import { PersonBit } from './interfaces/PersonBit'
 import { SearchResult } from './interfaces/Search'
 import { Setting } from './interfaces/Setting'
 import { Source } from './interfaces/Source'
@@ -16,16 +14,6 @@ import { User } from './interfaces/User'
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
 export const JobModel = new Model<Job, FindOptions<Job>, FindOptionsWhere<Job>>('Job')
-
-export const PersonBitModel = new Model<
-  PersonBit,
-  FindOptions<PersonBit>,
-  FindOptionsWhere<PersonBit>
->('PersonBit')
-
-export const PersonModel = new Model<Person, FindOptions<Person>, FindOptionsWhere<Person>>(
-  'Person',
-)
 
 export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptionsWhere<Setting>>(
   'Setting',
@@ -45,7 +33,7 @@ export const GithubRepositoryModel = new Model<any, { sourceId: number }>('Githu
 
 export const SlackChannelModel = new Model<any, { sourceId: number }>('SlackChannel')
 
-export const SearchPinnedResultModel = new Model<Bit | PersonBit, { query: string }>(
+export const SearchPinnedResultModel = new Model<Bit, { query: string }>(
   'SearchPinnedResultModel',
 )
 
@@ -111,7 +99,7 @@ export type TrendingItem = { name: string; direction: 'up' | 'neutral' | 'down' 
 export const TrendingTopicsModel = new Model<TrendingItem, void>('trending-topics')
 export const TrendingTermsModel = new Model<TrendingItem, void>('trending-terms')
 
-export const PeopleNearTopicModel = new Model<PersonBit, { topic: string; count: number }>(
+export const PeopleNearTopicModel = new Model<Bit, { topic: string; count: number }>(
   'people-near-topic',
 )
 export const BitsNearTopicModel = new Model<Bit, { topic: string; count: number }>(

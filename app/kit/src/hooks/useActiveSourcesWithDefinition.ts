@@ -14,7 +14,7 @@ export type AppWithSource = {
 
 export function useActiveSourcesWithDefinition(): AppWithSource[] {
   return useActiveSources().map(source => ({
-    definition: config.getApps().find(app => app.id === source.type),
+    definition: config.getApps().find(app => app.id === source.appId),
     source,
   }))
 }

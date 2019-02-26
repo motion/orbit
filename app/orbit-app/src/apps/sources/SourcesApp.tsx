@@ -4,9 +4,8 @@ import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import SourcesAppIndex from './SourcesAppIndex'
 import { SourcesAppMain } from './SourcesAppMain'
 
-export const id = 'sources'
-
-export const app: AppDefinition = {
+export const SourcesApp: AppDefinition = {
+  id: 'sources',
   name: 'Sources',
   icon: '',
   app: props => (

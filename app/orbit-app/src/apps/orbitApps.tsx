@@ -1,29 +1,29 @@
 import { apps } from '@mcro/apps'
-import { AppPackage } from '@mcro/kit'
-import * as AppsApp from './apps/main'
-import * as BitApp from './bit/main'
-import * as CreateAppApp from './CreateAppApp'
-import * as MessageApp from './MessageApp'
-import * as OnboardApp from './onboard/main'
-import * as SettingsApp from './settings/main'
-import * as SourcesApp from './sources/main'
-import * as SpacesApp from './spaces/main'
+import { AppDefinition } from '@mcro/kit'
+import { AppsApp } from './apps/AppsApp'
+import { BitApp } from './bit/BitApp'
+import { CreateApp } from './CreateAppApp'
+import { MessageApp } from './MessageApp'
+import { OnboardApp } from './onboard/OnboardApp'
+import { SettingsApp } from './settings/SettingsApp'
+import { SourcesApp } from './sources/SourcesApp'
+import { SpacesApp } from './spaces/SpacesApp'
 
-export const orbitStaticApps: AppPackage[] = [
+export const orbitStaticApps: AppDefinition[] = [
   SettingsApp,
   SpacesApp,
   SourcesApp,
   AppsApp,
   BitApp,
   OnboardApp,
-  CreateAppApp,
+  CreateApp,
   MessageApp,
   // get our "bit/source" apps for now...
-  ...apps.filter(x => !x.app.app),
+  ...apps.filter(x => !x.app),
 ]
 
-export const orbitApps: AppPackage[] = [
+export const orbitApps: AppDefinition[] = [
   ...orbitStaticApps,
   // TODO figure this out
-  ...apps.filter(x => !!x.app.app),
+  ...apps.filter(x => !!x.app),
 ]

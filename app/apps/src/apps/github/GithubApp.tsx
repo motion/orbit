@@ -3,9 +3,8 @@ import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
 import GithubSettings from './GithubSettings'
 
-export const id = 'github'
-
-export const app: AppDefinition = {
+export const GithubApp: AppDefinition = {
+  id: 'github',
   name: 'Github',
   icon: githubIcon,
   iconLight: githubIconWhite,

@@ -3,9 +3,8 @@ import React from 'react'
 import { AppsIndex } from './AppsIndex'
 import { AppsMain } from './AppsMain'
 
-export const id = 'apps'
-
-export const app: AppDefinition = {
+export const AppsApp: AppDefinition = {
+  id: 'apps',
   name: 'Apps',
   icon: '',
   app: props => (

@@ -1,11 +1,11 @@
-import { Contents, View } from '@mcro/gloss'
-import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
-import { findDOMNode } from 'react-dom'
-import { useApp } from '../hooks/useApp'
-import { AppStore } from '../stores'
-import { AppProps } from '../types/AppProps'
-import { ProvideStores } from './ProvideStores'
+import { Contents, View } from '@mcro/gloss';
+import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui';
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
+import { findDOMNode } from 'react-dom';
+import { useApp } from '../hooks/useApp';
+import { AppStore } from '../stores';
+import { AppProps } from '../types/AppProps';
+import { ProvideStores } from './ProvideStores';
 
 export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
   id?: string
@@ -50,6 +50,10 @@ export const AppView = memoIsEqualDeep(
     const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
 
     let AppView = views[props.viewType]
+
+    if (!AppView) {
+      console.warn('loading alternate view', props, definition)
+    }
 
     if (!AppView && definition && definition.sync) {
       AppView = definition.sync[props.viewType]

@@ -32,7 +32,7 @@ const removeSource = async (source: Source) => {
 
 export const SettingManageRow = (props: { source: Source; whitelist: WhitelistManager<any> }) => {
   const sourceId = props.source && props.source.id
-  const { bitsCount } = useSourceInfo(sourceId)
+  const { bitsCount } = useSourceInfo(props.source)
   const { activeJobs, removeJobs } = useJobs(sourceId)
 
   if (!sourceId) {

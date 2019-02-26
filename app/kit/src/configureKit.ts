@@ -1,12 +1,12 @@
 import { Context, createContext } from 'react'
 import { KitStores } from './stores'
-import { AppPackage } from './types/AppPackage'
+import { AppDefinition } from './types/AppDefinition'
 
 let hasSet = false
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
-  getApps: () => AppPackage[]
+  getApps: () => AppDefinition[]
 }
 
 export let config: ConfigureOpts = window['__orbitKitConfig'] || {

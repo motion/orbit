@@ -7,28 +7,25 @@ import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
 import { SearchToolBar } from './SearchToolBar'
 
-function SearchApp(props: AppProps) {
-  const searchStore = useStore(SearchStore)
-  useSearch(state => {
-    searchStore.setSearchState(state)
-  })
-  return (
-    <App provideStores={{ searchStore }} index={<SearchAppIndex />} toolBar={<SearchToolBar />}>
-      <SearchAppMain {...props} />
-    </App>
-  )
-}
-
 export const context = createContext({
   searchStore: null as SearchStore,
 })
 
-export const id = 'search'
-
-export const app: AppDefinition = {
+export const SearchApp: AppDefinition = {
+  id: 'search',
   name: 'Search',
   icon: '',
   context,
-  app: SearchApp,
+  app: (props: AppProps) => {
+    const searchStore = useStore(SearchStore)
+    useSearch(state => {
+      searchStore.setSearchState(state)
+    })
+    return (
+      <App provideStores={{ searchStore }} index={<SearchAppIndex />} toolBar={<SearchToolBar />}>
+        <SearchAppMain {...props} />
+      </App>
+    )
+  },
   settings: SearchAppSettings,
 }

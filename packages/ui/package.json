@@ -6,8 +6,8 @@
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build": "tsc  --emitDeclarationOnly || true",
-    "watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
+    "build": "tsc || true",
+    "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
     "scroll": "2.0.3",

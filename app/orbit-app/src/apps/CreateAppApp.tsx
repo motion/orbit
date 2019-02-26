@@ -98,9 +98,8 @@ function CreateAppMain(props: AppProps) {
   )
 }
 
-export const id = 'createApp'
-
-export const app: AppDefinition = {
+export const CreateApp: AppDefinition = {
+  id: 'createApp',
   name: 'Create App',
   icon: '',
   app: props => (

@@ -4,9 +4,8 @@ import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { jiraIcon } from './jiraIcon'
 import { JiraSetup } from './JiraSetup'
 
-export const id = 'jira'
-
-export const app: AppDefinition = {
+export const JiraApp: AppDefinition = {
+  id: 'jira',
   name: 'Jira',
   icon: jiraIcon,
   itemType: 'task',

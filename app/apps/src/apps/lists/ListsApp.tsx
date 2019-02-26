@@ -9,31 +9,6 @@ import { ListAppStatusBar } from './ListsAppStatusBar'
 import { ListStore } from './ListStore'
 import { ListsAppBit } from './types'
 
-function ListsApp(props: AppProps) {
-  const listStore = useStore(ListStore, props)
-  return (
-    <App
-      provideStores={{ listStore }}
-      index={<ListsAppIndex {...props} />}
-      statusBar={<ListAppStatusBar />}
-    >
-      <ListsAppMain {...props} />
-    </App>
-  )
-}
-
-export const id = 'lists'
-
-export const app: AppDefinition = {
-  name: 'Lists',
-  icon: '',
-  app: ListsApp,
-  appData: {
-    rootItemID: 0,
-    items: {},
-  },
-}
-
 export const API = {
   receive(
     app: AppBit,
@@ -69,5 +44,28 @@ export const API = {
     }
 
     save(AppModel, app)
+  },
+}
+
+export const ListsApp: AppDefinition = {
+  id: 'lists',
+  name: 'Lists',
+  icon: '',
+  app: (props: AppProps) => {
+    const listStore = useStore(ListStore, props)
+    return (
+      <App
+        provideStores={{ listStore }}
+        index={<ListsAppIndex {...props} />}
+        statusBar={<ListAppStatusBar />}
+      >
+        <ListsAppMain {...props} />
+      </App>
+    )
+  },
+  API,
+  appData: {
+    rootItemID: 0,
+    items: {},
   },
 }

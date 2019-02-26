@@ -13,6 +13,7 @@
     // { "path": "./models" },
     // { "path": "./services" },
     // { "path": "./stores" },
+    { "path": "../packages/gloss" },
     { "path": "../packages/black" },
     { "path": "../packages/config" },
     { "path": "../packages/color" },

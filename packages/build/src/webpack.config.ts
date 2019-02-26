@@ -172,13 +172,22 @@ const config = {
               transpileOnly: true, // disable - we use it in fork plugin
             },
           },
+        ],
+
+        ...mcroClientOnly,
+      },
+      {
+        test: /\.(tj)sx?$/,
+        use: [
           {
             loader: 'babel-loader',
-            options: JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
+            options: {
+              ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
+              babelrc: false,
+            },
           },
           'react-hot-loader/webpack',
         ],
-
         ...mcroClientOnly,
       },
       {

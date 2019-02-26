@@ -94,8 +94,11 @@ const PersonHeader = gloss()
 export function PeopleAppMain(props: AppProps) {
   const { queryStore, themeStore } = useStores()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
+
+  console.log('hihi')
+
   if (!person) {
-    return <div>No one selected</div>
+    return <div>No one selected 2</div>
   }
   return (
     <Frame>

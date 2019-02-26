@@ -14,7 +14,11 @@ function debug(level?: number) {
     const last = window['enableLog']
     next = last ? 0 : 1
   }
-  console.warn(next ? `🐛 👍 debug log enabled` : `🐛 🤫 debug log disabled`)
+  if (next) {
+    console.log(`%c 🐛 👍 debug() enabled`, 'background: green; color: white; font-weight: bold;')
+  } else {
+    console.log(`%c 🐛 🤫 debug() disabled`, 'color: white; background: red; font-weight: bold;')
+  }
   window['enableLog'] = next
   localStorage.setItem('enableLog', `${next}`)
   if (next) {

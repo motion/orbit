@@ -7,16 +7,17 @@ import { getRepository } from 'typeorm'
 const log = new Logger('resolver:slack-channel')
 
 export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ appId }) => {
-  const source = await getRepository(AppEntity).findOne({
+  const app = await getRepository(AppEntity).findOne({
     id: appId,
   })
-  if (!source) {
-    log.error('cannot find requested slack source', { appId })
+  if (!app) {
+    log.error('cannot find requested slack app', { appId })
     return
   }
 
-  log.info('loading channels from the slack', { source })
-  const loader = new SlackLoader(source, log)
+  log.info('loading channels from the slack', { app })
+  // TODO @umed why wont this accept 'slack'
+  const loader = new SlackLoader(app as any, log)
   const channels = await loader.loadChannels()
   log.info('loaded channels', channels.map(x => x.id))
   return channels

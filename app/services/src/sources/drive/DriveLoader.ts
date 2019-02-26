@@ -17,9 +17,9 @@ export class DriveLoader {
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(source: DriveApp, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
-    this.app = source
-    this.log = log || new Logger('service:drive:loader:' + source.id)
+  constructor(app: DriveApp, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+    this.app = app
+    this.log = log || new Logger('service:drive:loader:' + app.id)
     this.loader = new ServiceLoader(this.app, this.log, saveCallback)
   }
 

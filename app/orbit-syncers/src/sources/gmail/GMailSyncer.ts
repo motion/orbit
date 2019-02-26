@@ -288,7 +288,7 @@ export class GMailSyncer implements AppSyncer {
 
     return BitUtils.create(
       {
-        appType: 'gmail',
+        appIdentifier: 'gmail',
         appId: this.app.id,
         type: 'mail',
         title,
@@ -310,7 +310,7 @@ export class GMailSyncer implements AppSyncer {
   createPersonBit(participant: GmailBitDataParticipant): Bit {
     return BitUtils.create(
       {
-        appType: 'gmail',
+        appIdentifier: 'gmail',
         appId: this.app.id,
         type: 'person',
         originalId: participant.email,

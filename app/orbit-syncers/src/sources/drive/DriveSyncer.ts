@@ -100,7 +100,7 @@ export class DriveSyncer implements AppSyncer {
   private createPersonBit(user: DriveUser): Bit {
     return BitUtils.create(
       {
-        appType: 'drive',
+        appIdentifier: 'drive',
         appId: this.app.id,
         type: 'person',
         originalId: user.emailAddress,
@@ -118,7 +118,7 @@ export class DriveSyncer implements AppSyncer {
   private createDocumentBit(file: DriveLoadedFile): Bit {
     return BitUtils.create(
       {
-        appType: 'drive',
+        appIdentifier: 'drive',
         appId: this.app.id,
         type: 'document',
         title: file.file.name,

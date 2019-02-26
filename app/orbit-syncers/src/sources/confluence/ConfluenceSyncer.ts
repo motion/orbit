@@ -201,7 +201,7 @@ export class ConfluenceSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        appType: 'confluence',
+        appIdentifier: 'confluence',
         appId: this.app.id,
         type: 'person',
         originalId: user.accountId,
@@ -246,7 +246,7 @@ export class ConfluenceSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        appType: 'confluence',
+        appIdentifier: 'confluence',
         appId: this.app.id,
         type: 'document',
         title: content.title,

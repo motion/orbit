@@ -324,7 +324,7 @@ export class GithubSyncer implements AppSyncer {
     return BitUtils.create({
       id,
       appId: this.app.id,
-      appType: 'github',
+      appIdentifier: 'github',
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
@@ -386,7 +386,7 @@ export class GithubSyncer implements AppSyncer {
   private createPersonBitFromGithubUser(githubPerson: GithubPerson): Bit {
     return BitUtils.create(
       {
-        appType: 'github',
+        appIdentifier: 'github',
         appId: this.app.id,
         type: 'person',
         originalId: githubPerson.id,
@@ -405,7 +405,7 @@ export class GithubSyncer implements AppSyncer {
   private createPersonBitFromCommit(commit: GithubCommit): Bit {
     return BitUtils.create(
       {
-        appType: 'github',
+        appIdentifier: 'github',
         appId: this.app.id,
         type: 'person',
         originalId: commit.email,

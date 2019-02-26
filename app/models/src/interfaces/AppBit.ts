@@ -17,7 +17,7 @@ export interface BaseAppBit {
 
   itemType?: ItemType
 
-  identifier?: string
+  identifier?: AppIdentifier | string
 
   // For validating if we're re-adding the same source
   sourceIdentifier?: string

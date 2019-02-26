@@ -19,15 +19,18 @@ ensure-dep "python3" -- pyenv install 3.6.6 || brew install python3 &
 # ensure-dep "carthage" -- brew install carthage &
 wait
 ensure-dep "tsc" -- npm i -g typescript
-# ensure-dep "pyenv" -- ./apps/oracle/build.sh
+
+# this was to build the modules used to build...
+# but we publish them not enough they should work, i think
 # internal tools
-if [ ! -f "./packages/gloss/_/gloss.js" ]; then
-  bin/__/build-builder-modules
-fi
-# link second
-if [ ! -L "./node_modules/@mcro/gloss" ]; then
-  bin/__/link-root-modules
-fi
+# if [ ! -f "./packages/gloss/_/gloss.js" ]; then
+#   bin/__/build-builder-modules
+# fi
+# # link second
+# if [ ! -L "./node_modules/@mcro/gloss" ]; then
+#   bin/__/link-root-modules
+# fi
+
 echo "installing root"
 yarn install
 echo "installing packages"

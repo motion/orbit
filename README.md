@@ -137,6 +137,16 @@ LoggerSettings.quiet() // quiet everything, argument to narrow
 
 It may be helpful to run `LoggerSettings.list` and `LoggerSettings.loud()` in each app just to get an idea of what's going on there.
 
+### `debug()` in browser
+
+orbit-app has it's own debugging functionality for debugging the frontend. Use `window.debug()` or just `debug()` to toggle between verbose or silent. It will log out colored outputs of all reactions/updates/actions happening at the store level, which is helpful to see whats going on generally in the app.
+
+```
+orange = action
+red = update
+blue = reaction
+```
+
 ### `log` global in the app
 
 This is a nice helper to log things. It colorizes the output nicely into terminal. It returns the first argument passed into it, so you can easily wrap it in weird places and have it log for you:

@@ -1,6 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { AppEntity, BitEntity } from '@mcro/models'
-import { GmailAppData } from '@mcro/models/_/interfaces/app-data/GmailAppData'
+import { AppEntity, BitEntity, GmailApp } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { AppSyncer } from '../../core/AppSyncer'
 
@@ -40,7 +39,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
     // update whitelist settings in Apps
     const newWhiteListedEmails: string[] = []
     for (let App of Apps) {
-      const values = App.data.values as GmailAppData['values']
+      const values = App.data.values as GmailApp['data']['values']
       const foundEmails = values.foundEmails || []
       const whitelist = {}
       for (let email of emails) {

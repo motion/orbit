@@ -7,7 +7,6 @@ import {
   SlackApp,
   SpaceEntity,
 } from '@mcro/models'
-import { SlackAppData } from '@mcro/models/_/interfaces/app-data/AppData'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
@@ -44,7 +43,7 @@ const createSource = async (type: AppIdentifier, values: OauthValues) => {
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = app.data.values as SlackAppData['values']
+    const values = app.data.values as SlackApp['data']['values']
     values.team = {
       id: team.id,
       name: team.name,

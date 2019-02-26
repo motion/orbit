@@ -1,32 +1,23 @@
 import { useModel, useModelCount } from '@mcro/bridge'
-import { BitModel, Job, JobModel, Source, SourceModel } from '@mcro/models'
+import { BitModel, Job, JobModel, Source } from '@mcro/models'
 
 export function useSourceInfo(
-  sourceId: number | false,
+  source: Source | false,
 ): {
-  source: Source
   bitsCount: number
   lastJob: Job
 } {
-  const hasSourceId = sourceId !== false
-  const [source] = useModel(
-    SourceModel,
-    hasSourceId && {
-      where: {
-        id: sourceId,
-      },
-    },
-  )
-  const bitsCount = useModelCount(BitModel, hasSourceId && { where: { sourceId } })
+  const hasSource = source !== false
+  const sourceId = source && source.id
+  const bitsCount = useModelCount(BitModel, hasSource && { where: { sourceId } })
   const [lastJob] = useModel(
     JobModel,
-    hasSourceId && {
+    hasSource && {
       where: { sourceId },
       order: { id: 'DESC' },
     },
   )
   return {
-    source,
     bitsCount,
     lastJob,
   }

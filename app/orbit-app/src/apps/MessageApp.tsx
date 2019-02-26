@@ -2,9 +2,8 @@ import { App, AppDefinition } from '@mcro/kit'
 import React from 'react'
 import { MessageViewMain } from './views/MessageViewMain'
 
-export const id = 'message'
-
-export const app: AppDefinition = {
+export const MessageApp: AppDefinition = {
+  id: 'message',
   name: 'Message',
   icon: '',
   app: props => (

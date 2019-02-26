@@ -36,13 +36,14 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
     title: typeof props.title === 'string' ? props.title : undefined,
     icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
+    subId: props.subId,
     ...props.appConfig,
   }
 }
 
 export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<AppConfig> {
   if (item && item.type) {
-    return sourceToAppConfig(config.getApps().find(x => x.id === item.appId).app, item)
+    return sourceToAppConfig(config.getApps().find(x => x.id === item.appId), item)
   }
 }
 

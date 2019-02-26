@@ -5,9 +5,8 @@
   "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "npm run build-js & npm run build-types",
-    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
-    "build-types": "tsc  --emitDeclarationOnly || true"
+    "build": "tsc  --emitDeclarationOnly || true",
+    "watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@mcro/kit": "*",

@@ -2,9 +2,8 @@ import { AppDefinition } from '@mcro/kit'
 import { gmailIcon } from './gmailIcon'
 import GmailSettings from './GmailSettings'
 
-export const id = 'gmail'
-
-export const app: AppDefinition = {
+export const GmailApp: AppDefinition = {
+  id: 'gmail',
   name: 'Gmail',
   icon: gmailIcon,
   itemType: 'thread',

@@ -2,9 +2,8 @@ import { AppDefinition } from '@mcro/kit'
 import { driveIcon } from './driveIcon'
 import { DriveSettings } from './DriveSettings'
 
-export const id = 'drive'
-
-export const app: AppDefinition = {
+export const DriveApp: AppDefinition = {
+  id: 'drive',
   name: 'Drive',
   icon: driveIcon,
   itemType: 'task',

@@ -3,6 +3,7 @@ import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useApp } from '../hooks/useApp'
+import { useAppView } from '../hooks/useAppView'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
@@ -47,12 +48,19 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
+
+    if (!props.appId) {
+      console.log('props for error', props)
+      throw new Error('No app id')
+    }
+
     const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
+    const AppViewAlt = useAppView(props.appId, props.viewType as any)
 
-    let AppView = views[props.viewType]
+    let AppView = views[props.viewType] || AppViewAlt
 
-    if (!AppView && definition && definition.sync) {
-      AppView = definition.sync[props.viewType]
+    if (!AppView) {
+      console.warn('loading alternate view failed', props, views, definition)
     }
 
     // handle ref

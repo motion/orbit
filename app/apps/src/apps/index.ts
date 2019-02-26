@@ -1,17 +1,17 @@
-import { AppPackage } from '@mcro/kit'
-import * as ConfluenceApp from './confluence/main'
-import * as CustomApp from './custom/main'
-import * as DriveApp from './drive/main'
-import * as GithubApp from './github/main'
-import * as GmailApp from './gmail/main'
-import * as JiraApp from './jira/main'
-import * as ListsApp from './lists/main'
-import * as PeopleApp from './people/main'
-import * as SearchApp from './search/main'
-import * as SlackApp from './slack/main'
-import * as WebsiteApp from './website/main'
+import { AppDefinition } from '@mcro/kit'
+import { ConfluenceApp } from './confluence/ConfluenceApp'
+import { CustomApp } from './custom/CustomApp'
+import { DriveApp } from './drive/DriveApp'
+import { GithubApp } from './github/GithubApp'
+import { GmailApp } from './gmail/GmailApp'
+import { JiraApp } from './jira/JiraApp'
+import { ListsApp } from './lists/ListsApp'
+import { PeopleApp } from './people/PeopleApp'
+import { SearchApp } from './search/SearchApp'
+import { SlackApp } from './slack/SlackApp'
+import { WebsiteApp } from './website/WebsiteApp'
 
-export const apps: AppPackage[] = [
+export const apps: AppDefinition[] = [
   ListsApp,
   SearchApp,
   PeopleApp,

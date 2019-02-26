@@ -4,9 +4,8 @@ import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { confluenceIcon } from './confluenceIcon'
 import { ConfluenceSetup } from './ConfluenceSetup'
 
-export const id = 'confluence'
-
-export const app: AppDefinition = {
+export const ConfluenceApp: AppDefinition = {
+  id: 'confluence',
   name: 'Confluence',
   icon: confluenceIcon,
   itemType: 'markdown',

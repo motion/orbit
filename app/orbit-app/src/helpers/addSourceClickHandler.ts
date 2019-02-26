@@ -1,10 +1,10 @@
 import { command } from '@mcro/bridge'
 import { getGlobalConfig } from '@mcro/config'
-import { AppPackage } from '@mcro/kit'
+import { AppDefinition } from '@mcro/kit'
 import { OpenCommand, SetupProxyCommand } from '@mcro/models'
 import { memoize } from 'lodash'
 
-export const addSourceClickHandler = memoize((app: AppPackage) => async (e: MouseEvent) => {
+export const addSourceClickHandler = memoize((app: AppDefinition) => async (e: MouseEvent) => {
   e.stopPropagation()
   e.preventDefault()
   // ...otherwise we open browser to oauth
@@ -12,7 +12,7 @@ export const addSourceClickHandler = memoize((app: AppPackage) => async (e: Mous
   addSource(app)
 })
 
-export async function addSource(app: AppPackage) {
+export async function addSource(app: AppDefinition) {
   if (await command(SetupProxyCommand)) {
     const url = `${getGlobalConfig().urls.auth}/auth/${app.id}`
     console.log('proxy setup success, opening...', url)

@@ -4,9 +4,8 @@ import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import SpacesAppIndex from './SpacesAppIndex'
 import SpacesAppMain from './SpacesAppMain'
 
-export const id = 'spaces'
-
-export const app: AppDefinition = {
+export const SpacesApp: AppDefinition = {
+  id: 'spaces',
   name: 'Spaces',
   icon: '',
   app: props => (

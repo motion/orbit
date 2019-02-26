@@ -6,8 +6,8 @@
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build": "../../node_modules/.bin/microbundle",
-    "watch": "../../node_modules/.bin/microbundle watch"
+    "build": "tsc || true",
+    "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
     "scroll": "2.0.3",

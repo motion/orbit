@@ -1,4 +1,4 @@
-import { Source } from '@mcro/models'
+import { AppBit, Source } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
@@ -25,6 +25,7 @@ export type AppViews = {
 }
 
 export type AppDefinition = {
+  id: string
   name: string
   icon: string
   iconLight?: string
@@ -49,6 +50,9 @@ export type AppDefinition = {
     modelType?: 'person-bit' | 'bit'
     settings?: FunctionComponent<OrbitSourceSettingProps<Source>>
     setup?: FunctionComponent<any>
+  }
+  API?: {
+    receive(app: AppBit, parentID: number, child: any): any
   }
 }
 

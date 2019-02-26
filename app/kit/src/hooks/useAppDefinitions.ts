@@ -1,5 +1,5 @@
 import { config } from '../configureKit'
 
-export function useAppPackages() {
+export function useAppDefinitions() {
   return config.getApps()
 }

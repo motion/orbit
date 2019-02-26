@@ -4,9 +4,8 @@ import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import { SettingsAppIndex } from './SettingsAppIndex'
 import { SettingsAppMain } from './SettingsAppMain'
 
-export const id = 'settings'
-
-export const app: AppDefinition = {
+export const SettingsApp: AppDefinition = {
+  id: 'settings',
   name: 'Settings',
   icon: '',
   app: props => (

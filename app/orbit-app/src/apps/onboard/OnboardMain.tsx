@@ -1,7 +1,7 @@
 import { sleep } from '@mcro/black'
 import { command } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
-import { useAppPackages } from '@mcro/kit'
+import { useAppDefinitions } from '@mcro/kit'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
@@ -85,7 +85,7 @@ export function OnboardMain() {
   // if (atlassian) {
   //   finalSources = ['jira', 'confluence', ...finalSources]
   // }
-  const allAppsSorted = useAppPackages().filter(x => !!x.app.sync)
+  const allDefs = useAppDefinitions().filter(x => !!x.sync)
 
   return (
     <>
@@ -172,15 +172,15 @@ export function OnboardMain() {
           <VerticalSpace />
 
           <Unpad>
-            {allAppsSorted.map(item => {
+            {allDefs.map(def => {
               return (
                 <SimpleItem
-                  key={item.id}
-                  title={item.app.name}
-                  icon={item.app.icon}
+                  key={def.id}
+                  title={def.name}
+                  icon={def.icon}
                   // !TODO true === item.isActive
                   inactive={true}
-                  onClick={true ? null : addSourceClickHandler(item)}
+                  onClick={true ? null : addSourceClickHandler(def)}
                   after={
                     <AddButton size={0.9} disabled={true}>
                       {true ? <Icon size={16} name="check" color="green" /> : 'Add'}

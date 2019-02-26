@@ -17,8 +17,8 @@ import {
 import { flow } from 'lodash'
 import React, { useCallback } from 'react'
 import { loadListItem } from './helpers'
+import { API } from './ListsApp'
 import { ListStore } from './ListStore'
-import { API } from './main'
 import { ListAppDataItem } from './types'
 
 export function ListsAppIndex(_: AppProps) {

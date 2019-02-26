@@ -1,5 +1,11 @@
 import { sleep } from '@mcro/black'
-import { List, useActiveApps, useActiveSources, useActiveSpace } from '@mcro/kit'
+import {
+  List,
+  OrbitListItemProps,
+  useActiveApps,
+  useActiveSourcesWithDefinition,
+  useActiveSpace,
+} from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
@@ -10,17 +16,16 @@ import { orbitApps } from '../orbitApps'
 export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
-  const allSourceApps = orbitApps.filter(x => !!x.app.sync)
-  const activeSources = useActiveSources().map(source => ({
-    ...orbitApps.find(app => app.id === source.type),
-    source,
-  }))
+  const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
+  const sourceInfo = useActiveSourcesWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
   }
 
-  const results = [
+  log(sourceInfo)
+
+  const results: OrbitListItemProps[] = [
     {
       group: 'Space',
       title: `Manage apps`,
@@ -33,43 +38,46 @@ export function AppsIndex(_props: AppProps) {
       },
     },
 
-    ...activeSources.map(app => ({
+    ...sourceInfo.map(app => ({
       group: 'Sources',
-      id: `${app.source.id}`,
-      title: app.app.name,
-      subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
-      icon: app.source,
+      // TODO once we get rid of Source model we can remove this and just use id
+      subId: app.source.id,
+      subType: app.definition.id,
+      appId: 'sources',
+      title: app.definition.name,
+      subtitle: <OrbitSourceInfo {...app} />,
+      icon: app.definition.icon,
       iconBefore: true,
-      total: activeSources.length,
+      total: sourceInfo.length,
     })),
 
-    ...allSourceApps.map(app => ({
+    ...allSourceDefinitions.map(def => ({
       group: 'Add Source',
-      title: app.app.name,
-      icon: app.app.icon,
+      title: def.name,
+      icon: def.icon,
       onClick:
-        !app.app.sync.setup &&
+        !def.sync.setup &&
         (async e => {
           e.preventDefault()
           e.stopPropagation()
           await sleep(700)
-          addSource(app)
+          addSource(def)
         }),
       // disableSelect: !source.views.setup,
-      after: app.app.sync.setup ? null : (
+      after: def.sync.setup ? null : (
         <View marginTop={4}>
           <Icon size={12} opacity={0.5} name="uilink6" />
         </View>
       ),
-      appConfig: app.app.sync.setup
+      appConfig: def.sync.setup
         ? {
-            appId: app.id,
+            appId: def.id,
             viewType: 'setup' as 'setup',
           }
         : {
             appId: 'message',
             viewType: 'main' as 'main',
-            title: `Opening private authentication for ${app.app.name}...`,
+            title: `Opening private authentication for ${def.name}...`,
           },
     })),
   ]

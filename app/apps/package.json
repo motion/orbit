@@ -1,14 +1,12 @@
 {
   "name": "@mcro/apps",
   "version": "2.3.10",
-  "main": "./_/index.js",
+  "main": "_/index.js",
   "private": true,
   "scripts": {
     "build": "npm run build-js & npm run build-types",
-    "watch": "npm run build-js -- --watch & npm run build-types-watch",
     "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
-    "build-types": "tsc  --emitDeclarationOnly || true",
-    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
+    "build-types": "tsc  --emitDeclarationOnly || true"
   },
   "dependencies": {
     "@mcro/kit": "*",

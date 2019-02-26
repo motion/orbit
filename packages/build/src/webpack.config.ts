@@ -99,6 +99,7 @@ const mcroClientOnly = {
     Path.resolve(cwd, 'src'),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'kit', 'src')),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'ui', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'apps', 'src')),
   ],
 }
 

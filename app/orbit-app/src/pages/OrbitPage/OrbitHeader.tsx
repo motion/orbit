@@ -1,21 +1,20 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
-import { AppType, Icon } from '@mcro/kit'
+import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
 import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, View } from '@mcro/ui'
 import React, { memo } from 'react'
-import { useActions } from '../../actions/Actions'
-import { useActiveApps } from '../../hooks/useActiveApps'
+import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
 
-export default memo(function OrbitHeader() {
+export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const activePaneType = paneManagerStore.activePane.type
   const { isTorn } = orbitStore
   const { isEditing } = orbitStore
-  const icon = activePaneType === 'createApp' ? newAppStore.app.type : activePaneType
+  const icon = activePaneType === 'createApp' ? newAppStore.app.appId : activePaneType
   const theme = useTheme()
 
   return (
@@ -121,7 +120,7 @@ function OrbitEditAppButton() {
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.type === AppType.custom && !orbitStore.isEditing
+  const show = activeApp && activeApp.appId === 'custom' && !orbitStore.isEditing
   const Actions = useActions()
 
   if (!show) {

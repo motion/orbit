@@ -53,15 +53,14 @@
     "latinize": "0.4.0",
     "lodash": "^4.17.10",
     "mobx-react": "5.4.3",
-    "mobx-react-lite": "1.0.0",
+    "mobx-react-lite": "1.1.0",
     "mobx-utils": "5.0.2",
     "pluralize": "^7.0.0",
     "re-resizable": "4.9.3",
-    "react": "16.8.2",
-    "react-dom": "16.8.2",
+    "react": "16.8.3",
+    "react-dom": "16.8.3",
     "react-date-range": "1.0.0-beta",
-    "react-hot-loader": "4.7.0",
-    "faker": "4.1.0",
+    "react-hot-loader": "4.7.1",
     "react-spring": "8.0.7",
     "react-svg-inline": "2.1.1",
     "react-virtualized": "9.21.0",
@@ -80,7 +79,7 @@
   "devDependencies": {
     "@babel/core": "7.2.0",
     "@mcro/build": "^2.3.10",
-    "@types/webpack-env": "1.13.6"
+    "@mcro/babel-preset-motion": "*"
   },
   "peerDependencies": {
     "electron": "*",

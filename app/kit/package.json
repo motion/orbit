@@ -1,26 +1,29 @@
 {
   "name": "@mcro/kit",
   "version": "2.3.10",
-  "main": "./_/index.js",
+  "main": "_/index.js",
+  "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "build-app": "NODE_ENV=production mcro-build --build --target node"
+    "build": "npm run build-js & npm run build-types",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly || true"
   },
   "dependencies": {
     "@mcro/ui": "*",
     "@mcro/gloss": "*",
+    "@mcro/stores": "*",
     "@mcro/models": "*",
     "@mcro/use-store": "*",
     "@mcro/helpers": "*",
     "@mcro/bridge": "*",
+    "@mcro/fast-compare": "*",
+    "immer": "1.7.2",
+    "fuzzysort": "1.1.4",
     "compromise": "11.11.0",
     "sherlockjs": "1.4.0",
     "lodash": "*",
     "typeorm": "^0.3.0-alpha.22",
-    "react-markdown": "4.0.6",
-    "remark-emoji": "2.0.2",
     "react-svg-inline": "2.1.1",
     "date-fns": "2.0.0-alpha.16"
   },

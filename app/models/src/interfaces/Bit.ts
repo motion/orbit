@@ -1,9 +1,9 @@
 import { BitData } from '../bit-data/BitData'
-import { IntegrationType } from './IntegrationType'
+import { BitContentType } from './BitContentType'
 import { Location } from './Location'
 import { Person } from './Person'
 import { Source } from './Source'
-import { BitContentType } from './BitContentType'
+import { SourceType } from './SourceType'
 
 export interface Bit {
   /**
@@ -17,10 +17,9 @@ export interface Bit {
   id?: number
 
   /**
-   * Integration type.
-   * Duplicates information stored in the settings.
+   * Source type.
    */
-  integration?: IntegrationType
+  sourceType?: SourceType
 
   /**
    * Source id.

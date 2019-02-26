@@ -1,4 +1,4 @@
-import { useModel } from '../useModel'
+import { useModel } from '@mcro/bridge'
 import { SettingModel } from '@mcro/models'
 
 export function useSettings() {

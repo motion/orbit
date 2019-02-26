@@ -40,7 +40,10 @@ function decoratePrototype(obj: any) {
       getterDesc[key] = descriptor
     }
     if (typeof descriptor.value === 'function') {
-      decor[key] = Mobx.action
+      // only make `set` prefixed functions into actions
+      if (key.indexOf('set') === 0) {
+        decor[key] = Mobx.action
+      }
     }
   }
   Mobx.decorate(obj, decor)
@@ -51,7 +54,11 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   if (!props) {
     return new Store(...args)
   }
-  const storeProps = Mobx.observable({ props }, { props: Mobx.observable.shallow })
+  const storeProps = Mobx.observable(
+    { props },
+    { props: Mobx.observable.shallow },
+    { name: Store.name },
+  )
   const getProps = {
     configurable: true,
     get: () => storeProps.props,
@@ -125,8 +132,10 @@ export function decorate<T>(
             instance[key] = val
             instDecor[key] = Mobx.observable.ref
           } else {
-            instDecor[key] = Mobx.action
-            decorations[key] = 'action'
+            if (key.indexOf('set') == 0) {
+              instDecor[key] = Mobx.action
+              decorations[key] = 'action'
+            }
           }
           continue
         }

@@ -1,8 +1,8 @@
 import { useModel } from '@mcro/bridge'
-import { HighlightedSearchable, ItemPropsProvider, normalizeItem } from '@mcro/kit'
+import { HighlightedSearchable, normalizeItem } from '@mcro/kit'
 import { BitModel } from '@mcro/models'
+import { ItemPropsProvider } from '@mcro/ui'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
 import { BitTitleBar } from './BitTitlebar'
 
@@ -15,8 +15,7 @@ const defaultItemProps = {
   },
 }
 
-export default function BitAppMain(props: AppProps) {
-  const { sourcesStore } = useStores()
+export function BitAppMain(props: AppProps) {
   const [bit] = useModel(BitModel, {
     where: { id: +props.appConfig.id },
     relations: ['people'],
@@ -24,7 +23,6 @@ export default function BitAppMain(props: AppProps) {
   if (!bit) {
     return null
   }
-  const View = sourcesStore.getView(bit.integration, 'main')
   const normalizedItem = normalizeItem(bit)
   return (
     <ItemPropsProvider value={defaultItemProps}>
@@ -32,7 +30,8 @@ export default function BitAppMain(props: AppProps) {
         {({ searchBar }) => (
           <>
             <BitTitleBar bit={bit} normalizedItem={normalizedItem} searchBar={searchBar} />
-            <View item={bit} normalizedItem={normalizedItem} {...props} />
+            {/* !TODO */}
+            {/* <MediaView item={bit} normalizedItem={normalizedItem} {...props} /> */}
           </>
         )}
       </HighlightedSearchable>

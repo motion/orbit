@@ -1,20 +1,24 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/models'
-import { sleep } from '@mcro/utils'
-import { DriveSource } from '@mcro/models'
+import {
+  BitEntity,
+  DriveSource,
+  PersonBitEntity,
+  PersonBitUtils,
+  PersonEntity,
+  SourceEntity,
+} from '@mcro/models'
 import { DriveLoader } from '@mcro/services'
-import { hash } from '@mcro/utils'
+import { hash, sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
+import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { DriveBitFactory } from './DriveBitFactory'
 import { DrivePersonFactory } from './DrivePersonFactory'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 
 /**
  * Syncs Google Drive files.
  */
-export class DriveSyncer implements IntegrationSyncer {
+export class DriveSyncer implements SourceSyncer {
   private source: DriveSource
   private log: Logger
   private loader: DriveLoader
@@ -77,7 +81,7 @@ export class DriveSyncer implements IntegrationSyncer {
       // for people without emails we create "virtual" email
       for (let person of bit.people) {
         if (!person.email) {
-          person.email = person.name + ' from ' + person.integration
+          person.email = person.name + ' from ' + person.source
         }
       }
 

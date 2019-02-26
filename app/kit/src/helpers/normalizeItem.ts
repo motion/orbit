@@ -16,7 +16,7 @@ const normalizers = {
       type: 'bit',
       id: `${bit.id}`,
       title: bit.title,
-      icon: bit.integration,
+      icon: bit.sourceType,
       webLink: bit.webLink,
       people: bit.people,
       location: bit.location ? bit.location.name : '',
@@ -24,7 +24,7 @@ const normalizers = {
         bit.desktopLink || bit.webLink || bit.location.desktopLink || bit.location.webLink,
       desktopLink: bit.desktopLink,
       subType: bit.type,
-      integration: bit.integration,
+      sourceType: bit.sourceType,
       createdAt: new Date(bit.bitCreatedAt),
       updatedAt: new Date(bit.bitUpdatedAt),
     }

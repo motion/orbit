@@ -1,22 +1,21 @@
 import { ensure, react } from '@mcro/black'
 import { save } from '@mcro/bridge'
 import { gloss, Row, ViewProps } from '@mcro/gloss'
-import { Pane, useActiveSpace } from '@mcro/kit'
+import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@mcro/kit'
 import { AppModel } from '@mcro/models'
 import { SortableContainer, SortableElement } from '@mcro/react-sortable-hoc'
 import { useHook, useStore } from '@mcro/use-store'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
-import { useActions } from '../../actions/Actions'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { isRightClick } from '../../helpers/isRightClick'
 import { preventDefault } from '../../helpers/preventDefault'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useActions } from '../../hooks/useActions'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 
-const isOnSettings = (pane?: Pane) =>
+const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 class OrbitNavStore {
@@ -76,11 +75,11 @@ export default memo(function OrbitNav() {
           width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
-          label: isPinned ? '' : app.type === 'search' && index === 0 ? activeSpaceName : app.name,
+          label: isPinned ? '' : app.appId === 'search' && index === 0 ? activeSpaceName : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
-          icon: `orbit-${app.type}`,
+          icon: `orbit-${app.appId}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {
@@ -123,7 +122,6 @@ export default memo(function OrbitNav() {
   const pinnedItems = items.filter(x => x.isPinned)
   const pinnedItemsWidth = pinWidth * pinnedItems.length
 
-  console.log('extraButtonsWidth', extraButtonsWidth)
   const epad = showCreateNew ? 0 : 3
 
   return (

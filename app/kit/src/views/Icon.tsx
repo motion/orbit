@@ -18,7 +18,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   const { activeTheme } = React.useContext(ThemeContext)
   const finalColor = color || activeTheme.color.toString()
 
-  // image based integration icons
+  // image based source icons
   const sourceIcon = useSourceIcon(props)
 
   if (sourceIcon) {

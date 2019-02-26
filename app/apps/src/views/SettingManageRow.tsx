@@ -1,5 +1,5 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog } from '@mcro/kit'
+import { showConfirmDialog, useJobs, useSourceInfo } from '@mcro/kit'
 import {
   Source,
   SourceForceCancelCommand,
@@ -8,9 +8,6 @@ import {
 } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { getAppFromSource } from '../getAppConfig'
-import { useJobs } from '../hooks/useJobs'
-import { useSourceInfo } from '../hooks/useSourceInfo'
 import { WhitelistManager } from '../WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 
@@ -20,11 +17,11 @@ const handleRefresh = async (sourceId: number) => {
   })
 }
 
-const removeIntegration = async (source: Source) => {
+const removeSource = async (source: Source) => {
   if (
     showConfirmDialog({
-      title: 'Remove integration?',
-      message: `Are you sure you want to remove ${getAppFromSource(source).display.name}?`,
+      title: 'Remove source?',
+      message: `Are you sure you want to remove ${source.name}?`,
     })
   ) {
     command(SourceRemoveCommand, {
@@ -84,7 +81,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
         <TitleBarButton
           icon="boldremove"
           tooltip={`Remove ${props.source.name}`}
-          onClick={() => removeIntegration(props.source)}
+          onClick={() => removeSource(props.source)}
         />
       </SegmentedRow>
     </Row>

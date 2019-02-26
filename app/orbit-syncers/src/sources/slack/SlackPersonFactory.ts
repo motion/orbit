@@ -1,6 +1,5 @@
-import { PersonUtils } from '@mcro/models'
-import { Person, SlackSource, SlackPersonData } from '@mcro/models'
-import { SlackUser, SlackTeam } from '@mcro/services'
+import { Person, PersonUtils, SlackPersonData, SlackSource } from '@mcro/models'
+import { SlackTeam, SlackUser } from '@mcro/services'
 
 /**
  * Creates a Slack Person.
@@ -13,13 +12,13 @@ export class SlackPersonFactory {
   }
 
   /**
-   * Creates a single integration person from given Slack user.
+   * Creates a single source person from given Slack user.
    */
   create(user: SlackUser, team: SlackTeam): Person {
     return PersonUtils.create({
       source: this.source,
-      integration: 'slack',
-      integrationId: user.id,
+      sourceType: 'slack',
+      userId: user.id,
       name: user.profile.real_name || user.name,
       data: { tz: user.tz, team: user.team_id } as SlackPersonData,
       webLink: `https://${team.domain}.slack.com/messages/${user.id}`,

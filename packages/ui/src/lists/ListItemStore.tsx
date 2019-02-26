@@ -1,5 +1,5 @@
-import { ensure, react } from '@mcro/use-store'
-import { ListItemProps } from './ListItem'
+import { ensure, react } from '@mcro/use-store';
+import { ListItemProps } from './ListItem';
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -54,11 +54,11 @@ export class ListItemStore {
     this.lastClickLocation = Date.now()
   }
 
-  setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) {
-      return
+  setCardWrapRef = next => {
+    if (!next) return
+    if (next !== this.cardWrapRef) {
+      this.cardWrapRef = next
     }
-    this.cardWrapRef = cardWrapRef
   }
 
   get index() {
@@ -82,7 +82,7 @@ export class ListItemStore {
 
   updateIsSelected = react(this.getIsSelected, async (isSelected, { sleep }) => {
     const { onSelect } = this.props
-    ensure('new index', isSelected !== this.isSelected)
+    ensure('changed', isSelected !== this.isSelected)
     // set this before doing callbacks to allow for instant update
     this.isSelected = isSelected
 

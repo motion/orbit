@@ -2,7 +2,7 @@ import { Direction } from '@mcro/ui'
 import { ensure, react, ReactionRejectionError } from '@mcro/use-store'
 import { memoize } from 'lodash'
 
-export type Pane = {
+export type PaneManagerPane = {
   id: string
   type: string
   name?: string
@@ -15,8 +15,8 @@ export type Pane = {
 export class PaneManagerStore {
   props: {
     disabled?: boolean
-    defaultPanes: Pane[]
-    onPaneChange: (index: number, pane: Pane) => any
+    defaultPanes: PaneManagerPane[]
+    onPaneChange: (index: number, pane: PaneManagerPane) => any
     defaultIndex?: number
   }
 
@@ -33,12 +33,11 @@ export class PaneManagerStore {
     },
   )
 
-  setPanes(panes: Pane[]) {
-    console.log('panes', panes)
+  setPanes(panes: PaneManagerPane[]) {
     this.panes = panes
   }
 
-  get activePane(): Pane {
+  get activePane(): PaneManagerPane {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
@@ -84,7 +83,7 @@ export class PaneManagerStore {
     }
   }
 
-  private setPaneBy<A extends keyof Pane>(attr: A, val: Pane[A]) {
+  private setPaneBy<A extends keyof PaneManagerPane>(attr: A, val: PaneManagerPane[A]) {
     const index = this.panes.findIndex(pane => pane[attr] === val)
     if (index === -1) {
       // debugger

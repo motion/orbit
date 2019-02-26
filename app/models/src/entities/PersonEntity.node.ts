@@ -8,15 +8,15 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { Bit } from '../interfaces/Bit'
+import { Person } from '../interfaces/Person'
+import { PersonBit } from '../interfaces/PersonBit'
+import { Source } from '../interfaces/Source'
+import { SourceType } from '../interfaces/SourceType'
+import { PersonData } from '../person-data/PersonData'
 import { BitEntity } from './BitEntity.node'
 import { PersonBitEntity } from './PersonBitEntity.node'
 import { SourceEntity } from './SourceEntity.node'
-import { IntegrationType } from '../interfaces/IntegrationType'
-import { PersonData } from '../person-data/PersonData'
-import { Source } from '../interfaces/Source'
-import { PersonBit } from '../interfaces/PersonBit'
-import { Bit } from '../interfaces/Bit'
-import { Person } from '../interfaces/Person'
 
 @Entity()
 export class PersonEntity extends BaseEntity implements Person {
@@ -29,10 +29,10 @@ export class PersonEntity extends BaseEntity implements Person {
   contentHash?: number
 
   @Column({ type: String })
-  integration?: IntegrationType
+  sourceType?: SourceType
 
   @Column()
-  integrationId?: string
+  userId?: string
 
   @Column({ nullable: true })
   email?: string

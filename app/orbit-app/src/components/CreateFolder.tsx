@@ -1,7 +1,6 @@
-import { Absolute, Button, Input, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Absolute, BarButton, Button, Input, Popover, Row, SegmentedRow, View } from '@mcro/ui'
 import { Picker } from 'emoji-mart'
 import React, { useState } from 'react'
-import { FloatingBarButtonLarge } from '../views/FloatingBar/FloatingBarButtonLarge'
 
 export function CreateFolder(props: { onAdd: (name: string) => any }) {
   const [name, setName] = useState('')
@@ -9,7 +8,7 @@ export function CreateFolder(props: { onAdd: (name: string) => any }) {
 
   return (
     <View position="relative" flex={1} justifyContent="center">
-      <FloatingBarButtonLarge
+      <BarButton
         icon="folderadd"
         transition="transform ease 200ms"
         transform={{

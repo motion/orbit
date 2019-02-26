@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStoreSimple } from '@mcro/use-store'
 import React from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
@@ -39,7 +39,7 @@ export enum SelectEvent {
 }
 
 export function useSelectionStore(props: SelectionStoreProps) {
-  return useStore(SelectionStore, props)
+  return useStoreSimple(SelectionStore, props)
 }
 
 export function ProvideSelectionStore({

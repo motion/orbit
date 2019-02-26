@@ -5,10 +5,10 @@ import { Space } from './Space'
 export interface AppBit {
   target: 'app'
   id?: number
+  appId: string
   space?: Space
   spaceId?: number
   name?: string
-  type?: string
   pinned?: boolean
   colors?: string[]
   editable?: boolean

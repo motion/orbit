@@ -22,7 +22,7 @@ export class WebsiteBitFactory {
     // create or update a bit
     return BitUtils.create(
       {
-        integration: 'website',
+        sourceType: 'website',
         sourceId: this.source.id,
         type: 'website',
         title: crawledData.title,

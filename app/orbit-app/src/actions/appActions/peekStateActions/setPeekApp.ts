@@ -1,5 +1,5 @@
+import { AppConfig } from '@mcro/kit'
 import invariant from 'invariant'
-import { AppConfig } from '../../../apps/AppTypes'
 import { getTargetPosition } from '../../../helpers/getTargetPosition'
 import { peekPosition, Position } from '../../../helpers/peekPosition'
 import { setAppState } from '../setAppState'
@@ -16,11 +16,10 @@ type PeekApp = {
 // because App.setState merges not replaces
 const DEFAULT_APP_CONFIG: AppConfig = {
   id: '',
-  type: 'home',
+  appId: 'home',
   title: '',
   icon: '',
   subType: '',
-  integration: '',
 }
 
 const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {

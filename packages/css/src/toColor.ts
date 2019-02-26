@@ -1,6 +1,5 @@
-import { Config } from './config'
-import { ColorObject, Color } from './types'
 import { colorNames } from './colorNames'
+import { Color, ColorObject } from './types'
 
 export const toColor = memoizeOne<string>(
   (color: Color): string => {
@@ -101,20 +100,16 @@ function isColorLikeObject(object: ColorObject) {
 
 function isColorLikeLibrary(val: any): boolean {
   return (
-    (Config.isColor && typeof val === 'object' && Config.isColor(val)) ||
-    (typeof val.toCSS === 'function' ||
-      typeof val.css === 'function' ||
-      typeof val.rgb === 'function' ||
-      typeof val.rgba === 'function')
+    typeof val.toCSS === 'function' ||
+    typeof val.css === 'function' ||
+    typeof val.rgb === 'function' ||
+    typeof val.rgba === 'function'
   )
 }
 
 // attempts to work with a variety of css libraries
 function getColorLikeLibraryValue(val: any) {
   let res = val
-  if (Config.isColor && Config.isColor(val)) {
-    return Config.toColor(val)
-  }
   if (typeof val.css === 'function') {
     res = val.css()
   } else if (typeof val.toCSS === 'function') {

@@ -1,14 +1,16 @@
-import { AppConfig, Icon } from '@mcro/kit'
+import { Icon } from '@mcro/kit'
 import { Center, PassProps, Title, VerticalSpace } from '@mcro/ui'
-import * as React from 'react'
+import React from 'react'
+import { AppProps } from '../AppTypes'
 
-export function MessageViewMain(props: AppConfig) {
+export function MessageViewMain({ appConfig }: AppProps) {
+  const { title, icon } = appConfig
   return (
     <Center>
-      <Title size={props.title.length > 40 ? 1.4 : 2.2}>{props.title}</Title>
+      <Title size={title.length > 40 ? 1.4 : 2.2}>{title}</Title>
       <VerticalSpace />
       <PassProps size={88}>
-        {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon || null}
+        {typeof icon === 'string' ? <Icon name={icon} /> : icon || null}
       </PassProps>
     </Center>
   )

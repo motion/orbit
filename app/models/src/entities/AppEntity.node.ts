@@ -9,6 +9,9 @@ export class AppEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
+  @Column()
+  appId?: string
+
   @ManyToOne(() => SpaceEntity, space => space.sources)
   space?: Space
 
@@ -23,9 +26,6 @@ export class AppEntity extends BaseEntity {
 
   @Column({ default: false })
   pinned?: boolean
-
-  @Column()
-  type?: string
 
   @Column('simple-json', { default: '{}' })
   data?: any

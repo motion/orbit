@@ -2,7 +2,7 @@ import { on } from '@mcro/helpers'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
-import { useStoresSimple } from '../helpers/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { SubPaneProps } from '../views/SubPane'
 
 export class SubPaneStore {
@@ -25,21 +25,15 @@ export class SubPaneStore {
     return this.paneNode.firstChild as HTMLDivElement
   }
 
-  isLeft = react(
-    () => {
-      const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
-      return thisIndex === this.stores.paneManagerStore.paneIndex - 1
-    },
-    _ => _,
-  )
+  get isLeft() {
+    const thisIndex = this.stores.paneManagerStore.indexOfPane(this.props.id)
+    return thisIndex === this.stores.paneManagerStore.paneIndex - 1
+  }
 
-  isActive = react(
-    () => {
-      const { paneManagerStore } = this.stores
-      return paneManagerStore.activePane && this.props.id === paneManagerStore.activePane.id
-    },
-    _ => _,
-  )
+  get isActive() {
+    const { paneManagerStore } = this.stores
+    return paneManagerStore.activePane && this.props.id === paneManagerStore.activePane.id
+  }
 
   triggerRewatch = 0
   watchParentNode = react(

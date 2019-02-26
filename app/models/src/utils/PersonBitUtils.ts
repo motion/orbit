@@ -24,8 +24,8 @@ export class PersonBitUtils {
     if (!personBit.people) personBit.people = []
 
     // add new properties
-    if (person.name) personBit.allNames[person.integration] = person.name
-    if (person.photo) personBit.allPhotos[person.integration] = person.photo
+    if (person.name) personBit.allNames[person.sourceType] = person.name
+    if (person.photo) personBit.allPhotos[person.sourceType] = person.photo
 
     // if we have default photo and name value
     // that is not defined in all names and all photos
@@ -40,12 +40,12 @@ export class PersonBitUtils {
         .map(key => personBit.allPhotos[key])
         .indexOf(person.photo) !== -1
 
-    if (!isNameValid && personBit.allNames[person.integration])
-      person.name = personBit.allNames[person.integration]
-    if (!isPhotoValid && personBit.allPhotos[person.integration])
-      person.photo = personBit.allPhotos[person.integration]
+    if (!isNameValid && personBit.allNames[person.sourceType])
+      person.name = personBit.allNames[person.sourceType]
+    if (!isPhotoValid && personBit.allPhotos[person.sourceType])
+      person.photo = personBit.allPhotos[person.sourceType]
 
-    switch (person.integration) {
+    switch (person.sourceType) {
       case 'gmail':
         personBit.hasGmail = true
         break

@@ -1,15 +1,15 @@
+import { AppSubView } from '@mcro/kit'
 import React from 'react'
 import { AppProps } from '../AppTypes'
-import { AppSubView } from '../views/AppSubView'
-import AppsMainManage from './AppsMainManage'
-import AppsMainNew from './AppsMainNew'
+import { AppsMainManage } from './AppsMainManage'
+import { AppsMainNew } from './AppsMainNew'
 
-export default function AppsAppsMain(props: AppProps) {
+export function AppsMain(props: AppProps) {
   if (!props.appConfig) {
     return <AppsMainManage />
   }
 
-  if (props.appConfig.type !== 'apps') {
+  if (props.appConfig.appId !== 'apps') {
     return <AppSubView appConfig={props.appConfig} />
   }
 
@@ -17,9 +17,5 @@ export default function AppsAppsMain(props: AppProps) {
     return <AppsMainNew />
   }
 
-  return (
-    <>
-      <AppsMainManage />
-    </>
-  )
+  return <AppsMainManage />
 }

@@ -1,8 +1,8 @@
 import { hash } from '@mcro/utils'
-import { IntegrationType } from '../interfaces/IntegrationType'
-import { Source } from '../interfaces/Source'
-import { Bit } from '../interfaces/Bit'
 import { SlackBitData } from '../bit-data/SlackBitData'
+import { Bit } from '../interfaces/Bit'
+import { Source } from '../interfaces/Source'
+import { SourceType } from '../interfaces/SourceType'
 
 /**
  * Common Bit utility functions.
@@ -11,20 +11,16 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(integration: IntegrationType, sourceId: number | undefined, data: string): number
+  static id(Source: SourceType, sourceId: number | undefined, data: string): number
   static id(source: Source, data: string): number
-  static id(
-    integrationOrSource: Source | IntegrationType,
-    sourceIdOrData: any,
-    maybeData?: string,
-  ): number {
-    if (typeof integrationOrSource === 'object') {
+  static id(SourceOrSource: Source | SourceType, sourceIdOrData: any, maybeData?: string): number {
+    if (typeof SourceOrSource === 'object') {
       // Source
-      return hash(`${integrationOrSource.type}-${integrationOrSource.id}-${sourceIdOrData}`)
-    } else if (integrationOrSource && sourceIdOrData && maybeData) {
-      return hash(`${integrationOrSource}-${sourceIdOrData}-${maybeData}`)
-    } else if (integrationOrSource && !sourceIdOrData) {
-      return hash(`${integrationOrSource}-${maybeData}`)
+      return hash(`${SourceOrSource.type}-${SourceOrSource.id}-${sourceIdOrData}`)
+    } else if (SourceOrSource && sourceIdOrData && maybeData) {
+      return hash(`${SourceOrSource}-${sourceIdOrData}-${maybeData}`)
+    } else if (SourceOrSource && !sourceIdOrData) {
+      return hash(`${SourceOrSource}-${maybeData}`)
     }
     return 0
   }
@@ -43,12 +39,12 @@ export class BitUtils {
   /**
    * Creates a new bit and sets given properties to it.
    */
-  static create(properties: Partial<Bit>, integrationId?: any) {
+  static create(properties: Partial<Bit>, SourceId?: any) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
     if (!bit.sourceId && bit.source) bit.sourceId = bit.source.id
-    if (bit.integration && bit.sourceId && integrationId) {
-      bit.id = this.id(bit.integration, bit.sourceId, integrationId)
+    if (bit.sourceType && bit.sourceId && SourceId) {
+      bit.id = this.id(bit.sourceType, bit.sourceId, SourceId)
     }
     return bit
   }
@@ -60,7 +56,7 @@ export class BitUtils {
     return hash(
       [
         bit.id,
-        bit.integration,
+        bit.sourceType,
         bit.source ? bit.source.id : bit.sourceId,
         bit.title,
         bit.body,

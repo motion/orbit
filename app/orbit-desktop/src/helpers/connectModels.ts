@@ -27,7 +27,7 @@ export default async function connectModels(models) {
   // this case must be gracefully handled. We are trying here to drop everything in the database
   // except spaces and sources. Right, this means user is going to loose all its synced data
   // but since spaces and sources are in there application will restart sync
-  // in such case we at least don't force people to re-add every added integration again
+  // in such case we at least don't force people to re-add every added Source again
   // to make this schema to work properly its recommended to keep space and source entities simple
   // todo: we need to reset source setting values
 

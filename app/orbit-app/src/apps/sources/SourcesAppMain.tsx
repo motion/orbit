@@ -1,13 +1,12 @@
 import { useModel } from '@mcro/bridge'
+import { AppSubView, AppView } from '@mcro/kit'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
-import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
-import { AppSubView } from '../views/AppSubView'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {
-  const { sourcesStore } = useStores()
+  console.log('rendering me', props)
 
   if (!props.appConfig) {
     return null
@@ -18,13 +17,10 @@ export function SourcesAppMain(props: AppProps) {
   }
 
   if (props.appConfig.viewType === 'setup') {
-    const type = props.appConfig.integration
-    const View = sourcesStore.getView(type, 'setup')
-    console.log('getting view', type, View)
-    return <View {...props} />
+    return <AppView appId={props.appConfig.appId} viewType="setup" {...props} />
   }
 
-  if (props.appConfig.type === 'sources') {
+  if (props.appConfig.appId === 'sources') {
     return <SourceMain {...props} />
   }
 
@@ -32,7 +28,6 @@ export function SourcesAppMain(props: AppProps) {
 }
 
 function SourceMain(props: AppProps) {
-  const { sourcesStore } = useStores()
   const [source] = useModel(SourceModel, {
     where: { id: +props.appConfig.id },
   })
@@ -41,17 +36,6 @@ function SourceMain(props: AppProps) {
     return null
   }
 
-  const type = props.appConfig.integration
-  const View = sourcesStore.getView(type, 'setting')
-
-  if (!View) {
-    console.log(props.appConfig)
-    return (
-      <div>
-        no view type {type}, for source <br />
-      </div>
-    )
-  }
-
-  return <View source={source} appConfig={props.appConfig} />
+  // !TODO
+  return <AppView appId={props.appConfig.appId} viewType="settings" appConfig={props.appConfig} />
 }

@@ -14,7 +14,6 @@
     "@mcro/mobx-bridge": "^2.3.10",
     "@mcro/models": "^2.3.10",
     "global": "^4.3.2",
-    "keen-tracking": "4.0.6",
     "lodash": "^4.17.10"
   },
   "peerDependencies": {

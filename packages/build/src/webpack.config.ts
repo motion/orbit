@@ -1,12 +1,11 @@
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
-// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 const TerserPlugin = require('terser-webpack-plugin')
@@ -26,7 +25,6 @@ const mode = process.env.NODE_ENV || 'development'
 const isProd = mode === 'production'
 const entry = process.env.ENTRY || readPackage('main') || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
-const tsConfigExists = Fs.existsSync(tsConfig)
 const outputPath = Path.join(cwd, 'dist')
 const buildNodeModules = process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
 
@@ -86,13 +84,32 @@ const alias = {
   '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
   'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
   react: Path.resolve(cwd, 'node_modules', 'react'),
-  'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
-  // 'react-dom': Path.resolve(buildNodeModules, '@hot-loader/react-dom'),
+  // 'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
+  'react-dom': Path.resolve(buildNodeModules, '@hot-loader/react-dom'),
   'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
   lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
 }
 
 // console.log('alias', alias)
+
+const mcroClientOnly = {
+  include: [
+    Path.resolve(cwd, 'src'),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'kit', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'ui', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'apps', 'src')),
+  ],
+}
+
+console.log('mcroClientOnly', mcroClientOnly)
+
+const babelrcOptions = {
+  ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
+  babelrc: false,
+  cacheDirectory: true,
+}
+
+console.log('babelrcOptions', babelrcOptions)
 
 const config = {
   target,
@@ -127,7 +144,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    // mainFields: isProd ? ['module', 'browser', 'main'] : ['browser', 'main'],
+    mainFields: isProd ? ['module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },
@@ -152,9 +169,23 @@ const config = {
         use: 'ignore-loader',
       },
       {
-        test: /\.[jt]sx?$/,
-        use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
-        exclude: /node_modules/,
+        test: /\.tsx?$/,
+        use: [
+          'thread-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              happyPackMode: true,
+              transpileOnly: true, // disable - we use it in fork plugin
+            },
+          },
+          {
+            loader: 'babel-loader',
+            options: babelrcOptions,
+          },
+          'react-hot-loader/webpack',
+        ],
+        ...mcroClientOnly,
       },
       {
         test: /\.css$/,
@@ -194,13 +225,13 @@ const config = {
     ].filter(Boolean),
   },
   plugins: [
-    tsConfigExists && new TsconfigPathsPlugin({ configFile: tsConfig }),
-
     new webpack.DefinePlugin(defines),
 
     new webpack.IgnorePlugin(/electron-log/),
 
     target === 'web' && new webpack.IgnorePlugin(/^electron$/),
+
+    new ForkTsCheckerWebpackPlugin(),
 
     isProd &&
       new TerserPlugin({

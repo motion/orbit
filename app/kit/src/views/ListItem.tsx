@@ -3,12 +3,13 @@ import { Bit, Person, PersonBit } from '@mcro/models'
 import { ListItem as UIListItem, ListItemProps, PersonRow, VirtualListItemProps } from '@mcro/ui'
 import * as React from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
-import { useStoresSimple } from '../helpers/useStores'
+import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppConfig } from '../types/AppConfig'
 import { ItemType } from '../types/ItemType'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
+import { itemViewsListItem } from './itemViews'
 import { ListItemPerson } from './ListItemPerson'
 
 type OrbitItem = Bit | PersonBit | any
@@ -21,7 +22,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
   index?: number
   // for appconfig merge
   id?: string
-  type?: string
+  appId?: string
   subType?: string
   // extra props for orbit list items
   people?: Person[]
@@ -32,8 +33,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> 
 
 export const ListItem = React.memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    // !TODO
-    const { appStore, selectionStore, sourcesStore } = useStoresSimple()
+    const { appsStore, appStore, selectionStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: OrbitItemComponent<any> = null
@@ -48,8 +48,8 @@ export const ListItem = React.memo(
           itemProps = getNormalPropsForListItem(normalized)
 
           if (item.target === 'bit') {
-            // !TODO instead of using sourcesStore directly, have configuration config.getItemView()
-            ItemView = sourcesStore.getView(normalized.integration, 'item')
+            const itemType = appsStore.definitions[normalized.sourceType].itemType
+            ItemView = itemViewsListItem[itemType]
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson
           }
@@ -61,7 +61,7 @@ export const ListItem = React.memo(
 
     const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
 
-    const isSelected = React.useCallback((index: number) => {
+    const getIsSelected = React.useCallback((index: number) => {
       const appActive = appStore ? appStore.isActive : true
       const isSelected =
         props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
@@ -79,7 +79,7 @@ export const ListItem = React.memo(
         subtitleSpaceBetween={spaceBetween}
         {...ItemView && ItemView.itemProps}
         {...itemProps}
-        isSelected={isSelected}
+        isSelected={getIsSelected}
         {...props}
         icon={icon}
         date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
@@ -115,7 +115,7 @@ export const getNormalPropsForListItem = (normalized: NormalItem): OrbitListItem
   location: normalized.location,
   // webLink: normalized.webLink,
   // desktopLink: normalized.desktopLink,
-  // integration: normalized.integration,
+  // source: normalized.source,
   people: normalized.people,
   date: normalized.updatedAt,
   icon: normalized.icon,

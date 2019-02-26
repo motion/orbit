@@ -1,5 +1,4 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, DriveBitData, DriveSource } from '@mcro/models'
+import { Bit, BitUtils, DriveBitData, DriveSource } from '@mcro/models'
 import { DriveLoadedFile } from '@mcro/services'
 
 /**
@@ -18,7 +17,7 @@ export class DriveBitFactory {
   create(file: DriveLoadedFile): Bit {
     return BitUtils.create(
       {
-        integration: 'drive',
+        sourceType: 'drive',
         sourceId: this.source.id,
         type: 'document',
         title: file.file.name,

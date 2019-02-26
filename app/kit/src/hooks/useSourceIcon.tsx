@@ -1,25 +1,21 @@
 import { IconProps, ThemeContext } from '@mcro/ui'
-import React, { isValidElement, useContext } from 'react'
-import { useStoresSimple } from '../helpers/useStores'
+import React, { useContext } from 'react'
 import { SVG } from '../views/SVG'
+import { useAppPackage } from './useAppPackage'
 
 export function useSourceIcon(props: IconProps) {
   const { name } = props
-  const { sourcesStore } = useStoresSimple()
   const { activeTheme } = useContext(ThemeContext)
-  if (isValidElement(name)) return name
+  const appDefinition = useAppPackage(props.name)
   if (!name) return null
+  if (!appDefinition) return null
   const extImg = name && (name[0] === '/' || name.indexOf('http') === 0) ? name : null
-  const allSourcesMap = sourcesStore.allSourcesMap
   let iconImg = extImg
-  if (allSourcesMap[name]) {
-    const display = allSourcesMap[name].display
-    if (display) {
-      const isDark = activeTheme.background.isDark && activeTheme.background.isDark()
-      iconImg = isDark ? display.iconLight || display.icon : display.icon
-    } else {
-      console.log('no config for...', name)
-    }
+  if (appDefinition) {
+    const isDark = activeTheme.background.isDark && activeTheme.background.isDark()
+    iconImg = isDark
+      ? appDefinition.app.iconLight || appDefinition.app.icon
+      : appDefinition.app.icon
   }
   if (iconImg) {
     return <SVG svg={iconImg} cleanup={['width', 'height']} {...props} />

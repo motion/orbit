@@ -1,16 +1,12 @@
-import { SourcesStore } from '@mcro/apps'
 import { gloss } from '@mcro/gloss'
-import { Icon, QueryStore } from '@mcro/kit'
+import { AppView, Icon, QueryStore, SettingStore, SpaceStore } from '@mcro/kit'
 import * as UI from '@mcro/ui'
 import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@mcro/ui'
-import { useReaction, useStore } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import * as React from 'react'
-import { AppView } from '../../apps/AppView'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
 import { useStores } from '../../hooks/useStores'
-import { SettingStore } from '../../stores/SettingStore'
-import { SpaceStore } from '../../stores/SpaceStore'
 import { AppWrapper } from '../../views'
 import { WindowControls } from '../../views/WindowControls'
 import AppFrame from './AppFrame'
@@ -20,22 +16,15 @@ import { AppSearchable } from './AppSearchable'
 // see main.ts for setup for testing this in browser
 
 export default React.memo(() => {
-  const sourcesStore = useStore(SourcesStore)
   const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
   const queryStore = useStore(QueryStore)
-
-  useReaction(() => {
-    queryStore.setSources(sourcesStore.activeSources)
-  })
-
   const selectionStore = useStore(SelectionStore)
 
   return (
     <StoreContext.Provider
       value={{
-        sourcesStore,
         settingStore,
         spaceStore,
         appPageStore,
@@ -79,7 +68,7 @@ const CenteredTitle = gloss({
 })
 
 const AppPageContent = () => {
-  const { appPageStore, appFrameStore, queryStore } = useStores()
+  const { appPageStore, appFrameStore } = useStores()
   if (!appPageStore.state) {
     return <div>no state</div>
   }
@@ -132,7 +121,7 @@ const AppPageContent = () => {
                 id={appConfig.id}
                 viewType="index"
                 title={appConfig.title}
-                type={appConfig.type}
+                appId={appConfig.appId}
                 isActive
               />
             </AppSearchable>
@@ -143,7 +132,7 @@ const AppPageContent = () => {
             id={appConfig.id}
             viewType={appConfig.viewType || 'main'}
             title={appConfig.title}
-            type={appConfig.type}
+            appId={appConfig.appId}
             isActive
           />
         </Col>

@@ -1,4 +1,3 @@
-import { LinearGradient } from './colorHelpers'
 import {
   COLOR_KEYS,
   FALSE_VALUES,
@@ -19,6 +18,7 @@ export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
 export { Color, ThemeObject, Transform } from './types'
+export { LinearGradient } from './utils/LinearGradient'
 
 export type CSSOptions = {
   errorMessage?: string
@@ -90,8 +90,8 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = css(value, opts)
       respond = true
     } else if (valueType === 'object') {
-      if (value instanceof LinearGradient) {
-        toReturn[finalKey] = value.toString()
+      if (value.toCSS) {
+        toReturn[finalKey] = value.toCSS()
         continue
       }
       // not react element

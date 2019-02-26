@@ -11,7 +11,7 @@ import * as React from 'react'
 
 type Props = {
   type: string
-  source?: AtlassianSource
+  source?: Source
 }
 
 const Statuses = {
@@ -26,27 +26,24 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-export default function AtlassianSettingLogin(props: Props) {
+export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  const [source] = React.useState(
-    props.source ||
-      ({
-        category: 'integration',
-        type: props.type,
-        token: null,
-      } as Source),
-  )
-  const [credentials, setCredentials] = React.useState<AtlassianSource['values']['credentials']>(
-    (props.source && props.source.values.credentials) || {
+  const [source] = React.useState<Partial<AtlassianSource>>({
+    category: 'source',
+    type: props.type as any,
+    token: null,
+  })
+  const [credentials, setCredentials] = React.useState(
+    (source.values && source.values.credentials) || {
       username: '',
       password: '',
       domain: '',
     },
   )
 
-  const addIntegration = async e => {
+  const addSource = async e => {
     e.preventDefault()
     source.values = { ...source.values, credentials }
     if (!source.spaces) {
@@ -58,6 +55,8 @@ export default function AtlassianSettingLogin(props: Props) {
     // send command to the desktop
     setStatus(Statuses.LOADING)
     const result = await command(SourceSaveCommand, {
+      // TODO @umed
+      // @ts-ignore
       source,
     })
     // update status on success of fail
@@ -82,7 +81,7 @@ export default function AtlassianSettingLogin(props: Props) {
   }
 
   return (
-    <Col tagName="form" onSubmit={addIntegration}>
+    <Col tagName="form" onSubmit={addSource}>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
@@ -120,7 +119,7 @@ export default function AtlassianSettingLogin(props: Props) {
           >
             {status === Statuses.LOADING && <Button>Saving...</Button>}
             {status !== Statuses.LOADING && (
-              <Button type="submit" onClick={addIntegration}>
+              <Button type="submit" onClick={addSource}>
                 Save
               </Button>
             )}

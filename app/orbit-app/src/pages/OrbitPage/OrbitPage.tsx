@@ -1,34 +1,44 @@
-import { SourcesStore } from '@mcro/apps'
+import { command } from '@mcro/bridge'
+import { isEqual } from '@mcro/fast-compare'
 import { gloss, View, ViewProps } from '@mcro/gloss'
-import { PaneManagerStore, QueryStore, showConfirmDialog } from '@mcro/kit'
+import {
+  defaultPanes,
+  getIsTorn,
+  getPanes,
+  PaneManagerStore,
+  ProvideStores,
+  QueryStore,
+  settingsPane,
+  SettingStore,
+  showConfirmDialog,
+  SpaceStore,
+  ThemeStore,
+  useActiveSources,
+  useStoresSimple,
+} from '@mcro/kit'
+import { CloseAppCommand } from '@mcro/models'
 import { Theme } from '@mcro/ui'
-import { useReaction, useStore, useStoreSimple } from '@mcro/use-store'
+import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { ActionsContext, defaultActions, useActions } from '../../actions/Actions'
+import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppsLoader } from '../../apps/AppsLoader'
-import { ProvideStores } from '../../components/ProvideStores'
+import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
-import { getIsTorn } from '../../helpers/getAppHelpers'
+import { useActions } from '../../hooks/useActions'
 import { useManagePaneSort } from '../../hooks/useManagePaneSort'
+import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useStores } from '../../hooks/useStores'
-import { defaultPanes, settingsPane } from '../../stores/getPanes'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
-import { SettingStore } from '../../stores/SettingStore'
-import { SpaceStore } from '../../stores/SpaceStore'
-import { ThemeStore } from '../../stores/ThemeStore'
 import { AppWrapper } from '../../views'
-import OrbitHeader from './OrbitHeader'
-import OrbitMain from './OrbitMain'
+import { OrbitHeader } from './OrbitHeader'
+import { OrbitMain } from './OrbitMain'
 import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
-import OrbitStatusBar from './OrbitStatusBar'
+import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
-import OrbitToolBar from './OrbitToolBar'
-import { CloseAppCommand } from '@mcro/models'
-import { command } from '@mcro/bridge'
-import { useMessageHandlers } from '../../hooks/useMessageHandlers'
+import { OrbitToolBar } from './OrbitToolBar'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
@@ -51,8 +61,37 @@ export default memo(function OrbitPage() {
   )
 })
 
+function useManageQuerySources() {
+  const { queryStore } = useStoresSimple()
+  const activeSources = useActiveSources()
+  useEffect(
+    () => {
+      // TODO @umed type
+      queryStore.setSources(activeSources as any[])
+    },
+    [activeSources],
+  )
+}
+
+function useManagePanes() {
+  const Actions = useActions()
+  const { paneManagerStore, spaceStore } = useStores()
+
+  useReaction(() => spaceStore.apps, function managePanes(apps) {
+    ensure('apps', !!apps.length)
+    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+    if (!isEqual(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+    Actions.setInitialPaneIndex()
+  })
+}
+
 function OrbitManagers() {
+  useManagePanes()
   useManagePaneSort()
+  useManageQuerySources()
   useMessageHandlers()
   return null
 }
@@ -67,11 +106,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     closeTab: 0,
     closeApp: 0,
   })
-
-  const allViews = paneManagerStore.panes.map(pane => ({
-    id: pane.id,
-    type: pane.type,
-  }))
 
   useEffect(() => {
     // prevent close on the main window
@@ -124,10 +158,20 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     }
   }, [])
 
+  const activeApps = paneManagerStore.panes.map(pane => ({
+    id: pane.id,
+    appId: pane.type,
+  }))
+
+  const staticApps = orbitStaticApps.map(app => ({
+    id: app.id,
+    appId: app.id,
+  }))
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
       <MainShortcutHandler handlers={handlers}>
-        <AppsLoader views={allViews}>
+        <AppsLoader apps={[...activeApps, ...staticApps]}>
           <OrbitHeader />
           <InnerChrome torn={orbitStore.isTorn}>
             <OrbitToolBar />
@@ -155,16 +199,9 @@ const OrbitContentArea = gloss({
 
 function OrbitPageProvideStores(props: any) {
   const settingStore = useStoreSimple(SettingStore)
-  const sourcesStore = useStoreSimple(SourcesStore)
   const queryStore = useStoreSimple(QueryStore)
   const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
   const newAppStore = useStoreSimple(NewAppStore)
-
-  useReaction(() => {
-    queryStore.setSources(sourcesStore.activeSources)
-  })
-
-  log('why r u rendering me bro............')
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
@@ -178,7 +215,6 @@ function OrbitPageProvideStores(props: any) {
 
   const stores = {
     settingStore,
-    sourcesStore,
     orbitWindowStore,
     spaceStore,
     queryStore,

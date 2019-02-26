@@ -1,5 +1,5 @@
 import { useReaction } from '@mcro/use-store'
-import { useStoresSimple } from '../helpers/useStores'
+import { useStoresSimple } from './useStores'
 
 export function useIsAppActive() {
   const { appStore } = useStoresSimple()

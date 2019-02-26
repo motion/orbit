@@ -1,12 +1,12 @@
-import { Bit, BitEntity, GithubSource, PersonEntity, Source } from '@mcro/models'
 import { Logger } from '@mcro/logger'
+import { Bit, BitEntity, GithubSource, PersonEntity, Source } from '@mcro/models'
+import { CosalTopWordsModel, SlackBitData } from '@mcro/models/'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getManager, getRepository } from 'typeorm'
-import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 import { Mediator } from '../mediator'
-import { CosalTopWordsModel, SlackBitData } from '@mcro/models/'
+import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 
 /**
  * Sync Bits options.
@@ -39,7 +39,7 @@ export class BitSyncer {
   }
 
   async syncOne(bit: Bit): Promise<void> {
-    // there is one problematic use case - if user removes integration during synchronization
+    // there is one problematic use case - if user removes Source during synchronization
     // we should not sync anything (shouldn't write any new person or bit into the database)
     // if (this.syncerRepository.isSettingRemoved())
     //   throw new Error(`Setting wasn't found, looks like it was removed, stopping sync`)
@@ -80,7 +80,7 @@ export class BitSyncer {
       return
     }
 
-    // there is one problematic use case - if user removes integration during synchronization
+    // there is one problematic use case - if user removes Source during synchronization
     // we should not sync anything (shouldn't write any new person or bit into the database)
     // that's why we check if we have job for this particular source registered
     // and we do it twice - before saving anything to prevent further operations
@@ -91,10 +91,14 @@ export class BitSyncer {
     //   return
     // }
 
-    this.log.timer('save bits in the database', { insertedBits, updatedBits, removedBits, duplicateInsertBits })
+    this.log.timer('save bits in the database', {
+      insertedBits,
+      updatedBits,
+      removedBits,
+      duplicateInsertBits,
+    })
     try {
       await getManager().transaction(async manager => {
-
         // insert new bits
         if (insertedBits.length > 0) {
           const insertedBitChunks = chunk(insertedBits, 50)
@@ -174,13 +178,12 @@ export class BitSyncer {
 
   private async completeBitsData(bits: Bit[]) {
     for (let bit of bits) {
-      if (bit.integration === 'slack' && bit.type === 'conversation') {
+      if (bit.sourceType === 'slack' && bit.type === 'conversation') {
         const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
-        bit.title = (await Mediator.loadMany(CosalTopWordsModel, { args: { text: flatBody, max: 6 } })).join(
-          ' ',
-        )
+        bit.title = (await Mediator.loadMany(CosalTopWordsModel, {
+          args: { text: flatBody, max: 6 },
+        })).join(' ')
       }
     }
   }
-
 }

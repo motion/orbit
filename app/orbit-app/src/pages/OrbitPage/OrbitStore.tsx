@@ -1,19 +1,15 @@
-import { ensure, react } from '@mcro/black'
-import { AppConfig, AppType, OrbitHandleSelect } from '@mcro/kit'
+import { ensure, react, shallow } from '@mcro/black'
+import { AppConfig, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
-import { isEqual } from 'lodash'
-import { getIsTorn } from '../../helpers/getAppHelpers'
 import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {
   stores = useHook(useStoresSimple)
+
   lastSelectAt = Date.now()
   nextItem = { index: -1, appConfig: null }
   isEditing = false
-
-  activeConfig: { [key: string]: AppConfig } = {
-    search: { id: '', type: AppType.search, title: '' },
-  }
+  activeConfig: { [key: string]: AppConfig } = shallow({})
 
   get isTorn() {
     return getIsTorn()
@@ -23,7 +19,7 @@ export class OrbitStore {
     this.isEditing = true
   }
 
-  handleSelectItem: OrbitHandleSelect = (index, appConfig) => {
+  setSelectItem: HandleOrbitSelect = (index, appConfig) => {
     this.nextItem = { index, appConfig }
   }
 
@@ -33,18 +29,12 @@ export class OrbitStore {
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()
-      if (Date.now() - last < 80) {
+      if (Date.now() - last < 50) {
         await sleep(50)
       }
       ensure('app config', !!appConfig)
       const { id } = this.stores.paneManagerStore.activePane
-      console.debug('selecting', id, appConfig)
-      if (!isEqual(this.activeConfig[id], appConfig)) {
-        this.activeConfig = {
-          ...this.activeConfig,
-          [id]: appConfig,
-        }
-      }
+      this.activeConfig[id] = appConfig
     },
   )
 }

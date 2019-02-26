@@ -1,8 +1,6 @@
-import * as React from 'react'
-import ListItem from './ListItem'
-import { Row, Col, Text } from '@mcro/ui'
-import { HighlightText } from '../HighlightText'
 import { gloss } from '@mcro/gloss'
+import { Col, HighlightText, ListItem, Row, Text } from '@mcro/ui'
+import * as React from 'react'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   const num = abbreviateNumber(item.count)
@@ -50,7 +48,7 @@ function abbreviateNumber(num: number, fixed = 0) {
   let b = num.toPrecision(2).split('e') // get power
   let k = b.length === 1 ? 0 : Math.floor(Math.min(+b[1].slice(1), 14) / 3) // floor at decimals, ceiling at trillions
   let c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3)).toFixed(1 + fixed) // divide by power
-  let d = +c < 0 ? c : Math.abs(c) // enforce -0 is 0
+  let d = +c < 0 ? c : Math.abs(+c) // enforce -0 is 0
   let e = d + ['', 'k', 'm', 'b', 't'][k] // append power
   return e
 }

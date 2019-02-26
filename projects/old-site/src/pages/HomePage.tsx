@@ -559,8 +559,7 @@ class SectionNoCloud extends React.Component {
                 Download to setup in just a couple minutes.
               </Card>
               <Card icon="business_plug" title="Custom apps">
-                Build custom integrations right on your computer, and deploy to your teams with a
-                click.
+                Build custom sources right on your computer, and deploy to your teams with a click.
               </Card>
             </UI.Col>
           </div>

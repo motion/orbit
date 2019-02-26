@@ -78,7 +78,7 @@ export function AppIcon({ app, ...props }: AppIconProps) {
     <AppIconInner
       background={app.colors[0]}
       color={app.colors[1]}
-      name={`orbit-${app.type}-full`}
+      name={`orbit-${app.appId}-full`}
       size={48}
       {...props}
     />

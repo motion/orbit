@@ -1,0 +1,166 @@
+import { save } from '@mcro/bridge'
+import { AppProps, getTargetValue, List, useStores } from '@mcro/kit'
+import { AppModel } from '@mcro/models'
+import {
+  Absolute,
+  arrayMove,
+  BorderBottom,
+  Button,
+  Input,
+  Panel,
+  PassProps,
+  preventDefault,
+  Row,
+  SelectableTreeList,
+  View,
+} from '@mcro/ui'
+import { flow } from 'lodash'
+import React, { useCallback } from 'react'
+import { loadListItem } from './helpers'
+import { ListStore } from './ListStore'
+import { API } from './main'
+import { ListAppDataItem } from './types'
+
+export function ListsAppIndex(_: AppProps) {
+  return (
+    <>
+      {/* Search/add bar */}
+      <ListAdd />
+      {/* List items */}
+      <ListCurrentFolder />
+      {/* Search results */}
+      <ListSearchResults />
+    </>
+  )
+}
+
+function ListCurrentFolder() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  const { items, currentFolder } = listStore
+
+  const getContextMenu = useCallback(index => {
+    return [
+      {
+        label: 'Delete',
+        click: () => {
+          console.log('delete item', index)
+        },
+      },
+    ]
+  }, [])
+  const onChangeDepth = useCallback((depth, history) => {
+    listStore.depth = depth
+    listStore.history = history
+  }, [])
+
+  const loadItemProps = useCallback((item: ListAppDataItem) => {
+    return loadListItem(item, +listStore.props.id)
+  }, [])
+
+  const handleSortEnd = useCallback(
+    ({ oldIndex, newIndex }) => {
+      const children = arrayMove(currentFolder.children, oldIndex, newIndex)
+      listStore.app.data.items = {
+        ...listStore.app.data.items,
+        [currentFolder.id]: {
+          ...currentFolder,
+          children,
+        },
+      }
+      save(AppModel, listStore.app)
+    },
+    [JSON.stringify(currentFolder)],
+  )
+
+  const handleSelect = useCallback(index => {
+    listStore.selectedIndex = index
+  }, [])
+
+  return (
+    <View flex={1}>
+      <SelectableTreeList
+        minSelected={0}
+        rootItemID={0}
+        items={items}
+        loadItemProps={loadItemProps}
+        sortable
+        onSortEnd={handleSortEnd}
+        getContextMenu={getContextMenu}
+        onSelect={handleSelect}
+        onChangeDepth={onChangeDepth}
+        depth={listStore.depth}
+      />
+    </View>
+  )
+}
+
+const addFolder = (store: ListStore) => {
+  API.receive(store.app, store.parentId, {
+    target: 'folder',
+    name: store.query,
+  })
+  store.setQuery('')
+}
+
+function ListAdd() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  return (
+    <Row position="relative">
+      <BorderBottom opacity={0.25} />
+      <Input
+        chromeless
+        sizeRadius={0}
+        paddingLeft={12}
+        paddingRight={40}
+        height={33}
+        value={listStore.query}
+        onChange={flow(
+          preventDefault,
+          getTargetValue,
+          listStore.setQuery,
+        )}
+        onEnter={() => {
+          addFolder(listStore)
+        }}
+        flex={1}
+        placeholder="Add..."
+      />
+      <Absolute top={0} right={12} bottom={0}>
+        <Row flex={1} alignItems="center">
+          <PassProps chromeless opacity={0.35} hoverOpacity={1}>
+            <Button
+              active={!listStore.searchCollapsed}
+              tooltip="Search to add"
+              icon="zoom"
+              onClick={listStore.toggleSearchCollapsed}
+            />
+            <Button tooltip="Create folder" icon="folder-15" onClick={() => addFolder(listStore)} />
+          </PassProps>
+        </Row>
+      </Absolute>
+    </Row>
+  )
+}
+
+function ListSearchResults() {
+  // @ts-ignore
+  const { listStore } = useStores()
+  const { searchCollapsed, searchResults, query } = listStore
+
+  return (
+    <Panel
+      boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
+      margin={[0, -10]}
+      padding={[0, 10]}
+      padded={false}
+      collapsable
+      collapsed={searchCollapsed}
+      onCollapse={listStore.setSearchCollapsed}
+      heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+    >
+      <List query={query} items={searchResults || []} />
+    </Panel>
+  )
+}

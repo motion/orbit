@@ -1,15 +1,14 @@
-import { BitEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { WebsiteSource } from '@mcro/models'
+import { BitEntity, WebsiteSource } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
 
 /**
  * Syncs crawled websites.
  */
-export class WebsiteSyncer implements IntegrationSyncer {
+export class WebsiteSyncer implements SourceSyncer {
   private source: WebsiteSource
   private log: Logger
   private crawler: WebsiteCrawler
@@ -45,7 +44,7 @@ export class WebsiteSyncer implements IntegrationSyncer {
         const bit = this.bitFactory.create(data)
         await getRepository(BitEntity).save(bit, { listeners: false })
         return true
-      }
+      },
     })
     this.log.timer('crawl site')
 

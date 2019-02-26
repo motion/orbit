@@ -19,12 +19,12 @@ export interface Job {
   syncer?: string
 
   /**
-   * Integration id for which this job was executed.
+   * Source id for which this job was executed.
    */
   sourceId?: number
 
   /**
-   * Integration for which this job was executed.
+   * Source for which this job was executed.
    */
   source?: Source
 

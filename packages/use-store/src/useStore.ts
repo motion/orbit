@@ -1,4 +1,5 @@
 import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@mcro/automagical'
+import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { config } from './configure'
 import { debugEmit } from './debugUseStore'
@@ -19,6 +20,16 @@ export {
 export { configureUseStore } from './configure'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
+
+// helpers for deep/shallow objects, which dont mess up types
+
+export const deep = <X>(x: X) => {
+  return (observable(x) as unknown) as X
+}
+
+export const shallow = <X>(x: X) => {
+  return (observable.object(x, null, { deep: false }) as unknown) as X
+}
 
 type UseStoreOptions = {
   debug?: boolean

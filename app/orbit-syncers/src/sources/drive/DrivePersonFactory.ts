@@ -1,5 +1,4 @@
-import { PersonUtils } from '@mcro/models'
-import { DrivePersonData, Person, DriveSource } from '@mcro/models'
+import { DrivePersonData, DriveSource, Person, PersonUtils } from '@mcro/models'
 import { DriveUser } from '@mcro/services'
 
 /**
@@ -18,8 +17,8 @@ export class DrivePersonFactory {
   create(user: DriveUser): Person {
     return PersonUtils.create({
       source: this.source,
-      integrationId: user.emailAddress,
-      integration: 'drive',
+      userId: user.emailAddress,
+      sourceType: 'drive',
       name: user.displayName,
       email: user.emailAddress,
       photo: user.photoLink,

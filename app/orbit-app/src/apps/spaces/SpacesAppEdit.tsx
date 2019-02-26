@@ -1,4 +1,5 @@
 import { useModel } from '@mcro/bridge'
+import { OrbitOrb, useSourcesForSpace } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import {
   Col,
@@ -16,10 +17,8 @@ import {
 } from '@mcro/ui'
 import randomColor from 'randomcolor'
 import * as React from 'react'
-import { useIntegrationsForSpace } from '../../hooks/useIntegrationsForSpace'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
-import { OrbitOrb } from '../../views/OrbitOrb'
 import { SubSection } from '../../views/SubSection'
 import { AppProps } from '../AppTypes'
 
@@ -28,7 +27,7 @@ const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 export default function SpacesAppEdit(props: AppProps) {
   const id = +props.appConfig.id
   const [space] = useModel(SpaceModel, { where: { id } })
-  const integrations = useIntegrationsForSpace({ spaceId: id })
+  const sources = useSourcesForSpace(id)
   const [colors, setColors] = React.useState(defaultColors)
 
   return (
@@ -44,6 +43,7 @@ export default function SpacesAppEdit(props: AppProps) {
           label="Name"
           placeholder="Name..."
           onChange={e => {
+            console.log('change name', e)
             // update name...
           }}
         />
@@ -76,10 +76,10 @@ export default function SpacesAppEdit(props: AppProps) {
       <VerticalSpace />
 
       <SubSection title="Authentication">
-        <Text size={1.1}>Choose which integration grants access to this space.</Text>
+        <Text size={1.1}>Choose which source grants access to this space.</Text>
         <VerticalSpace />
 
-        {(integrations || []).map((int, index) => (
+        {(sources || []).map((int, index) => (
           <Theme key={int.id} name={index === 0 ? 'selected' : null}>
             <ListItem icon={int.type} title={int.name} />
           </Theme>

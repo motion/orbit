@@ -1,4 +1,5 @@
 import { command } from '@mcro/bridge'
+import { themes } from '@mcro/kit'
 import { OpenCommand } from '@mcro/models'
 import { ContextMenuProvider, ThemeProvide } from '@mcro/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
@@ -9,7 +10,6 @@ import ContextMenu from './helpers/electron/ContextMenu.electron'
 import './helpers/installDevelopmentHelpers'
 import ChromePage from './pages/ChromePage/ChromePage'
 import OrbitPage from './pages/OrbitPage/OrbitPage'
-import { themes } from './themes'
 
 // pages
 

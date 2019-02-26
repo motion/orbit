@@ -1,22 +1,23 @@
 import { Context, createContext } from 'react'
 import { KitStores } from './stores'
-import { AppConfig } from './types/AppConfig'
-import { OrbitListItemProps } from './views/ListItem'
+import { AppPackage } from './types/AppPackage'
 
 let hasSet = false
 
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
-  getAppConfig(props: OrbitListItemProps, id?: string): AppConfig
+  getApps: () => AppPackage[]
 }
 
-export let config: ConfigureOpts = {
+export let config: ConfigureOpts = window['__orbitKitConfig'] || {
   StoreContext: createContext(null),
-  getAppConfig: _ => ({}),
+  getApps: null,
 }
 
 export function configureKit(opts: ConfigureOpts) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
   Object.assign(config, opts)
+  Object.freeze(config)
+  window['__orbitKitConfig'] = config
 }

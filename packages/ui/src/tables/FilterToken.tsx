@@ -231,8 +231,6 @@ export class FilterToken extends PureComponent {
       value = filter.value
     }
 
-    console.log('filter', typeof filter.key, typeof value, filter.key, value)
-
     return (
       <Token
         key={`${filter.key}:${value}=${filter.type}`}

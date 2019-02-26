@@ -1,8 +1,8 @@
-import { getAppConfig } from '@mcro/apps'
 import { configureGloss } from '@mcro/gloss'
 import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
+import { orbitApps } from './apps/orbitApps'
 import { StoreContext } from './contexts'
 
 // run these only once, and avoid HMR above it
@@ -12,7 +12,7 @@ function setup() {
 
   configureKit({
     StoreContext,
-    getAppConfig,
+    getApps: () => orbitApps,
   })
 
   configureGloss({
@@ -35,12 +35,4 @@ function setup() {
 
 if (!window['hasConfigured']) {
   setup()
-}
-
-if (process.env.NODE_ENV === 'development') {
-  if (typeof module['hot'] !== 'undefined') {
-    module['hot'].accept(() => {
-      console.log('Accepted configurations, ignoring on purpose')
-    })
-  }
 }

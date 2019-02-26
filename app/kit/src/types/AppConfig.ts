@@ -1,17 +1,16 @@
-import { IntegrationType } from '@mcro/models'
-import { AppType } from './AppType'
+import { SourceType } from '@mcro/models'
 
 export type AppConfig = {
+  appId?: string
   id?: string
   subId?: string
   title?: string
-  type?: AppType
   data?: any
   icon?: string
   iconLight?: string
-  integration?: IntegrationType
+  source?: SourceType
   subType?: string
-  viewType?: 'main' | 'index' | 'setup'
+  viewType?: 'main' | 'index' | 'setup' | 'settings'
   // allow various things to be passed as config
   // to help configure the peek window
   viewConfig?: {

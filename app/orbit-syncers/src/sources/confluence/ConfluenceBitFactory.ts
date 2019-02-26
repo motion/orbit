@@ -1,10 +1,10 @@
-import { BitUtils } from '@mcro/models'
 import {
   Bit,
+  BitUtils,
   ConfluenceBitData,
+  ConfluenceSource,
   ConfluenceSourceValues,
   Person,
-  ConfluenceSource,
 } from '@mcro/models'
 import { ConfluenceContent } from '@mcro/services'
 import { SyncerUtils } from '../../core/SyncerUtils'
@@ -41,18 +41,18 @@ export class ConfluenceBitFactory {
       ...content.history.contributors.publishers.userAccountIds,
     ]
     const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.integrationId) !== -1
+      return peopleIds.indexOf(person.userId) !== -1
     })
 
     // find original content creator
     const author = allPeople.find(person => {
-      return person.integrationId === content.history.createdBy.accountId
+      return person.userId === content.history.createdBy.accountId
     })
 
     // create or update a bit
     return BitUtils.create(
       {
-        integration: 'confluence',
+        sourceType: 'confluence',
         sourceId: this.source.id,
         type: 'document',
         title: content.title,

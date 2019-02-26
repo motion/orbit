@@ -1,5 +1,4 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, GmailBitData, GmailSource } from '@mcro/models'
+import { Bit, BitUtils, GmailBitData, GmailSource } from '@mcro/models'
 import { GMailThread } from '@mcro/services'
 import { GMailMessageParser } from './GMailMessageParser'
 
@@ -16,7 +15,7 @@ export class GMailBitFactory {
   /**
    * Creates a new bit from a given GMail thread.
    */
-  create(thread: GMailThread): Bit|undefined {
+  create(thread: GMailThread): Bit | undefined {
     const body = thread.messages
       .map(message => {
         const parser = new GMailMessageParser(message)
@@ -26,8 +25,7 @@ export class GMailBitFactory {
 
     // in the case if body is not defined (e.g. message without content)
     // we return undefined - to skip bit creation, we don't need bits with empty body
-    if (!body)
-      return undefined
+    if (!body) return undefined
 
     const messages = thread.messages.map(message => {
       const parser = new GMailMessageParser(message)
@@ -46,23 +44,22 @@ export class GMailBitFactory {
     let title = firstMessageParser.getTitle()
 
     // if there is no title it can be a hangouts conversation, check if it is and generate a title
-    if (!title && firstMessage.labelIds.indexOf("CHAT") !== -1) {
+    if (!title && firstMessage.labelIds.indexOf('CHAT') !== -1) {
       const participantNames: string[] = []
       for (let message of messages) {
         for (let participant of message.participants) {
           participantNames.push(participant.name ? participant.name : participant.email)
         }
       }
-      title = 'Chat with ' + participantNames.join(", ")
+      title = 'Chat with ' + participantNames.join(', ')
     }
 
     // if we still have no title then skip this email
-    if (!title)
-      return undefined
+    if (!title) return undefined
 
     return BitUtils.create(
       {
-        integration: 'gmail',
+        sourceType: 'gmail',
         sourceId: this.source.id,
         type: 'mail',
         title,

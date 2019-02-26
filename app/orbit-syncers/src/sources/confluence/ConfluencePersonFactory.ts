@@ -1,9 +1,9 @@
-import { PersonUtils } from '@mcro/models'
 import {
   ConfluencePersonData,
+  ConfluenceSource,
   ConfluenceSourceValues,
   Person,
-  ConfluenceSource,
+  PersonUtils,
 } from '@mcro/models'
 import { ConfluenceUser } from '@mcro/services'
 
@@ -23,9 +23,9 @@ export class ConfluencePersonFactory {
   create(user: ConfluenceUser): Person {
     const values = this.source.values as ConfluenceSourceValues
     return PersonUtils.create({
-      integration: 'confluence',
+      sourceType: 'confluence',
       source: this.source,
-      integrationId: user.accountId,
+      userId: user.accountId,
       name: user.displayName,
       email: user.details.personal.email,
       photo: values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),

@@ -1,4 +1,4 @@
-import { IntegrationType, Person } from '@mcro/models'
+import { Person, SourceType } from '@mcro/models'
 
 export type NormalItem = {
   id?: string
@@ -18,7 +18,7 @@ export type NormalItem = {
   people?: Person[]
   searchTerm?: string
   subtitle?: React.ReactNode
-  integration?: IntegrationType
+  sourceType?: SourceType
   image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode

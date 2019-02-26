@@ -1,12 +1,10 @@
-import { BitUtils } from '@mcro/models'
-import { Bit, PinnedBitData } from '@mcro/models'
+import { Bit, BitUtils, PinnedBitData } from '@mcro/models'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
 
 /**
  * Creates a Bit for pinned url.
  */
 export class PinnedBitFactory {
-
   /**
    * Builds a bit from the given crawled data.
    */
@@ -18,7 +16,7 @@ export class PinnedBitFactory {
     // create or update a bit
     return BitUtils.create(
       {
-        integration: 'pinned',
+        sourceType: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,

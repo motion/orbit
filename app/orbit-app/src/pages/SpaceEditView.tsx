@@ -1,13 +1,12 @@
 import { react } from '@mcro/black'
 import { save } from '@mcro/bridge'
-import { AppModel, Space, SpaceModel } from '@mcro/models'
+import { AppBit, AppModel, Space, SpaceModel } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
-import { ListsApp } from '../apps/lists/ListsApp'
 
 type Props = {
   space?: Space
@@ -53,10 +52,10 @@ export default observer(function SpaceEditView(props: Props) {
     console.log('saved space:', savedSpace)
 
     // create a list app for the created space
-    const listsApp: ListsApp = {
+    const listsApp: AppBit = {
       target: 'app',
       name: 'Lists',
-      type: 'lists',
+      appId: 'lists',
       spaceId: savedSpace.id,
       // data: {
       //   lists: [

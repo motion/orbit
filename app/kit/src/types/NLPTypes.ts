@@ -1,6 +1,6 @@
 export enum MarkType {
   Date = 'date',
-  Integration = 'integration',
+  Source = 'source',
   Person = 'person',
   Type = 'type',
   Location = 'location',

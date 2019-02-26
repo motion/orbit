@@ -1,19 +1,20 @@
-import { sourceToAppConfig } from '@mcro/apps'
 import { sleep } from '@mcro/black'
-import { AppType, List, useActiveSpace } from '@mcro/kit'
+import { List, useActiveApps, useActiveSources, useActiveSpace } from '@mcro/kit'
 import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
-import { useActiveApps } from '../../hooks/useActiveApps'
-import { useStores } from '../../hooks/useStores'
 import { AppProps } from '../AppTypes'
+import { orbitApps } from '../orbitApps'
 
-export default function AppsAppsIndex(_props: AppProps) {
-  const { sourcesStore } = useStores()
+export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
-  const { activeSources, allSources } = sourcesStore
   const activeApps = useActiveApps()
+  const allSourceApps = orbitApps.filter(x => !!x.app.sync)
+  const activeSources = useActiveSources().map(source => ({
+    ...orbitApps.find(app => app.id === source.type),
+    source,
+  }))
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -27,50 +28,49 @@ export default function AppsAppsIndex(_props: AppProps) {
       icon: 'orbit-apps-full',
       iconBefore: true,
       appConfig: {
-        type: AppType.apps,
+        appId: 'apps',
         subType: 'manage-apps',
       },
     },
+
     ...activeSources.map(app => ({
+      group: 'Sources',
       id: `${app.source.id}`,
-      title: app.display.name,
+      title: app.app.name,
       subtitle: <OrbitSourceInfo sourceId={app.source.id} app={app} />,
-      icon: app.integration,
+      icon: app.source,
       iconBefore: true,
       total: activeSources.length,
-      appConfig: sourceToAppConfig(app),
-      group: 'Sources',
     })),
-    ...allSources.map((source, index) => ({
-      // ...these have their own onClick
-      id: `${source.integration}${index}`,
-      title: source.appName,
-      icon: source.integration,
+
+    ...allSourceApps.map(app => ({
+      group: 'Add Source',
+      title: app.app.name,
+      icon: app.app.icon,
       onClick:
-        !source.views.setup &&
+        !app.app.sync.setup &&
         (async e => {
           e.preventDefault()
           e.stopPropagation()
           await sleep(700)
-          addSource(source)
+          addSource(app)
         }),
       // disableSelect: !source.views.setup,
-      after: source.views.setup ? null : (
+      after: app.app.sync.setup ? null : (
         <View marginTop={4}>
           <Icon size={12} opacity={0.5} name="uilink6" />
         </View>
       ),
-      appConfig: source.views.setup
+      appConfig: app.app.sync.setup
         ? {
-            ...sourceToAppConfig(source),
-            type: AppType.sources,
+            appId: app.id,
             viewType: 'setup' as 'setup',
           }
         : {
-            type: AppType.message,
-            title: `Opening private authentication for ${source.appName}...`,
+            appId: 'message',
+            viewType: 'main' as 'main',
+            title: `Opening private authentication for ${app.app.name}...`,
           },
-      group: 'Add Source',
     })),
   ]
 

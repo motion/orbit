@@ -1,7 +1,14 @@
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { Job, SourceRemoveCommand } from '@mcro/models'
+import {
+  BitEntity,
+  Job,
+  JobEntity,
+  PersonBitEntity,
+  PersonEntity,
+  SourceEntity,
+  SourceRemoveCommand,
+} from '@mcro/models'
 import { hash } from '@mcro/utils'
 import { getManager, getRepository, In } from 'typeorm'
 
@@ -23,7 +30,7 @@ export const SourceRemoveResolver = resolveCommand(SourceRemoveCommand, async ({
     syncer: '',
     source,
     time: new Date().getTime(),
-    type: 'INTEGRATION_REMOVE',
+    type: 'SOURCE_REMOVE',
     status: 'PROCESSING',
     message: '',
   }
@@ -40,11 +47,11 @@ export const SourceRemoveResolver = resolveCommand(SourceRemoveCommand, async ({
       await manager.remove(bits, { chunk: 100 })
       log.info('bits were removed')
 
-      // removing all integration people
+      // removing all source people
       const persons = await manager.find(PersonEntity, { sourceId })
-      log.info('removing integration people...', persons)
+      log.info('removing source people...', persons)
       await manager.remove(persons, { chunk: 100 })
-      log.info('integration people were removed')
+      log.info('source people were removed')
 
       // get person bits which we are going to filter and find which ones we will remove
       log.info('loading person bits related to persons', persons)

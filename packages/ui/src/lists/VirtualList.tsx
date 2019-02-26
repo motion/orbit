@@ -1,5 +1,5 @@
 import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
-import { always, cancel, react, useStore } from '@mcro/use-store'
+import { always, ensure, react, useStore } from '@mcro/use-store'
 import { MenuItem } from 'electron'
 import { throttle } from 'lodash'
 import React, {
@@ -145,9 +145,7 @@ class VirtualListStore {
   runMeasure = react(
     () => [this.triggerMeasure, this.props.allowMeasure],
     async (_, { when, sleep }) => {
-      if (this.props.allowMeasure === false) {
-        throw cancel
-      }
+      ensure('this.props.allowMeasure', this.props.allowMeasure)
       await sleep()
       await when(() => !!this.frameRef)
 
@@ -177,7 +175,6 @@ class VirtualListStore {
       await sleep()
       await when(() => this.props.allowMeasure !== false)
       await when(() => !!this.listRef)
-      console.warn('recomputing heights for', this.props)
       this.cache.clearAll()
       this.listRef.recomputeRowHeights()
     },
@@ -240,8 +237,6 @@ export const VirtualListDefaultProps = createContext({
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
-
-  console.warn('render inner')
 
   useResizeObserver(frameRef, () => {
     store.measure()
@@ -368,5 +363,6 @@ export function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListPro
     allowMeasure,
     ...(props as any),
   })
+
   return <VirtualListInner {...props} items={items} store={store} />
 }

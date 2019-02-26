@@ -16,11 +16,7 @@ export class SlackBitFactory {
   /**
    * Creates a new slack conversation bit.
    */
-  createConversation(
-    channel: SlackChannel,
-    messages: SlackMessage[],
-    allPeople: Person[],
-  ): Bit {
+  createConversation(channel: SlackChannel, messages: SlackMessage[], allPeople: Person[]): Bit {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -46,7 +42,7 @@ export class SlackBitFactory {
     const people = allPeople.filter(person => {
       return (
         messages.some(message => {
-          return message.user === person.integrationId
+          return message.user === person.userId
         }) ||
         mentionedPeople.some(mentionedPerson => {
           return person.id === mentionedPerson.id
@@ -57,7 +53,7 @@ export class SlackBitFactory {
     return BitUtils.create(
       {
         sourceId: this.source.id,
-        integration: 'slack',
+        sourceType: 'slack',
         type: 'conversation',
         title: '',
         body: data.messages.map(message => message.text).join(' ... '),
@@ -91,7 +87,7 @@ export class SlackBitFactory {
     const mentionedPeople = this.findMessageMentionedPeople([message], allPeople)
     const people = allPeople.filter(person => {
       return (
-        message.user === person.integrationId ||
+        message.user === person.userId ||
         mentionedPeople.some(mentionedPerson => person.id === mentionedPerson.id)
       )
     })
@@ -99,14 +95,14 @@ export class SlackBitFactory {
     return BitUtils.create(
       {
         sourceId: this.source.id,
-        integration: 'slack',
+        sourceType: 'slack',
         type: 'website',
         title: attachment.title,
         body: attachment.text,
         data: {
           url: attachment.original_url,
           title: attachment.title,
-          content: ''
+          content: '',
         },
         bitCreatedAt: messageTime,
         bitUpdatedAt: messageTime,
@@ -132,7 +128,7 @@ export class SlackBitFactory {
     let body = message.trim()
     // replace all people id mentions in the message into a real people names
     for (let person of allPeople) {
-      body = body.replace(new RegExp(`<@${person.integrationId}>`, 'g'), '@' + person.name)
+      body = body.replace(new RegExp(`<@${person.sourceId}>`, 'g'), '@' + person.name)
     }
     // make all links in the message a better formatting (without http and <>)
     const matchedLinks: string[] = []
@@ -153,6 +149,6 @@ export class SlackBitFactory {
    */
   private findMessageMentionedPeople(messages: SlackMessage[], allPeople: Person[]) {
     const body = messages.map(message => message.text).join('')
-    return allPeople.filter(person => new RegExp(`<@${person.integrationId}>`).test(body))
+    return allPeople.filter(person => new RegExp(`<@${person.sourceId}>`).test(body))
   }
 }

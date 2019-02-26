@@ -1,30 +1,30 @@
 import { gloss, Row } from '@mcro/gloss'
+import { ProvideStores, useApp } from '@mcro/kit'
 import { BorderTop } from '@mcro/ui'
 import React from 'react'
-import { useApp } from '../../apps/useApp'
-import { ProvideStores } from '../../components/ProvideStores'
 import { useStores } from '../../hooks/useStores'
 
 const statusBarHeight = 26
 
-export const OrbitStatusBarHeight = ({ id }: { id: string }) => {
-  const { appViews } = useApp({ id })
-  return <div style={{ height: appViews.statusBar ? statusBarHeight : 0 }} />
+export const OrbitStatusBarHeight = ({ appId }: { appId: string }) => {
+  const { views } = useApp(appId)
+  return <div style={{ height: views.statusBar ? statusBarHeight : 0 }} />
 }
 
-export default function OrbitStatusBar() {
+export function OrbitStatusBar() {
   const { paneManagerStore } = useStores()
-  const { appViews, appStore, provideStores } = useApp(paneManagerStore.activePane)
-  const AppView = appViews.statusBar
+  const { type, id } = paneManagerStore.activePane
+  const { views, appStore, provideStores } = useApp(type, id)
+  const StatusBarView = views.statusBar
 
-  if (!AppView) {
+  if (!StatusBarView) {
     return null
   }
 
   return (
     <ProvideStores stores={provideStores}>
       <StatusBarChrome>
-        <AppView key={paneManagerStore.activePane.id} appStore={appStore} />
+        <StatusBarView key={paneManagerStore.activePane.id} appStore={appStore} />
         <BorderTop />
       </StatusBarChrome>
     </ProvideStores>

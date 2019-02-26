@@ -91,7 +91,7 @@ class DesktopStore {
       mouseDown: Date.now(),
     },
     onboardState: {
-      foundIntegrations: {},
+      foundSources: {},
     },
     operatingSystem: {
       theme: 'light' as OSThemes,

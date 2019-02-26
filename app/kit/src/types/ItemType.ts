@@ -1,3 +1,3 @@
-import { IntegrationType } from '@mcro/models'
+import { SourceType } from '@mcro/models'
 
-export type ItemType = IntegrationType | 'person'
+export type ItemType = SourceType | 'people'

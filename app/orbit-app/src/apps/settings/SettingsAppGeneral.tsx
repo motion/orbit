@@ -1,16 +1,25 @@
+import { command } from '@mcro/bridge'
 import { showConfirmDialog } from '@mcro/kit'
+import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
+import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
-import { Button, CheckBoxRow, Divider, FormRow, Section, Theme, Title, VerticalSpace } from '@mcro/ui'
+import {
+  Button,
+  CheckBoxRow,
+  Divider,
+  FormRow,
+  Section,
+  Theme,
+  Title,
+  VerticalSpace,
+} from '@mcro/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
-import { useActiveUser } from '../../hooks/useActiveUser'
+import { sleep } from '../../helpers'
+import { showNotification } from '../../helpers/electron/showNotification'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
 import { AppProps } from '../AppTypes'
-import { command } from '@mcro/bridge'
-import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
-import { showNotification } from '../../helpers/electron/showNotification'
-import { sleep } from '../../helpers'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

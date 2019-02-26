@@ -1,11 +1,8 @@
 import { useModels } from '@mcro/bridge'
-import { List } from '@mcro/kit'
+import { List, OrbitOrb, useActiveQueryFilter, useActiveUser } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import * as React from 'react'
-import { useActiveUser } from '../../hooks/useActiveUser'
-import { useOrbitFilterableResults } from '../../hooks/useOrbitFilterableResults'
-import { OrbitOrb } from '../../views/OrbitOrb'
 
 export default function SpacesAppIndex() {
   const [user = {}, setUser] = useActiveUser()
@@ -39,7 +36,7 @@ export default function SpacesAppIndex() {
     },
   ]
 
-  const results = useOrbitFilterableResults({
+  const results = useActiveQueryFilter({
     items,
   })
 

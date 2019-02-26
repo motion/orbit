@@ -1,35 +1,32 @@
-import { AppType } from '@mcro/kit'
+import { useAppPackage } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
-import { apps } from '../apps/apps'
-import { appsStatic } from '../apps/appsStatic'
-import { App } from '../apps/AppTypes'
 
 export const defaultApps: AppBit[] = [
   {
     target: 'app',
     name: 'Search',
-    type: AppType.search,
+    appId: 'search',
     colors: ['red'],
     data: {},
   },
   {
     target: 'app',
     name: 'List',
-    type: AppType.lists,
+    appId: 'lists',
     colors: ['blue'],
     data: {},
   },
   {
     target: 'app',
     name: 'Directory',
-    type: AppType.people,
+    appId: 'people',
     colors: ['green'],
     data: {},
   },
   {
     target: 'app',
     name: 'Custom',
-    type: AppType.custom,
+    appId: 'custom',
     colors: ['gray'],
     data: {},
   },
@@ -51,8 +48,8 @@ export class NewAppStore {
     }
   }
 
-  setApp(type: AppType) {
-    const nextApp = defaultApps.find(x => x.type === type)
+  setApp(appId: string) {
+    const nextApp = defaultApps.find(x => x.appId === appId)
     if (!nextApp) {
       console.warn('no next app?')
       debugger
@@ -62,7 +59,7 @@ export class NewAppStore {
     // update name and colors if unedited
     let name = this.app.name
     let colors = this.app.colors
-    const neverChangedName = name === defaultApps.find(x => x.type === this.app.type).name
+    const neverChangedName = name === defaultApps.find(x => x.appId === this.app.appId).name
     if (neverChangedName) {
       name = nextApp.name
       colors = nextApp.colors
@@ -70,14 +67,15 @@ export class NewAppStore {
 
     // get data from defaultValue
     let data = nextApp.data
-    const app = (apps[type] || appsStatic[type]) as App<any>
+    const { app } = useAppPackage(appId)
     if (!app) {
       console.warn('no wapp?')
       debugger
       return
     }
-    if (app.defaultValue) {
-      data = app.defaultValue
+
+    if (app.appData) {
+      data = app.appData
     }
 
     this.app = {
@@ -86,7 +84,7 @@ export class NewAppStore {
       name,
       colors,
       // always update
-      type,
+      appId: appId,
       data,
     }
   }

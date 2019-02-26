@@ -1,12 +1,11 @@
 import { Absolute, gloss, ViewProps } from '@mcro/gloss'
-import { AppIcon } from '@mcro/kit'
+import { AppIcon, useActiveAppsSorted } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { Icon, Section, Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
-import { useActions } from '../../actions/Actions'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { useActiveAppsSorted } from '../../hooks/useActiveAppsSorted'
+import { useActions } from '../../hooks/useActions'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { TitleRow } from '../../views/TitleRow'
@@ -78,7 +77,7 @@ const AppIconContainer = gloss({
   },
 }))
 
-export default function AppsMainManage() {
+export function AppsMainManage() {
   const { paneManagerStore } = useStores()
   const Actions = useActions()
   const activeApps = useActiveAppsSorted()

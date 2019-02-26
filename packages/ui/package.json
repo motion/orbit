@@ -2,14 +2,12 @@
   "name": "@mcro/ui",
   "version": "2.3.10",
   "main": "_/index.js",
+  "ts:main": "src/index.ts",
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build": "npm run build-js & npm run build-types",
-    "watch": "npm run build-js -- --watch & npm run build-types-watch",
-    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
-    "build-types": "tsc  --emitDeclarationOnly || true",
-    "build-types-watch": "tsc  --emitDeclarationOnly --preserveWatchOutput --watch"
+    "build": "../../node_modules/.bin/microbundle",
+    "watch": "../../node_modules/.bin/microbundle watch"
   },
   "dependencies": {
     "scroll": "2.0.3",
@@ -35,16 +33,16 @@
     "react-virtualized-auto-sizer": "1.0.2",
     "react-window": "1.5.1",
     "react-virtualized": "9.21.0",
-    "hash-sum": "1.0.2"
+    "hash-sum": "1.0.2",
+    "react-date-range": "1.0.0-beta",
+    "react-markdown": "4.0.6",
+    "remark-emoji": "2.0.2"
   },
   "peerDependencies": {
     "electron": "*",
     "mobx": "5.9.0",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
-  },
-  "devDependencies": {
-    "@types/electron": "1.6.10"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

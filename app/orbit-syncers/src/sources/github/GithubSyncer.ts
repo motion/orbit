@@ -1,15 +1,18 @@
-import { BitEntity, PersonBitEntity, PersonEntity, SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { PersonBitUtils } from '@mcro/models'
 import {
+  BitEntity,
   GithubSource,
   GithubSourceValues,
   GithubSourceValuesLastSyncRepositoryInfo,
+  PersonBitEntity,
+  PersonBitUtils,
+  PersonEntity,
+  SourceEntity,
 } from '@mcro/models'
 import { GithubIssue, GithubLoader, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
-import { IntegrationSyncer } from '../../core/IntegrationSyncer'
+import { SourceSyncer } from '../../core/SourceSyncer'
 import { GithubBitFactory } from './GithubBitFactory'
 import { GithubPersonFactory } from './GithubPersonFactory'
 
@@ -20,7 +23,7 @@ import { GithubPersonFactory } from './GithubPersonFactory'
  * which means we never remove github bits during regular sync.
  * We only remove when some source change (for example user don't sync specific repository anymore).
  */
-export class GithubSyncer implements IntegrationSyncer {
+export class GithubSyncer implements SourceSyncer {
   private log: Logger
   private source: GithubSource
   private loader: GithubLoader
@@ -212,7 +215,7 @@ export class GithubSyncer implements IntegrationSyncer {
     // for people without emails we create "virtual" email
     for (let person of bit.people) {
       if (!person.email) {
-        person.email = person.name + ' from ' + person.integration
+        person.email = person.name + ' from ' + person.source
       }
     }
 

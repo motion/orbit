@@ -1,5 +1,14 @@
-import { BitEntity, JobEntity, PersonBitEntity, PersonEntity, SettingEntity } from '@mcro/models'
-import { Bit, Person, PersonBit, Source } from '@mcro/models'
+import {
+  Bit,
+  BitEntity,
+  JobEntity,
+  Person,
+  PersonBit,
+  PersonBitEntity,
+  PersonEntity,
+  SettingEntity,
+  Source,
+} from '@mcro/models'
 import { hash } from '@mcro/utils'
 import { getRepository, In, MoreThan } from 'typeorm'
 
@@ -22,7 +31,7 @@ export class SyncerRepository {
 
     const jobs = await getRepository(JobEntity).find({
       sourceId: this.source.id,
-      type: 'INTEGRATION_REMOVE',
+      type: 'SOURCE_REMOVE',
       status: 'PROCESSING',
     })
     if (jobs.length > 0) return true
@@ -58,7 +67,7 @@ export class SyncerRepository {
   }
 
   /**
-   * Loads all exist database people for the current integration.
+   * Loads all exist database people for the current Source.
    */
   async loadDatabasePeople(options?: { ids?: number[] }): Promise<Person[]> {
     if (!options) options = {}

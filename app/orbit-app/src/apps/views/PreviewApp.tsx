@@ -1,8 +1,8 @@
+import { AppView } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { BorderLeft, Section, Title } from '@mcro/ui'
 import React from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
-import { AppView } from '../AppView'
 
 export default function PreviewApp(props: { app: AppBit }) {
   return (
@@ -12,9 +12,8 @@ export default function PreviewApp(props: { app: AppBit }) {
         <Title>Preview</Title>
       </Section>
       <AppView
+        appId={props.app.appId}
         viewType="index"
-        id={`preview-${props.app.id}`}
-        type={props.app.type}
         appConfig={{
           ...appToAppConfig(props.app),
           id: `preview-${props.app.id}`,

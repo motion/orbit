@@ -1,12 +1,13 @@
 {
   "name": "@mcro/apps",
   "version": "2.3.10",
-  "main": "./_/index.js",
+  "main": "_/index.js",
+  "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "build-app": "NODE_ENV=production mcro-build --build --target node"
+    "build": "npm run build-js & npm run build-types",
+    "build-js": "../../node_modules/.bin/babel src  --extensions '.js,.ts,.tsx' --out-dir _ -s true",
+    "build-types": "tsc  --emitDeclarationOnly || true"
   },
   "dependencies": {
     "@mcro/kit": "*",
@@ -15,6 +16,7 @@
     "@mcro/bridge": "*",
     "@mcro/use-store": "*",
     "@mcro/ui": "*",
+    "faker": "4.1.0",
     "immer": "1.7.2",
     "lodash": "*",
     "typeorm": "^0.3.0-alpha.22"

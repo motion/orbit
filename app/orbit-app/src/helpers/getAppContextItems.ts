@@ -1,6 +1,6 @@
+import { remove } from '@mcro/bridge'
 import { showConfirmDialog } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
-import { remove } from '@mcro/bridge'
 
 export function getAppContextItems(app: AppBit) {
   return [
@@ -13,7 +13,8 @@ export function getAppContextItems(app: AppBit) {
             message: `Deleting this app will remove it from this space and delete it's data.`,
           })
         ) {
-          remove(AppModel, app)
+          // TODO @umed type off
+          remove(AppModel, app as any)
         }
       },
     },

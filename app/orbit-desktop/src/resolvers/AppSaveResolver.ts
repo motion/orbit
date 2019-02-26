@@ -19,15 +19,15 @@ export const AppSaveResolver = resolveCommand(AppSaveCommand, async ({ app }) =>
   try {
     // send test request to atlassian server to check app credentials
     log.info('saving app', app)
-    if (app.appId === 'jira') {
+    if (app.identifier === 'jira') {
       const loader = new JiraLoader(app as JiraApp, log)
       await loader.test()
       app.name = extractTeamNameFromDomain((app as JiraApp).data.values.credentials.domain)
-    } else if (app.appId === 'confluence') {
+    } else if (app.identifier === 'confluence') {
       const loader = new ConfluenceLoader(app as ConfluenceApp, log)
       await loader.test()
       app.name = extractTeamNameFromDomain((app as ConfluenceApp).data.values.credentials.domain)
-    } else if (app.appId === 'website') {
+    } else if (app.identifier === 'website') {
       app.name = (app as WebsiteApp).data.values.url
     }
 

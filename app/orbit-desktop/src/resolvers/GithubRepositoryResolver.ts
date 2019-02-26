@@ -11,7 +11,7 @@ export const GithubRepositoryManyResolver = resolveMany(
   async ({ appId }) => {
     const app = await getRepository(AppEntity).findOne({
       id: appId,
-      appType: 'github',
+      identifier: 'github',
     })
     if (!app) {
       log.error('cannot find requested app', { appId })

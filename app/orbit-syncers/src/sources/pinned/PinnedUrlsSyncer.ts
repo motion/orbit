@@ -113,7 +113,7 @@ export class PinnedUrlsSyncer implements AppSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        appType: 'pinned',
+        appIdentifier: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,
@@ -121,12 +121,6 @@ export class PinnedUrlsSyncer implements AppSyncer {
           title: crawledData.title,
           content: crawledData.content,
         } as PinnedBitData,
-        // location: {
-        //   id: undefined,
-        //   name: undefined,
-        //   webLink: undefined,
-        //   desktopLink: undefined,
-        // },
         webLink: crawledData.url,
         people: [],
         bitCreatedAt,

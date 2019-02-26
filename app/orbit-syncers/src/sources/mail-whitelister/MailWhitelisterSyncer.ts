@@ -23,7 +23,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
     const people = await getRepository(BitEntity).find({
       where: {
         type: 'person',
-        appType: ['AppIdentifier', 'github', 'drive', 'jira', 'confluence'],
+        appIdentifier: ['slack', 'github', 'drive', 'jira', 'confluence'],
       },
     })
     this.log.info('person bits were loaded', people)
@@ -33,7 +33,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
     // next we find all gmail Apps to add those emails to their whitelists
     this.log.info('loading gmail Apps')
     const Apps = await getRepository(AppEntity).find({
-      where: { appType: 'gmail' },
+      where: { identifier: 'gmail' },
     })
     this.log.info('loaded gmail Apps', Apps)
 

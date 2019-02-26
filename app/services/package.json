@@ -12,7 +12,7 @@
     "@mcro/logger": "^2.3.10",
     "@mcro/models": "^2.3.10",
     "@mcro/utils": "^2.3.10",
-    "slack": "^11.0.0"
+    "slack": "11.0.2"
   },
   "peerDependencies": {
     "mobx": "*"

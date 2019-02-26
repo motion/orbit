@@ -32,8 +32,8 @@ export class BitSyncer {
    */
   static buildId(app: GithubApp, data: GithubIssue | GithubPullRequest)
   static buildId(app: AppBit, data: any) {
-    if (app.appId === 'github') {
-      return hash(`${app.appId}-${app.id}-${data}`)
+    if (app.identifier === 'github') {
+      return hash(`${app.identifier}-${app.id}-${data}`)
     }
   }
 
@@ -171,7 +171,7 @@ export class BitSyncer {
 
   private async completeBitsData(bits: Bit[]) {
     for (let bit of bits) {
-      if (bit.appType === 'AppIdentifier' && bit.type === 'conversation') {
+      if (bit.appIdentifier === 'slack' && bit.type === 'conversation') {
         const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
         bit.title = (await Mediator.loadMany(CosalTopWordsModel, {
           args: { text: flatBody, max: 6 },

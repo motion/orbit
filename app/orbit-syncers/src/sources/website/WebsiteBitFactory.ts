@@ -22,7 +22,7 @@ export class WebsiteBitFactory {
     // create or update a bit
     return BitUtils.create(
       {
-        appType: 'website',
+        appIdentifier: 'website',
         appId: this.app.id,
         type: 'website',
         title: crawledData.title,

@@ -11,6 +11,7 @@ import {
 } from 'typeorm'
 import { AppData } from '../interfaces/app-data/AppData'
 import { AppIdentifier } from '../interfaces/AppBit'
+import { ItemType } from '../interfaces/ItemType'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
@@ -22,7 +23,10 @@ export class AppEntity extends BaseEntity {
   id?: number
 
   @Column()
-  identifier?: AppIdentifier
+  identifier?: AppIdentifier | string
+
+  @Column()
+  sourceIdentifier?: string
 
   @Column()
   token?: string
@@ -41,7 +45,7 @@ export class AppEntity extends BaseEntity {
   name?: string
 
   @Column()
-  itemType?: string
+  itemType?: ItemType
 
   @Column({ type: 'simple-json', default: '[]' })
   colors?: string[]

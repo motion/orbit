@@ -226,7 +226,7 @@ export class SlackSyncer implements AppSyncer {
   createPersonBit(user: SlackUser, team: SlackTeam): Bit {
     return BitUtils.create(
       {
-        appType: 'AppIdentifier',
+        appIdentifier: 'slack',
         appId: this.app.id,
         type: 'person',
         originalId: user.id,
@@ -284,7 +284,7 @@ export class SlackSyncer implements AppSyncer {
     return BitUtils.create(
       {
         appId: this.app.id,
-        appType: 'AppIdentifier',
+        appIdentifier: 'slack',
         type: 'conversation',
         title: '',
         body: data.messages.map(message => message.text).join(' ... '),
@@ -326,7 +326,7 @@ export class SlackSyncer implements AppSyncer {
     return BitUtils.create(
       {
         appId: this.app.id,
-        appType: 'AppIdentifier',
+        appIdentifier: 'slack',
         type: 'website',
         title: attachment.title,
         body: attachment.text,

@@ -35,7 +35,7 @@ export class BitEntity extends BaseEntity implements Bit {
   contentHash?: number
 
   @Column({ type: String })
-  appType?: AppIdentifier
+  appIdentifier?: AppIdentifier
 
   /**
    * Source id can be null only for pinned urls.

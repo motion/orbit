@@ -76,19 +76,19 @@ export default async function connectModels(models) {
       try {
         const apps = (await connection.getRepository(AppEntity).find()) as AppBit[]
         for (let app of apps) {
-          if (app.appType === 'confluence') {
+          if (app.identifier === 'confluence') {
             app.data.values.blogLastSync = {}
             app.data.values.pageLastSync = {}
-          } else if (app.appType === 'github') {
+          } else if (app.identifier === 'github') {
             app.data.values.lastSyncIssues = {}
             app.data.values.lastSyncPullRequests = {}
-          } else if (app.appType === 'drive') {
+          } else if (app.identifier === 'drive') {
             app.data.values.lastSync = {}
-          } else if (app.appType === 'gmail') {
+          } else if (app.identifier === 'gmail') {
             // app.data.values.lastSync = {} // todo: do after my another PR merge
-          } else if (app.appType === 'jira') {
+          } else if (app.identifier === 'jira') {
             app.data.values.lastSync = {}
-          } else if (app.appType === 'AppIdentifier') {
+          } else if (app.identifier === 'AppIdentifier') {
             app.data.values.lastMessageSync = {}
             app.data.values.lastAttachmentSync = {}
           }

@@ -19,6 +19,9 @@ export interface BaseAppBit {
 
   identifier?: string
 
+  // For validating if we're re-adding the same source
+  sourceIdentifier?: string
+
   space?: Space
 
   spaceId?: number

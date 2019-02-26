@@ -39,17 +39,17 @@ export class Syncer {
   constructor(options: SyncerOptions) {
     this.options = options
     this.name = options.name || options.constructor.name
-    this.log = new Logger('syncer:' + (options.type || this.name))
+    this.log = new Logger('syncer:' + (options.appIdentifier || this.name))
   }
 
   /**
    * Starts a process of active syncronization (runs interval).
    */
   async start(force = false) {
-    if (this.options.type) {
+    if (this.options.appIdentifier) {
       // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
-        const apps = await getRepository(AppEntity).find({ appType: this.options.type })
+        const apps = await getRepository(AppEntity).find({ identifier: this.options.appIdentifier })
         for (let app of apps) {
           await this.runInterval(app as AppBit, true)
         }
@@ -133,7 +133,7 @@ export class Syncer {
       interval = this.intervals.find(interval => interval.app.id === app.id)
     }
     const log = new Logger(
-      'syncer:' + (app ? app.appType + ':' + app.id : '') + (force ? ' (force)' : ''),
+      'syncer:' + (app ? app.identifier + ':' + app.id : '') + (force ? ' (force)' : ''),
     )
 
     // get the last run job

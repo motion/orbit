@@ -1,14 +1,7 @@
 import { loadMany, loadOne, observeMany } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
 import { AppProps, ListItem, useStores } from '@mcro/kit'
-import {
-  Bit,
-  BitModel,
-  CosalTopicsModel,
-  PersonBitModel,
-  SlackBitData,
-  SlackPersonData,
-} from '@mcro/models'
+import { Bit, BitModel, CosalTopicsModel, PersonData, SlackBitData } from '@mcro/models'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -37,10 +30,15 @@ class PeopleAppStore {
     () => this.appConfig,
     appConfig => {
       ensure('appConfig', !!appConfig)
-      return loadOne(PersonBitModel, {
+      return loadOne(BitModel, {
         args: {
-          where: { id: +appConfig.id },
-          relations: ['people'],
+          // TODO @umed type complains
+          // @ts-ignore
+          where: {
+            type: 'person',
+            id: +appConfig.id,
+          },
+          // relations: ['people'], // todo(nate): check why do we need it here
         },
       })
     },
@@ -54,10 +52,14 @@ class PeopleAppStore {
         args: {
           where: {
             people: {
-              personBit: {
-                email: person.email,
-              },
+              email: person.email,
             },
+            // todo(nate): below has been changed please check it
+            // people: {
+            //   personBit: {
+            //     email: person.email,
+            //   },
+            // },
           },
           order: {
             bitUpdatedAt: 'DESC',
@@ -106,7 +108,7 @@ export function PeopleAppMain(props: AppProps) {
         <CardContent>
           <Avatar src={person.photo} />
           <Info>
-            <Name>{person.name}</Name>
+            <Name>{person.title}</Name>
             <br />
             <Email href={`mailto:${person.email}`}>{person.email}</Email>
             <br />
@@ -119,12 +121,15 @@ export function PeopleAppMain(props: AppProps) {
           </SourceButton> */}
               <SourceButton
                 icon="zoom"
-                onClick={() => queryStore.setQuery(`${person.name} documents`)}
+                onClick={() => queryStore.setQuery(`${person.title} documents`)}
               >
                 Documents
               </SourceButton>
               <HorizontalSpace />
-              <SourceButton icon="zoom" onClick={() => queryStore.setQuery(`${person.name} tasks`)}>
+              <SourceButton
+                icon="zoom"
+                onClick={() => queryStore.setQuery(`${person.title} tasks`)}
+              >
                 Tasks
               </SourceButton>
             </Links>
@@ -138,7 +143,7 @@ export function PeopleAppMain(props: AppProps) {
               src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
                 // TODO @umed person-bit refactor to bit should then come back here and fix this
                 // @ts-ignore
-                ((person.data as SlackPersonData) || {}).tz
+                ((person.data as PersonData) || {}).tz
               }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
             />
           </Map>

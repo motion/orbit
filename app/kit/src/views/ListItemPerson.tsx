@@ -1,13 +1,13 @@
-import { PersonBit } from '@mcro/models'
 import { Avatar, memoIsEqualDeep, Text } from '@mcro/ui'
 import * as React from 'react'
+import { Bit } from '@mcro/models'
 
 // TODO basically just use a regular ListItem and make it support this
 
 export const ListItemPerson = memoIsEqualDeep(function ListItemPerson({
   item,
 }: {
-  item: PersonBit
+  item: Bit
 }) {
   return (
     <>

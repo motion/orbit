@@ -26,7 +26,7 @@ export type ListAppDataItemFolder = BaseListItem & {
   children: ItemID[]
 }
 
-export type ListAppDataItem = ListAppDataItemFolder | BaseListItem & { type: 'bit' | 'person' }
+export type ListAppDataItem = ListAppDataItemFolder | BaseListItem & { type: 'bit' }
 
 export type ListsAppData = {
   rootItemID: ItemID

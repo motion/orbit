@@ -28,7 +28,7 @@ export interface DriveLastSyncInfo {
   lastCursorSyncedDate?: number
 }
 
-export interface DriveSourceValues {
+export interface DriveAppValues {
   oauth: {
     refreshToken: string
     secret: string
@@ -36,4 +36,9 @@ export interface DriveSourceValues {
   }
 
   lastSync: DriveLastSyncInfo
+}
+
+export interface DriveAppData {
+  data: {}
+  values: DriveAppValues
 }

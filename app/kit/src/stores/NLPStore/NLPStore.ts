@@ -1,10 +1,10 @@
 import { observeMany } from '@mcro/bridge'
-import { PersonBitModel } from '@mcro/models'
 import { decorate, ensure, react } from '@mcro/use-store'
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
+import { BitModel } from '@mcro/models'
 
 const { parseSearchQuery, setUserNames } = initNlp()
 
@@ -21,15 +21,18 @@ export class NLPStore {
   }
 
   peopleNames: string[] = null
-  peopleNames$ = observeMany(PersonBitModel, {
+  peopleNames$ = observeMany(BitModel, {
     args: {
       select: {
-        name: true,
+        title: true,
+      },
+      where: {
+        type: 'person'
       },
       take: 100,
     },
-  }).subscribe(values => {
-    this.peopleNames = values.map(person => person.name).filter(x => x.trim().length > 1)
+  }).subscribe(bits => {
+    this.peopleNames = bits.map(bit => bit.title).filter(x => x.trim().length > 1)
   })
 
   willUnmount() {

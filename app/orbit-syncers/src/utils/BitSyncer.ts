@@ -4,14 +4,13 @@ import {
   BitEntity,
   CosalTopWordsModel,
   GithubSource,
-  PersonEntity,
   SlackBitData,
   Source,
 } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
-import { getManager, getRepository } from 'typeorm'
+import { getManager } from 'typeorm'
 import { Mediator } from '../mediator'
 import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
 
@@ -43,15 +42,6 @@ export class BitSyncer {
     if (source.type === 'github') {
       return hash(`${source.type}-${source.id}-${data}`)
     }
-  }
-
-  async syncOne(bit: Bit): Promise<void> {
-    // there is one problematic use case - if user removes Source during synchronization
-    // we should not sync anything (shouldn't write any new person or bit into the database)
-    // if (this.syncerRepository.isSettingRemoved())
-    //   throw new Error(`Setting wasn't found, looks like it was removed, stopping sync`)
-
-    await getRepository(BitEntity).save(bit)
   }
 
   /**
@@ -135,11 +125,14 @@ export class BitSyncer {
           }
           await manager.update(BitEntity, { id: bit.id }, bit)
 
-          const dbPeople = await manager.getRepository(PersonEntity).find({
+          const dbPeople = await manager.getRepository(BitEntity).find({
+            // TODO @umed type complains for me
+            // @ts-ignore
             select: {
               id: true,
             },
             where: {
+              type: 'person',
               bits: {
                 id: bit.id,
               },

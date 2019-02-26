@@ -13,12 +13,10 @@ import {
 import { BitData } from '../bit-data/BitData'
 import { Bit } from '../interfaces/Bit'
 import { BitContentType } from '../interfaces/BitContentType'
-import { Person } from '../interfaces/Person'
 import { Source } from '../interfaces/Source'
 import { SourceType } from '../interfaces/SourceType'
 import { Space } from '../interfaces/Space'
 import { LocationEntity } from './LocationEntity.node'
-import { PersonEntity } from './PersonEntity.node'
 import { SourceEntity } from './SourceEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
 
@@ -49,11 +47,20 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column({ nullable: true })
   authorId?: number
 
+  @Column({ nullable: true })
+  originalId?: string
+
   @Index()
   @Column()
   title?: string
 
-  @Column()
+  @Column({ nullable: true })
+  email?: string
+
+  @Column({ nullable: true })
+  photo?: string
+
+  @Column({ nullable: true })
   body?: string
 
   @Index()
@@ -72,10 +79,10 @@ export class BitEntity extends BaseEntity implements Bit {
   @Column(() => LocationEntity)
   location?: LocationEntity
 
-  @Column()
+  @Column({ nullable: true })
   bitCreatedAt?: number
 
-  @Column()
+  @Column({ nullable: true })
   bitUpdatedAt?: number
 
   @Column({ default: false })
@@ -89,12 +96,15 @@ export class BitEntity extends BaseEntity implements Bit {
   @UpdateDateColumn()
   updatedAt?: Date
 
-  @ManyToOne(() => PersonEntity)
-  author?: Person
+  @ManyToOne(() => BitEntity)
+  author?: Bit
 
-  @ManyToMany(() => PersonEntity, person => person.bits)
+  @ManyToMany(() => BitEntity, bit => bit.bits)
   @JoinTable()
-  people?: Person[]
+  people?: Bit[]
+
+  @ManyToMany(() => BitEntity, bit => bit.people)
+  bits?: Bit[]
 
   @ManyToOne(() => SourceEntity)
   source?: Source

@@ -1,4 +1,4 @@
-import { AtlassianSourceValuesCredentials } from './AtlassianSourceValuesCredentials'
+import { AtlassianAppValuesCredentials } from './AtlassianAppValuesCredentials'
 
 /**
  * Information about last sync.
@@ -35,8 +35,11 @@ export interface ConfluenceLastSyncInfo {
   lastCursorLoadedCount?: number
 }
 
-export interface ConfluenceSourceValues {
-  credentials: AtlassianSourceValuesCredentials
-  pageLastSync: ConfluenceLastSyncInfo
-  blogLastSync: ConfluenceLastSyncInfo
+export interface ConfluenceAppData {
+  values: {
+    credentials: AtlassianAppValuesCredentials
+    pageLastSync: ConfluenceLastSyncInfo
+    blogLastSync: ConfluenceLastSyncInfo
+  }
+  data: {}
 }

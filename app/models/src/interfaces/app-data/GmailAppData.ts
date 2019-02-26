@@ -2,8 +2,7 @@
  * Information about GMail last sync.
  * Used to implement partial syncing.
  */
-export interface GmailSourceValuesLastSync {
-
+export interface GmailAppValuesLastSync {
   /**
    * History is an advanced cursor.
    * Once history id is set gmail syncer will load only newly added and removed messages.
@@ -50,8 +49,7 @@ export interface GmailSourceValuesLastSync {
 /**
  * Additional GMail setting's values.
  */
-export interface GmailSourceValues {
-
+export interface GmailAppValues {
   /**
    * Maximal number of emails to load.
    */
@@ -90,5 +88,10 @@ export interface GmailSourceValues {
    * Information about threads last sync.
    * Used to implement partial syncing.
    */
-  lastSync: GmailSourceValuesLastSync
+  lastSync: GmailAppValuesLastSync
+}
+
+export interface GmailAppData {
+  data: {}
+  values: GmailAppValues
 }

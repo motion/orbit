@@ -2,7 +2,7 @@ import { useModel } from '@mcro/bridge'
 import { AppSubView, AppView, useAppView } from '@mcro/kit'
 import { SourceModel } from '@mcro/models'
 import * as React from 'react'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import { ManageApps } from './ManageApps'
 
 export function SourcesAppMain(props: AppProps) {

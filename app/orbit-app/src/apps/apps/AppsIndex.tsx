@@ -10,7 +10,7 @@ import { Icon, View } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitSourceInfo } from '../../components/OrbitSourceInfo'
 import { addSource } from '../../helpers/addSourceClickHandler'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import { orbitApps } from '../orbitApps'
 
 export function AppsIndex(_props: AppProps) {

@@ -1,6 +1,6 @@
 import { AppSubView } from '@mcro/kit'
 import React from 'react'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import { AppsMainManage } from './AppsMainManage'
 import { AppsMainNew } from './AppsMainNew'
 

@@ -1,4 +1,4 @@
-import { Person, SourceType } from '@mcro/models'
+import { Bit, SourceType } from '@mcro/models'
 
 export type NormalItem = {
   id?: string
@@ -15,7 +15,7 @@ export type NormalItem = {
   createdAt?: Date
   updatedAt?: Date
   comments?: React.ReactNode[]
-  people?: Person[]
+  people?: Bit[]
   searchTerm?: string
   subtitle?: React.ReactNode
   sourceType?: SourceType

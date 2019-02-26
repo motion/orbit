@@ -1,9 +1,7 @@
 import { BitData } from '../bit-data/BitData'
+import { AppBit } from './AppBit'
 import { BitContentType } from './BitContentType'
 import { Location } from './Location'
-import { Person } from './Person'
-import { Source } from './Source'
-import { SourceType } from './SourceType'
 
 export interface Bit {
   /**
@@ -19,17 +17,22 @@ export interface Bit {
   /**
    * Source type.
    */
-  sourceType?: SourceType
+  appType?: string
 
   /**
-   * Source id.
+   * App id.
    */
-  sourceId?: number
+  appId?: number
 
   /**
    * Original bit content author id.
    */
   authorId?: number
+
+  /**
+   * Id of the content on a remote.
+   */
+  originalId?: string
 
   /**
    * Bit unique content hash.
@@ -50,6 +53,16 @@ export interface Bit {
    * Bit title.
    */
   title?: string
+
+  /**
+   * Bit email (used for person bits).
+   */
+  email?: string
+
+  /**
+   * Bit photo (used for person bits).
+   */
+  photo?: string
 
   /**
    * Bit format-less body.
@@ -85,12 +98,17 @@ export interface Bit {
   /**
    * Original bit content author.
    */
-  author?: Person
+  author?: Bit
 
   /**
    * Related to this Bit people.
    */
-  people?: Person[]
+  people?: Bit[]
+
+  /**
+   * Bits this person owns (used when bit type is person).
+   */
+  bits?: Bit[]
 
   /**
    * Related to this Bit number of people.
@@ -98,9 +116,9 @@ export interface Bit {
   peopleCount?: number
 
   /**
-   * Source is a Bit's owner.
+   * App is a Bit's owner.
    */
-  source?: Source
+  app?: AppBit
 
   /**
    * Additional bit data.

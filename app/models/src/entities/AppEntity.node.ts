@@ -1,4 +1,15 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { AppData } from '../interfaces/app-data/AppData'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
@@ -11,6 +22,10 @@ export class AppEntity extends BaseEntity {
 
   @Column()
   appId?: string
+
+  @ManyToMany(() => SpaceEntity, space => space.sources)
+  @JoinTable()
+  spaces?: Space[]
 
   @ManyToOne(() => SpaceEntity, space => space.sources)
   space?: Space
@@ -28,5 +43,11 @@ export class AppEntity extends BaseEntity {
   pinned?: boolean
 
   @Column('simple-json', { default: '{}' })
-  data?: any
+  data?: AppData
+
+  @CreateDateColumn()
+  createdAt?: Date
+
+  @UpdateDateColumn()
+  updatedAt?: Date
 }

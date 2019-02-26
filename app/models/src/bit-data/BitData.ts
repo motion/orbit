@@ -1,5 +1,6 @@
+import { PersonData } from '..'
+import { AppBitType } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
-import { SourceType } from '../interfaces/SourceType'
 import { ConfluenceBitData } from './ConfluenceBitData'
 import { DriveBitData } from './DriveBitData'
 import { GithubBitData } from './GithubBitData'
@@ -21,6 +22,7 @@ export type BitData =
   | DriveBitData
   | WebsiteBitData
   | PinnedBitData
+  | PersonData
 
 export type AllBitData = {
   github: GithubBitData
@@ -31,9 +33,12 @@ export type AllBitData = {
   confluence: ConfluenceBitData
   jira: JiraBitData
   pinned: PinnedBitData
+  person: PersonData
 }
 
-export type GenericBit<A extends SourceType> = Bit & {
-  type: A
-  data: AllBitData[A]
-}
+export type GenericBit<A extends string> = A extends AppBitType
+  ? Bit & {
+      type: A
+      data: AllBitData[A]
+    }
+  : any

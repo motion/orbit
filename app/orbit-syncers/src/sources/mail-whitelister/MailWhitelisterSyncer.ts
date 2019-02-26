@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { GmailSourceValues, PersonBitEntity, SourceEntity } from '@mcro/models'
+import { BitEntity, GmailSourceValues, SourceEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 
@@ -19,18 +19,14 @@ export class MailWhitelisterSyncer implements SourceSyncer {
   async run() {
     // load person because we need emails that we want to whitelist
     this.log.info('loading person bits')
-    const personBits = await getRepository(PersonBitEntity).find({
-      where: [
-        { hasSlack: true },
-        { hasGithub: true },
-        { hasDrive: true },
-        { hasJira: true },
-        { hasConfluence: true },
-        // { hasGmail: true },
-      ],
+    const people = await getRepository(BitEntity).find({
+      where: {
+        type: 'person',
+        sourceType: ['slack', 'github', 'drive', 'jira', 'confluence']
+      },
     })
-    this.log.info('person bits were loaded', personBits)
-    const emails = personBits.map(person => person.email).filter(email => email.indexOf('@') !== -1)
+    this.log.info('person bits were loaded', people)
+    const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
     this.log.info('emails from the person bits', emails)
 
     // next we find all gmail Sources to add those emails to their whitelists

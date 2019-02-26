@@ -1,20 +1,19 @@
 import { Logger } from '@mcro/logger'
 import {
+  Bit,
   BitEntity,
+  BitUtils,
+  GithubBitData,
   GithubSource,
   GithubSourceValues,
   GithubSourceValuesLastSyncRepositoryInfo,
-  PersonBitEntity,
-  PersonBitUtils,
-  PersonEntity,
   SourceEntity,
 } from '@mcro/models'
-import { GithubIssue, GithubLoader, GithubPullRequest } from '@mcro/services'
+import { GithubComment, GithubCommit, GithubIssue, GithubLoader, GithubPerson, GithubPullRequest } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
-import { GithubBitFactory } from './GithubBitFactory'
-import { GithubPersonFactory } from './GithubPersonFactory'
+import { uniqBy } from 'lodash'
 
 /**
  * Syncs Github.
@@ -27,15 +26,11 @@ export class GithubSyncer implements SourceSyncer {
   private log: Logger
   private source: GithubSource
   private loader: GithubLoader
-  private bitFactory: GithubBitFactory
-  private personFactory: GithubPersonFactory
 
   constructor(source: GithubSource, log?: Logger) {
     this.source = source
     this.log = log || new Logger('syncer:github:' + source.id)
     this.loader = new GithubLoader(source, this.log)
-    this.bitFactory = new GithubBitFactory(source)
-    this.personFactory = new GithubPersonFactory(source)
   }
 
   /**
@@ -72,14 +67,14 @@ export class GithubSyncer implements SourceSyncer {
         repository.issues.nodes.length &&
         new Date(repository.issues.nodes[0].updatedAt).getTime() === lastSyncIssues.lastSyncedDate
       ) {
-        this.log.info(
+        this.log.verbose(
           `looks like nothing was changed in a ${
             repository.nameWithOwner
           } repository issues from our last sync, skipping`,
         )
       } else {
         // load repository issues and sync them in a stream
-        this.log.timer(`sync ${repository.nameWithOwner} issues`)
+        this.log.vtimer(`sync ${repository.nameWithOwner} issues`)
         await this.loader.loadIssues({
           organization,
           repository: repositoryName,
@@ -98,7 +93,7 @@ export class GithubSyncer implements SourceSyncer {
             })
           },
         })
-        this.log.timer(`sync ${repository.nameWithOwner} issues`)
+        this.log.vtimer(`sync ${repository.nameWithOwner} issues`)
       }
 
       // compare repository's first PR updated date with our last synced date to make sure
@@ -109,14 +104,14 @@ export class GithubSyncer implements SourceSyncer {
         new Date(repository.pullRequests.nodes[0].updatedAt).getTime() ===
           lastSyncPullRequests.lastSyncedDate
       ) {
-        this.log.info(
+        this.log.verbose(
           `looks like nothing was changed in a ${
             repository.nameWithOwner
           } repository PRs from our last sync, skipping`,
         )
       } else {
         // load repository pull requests and sync them in a stream
-        this.log.timer(`sync ${repository.nameWithOwner} pull requests`)
+        this.log.vtimer(`sync ${repository.nameWithOwner} pull requests`)
         await this.loader.loadPullRequests({
           organization,
           repository: repositoryName,
@@ -135,7 +130,7 @@ export class GithubSyncer implements SourceSyncer {
             })
           },
         })
-        this.log.timer(`sync ${repository.nameWithOwner} pull requests`)
+        this.log.vtimer(`sync ${repository.nameWithOwner} pull requests`)
       }
     }
     this.log.timer('load api bits and people')
@@ -204,41 +199,16 @@ export class GithubSyncer implements SourceSyncer {
         : []
 
     // load issue bit from the database
-    const bit = this.bitFactory.createFromIssue(issueOrPullRequest, comments)
+    const bit = this.createTaskBit(issueOrPullRequest, comments)
     if (type === 'issue') {
-      bit.people = this.personFactory.createFromIssue(issueOrPullRequest)
+      bit.people = this.createPersonBitFromIssue(issueOrPullRequest)
     } else {
       // pull request
-      bit.people = this.personFactory.createFromPullRequest(issueOrPullRequest as GithubPullRequest)
+      bit.people = this.createPersonBitFromPullRequest(issueOrPullRequest as GithubPullRequest)
     }
 
-    // for people without emails we create "virtual" email
-    for (let person of bit.people) {
-      if (!person.email) {
-        person.email = person.name + ' from ' + person.source
-      }
-    }
-
-    // find person bit with email
-    const personBits = await Promise.all(
-      bit.people.map(async person => {
-        const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
-        const newPersonBit = PersonBitUtils.createFromPerson(person)
-        const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
-
-        // push person to person bit's people
-        const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
-        if (!hasPerson) {
-          personBit.people.push(person)
-        }
-
-        return personBit
-      }),
-    )
-
-    this.log.verbose('syncing', { issueOrPullRequest, bit, people: bit.people, personBits })
-    await getRepository(PersonEntity).save(bit.people, { listeners: false })
-    await getRepository(PersonBitEntity).save(personBits, { listeners: false })
+    this.log.verbose('syncing', { issueOrPullRequest, bit, people: bit.people })
+    await getRepository(BitEntity).save(bit.people, { listeners: false })
     await getRepository(BitEntity).save(bit, { listeners: false })
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
@@ -300,5 +270,141 @@ export class GithubSyncer implements SourceSyncer {
     }
 
     return repositories
+  }
+
+  /**
+   * Creates a new bit from a given Github issue.
+   */
+  private createTaskBit(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
+    const id = hash(`github-${this.source.id}-${issue.id}`)
+    const createdAt = new Date(issue.createdAt).getTime()
+    const updatedAt = new Date(issue.updatedAt).getTime()
+
+    const data: GithubBitData = {
+      closed: issue.closed,
+      body: issue.body,
+      comments: comments.map(comment => {
+        // note: if user is removed on a github comment will have author set to "null"
+        return {
+          author: comment.author
+            ? {
+              avatarUrl: comment.author.avatarUrl,
+              login: comment.author.login,
+              email: comment.author.email,
+            }
+            : undefined,
+          createdAt: comment.createdAt,
+          body: comment.body,
+        }
+      }),
+      author: issue.author
+        ? {
+          avatarUrl: issue.author.avatarUrl,
+          login: issue.author.login,
+          email: issue.author.email,
+        }
+        : undefined,
+      labels: issue.labels.edges.map(label => ({
+        name: label.node.name,
+        description: label.node.description,
+        color: label.node.color,
+        url: label.node.url,
+      })),
+    }
+
+    return BitUtils.create({
+      id,
+      sourceId: this.source.id,
+      sourceType: 'github',
+      type: 'task',
+      title: issue.title,
+      body: issue.bodyText,
+      webLink: issue.url,
+      location: {
+        id: issue.repository.id,
+        name: issue.repository.name,
+        webLink: issue.repository.url,
+        desktopLink: '',
+      },
+      data,
+      bitCreatedAt: createdAt,
+      bitUpdatedAt: updatedAt,
+    })
+  }
+
+  /**
+   * Finds all participated people in a github issue and creates source
+   * people from them.
+   */
+  private createPersonBitFromIssue(issue: GithubIssue): Bit[] {
+    return issue.participants.edges
+      .map(user => user.node)
+      .filter(user => !!user)
+      .map(githubPerson => this.createPersonBitFromGithubUser(githubPerson))
+  }
+
+  /**
+   * Finds all participated people in a github pull request and creates source
+   * people from them.
+   */
+  private createPersonBitFromPullRequest(pr: GithubPullRequest): Bit[] {
+    const commits = pr.commits.edges.map(edge => edge.node.commit)
+    const reviews = pr.reviews.edges.map(edge => edge.node)
+
+    const githubPeople = uniqBy(
+      [
+        pr.author,
+        ...pr.participants.edges.map(user => user.node),
+        ...reviews.map(user => user.author),
+        ...commits.filter(commit => !!commit.user).map(commit => commit.user),
+      ],
+      'id',
+    ).filter(user => !!user)
+
+    const usersFromCommit = commits.filter(commit => {
+      return !commit.user && githubPeople.find(person => person.email === commit.email)
+    })
+
+    return [
+      ...githubPeople.map(githubPerson => this.createPersonBitFromGithubUser(githubPerson)),
+      ...usersFromCommit.map(commit => this.createPersonBitFromCommit(commit)),
+    ]
+  }
+
+  /**
+   * Creates a single source person from given Github user.
+   */
+  private createPersonBitFromGithubUser(githubPerson: GithubPerson): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'github',
+        sourceId: this.source.id,
+        type: 'person',
+        originalId: githubPerson.id,
+        title: githubPerson.login,
+        email: githubPerson.email,
+        photo: githubPerson.avatarUrl,
+        webLink: `https://github.com/${githubPerson.login}`,
+      },
+      githubPerson.id,
+    )
+  }
+
+  /**
+   * Creates a single source person from a commit.
+   */
+  private createPersonBitFromCommit(commit: GithubCommit): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'github',
+        sourceId: this.source.id,
+        type: 'person',
+        originalId: commit.email,
+        title: commit.name,
+        email: commit.email,
+        photo: commit.avatarUrl,
+      },
+      commit.email,
+    )
   }
 }

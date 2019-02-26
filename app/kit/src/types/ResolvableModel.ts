@@ -1,3 +1,3 @@
-import { Bit, PersonBit, SearchResult, Source } from '@mcro/models'
+import { Bit, SearchResult, Source } from '@mcro/models'
 
-export type ResolvableModel = Bit | PersonBit | Source | SearchResult
+export type ResolvableModel = Bit | Source | SearchResult

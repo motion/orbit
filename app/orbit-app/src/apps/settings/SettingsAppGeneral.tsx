@@ -19,7 +19,7 @@ import { sleep } from '../../helpers'
 import { showNotification } from '../../helpers/electron/showNotification'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

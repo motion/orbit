@@ -1,4 +1,4 @@
-import { AtlassianSourceValuesCredentials } from './AtlassianSourceValuesCredentials'
+import { AtlassianAppValuesCredentials } from './AtlassianAppValuesCredentials'
 
 /**
  * Information about last sync.
@@ -35,7 +35,12 @@ export interface JiraLastSyncInfo {
   lastCursorLoadedCount?: number
 }
 
-export interface JiraSourceValues {
-  credentials: AtlassianSourceValuesCredentials
+export interface JiraAppValues {
+  credentials: AtlassianAppValuesCredentials
   lastSync: JiraLastSyncInfo
+}
+
+export interface JiraAppData {
+  data: {}
+  values: JiraAppValues
 }

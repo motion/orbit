@@ -3,7 +3,7 @@ import { HighlightedSearchable, normalizeItem } from '@mcro/kit'
 import { BitModel } from '@mcro/models'
 import { ItemPropsProvider } from '@mcro/ui'
 import * as React from 'react'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import { BitTitleBar } from './BitTitlebar'
 
 const defaultItemProps = {

@@ -1,4 +1,4 @@
-import { Bit, PersonBit } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import {
   Center,
   Direction,
@@ -21,9 +21,7 @@ import { AppConfig } from '../types/AppConfig'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type SearchableItem = Bit | PersonBit
-
-export type Item = SearchableItem | OrbitListItemProps
+export type Item = Bit | OrbitListItemProps
 
 export function toListItemProps(props: any): OrbitListItemProps {
   if (!props) {

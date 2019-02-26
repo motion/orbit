@@ -1,4 +1,3 @@
-import { SourceType } from '@mcro/models'
 import { config } from '../configureKit'
 import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
@@ -37,9 +36,10 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
 }
 
 const modelTargetToAppType = (model: ResolvableModel) => {
-  if (model.target === 'person-bit') {
-    return 'people'
-  }
+  // todo(nate): check it
+  // if (model.target === 'person-bit') {
+  //   return 'people'
+  // }
   if (model.target === 'search-group') {
     return 'search'
   }
@@ -56,7 +56,6 @@ export function getSourceAppConfig(appDef: AppDefinition, model: ResolvableModel
     iconLight: appDef.iconLight,
     title: model.target === 'bit' ? model.title : model['name'],
     appId: model ? modelTargetToAppType(model) : 'sources',
-    source: appDef.sync.sourceType as SourceType,
     viewConfig: appDef.defaultViewConfig,
   }
 }

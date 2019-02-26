@@ -15,7 +15,7 @@ import {
   TableColumnSizes,
   TableOnAddFilter,
 } from './types'
-import { normaliseColumnWidth } from './utils.js'
+import { normaliseColumnWidth } from './utils'
 
 const backgroundColor = (props, theme) => {
   if (props.highlighted) {

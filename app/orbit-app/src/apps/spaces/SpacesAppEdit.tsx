@@ -43,6 +43,7 @@ export default function SpacesAppEdit(props: AppProps) {
           label="Name"
           placeholder="Name..."
           onChange={e => {
+            console.log('change name', e)
             // update name...
           }}
         />

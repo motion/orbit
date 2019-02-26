@@ -7,6 +7,6 @@ export function setPeekTarget(fromTarget: PeekTarget) {
   const target = getTargetPosition(fromTarget)
   setAppState({
     target,
-    ...peekPosition(target, 0, null),
+    ...peekPosition(target, null, null),
   })
 }

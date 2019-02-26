@@ -95,7 +95,11 @@ const alias = {
 // console.log('alias', alias)
 
 const mcroClientOnly = {
-  include: [Path.resolve(cwd, 'src'), /node_modules\/@mcro\/(kit|ui|gloss)/],
+  include: [
+    Path.resolve(cwd, 'src'),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'kit', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'ui', 'src')),
+  ],
 }
 
 console.log('mcroClientOnly', mcroClientOnly)
@@ -167,7 +171,10 @@ const config = {
               transpileOnly: true, // disable - we use it in fork plugin
             },
           },
-          'babel-loader',
+          {
+            loader: 'babel-loader',
+            options: JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
+          },
           'react-hot-loader/webpack',
         ],
 

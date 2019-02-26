@@ -61,7 +61,7 @@ export const ListItem = React.memo(
 
     const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
 
-    const isSelected = React.useCallback((index: number) => {
+    const getIsSelected = React.useCallback((index: number) => {
       const appActive = appStore ? appStore.isActive : true
       const isSelected =
         props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
@@ -79,7 +79,7 @@ export const ListItem = React.memo(
         subtitleSpaceBetween={spaceBetween}
         {...ItemView && ItemView.itemProps}
         {...itemProps}
-        isSelected={isSelected}
+        isSelected={getIsSelected}
         {...props}
         icon={icon}
         date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}

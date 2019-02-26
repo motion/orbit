@@ -23,7 +23,6 @@ export class AppsStore {
 
   get allIds() {
     const next = [...new Set([...Object.keys(this.apps), ...Object.keys(this.definitions)])]
-    console.log('run allids', next)
     return next
   }
 

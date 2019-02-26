@@ -54,11 +54,11 @@ export class ListItemStore {
     this.lastClickLocation = Date.now()
   }
 
-  setCardWrapRef = cardWrapRef => {
-    if (!cardWrapRef) {
-      return
+  setCardWrapRef = next => {
+    if (!next) return
+    if (next !== this.cardWrapRef) {
+      this.cardWrapRef = next
     }
-    this.cardWrapRef = cardWrapRef
   }
 
   get index() {

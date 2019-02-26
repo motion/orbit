@@ -3,9 +3,9 @@ import { DriveSyncer } from '../sources/drive/DriveSyncer'
 import { GithubSyncer } from '../sources/github/GithubSyncer'
 import { GMailSyncer } from '../sources/gmail/GMailSyncer'
 import { JiraSyncer } from '../sources/jira/JiraSyncer'
-import { WebsiteSyncer } from '../sources/website/WebsiteSyncer'
 import { MailWhitelisterSyncer } from '../sources/mail-whitelister/MailWhitelisterSyncer'
 import { SlackSyncer } from '../sources/slack/SlackSyncer'
+import { WebsiteSyncer } from '../sources/website/WebsiteSyncer'
 import { Syncer } from './Syncer'
 
 const ONE_MINUTE = 1000 * 60
@@ -40,7 +40,7 @@ export const Syncers = [
     interval: TEN_MINUTES,
   }),
   new Syncer({
-    type: 'slack',
+    type: 'AppIdentifier',
     constructor: SlackSyncer,
     interval: FIVE_MINUTES,
   }),

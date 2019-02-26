@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import {
-  AppBitEntity,
+  AppEntity,
   Bit,
   BitEntity,
   BitUtils,
@@ -189,7 +189,7 @@ export class GithubSyncer implements AppSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -199,7 +199,7 @@ export class GithubSyncer implements AppSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     const comments =
@@ -230,7 +230,7 @@ export class GithubSyncer implements AppSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
       return true
     }
 
@@ -239,7 +239,7 @@ export class GithubSyncer implements AppSyncer {
       this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     return true

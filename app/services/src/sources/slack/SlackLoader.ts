@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { SlackApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import { channels, team, users } from 'slack'
+import { channels, team, users } from 'AppIdentifier'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
 

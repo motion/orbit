@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { AppBitEntity, GithubApp, GithubRepositoryModel } from '@mcro/models'
+import { AppEntity, GithubApp, GithubRepositoryModel } from '@mcro/models'
 import { GithubLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
@@ -9,7 +9,7 @@ const log = new Logger('resolver:github-repositories')
 export const GithubRepositoryManyResolver = resolveMany(
   GithubRepositoryModel,
   async ({ appId }) => {
-    const app = await getRepository(AppBitEntity).findOne({
+    const app = await getRepository(AppEntity).findOne({
       id: appId,
       appType: 'github',
     })

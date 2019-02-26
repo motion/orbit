@@ -40,7 +40,7 @@ const createSource = async (type: SourceType, values: OauthValues) => {
     } as any,
   }
 
-  if (source.type === 'slack') {
+  if (source.type === 'AppIdentifier') {
     const loader = new SlackLoader(source as SlackSource)
     const team = await loader.loadTeam()
 

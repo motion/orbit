@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { AppBitEntity, Bit, BitEntity, BitUtils, JiraApp, JiraBitData } from '@mcro/models'
+import { AppEntity, Bit, BitEntity, BitUtils, JiraApp, JiraBitData } from '@mcro/models'
 import { JiraAppData } from '@mcro/models/_/interfaces/app-data/JiraAppData'
 import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
@@ -85,7 +85,7 @@ export class JiraSyncer implements AppSyncer {
           }
           lastSync.lastCursor = undefined
           lastSync.lastCursorSyncedDate = undefined
-          await getRepository(AppBitEntity).save(this.app)
+          await getRepository(AppEntity).save(this.app)
 
           return false // this tells from the callback to stop file proceeding
         }
@@ -95,7 +95,7 @@ export class JiraSyncer implements AppSyncer {
         if (!lastSync.lastCursorSyncedDate) {
           lastSync.lastCursorSyncedDate = updatedAt
           this.log.info('looks like its the first syncing issue, set last synced date', lastSync)
-          await getRepository(AppBitEntity).save(this.app)
+          await getRepository(AppEntity).save(this.app)
         }
 
         const bit = this.createDocumentBit(issue, allDbPeople)
@@ -111,7 +111,7 @@ export class JiraSyncer implements AppSyncer {
           lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
           lastSync.lastCursor = undefined
           lastSync.lastCursorSyncedDate = undefined
-          await getRepository(AppBitEntity).save(this.app)
+          await getRepository(AppEntity).save(this.app)
           return true
         }
 
@@ -120,7 +120,7 @@ export class JiraSyncer implements AppSyncer {
           this.log.info('updating last cursor in settings', { cursor })
           lastSync.lastCursor = cursor
           lastSync.lastCursorLoadedCount = loadedCount
-          await getRepository(AppBitEntity).save(this.app)
+          await getRepository(AppEntity).save(this.app)
         }
 
         return true

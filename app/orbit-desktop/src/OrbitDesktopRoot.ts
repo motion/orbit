@@ -11,7 +11,7 @@ import {
   WebSocketServerTransport,
 } from '@mcro/mediator'
 import {
-  AppBitEntity,
+  AppEntity,
   AppModel,
   AppRemoveCommand,
   AppSaveCommand,
@@ -292,7 +292,7 @@ export class OrbitDesktopRoot {
       fallbackClient: client,
       resolvers: [
         ...typeormResolvers(getConnection(), [
-          { entity: AppBitEntity, models: [AppModel] },
+          { entity: AppEntity, models: [AppModel] },
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },

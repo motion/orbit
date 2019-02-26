@@ -36,7 +36,10 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
       {bits.map(bit => {
         return (
           <React.Fragment key={bit.id}>
-            <ChatMessages key={bit.id} messages={(bit as GenericBit<'slack'>).data.messages} />
+            <ChatMessages
+              key={bit.id}
+              messages={(bit as GenericBit<'AppIdentifier'>).data.messages}
+            />
             <Divider />
           </React.Fragment>
         )

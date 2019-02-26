@@ -10,22 +10,22 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { AppData } from '../interfaces/app-data/AppData'
-import { AppBitType } from '../interfaces/AppBit'
+import { AppIdentifier } from '../interfaces/AppBit'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
-export class AppBitEntity extends BaseEntity {
+export class AppEntity extends BaseEntity {
   target: 'app' = 'app'
 
   @PrimaryGeneratedColumn()
   id?: number
 
   @Column()
-  appId?: string
+  identifier?: AppIdentifier
 
   @Column()
-  appType?: AppBitType
+  token?: string
 
   @ManyToMany(() => SpaceEntity, space => space.apps)
   @JoinTable()

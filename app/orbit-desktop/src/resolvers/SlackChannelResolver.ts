@@ -1,13 +1,13 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { AppBitEntity, SlackChannelModel } from '@mcro/models'
+import { AppEntity, SlackChannelModel } from '@mcro/models'
 import { SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('resolver:slack-channel')
 
 export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ appId }) => {
-  const source = await getRepository(AppBitEntity).findOne({
+  const source = await getRepository(AppEntity).findOne({
     id: appId,
   })
   if (!source) {

@@ -2,7 +2,7 @@ import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
-  AppBitEntity,
+  AppEntity,
   AppForceCancelCommand,
   AppForceSyncCommand,
   AppModel,
@@ -97,9 +97,9 @@ export class OrbitSyncersRoot {
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
-          { entity: AppBitEntity, models: [AppModel] },
+          { entity: AppEntity, models: [AppModel] },
           { entity: SettingEntity, models: [SettingModel] },
-          { entity: AppBitEntity, models: [AppModel] },
+          { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: SpaceEntity, models: [SpaceModel] },

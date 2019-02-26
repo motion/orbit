@@ -1,4 +1,4 @@
-import { AppBitEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@mcro/models'
+import { AppEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@mcro/models'
 import { DesktopActions } from '@mcro/stores'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
@@ -107,7 +107,7 @@ export class OrbitDataManager {
       persist()
     })
 
-    addObserveMany(this.subscriptions, AppBitEntity, { where: { spaceId: space.id } }, apps => {
+    addObserveMany(this.subscriptions, AppEntity, { where: { spaceId: space.id } }, apps => {
       state.apps = apps
       persist()
     })

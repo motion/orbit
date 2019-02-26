@@ -97,8 +97,7 @@ export type AppBit =
   | GithubApp
   | GenericAppBit
 
-// TODO this is dynamic now...
-export type AppBitType =
+export type AppIdentifier =
   | 'slack'
   | 'gmail'
   | 'drive'

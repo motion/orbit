@@ -1,4 +1,4 @@
-import { AppBitType } from '../interfaces/AppBit'
+import { AppIdentifier } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
 import { ConfluenceBitData } from './ConfluenceBitData'
 import { DriveBitData } from './DriveBitData'
@@ -36,7 +36,7 @@ export type AllBitData = {
   person: PersonData
 }
 
-export type GenericBit<A extends string> = A extends AppBitType
+export type GenericBit<A extends string> = A extends AppIdentifier
   ? Bit & {
       type: A
       data: AllBitData[A]

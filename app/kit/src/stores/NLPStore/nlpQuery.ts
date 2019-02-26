@@ -10,7 +10,7 @@ const state = {
 
 const prefixes = {
   gh: 'github',
-  sl: 'slack',
+  sl: 'AppIdentifier',
   gm: 'gmail',
   gd: 'gdocs',
   ji: 'jira',
@@ -18,7 +18,7 @@ const prefixes = {
 }
 
 const appFilters = {
-  slack: 'slack',
+  slack: 'AppIdentifier',
   gmail: 'gmail',
   drive: 'drive',
   confluence: 'confluence',

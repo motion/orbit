@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import {
-  AppBitEntity,
+  AppEntity,
   Bit,
   BitEntity,
   BitUtils,
@@ -142,7 +142,7 @@ export class ConfluenceSyncer {
       }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getRepository(AppBitEntity).save(this.app)
+      await getRepository(AppEntity).save(this.app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -152,7 +152,7 @@ export class ConfluenceSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
-      await getRepository(AppBitEntity).save(this.app)
+      await getRepository(AppEntity).save(this.app)
     }
 
     const bit = this.createDocumentBit(content, allDbPeople)
@@ -168,7 +168,7 @@ export class ConfluenceSyncer {
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getRepository(AppBitEntity).save(this.app)
+      await getRepository(AppEntity).save(this.app)
       return true
     }
 
@@ -177,7 +177,7 @@ export class ConfluenceSyncer {
       this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(AppBitEntity).save(this.app)
+      await getRepository(AppEntity).save(this.app)
     }
 
     return true

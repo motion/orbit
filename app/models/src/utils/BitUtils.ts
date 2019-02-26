@@ -1,6 +1,6 @@
 import { hash } from '@mcro/utils'
 import { SlackBitData } from '../bit-data/SlackBitData'
-import { AppBit, AppBitType } from '../interfaces/AppBit'
+import { AppBit, AppIdentifier } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
 
 /**
@@ -10,15 +10,15 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(Source: AppBitType, sourceId: number | undefined, data: string): number
-  static id(source: AppBit, data: string): number
-  static id(bitOrBitType: AppBit | AppBitType, sourceIdOrData: any, maybeData?: string): number {
+  static id(App: AppIdentifier, appId: number | undefined, data: string): number
+  static id(app: AppBit, data: string): number
+  static id(bitOrBitType: AppBit | AppIdentifier, appIdOrData: any, maybeData?: string): number {
     if (typeof bitOrBitType === 'object') {
-      // Source
-      return hash(`${bitOrBitType.appId}-${bitOrBitType.id}-${sourceIdOrData}`)
-    } else if (bitOrBitType && sourceIdOrData && maybeData) {
-      return hash(`${bitOrBitType}-${sourceIdOrData}-${maybeData}`)
-    } else if (bitOrBitType && !sourceIdOrData) {
+      // App
+      return hash(`${bitOrBitType.identifier}-${bitOrBitType.id}-${appIdOrData}`)
+    } else if (bitOrBitType && appIdOrData && maybeData) {
+      return hash(`${bitOrBitType}-${appIdOrData}-${maybeData}`)
+    } else if (bitOrBitType && !appIdOrData) {
       return hash(`${bitOrBitType}-${maybeData}`)
     }
     return 0
@@ -38,12 +38,12 @@ export class BitUtils {
   /**
    * Creates a new bit and sets given properties to it.
    */
-  static create(properties: Partial<Bit>, SourceId?: any) {
+  static create(properties: Partial<Bit>, AppId?: any) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
     if (!bit.appId && bit.app) bit.appId = bit.app.id
-    if (bit.appType && bit.appId && SourceId) {
-      bit.id = this.id(bit.appType, bit.appId, SourceId)
+    if (bit.appIdentifier && bit.appId && AppId) {
+      bit.id = this.id(bit.appIdentifier, bit.appId, AppId)
     }
     return bit
   }

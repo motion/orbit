@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { AppBitEntity, AppSaveCommand, ConfluenceApp, JiraApp, WebsiteApp } from '@mcro/models'
+import { AppEntity, AppSaveCommand, ConfluenceApp, JiraApp, WebsiteApp } from '@mcro/models'
 import { ConfluenceLoader, JiraLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
@@ -33,7 +33,7 @@ export const AppSaveResolver = resolveCommand(AppSaveCommand, async ({ app }) =>
 
     // if credentials are okay save the app
     log.info('saving app', app)
-    await getRepository(AppBitEntity).save(app)
+    await getRepository(AppEntity).save(app)
     log.info('atlassian app saved successfully')
 
     return { success: true }

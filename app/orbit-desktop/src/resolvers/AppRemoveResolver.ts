@@ -1,13 +1,13 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { AppBit, AppBitEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@mcro/models'
+import { AppBit, AppEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@mcro/models'
 import { getManager, getRepository } from 'typeorm'
 
 const log = new Logger('command:app-remove')
 
 export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId }) => {
   // load app that we should remove
-  const app = await getRepository(AppBitEntity).findOne({
+  const app = await getRepository(AppEntity).findOne({
     id: appId,
   })
   if (!app) {

@@ -1,6 +1,6 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
-import { AppBit, AppBitType } from './interfaces/AppBit'
+import { AppBit, AppIdentifier } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
@@ -35,7 +35,7 @@ export type SearchQuery = {
   searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
-  appFilters?: AppBitType[]
+  appFilters?: AppIdentifier[]
   peopleFilters?: string[]
   locationFilters?: string[]
   take: number

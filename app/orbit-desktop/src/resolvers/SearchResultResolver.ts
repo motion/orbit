@@ -1,7 +1,7 @@
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
 import {
-  AppBitEntity,
+  AppEntity,
   Bit,
   BitContentType,
   BitContentTypes,
@@ -23,7 +23,7 @@ export class SearchResultResolver {
   private startDate: Date
   private endDate: Date
   private queryExecutor: SearchQueryExecutor
-  private apps: AppBitEntity[] = []
+  private apps: AppEntity[] = []
   private cosalBitIds: number[] = []
 
   constructor(cosal: Cosal, args: SearchQuery) {
@@ -39,7 +39,7 @@ export class SearchResultResolver {
    */
   async resolve() {
     this.log.timer('search', this.args)
-    this.apps = await getRepository(AppBitEntity).find({ spaces: { id: this.args.spaceId } })
+    this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()
     const searchResults: SearchResult[] = []
 

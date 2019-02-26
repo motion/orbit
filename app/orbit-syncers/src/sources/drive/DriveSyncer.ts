@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { AppBitEntity, Bit, BitEntity, BitUtils, DriveApp, DriveBitData } from '@mcro/models'
+import { AppEntity, Bit, BitEntity, BitUtils, DriveApp, DriveBitData } from '@mcro/models'
 import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
@@ -18,7 +18,7 @@ export class DriveSyncer implements AppSyncer {
     this.app = source
     this.log = log || new Logger('syncer:drive:' + source.id)
     this.loader = new DriveLoader(this.app, this.log, source =>
-      getRepository(AppBitEntity).save(source),
+      getRepository(AppEntity).save(source),
     )
   }
 
@@ -49,7 +49,7 @@ export class DriveSyncer implements AppSyncer {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(AppBitEntity).save(this.app)
+        await getRepository(AppEntity).save(this.app)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -59,7 +59,7 @@ export class DriveSyncer implements AppSyncer {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         this.log.info('looks like its the first syncing file, set last synced date', lastSync)
-        await getRepository(AppBitEntity).save(this.app)
+        await getRepository(AppEntity).save(this.app)
       }
 
       const bit = this.createDocumentBit(file)
@@ -78,7 +78,7 @@ export class DriveSyncer implements AppSyncer {
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(AppBitEntity).save(this.app)
+        await getRepository(AppEntity).save(this.app)
         return true
       }
 
@@ -86,7 +86,7 @@ export class DriveSyncer implements AppSyncer {
       if (lastSync.lastCursor !== cursor) {
         this.log.info('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
-        await getRepository(AppBitEntity).save(this.app)
+        await getRepository(AppEntity).save(this.app)
       }
 
       return true

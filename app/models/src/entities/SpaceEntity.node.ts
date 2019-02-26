@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { AppBit } from '../interfaces/AppBit'
 import { Space } from '../interfaces/Space'
-import { AppBitEntity } from './AppBitEntity.node'
+import { AppEntity } from './AppEntity.node'
 
 @Entity()
 export class SpaceEntity implements Space {
@@ -17,6 +17,6 @@ export class SpaceEntity implements Space {
   @Column({ type: 'simple-json' })
   paneSort: number[]
 
-  @OneToMany(() => AppBitEntity, app => app.space)
+  @OneToMany(() => AppEntity, app => app.space)
   apps: AppBit[]
 }

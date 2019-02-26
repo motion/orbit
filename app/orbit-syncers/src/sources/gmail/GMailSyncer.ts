@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import {
-  AppBitEntity,
+  AppEntity,
   Bit,
   BitEntity,
   BitUtils,
@@ -27,9 +27,7 @@ export class GMailSyncer implements AppSyncer {
   constructor(source: GmailApp, log?: Logger) {
     this.app = source
     this.log = log || new Logger('syncer:gmail:' + source.id)
-    this.loader = new GMailLoader(source, this.log, source =>
-      getRepository(AppBitEntity).save(source),
-    )
+    this.loader = new GMailLoader(source, this.log, source => getRepository(AppEntity).save(source))
   }
 
   async run() {
@@ -50,7 +48,7 @@ export class GMailSyncer implements AppSyncer {
     lastSync.usedQueryFilter = queryFilter
     lastSync.usedDaysLimit = this.app.data.values.daysLimit
     lastSync.usedMax = this.app.data.values.max
-    await getRepository(AppBitEntity).save(this.app, { listeners: false })
+    await getRepository(AppEntity).save(this.app, { listeners: false })
 
     // if user configuration has changed (max number of messages, days limitation or query filter)
     // we drop all bits to make complete sync again
@@ -115,7 +113,7 @@ export class GMailSyncer implements AppSyncer {
       }
 
       lastSync.historyId = history.historyId
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     } else {
       // else this is a first time sync, load all threads
       this.log.timer('sync all threads')
@@ -175,7 +173,7 @@ export class GMailSyncer implements AppSyncer {
     if (!lastSync.lastCursorHistoryId) {
       lastSync.lastCursorHistoryId = thread.historyId
       this.log.info('looks like its the first syncing thread, set history id', lastSync)
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     // sync a thread
@@ -191,7 +189,7 @@ export class GMailSyncer implements AppSyncer {
       lastSync.lastCursor = undefined
       lastSync.lastCursorHistoryId = undefined
       lastSync.lastCursorLoadedCount = undefined
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
       return true
     }
 
@@ -200,7 +198,7 @@ export class GMailSyncer implements AppSyncer {
       this.log.info('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
       lastSync.lastCursorLoadedCount = loadedCount
-      await getRepository(AppBitEntity).save(this.app, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     return true

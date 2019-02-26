@@ -1,4 +1,4 @@
-import { AppBit, AppBitEntity } from '@mcro/models'
+import { AppBit, AppEntity } from '@mcro/models'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'
@@ -74,7 +74,7 @@ export default async function connectModels(models) {
 
       // reset app last sync settings, since we are going to start it from scratch
       try {
-        const apps = (await connection.getRepository(AppBitEntity).find()) as AppBit[]
+        const apps = (await connection.getRepository(AppEntity).find()) as AppBit[]
         for (let app of apps) {
           if (app.appType === 'confluence') {
             app.data.values.blogLastSync = {}
@@ -88,13 +88,13 @@ export default async function connectModels(models) {
             // app.data.values.lastSync = {} // todo: do after my another PR merge
           } else if (app.appType === 'jira') {
             app.data.values.lastSync = {}
-          } else if (app.appType === 'slack') {
+          } else if (app.appType === 'AppIdentifier') {
             app.data.values.lastMessageSync = {}
             app.data.values.lastAttachmentSync = {}
           }
         }
 
-        await connection.getRepository(AppBitEntity).save(apps)
+        await connection.getRepository(AppEntity).save(apps)
       } catch {
         console.log('failed with method 2')
       }

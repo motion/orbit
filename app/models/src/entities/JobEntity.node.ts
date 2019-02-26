@@ -3,7 +3,7 @@ import { AppBit } from '../interfaces/AppBit'
 import { Job } from '../interfaces/Job'
 import { JobStatus } from '../interfaces/JobStatus'
 import { JobType } from '../interfaces/JobType'
-import { AppBitEntity } from './AppBitEntity.node'
+import { AppEntity } from './AppEntity.node'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
@@ -30,6 +30,6 @@ export class JobEntity extends BaseEntity implements Job {
   @Column({ nullable: true })
   appId?: number
 
-  @ManyToOne(() => AppBitEntity)
+  @ManyToOne(() => AppEntity)
   app?: AppBit
 }

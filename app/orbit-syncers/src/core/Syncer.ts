@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
-import { AppBit, AppBitEntity, AppModel, Job, JobEntity } from '@mcro/models'
+import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Mediator } from '../mediator'
 import { SyncerOptions } from './AppSyncer'
@@ -10,7 +10,7 @@ import Timer = NodeJS.Timer
  * Interval running in the Syncer.
  */
 interface SyncerInterval {
-  app?: AppBitEntity
+  app?: AppEntity
   timer: Timer
   running?: Promise<any>
 }
@@ -49,7 +49,7 @@ export class Syncer {
     if (this.options.type) {
       // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
-        const apps = await getRepository(AppBitEntity).find({ appType: this.options.type })
+        const apps = await getRepository(AppEntity).find({ appType: this.options.type })
         for (let app of apps) {
           await this.runInterval(app as AppBit, true)
         }
@@ -197,7 +197,7 @@ export class Syncer {
     // create interval to run syncer periodically
     if (this.options.interval && force === false) {
       interval = {
-        app: app as AppBitEntity,
+        app: app as AppEntity,
         running: syncerPromise,
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
@@ -211,9 +211,7 @@ export class Syncer {
           }
 
           // re-load app again just to make sure we have a new version of it
-          const latestApp = app
-            ? await getRepository(AppBitEntity).findOne({ id: app.id })
-            : undefined
+          const latestApp = app ? await getRepository(AppEntity).findOne({ id: app.id }) : undefined
           interval.app = latestApp
           interval.running = this.runSyncer(log, latestApp as AppBit)
           await interval.running

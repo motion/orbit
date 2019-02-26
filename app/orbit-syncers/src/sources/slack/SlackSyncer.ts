@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { AppBitEntity, Bit, BitUtils, PersonData, SlackApp, SlackBitData } from '@mcro/models'
+import { AppEntity, Bit, BitUtils, PersonData, SlackApp, SlackBitData } from '@mcro/models'
 import {
   SlackAttachment,
   SlackChannel,
@@ -54,7 +54,7 @@ export class SlackSyncer implements AppSyncer {
       domain: team.domain,
       icon: team.icon.image_132,
     }
-    await getRepository(AppBitEntity).save(this.app)
+    await getRepository(AppEntity).save(this.app)
 
     // load api users
     this.log.timer('load API users')
@@ -161,7 +161,7 @@ export class SlackSyncer implements AppSyncer {
         // update apps
         this.log.info('update apps', { lastMessageSync })
         values.lastMessageSync = lastMessageSync
-        await getRepository(AppBitEntity).save(this.app)
+        await getRepository(AppEntity).save(this.app)
       }
     }
   }
@@ -226,7 +226,7 @@ export class SlackSyncer implements AppSyncer {
   createPersonBit(user: SlackUser, team: SlackTeam): Bit {
     return BitUtils.create(
       {
-        appType: 'slack',
+        appType: 'AppIdentifier',
         appId: this.app.id,
         type: 'person',
         originalId: user.id,
@@ -284,7 +284,7 @@ export class SlackSyncer implements AppSyncer {
     return BitUtils.create(
       {
         appId: this.app.id,
-        appType: 'slack',
+        appType: 'AppIdentifier',
         type: 'conversation',
         title: '',
         body: data.messages.map(message => message.text).join(' ... '),
@@ -326,7 +326,7 @@ export class SlackSyncer implements AppSyncer {
     return BitUtils.create(
       {
         appId: this.app.id,
-        appType: 'slack',
+        appType: 'AppIdentifier',
         type: 'website',
         title: attachment.title,
         body: attachment.text,

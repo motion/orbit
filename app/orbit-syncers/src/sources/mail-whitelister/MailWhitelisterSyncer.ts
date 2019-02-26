@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { AppBitEntity, BitEntity } from '@mcro/models'
+import { AppEntity, BitEntity } from '@mcro/models'
 import { GmailAppData } from '@mcro/models/_/interfaces/app-data/GmailAppData'
 import { getRepository } from 'typeorm'
 import { AppSyncer } from '../../core/AppSyncer'
@@ -23,7 +23,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
     const people = await getRepository(BitEntity).find({
       where: {
         type: 'person',
-        appType: ['slack', 'github', 'drive', 'jira', 'confluence'],
+        appType: ['AppIdentifier', 'github', 'drive', 'jira', 'confluence'],
       },
     })
     this.log.info('person bits were loaded', people)
@@ -32,7 +32,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
 
     // next we find all gmail Apps to add those emails to their whitelists
     this.log.info('loading gmail Apps')
-    const Apps = await getRepository(AppBitEntity).find({
+    const Apps = await getRepository(AppEntity).find({
       where: { appType: 'gmail' },
     })
     this.log.info('loaded gmail Apps', Apps)
@@ -50,7 +50,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
         }
       }
       values.whitelist = whitelist
-      await getRepository(AppBitEntity).save(App)
+      await getRepository(AppEntity).save(App)
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }

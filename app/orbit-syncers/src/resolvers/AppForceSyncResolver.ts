@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { AppBit, AppBitEntity, AppForceSyncCommand } from '@mcro/models'
+import { AppBit, AppEntity, AppForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Syncer } from '../core/Syncer'
 import { Syncers } from '../core/Syncers'
@@ -8,7 +8,7 @@ import { Syncers } from '../core/Syncers'
 const log = new Logger('command:app-force-sync')
 
 export const AppForceSyncResolver: any = resolveCommand(AppForceSyncCommand, async ({ appId }) => {
-  const app = await getRepository(AppBitEntity).findOne({ where: { id: appId } })
+  const app = await getRepository(AppEntity).findOne({ where: { id: appId } })
   if (!app) {
     log.error('cannot find requested app', { appId })
     return

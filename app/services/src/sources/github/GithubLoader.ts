@@ -1,13 +1,13 @@
 import { Logger } from '@mcro/logger'
-import { GithubSource } from '@mcro/models'
+import { GithubApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GithubQueries } from './GithubQueries'
 import {
+  GithubComment,
   GithubCommentsResponse,
   GithubIssue,
-  GithubComment,
   GithubIssueQueryResult,
   GithubOrganization,
   GithubOrganizationsQueryResult,
@@ -15,8 +15,8 @@ import {
   GithubPerson,
   GithubPullRequestQueryResult,
   GithubRepository,
-  GithubUserRepositoriesQueryResult,
   GithubRepositoryQueryResult,
+  GithubUserRepositoriesQueryResult,
 } from './GithubTypes'
 
 /**
@@ -39,16 +39,16 @@ export interface GithubLoaderIssueOrPullRequestStreamOptions {
  * Performs requests GitHub API.
  */
 export class GithubLoader {
-  private source: GithubSource
+  private app: GithubApp
   private log: Logger
   private loader: ServiceLoader
   private totalCost: number = 0
   private remainingCost: number = 0
 
-  constructor(source: GithubSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('service:github:loader:' + source.id)
-    this.loader = new ServiceLoader(this.source, this.log)
+  constructor(app: GithubApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('service:github:loader:' + app.id)
+    this.loader = new ServiceLoader(this.app, this.log)
   }
 
   /**

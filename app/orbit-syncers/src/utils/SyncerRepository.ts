@@ -1,14 +1,14 @@
-import { Bit, BitEntity, Source } from '@mcro/models'
+import { AppBit, Bit, BitEntity } from '@mcro/models'
 import { getRepository, In, MoreThan } from 'typeorm'
 
 /**
  * Executes common syncer queries.
  */
 export class SyncerRepository {
-  private source: Source
+  private app: AppBit
 
-  constructor(source: Source) {
-    this.source = source
+  constructor(app: AppBit) {
+    this.app = app
   }
 
   /**
@@ -27,7 +27,7 @@ export class SyncerRepository {
       },
       where: {
         id: options.ids ? In(options.ids) : undefined,
-        sourceId: this.source.id,
+        appId: this.app.id,
         location: {
           id: options.locationId ? options.locationId : undefined,
         },
@@ -39,7 +39,7 @@ export class SyncerRepository {
   }
 
   /**
-   * Loads all exist database people for the current Source.
+   * Loads all exist database people for the current App.
    */
   async loadDatabasePeople(options?: { ids?: number[] }): Promise<Bit[]> {
     if (!options) options = {}
@@ -47,9 +47,8 @@ export class SyncerRepository {
       where: {
         id: options.ids ? In(options.ids) : undefined,
         type: 'person',
-        sourceId: this.source.id,
+        appId: this.app.id,
       },
     })
   }
-
 }

@@ -451,17 +451,18 @@ export function Menu() {
   const queryStore = useStore(QueryStore)
   const menuApps = useMenuApps()
 
+  console.warn('see todos')
+
   const paneManagerStore = useStore(PaneManagerStore, {
-    panes: menuApps,
+    defaultPanes: [], //menuApps,
     onPaneChange: () => {
       AppActions.clearPeek()
     },
   })
 
   const menuStore = useStore(MenuStore, {
-    paneManagerStore,
     queryStore,
-    menuItems: menuApps,
+    menuItems: [], //menuApps,
     onMenuHover: index => {
       const app = menuApps.find(x => x.index === index)
       if (app) {

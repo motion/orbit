@@ -41,7 +41,10 @@
     "webpack-bundle-analyzer": "3.0.4",
     "webpack-cli": "3.2.3",
     "webpack-dev-server": "3.1.14",
-    "workerize-loader": "1.0.4"
+    "workerize-loader": "1.0.4",
+    "fork-ts-checker-webpack-plugin": "0.5.2",
+    "ts-loader": "5.3.3",
+    "tslint": "5.13.0"
   },
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

@@ -2,6 +2,7 @@
   "name": "@mcro/kit",
   "version": "2.3.10",
   "main": "./_/index.js",
+  "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
     "build": "npm run build-js & npm run build-types",

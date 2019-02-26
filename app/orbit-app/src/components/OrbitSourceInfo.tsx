@@ -1,11 +1,8 @@
-import { OrbitSource, useJobs, useSourceInfo } from '@mcro/kit'
-import { HorizontalSpace, Row, Text, View } from '@mcro/ui'
-import pluralize from 'pluralize'
-import * as React from 'react'
+import { AppPackage } from '@mcro/kit'
 
 type Props = {
   sourceId: number
-  app?: OrbitSource<any>
+  app?: AppPackage
 }
 
 /**
@@ -14,36 +11,38 @@ type Props = {
 const bitsCountCache = {}
 
 export const OrbitSourceInfo = (props: Props) => {
-  const sourceId = props.app.source ? props.app.source.id : false
-  const { bitsCount } = useSourceInfo(sourceId)
-  const allJobs = useJobs(sourceId)
-  const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
+  console.warn('todo', props, bitsCountCache, !!shortNumber)
 
-  if (!sourceId) {
-    return null
-  }
+  // const sourceId = props.app.source ? props.app.source.id : false
+  // const { bitsCount } = useSourceInfo(sourceId)
+  // const allJobs = useJobs(sourceId)
+  // const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
 
-  if (bitsCount !== 0) {
-    bitsCountCache[sourceId] = bitsCount
-  }
-  const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[sourceId] || 0 : bitsCount)
+  // if (!sourceId) {
+  //   return null
+  // }
 
-  return (
-    <Row alignItems="center" flex={1}>
-      <View flex={1} justifyContent="center">
-        <Text size={0.9} alpha={0.5} ellipse>
-          {props.app.name}&nbsp;·&nbsp;
-          {countSubtitle}&nbsp;{pluralize(props.app.itemName || 'item', countSubtitle)}
-        </Text>
-      </View>
-      <HorizontalSpace />
-      {!!isSyncing && (
-        <Text size={0.9} alpha={0.75}>
-          Syncing...
-        </Text>
-      )}
-    </Row>
-  )
+  // if (bitsCount !== 0) {
+  //   bitsCountCache[sourceId] = bitsCount
+  // }
+  // const countSubtitle = shortNumber(bitsCount === 0 ? bitsCountCache[sourceId] || 0 : bitsCount)
+
+  // return (
+  //   <Row alignItems="center" flex={1}>
+  //     <View flex={1} justifyContent="center">
+  //       <Text size={0.9} alpha={0.5} ellipse>
+  //         {props.app.name}&nbsp;·&nbsp;
+  //         {countSubtitle}&nbsp;{pluralize(props.app.itemName || 'item', countSubtitle)}
+  //       </Text>
+  //     </View>
+  //     <HorizontalSpace />
+  //     {!!isSyncing && (
+  //       <Text size={0.9} alpha={0.75}>
+  //         Syncing...
+  //       </Text>
+  //     )}
+  //   </Row>
+  // )
 }
 
 function shortNumber(num: number) {

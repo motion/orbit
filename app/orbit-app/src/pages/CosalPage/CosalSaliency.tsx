@@ -1,10 +1,10 @@
-import * as React from 'react'
 import { react } from '@mcro/black'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
-import { loadMany } from '../../mediator'
-import { CosalSaliencyModel } from '@mcro/models'
+import { loadMany } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
+import { CosalSaliencyModel } from '@mcro/models'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
 
 type Props = { query?: string }
 

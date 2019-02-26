@@ -78,8 +78,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
-    "@mcro/build": "^2.3.10",
-    "@types/webpack-env": "1.13.6"
+    "@mcro/build": "^2.3.10"
   },
   "peerDependencies": {
     "electron": "*",

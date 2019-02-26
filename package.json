@@ -23,6 +23,8 @@
     "@types/zen-observable": "0.8.0",
     "@types/fs-extra": "5.0.4",
     "@types/node": "11.9.5",
+    "@types/electron": "1.6.10",
+    "@types/webpack-env": "1.13.7",
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
@@ -36,7 +38,8 @@
     "prettier": "1.15.3",
     "sb-promisify": "^2.0.2",
     "typescript": "3.3.3333",
-    "verdaccio": "3.10.1"
+    "verdaccio": "3.10.1",
+    "microbundle": "0.10.1"
   },
   "scripts": {
     "watch": "source .env && build --watch",

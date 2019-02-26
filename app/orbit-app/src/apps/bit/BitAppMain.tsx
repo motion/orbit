@@ -31,7 +31,7 @@ export function BitAppMain(props: AppProps) {
           <>
             <BitTitleBar bit={bit} normalizedItem={normalizedItem} searchBar={searchBar} />
             {/* !TODO */}
-            <MediaView item={bit} normalizedItem={normalizedItem} {...props} />
+            {/* <MediaView item={bit} normalizedItem={normalizedItem} {...props} /> */}
           </>
         )}
       </HighlightedSearchable>

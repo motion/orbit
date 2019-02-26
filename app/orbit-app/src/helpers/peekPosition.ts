@@ -1,6 +1,5 @@
-
-import { isEqual } from 'lodash';
-import { AppConfig } from '../apps/AppTypes';
+import { AppConfig } from '@mcro/kit'
+import { isEqual } from 'lodash'
 
 const MIN_Y = 60
 const EDGE_PAD = 20

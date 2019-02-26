@@ -1,9 +1,9 @@
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
-// import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 // import ProfilingPlugin from 'webpack/lib/debug/ProfilingPlugin'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
@@ -94,6 +94,12 @@ const alias = {
 
 // console.log('alias', alias)
 
+const mcroClientOnly = {
+  include: [Path.resolve(cwd, 'src'), /node_modules\/@mcro\/(kit|ui|gloss)/],
+}
+
+console.log('mcroClientOnly', mcroClientOnly)
+
 const config = {
   target,
   mode,
@@ -127,7 +133,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    // mainFields: isProd ? ['module', 'browser', 'main'] : ['main'],
+    mainFields: isProd ? ['module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },
@@ -152,9 +158,20 @@ const config = {
         use: 'ignore-loader',
       },
       {
-        test: /\.[jt]sx?$/,
-        use: ['thread-loader', 'babel-loader', 'react-hot-loader/webpack'],
-        exclude: /node_modules/,
+        test: /\.tsx?$/,
+        use: [
+          // 'thread-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true, // disable - we use it in fork plugin
+            },
+          },
+          'babel-loader',
+          'react-hot-loader/webpack',
+        ],
+
+        ...mcroClientOnly,
       },
       {
         test: /\.css$/,
@@ -201,6 +218,8 @@ const config = {
     new webpack.IgnorePlugin(/electron-log/),
 
     target === 'web' && new webpack.IgnorePlugin(/^electron$/),
+
+    new ForkTsCheckerWebpackPlugin(),
 
     isProd &&
       new TerserPlugin({

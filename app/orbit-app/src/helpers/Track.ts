@@ -1,4 +1,3 @@
-import { track } from '@mcro/stores'
 import { reaction } from 'mobx'
 
 class TrackSingleton {
@@ -15,9 +14,9 @@ class TrackSingleton {
         return
       }
       try {
-        for (const { name, details } of this.eventLog) {
-          await track.recordEvent(name, details)
-        }
+        // for (const { name, details } of this.eventLog) {
+        //   await track.recordEvent(name, details)
+        // }
       } catch {
         // they blocked it...
       }

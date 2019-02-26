@@ -1,10 +1,10 @@
+import { SubPaneStore } from '@mcro/kit'
+import { Section } from '@mcro/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
-import { Section } from '../views/Section'
 import { Unpad } from '../views/Unpad'
 import { default as SelectableCarousel, SelectableCarouselProps } from './SelectableCarousel'
-import { SubPaneStore } from './SubPaneStore'
 
 type Props = SelectableCarouselProps & {
   categoryName?: string

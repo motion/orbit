@@ -1,4 +1,4 @@
-import { loadOne } from '@mcro/bridge'
+import { loadOne, save } from '@mcro/bridge'
 import { useActiveSpace, useActiveUser } from '@mcro/kit'
 import { Space, SpaceModel, User, UserModel } from '@mcro/models'
 import immer from 'immer'

@@ -4,18 +4,23 @@
 
 if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
-  # build --watch
   if [ "$1" = "--watch" ]; then
+
+    # WATCH
+
     ARGS=${@:2}
     (bin/in gloss npm run watch) &
     (bin/in reactron npm run watch) &
-    (bin/in ui npm run watch) &
-    (bin/in kit npm run watch) &
+    # (bin/in ui npm run watch) &
+    # (bin/in kit npm run watch) &
     (bin/in apps npm run watch) &
     (bin/in store-hmr npm run watch) &
     (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
     wait
   else
+
+    # BUILD
+
     ARGS=${@:1}
     bin/in store-hmr npm run build
     bin/in black npm run build

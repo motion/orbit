@@ -9,7 +9,7 @@ export const app: AppDefinition = {
   icon: '',
   app: props => (
     <App>
-      <MessageViewMain {...props.appConfig} />
+      <MessageViewMain {...props} />
     </App>
   ),
 }

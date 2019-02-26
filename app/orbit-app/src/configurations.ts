@@ -36,11 +36,3 @@ function setup() {
 if (!window['hasConfigured']) {
   setup()
 }
-
-if (process.env.NODE_ENV === 'development') {
-  if (typeof module['hot'] !== 'undefined') {
-    module['hot'].accept(() => {
-      console.log('Accepted configurations, ignoring on purpose')
-    })
-  }
-}

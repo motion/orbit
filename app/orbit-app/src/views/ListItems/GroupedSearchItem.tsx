@@ -1,8 +1,6 @@
-import * as React from 'react'
-import ListItem from './ListItem'
-import { Row, Col, Text } from '@mcro/ui'
-import { HighlightText } from '../HighlightText'
 import { gloss } from '@mcro/gloss'
+import { Col, HighlightText, ListItem, Row, Text } from '@mcro/ui'
+import * as React from 'react'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
   const num = abbreviateNumber(item.count)

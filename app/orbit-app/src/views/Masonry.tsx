@@ -61,16 +61,16 @@ export class Masonry extends React.PureComponent<MasonryProps> {
       styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
     const gridChildren = React.Children.map(this.props.children, (child, index) => {
-      if (typeof child === 'string' || typeof child === 'number') {
-        return child
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child as any, {
+          inGrid: true,
+          style: {
+            ...styles[index],
+            ...child.props['style'],
+          },
+        })
       }
-      return React.cloneElement(child, {
-        inGrid: true,
-        style: {
-          ...styles[index],
-          ...child.props.style,
-        },
-      })
+      return child
     })
     this.setState({
       gridChildren,

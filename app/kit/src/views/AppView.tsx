@@ -3,6 +3,7 @@ import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useApp } from '../hooks/useApp'
+import { useAppView } from '../hooks/useAppView'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
@@ -54,12 +55,9 @@ export const AppView = memoIsEqualDeep(
     }
 
     const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
+    const AppViewAlt = useAppView(props.appId, props.viewType as any)
 
-    let AppView = views[props.viewType]
-
-    if (!AppView && definition && definition.sync) {
-      AppView = definition.sync[props.viewType]
-    }
+    let AppView = views[props.viewType] || AppViewAlt
 
     if (!AppView) {
       console.warn('loading alternate view failed', props, views, definition)

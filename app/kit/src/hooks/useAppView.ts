@@ -4,11 +4,8 @@ import { config } from '../configureKit'
 
 export function useAppView(appId: string, viewType: 'settings' | 'setup') {
   const def = config.getApps().find(x => x.id === appId)
-  if (!def) {
-    throw new Error(`No definition found for ${appId}`)
-  }
-  if (!def.sync || !def.sync[viewType]) {
-    throw new Error(`No views found on definition for ${appId} ${viewType}`)
+  if (!def || !def.sync || !def.sync[viewType]) {
+    return null
   }
   return def.sync[viewType]
 }

@@ -49,7 +49,7 @@ export class AppsStore {
     () => always(this._apps),
     async (_, { sleep, setValue }) => {
       setValue(false)
-      await sleep(16)
+      await sleep(32)
       return true
     },
   )
@@ -71,7 +71,7 @@ export class AppsStore {
   // }
 
   getApp(appId: string, id: string) {
-    const appState = id ? this.apps[id] : this.getAppByAppId(appId)
+    let appState = (id && this.apps[id]) || this.getAppByAppId(appId)
     if (appState && appState.appId !== appId) {
       throw new Error(`You called getApp with a mismatched id/appId: appId ${appId}, id: ${id}`)
     }

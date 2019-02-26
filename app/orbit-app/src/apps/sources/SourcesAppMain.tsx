@@ -8,10 +8,6 @@ import { ManageApps } from './ManageApps'
 export function SourcesAppMain(props: AppProps) {
   console.log('rendering me', props)
 
-  if (!props.appConfig) {
-    return null
-  }
-
   if (props.appConfig.subType === 'manage-apps') {
     return <ManageApps />
   }
@@ -29,7 +25,7 @@ export function SourcesAppMain(props: AppProps) {
 
 function SourceMain(props: AppProps) {
   const [source] = useModel(SourceModel, {
-    where: { id: +props.appConfig.id },
+    where: { id: +props.appConfig.subId },
   })
 
   if (!source) {

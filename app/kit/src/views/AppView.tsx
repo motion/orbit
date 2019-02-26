@@ -49,6 +49,7 @@ export const AppView = memoIsEqualDeep(
     const rootRef = useRef<HTMLDivElement>(null)
 
     if (!props.appId) {
+      console.log('props for error', props)
       throw new Error('No app id')
     }
 
@@ -61,7 +62,7 @@ export const AppView = memoIsEqualDeep(
     }
 
     if (!AppView) {
-      console.warn('loading alternate view failed', props, definition)
+      console.warn('loading alternate view failed', props, views, definition)
     }
 
     // handle ref

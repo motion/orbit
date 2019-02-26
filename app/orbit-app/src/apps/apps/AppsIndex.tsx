@@ -40,7 +40,8 @@ export function AppsIndex(_props: AppProps) {
 
     ...sourceInfo.map(app => ({
       group: 'Sources',
-      id: `${app.definition.id}`,
+      // TODO once we get rid of Source model we can remove this and just use id
+      subId: `${app.source.id}`,
       appId: 'sources',
       title: app.definition.name,
       subtitle: <OrbitSourceInfo {...app} />,

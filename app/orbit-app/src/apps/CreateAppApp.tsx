@@ -57,7 +57,6 @@ function CreateAppMain(props: AppProps) {
   )
 
   const app = { appId } as AppBit
-
   const createApp = async () => {
     const app = {
       ...newAppStore.app,
@@ -66,6 +65,10 @@ function CreateAppMain(props: AppProps) {
     console.log('creating new app', app)
     save(AppModel, app)
     Actions.previousTab()
+  }
+
+  if (!appId) {
+    return null
   }
 
   return (

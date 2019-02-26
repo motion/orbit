@@ -48,12 +48,12 @@ export class SearchResultResolver {
       const [bits, bitsTotalCount] = await this.searchBits(contentType)
       if (bits.length) {
         const bitAppIds = uniq(bits.map(bit => bit.appId))
-        const bitApps = this.apps.filter(source => bitAppIds.indexOf(source.id) !== -1)
-        const bitAppNames = bitApps.map(source => source.name).join(', ')
+        const bitApps = this.apps.filter(app => bitAppIds.indexOf(app.id) !== -1)
+        const bitAppNames = bitApps.map(app => app.name).join(', ')
         const bitLocationNames = bits
           .filter(bit => !!bit.location.name)
           .map(bit => bit.location.name)
-        const bitAppTypeNames = bitApps.map(source => source.appType) // todo: beatify type name
+        const bitAppTypes = bitApps.map(app => app.itemType)
         const text = SearchResultUtils.buildSearchResultText(
           this.args.query,
           bits.map(bit => bit.body),
@@ -120,7 +120,7 @@ export class SearchResultResolver {
             target: 'search-group',
             id: Math.random(),
             group: this.args.group,
-            title: 'Tasks from ' + bitAppTypeNames,
+            title: 'Tasks from ' + bitAppTypes,
             contentType,
             text,
             bitsTotalCount,
@@ -172,7 +172,7 @@ export class SearchResultResolver {
    * Performs a database search on bits.
    */
   private async searchBits(contentType: BitContentType): Promise<[Bit[], number]> {
-    const appIds = this.apps.map(source => source.id)
+    const appIds = this.apps.map(app => app.id)
     this.log.info(`search`, this.apps, this.args)
 
     // parallel search both fts and cosal

@@ -1,0 +1,10 @@
+export type ItemType =
+  | 'task'
+  | 'document'
+  | 'webpage'
+  | 'thread'
+  | 'conversation'
+  | 'markdown'
+  | 'text'
+  | 'task'
+  | 'person'

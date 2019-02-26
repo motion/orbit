@@ -1,6 +1,6 @@
-import { AppDefinition } from '../types/AppDefinition'
+import { ItemType } from '../types/ItemType'
 
-const names: { [key in AppDefinition['itemType']]: string } = {
+const names: { [key in ItemType]: string } = {
   task: 'task',
   thread: 'thread',
   markdown: 'document',
@@ -11,6 +11,6 @@ const names: { [key in AppDefinition['itemType']]: string } = {
   webpage: 'website',
 }
 
-export function getItemName(string: AppDefinition['itemType']) {
+export function getItemName(string: ItemType) {
   return names[string] || 'item'
 }

@@ -5,6 +5,7 @@ import { GmailAppData } from './app-data/GmailAppData'
 import { JiraAppData } from './app-data/JiraAppData'
 import { SlackAppData } from './app-data/SlackAppData'
 import { WebsiteAppData } from './app-data/WebsiteAppData'
+import { ItemType } from './ItemType'
 import { Space } from './Space'
 
 // base
@@ -13,6 +14,8 @@ export interface BaseAppBit {
   target: 'app'
 
   id?: number
+
+  itemType?: ItemType
 
   identifier?: string
 
@@ -40,11 +43,6 @@ export interface BaseAppBit {
   token?: string
 
   data?: any
-}
-
-type GenericAppBit = BaseAppBit & {
-  data?: any
-  identifier?: string
 }
 
 export type GithubApp = BaseAppBit & {
@@ -95,7 +93,7 @@ export type AppBit =
   | ConfluenceApp
   | WebsiteApp
   | GithubApp
-  | GenericAppBit
+  | BaseAppBit
 
 export type AppIdentifier =
   | 'slack'

@@ -40,6 +40,9 @@ export class AppEntity extends BaseEntity {
   @Column()
   name?: string
 
+  @Column()
+  itemType?: string
+
   @Column({ type: 'simple-json', default: '[]' })
   colors?: string[]
 

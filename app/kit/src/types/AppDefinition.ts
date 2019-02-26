@@ -1,4 +1,4 @@
-import { AppBit } from '@mcro/models'
+import { AppBit, ItemType } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
@@ -31,16 +31,7 @@ export type AppDefinition = {
   iconLight?: string
   defaultViewConfig?: AppConfig['viewConfig']
   context?: React.Context<any>
-  itemType?:
-    | 'task'
-    | 'document'
-    | 'webpage'
-    | 'thread'
-    | 'conversation'
-    | 'markdown'
-    | 'text'
-    | 'task'
-    | 'person'
+  itemType?: ItemType
   app?: FunctionComponent<AppProps>
   settings?: FunctionComponent<null>
   appData?: Object

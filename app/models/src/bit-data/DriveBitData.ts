@@ -1,2 +1,1 @@
-export interface DriveBitData {
-}
+export interface DriveBitData {}

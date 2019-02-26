@@ -14,7 +14,7 @@ import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
-export class AppEntity extends BaseEntity {
+export class AppBitEntity extends BaseEntity {
   target: 'app' = 'app'
 
   @PrimaryGeneratedColumn()
@@ -23,11 +23,14 @@ export class AppEntity extends BaseEntity {
   @Column()
   appId?: string
 
-  @ManyToMany(() => SpaceEntity, space => space.sources)
+  @Column()
+  appType?: string
+
+  @ManyToMany(() => SpaceEntity, space => space.apps)
   @JoinTable()
   spaces?: Space[]
 
-  @ManyToOne(() => SpaceEntity, space => space.sources)
+  @ManyToOne(() => SpaceEntity, space => space.apps)
   space?: Space
 
   @Column({ nullable: false })

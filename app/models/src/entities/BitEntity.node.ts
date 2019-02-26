@@ -11,13 +11,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { BitData } from '../bit-data/BitData'
+import { AppBit, AppBitType } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
 import { BitContentType } from '../interfaces/BitContentType'
-import { Source } from '../interfaces/Source'
-import { SourceType } from '../interfaces/SourceType'
 import { Space } from '../interfaces/Space'
+import { AppBitEntity } from './AppBitEntity.node'
 import { LocationEntity } from './LocationEntity.node'
-import { SourceEntity } from './SourceEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
@@ -36,13 +35,13 @@ export class BitEntity extends BaseEntity implements Bit {
   contentHash?: number
 
   @Column({ type: String })
-  sourceType?: SourceType
+  appType?: AppBitType
 
   /**
    * Source id can be null only for pinned urls.
    */
   @Column({ nullable: true })
-  sourceId?: number
+  appId?: number
 
   @Column({ nullable: true })
   authorId?: number
@@ -106,8 +105,8 @@ export class BitEntity extends BaseEntity implements Bit {
   @ManyToMany(() => BitEntity, bit => bit.people)
   bits?: Bit[]
 
-  @ManyToOne(() => SourceEntity)
-  source?: Source
+  @ManyToOne(() => AppBitEntity)
+  source?: AppBit
 
   @ManyToOne(() => SpaceEntity)
   space?: Space

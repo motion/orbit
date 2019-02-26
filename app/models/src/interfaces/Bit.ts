@@ -1,5 +1,5 @@
 import { BitData } from '../bit-data/BitData'
-import { AppBit } from './AppBit'
+import { AppBit, AppBitType } from './AppBit'
 import { BitContentType } from './BitContentType'
 import { Location } from './Location'
 
@@ -17,7 +17,7 @@ export interface Bit {
   /**
    * Source type.
    */
-  appType?: string
+  appType?: AppBitType
 
   /**
    * App id.

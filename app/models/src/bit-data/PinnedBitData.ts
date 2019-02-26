@@ -2,7 +2,6 @@
  * Website additional bit information.
  */
 export interface PinnedBitData {
-
   /**
    * Rendered page's title.
    */
@@ -12,5 +11,4 @@ export interface PinnedBitData {
    * Html content of the rendered page.
    */
   content: string
-
 }

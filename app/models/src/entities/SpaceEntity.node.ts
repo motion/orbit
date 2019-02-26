@@ -1,8 +1,7 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Source } from '../interfaces/Source'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { AppBit } from '../interfaces/AppBit'
 import { Space } from '../interfaces/Space'
-import { AppEntity } from './AppEntity.node'
-import { SourceEntity } from './SourceEntity.node'
+import { AppBitEntity } from './AppBitEntity.node'
 
 @Entity()
 export class SpaceEntity implements Space {
@@ -15,12 +14,9 @@ export class SpaceEntity implements Space {
   @Column({ type: 'simple-json' })
   colors: string[]
 
-  @ManyToMany(() => SourceEntity, source => source.spaces)
-  sources: Source[]
-
   @Column({ type: 'simple-json' })
   paneSort: number[]
 
-  @OneToMany(() => AppEntity, app => app.space)
-  apps: Source[]
+  @OneToMany(() => AppBitEntity, app => app.space)
+  apps: AppBit[]
 }

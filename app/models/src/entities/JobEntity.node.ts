@@ -1,9 +1,9 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { SourceEntity } from './SourceEntity.node'
+import { AppBit } from '../interfaces/AppBit'
 import { Job } from '../interfaces/Job'
-import { JobType } from '../interfaces/JobType'
 import { JobStatus } from '../interfaces/JobStatus'
-import { Source } from '../interfaces/Source'
+import { JobType } from '../interfaces/JobType'
+import { AppBitEntity } from './AppBitEntity.node'
 
 @Entity()
 export class JobEntity extends BaseEntity implements Job {
@@ -28,8 +28,8 @@ export class JobEntity extends BaseEntity implements Job {
   message?: string
 
   @Column({ nullable: true })
-  sourceId?: number
+  appId?: number
 
-  @ManyToOne(() => SourceEntity)
-  source?: Source
+  @ManyToOne(() => AppBitEntity)
+  app?: AppBit
 }

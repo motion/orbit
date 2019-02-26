@@ -1,5 +1,5 @@
 import { useActiveSpace } from './useActiveSpace'
-import { useSourcesForSpace } from './useSourcesForSpace'
+import { useSourcesForSpace } from './useAppsForSpace'
 
 export function useActiveSources() {
   const [activeSpace] = useActiveSpace()

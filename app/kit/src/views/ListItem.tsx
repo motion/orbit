@@ -46,7 +46,7 @@ export const ListItem = React.memo(
           itemProps = getNormalPropsForListItem(normalized)
 
           if (item.target === 'bit') {
-            const itemType = appsStore.definitions[normalized.sourceType].itemType
+            const itemType = appsStore.definitions[normalized.appType].itemType
             ItemView = itemViewsListItem[itemType]
           } else if (item.target === 'person-bit') {
             ItemView = ListItemPerson

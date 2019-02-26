@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { SVG } from '../views/SVG'
 import { useAppDefinition } from './useAppDefinition'
 
-export function useSourceIcon(props: IconProps) {
+export function useAppIcon(props: IconProps) {
   const { name } = props
   const { activeTheme } = useContext(ThemeContext)
   const def = useAppDefinition(props.name)

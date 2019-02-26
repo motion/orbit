@@ -80,9 +80,9 @@ export class SearchQueryExecutor {
       conditions.push('"bit"."bitCreatedAt" < ?')
       conditionParameters.push(new Date(args.endDate).getTime())
     }
-    if (args.sourceFilters && args.sourceFilters.length) {
-      conditions.push(`"bit"."source" IN (${args.sourceFilters.map(() => '?')}`)
-      conditionParameters.push(...args.sourceFilters)
+    if (args.appFilters && args.appFilters.length) {
+      conditions.push(`"bit"."appType" IN (${args.appFilters.map(() => '?')}`)
+      conditionParameters.push(...args.appFilters)
     }
     if (args.sourceId) {
       conditions.push('"bit"."sourceId" = ?')

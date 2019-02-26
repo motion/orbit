@@ -191,9 +191,9 @@ export class SearchStore {
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
 
-      const sourceFilters = [
+      const appFilters = [
         // these come from the text string
-        ...activeFilters.filter(x => x.type === MarkType.Source).map(x => x.text),
+        ...activeFilters.filter(x => x.type === MarkType.App).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
       ]
@@ -212,7 +212,7 @@ export class SearchStore {
           sortBy,
           startDate,
           endDate,
-          sourceFilters,
+          appFilters,
           peopleFilters,
           locationFilters,
           group,

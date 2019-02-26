@@ -1,4 +1,4 @@
-import { AppBit, Source } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
@@ -48,7 +48,7 @@ export type AppDefinition = {
     sourceType?: string
     // TODO remove and just use bit
     modelType?: 'person-bit' | 'bit'
-    settings?: FunctionComponent<OrbitSourceSettingProps<Source>>
+    settings?: FunctionComponent<OrbitSourceSettingProps<AppBit>>
     setup?: FunctionComponent<any>
   }
   API?: {
@@ -61,7 +61,7 @@ export type OrbitSourceMainProps = OrbitItemViewProps<any> & {
   searchTerm: string
 }
 
-export type OrbitSourceSettingProps<T extends Source> = {
+export type OrbitSourceSettingProps<T extends AppBit> = {
   appConfig?: AppConfig
   source: T
 }

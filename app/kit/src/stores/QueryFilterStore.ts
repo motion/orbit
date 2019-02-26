@@ -131,11 +131,11 @@ export class QueryFilterStore {
     return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3].toLowerCase()])
   }
 
-  get hasSourceFilters() {
-    return this.sourceFilters.some(x => x.active)
+  get hasAppFilters() {
+    return this.appFilters.some(x => x.active)
   }
 
-  get sourceFilters(): SearchFilter[] {
+  get appFilters(): SearchFilter[] {
     // !TODO
     return this.activeSources.map((app, id) => ({
       id,
@@ -189,7 +189,7 @@ export class QueryFilterStore {
     },
   )
 
-  resetSourceFiltersOnNLPChange = react(
+  resetAppFiltersOnNLPChange = react(
     () => always(this.nlpStore.nlp),
     () => {
       const nlp = this.nlpStore.nlp

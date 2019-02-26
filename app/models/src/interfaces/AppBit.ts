@@ -16,6 +16,8 @@ export interface BaseAppBit {
 
   appId: string
 
+  appType: AppBitType
+
   space?: Space
 
   spaceId?: number

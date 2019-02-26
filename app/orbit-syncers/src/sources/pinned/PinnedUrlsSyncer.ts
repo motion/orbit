@@ -1,10 +1,17 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, BitUtils, PinnedBitData, SettingEntity, WebsiteBitData } from '@mcro/models'
+import {
+  Bit,
+  BitEntity,
+  BitUtils,
+  PinnedBitData,
+  SettingEntity,
+  WebsiteBitData,
+} from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
-import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
+import { WebsiteCrawler } from '../website/WebsiteCrawler'
 
 /**
  * Crawls pinned websites.
@@ -106,7 +113,7 @@ export class PinnedUrlsSyncer implements SourceSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'pinned',
+        appType: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,

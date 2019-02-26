@@ -1,6 +1,6 @@
+import { AppBit } from './AppBit'
 import { JobStatus } from './JobStatus'
 import { JobType } from './JobType'
-import { Source } from './Source'
 
 export interface Job {
   /**
@@ -19,14 +19,14 @@ export interface Job {
   syncer?: string
 
   /**
-   * Source id for which this job was executed.
+   * App id for which this job was executed.
    */
-  sourceId?: number
+  appId?: number
 
   /**
    * Source for which this job was executed.
    */
-  source?: Source
+  app?: AppBit
 
   /**
    * Time when job was executed.

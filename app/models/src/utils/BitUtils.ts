@@ -1,8 +1,7 @@
 import { hash } from '@mcro/utils'
 import { SlackBitData } from '../bit-data/SlackBitData'
+import { AppBit, AppBitType } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
-import { Source } from '../interfaces/Source'
-import { SourceType } from '../interfaces/SourceType'
 
 /**
  * Common Bit utility functions.
@@ -11,16 +10,16 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(Source: SourceType, sourceId: number | undefined, data: string): number
-  static id(source: Source, data: string): number
-  static id(SourceOrSource: Source | SourceType, sourceIdOrData: any, maybeData?: string): number {
-    if (typeof SourceOrSource === 'object') {
+  static id(Source: AppBitType, sourceId: number | undefined, data: string): number
+  static id(source: AppBit, data: string): number
+  static id(bitOrBitType: AppBit | AppBitType, sourceIdOrData: any, maybeData?: string): number {
+    if (typeof bitOrBitType === 'object') {
       // Source
-      return hash(`${SourceOrSource.type}-${SourceOrSource.id}-${sourceIdOrData}`)
-    } else if (SourceOrSource && sourceIdOrData && maybeData) {
-      return hash(`${SourceOrSource}-${sourceIdOrData}-${maybeData}`)
-    } else if (SourceOrSource && !sourceIdOrData) {
-      return hash(`${SourceOrSource}-${maybeData}`)
+      return hash(`${bitOrBitType.appId}-${bitOrBitType.id}-${sourceIdOrData}`)
+    } else if (bitOrBitType && sourceIdOrData && maybeData) {
+      return hash(`${bitOrBitType}-${sourceIdOrData}-${maybeData}`)
+    } else if (bitOrBitType && !sourceIdOrData) {
+      return hash(`${bitOrBitType}-${maybeData}`)
     }
     return 0
   }
@@ -42,9 +41,9 @@ export class BitUtils {
   static create(properties: Partial<Bit>, SourceId?: any) {
     const bit: Bit = { target: 'bit', ...properties }
     bit.contentHash = this.contentHash(bit)
-    if (!bit.sourceId && bit.source) bit.sourceId = bit.source.id
-    if (bit.sourceType && bit.sourceId && SourceId) {
-      bit.id = this.id(bit.sourceType, bit.sourceId, SourceId)
+    if (!bit.appId && bit.app) bit.appId = bit.app.id
+    if (bit.appType && bit.appId && SourceId) {
+      bit.id = this.id(bit.appType, bit.appId, SourceId)
     }
     return bit
   }
@@ -56,8 +55,8 @@ export class BitUtils {
     return hash(
       [
         bit.id,
-        bit.sourceType,
-        bit.source ? bit.source.id : bit.sourceId,
+        bit.appId,
+        bit.app ? bit.app.id : bit.appId,
         bit.title,
         bit.body,
         bit.type,

@@ -1,5 +1,1 @@
-export type ModelTarget =
-  | 'bit'
-  | 'job'
-  | 'setting'
-  | 'personBit'
+export type ModelTarget = 'bit' | 'job' | 'setting' | 'personBit'

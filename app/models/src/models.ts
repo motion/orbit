@@ -1,13 +1,11 @@
 import { Model } from '@mcro/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
-import { AppBit } from './interfaces/AppBit'
+import { AppBit, AppBitType } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
 import { SearchResult } from './interfaces/Search'
 import { Setting } from './interfaces/Setting'
-import { Source } from './interfaces/Source'
-import { SourceType } from './interfaces/SourceType'
 import { Space } from './interfaces/Space'
 import { User } from './interfaces/User'
 
@@ -23,19 +21,13 @@ export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<
 
 export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<AppBit>>('App')
 
-export const SourceModel = new Model<Source, FindOptions<Source>, FindOptionsWhere<Source>>(
-  'Source',
-)
-
 export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
 
 export const GithubRepositoryModel = new Model<any, { sourceId: number }>('GithubRepository')
 
 export const SlackChannelModel = new Model<any, { sourceId: number }>('SlackChannel')
 
-export const SearchPinnedResultModel = new Model<Bit, { query: string }>(
-  'SearchPinnedResultModel',
-)
+export const SearchPinnedResultModel = new Model<Bit, { query: string }>('SearchPinnedResultModel')
 
 export type SearchQuery = {
   query: string
@@ -43,7 +35,7 @@ export type SearchQuery = {
   searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
-  sourceFilters?: SourceType[]
+  appFilters?: AppBitType[]
   peopleFilters?: string[]
   locationFilters?: string[]
   take: number

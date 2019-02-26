@@ -1,4 +1,4 @@
-import { Bit, SourceType } from '@mcro/models'
+import { AppBitType, Bit } from '@mcro/models'
 
 export type NormalItem = {
   id?: string
@@ -11,6 +11,7 @@ export type NormalItem = {
   location?: string
   locationLink?: string
   webLink?: string
+  appType?: AppBitType
   desktopLink?: string
   createdAt?: Date
   updatedAt?: Date
@@ -18,7 +19,6 @@ export type NormalItem = {
   people?: Bit[]
   searchTerm?: string
   subtitle?: React.ReactNode
-  sourceType?: SourceType
   image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode

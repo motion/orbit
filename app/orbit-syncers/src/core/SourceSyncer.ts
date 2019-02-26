@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { Source, SourceType } from '@mcro/models'
+import { AppBit, AppBitType } from '@mcro/models'
 
 /**
  * Interface for Source syncers.
@@ -14,7 +14,7 @@ export interface SourceSyncer {
 /**
  * Constructor of the Source syncer instance.
  */
-export type SyncerConstructor = new (setting?: Source, log?: Logger) => SourceSyncer
+export type SyncerConstructor = new (setting?: AppBit, log?: Logger) => SourceSyncer
 
 /**
  * Options to be passed to Syncer.
@@ -31,7 +31,7 @@ export interface SyncerOptions {
    * Used to get syncer settings.
    * If type is not specified then syncer will be executed once without any setting specified.
    */
-  type?: SourceType
+  type?: AppBitType
 
   /**
    * Constructor of the Source syncer instance.

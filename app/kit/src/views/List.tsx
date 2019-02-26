@@ -121,7 +121,7 @@ export function List(rawProps: ListProps) {
         onSelect(index, appConfig, eventType)
       }
       if (selectionStore) {
-        selectionStore.toggleSelected(index, eventType)
+        selectionStore.setSelected(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, appConfig, eventType)

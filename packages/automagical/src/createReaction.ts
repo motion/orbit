@@ -44,6 +44,8 @@ export function createReaction(
   // we run immediately by default
   // its the 95% use case and causes less bugs
   mobxOptions.fireImmediately = !deferFirstRun
+  mobxOptions.name = config.name
+
   let id = deferFirstRun ? 1 : 0
   let preventLog = options.log === false
   let currentValueUnreactive: any // for comparing previous value without triggering reaction

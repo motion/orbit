@@ -5,7 +5,6 @@ import { MergeContext } from '../helpers/MergeContext'
 import { useStores } from '../helpers/useStores'
 import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
-import { SelectEvent } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -64,20 +63,11 @@ class SelectableStore {
 
   // handle scroll to row
   handleSelection = react(
-    () => {
-      const { selectionStore } = this.props
-      if (selectionStore && !selectionStore.isActive) {
-        return
-      }
-      const { activeIndex, selectEvent } = selectionStore
-      if (selectEvent === SelectEvent.click) {
-        return
-      }
-      return activeIndex
-    },
+    () => this.props.selectionStore.activeIndex,
     activeIndex => {
       ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
       ensure('list', !!this.listRef)
+      ensure('is active', this.props.selectionStore.isActive)
       this.scrollId = Math.random()
     },
   )
@@ -129,7 +119,7 @@ export function SelectableList({
         return props.onSelect(index, eventType, element)
       }
       if (selectionStore) {
-        selectionStore.toggleSelected(index, eventType)
+        selectionStore.setSelected(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, eventType, element)

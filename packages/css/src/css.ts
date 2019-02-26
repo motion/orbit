@@ -9,7 +9,6 @@ import {
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 import { toColor } from './toColor'
-import { LinearGradient } from './utils/LinearGradient'
 
 export * from './colorHelpers'
 // exports
@@ -91,8 +90,8 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = css(value, opts)
       respond = true
     } else if (valueType === 'object') {
-      if (value instanceof LinearGradient) {
-        toReturn[finalKey] = value.toString()
+      if (value.toCSS) {
+        toReturn[finalKey] = value.toCSS()
         continue
       }
       // not react element

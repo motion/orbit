@@ -18,8 +18,15 @@ export function setupTrackableStore(
   rerender: Function,
   opts: TrackableStoreOptions = { component: {} },
 ) {
-  const debug = opts.debug || (opts.component && opts.component.__debug)
-  const name = `>> ${opts.component.renderName}`
+  const debug = () => {
+    if (typeof window !== 'undefined') {
+      if (window['enableLog'] > 1) {
+        return true
+      }
+    }
+    return opts.debug || (opts.component && opts.component.__debug)
+  }
+  const name = `)) ${opts.component.renderName}`
   const storeName = store.constructor.name
   let paused = true
   let reactiveKeys = new Set()
@@ -65,7 +72,7 @@ export function setupTrackableStore(
       observe(store, change => {
         const key = change['name']
         if (reactiveKeys.has(key)) {
-          if (debug) console.log(name, 'render via', `${storeName}.${key}`)
+          if (debug()) console.log(name, 'render via', `${storeName}.${key}`)
           queueUpdate(update)
         }
       }),
@@ -76,7 +83,7 @@ export function setupTrackableStore(
     observers.push(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
-          if (debug) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
+          if (debug()) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
           queueUpdate(update)
         }
       }),
@@ -102,7 +109,7 @@ export function setupTrackableStore(
     track() {
       paused = true
       done = config.track(Math.random(), opts.debug ? opts.component : null)
-      if (debug) {
+      if (debug()) {
         console.log(name, storeName, 'start tracking', config.state)
       }
     },
@@ -114,7 +121,7 @@ export function setupTrackableStore(
         deepKeys = nextDeepKeys
         reaction.schedule()
       }
-      if (debug) {
+      if (debug()) {
         console.log(name, storeName, reactiveKeys, '[reactive keys]', deepKeys, '[deep keys]')
       }
     },

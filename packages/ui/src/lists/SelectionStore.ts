@@ -1,4 +1,3 @@
-import { ensure, react } from '@mcro/use-store'
 import {
   Direction,
   MovesMap,
@@ -53,23 +52,11 @@ export class SelectionStore {
     return this.activeIndex > -1
   }
 
-  clearPeekOnInactiveIndex = react(
-    () => this.activeIndex,
-    () => {
-      ensure('no active index', !this.hasActiveIndex)
-      // AppActions.clearPeek()
-      // => this.props.onClearIndex()
-    },
-    {
-      deferFirstRun: true,
-    },
-  )
-
   clearSelected = () => {
     this.setActiveIndex(-1)
   }
 
-  toggleSelected = (index: number, eventType?: 'key' | 'click') => {
+  setSelected = (index: number, eventType?: 'key' | 'click') => {
     if (eventType) {
       this.setSelectEvent(SelectEvent[eventType])
     }
@@ -91,7 +78,7 @@ export class SelectionStore {
     this.setSelectEvent(selectEvent)
     const activeIndex = this.getNextIndex(this.activeIndex, direction)
     if (activeIndex !== this.activeIndex) {
-      this.toggleSelected(activeIndex)
+      this.setSelected(activeIndex)
     }
   }
 
@@ -120,7 +107,7 @@ export class SelectionStore {
         const prevIndex = curIndex - 1
         const prevIsRow = isInRow(this.movesMap[prevIndex])
         if (prevIsRow) {
-          const movesToNextRow = this.movesToNextRow(Direction.left, prevIndex)
+          const movesToNextRow = this.getMovesToNextRow(Direction.left, prevIndex)
           return prevIndex + movesToNextRow
         }
       }
@@ -134,10 +121,10 @@ export class SelectionStore {
         case Direction.left:
           return curIndex - 1
         case Direction.up:
-          const movesToPrevRow = this.movesToNextRow(Direction.left, curIndex)
+          const movesToPrevRow = this.getMovesToNextRow(Direction.left, curIndex)
           return curIndex + movesToPrevRow
         case Direction.down:
-          const movesToNextRow = this.movesToNextRow(Direction.right, curIndex)
+          const movesToNextRow = this.getMovesToNextRow(Direction.right, curIndex)
           const nextIndex = curIndex + movesToNextRow
           // if were in the last row already, avoid moving
           if (nextIndex > maxIndex) {
@@ -149,7 +136,7 @@ export class SelectionStore {
     return curIndex
   }
 
-  movesToNextRow = (dir: Direction, curIndex: number) => {
+  getMovesToNextRow = (dir: Direction, curIndex: number) => {
     const amt = dir === Direction.right ? 1 : -1
     const all = this.movesMap
     const hasMove = (index: number) => all[index] && all[index].moves.indexOf(dir) > -1

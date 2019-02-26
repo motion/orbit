@@ -1,7 +1,16 @@
 {
   "env": {
     "development": {
-      "presets": [["@mcro/babel-preset-motion"]]
+      "presets": [
+        [
+          "@mcro/babel-preset-motion",
+          {
+            "env": {
+              "modules": false
+            }
+          }
+        ]
+      ]
     }
   }
 }

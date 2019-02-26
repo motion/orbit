@@ -18,4 +18,8 @@ export class LinearGradient {
     const args = this.items.map(item => (isColor(item) ? toColor(item) : item)).join(', ')
     return `linear-gradient(${args})`
   }
+
+  toCSS() {
+    return this.toString()
+  }
 }

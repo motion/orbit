@@ -1,4 +1,4 @@
-import { always, react, useHook } from '@mcro/use-store'
+import { always, react, shallow, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { AppStore } from './AppStore'
@@ -11,17 +11,34 @@ type LoadedApp = {
   appStore?: AppStore
 }
 
+type AppsWithDefinitions = {
+  [key: string]: LoadedApp & { definition: AppDefinition }
+}
+
 export class AppsStore {
   stores = useHook(useStoresSimple)
 
-  _apps: { [key: string]: LoadedApp } = {}
-  definitions: { [key: string]: AppDefinition } = {}
+  _apps: { [key: string]: LoadedApp } = shallow({})
+  definitions: { [key: string]: AppDefinition } = shallow({})
 
-  // because these load in waterfall, we debounce
+  get allIds() {
+    const next = [...new Set([...Object.keys(this.apps), ...Object.keys(this.definitions)])]
+    console.log('run allids', next)
+    return next
+  }
+
+  // because these load in waterfall, debounce
   apps = react(
-    () => always(this._apps),
+    () => always(this.allIds),
     async (_, { sleep }) => {
       await sleep(16)
+
+      console.warn('run apps', this.allIds)
+
+      const res: AppsWithDefinitions = {}
+      for (const key of this.allIds) {
+        res[key] = { ...this._apps[key], definition: this.definitions[key] }
+      }
       return this._apps
     },
     {
@@ -30,10 +47,7 @@ export class AppsStore {
   )
 
   setApp = (app: { appId: string; id: string; views: AppViews; provideStores?: Object }) => {
-    this._apps = {
-      ...this._apps,
-      [app.id]: app,
-    }
+    this._apps[app.id] = app
   }
 
   setAppStore = (id: string, appStore: AppStore) => {
@@ -41,10 +55,7 @@ export class AppsStore {
   }
 
   setAppDefinition(id: string, definition: AppDefinition) {
-    this.definitions = {
-      ...this.definitions,
-      [id]: definition,
-    }
+    this.definitions[id] = definition
   }
 
   // setSettingsView(id: string, settingsView: AppViews['settings']) {
@@ -53,18 +64,10 @@ export class AppsStore {
 
   getApp(appId: string, id: string) {
     const appState = id ? this.apps[id] : this.getAppByAppId(appId)
-    if (!appState) {
-      return {
-        definition: this.definitions[appId],
-      }
-    }
-    if (appState.appId !== appId) {
+    if (appState && appState.appId !== appId) {
       throw new Error(`You called getApp with a mismatched id/appId`)
     }
-    return {
-      ...appState,
-      definition: this.definitions[appId],
-    }
+    return appState
   }
 
   getAppByAppId(appId: string) {

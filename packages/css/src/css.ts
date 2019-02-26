@@ -10,8 +10,9 @@ import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 import { toColor } from './toColor'
 
-export * from './colorHelpers'
 // exports
+
+export * from './colorHelpers'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
 export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'

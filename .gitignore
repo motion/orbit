@@ -21,6 +21,7 @@ kubeconfig
 .cache-loader
 .toc
 *.pyc
+.rts2_cache_cjs
 
 common/temp/**
 

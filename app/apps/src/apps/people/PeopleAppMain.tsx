@@ -5,7 +5,6 @@ import { Bit, BitModel, CosalTopicsModel, PersonData, SlackBitData } from '@mcro
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
-// import { AppActions } from '../../actions/appActions/AppActions'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits

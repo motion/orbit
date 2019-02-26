@@ -25,7 +25,7 @@ export function PeopleAppIndex() {
       if (filter.active) {
         where.push({
           type: 'person',
-          appType: filter.app, // todo: make sure it works
+          identifier: filter.app, // todo: make sure it works
         })
       }
     }

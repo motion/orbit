@@ -37,7 +37,7 @@ class WebsiteSetupStore {
       }
       // create a new empty app
       return {
-        appId: 'website',
+        identifier: 'website',
         // TODO
         // token: null,
         // category: 'app',

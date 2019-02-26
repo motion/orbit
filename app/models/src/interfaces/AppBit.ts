@@ -14,7 +14,7 @@ export interface BaseAppBit {
 
   id?: number
 
-  appType: AppBitType
+  identifier?: string
 
   space?: Space
 
@@ -40,41 +40,40 @@ export interface BaseAppBit {
   token?: string
 
   data?: any
-  appId?: string
 }
 
 type GenericAppBit = BaseAppBit & {
   data?: any
-  appId?: string
+  identifier?: string
 }
 
 export type GithubApp = BaseAppBit & {
-  appId?: 'github'
+  identifier?: 'github'
   data?: GithubAppData
 }
 export type SlackApp = BaseAppBit & {
-  appId?: 'slack'
+  identifier?: 'slack'
   data?: SlackAppData
 }
 export type DriveApp = BaseAppBit & {
-  appId?: 'drive'
+  identifier?: 'drive'
   data?: DriveAppData
 }
 export type GmailApp = BaseAppBit & {
-  appId?: 'gmail'
+  identifier?: 'gmail'
   data?: GmailAppData
 }
 export type JiraApp = BaseAppBit & {
-  appId?: 'jira'
+  identifier?: 'jira'
   data?: JiraAppData
 }
 export type ConfluenceApp = BaseAppBit & {
-  appId?: 'confluence'
+  identifier?: 'confluence'
   data?: ConfluenceAppData
 }
 export type AtlassianApp = JiraApp | ConfluenceApp
 export type WebsiteApp = BaseAppBit & {
-  appId?: 'website'
+  identifier?: 'website'
   data?: WebsiteAppData
 }
 

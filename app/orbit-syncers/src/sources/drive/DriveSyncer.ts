@@ -1,24 +1,24 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, BitUtils, DriveBitData, DriveSource, SourceEntity } from '@mcro/models'
+import { AppBitEntity, Bit, BitEntity, BitUtils, DriveApp, DriveBitData } from '@mcro/models'
 import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
 import { AppSyncer } from '../../core/AppSyncer'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
+import { checkCancelled } from '../../resolvers/AppForceCancelResolver'
 
 /**
  * Syncs Google Drive files.
  */
 export class DriveSyncer implements AppSyncer {
-  private source: DriveSource
+  private app: DriveApp
   private log: Logger
   private loader: DriveLoader
 
-  constructor(source: DriveSource, log?: Logger) {
-    this.source = source
+  constructor(source: DriveApp, log?: Logger) {
+    this.app = source
     this.log = log || new Logger('syncer:drive:' + source.id)
-    this.loader = new DriveLoader(this.source, this.log, source =>
-      getRepository(SourceEntity).save(source),
+    this.loader = new DriveLoader(this.app, this.log, source =>
+      getRepository(AppBitEntity).save(source),
     )
   }
 
@@ -26,13 +26,13 @@ export class DriveSyncer implements AppSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-    if (!this.source.values.lastSync) this.source.values.lastSync = {}
-    const lastSync = this.source.values.lastSync
+    if (!this.app.data.values.lastSync) this.app.data.values.lastSync = {}
+    const lastSync = this.app.data.values.lastSync
 
     // load users from API
     this.log.timer('load files and people from API')
     const files = await this.loader.loadFiles(undefined, async (file, cursor, isLast) => {
-      await checkCancelled(this.source.id)
+      await checkCancelled(this.app.id)
       await sleep(2)
 
       const updatedAt = new Date(file.file.modifiedByMeTime || file.file.modifiedTime).getTime()
@@ -49,7 +49,7 @@ export class DriveSyncer implements AppSyncer {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SourceEntity).save(this.source)
+        await getRepository(AppBitEntity).save(this.app)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -59,7 +59,7 @@ export class DriveSyncer implements AppSyncer {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         this.log.info('looks like its the first syncing file, set last synced date', lastSync)
-        await getRepository(SourceEntity).save(this.source)
+        await getRepository(AppBitEntity).save(this.app)
       }
 
       const bit = this.createDocumentBit(file)
@@ -78,7 +78,7 @@ export class DriveSyncer implements AppSyncer {
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getRepository(SourceEntity).save(this.source)
+        await getRepository(AppBitEntity).save(this.app)
         return true
       }
 
@@ -86,7 +86,7 @@ export class DriveSyncer implements AppSyncer {
       if (lastSync.lastCursor !== cursor) {
         this.log.info('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
-        await getRepository(SourceEntity).save(this.source)
+        await getRepository(AppBitEntity).save(this.app)
       }
 
       return true
@@ -100,8 +100,8 @@ export class DriveSyncer implements AppSyncer {
   private createPersonBit(user: DriveUser): Bit {
     return BitUtils.create(
       {
-        sourceType: 'drive',
-        sourceId: this.source.id,
+        appType: 'drive',
+        appId: this.app.id,
         type: 'person',
         originalId: user.emailAddress,
         title: user.displayName,
@@ -118,8 +118,8 @@ export class DriveSyncer implements AppSyncer {
   private createDocumentBit(file: DriveLoadedFile): Bit {
     return BitUtils.create(
       {
-        sourceType: 'drive',
-        sourceId: this.source.id,
+        appType: 'drive',
+        appId: this.app.id,
         type: 'document',
         title: file.file.name,
         body: file.content || 'empty',

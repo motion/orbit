@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
-import { Job, JobEntity, Source, SourceEntity, SourceModel } from '@mcro/models'
+import { AppBit, AppBitEntity, AppModel, Job, JobEntity } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Mediator } from '../mediator'
 import { SyncerOptions } from './AppSyncer'
@@ -10,18 +10,18 @@ import Timer = NodeJS.Timer
  * Interval running in the Syncer.
  */
 interface SyncerInterval {
-  source?: Source
+  app?: AppBit
   timer: Timer
   running?: Promise<any>
 }
 
 /**
- * Runs given source syncer.
+ * Runs given app syncer.
  * Sync is interval-based, it sync data each x period of times.
  *
  * Some of the syncer requirements:
  *
- *   1. we need to sync whens source changes
+ *   1. we need to sync whens app changes
  *   2. we need to sync periodically (each hour lets say)
  *   3. record errors and progress
  *   4. don’t sync again if sync already running (lock)
@@ -47,18 +47,18 @@ export class Syncer {
    */
   async start(force = false) {
     if (this.options.type) {
-      // in force mode we simply load all sources and run them, we don't need to create a subscription
+      // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
-        const sources = await getRepository(SourceEntity).find({ type: this.options.type })
-        for (let source of sources) {
-          await this.runInterval(source, true)
+        const apps = await getRepository(AppBitEntity).find({ type: this.options.type })
+        for (let app of apps) {
+          await this.runInterval(app, true)
         }
       } else {
-        this.subscription = Mediator.observeMany(SourceModel, {
+        this.subscription = Mediator.observeMany(AppModel, {
           // TODO @umed type
           // @ts-ignore
           args: { where: { type: this.options.type } },
-        }).subscribe(async sources => this.reactOnSettingsChanges(sources))
+        }).subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {
       await this.runInterval(undefined, force)
@@ -82,37 +82,37 @@ export class Syncer {
   }
 
   /**
-   * Reacts on source changes - manages sources lifecycle and how syncer deals with it.
+   * Reacts on app changes - manages apps lifecycle and how syncer deals with it.
    */
-  private async reactOnSettingsChanges(sources: Source[]) {
-    this.log.info('got sources in syncer', sources)
+  private async reactOnSettingsChanges(apps: AppBit[]) {
+    this.log.info('got apps in syncer', apps)
 
     const intervalSettings = this.intervals
-      .filter(interval => !!interval.source)
-      .map(interval => interval.source)
+      .filter(interval => !!interval.app)
+      .map(interval => interval.app)
 
-    const sourceIds = sources.map(source => source.id)
-    const intervalSettingIds = intervalSettings.map(source => source.id)
+    const appIds = apps.map(app => app.id)
+    const intervalSettingIds = intervalSettings.map(app => app.id)
 
-    // find new sources (for those we don't have intervals) and run intervals for them
-    const newSettings = sources.filter(source => intervalSettingIds.indexOf(source.id) === -1)
+    // find new apps (for those we don't have intervals) and run intervals for them
+    const newSettings = apps.filter(app => intervalSettingIds.indexOf(app.id) === -1)
     if (newSettings.length) {
-      this.log.info('found new sources, creating intervals for them', newSettings)
-      for (let source of newSettings) {
-        await this.runInterval(source)
+      this.log.info('found new apps, creating intervals for them', newSettings)
+      for (let app of newSettings) {
+        await this.runInterval(app)
       }
     }
 
-    // find removed sources and remove intervals for them if they exist
-    const removedSettings = intervalSettings.filter(source => sourceIds.indexOf(source.id) === -1)
+    // find removed apps and remove intervals for them if they exist
+    const removedSettings = intervalSettings.filter(app => appIds.indexOf(app.id) === -1)
     if (removedSettings.length) {
-      this.log.info('found removed sources, removing their intervals', removedSettings)
-      for (let source of removedSettings) {
+      this.log.info('found removed apps, removing their intervals', removedSettings)
+      for (let app of removedSettings) {
         const interval = this.intervals.find(interval => {
-          return interval.source && interval.source.id === source.id
+          return interval.app && interval.app.id === app.id
         })
         if (interval) {
-          // commented because we can't await it since source is already missing inside at this moment
+          // commented because we can't await it since app is already missing inside at this moment
           // if (interval.running) { // if its running await once it finished
           //   await interval.running
           // }
@@ -127,22 +127,22 @@ export class Syncer {
   /**
    * Runs interval to run a syncer.
    */
-  private async runInterval(source: Source, force = false) {
+  private async runInterval(app: AppBit, force = false) {
     let interval: SyncerInterval | undefined
-    if (source) {
-      interval = this.intervals.find(interval => interval.source.id === source.id)
+    if (app) {
+      interval = this.intervals.find(interval => interval.app.id === app.id)
     }
     const log = new Logger(
-      'syncer:' + (source ? source.type + ':' + source.id : '') + (force ? ' (force)' : ''),
+      'syncer:' + (app ? app.type + ':' + app.id : '') + (force ? ' (force)' : ''),
     )
 
     // get the last run job
     if (force === false) {
       const lastJob = await getRepository(JobEntity).findOne({
         where: {
-          type: 'SOURCE_SYNC',
+          type: 'APP_SYNC',
           syncer: this.name,
-          sourceId: source ? source.id : undefined,
+          appId: app ? app.id : undefined,
         },
         order: {
           time: 'desc',
@@ -152,7 +152,7 @@ export class Syncer {
         const jobTime = lastJob.time + this.options.interval
         const currentTime = new Date().getTime()
         const needToWait = jobTime - currentTime
-        const jobName = this.name + (source ? ':' + source.id : '')
+        const jobName = this.name + (app ? ':' + app.id : '')
 
         // if app was closed when syncer was in processing
         if (lastJob.status === 'PROCESSING' && !interval) {
@@ -169,7 +169,7 @@ export class Syncer {
                 'until enough interval time will pass before we execute a new job',
               { jobTime, currentTime, needToWait, lastJob },
             )
-            setTimeout(() => this.runInterval(source), needToWait)
+            setTimeout(() => this.runInterval(app), needToWait)
             return
           }
           log.info(
@@ -192,12 +192,12 @@ export class Syncer {
     }
 
     // run syncer
-    const syncerPromise = this.runSyncer(log, source) // note: don't await it
+    const syncerPromise = this.runSyncer(log, app) // note: don't await it
 
     // create interval to run syncer periodically
     if (this.options.interval && force === false) {
       interval = {
-        source,
+        app,
         running: syncerPromise,
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
@@ -210,12 +210,12 @@ export class Syncer {
             return
           }
 
-          // re-load source again just to make sure we have a new version of it
-          const latestSource = source
-            ? await getRepository(SourceEntity).findOne({ id: source.id })
+          // re-load app again just to make sure we have a new version of it
+          const latestApp = app
+            ? await getRepository(AppBitEntity).findOne({ id: app.id })
             : undefined
-          interval.source = latestSource
-          interval.running = this.runSyncer(log, latestSource)
+          interval.app = latestApp
+          interval.running = this.runSyncer(log, latestApp)
           await interval.running
           interval.running = undefined
         }, this.options.interval),
@@ -231,14 +231,14 @@ export class Syncer {
   /**
    * Runs syncer immediately.
    */
-  async runSyncer(log: Logger, source?: Source) {
+  async runSyncer(log: Logger, app?: AppBit) {
     // create a new job - the fact that we started a new syncer
     const job: Job = {
       target: 'job',
       syncer: this.name,
-      source,
+      app,
       time: new Date().getTime(),
-      type: 'SOURCE_SYNC',
+      type: 'APP_SYNC',
       status: 'PROCESSING',
       message: '',
     }
@@ -248,7 +248,7 @@ export class Syncer {
     try {
       log.clean() // clean syncer timers, do a fresh logger start
       log.timer(`${this.options.constructor.name} sync`)
-      const syncer = new this.options.constructor(source, log)
+      const syncer = new this.options.constructor(app, log)
       await syncer.run()
 
       // update our job (finish successfully)

@@ -1,18 +1,11 @@
 import { Logger } from '@mcro/logger'
-import {
-  Bit,
-  BitEntity,
-  CosalTopWordsModel,
-  GithubSource,
-  SlackBitData,
-  Source,
-} from '@mcro/models'
+import { AppBit, Bit, BitEntity, CosalTopWordsModel, GithubApp, SlackBitData } from '@mcro/models'
 import { GithubIssue, GithubPullRequest } from '@mcro/services'
 import { hash, sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getManager } from 'typeorm'
 import { Mediator } from '../mediator'
-import { checkCancelled } from '../resolvers/SourceForceCancelResolver'
+import { checkCancelled } from '../resolvers/AppForceCancelResolver'
 
 /**
  * Sync Bits options.
@@ -26,21 +19,21 @@ export interface BitSyncerOptions {
  * Syncs Bits.
  */
 export class BitSyncer {
-  private source: Source
+  private app: AppBit
   private log: Logger
 
-  constructor(source: Source | undefined, log: Logger) {
-    this.source = source
+  constructor(app: AppBit | undefined, log: Logger) {
+    this.app = app
     this.log = log
   }
 
   /**
    * Creates a bit id.
    */
-  static buildId(source: GithubSource, data: GithubIssue | GithubPullRequest)
-  static buildId(source: Source, data: any) {
-    if (source.type === 'github') {
-      return hash(`${source.type}-${source.id}-${data}`)
+  static buildId(app: GithubApp, data: GithubIssue | GithubPullRequest)
+  static buildId(app: AppBit, data: any) {
+    if (app.appId === 'github') {
+      return hash(`${app.appId}-${app.id}-${data}`)
     }
   }
 
@@ -77,14 +70,14 @@ export class BitSyncer {
       return
     }
 
-    // there is one problematic use case - if user removes Source during synchronization
+    // there is one problematic use case - if user removes App during synchronization
     // we should not sync anything (shouldn't write any new person or bit into the database)
-    // that's why we check if we have job for this particular source registered
+    // that's why we check if we have job for this particular app registered
     // and we do it twice - before saving anything to prevent further operations
-    // and after saving everything to make sure source wasn't removed or requested for removal
+    // and after saving everything to make sure app wasn't removed or requested for removal
     // while we were inserting new bits
     // if (await this.syncerRepository.isSettingRemoved()) {
-    //   this.log.warning('found a source in a process of removal, skip syncing')
+    //   this.log.warning('found a app in a process of removal, skip syncing')
     //   return
     // }
 
@@ -100,8 +93,8 @@ export class BitSyncer {
         if (insertedBits.length > 0) {
           const insertedBitChunks = chunk(insertedBits, 50)
           for (let bits of insertedBitChunks) {
-            if (this.source) {
-              await checkCancelled(this.source.id)
+            if (this.app) {
+              await checkCancelled(this.app.id)
             }
             await this.completeBitsData(bits)
             await manager.insert(BitEntity, bits)
@@ -120,8 +113,8 @@ export class BitSyncer {
         // update changed bits
         await this.completeBitsData(updatedBits)
         for (let bit of updatedBits) {
-          if (this.source) {
-            await checkCancelled(this.source.id)
+          if (this.app) {
+            await checkCancelled(this.app.id)
           }
           await manager.update(BitEntity, { id: bit.id }, bit)
 
@@ -162,14 +155,14 @@ export class BitSyncer {
           await manager.delete(BitEntity, removedBits)
         }
 
-        // before committing transaction we make sure nobody removed source during period of save
+        // before committing transaction we make sure nobody removed app during period of save
         // we use non-transactional manager inside this method intentionally
-        // if (await this.syncerRepository.isSettingRemoved()) throw 'source removed'
+        // if (await this.syncerRepository.isSettingRemoved()) throw 'app removed'
       })
       this.log.timer('save bits in the database')
     } catch (error) {
-      // if (error === 'source removed') {
-      //   this.log.warning('found a source in a process of removal, skip syncing')
+      // if (error === 'app removed') {
+      //   this.log.warning('found a app in a process of removal, skip syncing')
       //   return
       // }
       throw error
@@ -178,7 +171,7 @@ export class BitSyncer {
 
   private async completeBitsData(bits: Bit[]) {
     for (let bit of bits) {
-      if (bit.sourceType === 'slack' && bit.type === 'conversation') {
+      if (bit.appType === 'slack' && bit.type === 'conversation') {
         const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
         bit.title = (await Mediator.loadMany(CosalTopWordsModel, {
           args: { text: flatBody, max: 6 },

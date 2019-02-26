@@ -4,7 +4,7 @@ import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
 import { Icon } from './Icon'
 
-export function SourceFilterButton(props: ViewProps & { queryFilterStore?: QueryFilterStore }) {
+export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFilterStore }) {
   const stores = useStores()
   const queryFilterStore = props.queryFilterStore || stores.queryStore.queryFilters
   const { /* hasSourceFilters,  */ sourceFilters, sourceFilterToggler } = queryFilterStore

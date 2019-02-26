@@ -1,19 +1,11 @@
 import { Logger } from '@mcro/logger'
-import {
-  Bit,
-  BitEntity,
-  BitUtils,
-  JiraBitData,
-  JiraSource,
-  JiraSourceValues,
-  SourceEntity,
-} from '@mcro/models'
+import { AppBitEntity, Bit, BitEntity, BitUtils, JiraApp, JiraBitData } from '@mcro/models'
 import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
 import { AppSyncer } from '../../core/AppSyncer'
 import { SyncerUtils } from '../../core/SyncerUtils'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
+import { checkCancelled } from '../../resolvers/AppForceCancelResolver'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
 
@@ -22,14 +14,14 @@ import { SyncerRepository } from '../../utils/SyncerRepository'
  */
 export class JiraSyncer implements AppSyncer {
   private log: Logger
-  private source: JiraSource
+  private app: JiraApp
   private loader: JiraLoader
   private personSyncer: PersonSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(source: JiraSource, log?: Logger) {
+  constructor(source: JiraApp, log?: Logger) {
     this.log = log || new Logger('syncer:jira:' + source.id)
-    this.source = source
+    this.app = source
     this.loader = new JiraLoader(source, this.log)
     this.personSyncer = new PersonSyncer(this.log)
     this.syncerRepository = new SyncerRepository(source)
@@ -39,8 +31,8 @@ export class JiraSyncer implements AppSyncer {
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-    if (!this.source.values.lastSync) this.source.values.lastSync = {}
-    const lastSync = this.source.values.lastSync
+    if (!this.app.data.values.lastSync) this.app.data.values.lastSync = {}
+    const lastSync = this.app.data.values.lastSync
 
     // load database data
     this.log.timer('load people, person bits and bits from the database')
@@ -75,7 +67,7 @@ export class JiraSyncer implements AppSyncer {
       lastSync.lastCursor || 0,
       lastSync.lastCursorLoadedCount || 0,
       async (issue, cursor, loadedCount, isLast) => {
-        await checkCancelled(this.source.id)
+        await checkCancelled(this.app.id)
         await sleep(2)
 
         const updatedAt = new Date(issue.fields.updated).getTime()
@@ -92,7 +84,7 @@ export class JiraSyncer implements AppSyncer {
           }
           lastSync.lastCursor = undefined
           lastSync.lastCursorSyncedDate = undefined
-          await getRepository(SourceEntity).save(this.source)
+          await getRepository(AppBitEntity).save(this.app)
 
           return false // this tells from the callback to stop file proceeding
         }
@@ -102,7 +94,7 @@ export class JiraSyncer implements AppSyncer {
         if (!lastSync.lastCursorSyncedDate) {
           lastSync.lastCursorSyncedDate = updatedAt
           this.log.info('looks like its the first syncing issue, set last synced date', lastSync)
-          await getRepository(SourceEntity).save(this.source)
+          await getRepository(AppBitEntity).save(this.app)
         }
 
         const bit = this.createDocumentBit(issue, allDbPeople)
@@ -118,7 +110,7 @@ export class JiraSyncer implements AppSyncer {
           lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
           lastSync.lastCursor = undefined
           lastSync.lastCursorSyncedDate = undefined
-          await getRepository(SourceEntity).save(this.source)
+          await getRepository(AppBitEntity).save(this.app)
           return true
         }
 
@@ -127,7 +119,7 @@ export class JiraSyncer implements AppSyncer {
           this.log.info('updating last cursor in settings', { cursor })
           lastSync.lastCursor = cursor
           lastSync.lastCursorLoadedCount = loadedCount
-          await getRepository(SourceEntity).save(this.source)
+          await getRepository(AppBitEntity).save(this.app)
         }
 
         return true
@@ -151,7 +143,7 @@ export class JiraSyncer implements AppSyncer {
   private createDocumentBit(issue: JiraIssue, allPeople: Bit[]): Bit {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = this.source.values as JiraSourceValues
+    const values = this.app.data.values as JiraAppValues
     const domain = values.credentials.domain
     const body = SyncerUtils.stripHtml(issue.renderedFields.description)
     const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)
@@ -176,8 +168,8 @@ export class JiraSyncer implements AppSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'jira',
-        sourceId: this.source.id,
+        appType: 'jira',
+        appId: this.app.id,
         type: 'document',
         title: issue.fields.summary,
         body,
@@ -206,8 +198,8 @@ export class JiraSyncer implements AppSyncer {
   createPersonBit(user: JiraUser): Bit {
     return BitUtils.create(
       {
-        sourceType: 'jira',
-        sourceId: this.source.id,
+        appType: 'jira',
+        appId: this.app.id,
         type: 'person',
         originalId: user.accountId,
         title: user.displayName,

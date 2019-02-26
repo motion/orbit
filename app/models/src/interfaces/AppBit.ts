@@ -14,8 +14,6 @@ export interface BaseAppBit {
 
   id?: number
 
-  appId: string
-
   appType: AppBitType
 
   space?: Space
@@ -35,13 +33,16 @@ export interface BaseAppBit {
 
   editable?: boolean
 
-  data?: any
-
   createdAt?: Date
 
   updatedAt?: Date
 
   token?: string
+}
+
+type GenericAppBit = BaseAppBit & {
+  data?: any
+  appId?: string
 }
 
 export type GithubApp = BaseAppBit & {
@@ -92,6 +93,7 @@ export type AppBit =
   | ConfluenceApp
   | WebsiteApp
   | GithubApp
+  | GenericAppBit
 
 // TODO this is dynamic now...
 export type AppBitType =

@@ -43,7 +43,8 @@ export const API = {
       }
     }
 
-    save(AppModel, app)
+    // TODO @umed type
+    save(AppModel, app as any)
   },
 }
 

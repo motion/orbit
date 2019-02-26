@@ -1,4 +1,5 @@
 import { loadMany, save } from '@mcro/bridge'
+import { AppSettingsProps } from '@mcro/kit'
 import { AppModel, GithubApp, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -24,7 +25,7 @@ export default function GithubSettings({ app }: AppSettingsProps<GithubApp>) {
   useEffect(
     () => {
       // for some reason we can get any app here, so filter out everything except github
-      if (app.type !== 'github') return
+      if (app.identifier !== 'github') return
       // console.log(app)
 
       // if we have repositories stored in the app - use them at first

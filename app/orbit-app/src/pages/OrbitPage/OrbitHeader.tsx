@@ -14,7 +14,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const activePaneType = paneManagerStore.activePane.type
   const { isTorn } = orbitStore
   const { isEditing } = orbitStore
-  const icon = activePaneType === 'createApp' ? newAppStore.app.appId : activePaneType
+  const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
 
   return (
@@ -120,7 +120,7 @@ function OrbitEditAppButton() {
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.appId === 'custom' && !orbitStore.isEditing
+  const show = activeApp && activeApp.identifier === 'custom' && !orbitStore.isEditing
   const Actions = useActions()
 
   if (!show) {

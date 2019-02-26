@@ -9,7 +9,7 @@ import * as React from 'react'
 const getBitTexts = (bits: Bit[]) => {
   return bits
     .map(x => {
-      if (x.appType === 'slack') {
+      if (x.appIdentifier === 'slack') {
         const data = x.data as SlackBitData
         return data.messages.map(m => m.text).join(' ')
       }

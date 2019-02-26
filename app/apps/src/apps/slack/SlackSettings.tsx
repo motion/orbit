@@ -29,7 +29,7 @@ export default function SlackSettings({ app }: AppSettingsProps<SlackApp>) {
   useEffect(
     () => {
       // for some reason we can get any app here, so filter out everything except slack
-      if (app.type !== 'slack') return
+      if (app.identifier !== 'slack') return
 
       // if we have channels stored in the app - use them at first
       if (app.data.channels) {

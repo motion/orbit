@@ -34,7 +34,7 @@ export const ManageApps = function ManageApps() {
             items={apps.map(app => ({
               title: app.name,
               icon: <AppIcon app={app} />,
-              type: app.appId,
+              identifier: app.identifier,
               iconBefore: true,
             }))}
             onSelect={i => setIndex(i)}
@@ -46,7 +46,7 @@ export const ManageApps = function ManageApps() {
           <Section>
             <SubTitle>Settings</SubTitle>
             <Title>{selectedApp.name}</Title>
-            <AppView appId={selectedApp.appId} viewType="settings" />
+            <AppView identifier={selectedApp.identifier} viewType="settings" />
           </Section>
         </VerticalSplitPane>
       </Row>

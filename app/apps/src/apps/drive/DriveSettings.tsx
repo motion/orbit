@@ -1,11 +1,11 @@
-import { OrbitAppSettingProps } from '@mcro/kit'
+import { AppSettingsProps } from '@mcro/kit'
 import { DriveApp } from '@mcro/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-type Props = OrbitAppSettingProps<DriveApp>
+type Props = AppSettingsProps<DriveApp>
 
 class DriveSettingsStore {
   props: Props

@@ -554,7 +554,7 @@ const MenuLayerContent = React.memo(() => {
       >
         {menuApps.map(app => (
           <MenuApp
-            appId={app.id}
+            identifier={app.id}
             index={app.index}
             key={app.id}
             viewType="index"

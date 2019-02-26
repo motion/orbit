@@ -22,8 +22,8 @@ function CreateAppIndex() {
       minSelected={0}
       items={defaultApps.map(app => ({
         title: app.name,
-        appId: app.appId,
-        subtitle: descriptions[app.appId],
+        identifier: app.identifier,
+        subtitle: descriptions[app.identifier],
         icon: <AppIcon app={app} />,
         iconBefore: true,
       }))}
@@ -45,29 +45,30 @@ function CreateAppMain(props: AppProps) {
     return null
   }
 
-  const { appId } = props.appConfig
+  const { identifier } = props.appConfig
 
   useEffect(
     () => {
-      if (appId) {
-        newAppStore.setApp(appId)
+      if (identifier) {
+        newAppStore.setApp(identifier)
       }
     },
-    [appId],
+    [identifier],
   )
 
-  const app = { appId } as AppBit
+  const app = { identifier } as AppBit
   const createApp = async () => {
     const app = {
       ...newAppStore.app,
       spaceId: activeSpace.id,
     }
     console.log('creating new app', app)
-    save(AppModel, app)
+    // TODO @umed type
+    save(AppModel, app as any)
     Actions.previousTab()
   }
 
-  if (!appId) {
+  if (!identifier) {
     return null
   }
 
@@ -79,7 +80,7 @@ function CreateAppMain(props: AppProps) {
         </Section>
 
         <Section paddingTop={0}>
-          <AppView appId={appId} viewType="settings" />
+          <AppView identifier={identifier} viewType="settings" />
         </Section>
       </View>
 

@@ -9,7 +9,7 @@ export function AppsMain(props: AppProps) {
     return <AppsMainManage />
   }
 
-  if (props.appConfig.appId !== 'apps') {
+  if (props.appConfig.identifier !== 'apps') {
     return <AppSubView appConfig={props.appConfig} />
   }
 

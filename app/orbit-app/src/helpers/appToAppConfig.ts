@@ -5,6 +5,6 @@ export function appToAppConfig(app: AppBit): AppConfig {
   return {
     id: `${app.id}`,
     title: app.name,
-    appId: app.appId,
+    identifier: app.identifier,
   }
 }

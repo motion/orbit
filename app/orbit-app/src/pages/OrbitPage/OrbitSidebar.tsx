@@ -118,7 +118,7 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
         <AppView
           key={id}
           id={id}
-          appId={appId}
+          identifier={appId}
           viewType="index"
           ref={handleAppRef}
           before={<OrbitToolBarHeight appId={appId} />}

@@ -11,7 +11,7 @@ export function AppsMainSetup(props: AppProps) {
   }
 
   if (props.appConfig.viewType === 'setup') {
-    return <AppView appId={props.appConfig.appId} viewType="setup" {...props} />
+    return <AppView identifier={props.appConfig.identifier} viewType="setup" {...props} />
   }
 
   // if (props.appConfig.appId === 'apps') {

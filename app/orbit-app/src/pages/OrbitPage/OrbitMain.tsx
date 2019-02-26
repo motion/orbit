@@ -59,7 +59,7 @@ const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
       <AppView
         key={JSON.stringify(appConfig)}
         id={id}
-        appId={appId}
+        identifier={appId}
         viewType="main"
         appConfig={appConfig}
         before={<OrbitToolBarHeight appId={appId} />}

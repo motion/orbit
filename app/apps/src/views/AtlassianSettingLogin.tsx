@@ -27,11 +27,11 @@ export function AtlassianSettingLogin(props: Props) {
   const [error, setError] = React.useState('')
   const [app] = React.useState<Partial<AtlassianApp>>({
     target: 'app',
-    identifier: props.identifier,
+    identifier: props.identifier as 'confluence',
     token: null,
   })
   const [credentials, setCredentials] = React.useState(
-    (app.values && app.values.credentials) || {
+    (app.data.values && app.data.values.credentials) || {
       username: '',
       password: '',
       domain: '',
@@ -40,7 +40,7 @@ export function AtlassianSettingLogin(props: Props) {
 
   const addApp = async e => {
     e.preventDefault()
-    app.values = { ...app.values, credentials }
+    app.data.values = { ...app.data.values, credentials }
     if (!app.spaces) {
       app.spaces = []
     }

@@ -36,7 +36,7 @@ export type AllBitData = {
   person: PersonData
 }
 
-export type GenericBit<A extends string> = A extends AppIdentifier
+export type GenericBit<A> = A extends AppIdentifier
   ? Bit & {
       type: A
       data: AllBitData[A]

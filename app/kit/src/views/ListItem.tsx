@@ -1,5 +1,5 @@
 import { gloss } from '@mcro/gloss'
-import { Bit, Person, PersonBit } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { ListItem as UIListItem, ListItemProps, PersonRow, VirtualListItemProps } from '@mcro/ui'
 import * as React from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
@@ -12,20 +12,18 @@ import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { itemViewsListItem } from './itemViews'
 import { ListItemPerson } from './ListItemPerson'
 
-type OrbitItem = Bit | PersonBit | any
-
 type OrbitItemComponent<A extends ItemType> = React.FunctionComponent<OrbitItemViewProps<A>> & {
   itemProps?: OrbitItemViewProps<A>
 }
 
-export type OrbitListItemProps = Omit<VirtualListItemProps<OrbitItem>, 'index'> & {
+export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & { // Bit | any
   index?: number
   // for appconfig merge
   id?: string
   appId?: string
   subType?: string
   // extra props for orbit list items
-  people?: Person[]
+  people?: Bit[]
   hidePeople?: boolean
   itemViewProps?: OrbitItemViewProps<any>
   appConfig?: AppConfig

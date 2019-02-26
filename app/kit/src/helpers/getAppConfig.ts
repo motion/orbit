@@ -48,9 +48,10 @@ export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<
 }
 
 const modelTargetToAppType = (model: ResolvableModel) => {
-  if (model.target === 'person-bit') {
-    return 'people'
-  }
+  // todo(nate): check it
+  // if (model.target === 'person-bit') {
+  //   return 'people'
+  // }
   if (model.target === 'search-group') {
     return 'search'
   }

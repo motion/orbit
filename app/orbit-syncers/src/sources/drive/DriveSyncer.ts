@@ -1,19 +1,10 @@
 import { Logger } from '@mcro/logger'
-import {
-  BitEntity,
-  DriveSource,
-  PersonBitEntity,
-  PersonBitUtils,
-  PersonEntity,
-  SourceEntity,
-} from '@mcro/models'
-import { DriveLoader } from '@mcro/services'
-import { hash, sleep } from '@mcro/utils'
+import { Bit, BitEntity, BitUtils, DriveBitData, DriveSource, SourceEntity } from '@mcro/models'
+import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
+import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
-import { DriveBitFactory } from './DriveBitFactory'
-import { DrivePersonFactory } from './DrivePersonFactory'
 
 /**
  * Syncs Google Drive files.
@@ -22,8 +13,6 @@ export class DriveSyncer implements SourceSyncer {
   private source: DriveSource
   private log: Logger
   private loader: DriveLoader
-  private bitFactory: DriveBitFactory
-  private personFactory: DrivePersonFactory
 
   constructor(source: DriveSource, log?: Logger) {
     this.source = source
@@ -31,8 +20,6 @@ export class DriveSyncer implements SourceSyncer {
     this.loader = new DriveLoader(this.source, this.log, source =>
       getRepository(SourceEntity).save(source),
     )
-    this.bitFactory = new DriveBitFactory(source)
-    this.personFactory = new DrivePersonFactory(source)
   }
 
   /**
@@ -75,36 +62,11 @@ export class DriveSyncer implements SourceSyncer {
         await getRepository(SourceEntity).save(this.source)
       }
 
-      const bit = this.bitFactory.create(file)
-      bit.people = file.users.map(user => this.personFactory.create(user))
+      const bit = this.createDocumentBit(file)
+      bit.people = file.users.map(user => this.createPersonBit(user))
 
-      // for people without emails we create "virtual" email
-      for (let person of bit.people) {
-        if (!person.email) {
-          person.email = person.name + ' from ' + person.source
-        }
-      }
-
-      // find person bit with email
-      const personBits = await Promise.all(
-        bit.people.map(async person => {
-          const dbPersonBit = await getRepository(PersonBitEntity).findOne(hash(person.email))
-          const newPersonBit = PersonBitUtils.createFromPerson(person)
-          const personBit = PersonBitUtils.merge(newPersonBit, dbPersonBit || {})
-
-          // push person to person bit's people
-          const hasPerson = personBit.people.some(existPerson => existPerson.id === person.id)
-          if (!hasPerson) {
-            personBit.people.push(person)
-          }
-
-          return personBit
-        }),
-      )
-
-      this.log.verbose('syncing', { file, bit, people: bit.people, personBits })
-      await getRepository(PersonEntity).save(bit.people, { listeners: false })
-      await getRepository(PersonBitEntity).save(personBits, { listeners: false })
+      this.log.verbose('syncing', { file, bit, people: bit.people })
+      await getRepository(BitEntity).save(bit.people, { listeners: false })
       await getRepository(BitEntity).save(bit, { listeners: false })
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
@@ -131,4 +93,55 @@ export class DriveSyncer implements SourceSyncer {
     })
     this.log.timer('load files and people from API', files)
   }
+
+  /**
+   * Creates person entity from a given Drive user.
+   */
+  private createPersonBit(user: DriveUser): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'drive',
+        sourceId: this.source.id,
+        type: 'person',
+        originalId: user.emailAddress,
+        title: user.displayName,
+        email: user.emailAddress,
+        photo: user.photoLink,
+      },
+      user.emailAddress,
+    )
+  }
+
+  /**
+   * Builds a document bit from the given google drive aggregated file.
+   */
+  private createDocumentBit(file: DriveLoadedFile): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'drive',
+        sourceId: this.source.id,
+        type: 'document',
+        title: file.file.name,
+        body: file.content || 'empty',
+        data: {} as DriveBitData,
+        webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
+        location: file.parent
+          ? {
+            id: file.parent.id,
+            name: file.parent.name,
+            webLink: file.file.webViewLink || file.parent.webContentLink,
+            desktopLink: '',
+          }
+          : undefined,
+        bitCreatedAt: new Date(file.file.createdTime).getTime(),
+        bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
+        // image:
+        //   file.file.fileExtension && file.file.thumbnailLink
+        //     ? file.file.id + '.' + file.file.fileExtension
+        //     : undefined,
+      },
+      file.file.id,
+    )
+  }
+
 }

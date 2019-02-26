@@ -1,14 +1,14 @@
 import { Logger } from '@mcro/logger'
-import { SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
-import { SlackChannel, SlackLoader, SlackMessage } from '@mcro/services'
+import { Bit, BitUtils, PersonData, SlackBitData, SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
+import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { SourceSyncer } from '../../core/SourceSyncer'
 import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
-import { SlackBitFactory } from './SlackBitFactory'
-import { SlackPersonFactory } from './SlackPersonFactory'
+
+const Autolinker = require('autolinker')
 
 /**
  * Syncs Slack messages.
@@ -17,8 +17,6 @@ export class SlackSyncer implements SourceSyncer {
   private log: Logger
   private source: SlackSource
   private loader: SlackLoader
-  private bitFactory: SlackBitFactory
-  private personFactory: SlackPersonFactory
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
@@ -27,8 +25,6 @@ export class SlackSyncer implements SourceSyncer {
     this.source = source
     this.log = log || new Logger('syncer:slack:' + source.id)
     this.loader = new SlackLoader(this.source, this.log)
-    this.bitFactory = new SlackBitFactory(this.source)
-    this.personFactory = new SlackPersonFactory(this.source)
     this.personSyncer = new PersonSyncer(this.log)
     this.bitSyncer = new BitSyncer(source, this.log)
     this.syncerRepository = new SyncerRepository(source)
@@ -67,20 +63,16 @@ export class SlackSyncer implements SourceSyncer {
     // creating entities for them
     this.log.info('finding and creating people for users', filteredApiUsers)
     const apiPeople = filteredApiUsers.map(user => {
-      return this.personFactory.create(user, team)
+      return this.createPersonBit(user, team)
     })
 
     // load all people and person bits from the local database
     this.log.timer('load synced people and person bits from the database')
     const dbPeople = await this.syncerRepository.loadDatabasePeople()
-    const dbPersonBits = await this.syncerRepository.loadDatabasePersonBits({ people: dbPeople })
-    this.log.timer('load synced people and person bits from the database', {
-      dbPeople,
-      dbPersonBits,
-    })
+    this.log.timer('load synced people and person bits from the database', { dbPeople })
 
     // sync people
-    await this.personSyncer.sync({ apiPeople, dbPeople, dbPersonBits })
+    await this.personSyncer.sync(apiPeople, dbPeople)
 
     // re-load database people, we need them to deal with bits
     this.log.timer('load synced people from the database')
@@ -137,7 +129,7 @@ export class SlackSyncer implements SourceSyncer {
 
         // create bits from conversations
         const apiBits = conversations.map(messages =>
-          this.bitFactory.createConversation(channel, messages, allDbPeople),
+          this.createConversationBit(channel, messages, allDbPeople),
         )
 
         // create bits from links inside messages
@@ -146,7 +138,7 @@ export class SlackSyncer implements SourceSyncer {
 
           for (let attachment of message.attachments) {
             if (attachment.title && attachment.text && attachment.original_url) {
-              apiBits.push(this.bitFactory.createWebsite(channel, message, attachment, allDbPeople))
+              apiBits.push(this.createWebsiteBit(channel, message, attachment, allDbPeople))
             }
           }
         }
@@ -219,5 +211,168 @@ export class SlackSyncer implements SourceSyncer {
       }
     }
     return conversations
+  }
+
+  /**
+   * Creates a single source person from given Slack user.
+   */
+  createPersonBit(user: SlackUser, team: SlackTeam): Bit {
+    return BitUtils.create(
+      {
+        sourceType: 'slack',
+        sourceId: this.source.id,
+        type: 'person',
+        originalId: user.id,
+        title: user.profile.real_name || user.name,
+        webLink: `https://${team.domain}.slack.com/messages/${user.id}`,
+        desktopLink: `slack://user?team=${team.id}&id=${user.id}`,
+        email: user.profile.email,
+        photo: user.profile.image_512,
+        data: {
+          tz: user.tz,
+          team: user.id,
+        } as PersonData
+      },
+      user.id,
+    )
+  }
+
+  /**
+   * Creates a new slack conversation bit.
+   */
+  createConversationBit(channel: SlackChannel, messages: SlackMessage[], allPeople: Bit[]): Bit {
+    // we need message in a reverse order
+    // by default messages we get are in last-first order,
+    // but we need in last-last order here
+
+    const firstMessage = messages[0]
+    const lastMessage = messages[messages.length - 1]
+    const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
+    const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
+    const webLink = `https://${this.source.values.team.domain}.slack.com/archives/${
+      channel.id
+      }/p${firstMessage.ts.replace('.', '')}`
+    const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
+      this.source.values.team.id
+      }`
+    const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
+    const data: SlackBitData = {
+      messages: messages.reverse().map(message => ({
+        user: message.user,
+        text: this.buildSlackText(message.text, allPeople),
+        time: +message.ts.split('.')[0] * 1000,
+      })),
+    }
+    const people = allPeople.filter(person => {
+      return (
+        messages.some(message => {
+          return message.user === person.originalId
+        }) ||
+        mentionedPeople.some(mentionedPerson => {
+          return person.id === mentionedPerson.id
+        })
+      )
+    })
+
+    return BitUtils.create(
+      {
+        sourceId: this.source.id,
+        sourceType: 'slack',
+        type: 'conversation',
+        title: '',
+        body: data.messages.map(message => message.text).join(' ... '),
+        data,
+        bitCreatedAt,
+        bitUpdatedAt,
+        people,
+        location: {
+          id: channel.id,
+          name: channel.name,
+          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+        },
+        webLink,
+        desktopLink,
+      },
+      channel.id + '_' + firstMessage.ts,
+    )
+  }
+
+  /**
+   * Creates a new slack website bit.
+   */
+  private createWebsiteBit(
+    channel: SlackChannel,
+    message: SlackMessage,
+    attachment: SlackAttachment,
+    allPeople: Bit[],
+  ): Bit {
+    const messageTime = +message.ts.split('.')[0] * 1000
+    const mentionedPeople = this.findMessageMentionedPeople([message], allPeople)
+    const people = allPeople.filter(person => {
+      return (
+        message.user === person.originalId ||
+        mentionedPeople.some(mentionedPerson => person.id === mentionedPerson.id)
+      )
+    })
+
+    return BitUtils.create(
+      {
+        sourceId: this.source.id,
+        sourceType: 'slack',
+        type: 'website',
+        title: attachment.title,
+        body: attachment.text,
+        data: {
+          url: attachment.original_url,
+          title: attachment.title,
+          content: '',
+        },
+        bitCreatedAt: messageTime,
+        bitUpdatedAt: messageTime,
+        people,
+        location: {
+          id: channel.id,
+          name: channel.name,
+          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+        },
+        webLink: attachment.original_url,
+        desktopLink: undefined,
+      },
+      channel.id + '_' + message.ts + '_' + attachment.id,
+    )
+  }
+
+  /**
+   * Processes text for a slack message
+   */
+  private buildSlackText(message: string, people: Bit[]): string {
+    // merge all messages texts into a single body
+    let body = message.trim()
+    // replace all people id mentions in the message into a real people names
+    for (let bit of people) {
+      body = body.replace(new RegExp(`<@${bit.originalId}>`, 'g'), '@' + bit.title)
+    }
+    // make all links in the message a better formatting (without http and <>)
+    const matchedLinks: string[] = []
+    body = Autolinker.link(body, {
+      replaceFn: match => {
+        matchedLinks.push(match.getAnchorText())
+        return match.getAnchorText()
+      },
+    })
+    for (let matchedLink of matchedLinks) {
+      body = body.replace(`<${matchedLink}>`, matchedLink)
+    }
+    return body
+  }
+
+  /**
+   * Finds all the mentioned people in the given slack messages.
+   */
+  private findMessageMentionedPeople(messages: SlackMessage[], people: Bit[]) {
+    const body = messages.map(message => message.text).join('')
+    return people.filter(person => new RegExp(`<@${person.originalId}>`).test(body))
   }
 }

@@ -1,5 +1,4 @@
-import { Bit, PersonBit, Source } from '@mcro/models'
-import { last } from 'lodash'
+import { Bit, Source } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem } from '../types/NormalItem'
 import { ResolvableModel } from '../types/ResolvableModel'
@@ -35,18 +34,19 @@ const normalizers = {
     title: source.type,
     icon: source.type,
   }),
-  'person-bit': (person: PersonBit): NormalItem => {
-    return {
-      type: 'person',
-      id: person.email,
-      title: person.name,
-      icon: 'person',
-      subtitle: person.email,
-      image: last(person.allPhotos as any) || person.photo,
-      // createdAt: person.createdAt,
-      // updatedAt: person.updatedAt,
-    }
-  },
+  // todo(nate) make sure this works
+  // 'person-bit': (person: PersonBit): NormalItem => {
+  //   return {
+  //     type: 'person',
+  //     id: person.email,
+  //     title: person.name,
+  //     icon: 'person',
+  //     subtitle: person.email,
+  //     image: last(person.allPhotos as any) || person.photo,
+  //     // createdAt: person.createdAt,
+  //     // updatedAt: person.updatedAt,
+  //   }
+  // },
 }
 
 export const normalizeItem = (model: ResolvableModel): NormalItem => {

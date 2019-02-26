@@ -1,6 +1,6 @@
 import { loadOne } from '@mcro/bridge'
 import { OrbitListItemProps } from '@mcro/kit'
-import { BitModel, PersonBitModel } from '@mcro/models'
+import { BitModel } from '@mcro/models'
 import { Button } from '@mcro/ui'
 import React from 'react'
 import { ListAppDataItem } from './types'
@@ -28,10 +28,6 @@ export async function loadListItem(
     case 'bit':
       return {
         item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
-      }
-    case 'person':
-      return {
-        item: await loadOne(PersonBitModel, { args: { where: { id: +item.id } } }),
       }
   }
   return null

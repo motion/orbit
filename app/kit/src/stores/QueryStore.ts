@@ -66,12 +66,6 @@ export class QueryStore {
     }
   }
 
-  togglePersonFilter(person: string) {
-    if (this.queryInstant.includes(person) === false) {
-      this.setQuery(`${this.queryInstant.trim()} ${person}`)
-    }
-  }
-
   queryToggleFilter(str: string) {
     if (this.queryInstant.includes(str) === false) {
       this.setQuery(`${this.queryInstant.trim()} ${str}`)

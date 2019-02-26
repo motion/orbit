@@ -167,7 +167,7 @@ function glossify(
     const className = addRules(displayName, style, key, tagName)
     if (Date.now() - x > 15) {
       console.warn('long add rules...', displayName, style, tagName, sortedKeys, props, allStyles)
-      debugger
+      // debugger
     }
     nextClassNames = nextClassNames || []
     nextClassNames.push(className)

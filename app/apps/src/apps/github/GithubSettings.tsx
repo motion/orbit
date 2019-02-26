@@ -1,5 +1,5 @@
 import { loadMany, save } from '@mcro/bridge'
-import { GithubRepositoryModel } from '@mcro/models'
+import { GithubApp, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -7,11 +7,11 @@ import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 import { WhitelistManager } from '../../WhitelistManager'
 
-export default function GithubSettings({ source }: AppSettingsProps<GithubSource>) {
+export default function GithubSettings({ source }: AppSettingsProps<GithubApp>) {
   const whitelist = useStore(WhitelistManager, {
     source,
     getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
-  }) as WhitelistManager<GithubSource>
+  }) as WhitelistManager<GithubApp>
   // setup state
   const [repositories, setRepositories] = useState(null)
   // console.log('repositories', repositories)

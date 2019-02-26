@@ -75,11 +75,15 @@ export default memo(function OrbitNav() {
           width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
           isPinned,
-          label: isPinned ? '' : app.appId === 'search' && index === 0 ? activeSpaceName : app.name,
+          label: isPinned
+            ? ''
+            : app.identifier === 'search' && index === 0
+            ? activeSpaceName
+            : app.name,
           stretch: !isPinned,
           thicc: isPinned,
           isActive,
-          icon: `orbit-${app.appId}`,
+          icon: `orbit-${app.identifier}`,
           // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {
@@ -97,7 +101,8 @@ export default memo(function OrbitNav() {
               {
                 label: isPinned ? 'Unpin' : 'Pin',
                 click() {
-                  save(AppModel, { ...app, pinned: !app.pinned })
+                  // TODO @umed type pain
+                  save(AppModel, { ...app, pinned: !app.pinned } as any)
                 },
               },
               ...getAppContextItems(app),

@@ -1,12 +1,12 @@
-import { superMemo } from '@mcro/ui'
-import React, { createContext, useContext, useEffect } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
-import { AppElements } from '../types/AppDefinition'
+import { superMemo } from '@mcro/ui';
+import React, { createContext, useContext, useEffect } from 'react';
+import { useStoresSimple } from '../hooks/useStores';
+import { AppElements } from '../types/AppDefinition';
 
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
 export const AppLoadContext = createContext({
-  appId: '',
+  identifier: '',
   id: '',
 })
 
@@ -17,17 +17,17 @@ function AppContainerInner(props: AppElements) {
     }
   }
 
-  const { id, appId } = useContext(AppLoadContext)
+  const { id, identifier } = useContext(AppLoadContext)
   const { appsStore } = useStoresSimple()
 
-  if (!appId || !id) {
-    throw new Error('Internal bug, we didnt set context id + appId')
+  if (!identifier || !id) {
+    throw new Error('Internal bug, we didnt set context id + identifier')
   }
 
   useEffect(() => {
     appsStore.setApp({
       id,
-      appId,
+      identifier,
       views: {
         index: props.index && superMemo(props.index),
         main: props.children && superMemo(props.children),

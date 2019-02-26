@@ -5,7 +5,7 @@ import { AppStore } from './AppStore'
 
 type LoadedApp = {
   id: string
-  appId: string
+  identifier: string
   views: AppViews
   provideStores?: any
   appStore?: AppStore
@@ -54,7 +54,7 @@ export class AppsStore {
     },
   )
 
-  setApp = (app: { appId: string; id: string; views: AppViews; provideStores?: Object }) => {
+  setApp = (app: { identifier: string; id: string; views: AppViews; provideStores?: Object }) => {
     this._apps[app.id] = app
   }
 
@@ -70,26 +70,28 @@ export class AppsStore {
   //   this.appViews[id] = { ...this.appViews[id], settings: settingsView }
   // }
 
-  getApp(appId: string, id: string) {
-    let appState = (id && this.apps[id]) || this.getAppByAppId(appId)
-    if (appState && appState.appId !== appId) {
-      throw new Error(`You called getApp with a mismatched id/appId: appId ${appId}, id: ${id}`)
+  getApp(identifier: string, id: string) {
+    let appState = (id && this.apps[id]) || this.getAppByIdentifier(identifier)
+    if (appState && appState.identifier !== identifier) {
+      throw new Error(
+        `You called getApp with a mismatched id/identifier: identifier ${identifier}, id: ${id}`,
+      )
     }
     return appState
   }
 
-  getAppByAppId(appId: string) {
+  getAppByIdentifier(identifier: string) {
     for (const id in this.apps) {
       const app = this.apps[id]
-      if (app.appId === appId) {
+      if (app.identifier === identifier) {
         return app
       }
     }
     return null
   }
 
-  getViewState(appId: string) {
-    const app = this.getAppByAppId(appId)
+  getViewState(identifier: string) {
+    const app = this.getAppByIdentifier(identifier)
     return {
       hasMain: app && app.views && !!app.views.main,
       hasIndex: app && app.views && !!app.views.index,

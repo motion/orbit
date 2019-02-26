@@ -1,9 +1,9 @@
 import { useModels } from '@mcro/bridge'
-import { SourceModel } from '@mcro/models'
+import { AppModel } from '@mcro/models'
 
-export function useSourcesForSpace(spaceId: number | false) {
+export function useAppsForSpace(spaceId: number | false) {
   return useModels(
-    SourceModel,
+    AppModel,
     typeof spaceId === 'number' ? { where: { spaces: { $in: [spaceId] } } } : false,
   )[0]
 }

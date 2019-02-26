@@ -20,7 +20,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   index?: number
   // for appconfig merge
   id?: string
-  appId?: string
+  identifier?: string
   subType?: string
   // extra props for orbit list items
   people?: Bit[]

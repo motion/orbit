@@ -1,4 +1,4 @@
-import { ItemType } from '../types/ItemType'
+import { ItemType } from '@mcro/models'
 
 const names: { [key in ItemType]: string } = {
   task: 'task',

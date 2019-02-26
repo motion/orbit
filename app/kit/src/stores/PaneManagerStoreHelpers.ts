@@ -22,7 +22,7 @@ export const defaultPanes: PaneManagerPane[] = [
 
 function appToPane(app: AppBit): PaneManagerPane {
   return {
-    type: app.appId,
+    type: app.identifier,
     id: `${app.id}`,
     keyable: true,
     subType: 'app',

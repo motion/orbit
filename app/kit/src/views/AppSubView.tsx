@@ -5,7 +5,7 @@ export function AppSubView({
   viewType = 'main',
   appConfig,
 }: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
-  if (!appConfig.appId) {
+  if (!appConfig.identifier) {
     console.warn('no app id given')
     return null
   }
@@ -14,7 +14,7 @@ export function AppSubView({
     <AppView
       key={JSON.stringify(appConfig)}
       id={appConfig.id}
-      appId={appConfig.appId}
+      identifier={appConfig.identifier}
       viewType={appConfig.viewType || viewType}
       appConfig={appConfig}
     />

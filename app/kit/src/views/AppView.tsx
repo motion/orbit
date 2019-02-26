@@ -10,7 +10,7 @@ import { ProvideStores } from './ProvideStores'
 
 export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
   id?: string
-  appId: string
+  identifier: string
   appStore?: AppStore
   after?: React.ReactNode
   before?: React.ReactNode
@@ -49,13 +49,13 @@ export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
 
-    if (!props.appId) {
+    if (!props.identifier) {
       console.log('props for error', props)
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores, definition } = useApp(props.appId, props.id)
-    const AppViewAlt = useAppView(props.appId, props.viewType as any)
+    const { views, appStore, provideStores, definition } = useApp(props.identifier, props.id)
+    const AppViewAlt = useAppView(props.identifier, props.viewType as any)
 
     let AppView = views[props.viewType] || AppViewAlt
 

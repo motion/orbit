@@ -1,5 +1,5 @@
 import { loadMany, save } from '@mcro/bridge'
-import { GithubApp, GithubRepositoryModel } from '@mcro/models'
+import { AppModel, GithubApp, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'

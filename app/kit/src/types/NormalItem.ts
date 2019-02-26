@@ -6,7 +6,7 @@ export type NormalItem = {
   title?: string
   type?: string
   subType?: string
-  appIdentifier?: string
+  identifier?: string
   preview?: React.ReactNode
   content?: any
   location?: string

@@ -1,5 +1,5 @@
 export type AppConfig = {
-  appId?: string
+  identifier?: string
   id?: string
   subId?: string
   title?: string

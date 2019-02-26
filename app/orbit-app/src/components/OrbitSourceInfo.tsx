@@ -13,6 +13,8 @@ const bitsCountCache = {}
 export const OrbitSourceInfo = (props: Props) => {
   console.warn('todo', props, bitsCountCache, !!shortNumber)
 
+  return null
+
   // const sourceId = props.app.source ? props.app.source.id : false
   // const { bitsCount } = useSourceInfo(sourceId)
   // const allJobs = useJobs(sourceId)

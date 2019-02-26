@@ -10,7 +10,7 @@ export type AppConfig = {
   iconLight?: string
   source?: SourceType
   subType?: string
-  viewType?: 'main' | 'index' | 'setup'
+  viewType?: 'main' | 'index' | 'setup' | 'settings'
   // allow various things to be passed as config
   // to help configure the peek window
   viewConfig?: {

@@ -11,7 +11,7 @@ type SelectableGridProps<A> = SortableGridProps<A> & {
 
 export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
   // !TODO type
-  const selectionStore = props.selectionStore || useStore(SelectionStore, props)
+  const selectionStore = props.selectionStore || useStore(SelectionStore, props as any)
   const moves = items.map((_, i) => i)
   const itemsKey = JSON.stringify(items.map(i => i.id))
 

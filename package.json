@@ -7,7 +7,9 @@
   },
   "resolutions": {
     "@types/react": "16.8.2",
-    "@types/react-dom": "16.8.0"
+    "@types/react-dom": "16.8.0",
+    "@types/node": "11.9.5",
+    "@types/ws": "5.1.2"
   },
   "devDependencies": {
     "@babel/runtime": "7.2.0",

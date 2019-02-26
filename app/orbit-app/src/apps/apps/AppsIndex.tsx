@@ -68,7 +68,7 @@ export function AppsIndex(_props: AppProps) {
           }
         : {
             appId: 'message',
-            viewType: 'main',
+            viewType: 'main' as 'main',
             title: `Opening private authentication for ${app.app.name}...`,
           },
     })),

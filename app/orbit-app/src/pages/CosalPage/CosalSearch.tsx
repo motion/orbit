@@ -1,10 +1,10 @@
-import * as React from 'react'
 import { react } from '@mcro/black'
-import { observer } from 'mobx-react-lite'
-import { useStore } from '@mcro/use-store'
-import CosalSaliency from './CosalSaliency'
-import { loadMany } from '../../mediator'
+import { loadMany } from '@mcro/bridge'
 import { BitUtils, CosalTopicsModel, CosalTopWordsModel, SearchByTopicModel } from '@mcro/models'
+import { useStore } from '@mcro/use-store'
+import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import CosalSaliency from './CosalSaliency'
 
 class SearchStore {
   query = 'blast me off'

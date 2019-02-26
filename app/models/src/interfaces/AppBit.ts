@@ -38,6 +38,9 @@ export interface BaseAppBit {
   updatedAt?: Date
 
   token?: string
+
+  data?: any
+  appId?: string
 }
 
 type GenericAppBit = BaseAppBit & {

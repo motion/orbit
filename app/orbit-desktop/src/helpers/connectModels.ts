@@ -1,4 +1,4 @@
-import { Source, SourceEntity } from '@mcro/models'
+import { AppBit, AppBitEntity } from '@mcro/models'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'
@@ -25,11 +25,11 @@ function buildOptions(models): ConnectionOptions {
 export default async function connectModels(models) {
   // if we cannot create connection it usually means we have some unhandled database schema changes
   // this case must be gracefully handled. We are trying here to drop everything in the database
-  // except spaces and sources. Right, this means user is going to loose all its synced data
-  // but since spaces and sources are in there application will restart sync
-  // in such case we at least don't force people to re-add every added Source again
-  // to make this schema to work properly its recommended to keep space and source entities simple
-  // todo: we need to reset source setting values
+  // except spaces and apps. Right, this means user is going to loose all its synced data
+  // but since spaces and apps are in there application will restart sync
+  // in such case we at least don't force people to re-add every added App again
+  // to make this schema to work properly its recommended to keep space and app entities simple
+  // todo: we need to reset app setting values
 
   let connection: Connection
 
@@ -45,8 +45,8 @@ export default async function connectModels(models) {
       // fine, just in case something odd kept it open
     }
 
-    // if its going to fail this time again we have no choice - we drop all sources and spaces as well
-    // and user will have to add spaces, sources and settings from scratch again
+    // if its going to fail this time again we have no choice - we drop all apps and spaces as well
+    // and user will have to add spaces, apps and settings from scratch again
     // at least this is better then non responsive application
     try {
       // create connection without synchronizations and migrations running to execute raw SQL queries
@@ -72,29 +72,29 @@ export default async function connectModels(models) {
         migrationsRun: false,
       })
 
-      // reset source last sync settings, since we are going to start it from scratch
+      // reset app last sync settings, since we are going to start it from scratch
       try {
-        const sources: Source[] = await connection.getRepository(SourceEntity).find()
-        for (let source of sources) {
-          if (source.type === 'confluence') {
-            source.values.blogLastSync = {}
-            source.values.pageLastSync = {}
-          } else if (source.type === 'github') {
-            source.values.lastSyncIssues = {}
-            source.values.lastSyncPullRequests = {}
-          } else if (source.type === 'drive') {
-            source.values.lastSync = {}
-          } else if (source.type === 'gmail') {
-            // source.values.lastSync = {} // todo: do after my another PR merge
-          } else if (source.type === 'jira') {
-            source.values.lastSync = {}
-          } else if (source.type === 'slack') {
-            source.values.lastMessageSync = {}
-            source.values.lastAttachmentSync = {}
+        const apps = (await connection.getRepository(AppBitEntity).find()) as AppBit[]
+        for (let app of apps) {
+          if (app.appType === 'confluence') {
+            app.data.values.blogLastSync = {}
+            app.data.values.pageLastSync = {}
+          } else if (app.appType === 'github') {
+            app.data.values.lastSyncIssues = {}
+            app.data.values.lastSyncPullRequests = {}
+          } else if (app.appType === 'drive') {
+            app.data.values.lastSync = {}
+          } else if (app.appType === 'gmail') {
+            // app.data.values.lastSync = {} // todo: do after my another PR merge
+          } else if (app.appType === 'jira') {
+            app.data.values.lastSync = {}
+          } else if (app.appType === 'slack') {
+            app.data.values.lastMessageSync = {}
+            app.data.values.lastAttachmentSync = {}
           }
         }
 
-        await connection.getRepository(SourceEntity).save(sources)
+        await connection.getRepository(AppBitEntity).save(apps)
       } catch {
         console.log('failed with method 2')
       }
@@ -137,11 +137,11 @@ export default async function connectModels(models) {
         await connection.query(`DROP TABLE IF EXISTS 'person_bit_entity'`)
         await connection.query(`DROP TABLE IF EXISTS 'search_index_entity'`)
         await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'source_entity_spaces_space_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'source_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'app_entity_spaces_space_entity'`)
+        await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
         await connection.query(`DROP TABLE IF EXISTS 'app_entity'`)
         await connection.query(`DROP TABLE IF EXISTS 'setting_entity'`)
-        await connection.query(`DROP TABLE IF EXISTS 'space_entity'`) // maybe we should remove them next step instead? (and make sources to be retrieved from spaces)
+        await connection.query(`DROP TABLE IF EXISTS 'space_entity'`) // maybe we should remove them next step instead? (and make apps to be retrieved from spaces)
 
         // close connection
         await connection.close()

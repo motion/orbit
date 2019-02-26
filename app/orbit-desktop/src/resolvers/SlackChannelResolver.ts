@@ -1,19 +1,17 @@
-import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { SlackChannelModel, SlackSource } from '@mcro/models'
+import { AppBitEntity, SlackChannelModel } from '@mcro/models'
 import { SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('resolver:slack-channel')
 
-export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ sourceId }) => {
-  const source = (await getRepository(SourceEntity).findOne({
-    id: sourceId,
-    type: 'slack',
-  })) as SlackSource
+export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ appId }) => {
+  const source = await getRepository(AppBitEntity).findOne({
+    id: appId,
+  })
   if (!source) {
-    log.error('cannot find requested slack source', { sourceId })
+    log.error('cannot find requested slack source', { appId })
     return
   }
 

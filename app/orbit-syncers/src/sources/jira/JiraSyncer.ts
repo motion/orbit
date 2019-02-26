@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { AppBitEntity, Bit, BitEntity, BitUtils, JiraApp, JiraBitData } from '@mcro/models'
+import { JiraAppData } from '@mcro/models/_/interfaces/app-data/JiraAppData'
 import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
@@ -143,7 +144,7 @@ export class JiraSyncer implements AppSyncer {
   private createDocumentBit(issue: JiraIssue, allPeople: Bit[]): Bit {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = this.app.data.values as JiraAppValues
+    const values = this.app.data.values as JiraAppData['values']
     const domain = values.credentials.domain
     const body = SyncerUtils.stripHtml(issue.renderedFields.description)
     const cleanHtml = SyncerUtils.sanitizeHtml(issue.renderedFields.description)

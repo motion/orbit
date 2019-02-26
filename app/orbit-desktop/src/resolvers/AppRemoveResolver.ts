@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { AppBitEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@mcro/models'
+import { AppBit, AppBitEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@mcro/models'
 import { getManager, getRepository } from 'typeorm'
 
 const log = new Logger('command:app-remove')
@@ -19,7 +19,7 @@ export const AppRemoveResolver = resolveCommand(AppRemoveCommand, async ({ appId
   const job: Job = {
     target: 'job',
     syncer: '',
-    app,
+    app: app as AppBit,
     time: new Date().getTime(),
     type: 'APP_REMOVE',
     status: 'PROCESSING',

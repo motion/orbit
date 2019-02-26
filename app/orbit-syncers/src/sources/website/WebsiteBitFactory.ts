@@ -1,14 +1,14 @@
-import { Bit, BitUtils, WebsiteBitData, WebsiteSource } from '@mcro/models'
+import { Bit, BitUtils, WebsiteApp, WebsiteBitData } from '@mcro/models'
 import { WebsiteCrawledData } from './WebsiteCrawledData'
 
 /**
  * Creates a website Bit.
  */
 export class WebsiteBitFactory {
-  private source: WebsiteSource
+  private app: WebsiteApp
 
-  constructor(source: WebsiteSource) {
-    this.source = source
+  constructor(app: WebsiteApp) {
+    this.app = app
   }
 
   /**
@@ -17,13 +17,13 @@ export class WebsiteBitFactory {
   create(crawledData: WebsiteCrawledData): Bit {
     const bitCreatedAt = new Date().getTime()
     const bitUpdatedAt = new Date().getTime()
-    // const values = this.source.values as CrawlerSettingValues
+    // const values = this.app.values as CrawlerSettingValues
 
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'website',
-        sourceId: this.source.id,
+        appType: 'website',
+        appId: this.app.id,
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,
@@ -44,7 +44,7 @@ export class WebsiteBitFactory {
         bitUpdatedAt,
         crawled: true,
       },
-      this.source.id + '_' + crawledData.url,
+      this.app.id + '_' + crawledData.url,
     )
   }
 }

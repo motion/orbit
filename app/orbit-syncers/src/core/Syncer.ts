@@ -10,7 +10,7 @@ import Timer = NodeJS.Timer
  * Interval running in the Syncer.
  */
 interface SyncerInterval {
-  app?: AppBit
+  app?: AppBitEntity
   timer: Timer
   running?: Promise<any>
 }
@@ -49,9 +49,9 @@ export class Syncer {
     if (this.options.type) {
       // in force mode we simply load all apps and run them, we don't need to create a subscription
       if (force) {
-        const apps = await getRepository(AppBitEntity).find({ type: this.options.type })
+        const apps = await getRepository(AppBitEntity).find({ appType: this.options.type })
         for (let app of apps) {
-          await this.runInterval(app, true)
+          await this.runInterval(app as AppBit, true)
         }
       } else {
         this.subscription = Mediator.observeMany(AppModel, {
@@ -133,7 +133,7 @@ export class Syncer {
       interval = this.intervals.find(interval => interval.app.id === app.id)
     }
     const log = new Logger(
-      'syncer:' + (app ? app.type + ':' + app.id : '') + (force ? ' (force)' : ''),
+      'syncer:' + (app ? app.appType + ':' + app.id : '') + (force ? ' (force)' : ''),
     )
 
     // get the last run job
@@ -197,7 +197,7 @@ export class Syncer {
     // create interval to run syncer periodically
     if (this.options.interval && force === false) {
       interval = {
-        app,
+        app: app as AppBitEntity,
         running: syncerPromise,
         timer: setInterval(async () => {
           // if we still have previous interval running - we don't do anything
@@ -215,7 +215,7 @@ export class Syncer {
             ? await getRepository(AppBitEntity).findOne({ id: app.id })
             : undefined
           interval.app = latestApp
-          interval.running = this.runSyncer(log, latestApp)
+          interval.running = this.runSyncer(log, latestApp as AppBit)
           await interval.running
           interval.running = undefined
         }, this.options.interval),

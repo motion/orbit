@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { AppData } from '../interfaces/app-data/AppData'
+import { AppBitType } from '../interfaces/AppBit'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
@@ -24,7 +25,7 @@ export class AppBitEntity extends BaseEntity {
   appId?: string
 
   @Column()
-  appType?: string
+  appType?: AppBitType
 
   @ManyToMany(() => SpaceEntity, space => space.apps)
   @JoinTable()

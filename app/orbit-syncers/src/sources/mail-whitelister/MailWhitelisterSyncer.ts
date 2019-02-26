@@ -1,5 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { BitEntity, GmailSourceValues, SourceEntity } from '@mcro/models'
+import { AppBitEntity, BitEntity } from '@mcro/models'
+import { GmailAppData } from '@mcro/models/_/interfaces/app-data/GmailAppData'
 import { getRepository } from 'typeorm'
 import { AppSyncer } from '../../core/AppSyncer'
 
@@ -22,24 +23,24 @@ export class MailWhitelisterSyncer implements AppSyncer {
     const people = await getRepository(BitEntity).find({
       where: {
         type: 'person',
-        sourceType: ['slack', 'github', 'drive', 'jira', 'confluence'],
+        appType: ['slack', 'github', 'drive', 'jira', 'confluence'],
       },
     })
     this.log.info('person bits were loaded', people)
     const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
     this.log.info('emails from the person bits', emails)
 
-    // next we find all gmail Sources to add those emails to their whitelists
-    this.log.info('loading gmail Sources')
-    const Sources = await getRepository(SourceEntity).find({
-      where: { type: 'gmail' },
+    // next we find all gmail Apps to add those emails to their whitelists
+    this.log.info('loading gmail Apps')
+    const Apps = await getRepository(AppBitEntity).find({
+      where: { appType: 'gmail' },
     })
-    this.log.info('loaded gmail Sources', Sources)
+    this.log.info('loaded gmail Apps', Apps)
 
-    // update whitelist settings in Sources
+    // update whitelist settings in Apps
     const newWhiteListedEmails: string[] = []
-    for (let Source of Sources) {
-      const values = Source.values as GmailSourceValues
+    for (let App of Apps) {
+      const values = App.data.values as GmailAppData['values']
       const foundEmails = values.foundEmails || []
       const whitelist = {}
       for (let email of emails) {
@@ -49,7 +50,7 @@ export class MailWhitelisterSyncer implements AppSyncer {
         }
       }
       values.whitelist = whitelist
-      await getRepository(SourceEntity).save(Source)
+      await getRepository(AppBitEntity).save(App)
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }

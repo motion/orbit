@@ -84,16 +84,16 @@ export class SearchQueryExecutor {
       conditions.push(`"bit"."appType" IN (${args.appFilters.map(() => '?')}`)
       conditionParameters.push(...args.appFilters)
     }
-    if (args.sourceId) {
-      conditions.push('"bit"."sourceId" = ?')
-      conditionParameters.push(args.sourceId)
-    } else if (args.sourceIds) {
-      conditions.push(`"bit"."sourceId" IN (${args.sourceIds.join(', ')})`)
+    if (args.appId) {
+      conditions.push('"bit"."appId" = ?')
+      conditionParameters.push(args.appId)
+    } else if (args.appIds) {
+      conditions.push(`"bit"."appId" IN (${args.appIds.join(', ')})`)
     }
 
     // if (peopleFilters && peopleFilters.length) {
-    //   joins.push(`INNER JOIN "source" "source" ON "source"."spaceId" = ?`)
-    //   joinParameters.push(sourceId)
+    //   joins.push(`INNER JOIN "app" "app" ON "app"."spaceId" = ?`)
+    //   joinParameters.push(appId)
     //
     //   conditions.push("(" + peopleFilters.map(name => {
     //     conditionParameters.push(name)
@@ -175,12 +175,12 @@ export class SearchQueryExecutor {
       data: string
       desktopLink: string
       id: number
-      sourceType: string
+      appType: string
       locationDesktoplink: string
       locationId: string
       locationName: string
       locationWeblink: string
-      sourceId: number
+      appId: number
       title: string
       type: string
       updatedAt: string
@@ -199,14 +199,14 @@ export class SearchQueryExecutor {
         data: rawBit.data ? JSON.parse(rawBit.data) : undefined,
         desktopLink: rawBit.desktopLink,
         id: rawBit.id,
-        sourceType: rawBit.sourceType,
+        appType: rawBit.appType,
         location: {
           id: rawBit.locationId,
           name: rawBit.locationName,
           webLink: rawBit.webLink,
           desktopLink: rawBit.desktopLink,
         },
-        sourceId: rawBit.sourceId,
+        appId: rawBit.appId,
         title: rawBit.title,
         type: rawBit.type,
         updatedAt: new Date(rawBit.updatedAt),

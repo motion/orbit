@@ -74,7 +74,7 @@ export class PinnedUrlsSyncer implements AppSyncer {
 
       // sync bits
       const dbBits = await getRepository(BitEntity).find({
-        sourceType: 'pinned',
+        appType: 'pinned',
       })
       await this.bitSyncer.sync({ apiBits, dbBits })
     }

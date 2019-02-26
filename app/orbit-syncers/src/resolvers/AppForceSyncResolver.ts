@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
-import { AppBitEntity, AppForceSyncCommand } from '@mcro/models'
+import { AppBit, AppBitEntity, AppForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
 import { Syncer } from '../core/Syncer'
 import { Syncers } from '../core/Syncers'
@@ -19,7 +19,7 @@ export const AppForceSyncResolver: any = resolveCommand(AppForceSyncCommand, asy
     if (syncer instanceof Syncer) {
       if (syncer.options.type === app.appType) {
         const syncerLogger = new Logger(`command:app-force-sync:${app.appType}:${app.id}`)
-        await syncer.runSyncer(syncerLogger, app)
+        await syncer.runSyncer(syncerLogger, app as AppBit)
       }
     }
   }

@@ -1,25 +1,20 @@
-import { loadOne } from '@mcro/bridge'
-import { SourceModel, SourceType } from '@mcro/models'
+import { SourceType } from '@mcro/models'
 import { config } from '../configureKit'
 import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
 import { ResolvableModel } from '../types/ResolvableModel'
 import { OrbitListItemProps } from '../views/ListItem'
 
-export async function getAppConfig(props: OrbitListItemProps, id?: string): Promise<AppConfig> {
+export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
   const { item } = props
-  let type: string = ''
   if (item) {
-    switch (item.target) {
-      case 'bit':
-        type = item.source
-        break
-      case 'person-bit':
-        type = 'person'
-        break
+    if (item.target === 'bit') {
+      const appDef = config.getApps().find(x => x.id === item.appId)
+      return getSourceAppConfig(appDef, item)
     }
-    if (type) {
-      return getSourceAppConfig(props)
+    if (item.target === 'person-bit') {
+      const appDef = config.getApps().find(x => x.id === 'people')
+      return getSourceAppConfig(appDef, item)
     }
   }
   return {
@@ -41,12 +36,6 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   }
 }
 
-export async function getSourceAppConfig({ item }: OrbitListItemProps): Promise<AppConfig> {
-  if (item && item.type) {
-    return sourceToAppConfig(config.getApps().find(x => x.id === item.appId), item)
-  }
-}
-
 const modelTargetToAppType = (model: ResolvableModel) => {
   if (model.target === 'person-bit') {
     return 'people'
@@ -57,22 +46,15 @@ const modelTargetToAppType = (model: ResolvableModel) => {
   return model.target
 }
 
-export async function sourceToAppConfig(
-  appDef: AppDefinition,
-  model?: ResolvableModel,
-): Promise<AppConfig> {
+export function getSourceAppConfig(appDef: AppDefinition, model: ResolvableModel): AppConfig {
   if (!appDef) {
     throw new Error(`No source given: ${JSON.stringify(appDef)}`)
   }
-  let source = null
-  if (model.target === 'bit') {
-    source = await loadOne(SourceModel, { args: { where: { id: model.sourceId } } })
-  }
   return {
-    id: `${(model && model.id) || (source && source.id) || Math.random()}`,
+    id: `${model.id}`,
     icon: appDef.icon,
     iconLight: appDef.iconLight,
-    title: source.name,
+    title: model.target === 'bit' ? model.title : model['name'],
     appId: model ? modelTargetToAppType(model) : 'sources',
     source: appDef.sync.sourceType as SourceType,
     viewConfig: appDef.defaultViewConfig,

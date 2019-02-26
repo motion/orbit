@@ -12,6 +12,10 @@ export class WhitelistManager<T extends { values?: { whitelist?: string[] } }> {
     return !this.values.whitelist
   }
 
+  getIsWhitelisting() {
+    return this.isWhitelisting
+  }
+
   saveSettingOnValuesUpdate = react(
     () => this.values,
     values => {

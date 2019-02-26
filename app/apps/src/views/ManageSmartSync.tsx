@@ -11,7 +11,10 @@ export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any
         tooltip="Turning this on will let Orbit manage space"
       >
         <label style={{ flexFlow: 'row' }}>
-          <CheckboxReactive onChange={whitelist.toggleActive} checked={whitelist.isWhitelisting} />
+          <CheckboxReactive
+            onChange={whitelist.toggleActive}
+            checked={whitelist.getIsWhitelisting}
+          />
           <HorizontalSpace />
           <Text>Smart sync</Text>
         </label>

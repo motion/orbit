@@ -48,10 +48,10 @@ export function PeopleAppIndex() {
 
   return (
     <List
-      getItemProps={(...args) => {
+      getItemProps={(a, b, c) => {
         return {
-          ...getItemGroupProps(...args),
-          ...getShareMenuItemProps(...args),
+          ...getItemGroupProps(a, b, c),
+          ...getShareMenuItemProps(a, b, c),
         }
       }}
       minSelected={0}

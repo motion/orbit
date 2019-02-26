@@ -18,12 +18,15 @@ export function Task(rawProps: TaskLike & ItemsPropsContextType) {
   if (oneLine) {
     return <HighlightText ellipse>{body.slice(0, 200)}</HighlightText>
   }
+  if (!comments) {
+    console.warn('why no comments for Task?', rawProps)
+  }
   return (
     <>
       <HighlightSection>
         <Markdown source={body} />
       </HighlightSection>
-      {comments.map((comment, index) => (
+      {(comments || []).map((comment, index) => (
         <TaskComment key={index} {...comment} />
       ))}
     </>

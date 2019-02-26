@@ -10,7 +10,6 @@ export const ConfluenceApp: AppDefinition = {
   icon: confluenceIcon,
   itemType: 'markdown',
   sync: {
-    sourceType: 'confluence',
     settings: props => <AtlassianSettingLogin type="confluence" {...props} />,
     setup: ConfluenceSetup,
   },

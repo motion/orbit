@@ -1,11 +1,11 @@
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { DriveSource } from '@mcro/models'
+import { OrbitAppSettingProps } from '@mcro/kit'
+import { DriveApp } from '@mcro/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-type Props = OrbitSourceSettingProps<DriveSource>
+type Props = OrbitAppSettingProps<DriveApp>
 
 class DriveSettingsStore {
   props: Props
@@ -27,8 +27,8 @@ class DriveSettingsStore {
     this.popularFolders = files
   }
 
-  get source() {
-    return this.props.source
+  get app() {
+    return this.props.app
   }
 
   onSyncSetter = id => () => {
@@ -38,7 +38,7 @@ class DriveSettingsStore {
 
   get service(): any {
     // todo: broken by umed please fix me
-    // !TODO this should come from first class api for fetching from sources
+    // !TODO this should come from first class api for fetching from apps
     console.warn('todo: broken by umed please fix me')
     return {}
   }
@@ -50,7 +50,7 @@ export function DriveSettings(props: Props) {
 
   return (
     <>
-      <SettingManageRow source={props.source} whitelist={null} />
+      <SettingManageRow app={props.app} whitelist={null} />
       <View flex={1} opacity={1}>
         <SearchableTable
           virtual

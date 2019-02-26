@@ -1,6 +1,5 @@
 import { loadMany, save } from '@mcro/bridge'
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
+import { GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -8,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 import { WhitelistManager } from '../../WhitelistManager'
 
-export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
+export default function GithubSettings({ source }: AppSettingsProps<GithubSource>) {
   const whitelist = useStore(WhitelistManager, {
     source,
     getAll: () => (repositories || []).map(repository => repository.nameWithOwner),

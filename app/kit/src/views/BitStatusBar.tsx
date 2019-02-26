@@ -9,14 +9,14 @@ import {
   View,
 } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitSourceMainProps } from '../types/AppDefinition'
+import { AppBitMainProps } from '../types/AppDefinition'
 
 const Cmd = gloss({
   opacity: 0.6,
   marginLeft: 4,
 })
 
-export const BitStatusBar = ({ normalizedItem /* , item */ }: OrbitSourceMainProps) => {
+export const BitStatusBar = ({ normalizedItem /* , item */ }: AppBitMainProps) => {
   const { location /* , locationLink */, updatedAt } = normalizedItem
   return (
     <StatusBar>

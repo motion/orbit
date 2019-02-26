@@ -10,7 +10,6 @@ export const GithubApp: AppDefinition = {
   iconLight: githubIconWhite,
   itemType: 'task',
   sync: {
-    sourceType: 'github',
     settings: GithubSettings,
   },
 }

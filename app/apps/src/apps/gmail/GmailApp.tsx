@@ -8,7 +8,6 @@ export const GmailApp: AppDefinition = {
   icon: gmailIcon,
   itemType: 'thread',
   sync: {
-    sourceType: 'gmail',
     settings: GmailSettings,
   },
 }

@@ -48,7 +48,7 @@ export type AppDefinition = {
     sourceType?: string
     // TODO remove and just use bit
     modelType?: 'person-bit' | 'bit'
-    settings?: FunctionComponent<OrbitSourceSettingProps<AppBit>>
+    settings?: FunctionComponent<AppSettingsProps<AppBit>>
     setup?: FunctionComponent<any>
   }
   API?: {
@@ -56,12 +56,12 @@ export type AppDefinition = {
   }
 }
 
-export type OrbitSourceMainProps = OrbitItemViewProps<any> & {
+export type AppBitMainProps = OrbitItemViewProps<any> & {
   searchBar: SearchBarType
   searchTerm: string
 }
 
-export type OrbitSourceSettingProps<T extends AppBit> = {
+export type AppSettingsProps<T extends AppBit> = {
   appConfig?: AppConfig
   source: T
 }

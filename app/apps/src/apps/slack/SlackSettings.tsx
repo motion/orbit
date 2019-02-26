@@ -1,5 +1,5 @@
 import { loadMany, save } from '@mcro/bridge'
-import { OrbitSourceSettingProps } from '@mcro/kit'
+import { AppSettingsProps } from '@mcro/kit'
 import { SlackChannelModel, SlackSource, SourceModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 import { WhitelistManager } from '../../WhitelistManager'
 
-export default function SlackSettings({ source }: OrbitSourceSettingProps<SlackSource>) {
+export default function SlackSettings({ source }: AppSettingsProps<SlackSource>) {
   const whitelist = useStore(WhitelistManager, {
     source,
     getAll: () => (channels || []).map(channel => channel.id),

@@ -5,6 +5,6 @@ import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 export const JiraSetup = () => (
   <Section>
     <Title>Jira</Title>
-    <AtlassianSettingLogin type="jira" />
+    <AtlassianSettingLogin identifier="jira" />
   </Section>
 )

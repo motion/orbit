@@ -5,6 +5,6 @@ import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 export const ConfluenceSetup = () => (
   <Section>
     <Title>Confluence</Title>
-    <AtlassianSettingLogin type="confluence" />
+    <AtlassianSettingLogin identifier="confluence" />
   </Section>
 )

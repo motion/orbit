@@ -1,22 +1,15 @@
 import { useReaction } from '@mcro/use-store'
 import { useStores } from './useStores'
 
-export function useApp(appId: string, id?: string) {
+export function useApp(identifier: string, id?: string) {
   const { appsStore } = useStores()
-
-  if (appsStore.hasLoaded) {
-    if (!appsStore.allIds.find(x => x === appId)) {
-      throw new Error(`No appId exists: ${appId}. Available: ${appsStore.allIds.join(', ')}`)
-    }
-  }
-
-  const state = useReaction(() => appsStore.getApp(appId, id), [appId, id])
+  const state = useReaction(() => appsStore.getApp(identifier, id), [identifier, id])
   const next = {
     views: {},
     appStore: null,
     definition: null,
     id,
-    appId,
+    identifier,
     provideStores: null,
     ...state,
   }

@@ -1,5 +1,5 @@
 import { observeMany, observeOne } from '@mcro/bridge'
-import { AppModel, SourceModel, Space, SpaceModel, UserModel } from '@mcro/models'
+import { AppModel, SpaceModel, UserModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { ensure, react } from '@mcro/use-store'
 import { isEqual } from 'lodash'
@@ -15,18 +15,6 @@ export class SpaceStore {
   spaces = react(() => observeMany(SpaceModel, { args: {} }), {
     defaultValue: [],
   })
-
-  sources = react(
-    () =>
-      observeMany(SourceModel, {
-        args: {
-          relations: ['spaces'],
-        },
-      }),
-    {
-      defaultValue: [],
-    },
-  )
 
   user = react(() => observeOne(UserModel, {}))
 
@@ -74,18 +62,4 @@ export class SpaceStore {
       defaultValue: [],
     },
   )
-
-  spaceSources(space: Space) {
-    console.warn('nate: i changed this type in refactor to be simpler, needs fix')
-    return this.sources.filter(source => {
-      return source.spaces.find(sourceSpace => sourceSpace.id === space.id)
-    })
-  }
-
-  activeSources() {
-    console.warn('nate: i changed this type in refactor to be simpler, needs fix')
-    return this.sources.filter(source => {
-      return source.spaces.find(sourceSpace => sourceSpace.id === this.activeSpace.id)
-    })
-  }
 }

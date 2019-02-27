@@ -1,36 +1,43 @@
 import { Logger } from '@mcro/logger'
 import {
+  AppEntity,
   Bit,
   BitEntity,
   BitUtils,
+  GithubApp,
+  GithubAppData,
+  GithubAppValuesLastSyncRepositoryInfo,
   GithubBitData,
-  GithubSource,
-  GithubSourceValues,
-  GithubSourceValuesLastSyncRepositoryInfo,
-  SourceEntity,
 } from '@mcro/models'
-import { GithubComment, GithubCommit, GithubIssue, GithubLoader, GithubPerson, GithubPullRequest } from '@mcro/services'
+import {
+  GithubComment,
+  GithubCommit,
+  GithubIssue,
+  GithubLoader,
+  GithubPerson,
+  GithubPullRequest,
+} from '@mcro/services'
 import { hash } from '@mcro/utils'
-import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
 import { uniqBy } from 'lodash'
+import { getRepository } from 'typeorm'
+import { AppSyncer } from '../../core/AppSyncer'
 
 /**
  * Syncs Github.
  *
  * One important note regarding to github bits syncing - issues and PRs in github never be removed,
  * which means we never remove github bits during regular sync.
- * We only remove when some source change (for example user don't sync specific repository anymore).
+ * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export class GithubSyncer implements SourceSyncer {
+export class GithubSyncer implements AppSyncer {
   private log: Logger
-  private source: GithubSource
+  private app: GithubApp
   private loader: GithubLoader
 
-  constructor(source: GithubSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('syncer:github:' + source.id)
-    this.loader = new GithubLoader(source, this.log)
+  constructor(app: GithubApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('syncer:github:' + app.id)
+    this.loader = new GithubLoader(app, this.log)
   }
 
   /**
@@ -45,19 +52,21 @@ export class GithubSyncer implements SourceSyncer {
     }
 
     // initial default settings
-    if (!this.source.values.lastSyncIssues) this.source.values.lastSyncIssues = {}
-    if (!this.source.values.lastSyncPullRequests) this.source.values.lastSyncPullRequests = {}
+    if (!this.app.data.values.lastSyncIssues) this.app.data.values.lastSyncIssues = {}
+    if (!this.app.data.values.lastSyncPullRequests) this.app.data.values.lastSyncPullRequests = {}
 
     // go through all repositories and sync them all
     this.log.timer('load api bits and people')
     for (let repository of repositories) {
-      if (!this.source.values.lastSyncIssues[repository.nameWithOwner])
-        this.source.values.lastSyncIssues[repository.nameWithOwner] = {}
-      if (!this.source.values.lastSyncPullRequests[repository.nameWithOwner])
-        this.source.values.lastSyncPullRequests[repository.nameWithOwner] = {}
+      if (!this.app.data.values.lastSyncIssues[repository.nameWithOwner])
+        this.app.data.values.lastSyncIssues[repository.nameWithOwner] = {}
+      if (!this.app.data.values.lastSyncPullRequests[repository.nameWithOwner])
+        this.app.data.values.lastSyncPullRequests[repository.nameWithOwner] = {}
 
-      const lastSyncIssues = this.source.values.lastSyncIssues[repository.nameWithOwner]
-      const lastSyncPullRequests = this.source.values.lastSyncPullRequests[repository.nameWithOwner]
+      const lastSyncIssues = this.app.data.values.lastSyncIssues[repository.nameWithOwner]
+      const lastSyncPullRequests = this.app.data.values.lastSyncPullRequests[
+        repository.nameWithOwner
+      ]
       const [organization, repositoryName] = repository.nameWithOwner.split('/')
 
       // compare repository's first issue updated date with our last synced date to make sure
@@ -149,7 +158,7 @@ export class GithubSyncer implements SourceSyncer {
     cursor: string
     loadedCount: number
     lastIssue: boolean
-    lastSyncInfo: GithubSourceValuesLastSyncRepositoryInfo
+    lastSyncInfo: GithubAppValuesLastSyncRepositoryInfo
   }) {
     const {
       type,
@@ -180,7 +189,7 @@ export class GithubSyncer implements SourceSyncer {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -190,7 +199,7 @@ export class GithubSyncer implements SourceSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     const comments =
@@ -214,14 +223,14 @@ export class GithubSyncer implements SourceSyncer {
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
       this.log.info(
-        'looks like its the last issue in this sync, removing last cursor and source last sync date',
+        'looks like its the last issue in this sync, removing last cursor and app last sync date',
         lastSyncInfo,
       )
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
       return true
     }
 
@@ -230,7 +239,7 @@ export class GithubSyncer implements SourceSyncer {
       this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(SourceEntity).save(this.source, { listeners: false })
+      await getRepository(AppEntity).save(this.app, { listeners: false })
     }
 
     return true
@@ -247,7 +256,7 @@ export class GithubSyncer implements SourceSyncer {
     this.log.timer('load API repositories', repositories)
 
     // get whitelist, if its not defined just return all loaded repositories
-    const values = this.source.values as GithubSourceValues
+    const values = this.app.data.values as GithubAppData['values']
     if (values.whitelist !== undefined) {
       this.log.info('whitelist is defined, filtering settings by a whitelist', values.whitelist)
       repositories = repositories.filter(repository => {
@@ -276,7 +285,7 @@ export class GithubSyncer implements SourceSyncer {
    * Creates a new bit from a given Github issue.
    */
   private createTaskBit(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
-    const id = hash(`github-${this.source.id}-${issue.id}`)
+    const id = hash(`github-${this.app.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
 
@@ -288,10 +297,10 @@ export class GithubSyncer implements SourceSyncer {
         return {
           author: comment.author
             ? {
-              avatarUrl: comment.author.avatarUrl,
-              login: comment.author.login,
-              email: comment.author.email,
-            }
+                avatarUrl: comment.author.avatarUrl,
+                login: comment.author.login,
+                email: comment.author.email,
+              }
             : undefined,
           createdAt: comment.createdAt,
           body: comment.body,
@@ -299,10 +308,10 @@ export class GithubSyncer implements SourceSyncer {
       }),
       author: issue.author
         ? {
-          avatarUrl: issue.author.avatarUrl,
-          login: issue.author.login,
-          email: issue.author.email,
-        }
+            avatarUrl: issue.author.avatarUrl,
+            login: issue.author.login,
+            email: issue.author.email,
+          }
         : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,
@@ -314,8 +323,8 @@ export class GithubSyncer implements SourceSyncer {
 
     return BitUtils.create({
       id,
-      sourceId: this.source.id,
-      sourceType: 'github',
+      appId: this.app.id,
+      appIdentifier: 'github',
       type: 'task',
       title: issue.title,
       body: issue.bodyText,
@@ -333,7 +342,7 @@ export class GithubSyncer implements SourceSyncer {
   }
 
   /**
-   * Finds all participated people in a github issue and creates source
+   * Finds all participated people in a github issue and creates app
    * people from them.
    */
   private createPersonBitFromIssue(issue: GithubIssue): Bit[] {
@@ -344,7 +353,7 @@ export class GithubSyncer implements SourceSyncer {
   }
 
   /**
-   * Finds all participated people in a github pull request and creates source
+   * Finds all participated people in a github pull request and creates app
    * people from them.
    */
   private createPersonBitFromPullRequest(pr: GithubPullRequest): Bit[] {
@@ -372,13 +381,13 @@ export class GithubSyncer implements SourceSyncer {
   }
 
   /**
-   * Creates a single source person from given Github user.
+   * Creates a single app person from given Github user.
    */
   private createPersonBitFromGithubUser(githubPerson: GithubPerson): Bit {
     return BitUtils.create(
       {
-        sourceType: 'github',
-        sourceId: this.source.id,
+        appIdentifier: 'github',
+        appId: this.app.id,
         type: 'person',
         originalId: githubPerson.id,
         title: githubPerson.login,
@@ -391,13 +400,13 @@ export class GithubSyncer implements SourceSyncer {
   }
 
   /**
-   * Creates a single source person from a commit.
+   * Creates a single app person from a commit.
    */
   private createPersonBitFromCommit(commit: GithubCommit): Bit {
     return BitUtils.create(
       {
-        sourceType: 'github',
-        sourceId: this.source.id,
+        appIdentifier: 'github',
+        appId: this.app.id,
         type: 'person',
         originalId: commit.email,
         title: commit.name,

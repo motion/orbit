@@ -1,14 +1,11 @@
-import { SourceType } from '@mcro/models'
-
 export type AppConfig = {
-  appId?: string
+  identifier?: string
   id?: string
   subId?: string
   title?: string
   data?: any
   icon?: string
   iconLight?: string
-  source?: SourceType
   subType?: string
   viewType?: 'main' | 'index' | 'setup' | 'settings'
   // allow various things to be passed as config

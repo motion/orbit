@@ -55,7 +55,7 @@ export default observer(function SpaceEditView(props: Props) {
     const listsApp: AppBit = {
       target: 'app',
       name: 'Lists',
-      appId: 'lists',
+      identifier: 'lists',
       spaceId: savedSpace.id,
       // data: {
       //   lists: [
@@ -65,7 +65,8 @@ export default observer(function SpaceEditView(props: Props) {
       //   ],
       // },
     }
-    await save(AppModel, listsApp)
+    // TODO @umed type
+    await save(AppModel, listsApp as any)
 
     store.values = { name: '', colors: [] }
     AppActions.clearPeek()

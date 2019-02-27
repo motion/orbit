@@ -113,8 +113,8 @@ export function List(rawProps: ListProps) {
   )
 
   const onSelectInner = useCallback(
-    async (index, eventType) => {
-      const appConfig = await getAppConfig(toListItemProps(itemsRef.current[index]))
+    (index, eventType) => {
+      const appConfig = getAppConfig(toListItemProps(itemsRef.current[index]))
       if (onSelect) {
         onSelect(index, appConfig, eventType)
       }
@@ -129,8 +129,8 @@ export function List(rawProps: ListProps) {
   )
 
   const onOpenInner = useCallback(
-    async (index, eventType) => {
-      const appConfig = await getAppConfig(toListItemProps(itemsRef.current[index]))
+    (index, eventType) => {
+      const appConfig = getAppConfig(toListItemProps(itemsRef.current[index]))
       if (onOpen) {
         onOpen(index, appConfig)
       }

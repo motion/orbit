@@ -13,7 +13,4 @@ export const PeopleApp: AppDefinition = {
       <PeopleAppMain {...props} />
     </App>
   ),
-  sync: {
-    modelType: 'person-bit',
-  },
 }

@@ -1,29 +1,25 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { DriveSource, GmailSource, Source } from '@mcro/models'
+import { AppBit, DriveApp, GmailApp } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
 import {
+  ServiceLoaderAppSaveCallback,
   ServiceLoaderDownloadFileOptions,
   ServiceLoaderLoadOptions,
-  ServiceLoaderSourceSaveCallback,
 } from './ServiceLoaderTypes'
 
 /**
  * Loader (fetcher) from service.
  */
 export class ServiceLoader {
-  private source: Source
+  private app: AppBit
   private log: Logger
-  private saveCallback?: ServiceLoaderSourceSaveCallback
+  private saveCallback?: ServiceLoaderAppSaveCallback
 
-  constructor(
-    source: Source,
-    log: Logger,
-    saveCallback?: ServiceLoaderSourceSaveCallback,
-  ) {
-    this.source = source
+  constructor(app: AppBit, log: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+    this.app = app
     this.log = log
     this.saveCallback = saveCallback
   }
@@ -61,12 +57,12 @@ export class ServiceLoader {
     // throw error if there is an error
     if (!result.ok || responseBody.error || responseBody.errors) {
       if (
-        (this.source.type === 'gmail' || this.source.type === 'drive') &&
+        (this.app.identifier === 'gmail' || this.app.identifier === 'drive') &&
         autoRefreshTokens === true &&
         result.status === 401
       ) {
         this.log.warning('refreshing oauth token')
-        await this.refreshGoogleToken(this.source as GmailSource | DriveSource)
+        await this.refreshGoogleToken(this.app as GmailApp | DriveApp)
         return this.load(options, false)
       }
       const error = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody
@@ -123,19 +119,19 @@ export class ServiceLoader {
   /**
    * Refreshes Google API token.
    */
-  private async refreshGoogleToken(source: GmailSource | DriveSource) {
+  private async refreshGoogleToken(app: GmailApp | DriveApp) {
     // check if we have credentials defined
-    if (!source.values.oauth)
-      throw new Error(`OAuth values are not defined in the given source (#${source.id})`)
+    if (!app.data.values.oauth)
+      throw new Error(`OAuth values are not defined in the given app (#${app.id})`)
 
-    if (!source.values.oauth.refreshToken)
-      throw new Error(`Refresh token is not set in the given source (#${source.id})`)
+    if (!app.data.values.oauth.refreshToken)
+      throw new Error(`Refresh token is not set in the given app (#${app.id})`)
 
     // setup a data we are going to send
     const formData = {
-      refresh_token: source.values.oauth.refreshToken,
-      client_id: source.values.oauth.clientId,
-      client_secret: source.values.oauth.secret,
+      refresh_token: app.data.values.oauth.refreshToken,
+      client_id: app.data.values.oauth.clientId,
+      client_secret: app.data.values.oauth.secret,
       grant_type: 'refresh_token',
     }
     const body = Object.keys(formData)
@@ -157,16 +153,16 @@ export class ServiceLoader {
 
     if (!reply.access_token) throw new Error('No access token was found in refresh token response')
 
-    // update tokens in the source
-    source.token = reply.access_token
+    // update tokens in the app
+    app.token = reply.access_token
     if (reply.refresh_token) {
-      source.values.oauth.refreshToken = reply.refresh_token
+      app.data.values.oauth.refreshToken = reply.refresh_token
     }
 
     // execute save callback if defined
     // we use save callback instead of direct save because our services package is cross-platform
     if (this.saveCallback) {
-      await this.saveCallback(source)
+      await this.saveCallback(app)
     }
 
     return true
@@ -176,16 +172,13 @@ export class ServiceLoader {
    * Builds base url to make request to.
    */
   private buildBaseUrl() {
-    if (this.source.type === 'jira' || this.source.type === 'confluence') {
-      return this.source.values.credentials.domain
-
-    } else if (this.source.type === 'drive') {
+    if (this.app.identifier === 'jira' || this.app.identifier === 'confluence') {
+      return this.app.data.values.credentials.domain
+    } else if (this.app.identifier === 'drive') {
       return 'https://content.googleapis.com/drive/v3'
-
-    } else if (this.source.type === 'github') {
+    } else if (this.app.identifier === 'github') {
       return 'https://api.github.com/graphql'
-
-    } else if (this.source.type === 'gmail') {
+    } else if (this.app.identifier === 'gmail') {
       return 'https://www.googleapis.com/gmail/v1'
     }
   }
@@ -194,26 +187,23 @@ export class ServiceLoader {
    * Builds headers to be included in the main query.
    */
   private buildHeaders() {
-    if (this.source.type === 'jira' || this.source.type === 'confluence') {
-      const { username, password } = this.source.values.credentials
+    if (this.app.identifier === 'jira' || this.app.identifier === 'confluence') {
+      const { username, password } = this.app.data.values.credentials
       const credentials = Buffer.from(`${username}:${password}`).toString('base64')
       return { Authorization: `Basic ${credentials}` }
-
-    } else if (this.source.type === 'drive') {
+    } else if (this.app.identifier === 'drive') {
       return {
-        Authorization: `Bearer ${this.source.token}`,
+        Authorization: `Bearer ${this.app.token}`,
         'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
         'Access-Control-Allow-Methods': 'GET',
       }
-
-    } else if (this.source.type === 'github') {
+    } else if (this.app.identifier === 'github') {
       return {
-        Authorization: `Bearer ${this.source.token}`,
+        Authorization: `Bearer ${this.app.token}`,
       }
-
-    } else if (this.source.type === 'gmail') {
+    } else if (this.app.identifier === 'gmail') {
       return {
-        Authorization: `Bearer ${this.source.token}`,
+        Authorization: `Bearer ${this.app.token}`,
         'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
         'Access-Control-Allow-Methods': 'GET',
       }

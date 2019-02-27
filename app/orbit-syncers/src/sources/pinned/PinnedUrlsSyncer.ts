@@ -1,15 +1,22 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, BitUtils, PinnedBitData, SettingEntity, WebsiteBitData } from '@mcro/models'
+import {
+  Bit,
+  BitEntity,
+  BitUtils,
+  PinnedBitData,
+  SettingEntity,
+  WebsiteBitData,
+} from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { BitSyncer } from '../../utils/BitSyncer'
-import { WebsiteCrawler } from '../website/WebsiteCrawler'
 import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
+import { WebsiteCrawler } from '../website/WebsiteCrawler'
 
 /**
  * Crawls pinned websites.
  */
-export class PinnedUrlsSyncer implements SourceSyncer {
+export class PinnedUrlsSyncer implements AppSyncer {
   private log: Logger
   private crawler: WebsiteCrawler
   private bitSyncer: BitSyncer
@@ -67,7 +74,7 @@ export class PinnedUrlsSyncer implements SourceSyncer {
 
       // sync bits
       const dbBits = await getRepository(BitEntity).find({
-        sourceType: 'pinned',
+        appIdentifier: 'pinned',
       })
       await this.bitSyncer.sync({ apiBits, dbBits })
     }
@@ -106,7 +113,7 @@ export class PinnedUrlsSyncer implements SourceSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'pinned',
+        appIdentifier: 'pinned',
         type: 'website',
         title: crawledData.title,
         body: crawledData.textContent,
@@ -114,12 +121,6 @@ export class PinnedUrlsSyncer implements SourceSyncer {
           title: crawledData.title,
           content: crawledData.content,
         } as PinnedBitData,
-        // location: {
-        //   id: undefined,
-        //   name: undefined,
-        //   webLink: undefined,
-        //   desktopLink: undefined,
-        // },
         webLink: crawledData.url,
         people: [],
         bitCreatedAt,

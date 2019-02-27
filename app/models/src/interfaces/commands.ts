@@ -1,26 +1,23 @@
 import { Command } from '@mcro/mediator'
-import { Source } from './Source'
+import { AppBit } from './AppBit'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
-export const SourceRemoveCommand = new Command<void, { sourceId: number }>('source-remove')
-export const SourceForceSyncCommand = new Command<void, { sourceId: number }>('source-force-sync')
-export const SourceForceCancelCommand = new Command<void, { sourceId: number }>(
-  'source-force-cancel',
+export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
+export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
+export const AppForceCancelCommand = new Command<void, { appId: number }>('app-force-cancel')
+export const AppSaveCommand = new Command<{ success: boolean; error?: string }, { app: AppBit }>(
+  'setting-save',
 )
-export const SourceSaveCommand = new Command<
-  { success: boolean; error?: string },
-  { source: Source }
->('setting-save')
-export const SlackSourceBlacklistCommand = new Command<
+export const SlackAppBlacklistCommand = new Command<
   void,
-  { sourceId: number; channel: string; blacklisted: boolean }
+  { appId: number; channel: string; blacklisted: boolean }
 >('slack-setting-blacklist')
 
 export const SettingOnboardFinishCommand = new Command<void, void>('setting-onboard-finish')
 
-export const GithubSourceBlacklistCommand = new Command<
+export const GithubAppBlacklistCommand = new Command<
   void,
-  { sourceId: number; repository: string; blacklisted: boolean }
+  { appId: number; repository: string; blacklisted: boolean }
 >('github-setting-blacklist')
 
 export const CheckProxyCommand = new Command<boolean, void>('CheckProxyCommand')

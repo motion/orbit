@@ -10,15 +10,15 @@ const state = {
 
 const prefixes = {
   gh: 'github',
-  sl: 'slack',
+  sl: 'AppIdentifier',
   gm: 'gmail',
   gd: 'gdocs',
   ji: 'jira',
   co: 'confluence',
 }
 
-const sourceFilters = {
-  slack: 'slack',
+const appFilters = {
+  slack: 'AppIdentifier',
   gmail: 'gmail',
   drive: 'drive',
   confluence: 'confluence',
@@ -115,12 +115,12 @@ export function parseSearchQuery(query: string): NLPResponse {
     .map(word => word.normal)
   const nouns = filterNouns(nlp.nouns().out('frequency')).map(word => word.normal)
   const words = query.toLowerCase().split(' ')
-  const sources = []
+  const apps = []
 
   // find all marks for highlighting
   const prefix = prefixes[words[0]]
   if (prefix) {
-    const mark: Mark = [0, words[0].length, MarkType.Source, words[0]]
+    const mark: Mark = [0, words[0].length, MarkType.App, words[0]]
     marks.push(mark)
   }
 
@@ -140,9 +140,9 @@ export function parseSearchQuery(query: string): NLPResponse {
       highlightIfClear(word, MarkType.Type)
       continue
     }
-    if (sourceFilters[word]) {
-      sources.push(word)
-      highlightIfClear(word, MarkType.Source)
+    if (appFilters[word]) {
+      apps.push(word)
+      highlightIfClear(word, MarkType.App)
       continue
     }
     // location filter segment
@@ -259,7 +259,7 @@ export function parseSearchQuery(query: string): NLPResponse {
     date,
     marks,
     people,
-    sources,
+    apps,
     startDate: date.startDate || null,
     endDate: date.endDate || null,
   }

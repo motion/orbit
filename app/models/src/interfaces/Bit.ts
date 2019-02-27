@@ -1,8 +1,7 @@
 import { BitData } from '../bit-data/BitData'
+import { AppBit, AppIdentifier } from './AppBit'
 import { BitContentType } from './BitContentType'
 import { Location } from './Location'
-import { Source } from './Source'
-import { SourceType } from './SourceType'
 
 export interface Bit {
   /**
@@ -16,14 +15,14 @@ export interface Bit {
   id?: number
 
   /**
-   * Source type.
+   * App type.
    */
-  sourceType?: SourceType
+  appIdentifier?: AppIdentifier
 
   /**
-   * Source id.
+   * App id.
    */
-  sourceId?: number
+  appId?: number
 
   /**
    * Original bit content author id.
@@ -117,9 +116,9 @@ export interface Bit {
   peopleCount?: number
 
   /**
-   * Source is a Bit's owner.
+   * App is a Bit's owner.
    */
-  source?: Source
+  app?: AppBit
 
   /**
    * Additional bit data.

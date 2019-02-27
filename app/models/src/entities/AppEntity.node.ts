@@ -1,4 +1,17 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { AppData } from '../interfaces/app-data/AppData'
+import { AppIdentifier } from '../interfaces/AppBit'
+import { ItemType } from '../interfaces/ItemType'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
@@ -10,9 +23,19 @@ export class AppEntity extends BaseEntity {
   id?: number
 
   @Column()
-  appId?: string
+  identifier?: AppIdentifier | string
 
-  @ManyToOne(() => SpaceEntity, space => space.sources)
+  @Column({ default: '' })
+  sourceIdentifier?: string
+
+  @Column({ default: '' })
+  token?: string
+
+  @ManyToMany(() => SpaceEntity, space => space.apps)
+  @JoinTable()
+  spaces?: Space[]
+
+  @ManyToOne(() => SpaceEntity, space => space.apps)
   space?: Space
 
   @Column({ nullable: false })
@@ -21,6 +44,9 @@ export class AppEntity extends BaseEntity {
   @Column()
   name?: string
 
+  @Column({ default: '' })
+  itemType?: ItemType
+
   @Column({ type: 'simple-json', default: '[]' })
   colors?: string[]
 
@@ -28,5 +54,11 @@ export class AppEntity extends BaseEntity {
   pinned?: boolean
 
   @Column('simple-json', { default: '{}' })
-  data?: any
+  data?: AppData
+
+  @CreateDateColumn()
+  createdAt?: Date
+
+  @UpdateDateColumn()
+  updatedAt?: Date
 }

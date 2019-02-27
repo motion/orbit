@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/bridge'
-import { OrbitOrb, useSourcesForSpace } from '@mcro/kit'
+import { OrbitOrb, useAppsForSpace } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import {
   Col,
@@ -20,14 +20,14 @@ import * as React from 'react'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { SubSection } from '../../views/SubSection'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
 export default function SpacesAppEdit(props: AppProps) {
   const id = +props.appConfig.id
   const [space] = useModel(SpaceModel, { where: { id } })
-  const sources = useSourcesForSpace(id)
+  const apps = useAppsForSpace(id)
   const [colors, setColors] = React.useState(defaultColors)
 
   return (
@@ -79,9 +79,9 @@ export default function SpacesAppEdit(props: AppProps) {
         <Text size={1.1}>Choose which source grants access to this space.</Text>
         <VerticalSpace />
 
-        {(sources || []).map((int, index) => (
+        {(apps || []).map((int, index) => (
           <Theme key={int.id} name={index === 0 ? 'selected' : null}>
-            <ListItem icon={int.type} title={int.name} />
+            <ListItem icon={int.identifier} title={int.name} />
           </Theme>
         ))}
       </SubSection>

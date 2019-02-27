@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import SpacesAppEdit from './SpacesAppEdit'
 import { SpacesAppNewSpace } from './SpacesAppNewSpace'
 

@@ -11,7 +11,7 @@ import {
   Title,
 } from '@mcro/ui'
 import * as React from 'react'
-import { OrbitSourceMainProps } from '../types/AppDefinition'
+import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
 
 const Pane = gloss(View, {
@@ -36,7 +36,10 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
       {bits.map(bit => {
         return (
           <React.Fragment key={bit.id}>
-            <ChatMessages key={bit.id} messages={(bit as GenericBit<'slack'>).data.messages} />
+            <ChatMessages
+              key={bit.id}
+              messages={(bit as GenericBit<'AppIdentifier'>).data.messages}
+            />
             <Divider />
           </React.Fragment>
         )
@@ -45,7 +48,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-export function Conversation(props: OrbitSourceMainProps) {
+export function Conversation(props: AppBitMainProps) {
   const { item } = props
 
   const [nextConvos] = useModels(BitModel, {

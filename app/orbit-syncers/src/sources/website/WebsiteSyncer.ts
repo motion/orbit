@@ -1,24 +1,24 @@
 import { Logger } from '@mcro/logger'
-import { BitEntity, WebsiteSource } from '@mcro/models'
+import { BitEntity, WebsiteApp } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
 
 /**
  * Syncs crawled websites.
  */
-export class WebsiteSyncer implements SourceSyncer {
-  private source: WebsiteSource
+export class WebsiteSyncer implements AppSyncer {
+  private app: WebsiteApp
   private log: Logger
   private crawler: WebsiteCrawler
   private bitFactory: WebsiteBitFactory
 
-  constructor(source: WebsiteSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('syncer:crawler:' + source.id)
+  constructor(app: WebsiteApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('syncer:crawler:' + app.id)
     this.crawler = new WebsiteCrawler(this.log)
-    this.bitFactory = new WebsiteBitFactory(source)
+    this.bitFactory = new WebsiteBitFactory(app)
   }
 
   /**
@@ -38,7 +38,7 @@ export class WebsiteSyncer implements SourceSyncer {
     // crawl link
     this.log.timer('crawl site')
     await this.crawler.run({
-      url: this.source.values.url,
+      url: this.app.data.values.url,
       deep: true,
       handler: async data => {
         const bit = this.bitFactory.create(data)

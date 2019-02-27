@@ -6,7 +6,7 @@ import React, { memo, useEffect, useMemo, useRef } from 'react'
 
 type AppsLoaderProps = {
   children?: any
-  apps: { id: string; appId: string }[]
+  apps: { id: string; identifier: string }[]
 }
 
 export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
@@ -24,8 +24,8 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   // a little weird
   useEffect(
     () => {
-      for (const { appId } of props.apps) {
-        appsStore.setAppDefinition(appId, useAppDefinition(appId))
+      for (const { identifier } of props.apps) {
+        appsStore.setAppDefinition(identifier, useAppDefinition(identifier))
       }
     },
     [props.apps],
@@ -33,7 +33,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
 
   const appViews = stableKeys.current.map(id => {
     const view = props.apps.find(view => view.id === id)
-    return <AppLoader key={id} id={id} appId={view.appId} store={appsStore} />
+    return <AppLoader key={id} id={id} identifier={view.identifier} store={appsStore} />
   })
 
   return (
@@ -44,7 +44,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   )
 })
 
-type AppLoaderProps = { id: string; appId: string; store: AppsStore }
+type AppLoaderProps = { id: string; identifier: string; store: AppsStore }
 
 // never run more than once
 function AppLoader(props: AppLoaderProps) {
@@ -53,8 +53,8 @@ function AppLoader(props: AppLoaderProps) {
   }, [])
 }
 
-function AppLoadView({ id, appId, store }: AppLoaderProps) {
-  const appDefinition = useAppDefinition(appId)
+function AppLoadView({ id, identifier, store }: AppLoaderProps) {
+  const appDefinition = useAppDefinition(identifier)
   const AppApp = appDefinition.app
 
   // this branch should never change it's static
@@ -75,13 +75,13 @@ function AppLoadView({ id, appId, store }: AppLoaderProps) {
   if (typeof AppApp === 'function') {
     return (
       <ProvideStores stores={{ appStore }}>
-        <MergeContext Context={AppLoadContext} value={{ appId, id }}>
+        <MergeContext Context={AppLoadContext} value={{ identifier, id }}>
           <AppApp {...appViewProps} appStore={appStore} />
         </MergeContext>
       </ProvideStores>
     )
   } else {
-    console.warn('no app view...', appId, appDefinition)
+    console.warn('no app view...', identifier, appDefinition)
     return null
   }
 }

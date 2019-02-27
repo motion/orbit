@@ -1,4 +1,4 @@
-import { AppBit, Source } from '@mcro/models'
+import { AppBit, ItemType } from '@mcro/models'
 import { SearchBarType } from '@mcro/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
@@ -31,37 +31,24 @@ export type AppDefinition = {
   iconLight?: string
   defaultViewConfig?: AppConfig['viewConfig']
   context?: React.Context<any>
-  itemType?:
-    | 'task'
-    | 'document'
-    | 'webpage'
-    | 'thread'
-    | 'conversation'
-    | 'markdown'
-    | 'text'
-    | 'task'
-    | 'person'
+  itemType?: ItemType
   app?: FunctionComponent<AppProps>
-  settings?: FunctionComponent<null>
+  settings?: FunctionComponent<AppProps>
+  setup?: FunctionComponent<AppProps>
   appData?: Object
-  sync?: {
-    sourceType?: string
-    // TODO remove and just use bit
-    modelType?: 'person-bit' | 'bit'
-    settings?: FunctionComponent<OrbitSourceSettingProps<Source>>
-    setup?: FunctionComponent<any>
-  }
+  // TODO @umed this is where we can put syncer stuff
+  sync?: Object
   API?: {
     receive(app: AppBit, parentID: number, child: any): any
   }
 }
 
-export type OrbitSourceMainProps = OrbitItemViewProps<any> & {
+export type AppBitMainProps = OrbitItemViewProps<any> & {
   searchBar: SearchBarType
   searchTerm: string
 }
 
-export type OrbitSourceSettingProps<T extends Source> = {
+export type AppSettingsProps<T extends AppBit> = {
   appConfig?: AppConfig
-  source: T
+  app: T
 }

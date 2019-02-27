@@ -1,12 +1,12 @@
 import { Logger } from '@mcro/logger'
-import { BitEntity, GmailSourceValues, SourceEntity } from '@mcro/models'
+import { AppEntity, BitEntity, GmailApp } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
+import { AppSyncer } from '../../core/AppSyncer'
 
 /**
  * Whitelists emails from person bits.
  */
-export class MailWhitelisterSyncer implements SourceSyncer {
+export class MailWhitelisterSyncer implements AppSyncer {
   private log: Logger
 
   constructor() {
@@ -22,24 +22,24 @@ export class MailWhitelisterSyncer implements SourceSyncer {
     const people = await getRepository(BitEntity).find({
       where: {
         type: 'person',
-        sourceType: ['slack', 'github', 'drive', 'jira', 'confluence']
+        appIdentifier: ['slack', 'github', 'drive', 'jira', 'confluence'],
       },
     })
     this.log.info('person bits were loaded', people)
     const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
     this.log.info('emails from the person bits', emails)
 
-    // next we find all gmail Sources to add those emails to their whitelists
-    this.log.info('loading gmail Sources')
-    const Sources = await getRepository(SourceEntity).find({
-      where: { type: 'gmail' },
+    // next we find all gmail Apps to add those emails to their whitelists
+    this.log.info('loading gmail Apps')
+    const Apps = await getRepository(AppEntity).find({
+      where: { identifier: 'gmail' },
     })
-    this.log.info('loaded gmail Sources', Sources)
+    this.log.info('loaded gmail Apps', Apps)
 
-    // update whitelist settings in Sources
+    // update whitelist settings in Apps
     const newWhiteListedEmails: string[] = []
-    for (let Source of Sources) {
-      const values = Source.values as GmailSourceValues
+    for (let App of Apps) {
+      const values = App.data.values as GmailApp['data']['values']
       const foundEmails = values.foundEmails || []
       const whitelist = {}
       for (let email of emails) {
@@ -49,7 +49,7 @@ export class MailWhitelisterSyncer implements SourceSyncer {
         }
       }
       values.whitelist = whitelist
-      await getRepository(SourceEntity).save(Source)
+      await getRepository(AppEntity).save(App)
     }
     this.log.info('newly whitelisted emails', newWhiteListedEmails)
   }

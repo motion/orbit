@@ -1,9 +1,8 @@
 import { AppEntity } from './AppEntity.node'
 import { BitEntity } from './BitEntity.node'
 import { JobEntity } from './JobEntity.node'
-import { SettingEntity } from './SettingEntity.node'
 import { SearchIndexEntity } from './SearchIndexEntity.node'
-import { SourceEntity } from './SourceEntity.node'
+import { SettingEntity } from './SettingEntity.node'
 import { SpaceEntity } from './SpaceEntity.node'
 import { UserEntity } from './UserEntity.node'
 
@@ -15,7 +14,6 @@ export * from './JobEntity.node'
 export * from './LocationEntity.node'
 export * from './SearchIndexEntity.node'
 export * from './SettingEntity.node'
-export * from './SourceEntity.node'
 export * from './SpaceEntity.node'
 export * from './UserEntity.node'
 
@@ -25,7 +23,6 @@ export const Entities = [
   JobEntity,
   SettingEntity,
   SearchIndexEntity,
-  SourceEntity,
   SpaceEntity,
   UserEntity,
 ]

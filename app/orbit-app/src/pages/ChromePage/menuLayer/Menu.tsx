@@ -432,8 +432,8 @@ export class MenuStore {
 
 function useMenuApps() {
   const allApps = useActiveApps()
-  const searchApp = allApps.find(x => x.appId === 'search')
-  const listsApp = allApps.find(x => x.appId === 'lists')
+  const searchApp = allApps.find(x => x.identifier === 'search')
+  const listsApp = allApps.find(x => x.identifier === 'lists')
   return [
     // indices start at 1 because 0 = orbit O
     { ...searchApp, id: `${searchApp.id}`, index: 1 },
@@ -441,7 +441,7 @@ function useMenuApps() {
     {
       id: '100',
       index: 3,
-      appId: 'actions',
+      identifier: 'actions',
       name: 'Actions',
     },
   ]
@@ -554,7 +554,7 @@ const MenuLayerContent = React.memo(() => {
       >
         {menuApps.map(app => (
           <MenuApp
-            appId={app.id}
+            identifier={app.id}
             index={app.index}
             key={app.id}
             viewType="index"

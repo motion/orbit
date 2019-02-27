@@ -13,6 +13,8 @@ import {
 import {
   AppEntity,
   AppModel,
+  AppRemoveCommand,
+  AppSaveCommand,
   BitEntity,
   BitModel,
   BitsNearTopicModel,
@@ -21,8 +23,8 @@ import {
   CosalSaliencyModel,
   CosalTopicsModel,
   CosalTopWordsModel,
+  GithubAppBlacklistCommand,
   GithubRepositoryModel,
-  GithubSourceBlacklistCommand,
   JobEntity,
   JobModel,
   NewFallbackServerPortCommand,
@@ -38,12 +40,8 @@ import {
   SettingEntity,
   SettingModel,
   SetupProxyCommand,
+  SlackAppBlacklistCommand,
   SlackChannelModel,
-  SlackSourceBlacklistCommand,
-  SourceEntity,
-  SourceModel,
-  SourceRemoveCommand,
-  SourceSaveCommand,
   SpaceEntity,
   SpaceModel,
   TrendingTermsModel,
@@ -77,22 +75,22 @@ import { OracleManager } from './managers/OracleManager'
 import { OrbitDataManager } from './managers/OrbitDataManager'
 // import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
+import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
+import { AppSaveResolver } from './resolvers/AppSaveResolver'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
+import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
 import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
+import { ResetDataResolver } from './resolvers/ResetDataResolver'
 import { getSalientWordsResolver } from './resolvers/SalientWordsResolver'
 import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
-import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
-import { SourceRemoveResolver } from './resolvers/SourceRemoveResolver'
-import { SourceSaveResolver } from './resolvers/SourceSaveResolver'
-import { WebServer } from './WebServer'
-import { ResetDataResolver } from './resolvers/ResetDataResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
-import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
+import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
+import { WebServer } from './WebServer'
 
 export class OrbitDesktopRoot {
   // public
@@ -255,7 +253,6 @@ export class OrbitDesktopRoot {
     this.mediatorServer = new MediatorServer({
       models: [
         AppModel,
-        SourceModel,
         SettingModel,
         BitModel,
         JobModel,
@@ -278,10 +275,10 @@ export class OrbitDesktopRoot {
       ],
       commands: [
         NewFallbackServerPortCommand,
-        SourceSaveCommand,
-        SourceRemoveCommand,
-        GithubSourceBlacklistCommand,
-        SlackSourceBlacklistCommand,
+        AppSaveCommand,
+        AppRemoveCommand,
+        GithubAppBlacklistCommand,
+        SlackAppBlacklistCommand,
         SetupProxyCommand,
         CheckProxyCommand,
         OpenCommand,
@@ -296,15 +293,14 @@ export class OrbitDesktopRoot {
       resolvers: [
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },
-          { entity: SourceEntity, models: [SourceModel] },
           { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
-        SourceRemoveResolver,
-        SourceSaveResolver,
+        AppRemoveResolver,
+        AppSaveResolver,
         NewFallbackServerPortResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,

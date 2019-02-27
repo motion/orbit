@@ -6,8 +6,8 @@ import { useStores } from '../../hooks/useStores'
 
 const statusBarHeight = 26
 
-export const OrbitStatusBarHeight = ({ appId }: { appId: string }) => {
-  const { views } = useApp(appId)
+export const OrbitStatusBarHeight = ({ identifier }: { identifier: string }) => {
+  const { views } = useApp(identifier)
   return <div style={{ height: views.statusBar ? statusBarHeight : 0 }} />
 }
 

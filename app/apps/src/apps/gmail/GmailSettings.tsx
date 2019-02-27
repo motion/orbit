@@ -1,9 +1,8 @@
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { GmailSource } from '@mcro/models'
+import { AppProps } from '@mcro/kit'
 import { Message } from '@mcro/ui'
 import * as React from 'react'
 
-export default function GmailSettings(_: OrbitSourceSettingProps<GmailSource>) {
+export function GmailSettings(_: AppProps) {
   return (
     <>
       <Message>Gmail Sync Active</Message>

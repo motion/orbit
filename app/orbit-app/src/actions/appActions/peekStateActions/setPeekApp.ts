@@ -16,7 +16,7 @@ type PeekApp = {
 // because App.setState merges not replaces
 const DEFAULT_APP_CONFIG: AppConfig = {
   id: '',
-  appId: 'home',
+  identifier: 'home',
   title: '',
   icon: '',
   subType: '',

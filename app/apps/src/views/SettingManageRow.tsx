@@ -1,41 +1,35 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog, useJobs, useSourceInfo } from '@mcro/kit'
-import {
-  Source,
-  SourceForceCancelCommand,
-  SourceForceSyncCommand,
-  SourceRemoveCommand,
-} from '@mcro/models'
+import { showConfirmDialog, useAppInfo, useJobs, WhitelistManager } from '@mcro/kit'
+import { AppBit, AppForceCancelCommand, AppForceSyncCommand, AppRemoveCommand } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { WhitelistManager } from '../WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 
-const handleRefresh = async (sourceId: number) => {
-  command(SourceForceSyncCommand, {
-    sourceId,
+const handleRefresh = async (appId: number) => {
+  command(AppForceSyncCommand, {
+    appId,
   })
 }
 
-const removeSource = async (source: Source) => {
+const removeApp = async (app: AppBit) => {
   if (
     showConfirmDialog({
-      title: 'Remove source?',
-      message: `Are you sure you want to remove ${source.name}?`,
+      title: 'Remove app?',
+      message: `Are you sure you want to remove ${app.name}?`,
     })
   ) {
-    command(SourceRemoveCommand, {
-      sourceId: source.id,
+    command(AppRemoveCommand, {
+      appId: app.id,
     })
   }
 }
 
-export const SettingManageRow = (props: { source: Source; whitelist: WhitelistManager<any> }) => {
-  const sourceId = props.source && props.source.id
-  const { bitsCount } = useSourceInfo(props.source)
-  const { activeJobs, removeJobs } = useJobs(sourceId)
+export const SettingManageRow = (props: { app: AppBit; whitelist: WhitelistManager<any> }) => {
+  const appId = props.app && props.app.id
+  const { bitsCount } = useAppInfo(props.app)
+  const { activeJobs, removeJobs } = useJobs(appId)
 
-  if (!sourceId) {
+  if (!appId) {
     return null
   }
 
@@ -55,10 +49,7 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
           {!removeJobs.length && (
             <>
               <TitleBarSpace />
-              <TitleBarButton
-                onClick={() => command(SourceForceCancelCommand, { sourceId })}
-                size={0.8}
-              >
+              <TitleBarButton onClick={() => command(AppForceCancelCommand, { appId })} size={0.8}>
                 Cancel
               </TitleBarButton>
               <TitleBarSpace />
@@ -76,12 +67,12 @@ export const SettingManageRow = (props: { source: Source; whitelist: WhitelistMa
           disabled={removeJobs.length > 0 || activeJobs.length > 0}
           tooltip="Sync"
           icon="refresh"
-          onClick={() => handleRefresh(sourceId)}
+          onClick={() => handleRefresh(appId)}
         />
         <TitleBarButton
           icon="boldremove"
-          tooltip={`Remove ${props.source.name}`}
-          onClick={() => removeSource(props.source)}
+          tooltip={`Remove ${props.app.name}`}
+          onClick={() => removeApp(props.app)}
         />
       </SegmentedRow>
     </Row>

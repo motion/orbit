@@ -19,6 +19,11 @@ export function AppIconInner({
 }: OrbitIconProps) {
   const theme = useTheme()
   const fill = color(props.color || theme.iconFill || '#fff').hex()
+
+  if (!appIcons[props.name]) {
+    return null
+  }
+
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
@@ -31,6 +36,12 @@ export function AppIconInner({
   const newID = bgLight.replace('#', '')
 
   const matches = iconSrc.match(idReplace)
+
+  if (!matches) {
+    console.warn('no matches', props)
+    return null
+  }
+
   for (const full of matches) {
     const id = full
       .replace(' id="', '')
@@ -78,7 +89,7 @@ export function AppIcon({ app, ...props }: AppIconProps) {
     <AppIconInner
       background={app.colors[0]}
       color={app.colors[1]}
-      name={`orbit-${app.appId}-full`}
+      name={`orbit-${app.identifier}-full`}
       size={48}
       {...props}
     />

@@ -10,5 +10,5 @@ export interface GmailBitData {
 export interface GmailBitDataParticipant {
   name?: string
   email: string
-  type: "from"|"to"
+  type: 'from' | 'to'
 }

@@ -1,3 +1,4 @@
+import { gloss } from '@mcro/gloss'
 import { superMemo } from '@mcro/ui'
 import React, { createContext, useContext, useEffect } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
@@ -6,7 +7,7 @@ import { AppElements } from '../types/AppDefinition'
 const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
 
 export const AppLoadContext = createContext({
-  appId: '',
+  identifier: '',
   id: '',
 })
 
@@ -17,17 +18,17 @@ function AppContainerInner(props: AppElements) {
     }
   }
 
-  const { id, appId } = useContext(AppLoadContext)
+  const { id, identifier } = useContext(AppLoadContext)
   const { appsStore } = useStoresSimple()
 
-  if (!appId || !id) {
-    throw new Error('Internal bug, we didnt set context id + appId')
+  if (!identifier || !id) {
+    throw new Error('Internal bug, we didnt set context id + identifier')
   }
 
   useEffect(() => {
     appsStore.setApp({
       id,
-      appId,
+      identifier,
       views: {
         index: props.index && superMemo(props.index),
         main: props.children && superMemo(props.children),
@@ -57,8 +58,20 @@ export class App extends React.Component<AppElements> {
 
   render() {
     if (this.state.error) {
-      console.warn('has error')
+      console.warn(this.state.error)
+      return <RedBox>{this.state.error}</RedBox>
     }
     return <AppContainerInner {...this.props} />
   }
 }
+
+const RedBox = gloss({
+  flex: 1,
+  minHeight: 100,
+  minWidth: 300,
+  background: 'red',
+  color: 'white',
+  fontFamily: 'monospace',
+  whiteSpace: 'pre',
+  overflow: 'scroll',
+})

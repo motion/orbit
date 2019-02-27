@@ -4,8 +4,7 @@ var OAuth2Strategy = require('passport-oauth').OAuth2Strategy
 export default function Strategy(options, verify) {
   options = options || {}
   options.tokenURL = options.tokenURL || 'https://slack.com/api/oauth.access'
-  options.authorizationURL =
-    options.authorizationURL || 'https://slack.com/oauth/authorize'
+  options.authorizationURL = options.authorizationURL || 'https://slack.com/oauth/authorize'
   // options.scopeSeparator = ','
   options.scope = options.scope || [
     'identity.basic',
@@ -15,12 +14,11 @@ export default function Strategy(options, verify) {
   ]
   options.skipUserProfile = true
 
-  this.profileUrl =
-    options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
+  this.profileUrl = options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
   this._team = options.team
 
   OAuth2Strategy.call(this, options, verify)
-  this.name = options.name || 'slack'
+  this.name = options.name || 'AppIdentifier'
 
   // warn is not enough scope
   // Details on Slack's identity scope - https://api.slack.com/methods/users.identity
@@ -76,7 +74,7 @@ Strategy.prototype.userProfile = function(accessToken, done) {
             done(null, profile)
           }
         } else {
-          profile.provider = 'slack'
+          profile.provider = 'AppIdentifier'
           profile.id = profile.user.id
           profile.displayName = profile.user.name
           profile.error = null

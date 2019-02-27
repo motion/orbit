@@ -8,30 +8,29 @@ import {
   useShareMenu,
   useStores,
 } from '@mcro/kit'
+import { BitModel } from '@mcro/models'
 import * as React from 'react'
 import NoResultsDialog from '../../views/NoResultsDialog'
-import { BitModel } from '@mcro/models'
 
 export function PeopleAppIndex() {
   // people and query
   const { queryStore } = useStores()
-  const { sourceFilters } = queryStore.queryFilters
+  const { appFilters } = queryStore.queryFilters
   const { getShareMenuItemProps } = useShareMenu()
   const activeQuery = useActiveQuery()
 
   let where = []
-  if (sourceFilters.length) {
-    for (const filter of sourceFilters) {
+  if (appFilters.length) {
+    for (const filter of appFilters) {
       if (filter.active) {
         where.push({
           type: 'person',
-          sourceType: filter.source // todo: make sure it works
+          identifier: filter.app, // todo: make sure it works
         })
       }
     }
   }
-  if (!where.length)
-    where.push({ type: 'person' })
+  if (!where.length) where.push({ type: 'person' })
 
   const [people] = useModels(BitModel, { take: 50000, where })
   const results = useActiveQueryFilter({
@@ -49,10 +48,10 @@ export function PeopleAppIndex() {
 
   return (
     <List
-      getItemProps={(...args) => {
+      getItemProps={(a, b, c) => {
         return {
-          ...getItemGroupProps(...args),
-          ...getShareMenuItemProps(...args),
+          ...getItemGroupProps(a, b, c),
+          ...getShareMenuItemProps(a, b, c),
         }
       }}
       minSelected={0}

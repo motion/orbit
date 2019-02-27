@@ -1,14 +1,14 @@
+import { AppIdentifier } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
-import { SourceType } from '../interfaces/SourceType'
 import { ConfluenceBitData } from './ConfluenceBitData'
 import { DriveBitData } from './DriveBitData'
 import { GithubBitData } from './GithubBitData'
 import { GmailBitData } from './GmailBitData'
 import { JiraBitData } from './JiraBitData'
+import { PersonData } from './PersonData'
 import { PinnedBitData } from './PinnedBitData'
 import { SlackBitData } from './SlackBitData'
 import { WebsiteBitData } from './WebsiteBitData'
-import { PersonData } from '..'
 
 /**
  * What Bit.data property can be.
@@ -36,7 +36,9 @@ export type AllBitData = {
   person: PersonData
 }
 
-export type GenericBit<A extends SourceType> = Bit & {
-  type: A
-  data: AllBitData[A]
-}
+export type GenericBit<A> = A extends AppIdentifier
+  ? Bit & {
+      type: A
+      data: AllBitData[A]
+    }
+  : any

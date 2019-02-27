@@ -5,28 +5,28 @@ export const defaultApps: AppBit[] = [
   {
     target: 'app',
     name: 'Search',
-    appId: 'search',
+    identifier: 'search',
     colors: ['red'],
     data: {},
   },
   {
     target: 'app',
     name: 'List',
-    appId: 'lists',
+    identifier: 'lists',
     colors: ['blue'],
     data: {},
   },
   {
     target: 'app',
     name: 'Directory',
-    appId: 'people',
+    identifier: 'people',
     colors: ['green'],
     data: {},
   },
   {
     target: 'app',
     name: 'Custom',
-    appId: 'custom',
+    identifier: 'custom',
     colors: ['gray'],
     data: {},
   },
@@ -48,8 +48,8 @@ export class NewAppStore {
     }
   }
 
-  setApp(appId: string) {
-    const nextApp = defaultApps.find(x => x.appId === appId)
+  setApp(identifier: string) {
+    const nextApp = defaultApps.find(x => x.identifier === identifier)
     if (!nextApp) {
       console.warn('no next app?')
       debugger
@@ -59,7 +59,8 @@ export class NewAppStore {
     // update name and colors if unedited
     let name = this.app.name
     let colors = this.app.colors
-    const neverChangedName = name === defaultApps.find(x => x.appId === this.app.appId).name
+    const neverChangedName =
+      name === defaultApps.find(x => x.identifier === this.app.identifier).name
     if (neverChangedName) {
       name = nextApp.name
       colors = nextApp.colors
@@ -67,7 +68,7 @@ export class NewAppStore {
 
     // get data from defaultValue
     let data = nextApp.data
-    const def = useAppDefinition(appId)
+    const def = useAppDefinition(identifier)
     if (!def) {
       console.warn('no wapp?')
       debugger
@@ -84,7 +85,7 @@ export class NewAppStore {
       name,
       colors,
       // always update
-      appId: appId,
+      identifier: identifier,
       data,
     }
   }

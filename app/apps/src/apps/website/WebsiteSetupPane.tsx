@@ -1,10 +1,9 @@
-import { command } from '@mcro/bridge'
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { Source, SourceSaveCommand, WebsiteSource, WebsiteSourceValues } from '@mcro/models'
-import * as UI from '@mcro/ui'
-import { InputRow, Message, Table, VerticalSpace } from '@mcro/ui'
-import { react, useStore } from '@mcro/use-store'
-import * as React from 'react'
+import { command, useModel } from '@mcro/bridge'
+import { AppProps } from '@mcro/kit'
+import { AppModel, AppSaveCommand } from '@mcro/models'
+import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
+import produce from 'immer'
+import React, { useEffect, useState } from 'react'
 
 /**
  * Crawled website data.
@@ -17,94 +16,55 @@ export interface WebsiteCrawledData {
   content: string
 }
 
-type Props = OrbitSourceSettingProps<WebsiteSource>
-
-class WebsiteSetupStore {
-  props: Props
-  // source: Source
-
-  values: WebsiteSourceValues = {
-    url: '',
-  }
-
-  source = react(
-    () => this.props.source,
-    async propSource => {
-      // if source was sent via component props then use it
-      if (propSource) {
-        this.values = propSource.values
-        return propSource
-      }
-      // create a new empty source
-      return {
-        category: 'source',
-        type: 'website',
-        token: null,
-      } as Source
-    },
-  )
-}
+type Props = AppProps
 
 export default function WebsiteSetupPane(props: Props) {
-  const store = useStore(WebsiteSetupStore, props)
+  const [app, update] = useModel(AppModel, { where: { id: +props.appConfig.subId } })
+  const [values, setValues] = useState({ url: '' })
 
-  const addSource = React.useCallback(
-    async e => {
-      e.preventDefault()
-      const { source, values } = store
-      source.values = { ...source.values, ...values }
-      source.name = values.url
-      console.log(`adding source!`, source)
-      const result = await command(SourceSaveCommand, {
-        source,
-      })
-
-      // update status on success of fail
-      if (result.success) {
-        // store.status = Statuses.SUCCESS
-        // store.error = null
-        // Actions.clearPeek()
-      } else {
-        // store.status = Statuses.FAIL
-        // store.error = result.error
-      }
+  useEffect(
+    () => {
+      setValues({ ...app.data.values })
     },
-    [store],
+    [app],
   )
 
-  const handleChange = React.useCallback(
-    (prop: keyof WebsiteCrawledData) => (val: WebsiteCrawledData[typeof prop]) => {
-      store.values = {
-        ...store.values,
-        [prop]: val,
-      }
-    },
-    [store],
-  )
+  const addApp = async e => {
+    e.preventDefault()
+    update(
+      produce(app, next => {
+        next.data.values = { ...app.data.values, ...values }
+      }),
+    )
+    await command(AppSaveCommand, {
+      app,
+    })
+  }
 
   return (
-    <UI.Col tagName="form" onSubmit={addSource} padding={20}>
+    <Col tagName="form" onSubmit={addApp} padding={20}>
       <Message>Enter website URL</Message>
       <VerticalSpace />
-      <UI.Col margin="auto" width={370}>
-        <UI.Col padding={[0, 10]}>
+      <Col margin="auto" width={370}>
+        <Col padding={[0, 10]}>
           <Table>
             <InputRow
               label="Website URL"
-              value={store.values.url}
-              // !TODO type on handlechange
-              onChange={handleChange('url') as any}
+              value={values.url}
+              onChange={e => {
+                setValues({ ...values, url: e.target.value })
+              }}
             />
           </Table>
           <VerticalSpace />
-          <UI.Theme>
-            <UI.Button type="submit" onClick={addSource}>
+          <Theme>
+            <Button type="submit" onClick={addApp}>
               Save
-            </UI.Button>
-          </UI.Theme>
+            </Button>
+          </Theme>
           <VerticalSpace />
-        </UI.Col>
-      </UI.Col>
-    </UI.Col>
+        </Col>
+      </Col>
+    </Col>
   )
 }

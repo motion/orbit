@@ -59,7 +59,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
           const defaultApps: AppBit[] = [
             {
               target: 'app',
-              appId: 'search',
+              identifier: 'search',
               name: 'Search',
               colors: ['#D48D48', '#ACEACE'],
               pinned: true,
@@ -70,7 +70,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Directory',
-              appId: 'people',
+              identifier: 'people',
               colors: ['#0F1453', '#449878'],
               spaceId: space.id,
               pinned: true,
@@ -79,7 +79,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Home',
-              appId: 'lists',
+              identifier: 'lists',
               spaceId: space.id,
               colors: ['#353353', '#EADEAD'],
               pinned: true,

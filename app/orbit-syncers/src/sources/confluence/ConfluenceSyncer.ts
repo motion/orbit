@@ -1,48 +1,47 @@
+import { Logger } from '@mcro/logger'
 import {
+  AppEntity,
   Bit,
   BitEntity,
   BitUtils,
+  ConfluenceApp,
   ConfluenceBitData,
   ConfluenceLastSyncInfo,
-  ConfluenceSource,
-  ConfluenceSourceValues,
-  SourceEntity,
 } from '@mcro/models'
-import { Logger } from '@mcro/logger'
 import { ConfluenceContent, ConfluenceLoader, ConfluenceUser } from '@mcro/services'
+import { sleep } from '@mcro/utils'
 import { getRepository } from 'typeorm'
+import { SyncerUtils } from '../../core/SyncerUtils'
+import { checkCancelled } from '../../resolvers/AppForceCancelResolver'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
-import { sleep } from '@mcro/utils'
-import { SyncerUtils } from '../../core/SyncerUtils'
 
 /**
  * Syncs Confluence pages and blogs.
  */
 export class ConfluenceSyncer {
   private log: Logger
-  private source: ConfluenceSource
+  private app: ConfluenceApp
   private loader: ConfluenceLoader
   private personSyncer: PersonSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(source: ConfluenceSource, log?: Logger) {
-    this.log = log || new Logger('syncer:confluence:' + source.id)
-    this.source = source
-    this.loader = new ConfluenceLoader(source, this.log)
+  constructor(app: ConfluenceApp, log?: Logger) {
+    this.log = log || new Logger('syncer:confluence:' + app.id)
+    this.app = app
+    this.loader = new ConfluenceLoader(app, this.log)
     this.personSyncer = new PersonSyncer(this.log)
-    this.syncerRepository = new SyncerRepository(source)
+    this.syncerRepository = new SyncerRepository(app)
   }
 
   /**
    * Runs synchronization process.
    */
   async run(): Promise<void> {
-    if (!this.source.values.pageLastSync) this.source.values.pageLastSync = {}
-    const pageLastSync = this.source.values.pageLastSync
-    if (!this.source.values.blogLastSync) this.source.values.blogLastSync = {}
-    const blogLastSync = this.source.values.blogLastSync
+    if (!this.app.data.values.pageLastSync) this.app.data.values.pageLastSync = {}
+    const pageLastSync = this.app.data.values.pageLastSync
+    if (!this.app.data.values.blogLastSync) this.app.data.values.blogLastSync = {}
+    const blogLastSync = this.app.data.values.blogLastSync
 
     // load database data
     this.log.timer('load person bits from the database')
@@ -121,7 +120,7 @@ export class ConfluenceSyncer {
     isLast: boolean
     allDbPeople: Bit[]
   }) {
-    await checkCancelled(this.source.id)
+    await checkCancelled(this.app.id)
     await sleep(2)
 
     const { lastSyncInfo, content, cursor, loadedCount, isLast, allDbPeople } = options
@@ -143,7 +142,7 @@ export class ConfluenceSyncer {
       }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getRepository(SourceEntity).save(this.source)
+      await getRepository(AppEntity).save(this.app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -153,7 +152,7 @@ export class ConfluenceSyncer {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       this.log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
-      await getRepository(SourceEntity).save(this.source)
+      await getRepository(AppEntity).save(this.app)
     }
 
     const bit = this.createDocumentBit(content, allDbPeople)
@@ -163,13 +162,13 @@ export class ConfluenceSyncer {
     // in the case if its the last content we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
       this.log.info(
-        'looks like its the last content in this sync, removing last cursor and source last sync date',
+        'looks like its the last content in this sync, removing last cursor and app last sync date',
         lastSyncInfo,
       )
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getRepository(SourceEntity).save(this.source)
+      await getRepository(AppEntity).save(this.app)
       return true
     }
 
@@ -178,7 +177,7 @@ export class ConfluenceSyncer {
       this.log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getRepository(SourceEntity).save(this.source)
+      await getRepository(AppEntity).save(this.app)
     }
 
     return true
@@ -197,13 +196,13 @@ export class ConfluenceSyncer {
    * Creates person entity from a given Confluence user.
    */
   private createPersonBit(user: ConfluenceUser): Bit {
-    const values = this.source.values as ConfluenceSourceValues
+    const values = this.app.data.values
 
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'confluence',
-        sourceId: this.source.id,
+        appIdentifier: 'confluence',
+        appId: this.app.id,
         type: 'person',
         originalId: user.accountId,
         title: user.displayName,
@@ -218,7 +217,7 @@ export class ConfluenceSyncer {
    * Builds a document bit from the given confluence content.
    */
   private createDocumentBit(content: ConfluenceContent, allPeople: Bit[]): Bit {
-    const values = this.source.values as ConfluenceSourceValues
+    const values = this.app.data.values
     const domain = values.credentials.domain
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
@@ -247,8 +246,8 @@ export class ConfluenceSyncer {
     // create or update a bit
     return BitUtils.create(
       {
-        sourceType: 'confluence',
-        sourceId: this.source.id,
+        appIdentifier: 'confluence',
+        appId: this.app.id,
         type: 'document',
         title: content.title,
         author,

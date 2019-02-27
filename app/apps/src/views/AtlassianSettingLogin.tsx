@@ -1,17 +1,12 @@
 import { command } from '@mcro/bridge'
 import { useActiveSpace } from '@mcro/kit'
-import {
-  AtlassianSource,
-  AtlassianSourceValuesCredentials,
-  Source,
-  SourceSaveCommand,
-} from '@mcro/models'
+import { AppBit, AppSaveCommand, AtlassianApp, AtlassianAppValuesCredentials } from '@mcro/models'
 import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
 
 type Props = {
-  type: string
-  source?: Source
+  identifier: string
+  app?: AppBit
 }
 
 const Statuses = {
@@ -30,34 +25,35 @@ export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  const [source] = React.useState<Partial<AtlassianSource>>({
-    category: 'source',
-    type: props.type as any,
+  const [app] = React.useState<Partial<AtlassianApp>>({
+    target: 'app',
+    identifier: props.identifier as 'confluence',
     token: null,
+    data: (props.app && props.app.data) || {},
   })
   const [credentials, setCredentials] = React.useState(
-    (source.values && source.values.credentials) || {
+    (app.data.values && app.data.values.credentials) || {
       username: '',
       password: '',
       domain: '',
     },
   )
 
-  const addSource = async e => {
+  const addApp = async e => {
     e.preventDefault()
-    source.values = { ...source.values, credentials }
-    if (!source.spaces) {
-      source.spaces = []
+    app.data.values = { ...app.data.values, credentials }
+    if (!app.spaces) {
+      app.spaces = []
     }
-    if (!source.spaces.find(space => space.id === activeSpace.id)) {
-      source.spaces.push(activeSpace)
+    if (!app.spaces.find(space => space.id === activeSpace.id)) {
+      app.spaces.push(activeSpace)
     }
     // send command to the desktop
     setStatus(Statuses.LOADING)
-    const result = await command(SourceSaveCommand, {
+    const result = await command(AppSaveCommand, {
       // TODO @umed
       // @ts-ignore
-      source,
+      app,
     })
     // update status on success of fail
     if (result.success) {
@@ -71,8 +67,8 @@ export function AtlassianSettingLogin(props: Props) {
     }
   }
 
-  const handleChange = (prop: keyof AtlassianSourceValuesCredentials) => (
-    val: AtlassianSourceValuesCredentials[typeof prop],
+  const handleChange = (prop: keyof AtlassianAppValuesCredentials) => (
+    val: AtlassianAppValuesCredentials[typeof prop],
   ) => {
     setCredentials({
       ...credentials,
@@ -81,7 +77,7 @@ export function AtlassianSettingLogin(props: Props) {
   }
 
   return (
-    <Col tagName="form" onSubmit={addSource}>
+    <Col tagName="form" onSubmit={addApp}>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
@@ -119,7 +115,7 @@ export function AtlassianSettingLogin(props: Props) {
           >
             {status === Statuses.LOADING && <Button>Saving...</Button>}
             {status !== Statuses.LOADING && (
-              <Button type="submit" onClick={addSource}>
+              <Button type="submit" onClick={addApp}>
                 Save
               </Button>
             )}

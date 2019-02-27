@@ -1,10 +1,4 @@
-export type BitContentType =
-  | 'task'
-  | 'mail'
-  | 'document'
-  | 'conversation'
-  | 'website'
-  | 'person'
+export type BitContentType = 'task' | 'mail' | 'document' | 'conversation' | 'website' | 'person'
 
 export const BitContentTypes: BitContentType[] = [
   'task',

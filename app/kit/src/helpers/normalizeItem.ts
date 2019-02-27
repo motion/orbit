@@ -1,4 +1,4 @@
-import { Bit, Source } from '@mcro/models'
+import { AppBit, Bit } from '@mcro/models'
 import * as React from 'react'
 import { NormalItem } from '../types/NormalItem'
 import { ResolvableModel } from '../types/ResolvableModel'
@@ -15,7 +15,7 @@ const normalizers = {
       type: 'bit',
       id: `${bit.id}`,
       title: bit.title,
-      icon: bit.sourceType,
+      icon: bit.appIdentifier,
       webLink: bit.webLink,
       people: bit.people,
       location: bit.location ? bit.location.name : '',
@@ -23,16 +23,15 @@ const normalizers = {
         bit.desktopLink || bit.webLink || bit.location.desktopLink || bit.location.webLink,
       desktopLink: bit.desktopLink,
       subType: bit.type,
-      sourceType: bit.sourceType,
       createdAt: new Date(bit.bitCreatedAt),
       updatedAt: new Date(bit.bitUpdatedAt),
     }
   },
-  source: (source: Source): NormalItem => ({
-    type: 'source',
-    id: `${source.id}`,
-    title: source.type,
-    icon: source.type,
+  app: (app: AppBit): NormalItem => ({
+    type: 'app',
+    id: `${app.id}`,
+    title: app.name,
+    icon: app.identifier,
   }),
   // todo(nate) make sure this works
   // 'person-bit': (person: PersonBit): NormalItem => {

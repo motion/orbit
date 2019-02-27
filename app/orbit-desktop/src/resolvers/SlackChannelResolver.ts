@@ -1,24 +1,23 @@
-import { SourceEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { SlackChannelModel, SlackSource } from '@mcro/models'
+import { AppEntity, SlackChannelModel } from '@mcro/models'
 import { SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('resolver:slack-channel')
 
-export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ sourceId }) => {
-  const source = (await getRepository(SourceEntity).findOne({
-    id: sourceId,
-    type: 'slack',
-  })) as SlackSource
-  if (!source) {
-    log.error('cannot find requested slack source', { sourceId })
+export const SlackChannelManyResolver = resolveMany(SlackChannelModel, async ({ appId }) => {
+  const app = await getRepository(AppEntity).findOne({
+    id: appId,
+  })
+  if (!app) {
+    log.error('cannot find requested slack app', { appId })
     return
   }
 
-  log.info('loading channels from the slack', { source })
-  const loader = new SlackLoader(source, log)
+  log.info('loading channels from the slack', { app })
+  // TODO @umed why wont this accept 'slack'
+  const loader = new SlackLoader(app as any, log)
   const channels = await loader.loadChannels()
   log.info('loaded channels', channels.map(x => x.id))
   return channels

@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
+import { Bit, BitEntity } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { getManager } from 'typeorm'
-import { Bit, BitEntity } from '@mcro/models'
 
 /**
  * Syncs bits with person type.
@@ -43,11 +43,7 @@ export class PersonSyncer {
     })
 
     // perform database operations on synced bits
-    if (
-      !insertedPeople.length &&
-      !updatedPeople.length &&
-      !removedPeople.length
-    ) {
+    if (!insertedPeople.length && !updatedPeople.length && !removedPeople.length) {
       this.log.info('no changes were detected, people and person bits were not synced')
       return
     }
@@ -67,7 +63,8 @@ export class PersonSyncer {
     await getManager().transaction(async manager => {
       await manager.save(BitEntity, insertedPeople, { chunk: 100 })
       await manager.save(BitEntity, updatedPeople, { chunk: 100 })
-      await manager.remove(BitEntity, removedPeople, { chunk: 100 })
+      // TODO @umed i may have broke this type
+      await manager.remove(BitEntity, removedPeople as any, { chunk: 100 })
     })
     this.log.timer('save people and person bits in the database')
   }

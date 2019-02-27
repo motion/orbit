@@ -119,9 +119,9 @@ const AppPageContent = () => {
             <AppSearchable>
               <AppView
                 id={appConfig.id}
+                identifier={appConfig.identifier}
                 viewType="index"
                 title={appConfig.title}
-                appId={appConfig.appId}
                 isActive
               />
             </AppSearchable>
@@ -130,9 +130,9 @@ const AppPageContent = () => {
         <Col flex={1} overflow="hidden">
           <AppView
             id={appConfig.id}
+            identifier={appConfig.identifier}
             viewType={appConfig.viewType || 'main'}
             title={appConfig.title}
-            appId={appConfig.appId}
             isActive
           />
         </Col>

@@ -13,7 +13,7 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
-  useActiveSources,
+  useActiveSyncApps,
   useStoresSimple,
 } from '@mcro/kit'
 import { CloseAppCommand } from '@mcro/models'
@@ -63,13 +63,17 @@ export default memo(function OrbitPage() {
 
 function useManageQuerySources() {
   const { queryStore } = useStoresSimple()
-  const activeSources = useActiveSources()
+  const syncApps = useActiveSyncApps()
   useEffect(
     () => {
-      // TODO @umed type
-      queryStore.setSources(activeSources as any[])
+      queryStore.setSources(
+        syncApps.map(x => ({
+          name: x.name,
+          type: x.identifier,
+        })),
+      )
     },
-    [activeSources],
+    [syncApps],
   )
 }
 
@@ -160,13 +164,15 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   const activeApps = paneManagerStore.panes.map(pane => ({
     id: pane.id,
-    appId: pane.type,
+    identifier: pane.type,
   }))
 
   const staticApps = orbitStaticApps.map(app => ({
     id: app.id,
-    appId: app.id,
+    identifier: app.id,
   }))
+
+  console.log('apps', activeApps, staticApps)
 
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>

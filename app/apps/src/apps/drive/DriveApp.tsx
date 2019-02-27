@@ -7,8 +7,6 @@ export const DriveApp: AppDefinition = {
   name: 'Drive',
   icon: driveIcon,
   itemType: 'task',
-  sync: {
-    sourceType: 'drive',
-    settings: DriveSettings,
-  },
+  settings: DriveSettings,
+  sync: {},
 }

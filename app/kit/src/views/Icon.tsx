@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
 import { IconProps, ThemeContext, View } from '@mcro/ui'
 import * as React from 'react'
-import { useSourceIcon } from '../hooks/useSourceIcon'
+import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
@@ -19,7 +19,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   const finalColor = color || activeTheme.color.toString()
 
   // image based source icons
-  const sourceIcon = useSourceIcon(props)
+  const sourceIcon = useAppIcon(props)
 
   if (sourceIcon) {
     const sizeProps = {

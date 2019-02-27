@@ -9,8 +9,5 @@ export const GithubApp: AppDefinition = {
   icon: githubIcon,
   iconLight: githubIconWhite,
   itemType: 'task',
-  sync: {
-    sourceType: 'github',
-    settings: GithubSettings,
-  },
+  settings: GithubSettings,
 }

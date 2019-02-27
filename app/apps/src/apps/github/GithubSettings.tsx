@@ -1,18 +1,19 @@
-import { loadMany, save } from '@mcro/bridge'
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { GithubRepositoryModel, GithubSource, SourceModel } from '@mcro/models'
+import { loadMany, useModel } from '@mcro/bridge'
+import { AppProps, WhitelistManager } from '@mcro/kit'
+import { AppModel, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
-import { WhitelistManager } from '../../WhitelistManager'
 
-export default function GithubSettings({ source }: OrbitSourceSettingProps<GithubSource>) {
+export default function GithubSettings(props: AppProps) {
+  const { subId } = props.appConfig
+  const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
-    source,
+    app,
     getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
-  }) as WhitelistManager<GithubSource>
+  })
   // setup state
   const [repositories, setRepositories] = useState(null)
   // console.log('repositories', repositories)
@@ -21,55 +22,53 @@ export default function GithubSettings({ source }: OrbitSourceSettingProps<Githu
     direction: 'up',
   })
 
-  // load and set repositories when source changes
+  // load and set repositories when app changes
   useEffect(
     () => {
-      // for some reason we can get any source here, so filter out everything except github
-      if (source.type !== 'github') return
-      // console.log(source)
+      if (!app) return
+      // for some reason we can get any app here, so filter out everything except github
+      if (app.identifier !== 'github') return
+      // console.log(app)
 
-      // if we have repositories stored in the source - use them at first
-      if (source.data.repositories) {
-        // console.log(`set repositories from source`, source.data.repositories)
-        setRepositories(source.data.repositories)
+      // if we have repositories stored in the app - use them at first
+      if (app.data.repositories) {
+        // console.log(`set repositories from app`, app.data.repositories)
+        setRepositories(app.data.repositories)
       }
 
       // to make sure we always have a fresh repositories we load them form API
       loadMany(GithubRepositoryModel, {
         args: {
-          sourceId: source.id,
+          appId: app.id,
         },
       }).then(freshApiRepositories => {
         // console.log(`loaded repositories from remote`, freshApiRepositories)
 
         // we check if api repositories are changed
-        const sourceRepositories = source.data.repositories
+        const appRepositories = app.data.repositories
         if (
           !freshApiRepositories ||
-          JSON.stringify(sourceRepositories) === JSON.stringify(freshApiRepositories)
+          JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
         )
           return
 
         // console.log(`repositories changed, updating`)
 
-        // then we update source data in the db
+        // then we update app data in the db
         setRepositories(freshApiRepositories)
-        source.data = {
-          ...source.data,
+        app.data = {
+          ...app.data,
           repositories: freshApiRepositories,
         }
-        save(SourceModel, {
-          id: source.id,
-          data: source.data,
-        })
+        updateApp(app)
       })
     },
-    [source.id],
+    [app && app.id],
   )
 
   return (
     <>
-      <SettingManageRow source={source} whitelist={whitelist} />
+      <SettingManageRow app={app} whitelist={whitelist} />
       <View
         flex={1}
         opacity={whitelist.isWhitelisting ? 0.5 : 1}

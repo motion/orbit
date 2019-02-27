@@ -1,24 +1,24 @@
 import { Logger } from '@mcro/logger'
-import { GmailSource } from '@mcro/models'
+import { GmailApp } from '@mcro/models'
+import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
-import { ServiceLoaderSourceSaveCallback } from '../../loader/ServiceLoaderTypes'
+import { ServiceLoaderAppSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
-import { sleep } from '@mcro/utils'
 
 /**
  * Loads data from GMail service.
  */
 export class GMailLoader {
-  private source: GmailSource
+  private app: GmailApp
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(source: GmailSource, log?: Logger, saveCallback?: ServiceLoaderSourceSaveCallback) {
-    this.source = source
-    this.log = log || new Logger('service:gmail:loader:' + this.source.id)
-    this.loader = new ServiceLoader(this.source, this.log, saveCallback)
+  constructor(app: GmailApp, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+    this.app = app
+    this.log = log || new Logger('service:gmail:loader:' + this.app.id)
+    this.loader = new ServiceLoader(this.app, this.log, saveCallback)
   }
 
   /**
@@ -98,11 +98,11 @@ export class GMailLoader {
    * Count is the maximal number of threads to load.
    */
   async loadThreads(options: {
-    count: number,
-    queryFilter?: string,
-    filteredIds?: string[],
-    pageToken?: string,
-    loadedCount?: number,
+    count: number
+    queryFilter?: string
+    filteredIds?: string[]
+    pageToken?: string
+    loadedCount?: number
     handler: (
       thread: GMailThread,
       cursor?: string,
@@ -110,9 +110,8 @@ export class GMailLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean
   }): Promise<void> {
-
     await sleep(ServiceLoadThrottlingOptions.gmail.threads)
-    let { count,  queryFilter, filteredIds, pageToken, loadedCount, handler } = options
+    let { count, queryFilter, filteredIds, pageToken, loadedCount, handler } = options
 
     // load all threads first
     this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
@@ -120,17 +119,17 @@ export class GMailLoader {
     const result = await this.loader.load(query)
 
     // if query doesn't return any email result.threads will be undefined
-    if (!result.resultSizeEstimate)
-      return
+    if (!result.resultSizeEstimate) return
 
     this.log.info(
-      `${result.threads.length} threads were loaded (${loadedCount + result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`, result)
+      `${result.threads.length} threads were loaded (${loadedCount +
+        result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`,
+      result,
+    )
 
-    if (!result)
-      return
+    if (!result) return
     let threads = result.threads
-    if (!threads)
-      return
+    if (!threads) return
 
     // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
     // once we found all threads we stop loading threads
@@ -155,7 +154,12 @@ export class GMailLoader {
       const thread = threads[i]
       try {
         const isLast = i === threads.length - 1 && !result.nextPageToken
-        const handleResult = await handler(threads[i], result.nextPageToken, loadedCount + threads.length, isLast)
+        const handleResult = await handler(
+          threads[i],
+          result.nextPageToken,
+          loadedCount + threads.length,
+          isLast,
+        )
 
         // if callback returned true we don't continue syncing
         if (handleResult === false) {
@@ -177,7 +181,6 @@ export class GMailLoader {
 
     // load threads from the next page if available
     if (result.nextPageToken) {
-
       // this condition means we just found all requested threads, no need to load next page
       if (filteredIds && filteredIds.length === 0) {
         this.log.verbose('all requested threads were found')
@@ -190,7 +193,7 @@ export class GMailLoader {
         filteredIds: filteredIds,
         pageToken: result.nextPageToken,
         loadedCount: loadedCount + threads.length,
-        handler
+        handler,
       })
     }
   }
@@ -210,5 +213,4 @@ export class GMailLoader {
     )
     this.log.verbose('thread messages are loaded', threads)
   }
-
 }

@@ -1,14 +1,15 @@
-import { OrbitSourceSettingProps } from '@mcro/kit'
-import { DriveSource } from '@mcro/models'
+import { useModel } from '@mcro/bridge'
+import { AppProps } from '@mcro/kit'
+import { AppModel, DriveApp } from '@mcro/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-type Props = OrbitSourceSettingProps<DriveSource>
+type Props = AppProps
 
 class DriveSettingsStore {
-  props: Props
+  props: { app?: DriveApp }
   popularFolders = []
 
   async didMount() {
@@ -27,10 +28,6 @@ class DriveSettingsStore {
     this.popularFolders = files
   }
 
-  get source() {
-    return this.props.source
-  }
-
   onSyncSetter = id => () => {
     console.log('should set', id)
     return false
@@ -38,19 +35,21 @@ class DriveSettingsStore {
 
   get service(): any {
     // todo: broken by umed please fix me
-    // !TODO this should come from first class api for fetching from sources
+    // !TODO this should come from first class api for fetching from apps
     console.warn('todo: broken by umed please fix me')
     return {}
   }
 }
 
 export function DriveSettings(props: Props) {
-  const store = useStore(DriveSettingsStore)
+  const { subId } = props.appConfig
+  const [app] = useModel<DriveApp, any>(AppModel as any, { where: { id: +subId } })
+  const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders
 
   return (
     <>
-      <SettingManageRow source={props.source} whitelist={null} />
+      <SettingManageRow app={app} whitelist={null} />
       <View flex={1} opacity={1}>
         <SearchableTable
           virtual

@@ -3,6 +3,8 @@ import { Logger } from '@mcro/logger'
 import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
 import {
   AppEntity,
+  AppForceCancelCommand,
+  AppForceSyncCommand,
   AppModel,
   BitEntity,
   BitModel,
@@ -11,10 +13,6 @@ import {
   JobModel,
   SettingEntity,
   SettingModel,
-  SourceEntity,
-  SourceForceCancelCommand,
-  SourceForceSyncCommand,
-  SourceModel,
   SpaceEntity,
   SpaceModel,
   UserEntity,
@@ -25,8 +23,8 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
-import { SourceForceCancelResolver } from './resolvers/SourceForceCancelResolver'
-import { SourceForceSyncResolver } from './resolvers/SourceForceSyncResolver'
+import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
+import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -92,16 +90,8 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [
-        AppModel,
-        SettingModel,
-        SourceModel,
-        BitModel,
-        JobModel,
-        SpaceModel,
-        UserModel,
-      ],
-      commands: [SourceForceSyncCommand, SourceForceCancelCommand],
+      models: [AppModel, SettingModel, BitModel, JobModel, SpaceModel, UserModel],
+      commands: [AppForceSyncCommand, AppForceCancelCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),
@@ -109,14 +99,14 @@ export class OrbitSyncersRoot {
         ...typeormResolvers(this.connection, [
           { entity: AppEntity, models: [AppModel] },
           { entity: SettingEntity, models: [SettingModel] },
-          { entity: SourceEntity, models: [SourceModel] },
+          { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),
-        SourceForceSyncResolver,
-        SourceForceCancelResolver,
+        AppForceSyncResolver,
+        AppForceCancelResolver,
       ],
     })
     this.mediatorServer.bootstrap()

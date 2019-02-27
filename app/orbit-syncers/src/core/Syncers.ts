@@ -3,9 +3,9 @@ import { DriveSyncer } from '../sources/drive/DriveSyncer'
 import { GithubSyncer } from '../sources/github/GithubSyncer'
 import { GMailSyncer } from '../sources/gmail/GMailSyncer'
 import { JiraSyncer } from '../sources/jira/JiraSyncer'
-import { WebsiteSyncer } from '../sources/website/WebsiteSyncer'
 import { MailWhitelisterSyncer } from '../sources/mail-whitelister/MailWhitelisterSyncer'
 import { SlackSyncer } from '../sources/slack/SlackSyncer'
+import { WebsiteSyncer } from '../sources/website/WebsiteSyncer'
 import { Syncer } from './Syncer'
 
 const ONE_MINUTE = 1000 * 60
@@ -15,32 +15,32 @@ const TEN_MINUTES = ONE_MINUTE * 10
 
 export const Syncers = [
   new Syncer({
-    type: 'jira',
+    appIdentifier: 'jira',
     constructor: JiraSyncer,
     interval: TEN_MINUTES,
   }),
   new Syncer({
-    type: 'confluence',
+    appIdentifier: 'confluence',
     constructor: ConfluenceSyncer,
     interval: TEN_MINUTES,
   }),
   new Syncer({
-    type: 'drive',
+    appIdentifier: 'drive',
     constructor: DriveSyncer,
     interval: FIVE_MINUTES,
   }),
   new Syncer({
-    type: 'gmail',
+    appIdentifier: 'gmail',
     constructor: GMailSyncer,
     interval: FIVE_MINUTES,
   }),
   new Syncer({
-    type: 'github',
+    appIdentifier: 'github',
     constructor: GithubSyncer,
     interval: TEN_MINUTES,
   }),
   new Syncer({
-    type: 'slack',
+    appIdentifier: 'slack',
     constructor: SlackSyncer,
     interval: FIVE_MINUTES,
   }),
@@ -53,7 +53,7 @@ export const Syncers = [
   //   interval: THIRTY_MINUTES,
   // }),
   new Syncer({
-    type: 'website',
+    appIdentifier: 'website',
     constructor: WebsiteSyncer,
     interval: FIVE_MINUTES,
   }),

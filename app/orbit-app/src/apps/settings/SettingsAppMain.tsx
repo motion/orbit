@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppProps } from '../AppTypes'
+import { AppProps } from '../AppProps'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 

@@ -5,12 +5,12 @@ export type ItemID = number | string
 type ListItemFilter =
   | {
       type: 'recent-items'
-      sourceId: number
+      appId: number
       limit?: number
     }
   | {
       type: 'trending-items'
-      sourceId: number
+      appId: number
       limit?: number
     }
 

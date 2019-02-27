@@ -7,7 +7,7 @@ import {
   SpaceIcon,
   useStoresSimple,
 } from '@mcro/kit'
-import { AppBit, SearchQuery, SearchResultModel, SourceType } from '@mcro/models'
+import { AppBit, AppIdentifier, SearchQuery, SearchResultModel } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -78,7 +78,7 @@ export class SearchStore {
       title: this.stores.spaceStore.activeSpace.name,
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
-      appId: 'apps',
+      identifier: 'apps',
       group: 'Home',
     }
   }
@@ -104,8 +104,8 @@ export class SearchStore {
         icon: <AppIcon app={app} />,
         group: 'Apps',
         appConfig: {
-          icon: `orbit-${app.appId}-full`,
-          appId: 'message',
+          icon: `orbit-${app.identifier}-full`,
+          identifier: 'message',
           title: `Open ${app.name}`,
         },
         onOpen: () => {
@@ -128,7 +128,7 @@ export class SearchStore {
         iconBefore: true,
         // group: 'Home',
         appConfig: {
-          appId: 'message',
+          identifier: 'message',
           title: `Create new app`,
         },
         onOpen: () => {
@@ -191,12 +191,12 @@ export class SearchStore {
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)
 
-      const sourceFilters = [
+      const appFilters = [
         // these come from the text string
-        ...activeFilters.filter(x => x.type === MarkType.Source).map(x => x.text),
+        ...activeFilters.filter(x => x.type === MarkType.App).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
-      ] as SourceType[]
+      ] as AppIdentifier[]
 
       const locationFilters = activeFilters
         .filter(x => x.type === MarkType.Location)
@@ -212,7 +212,7 @@ export class SearchStore {
           sortBy,
           startDate,
           endDate,
-          sourceFilters,
+          appFilters,
           peopleFilters,
           locationFilters,
           group,

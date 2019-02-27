@@ -6,13 +6,11 @@ import { CreateApp } from './CreateAppApp'
 import { MessageApp } from './MessageApp'
 import { OnboardApp } from './onboard/OnboardApp'
 import { SettingsApp } from './settings/SettingsApp'
-import { SourcesApp } from './sources/SourcesApp'
 import { SpacesApp } from './spaces/SpacesApp'
 
 export const orbitStaticApps: AppDefinition[] = [
   SettingsApp,
   SpacesApp,
-  SourcesApp,
   AppsApp,
   BitApp,
   OnboardApp,

@@ -1,9 +1,16 @@
 import { Logger } from '@mcro/logger'
-import { Bit, BitUtils, PersonData, SlackBitData, SlackSource, SlackSourceValues, SourceEntity } from '@mcro/models'
-import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
+import { AppEntity, Bit, BitUtils, PersonData, SlackApp, SlackBitData } from '@mcro/models'
+import {
+  SlackAttachment,
+  SlackChannel,
+  SlackLoader,
+  SlackMessage,
+  SlackTeam,
+  SlackUser,
+} from '@mcro/services'
 import { getRepository } from 'typeorm'
-import { SourceSyncer } from '../../core/SourceSyncer'
-import { checkCancelled } from '../../resolvers/SourceForceCancelResolver'
+import { AppSyncer } from '../../core/AppSyncer'
+import { checkCancelled } from '../../resolvers/AppForceCancelResolver'
 import { BitSyncer } from '../../utils/BitSyncer'
 import { PersonSyncer } from '../../utils/PersonSyncer'
 import { SyncerRepository } from '../../utils/SyncerRepository'
@@ -13,21 +20,21 @@ const Autolinker = require('autolinker')
 /**
  * Syncs Slack messages.
  */
-export class SlackSyncer implements SourceSyncer {
+export class SlackSyncer implements AppSyncer {
   private log: Logger
-  private source: SlackSource
+  private app: SlackApp
   private loader: SlackLoader
   private personSyncer: PersonSyncer
   private bitSyncer: BitSyncer
   private syncerRepository: SyncerRepository
 
-  constructor(source: SlackSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('syncer:slack:' + source.id)
-    this.loader = new SlackLoader(this.source, this.log)
+  constructor(app: SlackApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('syncer:slack:' + app.id)
+    this.loader = new SlackLoader(this.app, this.log)
     this.personSyncer = new PersonSyncer(this.log)
-    this.bitSyncer = new BitSyncer(source, this.log)
-    this.syncerRepository = new SyncerRepository(source)
+    this.bitSyncer = new BitSyncer(app, this.log)
+    this.syncerRepository = new SyncerRepository(app)
   }
 
   /**
@@ -39,15 +46,15 @@ export class SlackSyncer implements SourceSyncer {
     const team = await this.loader.loadTeam()
     this.log.timer('load team info from API')
 
-    // update sources with team info
-    const values = this.source.values as SlackSourceValues
+    // update apps with team info
+    const values = this.app.data.values
     values.team = {
       id: team.id,
       name: team.name,
       domain: team.domain,
       icon: team.icon.image_132,
     }
-    await getRepository(SourceEntity).save(this.source)
+    await getRepository(AppEntity).save(this.app)
 
     // load api users
     this.log.timer('load API users')
@@ -84,7 +91,7 @@ export class SlackSyncer implements SourceSyncer {
     const allChannels = await this.loader.loadChannels()
     this.log.timer('load API channels', allChannels)
 
-    // filter out channels based on user sources
+    // filter out channels based on user apps
     const activeChannels = this.filterChannelsBySettings(allChannels)
     this.log.info('filtering only selected channels', activeChannels)
 
@@ -92,7 +99,7 @@ export class SlackSyncer implements SourceSyncer {
     const lastMessageSync = values.lastMessageSync || {}
 
     for (let channel of activeChannels) {
-      await checkCancelled(this.source.id)
+      await checkCancelled(this.app.id)
 
       // to load messages using pagination we use "oldest" message we got last time when we synced
       // BUT we also need to support edit and remove last x messages
@@ -147,24 +154,24 @@ export class SlackSyncer implements SourceSyncer {
         // sync all the bits we have
         await this.bitSyncer.sync({ apiBits, dbBits })
 
-        // update last message sync source
+        // update last message sync app
         // note: we need to use loaded messages, not filtered
         lastMessageSync[channel.id] = loadedMessages[0].ts
 
-        // update sources
-        this.log.info('update sources', { lastMessageSync })
+        // update apps
+        this.log.info('update apps', { lastMessageSync })
         values.lastMessageSync = lastMessageSync
-        await getRepository(SourceEntity).save(this.source)
+        await getRepository(AppEntity).save(this.app)
       }
     }
   }
 
   /**
-   * Filters given slack channels by channels in the sources.
+   * Filters given slack channels by channels in the apps.
    */
   private filterChannelsBySettings(channels: SlackChannel[]) {
-    const values = this.source.values as SlackSourceValues
-    const sourceChannels =
+    const values = this.app.data.values
+    const appChannels =
       values.channels /* || {
       'C0SAU3124': true,
       'CBV9PGSGG': true,
@@ -172,13 +179,13 @@ export class SlackSyncer implements SourceSyncer {
       'C221Y7CMN': true,
     }*/
 
-    // if no channels in sources are selected then return all channels
-    if (!sourceChannels) return channels
+    // if no channels in apps are selected then return all channels
+    if (!appChannels) return channels
 
-    const sourcesChannelIds = Object.keys(sourceChannels).filter(key => sourceChannels[key])
+    const appsChannelIds = Object.keys(appChannels).filter(key => appChannels[key])
 
     return channels.filter(channel => {
-      return sourcesChannelIds.indexOf(channel.id) !== -1
+      return appsChannelIds.indexOf(channel.id) !== -1
     })
   }
 
@@ -214,13 +221,13 @@ export class SlackSyncer implements SourceSyncer {
   }
 
   /**
-   * Creates a single source person from given Slack user.
+   * Creates a single app person from given Slack user.
    */
   createPersonBit(user: SlackUser, team: SlackTeam): Bit {
     return BitUtils.create(
       {
-        sourceType: 'slack',
-        sourceId: this.source.id,
+        appIdentifier: 'slack',
+        appId: this.app.id,
         type: 'person',
         originalId: user.id,
         title: user.profile.real_name || user.name,
@@ -231,7 +238,7 @@ export class SlackSyncer implements SourceSyncer {
         data: {
           tz: user.tz,
           team: user.id,
-        } as PersonData
+        } as PersonData,
       },
       user.id,
     )
@@ -249,12 +256,12 @@ export class SlackSyncer implements SourceSyncer {
     const lastMessage = messages[messages.length - 1]
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const webLink = `https://${this.source.values.team.domain}.slack.com/archives/${
+    const webLink = `https://${this.app.data.values.team.domain}.slack.com/archives/${
       channel.id
-      }/p${firstMessage.ts.replace('.', '')}`
+    }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
-      this.source.values.team.id
-      }`
+      this.app.data.values.team.id
+    }`
     const mentionedPeople = this.findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
@@ -276,8 +283,8 @@ export class SlackSyncer implements SourceSyncer {
 
     return BitUtils.create(
       {
-        sourceId: this.source.id,
-        sourceType: 'slack',
+        appId: this.app.id,
+        appIdentifier: 'slack',
         type: 'conversation',
         title: '',
         body: data.messages.map(message => message.text).join(' ... '),
@@ -288,8 +295,8 @@ export class SlackSyncer implements SourceSyncer {
         location: {
           id: channel.id,
           name: channel.name,
-          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+          webLink: `https://${this.app.data.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.app.data.values.team.id}`,
         },
         webLink,
         desktopLink,
@@ -318,8 +325,8 @@ export class SlackSyncer implements SourceSyncer {
 
     return BitUtils.create(
       {
-        sourceId: this.source.id,
-        sourceType: 'slack',
+        appId: this.app.id,
+        appIdentifier: 'slack',
         type: 'website',
         title: attachment.title,
         body: attachment.text,
@@ -334,8 +341,8 @@ export class SlackSyncer implements SourceSyncer {
         location: {
           id: channel.id,
           name: channel.name,
-          webLink: `https://${this.source.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${this.source.values.team.id}`,
+          webLink: `https://${this.app.data.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${this.app.data.values.team.id}`,
         },
         webLink: attachment.original_url,
         desktopLink: undefined,

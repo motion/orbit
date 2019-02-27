@@ -6,7 +6,7 @@ import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import * as React from 'react'
-import { addSourceClickHandler } from '../../helpers/addSourceClickHandler'
+import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { useStoresSimple } from '../../hooks/useStores'
 import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../../views/BottomControls'
@@ -180,7 +180,7 @@ export function OnboardMain() {
                   icon={def.icon}
                   // !TODO true === item.isActive
                   inactive={true}
-                  onClick={true ? null : addSourceClickHandler(def)}
+                  onClick={true ? null : addAppClickHandler(def)}
                   after={
                     <AddButton size={0.9} disabled={true}>
                       {true ? <Icon size={16} name="check" color="green" /> : 'Add'}

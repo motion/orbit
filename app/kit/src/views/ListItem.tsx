@@ -6,21 +6,20 @@ import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppConfig } from '../types/AppConfig'
-import { ItemType } from '../types/ItemType'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { itemViewsListItem } from './itemViews'
-import { ListItemPerson } from './ListItemPerson'
 
-type OrbitItemComponent<A extends ItemType> = React.FunctionComponent<OrbitItemViewProps<A>> & {
+type OrbitItemComponent<A> = React.FunctionComponent<OrbitItemViewProps<A>> & {
   itemProps?: OrbitItemViewProps<A>
 }
 
-export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & { // Bit | any
+export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
+  // Bit | any
   index?: number
   // for appconfig merge
   id?: string
-  appId?: string
+  identifier?: string
   subType?: string
   // extra props for orbit list items
   people?: Bit[]
@@ -31,7 +30,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & { //
 
 export const ListItem = React.memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    const { appsStore, appStore, selectionStore } = useStoresSimple()
+    const { appStore, selectionStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: OrbitItemComponent<any> = null
@@ -39,25 +38,13 @@ export const ListItem = React.memo(
     let normalized: NormalItem = null
 
     if (item && item.target) {
-      switch (item.target) {
-        case 'bit':
-        case 'person-bit':
-          normalized = normalizeItem(item)
-          itemProps = getNormalPropsForListItem(normalized)
-
-          if (item.target === 'bit') {
-            const itemType = appsStore.definitions[normalized.sourceType].itemType
-            ItemView = itemViewsListItem[itemType]
-          } else if (item.target === 'person-bit') {
-            ItemView = ListItemPerson
-          }
-          break
-        default:
-          return <div>SearchResultListItem no result</div>
-      }
+      normalized = normalizeItem(item)
+      itemProps = getNormalPropsForListItem(normalized)
+      ItemView = itemViewsListItem[item.type]
     }
 
-    const icon = props.icon || (item ? item.icon : null) || (normalized ? normalized.icon : null)
+    const icon =
+      props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
 
     const getIsSelected = React.useCallback((index: number) => {
       const appActive = appStore ? appStore.isActive : true

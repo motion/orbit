@@ -14,7 +14,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
   return res
 }
 
-export function ConversationItem(rawProps: OrbitItemViewProps<'slack'>) {
+export function ConversationItem(rawProps: OrbitItemViewProps<'AppIdentifier'>) {
   const itemProps = React.useContext(ItemPropsContext)
   const { item, searchTerm, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
   const { data, people } = item

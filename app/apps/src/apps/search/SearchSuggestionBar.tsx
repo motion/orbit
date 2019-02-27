@@ -1,11 +1,10 @@
-import { gloss } from '@mcro/gloss'
+import { color, gloss } from '@mcro/gloss'
 import { useStores } from '@mcro/kit'
-import * as UI from '@mcro/ui'
-import { ButtonProps } from '@mcro/ui'
+import { Button, ButtonProps, Row } from '@mcro/ui'
 import * as React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
-const dateBg = UI.color('#ffb049')
+const dateBg = color('#ffb049')
 
 const activeThemes = {
   date: {
@@ -30,7 +29,7 @@ const activeThemes = {
   },
 }
 
-const SuggestionBar = gloss(UI.Row, {
+const SuggestionBar = gloss(Row, {
   height: '100%',
   overflow: 'hidden',
   position: 'relative',
@@ -54,7 +53,7 @@ const SuggestionBar = gloss(UI.Row, {
 })
 
 const SuggestionButton = (props: ButtonProps) => (
-  <UI.Button
+  <Button
     glint={false}
     size={1}
     sizeRadius={0}

@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
+import { ConfluenceApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import { ConfluenceSource } from '@mcro/models'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { ConfluenceQueries } from './ConfluenceQueries'
@@ -15,14 +15,14 @@ import {
  * Loads confluence data from its API.
  */
 export class ConfluenceLoader {
-  private source: ConfluenceSource
+  private app: ConfluenceApp
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(source: ConfluenceSource, log?: Logger) {
-    this.source = source
-    this.log = log || new Logger('service:confluence:loader:' + source.id)
-    this.loader = new ServiceLoader(this.source, this.log)
+  constructor(app: ConfluenceApp, log?: Logger) {
+    this.app = app
+    this.log = log || new Logger('service:confluence:loader:' + app.id)
+    this.loader = new ServiceLoader(this.app, this.log)
   }
 
   /**
@@ -59,7 +59,6 @@ export class ConfluenceLoader {
     for (let i = 0; i < response.results.length; i++) {
       const content = response.results[i]
       try {
-
         // load content comments
         if (content.childTypes.comment.value === true) {
           content.comments = await this.loadComments(content.id)
@@ -68,7 +67,12 @@ export class ConfluenceLoader {
         }
 
         const isLast = i === response.results.length - 1 && hasNextPage === false
-        const result = await handler(content, cursor + maxResults, loadedCount + response.results.length, isLast)
+        const result = await handler(
+          content,
+          cursor + maxResults,
+          loadedCount + response.results.length,
+          isLast,
+        )
 
         // if callback returned true we don't continue syncing
         if (result === false) {
@@ -86,7 +90,12 @@ export class ConfluenceLoader {
     // since we can only load max 100 pages per request, we check if we have more pages to load
     // then execute recursive call to load next 100 pages. Do it until we reach the end (total)
     if (hasNextPage) {
-      await this.loadContents(type, cursor + maxResults, loadedCount + response.results.length, handler)
+      await this.loadContents(
+        type,
+        cursor + maxResults,
+        loadedCount + response.results.length,
+        handler,
+      )
     }
   }
 
@@ -173,5 +182,4 @@ export class ConfluenceLoader {
 
     return response.results
   }
-
 }

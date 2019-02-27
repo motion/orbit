@@ -7,7 +7,7 @@ import { QueryStore } from './QueryStore'
 export type SearchFilter = {
   id: number
   type: string
-  source: string
+  app: string
   name: string
   active: boolean
 }
@@ -131,16 +131,16 @@ export class QueryFilterStore {
     return this.nlpStore.marks.filter(mark => !this.disabledFilters[mark[3].toLowerCase()])
   }
 
-  get hasSourceFilters() {
-    return this.sourceFilters.some(x => x.active)
+  get hasAppFilters() {
+    return this.appFilters.some(x => x.active)
   }
 
-  get sourceFilters(): SearchFilter[] {
+  get appFilters(): SearchFilter[] {
     // !TODO
     return this.activeSources.map((app, id) => ({
       id,
       type: 'source',
-      source: app.type,
+      app: app.type,
       name: app.name,
       active: Object.keys(this.exclusiveFilters).length ? this.exclusiveFilters[app.type] : false,
     }))
@@ -189,15 +189,15 @@ export class QueryFilterStore {
     },
   )
 
-  resetSourceFiltersOnNLPChange = react(
+  resetAppFiltersOnNLPChange = react(
     () => always(this.nlpStore.nlp),
     () => {
       const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)
       // reset source inactive filters
-      ensure('sources', nlp.sources && !!nlp.sources.length)
+      ensure('sources', nlp.apps && !!nlp.apps.length)
       this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
-        acc[app.type] = nlp.sources.some(x => x === app.type)
+        acc[app.type] = nlp.apps.some(x => x === app.type)
         return acc
       }, {})
     },
@@ -252,7 +252,7 @@ export class QueryFilterStore {
   toggleSourceFilter = (filter: SearchFilter) => {
     this.exclusiveFilters = {
       ...this.exclusiveFilters,
-      [filter.source]: !this.exclusiveFilters[filter.source],
+      [filter.app]: !this.exclusiveFilters[filter.app],
     }
   }
 

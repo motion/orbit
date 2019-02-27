@@ -5,12 +5,11 @@ import { Bit, BitModel, CosalTopicsModel, PersonData, SlackBitData } from '@mcro
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
-// import { AppActions } from '../../actions/appActions/AppActions'
 
 const getBitTexts = (bits: Bit[]) => {
   return bits
     .map(x => {
-      if (x.sourceType === 'slack') {
+      if (x.appIdentifier === 'slack') {
         const data = x.data as SlackBitData
         return data.messages.map(m => m.text).join(' ')
       }
@@ -32,9 +31,11 @@ class PeopleAppStore {
       ensure('appConfig', !!appConfig)
       return loadOne(BitModel, {
         args: {
+          // TODO @umed type complains
+          // @ts-ignore
           where: {
             type: 'person',
-            id: +appConfig.id
+            id: +appConfig.id,
           },
           // relations: ['people'], // todo(nate): check why do we need it here
         },
@@ -50,8 +51,8 @@ class PeopleAppStore {
         args: {
           where: {
             people: {
-              email: person.email
-            }
+              email: person.email,
+            },
             // todo(nate): below has been changed please check it
             // people: {
             //   personBit: {
@@ -96,6 +97,7 @@ export function PeopleAppMain(props: AppProps) {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
 
   if (!person) {
+    console.log('PeopleAppMain', props)
     return <div>No one selected</div>
   }
 
@@ -123,7 +125,10 @@ export function PeopleAppMain(props: AppProps) {
                 Documents
               </SourceButton>
               <HorizontalSpace />
-              <SourceButton icon="zoom" onClick={() => queryStore.setQuery(`${person.title} tasks`)}>
+              <SourceButton
+                icon="zoom"
+                onClick={() => queryStore.setQuery(`${person.title} tasks`)}
+              >
                 Tasks
               </SourceButton>
             </Links>

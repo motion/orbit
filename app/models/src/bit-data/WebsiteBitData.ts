@@ -2,7 +2,6 @@
  * Website additional bit information.
  */
 export interface WebsiteBitData {
-
   /**
    * Website page url.
    */
@@ -17,5 +16,4 @@ export interface WebsiteBitData {
    * Html content of the rendered page.
    */
   content: string
-
 }

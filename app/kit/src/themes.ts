@@ -92,7 +92,7 @@ const light = {
     background: orbitColor,
     backgroundHover: orbitColor,
     backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.25),
+    listItemBackground: orbitColor.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),

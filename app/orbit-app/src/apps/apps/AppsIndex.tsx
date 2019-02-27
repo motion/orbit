@@ -13,7 +13,7 @@ import { orbitApps } from '../orbitApps'
 function getFeatures(def: AppDefinition) {
   const hasSync = !!def.sync
   const hasClient = !!def.app
-  const titles = [hasSync ? 'Sync' : '', hasClient ? 'Client' : ''].filter(Boolean)
+  const titles = [hasSync ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
   return titles.join(', ')
 }
 
@@ -49,6 +49,8 @@ export function AppsIndex(_props: AppProps) {
           group: 'App Store',
           title: def.name,
           icon: def.id,
+          iconBefore: true,
+          slim: true,
           subtitle: getFeatures(def),
           appConfig: {
             identifier: 'apps',

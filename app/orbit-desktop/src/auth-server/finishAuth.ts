@@ -6,6 +6,7 @@ import {
   GmailApp,
   SlackApp,
   SpaceEntity,
+  UserEntity,
 } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
@@ -17,18 +18,18 @@ export const finishAuth = (type: AppIdentifier, values: OauthValues) => {
 
 const createSource = async (type: AppIdentifier, values: OauthValues) => {
   console.log('createSource', values)
+
   if (!values.token) {
     throw new Error(`No token returned ${JSON.stringify(values)}`)
   }
 
-  // temporary fix
-  if ((type as any) === 'gdrive') {
-    type = 'drive'
-  }
-
+  const user = await getRepository(UserEntity).findOne({})
+  const space = await getRepository(SpaceEntity).findOne({ where: { id: user.activeSpace } })
   const app: AppBit = {
     target: 'app',
-    spaces: [await getRepository(SpaceEntity).findOne(1)], // todo: we need to receive space id instead of hard codding it
+    // todo: we need to receive space id instead of hard codding it
+    spaces: [space],
+    spaceId: space.id,
     identifier: type,
     token: values.token,
     data: {

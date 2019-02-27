@@ -49,7 +49,7 @@ export class AppsStore {
     () => always(this._apps),
     async (_, { sleep, setValue }) => {
       setValue(false)
-      await sleep(32)
+      await sleep(64)
       return true
     },
   )

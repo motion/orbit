@@ -1,11 +1,21 @@
-import { sleep } from '@mcro/black';
-import { List, useActiveApps, useActiveSpace, useActiveSyncAppsWithDefinition } from '@mcro/kit';
-import { Icon, View } from '@mcro/ui';
-import * as React from 'react';
-import { OrbitAppInfo } from '../../components/OrbitAppInfo';
-import { addSource } from '../../helpers/addAppClickHandler';
-import { AppProps } from '../AppProps';
-import { orbitApps } from '../orbitApps';
+import {
+  AppDefinition,
+  List,
+  useActiveApps,
+  useActiveSpace,
+  useActiveSyncAppsWithDefinition,
+} from '@mcro/kit'
+import * as React from 'react'
+import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { AppProps } from '../AppProps'
+import { orbitApps } from '../orbitApps'
+
+function getFeatures(def: AppDefinition) {
+  const hasSync = !!def.sync
+  const hasClient = !!def.app
+  const titles = [hasSync ? 'Sync' : '', hasClient ? 'Client' : ''].filter(Boolean)
+  return titles.join(', ')
+}
 
 export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
@@ -36,34 +46,27 @@ export function AppsIndex(_props: AppProps) {
         })),
 
         ...allSourceDefinitions.map(def => ({
-          group: 'Add Source',
+          group: 'App Store',
           title: def.name,
           icon: def.icon,
-          onClick:
-            !def.setup &&
-            (async e => {
-              e.preventDefault()
-              e.stopPropagation()
-              await sleep(700)
-              addSource(def)
-            }),
-          after: def.setup ? null : (
-            <View marginTop={4}>
-              <Icon size={12} opacity={0.5} name="uilink6" />
-            </View>
-          ),
-          appConfig: def.setup
-            ? {
-                identifier: 'apps',
-                subId: def.id,
-                viewType: 'setup' as 'setup',
-              }
-            : {
-                identifier: 'message',
-                viewType: 'main' as 'main',
-                icon: def.icon,
-                title: `Opening private authentication for ${def.name}...`,
-              },
+          subtitle: getFeatures(def),
+          appConfig: {
+            identifier: 'apps',
+            subType: 'add-app',
+            subId: def.id,
+          },
+          //  def.setup
+          //   ? {
+          //       identifier: 'apps',
+          //       subId: def.id,
+          //       viewType: 'setup' as 'setup',
+          //     }
+          //   : {
+          //       identifier: 'message',
+          //       viewType: 'main' as 'main',
+          //       icon: def.icon,
+          //       title: `Opening private authentication for ${def.name}...`,
+          //     },
         })),
       ]}
     />

@@ -164,13 +164,15 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
   const activeApps = paneManagerStore.panes.map(pane => ({
     id: pane.id,
-    appId: pane.type,
+    identifier: pane.type,
   }))
 
   const staticApps = orbitStaticApps.map(app => ({
     id: app.id,
-    appId: app.id,
+    identifier: app.id,
   }))
+
+  console.log('apps', activeApps, staticApps)
 
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>

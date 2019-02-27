@@ -25,10 +25,10 @@ export class AppEntity extends BaseEntity {
   @Column()
   identifier?: AppIdentifier | string
 
-  @Column()
+  @Column({ default: '' })
   sourceIdentifier?: string
 
-  @Column()
+  @Column({ default: '' })
   token?: string
 
   @ManyToMany(() => SpaceEntity, space => space.apps)
@@ -44,7 +44,7 @@ export class AppEntity extends BaseEntity {
   @Column()
   name?: string
 
-  @Column()
+  @Column({ default: '' })
   itemType?: ItemType
 
   @Column({ type: 'simple-json', default: '[]' })

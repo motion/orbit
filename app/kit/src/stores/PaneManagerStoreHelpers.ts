@@ -12,7 +12,6 @@ export const settingsPane = {
 }
 
 export const defaultPanes: PaneManagerPane[] = [
-  { id: 'sources', name: 'Sources', type: 'sources', isHidden: true, keyable: true },
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
   { id: 'apps', name: 'Apps', type: 'apps' },

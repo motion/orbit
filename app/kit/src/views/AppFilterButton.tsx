@@ -7,7 +7,7 @@ import { Icon } from './Icon'
 export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFilterStore }) {
   const stores = useStores()
   const queryFilterStore = props.queryFilterStore || stores.queryStore.queryFilters
-  const { /* hasSourceFilters,  */ sourceFilters, sourceFilterToggler } = queryFilterStore
+  const { /* hasAppFilters,  */ appFilters, sourceFilterToggler } = queryFilterStore
   return (
     <Popover
       openOnClick
@@ -19,23 +19,23 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
       themeName="tooltip"
       target={
         <BarButtonSmall icon="funnel">
-          {/* {hasSourceFilters ? sourceFilters.filter(x => x.active).length : 'All'} */}
+          {/* {hasAppFilters ? appFilters.filter(x => x.active).length : 'All'} */}
         </BarButtonSmall>
       }
     >
       <Col {...props}>
-        {!sourceFilters.length && (
+        {!appFilters.length && (
           <View padding={20} alignItems="center" justifyContent="center">
             <Text>No data sources.</Text>
           </View>
         )}
-        {sourceFilters.map(filter => {
+        {appFilters.map(filter => {
           return (
             <ListItem
               key={filter.id}
               width={200}
               onClick={sourceFilterToggler(filter)}
-              icon={filter.source}
+              icon={filter.app}
               titleProps={{
                 fontWeight: 300,
               }}

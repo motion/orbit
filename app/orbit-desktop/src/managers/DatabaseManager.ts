@@ -19,6 +19,9 @@ export class DatabaseManager {
     // connect models next
     log.info('Connecting models...')
     await connectModels(Entities)
+
+    await sleep(100)
+
     log.info('Connected models...')
 
     // TODO typeorm needs a patch

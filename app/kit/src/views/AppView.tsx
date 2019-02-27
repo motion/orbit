@@ -57,7 +57,7 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores, version } = useApp(props.identifier, props.id)
+    const { views, appStore, provideStores } = useApp(props.identifier, props.id)
     const AppViewAlt = useAppView(props.identifier, props.viewType as any)
     const AppView = views[props.viewType] || AppViewAlt
 
@@ -74,7 +74,7 @@ export const AppView = memoIsEqualDeep(
           {before || null}
           <View position="relative" overflow="hidden" flex={1}>
             {inside}
-            <AppView key={version} appStore={appStore} {...props} />
+            <AppView appStore={appStore} {...props} />
           </View>
           {after || null}
         </Contents>

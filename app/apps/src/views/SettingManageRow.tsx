@@ -1,9 +1,8 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog, useAppInfo, useJobs } from '@mcro/kit'
+import { showConfirmDialog, useAppInfo, useJobs, WhitelistManager } from '@mcro/kit'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand, AppRemoveCommand } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
-import { WhitelistManager } from '../WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 
 const handleRefresh = async (appId: number) => {

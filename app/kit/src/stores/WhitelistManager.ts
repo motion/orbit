@@ -34,6 +34,9 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
       ensure('is updated', !isEqual(next, this.props.app))
       save(AppModel, next)
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   updateValues(cb) {

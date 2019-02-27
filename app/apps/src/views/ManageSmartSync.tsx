@@ -13,7 +13,7 @@ export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any
         <label style={{ flexFlow: 'row' }}>
           <CheckboxReactive
             onChange={whitelist.toggleActive}
-            checked={whitelist.getIsWhitelisting}
+            isActive={whitelist.getIsWhitelisting}
           />
           <HorizontalSpace />
           <Text>Smart sync</Text>

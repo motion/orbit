@@ -29,7 +29,7 @@ export function SlackSettings(props: AppProps) {
   // load and set channels when app changes
   useEffect(
     () => {
-      if (!app) return null
+      if (!app) return
       // for some reason we can get any app here, so filter out everything except slack
       if (app.identifier !== 'slack') return
 

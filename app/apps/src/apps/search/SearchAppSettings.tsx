@@ -1,8 +1,8 @@
+import { AppProps } from '@mcro/kit'
 import { Button, FormRow, HorizontalSpace, Input, Row, SubTitle } from '@mcro/ui'
 import React from 'react'
-import { SearchApp } from './types'
 
-export function SearchAppSettings(_: { app: SearchApp }) {
+export function SearchAppSettings(_: AppProps) {
   return (
     <>
       <SubTitle>Filters</SubTitle>

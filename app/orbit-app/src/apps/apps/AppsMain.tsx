@@ -46,4 +46,6 @@ function AppsMainAddApp(props: { identifier: string }) {
   )
 }
 
-const SubItem = (props: ButtonProps) => <Button chromeless {...props} />
+function SubItem(props: ButtonProps) {
+  return <Button chromeless {...props} />
+}

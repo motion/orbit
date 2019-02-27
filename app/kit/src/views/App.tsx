@@ -22,7 +22,7 @@ function AppContainerInner(props: AppElements) {
   const { appsStore } = useStoresSimple()
 
   if (!identifier || !id) {
-    throw new Error('Internal bug, we didnt set context id + identifier')
+    console.error('Internal bug, we didnt set context id + identifier')
   }
 
   useEffect(() => {

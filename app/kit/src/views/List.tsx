@@ -6,6 +6,7 @@ import {
   ProvideSelectionStore,
   SelectableList,
   SelectableListProps,
+  SelectionStore,
   SubTitle,
   Text,
   useSelectionStore,
@@ -24,9 +25,6 @@ import { ListItem, OrbitListItemProps } from './ListItem'
 export type Item = Bit | OrbitListItemProps
 
 export function toListItemProps(props: any): OrbitListItemProps {
-  if (!props) {
-    debugger
-  }
   if (props.target) {
     return { item: props }
   }
@@ -76,12 +74,13 @@ export function List(rawProps: ListProps) {
   const selectableProps = useContext(SelectionContext)
   const itemsRef = useRef([])
   itemsRef.current = items
-  let selectionStore
+  let selectionStore: SelectionStore | null = null
+  const selectionStoreRef = useRef<SelectionStore | null>(null)
 
   useEffect(
     () => {
       return shortcutStore.onShortcut(shortcut => {
-        if (!selectionStore.isActive) {
+        if (selectionStore && !selectionStore.isActive) {
           return false
         }
         switch (shortcut) {
@@ -118,8 +117,8 @@ export function List(rawProps: ListProps) {
       if (onSelect) {
         onSelect(index, appConfig, eventType)
       }
-      if (selectionStore) {
-        selectionStore.setSelected(index, eventType)
+      if (selectionStoreRef.current) {
+        selectionStoreRef.current.setSelected(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, appConfig, eventType)
@@ -147,6 +146,7 @@ export function List(rawProps: ListProps) {
     onSelect: onSelectInner,
     isActive,
   })
+  selectionStoreRef.current = selectionStore
 
   const hasItems = !!items.length
 

@@ -35,7 +35,7 @@ export function AppsIndex(_props: AppProps) {
           group: 'Apps',
           title: app.definition.name,
           subtitle: <OrbitAppInfo {...app} />,
-          icon: app.definition.icon,
+          icon: app.definition.id,
           iconBefore: true,
           total: sourceAppInfo.length,
           appConfig: {
@@ -48,7 +48,7 @@ export function AppsIndex(_props: AppProps) {
         ...allSourceDefinitions.map(def => ({
           group: 'App Store',
           title: def.name,
-          icon: def.icon,
+          icon: def.id,
           subtitle: getFeatures(def),
           appConfig: {
             identifier: 'apps',

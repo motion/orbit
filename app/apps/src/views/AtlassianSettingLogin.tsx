@@ -29,6 +29,7 @@ export function AtlassianSettingLogin(props: Props) {
     target: 'app',
     identifier: props.identifier as 'confluence',
     token: null,
+    data: (props.app && props.app.data) || {},
   })
   const [credentials, setCredentials] = React.useState(
     (app.data.values && app.data.values.credentials) || {

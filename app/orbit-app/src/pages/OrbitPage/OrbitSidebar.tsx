@@ -52,7 +52,7 @@ export default memo(function OrbitSidebar() {
                 hasMain={hasMain}
                 sidebarStore={sidebarStore}
                 id={pane.id}
-                appId={pane.type}
+                identifier={pane.type}
               />
             )
           })}
@@ -94,12 +94,12 @@ const SidebarContainer = gloss(Absolute, {
 
 const SidebarSubPane = memo(function SidebarSubPane(props: {
   id: string
-  appId: string
+  identifier: string
   sidebarStore: SidebarStore
   hasMain: boolean
 }) {
   const { orbitStore } = useStores()
-  const { id, appId, sidebarStore, hasMain } = props
+  const { id, identifier, sidebarStore, hasMain } = props
 
   const handleAppRef = state => {
     if (isEqual(state, sidebarStore.indexViews[id])) return
@@ -118,11 +118,11 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
         <AppView
           key={id}
           id={id}
-          identifier={appId}
+          identifier={identifier}
           viewType="index"
           ref={handleAppRef}
-          before={<OrbitToolBarHeight appId={appId} />}
-          after={<OrbitStatusBarHeight appId={appId} />}
+          before={<OrbitToolBarHeight identifier={identifier} />}
+          after={<OrbitStatusBarHeight identifier={identifier} />}
           inside={<BorderRight />}
         />
       </ProvideSelectionContext>

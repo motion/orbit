@@ -6,7 +6,7 @@ export function AppSubView({
   appConfig,
 }: Pick<AppViewProps, 'appConfig' | 'viewType'>) {
   if (!appConfig.identifier) {
-    console.warn('no app id given')
+    console.warn('no app id given', appConfig)
     return null
   }
 

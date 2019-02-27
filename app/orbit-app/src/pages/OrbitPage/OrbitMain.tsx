@@ -12,23 +12,23 @@ export const OrbitMain = memo(function OrbitMain() {
   return (
     <>
       {paneManagerStore.panes.map(pane => (
-        <OrbitMainSubPane key={pane.id} id={pane.id} appId={pane.type} />
+        <OrbitMainSubPane key={pane.id} id={pane.id} identifier={pane.type} />
       ))}
     </>
   )
 })
 
-type AppPane = { id: string; appId: string }
+type AppPane = { id: string; identifier: string }
 
-const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
+const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
   const { sidebarStore, paneManagerStore } = useStoresSimple()
   const { appsStore } = useStores()
-  const { hasMain } = appsStore.getViewState(appId)
+  const { hasMain } = appsStore.getViewState(identifier)
 
   const left = useReaction(
     () => {
       // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
-      const { hasIndex } = appsStore.getViewState(appId)
+      const { hasIndex } = appsStore.getViewState(identifier)
       const isActive = paneManagerStore.activePaneLowPriority.id === id
       if (isActive) {
         return hasIndex ? sidebarStore.width : 0
@@ -45,13 +45,13 @@ const OrbitMainSubPane = memo(({ appId, id }: AppPane) => {
 
   return (
     <SubPane left={left} id={id} fullHeight>
-      <OrbitPageMainView id={id} appId={appId} />
+      <OrbitPageMainView id={id} identifier={identifier} />
     </SubPane>
   )
 })
 
 // separate view prevents big re-renders
-const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
+const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
   const { orbitStore } = useStores()
   const appConfig = orbitStore.activeConfig[id] || {}
   return (
@@ -59,11 +59,11 @@ const OrbitPageMainView = memo(({ appId, id }: AppPane) => {
       <AppView
         key={JSON.stringify(appConfig)}
         id={id}
-        identifier={appId}
+        identifier={identifier}
         viewType="main"
         appConfig={appConfig}
-        before={<OrbitToolBarHeight appId={appId} />}
-        after={<OrbitStatusBarHeight appId={appId} />}
+        before={<OrbitToolBarHeight identifier={identifier} />}
+        after={<OrbitStatusBarHeight identifier={identifier} />}
       />
     </OrbitMainContainer>
   )

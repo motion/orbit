@@ -8,8 +8,8 @@ import { useStores } from '../../hooks/useStores'
 const toolbarHeight = 30
 const minHeight = 3
 
-export const OrbitToolBarHeight = ({ appId }: { appId: string }) => {
-  const { views } = useApp(appId)
+export const OrbitToolBarHeight = ({ identifier }: { identifier: string }) => {
+  const { views } = useApp(identifier)
   const height = views.toolBar ? toolbarHeight : minHeight
   return <div style={{ height }} />
 }

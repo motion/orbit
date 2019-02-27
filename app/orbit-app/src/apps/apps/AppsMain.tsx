@@ -5,6 +5,8 @@ import { AppsMainManage } from './AppsMainManage'
 import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMain(props: AppProps) {
+  console.log('wut', props.appConfig)
+
   if (!props.appConfig) {
     return <AppsMainManage />
   }

@@ -22,7 +22,7 @@ export const ShareMenu = memo(function ShareMenu() {
             {
               id: `app-${app.id}`,
               title: app.name,
-              icon: `orbit-${app.appId}`,
+              icon: `orbit-${app.identifier}`,
               subtitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction)

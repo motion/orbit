@@ -17,13 +17,11 @@ export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
-  const sourceInfo = useActiveAppsWithDefinition()
+  const sourceAppInfo = useActiveAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
   }
-
-  log(sourceInfo)
 
   const results: OrbitListItemProps[] = [
     {
@@ -33,22 +31,23 @@ export function AppsIndex(_props: AppProps) {
       icon: 'orbit-apps-full',
       iconBefore: true,
       appConfig: {
-        appId: 'apps',
+        identifier: 'apps',
         subType: 'manage-apps',
       },
     },
 
-    ...sourceInfo.map(app => ({
+    ...sourceAppInfo.map(app => ({
       group: 'Sources',
       // TODO once we get rid of Source model we can remove this and just use id
       subId: app.app.id,
       subType: app.definition.id,
-      appId: 'sources',
+      identifier: 'sources',
       title: app.definition.name,
       subtitle: <OrbitAppInfo {...app} />,
       icon: app.definition.icon,
       iconBefore: true,
-      total: sourceInfo.length,
+      total: sourceAppInfo.length,
+      poop: 1,
     })),
 
     ...allSourceDefinitions.map(def => ({
@@ -71,11 +70,11 @@ export function AppsIndex(_props: AppProps) {
       ),
       appConfig: def.sync.setup
         ? {
-            appId: def.id,
+            identifier: def.id,
             viewType: 'setup' as 'setup',
           }
         : {
-            appId: 'message',
+            identifier: 'message',
             viewType: 'main' as 'main',
             title: `Opening private authentication for ${def.name}...`,
           },

@@ -7,7 +7,7 @@ import {
   ThemeContext,
   ThemeObject,
   View,
-  ViewProps,
+  ViewPropsStrict,
 } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
@@ -44,7 +44,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = ViewProps &
+export type ListItemProps = ViewPropsStrict &
   ListItemHide &
   ListItemDisplayProps & {
     location?: React.ReactNode

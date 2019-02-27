@@ -23,7 +23,7 @@ export { InlineBlock } from './blocks/InlineBlock'
 export { InlineFlex } from './blocks/InlineFlex'
 export { Row } from './blocks/Row'
 export { SimpleText } from './blocks/SimpleText'
-export { View, ViewProps } from './blocks/View'
+export { View, ViewProps, ViewPropsStrict } from './blocks/View'
 // configureGloss
 export { configureGloss } from './config'
 export { gloss, GlossView } from './gloss'

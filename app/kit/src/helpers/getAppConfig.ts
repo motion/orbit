@@ -55,7 +55,7 @@ export function getSourceAppConfig(appDef: AppDefinition, model: ResolvableModel
     icon: appDef.icon,
     iconLight: appDef.iconLight,
     title: model.target === 'bit' ? model.title : model['name'],
-    appId: model ? modelTargetToAppType(model) : 'sources',
+    identifier: model ? modelTargetToAppType(model) : 'sources',
     viewConfig: appDef.defaultViewConfig,
   }
 }

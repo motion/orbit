@@ -3,6 +3,7 @@ import React from 'react'
 import { Conversation } from '../bit/BitConversation'
 import { ConversationItem } from '../bit/BitConversationItem'
 import { Readability } from '../bit/Readability'
+import { ListItemPerson } from './ListItemPerson'
 
 export const itemViewsApp = {
   conversation: Conversation,
@@ -20,4 +21,5 @@ export const itemViewsListItem = {
   text: ({ item }) => <Readability {...item} />,
   task: ({ item }) => <Task {...item} />,
   thread: ({ item }) => <Thread {...item} />,
+  person: ListItemPerson,
 }

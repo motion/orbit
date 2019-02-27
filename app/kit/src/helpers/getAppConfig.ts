@@ -8,7 +8,7 @@ export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig 
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
-      const appDef = config.getApps().find(x => x.id === item.identifier)
+      const appDef = config.getApps().find(x => x.id === item.appIdentifier)
       return getSourceAppConfig(appDef, item)
     }
     if (item.target === 'person-bit') {
@@ -30,7 +30,7 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
     title: typeof props.title === 'string' ? props.title : undefined,
     icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
-    subId: props.subId,
+    subId: `${props.subId}`,
     ...props.appConfig,
   }
 }

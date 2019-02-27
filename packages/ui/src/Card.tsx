@@ -1,13 +1,11 @@
-import { CSSPropertySet, gloss, Row, View } from '@mcro/gloss'
+import { CSSPropertySet, gloss, View } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
-import { HorizontalSpace } from '.'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Glint } from './effects/Glint'
 import { ConfiguredIcon } from './Icon'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemStore } from './lists/ListItemStore'
-import { PersonRow } from './PersonRow'
 import { DateFormat } from './text/DateFormat'
 import { HighlightText } from './text/HighlightText'
 import { Text } from './text/Text'
@@ -17,16 +15,12 @@ export function Card({
   padding = 8,
   icon,
   location,
-  people,
   preview,
   title,
-  updatedAt,
   afterTitle,
   cardProps,
   children,
   disableShadow,
-  hide,
-  hoverToSelect,
   iconProps,
   inGrid,
   onClick,
@@ -41,21 +35,20 @@ export function Card({
   chromeless,
   activeStyle,
   subtitle,
+  date,
   ...props
 }: ListItemProps) {
   const store = useStore(ListItemStore, props)
   // allow either custom subtitle or resolved one
   const { isSelected } = store
-  const showChildren = typeof children !== 'undefined' && !(hide && hide.body)
-  const hasTitle = !!title && !(hide && hide.title)
-  const hasMeta = !!location && !(hide && hide.meta)
-  const hasPreview = !!preview && !children && !(hide && hide.body)
-  const hasSubtitle = !!subtitle && !(hide && hide.subtitle)
-  const hasDate = !!updatedAt
-  const hasPeople = !!people && !!people.length
+  const showChildren = typeof children !== 'undefined' && !props.hideBody
+  const hasTitle = !!title && !props.hideTitle
+  const hasMeta = !!location && !props.hideMeta
+  const hasPreview = !!preview && !children && !props.hideBody
+  const hasSubtitle = !!subtitle && !props.hideSubtitle
+  const hasDate = !!date
   const hasFourRows =
-    ((hasSubtitle || hasMeta) && hasPeople) ||
-    ((hasSubtitle || hasPeople) && titleProps && titleProps['ellipse'] !== true)
+    hasSubtitle || hasMeta || (hasSubtitle && titleProps && titleProps['ellipse'] !== true)
   let topPad = 10 as any
   let sidePad = 10 as any
   if (padding) {
@@ -69,16 +62,11 @@ export function Card({
   }
   const dateContent = hasDate && (
     <Text alpha={0.65} size={0.9} ellipse>
-      <DateFormat date={new Date(updatedAt)} nice />
+      <DateFormat date={new Date(date)} nice />
     </Text>
   )
   return (
-    <CardWrap
-      {...hoverToSelect && store.hoverSettler && store.hoverSettler.props}
-      ref={store.setCardWrapRef}
-      {...props}
-      {...isSelected && activeStyle}
-    >
+    <CardWrap ref={store.setCardWrapRef} {...props} {...isSelected && activeStyle}>
       <CardChrome
         isSelected={isSelected}
         borderRadius={borderRadius}
@@ -157,15 +145,7 @@ export function Card({
                   extraProps={props.extraProps}
                 />
               )} */}
-              {hasPeople && (
-                <Row>
-                  <PersonRow people={people} />
-                  {/* to avoid hitting orbit icon */}
-                  <HorizontalSpace />
-                </Row>
-              )}
-
-              {!!icon && !(hide && hide.icon) && (
+              {!!icon && !props.hideIcon && (
                 <ConfiguredIcon
                   name={icon}
                   size={14}

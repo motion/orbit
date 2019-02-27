@@ -11,5 +11,5 @@ export type NLPResponse = {
   startDate: Date
   endDate: Date
   people: string[]
-  sources: string[]
+  apps: string[]
 }

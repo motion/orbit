@@ -47,6 +47,7 @@ export type ListItemDisplayProps = {
 export type ListItemProps = ViewPropsStrict &
   ListItemHide &
   ListItemDisplayProps & {
+    subId?: string | number
     location?: React.ReactNode
     preview?: React.ReactNode
     title?: React.ReactNode

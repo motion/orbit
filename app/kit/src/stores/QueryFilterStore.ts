@@ -140,7 +140,7 @@ export class QueryFilterStore {
     return this.activeSources.map((app, id) => ({
       id,
       type: 'source',
-      source: app.type,
+      app: app.type,
       name: app.name,
       active: Object.keys(this.exclusiveFilters).length ? this.exclusiveFilters[app.type] : false,
     }))
@@ -195,9 +195,9 @@ export class QueryFilterStore {
       const nlp = this.nlpStore.nlp
       ensure('nlp', !!nlp)
       // reset source inactive filters
-      ensure('sources', nlp.sources && !!nlp.sources.length)
+      ensure('sources', nlp.apps && !!nlp.apps.length)
       this.exclusiveFilters = this.activeSources.reduce((acc, app) => {
-        acc[app.type] = nlp.sources.some(x => x === app.type)
+        acc[app.type] = nlp.apps.some(x => x === app.type)
         return acc
       }, {})
     },
@@ -252,7 +252,7 @@ export class QueryFilterStore {
   toggleSourceFilter = (filter: SearchFilter) => {
     this.exclusiveFilters = {
       ...this.exclusiveFilters,
-      [filter.source]: !this.exclusiveFilters[filter.source],
+      [filter.app]: !this.exclusiveFilters[filter.app],
     }
   }
 

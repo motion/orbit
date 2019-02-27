@@ -10,6 +10,13 @@ export function useActions() {
   const actions = useContext(ActionsContext)
   const stores = useStoresSimple()
   const boundActions = (actions as unknown) as ActionsBound<typeof actions>
+
+  // fnCache means we don't generate new actions every time
+  // this fixes bugs where you'd have an inner once(() => fn):
+  //    (stores) => once(function myAction() {})
+  //    without fnCache, this would run over and over
+  const fnCache = new WeakMap()
+
   return new Proxy(boundActions, {
     get(_, key) {
       if (typeof key === 'string') {
@@ -19,7 +26,12 @@ export function useActions() {
         }
         return (...args: any[]) => {
           console.log(`Actions.${key}`, args)
-          return actions[key](stores)(...args)
+          if (fnCache.get(actions[key])) {
+            return fnCache.get(actions[key])(...args)
+          }
+          const res = actions[key](stores)
+          fnCache.set(actions[key], res)
+          return res(...args)
         }
       }
     },

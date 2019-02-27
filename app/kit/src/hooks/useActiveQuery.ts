@@ -1,7 +1,7 @@
 import { useReaction } from '@mcro/use-store'
-import { useStores } from './useStores'
+import { useStoresSimple } from './useStores'
 
-export function useActiveQuery(): string {
-  const { appStore } = useStores()
+export function useActiveQuery() {
+  const { appStore } = useStoresSimple()
   return useReaction(() => appStore.activeQuery) || ''
 }

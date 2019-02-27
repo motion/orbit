@@ -19,13 +19,13 @@ function AppContainerInner(props: AppElements) {
   }
 
   const { id, identifier } = useContext(AppLoadContext)
-  const { appsStore } = useStoresSimple()
-
   if (!identifier || !id) {
     console.error('Internal bug, we didnt set context id + identifier')
   }
 
-  useEffect(() => {
+  const { appsStore } = useStoresSimple()
+
+  function setupApp() {
     appsStore.setApp({
       id,
       identifier,
@@ -37,7 +37,18 @@ function AppContainerInner(props: AppElements) {
       },
       provideStores: props.provideStores,
     })
-  }, [])
+  }
+
+  // hmr, setApp
+  useEffect(() => {
+    if (window['RECENT_HMR']) {
+      console.log('[hmr app]', identifier)
+      setupApp()
+    }
+  })
+
+  // mount, setApp
+  useEffect(setupApp, [])
 
   return null
 }

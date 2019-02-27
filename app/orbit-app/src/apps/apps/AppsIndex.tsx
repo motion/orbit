@@ -2,8 +2,8 @@ import {
   AppDefinition,
   List,
   useActiveApps,
+  useActiveAppsWithDefinition,
   useActiveSpace,
-  useActiveSyncAppsWithDefinition,
 } from '@mcro/kit'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
@@ -21,7 +21,7 @@ export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
-  const sourceAppInfo = useActiveSyncAppsWithDefinition()
+  const sourceAppInfo = useActiveAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -57,18 +57,6 @@ export function AppsIndex(_props: AppProps) {
             subType: 'add-app',
             subId: def.id,
           },
-          //  def.setup
-          //   ? {
-          //       identifier: 'apps',
-          //       subId: def.id,
-          //       viewType: 'setup' as 'setup',
-          //     }
-          //   : {
-          //       identifier: 'message',
-          //       viewType: 'main' as 'main',
-          //       icon: def.icon,
-          //       title: `Opening private authentication for ${def.name}...`,
-          //     },
         })),
       ]}
     />

@@ -1,6 +1,6 @@
 import { Contents, View } from '@mcro/gloss'
 import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
+import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { useApp } from '../hooks/useApp'
 import { useAppView } from '../hooks/useAppView'
@@ -45,6 +45,9 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
   )
 }
 
+let x = new Set()
+window['x'] = x
+
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
@@ -54,46 +57,36 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores } = useApp(props.identifier, props.id)
+    const { views, appStore, provideStores, version } = useApp(props.identifier, props.id)
     const AppViewAlt = useAppView(props.identifier, props.viewType as any)
     const AppView = views[props.viewType] || AppViewAlt
 
     // handle ref
     useHandleAppViewRef(ref, rootRef)
 
-    const appElement = useMemo(
-      () => {
-        if (!AppView) {
-          return null
-        }
-
-        const appElement = (
-          <Contents ref={rootRef}>
-            {before || null}
-            <View position="relative" overflow="hidden" flex={1}>
-              {inside}
-              <AppView appStore={appStore} {...props} />
-            </View>
-            {after || null}
-          </Contents>
-        )
-
-        // small rendering for index views
-        if (props.viewType === 'index') {
-          return <ItemPropsProviderSmall>{appElement}</ItemPropsProviderSmall>
-        }
-
-        // regular rendering for others
-        return appElement
-      },
-      // never update, once we have our stuff
-      [appStore, AppView],
-    )
-
-    if (!appElement) {
+    if (!AppView) {
       return null
     }
 
-    return <ProvideStores stores={{ ...provideStores, appStore }}>{appElement}</ProvideStores>
+    function getAppElement() {
+      const appElement = (
+        <Contents ref={rootRef}>
+          {before || null}
+          <View position="relative" overflow="hidden" flex={1}>
+            {inside}
+            <AppView key={version} appStore={appStore} {...props} />
+          </View>
+          {after || null}
+        </Contents>
+      )
+      // small rendering for index views
+      if (props.viewType === 'index') {
+        return <ItemPropsProviderSmall>{appElement}</ItemPropsProviderSmall>
+      }
+      // regular rendering for others
+      return appElement
+    }
+
+    return <ProvideStores stores={{ ...provideStores, appStore }}>{getAppElement()}</ProvideStores>
   }),
 )

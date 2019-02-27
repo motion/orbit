@@ -9,6 +9,7 @@ type LoadedApp = {
   views: AppViews
   provideStores?: any
   appStore?: AppStore
+  version: number
 }
 
 type AppsWithDefinitions = {
@@ -22,20 +23,19 @@ export class AppsStore {
   definitions: { [key: string]: AppDefinition } = shallow({})
 
   get allIds() {
-    const next = [...new Set([...Object.keys(this.apps), ...Object.keys(this.definitions)])]
-    return next
+    return [...new Set([...Object.keys(this._apps), ...Object.keys(this.definitions)])]
   }
 
   // because these load in waterfall, debounce
-  apps = react(
-    () => always(this.allIds),
+  apps: AppsWithDefinitions = react(
+    () => always(this.allIds.map(id => this._apps[id])),
     async (_, { sleep }) => {
       await sleep(16)
-      const res: AppsWithDefinitions = {}
+      const res = {}
       for (const key of this.allIds) {
         res[key] = { ...this._apps[key], definition: this.definitions[key] }
       }
-      return this._apps
+      return res
     },
     {
       defaultValue: {},
@@ -43,7 +43,13 @@ export class AppsStore {
   )
 
   setApp = (app: { identifier: string; id: string; views: AppViews; provideStores?: Object }) => {
-    this._apps[app.id] = app
+    const prev = this._apps[app.id]
+    this._apps[app.id] = {
+      // merge to prevent overwrite appStore
+      ...prev,
+      ...app,
+      version: prev ? prev.version + 1 : 0,
+    }
   }
 
   setAppStore = (id: string, appStore: AppStore) => {
@@ -53,10 +59,6 @@ export class AppsStore {
   setAppDefinition(id: string, definition: AppDefinition) {
     this.definitions[id] = definition
   }
-
-  // setSettingsView(id: string, settingsView: AppViews['settings']) {
-  //   this.appViews[id] = { ...this.appViews[id], settings: settingsView }
-  // }
 
   getApp(identifier: string, id: string) {
     let appState = (id && this.apps[id]) || this.getAppByIdentifier(identifier)

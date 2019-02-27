@@ -55,22 +55,19 @@ function AppLoader(props: AppLoaderProps) {
 
 function AppLoadView({ id, identifier, store }: AppLoaderProps) {
   const appDefinition = getAppDefinition(identifier)
-  const AppApp = appDefinition.app
-
-  // this branch should never change it's static
-  if (!AppApp) {
-    return null
-  }
-
+  const appAppRef = useRef(appDefinition.app)
+  const AppApp = appAppRef.current
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {
-    // if (AppView.settings) {
-    //   appsStore.addSettingsView(id, AppView.settings)
-    // }
+    if (!AppApp) return
     store.setAppStore(id, appStore)
   }, [])
+
+  if (!AppApp) {
+    return null
+  }
 
   if (typeof AppApp === 'function') {
     return (

@@ -55,9 +55,7 @@ export class Syncer {
         }
       } else {
         this.subscription = Mediator.observeMany(AppModel, {
-          // TODO @umed type
-          // @ts-ignore
-          args: { where: { type: this.options.type } },
+          args: { where: { identifier: this.options.appIdentifier } },
         }).subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {

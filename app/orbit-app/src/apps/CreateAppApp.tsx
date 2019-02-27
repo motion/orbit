@@ -63,8 +63,7 @@ function CreateAppMain(props: AppProps) {
       spaceId: activeSpace.id,
     }
     console.log('creating new app', app)
-    // TODO @umed type
-    save(AppModel, app as any)
+    save(AppModel, app)
     Actions.previousTab()
   }
 

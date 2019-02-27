@@ -51,8 +51,6 @@ export function AtlassianSettingLogin(props: Props) {
     // send command to the desktop
     setStatus(Statuses.LOADING)
     const result = await command(AppSaveCommand, {
-      // TODO @umed
-      // @ts-ignore
       app,
     })
     // update status on success of fail

@@ -65,8 +65,7 @@ export default observer(function SpaceEditView(props: Props) {
       //   ],
       // },
     }
-    // TODO @umed type
-    await save(AppModel, listsApp as any)
+    await save(AppModel, listsApp)
 
     store.values = { name: '', colors: [] }
     AppActions.clearPeek()

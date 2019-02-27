@@ -63,7 +63,6 @@ export class PersonSyncer {
     await getManager().transaction(async manager => {
       await manager.save(BitEntity, insertedPeople, { chunk: 100 })
       await manager.save(BitEntity, updatedPeople, { chunk: 100 })
-      // TODO @umed i may have broke this type
       await manager.remove(BitEntity, removedPeople as any, { chunk: 100 })
     })
     this.log.timer('save people and person bits in the database')

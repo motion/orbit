@@ -119,8 +119,6 @@ export class BitSyncer {
           await manager.update(BitEntity, { id: bit.id }, bit)
 
           const dbPeople = await manager.getRepository(BitEntity).find({
-            // TODO @umed type complains for me
-            // @ts-ignore
             select: {
               id: true,
             },

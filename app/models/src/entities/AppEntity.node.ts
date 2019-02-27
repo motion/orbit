@@ -10,20 +10,20 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { AppData } from '../interfaces/app-data/AppData'
-import { AppIdentifier } from '../interfaces/AppBit'
+import { AppIdentifier, BaseAppBit } from '../interfaces/AppBit'
 import { ItemType } from '../interfaces/ItemType'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
-export class AppEntity extends BaseEntity {
+export class AppEntity extends BaseEntity implements BaseAppBit {
   target: 'app' = 'app'
 
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column()
-  identifier?: AppIdentifier | string
+  @Column({ type: String })
+  identifier?: AppIdentifier
 
   @Column({ default: '' })
   sourceIdentifier?: string

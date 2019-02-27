@@ -32,6 +32,7 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
         draft.data.values = values
       })
       ensure('is updated', !isEqual(next, this.props.app))
+      console.warn('updating app', next)
       save(AppModel, next)
     },
     {

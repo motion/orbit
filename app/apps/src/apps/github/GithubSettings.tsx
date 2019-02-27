@@ -1,4 +1,4 @@
-import { loadMany, save, useModel } from '@mcro/bridge'
+import { loadMany, useModel } from '@mcro/bridge'
 import { AppProps, WhitelistManager } from '@mcro/kit'
 import { AppModel, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
@@ -9,7 +9,7 @@ import { SettingManageRow } from '../../views/SettingManageRow'
 
 export default function GithubSettings(props: AppProps) {
   const { subId } = props.appConfig
-  const [app] = useModel(AppModel, { where: { id: +subId } })
+  const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,
     getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
@@ -60,10 +60,7 @@ export default function GithubSettings(props: AppProps) {
           ...app.data,
           repositories: freshApiRepositories,
         }
-        save(AppModel, {
-          id: app.id,
-          data: app.data,
-        })
+        updateApp(app)
       })
     },
     [app && app.id],

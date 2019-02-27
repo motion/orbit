@@ -1,4 +1,4 @@
-import { loadMany, save, useModel } from '@mcro/bridge'
+import { loadMany, useModel } from '@mcro/bridge'
 import { AppProps, WhitelistManager } from '@mcro/kit'
 import { AppModel, SlackChannelModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
@@ -10,7 +10,7 @@ import { SettingManageRow } from '../../views/SettingManageRow'
 
 export function SlackSettings(props: AppProps) {
   const { subId } = props.appConfig
-  const [app] = useModel(AppModel, { where: { id: +subId } })
+  const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,
     getAll: () => (channels || []).map(channel => channel.id),
@@ -69,10 +69,7 @@ export function SlackSettings(props: AppProps) {
           ...app.data,
           channels: freshApiChannels,
         }
-        save(AppModel, {
-          id: app.id,
-          data: app.data,
-        })
+        updateApp(app)
       })
     },
     [app && app.id],

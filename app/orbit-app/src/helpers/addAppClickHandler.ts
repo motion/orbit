@@ -4,11 +4,9 @@ import { AppDefinition } from '@mcro/kit'
 import { OpenCommand, SetupProxyCommand } from '@mcro/models'
 import { memoize } from 'lodash'
 
-export const addAppClickHandler = memoize((app: AppDefinition) => async (e: MouseEvent) => {
+export const addAppClickHandler = memoize((app: AppDefinition) => async (e: any) => {
   e.stopPropagation()
   e.preventDefault()
-  // ...otherwise we open browser to oauth
-  console.log('opening...')
   addSource(app)
 })
 

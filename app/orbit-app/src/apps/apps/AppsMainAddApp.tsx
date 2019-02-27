@@ -1,20 +1,33 @@
-import { getAppDefinition } from '@mcro/kit'
+import { AppView, getAppDefinition } from '@mcro/kit'
 import { Button, ButtonProps, Row, Section, SubTitle, Theme } from '@mcro/ui'
 import React from 'react'
+import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'
 import { TitleRow } from '../../views/TitleRow'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const def = getAppDefinition(props.identifier)
+  const hasSetup = !!def.setup
 
   return (
     <Section>
       <TitleRow
         bordered
         after={
-          <Theme name="selected">
-            <Button icon="add">Install</Button>
-          </Theme>
+          <>
+            {!hasSetup && def.sync && (
+              <Theme name="action">
+                <Button icon="lock" onClick={addAppClickHandler(def)}>
+                  Authenticate and add
+                </Button>
+              </Theme>
+            )}
+            {!def.sync && (
+              <Theme name="selected">
+                <Button icon="add">Install</Button>
+              </Theme>
+            )}
+          </>
         }
       >
         {def.name}
@@ -25,6 +38,12 @@ export function AppsMainAddApp(props: { identifier: string }) {
           <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
         </Row>
       </SubTitle>
+
+      {hasSetup && (
+        <SubSection title="Setup">
+          <AppView identifier={props.identifier} viewType="setup" />
+        </SubSection>
+      )}
 
       <SubSection title="Description">
         Features Fuzzy-matching autocomplete to create new file relative to existing path Create new

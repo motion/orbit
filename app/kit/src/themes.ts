@@ -195,6 +195,15 @@ export const themes = {
       borderColor: orbitActiveBg,
     }),
   },
+  action: {
+    ...Theme.fromStyles({
+      iconFill: '#fff',
+      background: '#449878',
+      // backgroundHover: '#449878',
+      // backgroundActive: '#449878',
+      color: '#fff',
+    }),
+  },
   // 'light-selected': {
   //   ...Theme.fromStyles({
   //     background: [0, 0, 0, 0.015],

@@ -35,7 +35,7 @@ export function AppsIndex(_props: AppProps) {
           group: 'Apps',
           title: app.definition.name,
           subtitle: <OrbitAppInfo {...app} />,
-          icon: app.definition.id,
+          icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}`,
           iconBefore: true,
           total: sourceAppInfo.length,
           appConfig: {

@@ -43,6 +43,7 @@ app/oracle/Index
 app/oracle/orbit.xcodeproj/project.xcworkspace
 app/oracle/orbit.xcodeproj/xcuserdata
 app/oracle/Oracle.xcworkspace/xcuserdata/
+app/oracle/Oracle.xcodeproj/xcshareddata/
 app/oracle/Test-Output/*.png
 app/oracle-training/CharacterGenerator/CharacterGenerator.xcodeproj/project.xcworkspace/xcuserdata
 app/oracle-training/CharacterGenerator/Output/*

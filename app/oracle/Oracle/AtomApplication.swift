@@ -33,7 +33,7 @@ let shouldLogDebug = true
 
 /// Set this to `true` to log the final OCR output for each frame.
 /// Disable for production builds.
-let shouldLogOCR = false
+let shouldLogOCR = true
 
 /// Set this to `true` to save character boxes and other debug images
 /// to the test output directory.
@@ -68,8 +68,8 @@ class AtomApplication: NSObject, NSApplicationDelegate {
         TrayManager.shared.setupTray()
         
         // Testing
-        OCRTester.shared.testScreenshots()
-//            OCRTester.shared.watchBounds(CGRect(x: 0, y: 100, width: 1000, height: 2000))
+//        OCRTester.shared.testScreenshots()
+//        OCRTester.shared.watchBounds(CGRect(x: 0, y: 100, width: 1000, height: 2000))
     }
     
 

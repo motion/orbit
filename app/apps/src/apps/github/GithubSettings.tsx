@@ -1,18 +1,19 @@
-import { loadMany, save } from '@mcro/bridge'
-import { AppSettingsProps } from '@mcro/kit'
-import { AppModel, GithubApp, GithubRepositoryModel } from '@mcro/models'
+import { loadMany, save, useModel } from '@mcro/bridge'
+import { AppProps, WhitelistManager } from '@mcro/kit'
+import { AppModel, GithubRepositoryModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
-import { WhitelistManager } from '../../WhitelistManager'
 
-export default function GithubSettings({ app }: AppSettingsProps<GithubApp>) {
+export default function GithubSettings(props: AppProps) {
+  const { subId } = props.appConfig
+  const [app] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,
     getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
-  }) as WhitelistManager<GithubApp>
+  })
   // setup state
   const [repositories, setRepositories] = useState(null)
   // console.log('repositories', repositories)
@@ -24,6 +25,7 @@ export default function GithubSettings({ app }: AppSettingsProps<GithubApp>) {
   // load and set repositories when app changes
   useEffect(
     () => {
+      if (!app) return
       // for some reason we can get any app here, so filter out everything except github
       if (app.identifier !== 'github') return
       // console.log(app)
@@ -64,7 +66,7 @@ export default function GithubSettings({ app }: AppSettingsProps<GithubApp>) {
         })
       })
     },
-    [app.id],
+    [app && app.id],
   )
 
   return (

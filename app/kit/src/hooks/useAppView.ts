@@ -4,8 +4,8 @@ import { config } from '../configureKit'
 
 export function useAppView(appIdentifier: string, viewType: 'settings' | 'setup') {
   const def = config.getApps().find(x => x.id === appIdentifier)
-  if (!def || !def.sync || !def.sync[viewType]) {
+  if (!def || !def[viewType]) {
     return null
   }
-  return def.sync[viewType]
+  return def[viewType]
 }

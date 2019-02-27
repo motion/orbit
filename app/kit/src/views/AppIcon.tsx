@@ -23,7 +23,7 @@ export function AppIconInner({
   if (!appIcons[props.name]) {
     return null
   }
-  
+
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
@@ -36,9 +36,12 @@ export function AppIconInner({
   const newID = bgLight.replace('#', '')
 
   const matches = iconSrc.match(idReplace)
-  if (!matches || !Array.isArray(matches)) {
-    debugger
+
+  if (!matches) {
+    console.warn('no matches', props)
+    return null
   }
+
   for (const full of matches) {
     const id = full
       .replace(' id="', '')

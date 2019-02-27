@@ -33,14 +33,11 @@ export type AppDefinition = {
   context?: React.Context<any>
   itemType?: ItemType
   app?: FunctionComponent<AppProps>
-  settings?: FunctionComponent<null>
+  settings?: FunctionComponent<AppProps>
+  setup?: FunctionComponent<AppProps>
   appData?: Object
-  sync?: {
-    // TODO remove and just use bit
-    modelType?: 'person-bit' | 'bit'
-    settings?: FunctionComponent<AppSettingsProps<AppBit>>
-    setup?: FunctionComponent<any>
-  }
+  // TODO @umed this is where we can put syncer stuff
+  sync?: Object
   API?: {
     receive(app: AppBit, parentID: number, child: any): any
   }

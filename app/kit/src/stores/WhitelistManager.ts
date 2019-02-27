@@ -1,12 +1,21 @@
 import { save } from '@mcro/bridge'
+import { isEqual } from '@mcro/fast-compare'
 import { AppModel } from '@mcro/models'
-import { react } from '@mcro/use-store'
+import { ensure, react } from '@mcro/use-store'
 import produce from 'immer'
 import { memoize } from 'lodash'
 
 export class WhitelistManager<T extends { data?: { values?: { whitelist?: string[] } } }> {
   props: { app: T; getAll: () => string[] }
-  values: T['data']['values'] = { ...this.props.app.data.values }
+  values: T['data']['values'] = {}
+
+  syncValuesFromProp = react(
+    () => this.props.app,
+    app => {
+      ensure('app', !!app)
+      this.values = { ...this.props.app.data.values }
+    },
+  )
 
   get isWhitelisting() {
     return !this.values.whitelist
@@ -16,16 +25,14 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
     return this.isWhitelisting
   }
 
-  saveSettingOnValuesUpdate = react(
+  persistSetting = react(
     () => this.values,
     values => {
-      save(AppModel, {
-        ...this.props.app,
-        data: {
-          ...this.props.app.data,
-          values,
-        },
+      const next = produce(this.props.app, draft => {
+        draft.data.values = values
       })
+      ensure('is updated', !isEqual(next, this.props.app))
+      save(AppModel, next)
     },
   )
 

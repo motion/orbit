@@ -1,15 +1,16 @@
-import { loadMany, save } from '@mcro/bridge'
-import { AppSettingsProps } from '@mcro/kit'
-import { AppModel, SlackApp, SlackChannelModel } from '@mcro/models'
+import { loadMany, save, useModel } from '@mcro/bridge'
+import { AppProps, WhitelistManager } from '@mcro/kit'
+import { AppModel, SlackChannelModel } from '@mcro/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
-import { WhitelistManager } from '../../WhitelistManager'
 
-export default function SlackSettings({ app }: AppSettingsProps<SlackApp>) {
+export function SlackSettings(props: AppProps) {
+  const { subId } = props.appConfig
+  const [app] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,
     getAll: () => (channels || []).map(channel => channel.id),
@@ -28,6 +29,7 @@ export default function SlackSettings({ app }: AppSettingsProps<SlackApp>) {
   // load and set channels when app changes
   useEffect(
     () => {
+      if (!app) return null
       // for some reason we can get any app here, so filter out everything except slack
       if (app.identifier !== 'slack') return
 
@@ -73,7 +75,7 @@ export default function SlackSettings({ app }: AppSettingsProps<SlackApp>) {
         })
       })
     },
-    [app.id],
+    [app && app.id],
   )
 
   return (

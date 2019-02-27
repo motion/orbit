@@ -6,10 +6,9 @@ export const WebsiteApp: AppDefinition = {
   name: 'Website',
   icon: websiteIcon(),
   itemType: 'task',
-  sync: {
-    settings: WebsiteSetupPane,
-    setup: WebsiteSetupPane,
-  },
+  settings: WebsiteSetupPane,
+  setup: WebsiteSetupPane,
+  sync: {},
 }
 
 function websiteIcon() {

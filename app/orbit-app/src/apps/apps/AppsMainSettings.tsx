@@ -1,6 +1,4 @@
-import { useModel } from '@mcro/bridge'
-import { AppView, useAppView } from '@mcro/kit'
-import { AppModel } from '@mcro/models'
+import { AppView } from '@mcro/kit'
 import * as React from 'react'
 import { AppProps } from '../AppProps'
 import { ManageApps } from './ManageApps'
@@ -14,18 +12,7 @@ export function AppsMainSetup(props: AppProps) {
     return <AppView identifier={props.appConfig.identifier} viewType="setup" {...props} />
   }
 
-  // if (props.appConfig.appId === 'apps') {
-  //   console.log('loading app settings view', props)
-  //   return <AppsMainSettings appId={props.appConfig.subId} />
-  // }
-}
-
-export function AppsMainSettings(props: { appId: string }) {
-  const [app] = useModel(AppModel, { where: { id: +props.appId } })
-  const View = useAppView(props.appId, 'settings')
-  if (!app) {
-    // !todo suspense style loading
-    return null
+  if (props.appConfig.viewType === 'settings') {
+    return <AppView identifier={props.appConfig.identifier} viewType="settings" {...props} />
   }
-  return <View app={app} />
 }

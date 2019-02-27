@@ -5,6 +5,7 @@ import { MergeContext } from '../helpers/MergeContext'
 import { useStores } from '../helpers/useStores'
 import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
+import { SelectEvent } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -46,7 +47,6 @@ class SelectableStore {
     getItems: Function
   }
   listRef = null
-  scrollId = 0
 
   setListRef = ref => {
     this.listRef = ref
@@ -66,9 +66,10 @@ class SelectableStore {
     () => this.props.selectionStore.activeIndex,
     activeIndex => {
       ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
-      ensure('list', !!this.listRef)
+      ensure('has list', !!this.listRef)
       ensure('is active', this.props.selectionStore.isActive)
-      this.scrollId = Math.random()
+      ensure('used key', this.props.selectionStore.selectEvent === SelectEvent.key)
+      this.listRef.scrollToRow(activeIndex)
     },
   )
 }
@@ -93,16 +94,6 @@ export function SelectableList({
     getItems,
   })
   const selectableProps = useContext(SelectableListContext)
-
-  // in an effect because this.listRef.scrollToRow errors if not done outside render
-  useEffect(
-    () => {
-      if (selectableStore.listRef) {
-        selectableStore.listRef.scrollToRow(selectionStore.activeIndex)
-      }
-    },
-    [selectableStore.scrollId],
-  )
 
   useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
@@ -132,7 +123,6 @@ export function SelectableList({
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
       <VirtualList
         items={items}
-        scrollToAlignment="center"
         forwardRef={selectableStore.setListRef}
         onOpen={selectableProps && selectableProps.onSelectItem}
         getItemProps={getItemProps}

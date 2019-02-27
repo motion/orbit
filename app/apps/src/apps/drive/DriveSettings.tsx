@@ -13,6 +13,7 @@ class DriveSettingsStore {
   popularFolders = []
 
   async didMount() {
+    if (!this.service.fetch) return
     const { files } = await this.service.fetch('/files', {
       query: {
         pageSize: 1000,

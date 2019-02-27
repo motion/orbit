@@ -2,8 +2,6 @@ import { Context, createContext } from 'react'
 import { KitStores } from './stores'
 import { AppDefinition } from './types/AppDefinition'
 
-let hasSet = false
-
 type ConfigureOpts = {
   StoreContext?: Context<KitStores>
   getApps: () => AppDefinition[]
@@ -15,9 +13,9 @@ export let config: ConfigureOpts = window['__orbitKitConfig'] || {
 }
 
 export function configureKit(opts: ConfigureOpts) {
-  if (hasSet) throw new Error('Only configure once.')
-  hasSet = true
   Object.assign(config, opts)
-  Object.freeze(config)
-  window['__orbitKitConfig'] = config
+  // for HMR we need to update views as they change
+  if (process.env.NODE_ENV !== 'development') {
+    Object.freeze(config)
+  }
 }

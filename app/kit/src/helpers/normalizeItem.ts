@@ -33,19 +33,6 @@ const normalizers = {
     title: app.name,
     icon: app.identifier,
   }),
-  // todo(nate) make sure this works
-  // 'person-bit': (person: PersonBit): NormalItem => {
-  //   return {
-  //     type: 'person',
-  //     id: person.email,
-  //     title: person.name,
-  //     icon: 'person',
-  //     subtitle: person.email,
-  //     image: last(person.allPhotos as any) || person.photo,
-  //     // createdAt: person.createdAt,
-  //     // updatedAt: person.updatedAt,
-  //   }
-  // },
 }
 
 export const normalizeItem = (model: ResolvableModel): NormalItem => {
@@ -56,8 +43,5 @@ export const normalizeItem = (model: ResolvableModel): NormalItem => {
     console.debug('no normalizer for model', model)
     return model as any
   }
-  const normalizer = normalizers[model.target]
-  // TODO
-  // @ts-ignore
-  return normalizer(model)
+  return normalizers[model.target](model)
 }

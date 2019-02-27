@@ -172,8 +172,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     identifier: app.id,
   }))
 
-  console.log('apps', activeApps, staticApps)
-
   return (
     <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
       <MainShortcutHandler handlers={handlers}>

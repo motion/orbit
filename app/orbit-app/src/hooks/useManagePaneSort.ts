@@ -1,4 +1,4 @@
-import { useActiveApps, useActiveSpace } from '@mcro/kit'
+import { useActiveClientApps, useActiveSpace } from '@mcro/kit'
 import { AppBit, Space } from '@mcro/models'
 import { isEqual } from 'lodash'
 import { useEffect } from 'react'
@@ -27,7 +27,7 @@ function hasDifference(a: number[], b: number[]) {
 }
 
 export function useManagePaneSort() {
-  const activeApps = useActiveApps()
+  const activeApps = useActiveClientApps()
   const [space, updateSpace] = useActiveSpace()
   const paneSort = (space && space.paneSort) || []
   const hasMismatchedIds = hasDifference(paneSort, activeApps.map(x => x.id))

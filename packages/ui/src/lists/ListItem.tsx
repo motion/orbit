@@ -102,7 +102,6 @@ export type ListItemProps = ViewPropsStrict &
 
 function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   let iconSize = iconBefore ? (slim ? 20 : 28) : slim ? 12 : 14
-
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,

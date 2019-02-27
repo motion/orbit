@@ -6,8 +6,6 @@ import { AppConfig } from './AppConfig'
 import { AppProps } from './AppProps'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
 
-type SettingsView = FunctionComponent<null> | false
-
 export type AppElements = {
   index?: React.ReactElement<any>
   children?: React.ReactElement<any>
@@ -21,7 +19,8 @@ export type AppViews = {
   main?: FunctionComponent<AppProps> | false | null
   toolBar?: FunctionComponent<AppProps> | false | null
   statusBar?: FunctionComponent<AppProps> | false | null
-  settings?: SettingsView
+  settings?: FunctionComponent<AppProps> | false | null
+  setup?: FunctionComponent<AppProps> | false | null
 }
 
 export type AppDefinition = {

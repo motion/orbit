@@ -92,7 +92,7 @@ const light = {
     background: orbitColor,
     backgroundHover: orbitColor,
     backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.25),
+    listItemBackground: orbitColor.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
@@ -193,6 +193,15 @@ export const themes = {
       backgroundActive: orbitColor,
       color: '#fff',
       borderColor: orbitActiveBg,
+    }),
+  },
+  action: {
+    ...Theme.fromStyles({
+      iconFill: '#fff',
+      background: '#449878',
+      // backgroundHover: '#449878',
+      // backgroundActive: '#449878',
+      color: '#fff',
     }),
   },
   // 'light-selected': {

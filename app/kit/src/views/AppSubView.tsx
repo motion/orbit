@@ -9,7 +9,6 @@ export function AppSubView({
     console.warn('no app id given', appConfig)
     return null
   }
-
   return (
     <AppView
       key={JSON.stringify(appConfig)}

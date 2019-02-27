@@ -1,5 +1,5 @@
 import { AppBit } from '@mcro/models'
-import { config } from '../configureKit'
+import { getAppDefinitions } from '../helpers/getAppDefinitions'
 import { AppDefinition } from '../types/AppDefinition'
 import { useActiveApps } from './useActiveApps'
 
@@ -14,7 +14,7 @@ export type AppWithDefinition = {
 
 export function useActiveAppsWithDefinition(): AppWithDefinition[] {
   return useActiveApps().map(app => ({
-    definition: config.getApps().find(def => def.id === app.identifier),
+    definition: getAppDefinitions().find(def => def.id === app.identifier),
     app,
   }))
 }

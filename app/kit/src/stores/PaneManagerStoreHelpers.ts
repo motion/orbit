@@ -29,18 +29,21 @@ function appToPane(app: AppBit): PaneManagerPane {
   }
 }
 
+function getTornPanes(apps: AppBit[]): PaneManagerPane[] {
+  // torn window panes, remove the others besides active app + settings
+  const appState = getAppState()
+  const app = apps.find(app => +app.id === +appState.appId)
+  console.log('setting panes by torn')
+  if (!app) {
+    console.warn(`No app found! ${JSON.stringify(appState)} ${JSON.stringify(apps)}`)
+    return [settingsPane]
+  }
+  return [appToPane(app), settingsPane]
+}
+
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
-  const isTorn = getIsTorn()
-  if (isTorn) {
-    // torn window panes, remove the others besides active app + settings
-    const appState = getAppState()
-    const app = apps.find(app => +app.id === +appState.appId)
-    console.log('setting panes by torn')
-    if (!app) {
-      console.warn(`No app found! ${JSON.stringify(appState)} ${JSON.stringify(apps)}`)
-      return [settingsPane]
-    }
-    return [appToPane(app), settingsPane]
+  if (getIsTorn()) {
+    getTornPanes(apps)
   } else {
     const appPanes = apps.map(appToPane)
     return [...defaultPanes, ...appPanes]

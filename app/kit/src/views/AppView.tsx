@@ -54,14 +54,9 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores, definition } = useApp(props.identifier, props.id)
+    const { views, appStore, provideStores } = useApp(props.identifier, props.id)
     const AppViewAlt = useAppView(props.identifier, props.viewType as any)
-
-    let AppView = views[props.viewType] || AppViewAlt
-
-    if (!AppView) {
-      console.warn('loading alternate view failed', props, views, definition)
-    }
+    const AppView = views[props.viewType] || AppViewAlt
 
     // handle ref
     useHandleAppViewRef(ref, rootRef)

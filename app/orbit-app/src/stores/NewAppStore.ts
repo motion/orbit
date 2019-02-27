@@ -1,4 +1,4 @@
-import { useAppDefinition } from '@mcro/kit'
+import { getAppDefinition } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 
 export const defaultApps: AppBit[] = [
@@ -68,7 +68,7 @@ export class NewAppStore {
 
     // get data from defaultValue
     let data = nextApp.data
-    const def = useAppDefinition(identifier)
+    const def = getAppDefinition(identifier)
     if (!def) {
       console.warn('no wapp?')
       debugger

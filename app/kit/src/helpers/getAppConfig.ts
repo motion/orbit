@@ -1,18 +1,18 @@
-import { config } from '../configureKit'
 import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
 import { ResolvableModel } from '../types/ResolvableModel'
 import { OrbitListItemProps } from '../views/ListItem'
+import { getAppDefinitions } from './getAppDefinitions'
 
 export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
-      const appDef = config.getApps().find(x => x.id === item.appIdentifier)
+      const appDef = getAppDefinitions().find(x => x.id === item.appIdentifier)
       return getSourceAppConfig(appDef, item)
     }
     if (item.target === 'person-bit') {
-      const appDef = config.getApps().find(x => x.id === 'people')
+      const appDef = getAppDefinitions().find(x => x.id === 'people')
       return getSourceAppConfig(appDef, item)
     }
   }

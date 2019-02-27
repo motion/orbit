@@ -31,9 +31,6 @@ export class AppsStore {
     () => always(this.allIds),
     async (_, { sleep }) => {
       await sleep(16)
-
-      console.warn('run apps', this.allIds)
-
       const res: AppsWithDefinitions = {}
       for (const key of this.allIds) {
         res[key] = { ...this._apps[key], definition: this.definitions[key] }

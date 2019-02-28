@@ -144,7 +144,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    mainFields: isProd ? ['module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
+    mainFields: isProd ? ['ts:main', 'module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },

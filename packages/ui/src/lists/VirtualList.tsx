@@ -147,7 +147,6 @@ class VirtualListStore {
   runMeasure = react(
     () => [this.triggerMeasure, this.props.allowMeasure, this.frameRef],
     async (_, { when, sleep }) => {
-      console.log('run', this.props.getItem(0), this.props.allowMeasure, this.frameRef)
       ensure('can measure', this.props.allowMeasure !== false)
       await when(() => !!this.frameRef)
       if (this.cache) {
@@ -315,8 +314,6 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
       />
     )
   }
-
-  console.log('RENDER', frameRef, props.items)
 
   return (
     <div

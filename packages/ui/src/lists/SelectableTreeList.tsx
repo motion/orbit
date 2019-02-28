@@ -152,8 +152,6 @@ export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeLi
       }
     }, [])
 
-    console.log(store, store.childrenItems)
-
     return (
       <>
         {error && <div>SelectableTreeListError: {error}</div>}

@@ -38,7 +38,6 @@ function ListCurrentFolder() {
   // @ts-ignore
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
-  console.log('items', items)
   return (
     <View flex={1}>
       <SelectableTreeList

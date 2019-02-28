@@ -1,3 +1,4 @@
+/*
 import { Logger } from '@mcro/logger'
 import {
   Bit,
@@ -8,15 +9,14 @@ import {
   WebsiteBitData,
 } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { AppSyncer } from '../../core/AppSyncer'
-import { BitSyncer } from '../../utils/BitSyncer'
-import { WebsiteCrawledData } from '../website/WebsiteCrawledData'
-import { WebsiteCrawler } from '../website/WebsiteCrawler'
+import { BitSyncer } from '@mcro/sync-kit'
+import { WebsiteCrawledData } from '../../../../apps/src/apps/website/WebsiteCrawledData'
+import { WebsiteCrawler } from '../../../../apps/src/apps/website/WebsiteCrawler'
 
-/**
+/!**
  * Crawls pinned websites.
- */
-export class PinnedUrlsSyncer implements AppSyncer {
+ *!/
+export class PinnedUrlsSyncer {
   private log: Logger
   private crawler: WebsiteCrawler
   private bitSyncer: BitSyncer
@@ -27,9 +27,9 @@ export class PinnedUrlsSyncer implements AppSyncer {
     this.bitSyncer = new BitSyncer(undefined, this.log)
   }
 
-  /**
+  /!**
    * Runs synchronization process.
-   */
+   *!/
   async run() {
     // load person because we need emails that we want to whitelist
     this.log.info('loading general settings')
@@ -102,9 +102,9 @@ export class PinnedUrlsSyncer implements AppSyncer {
     await this.crawler.close()
   }
 
-  /**
+  /!**
    * Builds a bit from the given crawled data.
-   */
+   *!/
   private createWebsiteBit(crawledData: WebsiteCrawledData): Bit {
     const bitCreatedAt = new Date().getTime()
     const bitUpdatedAt = new Date().getTime()
@@ -130,3 +130,4 @@ export class PinnedUrlsSyncer implements AppSyncer {
     )
   }
 }
+*/

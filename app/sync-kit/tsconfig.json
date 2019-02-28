@@ -9,10 +9,9 @@
   // "references": [
   //   { "path": "../../packages/gloss" },
   //   { "path": "../../packages/use-store" },
-  //   { "path": "../../packages/ui" },
-  //   { "path": "../bridge" },
-  //   { "path": "../kit" },
-  //   { "path": "../sync-kit" },
-  //   { "path": "../models" }
+  //   { "path": "../../packages/helpers" },
+  //   { "path": "../../packages/fast-compare" },
+  //   { "path": "../models" },
+  //   { "path": "../bridge" }
   // ]
 }

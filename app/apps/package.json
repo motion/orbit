@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@mcro/kit": "*",
+    "@mcro/sync-kit": "*",
     "@mcro/gloss": "*",
+    "@mcro/utils": "*",
+    "@mcro/logger": "*",
+    "@mcro/services": "*",
     "@mcro/models": "*",
     "@mcro/bridge": "*",
     "@mcro/use-store": "*",
@@ -18,7 +22,15 @@
     "faker": "4.1.0",
     "immer": "1.7.2",
     "lodash": "*",
-    "typeorm": "^0.3.0-alpha.22"
+    "typeorm": "^0.3.0-alpha.22",
+    "urijs": "^1.19.0",
+    "get-urls": "^8.0.0",
+    "puppeteer": "^1.9.0",
+    "autolinker": "^1.7.1",
+    "dompurify": "^1.0.7",
+    "email-addresses": "^3.0.1",
+    "jsdom": "^11.12.0",
+    "readability": "^0.1.0"
   },
   "peerDependencies": {
     "react": "*"

@@ -2,18 +2,18 @@ import { useModels } from '@mcro/bridge'
 import { Job, JobModel } from '@mcro/models'
 
 export const useJobs = (
-  sourceId: number | false,
+  appId: number | false,
 ): {
   activeJobs: Job[]
   removeJobs: Job[]
 } => {
-  const hasSource = sourceId !== false
+  const hasSource = appId !== false
   const [jobs] = useModels(
     JobModel,
     hasSource && {
       where: {
         status: 'PROCESSING',
-        sourceId,
+        appId,
       },
     },
   )

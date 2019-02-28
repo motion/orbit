@@ -37,7 +37,7 @@ export type AppDefinition = {
   setup?: FunctionComponent<AppProps>
   appData?: Object
   // TODO @umed this is where we can put syncer stuff
-  sync?: Object
+  sync?: {} // todo: it can be boolean at max
   API?: {
     receive(app: AppBit, parentID: number, child: any): any
   }

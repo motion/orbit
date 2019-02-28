@@ -1,11 +1,4 @@
-import {
-  AppBit,
-  AppEntity,
-  SettingEntity,
-  SpaceEntity,
-  userDefaultValue,
-  UserEntity,
-} from '@mcro/models'
+import { AppBit, AppEntity, SettingEntity, SpaceEntity, userDefaultValue, UserEntity } from '@mcro/models'
 import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
@@ -59,7 +52,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
           const defaultApps: AppBit[] = [
             {
               target: 'app',
-              identifier: 'search',
+              identifier: 'search' as any, // todo(nate) add this item into identifier type?
               name: 'Search',
               colors: ['#D48D48', '#ACEACE'],
               pinned: true,
@@ -70,7 +63,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Directory',
-              identifier: 'people',
+              identifier: 'people' as any, // todo(nate) add this item into identifier type?
               colors: ['#0F1453', '#449878'],
               spaceId: space.id,
               pinned: true,
@@ -79,7 +72,7 @@ export class EnsureModels1546916550168 implements MigrationInterface {
             {
               target: 'app',
               name: 'Home',
-              identifier: 'lists',
+              identifier: 'lists' as any, // todo(nate) add this item into identifier type?
               spaceId: space.id,
               colors: ['#353353', '#EADEAD'],
               pinned: true,

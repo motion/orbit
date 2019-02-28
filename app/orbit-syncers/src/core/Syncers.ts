@@ -1,19 +1,23 @@
-import { ConfluenceSyncer } from '../sources/confluence/ConfluenceSyncer'
-import { DriveSyncer } from '../sources/drive/DriveSyncer'
-import { GithubSyncer } from '../sources/github/GithubSyncer'
-import { GMailSyncer } from '../sources/gmail/GMailSyncer'
-import { JiraSyncer } from '../sources/jira/JiraSyncer'
-import { MailWhitelisterSyncer } from '../sources/mail-whitelister/MailWhitelisterSyncer'
-import { SlackSyncer } from '../sources/slack/SlackSyncer'
-import { WebsiteSyncer } from '../sources/website/WebsiteSyncer'
 import { Syncer } from './Syncer'
+import { apps } from '@mcro/apps/_/apps'
+import { syncers } from '@mcro/apps/_/syncers'
 
-const ONE_MINUTE = 1000 * 60
-const FIVE_MINUTES = ONE_MINUTE * 5
-const TEN_MINUTES = ONE_MINUTE * 10
+// const ONE_MINUTE = 1000 * 60
+// const FIVE_MINUTES = ONE_MINUTE * 5
+// const TEN_MINUTES = ONE_MINUTE * 10
 // const THIRTY_MINUTES = ONE_MINUTE * 30
 
-export const Syncers = [
+export const Syncers = []
+apps.forEach((app, index) => {
+  Syncers.push(new Syncer({
+    name: app.name,
+    appIdentifier: app.id as any, // todo @umed fix it
+    runner: syncers[index].runner,
+    interval: syncers[index].interval,
+  }))
+})
+
+/*export const Syncers = [
   new Syncer({
     appIdentifier: 'jira',
     constructor: JiraSyncer,
@@ -57,4 +61,4 @@ export const Syncers = [
     constructor: WebsiteSyncer,
     interval: FIVE_MINUTES,
   }),
-]
+]*/

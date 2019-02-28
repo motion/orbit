@@ -88,7 +88,7 @@ export default async function connectModels(models) {
             // app.data.values.lastSync = {} // todo: do after my another PR merge
           } else if (app.identifier === 'jira') {
             app.data.values.lastSync = {}
-          } else if (app.identifier === 'AppIdentifier') {
+          } else if (app.identifier === 'slack') {
             app.data.values.lastMessageSync = {}
             app.data.values.lastAttachmentSync = {}
           }

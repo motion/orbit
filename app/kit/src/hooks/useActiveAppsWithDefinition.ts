@@ -13,6 +13,7 @@ export type AppWithDefinition = {
 }
 
 export function useActiveAppsWithDefinition(): AppWithDefinition[] {
+  console.log(config.getApps())
   return useActiveApps().map(app => ({
     definition: config.getApps().find(def => def.id === app.identifier),
     app,

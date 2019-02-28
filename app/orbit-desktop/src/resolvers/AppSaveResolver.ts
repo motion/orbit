@@ -33,7 +33,7 @@ export const AppSaveResolver = resolveCommand(AppSaveCommand, async ({ app }) =>
 
     // if credentials are okay save the app
     log.info('saving app', app)
-    await getRepository(AppEntity).save(app)
+    await getRepository(AppEntity).save(app as any) // todo @umed fix it
     log.info('atlassian app saved successfully')
 
     return { success: true }

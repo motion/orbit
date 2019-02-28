@@ -11,6 +11,7 @@ export function useApp(identifier: string, id?: string) {
     id,
     identifier,
     provideStores: null,
+    version: 0,
     ...state,
   }
   return {

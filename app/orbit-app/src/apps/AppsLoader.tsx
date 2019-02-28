@@ -1,4 +1,4 @@
-import { AppLoadContext, AppsStore, AppStore, ProvideStores, useAppDefinition } from '@mcro/kit'
+import { AppLoadContext, AppsStore, AppStore, getAppDefinition, ProvideStores } from '@mcro/kit'
 import { MergeContext } from '@mcro/ui'
 import { useStoreSimple } from '@mcro/use-store'
 import { isEqual } from 'lodash'
@@ -25,7 +25,7 @@ export const AppsLoader = memo(function AppsLoader(props: AppsLoaderProps) {
   useEffect(
     () => {
       for (const { identifier } of props.apps) {
-        appsStore.setAppDefinition(identifier, useAppDefinition(identifier))
+        appsStore.setAppDefinition(identifier, getAppDefinition(identifier))
       }
     },
     [props.apps],
@@ -54,23 +54,20 @@ function AppLoader(props: AppLoaderProps) {
 }
 
 function AppLoadView({ id, identifier, store }: AppLoaderProps) {
-  const appDefinition = useAppDefinition(identifier)
-  const AppApp = appDefinition.app
-
-  // this branch should never change it's static
-  if (!AppApp) {
-    return null
-  }
-
+  const appDefinition = getAppDefinition(identifier)
+  const appAppRef = useRef(appDefinition.app)
+  const AppApp = appAppRef.current
   const appViewProps = { id }
   const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {
-    // if (AppView.settings) {
-    //   appsStore.addSettingsView(id, AppView.settings)
-    // }
+    if (!AppApp) return
     store.setAppStore(id, appStore)
   }, [])
+
+  if (!AppApp) {
+    return null
+  }
 
   if (typeof AppApp === 'function') {
     return (

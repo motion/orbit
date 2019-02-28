@@ -166,6 +166,7 @@ export class SearchQueryExecutor {
    */
   private rawBitsToBits(
     rawBits: {
+      appIdentifier: string
       authorId: number
       bitCreatedAt: number
       bitUpdatedAt: number
@@ -190,6 +191,7 @@ export class SearchQueryExecutor {
     return rawBits.map(rawBit => {
       return {
         target: 'bit',
+        appIdentifier: rawBit.appIdentifier,
         authorId: rawBit.authorId,
         bitCreatedAt: rawBit.bitCreatedAt,
         bitUpdatedAt: rawBit.bitCreatedAt,

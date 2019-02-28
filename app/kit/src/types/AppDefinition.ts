@@ -42,7 +42,7 @@ export type AppDefinition = {
   }
 }
 
-export type AppBitMainProps = OrbitItemViewProps<any> & {
+export type AppBitMainProps = OrbitItemViewProps & {
   searchBar: SearchBarType
   searchTerm: string
 }

@@ -1,6 +1,6 @@
 import { react } from '@mcro/black'
 import { loadMany } from '@mcro/bridge'
-import { BitUtils, CosalTopicsModel, CosalTopWordsModel, SearchByTopicModel } from '@mcro/models'
+import { CosalTopicsModel, CosalTopWordsModel, getSearchableText, SearchByTopicModel } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -60,7 +60,7 @@ export default observer(function CosalSearch() {
             <h4>Search results</h4>
             {store.results.map((result, index) => (
               <div key={index} style={{ marginBottom: 10 }}>
-                <p>{BitUtils.getSearchableText(result)}</p>
+                <p>{getSearchableText(result)}</p>
               </div>
             ))}
           </div>

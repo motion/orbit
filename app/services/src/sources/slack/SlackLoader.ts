@@ -1,18 +1,18 @@
 import { Logger } from '@mcro/logger'
-import { SlackApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { channels, team, users } from 'slack'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
+import { AppBit } from '@mcro/models'
 
 /**
  * Loads the data from the Slack API.
  */
 export class SlackLoader {
-  private app: SlackApp
+  private app: AppBit
   private log: Logger
 
-  constructor(app: SlackApp, log?: Logger) {
+  constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:slack:loader:' + app.id)
   }

@@ -1,6 +1,6 @@
 import { command } from '@mcro/bridge'
 import { useActiveSpace } from '@mcro/kit'
-import { AppBit, AppSaveCommand, AtlassianApp, AtlassianAppValuesCredentials } from '@mcro/models'
+import { AppBit, AppSaveCommand } from '@mcro/models'
 import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
 import * as React from 'react'
 
@@ -21,11 +21,17 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
+interface AtlassianAppValuesCredentials {
+  domain: string
+  username: string
+  password: string
+}
+
 export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  const [app] = React.useState<Partial<AtlassianApp>>({
+  const [app] = React.useState<Partial<AppBit>>({
     target: 'app',
     identifier: props.identifier as 'confluence',
     token: null,

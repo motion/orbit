@@ -1,13 +1,4 @@
-import {
-  AppEntity,
-  Bit,
-  BitEntity,
-  BitUtils,
-  GithubApp,
-  GithubAppData,
-  GithubAppValuesLastSyncRepositoryInfo,
-  GithubBitData,
-} from '@mcro/models'
+import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import {
   GithubComment,
   GithubCommit,
@@ -18,7 +9,9 @@ import {
 } from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { GithubBitData } from './GithubBitData'
+import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
 
 /**
  * Syncs Github.
@@ -27,8 +20,9 @@ import { createSyncer } from '@mcro/sync-kit'
  * which means we never remove github bits during regular sync.
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export const GithubSyncer = createSyncer<GithubApp>(async ({ app, log, manager, isAborted }) => {
+export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
 
+  const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
 
   /**
@@ -140,7 +134,7 @@ export const GithubSyncer = createSyncer<GithubApp>(async ({ app, log, manager, 
     log.timer('load API repositories', repositories)
 
     // get whitelist, if its not defined just return all loaded repositories
-    const values = app.data.values as GithubAppData['values']
+    const values = data.values['values']
     if (values.whitelist !== undefined) {
       log.info('whitelist is defined, filtering settings by a whitelist', values.whitelist)
       repositories = repositories.filter(repository => {
@@ -309,21 +303,21 @@ export const GithubSyncer = createSyncer<GithubApp>(async ({ app, log, manager, 
   }
 
   // initial default settings
-  if (!app.data.values.lastSyncIssues) app.data.values.lastSyncIssues = {}
-  if (!app.data.values.lastSyncPullRequests) app.data.values.lastSyncPullRequests = {}
+  if (!data.values.lastSyncIssues) data.values.lastSyncIssues = {}
+  if (!data.values.lastSyncPullRequests) data.values.lastSyncPullRequests = {}
 
   // go through all repositories and sync them all
   log.timer('load api bits and people')
   for (let repository of repositories) {
     await isAborted()
 
-    if (!app.data.values.lastSyncIssues[repository.nameWithOwner])
-      app.data.values.lastSyncIssues[repository.nameWithOwner] = {}
-    if (!app.data.values.lastSyncPullRequests[repository.nameWithOwner])
-      app.data.values.lastSyncPullRequests[repository.nameWithOwner] = {}
+    if (!data.values.lastSyncIssues[repository.nameWithOwner])
+      data.values.lastSyncIssues[repository.nameWithOwner] = {}
+    if (!data.values.lastSyncPullRequests[repository.nameWithOwner])
+      data.values.lastSyncPullRequests[repository.nameWithOwner] = {}
 
-    const lastSyncIssues = app.data.values.lastSyncIssues[repository.nameWithOwner]
-    const lastSyncPullRequests = app.data.values.lastSyncPullRequests[
+    const lastSyncIssues = data.values.lastSyncIssues[repository.nameWithOwner]
+    const lastSyncPullRequests = data.values.lastSyncPullRequests[
       repository.nameWithOwner
       ]
     const [organization, repositoryName] = repository.nameWithOwner.split('/')

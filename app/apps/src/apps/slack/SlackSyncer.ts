@@ -1,20 +1,22 @@
-import { AppEntity, Bit, BitUtils, PersonData, SlackApp, SlackBitData } from '@mcro/models'
+import { AppEntity, Bit } from '@mcro/models'
 import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { SlackBitData } from './SlackBitData'
 
 /**
  * Syncs Slack messages.
  */
-export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, utils, isAborted }) => {
+export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
 
   const Autolinker = require('autolinker')
+  const appData = app.data
   const loader = new SlackLoader(app, log)
 
   /**
    * Filters given slack channels by channels in the apps.
    */
   const filterChannelsBySettings = (channels: SlackChannel[]) => {
-    const values = app.data.values
+    const values = appData.values
     const appChannels =
       values.channels /* || {
       'C0SAU3124': true,
@@ -82,7 +84,7 @@ export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, ut
         data: {
           tz: user.tz,
           team: user.id,
-        } as PersonData,
+        },
       },
       user.id,
     )
@@ -100,11 +102,11 @@ export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, ut
     const lastMessage = messages[messages.length - 1]
     const bitCreatedAt = +firstMessage.ts.split('.')[0] * 1000
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
-    const webLink = `https://${app.data.values.team.domain}.slack.com/archives/${
+    const webLink = `https://${appData.values.team.domain}.slack.com/archives/${
       channel.id
       }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
-      app.data.values.team.id
+      appData.values.team.id
       }`
     const mentionedPeople = findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
@@ -139,8 +141,8 @@ export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, ut
         location: {
           id: channel.id,
           name: channel.name,
-          webLink: `https://${app.data.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${app.data.values.team.id}`,
+          webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
         },
         webLink,
         desktopLink,
@@ -185,8 +187,8 @@ export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, ut
         location: {
           id: channel.id,
           name: channel.name,
-          webLink: `https://${app.data.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${app.data.values.team.id}`,
+          webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
+          desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
         },
         webLink: attachment.original_url,
         desktopLink: undefined,
@@ -233,7 +235,7 @@ export const SlackSyncer = createSyncer<SlackApp>(async ({ app, log, manager, ut
   log.timer('load team info from API')
 
   // update apps with team info
-  const values = app.data.values
+  const values = appData.values
   values.team = {
     id: team.id,
     name: team.name,

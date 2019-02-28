@@ -1,20 +1,14 @@
-import {
-  AppEntity,
-  Bit,
-  BitEntity,
-  BitUtils,
-  ConfluenceApp,
-  ConfluenceBitData,
-  ConfluenceLastSyncInfo,
-} from '@mcro/models'
+import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { ConfluenceContent, ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { ConfluenceLastSyncInfo } from './ConfluenceAppData'
+import { ConfluenceBitData } from './ConfluenceBitData'
 
 /**
  * Syncs Confluence pages and blogs.
  */
-export const ConfluenceSyncer = createSyncer<ConfluenceApp>(async ({ app, log, manager, utils, isAborted }) => {
+export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
 
   const loader = new ConfluenceLoader(app, log)
 

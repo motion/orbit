@@ -1,13 +1,15 @@
-import { Bit, BitUtils, WebsiteApp, WebsiteBitData } from '@mcro/models'
+import { AppBit, Bit } from '@mcro/models'
+import { BitUtils } from '@mcro/sync-kit'
 import { WebsiteCrawledData } from './WebsiteCrawledData'
+import { WebsiteBitData } from './WebsiteBitData'
 
 /**
  * Creates a website Bit.
  */
 export class WebsiteBitFactory {
-  private app: WebsiteApp
+  private app: AppBit
 
-  constructor(app: WebsiteApp) {
+  constructor(app: AppBit) {
     this.app = app
   }
 

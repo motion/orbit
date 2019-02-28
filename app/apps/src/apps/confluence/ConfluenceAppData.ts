@@ -1,4 +1,3 @@
-import { AtlassianAppValuesCredentials } from './AtlassianAppValuesCredentials'
 
 /**
  * Information about last sync.
@@ -37,7 +36,11 @@ export interface ConfluenceLastSyncInfo {
 
 export interface ConfluenceAppData {
   values: {
-    credentials: AtlassianAppValuesCredentials
+    credentials: {
+      domain: string
+      username: string
+      password: string
+    }
     pageLastSync: ConfluenceLastSyncInfo
     blogLastSync: ConfluenceLastSyncInfo
   }

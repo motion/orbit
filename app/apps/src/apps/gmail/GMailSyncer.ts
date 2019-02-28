@@ -1,16 +1,19 @@
-import { AppEntity, Bit, BitEntity, BitUtils, GmailApp, GmailBitData, GmailBitDataParticipant } from '@mcro/models'
+import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { GMailLoader, GMailThread } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
 import { GMailMessageParser } from './GMailMessageParser'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
+import { GmailAppData } from './GmailAppData'
 
 /**
  * Syncs GMail.
  */
-export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, isAborted }) => {
+export const GMailSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
 
+  const data: GmailAppData = app.data
   const loader = new GMailLoader(app, log, source => manager.getRepository(AppEntity).save(source))
 
   /**
@@ -22,7 +25,7 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
       loadedCount?: number,
       isLast?: boolean,
   ) => {
-    const lastSync = app.data.values.lastSync
+    const lastSync = data.values.lastSync
 
     // for the first ever synced thread we store its history id, and once sync is done,
     // we use this history to id to load further newly added or removed messages
@@ -203,7 +206,7 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
   // update whitelist settings in Apps
   const newWhiteListedEmails: string[] = []
   for (let App of Apps) {
-    const values = App.data.values as GmailApp['data']['values']
+    const values = App.data.values as GmailAppData['values']
     const foundEmails = values.foundEmails || []
     const whitelist = {}
     for (let email of emails) {
@@ -219,38 +222,38 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
 
   // gmail sync
 
-  log.info('sync gmail based on settings', app.data.values)
+  log.info('sync gmail based on settings', data.values)
 
   // setup default source configuration values
-  if (!app.data.values.lastSync) app.data.values.lastSync = {}
-  if (!app.data.values.max) app.data.values.max = 10000
-  if (!app.data.values.daysLimit) app.data.values.daysLimit = 330
+  if (!data.values.lastSync) data.values.lastSync = {}
+  if (!data.values.max) data.values.max = 10000
+  if (!data.values.daysLimit) data.values.daysLimit = 330
 
   // setup some local variables we are gonna work with
   const queryFilter =
-    app.data.values.filter || `newer_than:${app.data.values.daysLimit}d`
-  let lastSync = app.data.values.lastSync
+    data.values.filter || `newer_than:${data.values.daysLimit}d`
+  let lastSync = data.values.lastSync
 
   // update last sync configuration
   log.info('updating sync sources')
   lastSync.usedQueryFilter = queryFilter
-  lastSync.usedDaysLimit = app.data.values.daysLimit
-  lastSync.usedMax = app.data.values.max
+  lastSync.usedDaysLimit = data.values.daysLimit
+  lastSync.usedMax = data.values.max
   await manager.getRepository(AppEntity).save(app, { listeners: false })
 
   // if user configuration has changed (max number of messages, days limitation or query filter)
   // we drop all bits to make complete sync again
   if (
-    (lastSync.usedMax !== undefined && app.data.values.max !== lastSync.usedMax) ||
+    (lastSync.usedMax !== undefined && data.values.max !== lastSync.usedMax) ||
     (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
     (lastSync.usedDaysLimit !== undefined &&
-      app.data.values.daysLimit !== lastSync.usedDaysLimit)
+      data.values.daysLimit !== lastSync.usedDaysLimit)
   ) {
     log.info(
       'last syncronization configuration mismatch, dropping bits and start sync from scratch',
     )
     await manager.getRepository(BitEntity).delete({ appId: app.id }) // todo: drop people as well
-    app.data.values.lastSync = lastSync = {}
+    data.values.lastSync = lastSync = {}
   }
 
   // we if we have last history id it means we already did a complete sync and now we are using
@@ -306,7 +309,7 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
     log.timer('sync all threads')
 
     await loader.loadThreads({
-      count: app.data.values.max,
+      count: data.values.max,
       queryFilter: queryFilter,
       pageToken: lastSync.lastCursor,
       loadedCount: lastSync.lastCursorLoadedCount || 0,
@@ -318,10 +321,10 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
   // load emails for whitelisted people separately
   // we don't make this operation on a first sync because we can miss newly added emails
   // this operation is relatively cheap, so for now we are okay with it
-  if (app.data.values.whitelist) {
-    log.info('checking whitelist', app.data.values.whitelist)
-    const whitelistEmails = Object.keys(app.data.values.whitelist).filter(
-      email => app.data.values.whitelist[email] === true,
+  if (data.values.whitelist) {
+    log.info('checking whitelist', data.values.whitelist)
+    const whitelistEmails = Object.keys(data.values.whitelist).filter(
+      email => data.values.whitelist[email] === true,
     )
 
     if (whitelistEmails.length > 0) {
@@ -331,7 +334,7 @@ export const GMailSyncer = createSyncer<GmailApp>(async ({ app, log, manager, is
       for (let emails of emailChunks) {
         const whitelistFilter = emails.map(email => 'from:' + email).join(' OR ')
         await loader.loadThreads({
-          count: app.data.values.max,
+          count: data.values.max,
           queryFilter: whitelistFilter,
           loadedCount: 0,
           handler: syncThread.bind(this),

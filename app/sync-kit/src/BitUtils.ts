@@ -1,7 +1,5 @@
 import { hash } from '@mcro/utils'
-import { SlackBitData } from '../bit-data/SlackBitData'
-import { AppBit, AppIdentifier } from '../interfaces/AppBit'
-import { Bit } from '../interfaces/Bit'
+import { AppBit, Bit } from '@mcro/models'
 
 /**
  * Common Bit utility functions.
@@ -10,9 +8,9 @@ export class BitUtils {
   /**
    * Creates a bit id.
    */
-  static id(App: AppIdentifier, appId: number | undefined, data: string): number
+  static id(App: string, appId: number | undefined, data: string): number
   static id(app: AppBit, data: string): number
-  static id(bitOrBitType: AppBit | AppIdentifier, appIdOrData: any, maybeData?: string): number {
+  static id(bitOrBitType: AppBit | string, appIdOrData: any, maybeData?: string): number {
     if (typeof bitOrBitType === 'object') {
       // App
       return hash(`${bitOrBitType.identifier}-${bitOrBitType.id}-${appIdOrData}`)
@@ -69,18 +67,5 @@ export class BitUtils {
         bit.authorId,
       ].filter(item => item !== null && item !== undefined),
     )
-  }
-
-  // TODO could return title/body separately when improving search
-  static getSearchableText(bit: Bit): string {
-    if (bit.type === 'conversation') {
-      // TODO make a generic conversation bit data type
-      const data = bit.data as SlackBitData
-      return data.messages
-        .map(x => `${x.user} ${x.text}`)
-        .join(' ')
-        .trim()
-    }
-    return `${bit.title} ${bit.body}`.trim()
   }
 }

@@ -1,9 +1,8 @@
-import { SlackBitDataMessage } from '@mcro/models'
 import { ChatMessage, HighlightText, ItemPropsContext } from '@mcro/ui'
 import * as React from 'react'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 
-const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }) => {
+const getMessages = (messages: any[], { shownLimit, searchTerm }) => { // todo: fix any type
   let res = messages.slice(0, shownLimit)
   if (searchTerm) {
     const filtered = res.filter(m => m.text.includes(searchTerm))
@@ -14,7 +13,7 @@ const getMessages = (messages: SlackBitDataMessage[], { shownLimit, searchTerm }
   return res
 }
 
-export function ConversationItem(rawProps: OrbitItemViewProps<'AppIdentifier'>) {
+export function ConversationItem(rawProps: OrbitItemViewProps) {
   const itemProps = React.useContext(ItemPropsContext)
   const { item, searchTerm, shownLimit, oneLine, renderText } = { ...itemProps, ...rawProps }
   const { data, people } = item
@@ -38,8 +37,8 @@ export function ConversationItem(rawProps: OrbitItemViewProps<'AppIdentifier'>) 
   return messages.map((message, index) => {
     for (let person of people || []) {
       message.text = message.text.replace(
-        new RegExp(`<@${person.sourceId}>`, 'g'),
-        '@' + person.name,
+        new RegExp(`<@${person.originalId}>`, 'g'),
+        '@' + person.title,
       )
     }
     return (

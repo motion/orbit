@@ -1,4 +1,4 @@
-import { BitEntity, WebsiteApp } from '@mcro/models'
+import { BitEntity } from '@mcro/models'
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
 import { createSyncer } from '@mcro/sync-kit'
@@ -6,7 +6,7 @@ import { createSyncer } from '@mcro/sync-kit'
 /**
  * Syncs crawled websites.
  */
-export const WebsiteSyncer = createSyncer<WebsiteApp>(async ({ app, log, manager, isAborted }) => {
+export const WebsiteSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
 
   const crawler = new WebsiteCrawler(log)
   const bitFactory = new WebsiteBitFactory(app)

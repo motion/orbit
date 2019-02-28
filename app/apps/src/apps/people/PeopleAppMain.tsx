@@ -1,7 +1,7 @@
 import { loadMany, loadOne, observeMany } from '@mcro/bridge'
 import { gloss } from '@mcro/gloss'
 import { AppProps, ListItem, useStores } from '@mcro/kit'
-import { Bit, BitModel, CosalTopicsModel, PersonData, SlackBitData } from '@mcro/models'
+import { Bit, BitModel, CosalTopicsModel } from '@mcro/models'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@mcro/ui'
 import { ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -10,7 +10,7 @@ const getBitTexts = (bits: Bit[]) => {
   return bits
     .map(x => {
       if (x.appIdentifier === 'slack') {
-        const data = x.data as SlackBitData
+        const data = x.data as any // todo fix typing
         return data.messages.map(m => m.text).join(' ')
       }
       return `${x.title} ${x.body}`
@@ -138,7 +138,7 @@ export function PeopleAppMain(props: AppProps) {
             <FadeMapRight />
             <MapImg
               src={`https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAsT_1IWdFZ-aV68sSYLwqwCdP_W0jCknA&center=${
-                (person.data ? (person.data as PersonData).tz : '')
+                (person.data ? (person.data as any).tz : '') // todo fix typing
               }&zoom=12&format=png&maptype=roadmap&style=element:geometry%7Ccolor:0xf5f5f5&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.fill%7Ccolor:0x616161&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Celement:geometry%7Ccolor:0xc9c9c9&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&size=${mapW}x${mapH}`}
             />
           </Map>

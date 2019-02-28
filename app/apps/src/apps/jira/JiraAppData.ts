@@ -1,4 +1,3 @@
-import { AtlassianAppValuesCredentials } from './AtlassianAppValuesCredentials'
 
 /**
  * Information about last sync.
@@ -36,7 +35,11 @@ export interface JiraLastSyncInfo {
 }
 
 export interface JiraAppValues {
-  credentials: AtlassianAppValuesCredentials
+  credentials: {
+    domain: string
+    username: string
+    password: string
+  }
   lastSync: JiraLastSyncInfo
 }
 

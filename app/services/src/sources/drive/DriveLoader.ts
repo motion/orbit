@@ -1,5 +1,4 @@
 import { Logger } from '@mcro/logger'
-import { DriveApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { uniqBy } from 'lodash'
 // import * as path from 'path'
@@ -8,16 +7,17 @@ import { ServiceLoaderAppSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
+import { AppBit } from '@mcro/models'
 
 /**
  * Loads data from google drive api.
  */
 export class DriveLoader {
-  private app: DriveApp
+  private app: AppBit
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(app: DriveApp, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+  constructor(app: AppBit, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.app = app
     this.log = log || new Logger('service:drive:loader:' + app.id)
     this.loader = new ServiceLoader(this.app, this.log, saveCallback)

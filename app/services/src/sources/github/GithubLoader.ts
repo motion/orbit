@@ -1,5 +1,4 @@
 import { Logger } from '@mcro/logger'
-import { GithubApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -18,6 +17,7 @@ import {
   GithubRepositoryQueryResult,
   GithubUserRepositoriesQueryResult,
 } from './GithubTypes'
+import { AppBit } from '@mcro/models/_'
 
 /**
  * Options for loadIssues and loadPullRequests methods.
@@ -39,13 +39,13 @@ export interface GithubLoaderIssueOrPullRequestStreamOptions {
  * Performs requests GitHub API.
  */
 export class GithubLoader {
-  private app: GithubApp
+  private app: AppBit
   private log: Logger
   private loader: ServiceLoader
   private totalCost: number = 0
   private remainingCost: number = 0
 
-  constructor(app: GithubApp, log?: Logger) {
+  constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:github:loader:' + app.id)
     this.loader = new ServiceLoader(this.app, this.log)

@@ -10,8 +10,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { BitData } from '../bit-data/BitData'
-import { AppBit, AppIdentifier } from '../interfaces/AppBit'
+import { AppBit } from '../interfaces/AppBit'
 import { Bit } from '../interfaces/Bit'
 import { BitContentType } from '../interfaces/BitContentType'
 import { Space } from '../interfaces/Space'
@@ -35,7 +34,7 @@ export class BitEntity extends BaseEntity implements Bit {
   contentHash?: number
 
   @Column({ type: String })
-  appIdentifier?: AppIdentifier
+  appIdentifier?: string
 
   /**
    * Source id can be null only for pinned urls.
@@ -73,7 +72,7 @@ export class BitEntity extends BaseEntity implements Bit {
   desktopLink?: string
 
   @Column({ type: 'simple-json', default: '{}' })
-  data?: BitData
+  data?: any
 
   @Column(() => LocationEntity)
   location?: LocationEntity

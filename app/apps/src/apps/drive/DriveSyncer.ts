@@ -1,12 +1,13 @@
-import { AppEntity, Bit, BitEntity, BitUtils, DriveApp, DriveBitData } from '@mcro/models'
+import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { DriveBitData } from './DriveBitData'
 
 /**
  * Syncs Google Drive files.
  */
-export const DriveSyncer = createSyncer<DriveApp>(async ({ app, log, manager, isAborted }) => {
+export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
 
   const loader = new DriveLoader(app, log, source =>
     manager.getRepository(AppEntity).save(source),

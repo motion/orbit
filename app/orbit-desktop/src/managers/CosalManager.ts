@@ -1,6 +1,6 @@
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
-import { Bit, BitEntity, BitUtils } from '@mcro/models'
+import { Bit, BitEntity, getSearchableText } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { remove } from 'fs-extra'
 import { chunk, last } from 'lodash'
@@ -13,7 +13,7 @@ const log = new Logger('CosalManager')
 const getBitForScan = (bit: Bit) => {
   return {
     id: bit.id,
-    text: BitUtils.getSearchableText(bit),
+    text: getSearchableText(bit),
   }
 }
 

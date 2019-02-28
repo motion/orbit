@@ -1,17 +1,7 @@
-export * from './bit-data/BitData'
-export * from './bit-data/ConfluenceBitData'
-export * from './bit-data/DriveBitData'
-export * from './bit-data/GithubBitData'
-export * from './bit-data/GmailBitData'
-export * from './bit-data/JiraBitData'
-export * from './bit-data/PersonData'
-export * from './bit-data/PinnedBitData'
-export * from './bit-data/SlackBitData'
-export * from './bit-data/WebsiteBitData'
+import { Bit } from './interfaces/Bit'
+
 export * from './defaultValues/userDefaultValue'
 export * from './entities/index.node'
-export * from './interfaces/app-data/AppData'
-export * from './interfaces/app-data/AtlassianAppValuesCredentials'
 export * from './interfaces/AppBit'
 export * from './interfaces/Bit'
 export * from './interfaces/BitContentType'
@@ -27,4 +17,17 @@ export * from './interfaces/Setting'
 export * from './interfaces/Space'
 export * from './interfaces/User'
 export * from './models'
-export * from './utils/BitUtils'
+
+// todo: find a good place for this function
+// TODO could return title/body separately when improving search
+export const getSearchableText = (bit: Bit): string => {
+  if (bit.type === 'conversation') {
+    // TODO make a generic conversation bit data type
+    const data = bit.data
+    return data.messages
+      .map(x => `${x.user} ${x.text}`)
+      .join(' ')
+      .trim()
+  }
+  return `${bit.title} ${bit.body}`.trim()
+}

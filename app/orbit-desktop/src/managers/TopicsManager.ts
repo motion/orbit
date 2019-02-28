@@ -1,6 +1,6 @@
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
-import { BitEntity, BitUtils } from '@mcro/models'
+import { BitEntity, getSearchableText } from '@mcro/models'
 import { flatten, zip } from 'lodash'
 import { getRepository } from 'typeorm'
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'
@@ -62,7 +62,7 @@ export class TopicsManager {
     let allTopics: string[][] = []
     for (let i = 0; i < numScans; i++) {
       const bits = await getRepository(BitEntity).find({ take: maxPerGroup, skip: maxPerGroup * i })
-      const bodies = bits.map(BitUtils.getSearchableText).join(' ')
+      const bodies = bits.map(getSearchableText).join(' ')
       const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
       // dont flatten
       allTopics = [...allTopics, topics]

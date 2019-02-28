@@ -1,20 +1,20 @@
 import { Logger } from '@mcro/logger'
-import { JiraApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
 import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
+import { AppBit } from '@mcro/models'
 
 /**
  * Loads jira data from its API.
  */
 export class JiraLoader {
-  private app: JiraApp
+  private app: AppBit
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(app: JiraApp, log?: Logger) {
+  constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:jira:loader:' + app.id)
     this.loader = new ServiceLoader(this.app, this.log)

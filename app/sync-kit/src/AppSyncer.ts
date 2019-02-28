@@ -1,7 +1,7 @@
-import { AppIdentifier, BaseAppBit } from '@mcro/models'
 import { Logger } from '@mcro/logger'
 import { EntityManager } from 'typeorm'
 import { SyncerUtils } from './SyncerUtils'
+import { AppBit } from '@mcro/models'
 
 /**
  * Options to be passed to Syncer.
@@ -18,12 +18,12 @@ export interface SyncerOptions {
    * Used to get syncer settings.
    * If type is not specified then syncer will be executed once without any setting specified.
    */
-  appIdentifier?: AppIdentifier
+  appIdentifier?: string
 
   /**
    * Syncer runner.
    */
-  runner: SyncerRunner<any>
+  runner: SyncerRunner
 
   /**
    * Interval during which syncers should be executed.
@@ -34,12 +34,12 @@ export interface SyncerOptions {
 /**
  * Options passed to the syncer runner.
  */
-export type CreateSyncerOptions<AppType = BaseAppBit> = {
+export type CreateSyncerOptions = {
 
   /**
    * App bit.
    */
-  app: AppType
+  app: AppBit
 
   /**
    * Logger used to log syncer operations.
@@ -66,10 +66,10 @@ export type CreateSyncerOptions<AppType = BaseAppBit> = {
 /**
  * Function that executes syncer.
  */
-export type SyncerRunner<T> = (options: CreateSyncerOptions<T>) => any
+export type SyncerRunner = (options: CreateSyncerOptions) => any
 
 /**
  * Helper factory function that helps to create syncer in easy type-safe manner.
  */
-export const createSyncer = <T>(runner: SyncerRunner<T>): SyncerRunner<T> => runner
+export const createSyncer = (runner: SyncerRunner): SyncerRunner => runner
 

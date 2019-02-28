@@ -1,12 +1,14 @@
-import { AppEntity, Bit, BitEntity, BitUtils, JiraApp, JiraBitData } from '@mcro/models'
+import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
-import { createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { JiraAppData } from './JiraAppData'
+import { JiraBitData } from './JiraBitData'
 
 /**
  * Syncs Jira issues.
  */
-export const JiraSyncer = createSyncer<JiraApp>(async ({ app, log, manager, utils, isAborted }) => {
+export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
 
   const loader = new JiraLoader(app, log)
 
@@ -25,7 +27,7 @@ export const JiraSyncer = createSyncer<JiraApp>(async ({ app, log, manager, util
   const createDocumentBit = (issue: JiraIssue, allPeople: Bit[]): Bit => {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = app.data.values as JiraApp['data']['values']
+    const values = (app.data as JiraAppData).values['data']['values']
     const domain = values.credentials.domain
     const body = utils.stripHtml(issue.renderedFields.description)
     const cleanHtml = utils.sanitizeHtml(issue.renderedFields.description)

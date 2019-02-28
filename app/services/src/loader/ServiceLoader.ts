@@ -1,6 +1,6 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { AppBit, DriveApp, GmailApp } from '@mcro/models'
+import { AppBit } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -62,7 +62,7 @@ export class ServiceLoader {
         result.status === 401
       ) {
         this.log.warning('refreshing oauth token')
-        await this.refreshGoogleToken(this.app as GmailApp | DriveApp)
+        await this.refreshGoogleToken(this.app)
         return this.load(options, false)
       }
       const error = typeof responseBody === 'object' ? JSON.stringify(responseBody) : responseBody
@@ -119,7 +119,7 @@ export class ServiceLoader {
   /**
    * Refreshes Google API token.
    */
-  private async refreshGoogleToken(app: GmailApp | DriveApp) {
+  private async refreshGoogleToken(app: AppBit) {
     // check if we have credentials defined
     if (!app.data.values.oauth)
       throw new Error(`OAuth values are not defined in the given app (#${app.id})`)

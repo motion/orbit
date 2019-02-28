@@ -12,7 +12,7 @@ class DriveSettingsStore {
   props: { app?: DriveApp }
   popularFolders = []
 
-  async didMount() {
+  async fetchFiles() {
     if (!this.service.fetch) return
     const { files } = await this.service.fetch('/files', {
       query: {

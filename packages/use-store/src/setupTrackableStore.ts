@@ -103,6 +103,7 @@ export function setupTrackableStore(
 
   // done gives us back the keys it tracked
   let done: ReturnType<typeof config['track']> = null
+  let disposed = false
 
   return {
     store: config.store,
@@ -113,6 +114,7 @@ export function setupTrackableStore(
       done = config.track(id, debug())
     },
     untrack() {
+      if (disposed) return
       paused = false
       reactiveKeys = done()
       const nextDeepKeys = [...reactiveKeys].filter(x => x.indexOf('.') > 0)
@@ -125,7 +127,8 @@ export function setupTrackableStore(
       }
     },
     dispose() {
-      done()
+      disposed = true
+      if (done) done()
       removeUpdate(update)
       reaction.dispose()
       for (const off of observers) {

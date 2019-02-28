@@ -1,7 +1,7 @@
-import { ensure, react } from '@mcro/black'
-import { Logger } from '@mcro/logger'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
+import { ensure, react } from '@mcro/black';
+import { Logger } from '@mcro/logger';
+import { App, Desktop, Electron } from '@mcro/stores';
+import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager';
 
 const log = new Logger('ShortcutsManager')
 
@@ -13,7 +13,7 @@ export class OrbitShortcutsStore {
   }
   disposed = false
 
-  didMount() {
+  start() {
     this.globalShortcut.registerShortcuts()
   }
 

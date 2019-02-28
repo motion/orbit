@@ -141,10 +141,9 @@ export function useStore<A>(
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, { ...options, component })
     }
+
+    // dispose on unmount
     useEffect(() => {
-      if (!isInstantiated) {
-        store.didMount && store.didMount()
-      }
       return () => disposeStore(store, component)
     }, [])
   }

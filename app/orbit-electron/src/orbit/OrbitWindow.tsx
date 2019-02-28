@@ -1,20 +1,20 @@
-import { ensure, react } from '@mcro/black'
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
-import { Window } from '@mcro/reactron'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { useStore } from '@mcro/use-store'
-import { ChildProcess } from 'child_process'
-import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron'
-import root from 'global'
-import { last } from 'lodash'
-import { join } from 'path'
-import * as React from 'react'
-import { ROOT } from '../constants'
-import { getScreenSize } from '../helpers/getScreenSize'
-import { OrbitShortcutsStore } from './OrbitShortcutsStore'
-import { Mediator } from '../mediator'
-import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@mcro/models'
+import { ensure, react } from '@mcro/black';
+import { getGlobalConfig } from '@mcro/config';
+import { Logger } from '@mcro/logger';
+import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@mcro/models';
+import { Window } from '@mcro/reactron';
+import { App, Desktop, Electron } from '@mcro/stores';
+import { useStore } from '@mcro/use-store';
+import { ChildProcess } from 'child_process';
+import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron';
+import root from 'global';
+import { last } from 'lodash';
+import { join } from 'path';
+import * as React from 'react';
+import { ROOT } from '../constants';
+import { getScreenSize } from '../helpers/getScreenSize';
+import { Mediator } from '../mediator';
+import { OrbitShortcutsStore } from './OrbitShortcutsStore';
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -44,7 +44,7 @@ class OrbitWindowStore {
   windowID = last(App.state.allApps).id
   vibrancy = 'light'
 
-  didMount() {
+  start() {
     // screen events
     setScreenSize()
     screen.on('display-metrics-changed', async () => {
@@ -191,13 +191,16 @@ export default function OrbitWindow() {
         return
       }
       Mediator.command(SendClientDataCommand, {
-        name: shown ? 'HIDE' : 'SHOW'
+        name: shown ? 'HIDE' : 'SHOW',
       })
     },
   })
 
   // onMount
   React.useEffect(() => {
+    store.start()
+    orbitShortcutsStore.start()
+
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))

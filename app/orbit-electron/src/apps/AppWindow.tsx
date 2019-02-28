@@ -1,23 +1,18 @@
 import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
+import { SendClientDataCommand } from '@mcro/models'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
 import { BrowserWindow } from 'electron'
-import global from 'global'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { WEB_PREFERENCES } from '../constants'
 import { Mediator } from '../mediator'
-import { SendClientDataCommand } from '@mcro/models'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
-
-// set a global, bad i know
-const apps = new Set()
-global['apps'] = apps
 
 type Props = {
   id: number
@@ -30,12 +25,13 @@ class AppWindowStore {
   position = [1, 1]
   closed = false
 
-  didMount() {
-    apps.add(this)
-    setTimeout(() => {
+  setPos = react(
+    () => 1,
+    async (_, { sleep }) => {
+      await sleep(100)
       this.position = [0, 0]
-    }, 100)
-  }
+    },
+  )
 
   willUnmount() {
     // We have to close manually because this is inside a normal window
@@ -94,7 +90,7 @@ class AppWindowStore {
     if (this.closed) return
     Mediator.command(SendClientDataCommand, {
       name: 'CLOSE_APP',
-      value: this.props.id
+      value: this.props.id,
     })
     this.closeApp()
   }

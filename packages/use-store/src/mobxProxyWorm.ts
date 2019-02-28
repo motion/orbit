@@ -96,16 +96,19 @@ export function mobxProxyWorm<A extends Function>(
     store,
     track(id: number, dbg?: CurrentComponent) {
       debug = dbg || null
-      if (debug) console.log('track state', id, state.ids)
+      if (debug) console.log('track start', id, [...state.ids])
       state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
-        state.ids.delete(id)
-        const res = state.keys.get(id)
-        state.keys.delete(id)
-        filterShallowKeys(res)
-        if (debug) console.log('track fin', id, [...state.ids], [...state.keys])
-        return res
+        // we may call untrack() then dispose() later so only do once
+        if (state.ids.has(id)) {
+          state.ids.delete(id)
+          const res = state.keys.get(id)
+          state.keys.delete(id)
+          filterShallowKeys(res)
+          if (debug) console.log('track fin', id, [...state.ids], [...state.keys])
+          return res
+        }
       }
     },
   }

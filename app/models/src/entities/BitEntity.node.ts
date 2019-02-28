@@ -105,7 +105,7 @@ export class BitEntity extends BaseEntity implements Bit {
   bits?: Bit[]
 
   @ManyToOne(() => AppEntity)
-  source?: AppBit
+  app?: AppBit
 
   @ManyToOne(() => SpaceEntity)
   space?: Space

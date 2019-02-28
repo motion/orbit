@@ -45,7 +45,7 @@ export function Conversation(props: AppBitMainProps) {
 
   const [nextConvos] = useModels(BitModel, {
     where: {
-      source: item.app,
+      app: item.app,
       type: item.type,
       location: {
         name: item.location.name,
@@ -63,7 +63,7 @@ export function Conversation(props: AppBitMainProps) {
 
   const [prevConvos] = useModels(BitModel, {
     where: {
-      source: item.app,
+      app: item.app,
       type: item.type,
       location: {
         name: item.location.name,

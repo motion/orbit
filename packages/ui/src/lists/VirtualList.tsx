@@ -86,7 +86,6 @@ class VirtualListStore {
   setFrameRef = (ref: HTMLDivElement) => {
     if (this.frameRef || !ref) return
     this.frameRef = ref
-    this.measure()
   }
 
   getFrameHeight() {
@@ -135,19 +134,25 @@ class VirtualListStore {
     }
     const id = this.props.getItem(rowIndex).id
     if (typeof id === 'undefined') {
-      return `index${rowIndex}`
+      return rowIndex
     }
     return id
   }
 
   triggerMeasure = 0
+  measure() {
+    this.triggerMeasure = Date.now()
+  }
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.allowMeasure],
+    () => [this.triggerMeasure, this.props.allowMeasure, this.frameRef],
     async (_, { when, sleep }) => {
-      ensure('this.props.allowMeasure', this.props.allowMeasure)
-      await sleep()
+      console.log('run', this.props.getItem(0), this.props.allowMeasure, this.frameRef)
+      ensure('can measure', this.props.allowMeasure !== false)
       await when(() => !!this.frameRef)
+      if (this.cache) {
+        await sleep()
+      }
 
       if (this.frameRef.clientWidth !== this.width) {
         this.setWidth(this.frameRef.clientWidth)
@@ -158,7 +163,7 @@ class VirtualListStore {
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
           fixedWidth: true,
-          // keyMapper: this.getKey,
+          keyMapper: this.getKey,
         })
       }
     },
@@ -179,10 +184,6 @@ class VirtualListStore {
       this.listRef.recomputeRowHeights()
     },
   )
-
-  measure() {
-    this.triggerMeasure = Date.now()
-  }
 
   resizeAll = () => {
     console.trace('resize all')
@@ -242,13 +243,6 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
     store.measure()
     store.measureHeight()
   })
-
-  useEffect(
-    () => {
-      store.setFrameRef(frameRef.current)
-    },
-    [frameRef.current],
-  )
 
   useEffect(
     () => {
@@ -322,9 +316,14 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
     )
   }
 
+  console.log('RENDER', frameRef, props.items)
+
   return (
     <div
-      ref={frameRef}
+      ref={ref => {
+        frameRef.current = ref
+        ref && store.setFrameRef(ref)
+      }}
       style={{
         height: props.dynamicHeight ? store.height : 'auto',
         flex: props.dynamicHeight ? 'none' : 1,
@@ -356,13 +355,14 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 export function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = { ...defaultProps, ...rawProps }
-  const getItem = useCallback(index => items[index], [items])
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+  const getItem = useCallback(index => itemsRef.current[index], [])
   const store = useStore(VirtualListStore, {
     numItems: items.length,
     getItem,
     allowMeasure,
-    ...(props as any),
+    ...props,
   })
-
   return <VirtualListInner {...props} items={items} store={store} />
 }

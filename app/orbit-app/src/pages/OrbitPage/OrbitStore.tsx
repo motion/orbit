@@ -20,6 +20,7 @@ export class OrbitStore {
   }
 
   setSelectItem: HandleOrbitSelect = (index, appConfig) => {
+    console.warn('????????????????', appConfig)
     this.nextItem = { index, appConfig }
   }
 

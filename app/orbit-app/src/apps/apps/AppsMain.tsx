@@ -2,6 +2,7 @@ import { AppSubView } from '@mcro/kit'
 import React from 'react'
 import { AppProps } from '../AppProps'
 import { AppsMainAddApp } from './AppsMainAddApp'
+import { AppsMainManage } from './AppsMainManage'
 
 export function AppsMain(props: AppProps) {
   if (props.appConfig.identifier !== 'apps') {
@@ -12,5 +13,5 @@ export function AppsMain(props: AppProps) {
     return <AppsMainAddApp identifier={props.appConfig.subId} />
   }
 
-  return null
+  return <AppsMainManage />
 }

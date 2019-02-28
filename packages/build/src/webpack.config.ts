@@ -9,6 +9,7 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 const TerserPlugin = require('terser-webpack-plugin')
+const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -225,6 +226,8 @@ const config = {
     ].filter(Boolean),
   },
   plugins: [
+    new ErrorOverlayPlugin(),
+
     new webpack.DefinePlugin(defines),
 
     new webpack.IgnorePlugin(/electron-log/),

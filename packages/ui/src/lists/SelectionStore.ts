@@ -82,7 +82,7 @@ export class SelectionStore {
     }
   }
 
-  getNextIndex = (curIndex: number, direction: Direction): number => {
+  private getNextIndex(curIndex: number, direction: Direction): number {
     if (!this.movesMap) {
       return -1
     }
@@ -136,7 +136,7 @@ export class SelectionStore {
     return curIndex
   }
 
-  getMovesToNextRow = (dir: Direction, curIndex: number) => {
+  private getMovesToNextRow(dir: Direction, curIndex: number) {
     const amt = dir === Direction.right ? 1 : -1
     const all = this.movesMap
     const hasMove = (index: number) => all[index] && all[index].moves.indexOf(dir) > -1
@@ -195,7 +195,16 @@ export class SelectionStore {
         results = [...results, ...nextMoves]
       }
     }
+
     this.movesMap = results
+
+    // also we'll need to trigger the onSelect callback in case the item changed
+    // this is pretty weird, we are trigger updates from multiple places and all
+    // are a bit wierd. we should unify in one area i think, likely in this store
+    if (this.hasActiveIndex) {
+      console.warn('SHOULD BE SELECTING NEW.///////////')
+      this.props.onSelect(this.activeIndex, this.selectEvent)
+    }
   }
 
   getIndexForItem = (index: number) => {

@@ -1,5 +1,5 @@
-import { ensure, react } from '@mcro/use-store';
-import { ListItemProps } from './ListItem';
+import { ensure, react } from '@mcro/use-store'
+import { ListItemProps } from './ListItem'
 
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
@@ -83,6 +83,7 @@ export class ListItemStore {
   updateIsSelected = react(this.getIsSelected, async (isSelected, { sleep }) => {
     const { onSelect } = this.props
     ensure('changed', isSelected !== this.isSelected)
+    console.log('new isSelected', isSelected, this.index)
     // set this before doing callbacks to allow for instant update
     this.isSelected = isSelected
 

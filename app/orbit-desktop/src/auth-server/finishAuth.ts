@@ -1,22 +1,13 @@
-import {
-  AppBit,
-  AppEntity,
-  AppIdentifier,
-  DriveApp,
-  GmailApp,
-  SlackApp,
-  SpaceEntity,
-  UserEntity,
-} from '@mcro/models'
+import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@mcro/models'
 import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
 
-export const finishAuth = (type: AppIdentifier, values: OauthValues) => {
+export const finishAuth = (type: string, values: OauthValues) => {
   createSource(type, values)
 }
 
-const createSource = async (type: AppIdentifier, values: OauthValues) => {
+const createSource = async (type: string, values: OauthValues) => {
   console.log('createSource', values)
 
   if (!values.token) {
@@ -40,11 +31,11 @@ const createSource = async (type: AppIdentifier, values: OauthValues) => {
   }
 
   if (app.identifier === 'slack') {
-    const loader = new SlackLoader(app as SlackApp)
+    const loader = new SlackLoader(app)
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = app.data.values as SlackApp['data']['values']
+    const values = (app.data.values as any)['data']['values']
     values.team = {
       id: team.id,
       name: team.name,
@@ -56,12 +47,12 @@ const createSource = async (type: AppIdentifier, values: OauthValues) => {
     app.name = values.info.username
   } else if (app.identifier === 'drive') {
     // load account info
-    const loader = new DriveLoader(app as DriveApp)
+    const loader = new DriveLoader(app)
     const about = await loader.loadAbout()
     app.name = about.user.emailAddress
   } else if (app.identifier === 'gmail') {
     // load account info
-    const loader = new GMailLoader(app as GmailApp)
+    const loader = new GMailLoader(app)
     const profile = await loader.loadProfile()
     app.name = profile.emailAddress
   }

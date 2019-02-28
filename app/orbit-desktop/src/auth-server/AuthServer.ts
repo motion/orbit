@@ -1,6 +1,5 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { AppIdentifier } from '@mcro/models'
 import bodyParser from 'body-parser'
 import express from 'express'
 import session from 'express-session'
@@ -153,7 +152,7 @@ export class AuthServer {
         Passport.authenticate(name, options, null),
         (req, res) => {
           const values: OauthValues = req.user || req['currentUser']
-          finishAuth(name as AppIdentifier, values)
+          finishAuth(name, values)
           res.send(`
 <html>
   <head>

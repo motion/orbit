@@ -9,21 +9,20 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { AppData } from '../interfaces/app-data/AppData'
-import { AppIdentifier } from '../interfaces/AppBit'
+import { AppBit } from '../interfaces/AppBit'
 import { ItemType } from '../interfaces/ItemType'
 import { Space } from '../interfaces/Space'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()
-export class AppEntity extends BaseEntity {
+export class AppEntity extends BaseEntity implements AppBit {
   target: 'app' = 'app'
 
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column()
-  identifier?: AppIdentifier | string
+  @Column({ type: String })
+  identifier?: string
 
   @Column({ default: '' })
   sourceIdentifier?: string
@@ -54,7 +53,7 @@ export class AppEntity extends BaseEntity {
   pinned?: boolean
 
   @Column('simple-json', { default: '{}' })
-  data?: AppData
+  data?: any
 
   @CreateDateColumn()
   createdAt?: Date

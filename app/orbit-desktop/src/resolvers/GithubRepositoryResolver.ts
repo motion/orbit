@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
-import { AppEntity, GithubApp, GithubRepositoryModel } from '@mcro/models'
+import { AppEntity, GithubRepositoryModel } from '@mcro/models'
 import { GithubLoader } from '@mcro/services'
 import { getRepository } from 'typeorm'
 
@@ -19,7 +19,7 @@ export const GithubRepositoryManyResolver = resolveMany(
     }
 
     log.timer('load user repositories', { app })
-    const loader = new GithubLoader(app as GithubApp, log)
+    const loader = new GithubLoader(app, log)
     const repositories = await loader.loadUserRepositories()
     log.timer('load user repositories', repositories)
     return repositories

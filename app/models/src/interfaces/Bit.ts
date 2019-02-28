@@ -1,5 +1,4 @@
-import { BitData } from '../bit-data/BitData'
-import { AppBit, AppIdentifier } from './AppBit'
+import { AppBit } from './AppBit'
 import { BitContentType } from './BitContentType'
 import { Location } from './Location'
 
@@ -17,7 +16,7 @@ export interface Bit {
   /**
    * App type.
    */
-  appIdentifier?: AppIdentifier
+  appIdentifier?: string
 
   /**
    * App id.
@@ -123,7 +122,7 @@ export interface Bit {
   /**
    * Additional bit data.
    */
-  data?: BitData
+  data?: any
 
   /**
    * Used for filtering: slack room, github repo, google doc folder, etc

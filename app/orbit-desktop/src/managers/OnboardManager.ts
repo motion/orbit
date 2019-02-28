@@ -26,7 +26,7 @@ const sourcePatterns = [
   { name: 'atlassian', patterns: ['%atlassian.net%'] },
   { name: 'github', patterns: ['%github.com%'] },
   { name: 'gmail', patterns: ['%gmail.com%', '%mail.google.com/mail%'] },
-  { name: 'AppIdentifier', patterns: ['%.slack.com%'] },
+  { name: 'slack', patterns: ['%.slack.com%'] },
   { name: 'drive', patterns: ['%docs.google.com%'] },
 ]
 

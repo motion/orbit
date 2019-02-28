@@ -1,9 +1,10 @@
 import { Logger } from '@mcro/logger'
 import { Subscription } from '@mcro/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
-import { getRepository } from 'typeorm'
+import { getManager, getRepository } from 'typeorm'
 import { Mediator } from '../mediator'
-import { SyncerOptions } from './AppSyncer'
+import { SyncerOptions, SyncerUtils } from '@mcro/sync-kit'
+import { checkCancelled } from '../resolvers/AppForceCancelResolver'
 import Timer = NodeJS.Timer
 
 /**
@@ -38,7 +39,7 @@ export class Syncer {
 
   constructor(options: SyncerOptions) {
     this.options = options
-    this.name = options.name || options.constructor.name
+    this.name = options.name
     this.log = new Logger('syncer:' + (options.appIdentifier || this.name))
   }
 
@@ -55,9 +56,7 @@ export class Syncer {
         }
       } else {
         this.subscription = Mediator.observeMany(AppModel, {
-          // TODO @umed type
-          // @ts-ignore
-          args: { where: { type: this.options.type } },
+          args: { where: { identifier: this.options.appIdentifier } },
         }).subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {
@@ -245,9 +244,15 @@ export class Syncer {
 
     try {
       log.clean() // clean syncer timers, do a fresh logger start
-      log.timer(`${this.options.constructor.name} sync`)
-      const syncer = new this.options.constructor(app, log)
-      await syncer.run()
+      log.timer(`${this.options.name} sync`)
+      await this.options.runner({
+        app,
+        log,
+        manager: getManager(),
+        isAborted: () => checkCancelled(app.id),
+        utils: new SyncerUtils(app, log, getManager()),
+        mediator: Mediator
+      })
 
       // update our job (finish successfully)
       job.status = 'COMPLETE'

@@ -18,7 +18,7 @@ export default function Strategy(options, verify) {
   this._team = options.team
 
   OAuth2Strategy.call(this, options, verify)
-  this.name = options.name || 'AppIdentifier'
+  this.name = options.name || 'slack'
 
   // warn is not enough scope
   // Details on Slack's identity scope - https://api.slack.com/methods/users.identity
@@ -74,7 +74,7 @@ Strategy.prototype.userProfile = function(accessToken, done) {
             done(null, profile)
           }
         } else {
-          profile.provider = 'AppIdentifier'
+          profile.provider = 'slack'
           profile.id = profile.user.id
           profile.displayName = profile.user.name
           profile.error = null

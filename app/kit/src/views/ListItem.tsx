@@ -10,8 +10,8 @@ import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { itemViewsListItem } from './itemViews'
 
-type OrbitItemComponent<A> = React.FunctionComponent<OrbitItemViewProps<A>> & {
-  itemProps?: OrbitItemViewProps<A>
+type OrbitItemComponent = React.FunctionComponent<OrbitItemViewProps> & {
+  itemProps?: OrbitItemViewProps
 }
 
 export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
@@ -24,7 +24,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   // extra props for orbit list items
   people?: Bit[]
   hidePeople?: boolean
-  itemViewProps?: OrbitItemViewProps<any>
+  itemViewProps?: OrbitItemViewProps
   appConfig?: AppConfig
 }
 
@@ -33,7 +33,7 @@ export const ListItem = React.memo(
     const { appStore, selectionStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
-    let ItemView: OrbitItemComponent<any> = null
+    let ItemView: OrbitItemComponent = null
     let itemProps: Partial<ListItemProps> = null
     let normalized: NormalItem = null
 

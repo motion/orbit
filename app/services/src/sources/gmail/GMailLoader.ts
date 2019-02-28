@@ -1,21 +1,21 @@
 import { Logger } from '@mcro/logger'
-import { GmailApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoaderAppSaveCallback } from '../../loader/ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
+import { AppBit } from '@mcro/models'
 
 /**
  * Loads data from GMail service.
  */
 export class GMailLoader {
-  private app: GmailApp
+  private app: AppBit
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(app: GmailApp, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+  constructor(app: AppBit, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.app = app
     this.log = log || new Logger('service:gmail:loader:' + this.app.id)
     this.loader = new ServiceLoader(this.app, this.log, saveCallback)

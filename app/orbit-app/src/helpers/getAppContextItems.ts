@@ -13,8 +13,7 @@ export function getAppContextItems(app: AppBit) {
             message: `Deleting this app will remove it from this space and delete it's data.`,
           })
         ) {
-          // TODO @umed type off
-          remove(AppModel, app as any)
+          remove(AppModel, app)
         }
       },
     },

@@ -12,8 +12,6 @@ export function useAppInfo(
   const bitsCount = useModelCount(BitModel, hasApp && { where: { appId } })
   const [lastJob] = useModel(
     JobModel,
-    // TODO @umed type off
-    // @ts-ignore
     hasApp && {
       where: { appId },
       order: { id: 'DESC' },

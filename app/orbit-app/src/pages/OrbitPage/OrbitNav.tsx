@@ -101,8 +101,7 @@ export default memo(function OrbitNav() {
               {
                 label: isPinned ? 'Unpin' : 'Pin',
                 click() {
-                  // TODO @umed type pain
-                  save(AppModel, { ...app, pinned: !app.pinned } as any)
+                  save(AppModel, { ...app, pinned: !app.pinned })
                 },
               },
               ...getAppContextItems(app),

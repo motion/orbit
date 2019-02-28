@@ -1,6 +1,6 @@
 import { useModel } from '@mcro/bridge'
 import { AppProps } from '@mcro/kit'
-import { AppModel, DriveApp } from '@mcro/models'
+import { AppBit, AppModel } from '@mcro/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
 import * as React from 'react'
@@ -9,7 +9,7 @@ import { SettingManageRow } from '../../views/SettingManageRow'
 type Props = AppProps
 
 class DriveSettingsStore {
-  props: { app?: DriveApp }
+  props: { app?: AppBit }
   popularFolders = []
 
   async didMount() {
@@ -44,7 +44,7 @@ class DriveSettingsStore {
 
 export function DriveSettings(props: Props) {
   const { subId } = props.appConfig
-  const [app] = useModel<DriveApp, any>(AppModel as any, { where: { id: +subId } })
+  const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders
 

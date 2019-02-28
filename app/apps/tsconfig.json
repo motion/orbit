@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.client",
+  "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     // "composite": true,
     "outDir": "_",
@@ -12,6 +12,7 @@
   //   { "path": "../../packages/ui" },
   //   { "path": "../bridge" },
   //   { "path": "../kit" },
+  //   { "path": "../sync-kit" },
   //   { "path": "../models" }
   // ]
 }

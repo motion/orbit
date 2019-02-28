@@ -1,15 +1,7 @@
 import { useModels } from '@mcro/bridge'
 import { gloss, View } from '@mcro/gloss'
-import { Bit, BitModel, GenericBit } from '@mcro/models'
-import {
-  Button,
-  ChatMessages,
-  Divider,
-  Row,
-  ScrollableContent,
-  SegmentedRow,
-  Title,
-} from '@mcro/ui'
+import { Bit, BitModel } from '@mcro/models'
+import { Button, ChatMessages, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@mcro/ui'
 import * as React from 'react'
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
@@ -38,7 +30,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
           <React.Fragment key={bit.id}>
             <ChatMessages
               key={bit.id}
-              messages={(bit as GenericBit<'AppIdentifier'>).data.messages}
+              messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
             />
             <Divider />
           </React.Fragment>
@@ -53,7 +45,7 @@ export function Conversation(props: AppBitMainProps) {
 
   const [nextConvos] = useModels(BitModel, {
     where: {
-      source: item.source,
+      app: item.app,
       type: item.type,
       location: {
         name: item.location.name,
@@ -71,7 +63,7 @@ export function Conversation(props: AppBitMainProps) {
 
   const [prevConvos] = useModels(BitModel, {
     where: {
-      source: item.source,
+      app: item.app,
       type: item.type,
       location: {
         name: item.location.name,
@@ -108,7 +100,7 @@ export function Conversation(props: AppBitMainProps) {
       <Pane isShown={activePane === 0}>
         <ScrollableContent paddingBottom={50} key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-            {!!props.item && <ChatMessages {...props.item} />}
+            {!!props.item && <ChatMessages messages={props.item.data.messages} />}
           </div>
         </ScrollableContent>
       </Pane>

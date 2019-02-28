@@ -1,25 +1,20 @@
 import { Logger } from '@mcro/logger'
-import { ConfluenceApp } from '@mcro/models'
 import { sleep } from '@mcro/utils'
 import { ServiceLoader } from '../../loader/ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { ConfluenceQueries } from './ConfluenceQueries'
-import {
-  ConfluenceComment,
-  ConfluenceContent,
-  ConfluenceGroup,
-  ConfluenceUser,
-} from './ConfluenceTypes'
+import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
+import { AppBit } from '@mcro/models'
 
 /**
  * Loads confluence data from its API.
  */
 export class ConfluenceLoader {
-  private app: ConfluenceApp
+  private app: AppBit
   private log: Logger
   private loader: ServiceLoader
 
-  constructor(app: ConfluenceApp, log?: Logger) {
+  constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:confluence:loader:' + app.id)
     this.loader = new ServiceLoader(this.app, this.log)

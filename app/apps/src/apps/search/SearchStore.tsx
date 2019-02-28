@@ -1,13 +1,6 @@
 import { loadMany } from '@mcro/bridge'
-import {
-  AppIcon,
-  MarkType,
-  OrbitListItemProps,
-  SearchState,
-  SpaceIcon,
-  useStoresSimple,
-} from '@mcro/kit'
-import { AppBit, AppIdentifier, SearchQuery, SearchResultModel } from '@mcro/models'
+import { AppIcon, MarkType, OrbitListItemProps, SearchState, SpaceIcon, useStoresSimple } from '@mcro/kit'
+import { AppBit, SearchQuery, SearchResultModel } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
@@ -196,7 +189,7 @@ export class SearchStore {
         ...activeFilters.filter(x => x.type === MarkType.App).map(x => x.text),
         // these come from the button bar
         ...Object.keys(exclusiveFilters).filter(x => exclusiveFilters[x]),
-      ] as AppIdentifier[]
+      ]
 
       const locationFilters = activeFilters
         .filter(x => x.type === MarkType.Location)

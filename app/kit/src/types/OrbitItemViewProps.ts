@@ -1,9 +1,9 @@
-import { GenericBit } from '@mcro/models'
 import { ItemRenderText, ListItemHide } from '@mcro/ui'
 import { NormalItem } from './NormalItem'
+import { Bit } from '@mcro/models'
 
-export type OrbitItemViewProps<A> = {
-  item?: GenericBit<A>
+export type OrbitItemViewProps = {
+  item?: Bit
   normalizedItem?: Partial<NormalItem>
   isExpanded?: boolean
   shownLimit?: number

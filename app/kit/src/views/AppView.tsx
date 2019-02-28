@@ -45,9 +45,6 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
   )
 }
 
-let x = new Set()
-window['x'] = x
-
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)

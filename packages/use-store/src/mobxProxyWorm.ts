@@ -68,9 +68,7 @@ export function mobxProxyWorm<A extends Function>(
       if (key.indexOf('isMobX') === 0) return val
       if (key[0] === '_') return val
       const nextPath = `${parentPath ? `${parentPath}.` : ''}${key}`
-      if (debug) {
-        console.log('track get key', key, debug, state.ids)
-      }
+      if (debug) console.log('get key', key, debug, state.ids)
       if (isFunction) {
         // this will ensure prototypical fns will still move through proxyWorm
         return (...args: any[]) => val.call(store, ...args)
@@ -98,9 +96,7 @@ export function mobxProxyWorm<A extends Function>(
     store,
     track(id: number, dbg?: CurrentComponent) {
       debug = dbg || null
-      if (debug) {
-        console.log('tracking', id, state.ids, debug)
-      }
+      if (debug) console.log('track state', id, state.ids)
       state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
@@ -108,9 +104,7 @@ export function mobxProxyWorm<A extends Function>(
         const res = state.keys.get(id)
         state.keys.delete(id)
         filterShallowKeys(res)
-        if (debug) {
-          console.log('done tracking', id, res, debug)
-        }
+        if (debug) console.log('track fin', id, [...state.ids], [...state.keys])
         return res
       }
     },

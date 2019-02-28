@@ -113,12 +113,6 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     return this.containerRef
   }
 
-  componentWillReceiveProps(nextProps: DynamicListProps) {
-    if (nextProps.rowCount !== this.props.rowCount || nextProps.pureData !== this.props.pureData) {
-      this.queueMeasurements(nextProps)
-    }
-  }
-
   componentDidMount() {
     // perform initial measurements and container dimension calculation
     this.recalculateContainerDimensions()
@@ -126,6 +120,12 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     // if onMount we didn't add any measurements then we've successfully calculated all row sizes
     if (this.measureQueue.size === 0) {
       this.onMount()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.rowCount !== this.props.rowCount || prevProps.pureData !== this.props.pureData) {
+      this.queueMeasurements(prevProps)
     }
   }
 

@@ -77,18 +77,18 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   })
 
   return (
-    // <React.StrictMode>
-    <ContextMenuProvider
-      onContextMenu={items => {
-        if (ContextMenu) {
-          ContextMenu.update({ prepend: items })
-        }
-      }}
-    >
-      <ThemeProvide themes={themes}>
-        <OrbitBrowser />
-      </ThemeProvide>
-    </ContextMenuProvider>
-    // </React.StrictMode>
+    <React.StrictMode>
+      <ContextMenuProvider
+        onContextMenu={items => {
+          if (ContextMenu) {
+            ContextMenu.update({ prepend: items })
+          }
+        }}
+      >
+        <ThemeProvide themes={themes}>
+          <OrbitBrowser />
+        </ThemeProvide>
+      </ContextMenuProvider>
+    </React.StrictMode>
   )
 })

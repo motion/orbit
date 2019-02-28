@@ -235,6 +235,7 @@ export const VirtualListDefaultProps = createContext({
 } as Partial<VirtualListProps<any>>)
 
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
+  console.log('render me yoooooooooooo')
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
 

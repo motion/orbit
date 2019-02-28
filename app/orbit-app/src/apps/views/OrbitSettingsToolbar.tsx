@@ -16,6 +16,8 @@ export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
   const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
 
+  log('toolbar')
+
   useReaction(() => {
     const next = paneManagerStore.activePane.type
     if (next !== activePaneKey) {

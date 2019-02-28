@@ -24,7 +24,7 @@ class OnboardStore {
 
   mount = react(
     () => 1,
-    () => {
+    async () => {
       this.accepted = await command(CheckProxyCommand)
       if (this.accepted && this.curFrame === 0) {
         this.nextFrame()

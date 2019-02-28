@@ -1,30 +1,44 @@
-import { command } from '@mcro/bridge';
-import { isEqual } from '@mcro/fast-compare';
-import { gloss, View, ViewProps } from '@mcro/gloss';
-import { defaultPanes, getIsTorn, getPanes, PaneManagerStore, ProvideStores, QueryStore, settingsPane, SettingStore, showConfirmDialog, SpaceStore, ThemeStore, useActiveSyncApps, useStoresSimple } from '@mcro/kit';
-import { CloseAppCommand } from '@mcro/models';
-import { Theme } from '@mcro/ui';
-import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store';
-import React, { memo, useEffect, useMemo, useRef } from 'react';
-import { ActionsContext, defaultActions } from '../../actions/Actions';
-import { AppsLoader } from '../../apps/AppsLoader';
-import { orbitStaticApps } from '../../apps/orbitApps';
-import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler';
-import { APP_ID } from '../../constants';
-import { useActions } from '../../hooks/useActions';
-import { useManagePaneSort } from '../../hooks/useManagePaneSort';
-import { useMessageHandlers } from '../../hooks/useMessageHandlers';
-import { useStores } from '../../hooks/useStores';
-import { HeaderStore } from '../../stores/HeaderStore';
-import { NewAppStore } from '../../stores/NewAppStore';
-import { OrbitWindowStore } from '../../stores/OrbitWindowStore';
-import { AppWrapper } from '../../views';
-import { OrbitHeader } from './OrbitHeader';
-import { OrbitMain } from './OrbitMain';
-import OrbitSidebar, { SidebarStore } from './OrbitSidebar';
-import { OrbitStatusBar } from './OrbitStatusBar';
-import { OrbitStore } from './OrbitStore';
-import { OrbitToolBar } from './OrbitToolBar';
+import { command } from '@mcro/bridge'
+import { isEqual } from '@mcro/fast-compare'
+import { gloss, View, ViewProps } from '@mcro/gloss'
+import {
+  defaultPanes,
+  getIsTorn,
+  getPanes,
+  PaneManagerStore,
+  ProvideStores,
+  QueryStore,
+  settingsPane,
+  SettingStore,
+  showConfirmDialog,
+  SpaceStore,
+  ThemeStore,
+  useActiveSyncApps,
+  useStoresSimple,
+} from '@mcro/kit'
+import { CloseAppCommand } from '@mcro/models'
+import { Theme } from '@mcro/ui'
+import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
+import React, { memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { ActionsContext, defaultActions } from '../../actions/Actions'
+import { AppsLoader } from '../../apps/AppsLoader'
+import { orbitStaticApps } from '../../apps/orbitApps'
+import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
+import { APP_ID } from '../../constants'
+import { useActions } from '../../hooks/useActions'
+import { useManagePaneSort } from '../../hooks/useManagePaneSort'
+import { useMessageHandlers } from '../../hooks/useMessageHandlers'
+import { useStores } from '../../hooks/useStores'
+import { HeaderStore } from '../../stores/HeaderStore'
+import { NewAppStore } from '../../stores/NewAppStore'
+import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
+import { AppWrapper } from '../../views'
+import { OrbitHeader } from './OrbitHeader'
+import { OrbitMain } from './OrbitMain'
+import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
+import { OrbitStatusBar } from './OrbitStatusBar'
+import { OrbitStore } from './OrbitStore'
+import { OrbitToolBar } from './OrbitToolBar'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
@@ -89,6 +103,12 @@ function OrbitManagers() {
 const OrbitPageInner = memo(function OrbitPageInner() {
   const Actions = useActions()
   const { paneManagerStore } = useStores()
+  useEffect(() => {
+    log('Orbitpage effect unmount')
+  })
+  useLayoutEffect(() => {
+    log('Orbitpage layouot unmount')
+  })
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
   const sidebarStore = useStoreSimple(SidebarStore)

@@ -25,7 +25,7 @@ export function setupTrackableStore(
     }
     return opts.debug || (opts.component && opts.component.__debug)
   }
-  const name = `)) ${opts.component.renderName}`
+  const name = opts.component.renderName
   const storeName = store.constructor.name
   let paused = true
   let reactiveKeys = new Set()
@@ -99,18 +99,20 @@ export function setupTrackableStore(
   if (!config) {
     config = mobxProxyWorm(store)
     DedupedWorms.set(store, config)
+    console.log('init store', store)
   }
 
   // done gives us back the keys it tracked
   let done: ReturnType<typeof config['track']> = null
   let disposed = false
+  let id = 0
 
   return {
     store: config.store,
     track() {
       paused = true
-      const id = Math.random()
-      if (debug()) console.log('track()  ', id, name, storeName, config.state)
+      id = Math.random()
+      if (debug()) console.log('track()', id, name, storeName, config.state, store)
       done = config.track(id, debug())
     },
     untrack() {
@@ -123,7 +125,7 @@ export function setupTrackableStore(
         reaction.schedule()
       }
       if (debug()) {
-        console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep keys]')
+        console.log('untrack()', id, name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
       }
     },
     dispose() {

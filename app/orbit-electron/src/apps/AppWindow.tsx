@@ -101,7 +101,6 @@ class AppWindowStore {
     }
     this.closed = true
     this.window.close()
-    apps.delete(this)
   }
 }
 

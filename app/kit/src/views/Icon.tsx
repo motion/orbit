@@ -81,7 +81,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
           opacity,
           ...style,
         }}
-        cleanup={[color ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(Boolean)}
+        cleanup={[finalColor ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(Boolean)}
       />
     </View>
   )

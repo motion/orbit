@@ -11,7 +11,7 @@ export type AppIconProps = { app: AppBit; removeStroke?: boolean } & Partial<Orb
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
 export function AppIconInner({
-  background = '#222',
+  background,
   size = 32,
   style,
   removeStroke = true,
@@ -19,6 +19,7 @@ export function AppIconInner({
 }: OrbitIconProps) {
   const theme = useTheme()
   const fill = color(props.color || theme.iconFill || '#fff').hex()
+  console.log('fill', fill)
 
   if (!appIcons[props.name]) {
     return null

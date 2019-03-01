@@ -14,7 +14,7 @@ import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { AppProps } from '../AppProps'
 import { orbitApps } from '../orbitApps'
 
-function getFeatures(def: AppDefinition) {
+function getDescription(def: AppDefinition) {
   const hasSync = !!def.sync
   const hasClient = !!def.app
   const titles = [hasSync ? 'Data Source' : '', hasClient ? 'Client' : ''].filter(Boolean)
@@ -23,8 +23,8 @@ function getFeatures(def: AppDefinition) {
 
 function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
   return {
-    title: app.definition.name,
-    subtitle: <OrbitAppInfo {...app} />,
+    title: app.app ? app.app.name : app.definition.name,
+    subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}`,
     iconBefore: true,
     appConfig: {
@@ -46,7 +46,7 @@ export function AppsIndex(_props: AppProps) {
     return null
   }
 
-  const sourceIcon = <Icon size={20} name="database" />
+  const sourceIcon = <Icon opacity={0.5} size={20} name="database" />
 
   return (
     <List
@@ -60,7 +60,7 @@ export function AppsIndex(_props: AppProps) {
           icon: def.id,
           iconBefore: true,
           slim: true,
-          subtitle: getFeatures(def),
+          subtitle: getDescription(def),
           after: sourceIcon,
           appConfig: {
             identifier: 'apps',

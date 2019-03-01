@@ -74,5 +74,5 @@ const OrbitMainContainer = gloss<{ isTorn: boolean }>({
 }).theme(({ isTorn }, theme) => ({
   background: isTorn
     ? theme.mainBackground || theme.background
-    : theme.mainBackground || 'transparent',
+    : theme.mainBackground || theme.background || 'transparent',
 }))

@@ -74,7 +74,7 @@ class OrbitWindowStore {
     screenSize => {
       ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
-      let scl = 0.76
+      let scl = 0.8
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide

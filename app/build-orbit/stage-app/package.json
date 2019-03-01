@@ -8,7 +8,7 @@
     "@mcro/orbit": "*"
   },
   "devDependencies": {
-    "electron": "4.0.4"
+    "electron": "4.0.6"
   },
   "build": {
     "appId": "com.o.orbit",

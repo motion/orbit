@@ -29,6 +29,7 @@ export const SubPane = memo(function SubPane(props: Props) {
     offsetY,
     transition = 'opacity ease 90ms, transform ease 120ms',
     children,
+    zIndex,
     ...rest
   } = props
   const subPaneStore = useStore(SubPaneStore, props)
@@ -46,7 +47,7 @@ export const SubPane = memo(function SubPane(props: Props) {
   })
 
   return (
-    <SubPaneFrame isActive={isActive}>
+    <SubPaneFrame isActive={isActive} zIndex={zIndex}>
       {typeof before === 'function' ? before(isActive) : before}
       {!!offsetY && <div style={{ height: offsetY, pointerEvents: 'none' }} />}
       <SubPaneInner ref={subPaneStore.innerPaneRef}>
@@ -84,7 +85,6 @@ const SubPaneFrame = gloss(UI.FullScreen, {
   opacity: 0,
   isActive: {
     opacity: 1,
-    pointerEvents: 'inherit',
   },
 })
 
@@ -96,13 +96,14 @@ const Pane = gloss(UI.View, {
   overflow: 'hidden',
 }).theme(({ isLeft, isActive }) => ({
   opacity: isActive ? 1 : 0,
-  pointerEvents: isActive ? 'inherit' : 'none',
+  pointerEvents: isActive ? 'auto' : 'none',
   transform: {
     x: isActive ? 0 : isLeft ? -10 : 10,
   },
 }))
 
 const SubPaneInner = gloss(UI.View, {
+  pointerEvents: 'inherit',
   position: 'relative',
   flex: 1,
 })

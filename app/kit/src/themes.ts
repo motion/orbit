@@ -132,7 +132,7 @@ const dark = {
     colorActive: '#fff',
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
-    tabBackgroundTop: darkBackground.alpha(0.85),
+    tabBackgroundTop: darkBackground.alpha(0.15),
     tabBackgroundBottom: darkBackground.alpha(0.8),
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [255, 255, 255, 0.015],

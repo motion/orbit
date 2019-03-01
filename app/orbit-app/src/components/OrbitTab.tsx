@@ -210,7 +210,9 @@ const NavButtonChrome = gloss<TabProps>({
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
 
   const glowStyle = {
-    background: isActive ? background : theme.tabInactiveHover || [0, 0, 0, 0.05],
+    background: isActive
+      ? background
+      : linearGradient(theme.tabInactiveHover, 'transparent' || [0, 0, 0, 0.05]),
     transition: isActive ? 'none' : tabTransition,
   }
 

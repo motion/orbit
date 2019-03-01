@@ -44,7 +44,7 @@ const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
   }
 
   return (
-    <SubPane left={left} id={id} fullHeight>
+    <SubPane left={left} id={id} fullHeight zIndex={10}>
       <OrbitPageMainView id={id} identifier={identifier} />
     </SubPane>
   )
@@ -55,17 +55,19 @@ const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
   const { orbitStore } = useStores()
   const appConfig = orbitStore.activeConfig[id] || {}
   return (
-    <OrbitMainContainer isTorn={orbitStore.isTorn}>
-      <AppView
-        key={JSON.stringify(appConfig)}
-        id={id}
-        identifier={identifier}
-        viewType="main"
-        appConfig={appConfig}
-        before={<OrbitToolBarHeight identifier={identifier} />}
-        after={<OrbitStatusBarHeight identifier={identifier} />}
-      />
-    </OrbitMainContainer>
+    <>
+      <OrbitToolBarHeight identifier={identifier} />
+      <OrbitMainContainer isTorn={orbitStore.isTorn}>
+        <AppView
+          key={JSON.stringify(appConfig)}
+          id={id}
+          identifier={identifier}
+          viewType="main"
+          appConfig={appConfig}
+          after={<OrbitStatusBarHeight identifier={identifier} />}
+        />
+      </OrbitMainContainer>
+    </>
   )
 })
 

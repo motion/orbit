@@ -51,17 +51,16 @@ export function setupTrackableStore(
 
   // this lets us handle deep objects
   const reaction = new Reaction(`track(${name})`, () => {
-    if (paused) return
     reaction.track(() => {
-      if (deepKeys.length) {
-        transaction(() => {
-          if (debug()) console.log('update', name, storeName, deepKeys, '[reactive key]')
-          deepKeys.forEach(key => {
-            get(store, key)
-          })
+      if (paused) return
+      if (!deepKeys.length) return
+      transaction(() => {
+        deepKeys.forEach(key => {
+          get(store, key)
         })
-        queueUpdate(update)
-      }
+      })
+      if (debug()) console.log('update', name, storeName, deepKeys, '[deepKeys]')
+      queueUpdate(update)
     })
   })
 
@@ -72,7 +71,7 @@ export function setupTrackableStore(
       observe(store, change => {
         const key = change['name']
         if (reactiveKeys.has(key)) {
-          if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+          console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
           queueUpdate(update)
         }
       }),
@@ -83,7 +82,7 @@ export function setupTrackableStore(
     observers.push(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
-          if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
+          console.log('update', name, `${storeName}.${key}`, '[getter]')
           queueUpdate(update)
         }
       }),
@@ -109,7 +108,6 @@ export function setupTrackableStore(
     store: config.store,
     track() {
       paused = true
-      if (debug()) console.log('track()', name, storeName, config.state, store)
       done = config.track(debug())
     },
     untrack() {
@@ -120,12 +118,14 @@ export function setupTrackableStore(
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
         reaction.schedule()
+        if (debug()) console.log('schedule reaction')
       }
       if (debug()) {
         console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
       }
     },
     dispose() {
+      if (debug()) console.log('dispose reaction', name, storeName)
       disposed = true
       if (done) done()
       removeUpdate(update)

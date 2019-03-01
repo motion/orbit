@@ -202,7 +202,6 @@ export class SelectionStore {
     // this is pretty weird, we are trigger updates from multiple places and all
     // are a bit wierd. we should unify in one area i think, likely in this store
     if (this.hasActiveIndex) {
-      console.warn('SHOULD BE SELECTING NEW.///////////')
       this.props.onSelect(this.activeIndex, this.selectEvent)
     }
   }

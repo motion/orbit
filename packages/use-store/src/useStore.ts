@@ -37,7 +37,7 @@ type UseStoreOptions = {
   react?: boolean
 }
 
-export function disposeStore(store: any, component: CurrentComponent) {
+export function disposeStore(store: any, component?: CurrentComponent) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
   if (process.env.NODE_ENV === 'development') {
@@ -96,6 +96,9 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
   const hasChangedSource = store && !isSourceEqual(store, Store)
 
   if (!store || hasChangedSource) {
+    if (hasChangedSource) {
+      disposeStore(state.current.store)
+    }
     state.current = setupReactiveStore(Store, props)
   } else {
     // ensure we dont have different number of hooks by re-running them

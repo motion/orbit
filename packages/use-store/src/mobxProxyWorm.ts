@@ -51,6 +51,7 @@ export function mobxProxyWorm<A extends Function>(
     keys: new Map<number, Set<string>>(),
     add: (next: string) => {
       if (state.activeId !== -1) {
+        if (state.debug) console.log('add key', next, state.activeId)
         state.keys.get(state.activeId).add(next)
       }
     },
@@ -82,7 +83,6 @@ export function mobxProxyWorm<A extends Function>(
         // by binding store to val, so they use the proxy worm as `this`
         return (...args: any[]) => val.call(store, ...args)
       }
-      if (state.debug) console.log('add key', key, state.activeId)
       state.add(nextPath)
       if (val) {
         if (val[IS_PROXY]) return val
@@ -108,7 +108,7 @@ export function mobxProxyWorm<A extends Function>(
     track(dbg?: boolean) {
       const id = nextId()
       state.debug = dbg || false
-      if (state.debug) console.log('track start', id, [...state.ids])
+      // if (state.debug) console.log('track start', id, [...state.ids])
       state.activeId = id
       state.ids.add(id)
       state.keys.set(id, new Set())
@@ -119,7 +119,7 @@ export function mobxProxyWorm<A extends Function>(
           state.ids.delete(id)
           const res = state.keys.get(id)
           state.keys.delete(id)
-          if (state.debug) console.log('track fin', id, [...res], [...state.ids], [...state.keys])
+          // if (state.debug) console.log('track fin', id, [...res], [...state.ids])
           filterShallowKeys(res)
           return res
         }

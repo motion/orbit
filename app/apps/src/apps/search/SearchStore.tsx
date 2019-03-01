@@ -26,7 +26,6 @@ export class SearchStore {
   searchState: SearchState | null = null
 
   setSearchState(next: SearchState) {
-    console.log('setting search state')
     this.searchState = next
   }
 

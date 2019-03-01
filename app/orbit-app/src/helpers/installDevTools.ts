@@ -96,6 +96,7 @@ debugUseStore(event => {
       if (window['enableLog']) {
         console.log(event.component.renderName, event)
       }
+      if (!event.component) return
       addEvent(event.component, event)
       return
   }

@@ -8,9 +8,9 @@ export const BarButtonSmall = React.forwardRef(function FloatingBarButtonSmall(
   return (
     <Button
       ref={ref}
-      glint={false}
       borderWidth={0}
-      sizeHeight={0.85}
+      glint={false}
+      sizeHeight={0.8}
       sizeIcon={1.5}
       fontWeight={400}
       size={0.95}

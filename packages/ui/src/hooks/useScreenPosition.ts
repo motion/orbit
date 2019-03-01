@@ -34,7 +34,7 @@ export function useScreenPosition<T extends React.RefObject<HTMLDivElement>>(
   }
 
   useResizeObserver(
-    curNode,
+    curNode.current,
     debounce(() => {
       console.log('has resized')
     }, 32),

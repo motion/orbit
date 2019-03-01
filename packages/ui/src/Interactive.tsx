@@ -20,14 +20,14 @@ type CursorState = {
   left: number
 }
 
-type ResizingSides = {
+export type ResizableSides = {
   left?: boolean
   top?: boolean
   bottom?: boolean
   right?: boolean
 }
 
-const ALL_RESIZABLE: ResizingSides = {
+const ALL_RESIZABLE: ResizableSides = {
   bottom: true,
   left: true,
   right: true,
@@ -57,12 +57,12 @@ export type InteractiveProps = {
   minHeight: number
   maxWidth?: number
   maxHeight?: number
-  onCanResize?: (sides?: ResizingSides) => void
+  onCanResize?: (sides?: ResizableSides) => void
   onResizeStart?: () => void
   onResizeEnd?: () => void
   onResize?: (width: number, height?: number, desiredWidth?: number, desiredHeight?: number) => void
   resizing?: boolean
-  resizable?: boolean | ResizingSides
+  resizable?: boolean | ResizableSides
   innerRef?: (elem: HTMLElement) => void
   style?: Object
   className?: string
@@ -74,7 +74,7 @@ type InteractiveState = {
   movingInitialProps: InteractiveProps | void
   movingInitialCursor: CursorState | void
   cursor: string | void
-  resizingSides: ResizingSides
+  resizingSides: ResizableSides
   couldResize: boolean
   resizing: boolean
   resizingInitialRect: Rect | void
@@ -437,7 +437,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  getResizable(): ResizingSides {
+  getResizable(): ResizableSides {
     const { resizable } = this.props
     if (resizable === true) {
       return ALL_RESIZABLE

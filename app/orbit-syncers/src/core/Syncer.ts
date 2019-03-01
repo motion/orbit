@@ -1,10 +1,10 @@
-import { Logger } from '@mcro/logger'
-import { Subscription } from '@mcro/mediator'
-import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
-import { getManager, getRepository } from 'typeorm'
-import { Mediator } from '../mediator'
-import { SyncerOptions, SyncerUtils } from '@mcro/sync-kit'
-import { checkCancelled } from '../resolvers/AppForceCancelResolver'
+import { Logger } from '@mcro/logger';
+import { Subscription } from '@mcro/mediator';
+import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models';
+import { SyncerOptions, SyncerUtils } from '@mcro/sync-kit';
+import { getManager, getRepository } from 'typeorm';
+import { Mediator } from '../mediator';
+import { checkCancelled } from '../resolvers/AppForceCancelResolver';
 import Timer = NodeJS.Timer
 
 /**
@@ -245,13 +245,13 @@ export class Syncer {
     try {
       log.clean() // clean syncer timers, do a fresh logger start
       log.timer(`${this.options.name} sync`)
+
       await this.options.runner({
         app,
         log,
         manager: getManager(),
-        isAborted: () => checkCancelled(app.id),
-        utils: new SyncerUtils(app, log, getManager()),
-        mediator: Mediator
+        isAborted: async () => checkCancelled(app.id) && void 0,
+        utils: new SyncerUtils(app, log, getManager(), async () => !!checkCancelled(app.id), Mediator),
       })
 
       // update our job (finish successfully)

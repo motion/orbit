@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
+import { AppBit } from '@mcro/models'
 import { EntityManager } from 'typeorm'
 import { SyncerUtils } from './SyncerUtils'
-import { AppBit } from '@mcro/models'
 
 /**
  * Options to be passed to Syncer.
@@ -35,7 +35,6 @@ export interface SyncerOptions {
  * Options passed to the syncer runner.
  */
 export type CreateSyncerOptions = {
-
   /**
    * App bit.
    */
@@ -54,13 +53,12 @@ export type CreateSyncerOptions = {
   /**
    * Used to check if sync is aborted.
    */
-  isAborted: () => Promise<boolean>
+  isAborted: () => Promise<void>
 
   /**
    * Set of utils help write custom syncers.
    */
   utils: SyncerUtils
-
 }
 
 /**
@@ -72,4 +70,3 @@ export type SyncerRunner = (options: CreateSyncerOptions) => any
  * Helper factory function that helps to create syncer in easy type-safe manner.
  */
 export const createSyncer = (runner: SyncerRunner): SyncerRunner => runner
-

@@ -13,6 +13,7 @@ export function checkCancelled(appId: number) {
     cancelCommands.delete(appId)
     throw new AppCancelError(`Cancelled: ${appId}`)
   }
+  return true
 }
 
 export const AppForceCancelResolver: any = resolveCommand(

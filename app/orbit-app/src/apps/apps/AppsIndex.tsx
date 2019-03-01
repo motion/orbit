@@ -1,10 +1,13 @@
 import {
   AppDefinition,
+  AppWithDefinition,
   List,
+  OrbitListItemProps,
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
 } from '@mcro/kit'
+import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 import { AppProps } from '../AppProps'
@@ -17,11 +20,26 @@ function getFeatures(def: AppDefinition) {
   return titles.join(', ')
 }
 
+function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
+  return {
+    title: app.definition.name,
+    subtitle: <OrbitAppInfo {...app} />,
+    icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}`,
+    iconBefore: true,
+    appConfig: {
+      viewType: 'settings' as 'settings',
+      subId: `${app.app.id}`,
+      identifier: app.app.identifier,
+    },
+    ...extraProps,
+  }
+}
+
 export function AppsIndex(_props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
-  const sourceAppInfo = useActiveAppsWithDefinition()
+  const [syncApps, clientApps] = partition(useActiveAppsWithDefinition(), x => !!x.definition.sync)
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -31,19 +49,8 @@ export function AppsIndex(_props: AppProps) {
     <List
       minSelected={0}
       items={[
-        ...sourceAppInfo.map(app => ({
-          group: 'Apps',
-          title: app.definition.name,
-          subtitle: <OrbitAppInfo {...app} />,
-          icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}`,
-          iconBefore: true,
-          total: sourceAppInfo.length,
-          appConfig: {
-            viewType: 'settings' as 'settings',
-            subId: `${app.app.id}`,
-            identifier: app.app.identifier,
-          },
-        })),
+        ...clientApps.map(x => getAppItem(x, { group: 'Apps' })),
+        ...syncApps.map(x => getAppItem(x, { group: 'Sources' })),
 
         ...allSourceDefinitions.map(def => ({
           group: 'App Store',

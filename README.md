@@ -1,4 +1,4 @@
-![Orbit](https://raw.githubusercontent.com/motion/orbit/master/assets/appicon.png)
+![Orbit](../blob/master/assets/appicon.png?raw=truepng)
 
 <p align="center">
   <b>Orbit</b> - Make amazing apps together.

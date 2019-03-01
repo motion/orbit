@@ -30,7 +30,7 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
     title: typeof props.title === 'string' ? props.title : undefined,
     icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
-    subId: `${props.subId}`,
+    subId: props.subId ? `${props.subId}` : undefined,
     ...props.appConfig,
   }
 }

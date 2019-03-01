@@ -1,5 +1,6 @@
 import { useCurrentComponent } from '@mcro/automagical'
-import { get, isEqual } from 'lodash'
+import { isEqual } from '@mcro/fast-compare'
+import { get } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
@@ -19,14 +20,12 @@ export function setupTrackableStore(
   opts: TrackableStoreOptions = { component: {} },
 ) {
   const debug = () => {
-    if (typeof window !== 'undefined') {
-      if (window['enableLog'] > 1) {
-        return true
-      }
+    if (typeof window !== 'undefined' && window['enableLog'] > 1) {
+      return true
     }
     return opts.debug || (opts.component && opts.component.__debug)
   }
-  const name = `)) ${opts.component.renderName}`
+  const name = opts.component.renderName
   const storeName = store.constructor.name
   let paused = true
   let reactiveKeys = new Set()
@@ -52,16 +51,16 @@ export function setupTrackableStore(
 
   // this lets us handle deep objects
   const reaction = new Reaction(`track(${name})`, () => {
-    if (paused) return
     reaction.track(() => {
-      if (deepKeys.length) {
-        transaction(() => {
-          deepKeys.forEach(key => {
-            get(store, key)
-          })
+      if (paused) return
+      if (!deepKeys.length) return
+      transaction(() => {
+        deepKeys.forEach(key => {
+          get(store, key)
         })
-        queueUpdate(update)
-      }
+      })
+      if (debug()) console.log('update', name, storeName, deepKeys, '[deepKeys]')
+      queueUpdate(update)
     })
   })
 
@@ -72,7 +71,7 @@ export function setupTrackableStore(
       observe(store, change => {
         const key = change['name']
         if (reactiveKeys.has(key)) {
-          if (debug()) console.log(name, 'render via', `${storeName}.${key}`)
+          if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
           queueUpdate(update)
         }
       }),
@@ -83,7 +82,7 @@ export function setupTrackableStore(
     observers.push(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
-          if (debug()) console.log(name, 'render via', `${storeName}.${key}`, '[get]')
+          if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
           queueUpdate(update)
         }
       }),
@@ -103,33 +102,36 @@ export function setupTrackableStore(
 
   // done gives us back the keys it tracked
   let done: ReturnType<typeof config['track']> = null
+  let disposed = false
 
   return {
     store: config.store,
     track() {
       paused = true
-      done = config.track(Math.random(), opts.debug ? opts.component : null)
-      if (debug()) {
-        console.log(name, storeName, 'start tracking', config.state)
-      }
+      done = config.track(debug())
     },
     untrack() {
+      if (disposed) return
       paused = false
       reactiveKeys = done()
       const nextDeepKeys = [...reactiveKeys].filter(x => x.indexOf('.') > 0)
       if (!isEqual(nextDeepKeys, deepKeys)) {
         deepKeys = nextDeepKeys
         reaction.schedule()
+        if (debug()) console.log('schedule reaction')
       }
       if (debug()) {
-        console.log(name, storeName, reactiveKeys, '[reactive keys]', deepKeys, '[deep keys]')
+        console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
       }
     },
     dispose() {
+      if (debug()) console.log('dispose reaction', name, storeName)
+      disposed = true
+      if (done) done()
       removeUpdate(update)
       reaction.dispose()
-      for (const observer of observers) {
-        observer()
+      for (const off of observers) {
+        off()
       }
     },
   }

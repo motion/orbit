@@ -9,10 +9,11 @@ export function queueUpdate(fn: Function) {
   Updates.add(fn)
   tm = setImmediate(() => {
     if (!Updates.size) return
-    unstable_batchedUpdates(() => {
-      ;[...Updates].forEach(fn => fn())
-    })
+    let next = [...Updates]
     Updates.clear()
+    unstable_batchedUpdates(() => {
+      next.forEach(fn => fn())
+    })
   })
 }
 

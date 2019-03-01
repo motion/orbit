@@ -22,9 +22,10 @@ import { AppConfig } from '../types/AppConfig'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type Item = Bit | OrbitListItemProps
-
-export function toListItemProps(props: any): OrbitListItemProps {
+export function toListItemProps(props?: any): OrbitListItemProps {
+  if (!props) {
+    return null
+  }
   if (props.target) {
     return { item: props }
   }
@@ -60,7 +61,7 @@ export type HandleOrbitSelect = ((
 
 export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
   query?: string
-  items?: Item[]
+  items?: (Bit | OrbitListItemProps)[]
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode

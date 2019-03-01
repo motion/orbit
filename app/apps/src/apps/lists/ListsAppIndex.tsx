@@ -15,7 +15,7 @@ import {
   View,
 } from '@mcro/ui'
 import { flow } from 'lodash'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { loadListItem } from './helpers'
 import { API } from './ListsApp'
 import { ListStore } from './ListStore'
@@ -38,57 +38,44 @@ function ListCurrentFolder() {
   // @ts-ignore
   const { listStore } = useStores()
   const { items, currentFolder } = listStore
-
-  const getContextMenu = useCallback(index => {
-    return [
-      {
-        label: 'Delete',
-        click: () => {
-          console.log('delete item', index)
-        },
-      },
-    ]
-  }, [])
-  const onChangeDepth = useCallback((depth, history) => {
-    listStore.depth = depth
-    listStore.history = history
-  }, [])
-
-  const loadItemProps = useCallback((item: ListAppDataItem) => {
-    return loadListItem(item, +listStore.props.id)
-  }, [])
-
-  const handleSortEnd = useCallback(
-    ({ oldIndex, newIndex }) => {
-      const children = arrayMove(currentFolder.children, oldIndex, newIndex)
-      listStore.app.data.items = {
-        ...listStore.app.data.items,
-        [currentFolder.id]: {
-          ...currentFolder,
-          children,
-        },
-      }
-      save(AppModel, listStore.app)
-    },
-    [JSON.stringify(currentFolder)],
-  )
-
-  const handleSelect = useCallback(index => {
-    listStore.selectedIndex = index
-  }, [])
-
   return (
     <View flex={1}>
       <SelectableTreeList
+        sortable
         minSelected={0}
         rootItemID={0}
         items={items}
-        loadItemProps={loadItemProps}
-        sortable
-        onSortEnd={handleSortEnd}
-        getContextMenu={getContextMenu}
-        onSelect={handleSelect}
-        onChangeDepth={onChangeDepth}
+        loadItemProps={(item: ListAppDataItem) => {
+          return loadListItem(item, +listStore.props.id)
+        }}
+        onSortEnd={({ oldIndex, newIndex }) => {
+          const children = arrayMove(currentFolder.children, oldIndex, newIndex)
+          listStore.app.data.items = {
+            ...listStore.app.data.items,
+            [currentFolder.id]: {
+              ...currentFolder,
+              children,
+            },
+          }
+          save(AppModel, listStore.app)
+        }}
+        getContextMenu={index => {
+          return [
+            {
+              label: 'Delete',
+              click: () => {
+                console.log('delete item', index)
+              },
+            },
+          ]
+        }}
+        onSelect={index => {
+          listStore.selectedIndex = index
+        }}
+        onChangeDepth={(depth, history) => {
+          listStore.depth = depth
+          listStore.history = history
+        }}
         depth={listStore.depth}
       />
     </View>

@@ -19,12 +19,6 @@ export class ElectronStore {
   clear = Date.now()
   apps = new Set()
 
-  async didMount() {
-    console.log('Electron Store did mount')
-    root.Root = this
-    root.restart = this.restart
-  }
-
   restart() {
     if (process.env.NODE_ENV === 'development') {
       require('touch')(require('path').join(__dirname, '..', '..', '_', 'main.js'))

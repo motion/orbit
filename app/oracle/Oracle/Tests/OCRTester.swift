@@ -35,7 +35,7 @@ class OCRTester {
     /// If `true`, extracted character images will be saved to the `TestOutput` directory at the project root.
     /// This slows down performance significantly, so any performance logging can be
     /// disregarded while this flag is enabled.
-    fileprivate let saveImages = false
+    fileprivate let saveImages = true
     
     // -------------------------------------
     

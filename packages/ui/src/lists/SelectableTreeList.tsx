@@ -1,6 +1,7 @@
 import { always, cancel, ensure, react, useStore } from '@mcro/use-store'
 import React, { forwardRef, useCallback, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
+import { usePropsWithMemoFunctions } from '../hooks/usePropsWithMemoFunctions'
 import { Omit } from '../types'
 import { ListItemProps } from './ListItem'
 import { SelectableList, SelectableListProps } from './SelectableList'
@@ -119,7 +120,8 @@ class SelectableTreeListStore {
 }
 
 export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeListProps>(
-  function SelectableTreeList({ items, ...props }, ref) {
+  function SelectableTreeList({ items, ...restProps }, ref) {
+    const props = usePropsWithMemoFunctions(restProps)
     const stores = useStores({ optional: ['selectionStore', 'shortcutStore'] })
     const selectionStore =
       props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)

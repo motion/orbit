@@ -25,6 +25,7 @@ if [ "$(realpath .)" = "$ROOT" ]; then
 
     ARGS=${@:1}
     bin/in store-hmr npm run build
+    bin/in helpers npm run build
     bin/in black npm run build
     (bin/in ui npm run build) &
     (bin/in gloss npm run build) &

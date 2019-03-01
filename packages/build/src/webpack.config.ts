@@ -9,6 +9,7 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 const TerserPlugin = require('terser-webpack-plugin')
+const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
 const readPackage = (key: string) => {
@@ -144,7 +145,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    mainFields: isProd ? ['module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
+    mainFields: isProd ? ['ts:main', 'module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },
@@ -225,6 +226,8 @@ const config = {
     ].filter(Boolean),
   },
   plugins: [
+    new ErrorOverlayPlugin(),
+
     new webpack.DefinePlugin(defines),
 
     new webpack.IgnorePlugin(/electron-log/),

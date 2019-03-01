@@ -34,6 +34,17 @@ if (localStorage.getItem('enableLog')) {
   debug(+localStorage.getItem('enableLog'))
 }
 
+function lightLog(val: any) {
+  const type = typeof val
+  if (type === 'number' || type === 'boolean') {
+    return `${val}`
+  }
+  if (type === 'string' && val.length < 50) {
+    return `"${val}"`
+  }
+  return `(type: ${type})`
+}
+
 function logMobxEvent(event) {
   switch (event.type) {
     case 'action':
@@ -43,13 +54,13 @@ function logMobxEvent(event) {
       break
     case 'update':
       if (!event.object) {
-        console.log(`%c ${event.name} = ${typeof event.newValue}`, 'color:red;')
+        console.log(`%c ${event.name} = ${lightLog(event.newValue)}`, 'color:red;')
       } else {
         let name = `${event.object.constructor.name}.${event.key}`
         if (event.object.constructor.name === 'Object') {
           name = event.name
         }
-        console.log(`%c ${name} = ${typeof event.newValue}`, 'color:red;')
+        console.log(`%c ${name} = ${lightLog(event.newValue)}`, 'color:red;')
       }
       break
     case 'reaction':
@@ -85,6 +96,7 @@ debugUseStore(event => {
       if (window['enableLog']) {
         console.log(event.component.renderName, event)
       }
+      if (!event.component) return
       addEvent(event.component, event)
       return
   }

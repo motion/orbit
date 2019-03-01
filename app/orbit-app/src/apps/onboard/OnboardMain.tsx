@@ -4,7 +4,7 @@ import { gloss } from '@mcro/gloss'
 import { useAppDefinitions } from '@mcro/kit'
 import { CheckProxyCommand, SetupProxyCommand } from '@mcro/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
+import { react, useHook, useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -22,12 +22,15 @@ class OnboardStore {
   curFrame = 0
   pendingMove = false
 
-  async didMount() {
-    this.accepted = await command(CheckProxyCommand)
-    if (this.accepted && this.curFrame === 0) {
-      this.nextFrame()
-    }
-  }
+  mount = react(
+    () => 1,
+    async () => {
+      this.accepted = await command(CheckProxyCommand)
+      if (this.accepted && this.curFrame === 0) {
+        this.nextFrame()
+      }
+    },
+  )
 
   get disableButtons() {
     const isShowingSuccessMessage = this.accepted && this.curFrame === 0

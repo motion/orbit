@@ -1,6 +1,7 @@
 import { ensure, react } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
+import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@mcro/models'
 import { Window } from '@mcro/reactron'
 import { App, Desktop, Electron } from '@mcro/stores'
 import { useStore } from '@mcro/use-store'
@@ -12,9 +13,8 @@ import { join } from 'path'
 import * as React from 'react'
 import { ROOT } from '../constants'
 import { getScreenSize } from '../helpers/getScreenSize'
-import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 import { Mediator } from '../mediator'
-import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@mcro/models'
+import { OrbitShortcutsStore } from './OrbitShortcutsStore'
 
 const log = new Logger('electron')
 const Config = getGlobalConfig()
@@ -44,7 +44,7 @@ class OrbitWindowStore {
   windowID = last(App.state.allApps).id
   vibrancy = 'light'
 
-  didMount() {
+  start() {
     // screen events
     setScreenSize()
     screen.on('display-metrics-changed', async () => {
@@ -74,7 +74,7 @@ class OrbitWindowStore {
     screenSize => {
       ensure('not torn', !Electron.isTorn)
       // max initial size to prevent massive screen on huge monitor
-      let scl = 0.76
+      let scl = 0.8
       let w = screenSize[0] * scl
       let h = screenSize[1] * scl
       // clamp width to not be too wide
@@ -191,13 +191,16 @@ export default function OrbitWindow() {
         return
       }
       Mediator.command(SendClientDataCommand, {
-        name: shown ? 'HIDE' : 'SHOW'
+        name: shown ? 'HIDE' : 'SHOW',
       })
     },
   })
 
   // onMount
   React.useEffect(() => {
+    store.start()
+    orbitShortcutsStore.start()
+
     // set orbit icon in dev
     if (process.env.NODE_ENV === 'development') {
       app.dock.setIcon(join(ROOT, 'resources', 'icons', 'appicon.png'))

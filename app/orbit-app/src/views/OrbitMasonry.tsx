@@ -49,7 +49,7 @@ export class OrbitMasonry extends React.Component<Props> {
   cellRenderer = ({ index, key, parent, style }) => {
     const { CardView, items, cardProps, sidePad, offset } = this.props
     const item = items[index]
-    const itemProps = cardProps && cardProps.direct ? item : { model: item }
+    const itemProps = cardProps ? item : { model: item }
     return (
       <CellMeasurer cache={this.cache} index={index} key={key} parent={parent}>
         <div

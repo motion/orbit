@@ -1,8 +1,19 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@mcro/ui'
+import {
+  Avatar,
+  BorderBottom,
+  Button,
+  ButtonProps,
+  HorizontalSpace,
+  Row,
+  Text,
+  View,
+} from '@mcro/ui'
 import React, { memo } from 'react'
+// @ts-ignore
+import avatar from '../../../public/images/nate.jpg'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import { WindowControls } from '../../views/WindowControls'
@@ -63,6 +74,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
               </Button>
             )}
           </HeaderContain>
+
+          <Avatar src={avatar} width={26} height={26} marginLeft={12} />
 
           <View flex={1} />
         </Row>

@@ -1,14 +1,10 @@
+import { Bit } from '@mcro/models'
 import { Avatar, memoIsEqualDeep, Text } from '@mcro/ui'
 import * as React from 'react'
-import { Bit } from '@mcro/models'
 
 // TODO basically just use a regular ListItem and make it support this
 
-export const ListItemPerson = memoIsEqualDeep(function ListItemPerson({
-  item,
-}: {
-  item: Bit
-}) {
+export const ListItemPerson = memoIsEqualDeep(function ListItemPerson({ item }: { item: Bit }) {
   return (
     <>
       {!!item.photo && (
@@ -19,6 +15,9 @@ export const ListItemPerson = memoIsEqualDeep(function ListItemPerson({
           width={70}
           height={70}
           src={item.photo}
+          transform={{
+            rotate: '40deg',
+          }}
           // style={{
           //   '-webkit-mask-image': `linear-gradient(to bottom, transparent 0%, black 100%)`,
           // }}

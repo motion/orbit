@@ -27,6 +27,8 @@ export function AppIconInner({
   let iconSrc = `${appIcons[props.name]}`
 
   // hacky customize the background color
+  // warning: not having a string here literally causes a node level error....
+  // async hook stack has become corrupted
   let bg = color(background)
 
   const adjust = bg.isDark() ? 0.12 : 0.05

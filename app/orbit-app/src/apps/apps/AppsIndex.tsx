@@ -1,6 +1,7 @@
 import {
   AppDefinition,
   AppWithDefinition,
+  Icon,
   List,
   OrbitListItemProps,
   useActiveApps,
@@ -45,13 +46,14 @@ export function AppsIndex(_props: AppProps) {
     return null
   }
 
+  const sourceIcon = <Icon size={20} name="database" />
+
   return (
     <List
       minSelected={0}
       items={[
         ...clientApps.map(x => getAppItem(x, { group: 'Apps' })),
-        ...syncApps.map(x => getAppItem(x, { group: 'Sources' })),
-
+        ...syncApps.map(x => getAppItem(x, { group: 'Sources', after: sourceIcon })),
         ...allSourceDefinitions.map(def => ({
           group: 'App Store',
           title: def.name,
@@ -59,6 +61,7 @@ export function AppsIndex(_props: AppProps) {
           iconBefore: true,
           slim: true,
           subtitle: getFeatures(def),
+          after: sourceIcon,
           appConfig: {
             identifier: 'apps',
             subType: 'add-app',

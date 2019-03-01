@@ -6,7 +6,7 @@ import { iconNames } from './iconNames'
 
 export type IconProps = React.HTMLAttributes<HTMLDivElement> &
   CSSPropertySet & {
-    size: number
+    size?: number
     color?: Color
     type?: 'mini' | 'outline'
     opacity?: number
@@ -78,7 +78,7 @@ export const Icon = React.memo(
 
     const iconName = findMatch(name)
     // icons here are consistently a bit too big...
-    const size = props.size > 18 ? props.size * 0.65 : props.size
+    const size = props.size > 18 ? props.size * 0.65 : props.size || 16
 
     return (
       <IconInner color={color} {...props} size={size}>

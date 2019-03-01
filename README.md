@@ -1,4 +1,4 @@
-![Orbit](../blob/master/assets/appicon.png?raw=truepng)
+![Orbit](../master/assets/appicon.png?raw=truepng)
 
 <p align="center">
   <b>Orbit</b> - Make amazing apps together.

@@ -71,7 +71,7 @@ export function setupTrackableStore(
       observe(store, change => {
         const key = change['name']
         if (reactiveKeys.has(key)) {
-          console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
+          if (debug()) console.log('update', name, `${storeName}.${key}`, '[undecorated store]')
           queueUpdate(update)
         }
       }),
@@ -82,7 +82,7 @@ export function setupTrackableStore(
     observers.push(
       observe(getters[key], () => {
         if (reactiveKeys.has(key)) {
-          console.log('update', name, `${storeName}.${key}`, '[getter]')
+          if (debug()) console.log('update', name, `${storeName}.${key}`, '[getter]')
           queueUpdate(update)
         }
       }),

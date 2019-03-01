@@ -25,7 +25,7 @@ function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
   return {
     title: app.app ? app.app.name : app.definition.name,
     subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
-    icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}`,
+    icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
     appConfig: {
       viewType: 'settings' as 'settings',

@@ -1,7 +1,7 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, View } from '@mcro/ui'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
@@ -16,6 +16,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
+  const Actions = useActions()
 
   return (
     <OrbitHeaderContainer
@@ -55,6 +56,12 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </View>
 
             <OrbitHeaderInput />
+
+            {!isTorn && (
+              <Button onClick={Actions.tearApp}>
+                <Text fontWeight={600}>Open</Text> &nbsp; <Text alpha={0.5}>⌘ + ⏎</Text>
+              </Button>
+            )}
           </HeaderContain>
 
           <View flex={1} />

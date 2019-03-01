@@ -1,6 +1,6 @@
 import { IS_STORE } from '@mcro/automagical'
 import { EQUALITY_KEY } from '@mcro/fast-compare'
-import { isAction } from 'mobx'
+import { isAction, isObservableObject } from 'mobx'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -8,7 +8,7 @@ export const GET_STORE = Symbol('GET_STORE')
 type ProxyWorm<A extends Function> = {
   state: ProxyWormState
   store: A
-  track(id: number, debug?: boolean): () => Set<string>
+  track(debug?: boolean): () => Set<string>
 }
 
 type ProxyWormState = {
@@ -30,6 +30,12 @@ const filterShallowKeys = (set: Set<string>) => {
     lastKey = key
   }
   return set
+}
+
+let id = 0
+const nextId = () => {
+  id = (id + 1) % Number.MAX_SAFE_INTEGER
+  return id
 }
 
 export function mobxProxyWorm<A extends Function>(
@@ -80,8 +86,9 @@ export function mobxProxyWorm<A extends Function>(
       state.add(nextPath)
       if (val) {
         if (val[IS_PROXY]) return val
-        // only POJOs or explicitly trackable things
-        if (val.constructor.name === 'Object' || val[IS_STORE]) {
+        // only drill into explicitly trackable things
+        // to be more permissive you could just check if val.constructor.name === 'Object'
+        if (isObservableObject(val) || val[IS_STORE]) {
           // prevent cycles...
           if (state.loops.has(val)) {
             return state.loops.get(val)
@@ -98,7 +105,8 @@ export function mobxProxyWorm<A extends Function>(
   return {
     state,
     store,
-    track(id: number, dbg?: boolean) {
+    track(dbg?: boolean) {
+      const id = nextId()
       state.debug = dbg || false
       if (state.debug) console.log('track start', id, [...state.ids])
       state.activeId = id
@@ -107,9 +115,7 @@ export function mobxProxyWorm<A extends Function>(
       return () => {
         // we may call untrack() then dispose() later so only do once
         if (state.ids.has(id)) {
-          if (state.activeId === id) {
-            state.activeId = -1
-          }
+          state.activeId = -1
           state.ids.delete(id)
           const res = state.keys.get(id)
           state.keys.delete(id)

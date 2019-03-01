@@ -99,21 +99,18 @@ export function setupTrackableStore(
   if (!config) {
     config = mobxProxyWorm(store)
     DedupedWorms.set(store, config)
-    console.log('init store', store)
   }
 
   // done gives us back the keys it tracked
   let done: ReturnType<typeof config['track']> = null
   let disposed = false
-  let id = 0
 
   return {
     store: config.store,
     track() {
       paused = true
-      id = Math.random()
-      if (debug()) console.log('track()', id, name, storeName, config.state, store)
-      done = config.track(id, debug())
+      if (debug()) console.log('track()', name, storeName, config.state, store)
+      done = config.track(debug())
     },
     untrack() {
       if (disposed) return
@@ -125,7 +122,7 @@ export function setupTrackableStore(
         reaction.schedule()
       }
       if (debug()) {
-        console.log('untrack()', id, name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
+        console.log('untrack()', name, storeName, reactiveKeys, deepKeys, '[reactive/deep]')
       }
     },
     dispose() {

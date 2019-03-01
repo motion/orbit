@@ -19,7 +19,7 @@ import {
 import { CloseAppCommand } from '@mcro/models'
 import { Theme } from '@mcro/ui'
 import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
-import React, { memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { AppsLoader } from '../../apps/AppsLoader'
 import { orbitStaticApps } from '../../apps/orbitApps'
@@ -103,12 +103,6 @@ function OrbitManagers() {
 const OrbitPageInner = memo(function OrbitPageInner() {
   const Actions = useActions()
   const { paneManagerStore } = useStores()
-  useEffect(() => {
-    log('Orbitpage effect unmount')
-  })
-  useLayoutEffect(() => {
-    log('Orbitpage layouot unmount')
-  })
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
   const sidebarStore = useStoreSimple(SidebarStore)

@@ -1,8 +1,7 @@
 import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { AppView, SubPane } from '@mcro/kit'
-import { useStoreDebug } from '@mcro/use-store'
-import React, { memo, useEffect, useLayoutEffect } from 'react'
+import React, { memo } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
@@ -53,14 +52,6 @@ const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
 
 // separate view prevents big re-renders
 const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
-  log(id, 'OrbitMain')
-  useEffect(() => {
-    log(id, 'OrbitMain effect mount')
-  })
-  useLayoutEffect(() => {
-    log(id, 'OrbitMain layout mount')
-  })
-  useStoreDebug()
   const { orbitStore } = useStores()
   const appConfig = orbitStore.activeConfig[id] || {}
   return (

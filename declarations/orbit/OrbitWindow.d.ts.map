@@ -1,1 +1,0 @@
-{"version":3,"file":"OrbitWindow.d.ts","sourceRoot":"","sources":["../../app/orbit-electron/src/orbit/OrbitWindow.tsx"],"names":[],"mappings":";;AAOA,OAAO,EAAE,YAAY,EAAE,MAAM,eAAe,CAAA;AAkB5C,eAAO,MAAM,YAAY,EAAE;IAAE,KAAK,EAAE,MAAM,CAAC;IAAC,OAAO,EAAE,YAAY,CAAA;CAAE,EAAO,CAAA;AAK1E,eAAO,MAAM,sBAAsB,WAElC,CAAA;AA2ID,MAAM,CAAC,OAAO,UAAU,WAAW,gBAgElC"}

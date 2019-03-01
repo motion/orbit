@@ -1,6 +1,6 @@
-import { Syncer } from './Syncer'
-import { apps } from '@mcro/apps/_/apps'
+import { apps } from '@mcro/apps'
 import { syncers } from '@mcro/apps/_/syncers'
+import { Syncer } from './Syncer'
 
 // const ONE_MINUTE = 1000 * 60
 // const FIVE_MINUTES = ONE_MINUTE * 5
@@ -9,12 +9,14 @@ import { syncers } from '@mcro/apps/_/syncers'
 
 export const Syncers = []
 apps.forEach((app, index) => {
-  Syncers.push(new Syncer({
-    name: app.name,
-    appIdentifier: app.id as any, // todo @umed fix it
-    runner: syncers[index].runner,
-    interval: syncers[index].interval,
-  }))
+  Syncers.push(
+    new Syncer({
+      name: app.name,
+      appIdentifier: app.id as any, // todo @umed fix it
+      runner: syncers[index].runner,
+      interval: syncers[index].interval,
+    }),
+  )
 })
 
 /*export const Syncers = [

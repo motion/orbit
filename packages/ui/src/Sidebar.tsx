@@ -8,7 +8,7 @@
 import { gloss } from '@mcro/gloss'
 import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
-import { Interactive } from './Interactive'
+import { Interactive, ResizableSides } from './Interactive'
 
 type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
 
@@ -73,12 +73,7 @@ type SidebarState = {
   maxWidth?: number
   minWidth?: number
   horizontal?: boolean
-  resizable?: {
-    top?: boolean
-    bottom?: boolean
-    left?: boolean
-    right?: boolean
-  }
+  resizable?: boolean | ResizableSides
 }
 
 export class Sidebar extends React.Component<SidebarProps, SidebarState> {

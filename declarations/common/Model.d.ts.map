@@ -1,0 +1,1 @@
+{"version":3,"file":"Model.d.ts","sourceRoot":"","sources":["../../packages/mediator/src/common/Model.ts"],"names":[],"mappings":"AAAA,qBAAa,KAAK,CAAC,SAAS,EAAE,IAAI,GAAG,EAAE,EAAE,SAAS,GAAG,IAAI;IAKpC,IAAI,EAAE,MAAM;IAJ/B,MAAM,EAAG,SAAS,CAAA;IAClB,KAAK,EAAG,IAAI,CAAA;IACZ,UAAU,EAAG,SAAS,CAAA;gBAEH,IAAI,EAAE,MAAM;CAChC"}

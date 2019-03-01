@@ -1,0 +1,1 @@
+{"version":3,"file":"propsToThemeStyles.d.ts","sourceRoot":"","sources":["../../packages/gloss/src/helpers/propsToThemeStyles.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,WAAW,CAAA;AAcvC,aAAK,qBAAqB,GAAG,WAAW,GAAG;IACzC,SAAS,CAAC,EAAE,WAAW,CAAA;IACvB,SAAS,CAAC,EAAE,WAAW,CAAA;IACvB,UAAU,CAAC,EAAE,WAAW,CAAA;CACzB,CAAA;AAuBD,eAAO,MAAM,kBAAkB,6FA8D9B,CAAA"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"mlog.d.ts","sourceRoot":"","sources":["../packages/black/src/mlog.ts"],"names":[],"mappings":"AAmBA,aAAK,IAAI,GAAG;IACV,CAAC,EAAE,EAAE,QAAQ,EAAE,GAAG,IAAI,EAAE,KAAK,CAAC,GAAG,CAAC,GAAG,IAAI,CAAA;IACzC,KAAK,EAAE,QAAQ,CAAA;IACf,MAAM,EAAE,QAAQ,CAAA;IAChB,OAAO,EAAE,QAAQ,CAAA;CAClB,CAAA;AAED,eAAO,MAAM,IAAI,MAiBhB,CAAA"}

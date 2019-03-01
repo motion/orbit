@@ -5,7 +5,6 @@ import { Icon, Section, Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
 import { SelectableGrid } from '../../components/SelectableGrid'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { useActions } from '../../hooks/useActions'
 import { useAppSortHandler } from '../../hooks/useAppSortHandler'
 import { useStores } from '../../hooks/useStores'
 import { TitleRow } from '../../views/TitleRow'
@@ -66,7 +65,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 const AppIconContainer = gloss({
-  height: 180,
+  height: 200,
   padding: [15, 25],
   alignItems: 'center',
   justifyContent: 'center',
@@ -79,7 +78,7 @@ const AppIconContainer = gloss({
 
 export function AppsMainManage() {
   const { paneManagerStore } = useStores()
-  const Actions = useActions()
+  // const Actions = useActions()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const results = [
@@ -94,19 +93,19 @@ export function AppsMainManage() {
         console.log('double 2', x)
       },
     })),
-    {
-      id: '10000',
-      icon: (
-        <View width={58} height={58} alignItems="center" justifyContent="center">
-          <Icon name="add" size={32} opacity={0.25} />
-        </View>
-      ),
-      onDoubleClick: Actions.setupNewApp,
-      title: 'Add',
-      type: 'add',
-      onClick: () => {},
-      disabled: true,
-    },
+    // {
+    //   id: '10000',
+    //   icon: (
+    //     <View width={58} height={58} alignItems="center" justifyContent="center">
+    //       <Icon name="add" size={32} opacity={0.25} />
+    //     </View>
+    //   ),
+    //   onDoubleClick: Actions.setupNewApp,
+    //   title: 'Add',
+    //   type: 'add',
+    //   onClick: () => {},
+    //   disabled: true,
+    // },
   ]
 
   const resultsKey = results.map(x => x.id).join('')

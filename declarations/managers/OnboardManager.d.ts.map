@@ -1,0 +1,1 @@
+{"version":3,"file":"OnboardManager.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/managers/OnboardManager.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,aAAa,EAAE,MAAM,cAAc,CAAA;AA+B5C,qBAAa,cAAc;IACzB,cAAc,EAAE,aAAa,CAAA;IAC7B,OAAO,QAAK;IACZ,YAAY,MAAO;IAEb,KAAK;IAQL,WAAW;IAOjB,cAAc,0CASb;IAEK,UAAU,CAAC,MAAM,EAAE,MAAM;CA6BhC"}

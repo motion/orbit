@@ -28,7 +28,7 @@ export default memo(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = getIsTorn() ? 16 : 18
+  const fontSize = getIsTorn() ? 16 : 20
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
@@ -70,7 +70,7 @@ const After = gloss({
 
 const FakeInput = gloss(View, {
   position: 'relative',
-  height: 32,
+  height: 34,
   padding: [2, 8],
   alignItems: 'center',
   justifyContent: 'center',

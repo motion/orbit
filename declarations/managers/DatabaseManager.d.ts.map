@@ -1,0 +1,1 @@
+{"version":3,"file":"DatabaseManager.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/managers/DatabaseManager.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,OAAO,EAAE,MAAM,cAAc,CAAA;AAWtC,qBAAa,eAAe;IAC1B,mBAAmB,EAAE,UAAU,CAAC,OAAO,OAAO,CAAC,SAAS,CAAC,CAAA;IAEnD,KAAK;IAoCX,OAAO;IAID,YAAY;YAMJ,aAAa;YAeb,mBAAmB;IAwDjC,iBAAiB,sBAMhB;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ServerTransport.d.ts","sourceRoot":"","sources":["../../packages/mediator/src/server/ServerTransport.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,iBAAiB,EAAE,MAAM,WAAW,CAAA;AAE/D,MAAM,WAAW,eAAe;IAC9B,SAAS,CAAC,QAAQ,EAAE,CAAC,IAAI,EAAE,gBAAgB,KAAK,IAAI,GAAG,IAAI,CAAA;IAC3D,IAAI,CAAC,IAAI,EAAE,iBAAiB,OAAC;CAC9B"}

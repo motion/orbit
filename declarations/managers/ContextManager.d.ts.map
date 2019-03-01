@@ -1,0 +1,1 @@
+{"version":3,"file":"ContextManager.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/managers/ContextManager.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,cAAc,CAAA;AAYrC,qBACa,cAAc;IACzB,MAAM,EAAE,MAAM,CAAA;IACd,QAAQ,SAAK;gBAED,EAAE,MAAM,EAAE,EAAE;QAAE,MAAM,EAAE,MAAM,CAAA;KAAE;IAK1C,+BAA+B,OAM9B;IAED,YAAY;CAoCb"}

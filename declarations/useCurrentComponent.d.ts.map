@@ -1,0 +1,1 @@
+{"version":3,"file":"useCurrentComponent.d.ts","sourceRoot":"","sources":["../packages/automagical/src/useCurrentComponent.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,gBAAgB;IAC/B,IAAI,GAAG,CAAA;IACP,UAAU,EAAE,MAAM,CAAA;IAClB,QAAQ,EAAE,MAAM,CAAA;IAChB,OAAO,CAAC,EAAE,OAAO,CAAA;CAClB;AAED,wBAAgB,mBAAmB,IAAI,gBAAgB,CAOtD"}

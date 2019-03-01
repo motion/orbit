@@ -1,0 +1,1 @@
+{"version":3,"file":"useSearch.d.ts","sourceRoot":"","sources":["../../app/kit/src/hooks/useSearch.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,gBAAgB,EAAE,MAAM,4BAA4B,CAAA;AAG7D,oBAAY,WAAW,GAAG;IACxB,KAAK,EAAE,MAAM,CAAA;IACb,YAAY,EAAE,gBAAgB,CAAA;CAC/B,CAAA;AAED,wBAAgB,SAAS,CAAC,EAAE,EAAE,CAAC,KAAK,EAAE,WAAW,KAAK,GAAG,QAcxD"}

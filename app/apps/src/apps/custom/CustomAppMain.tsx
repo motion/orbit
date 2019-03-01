@@ -10,6 +10,7 @@ import {
   Text,
   Title,
   Tree,
+  VerticalSplit,
   VerticalSplitPane,
   View,
 } from '@mcro/ui'
@@ -109,115 +110,117 @@ export function CustomAppMain(_props: AppProps) {
 
   return (
     <Row flex={1}>
-      <VerticalSplitPane>
-        <Title bordered>Hello World Edit</Title>
+      <VerticalSplit>
+        <VerticalSplitPane>
+          <Title bordered>Hello World Edit</Title>
 
-        <Section>
-          <Button size={2} icon="sun">
-            this is my button
-          </Button>
-        </Section>
+          <Section>
+            <Button size={2} icon="sun">
+              this is my button
+            </Button>
+          </Section>
 
-        <Tree
-          root="0"
-          onTreeItemSelected={id => {
-            console.log('select', id)
-          }}
-          onTreeItemExpanded={(id /* deep */) => {
-            setTreeState(
-              immer(treeState, next => {
-                next[id].expanded = !next[id].expanded
-              }),
-            )
-          }}
-          elements={treeState}
-        />
-      </VerticalSplitPane>
-
-      <VerticalSplitPane>
-        <BorderLeft />
-        <View position="relative" flex={1}>
-          <SearchableTable
-            virtual
-            rowLineHeight={28}
-            floating={false}
-            defaultFilters={DEFAULT_FILTERS}
-            columnSizes={{
-              name: '25%',
-              topic: '25%',
-              members: '20%',
-              createdAt: '15%',
-              active: '15%',
+          <Tree
+            root="0"
+            onTreeItemSelected={id => {
+              console.log('select', id)
             }}
-            columns={{
-              name: {
-                value: 'Name',
-                sortable: true,
-                resizable: true,
-              },
-              topic: {
-                value: 'Topic',
-                sortable: true,
-                resizable: true,
-              },
-              members: {
-                value: 'Members',
-                sortable: true,
-                resizable: true,
-              },
-              createdAt: {
-                value: 'Created',
-                sortable: true,
-                resizable: true,
-              },
-              active: {
-                value: 'Active',
-                sortable: true,
-              },
+            onTreeItemExpanded={(id /* deep */) => {
+              setTreeState(
+                immer(treeState, next => {
+                  next[id].expanded = !next[id].expanded
+                }),
+              )
             }}
-            multiHighlight
-            // highlightedRows={highlightedRows}
-            // onRowHighlighted={setHighlightedRows}
-            rows={channels.map((channel, index) => {
-              const topic = channel.topic ? channel.topic : ''
-              return {
-                key: `${index}`,
-                columns: {
-                  name: {
-                    sortValue: channel.name,
-                    value: channel.name,
-                  },
-                  topic: {
-                    sortValue: topic,
-                    value: topic,
-                  },
-                  members: {
-                    sortValue: channel.members,
-                    value: channel.members,
-                  },
-                  createdAt: {
-                    sortValue: channel.created,
-                    value: (
-                      <Text ellipse>
-                        <DateFormat date={new Date(channel.created * 1000)} />
-                      </Text>
-                    ),
-                  },
-                  active: {
-                    sortValue: true,
-                    value: <CheckboxReactive isActive={() => true} />,
-                  },
-                },
-              }
-            })}
-            bodyPlaceholder={
-              <div style={{ margin: 'auto' }}>
-                <Text size={1.2}>Loading...</Text>
-              </div>
-            }
+            elements={treeState}
           />
-        </View>
-      </VerticalSplitPane>
+        </VerticalSplitPane>
+
+        <VerticalSplitPane>
+          <BorderLeft />
+          <View position="relative" flex={1}>
+            <SearchableTable
+              virtual
+              rowLineHeight={28}
+              floating={false}
+              defaultFilters={DEFAULT_FILTERS}
+              columnSizes={{
+                name: '25%',
+                topic: '25%',
+                members: '20%',
+                createdAt: '15%',
+                active: '15%',
+              }}
+              columns={{
+                name: {
+                  value: 'Name',
+                  sortable: true,
+                  resizable: true,
+                },
+                topic: {
+                  value: 'Topic',
+                  sortable: true,
+                  resizable: true,
+                },
+                members: {
+                  value: 'Members',
+                  sortable: true,
+                  resizable: true,
+                },
+                createdAt: {
+                  value: 'Created',
+                  sortable: true,
+                  resizable: true,
+                },
+                active: {
+                  value: 'Active',
+                  sortable: true,
+                },
+              }}
+              multiHighlight
+              // highlightedRows={highlightedRows}
+              // onRowHighlighted={setHighlightedRows}
+              rows={channels.map((channel, index) => {
+                const topic = channel.topic ? channel.topic : ''
+                return {
+                  key: `${index}`,
+                  columns: {
+                    name: {
+                      sortValue: channel.name,
+                      value: channel.name,
+                    },
+                    topic: {
+                      sortValue: topic,
+                      value: topic,
+                    },
+                    members: {
+                      sortValue: channel.members,
+                      value: channel.members,
+                    },
+                    createdAt: {
+                      sortValue: channel.created,
+                      value: (
+                        <Text ellipse>
+                          <DateFormat date={new Date(channel.created * 1000)} />
+                        </Text>
+                      ),
+                    },
+                    active: {
+                      sortValue: true,
+                      value: <CheckboxReactive isActive={() => true} />,
+                    },
+                  },
+                }
+              })}
+              bodyPlaceholder={
+                <div style={{ margin: 'auto' }}>
+                  <Text size={1.2}>Loading...</Text>
+                </div>
+              }
+            />
+          </View>
+        </VerticalSplitPane>
+      </VerticalSplit>
     </Row>
   )
 }

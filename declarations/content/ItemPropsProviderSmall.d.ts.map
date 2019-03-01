@@ -1,0 +1,1 @@
+{"version":3,"file":"ItemPropsProviderSmall.d.ts","sourceRoot":"","sources":["../../packages/ui/src/content/ItemPropsProviderSmall.tsx"],"names":[],"mappings":";AACA,OAAO,EAAqB,sBAAsB,EAAE,MAAM,qBAAqB,CAAA;AAG/E,wBAAgB,sBAAsB,CAAC,EACrC,KAAK,EACL,GAAG,KAAK,EACT,EAAE,OAAO,CAAC,sBAAsB,CAAC,GAAG;IAAE,QAAQ,EAAE,GAAG,CAAA;CAAE,eAOrD"}

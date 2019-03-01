@@ -1,0 +1,1 @@
+{"version":3,"file":"View.d.ts","sourceRoot":"","sources":["../../packages/gloss/src/blocks/View.tsx"],"names":[],"mappings":";AAAA,OAAO,EAAE,cAAc,EAAE,oBAAoB,EAAgB,MAAM,WAAW,CAAA;AAQ9E,oBAAY,SAAS,GAAG,KAAK,CAAC,cAAc,CAAC,cAAc,CAAC,GAAG,cAAc,CAAA;AAE7E,oBAAY,eAAe,GAAG,KAAK,CAAC,cAAc,CAAC,cAAc,CAAC,GAAG,oBAAoB,CAAA;AAEzF,eAAO,MAAM,IAAI,yCAGd,CAAA"}

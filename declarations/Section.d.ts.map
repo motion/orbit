@@ -1,0 +1,1 @@
+{"version":3,"file":"Section.d.ts","sourceRoot":"","sources":["../packages/ui/src/Section.tsx"],"names":[],"mappings":";AAAA,OAAO,EAAe,SAAS,EAAE,MAAM,aAAa,CAAA;AAEpD,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAA;AAGvC,oBAAY,YAAY,GAAG,SAAS,GAAG;IACrC,WAAW,CAAC,EAAE,MAAM,CAAA;CACrB,CAAA;AAED,eAAO,MAAM,OAAO,+CAMjB,CAAA;AAEH,wBAAgB,YAAY,CAAC,KAAK,EAAE,SAAS,eAM5C"}

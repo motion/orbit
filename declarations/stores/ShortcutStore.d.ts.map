@@ -1,0 +1,1 @@
+{"version":3,"file":"ShortcutStore.d.ts","sourceRoot":"","sources":["../../app/kit/src/stores/ShortcutStore.ts"],"names":[],"mappings":"AAAA,qBAAa,aAAa;IACxB,iBAAiB,WAAY;IAE7B,UAAU,CAAC,EAAE,EAAE,CAAC,CAAC,EAAE,MAAM,KAAK,GAAG;IAOjC,IAAI,CAAC,QAAQ,EAAE,MAAM;CAKtB"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"oauth.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/auth-server/oauth.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,OAAO,OAAO,KAAK;IACxB,QAAQ,EAAE,QAAQ,CAAA;IAClB,UAAU,EAAE,QAAQ,CAAA;gBAER,EAAE,UAAU,EAAE,SAAS,EAAE,QAAQ,EAAE,UAAU,EAAE;;;;;KAAA;IAmB3D,eAAe,CAAC,UAAU,KAAA,EAAE,SAAS,KAAA;IA+BrC,YAAY,CAAC,OAAO,KAAA;IAoBpB,kBAAkB;CAUnB"}

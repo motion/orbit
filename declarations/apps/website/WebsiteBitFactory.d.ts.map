@@ -1,0 +1,1 @@
+{"version":3,"file":"WebsiteBitFactory.d.ts","sourceRoot":"","sources":["../../../app/apps/src/apps/website/WebsiteBitFactory.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,GAAG,EAAE,MAAM,cAAc,CAAA;AAE1C,OAAO,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAA;AAMzD,qBAAa,iBAAiB;IAC5B,OAAO,CAAC,GAAG,CAAQ;gBAEP,GAAG,EAAE,MAAM;IAOvB,MAAM,CAAC,WAAW,EAAE,kBAAkB,GAAG,GAAG;CAiC7C"}

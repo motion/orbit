@@ -1,0 +1,1 @@
+{"version":3,"file":"useVisibilityObserver.d.ts","sourceRoot":"","sources":["../../packages/ui/src/hooks/useVisibilityObserver.ts"],"names":[],"mappings":";AAEA,wBAAgB,qBAAqB,CACnC,GAAG,EAAE,KAAK,CAAC,SAAS,CAAC,cAAc,CAAC,EACpC,SAAS,EAAE,CAAC,UAAU,EAAE,OAAO,KAAK,GAAG,aA2BxC"}

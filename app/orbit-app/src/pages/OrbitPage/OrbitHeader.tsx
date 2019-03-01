@@ -16,6 +16,7 @@ import React, { memo } from 'react'
 import avatar from '../../../public/images/nate.jpg'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
+import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
 import OrbitNav from './OrbitNav'
@@ -75,7 +76,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
             )}
           </HeaderContain>
 
-          <Avatar src={avatar} width={26} height={26} marginLeft={12} />
+          <OrbitSpaceSwitch
+            target={<Avatar src={avatar} width={26} height={26} marginLeft={12} />}
+          />
 
           <View flex={1} />
         </Row>

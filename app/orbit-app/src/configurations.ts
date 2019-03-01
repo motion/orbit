@@ -11,7 +11,10 @@ function setup() {
   window['hasConfigured'] = true
 
   configureMobx({
-    disableErrorBoundaries: true,
+    // for easier debugging mobx stack traces
+    disableErrorBoundaries: false,
+    // for safer mutation points
+    enforceActions: false,
   })
 
   configureKit({

@@ -1,1 +1,0 @@
-{"version":3,"file":"GeneralSettingManager.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/managers/GeneralSettingManager.ts"],"names":[],"mappings":"AAIA,OAAO,EAAE,OAAO,EAAE,MAAM,cAAc,CAAA;AACtC,OAAO,UAAU,MAAM,aAAa,CAAA;AAMpC,qBACa,qBAAqB;IAChC,UAAU,EAAE,UAAU,CAAA;;IAiBhB,KAAK;IAKX,OAAO;IAEP,gBAAgB,6BAgBf;CACF"}

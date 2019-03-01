@@ -1,1 +1,0 @@
-{"version":3,"file":"ScreenManager.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/managers/ScreenManager.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAE,MAAM,cAAc,CAAA;AAMrC,qBACa,aAAa;IACxB,YAAY,CAAC,EAAE,QAAQ,CAAA;IACvB,SAAS,UAAQ;IACjB,MAAM,EAAE,MAAM,CAAA;gBAEF,EAAE,MAAM,EAAE,EAAE;QAAE,MAAM,EAAE,MAAM,CAAA;KAAE;IAI1C,KAAK,sBAmBJ;CACF"}

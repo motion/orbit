@@ -1,1 +1,0 @@
-{"version":3,"file":"useAppInfo.d.ts","sourceRoot":"","sources":["../../app/kit/src/hooks/useAppInfo.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAY,GAAG,EAAY,MAAM,cAAc,CAAA;AAE9D,wBAAgB,UAAU,CACxB,GAAG,EAAE,MAAM,GAAG,KAAK,GAClB;IACD,SAAS,EAAE,MAAM,CAAA;IACjB,OAAO,EAAE,GAAG,CAAA;CACb,CAeA"}

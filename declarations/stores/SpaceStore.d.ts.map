@@ -1,1 +1,0 @@
-{"version":3,"file":"SpaceStore.d.ts","sourceRoot":"","sources":["../../app/kit/src/stores/SpaceStore.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAA;AAErD,qBAAa,UAAU;IACrB,KAAK,EAAE;QACL,gBAAgB,EAAE,gBAAgB,CAAA;KACnC,CAAA;IAED,MAAM,iCAEJ;IAEF,IAAI,8BAAyC;IAE7C,UAAU,UAAQ;IAElB,gBAAgB,OAef;aAEG,WAAW;IAOf,YAAY,kCASX;IAED,IAAI,kCAMH;CACF"}

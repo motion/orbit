@@ -1,1 +1,0 @@
-{"version":3,"file":"UserEntity.node.d.ts","sourceRoot":"","sources":["../../app/models/src/entities/UserEntity.node.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,IAAI,EAAE,MAAM,oBAAoB,CAAA;AAEzC,qBACa,UAAW,YAAW,IAAI;IAErC,EAAE,EAAE,MAAM,CAAA;IAGV,IAAI,EAAE,MAAM,CAAA;IAGZ,WAAW,EAAE,MAAM,CAAA;IAGnB,WAAW,EAAE,IAAI,CAAC,aAAa,CAAC,CAAA;IAGhC,QAAQ,EAAE,IAAI,CAAC,UAAU,CAAC,CAAA;CAC3B"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"AppStore.d.ts","sourceRoot":"","sources":["../../app/kit/src/stores/AppStore.ts"],"names":[],"mappings":"AAIA,OAAO,EAAE,QAAQ,EAAE,MAAM,mBAAmB,CAAA;AAE5C,qBAAa,QAAQ;IACnB,KAAK,EAAE,IAAI,CAAC,QAAQ,EAAE,IAAI,GAAG,UAAU,CAAC,CAAA;IACxC,MAAM,wBAA2B;aAE7B,EAAE;aAIF,QAAQ;IAgBZ,WAAW,SAUV;IAED,GAAG,gCAID;aAEE,GAAG;aAIH,YAAY;aAIZ,UAAU;aAIV,SAAS;CAOd"}

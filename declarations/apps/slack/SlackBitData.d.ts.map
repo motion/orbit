@@ -1,1 +1,0 @@
-{"version":3,"file":"SlackBitData.d.ts","sourceRoot":"","sources":["../../../app/apps/src/apps/slack/SlackBitData.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,YAAY;IAC3B,QAAQ,EAAE,mBAAmB,EAAE,CAAA;CAChC;AAED,MAAM,WAAW,mBAAmB;IAClC,IAAI,EAAE,MAAM,CAAA;IACZ,IAAI,EAAE,MAAM,CAAA;IACZ,IAAI,EAAE,MAAM,CAAA;CACb"}

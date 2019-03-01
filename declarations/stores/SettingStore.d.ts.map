@@ -1,1 +1,0 @@
-{"version":3,"file":"SettingStore.d.ts","sourceRoot":"","sources":["../../app/kit/src/stores/SettingStore.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,OAAO,EAAgB,MAAM,cAAc,CAAA;AAGpD,qBAAa,YAAY;IACvB,OAAO,EAAE,OAAO,CAGf;IAED,YAAY,UAAkF;IAE9F,sBAAsB,OAKrB;aAEG,MAAM;;;;;;;;;;;;;;IAIV,MAAM;;;;;;;;;;;;;yBAML;CACF"}

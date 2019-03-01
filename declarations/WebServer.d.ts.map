@@ -1,1 +1,0 @@
-{"version":3,"file":"WebServer.d.ts","sourceRoot":"","sources":["../app/orbit-desktop/src/WebServer.ts"],"names":[],"mappings":"AAGA,OAAO,OAAO,MAAM,SAAS,CAAA;AAQ7B,qBAAa,SAAS;IACpB,KAAK,KAAK;IACV,KAAK,MAAO;IACZ,GAAG,EAAE,OAAO,CAAC,WAAW,CAAA;;IA+BlB,KAAK;IAUX,OAAO,CAAC,IAAI;IAYZ,OAAO,CAAC,aAAa;CA0BtB"}

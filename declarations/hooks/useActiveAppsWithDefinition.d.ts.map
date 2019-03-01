@@ -1,1 +1,0 @@
-{"version":3,"file":"useActiveAppsWithDefinition.d.ts","sourceRoot":"","sources":["../../app/kit/src/hooks/useActiveAppsWithDefinition.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,cAAc,CAAA;AAErC,OAAO,EAAE,aAAa,EAAE,MAAM,wBAAwB,CAAA;AAOtD,oBAAY,iBAAiB,GAAG;IAC9B,UAAU,EAAE,aAAa,CAAA;IACzB,GAAG,EAAE,MAAM,CAAA;CACZ,CAAA;AAED,wBAAgB,2BAA2B,IAAI,iBAAiB,EAAE,CAKjE"}

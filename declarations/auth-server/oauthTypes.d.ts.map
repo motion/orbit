@@ -1,1 +1,0 @@
-{"version":3,"file":"oauthTypes.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/auth-server/oauthTypes.ts"],"names":[],"mappings":"AAAA,oBAAY,WAAW,GAAG;IACxB,KAAK,EAAE,MAAM,CAAA;IACb,IAAI,EAAE;QACJ,EAAE,EAAE,MAAM,CAAA;QACV,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM,CAAA;KACtB,CAAA;IACD,KAAK,CAAC,EAAE,MAAM,CAAA;IACd,YAAY,CAAC,EAAE,MAAM,CAAA;CACtB,CAAA"}

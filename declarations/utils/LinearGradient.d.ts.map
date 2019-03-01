@@ -1,1 +1,0 @@
-{"version":3,"file":"LinearGradient.d.ts","sourceRoot":"","sources":["../../packages/css/src/utils/LinearGradient.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,KAAK,EAAE,MAAM,UAAU,CAAA;AAEhC,oBAAY,WAAW,GAAG,MAAM,GAAG,KAAK,CAAA;AAExC,qBAAa,cAAc;IACzB,KAAK,EAAE,WAAW,EAAE,CAAA;gBAER,KAAK,EAAE,WAAW,EAAE;IAIhC,SAAS;IAIT,QAAQ;IAKR,KAAK;CAGN"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"1538632159817-initial.d.ts","sourceRoot":"","sources":["../../app/orbit-desktop/src/migrations/1538632159817-initial.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,kBAAkB,EAAE,WAAW,EAAE,MAAM,SAAS,CAAA;AAIzD,qBAAa,sBAAuB,YAAW,kBAAkB;IAClD,EAAE,CAAC,YAAY,EAAE,WAAW,GAAG,OAAO,CAAC,GAAG,CAAC;IAM3C,IAAI,IAAkC,OAAO,CAAC,GAAG,CAAC;CAChE"}

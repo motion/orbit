@@ -1,1 +1,0 @@
-{"version":3,"file":"propsToTextSize.d.ts","sourceRoot":"","sources":["../../packages/gloss/src/helpers/propsToTextSize.ts"],"names":[],"mappings":"AAAA,aAAK,UAAU,GAAG;IAChB,QAAQ,CAAC,EAAE,MAAM,GAAG,MAAM,CAAA;IAC1B,UAAU,CAAC,EAAE,MAAM,GAAG,MAAM,CAAA;IAC5B,aAAa,CAAC,EAAE,MAAM,CAAA;IACtB,WAAW,CAAC,EAAE,MAAM,CAAA;CACrB,CAAA;AAID,wBAAgB,eAAe,CAAC,KAAK,KAAA,cAwCpC"}

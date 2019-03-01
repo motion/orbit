@@ -1,1 +1,0 @@
-{"version":3,"file":"SearchIndexEntity.node.d.ts","sourceRoot":"","sources":["../../app/models/src/entities/SearchIndexEntity.node.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAA0C,MAAM,SAAS,CAAA;AAC5E,OAAO,EAAE,WAAW,EAAE,MAAM,2BAA2B,CAAA;AAEvD,qBACa,iBAAkB,SAAQ,UAAW,YAAW,WAAW;IAEtE,EAAE,CAAC,EAAE,MAAM,CAAA;IAGX,KAAK,CAAC,EAAE,MAAM,CAAA;IAGd,IAAI,CAAC,EAAE,MAAM,CAAA;CACd"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"SegmentedRow.d.ts","sourceRoot":"","sources":["../packages/ui/src/SegmentedRow.tsx"],"names":[],"mappings":";AACA,OAAO,EAAE,cAAc,EAAe,gBAAgB,EAAE,MAAM,eAAe,CAAA;AAE7E,wBAAgB,YAAY,CAAC,KAAK,EAAE,gBAAgB,eAEnD;AAED,wBAAgB,gBAAgB,CAC9B,KAAK,EAAE;IAAE,aAAa,CAAC,EAAE,OAAO,CAAC;IAAC,YAAY,CAAC,EAAE,MAAM,CAAA;CAAE,EACzD,IAAI,EAAE,cAAc;;;;;;;;EA8BrB"}

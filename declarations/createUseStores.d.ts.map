@@ -1,1 +1,0 @@
-{"version":3,"file":"createUseStores.d.ts","sourceRoot":"","sources":["../packages/use-store/src/createUseStores.ts"],"names":[],"mappings":";AAQA,oBAAY,gBAAgB,CAAC,CAAC,IAAI;IAAE,QAAQ,CAAC,EAAE,CAAC,MAAM,CAAC,CAAC,EAAE,CAAC;IAAC,KAAK,CAAC,EAAE,OAAO,CAAA;CAAE,CAAA;AAE7E,wBAAgB,eAAe,CAAC,CAAC,SAAS,MAAM,EAAE,YAAY,EAAE,KAAK,CAAC,OAAO,CAAC,CAAC,CAAC,wCAsE/E"}

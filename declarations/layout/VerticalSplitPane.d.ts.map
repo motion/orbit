@@ -1,1 +1,0 @@
-{"version":3,"file":"VerticalSplitPane.d.ts","sourceRoot":"","sources":["../../packages/ui/src/layout/VerticalSplitPane.tsx"],"names":[],"mappings":";AAEA,OAAO,EAAe,gBAAgB,EAAE,MAAM,gBAAgB,CAAA;AAE9D,wBAAgB,iBAAiB,CAC/B,KAAK,EAAE,OAAO,CAAC,gBAAgB,CAAC,GAAG;IAAE,KAAK,CAAC,EAAE,MAAM,CAAC;IAAC,WAAW,CAAC,EAAE,MAAM,CAAA;CAAE,eAqB5E"}

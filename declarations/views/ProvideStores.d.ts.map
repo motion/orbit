@@ -1,1 +1,0 @@
-{"version":3,"file":"ProvideStores.d.ts","sourceRoot":"","sources":["../../app/kit/src/views/ProvideStores.tsx"],"names":[],"mappings":"AACA,OAAO,KAAK,MAAM,OAAO,CAAA;AAGzB,aAAK,kBAAkB,GAAG;IACxB,MAAM,EAAE,MAAM,CAAA;IACd,QAAQ,EAAE,KAAK,CAAC,SAAS,CAAA;CAC1B,CAAA;AAED,wBAAgB,aAAa,CAAC,KAAK,EAAE,kBAAkB,eAMtD"}

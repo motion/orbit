@@ -1,1 +1,0 @@
-{"version":3,"file":"Command.d.ts","sourceRoot":"","sources":["../../packages/mediator/src/common/Command.ts"],"names":[],"mappings":"AAAA,qBAAa,OAAO,CAAC,SAAS,EAAE,IAAI,GAAG,EAAE;IAIpB,IAAI,EAAE,MAAM;IAH/B,MAAM,EAAG,SAAS,CAAA;IAClB,KAAK,EAAG,IAAI,CAAA;gBAEO,IAAI,EAAE,MAAM;CAChC"}

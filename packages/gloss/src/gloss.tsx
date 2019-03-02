@@ -163,12 +163,7 @@ function glossify(
     if (newStyles[key]) {
       style = { ...style, ...newStyles[key] }
     }
-    let x = Date.now()
     const className = addRules(displayName, style, key, tagName)
-    if (Date.now() - x > 15) {
-      console.warn('long add rules...', displayName, style, tagName, sortedKeys, props, allStyles)
-      // debugger
-    }
     nextClassNames = nextClassNames || []
     nextClassNames.push(className)
     // if this is the first mount render or we didn't previously have this class then add it as new

@@ -3,6 +3,8 @@ import { TransportRequestType, TransportRequestValues, TransportResponse } from 
 import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
 
+let tm = null
+
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
   name: string
@@ -21,13 +23,15 @@ export class WebSocketClientTransport implements ClientTransport {
     this.websocket = websocket
 
     websocket.onopen = () => {
+      clearTimeout(tm)
       this.onConnectedCallbacks.forEach(callback => callback())
       this.onConnectedCallbacks = []
     }
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     websocket.onerror = ({ error }) => {
       if (`${error}`.indexOf('ECONNREFUSED')) {
-        log.info(`Connection refused ${name}, retrying...`)
+        clearTimeout(tm)
+        tm = setTimeout(() => log.info(`Connection refused ${name}, retrying...`), 300)
       } else {
         log.error(`Error ${name} ${error}`)
       }

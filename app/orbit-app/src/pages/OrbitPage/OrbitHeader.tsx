@@ -168,7 +168,7 @@ const OrbitHeaderContainer = gloss(View, {
     theme.background.alpha(a => a * 0.65),
 }))
 
-const HeaderContain = gloss({
+const HeaderContain = gloss<{ isActive?: boolean }>({
   margin: 'auto',
   alignItems: 'center',
   flex: 10,
@@ -177,8 +177,8 @@ const HeaderContain = gloss({
   minWidth: 400,
   padding: [1, 5],
   borderRadius: 100,
-}).theme((_, theme) => ({
-  background: [0, 0, 0, theme.background.isDark() ? 0.1 : 0.05],
+}).theme(({ isActive }, theme) => ({
+  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.05] : 'transparent',
 }))
 
 const HeaderFade = gloss(FullScreen, {

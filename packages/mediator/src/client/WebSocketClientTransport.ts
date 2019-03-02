@@ -3,6 +3,8 @@ import { TransportRequestType, TransportRequestValues, TransportResponse } from 
 import { log } from '../common/logger'
 import { ClientTransport } from './ClientTransport'
 
+let tm = null
+
 export class WebSocketClientTransport implements ClientTransport {
   websocket: WebSocket
   name: string
@@ -21,22 +23,15 @@ export class WebSocketClientTransport implements ClientTransport {
     this.websocket = websocket
 
     websocket.onopen = () => {
+      clearTimeout(tm)
       this.onConnectedCallbacks.forEach(callback => callback())
       this.onConnectedCallbacks = []
     }
     websocket.onmessage = ({ data }) => this.handleData(JSON.parse(data))
     websocket.onerror = ({ error }) => {
       if (`${error}`.indexOf('ECONNREFUSED')) {
-        if (process.env.NODE_ENV === 'development') {
-          if (process.env.DISABLE_SYNCERS) {
-            console.debug(
-              'Mediator socket failure. In development mode disable reconnections, so we dont get neverending errors in console.',
-            )
-            websocket.close()
-          }
-        } else {
-          log.info(`Connection refused ${name}...`)
-        }
+        clearTimeout(tm)
+        tm = setTimeout(() => log.info(`Connection refused ${name}, retrying...`), 1000)
       } else {
         log.error(`Error ${name} ${error}`)
       }
@@ -58,7 +53,10 @@ export class WebSocketClientTransport implements ClientTransport {
   /**
    * Creates a new observable that listens to the server events for the requested operation.
    */
-  observe(type: TransportRequestType, values: TransportRequestValues): Observable<TransportResponse> {
+  observe(
+    type: TransportRequestType,
+    values: TransportRequestValues,
+  ): Observable<TransportResponse> {
     const id = ++this.operationsCounter // don't change - can lead to wrong id
     const data = {
       id: this.name + '_' + id,

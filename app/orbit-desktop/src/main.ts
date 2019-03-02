@@ -22,6 +22,7 @@ export async function main() {
     } catch (err) {
       console.log('error on children dispose', err)
     }
+    console.log('bye')
     process.exit(0)
   })
   process.on('exit', dispose)

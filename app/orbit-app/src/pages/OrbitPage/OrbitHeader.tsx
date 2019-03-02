@@ -1,19 +1,8 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import {
-  Avatar,
-  BorderBottom,
-  Button,
-  ButtonProps,
-  HorizontalSpace,
-  Row,
-  Text,
-  View,
-} from '@mcro/ui'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@mcro/ui'
 import React, { memo } from 'react'
-// @ts-ignore
-import avatar from '../../../public/images/nate.jpg'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -71,14 +60,15 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
             {!isTorn && (
               <Button onClick={Actions.tearApp}>
-                <Text fontWeight={600}>Open</Text> &nbsp; <Text alpha={0.5}>⌘ + ⏎</Text>
+                <Text fontWeight={600}>Open</Text> &nbsp;{' '}
+                <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
+                  ⌘ ⏎
+                </Text>
               </Button>
             )}
           </HeaderContain>
 
-          <OrbitSpaceSwitch
-            target={<Avatar src={avatar} width={26} height={26} marginLeft={12} />}
-          />
+          <OrbitSpaceSwitch />
 
           <View flex={1} />
         </Row>

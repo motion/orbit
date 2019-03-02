@@ -1,7 +1,6 @@
 import { useReaction } from '@mcro/black'
-import { FullScreen, gloss, Row } from '@mcro/gloss'
+import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
 import { ProvideStores, useApp } from '@mcro/kit'
-import { BorderBottom } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -15,14 +14,13 @@ export const OrbitToolBarHeight = ({ identifier }: { identifier: string }) => {
 }
 
 export const OrbitToolBar = memo(function OrbitToolBar() {
-  const { orbitStore, paneManagerStore } = useStores()
+  const { paneManagerStore } = useStores()
   const { views } = useApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
   return (
     <ToolbarChrome hasToolbars={hasToolbar}>
       <ToolbarInner hasToolbars={hasToolbar}>
         <OrbitToolBarContent />
-        {!orbitStore.isTorn && hasToolbar && <BorderBottom opacity={0.5} />}
       </ToolbarInner>
     </ToolbarChrome>
   )
@@ -95,7 +93,7 @@ const ToolbarChrome = gloss(Row, {
     },
   },
 }).theme((_, theme) => ({
-  background: theme.tabBackgroundBottom || theme.background,
+  background: linearGradient(theme.tabBackgroundBottom || theme.background, theme.background),
 }))
 
 const ToolbarInner = gloss({

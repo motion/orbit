@@ -1,19 +1,21 @@
 import { App } from '@mcro/reactron'
-import * as React from 'react'
-import { ElectronStore } from './stores/ElectronStore'
-import { devTools } from './helpers/devTools'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { devTools } from './helpers/devTools'
+import { ElectronStore } from './stores/ElectronStore'
 
-export default observer(function ElectronRoot(props: { children: any }) {
+export default function ElectronRoot(props: { children: any }) {
   const electronStore = useStore(ElectronStore)
+
   if (electronStore.error) {
     if (electronStore.error) {
       console.log('error is', electronStore.error)
     }
     return null
   }
+
   console.log('electron success, rendering...')
+
   return (
     <App
       onBeforeQuit={electronStore.handleBeforeQuit}
@@ -24,4 +26,4 @@ export default observer(function ElectronRoot(props: { children: any }) {
       {props.children}
     </App>
   )
-})
+}

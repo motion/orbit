@@ -170,19 +170,23 @@ class VirtualListStore {
 
   setWidth = throttle((next: number) => {
     this.width = next
-  }, 64)
+  }, 100)
 
-  recomputeHeights = 0
+  triggerRecomputeHeights = 0
   runRecomputeHeights = react(
-    () => [this.recomputeHeights],
+    () => [this.triggerRecomputeHeights],
     async (_, { when, sleep }) => {
       await sleep()
       await when(() => this.props.allowMeasure !== false)
       await when(() => !!this.listRef)
-      this.cache.clearAll()
-      this.listRef.recomputeRowHeights()
+      this.recomputeHeights()
     },
   )
+
+  recomputeHeights = throttle(() => {
+    this.cache.clearAll()
+    this.listRef.recomputeRowHeights()
+  }, 100)
 
   resizeAll = () => {
     console.trace('resize all')
@@ -245,7 +249,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 
   useEffect(
     () => {
-      store.recomputeHeights = Date.now()
+      store.triggerRecomputeHeights = Date.now()
     },
     [props.items],
   )

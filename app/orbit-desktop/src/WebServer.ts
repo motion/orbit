@@ -43,13 +43,16 @@ export class WebServer {
     this.setupOrbitApp()
   }
 
-  async start() {
-    log.info('start()')
-    // kill old processes
-    log.verbose(`Killing old server on ${Config.ports.server}...`)
-    await killPort(Config.ports.server)
-    this.app.listen(Config.ports.server, () => {
-      log.info('Server listening', Config.ports.server)
+  start() {
+    return new Promise(async res => {
+      log.info('start()')
+      // kill old processes
+      log.verbose(`Killing old server on ${Config.ports.server}...`)
+      await killPort(Config.ports.server)
+      this.app.listen(Config.ports.server, () => {
+        res()
+        log.info('Server listening', Config.ports.server)
+      })
     })
   }
 

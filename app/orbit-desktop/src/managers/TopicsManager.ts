@@ -1,3 +1,4 @@
+import { sleep } from '@mcro/black'
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
 import { BitEntity, getSearchableText } from '@mcro/models'
@@ -20,6 +21,7 @@ export class TopicsManager {
     log.info(`start()`)
     await ensureSetting('topicsIndexUpdatedTo', 0)
     this.scanTopicsInt = setInterval(this.scanTopics, 1000 * 60 * 15)
+    await sleep(100)
     this.scanTopics()
   }
 
@@ -66,6 +68,7 @@ export class TopicsManager {
       const topics = await this.cosal.getTopWords(bodies, { max: 10, sortByWeight: true })
       // dont flatten
       allTopics = [...allTopics, topics]
+      await sleep(20)
     }
     const topTopics = flatten(flatten(zip(allTopics)))
     return topTopics

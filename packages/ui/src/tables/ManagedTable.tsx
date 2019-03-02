@@ -11,6 +11,7 @@ import * as React from 'react'
 import debounceRender from 'react-debounce-render'
 import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
+import { ResizeObserver } from '../ResizeObserver'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
@@ -26,6 +27,7 @@ import {
   TableRowSortOrder,
 } from './types'
 
+// TODO this can move to useResizeObserver
 function useComponentSize() {
   const [state, setState] = React.useState({ width: 0, height: 0 })
   const measureRef = React.useRef<HTMLDivElement>(null)
@@ -33,7 +35,6 @@ function useComponentSize() {
   React.useEffect(() => {
     const node = measureRef.current
 
-    // @ts-ignore
     const observer = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect
       const next = { width, height }

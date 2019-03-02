@@ -20,7 +20,7 @@ export function startElectron({ mainProcess }) {
 const finishLaunchingElectron = async ({ mainProcess }) => {
   // electron white bg fix attempt:
   // https://github.com/electron/electron/issues/2170#issuecomment-372108061
-  await new Promise(res => setTimeout(res, 100))
+  // await new Promise(res => setTimeout(res, 100))
 
   const Config = getGlobalConfig()
   // start electron...

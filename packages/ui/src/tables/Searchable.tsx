@@ -277,7 +277,7 @@ export class Searchable extends React.PureComponent<Props, State> {
       hasFocus: true,
     })
 
-  onInputBlur = () =>
+  onInputBlur = () => {
     setTimeout(
       () =>
         this.setState({
@@ -285,6 +285,7 @@ export class Searchable extends React.PureComponent<Props, State> {
         }),
       100,
     )
+  }
 
   onTokenFocus = (focusedToken: number) => this.setState({ focusedToken })
 

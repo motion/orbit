@@ -1,7 +1,7 @@
 import { deep } from '@mcro/black'
 import { Absolute, gloss } from '@mcro/gloss'
 import { AppView, AppViewRef, ProvideSelectionContext, SubPane } from '@mcro/kit'
-import { BorderRight, Sidebar } from '@mcro/ui'
+import { Sidebar } from '@mcro/ui'
 import { useHook } from '@mcro/use-store'
 import { isEqual } from 'lodash'
 import React, { memo, useEffect, useMemo } from 'react'
@@ -82,7 +82,6 @@ const SidebarContainer = gloss(Absolute, {
   top: 0,
   left: 0,
   bottom: 0,
-  zIndex: 10000000,
   overflow: 'hidden',
   position: 'relative',
   hideSidebar: {
@@ -123,7 +122,6 @@ const SidebarSubPane = memo(function SidebarSubPane(props: {
           ref={handleAppRef}
           before={<OrbitToolBarHeight identifier={identifier} />}
           after={<OrbitStatusBarHeight identifier={identifier} />}
-          inside={<BorderRight />}
         />
       </ProvideSelectionContext>
     </SubPane>

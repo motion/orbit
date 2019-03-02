@@ -45,7 +45,8 @@
     "source-map-support": "^0.5.0",
     "typeorm": "^0.3.0-alpha.22",
     "usage": "^0.7.1",
-    "wait-port": "^0.2.2"
+    "wait-port": "^0.2.2",
+    "wait-on": "3.2.0"
   },
   "peerDependencies": {
     "react": "16.8.3",

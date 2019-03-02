@@ -13,11 +13,12 @@ export function cleanupChildren(pid = process.getuid()) {
       try {
         const pids = children.map(x => x.PID)
         for (const pid of pids) {
+          console.log('dispose proccess', pid)
           try {
             process.kill(pid)
           } catch (err) {
             if (err.message.indexOf('ESRCH') === -1) {
-              console.log('err killing', pid, err.message)
+              console.log('err', pid, err.message)
             }
           }
         }

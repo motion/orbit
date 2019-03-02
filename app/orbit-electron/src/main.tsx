@@ -1,42 +1,47 @@
+import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
+import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
+import {
+  CloseAppCommand,
+  NewFallbackServerPortCommand,
+  RestartAppCommand,
+  TearAppCommand,
+} from '@mcro/models'
 import { render } from '@mcro/reactron'
-import { CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, TearAppCommand } from '@mcro/models'
 import { Electron } from '@mcro/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
 import * as React from 'react'
+import waitOn from 'wait-on'
 import waitPort from 'wait-port'
 import AppsWindow from './apps/AppsWindow'
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
-import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
-import { TearAppResolver } from './resolver/TearAppResolver'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
-import { Mediator } from './mediator'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
+import { TearAppResolver } from './resolver/TearAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
 
+  const desktopServerUrl = `http://localhost:${getGlobalConfig().ports.server}`
+  console.log('Waiting on desktop port', desktopServerUrl, '...')
+  await waitOn({ resources: [desktopServerUrl], interval: 50 })
+  console.log('Connected to desktop')
+
+  // require after desktop starts to avoid reconnect errors
+  const { Mediator } = require('./mediator')
   const port = await Mediator.command(NewFallbackServerPortCommand)
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [
-      TearAppCommand,
-      CloseAppCommand,
-      RestartAppCommand,
-    ],
+    commands: [TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
-    resolvers: [
-      TearAppResolver,
-      CloseAppResolver,
-      RestartAppResolver,
-    ],
+    resolvers: [TearAppResolver, CloseAppResolver, RestartAppResolver],
   })
   mediatorServer.bootstrap()
 
@@ -47,6 +52,7 @@ export async function main() {
     require('./helpers/installGlobals')
     console.log('Waiting for dev ports')
     await Promise.all[(waitPort({ port: 3999 }), waitPort({ port: 3001 }))]
+    console.log('Waiting for dev ports done')
 
     if (process.env.SUB_PROCESS) {
       // hide sub-process docks
@@ -61,9 +67,11 @@ export async function main() {
   electronDebug()
 
   // start Electron state store
+  console.log('Starting Electron store')
   await Electron.start({
     waitForInitialState: false,
   })
+  console.log('Started Electron store')
 
   //
   // START THE PROCESSES

@@ -139,7 +139,7 @@ export function AppsMainManage() {
       </TitleRow>
       <SelectableGrid
         autoFitColumns
-        minWidth={160}
+        minWidth={180}
         items={results}
         getItem={getItem}
         distance={10}

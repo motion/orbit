@@ -28,7 +28,7 @@ export default memo(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = getIsTorn() ? 16 : 20
+  const fontSize = getIsTorn() ? 16 : 18
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">
@@ -52,7 +52,11 @@ export default memo(function OrbitHeaderInput() {
         />
       </View>
       <After>
-        <ClearButton hidden={!queryStore.hasQuery} onClick={queryStore.clearQuery} />
+        <ClearButton
+          margin={['auto', 5]}
+          hidden={!queryStore.hasQuery}
+          onClick={queryStore.clearQuery}
+        />
       </After>
     </FakeInput>
   )
@@ -71,7 +75,7 @@ const After = gloss({
 const FakeInput = gloss(View, {
   position: 'relative',
   height: 34,
-  padding: [2, 8],
+  padding: [2, 10],
   alignItems: 'center',
   justifyContent: 'center',
   flexFlow: 'row',

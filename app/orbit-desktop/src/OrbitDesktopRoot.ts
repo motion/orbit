@@ -143,15 +143,6 @@ export class OrbitDesktopRoot {
     this.operatingSystemManager = new OperatingSystemManager()
     this.operatingSystemManager.start()
 
-    // cosal is a dependency of many things
-    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
-    await this.cosalManager.start()
-    this.cosal = this.cosalManager.cosal
-
-    // depends on cosal and generalSetting
-    this.topicsManager = new TopicsManager({ cosal: this.cosal })
-    await this.topicsManager.start()
-
     // the electron app wont start until this runs
     // start server a bit early so it lets them start
     this.webServer = new WebServer()
@@ -159,6 +150,14 @@ export class OrbitDesktopRoot {
 
     this.authServer = new AuthServer()
     await this.authServer.start()
+
+    this.cosalManager = new CosalManager({ dbPath: COSAL_DB })
+    await this.cosalManager.start()
+    this.cosal = this.cosalManager.cosal
+
+    // depends on cosal
+    this.topicsManager = new TopicsManager({ cosal: this.cosal })
+    await this.topicsManager.start()
 
     this.onboardManager = new OnboardManager()
     await this.onboardManager.start()
@@ -199,6 +198,8 @@ export class OrbitDesktopRoot {
     this.registerMediatorServer()
 
     this.registerREPLGlobals()
+
+    console.log('DESKTOP FINISHED START()')
   }
 
   restart = () => {

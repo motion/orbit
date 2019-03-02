@@ -3,7 +3,6 @@ import { ChildProcessProps, startChildProcess } from '@mcro/orbit-fork-process'
 import { ChildProcess } from 'child_process'
 import root from 'global'
 import { join } from 'path'
-import waitOn from 'wait-on'
 import WebSocket from 'ws'
 
 // sort order important
@@ -113,13 +112,9 @@ export async function main() {
       })
     }
 
-    // wait for server...
-    const desktopServerUrl = `http://localhost:${config.ports.server}`
-    await waitOn({ resources: [desktopServerUrl] })
-
-    console.log('Desktop has started, continuing starting electron processes...')
-
     if (DISABLE_ELECTRON !== 'true') {
+      console.log('Starting electron...')
+
       // start main electron process inside this thread (no forking)
       require('./startElectron').startElectron({ mainProcess: true })
 

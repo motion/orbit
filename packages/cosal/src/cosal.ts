@@ -71,6 +71,10 @@ export class Cosal {
   }
 
   async start() {
+    if (this.started) {
+      return
+    }
+
     this.seedVectors = this.seedVectors || (await getDefaultVectors())
     this.fallbackVector = this.fallbackVector || this.seedVectors.hello
 

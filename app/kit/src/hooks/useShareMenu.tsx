@@ -24,7 +24,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
                 alignItems="center"
                 justifyContent="center"
                 width={34}
-                opacity={0.5}
+                opacity={0.4}
                 hoverStyle={{ opacity: 1 }}
                 onClick={flow(
                   preventDefault,

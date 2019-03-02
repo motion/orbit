@@ -259,5 +259,5 @@ const Separator = gloss({
   },
   width: 1,
 }).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.borderColor.alpha(alpha => alpha * 0.65)})`,
+  background: `linear-gradient(transparent, ${theme.background.alpha(alpha => alpha * 0.65)})`,
 }))

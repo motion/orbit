@@ -2,7 +2,7 @@ import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
 import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@mcro/ui'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -17,7 +17,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
-  const Actions = useActions()
 
   return (
     <OrbitHeaderContainer
@@ -47,7 +46,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <View flex={1} />
 
           <HeaderContain>
-            <View width={20} alignItems="center" justifyContent="center">
+            <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}
                 name={`orbit-${icon}`}
@@ -58,17 +57,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
             <OrbitHeaderInput />
 
-            {!isTorn && (
-              <Button onClick={Actions.tearApp}>
-                <Text fontWeight={600}>Open</Text> &nbsp;{' '}
-                <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
-                  ⌘ ⏎
-                </Text>
-              </Button>
-            )}
+            {!isTorn && <LaunchButton />}
           </HeaderContain>
-
-          <OrbitSpaceSwitch />
 
           <View flex={1} />
         </Row>
@@ -93,7 +83,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
           bottom={0}
           alignItems="center"
           justifyContent="center"
+          flexFlow="row"
         >
+          <OrbitSpaceSwitch />
+
           <Button
             chromeless
             opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
@@ -180,9 +173,13 @@ const HeaderContain = gloss({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  maxWidth: '70%',
+  maxWidth: 700,
   minWidth: 400,
-})
+  padding: [1, 5],
+  borderRadius: 100,
+}).theme((_, theme) => ({
+  background: [0, 0, 0, theme.background.isDark() ? 0.1 : 0.05],
+}))
 
 const HeaderFade = gloss(FullScreen, {
   zIndex: -1,
@@ -211,4 +208,35 @@ const OrbitClose = gloss({
   dontDim: {
     opacity: 1,
   },
+})
+
+const LaunchButton = memo(() => {
+  const Actions = useActions()
+  const { orbitStore } = useStores()
+  const [isHovered, setHovered] = useState(false)
+
+  if (orbitStore.isTorn) {
+    return null
+  }
+
+  return (
+    <Button
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      sizeHeight={0.95}
+      sizeRadius={2}
+      onClick={Actions.tearApp}
+      width={85}
+    >
+      {!isHovered ? (
+        <Text fontWeight={500} alpha={0.9}>
+          Open
+        </Text>
+      ) : (
+        <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
+          ⌘ ⏎
+        </Text>
+      )}
+    </Button>
+  )
 })

@@ -242,12 +242,7 @@ export const ListItem = memo(function ListItem(props: ListItemProps) {
             {showTitle && (
               <Title>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText
-                  sizeLineHeight={0.85}
-                  ellipse
-                  fontWeight={slim ? 400 : 500}
-                  {...titleProps}
-                >
+                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
                   {title}
                 </HighlightText>
                 <TitleSpace slim={slim} />
@@ -319,10 +314,10 @@ export const ListItem = memo(function ListItem(props: ListItemProps) {
               </>
             )}
             {!showPreviewInSubtitle && (
-              <>
+              <Row>
                 {locationElement}
                 {childrenElement}
-              </>
+              </Row>
             )}
           </ListItemMainContent>
           {after}

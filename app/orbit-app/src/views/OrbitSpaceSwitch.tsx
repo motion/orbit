@@ -2,13 +2,13 @@ import { ensure, react } from '@mcro/black'
 import { useModels } from '@mcro/bridge'
 import { Icon, useActiveSpace, useStoresSimple } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { Col, ListItem, Popover, View } from '@mcro/ui'
+import { Avatar, Col, ListItem, Popover, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
-import React from 'react'
+import React, { memo } from 'react'
 import { SpaceModel } from '../../../models/_'
+// @ts-ignore
+import avatar from '../../../public/images/nate.jpg'
 import FocusableShortcutHandler from './FocusableShortcutHandler'
-
-type Props = { target?: React.ReactNode }
 
 class SpaceSwitchStore {
   stores = useHook(useStoresSimple)
@@ -57,7 +57,7 @@ const shortcuts = {
   down: 'down',
 }
 
-export function OrbitSpaceSwitch(props: Props) {
+export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const store = useStore(SpaceSwitchStore)
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
@@ -92,7 +92,11 @@ export function OrbitSpaceSwitch(props: Props) {
         elevation={7}
         group="filters"
         onChangeVisibility={store.setOpen}
-        target={<View>{props.target}</View>}
+        target={
+          <View>
+            <Avatar src={avatar} width={24} height={24} marginLeft={12} />
+          </View>
+        }
       >
         <Col ref={store.popoverContentRef} borderRadius={borderRadius} overflow="hidden" flex={1}>
           <View overflowY="auto" maxHeight={300}>
@@ -132,4 +136,4 @@ export function OrbitSpaceSwitch(props: Props) {
       </Popover>
     </FocusableShortcutHandler>
   )
-}
+})

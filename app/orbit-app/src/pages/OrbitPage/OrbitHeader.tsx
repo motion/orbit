@@ -47,7 +47,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <View flex={1} />
 
           <HeaderContain>
-            <View width={20} alignItems="center" justifyContent="center">
+            <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}
                 name={`orbit-${icon}`}
@@ -59,7 +59,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             <OrbitHeaderInput />
 
             {!isTorn && (
-              <Button onClick={Actions.tearApp}>
+              <Button sizeHeight={0.95} sizeRadius={2} onClick={Actions.tearApp}>
                 <Text fontWeight={600}>Open</Text> &nbsp;{' '}
                 <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
                   ⌘ ⏎
@@ -67,8 +67,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
               </Button>
             )}
           </HeaderContain>
-
-          <OrbitSpaceSwitch />
 
           <View flex={1} />
         </Row>
@@ -93,7 +91,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
           bottom={0}
           alignItems="center"
           justifyContent="center"
+          flexFlow="row"
         >
+          <OrbitSpaceSwitch />
+
           <Button
             chromeless
             opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
@@ -182,7 +183,11 @@ const HeaderContain = gloss({
   flexFlow: 'row',
   maxWidth: '70%',
   minWidth: 400,
-})
+  padding: [0, 4],
+  borderRadius: 100,
+}).theme((_, theme) => ({
+  background: theme.tabBackgroundTop.alpha(0.1),
+}))
 
 const HeaderFade = gloss(FullScreen, {
   zIndex: -1,

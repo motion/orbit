@@ -1,13 +1,13 @@
 import { ensure, react } from '@mcro/black'
 import { useModels } from '@mcro/bridge'
 import { Icon, useActiveSpace, useStoresSimple } from '@mcro/kit'
+import { SpaceModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Avatar, Col, ListItem, Popover, View } from '@mcro/ui'
 import { useHook, useStore } from '@mcro/use-store'
 import React, { memo } from 'react'
-import { SpaceModel } from '../../../models/_'
 // @ts-ignore
-import avatar from '../../../public/images/nate.jpg'
+import avatar from '../../public/images/nate.jpg'
 import FocusableShortcutHandler from './FocusableShortcutHandler'
 
 class SpaceSwitchStore {
@@ -94,7 +94,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         onChangeVisibility={store.setOpen}
         target={
           <View>
-            <Avatar src={avatar} width={24} height={24} marginLeft={12} />
+            <Avatar src={avatar} width={22} height={22} margin={[0, 6]} />
           </View>
         }
       >

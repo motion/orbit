@@ -63,20 +63,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <View flex={1} />
         </Row>
 
-        <OrbitEditAppButton />
-
-        {isEditing && (
-          <Absolute top={0} right={32} bottom={0} alignItems="center" justifyContent="center">
-            <Row>
-              <HeaderButton icon="edit" tooltip="Open in VSCode" />
-              <HorizontalSpace small />
-              <Theme name="selected">
-                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
-              </Theme>
-            </Row>
-          </Absolute>
-        )}
-
         <Absolute
           top={0}
           right={isTorn ? 3 : 6}
@@ -85,6 +71,18 @@ export const OrbitHeader = memo(function OrbitHeader() {
           justifyContent="center"
           flexFlow="row"
         >
+          <OrbitEditAppButton />
+
+          {isEditing && (
+            <Row>
+              <HeaderButton icon="edit" tooltip="Open in VSCode" />
+              <HorizontalSpace small />
+              <Theme name="selected">
+                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+              </Theme>
+            </Row>
+          )}
+
           <OrbitSpaceSwitch />
 
           <Button
@@ -134,18 +132,16 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <Absolute top={0} right={42} bottom={0} alignItems="center" justifyContent="center">
-      <HeaderButton
-        icon="tool"
-        tooltip="Edit app"
-        onClick={async () => {
-          Actions.tearApp()
-          orbitStore.setEditing()
-        }}
-      >
-        Edit
-      </HeaderButton>
-    </Absolute>
+    <HeaderButton
+      icon="tool"
+      tooltip="Edit app"
+      onClick={async () => {
+        Actions.tearApp()
+        orbitStore.setEditing()
+      }}
+    >
+      Edit
+    </HeaderButton>
   )
 }
 

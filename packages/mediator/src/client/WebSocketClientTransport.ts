@@ -31,7 +31,7 @@ export class WebSocketClientTransport implements ClientTransport {
     websocket.onerror = ({ error }) => {
       if (`${error}`.indexOf('ECONNREFUSED')) {
         clearTimeout(tm)
-        tm = setTimeout(() => log.info(`Connection refused ${name}, retrying...`), 300)
+        tm = setTimeout(() => log.info(`Connection refused ${name}, retrying...`), 1000)
       } else {
         log.error(`Error ${name} ${error}`)
       }

@@ -119,22 +119,22 @@ export async function main() {
       require('./startElectron').startElectron({ mainProcess: true })
 
       // im turning off the menu/menu-apps stuff until/if we revisit that
-      if (process.env.DISABLE_MENU !== 'true') {
-        // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
-        // see: https://github.com/electron/electron/issues/7246
-        await new Promise(res => setTimeout(res, 500))
-        setupProcess({
-          name: 'electron-menus',
-          inspectPort: 9006,
-          inspectPortRemote: 9007,
-        })
-        await new Promise(res => setTimeout(res, 500))
-        setupProcess({
-          name: 'electron-apps',
-          inspectPort: 9004,
-          inspectPortRemote: 9005,
-        })
-      }
+      // if (process.env.DISABLE_MENU !== 'true') {
+      //   // sleep a bit this is a shitty way to avoid bugs starting multiple electron instances at once
+      //   // see: https://github.com/electron/electron/issues/7246
+      //   await new Promise(res => setTimeout(res, 500))
+      //   setupProcess({
+      //     name: 'electron-menus',
+      //     inspectPort: 9006,
+      //     inspectPortRemote: 9007,
+      //   })
+      //   await new Promise(res => setTimeout(res, 500))
+      //   setupProcess({
+      //     name: 'electron-apps',
+      //     inspectPort: 9004,
+      //     inspectPortRemote: 9005,
+      //   })
+      // }
     }
 
     console.log('Started everything!')

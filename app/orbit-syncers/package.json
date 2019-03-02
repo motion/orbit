@@ -29,7 +29,7 @@
     "puppeteer": "^1.9.0",
     "readability": "^0.1.0",
     "slack": "^11.0.1",
-    "sqlite": "3.0.0",
+    "sqlite": "3.0.2",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "urijs": "^1.19.0"

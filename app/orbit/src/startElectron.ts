@@ -8,6 +8,7 @@ export function startElectron({ mainProcess }) {
     app.on('before-quit', handleExit)
 
     if (app.isReady) {
+      console.log('app already ready')
       finishLaunchingElectron({ mainProcess })
     } else {
       app.on('ready', finishLaunchingElectron)

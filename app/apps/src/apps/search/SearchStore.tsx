@@ -1,5 +1,12 @@
 import { loadMany } from '@mcro/bridge'
-import { AppIcon, MarkType, OrbitListItemProps, SearchState, SpaceIcon, useStoresSimple } from '@mcro/kit'
+import {
+  AppIcon,
+  MarkType,
+  OrbitListItemProps,
+  SearchState,
+  SpaceIcon,
+  useStoresSimple,
+} from '@mcro/kit'
 import { AppBit, SearchQuery, SearchResultModel } from '@mcro/models'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { uniq } from 'lodash'
@@ -15,7 +22,6 @@ type SearchResults = {
 
 export class SearchStore {
   stores = useHook(useStoresSimple)
-  // actions = useHook(useActions)
   searchState: SearchState | null = null
 
   setSearchState(next: SearchState) {
@@ -71,7 +77,6 @@ export class SearchStore {
       icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
       iconBefore: true,
       identifier: 'apps',
-      group: 'Home',
     }
   }
 

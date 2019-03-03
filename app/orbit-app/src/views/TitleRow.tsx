@@ -37,7 +37,7 @@ export function TitleRow({
           {after}
         </>
       )}
-      {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} />}
+      {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
     </Row>
   )
 }

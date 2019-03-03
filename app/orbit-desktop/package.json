@@ -67,7 +67,7 @@
     "semver": "5.5.1",
     "slack": "^11.0.1",
     "source-map-support": "^0.4.16",
-    "sqlite": "3.0.0",
+    "sqlite": "3.0.2",
     "turndown": "4.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "ws": "6.0.0",

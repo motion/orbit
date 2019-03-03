@@ -1,5 +1,5 @@
 import { Absolute, gloss, ViewProps } from '@mcro/gloss'
-import { AppIcon, useActiveAppsSorted } from '@mcro/kit'
+import { AppIcon, useActiveAppsSorted, useActiveSpace } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { Icon, Section, Text, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
@@ -72,7 +72,7 @@ const AppIconContainer = gloss({
   position: 'relative',
 }).theme((_, theme) => ({
   '&:hover': {
-    background: theme.backgroundHover,
+    background: theme.backgroundHover.alpha(0.05),
   },
 }))
 
@@ -81,6 +81,8 @@ export function AppsMainManage() {
   // const Actions = useActions()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
+  const [activeSpace] = useActiveSpace()
+
   const results = [
     ...activeApps.map(x => ({
       id: x.id,
@@ -135,7 +137,7 @@ export function AppsMainManage() {
   return (
     <Section sizePadding={0}>
       <TitleRow bordered sizePadding={2} margin={0}>
-        Apps
+        {activeSpace ? activeSpace.name : ''}
       </TitleRow>
       <SelectableGrid
         autoFitColumns

@@ -38,6 +38,7 @@ import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
+import { OrbitToolBar } from './OrbitToolBar'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
@@ -201,7 +202,11 @@ const RenderApp = ({ id, identifier }) => {
   const AppStatusBar = state.views.statusBar
   return (
     <ProvideStores stores={{ appStore: state.appStore }}>
-      {AppToolbar && <AppToolbar />}
+      {AppToolbar && (
+        <OrbitToolBar>
+          <AppToolbar />
+        </OrbitToolBar>
+      )}
       {AppSidebar && (
         <OrbitSidebar identifier={identifier} id={id}>
           <AppSidebar />

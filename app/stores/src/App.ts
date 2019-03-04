@@ -115,7 +115,7 @@ class AppStore {
       return 'none'
     }
     if (vibrancy === 'more') {
-      return App.isDark ? 'dark' : 'light'
+      return App.isDark ? 'ultra-dark' : 'light'
     }
     return App.isDark ? 'ultra-dark' : 'light'
   }

@@ -236,7 +236,7 @@ const LaunchButton = memo(() => {
       sizeHeight={0.95}
       sizeRadius={2}
       onClick={Actions.tearApp}
-      width={85}
+      width={80}
     >
       {!isHovered ? (
         <Text fontWeight={500} alpha={0.9}>

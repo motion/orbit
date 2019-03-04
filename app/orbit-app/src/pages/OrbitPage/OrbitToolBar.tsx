@@ -1,6 +1,8 @@
+import { useReaction } from '@mcro/black'
 import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
 import { useLoadedApp } from '@mcro/kit'
 import React, { memo } from 'react'
+import { useStoresSimple } from '../../hooks/useStores'
 
 const toolbarHeight = 30
 const minHeight = 3
@@ -11,21 +13,16 @@ export const OrbitToolBarHeight = ({ identifier }: { identifier: string }) => {
   return <div style={{ height }} />
 }
 
-export const OrbitToolBar = memo((props: { children: any }) => {
+export const OrbitToolBar = memo((props: { children: any; id: string }) => {
+  const { paneManagerStore } = useStoresSimple()
+  const isActive = useReaction(() => paneManagerStore.activePane.id === props.id)
   return (
     <ToolbarChrome>
-      <ToolbarInner>
+      <ToolbarInner isActive={isActive}>
         <ToolbarContent>{props.children}</ToolbarContent>
       </ToolbarInner>
     </ToolbarChrome>
   )
-})
-
-const ToolbarContent = gloss(FullScreen, {
-  flexFlow: 'row',
-  alignItems: 'center',
-  padding: [0, 12],
-  overflow: 'hidden',
 })
 
 const ToolbarChrome = gloss(Row, {
@@ -41,8 +38,20 @@ const ToolbarChrome = gloss(Row, {
   background: linearGradient(theme.tabBackgroundBottom || theme.background, theme.background),
 }))
 
-const ToolbarInner = gloss({
+const ToolbarInner = gloss<{ isActive: boolean }>({
   flex: 2,
   flexFlow: 'row',
-  height: toolbarHeight,
+  minHeight,
+  opacity: 0,
+  isActive: {
+    opacity: 1,
+    height: toolbarHeight,
+  },
+})
+
+const ToolbarContent = gloss(FullScreen, {
+  flexFlow: 'row',
+  alignItems: 'center',
+  padding: [0, 12],
+  overflow: 'hidden',
 })

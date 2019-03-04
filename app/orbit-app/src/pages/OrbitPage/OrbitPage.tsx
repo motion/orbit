@@ -203,7 +203,7 @@ const RenderApp = ({ id, identifier }) => {
   return (
     <ProvideStores stores={{ appStore: state.appStore }}>
       {AppToolbar && (
-        <OrbitToolBar>
+        <OrbitToolBar id={id}>
           <AppToolbar />
         </OrbitToolBar>
       )}

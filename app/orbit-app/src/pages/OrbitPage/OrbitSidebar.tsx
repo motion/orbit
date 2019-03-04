@@ -3,6 +3,7 @@ import { ProvideSelectionContext, SubPane } from '@mcro/kit'
 import { Sidebar } from '@mcro/ui'
 import React, { memo, useEffect, useState } from 'react'
 import { useStores } from '../../hooks/useStores'
+import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export const defaultSidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
 
@@ -44,6 +45,7 @@ export const OrbitSidebar = memo((props: { id: string; identifier: string; child
           noBorder
         >
           <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
+            <OrbitToolBarHeight identifier={identifier} />
             {props.children}
           </ProvideSelectionContext>
         </Sidebar>

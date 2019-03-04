@@ -1,6 +1,6 @@
 import { useReaction } from '@mcro/black'
 import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
-import { ProvideStores, useLoadedApp } from '@mcro/kit'
+import { useLoadedApp } from '@mcro/kit'
 import React, { memo } from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -40,11 +40,7 @@ const OrbitToolBarContent = memo(() => {
         const state = appsStore.getApp(type, id)
         if (!state || !state.views) continue
         const AppToolbar = state.views.toolBar
-        res[id] = AppToolbar && (
-          <ProvideStores stores={state.provideStores}>
-            <AppToolbar appStore={state.appStore} />
-          </ProvideStores>
-        )
+        res[id] = AppToolbar && <AppToolbar appStore={state.appStore} />
       }
       return res
     }) || {}

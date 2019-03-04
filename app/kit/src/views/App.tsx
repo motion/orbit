@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppElements } from '../types/AppDefinition'
 
-const appViews = ['index', 'children', 'statusBar', 'toolBar', 'provideStores']
+const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 
 export const AppLoadContext = createContext({
   identifier: '',
@@ -13,7 +13,7 @@ export const AppLoadContext = createContext({
 
 function AppContainerInner(props: AppElements) {
   for (const key in props) {
-    if (!appViews.find(x => x === key)) {
+    if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
     }
   }
@@ -35,7 +35,7 @@ function AppContainerInner(props: AppElements) {
         statusBar: props.statusBar && superMemo(props.statusBar),
         toolBar: props.toolBar && superMemo(props.toolBar),
       },
-      provideStores: props.provideStores,
+      context: props.context,
     })
   }
 

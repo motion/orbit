@@ -10,7 +10,7 @@ export function useLoadedApp(identifier: string, id?: string) {
     definition: null,
     id,
     identifier,
-    provideStores: null,
+    context: null,
     version: 0,
     ...state,
   }

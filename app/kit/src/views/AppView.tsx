@@ -54,7 +54,7 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores } = useLoadedApp(props.identifier, props.id)
+    const { views, appStore } = useLoadedApp(props.identifier, props.id)
     const AppViewAlt = useAppView(props.identifier, props.viewType as any)
     const AppView = views[props.viewType] || AppViewAlt
 
@@ -84,6 +84,6 @@ export const AppView = memoIsEqualDeep(
       return appElement
     }
 
-    return <ProvideStores stores={{ ...provideStores, appStore }}>{getAppElement()}</ProvideStores>
+    return <ProvideStores stores={{ appStore }}>{getAppElement()}</ProvideStores>
   }),
 )

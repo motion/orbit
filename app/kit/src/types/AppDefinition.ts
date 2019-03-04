@@ -11,7 +11,7 @@ export type AppElements = {
   children?: React.ReactElement<any>
   statusBar?: React.ReactElement<any>
   toolBar?: React.ReactElement<any>
-  provideStores?: Object
+  context?: any
 }
 
 export type AppViews = {

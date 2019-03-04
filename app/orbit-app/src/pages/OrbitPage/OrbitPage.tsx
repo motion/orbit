@@ -35,10 +35,9 @@ import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitMain } from './OrbitMain'
-import OrbitSidebar, { SidebarStore } from './OrbitSidebar'
+import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
-import { OrbitToolBar } from './OrbitToolBar'
 
 export default memo(function OrbitPage() {
   const themeStore = useStore(ThemeStore)
@@ -105,7 +104,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   const { paneManagerStore } = useStores()
   const orbitStore = useStore(OrbitStore)
   const headerStore = useStoreSimple(HeaderStore)
-  const sidebarStore = useStoreSimple(SidebarStore)
   const shortcutState = useRef({
     closeTab: 0,
     closeApp: 0,
@@ -173,23 +171,45 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   }))
 
   return (
-    <ProvideStores stores={{ orbitStore, headerStore, sidebarStore }}>
+    <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <AppsLoader apps={[...activeApps, ...staticApps]}>
           <OrbitHeader />
           <InnerChrome torn={orbitStore.isTorn}>
-            <OrbitToolBar />
             <OrbitContentArea>
-              <OrbitSidebar />
-              <OrbitMain />
+              {paneManagerStore.panes.map(pane => (
+                <RenderApp key={pane.id} id={pane.id} identifier={pane.type} />
+              ))}
             </OrbitContentArea>
-            <OrbitStatusBar />
           </InnerChrome>
         </AppsLoader>
       </MainShortcutHandler>
     </ProvideStores>
   )
 })
+
+const RenderApp = ({ id, identifier }) => {
+  const { appsStore } = useStores()
+  const state = appsStore.getApp(identifier, id)
+  if (!state || !state.views) {
+    return null
+  }
+  console.log('render render app', id, identifier)
+  const AppToolbar = state.views.toolBar
+  const AppSidebar = state.views.index
+  return (
+    <ProvideStores stores={{ appStore: state.appStore }}>
+      {AppToolbar && <AppToolbar />}
+      {AppSidebar && (
+        <OrbitSidebar identifier={identifier} id={id}>
+          <AppSidebar />
+        </OrbitSidebar>
+      )}
+      <OrbitMain />
+      <OrbitStatusBar />
+    </ProvideStores>
+  )
+}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',

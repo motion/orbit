@@ -22,7 +22,7 @@ export const OrbitMain = memo(function OrbitMain() {
 type AppPane = { id: string; identifier: string }
 
 const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
-  const { sidebarStore, paneManagerStore } = useStoresSimple()
+  const { paneManagerStore } = useStoresSimple()
   const { appsStore } = useStores()
   const { hasMain } = appsStore.getViewState(identifier)
 
@@ -32,7 +32,7 @@ const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
       const { hasIndex } = appsStore.getViewState(identifier)
       const isActive = paneManagerStore.activePaneLowPriority.id === id
       if (isActive) {
-        return hasIndex ? sidebarStore.width : 0
+        return hasIndex ? defaultSidebarWidth : 0
       }
     },
     {

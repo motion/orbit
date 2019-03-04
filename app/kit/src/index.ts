@@ -1,6 +1,7 @@
 export * from './bit/Readability'
 export { configureKit } from './configureKit'
 export * from './helpers/appDefinesClient'
+export * from './helpers/createApp'
 export * from './helpers/fuzzyFilter'
 export * from './helpers/getAppDefinition'
 export * from './helpers/getAppDefinitions'

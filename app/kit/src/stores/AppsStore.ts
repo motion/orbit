@@ -7,7 +7,7 @@ type LoadedApp = {
   id: string
   identifier: string
   views: AppViews
-  provideStores?: any
+  context?: any
   appStore?: AppStore
   version: number
 }
@@ -42,7 +42,7 @@ export class AppsStore {
     },
   )
 
-  setApp = (app: { identifier: string; id: string; views: AppViews; provideStores?: Object }) => {
+  setApp = (app: { identifier: string; id: string; views: AppViews; context?: Object }) => {
     const prev = this._apps[app.id]
     this._apps[app.id] = {
       // merge to prevent overwrite appStore

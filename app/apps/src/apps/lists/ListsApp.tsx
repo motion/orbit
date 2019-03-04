@@ -2,12 +2,16 @@ import { save } from '@mcro/bridge'
 import { App, AppDefinition, AppProps } from '@mcro/kit'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
-import React from 'react'
+import React, { createContext } from 'react'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'
 import { ListAppStatusBar } from './ListsAppStatusBar'
 import { ListStore } from './ListStore'
 import { ListsAppBit } from './types'
+
+export const ListContext = createContext({
+  listStore: null as ListStore,
+})
 
 export const API = {
   receive(
@@ -54,13 +58,11 @@ export const ListsApp: AppDefinition = {
   app: (props: AppProps) => {
     const listStore = useStore(ListStore, props)
     return (
-      <App
-        provideStores={{ listStore }}
-        index={<ListsAppIndex {...props} />}
-        statusBar={<ListAppStatusBar />}
-      >
-        <ListsAppMain {...props} />
-      </App>
+      <ListContext.Provider value={{ listStore }}>
+        <App index={<ListsAppIndex {...props} />} statusBar={<ListAppStatusBar />}>
+          <ListsAppMain {...props} />
+        </App>
+      </ListContext.Provider>
     )
   },
   API,

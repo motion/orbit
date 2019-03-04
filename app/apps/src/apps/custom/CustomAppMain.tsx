@@ -106,6 +106,9 @@ const DEFAULT_FILTERS = [
 ]
 
 export function CustomAppMain(_props: AppProps) {
+  console.log('rendering cusotm app')
+  return null
+
   const [treeState, setTreeState] = useState(treeData)
 
   return (

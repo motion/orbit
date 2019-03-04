@@ -11,8 +11,8 @@ import {
   View,
 } from '@mcro/ui'
 import { flow } from 'lodash'
-import React from 'react'
-import { API } from './ListsApp'
+import React, { useContext } from 'react'
+import { API, ListContext } from './ListsApp'
 import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {
@@ -55,8 +55,9 @@ const addFolder = (store: ListStore) => {
 }
 
 function ListAdd() {
-  // @ts-ignore
-  const { listStore } = useStores()
+  const { listStore } = useContext(ListContext)
+  console.log('listStore, listStore', listStore)
+  return null
   return (
     <Row position="relative">
       <BorderBottom opacity={0.25} />
@@ -96,6 +97,8 @@ function ListAdd() {
 }
 
 function ListSearchResults() {
+  return null
+
   // @ts-ignore
   const { listStore } = useStores()
   const { searchCollapsed, searchResults, query } = listStore

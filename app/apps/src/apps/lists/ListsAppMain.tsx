@@ -1,6 +1,7 @@
-import { AppProps, AppSubView, useStores } from '@mcro/kit'
+import { AppProps, AppSubView } from '@mcro/kit'
 import { Title } from '@mcro/ui'
 import * as React from 'react'
+import { ListContext } from './ListsApp'
 
 export function ListsAppMain(props: AppProps) {
   if (!props.appConfig) {
@@ -19,12 +20,12 @@ export function ListsAppMain(props: AppProps) {
 }
 
 function ListAppTitle(props) {
-  // @ts-ignore
-  const { listStore } = useStores()
+  return null
+  const { listStore } = React.useContext(ListContext)
   return (
     // !TODO merge TitleRow into Title so we have bordered/padded
     <Title bordered sizePadding={2} margin={0} {...props}>
-      {(listStore.app && listStore.app.title) || 'No Title'}
+      {(listStore.app && listStore.app.name) || 'No Title'}
     </Title>
   )
 }

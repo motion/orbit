@@ -141,7 +141,8 @@ class VirtualListStore {
 
   triggerMeasure = 0
   measure() {
-    this.triggerMeasure = Date.now()
+    console.log('should measure')
+    // this.triggerMeasure = Date.now()
   }
 
   runMeasure = react(

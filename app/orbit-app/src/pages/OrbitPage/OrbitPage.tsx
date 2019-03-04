@@ -197,6 +197,8 @@ const RenderApp = ({ id, identifier }) => {
   console.log('render render app', id, identifier)
   const AppToolbar = state.views.toolBar
   const AppSidebar = state.views.index
+  const AppMain = state.views.main
+  const AppStatusBar = state.views.statusBar
   return (
     <ProvideStores stores={{ appStore: state.appStore }}>
       {AppToolbar && <AppToolbar />}
@@ -205,8 +207,12 @@ const RenderApp = ({ id, identifier }) => {
           <AppSidebar />
         </OrbitSidebar>
       )}
-      <OrbitMain />
-      <OrbitStatusBar />
+      {AppMain && <OrbitMain identifier={identifier} id={id} />}
+      {AppStatusBar && (
+        <OrbitStatusBar>
+          <AppStatusBar />
+        </OrbitStatusBar>
+      )}
     </ProvideStores>
   )
 }

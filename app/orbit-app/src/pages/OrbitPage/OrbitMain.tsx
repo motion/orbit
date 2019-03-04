@@ -8,20 +8,9 @@ import { defaultSidebarWidth } from './OrbitSidebar'
 import { OrbitStatusBarHeight } from './OrbitStatusBar'
 import { OrbitToolBarHeight } from './OrbitToolBar'
 
-export const OrbitMain = memo(function OrbitMain() {
-  const { paneManagerStore } = useStores()
-  return (
-    <>
-      {paneManagerStore.panes.map(pane => (
-        <OrbitMainSubPane key={pane.id} id={pane.id} identifier={pane.type} />
-      ))}
-    </>
-  )
-})
-
 type AppPane = { id: string; identifier: string }
 
-const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
+export const OrbitMain = memo(({ identifier, id }: AppPane) => {
   const { paneManagerStore } = useStoresSimple()
   const { appsStore } = useStores()
   const { hasMain } = appsStore.getViewState(identifier)

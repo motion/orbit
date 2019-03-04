@@ -12,6 +12,7 @@ import pluralize from 'pluralize'
 import React from 'react'
 
 export function ListAppStatusBar() {
+  return null
   // @ts-ignore
   const { listStore } = useStores()
   const numItems = Object.keys(listStore.items).length

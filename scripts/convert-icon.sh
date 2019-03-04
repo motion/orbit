@@ -3,6 +3,9 @@
 # cd to root
 cd $(dirname $0)/..
 
+pngcrush ./assets/appicon.png ./assets/appicon2.png
+rm ./assets/appicon.png
+mv  ./assets/appicon2.png ./assets/appicon.png
 ./scripts/utils/png2icns.sh ./assets/appicon.png
 
 # copy for production

@@ -197,7 +197,7 @@ export default memo(function OrbitNav() {
           }}
           iconSize={11}
           icon="grid48"
-          tooltip="Apps"
+          tooltip="Apps & Settings"
           thicc
         />
 

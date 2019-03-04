@@ -1,7 +1,16 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
 import { Icon, useActiveApps } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@mcro/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  HorizontalSpace,
+  Row,
+  SegmentedRow,
+  Text,
+  View,
+} from '@mcro/ui'
 import React, { memo, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
@@ -36,8 +45,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 App.setOrbitState({ docked: !App.orbitState.docked })
               }
             }}
-            onMin={isTorn ? () => console.log('min') : null}
-            onMax={isTorn ? () => console.log('min') : null}
+            onMin={() => console.log('min')}
+            onMax={() => console.log('min')}
           />
         </OrbitClose>
 
@@ -45,7 +54,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
         <Row flex={1} alignItems="center">
           <View flex={1} />
 
-          <HeaderContain>
+          <BackButton />
+
+          <HeaderContain isActive>
             <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}
@@ -57,7 +68,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
             <OrbitHeaderInput />
 
-            {!isTorn && <LaunchButton />}
+            <SegmentedRow>
+              <LinkButton />
+              {!isTorn && <LaunchButton />}
+            </SegmentedRow>
           </HeaderContain>
 
           <View flex={1} />
@@ -169,12 +183,12 @@ const HeaderContain = gloss<{ isActive?: boolean }>({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  maxWidth: 700,
+  maxWidth: '70%',
   minWidth: 400,
   padding: [1, 5],
   borderRadius: 100,
 }).theme(({ isActive }, theme) => ({
-  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.05] : 'transparent',
+  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'none',
 }))
 
 const HeaderFade = gloss(FullScreen, {
@@ -234,5 +248,33 @@ const LaunchButton = memo(() => {
         </Text>
       )}
     </Button>
+  )
+})
+
+const LinkButton = memo(() => {
+  return (
+    <Button
+      sizeHeight={0.95}
+      sizePadding={1.2}
+      tooltip={`Copy link: app://search/?query=something`}
+      sizeRadius={2}
+      icon="link"
+    />
+  )
+})
+
+const BackButton = memo(() => {
+  return (
+    <View width={40} marginLeft={-40} padding={[0, 10]}>
+      <Button
+        chromeless
+        sizeHeight={0.95}
+        sizePadding={1.2}
+        sizeRadius={2}
+        icon="arrowminleft"
+        iconSize={22}
+        opacity={0.25}
+      />
+    </View>
   )
 })

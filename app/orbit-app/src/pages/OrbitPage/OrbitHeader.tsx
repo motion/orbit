@@ -273,7 +273,7 @@ const BackButton = memo(() => {
         sizeRadius={2}
         icon="arrowminleft"
         iconSize={22}
-        opacity={0.5}
+        opacity={0.25}
       />
     </View>
   )

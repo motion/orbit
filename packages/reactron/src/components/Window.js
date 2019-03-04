@@ -48,7 +48,7 @@ export class Window extends BaseComponent {
       icon: props.icon,
     })
 
-    console.log('setting with', this.options)
+    console.log('new BrowserWindow(', this.options, ')')
 
     this.window = new BrowserWindow(this.options)
 
@@ -56,7 +56,6 @@ export class Window extends BaseComponent {
     this.updatePosition = () => configurePosition.call(this, this.props)
 
     this.propHandlers = {
-      nodeIntegration: this.handleSetProp('nodeIntegration'),
       kiosk: this.handleSetProp('kiosk'),
       vibrancy: this.handleSetProp('vibrancy'),
       fullScreen: this.handleSetProp('fullScreen'),

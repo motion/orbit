@@ -56,7 +56,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           <BackButton />
 
-          <HeaderContain isActive>
+          <HeaderContain isActive={false}>
             <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
               <Icon
                 color={theme.color}

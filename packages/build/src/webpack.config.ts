@@ -35,7 +35,7 @@ const getFlag = flag => {
   return (found && found.length >= 2 && found[1]) || null
 }
 
-const target = getFlag('--target') || 'web'
+const target = getFlag('--target') || 'electron-renderer'
 const defines = {
   'process.env.NODE_ENV': JSON.stringify(mode),
   'process.env.RENDER_TARGET': JSON.stringify(target),

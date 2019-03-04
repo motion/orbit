@@ -214,6 +214,9 @@ export default function OrbitWindow() {
   return (
     <Window
       show={store.show}
+      webPreferences={{
+        nodeIntegration: true,
+      }}
       onReadyToShow={store.setInitialShow}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}

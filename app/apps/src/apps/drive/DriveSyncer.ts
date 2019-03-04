@@ -1,8 +1,9 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { DriveLoadedFile, DriveLoader, DriveUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { DriveBitData } from './DriveBitData'
+import { DriveLoadedFile, DriveUser } from './DriveTypes'
+import { DriveLoader } from './DriveLoader'
 
 /**
  * Syncs Google Drive files.

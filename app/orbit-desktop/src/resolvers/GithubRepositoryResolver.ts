@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { resolveMany } from '@mcro/mediator'
 import { AppEntity, GithubRepositoryModel } from '@mcro/models'
-import { GithubLoader } from '@mcro/services'
+import { GithubLoader } from '@mcro/apps/_/apps/github/GithubLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { getRepository } from 'typeorm'
 
 const log = new Logger('resolver:github-repositories')

@@ -1,6 +1,6 @@
 import { Logger } from '@mcro/logger'
 import { sleep } from '@mcro/utils'
-import { ServiceLoader } from '../../loader/ServiceLoader'
+import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
 import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'

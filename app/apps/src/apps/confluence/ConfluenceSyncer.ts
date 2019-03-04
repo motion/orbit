@@ -1,9 +1,10 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { ConfluenceContent, ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { ConfluenceLastSyncInfo } from './ConfluenceAppData'
 import { ConfluenceBitData } from './ConfluenceBitData'
+import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
+import { ConfluenceLoader } from './ConfluenceLoader'
 
 /**
  * Syncs Confluence pages and blogs.

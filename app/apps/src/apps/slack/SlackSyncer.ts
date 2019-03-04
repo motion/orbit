@@ -1,7 +1,8 @@
 import { AppEntity, Bit } from '@mcro/models'
-import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { SlackBitData } from './SlackBitData'
+import { SlackAttachment, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
+import { SlackLoader } from './SlackLoader'
 
 /**
  * Syncs Slack messages.

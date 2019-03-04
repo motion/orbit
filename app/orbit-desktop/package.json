@@ -23,7 +23,7 @@
     "@mcro/orbit-app": "^2.3.10",
     "@mcro/r2": "^2.3.10",
     "@mcro/screen": "^2.3.10",
-    "@mcro/services": "^2.3.10",
+    "@mcro/apps": "^2.3.10",
     "@mcro/stores": "^2.3.10",
     "@mcro/utils": "^2.3.10",
     "@mcro/devcert": "1.0.0",

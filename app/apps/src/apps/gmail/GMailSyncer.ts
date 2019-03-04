@@ -1,5 +1,4 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { GMailLoader, GMailThread } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { getRepository, In } from 'typeorm'
@@ -7,6 +6,8 @@ import { GMailMessageParser } from './GMailMessageParser'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
 import { GmailAppData } from './GmailAppData'
+import { GMailLoader } from './GMailLoader'
+import { GMailThread } from './GMailTypes'
 
 /**
  * Syncs GMail.

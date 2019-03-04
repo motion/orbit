@@ -1,4 +1,4 @@
-import { GMailMessage } from '@mcro/services'
+import { GMailMessage } from './GMailTypes'
 import { GmailBitDataParticipant } from './GmailBitData'
 
 const createDOMPurify = require('dompurify')

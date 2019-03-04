@@ -1,9 +1,10 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { JiraIssue, JiraLoader, JiraUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { JiraAppData } from './JiraAppData'
 import { JiraBitData } from './JiraBitData'
+import { JiraIssue, JiraUser } from './JiraTypes'
+import { JiraLoader } from './JiraLoader'
 
 /**
  * Syncs Jira issues.

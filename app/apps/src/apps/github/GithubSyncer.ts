@@ -1,17 +1,11 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import {
-  GithubComment,
-  GithubCommit,
-  GithubIssue,
-  GithubLoader,
-  GithubPerson,
-  GithubPullRequest,
-} from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
 import { BitUtils, createSyncer } from '@mcro/sync-kit'
 import { GithubBitData } from './GithubBitData'
 import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
+import { GithubComment, GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from './GithubTypes'
+import { GithubLoader } from './GithubLoader'
 
 /**
  * Syncs Github.

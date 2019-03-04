@@ -1,5 +1,7 @@
 import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@mcro/models'
-import { DriveLoader, GMailLoader, SlackLoader } from '@mcro/services'
+import { DriveLoader } from '@mcro/apps/_/apps/drive/DriveLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { GMailLoader } from '@mcro/apps/_/apps/gmail/GMailLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { SlackLoader } from '@mcro/apps/_/apps/slack/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
 

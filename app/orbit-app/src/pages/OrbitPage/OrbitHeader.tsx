@@ -28,11 +28,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const theme = useTheme()
 
   return (
-    <OrbitHeaderContainer
-      isTorn={isTorn}
-      className="draggable"
-      onMouseUp={headerStore.handleMouseUp}
-    >
+    <OrbitHeaderOuter isTorn={isTorn} className="draggable" onMouseUp={headerStore.handleMouseUp}>
       <OrbitHeaderEditingBg isActive={isEditing} />
       <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
         <OrbitClose dontDim={isTorn}>
@@ -125,7 +121,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
         zIndex={0}
       />
       <OrbitNav />
-    </OrbitHeaderContainer>
+    </OrbitHeaderOuter>
   )
 })
 
@@ -166,7 +162,7 @@ const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   background: (isActive && theme.orbitHeaderBackgroundEditing) || 'transparent',
 }))
 
-const OrbitHeaderContainer = gloss(View, {
+const OrbitHeaderOuter = gloss(View, {
   position: 'relative',
   overflow: 'hidden',
   zIndex: 400,
@@ -188,7 +184,7 @@ const HeaderContain = gloss<{ isActive?: boolean }>({
   padding: [1, 5],
   borderRadius: 100,
 }).theme(({ isActive }, theme) => ({
-  background: isActive ? [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075] : 'transparent',
+  border: isActive ? [1, [0, 0, 0, theme.background.isDark() ? 0.1 : 0.075]] : 'none',
 }))
 
 const HeaderFade = gloss(FullScreen, {

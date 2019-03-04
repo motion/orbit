@@ -1,26 +1,16 @@
-import {
-  CSSPropertySet,
-  gloss,
-  Row,
-  SimpleText,
-  Theme,
-  ThemeContext,
-  ThemeObject,
-  View,
-  ViewPropsStrict,
-} from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
-import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import React, { memo } from 'react'
-import { BorderBottom } from '../Border'
-import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
-import { ConfiguredIcon } from '../Icon'
-import { HorizontalSpace } from '../layout/HorizontalSpace'
-import { Separator } from '../Separator'
-import { DateFormat } from '../text/DateFormat'
-import { HighlightText } from '../text/HighlightText'
-import { Text } from '../text/Text'
-import { ListItemStore } from './ListItemStore'
+import { CSSPropertySet, gloss, Row, SimpleText, Theme, ThemeContext, ThemeObject, View, ViewPropsStrict } from '@mcro/gloss';
+import { useStore } from '@mcro/use-store';
+import { differenceInCalendarDays } from 'date-fns/esm/fp';
+import React, { memo } from 'react';
+import { BorderBottom } from '../Border';
+import { RoundButtonSmall } from '../buttons/RoundButtonSmall';
+import { ConfiguredIcon } from '../Icon';
+import { HorizontalSpace } from '../layout/HorizontalSpace';
+import { Separator } from '../Separator';
+import { DateFormat } from '../text/DateFormat';
+import { HighlightText } from '../text/HighlightText';
+import { Text } from '../text/Text';
+import { ListItemStore } from './ListItemStore';
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 export type HandleSelection = ((
@@ -266,7 +256,7 @@ export const ListItem = memo(function ListItem(props: ListItemProps) {
                   (typeof subtitle === 'string' ? (
                     <HighlightText
                       alpha={subTextOpacity}
-                      size={0.9}
+                      size={0.8}
                       sizeLineHeight={sizeLineHeight}
                       ellipse
                       {...subtitleProps}

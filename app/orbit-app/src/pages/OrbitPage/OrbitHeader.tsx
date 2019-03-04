@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from '@mcro/ui'
-import React, { memo, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -224,6 +224,7 @@ const LaunchButton = memo(() => {
   const Actions = useActions()
   const { orbitStore } = useStores()
   const [isHovered, setHovered] = useState(false)
+  const tm = useRef(null)
 
   if (orbitStore.isTorn) {
     return null
@@ -231,8 +232,14 @@ const LaunchButton = memo(() => {
 
   return (
     <Button
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => {
+        tm.current = setTimeout(() => setHovered(true), 400)
+      }}
+      onMouseLeave={() => {
+        clearTimeout(tm.current)
+        setHovered(false)
+      }}
+      tooltip="Persist app onto desktop"
       sizeHeight={0.95}
       sizeRadius={2}
       onClick={Actions.tearApp}
@@ -258,7 +265,8 @@ const LinkButton = memo(() => {
       sizePadding={1.2}
       tooltip={`Copy link: app://search/?query=something`}
       sizeRadius={2}
-      icon="link"
+      icon="link69"
+      iconSize={12}
     />
   )
 })

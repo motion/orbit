@@ -1,7 +1,5 @@
 import { Logger } from '@mcro/logger'
 import { AppBit } from '@mcro/models'
-import { EntityManager } from 'typeorm'
-import { SyncerUtils } from './SyncerUtils'
 
 /**
  * Options to be passed to Syncer.
@@ -44,21 +42,6 @@ export type CreateSyncerOptions = {
    * Logger used to log syncer operations.
    */
   log: Logger
-
-  /**
-   * Database entity manager.
-   */
-  manager: EntityManager
-
-  /**
-   * Used to check if sync is aborted.
-   */
-  isAborted: () => Promise<void>
-
-  /**
-   * Set of utils help write custom syncers.
-   */
-  utils: SyncerUtils
 }
 
 /**

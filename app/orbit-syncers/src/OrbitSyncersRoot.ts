@@ -1,6 +1,12 @@
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
-import { MediatorServer, typeormResolvers, WebSocketServerTransport } from '@mcro/mediator'
+import {
+  MediatorClient,
+  MediatorServer,
+  typeormResolvers,
+  WebSocketClientTransport,
+  WebSocketServerTransport,
+} from '@mcro/mediator'
 import {
   AppEntity,
   AppForceCancelCommand,
@@ -23,18 +29,38 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
-import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
+import { AppForceCancelResolver, checkCancelled } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
+import { setAbortionLogic, setEntityManager, setMediatorClient } from '@mcro/sync-kit'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
   connection: Connection
   mediatorServer: MediatorServer
+  mediatorClient: MediatorClient
 
   async start() {
     this.registerREPLGlobals()
     await this.createDbConnection()
     this.setupMediatorServer()
+
+    this.mediatorClient = new MediatorClient({
+      transports: [
+        new WebSocketClientTransport(
+          'syncers', // randomString(5)
+          new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
+            WebSocket,
+            minReconnectionDelay: 1,
+          }),
+        )
+      ]
+    })
+
+    // setup proper instances to use inside sync-kit package
+    setMediatorClient(this.mediatorClient)
+    setEntityManager(this.connection.manager)
+    setAbortionLogic(app => checkCancelled(app.id))
 
     setTimeout(() => {
       this.startSyncers()
@@ -135,3 +161,5 @@ export class OrbitSyncersRoot {
     )
   }
 }
+
+export const syncersRoot = new OrbitSyncersRoot()

@@ -1,12 +1,12 @@
 import { BitEntity } from '@mcro/models'
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
 
 /**
  * Syncs crawled websites.
  */
-export const WebsiteSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
+export const WebsiteSyncer = createSyncer(async ({ app, log }) => {
 
   const crawler = new WebsiteCrawler(log)
   const bitFactory = new WebsiteBitFactory(app)
@@ -27,10 +27,10 @@ export const WebsiteSyncer = createSyncer(async ({ app, log, manager, isAborted 
     url: app.data.values.url,
     deep: true,
     handler: async data => {
-      await isAborted()
+      await isAborted(app)
 
       const bit = bitFactory.create(data)
-      await manager.getRepository(BitEntity).save(bit, { listeners: false })
+      await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
       return true
     },
   })

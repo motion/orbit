@@ -1,5 +1,5 @@
 import { once } from 'lodash'
-import { OrbitSyncersRoot } from './OrbitSyncersRoot'
+import { syncersRoot } from './OrbitSyncersRoot'
 
 process.on('unhandledRejection', error => {
   console.log('unhandledRejection', error.stack)
@@ -7,18 +7,17 @@ process.on('unhandledRejection', error => {
 })
 
 export async function main() {
-  const root = new OrbitSyncersRoot()
 
   if (process.env.NODE_ENV === 'development') {
-    require('./helpers/startDevelopment').startDevelopment(root)
+    require('./helpers/startDevelopment').startDevelopment(syncersRoot)
   }
 
   const dispose = once(() => {
     console.log('Syncers exiting...')
-    root.dispose()
+    syncersRoot.dispose()
   })
   process.on('exit', dispose)
 
-  await root.start()
+  await syncersRoot.start()
   return dispose
 }

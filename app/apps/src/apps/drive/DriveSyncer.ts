@@ -1,6 +1,6 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
 import { DriveBitData } from './DriveBitData'
 import { DriveLoadedFile, DriveUser } from './DriveTypes'
 import { DriveLoader } from './DriveLoader'
@@ -8,10 +8,10 @@ import { DriveLoader } from './DriveLoader'
 /**
  * Syncs Google Drive files.
  */
-export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
+export const DriveSyncer = createSyncer(async ({ app, log }) => {
 
   const loader = new DriveLoader(app, log, source =>
-    manager.getRepository(AppEntity).save(source),
+    getEntityManager().getRepository(AppEntity).save(source),
   )
 
   /**
@@ -70,7 +70,7 @@ export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted })
   // load users from API
   log.timer('load files and people from API')
   const files = await loader.loadFiles(undefined, async (file, cursor, isLast) => {
-    await isAborted()
+    await isAborted(app)
     await sleep(2)
 
     const updatedAt = new Date(file.file.modifiedByMeTime || file.file.modifiedTime).getTime()
@@ -87,7 +87,7 @@ export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted })
       }
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -97,15 +97,15 @@ export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted })
     if (!lastSync.lastCursorSyncedDate) {
       lastSync.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing file, set last synced date', lastSync)
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
     }
 
     const bit = createDocumentBit(file)
     bit.people = file.users.map(user => createPersonBit(user))
 
     log.verbose('syncing', { file, bit, people: bit.people })
-    await manager.getRepository(BitEntity).save(bit.people, { listeners: false })
-    await manager.getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
+    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -116,7 +116,7 @@ export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted })
       lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
       return true
     }
 
@@ -124,7 +124,7 @@ export const DriveSyncer = createSyncer(async ({ app, log, manager, isAborted })
     if (lastSync.lastCursor !== cursor) {
       log.info('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
     }
 
     return true

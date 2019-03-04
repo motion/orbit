@@ -1,10 +1,9 @@
-import { Logger } from '@mcro/logger';
-import { Subscription } from '@mcro/mediator';
-import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models';
-import { SyncerOptions, SyncerUtils } from '@mcro/sync-kit';
-import { getManager, getRepository } from 'typeorm';
-import { Mediator } from '../mediator';
-import { checkCancelled } from '../resolvers/AppForceCancelResolver';
+import { Logger } from '@mcro/logger'
+import { Subscription } from '@mcro/mediator'
+import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
+import { SyncerOptions } from '@mcro/sync-kit'
+import { getRepository } from 'typeorm'
+import { syncersRoot } from '../OrbitSyncersRoot'
 import Timer = NodeJS.Timer
 
 /**
@@ -55,7 +54,7 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = Mediator.observeMany(AppModel, {
+        this.subscription = syncersRoot.mediatorClient.observeMany(AppModel, {
           args: { where: { identifier: this.options.appIdentifier } },
         }).subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
@@ -249,9 +248,6 @@ export class Syncer {
       await this.options.runner({
         app,
         log,
-        manager: getManager(),
-        isAborted: async () => checkCancelled(app.id) && void 0,
-        utils: new SyncerUtils(app, log, getManager(), async () => !!checkCancelled(app.id), Mediator),
       })
 
       // update our job (finish successfully)

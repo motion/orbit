@@ -1,6 +1,15 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
 import { sleep } from '@mcro/utils'
-import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import {
+  BitUtils,
+  createSyncer,
+  getEntityManager,
+  isAborted,
+  loadDatabasePeople,
+  sanitizeHtml,
+  stripHtml,
+  syncPeople,
+} from '@mcro/sync-kit'
 import { JiraAppData } from './JiraAppData'
 import { JiraBitData } from './JiraBitData'
 import { JiraIssue, JiraUser } from './JiraTypes'
@@ -9,7 +18,7 @@ import { JiraLoader } from './JiraLoader'
 /**
  * Syncs Jira issues.
  */
-export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
+export const JiraSyncer = createSyncer(async ({ app, log }) => {
 
   const loader = new JiraLoader(app, log)
 
@@ -30,8 +39,8 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
     const values = (app.data as JiraAppData).values['data']['values']
     const domain = values.credentials.domain
-    const body = utils.stripHtml(issue.renderedFields.description)
-    const cleanHtml = utils.sanitizeHtml(issue.renderedFields.description)
+    const body = stripHtml(issue.renderedFields.description)
+    const cleanHtml = sanitizeHtml(issue.renderedFields.description)
 
     // get people contributed to this bit (content author, editors, commentators)
     const peopleIds = []
@@ -100,7 +109,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
 
   // load database data
   log.timer('load people, person bits and bits from the database')
-  const dbPeople = await utils.loadDatabasePeople()
+  const dbPeople = await loadDatabasePeople(app)
   log.timer('load people, person bits and bits from the database', dbPeople)
 
   // load users from jira API
@@ -120,10 +129,10 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
   log.info('people created', apiPeople)
 
   // saving people and person bits
-  await utils.syncPeople(apiPeople, dbPeople)
+  await syncPeople(app, apiPeople, dbPeople)
 
   // load all people (once again after sync)
-  const allDbPeople = await utils.loadDatabasePeople()
+  const allDbPeople = await loadDatabasePeople(app)
 
   // load users from API
   log.timer('load issues from API')
@@ -131,7 +140,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
     lastSync.lastCursor || 0,
     lastSync.lastCursorLoadedCount || 0,
     async (issue, cursor, loadedCount, isLast) => {
-      await isAborted()
+      await isAborted(app)
       await sleep(2)
 
       const updatedAt = new Date(issue.fields.updated).getTime()
@@ -148,7 +157,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await manager.getRepository(AppEntity).save(app)
+        await getEntityManager().getRepository(AppEntity).save(app)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -158,12 +167,12 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         log.info('looks like its the first syncing issue, set last synced date', lastSync)
-        await manager.getRepository(AppEntity).save(app)
+        await getEntityManager().getRepository(AppEntity).save(app)
       }
 
       const bit = createDocumentBit(issue, allDbPeople)
       log.verbose('syncing', { issue, bit, people: bit.people })
-      await manager.getRepository(BitEntity).save(bit, { listeners: false })
+      await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
@@ -174,7 +183,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await manager.getRepository(AppEntity).save(app)
+        await getEntityManager().getRepository(AppEntity).save(app)
         return true
       }
 
@@ -183,7 +192,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, manager, utils, isAbor
         log.info('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
         lastSync.lastCursorLoadedCount = loadedCount
-        await manager.getRepository(AppEntity).save(app)
+        await getEntityManager().getRepository(AppEntity).save(app)
       }
 
       return true

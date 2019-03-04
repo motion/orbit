@@ -16,15 +16,9 @@ High Level to Launch:
 
 ---
 
-Goal by end of February
+Goal by end of March
 
 - initial working app editing
 - initial syncing of config p2p
 - onboarding
 - postgres example
-
----
-
-Bugs
-
-- AppsIndex and other app views no longer HMR, need fix

@@ -45,6 +45,17 @@ NEXT
 
 ---
 
+After this we will move into new data sources, first up, Postgres:
+
+- Postgres App with Query API
+- Set up a fake postgres database locally with fake data
+  - Make it set up on bootstrap
+  - Make it run with the app for now in development mode
+  - Docs for adding our postgres DB
+  - Show working Query on client side just from REPL
+
+---
+
 - types: models/entities dont have required types, can we make that enforced?
   - AppBit should have required types: identifier, spaceId, name
 - bugfix: if you rm sqlite database, then startup, it gives a sql error first time

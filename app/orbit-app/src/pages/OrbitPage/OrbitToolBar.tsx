@@ -1,6 +1,6 @@
 import { useReaction } from '@mcro/black'
 import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
-import { ProvideStores, useApp } from '@mcro/kit'
+import { ProvideStores, useLoadedApp } from '@mcro/kit'
 import React, { memo } from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -8,14 +8,14 @@ const toolbarHeight = 30
 const minHeight = 3
 
 export const OrbitToolBarHeight = ({ identifier }: { identifier: string }) => {
-  const { views } = useApp(identifier)
+  const { views } = useLoadedApp(identifier)
   const height = views.toolBar ? toolbarHeight : minHeight
   return <div style={{ height }} />
 }
 
 export const OrbitToolBar = memo(function OrbitToolBar() {
   const { paneManagerStore } = useStores()
-  const { views } = useApp(paneManagerStore.activePane.type)
+  const { views } = useLoadedApp(paneManagerStore.activePane.type)
   const hasToolbar = !!views.toolBar
   return (
     <ToolbarChrome hasToolbars={hasToolbar}>

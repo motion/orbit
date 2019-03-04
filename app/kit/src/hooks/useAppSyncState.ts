@@ -1,7 +1,7 @@
 import { useModel, useModelCount } from '@mcro/bridge'
 import { AppBit, BitModel, Job, JobModel } from '@mcro/models'
 
-export function useAppInfo(
+export function useAppSyncState(
   app: AppBit | false,
 ): {
   bitsCount: number

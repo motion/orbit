@@ -9,6 +9,7 @@ import {
   SelectionStore,
   SubTitle,
   Text,
+  useMemoGetValue,
   useSelectionStore,
   View,
 } from '@mcro/ui'
@@ -67,14 +68,16 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
   placeholder?: React.ReactNode
 }
 
+const nullFn = () => null
+
 export function List(rawProps: ListProps) {
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...props } = rawProps
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
-  const itemsRef = useRef([])
-  itemsRef.current = items
+  const getItemPropsGetter = useMemoGetValue(getItemProps || nullFn)
+  const getItems = useMemoGetValue(items)
   let selectionStore: SelectionStore | null = null
   const selectionStoreRef = useRef<SelectionStore | null>(null)
 
@@ -102,19 +105,17 @@ export function List(rawProps: ListProps) {
 
   // only update this on props.items change....
   // a bit risky but otherwise this is really  hard
-  const getItemPropsInner = useCallback(
-    (item, index, items) => {
-      // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
-      const normalized = toListItemProps(item)
-      const extraProps = (getItemProps && getItemProps(item, index, items)) || null
-      return { ...normalized, ...extraProps }
-    },
-    [getItemProps],
-  )
+  const getItemPropsInner = useCallback((item, index, items) => {
+    // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
+    const normalized = toListItemProps(item)
+    const extraProps = getItemPropsGetter()(item, index, items)
+    return { ...normalized, ...extraProps }
+  }, [])
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(itemsRef.current[index]))
+      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
+      console.log('selecting', index, appConfig)
       if (onSelect) {
         onSelect(index, appConfig, eventType)
       }
@@ -130,7 +131,7 @@ export function List(rawProps: ListProps) {
 
   const onOpenInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(itemsRef.current[index]))
+      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
       if (onOpen) {
         onOpen(index, appConfig)
       }

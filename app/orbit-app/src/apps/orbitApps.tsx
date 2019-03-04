@@ -37,7 +37,6 @@ if (module['hot']) {
   let hmrTm: any
   module['hot'].addStatusHandler(status => {
     if (status === 'apply') {
-      console.log('status', status)
       configureKit({
         StoreContext,
         getApps,

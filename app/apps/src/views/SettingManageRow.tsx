@@ -1,5 +1,5 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog, useAppInfo, useJobs, WhitelistManager } from '@mcro/kit'
+import { showConfirmDialog, useAppSyncState, useJobs, WhitelistManager } from '@mcro/kit'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand, AppRemoveCommand } from '@mcro/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@mcro/ui'
 import * as React from 'react'
@@ -26,7 +26,7 @@ const removeApp = async (app: AppBit) => {
 
 export const SettingManageRow = (props: { app: AppBit; whitelist: WhitelistManager<any> }) => {
   const appId = props.app && props.app.id
-  const { bitsCount } = useAppInfo(props.app)
+  const { bitsCount } = useAppSyncState(props.app)
   const { activeJobs, removeJobs } = useJobs(appId)
 
   if (!appId) {

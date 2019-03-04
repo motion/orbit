@@ -1,6 +1,7 @@
 import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import { AppView, SubPane } from '@mcro/kit'
+import { BorderLeft } from '@mcro/ui'
 import React, { memo } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
@@ -64,6 +65,7 @@ const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
           identifier={identifier}
           viewType="main"
           appConfig={appConfig}
+          inside={<BorderLeft opacity={0.5} />}
           after={<OrbitStatusBarHeight identifier={identifier} />}
         />
       </OrbitMainContainer>

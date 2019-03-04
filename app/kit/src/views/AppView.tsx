@@ -2,8 +2,8 @@ import { Contents, View } from '@mcro/gloss'
 import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
-import { useApp } from '../hooks/useApp'
 import { useAppView } from '../hooks/useAppView'
+import { useLoadedApp } from '../hooks/useLoadedApp'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { ProvideStores } from './ProvideStores'
@@ -54,7 +54,7 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores } = useApp(props.identifier, props.id)
+    const { views, appStore, provideStores } = useLoadedApp(props.identifier, props.id)
     const AppViewAlt = useAppView(props.identifier, props.viewType as any)
     const AppView = views[props.viewType] || AppViewAlt
 

@@ -1,5 +1,5 @@
 import { Row, View } from '@mcro/gloss'
-import { AppWithDefinition, getItemName, useAppInfo, useJobs } from '@mcro/kit'
+import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@mcro/kit'
 import { HorizontalSpace, Text } from '@mcro/ui'
 import pluralize from 'pluralize'
 import React from 'react'
@@ -11,7 +11,7 @@ const bitsCountCache = {}
 
 export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
   const appId = app ? app.id : false
-  const { bitsCount } = useAppInfo(app)
+  const { bitsCount } = useAppSyncState(app)
   const allJobs = useJobs(appId)
   const isSyncing = !!(allJobs && allJobs.activeJobs && allJobs.activeJobs.length)
 

@@ -3,8 +3,7 @@ High Level to Launch:
 1. Build System / Split Out
    1. App Editing CLI
    2. Environment improvements
-2. Data Providers => into Apps / Split Out
-   1. Making non-syncing data providers like Postgres
+2. Making non-syncing data providers like Postgres
 3. UI Kitchen Sink
    1. Should be pretty comprehensive and can serve as the demo
    2. Lots of sub-fixing for performance and various polish in current components

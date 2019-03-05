@@ -8,7 +8,5 @@ First week of March:
 
 - Apps:
 
-  - Fix item type views
   - Fix lists app bugs
-  - "URLs" and Forward/back, start on it
   - Improve demo app

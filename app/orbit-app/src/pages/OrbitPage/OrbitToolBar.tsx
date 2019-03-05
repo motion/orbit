@@ -1,21 +1,16 @@
 import { useReaction } from '@mcro/black'
 import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
-import { useLoadedApp } from '@mcro/kit'
-import React, { memo } from 'react'
+import { AppLoadContext } from '@mcro/kit'
+import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 
 const toolbarHeight = 30
 const minHeight = 3
 
-export const OrbitToolBarHeight = ({ identifier }: { identifier: string }) => {
-  const { views } = useLoadedApp(identifier)
-  const height = views.toolBar ? toolbarHeight : minHeight
-  return <div style={{ height }} />
-}
-
-export const OrbitToolBar = memo((props: { children: any; id: string }) => {
+export const OrbitToolBar = memo((props: { children: any }) => {
+  const { id } = useContext(AppLoadContext)
   const { paneManagerStore } = useStoresSimple()
-  const isActive = useReaction(() => paneManagerStore.activePane.id === props.id)
+  const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
     <ToolbarChrome>
       <ToolbarInner isActive={isActive}>

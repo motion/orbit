@@ -1,52 +1,21 @@
-import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { AppView, SubPane } from '@mcro/kit'
+import { AppLoadContext, AppView, SubPane } from '@mcro/kit'
 import { BorderLeft } from '@mcro/ui'
-import React, { memo } from 'react'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import React, { memo, useContext } from 'react'
+import { useStores } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
-import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitToolBarHeight } from './OrbitToolBar'
 
-type AppPane = { id: string; identifier: string }
+export const OrbitMain = memo(({ children }) => {
+  const { id, identifier } = useContext(AppLoadContext)
+  const { orbitStore } = useStores()
+  const appConfig = orbitStore.activeConfig[id] || {}
 
-export const OrbitMain = memo(({ identifier, id }: AppPane) => {
-  const { paneManagerStore } = useStoresSimple()
-  const { appsStore } = useStores()
-  const { hasMain } = appsStore.getViewState(identifier)
-
-  const left = useReaction(
-    () => {
-      // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
-      const { hasIndex } = appsStore.getViewState(identifier)
-      const isActive = paneManagerStore.activePaneLowPriority.id === id
-      if (isActive) {
-        return hasIndex ? defaultSidebarWidth : 0
-      }
-    },
-    {
-      defaultValue: defaultSidebarWidth,
-    },
-  )
-
-  if (hasMain === false) {
+  if (!children) {
     return null
   }
 
   return (
-    <SubPane left={left} id={id} fullHeight zIndex={10}>
-      <OrbitPageMainView id={id} identifier={identifier} />
-    </SubPane>
-  )
-})
-
-// separate view prevents big re-renders
-const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
-  const { orbitStore } = useStores()
-  const appConfig = orbitStore.activeConfig[id] || {}
-  return (
-    <>
-      <OrbitToolBarHeight identifier={identifier} />
+    <SubPane left={defaultSidebarWidth} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
         <AppView
           key={JSON.stringify(appConfig)}
@@ -55,10 +24,9 @@ const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
           viewType="main"
           appConfig={appConfig}
           inside={<BorderLeft opacity={0.5} />}
-          after={<OrbitStatusBarHeight identifier={identifier} />}
         />
       </OrbitMainContainer>
-    </>
+    </SubPane>
   )
 })
 

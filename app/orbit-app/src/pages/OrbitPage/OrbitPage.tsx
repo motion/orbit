@@ -2,7 +2,11 @@ import { command } from '@mcro/bridge'
 import { isEqual } from '@mcro/fast-compare'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
+  AppLoadContext,
+  AppStore,
+  AppViewsContext,
   defaultPanes,
+  getAppDefinition,
   getIsTorn,
   getPanes,
   PaneManagerStore,
@@ -21,7 +25,6 @@ import { Theme } from '@mcro/ui'
 import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { AppsLoader } from '../../apps/AppsLoader'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
@@ -100,6 +103,20 @@ function OrbitManagers() {
   return null
 }
 
+function useStableSort<A extends string>(ids: A[]): A[] {
+  const stableKeys = useRef<A[]>([])
+  const sortedIds = [...ids].sort()
+
+  if (!isEqual(stableKeys.current.sort(), sortedIds)) {
+    // we are building this up over time, so once we see an id
+    // we always show it in the same order in the DOM
+    const next = [...new Set([...stableKeys.current, ...sortedIds])]
+    stableKeys.current = next
+  }
+
+  return stableKeys.current
+}
+
 const OrbitPageInner = memo(function OrbitPageInner() {
   const Actions = useActions()
   const { paneManagerStore } = useStores()
@@ -171,53 +188,46 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     identifier: app.id,
   }))
 
+  const allApps = [...activeApps, ...staticApps]
+
+  const stableSortedApps = useStableSort(allApps.map(x => x.id)).map(id =>
+    allApps.find(x => x.id === id),
+  )
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
-        <AppsLoader apps={[...activeApps, ...staticApps]}>
-          <OrbitHeader />
-          <InnerChrome torn={orbitStore.isTorn}>
-            <OrbitContentArea>
-              {paneManagerStore.panes.map(pane => (
-                <RenderApp key={pane.id} id={pane.id} identifier={pane.type} />
-              ))}
-            </OrbitContentArea>
-          </InnerChrome>
-        </AppsLoader>
+        <OrbitHeader />
+        <InnerChrome torn={orbitStore.isTorn}>
+          <OrbitContentArea>
+            {stableSortedApps.map(app => (
+              <RenderApp key={app.id} id={app.id} identifier={app.identifier} />
+            ))}
+          </OrbitContentArea>
+        </InnerChrome>
       </MainShortcutHandler>
     </ProvideStores>
   )
 })
 
 const RenderApp = ({ id, identifier }) => {
-  const { appsStore } = useStores()
-  const state = appsStore.getApp(identifier, id)
-  if (!state || !state.views) {
+  const { app } = getAppDefinition(identifier)
+  if (!app) {
     return null
   }
-  console.log('render render app', id, identifier)
-  const AppToolbar = state.views.toolBar
-  const AppSidebar = state.views.index
-  const AppMain = state.views.main
-  const AppStatusBar = state.views.statusBar
+  const appStore = useStoreSimple(AppStore, { id })
+  const App = app
+  const Toolbar = props => <OrbitToolBar {...props} />
+  const Sidebar = props => <OrbitSidebar {...props} />
+  const Main = props => <OrbitMain {...props} />
+  const Statusbar = props => <OrbitStatusBar {...props} />
   return (
-    <ProvideStores stores={{ appStore: state.appStore }}>
-      {AppToolbar && (
-        <OrbitToolBar id={id}>
-          <AppToolbar />
-        </OrbitToolBar>
-      )}
-      {AppSidebar && (
-        <OrbitSidebar identifier={identifier} id={id}>
-          <AppSidebar />
-        </OrbitSidebar>
-      )}
-      {AppMain && <OrbitMain identifier={identifier} id={id} />}
-      {AppStatusBar && (
-        <OrbitStatusBar>
-          <AppStatusBar />
-        </OrbitStatusBar>
-      )}
+    <ProvideStores stores={{ appStore }}>
+      <AppLoadContext.Provider value={{ id, identifier }}>
+        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
+          <App />
+        </AppViewsContext.Provider>
+      </AppLoadContext.Provider>
     </ProvideStores>
   )
 }

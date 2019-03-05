@@ -1,14 +1,8 @@
 import { gloss, Row } from '@mcro/gloss'
-import { useLoadedApp } from '@mcro/kit'
 import { BorderTop } from '@mcro/ui'
 import React from 'react'
 
 const statusBarHeight = 26
-
-export const OrbitStatusBarHeight = ({ identifier }: { identifier: string }) => {
-  const { views } = useLoadedApp(identifier)
-  return <div style={{ height: views.statusBar ? statusBarHeight : 0 }} />
-}
 
 export function OrbitStatusBar({ children }) {
   return (

@@ -1,7 +1,5 @@
 import { gloss } from '@mcro/gloss'
-import { superMemo } from '@mcro/ui'
-import React, { createContext, useContext, useEffect } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
+import React, { createContext, useContext } from 'react'
 import { AppElements } from '../types/AppDefinition'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
@@ -9,6 +7,13 @@ const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 export const AppLoadContext = createContext({
   identifier: '',
   id: '',
+})
+
+export const AppViewsContext = createContext({
+  Toolbar: null,
+  Statusbar: null,
+  Main: null,
+  Sidebar: null,
 })
 
 function AppContainerInner(props: AppElements) {
@@ -19,38 +24,21 @@ function AppContainerInner(props: AppElements) {
   }
 
   const { id, identifier } = useContext(AppLoadContext)
+
   if (!identifier || !id) {
     console.error('Internal bug, we didnt set context id + identifier')
   }
 
-  const { appsStore } = useStoresSimple()
+  const { Statusbar, Main, Sidebar, Toolbar } = useContext(AppViewsContext)
 
-  function setupApp() {
-    appsStore.setApp({
-      id,
-      identifier,
-      views: {
-        index: props.index && superMemo(props.index),
-        main: props.children && superMemo(props.children),
-        statusBar: props.statusBar && superMemo(props.statusBar),
-        toolBar: props.toolBar && superMemo(props.toolBar),
-      },
-      context: props.context,
-    })
-  }
-
-  // hmr, setApp
-  useEffect(() => {
-    if (window['RECENT_HMR']) {
-      console.log('[hmr app]', identifier)
-      setupApp()
-    }
-  })
-
-  // mount, setApp
-  useEffect(setupApp, [])
-
-  return null
+  return (
+    <>
+      <Statusbar />
+      <Main />
+      <Sidebar />
+      <Toolbar />
+    </>
+  )
 }
 
 // handle errors per-app:

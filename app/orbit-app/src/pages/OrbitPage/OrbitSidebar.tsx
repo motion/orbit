@@ -1,9 +1,8 @@
 import { Absolute, gloss } from '@mcro/gloss'
-import { ProvideSelectionContext, SubPane } from '@mcro/kit'
+import { AppLoadContext, ProvideSelectionContext, SubPane } from '@mcro/kit'
 import { Sidebar } from '@mcro/ui'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useContext, useEffect, useState } from 'react'
 import { useStores } from '../../hooks/useStores'
-import { OrbitToolBarHeight } from './OrbitToolBar'
 
 export const defaultSidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
 
@@ -20,22 +19,20 @@ const SidebarContainer = gloss(Absolute, {
   },
 })
 
-export const OrbitSidebar = memo((props: { id: string; identifier: string; children: any }) => {
-  const { orbitStore, appsStore } = useStores()
-  const { id, identifier } = props
-  const { hasMain, hasIndex } = appsStore.getViewState(identifier)
-  const hideSidebar = !hasIndex && true
+export const OrbitSidebar = memo((props: { children: any }) => {
+  const { identifier, id } = useContext(AppLoadContext)
+  const { orbitStore } = useStores()
   const [width, setWidth] = useState(defaultSidebarWidth)
 
   useEffect(() => {
     return () => {
-      console.log('shouldnt unmount', id, props.id)
+      console.log('shouldnt unmount', id, identifier)
     }
   }, [])
 
   return (
-    <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
-      <SidebarContainer hideSidebar={hideSidebar} width={width}>
+    <SubPane id={id} fullHeight>
+      <SidebarContainer hideSidebar={!props.children} width={width}>
         <Sidebar
           background="transparent"
           width={width}
@@ -45,7 +42,6 @@ export const OrbitSidebar = memo((props: { id: string; identifier: string; child
           noBorder
         >
           <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
-            <OrbitToolBarHeight identifier={identifier} />
             {props.children}
           </ProvideSelectionContext>
         </Sidebar>

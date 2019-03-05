@@ -73,7 +73,7 @@ function AppLoadView({ id, identifier, store }: AppLoaderProps) {
     return (
       <ProvideStores stores={{ appStore }}>
         <MergeContext Context={AppLoadContext} value={{ identifier, id }}>
-          <AppApp {...appViewProps} appStore={appStore} />
+          <AppApp {...appViewProps} />
         </MergeContext>
       </ProvideStores>
     )

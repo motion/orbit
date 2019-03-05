@@ -10,6 +10,9 @@ import { toolbarPadElement } from './OrbitToolBar'
 export const OrbitMain = memo((props: AppSubViewProps) => {
   const { id } = useContext(AppLoadContext)
   const { orbitStore, appStore } = useStoresSimple()
+  const sidebarWidth = useReaction(() => {
+    return props.hasSidebar ? appStore.sidebarWidth : 0
+  })
   const appConfig = useReaction(() => {
     return orbitStore.activeConfig[id] || {}
   })
@@ -19,7 +22,7 @@ export const OrbitMain = memo((props: AppSubViewProps) => {
   }
 
   return (
-    <SubPane left={props.hasSidebar ? appStore.sidebarWidth : 0} id={id} fullHeight zIndex={10}>
+    <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}

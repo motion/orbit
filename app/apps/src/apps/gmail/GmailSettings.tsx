@@ -1,11 +1,11 @@
-import { AppProps } from '@mcro/kit'
-import { Message } from '@mcro/ui'
+import { AppProps, AppSubView } from '@mcro/kit'
 import * as React from 'react'
 
 export function GmailSettings(_: AppProps) {
   return (
-    <>
-      <Message>Gmail Sync Active</Message>
-    </>
+    <AppSubView
+      viewType="main"
+      appConfig={{ identifier: 'message', title: 'Gmail sync active', icon: 'gmail' }}
+    />
   )
 }

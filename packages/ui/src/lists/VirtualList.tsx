@@ -162,7 +162,7 @@ class VirtualListStore {
           defaultHeight: this.props.estimatedRowHeight,
           defaultWidth: this.width,
           fixedWidth: true,
-          keyMapper: this.getKey,
+          // keyMapper: this.getKey,
         })
       }
     },

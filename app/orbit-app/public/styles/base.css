@@ -1,3 +1,7 @@
+.react-hot-loader-error-overlay * {
+  pointer-events: auto;
+}
+
 .hide-scrollbars::-webkit-scrollbar {
   height: 0px;
   width: 0px;

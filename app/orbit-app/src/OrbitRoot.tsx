@@ -9,7 +9,7 @@ import { hot } from 'react-hot-loader'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import './helpers/installDevelopmentHelpers'
 import ChromePage from './pages/ChromePage/ChromePage'
-import OrbitPage from './pages/OrbitPage/OrbitPage'
+import { OrbitPage } from './pages/OrbitPage/OrbitPage'
 
 // pages
 
@@ -77,7 +77,6 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
   })
 
   return (
-    // <React.StrictMode>
     <ContextMenuProvider
       onContextMenu={items => {
         if (ContextMenu) {
@@ -89,6 +88,5 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
         <OrbitBrowser />
       </ThemeProvide>
     </ContextMenuProvider>
-    // </React.StrictMode>
   )
 })

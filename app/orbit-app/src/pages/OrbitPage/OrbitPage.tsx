@@ -43,11 +43,8 @@ import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
 import { OrbitToolBar } from './OrbitToolBar'
 
-export default memo(function OrbitPage() {
+export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
-
-  log('rendering orbit page root')
-
   return (
     <ProvideStores stores={{ themeStore }}>
       <Theme name={themeStore.themeColor}>

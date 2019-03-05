@@ -109,7 +109,7 @@ const babelrcOptions = {
   babelrc: false,
   // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
   // im presuming because it cached the output and gloss-displaynames needs a redo somehow
-  // cacheDirectory: true,
+  cacheDirectory: true,
 }
 
 console.log('babelrcOptions', babelrcOptions)

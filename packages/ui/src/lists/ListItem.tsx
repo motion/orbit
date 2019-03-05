@@ -11,9 +11,10 @@ import {
 } from '@mcro/gloss'
 import { useStore } from '@mcro/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
-import React, { memo } from 'react'
+import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
+import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { ConfiguredIcon } from '../Icon'
 import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { Separator } from '../Separator'
@@ -124,8 +125,9 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   )
 }
 
-export const ListItem = memo(function ListItem(props: ListItemProps) {
+export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) {
   const store = useStore(ListItemStore, props)
+  const { isSelected } = store
   const {
     date,
     location,
@@ -158,7 +160,6 @@ export const ListItem = memo(function ListItem(props: ListItemProps) {
     after,
     ...restProps
   } = props
-  const { isSelected } = store
   const showChildren = !props.hideBody
   const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!date && !props.hideDate

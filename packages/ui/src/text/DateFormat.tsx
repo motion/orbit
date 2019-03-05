@@ -24,12 +24,11 @@ export function DateFormat({ date = new Date(), locale = 'en-US', options = null
       weekday: 'short',
     }
   }
-  return (
-    <>
-      {date
-        .toLocaleDateString(locale, finalOptions)
-        .replace(/,.*,/, ',')
-        .replace(/\//g, '·')}
-    </>
-  )
+  const formatted = date
+    .toLocaleDateString(locale, finalOptions)
+    .replace(/,.*,/, ',')
+    .replace(/\//g, '·')
+
+  // TODO wait for https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20544 to fix type
+  return formatted as any
 }

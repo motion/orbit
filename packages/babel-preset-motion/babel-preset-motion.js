@@ -35,7 +35,7 @@ module.exports = function(_, givenOpts) {
         loose: true,
         // modules: false,
         targets: {
-          chrome: '66',
+          chrome: '73',
           esmodules: true,
         },
         ...opts.env,

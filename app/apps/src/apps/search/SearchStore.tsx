@@ -81,10 +81,10 @@ export class SearchStore {
   }
 
   getApps(query: string): OrbitListItemProps[] {
-    // only show apps search results when on home
     const { appStore } = this.stores
-    if (appStore && appStore.app && appStore.app['pinned'] !== true) {
-      console.warn('this should check editable but its not being set in ensureModels')
+
+    // non editable apps don't search apps, just the Home app
+    if (appStore && appStore.app && appStore.app.editable === true) {
       return []
     }
 
@@ -218,6 +218,9 @@ export class SearchStore {
           take: Math.max(0, endIndex - startIndex),
         }
         const nextResults = await loadMany(SearchResultModel, { args })
+        if (!nextResults.length) {
+          return false
+        }
         results = [...results, ...searchGroupsToResults(nextResults)]
         setValue({
           results,

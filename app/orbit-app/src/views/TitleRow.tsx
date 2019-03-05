@@ -21,8 +21,8 @@ export function TitleRow({
       position="relative"
       alignItems="center"
       overflow="hidden"
-      padding={[10 * sizePadding, 10 * sizePadding, 5 * sizePadding]}
-      margin={typeof margin !== 'undefined' ? margin : [0, 0, 20]}
+      padding={[10 * sizePadding, 0, 10 * sizePadding + 5]}
+      margin={typeof margin !== 'undefined' ? margin : [0, 0, 10]}
     >
       {before && (
         <>
@@ -30,7 +30,7 @@ export function TitleRow({
           <HorizontalSpace />
         </>
       )}
-      <Title marginBottom={4} {...props} />
+      <Title margin={0} {...props} />
       {after && (
         <>
           <div style={{ flex: 1 }} />

@@ -27,13 +27,13 @@ export const orbitApps: AppDefinition[] = [
   ...apps.filter(x => !!x.app),
 ]
 
+console.log('orbitApps', orbitApps)
+
 export function getApps() {
   return orbitApps
 }
 
 if (module['hot']) {
-  module['hot'].accept()
-
   module['hot'].addStatusHandler(status => {
     if (status === 'apply') {
       configureKit({

@@ -41,7 +41,6 @@ export function AppsIndex(_props: AppProps) {
   const activeApps = useActiveApps()
   const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
   const [syncApps, clientApps] = partition(useActiveAppsWithDefinition(), x => !!x.definition.sync)
-  console.log('useActiveAppsWithDefinition 123()', allSourceDefinitions)
 
   if (!activeSpace || !activeApps.length) {
     return null

@@ -104,13 +104,14 @@ function glossify(
   id: string,
   displayName: string = 'g',
   themeFn: GlossThemeFn<any> | null,
-  allStyles: { styles: any; propStyles: any },
+  styles: any,
+  conditionalStyles: any,
   previousClassNames: string[] | null,
   props: CSSPropertySet,
   tagName: string,
   theme: ThemeObject,
 ) {
-  const hasPropStyles = !!Object.keys(allStyles.propStyles).length
+  const hasConditionalStyles = !!Object.keys(conditionalStyles).length
   const newStyles = {}
 
   // if passed any classes from another styled component
@@ -125,18 +126,16 @@ function glossify(
     }
   }
 
-  const hasDynamicStyles = themeFn || hasPropStyles
+  const hasDynamicStyles = themeFn || hasConditionalStyles
   const dynamicStyles = { [id]: {} }
 
-  if (hasPropStyles) {
-    for (const key in allStyles.propStyles) {
+  if (hasConditionalStyles) {
+    for (const key in conditionalStyles) {
       if (props[key] !== true) continue
-      for (const styleKey in allStyles.propStyles[key]) {
+      for (const styleKey in conditionalStyles[key]) {
         const dynKey = styleKey === 'base' ? id : styleKey
-        dynamicStyles[dynKey] = {
-          ...dynamicStyles[dynKey],
-          ...allStyles.propStyles[key][styleKey],
-        }
+        dynamicStyles[dynKey] = dynamicStyles[dynKey] || {}
+        Object.assign(dynamicStyles[dynKey], conditionalStyles[key][styleKey])
       }
     }
   }
@@ -154,12 +153,12 @@ function glossify(
   let nextClassNames: string[] | null = null
 
   // sort so we properly order pseudo keys
-  const keys = [...new Set([...Object.keys(allStyles.styles), ...Object.keys(newStyles)])]
+  const keys = [...new Set([...Object.keys(styles), ...Object.keys(newStyles)])]
   const sortedKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
 
   // add rules
   for (const key of sortedKeys) {
-    let style = allStyles.styles[key]
+    let style = styles[key]
     if (newStyles[key]) {
       style = { ...style, ...newStyles[key] }
     }
@@ -229,7 +228,8 @@ export function gloss<Props = GlossProps<any>>(
         id,
         ThemedView.displayName,
         themeFn,
-        Styles,
+        Styles.styles,
+        Styles.propStyles,
         lastClassNames.current,
         props,
         tag,
@@ -310,11 +310,14 @@ export function gloss<Props = GlossProps<any>>(
   return ThemedView
 }
 
-// ensures &:active psuedo selectors are always placed below
-// so they override &:hover and &:hover
-// TODO: make sure &:active:hover is below below
-// TODO: and make sure &:focus:hover is below below
-const pseudoSort = (a: string) => (a[0] === '@' || a.indexOf('&:active') === 0 ? 1 : -1)
+// keeps priority of hover/active/focus as expected
+const psuedoScore = (x: string) => {
+  const hasFocus = x.indexOf('&:active') > 0 ? 1 : 0
+  const hasActive = x.indexOf('&:active') > 0 ? 3 : 0
+  const hasHover = x.indexOf('&:hover') > 0 ? 2 : 0
+  return hasActive + hasHover + hasFocus
+}
+const pseudoSort = (a: string, b: string) => (psuedoScore(a) > psuedoScore(b) ? -1 : 1)
 
 const arrToDict = (obj: Object) => {
   if (Array.isArray(obj)) {

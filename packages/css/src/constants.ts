@@ -1,3 +1,4 @@
+import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { CSSPropertySet } from './cssPropertySet'
 
 /*
@@ -23,6 +24,9 @@ const cssSpecialAttr = {
 export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
   ...allCSSAttr,
   ...cssSpecialAttr,
+}
+for (const key in CAMEL_TO_SNAKE) {
+  validCSSAttr[key] = true
 }
 
 // various helpful constants

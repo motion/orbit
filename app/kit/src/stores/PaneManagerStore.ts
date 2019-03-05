@@ -41,7 +41,7 @@ export class PaneManagerStore {
     return this.panes[this.paneIndex] || this.lastActivePane
   }
 
-  activePaneLowPriority = react(() => this.activePane, _ => _, { delay: 1 })
+  activePaneLowPriority = react(() => this.activePane, _ => _, { delay: 1, log: false })
 
   get activePaneId() {
     return (this.activePane && this.activePane.id) || ''
@@ -49,6 +49,7 @@ export class PaneManagerStore {
 
   lastActivePane = react(() => this.activePane, _ => _, {
     delayValue: true,
+    log: false,
   })
 
   // didMount() {

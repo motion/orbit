@@ -107,6 +107,8 @@ console.log('mcroClientOnly', mcroClientOnly)
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
   babelrc: false,
+  // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
+  // im presuming because it cached the output and gloss-displaynames needs a redo somehow
   // cacheDirectory: true,
 }
 

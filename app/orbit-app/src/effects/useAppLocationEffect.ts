@@ -1,19 +1,20 @@
 import { ensure, useReaction } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
-export function useAppLocationEffects() {
+export function useAppLocationEffect() {
   const { appStore, selectionStore, locationStore, paneManagerStore } = useStoresSimple()
 
   useReaction(
-    () => locationStore.current,
+    () => locationStore.url,
     location => {
       ensure('location', !!location)
-      ensure('location matches id', appStore.id === location.basename)
+      ensure('external url', location.source === 'link')
+      ensure('matches type', appStore.identifier === location.basename)
+      ensure('matches app id', appStore.id === location.query.id)
       console.log('got location lets do it', location)
       paneManagerStore.setActivePane(location.basename)
-      const queryID = location.query && location.query.find(x => x.key === 'id')
-      if (queryID) {
-        selectionStore.moveToId(queryID.value)
+      if (location.query.itemId) {
+        selectionStore.moveToId(location.query.itemId)
       }
     },
   )

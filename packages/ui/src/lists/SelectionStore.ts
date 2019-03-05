@@ -1,10 +1,4 @@
-import {
-  Direction,
-  MovesMap,
-  SelectEvent,
-  SelectionGroup,
-  SelectionStoreProps,
-} from './ProvideSelectionStore'
+import { Direction, MovesMap, SelectEvent, SelectionGroup, SelectionStoreProps } from './ProvideSelectionStore';
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)
@@ -39,6 +33,13 @@ export class SelectionStore {
   set activeIndex(val) {
     this.lastSelectAt = Date.now()
     this._activeIndex = val
+  }
+
+  get activeId() {
+    if (this.activeIndex === -1) {
+      return null
+    }
+    return this.movesMap[this.activeIndex].id
   }
 
   setActiveIndex = (val: number) => {

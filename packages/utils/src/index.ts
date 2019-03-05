@@ -31,3 +31,7 @@ export function randomString(length: number) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   return text
 }
+
+export function fromEntries(iterable: any[]): { [key: string]: any } {
+  return [...iterable].reduce((obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }), {})
+}

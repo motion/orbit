@@ -14,19 +14,18 @@ import {
   SpaceStore,
   ThemeStore,
   useActiveSyncApps,
-  useIsAppActive,
 } from '@mcro/kit'
 import { CloseAppCommand } from '@mcro/models'
 import { SelectionStore, Theme } from '@mcro/ui'
 import { useStore, useStoreSimple } from '@mcro/use-store'
-import React, { memo, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
-import { useAppLocationEffects } from '../../effects/useAppLocationEffects'
+import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useUserEffects } from '../../effects/userEffects'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useActions } from '../../hooks/useActions'
@@ -196,9 +195,14 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 })
 
 const OrbitApp = ({ id, identifier }) => {
-  const appStore = useStoreSimple(AppStore, { id })
-  const isActive = useIsAppActive()
-  const selectionStore = useStoreSimple(SelectionStore, { isActive })
+  const { paneManagerStore } = useStoresSimple()
+  const isActive = useCallback(() => {
+    if (paneManagerStore) {
+      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
+    }
+  }, [])
+  const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
+  const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
       <OrbitAppRender id={id} identifier={identifier} />
@@ -221,7 +225,7 @@ function OrbitAppRender({ id, identifier }) {
   const Statusbar = OrbitStatusBar
 
   // handle url changes
-  useAppLocationEffects()
+  useAppLocationEffect()
 
   return (
     <AppLoadContext.Provider value={{ id, identifier }}>

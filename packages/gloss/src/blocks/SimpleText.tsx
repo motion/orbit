@@ -21,13 +21,12 @@ export const SimpleText = gloss<
 >({
   display: 'contents',
 }).theme((props, theme) => {
-  const { lineHeight, fontSize } = propsToTextSize(props)
+  const textProps = propsToTextSize(props)
   const color = props.color || theme.color
   return {
     ...props,
     ...(props.ellipse && ellipseStyle),
-    fontSize,
-    lineHeight,
+    ...textProps,
     ...alphaColor({ color }, props),
   }
 })

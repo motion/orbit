@@ -5,7 +5,9 @@ import React, { memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 
-export const OrbitMain = memo(({ children }: { children: React.ReactElement<any> }) => {
+type Props = { children: React.ReactElement<any>; hasSidebar?: boolean }
+
+export const OrbitMain = memo(({ hasSidebar, children }: Props) => {
   const { id } = useContext(AppLoadContext)
   const { orbitStore } = useStores()
   const appConfig = orbitStore.activeConfig[id] || {}
@@ -15,7 +17,7 @@ export const OrbitMain = memo(({ children }: { children: React.ReactElement<any>
   }
 
   return (
-    <SubPane left={defaultSidebarWidth} id={id} fullHeight zIndex={10}>
+    <SubPane left={hasSidebar ? defaultSidebarWidth : 0} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
         {React.cloneElement(children, {
           appConfig,

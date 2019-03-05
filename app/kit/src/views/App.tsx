@@ -34,7 +34,7 @@ function AppContainerInner(props: AppElements) {
   return (
     <>
       {!!Statusbar && <Statusbar>{props.statusBar}</Statusbar>}
-      {!!Main && <Main>{props.children}</Main>}
+      {!!Main && <Main hasSidebar={!!props.index}>{props.children}</Main>}
       {!!Sidebar && <Sidebar>{props.index}</Sidebar>}
       {!!Toolbar && <Toolbar>{props.toolBar}</Toolbar>}
     </>

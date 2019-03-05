@@ -61,7 +61,6 @@ export const AppView = memoIsEqualDeep(
     } else {
       const RenderApp = definition.app
       const context = { [capitalize(props.viewType)]: ChildrenOnly } as any
-      console.log('context', context)
       View = props => (
         <AppViewsContext.Provider value={context}>
           <RenderApp {...props} />

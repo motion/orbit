@@ -56,7 +56,6 @@ const addFolder = (store: ListStore) => {
 
 function ListAdd() {
   const { listStore } = useContext(ListContext)
-  console.log('listStore, listStore', listStore)
   return null
   return (
     <Row position="relative">

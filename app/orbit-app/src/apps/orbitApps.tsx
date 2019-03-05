@@ -32,7 +32,7 @@ export function getApps() {
 }
 
 if (module['hot']) {
-  // module['hot'].accept()
+  module['hot'].accept()
 
   module['hot'].addStatusHandler(status => {
     if (status === 'apply') {

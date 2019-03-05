@@ -4,6 +4,9 @@ import React from 'react'
 
 export function MessageViewMain({ appConfig }: AppProps) {
   const { title, icon } = appConfig
+  if (!title) {
+    return null
+  }
   return (
     <Center>
       <Title size={title.length > 40 ? 1.4 : 2.2}>{title}</Title>

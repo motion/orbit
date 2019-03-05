@@ -1,12 +1,12 @@
 import { gloss } from '@mcro/gloss'
-import { AppLoadContext, AppView, SubPane } from '@mcro/kit'
+import { AppLoadContext, SubPane } from '@mcro/kit'
 import { BorderLeft } from '@mcro/ui'
 import React, { memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 
-export const OrbitMain = memo(({ children }) => {
-  const { id, identifier } = useContext(AppLoadContext)
+export const OrbitMain = memo(({ children }: { children: React.ReactElement<any> }) => {
+  const { id } = useContext(AppLoadContext)
   const { orbitStore } = useStores()
   const appConfig = orbitStore.activeConfig[id] || {}
 
@@ -17,14 +17,10 @@ export const OrbitMain = memo(({ children }) => {
   return (
     <SubPane left={defaultSidebarWidth} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
-        <AppView
-          key={JSON.stringify(appConfig)}
-          id={id}
-          identifier={identifier}
-          viewType="main"
-          appConfig={appConfig}
-          inside={<BorderLeft opacity={0.5} />}
-        />
+        {React.cloneElement(children, {
+          appConfig,
+        })}
+        <BorderLeft opacity={0.5} />
       </OrbitMainContainer>
     </SubPane>
   )

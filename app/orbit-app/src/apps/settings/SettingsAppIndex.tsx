@@ -1,5 +1,4 @@
-import { List, useActiveQueryFilter } from '@mcro/kit'
-import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
+import { List, useActiveQueryFilter, useActiveUser } from '@mcro/kit'
 import * as React from 'react'
 
 export function SettingsAppIndex() {

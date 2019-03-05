@@ -5,34 +5,33 @@ import {
   AppLoadContext,
   AppStore,
   AppViewsContext,
-  defaultPanes,
   getAppDefinition,
-  getIsTorn,
-  getPanes,
   PaneManagerStore,
   ProvideStores,
   QueryStore,
-  settingsPane,
   SettingStore,
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
   useActiveSyncApps,
-  useStoresSimple,
 } from '@mcro/kit'
 import { CloseAppCommand } from '@mcro/models'
 import { Theme } from '@mcro/ui'
-import { ensure, useReaction, useStore, useStoreSimple } from '@mcro/use-store'
+import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
+import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
+import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
+import { useUserEffects } from '../../effects/userEffects'
+import { getIsTorn } from '../../helpers/getIsTorn'
 import { useActions } from '../../hooks/useActions'
-import { useManagePaneSort } from '../../hooks/useManagePaneSort'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
-import { useStores } from '../../hooks/useStores'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
+import { LocationStore } from '../../stores/LocationStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
@@ -45,14 +44,16 @@ import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
+  const locationStore = useStore(LocationStore)
   return (
-    <ProvideStores stores={{ themeStore }}>
+    <ProvideStores stores={{ locationStore, themeStore }}>
       <Theme name={themeStore.themeColor}>
         <AppWrapper className={`theme-${themeStore.themeColor} app-parent-bounds`}>
           <ActionsContext.Provider value={defaultActions}>
             <OrbitPageProvideStores>
               <OrbitPageInner />
-              <OrbitManagers />
+              {/* Inside provide stores to capture all our relevant stores */}
+              <OrbitStoreEffects />
             </OrbitPageProvideStores>
           </ActionsContext.Provider>
         </AppWrapper>
@@ -77,24 +78,9 @@ function useManageQuerySources() {
   )
 }
 
-function useManagePanes() {
-  const Actions = useActions()
-  const { paneManagerStore, spaceStore } = useStores()
-
-  useReaction(() => spaceStore.apps, function managePanes(apps) {
-    ensure('apps', !!apps.length)
-    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
-    if (!isEqual(panes, paneManagerStore.panes)) {
-      paneManagerStore.setPanes(panes)
-    }
-    paneManagerStore.setPaneIndex(paneIndex)
-    Actions.setInitialPaneIndex()
-  })
-}
-
-function OrbitManagers() {
-  useManagePanes()
-  useManagePaneSort()
+function OrbitStoreEffects() {
+  usePaneManagerEffects()
+  useUserEffects()
   useManageQuerySources()
   useMessageHandlers()
   return null

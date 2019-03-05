@@ -1,7 +1,26 @@
+import { ensure, useReaction } from '@mcro/black'
+import { isEqual } from '@mcro/fast-compare'
+import { PaneManagerPane, PaneManagerStore } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
 import { getAppState } from '../helpers/getAppState'
 import { getIsTorn } from '../helpers/getIsTorn'
-import { PaneManagerPane, PaneManagerStore } from './PaneManagerStore'
+import { useActions } from '../hooks/useActions'
+import { useStoresSimple } from '../hooks/useStores'
+
+export function usePaneManagerUpdatePanes() {
+  const Actions = useActions()
+  const { paneManagerStore, spaceStore } = useStoresSimple()
+
+  useReaction(() => spaceStore.apps, function managePanes(apps) {
+    ensure('apps', !!apps.length)
+    const { panes, paneIndex } = getPanes(paneManagerStore, apps)
+    if (!isEqual(panes, paneManagerStore.panes)) {
+      paneManagerStore.setPanes(panes)
+    }
+    paneManagerStore.setPaneIndex(paneIndex)
+    Actions.setInitialPaneIndex()
+  })
+}
 
 export const settingsPane = {
   id: 'settings',

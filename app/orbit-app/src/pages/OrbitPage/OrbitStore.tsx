@@ -1,6 +1,7 @@
 import { ensure, react, shallow } from '@mcro/black'
-import { AppConfig, getIsTorn, HandleOrbitSelect } from '@mcro/kit'
+import { AppConfig, HandleOrbitSelect } from '@mcro/kit'
 import { useHook } from '@mcro/use-store'
+import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {

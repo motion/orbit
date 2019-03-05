@@ -63,37 +63,3 @@ export function App(props: AppElements) {
     </>
   )
 }
-
-// // handle errors per-app:
-
-// export class App extends React.Component<AppElements> {
-//   state = {
-//     error: null,
-//   }
-
-//   componentDidCatch(error) {
-//     console.error(this.state.error)
-//     this.setState({
-//       error,
-//     })
-//   }
-
-//   render() {
-//     if (this.state.error) {
-//       console.warn(this.state.error)
-//       return <RedBox>{this.state.error}</RedBox>
-//     }
-//     return <AppContainerInner {...this.props} />
-//   }
-// }
-
-// const RedBox = gloss({
-//   flex: 1,
-//   minHeight: 100,
-//   minWidth: 300,
-//   background: 'red',
-//   color: 'white',
-//   fontFamily: 'monospace',
-//   whiteSpace: 'pre',
-//   overflow: 'scroll',
-// })

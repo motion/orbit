@@ -1,6 +1,6 @@
 import { ensure, react } from '@mcro/black'
 import { useModels } from '@mcro/bridge'
-import { Icon, useActiveSpace, useStoresSimple } from '@mcro/kit'
+import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useStoresSimple } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Avatar, Col, ListItem, Popover, View } from '@mcro/ui'
@@ -59,6 +59,8 @@ const shortcuts = {
 
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const store = useStore(SpaceSwitchStore)
+  const [user] = useActiveUser()
+  const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
 
@@ -100,8 +102,13 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
       >
         <Col ref={store.popoverContentRef} borderRadius={borderRadius} overflow="hidden" flex={1}>
           <View overflowY="auto" maxHeight={300}>
-            {activeSpace ? (
-              <ListItem slim title={activeSpace.name} subtitle="20 people" />
+            {user ? (
+              <ListItem
+                icon={<Avatar src={avatar} width={30} height={30} margin={[0, 6, 0, 0]} />}
+                iconBefore
+                title={user.name}
+                subtitle="Active"
+              />
             ) : (
               <div>No spaces</div>
             )}
@@ -115,7 +122,11 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
               return (
                 <ListItem
                   key={space.id}
-                  slim
+                  icon={<SpaceIcon space={space} />}
+                  iconBefore
+                  after={
+                    activeSpaceId === space.id && <Icon name="check" color="#449878" size={12} />
+                  }
                   onClick={() => {
                     console.warn('ok')
                   }}
@@ -126,8 +137,10 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
               )
             })}
             <ListItem
-              slim
-              title="Manage spaces..."
+              title="Space Settings"
+              subtitle="Manage spaces..."
+              icon="gear"
+              iconBefore
               titleProps={{ fontWeight: 300, size: 0.9, alpha: 0.8 }}
               after={<Icon name="addcircle" size={14} fill="#444" />}
             />

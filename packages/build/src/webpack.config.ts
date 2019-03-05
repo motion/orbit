@@ -107,7 +107,7 @@ console.log('mcroClientOnly', mcroClientOnly)
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
   babelrc: false,
-  cacheDirectory: true,
+  // cacheDirectory: true,
 }
 
 console.log('babelrcOptions', babelrcOptions)

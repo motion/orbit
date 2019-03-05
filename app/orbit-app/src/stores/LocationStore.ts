@@ -57,11 +57,13 @@ export function useLocationEffect(fn: (url: URLState) => void) {
   useReaction(() => locationStore.current, fn)
 }
 
-export function useLocationLink(url: string) {
+export function useLocationLink(url: string, stopPropagation = false) {
   const { locationStore } = useStoresSimple()
   return (e: React.MouseEvent<any, any> | MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
+    if (stopPropagation) {
+      e.stopPropagation()
+      e.preventDefault()
+    }
     console.log('Clicking link', url)
     locationStore.push(parseUrl(url))
   }

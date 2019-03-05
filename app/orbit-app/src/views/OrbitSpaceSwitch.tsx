@@ -88,6 +88,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         delay={100}
         openOnClick
         closeOnClickAway
+        closeOnClick
         themeName="light"
         width={300}
         background

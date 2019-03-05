@@ -1,15 +1,14 @@
-import { store } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
-import { SettingEntity } from '@mcro/models'
 import { Logger } from '@mcro/logger'
-import { Setting } from '@mcro/models'
+import { Setting, SettingEntity } from '@mcro/models'
+import { decorate } from '@mcro/use-store'
 import AutoLaunch from 'auto-launch'
 import { getRepository } from 'typeorm'
 
 const Config = getGlobalConfig()
 const log = new Logger('GeneralSettingManager')
 
-@store
+@decorate
 export class GeneralSettingManager {
   autoLaunch: AutoLaunch
 

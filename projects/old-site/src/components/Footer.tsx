@@ -1,10 +1,10 @@
+import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { SectionContent } from '../views/sectionContent'
-import { Title, P, Link } from '../views'
 import { BrandLogo, Join } from '../components'
 import * as Constants from '../constants'
-import * as UI from '@mcro/ui'
+import { Link, P, Title } from '../views'
+import { SectionContent } from '../views/sectionContent'
 
 const SmallTitle = props => (
   <P
@@ -17,23 +17,23 @@ const SmallTitle = props => (
   />
 )
 
-const Bottom = view({
+const Bottom = gloss({
   overflow: 'hidden',
   zIndex: 1000,
 })
 
-const Nav = view({
+const Nav = gloss({
   flex: 1,
   height: '100%',
 })
 
 // Link
-const FootLink = view(Link, {
+const FootLink = gloss(Link, {
   margin: [0, 0, 5],
   color: [0, 0, 0, 0.5],
 })
 
-const Sections = view({
+const Sections = gloss({
   flex: 1,
   flexFlow: 'row',
   [Constants.screen.smallQuery]: {
@@ -41,7 +41,7 @@ const Sections = view({
   },
 })
 
-const StartSection = view({
+const StartSection = gloss({
   maxWidth: '50%',
   flex: 1,
   [Constants.screen.smallQuery]: {
@@ -53,7 +53,7 @@ const StartSection = view({
   },
 })
 
-const EndSections = view({
+const EndSections = gloss({
   flex: 2,
   flexFlow: 'row',
   padding: [0, 0, 0, 40],
@@ -63,14 +63,14 @@ const EndSections = view({
   },
 })
 
-const Section = view({
+const Section = gloss({
   margin: [0, '10%'],
   [Constants.screen.smallQuery]: {
     // margin: [0, -40, 40],
   },
 })
 
-const Contact = view('a', {
+const Contact = gloss('a', {
   [Constants.screen.smallQuery]: {
     margin: 'auto',
   },

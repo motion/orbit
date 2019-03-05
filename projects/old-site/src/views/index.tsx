@@ -1,11 +1,10 @@
-import { view } from '@mcro/black'
-import Media from 'react-media'
-import * as React from 'react'
+import { attachTheme, gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
+import * as React from 'react'
+import Media from 'react-media'
 import * as Constants from '../constants'
-import { MailIcon } from '../views/icons'
 import Router from '../router'
-import { attachTheme } from '@mcro/gloss'
+import { MailIcon } from '../views/icons'
 
 export * from './Section'
 
@@ -41,13 +40,12 @@ const changeCaps = (str, reducePct) =>
   typeof str === 'string'
     ? str
         .split('')
-        .map(
-          char =>
-            IS_UPPER.test(char) ? (
-              <span style={{ fontSize: `${100 - reducePct}%` }}>{char}</span>
-            ) : (
-              char
-            ),
+        .map(char =>
+          IS_UPPER.test(char) ? (
+            <span style={{ fontSize: `${100 - reducePct}%` }}>{char}</span>
+          ) : (
+            char
+          ),
         )
     : str
 
@@ -296,7 +294,7 @@ export const WindowsLogo = props => (
   </svg>
 )
 
-export const DottedButton = view({
+export const DottedButton = gloss({
   display: 'inline-block',
   padding: [8, 12],
   borderRadius: 8,
@@ -309,7 +307,7 @@ export const DottedButton = view({
   alignItems: 'center',
 })
 
-export const Cmd = view('span', {
+export const Cmd = gloss('span', {
   padding: [2, 5],
   margin: [-2, 0],
   border: [1, 'dotted', '#ccc'],
@@ -342,7 +340,7 @@ export const Glow = ({ below, style = {}, ...props }) => (
   />
 )
 
-const NotifFrame = view({
+const NotifFrame = gloss({
   width: 300,
   height: 70,
   background: '#f3f3f3',
@@ -372,7 +370,7 @@ export const Notification = ({ title, body, ...props }) => (
   </NotifFrame>
 )
 
-export const HalfSection = view('section', {
+export const HalfSection = gloss('section', {
   flex: 1,
   width: '50%',
   padding: [0, 50, 0, 0],
@@ -383,7 +381,7 @@ export const HalfSection = view('section', {
   },
 })
 
-export const A = view(UI.Inline, {
+export const A = gloss(UI.Inline, {
   textDecoration: 'none',
   fontSize: 14,
   color: [0, 0, 0, 0.6],
@@ -470,7 +468,7 @@ export const FeatureSubTitle = props => (
   </Media>
 )
 
-export const Card = view('div', {
+export const Card = gloss('div', {
   textAlign: 'left',
   background: '#fff',
   borderRadius: 6,

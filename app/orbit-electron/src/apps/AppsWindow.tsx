@@ -1,7 +1,6 @@
-import { react } from '@mcro/black'
 import { Logger } from '@mcro/logger'
 import { App } from '@mcro/stores'
-import { useStore } from '@mcro/use-store'
+import { react, useStore } from '@mcro/use-store'
 import { BrowserWindow } from 'electron'
 import * as React from 'react'
 import AppWindow from './AppWindow'

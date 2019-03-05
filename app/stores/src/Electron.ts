@@ -1,5 +1,5 @@
-import { deep, store } from '@mcro/black'
 import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
+import { decorate, deep } from '@mcro/use-store'
 
 export let Electron = null as ElectronStore
 
@@ -34,9 +34,8 @@ export type PinKeyType =
   | 'right'
   | 'down'
 
-@store
+@decorate
 class ElectronStore {
-
   bridge = Bridge
   setState = Bridge.setState
   sendMessage = Bridge.sendMessage

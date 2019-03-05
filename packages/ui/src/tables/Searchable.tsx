@@ -6,7 +6,7 @@
  */
 
 import { attachTheme, ThemeObject } from '@mcro/gloss'
-import { on } from '@mcro/helpers'
+import { on } from '@mcro/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'

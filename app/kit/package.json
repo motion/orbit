@@ -14,7 +14,7 @@
     "@mcro/stores": "*",
     "@mcro/models": "*",
     "@mcro/use-store": "*",
-    "@mcro/helpers": "*",
+    "@mcro/utils": "*",
     "@mcro/bridge": "*",
     "@mcro/fast-compare": "*",
     "immer": "1.7.2",

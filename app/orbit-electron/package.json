@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "@mcro/black": "^2.3.10",
     "@mcro/config": "^2.3.10",
     "@mcro/constants": "^2.3.10",
     "@mcro/logger": "^2.3.10",

@@ -1,5 +1,8 @@
 import stringHash from 'string-hash'
 
+export * from './highlightText'
+export * from './on'
+
 /**
  * Creates a promise that resolves in a given number of milliseconds.
  */

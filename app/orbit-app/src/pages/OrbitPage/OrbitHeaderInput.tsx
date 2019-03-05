@@ -1,7 +1,8 @@
 import { gloss } from '@mcro/gloss'
-import { getIsTorn, useActiveSpace } from '@mcro/kit'
+import { useActiveSpace } from '@mcro/kit'
 import { ClearButton, ThemeContext, View } from '@mcro/ui'
 import React, { memo } from 'react'
+import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStores } from '../../hooks/useStores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 

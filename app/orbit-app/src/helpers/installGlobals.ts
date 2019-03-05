@@ -14,11 +14,9 @@
 // ⚠️ ️
 // ⚠️ ️
 
-import * as Black from '@mcro/black'
 import { Mediator } from '@mcro/bridge'
 import { getGlobalConfig } from '@mcro/config'
 import { color } from '@mcro/gloss'
-import { stringify } from '@mcro/helpers'
 import { LoggerSettings } from '@mcro/logger'
 import * as Models from '@mcro/models'
 import r2 from '@mcro/r2'
@@ -31,6 +29,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { AppActions } from '../actions/appActions/AppActions'
 import * as Constants from '../constants'
 import * as Helpers from '../helpers'
+import { log } from './log'
 
 // add require('') to window for easy debugging
 // for example require('lodash')
@@ -57,8 +56,7 @@ window['React'] = React
 window['Constants'] = Constants
 window['Mobx'] = Mobx
 window['Config'] = getGlobalConfig()
-window['log'] = Black.log
-window['Black'] = Black
+window['log'] = log
 window['r2'] = r2
 window['Helpers'] = Helpers
 window['App'] = App
@@ -68,7 +66,7 @@ window['color'] = color
 window['dateFns'] = dateFns
 window['LoggerSettings'] = LoggerSettings
 window['toJS'] = toJS
-window['stringify'] = stringify
+window['stringify'] = JSON.stringify.bind(JSON)
 window['AppActions'] = AppActions
 window['Models'] = Models
 

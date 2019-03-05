@@ -1,7 +1,6 @@
-import { cancel, ensure, react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { Carousel, CarouselProps, SelectionStore } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { cancel, ensure, react, useStore } from '@mcro/use-store'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
 

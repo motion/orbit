@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { Search } from './Search'
 import { Saliency } from './Saliency'
-import { view } from '@mcro/black'
+import { Search } from './Search'
 
 export const CosalDebug = () => {
   return (
@@ -16,7 +15,7 @@ export const CosalDebug = () => {
   )
 }
 
-const Half = view({
+const Half = gloss({
   flex: 1,
   overflow: 'scroll',
 })

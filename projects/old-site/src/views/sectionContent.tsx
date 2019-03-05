@@ -1,8 +1,8 @@
-import { view } from '@mcro/black'
-import * as Constants from '../constants'
+import { gloss } from '@mcro/gloss'
 import { View } from '@mcro/ui'
+import * as Constants from '../constants'
 
-export const SectionContent = view(View, {
+export const SectionContent = gloss(View, {
   width: '100%',
   minWidth: Constants.smallSize,
   maxWidth: Constants.mediumSize,

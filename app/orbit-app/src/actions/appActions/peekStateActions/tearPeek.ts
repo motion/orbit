@@ -1,4 +1,3 @@
-import { stringify } from '@mcro/helpers'
 import { App, defaultPeekState } from '@mcro/stores'
 
 export function tearPeek() {
@@ -22,6 +21,6 @@ export function tearPeek() {
     peeksState,
   })
   setTimeout(() => {
-    console.log('APP STATE IS NOW', stringify(App.peeksState))
+    console.log('APP STATE IS NOW', App.peeksState)
   })
 }

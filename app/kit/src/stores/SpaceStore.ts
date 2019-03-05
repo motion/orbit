@@ -1,9 +1,6 @@
 import { observeMany, observeOne } from '@mcro/bridge'
 import { AppModel, SpaceModel, UserModel } from '@mcro/models'
-import { App } from '@mcro/stores'
 import { ensure, react } from '@mcro/use-store'
-import { isEqual } from 'lodash'
-import { getIsTorn } from '../helpers/getIsTorn'
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { PaneManagerStore } from './PaneManagerStore'
 
@@ -17,25 +14,6 @@ export class SpaceStore {
   })
 
   user = react(() => observeOne(UserModel, {}))
-
-  hasStarted = false
-
-  syncUserSettings = react(
-    () => this.user,
-    async (user, { sleep }) => {
-      ensure('has user', !!user)
-      if (!isEqual(user.settings, App.state.userSettings)) {
-        App.setState({ userSettings: user.settings })
-      }
-      if (!this.hasStarted) {
-        await sleep(10)
-        this.hasStarted = true
-        if (!getIsTorn()) {
-          App.setOrbitState({ docked: true })
-        }
-      }
-    },
-  )
 
   get activeSpace() {
     if (this.user && this.spaces.length) {

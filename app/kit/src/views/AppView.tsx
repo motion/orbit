@@ -68,13 +68,13 @@ export const AppView = memoIsEqualDeep(
       )
     }
 
+    // handle ref
+    useHandleAppViewRef(ref, rootRef)
+
     if (!View) {
       console.warn('no view', props, definition)
       return null
     }
-
-    // handle ref
-    useHandleAppViewRef(ref, rootRef)
 
     const element = (
       <Contents ref={rootRef}>

@@ -1,8 +1,7 @@
-import { react } from '@mcro/black'
 import { ORBIT_WIDTH } from '@mcro/constants'
 import { QueryStore } from '@mcro/kit'
 import { App } from '@mcro/stores'
-import { useHook } from '@mcro/use-store'
+import { react, useHook } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
 export class OrbitWindowStore {

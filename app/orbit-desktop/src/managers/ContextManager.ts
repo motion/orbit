@@ -1,6 +1,6 @@
 import { Screen } from '@mcro/screen'
-import { store, react, ensure } from '@mcro/black'
 import { Desktop } from '@mcro/stores'
+import { decorate, ensure, react } from '@mcro/use-store'
 // import { toJS } from 'mobx'
 // import { getGlobalConfig } from '@mcro/config'
 // import { last, isEqual } from 'lodash'
@@ -10,7 +10,7 @@ import { Desktop } from '@mcro/stores'
 // const Config = getGlobalConfig()
 // const ORBIT_APP_ID = Config.isProd ? 'com.o.orbit' : 'com.github.electron'
 
-@store
+@decorate
 export class ContextManager {
   screen: Screen
   curAppID = ''

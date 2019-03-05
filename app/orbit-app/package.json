@@ -15,12 +15,10 @@
   "dependencies": {
     "@mcro/bridge": "^2.3.10",
     "@mcro/apps": "^2.3.10",
-    "@mcro/black": "^2.3.10",
     "@mcro/color": "^2.3.10",
     "@mcro/config": "^2.3.10",
     "@mcro/constants": "^2.3.10",
     "@mcro/gloss": "^2.3.10",
-    "@mcro/helpers": "^2.3.10",
     "@mcro/logger": "^2.3.10",
     "@mcro/mediator": "^2.3.10",
     "@mcro/mobx-logger": "^2.3.10",

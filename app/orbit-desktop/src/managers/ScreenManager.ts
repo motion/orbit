@@ -1,11 +1,12 @@
-import { on, store } from '@mcro/black'
 import { Screen } from '@mcro/screen'
 import { Desktop } from '@mcro/stores'
+import { decorate } from '@mcro/use-store'
+import { on } from '@mcro/utils'
 
 // handles the screen blur window as well as any information relating to the current
 // OS screen state like spaces.
 
-@store
+@decorate
 export class ScreenManager {
   clearTimeout?: Function
   isStarted = false

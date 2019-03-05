@@ -8,7 +8,6 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../stores" },
-    { "path": "../../packages/black" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },

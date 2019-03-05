@@ -2,10 +2,9 @@ import { ensure, react, useStore } from '@mcro/use-store'
 import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
-import { useStores } from '../helpers/useStores'
 import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
-import { SelectEvent } from './ProvideSelectionStore'
+import { SelectEvent, useSelectionStore } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
@@ -55,8 +54,11 @@ class SelectableStore {
   updateSelectionResults = react(
     () => this.props.itemsKey,
     () => {
-      this.props.selectionStore.setResults([
-        { type: 'column', indices: this.props.getItems().map((_, index) => index) },
+      this.props.selectionStore.setSelectionResults([
+        {
+          type: 'column' as 'column',
+          items: this.props.getItems().map(({ id }, index) => ({ id, index })),
+        },
       ])
     },
   )
@@ -80,10 +82,7 @@ export function SelectableList({
   getItemProps,
   ...props
 }: SelectableListProps) {
-  const stores = useStores({ optional: ['selectionStore', 'appStore'] })
-  const selectionStore = createNewSelectionStore
-    ? useStore(SelectionStore, props)
-    : props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+  const selectionStore = useSelectionStore(props)
 
   // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = getItemsKey(items)

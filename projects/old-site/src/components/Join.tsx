@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import jsonp from 'jsonp'
 import * as React from 'react'
@@ -12,26 +12,26 @@ const queryString = query => {
     .join('&')
 }
 
-const Form = view('form', {
+const Form = gloss('form', {
   flex: 1,
   position: 'relative',
 })
 
-const Inner = view({
+const Inner = gloss({
   flexFlow: 'row',
   [Constants.screen.smallQuery]: {
     flexFlow: 'column',
   },
 })
 
-const Section = view('section', {
+const Section = gloss('section', {
   textAlign: 'left',
   width: '100%',
   maxWidth: 540,
   margin: [0, 'auto'],
 })
 
-const Message = view({
+const Message = gloss({
   position: 'absolute',
   bottom: -100,
   left: 0,

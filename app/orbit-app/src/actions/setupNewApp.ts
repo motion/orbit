@@ -1,4 +1,4 @@
-import { sleep } from '@mcro/black'
+import { sleep } from '@mcro/utils'
 import { AllStores } from '../contexts/StoreContext'
 
 export function setupNewApp({ newAppStore, paneManagerStore }: AllStores) {

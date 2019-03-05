@@ -15,7 +15,7 @@
     "@mcro/color": "^2.3.10",
     "@mcro/css": "^2.3.10",
     "@mcro/gloss": "^2.3.10",
-    "@mcro/helpers": "^2.3.10",
+    "@mcro/utils": "^2.3.10",
     "@mcro/fast-compare": "*",
     "@mcro/use-store": "*",
     "@mcro/react-sortable-hoc": "*",

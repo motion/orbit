@@ -1,12 +1,13 @@
-import { Screen } from '@mcro/screen'
-import { debounce } from 'lodash'
-import { on, store } from '@mcro/black'
-import { Desktop } from '@mcro/stores'
-import { Logger } from '@mcro/logger'
-import macosVersion from 'macos-version'
-import { screenBinPath } from '../constants'
 import { getGlobalConfig } from '@mcro/config'
 import { Cosal } from '@mcro/cosal'
+import { Logger } from '@mcro/logger'
+import { Screen } from '@mcro/screen'
+import { Desktop } from '@mcro/stores'
+import { decorate } from '@mcro/use-store'
+import { on } from '@mcro/utils'
+import { debounce } from 'lodash'
+import macosVersion from 'macos-version'
+import { screenBinPath } from '../constants'
 
 const log = new Logger('OCRManager')
 const Config = getGlobalConfig()
@@ -38,7 +39,7 @@ const PREVENT_CLEAR = {
 //   ActivityMonitor: true,
 // }
 
-@store
+@decorate
 export class OCRManager {
   cosal: Cosal
   hasResolvedOCR = false

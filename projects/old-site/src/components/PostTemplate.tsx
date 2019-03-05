@@ -1,15 +1,15 @@
-import { Title, SmallTitle } from '../views'
-import * as React from 'react'
-import { view } from '@mcro/black'
+import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
+import * as React from 'react'
 import * as Constants from '../constants'
-import { Renderer, pProps } from '../helpers'
+import { pProps, Renderer } from '../helpers'
+import { SmallTitle, Title } from '../views'
 
-const Post = view({
+const Post = gloss({
   position: 'relative',
 })
 
-const Header = view({
+const Header = gloss({
   zIndex: 0,
   padding: [150, 150, 50],
   textAlign: 'center',
@@ -18,7 +18,7 @@ const Header = view({
   },
 })
 
-const Card = view({
+const Card = gloss({
   background: '#fff',
   borderRadius: 6,
   padding: ['7%', '8%'],

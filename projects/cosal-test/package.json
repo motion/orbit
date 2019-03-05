@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/black": "^2.3.10",
     "@mcro/build": "^2.3.10",
     "@mcro/cosal": "^2.3.10",
     "@mcro/gloss": "^2.3.10",

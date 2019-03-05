@@ -1,6 +1,5 @@
 import { command } from '@mcro/bridge'
-import { AppProps, showConfirmDialog } from '@mcro/kit'
-import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
+import { AppProps, showConfirmDialog, useActiveUser } from '@mcro/kit'
 import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
 import {

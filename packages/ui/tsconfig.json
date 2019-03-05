@@ -9,7 +9,7 @@
     { "path": "../color" },
     { "path": "../gloss" },
     { "path": "../fast-compare" },
-    { "path": "../helpers" },
+    { "path": "../utils" },
     { "path": "../use-store" }
   ]
 }

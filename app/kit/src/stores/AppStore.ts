@@ -11,6 +11,11 @@ export class AppStore {
   history = []
   currentItems = []
   selectedIndex = -1
+  sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+
+  setSidebarWidth = next => {
+    this.sidebarWidth = next
+  }
 
   get id() {
     return this.props.id

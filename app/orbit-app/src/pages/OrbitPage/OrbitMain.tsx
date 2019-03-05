@@ -4,13 +4,12 @@ import { BorderLeft } from '@mcro/ui'
 import { useReaction } from '@mcro/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
-import { defaultSidebarWidth } from './OrbitSidebar'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { toolbarPadElement } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppSubViewProps) => {
   const { id } = useContext(AppLoadContext)
-  const { orbitStore } = useStoresSimple()
+  const { orbitStore, appStore } = useStoresSimple()
   const appConfig = useReaction(() => {
     return orbitStore.activeConfig[id] || {}
   })
@@ -20,9 +19,9 @@ export const OrbitMain = memo((props: AppSubViewProps) => {
   }
 
   return (
-    <SubPane left={props.hasSidebar ? defaultSidebarWidth : 0} id={id} fullHeight zIndex={10}>
+    <SubPane left={props.hasSidebar ? appStore.sidebarWidth : 0} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
-        <BorderLeft opacity={0.5} />
+        {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}
         {React.cloneElement(props.children, {
           appConfig,

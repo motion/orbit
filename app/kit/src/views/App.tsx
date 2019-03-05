@@ -40,10 +40,10 @@ function AppContainerInner(props: AppElements) {
   }
 
   const { Statusbar, Main, Sidebar, Toolbar } = useContext(AppViewsContext)
-  const hasStatusbar = !!Statusbar
-  const hasMain = !!Main
-  const hasSidebar = !!Sidebar
-  const hasToolbar = !!Toolbar
+  const hasStatusbar = !!props.statusBar
+  const hasMain = !!props.children
+  const hasSidebar = !!props.index
+  const hasToolbar = !!props.toolBar
   const hasProps = {
     hasStatusbar,
     hasMain,

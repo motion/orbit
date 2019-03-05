@@ -217,10 +217,10 @@ const RenderApp = ({ id, identifier }) => {
   }
   const appStore = useStoreSimple(AppStore, { id })
   const App = app
-  const Toolbar = props => <OrbitToolBar {...props} />
-  const Sidebar = props => <OrbitSidebar {...props} />
-  const Main = props => <OrbitMain {...props} />
-  const Statusbar = props => <OrbitStatusBar {...props} />
+  const Toolbar = OrbitToolBar
+  const Sidebar = OrbitSidebar
+  const Main = OrbitMain
+  const Statusbar = OrbitStatusBar
   return (
     <ProvideStores stores={{ appStore }}>
       <AppLoadContext.Provider value={{ id, identifier }}>

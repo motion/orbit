@@ -1,6 +1,7 @@
 import { useStoreSimple } from '@mcro/use-store'
 import React from 'react'
 import { configure } from '../helpers/configure'
+import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { MergeContext } from '../helpers/MergeContext'
 import { Omit } from '../types'
 import { SelectableListProps } from './SelectableList'
@@ -42,16 +43,12 @@ export function useSelectionStore(props: SelectionStoreProps) {
   return useStoreSimple(SelectionStore, props)
 }
 
-export function ProvideSelectionStore({
-  children,
-  selectionStore,
-}: {
-  selectionStore: SelectionStore
-  children: any
-}) {
-  return (
-    <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
-      {children}
-    </MergeContext>
-  )
-}
+export const ProvideSelectionStore = memoIsEqualDeep(
+  ({ children, selectionStore }: { selectionStore: SelectionStore; children: any }) => {
+    return (
+      <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
+        {children}
+      </MergeContext>
+    )
+  },
+)

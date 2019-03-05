@@ -132,10 +132,10 @@ export function useStore<A>(
 ): A {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
-  const isInstantiated = Store['constructor'].name !== 'Function'
+  const instantiated = useRef(Store && Store['constructor'].name !== 'Function')
   let store = null
 
-  if (isInstantiated) {
+  if (instantiated.current) {
     store = (Store as unknown) as A
     store = useTrackableStore(store, rerender, { ...options, component })
   } else {
@@ -144,11 +144,17 @@ export function useStore<A>(
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, { ...options, component })
     }
+  }
 
-    // dispose on unmount
-    useEffect(() => {
+  // dispose on unmount
+  useEffect(() => {
+    if (instantiated.current) {
       return () => disposeStore(store, component)
-    }, [])
+    }
+  }, [])
+
+  if (!Store) {
+    console.warn('no store given...')
   }
 
   if (options && options.conditionalUse === false) {

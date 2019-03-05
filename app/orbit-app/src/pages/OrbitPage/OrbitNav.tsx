@@ -33,7 +33,7 @@ class OrbitNavStore {
   )
 }
 
-export default memo(function OrbitNav() {
+export const OrbitNav = memo(() => {
   const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)

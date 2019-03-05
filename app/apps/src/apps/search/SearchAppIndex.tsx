@@ -8,9 +8,5 @@ export function SearchAppIndex() {
   const searchStore = useStore(context.searchStore)
   const items = searchStore.results
   const { getShareMenuItemProps } = useShareMenu()
-  return (
-    <>
-      <List minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
-    </>
-  )
+  return <List minSelected={0} items={items} getItemProps={getShareMenuItemProps} />
 }

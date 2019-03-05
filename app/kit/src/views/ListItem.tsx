@@ -1,7 +1,7 @@
 import { gloss } from '@mcro/gloss'
 import { Bit } from '@mcro/models'
 import { ListItem as UIListItem, ListItemProps, PersonRow, VirtualListItemProps } from '@mcro/ui'
-import * as React from 'react'
+import React, { memo, useCallback } from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -28,7 +28,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   appConfig?: AppConfig
 }
 
-export const ListItem = React.memo(
+export const ListItem = memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
     const { appStore, selectionStore } = useStoresSimple()
 
@@ -46,14 +46,11 @@ export const ListItem = React.memo(
     const icon =
       props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
 
-    const getIsSelected = React.useCallback((index: number) => {
-      const appActive = appStore ? appStore.isActive : true
-      const isSelected =
-        props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
-      if (appActive) {
-        return isSelected
+    const getIsSelected = useCallback((index: number) => {
+      if (appStore && appStore.isActive == false) {
+        return undefined
       }
-      return false
+      return props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
     }, []) as any
 
     const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])

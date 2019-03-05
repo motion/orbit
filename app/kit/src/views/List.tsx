@@ -115,7 +115,6 @@ export function List(rawProps: ListProps) {
   const onSelectInner = useCallback(
     (index, eventType) => {
       const appConfig = getAppConfig(toListItemProps(getItems()[index]))
-      console.log('selecting', index, appConfig)
       if (onSelect) {
         onSelect(index, appConfig, eventType)
       }

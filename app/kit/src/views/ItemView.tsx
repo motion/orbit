@@ -4,9 +4,9 @@ import { itemViewsApp } from './itemViews'
 
 export function ItemView(props: { item: Bit }) {
   const View = itemViewsApp[props.item.type]
-
   if (!View) {
-    throw new Error('Not found view')
+    console.error('ItemView not found', props)
+    return null
   }
   return <View item={props.item} />
 }

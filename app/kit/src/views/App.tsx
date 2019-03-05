@@ -1,4 +1,3 @@
-import { gloss } from '@mcro/gloss'
 import React, { createContext, useContext } from 'react'
 import { AppElements } from '../types/AppDefinition'
 
@@ -26,7 +25,7 @@ export const AppViewsContext = createContext({
   Sidebar: null as AppSubView,
 })
 
-function AppContainerInner(props: AppElements) {
+export function App(props: AppElements) {
   for (const key in props) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
@@ -65,36 +64,36 @@ function AppContainerInner(props: AppElements) {
   )
 }
 
-// handle errors per-app:
+// // handle errors per-app:
 
-export class App extends React.Component<AppElements> {
-  state = {
-    error: null,
-  }
+// export class App extends React.Component<AppElements> {
+//   state = {
+//     error: null,
+//   }
 
-  componentDidCatch(error) {
-    console.error(this.state.error)
-    this.setState({
-      error,
-    })
-  }
+//   componentDidCatch(error) {
+//     console.error(this.state.error)
+//     this.setState({
+//       error,
+//     })
+//   }
 
-  render() {
-    if (this.state.error) {
-      console.warn(this.state.error)
-      return <RedBox>{this.state.error}</RedBox>
-    }
-    return <AppContainerInner {...this.props} />
-  }
-}
+//   render() {
+//     if (this.state.error) {
+//       console.warn(this.state.error)
+//       return <RedBox>{this.state.error}</RedBox>
+//     }
+//     return <AppContainerInner {...this.props} />
+//   }
+// }
 
-const RedBox = gloss({
-  flex: 1,
-  minHeight: 100,
-  minWidth: 300,
-  background: 'red',
-  color: 'white',
-  fontFamily: 'monospace',
-  whiteSpace: 'pre',
-  overflow: 'scroll',
-})
+// const RedBox = gloss({
+//   flex: 1,
+//   minHeight: 100,
+//   minWidth: 300,
+//   background: 'red',
+//   color: 'white',
+//   fontFamily: 'monospace',
+//   whiteSpace: 'pre',
+//   overflow: 'scroll',
+// })

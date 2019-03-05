@@ -25,18 +25,13 @@ const preventClick = e => {
 export function CheckboxReactive(props: Props) {
   const { isActive, onChange, ...rest } = props
   const checked = useReaction(() => isActive())
-
-  const handleOnChange = React.useCallback(
-    e => {
-      onChange(!props.isActive, e)
-    },
-    [props.isActive],
-  )
   return (
     <input
       style={{ margin: 'auto' }}
       type="checkbox"
-      onChange={handleOnChange}
+      onChange={e => {
+        onChange(!props.isActive, e)
+      }}
       defaultChecked={checked}
       onMouseDown={preventClick}
       {...rest}

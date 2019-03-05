@@ -81,8 +81,11 @@ export class ListItemStore {
   }
 
   updateIsSelected = react(this.getIsSelected, async (isSelected, { sleep }) => {
-    const { onSelect } = this.props
+    ensure('not cancelled', isSelected !== undefined)
     ensure('changed', isSelected !== this.isSelected)
+
+    const { onSelect } = this.props
+
     // set this before doing callbacks to allow for instant update
     this.isSelected = isSelected
 

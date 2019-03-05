@@ -1,77 +1,23 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { sleep } from '@mcro/utils'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
-import { DriveBitData } from './DriveBitData'
-import { DriveLoadedFile, DriveUser } from './DriveTypes'
+import { createSyncer } from '@mcro/sync-kit'
 import { DriveLoader } from './DriveLoader'
+import { DriveBitFactory } from './DriveBitFactory'
+import { DriveAppData } from './DriveAppData'
 
 /**
  * Syncs Google Drive files.
  */
-export const DriveSyncer = createSyncer(async ({ app, log }) => {
+export const DriveSyncer = createSyncer(async ({ app, log, utils }) => {
 
-  const loader = new DriveLoader(app, log, source =>
-    getEntityManager().getRepository(AppEntity).save(source),
-  )
+  const factory = new DriveBitFactory(app)
+  const loader = new DriveLoader(app, log, () => utils.updateAppData())
 
-  /**
-   * Creates person entity from a given Drive user.
-   */
-  const createPersonBit = (user: DriveUser): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'drive',
-        appId: app.id,
-        type: 'person',
-        originalId: user.emailAddress,
-        title: user.displayName,
-        email: user.emailAddress,
-        photo: user.photoLink,
-      },
-      user.emailAddress,
-    )
-  }
-
-  /**
-   * Builds a document bit from the given google drive aggregated file.
-   */
-  const createDocumentBit = (file: DriveLoadedFile): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'drive',
-        appId: app.id,
-        type: 'document',
-        title: file.file.name,
-        body: file.content || 'empty',
-        data: {} as DriveBitData,
-        webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
-        location: file.parent
-          ? {
-            id: file.parent.id,
-            name: file.parent.name,
-            webLink: file.file.webViewLink || file.parent.webContentLink,
-            desktopLink: '',
-          }
-          : undefined,
-        bitCreatedAt: new Date(file.file.createdTime).getTime(),
-        bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
-        // image:
-        //   file.file.fileExtension && file.file.thumbnailLink
-        //     ? file.file.id + '.' + file.file.fileExtension
-        //     : undefined,
-      },
-      file.file.id,
-    )
-  }
-
-  if (!app.data.values.lastSync) app.data.values.lastSync = {}
-  const lastSync = app.data.values.lastSync
+  const appData: DriveAppData = app.data
+  if (!appData.values.lastSync) appData.values.lastSync = {}
+  const lastSync = appData.values.lastSync
 
   // load users from API
-  log.timer('load files and people from API')
-  const files = await loader.loadFiles(undefined, async (file, cursor, isLast) => {
-    await isAborted(app)
-    await sleep(2)
+  await loader.loadFiles(async (file, cursor, isLast) => {
+    await utils.isAborted()
 
     const updatedAt = new Date(file.file.modifiedByMeTime || file.file.modifiedTime).getTime()
 
@@ -87,7 +33,7 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
       }
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -97,15 +43,14 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSync.lastCursorSyncedDate) {
       lastSync.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing file, set last synced date', lastSync)
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
     }
 
-    const bit = createDocumentBit(file)
-    bit.people = file.users.map(user => createPersonBit(user))
+    const bit = factory.createDocumentBit(file)
+    bit.people = file.users.map(user => factory.createPersonBit(user))
 
-    log.verbose('syncing', { file, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    await utils.saveBits(bit.people)
+    await utils.saveBit(bit)
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -116,7 +61,7 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
       lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
       return true
     }
 
@@ -124,11 +69,10 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
     if (lastSync.lastCursor !== cursor) {
       log.info('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
     }
 
     return true
   })
-  log.timer('load files and people from API', files)
 
 })

@@ -29,9 +29,8 @@ import * as Path from 'path'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
 import { Syncers } from './core/Syncers'
-import { AppForceCancelResolver, checkCancelled } from './resolvers/AppForceCancelResolver'
+import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
-import { setAbortionLogic, setEntityManager, setMediatorClient } from '@mcro/sync-kit'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class OrbitSyncersRoot {
@@ -58,10 +57,6 @@ export class OrbitSyncersRoot {
     })
 
     // setup proper instances to use inside sync-kit package
-    setMediatorClient(this.mediatorClient)
-    setEntityManager(this.connection.manager)
-    setAbortionLogic(app => checkCancelled(app.id))
-
     setTimeout(() => {
       this.startSyncers()
     }, 10000)

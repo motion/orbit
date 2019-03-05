@@ -1,7 +1,7 @@
 import { AppBit, Bit } from '@mcro/models'
-import { BitUtils } from '@mcro/sync-kit'
 import { WebsiteCrawledData } from './WebsiteCrawledData'
 import { WebsiteBitData } from './WebsiteBitData'
+import { createBit } from '@mcro/sync-kit'
 
 /**
  * Creates a website Bit.
@@ -22,7 +22,7 @@ export class WebsiteBitFactory {
     // const values = this.app.values as CrawlerSettingValues
 
     // create or update a bit
-    return BitUtils.create(
+    return createBit(
       {
         appIdentifier: 'website',
         appId: this.app.id,

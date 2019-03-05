@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { sleep } from '@mcro/sync-kit'
 import { AppBit } from '@mcro/models'
 import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -69,13 +69,15 @@ export class GithubLoader {
    * Loads all user repositories.
    */
   async loadUserRepositories(): Promise<GithubRepository[]> {
-    this.log.verbose('loading repositories')
+    this.log.timer('load API repositories')
     const repositories = await this.loadRepositoriesByCursor()
     this.log.verbose(
-      `loading is finished. Loaded ${repositories.length} issues. ` +
+      `loaded ${repositories.length} repositories. ` +
         `Total query cost: ${this.totalCost}/${this.remainingCost}`,
       repositories,
     )
+
+    this.log.timer('load API repositories', repositories)
     return repositories
   }
 
@@ -107,132 +109,144 @@ export class GithubLoader {
    * Loads all issues and executes a given callback for each loaded issue.
    */
   async loadIssues(options?: GithubLoaderIssueOrPullRequestStreamOptions): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.github.issues)
+    const loadRecursively = async (options?: GithubLoaderIssueOrPullRequestStreamOptions) => {
+      await sleep(ServiceLoadThrottlingOptions.github.issues)
 
-    const { organization, repository, cursor, loadedCount, handler } = options
-    const first = 50 // number of issues to load per page
-    const results = await this.load<GithubIssueQueryResult>(GithubQueries.issues(), {
-      organization,
-      repository,
-      cursor,
-      first,
-    })
+      const { organization, repository, cursor, loadedCount, handler } = options
+      const first = 50 // number of issues to load per page
+      const results = await this.load<GithubIssueQueryResult>(GithubQueries.issues(), {
+        organization,
+        repository,
+        cursor,
+        first,
+      })
 
-    // query was made. calculate total costs
-    this.totalCost += results.rateLimit.cost
-    this.remainingCost = results.rateLimit.remaining
+      // query was made. calculate total costs
+      this.totalCost += results.rateLimit.cost
+      this.remainingCost = results.rateLimit.remaining
 
-    const hasNextPage = results.repository.issues.pageInfo.hasNextPage
-    const issues = results.repository.issues.nodes
-    const totalCount = results.repository.issues.totalCount
-    const lastEdgeCursor = hasNextPage ? results.repository.issues.pageInfo.endCursor : undefined
-    this.log.verbose(
-      `${issues.length} issues were loaded (${loadedCount + issues.length} of ${totalCount})`,
-      results,
-    )
+      const hasNextPage = results.repository.issues.pageInfo.hasNextPage
+      const issues = results.repository.issues.nodes
+      const totalCount = results.repository.issues.totalCount
+      const lastEdgeCursor = hasNextPage ? results.repository.issues.pageInfo.endCursor : undefined
+      this.log.verbose(
+        `${issues.length} issues were loaded (${loadedCount + issues.length} of ${totalCount})`,
+        results,
+      )
 
-    // run streaming callback for each loaded issue
-    for (let i = 0; i < issues.length; i++) {
-      try {
-        const isLast = i === issues.length - 1 && hasNextPage === false
-        const result = await handler(issues[i], lastEdgeCursor, loadedCount + issues.length, isLast)
+      // run streaming callback for each loaded issue
+      for (let i = 0; i < issues.length; i++) {
+        try {
+          const isLast = i === issues.length - 1 && hasNextPage === false
+          const result = await handler(issues[i], lastEdgeCursor, loadedCount + issues.length, isLast)
 
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped issues syncing, no need to sync more', {
-            issue: issues[i],
-            index: i,
-          })
-          return // return from the function, not from the loop!
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped issues syncing, no need to sync more', {
+              issue: issues[i],
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('error during issue handling', issues[i], error)
         }
-      } catch (error) {
-        this.log.warning('error during issue handling', issues[i], error)
+      }
+
+      // if there is a next page we execute next query to api to get all repository issues
+      // to get next issues we need a cursor from the last loaded edge
+      // and tell github to load issues "after" that cursor
+      // cursor basically is a token github returns
+      if (hasNextPage) {
+        await loadRecursively({
+          organization,
+          repository,
+          cursor: lastEdgeCursor,
+          loadedCount: loadedCount + issues.length,
+          handler,
+        })
       }
     }
 
-    // if there is a next page we execute next query to api to get all repository issues
-    // to get next issues we need a cursor from the last loaded edge
-    // and tell github to load issues "after" that cursor
-    // cursor basically is a token github returns
-    if (hasNextPage) {
-      await this.loadIssues({
-        organization,
-        repository,
-        cursor: lastEdgeCursor,
-        loadedCount: loadedCount + issues.length,
-        handler,
-      })
-    }
+    this.log.vtimer(`sync ${options.organization}/${options.repository} issues`)
+    await loadRecursively(options)
+    this.log.vtimer(`sync ${options.organization}/${options.repository} issues`)
   }
 
   /**
    * Loads all pull requests and executes a given callback for each loaded issue.
    */
   async loadPullRequests(options?: GithubLoaderIssueOrPullRequestStreamOptions): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.github.pullRequests)
+    const loadRecursively = async (options?: GithubLoaderIssueOrPullRequestStreamOptions) => {
+      await sleep(ServiceLoadThrottlingOptions.github.pullRequests)
 
-    const { organization, repository, cursor, loadedCount, handler } = options
-    const first = 50 // number of issues to load per page
-    const results = await this.load<GithubPullRequestQueryResult>(GithubQueries.pullRequests(), {
-      organization,
-      repository,
-      cursor,
-      first,
-    })
+      const { organization, repository, cursor, loadedCount, handler } = options
+      const first = 50 // number of issues to load per page
+      const results = await this.load<GithubPullRequestQueryResult>(GithubQueries.pullRequests(), {
+        organization,
+        repository,
+        cursor,
+        first,
+      })
 
-    // query was made. calculate total costs
-    this.totalCost += results.rateLimit.cost
-    this.remainingCost = results.rateLimit.remaining
+      // query was made. calculate total costs
+      this.totalCost += results.rateLimit.cost
+      this.remainingCost = results.rateLimit.remaining
 
-    const hasNextPage = results.repository.pullRequests.pageInfo.hasNextPage
-    const pullRequests = results.repository.pullRequests.nodes
-    const totalCount = results.repository.pullRequests.totalCount
-    const lastEdgeCursor = hasNextPage
-      ? results.repository.pullRequests.pageInfo.endCursor
-      : undefined
-    this.log.verbose(
-      `${pullRequests.length} pull request were loaded (${loadedCount +
+      const hasNextPage = results.repository.pullRequests.pageInfo.hasNextPage
+      const pullRequests = results.repository.pullRequests.nodes
+      const totalCount = results.repository.pullRequests.totalCount
+      const lastEdgeCursor = hasNextPage
+        ? results.repository.pullRequests.pageInfo.endCursor
+        : undefined
+      this.log.verbose(
+        `${pullRequests.length} pull request were loaded (${loadedCount +
         pullRequests.length} of ${totalCount})`,
-      results,
-    )
+        results,
+      )
 
-    // run streaming callback for each loaded issue
-    for (let i = 0; i < pullRequests.length; i++) {
-      try {
-        const isLast = i === pullRequests.length - 1 && hasNextPage === false
-        const result = await handler(
-          pullRequests[i],
-          lastEdgeCursor,
-          loadedCount + pullRequests.length,
-          isLast,
-        )
+      // run streaming callback for each loaded issue
+      for (let i = 0; i < pullRequests.length; i++) {
+        try {
+          const isLast = i === pullRequests.length - 1 && hasNextPage === false
+          const result = await handler(
+            pullRequests[i],
+            lastEdgeCursor,
+            loadedCount + pullRequests.length,
+            isLast,
+          )
 
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped pull request syncing, no need to sync more', {
-            pullRequest: pullRequests[i],
-            index: i,
-          })
-          return // return from the function, not from the loop!
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped pull request syncing, no need to sync more', {
+              pullRequest: pullRequests[i],
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('Error during pull request handling ', pullRequests[i], error)
         }
-      } catch (error) {
-        this.log.warning('Error during pull request handling ', pullRequests[i], error)
+      }
+
+      // if there is a next page we execute next query to api to get all repository issues
+      // to get next issues we need a cursor from the last loaded edge
+      // and tell github to load issues "after" that cursor
+      // cursor basically is a token github returns
+      if (hasNextPage) {
+        await loadRecursively({
+          organization,
+          repository,
+          cursor: lastEdgeCursor,
+          loadedCount: loadedCount + pullRequests.length,
+          handler,
+        })
       }
     }
 
-    // if there is a next page we execute next query to api to get all repository issues
-    // to get next issues we need a cursor from the last loaded edge
-    // and tell github to load issues "after" that cursor
-    // cursor basically is a token github returns
-    if (hasNextPage) {
-      await this.loadPullRequests({
-        organization,
-        repository,
-        cursor: lastEdgeCursor,
-        loadedCount: loadedCount + pullRequests.length,
-        handler,
-      })
-    }
+    this.log.vtimer(`sync ${options.organization}/${options.repository} pull requests`)
+    await loadRecursively(options)
+    this.log.vtimer(`sync ${options.organization}/${options.repository} pull requests`)
   }
 
   /**

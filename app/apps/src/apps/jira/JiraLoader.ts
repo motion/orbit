@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { sleep } from '@mcro/sync-kit'
 import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { JiraQueries } from './JiraQueries'
@@ -31,19 +31,36 @@ export class JiraLoader {
   /**
    * Loads users from the jira api.
    */
-  async loadUsers(startAt: number = 0): Promise<JiraUser[]> {
-    await sleep(ServiceLoadThrottlingOptions.jira.users)
+  async loadUsers(): Promise<JiraUser[]> {
+    const loadRecursively = async (startAt: number = 0) => {
+      await sleep(ServiceLoadThrottlingOptions.jira.users)
 
-    const maxResults = 1000
-    const users = await this.loader.load(JiraQueries.users(startAt, maxResults))
+      const maxResults = 1000
+      const users = await this.loader.load(JiraQueries.users(startAt, maxResults))
 
-    // since we can only load max 1000 people per request, we check if we have more people to load
-    // then execute recursive call to load next 1000 people. Since users API does not return total
-    // number of users we do recursive queries until it returns less then 1000 people (means end of people)
-    if (users.length >= maxResults) {
-      const nextPageUsers = await this.loadUsers(startAt + maxResults)
-      return [...users, ...nextPageUsers]
+      // since we can only load max 1000 people per request, we check if we have more people to load
+      // then execute recursive call to load next 1000 people. Since users API does not return total
+      // number of users we do recursive queries until it returns less then 1000 people (means end of people)
+      if (users.length >= maxResults) {
+        const nextPageUsers = await loadRecursively(startAt + maxResults)
+        return [...users, ...nextPageUsers]
+      }
+      return users
     }
+
+    this.log.timer('load API people')
+    const users = loadRecursively(0)
+    this.log.timer('load API people', users)
+
+    // we don't need some jira users, like system or bot users
+    // so we are filtering them out
+    this.log.info('filter out users we don\'t need')
+    const filteredUsers = users.filter(user => {
+      const email = user.emailAddress || ''
+      const ignoredEmail = '@connect.atlassian.com'
+      return email.substr(ignoredEmail.length * -1) !== ignoredEmail
+    })
+    this.log.info('updated users after filtering', filteredUsers)
 
     return users
   }
@@ -61,49 +78,55 @@ export class JiraLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.jira.issues)
+    const loadRecursively = async (cursor: number, loadedCount: number) => {
+      await sleep(ServiceLoadThrottlingOptions.jira.issues)
 
-    const maxResults = 100
-    const response = await this.loader.load(JiraQueries.issues(cursor, maxResults))
-    const hasNextPage = response.total > cursor + maxResults
+      const maxResults = 100
+      const response = await this.loader.load(JiraQueries.issues(cursor, maxResults))
+      const hasNextPage = response.total > cursor + maxResults
 
-    // traverse over loaded issues and call streaming function
-    for (let i = 0; i < response.issues.length; i++) {
-      const issue = response.issues[i]
-      try {
-        // load content comments
-        if (issue.fields.comment.total > 0) {
-          issue.comments = await this.loadComments(issue.id)
-        } else {
-          issue.comments = []
-        }
+      // traverse over loaded issues and call streaming function
+      for (let i = 0; i < response.issues.length; i++) {
+        const issue = response.issues[i]
+        try {
+          // load content comments
+          if (issue.fields.comment.total > 0) {
+            issue.comments = await this.loadComments(issue.id)
+          } else {
+            issue.comments = []
+          }
 
-        const isLast = i === response.issues.length - 1 && hasNextPage === false
-        const result = await handler(
-          issue,
-          cursor + maxResults,
-          loadedCount + response.issues.length,
-          isLast,
-        )
-
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped issue syncing, no need to sync more', {
+          const isLast = i === response.issues.length - 1 && hasNextPage === false
+          const result = await handler(
             issue,
-            index: i,
-          })
-          return // return from the function, not from the loop!
+            cursor + maxResults,
+            loadedCount + response.issues.length,
+            isLast,
+          )
+
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped issue syncing, no need to sync more', {
+              issue,
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('Error during issue handling ', issue, error)
         }
-      } catch (error) {
-        this.log.warning('Error during issue handling ', issue, error)
+      }
+
+      // since we can only load max 100 issues per request, we check if we have more issues to load
+      // then execute recursive call to load next 100 issues. Do it until we reach the end (total)
+      if (hasNextPage) {
+        await loadRecursively(cursor + maxResults, loadedCount + response.issues.length)
       }
     }
 
-    // since we can only load max 100 issues per request, we check if we have more issues to load
-    // then execute recursive call to load next 100 issues. Do it until we reach the end (total)
-    if (hasNextPage) {
-      await this.loadIssues(cursor + maxResults, loadedCount + response.issues.length, handler)
-    }
+    this.log.timer('load issues from API')
+    await loadRecursively(cursor, loadedCount)
+    this.log.timer('load issues from API')
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { sleep } from '@mcro/sync-kit'
 import { uniqBy } from 'lodash'
 // import * as path from 'path'
 import { ServiceLoader } from '../../ServiceLoader'
@@ -34,67 +34,72 @@ export class DriveLoader {
    * Loads google drive files.
    */
   async loadFiles(
-    cursor: string | undefined,
     handler: (
       file: DriveLoadedFile,
       cursor?: string,
       isLast?: boolean,
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.drive.files)
+    const loadRecursively = async (cursor?: string) => {
+      await sleep(ServiceLoadThrottlingOptions.drive.files)
 
-    const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      // try to find a file folder to create a Bit.location later on
-      let parent: DriveFile
-      if (file.parents && file.parents.length)
-        parent = files.find(otherFile => otherFile.id === file.parents[0])
+      const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        // try to find a file folder to create a Bit.location later on
+        let parent: DriveFile
+        if (file.parents && file.parents.length)
+          parent = files.find(otherFile => otherFile.id === file.parents[0])
 
-      // const thumbnailFilePath = await this.downloadThumbnail(file)
-      const content = await this.loadFileContent(file)
-      const comments = await this.loadComments(file)
-      const revisions = await this.loadRevisions(file)
-      const users = [
-        ...file.owners,
-        ...comments.map(comment => comment.author),
-        ...revisions.map(revision => revision.lastModifyingUser),
-      ].filter(user => {
-        // some users are not defined in where they come from. we skip such cases
-        // some users don't have emails. we skip such cases
-        // if author of the comment is current user we don't need to add him to users list
-        return user && user.emailAddress && user.me === false
-      })
+        // const thumbnailFilePath = await this.downloadThumbnail(file)
+        const content = await this.loadFileContent(file)
+        const comments = await this.loadComments(file)
+        const revisions = await this.loadRevisions(file)
+        const users = [
+          ...file.owners,
+          ...comments.map(comment => comment.author),
+          ...revisions.map(revision => revision.lastModifyingUser),
+        ].filter(user => {
+          // some users are not defined in where they come from. we skip such cases
+          // some users don't have emails. we skip such cases
+          // if author of the comment is current user we don't need to add him to users list
+          return user && user.emailAddress && user.me === false
+        })
 
-      const driveFile: DriveLoadedFile = {
-        file,
-        thumbnailFilePath: '',
-        content,
-        comments,
-        revisions,
-        users: uniqBy(users, user => user.emailAddress),
-        parent,
-      }
-      try {
-        const isLast = i === files.length - 1 && !!nextPageToken
-        const result = await handler(driveFile, nextPageToken, isLast)
-
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped issues syncing, no need to sync more', {
-            file: driveFile,
-            index: i,
-          })
-          return // return from the function, not from the loop!
+        const driveFile: DriveLoadedFile = {
+          file,
+          thumbnailFilePath: '',
+          content,
+          comments,
+          revisions,
+          users: uniqBy(users, user => user.emailAddress),
+          parent,
         }
-      } catch (error) {
-        this.log.warning('error during file handling', driveFile, error)
+        try {
+          const isLast = i === files.length - 1 && !!nextPageToken
+          const result = await handler(driveFile, nextPageToken, isLast)
+
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped issues syncing, no need to sync more', {
+              file: driveFile,
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('error during file handling', driveFile, error)
+        }
+      }
+
+      if (nextPageToken) {
+        await loadRecursively(nextPageToken)
       }
     }
 
-    if (nextPageToken) {
-      await this.loadFiles(nextPageToken, handler)
-    }
+    this.log.timer('load files and people from API')
+    await loadRecursively()
+    this.log.timer('load files and people from API')
   }
 
   /**

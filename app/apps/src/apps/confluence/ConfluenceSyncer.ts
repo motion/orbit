@@ -1,26 +1,18 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { sleep } from '@mcro/utils'
-import {
-  BitUtils,
-  createSyncer,
-  getEntityManager,
-  isAborted,
-  loadDatabasePeople,
-  sanitizeHtml,
-  stripHtml,
-  syncPeople,
-} from '@mcro/sync-kit'
-import { ConfluenceLastSyncInfo } from './ConfluenceAppData'
-import { ConfluenceBitData } from './ConfluenceBitData'
-import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
+import { Bit } from '@mcro/models'
+import { createSyncer } from '@mcro/sync-kit'
+import { ConfluenceAppData, ConfluenceLastSyncInfo } from './ConfluenceAppData'
+import { ConfluenceContent } from './ConfluenceTypes'
 import { ConfluenceLoader } from './ConfluenceLoader'
+import { ConfluenceBitFactory } from './ConfluenceBitFactory'
 
 /**
  * Syncs Confluence pages and blogs.
  */
-export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
+export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
 
+  const factory = new ConfluenceBitFactory(app)
   const loader = new ConfluenceLoader(app, log)
+  const appData: ConfluenceAppData = app.data
 
   /**
    * Handles a content (blog or page) from loaded confluence content stream.
@@ -33,8 +25,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
     isLast: boolean
     allDbPeople: Bit[]
   }) => {
-    await isAborted(app)
-    await sleep(2)
+    await utils.isAborted()
 
     const { lastSyncInfo, content, cursor, loadedCount, isLast, allDbPeople } = options
     const updatedAt = new Date(content.history.lastUpdated.when).getTime()
@@ -55,7 +46,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -65,12 +56,11 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
     }
 
-    const bit = createDocumentBit(content, allDbPeople)
-    log.verbose('syncing', { content, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    const bit = factory.createDocumentBit(content, allDbPeople)
+    await utils.saveBit(bit)
 
     // in the case if its the last content we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -81,7 +71,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await utils.updateAppData()
       return true
     }
 
@@ -90,166 +80,61 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getEntityManager().getRepository(AppEntity).save(app)
-    }
+      await utils.updateAppData()
+   }
 
     return true
   }
 
-  /**
-   * Checks if confluence user is acceptable and can be used to create person entity from.
-   */
-  const checkUser  = (user: ConfluenceUser): boolean => {
-    const email = user.details.personal.email || ''
-    const ignoredEmail = '@connect.atlassian.com'
-    return email.substr(ignoredEmail.length * -1) !== ignoredEmail
-  }
-
-  /**
-   * Creates person entity from a given Confluence user.
-   */
-  const createPersonBit = (user: ConfluenceUser): Bit => {
-    const values = app.data.values
-
-    // create or update a bit
-    return BitUtils.create(
-      {
-        appIdentifier: 'confluence',
-        appId: app.id,
-        type: 'person',
-        originalId: user.accountId,
-        title: user.displayName,
-        email: user.details.personal.email,
-        photo: values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),
-      },
-      user.accountId,
-    )
-  }
-
-  /**
-   * Builds a document bit from the given confluence content.
-   */
-  const createDocumentBit = (content: ConfluenceContent, allPeople: Bit[]): Bit => {
-    const values = app.data.values
-    const domain = values.credentials.domain
-    const bitCreatedAt = new Date(content.history.createdDate).getTime()
-    const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
-    const body = stripHtml(content.body.styled_view.value)
-    let cleanHtml = sanitizeHtml(content.body.styled_view.value)
-    const matches = content.body.styled_view.value.match(
-      /<style default-inline-css>((.|\n)*)<\/style>/gi,
-    )
-    if (matches) cleanHtml = matches[0] + cleanHtml
-
-    // get people contributed to this bit (content author, editors, commentators)
-    const peopleIds = [
-      content.history.createdBy.accountId,
-      ...content.comments.map(comment => comment.history.createdBy.accountId),
-      ...content.history.contributors.publishers.userAccountIds,
-    ]
-    const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.originalId) !== -1
-    })
-
-    // find original content creator
-    const author = allPeople.find(person => {
-      return person.originalId === content.history.createdBy.accountId
-    })
-
-    // create or update a bit
-    return BitUtils.create(
-      {
-        appIdentifier: 'confluence',
-        appId: app.id,
-        type: 'document',
-        title: content.title,
-        author,
-        body,
-        data: { content: cleanHtml } as ConfluenceBitData,
-        location: {
-          id: content.space.id,
-          name: content.space.name,
-          webLink: domain + '/wiki' + content.space._links.webui,
-          desktopLink: '',
-        },
-        webLink: domain + '/wiki' + content._links.webui,
-        people,
-        bitCreatedAt,
-        bitUpdatedAt,
-      },
-      content.id,
-    )
-  }
-
-  if (!app.data.values.pageLastSync) app.data.values.pageLastSync = {}
-  const pageLastSync = app.data.values.pageLastSync
-  if (!app.data.values.blogLastSync) app.data.values.blogLastSync = {}
-  const blogLastSync = app.data.values.blogLastSync
+  if (!appData.values.pageLastSync) appData.values.pageLastSync = {}
+  const pageLastSync = appData.values.pageLastSync
+  if (!appData.values.blogLastSync) appData.values.blogLastSync = {}
+  const blogLastSync = appData.values.blogLastSync
 
   // load database data
-  log.timer('load person bits from the database')
-  const dbPeople = await loadDatabasePeople(app)
-  log.timer('load person bits and bits from the database', { dbPeople })
+  const dbPeople = await utils.loadDatabasePeople()
 
   // load users from confluence API
-  log.info('loading confluence API users')
   const allUsers = await loader.loadUsers()
-  log.info('got confluence API users', allUsers)
-
-  // we don't need some confluence users, like system or bot users
-  // so we are filtering them out
-  log.info("filter out users we don't need")
-  const filteredUsers = allUsers.filter(member => checkUser(member))
-  log.info('updated users after filtering', filteredUsers)
 
   // create people for loaded user
-  log.info('creating people for api users')
-  const apiPeople = filteredUsers.map(user => createPersonBit(user))
+  const apiPeople = allUsers.map(user => factory.createPersonBit(user))
   log.info('people created', apiPeople)
 
   // saving people and person bits
-  await syncPeople(app, apiPeople, dbPeople)
+  await utils.syncPeople(apiPeople, dbPeople)
 
   // reload database people again
-  const allDbPeople = await loadDatabasePeople(app)
+  const allDbPeople = await utils.loadDatabasePeople()
 
   // sync content - pages
-  log.timer('sync API pages')
   await loader.loadContents(
     'page',
     pageLastSync.lastCursor || 0,
     pageLastSync.lastCursorLoadedCount || 0,
-    (content, cursor, loadedCount, isLast) => {
-      return handleContent({
-        content,
-        cursor,
-        loadedCount,
-        isLast,
-        lastSyncInfo: pageLastSync,
-        allDbPeople,
-      })
-    },
+    (content, cursor, loadedCount, isLast) => handleContent({
+      content,
+      cursor,
+      loadedCount,
+      isLast,
+      lastSyncInfo: pageLastSync,
+      allDbPeople,
+    })
   )
-  log.timer('sync API pages')
 
   // sync content - blogs
-  log.timer('sync API blogs')
   await loader.loadContents(
     'blogpost',
     blogLastSync.lastCursor || 0,
     blogLastSync.lastCursorLoadedCount || 0,
-    (content, cursor, loadedCount, isLast) => {
-      return handleContent({
-        content,
-        cursor,
-        loadedCount,
-        isLast,
-        lastSyncInfo: blogLastSync,
-        allDbPeople,
-      })
-    },
+    (content, cursor, loadedCount, isLast) => handleContent({
+      content,
+      cursor,
+      loadedCount,
+      isLast,
+      lastSyncInfo: blogLastSync,
+      allDbPeople,
+    })
   )
-  log.timer('sync API blogs')
 
 })
-

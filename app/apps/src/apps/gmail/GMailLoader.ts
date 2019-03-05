@@ -1,5 +1,5 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { sleep } from '@mcro/sync-kit'
 import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
 import { ServiceLoadThrottlingOptions } from '../../options'
@@ -110,92 +110,92 @@ export class GMailLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean
   }): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.gmail.threads)
-    let { count, queryFilter, filteredIds, pageToken, loadedCount, handler } = options
+    const loadRecursively = async (pageToken?: string, loadedCount?: number) => {
 
-    // load all threads first
-    this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
-    const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
-    const result = await this.loader.load(query)
+      await sleep(ServiceLoadThrottlingOptions.gmail.threads)
+      let { count, queryFilter, filteredIds, handler } = options
 
-    // if query doesn't return any email result.threads will be undefined
-    if (!result.resultSizeEstimate) return
+      // load all threads first
+      this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
+      const query = GMailQueries.threads(count > 100 ? 100 : count, queryFilter, pageToken)
+      const result = await this.loader.load(query)
 
-    this.log.info(
-      `${result.threads.length} threads were loaded (${loadedCount +
+      // if query doesn't return any email result.threads will be undefined
+      if (!result.resultSizeEstimate) return
+
+      this.log.info(
+        `${result.threads.length} threads were loaded (${loadedCount +
         result.threads.length} of ${loadedCount + result.resultSizeEstimate} estimated)`,
-      result,
-    )
+        result,
+      )
 
-    if (!result) return
-    let threads = result.threads
-    if (!threads) return
+      if (!result) return
+      let threads = result.threads
+      if (!threads) return
 
-    // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
-    // once we found all threads we stop loading threads
-    if (filteredIds) {
-      // filter out threads and left only those matching given ids
-      // if we find filtered thread we remove its id from the filter list
-      threads = []
-      result.threads.forEach(thread => {
-        const indexInFiltered = filteredIds.indexOf(thread.id)
-        if (indexInFiltered !== -1) {
-          threads.push(thread)
-          filteredIds.splice(indexInFiltered, 1)
-        }
-      })
-    }
-
-    // load messages for those threads
-    await this.loadMessages(threads)
-
-    // call handler function for each loaded thread
-    for (let i = 0; i < threads.length; i++) {
-      const thread = threads[i]
-      try {
-        const isLast = i === threads.length - 1 && !result.nextPageToken
-        const handleResult = await handler(
-          threads[i],
-          result.nextPageToken,
-          loadedCount + threads.length,
-          isLast,
-        )
-
-        // if callback returned true we don't continue syncing
-        if (handleResult === false) {
-          this.log.info('stopped threads syncing, no need to sync more', { thread, index: i })
-          return // return from the function, not from the loop!
-        }
-      } catch (error) {
-        this.log.warning('error during thread handling', thread, error)
+      // if array of filtered thread ids were passed then we load threads until we find all threads by given ids
+      // once we found all threads we stop loading threads
+      if (filteredIds) {
+        // filter out threads and left only those matching given ids
+        // if we find filtered thread we remove its id from the filter list
+        threads = []
+        result.threads.forEach(thread => {
+          const indexInFiltered = filteredIds.indexOf(thread.id)
+          if (indexInFiltered !== -1) {
+            threads.push(thread)
+            filteredIds.splice(indexInFiltered, 1)
+          }
+        })
       }
-    }
 
-    // decrease number of threads we need to load
-    // once we count is less than one we stop loading threads
-    count -= result.threads.length // important to use result.threads here instead of mutated threads
-    if (count < 1) {
-      this.log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
-      return
-    }
+      // load messages for those threads
+      await this.loadMessages(threads)
 
-    // load threads from the next page if available
-    if (result.nextPageToken) {
-      // this condition means we just found all requested threads, no need to load next page
-      if (filteredIds && filteredIds.length === 0) {
-        this.log.verbose('all requested threads were found')
+      // call handler function for each loaded thread
+      for (let i = 0; i < threads.length; i++) {
+        const thread = threads[i]
+        try {
+          const isLast = i === threads.length - 1 && !result.nextPageToken
+          const handleResult = await handler(
+            threads[i],
+            result.nextPageToken,
+            loadedCount + threads.length,
+            isLast,
+          )
+
+          // if callback returned true we don't continue syncing
+          if (handleResult === false) {
+            this.log.info('stopped threads syncing, no need to sync more', { thread, index: i })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('error during thread handling', thread, error)
+        }
+      }
+
+      // decrease number of threads we need to load
+      // once we count is less than one we stop loading threads
+      count -= result.threads.length // important to use result.threads here instead of mutated threads
+      if (count < 1) {
+        this.log.verbose('stopped loading, maximum number of threads were loaded', threads.length)
         return
       }
 
-      await this.loadThreads({
-        count: count,
-        queryFilter: queryFilter,
-        filteredIds: filteredIds,
-        pageToken: result.nextPageToken,
-        loadedCount: loadedCount + threads.length,
-        handler,
-      })
+      // load threads from the next page if available
+      if (result.nextPageToken) {
+        // this condition means we just found all requested threads, no need to load next page
+        if (filteredIds && filteredIds.length === 0) {
+          this.log.verbose('all requested threads were found')
+          return
+        }
+
+        await loadRecursively(result.nextPageToken, loadedCount + threads.length)
+      }
     }
+
+    this.log.timer('sync all threads')
+    await loadRecursively(options.pageToken, options.loadedCount)
+    this.log.timer('sync all threads')
   }
 
   /**

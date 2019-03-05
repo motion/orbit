@@ -1,5 +1,5 @@
 import { command } from '@mcro/bridge'
-import { showConfirmDialog } from '@mcro/kit'
+import { AppProps, showConfirmDialog } from '@mcro/kit'
 import { useActiveUser } from '@mcro/kit/src/hooks/useActiveUser'
 import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
 import { App } from '@mcro/stores'
@@ -19,7 +19,6 @@ import { sleep } from '../../helpers'
 import { showNotification } from '../../helpers/electron/showNotification'
 import { Input } from '../../views/Input'
 import { ShortcutCapture } from '../../views/ShortcutCapture'
-import { AppProps } from '../AppProps'
 
 const eventCharsToNiceChars = {
   alt: '⌥',

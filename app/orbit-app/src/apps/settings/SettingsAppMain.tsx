@@ -1,5 +1,5 @@
+import { AppProps } from '@mcro/kit'
 import * as React from 'react'
-import { AppProps } from '../AppProps'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 

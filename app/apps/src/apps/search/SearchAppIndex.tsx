@@ -1,9 +1,12 @@
 import { List, useShareMenu } from '@mcro/kit'
-import React from 'react'
-import { SearchStore } from './SearchStore'
+import { useStore } from '@mcro/use-store'
+import React, { useContext } from 'react'
+import { SearchContext } from './SearchApp'
 
-export function SearchAppIndex(props: { searchStore: SearchStore }) {
-  const items = props.searchStore.results
+export function SearchAppIndex() {
+  const context = useContext(SearchContext)
+  const searchStore = useStore(context.searchStore)
+  const items = searchStore.results
   const { getShareMenuItemProps } = useShareMenu()
   return (
     <>

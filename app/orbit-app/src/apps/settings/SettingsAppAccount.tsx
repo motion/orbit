@@ -1,3 +1,4 @@
+import { AppProps } from '@mcro/kit'
 import {
   Button,
   InputRow,
@@ -11,7 +12,6 @@ import {
 } from '@mcro/ui'
 import * as React from 'react'
 import { IntroText } from '../../views'
-import { AppProps } from '../AppProps'
 
 export default function SettingsAppAccount(_props: AppProps) {
   // const [user] = useActiveUser()

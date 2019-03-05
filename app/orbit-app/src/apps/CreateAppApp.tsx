@@ -1,12 +1,11 @@
 import { save } from '@mcro/bridge'
-import { App, AppDefinition, AppIcon, AppView, List, useActiveSpace } from '@mcro/kit'
+import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@mcro/kit'
 import { AppBit, AppModel } from '@mcro/models'
 import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import { AppProps } from './AppProps'
 import { AppsMainNew } from './apps/AppsMainNew'
 import PreviewApp from './views/PreviewApp'
 

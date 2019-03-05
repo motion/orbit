@@ -1,11 +1,15 @@
 import { App, AppProps, createApp, useSearch } from '@mcro/kit'
 import { useStore } from '@mcro/use-store'
-import React from 'react'
+import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
 import { SearchAppMain } from './SearchAppMain'
 import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
 import { SearchToolBar } from './SearchToolBar'
+
+export const SearchContext = createContext({
+  searchStore: null as SearchStore,
+})
 
 export const SearchApp = createApp({
   id: 'search',
@@ -19,9 +23,11 @@ export const SearchApp = createApp({
     })
 
     return (
-      <App index={<SearchAppIndex searchStore={searchStore} />} toolBar={<SearchToolBar />}>
-        <SearchAppMain {...props} />
-      </App>
+      <SearchContext.Provider value={{ searchStore }}>
+        <App index={<SearchAppIndex />} toolBar={<SearchToolBar />}>
+          <SearchAppMain {...props} />
+        </App>
+      </SearchContext.Provider>
     )
   },
   settings: SearchAppSettings,

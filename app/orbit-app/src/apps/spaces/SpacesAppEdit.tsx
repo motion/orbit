@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/bridge'
-import { OrbitOrb, useAppsForSpace } from '@mcro/kit'
+import { AppProps, OrbitOrb, useAppsForSpace } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import {
   Col,
@@ -20,7 +20,6 @@ import * as React from 'react'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
 import { SubSection } from '../../views/SubSection'
-import { AppProps } from '../AppProps'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 

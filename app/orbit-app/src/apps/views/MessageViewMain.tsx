@@ -1,7 +1,6 @@
-import { Icon } from '@mcro/kit'
+import { AppProps, Icon } from '@mcro/kit'
 import { Center, PassProps, Title, VerticalSpace } from '@mcro/ui'
 import React from 'react'
-import { AppProps } from '../AppProps'
 
 export function MessageViewMain({ appConfig }: AppProps) {
   const { title, icon } = appConfig

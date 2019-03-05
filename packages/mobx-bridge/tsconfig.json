@@ -6,9 +6,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "references": [
-    { "path": "../config" },
-    { "path": "../black" },
-    { "path": "../logger" }
-  ]
+  "references": [{ "path": "../config" }, { "path": "../logger" }]
 }

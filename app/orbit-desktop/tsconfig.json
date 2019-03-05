@@ -13,7 +13,6 @@
     { "path": "../oracle" },
     { "path": "../../packages/cosal" },
     { "path": "../../packages/utils" },
-    { "path": "../../packages/black" },
     { "path": "../../packages/mediator" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/config" },

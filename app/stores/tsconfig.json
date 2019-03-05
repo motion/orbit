@@ -9,7 +9,6 @@
   "references": [
     { "path": "../models" },
     { "path": "../../packages/config" },
-    { "path": "../../packages/black" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/mobx-bridge" }

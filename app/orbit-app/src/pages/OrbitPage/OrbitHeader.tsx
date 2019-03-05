@@ -183,7 +183,7 @@ const HeaderContain = gloss<{ isActive?: boolean }>({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  maxWidth: '70%',
+  maxWidth: 'calc(100% - 200px)',
   minWidth: 400,
   padding: [1, 5],
   borderRadius: 100,

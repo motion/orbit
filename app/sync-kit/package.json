@@ -12,7 +12,6 @@
     "@mcro/models": "*",
     "@mcro/logger": "*",
     "@mcro/mediator": "*",
-    "@mcro/services": "*",
     "@mcro/utils": "*",
     "lodash": "^4.17.10",
     "typeorm": "^0.3.0-alpha.22",

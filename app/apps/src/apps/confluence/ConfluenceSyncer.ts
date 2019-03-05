@@ -1,14 +1,24 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { ConfluenceContent, ConfluenceLoader, ConfluenceUser } from '@mcro/services'
 import { sleep } from '@mcro/utils'
-import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import {
+  BitUtils,
+  createSyncer,
+  getEntityManager,
+  isAborted,
+  loadDatabasePeople,
+  sanitizeHtml,
+  stripHtml,
+  syncPeople,
+} from '@mcro/sync-kit'
 import { ConfluenceLastSyncInfo } from './ConfluenceAppData'
 import { ConfluenceBitData } from './ConfluenceBitData'
+import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
+import { ConfluenceLoader } from './ConfluenceLoader'
 
 /**
  * Syncs Confluence pages and blogs.
  */
-export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
+export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
 
   const loader = new ConfluenceLoader(app, log)
 
@@ -23,7 +33,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
     isLast: boolean
     allDbPeople: Bit[]
   }) => {
-    await isAborted()
+    await isAborted(app)
     await sleep(2)
 
     const { lastSyncInfo, content, cursor, loadedCount, isLast, allDbPeople } = options
@@ -45,7 +55,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
       }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -55,12 +65,12 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
     }
 
     const bit = createDocumentBit(content, allDbPeople)
     log.verbose('syncing', { content, bit, people: bit.people })
-    await manager.getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
 
     // in the case if its the last content we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -71,7 +81,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
       return true
     }
 
@@ -80,7 +90,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
       log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
     }
 
     return true
@@ -124,8 +134,8 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
     const domain = values.credentials.domain
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
-    const body = utils.stripHtml(content.body.styled_view.value)
-    let cleanHtml = utils.sanitizeHtml(content.body.styled_view.value)
+    const body = stripHtml(content.body.styled_view.value)
+    let cleanHtml = sanitizeHtml(content.body.styled_view.value)
     const matches = content.body.styled_view.value.match(
       /<style default-inline-css>((.|\n)*)<\/style>/gi,
     )
@@ -178,7 +188,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
 
   // load database data
   log.timer('load person bits from the database')
-  const dbPeople = await utils.loadDatabasePeople()
+  const dbPeople = await loadDatabasePeople(app)
   log.timer('load person bits and bits from the database', { dbPeople })
 
   // load users from confluence API
@@ -198,10 +208,10 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, manager, utils, 
   log.info('people created', apiPeople)
 
   // saving people and person bits
-  await utils.syncPeople(apiPeople, dbPeople)
+  await syncPeople(app, apiPeople, dbPeople)
 
   // reload database people again
-  const allDbPeople = await utils.loadDatabasePeople()
+  const allDbPeople = await loadDatabasePeople(app)
 
   // sync content - pages
   log.timer('sync API pages')

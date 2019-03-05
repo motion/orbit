@@ -1,17 +1,11 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import {
-  GithubComment,
-  GithubCommit,
-  GithubIssue,
-  GithubLoader,
-  GithubPerson,
-  GithubPullRequest,
-} from '@mcro/services'
 import { hash } from '@mcro/utils'
 import { uniqBy } from 'lodash'
-import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
 import { GithubBitData } from './GithubBitData'
 import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
+import { GithubComment, GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from './GithubTypes'
+import { GithubLoader } from './GithubLoader'
 
 /**
  * Syncs Github.
@@ -20,7 +14,7 @@ import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAp
  * which means we never remove github bits during regular sync.
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }) => {
+export const GithubSyncer = createSyncer(async ({ app, log }) => {
 
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
@@ -67,7 +61,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await manager.getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -77,7 +71,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await manager.getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
     }
 
     const comments =
@@ -95,8 +89,8 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
     }
 
     log.verbose('syncing', { issueOrPullRequest, bit, people: bit.people })
-    await manager.getRepository(BitEntity).save(bit.people, { listeners: false })
-    await manager.getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
+    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
@@ -108,7 +102,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await manager.getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
       return true
     }
 
@@ -117,7 +111,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
       log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await manager.getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
     }
 
     return true
@@ -309,7 +303,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, manager, isAborted }
   // go through all repositories and sync them all
   log.timer('load api bits and people')
   for (let repository of repositories) {
-    await isAborted()
+    await isAborted(app)
 
     if (!data.values.lastSyncIssues[repository.nameWithOwner])
       data.values.lastSyncIssues[repository.nameWithOwner] = {}

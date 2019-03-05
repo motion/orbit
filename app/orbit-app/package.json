@@ -27,7 +27,6 @@
     "@mcro/models": "^2.3.10",
     "@mcro/r2": "^2.3.10",
     "@mcro/router": "^2.3.10",
-    "@mcro/services": "^2.3.10",
     "@mcro/slackdown": "^2.3.10",
     "@mcro/stores": "^2.3.10",
     "@mcro/ui": "^2.3.10",

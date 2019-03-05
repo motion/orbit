@@ -9,16 +9,17 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
+    "@mcro/config": "*",
     "@mcro/kit": "*",
     "@mcro/sync-kit": "*",
     "@mcro/gloss": "*",
     "@mcro/utils": "*",
     "@mcro/logger": "*",
-    "@mcro/services": "*",
     "@mcro/models": "*",
     "@mcro/bridge": "*",
     "@mcro/use-store": "*",
     "@mcro/ui": "*",
+    "slack": "11.0.2",
     "faker": "4.1.0",
     "immer": "1.7.2",
     "lodash": "*",

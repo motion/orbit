@@ -1,12 +1,23 @@
 import { AppEntity, Bit } from '@mcro/models'
-import { SlackAttachment, SlackChannel, SlackLoader, SlackMessage, SlackTeam, SlackUser } from '@mcro/services'
-import { BitUtils, createSyncer } from '@mcro/sync-kit'
+import {
+  BitUtils,
+  createSyncer,
+  getEntityManager,
+  isAborted,
+  loadDatabaseBits,
+  loadDatabasePeople,
+  loadTextTopWords,
+  syncBits,
+  syncPeople,
+} from '@mcro/sync-kit'
 import { SlackBitData } from './SlackBitData'
+import { SlackAttachment, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
+import { SlackLoader } from './SlackLoader'
 
 /**
  * Syncs Slack messages.
  */
-export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAborted }) => {
+export const SlackSyncer = createSyncer(async ({ app, log }) => {
 
   const Autolinker = require('autolinker')
   const appData = app.data
@@ -242,7 +253,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
     domain: team.domain,
     icon: team.icon.image_132,
   }
-  await manager.getRepository(AppEntity).save(app)
+  await getEntityManager().getRepository(AppEntity).save(app)
 
   // load api users
   log.timer('load API users')
@@ -263,15 +274,15 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
 
   // load all people and person bits from the local database
   log.timer('load synced people and person bits from the database')
-  const dbPeople = await utils.loadDatabasePeople()
+  const dbPeople = await loadDatabasePeople(app)
   log.timer('load synced people and person bits from the database', { dbPeople })
 
   // sync people
-  await utils.syncPeople(apiPeople, dbPeople)
+  await syncPeople(app, apiPeople, dbPeople)
 
   // re-load database people, we need them to deal with bits
   log.timer('load synced people from the database')
-  const allDbPeople = await utils.loadDatabasePeople()
+  const allDbPeople = await loadDatabasePeople(app)
   log.timer('load synced people from the database', allDbPeople)
 
   // load all slack channels
@@ -287,7 +298,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
   const lastMessageSync = values.lastMessageSync || {}
 
   for (let channel of activeChannels) {
-    await isAborted()
+    await isAborted(app)
 
     // to load messages using pagination we use "oldest" message we got last time when we synced
     // BUT we also need to support edit and remove last x messages
@@ -299,7 +310,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
     // we need to load all bits in the data range period we are working with (oldestMessageId)
     // because we do comparision and update bits, also we remove removed messages
     log.timer(`loading ${channel.name}(#${channel.id}) database bits`, { oldestMessageId })
-    const dbBits = await utils.loadDatabaseBits({
+    const dbBits = await loadDatabaseBits(app, {
       locationId: channel.id,
       oldestMessageId,
     })
@@ -340,13 +351,16 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
       log.info(`bits were created: ${apiBits.length}`, apiBits)
 
       // sync all the bits we have
-      await utils.syncBits({
+      await syncBits({
+        app,
         apiBits,
         dbBits,
         completeBitsData: async bits => {
           for (let bit of bits) {
-            const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
-            bit.title = (await utils.loadTextTopWords(flatBody, 6)).join(' ')
+            if ((bit.data as SlackBitData).messages) {
+              const flatBody = (bit.data as SlackBitData).messages.map(x => x.text).join(' ')
+              bit.title = (await loadTextTopWords(flatBody, 6)).join(' ')
+            }
           }
         }
       })
@@ -358,7 +372,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, manager, utils, isAbo
       // update apps
       log.info('update apps', { lastMessageSync })
       values.lastMessageSync = lastMessageSync
-      await manager.getRepository(AppEntity).save(app)
+      await getEntityManager().getRepository(AppEntity).save(app)
     }
   }
 

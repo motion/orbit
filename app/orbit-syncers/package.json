@@ -16,7 +16,6 @@
     "@mcro/logger": "^2.3.10",
     "@mcro/mediator": "^2.3.10",
     "@mcro/models": "^2.3.10",
-    "@mcro/services": "^2.3.10",
     "@mcro/utils": "^2.3.10",
     "autolinker": "^1.7.1",
     "dompurify": "^1.0.7",

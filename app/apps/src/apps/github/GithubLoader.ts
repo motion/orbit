@@ -1,6 +1,7 @@
 import { Logger } from '@mcro/logger'
 import { sleep } from '@mcro/utils'
-import { ServiceLoader } from '../../loader/ServiceLoader'
+import { AppBit } from '@mcro/models'
+import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { GithubQueries } from './GithubQueries'
 import {
@@ -17,7 +18,6 @@ import {
   GithubRepositoryQueryResult,
   GithubUserRepositoriesQueryResult,
 } from './GithubTypes'
-import { AppBit } from '@mcro/models/_'
 
 /**
  * Options for loadIssues and loadPullRequests methods.

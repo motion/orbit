@@ -1,12 +1,12 @@
-import { AppDefinition } from '@mcro/kit'
+import { createApp } from '@mcro/kit'
 import { slackIcon } from './slackIcon'
 import { SlackSettings } from './SlackSettings'
 
-export const SlackApp: AppDefinition = {
+export default createApp({
   id: 'slack',
   name: 'Slack',
   icon: slackIcon,
   itemType: 'conversation',
   settings: SlackSettings,
   sync: {},
-}
+})

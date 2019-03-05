@@ -1,10 +1,10 @@
-import { AppDefinition } from '@mcro/kit'
+import { createApp } from '@mcro/kit'
 import React from 'react'
 import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { confluenceIcon } from './confluenceIcon'
 import { ConfluenceSetup } from './ConfluenceSetup'
 
-export const ConfluenceApp: AppDefinition = {
+export default createApp({
   id: 'confluence',
   name: 'Confluence',
   icon: confluenceIcon,
@@ -12,4 +12,4 @@ export const ConfluenceApp: AppDefinition = {
   settings: props => <AtlassianSettingLogin identifier="confluence" {...props} />,
   setup: ConfluenceSetup,
   sync: {},
-}
+})

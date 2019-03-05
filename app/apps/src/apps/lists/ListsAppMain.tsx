@@ -1,7 +1,7 @@
 import { AppProps, AppSubView } from '@mcro/kit'
 import { Title } from '@mcro/ui'
 import * as React from 'react'
-import { ListContext } from './ListsApp'
+import { ListContext } from '.'
 
 export function ListsAppMain(props: AppProps) {
   if (!props.appConfig) {

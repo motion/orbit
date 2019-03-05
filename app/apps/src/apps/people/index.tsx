@@ -1,9 +1,9 @@
-import { App, AppDefinition, AppProps } from '@mcro/kit'
+import { App, AppProps, createApp } from '@mcro/kit'
 import React from 'react'
 import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
 
-export const PeopleApp: AppDefinition = {
+export default createApp({
   id: 'people',
   name: 'People',
   icon: 'person',
@@ -13,4 +13,4 @@ export const PeopleApp: AppDefinition = {
       <PeopleAppMain {...props} />
     </App>
   ),
-}
+})

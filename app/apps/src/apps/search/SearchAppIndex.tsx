@@ -1,7 +1,7 @@
 import { List, useShareMenu } from '@mcro/kit'
 import { useStore } from '@mcro/use-store'
 import React, { useContext } from 'react'
-import { SearchContext } from './SearchApp'
+import { SearchContext } from '.'
 
 export function SearchAppIndex() {
   const context = useContext(SearchContext)

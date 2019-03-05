@@ -12,7 +12,7 @@ import {
 } from '@mcro/ui'
 import { flow } from 'lodash'
 import React, { useContext } from 'react'
-import { API, ListContext } from './ListsApp'
+import { API, ListContext } from '.'
 import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {

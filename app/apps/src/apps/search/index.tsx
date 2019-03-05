@@ -11,7 +11,7 @@ export const SearchContext = createContext({
   searchStore: null as SearchStore,
 })
 
-export const SearchApp = createApp({
+export default createApp({
   id: 'search',
   name: 'Search',
   icon: '',

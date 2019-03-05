@@ -1,7 +1,7 @@
-import { AppDefinition } from '@mcro/kit'
+import { createApp } from '@mcro/kit'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
-export const WebsiteApp: AppDefinition = {
+export default createApp({
   id: 'website',
   name: 'Website',
   icon: websiteIcon(),
@@ -9,7 +9,7 @@ export const WebsiteApp: AppDefinition = {
   settings: WebsiteSetupPane,
   setup: WebsiteSetupPane,
   sync: {},
-}
+})
 
 function websiteIcon() {
   return `

@@ -1,5 +1,5 @@
 import { save } from '@mcro/bridge'
-import { App, AppDefinition, AppProps } from '@mcro/kit'
+import { App, AppProps, createApp } from '@mcro/kit'
 import { AppBit, AppModel, Bit } from '@mcro/models'
 import { useStore } from '@mcro/use-store'
 import React, { createContext } from 'react'
@@ -51,7 +51,7 @@ export const API = {
   },
 }
 
-export const ListsApp: AppDefinition = {
+export default createApp({
   id: 'lists',
   name: 'Lists',
   icon: '',
@@ -70,4 +70,4 @@ export const ListsApp: AppDefinition = {
     rootItemID: 0,
     items: {},
   },
-}
+})

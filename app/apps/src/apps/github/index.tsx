@@ -1,13 +1,13 @@
-import { AppDefinition } from '@mcro/kit'
+import { createApp } from '@mcro/kit'
 import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
 import GithubSettings from './GithubSettings'
 
-export const GithubApp: AppDefinition = {
+export default createApp({
   id: 'github',
   name: 'Github',
   icon: githubIcon,
   iconLight: githubIconWhite,
   itemType: 'task',
   settings: GithubSettings,
-}
+})

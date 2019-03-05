@@ -1,8 +1,8 @@
-import { App, AppDefinition, AppProps } from '@mcro/kit'
+import { App, AppProps, createApp } from '@mcro/kit'
 import React from 'react'
 import { CustomAppMain } from './CustomAppMain'
 
-export const CustomApp: AppDefinition = {
+export default createApp({
   id: 'custom',
   name: 'Custom',
   icon: '',
@@ -11,4 +11,4 @@ export const CustomApp: AppDefinition = {
       <CustomAppMain {...props} />
     </App>
   ),
-}
+})

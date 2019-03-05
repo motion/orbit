@@ -1,10 +1,10 @@
-import { AppDefinition } from '@mcro/kit'
+import { createApp } from '@mcro/kit'
 import React from 'react'
 import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { jiraIcon } from './jiraIcon'
 import { JiraSetup } from './JiraSetup'
 
-export const JiraApp: AppDefinition = {
+export default createApp({
   id: 'jira',
   name: 'Jira',
   icon: jiraIcon,
@@ -12,4 +12,4 @@ export const JiraApp: AppDefinition = {
   settings: props => <AtlassianSettingLogin identifier="jira" {...props} />,
   setup: JiraSetup,
   sync: {},
-}
+})

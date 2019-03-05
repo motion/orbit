@@ -34,18 +34,12 @@ export function getApps() {
 if (module['hot']) {
   // module['hot'].accept()
 
-  let hmrTm: any
   module['hot'].addStatusHandler(status => {
     if (status === 'apply') {
       configureKit({
         StoreContext,
         getApps,
       })
-      clearTimeout(hmrTm)
-      window['RECENT_HMR'] = true
-      hmrTm = setTimeout(() => {
-        window['RECENT_HMR'] = false
-      }, 200)
     }
   })
 }

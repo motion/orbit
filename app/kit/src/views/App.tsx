@@ -9,11 +9,21 @@ export const AppLoadContext = createContext({
   id: '',
 })
 
+export type AppSubViewProps = {
+  children: React.ReactElement<any>
+  hasSidebar: boolean
+  hasStatusbar: boolean
+  hasToolbar: boolean
+  hasMain: boolean
+}
+
+type AppSubView = React.FunctionComponent<AppSubViewProps>
+
 export const AppViewsContext = createContext({
-  Toolbar: null,
-  Statusbar: null,
-  Main: null,
-  Sidebar: null,
+  Toolbar: null as AppSubView,
+  Statusbar: null as AppSubView,
+  Main: null as AppSubView,
+  Sidebar: null as AppSubView,
 })
 
 function AppContainerInner(props: AppElements) {
@@ -30,13 +40,27 @@ function AppContainerInner(props: AppElements) {
   }
 
   const { Statusbar, Main, Sidebar, Toolbar } = useContext(AppViewsContext)
+  const hasStatusbar = !!Statusbar
+  const hasMain = !!Main
+  const hasSidebar = !!Sidebar
+  const hasToolbar = !!Toolbar
+  const hasProps = {
+    hasStatusbar,
+    hasMain,
+    hasSidebar,
+    hasToolbar,
+  }
 
   return (
     <>
-      {!!Statusbar && <Statusbar>{props.statusBar}</Statusbar>}
-      {!!Main && <Main hasSidebar={!!props.index}>{props.children}</Main>}
-      {!!Sidebar && <Sidebar>{props.index}</Sidebar>}
-      {!!Toolbar && <Toolbar>{props.toolBar}</Toolbar>}
+      {hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>}
+      {hasMain && (
+        <Main hasSidebar={!!props.index} {...hasProps}>
+          {props.children}
+        </Main>
+      )}
+      {hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>}
+      {hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>}
     </>
   )
 }

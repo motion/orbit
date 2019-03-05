@@ -4,6 +4,8 @@ import React from 'react'
 
 const statusBarHeight = 26
 
+export const statusbarPadElement = <div style={{ height: statusBarHeight }} />
+
 export function OrbitStatusBar({ children }) {
   return (
     <StatusBarChrome>

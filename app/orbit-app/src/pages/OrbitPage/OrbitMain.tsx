@@ -1,20 +1,19 @@
 import { gloss } from '@mcro/gloss'
 import { AppLoadContext, AppSubViewProps, SubPane } from '@mcro/kit'
 import { BorderLeft } from '@mcro/ui'
-import { useStoreDebug } from '@mcro/use-store'
+import { useReaction } from '@mcro/use-store'
 import React, { memo, useContext } from 'react'
-import { useStores } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import { defaultSidebarWidth } from './OrbitSidebar'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { toolbarPadElement } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppSubViewProps) => {
-  useStoreDebug()
   const { id } = useContext(AppLoadContext)
-  const { orbitStore } = useStores()
-  const appConfig = orbitStore.activeConfig[id] || {}
-
-  console.log('now its', appConfig)
+  const { orbitStore } = useStoresSimple()
+  const appConfig = useReaction(() => {
+    return orbitStore.activeConfig[id] || {}
+  })
 
   if (!props.children) {
     return null

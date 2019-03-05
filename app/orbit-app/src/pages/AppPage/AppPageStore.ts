@@ -1,6 +1,6 @@
-import { ensure, react, sleep } from '@mcro/black'
 import { Bit, Setting } from '@mcro/models'
 import { App, AppState } from '@mcro/stores'
+import { ensure, react } from '@mcro/use-store'
 import * as React from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { PEEK_ID } from '../../constants'
@@ -113,7 +113,6 @@ export class AppPageStore {
       return false
     }
     AppActions.tearPeek()
-    await sleep(16)
   }
 
   handleClose = () => {

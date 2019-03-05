@@ -1,7 +1,7 @@
-import { sleep } from '@mcro/black'
 import { Cosal } from '@mcro/cosal'
 import { Logger } from '@mcro/logger'
 import { BitEntity, getSearchableText } from '@mcro/models'
+import { sleep } from '@mcro/utils'
 import { flatten, zip } from 'lodash'
 import { getRepository } from 'typeorm'
 import { ensureSetting, getSettingValue, updateSetting } from '../helpers/settingModelHelpers'

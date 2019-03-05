@@ -1,4 +1,3 @@
-import { view } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
 import * as _ from 'lodash'
@@ -297,7 +296,7 @@ class HomeHeader extends React.Component {
   }
 }
 
-const IntIcon = view({
+const IntIcon = gloss({
   margin: [0, 20, 0, 0],
   background: UI.color(waveColor)
     .darken(0.2)

@@ -1,5 +1,5 @@
-import { deep, store } from '@mcro/black'
 import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
+import { decorate, deep } from '@mcro/use-store'
 
 // store export
 export let Desktop = null as DesktopStore
@@ -24,7 +24,7 @@ export type AppFocusState = {
 
 export type OSThemes = 'dark' | 'light'
 
-@store
+@decorate
 class DesktopStore {
   // TODO have the store decorator auto-define these types
   // shortcuts

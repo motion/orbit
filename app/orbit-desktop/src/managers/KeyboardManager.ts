@@ -1,10 +1,10 @@
-import { Desktop, App } from '@mcro/stores'
-import { store, react, ensure } from '@mcro/black'
 import { Screen } from '@mcro/screen'
+import { App, Desktop } from '@mcro/stores'
+import { decorate, ensure, react } from '@mcro/use-store'
 
 const OPTION_PEEK_DELAY = 300
 
-@store
+@decorate
 export class KeyboardManager {
   pauseTm = null
 

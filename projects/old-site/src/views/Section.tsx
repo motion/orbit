@@ -1,8 +1,8 @@
-import * as React from 'react'
-import * as Constants from '../constants'
-import Media from 'react-media'
+import { gloss } from '@mcro/gloss'
 import * as UI from '@mcro/ui'
-import { view } from '@mcro/black'
+import * as React from 'react'
+import Media from 'react-media'
+import * as Constants from '../constants'
 
 export const Slant = ({
   inverse = false,
@@ -92,7 +92,7 @@ export const Slant = ({
   )
 }
 
-const SectionFrame = view({
+const SectionFrame = gloss({
   position: 'relative',
 }).theme(({ withBackground }, theme) => ({
   background: withBackground ? theme.background : 'transparent',

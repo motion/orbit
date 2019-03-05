@@ -1,12 +1,11 @@
+import { gloss } from '@mcro/gloss'
+import * as UI from '@mcro/ui'
 import * as React from 'react'
-import { view } from '@mcro/black'
-import { attachTheme, gloss } from '@mcro/gloss'
-import { Link } from '../views'
-import { SectionContent } from '../views/sectionContent'
+import Media from 'react-media'
 import { BrandLogo } from '../components'
 import * as Constants from '../constants'
-import Media from 'react-media'
-import * as UI from '@mcro/ui'
+import { Link } from '../views'
+import { SectionContent } from '../views/sectionContent'
 
 const HeaderContain = gloss({
   // background: Constants.colorMain,

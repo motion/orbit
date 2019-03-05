@@ -1,10 +1,9 @@
-import { ensure, react } from '@mcro/black'
 import { useModels } from '@mcro/bridge'
 import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useStoresSimple } from '@mcro/kit'
 import { SpaceModel } from '@mcro/models'
 import { App } from '@mcro/stores'
 import { Avatar, Col, ListItem, Popover, View } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
+import { ensure, react, useHook, useStore } from '@mcro/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
 import avatar from '../../public/images/nate.jpg'

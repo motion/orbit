@@ -1,5 +1,5 @@
+import { ensure, react } from '@mcro/use-store'
 import * as React from 'react'
-import { react, ensure } from '@mcro/black'
 import Saliency from './Saliency'
 
 export class SearchStore {

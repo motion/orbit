@@ -8,7 +8,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/black": "^2.3.10",
+    "@mcro/use-store": "^2.3.10",
     "@mcro/config": "^2.3.10",
     "@mcro/constants": "^2.3.10",
     "@mcro/mobx-bridge": "^2.3.10",

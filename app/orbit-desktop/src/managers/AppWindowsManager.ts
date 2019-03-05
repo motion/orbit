@@ -1,8 +1,8 @@
-import { react, store } from '@mcro/black'
 import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { Screen } from '@mcro/screen'
 import { App, Desktop } from '@mcro/stores'
+import { decorate, react } from '@mcro/use-store'
 import { join } from 'path'
 import { screenOptions } from '../constants'
 
@@ -14,7 +14,7 @@ type FakeProcess = {
   screen: Screen
 }
 
-@store
+@decorate
 export class AppWindowsManager {
   processes: FakeProcess[] = []
 

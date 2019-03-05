@@ -8,7 +8,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/black": "^2.3.10",
     "@mcro/config": "^2.3.10",
     "@mcro/logger": "^2.3.10",
     "html5-websocket": "^2.0.2",

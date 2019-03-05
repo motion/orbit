@@ -1,11 +1,10 @@
-import root from 'global'
-import * as Mobx from 'mobx'
+import { getGlobalConfig } from '@mcro/config'
+import * as Cosal from '@mcro/cosal'
 import { Entities } from '@mcro/models'
 import r2 from '@mcro/r2'
 import { App, Desktop, Electron } from '@mcro/stores'
-import { getGlobalConfig } from '@mcro/config'
-import { stringify } from '@mcro/helpers'
-import * as Cosal from '@mcro/cosal'
+import root from 'global'
+import * as Mobx from 'mobx'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 
 export function installGlobals(AppRoot: OrbitDesktopRoot) {
@@ -21,7 +20,6 @@ export function installGlobals(AppRoot: OrbitDesktopRoot) {
   root['App'] = App
   root['Desktop'] = Desktop
   root['Electron'] = Electron
-  root['stringify'] = stringify
   root['toJS'] = Mobx.toJS
   root['Cosal'] = Cosal
   root['Models'] = require('@mcro/models')

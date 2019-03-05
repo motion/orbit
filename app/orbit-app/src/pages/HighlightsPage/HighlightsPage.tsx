@@ -1,14 +1,13 @@
-import * as React from 'react'
-import { react } from '@mcro/black'
-import quadtree from 'simple-quadtree'
-import { Desktop } from '@mcro/stores'
-import OCRWord from './OcrWord'
-import OCRLine from './OcrLine'
-import * as UI from '@mcro/ui'
-import { wordKey } from '../../helpers'
 import { gloss } from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
+import { Desktop } from '@mcro/stores'
+import * as UI from '@mcro/ui'
+import { react, useStore } from '@mcro/use-store'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import quadtree from 'simple-quadtree'
+import { wordKey } from '../../helpers'
+import OCRLine from './OcrLine'
+import OCRWord from './OcrWord'
 
 const Frame = gloss(UI.Col, {
   width: '100%',

@@ -1,6 +1,6 @@
 import { CSSPropertySetStrict } from '@mcro/css'
 import { alphaColor, CSSPropertySet, gloss, Inline, propsToTextSize, View } from '@mcro/gloss'
-import { HighlightOptions, highlightText, on } from '@mcro/helpers'
+import { HighlightOptions, highlightText, on } from '@mcro/utils'
 import keycode from 'keycode'
 import * as React from 'react'
 

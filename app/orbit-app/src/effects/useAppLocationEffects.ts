@@ -1,4 +1,4 @@
-import { ensure, useReaction } from '@mcro/black'
+import { ensure, useReaction } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
 export function useAppLocationEffects() {

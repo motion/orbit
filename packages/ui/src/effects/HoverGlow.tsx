@@ -1,6 +1,6 @@
 import { Color } from '@mcro/css'
 import { gloss } from '@mcro/gloss'
-import { on } from '@mcro/helpers'
+import { on } from '@mcro/utils'
 import { debounce } from 'lodash'
 import throttle from 'raf-throttle'
 import * as React from 'react'

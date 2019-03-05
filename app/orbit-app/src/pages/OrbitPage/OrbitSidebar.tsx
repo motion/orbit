@@ -1,6 +1,6 @@
-import { useReaction } from '@mcro/black'
 import { AppLoadContext, AppSubViewProps, ProvideSelectionContext, SubPane } from '@mcro/kit'
 import { Sidebar } from '@mcro/ui'
+import { useReaction } from '@mcro/use-store'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'

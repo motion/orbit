@@ -1,7 +1,7 @@
-import { ensure, useReaction } from '@mcro/black'
 import { isEqual } from '@mcro/fast-compare'
 import { PaneManagerPane, PaneManagerStore } from '@mcro/kit'
 import { AppBit } from '@mcro/models'
+import { ensure, useReaction } from '@mcro/use-store'
 import { getAppState } from '../helpers/getAppState'
 import { getIsTorn } from '../helpers/getIsTorn'
 import { useActions } from '../hooks/useActions'

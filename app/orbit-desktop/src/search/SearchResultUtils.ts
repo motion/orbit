@@ -1,4 +1,4 @@
-import { highlightText } from '@mcro/helpers'
+import { highlightText } from '@mcro/utils'
 import * as _ from 'lodash'
 
 /**

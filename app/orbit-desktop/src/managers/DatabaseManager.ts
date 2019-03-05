@@ -1,7 +1,7 @@
-import { sleep } from '@mcro/helpers'
 import { Logger } from '@mcro/logger'
 import { Entities, SettingEntity } from '@mcro/models'
 import { Desktop } from '@mcro/stores'
+import { sleep } from '@mcro/utils'
 import { remove } from 'fs-extra'
 import { getConnection, getRepository } from 'typeorm'
 import { COSAL_DB, DATABASE_PATH } from '../constants'

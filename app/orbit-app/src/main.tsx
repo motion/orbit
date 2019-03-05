@@ -59,10 +59,7 @@ async function main() {
 
   // setup some development helpers
   if (process.env.NODE_ENV === 'development') {
-    const { DevStore } = require('./stores/DevStore')
-    const devStore = new DevStore()
-    window['Root'] = devStore
-    devStore['rerender'] = () => {
+    window['rerender'] = () => {
       startApp(true)
     }
   }

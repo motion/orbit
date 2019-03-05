@@ -1,4 +1,4 @@
-import { useReaction } from '@mcro/black'
+import { useReaction } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
 type Query = {

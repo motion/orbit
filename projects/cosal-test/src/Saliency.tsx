@@ -1,5 +1,5 @@
+import { react } from '@mcro/use-store'
 import * as React from 'react'
-import { react } from '@mcro/black'
 
 type Props = { query?: string }
 

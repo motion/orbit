@@ -1,7 +1,7 @@
-import { react, store } from '@mcro/black'
 import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
 import { Screen } from '@mcro/screen'
 import { App, Desktop } from '@mcro/stores'
+import { decorate, react } from '@mcro/use-store'
 import { throttle } from 'lodash'
 
 type Point = [number, number]
@@ -27,7 +27,7 @@ const isMouseOver = (bounds: BoundLike, mousePosition: Point) => {
   return withinX && withinY
 }
 
-@store
+@decorate
 export class MousePositionManager {
   lastMousePos?: Point
   onMouseMove = null

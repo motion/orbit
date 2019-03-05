@@ -1,6 +1,6 @@
-import { deep, store } from '@mcro/black'
 import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
 import { User } from '@mcro/models'
+import { decorate, deep } from '@mcro/use-store'
 import { Desktop } from './Desktop'
 
 export let App = null as AppStore
@@ -47,7 +47,7 @@ export type AppStateEntry = {
   appId: number
 }
 
-@store
+@decorate
 class AppStore {
   // TODO proxySetters should auto-type this
   // shortcuts

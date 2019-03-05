@@ -10,4 +10,5 @@ export default createApp({
   iconLight: githubIconWhite,
   itemType: 'task',
   settings: GithubSettings,
+  sync: {},
 })

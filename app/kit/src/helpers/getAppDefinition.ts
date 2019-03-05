@@ -1,5 +1,5 @@
-import { getAppDefinitions } from '../helpers/getAppDefinitions';
+import { getAppDefinitions } from '../helpers/getAppDefinitions'
 
-export function getAppDefinition(id: string) {
-  return getAppDefinitions().find(x => x.id === id)
+export function getAppDefinition(identifier: string) {
+  return getAppDefinitions().find(x => x.id === identifier)
 }

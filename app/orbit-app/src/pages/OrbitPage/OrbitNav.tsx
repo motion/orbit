@@ -27,6 +27,9 @@ class OrbitNavStore {
       ensure('not on settings', !isOnSettings(pane))
       return pane.id
     },
+    {
+      log: false,
+    },
   )
 }
 

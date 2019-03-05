@@ -1,129 +1,42 @@
-import { deep } from '@mcro/black'
-import { Absolute, gloss } from '@mcro/gloss'
-import { AppView, AppViewRef, ProvideSelectionContext, SubPane } from '@mcro/kit'
+import { useReaction } from '@mcro/black'
+import { AppLoadContext, AppSubViewProps, ProvideSelectionContext, SubPane } from '@mcro/kit'
 import { Sidebar } from '@mcro/ui'
-import { useHook } from '@mcro/use-store'
-import { isEqual } from 'lodash'
-import React, { memo, useEffect, useMemo } from 'react'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
-import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitToolBarHeight } from './OrbitToolBar'
+import React, { memo, useContext, useEffect } from 'react'
+import { useStoresSimple } from '../../hooks/useStores'
+import { statusbarPadElement } from './OrbitStatusBar'
+import { toolbarPadElement } from './OrbitToolBar'
 
-export const defaultSidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+export const OrbitSidebar = memo((props: AppSubViewProps) => {
+  const { identifier, id } = useContext(AppLoadContext)
+  const { orbitStore, appStore } = useStoresSimple()
+  const width = useReaction(() => appStore.sidebarWidth)
 
-export class SidebarStore {
-  stores = useHook(useStoresSimple)
-  width = defaultSidebarWidth
+  useEffect(() => {
+    return () => {
+      console.log('shouldnt unmount', id, identifier)
+    }
+  }, [])
 
-  indexViews: { [key: string]: AppViewRef } = deep({})
-
-  handleResize = next => {
-    this.width = next
+  if (!props.hasSidebar) {
+    return null
   }
-
-  get activePane() {
-    return this.stores.paneManagerStore.activePaneLowPriority
-  }
-
-  get indexView() {
-    return this.indexViews[this.activePane.id]
-  }
-
-  get hasIndexContent() {
-    return this.indexView && this.indexView.hasView === true
-  }
-}
-
-export default memo(function OrbitSidebar() {
-  const { paneManagerStore, appsStore, sidebarStore } = useStores()
-  const { type } = paneManagerStore.activePane
-  const { hasMain, hasIndex } = appsStore.getViewState(type)
-  const hideSidebar = !hasIndex && !sidebarStore.hasIndexContent
-  const width = sidebarStore.width
-
-  const elements = useMemo(
-    () => {
-      return (
-        <>
-          {paneManagerStore.panes.map(pane => {
-            return (
-              <SidebarSubPane
-                key={pane.id}
-                hasMain={hasMain}
-                sidebarStore={sidebarStore}
-                id={pane.id}
-                identifier={pane.type}
-              />
-            )
-          })}
-        </>
-      )
-    },
-    [paneManagerStore.panes, hasMain],
-  )
 
   return (
-    <SidebarContainer hideSidebar={hideSidebar} width={width}>
+    <SubPane id={id} fullHeight>
       <Sidebar
         background="transparent"
         width={width}
-        onResize={sidebarStore.handleResize}
+        onResize={appStore.setSidebarWidth}
         minWidth={100}
         maxWidth={500}
         noBorder
       >
-        {elements}
+        {props.hasToolbar && toolbarPadElement}
+        <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
+          {props.children}
+        </ProvideSelectionContext>
+        {props.hasStatusbar && statusbarPadElement}
       </Sidebar>
-    </SidebarContainer>
-  )
-})
-
-const SidebarContainer = gloss(Absolute, {
-  top: 0,
-  left: 0,
-  bottom: 0,
-  overflow: 'hidden',
-  position: 'relative',
-  hideSidebar: {
-    zIndex: -1,
-    pointerEvents: 'none',
-    opacity: 0,
-  },
-})
-
-const SidebarSubPane = memo(function SidebarSubPane(props: {
-  id: string
-  identifier: string
-  sidebarStore: SidebarStore
-  hasMain: boolean
-}) {
-  const { orbitStore } = useStores()
-  const { id, identifier, sidebarStore, hasMain } = props
-
-  const handleAppRef = state => {
-    if (isEqual(state, sidebarStore.indexViews[id])) return
-    sidebarStore.indexViews[id] = state
-  }
-
-  useEffect(() => {
-    return () => {
-      console.log('shouldnt unmount', id, props.id)
-    }
-  }, [])
-
-  return (
-    <SubPane id={id} fullHeight padding={!hasMain ? [25, 80] : 0}>
-      <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
-        <AppView
-          key={id}
-          id={id}
-          identifier={identifier}
-          viewType="index"
-          ref={handleAppRef}
-          before={<OrbitToolBarHeight identifier={identifier} />}
-          after={<OrbitStatusBarHeight identifier={identifier} />}
-        />
-      </ProvideSelectionContext>
     </SubPane>
   )
 })

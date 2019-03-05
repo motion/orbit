@@ -1,6 +1,5 @@
-import { AppView } from '@mcro/kit'
+import { AppProps, AppView } from '@mcro/kit'
 import * as React from 'react'
-import { AppProps } from '../AppProps'
 import { ManageApps } from './ManageApps'
 
 export function AppsMainSetup(props: AppProps) {

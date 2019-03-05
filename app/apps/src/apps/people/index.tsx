@@ -1,0 +1,16 @@
+import { App, AppProps, createApp } from '@mcro/kit'
+import React from 'react'
+import { PeopleAppIndex } from './PeopleAppIndex'
+import { PeopleAppMain } from './PeopleAppMain'
+
+export default createApp({
+  id: 'people',
+  name: 'People',
+  icon: 'person',
+  itemType: 'person',
+  app: (props: AppProps) => (
+    <App index={<PeopleAppIndex />}>
+      <PeopleAppMain {...props} />
+    </App>
+  ),
+})

@@ -1,20 +1,17 @@
-import { Contents, View } from '@mcro/gloss'
+import { Contents } from '@mcro/gloss'
 import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
+import { capitalize } from 'lodash'
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
-import { useApp } from '../hooks/useApp'
-import { useAppView } from '../hooks/useAppView'
+import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
-import { ProvideStores } from './ProvideStores'
+import { AppViewsContext } from './App'
 
 export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
   id?: string
   identifier: string
   appStore?: AppStore
-  after?: React.ReactNode
-  before?: React.ReactNode
-  inside?: React.ReactNode
 }
 
 export type AppViewRef = {
@@ -45,8 +42,10 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
   )
 }
 
+const ChildrenOnly = props => props.children
+
 export const AppView = memoIsEqualDeep(
-  forwardRef<AppViewRef, AppViewProps>(function AppView({ before, after, inside, ...props }, ref) {
+  forwardRef<AppViewRef, AppViewProps>(function AppView(props, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
 
     if (!props.identifier) {
@@ -54,36 +53,41 @@ export const AppView = memoIsEqualDeep(
       throw new Error('No app id')
     }
 
-    const { views, appStore, provideStores } = useApp(props.identifier, props.id)
-    const AppViewAlt = useAppView(props.identifier, props.viewType as any)
-    const AppView = views[props.viewType] || AppViewAlt
+    const definition = getAppDefinition(props.identifier)
+    let View = null
+
+    if (props.viewType === 'setup' || props.viewType === 'settings') {
+      View = definition[props.viewType]
+    } else {
+      const RenderApp = definition.app
+      const context = { [capitalize(props.viewType)]: ChildrenOnly } as any
+      View = props => (
+        <AppViewsContext.Provider value={context}>
+          <RenderApp {...props} />
+        </AppViewsContext.Provider>
+      )
+    }
+
+    if (!View) {
+      console.warn('no view', props, definition)
+      return null
+    }
 
     // handle ref
     useHandleAppViewRef(ref, rootRef)
 
-    if (!AppView) {
-      return null
+    const element = (
+      <Contents ref={rootRef}>
+        <View {...props} />
+      </Contents>
+    )
+
+    // small rendering for index views
+    if (props.viewType === 'index') {
+      return <ItemPropsProviderSmall>{element}</ItemPropsProviderSmall>
     }
 
-    function getAppElement() {
-      const appElement = (
-        <Contents ref={rootRef}>
-          {before || null}
-          <View position="relative" overflow="hidden" flex={1}>
-            {inside}
-            <AppView appStore={appStore} {...props} />
-          </View>
-          {after || null}
-        </Contents>
-      )
-      // small rendering for index views
-      if (props.viewType === 'index') {
-        return <ItemPropsProviderSmall>{appElement}</ItemPropsProviderSmall>
-      }
-      // regular rendering for others
-      return appElement
-    }
-
-    return <ProvideStores stores={{ ...provideStores, appStore }}>{getAppElement()}</ProvideStores>
+    // regular rendering for others
+    return element
   }),
 )

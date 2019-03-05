@@ -8,6 +8,15 @@ export class AppStore {
   props: Pick<AppProps, 'id' | 'isActive'>
   stores = useHook(useStoresSimple)
 
+  history = []
+  currentItems = []
+  selectedIndex = -1
+  sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+
+  setSidebarWidth = next => {
+    this.sidebarWidth = next
+  }
+
   get id() {
     return this.props.id
   }
@@ -39,6 +48,18 @@ export class AppStore {
       deferFirstRun: true,
     },
   )
+
+  getCurrentItems = () => {
+    return this.currentItems
+  }
+
+  setCurrentItems = (items: any[]) => {
+    this.currentItems = items
+  }
+
+  back = () => {}
+
+  forward = () => {}
 
   app = react(() => {
     const numId = +this.id

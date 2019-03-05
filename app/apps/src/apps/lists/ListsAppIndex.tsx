@@ -1,9 +1,6 @@
-import { save } from '@mcro/bridge'
 import { AppProps, getTargetValue, List, useStores } from '@mcro/kit'
-import { AppModel } from '@mcro/models'
 import {
   Absolute,
-  arrayMove,
   BorderBottom,
   Button,
   Input,
@@ -11,54 +8,26 @@ import {
   PassProps,
   preventDefault,
   Row,
-  SelectableTreeList,
   View,
 } from '@mcro/ui'
 import { flow } from 'lodash'
-import React from 'react'
-import { loadListItem } from './helpers'
-import { API } from './ListsApp'
+import React, { useContext } from 'react'
+import { API, ListContext } from '.'
 import { ListStore } from './ListStore'
-import { ListAppDataItem } from './types'
 
 export function ListsAppIndex(_: AppProps) {
+  // const [state, updateState] = useAppState()
+  // const [bits] = useBits({ where: {} })
   return (
     <>
-      {/* Search/add bar */}
       <ListAdd />
-      {/* List items */}
-      <ListCurrentFolder />
-      {/* Search results */}
-      <ListSearchResults />
-    </>
-  )
-}
 
-function ListCurrentFolder() {
-  // @ts-ignore
-  const { listStore } = useStores()
-  const { items, currentFolder } = listStore
-  return (
-    <View flex={1}>
-      <SelectableTreeList
+      <View flex={1}>
+        {/* <TreeList
         sortable
         minSelected={0}
         rootItemID={0}
-        items={items}
-        loadItemProps={(item: ListAppDataItem) => {
-          return loadListItem(item, +listStore.props.id)
-        }}
-        onSortEnd={({ oldIndex, newIndex }) => {
-          const children = arrayMove(currentFolder.children, oldIndex, newIndex)
-          listStore.app.data.items = {
-            ...listStore.app.data.items,
-            [currentFolder.id]: {
-              ...currentFolder,
-              children,
-            },
-          }
-          save(AppModel, listStore.app)
-        }}
+        items={app.data.items}
         getContextMenu={index => {
           return [
             {
@@ -69,16 +38,11 @@ function ListCurrentFolder() {
             },
           ]
         }}
-        onSelect={index => {
-          listStore.selectedIndex = index
-        }}
-        onChangeDepth={(depth, history) => {
-          listStore.depth = depth
-          listStore.history = history
-        }}
-        depth={listStore.depth}
-      />
-    </View>
+      /> */}
+      </View>
+
+      <ListSearchResults />
+    </>
   )
 }
 
@@ -91,8 +55,8 @@ const addFolder = (store: ListStore) => {
 }
 
 function ListAdd() {
-  // @ts-ignore
-  const { listStore } = useStores()
+  const { listStore } = useContext(ListContext)
+  return null
   return (
     <Row position="relative">
       <BorderBottom opacity={0.25} />
@@ -132,6 +96,8 @@ function ListAdd() {
 }
 
 function ListSearchResults() {
+  return null
+
   // @ts-ignore
   const { listStore } = useStores()
   const { searchCollapsed, searchResults, query } = listStore

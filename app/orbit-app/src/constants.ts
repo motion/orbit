@@ -28,6 +28,3 @@ export const SHADOW_PAD = 15
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `${window.location.host}`
 export const API_URL = `${protocol}${API_HOST}`
-
-export const RECENT_HMR = () =>
-  process.env.NODE_ENV === 'development' && Date.now() - window['__lastHMR'] < 700

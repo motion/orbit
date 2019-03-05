@@ -1,5 +1,6 @@
 import {
   AppDefinition,
+  AppProps,
   AppWithDefinition,
   Icon,
   List,
@@ -11,7 +12,6 @@ import {
 import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
-import { AppProps } from '../AppProps'
 import { orbitApps } from '../orbitApps'
 
 function getDescription(def: AppDefinition) {

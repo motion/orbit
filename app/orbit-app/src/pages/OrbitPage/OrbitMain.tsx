@@ -1,73 +1,37 @@
-import { useReaction } from '@mcro/black'
 import { gloss } from '@mcro/gloss'
-import { AppView, SubPane } from '@mcro/kit'
-import React, { memo } from 'react'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
-import { defaultSidebarWidth } from './OrbitSidebar'
-import { OrbitStatusBarHeight } from './OrbitStatusBar'
-import { OrbitToolBarHeight } from './OrbitToolBar'
+import { AppLoadContext, AppSubViewProps, SubPane } from '@mcro/kit'
+import { BorderLeft } from '@mcro/ui'
+import { useReaction } from '@mcro/use-store'
+import React, { memo, useContext } from 'react'
+import { useStoresSimple } from '../../hooks/useStores'
+import { statusbarPadElement } from './OrbitStatusBar'
+import { toolbarPadElement } from './OrbitToolBar'
 
-export const OrbitMain = memo(function OrbitMain() {
-  const { paneManagerStore } = useStores()
-  return (
-    <>
-      {paneManagerStore.panes.map(pane => (
-        <OrbitMainSubPane key={pane.id} id={pane.id} identifier={pane.type} />
-      ))}
-    </>
-  )
-})
+export const OrbitMain = memo((props: AppSubViewProps) => {
+  const { id } = useContext(AppLoadContext)
+  const { orbitStore, appStore } = useStoresSimple()
+  const sidebarWidth = useReaction(() => {
+    return props.hasSidebar ? appStore.sidebarWidth : 0
+  })
+  const appConfig = useReaction(() => {
+    return orbitStore.activeConfig[id] || {}
+  })
 
-type AppPane = { id: string; identifier: string }
-
-const OrbitMainSubPane = memo(({ identifier, id }: AppPane) => {
-  const { sidebarStore, paneManagerStore } = useStoresSimple()
-  const { appsStore } = useStores()
-  const { hasMain } = appsStore.getViewState(identifier)
-
-  const left = useReaction(
-    () => {
-      // 🐛 this wont react if you use getViewState, but useObserver it will 🤷‍♂️
-      const { hasIndex } = appsStore.getViewState(identifier)
-      const isActive = paneManagerStore.activePaneLowPriority.id === id
-      if (isActive) {
-        return hasIndex ? sidebarStore.width : 0
-      }
-    },
-    {
-      defaultValue: defaultSidebarWidth,
-    },
-  )
-
-  if (hasMain === false) {
+  if (!props.children) {
     return null
   }
 
   return (
-    <SubPane left={left} id={id} fullHeight zIndex={10}>
-      <OrbitPageMainView id={id} identifier={identifier} />
-    </SubPane>
-  )
-})
-
-// separate view prevents big re-renders
-const OrbitPageMainView = memo(({ identifier, id }: AppPane) => {
-  const { orbitStore } = useStores()
-  const appConfig = orbitStore.activeConfig[id] || {}
-  return (
-    <>
-      <OrbitToolBarHeight identifier={identifier} />
+    <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
-        <AppView
-          key={JSON.stringify(appConfig)}
-          id={id}
-          identifier={identifier}
-          viewType="main"
-          appConfig={appConfig}
-          after={<OrbitStatusBarHeight identifier={identifier} />}
-        />
+        {props.hasSidebar && <BorderLeft opacity={0.5} />}
+        {props.hasToolbar && toolbarPadElement}
+        {React.cloneElement(props.children, {
+          appConfig,
+        })}
+        {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>
-    </>
+    </SubPane>
   )
 })
 

@@ -1,28 +1,24 @@
 import { always, cancel, ensure, react, useStore } from '@mcro/use-store'
-import React, { forwardRef, useCallback, useEffect } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
+import { useMemoGetValue } from '../hooks/useMemoGetValue'
 import { usePropsWithMemoFunctions } from '../hooks/usePropsWithMemoFunctions'
 import { Omit } from '../types'
 import { ListItemProps } from './ListItem'
 import { SelectableList, SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
-// import { ListAppDataItem, ListAppDataItemFolder, ListsAppData } from ''
 
-// !TODO restore types
-type ListsAppData = {
-  items?: any
-}
-type ListAppDataItem = { type: string }
-type ListAppDataItemFolder = { type: 'folder'; children: number[] }
+type BaseTreeItem = { id: string | number; type: string }
+type TreeItemFolder = BaseTreeItem & { type: 'folder'; children: number[] }
+type TreeItem = BaseTreeItem | TreeItemFolder
 
-type ID = number | string
-
-type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
+export type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
   depth: number
-  onChangeDepth?: (depth: number, history: ID[]) => any
-  rootItemID: ID
-  items: ListsAppData['items']
-  loadItemProps: (item: ListAppDataItem) => Promise<ListItemProps>
+  onChangeDepth?: (depth: number, history: number[]) => void
+  rootItemID: number
+  items: { [key: string]: TreeItem }
+  loadItemProps: (items: TreeItem[]) => Promise<ListItemProps[]>
+  onLoadItems: (items: ListItemProps[]) => any
   selectionStore?: SelectionStore
 }
 
@@ -33,7 +29,7 @@ export type SelectableTreeRef = {
 
 class SelectableTreeListStore {
   props: SelectableTreeListProps & {
-    getItems: () => ListsAppData['items']
+    getItems: () => { [key: string]: TreeItem }
     selectionStore: SelectionStore
   }
 
@@ -65,23 +61,27 @@ class SelectableTreeListStore {
   }
 
   get curFolder() {
-    return this.props.items[this.currentID] as ListAppDataItemFolder
+    return this.props.items[this.currentID] as TreeItemFolder
   }
 
-  childrenItems = react(
+  loadedItems = react(
     () => [this.curFolder, always(this.props.items)],
     async ([curFolder]) => {
       ensure('curFolder', !!curFolder)
       this.ensureValid()
-      const { props } = this
-      return await Promise.all(
-        curFolder.children
-          .filter(x => !!props.items[x])
-          .map(id => props.loadItemProps(props.items[id])),
-      )
+      return await this.props.loadItemProps(curFolder.children.map(x => this.props.items[x]))
     },
     {
       defaultValue: [],
+    },
+  )
+
+  onLoadItemsCallback = react(
+    () => this.loadedItems,
+    () => {
+      if (this.props.onLoadItems) {
+        this.props.onLoadItems(this.loadedItems)
+      }
     },
   )
 
@@ -125,8 +125,7 @@ export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeLi
     const stores = useStores({ optional: ['selectionStore', 'shortcutStore'] })
     const selectionStore =
       props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
-    const getItems = useCallback(() => items, [items])
-    // TODO why does getItems not trigger a change...
+    const getItems = useMemoGetValue(items)
     const store = useStore(SelectableTreeListStore, { selectionStore, items, getItems, ...props })
     const { error } = store
 
@@ -137,20 +136,23 @@ export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeLi
       [store],
     )
 
-    useEffect(function handleShortcuts() {
-      if (selectionStore && stores.shortcutStore) {
-        return stores.shortcutStore.onShortcut(shortcut => {
-          switch (shortcut) {
-            case 'left':
-              store.back()
-              return
-            case 'right':
-              store.handleOpen(selectionStore.activeIndex)
-              break
-          }
-        })
-      }
-    }, [])
+    useEffect(
+      () => {
+        if (selectionStore && stores.shortcutStore) {
+          return stores.shortcutStore.onShortcut(shortcut => {
+            switch (shortcut) {
+              case 'left':
+                store.back()
+                return
+              case 'right':
+                store.handleOpen(selectionStore.activeIndex)
+                break
+            }
+          })
+        }
+      },
+      [selectionStore, stores.shortcutStore],
+    )
 
     return (
       <>
@@ -160,7 +162,7 @@ export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeLi
             {...props}
             selectionStore={selectionStore}
             onOpen={store.handleOpen}
-            items={store.childrenItems}
+            items={store.loadedItems}
           />
         )}
       </>

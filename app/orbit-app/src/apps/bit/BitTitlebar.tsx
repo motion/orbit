@@ -1,5 +1,5 @@
 import { gloss, Row } from '@mcro/gloss'
-import { NormalItem, SearchItemShareProvide } from '@mcro/kit'
+import { normalizeItem, SearchItemShareProvide } from '@mcro/kit'
 import { Bit } from '@mcro/models'
 import {
   HorizontalSpace,
@@ -15,10 +15,10 @@ import * as React from 'react'
 export class BitTitleBar extends React.Component<{
   searchBar: any
   bit: Bit
-  normalizedItem: NormalItem
 }> {
   render() {
-    const { bit, searchBar, normalizedItem } = this.props
+    const { bit, searchBar } = this.props
+    const normalizedItem = normalizeItem(bit)
     return (
       <ToolbarChrome>
         {searchBar}

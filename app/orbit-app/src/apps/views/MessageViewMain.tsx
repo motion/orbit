@@ -1,10 +1,12 @@
-import { Icon } from '@mcro/kit'
+import { AppProps, Icon } from '@mcro/kit'
 import { Center, PassProps, Title, VerticalSpace } from '@mcro/ui'
 import React from 'react'
-import { AppProps } from '../AppProps'
 
 export function MessageViewMain({ appConfig }: AppProps) {
   const { title, icon } = appConfig
+  if (!title) {
+    return null
+  }
   return (
     <Center>
       <Title size={title.length > 40 ? 1.4 : 2.2}>{title}</Title>

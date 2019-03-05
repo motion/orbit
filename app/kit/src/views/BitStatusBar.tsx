@@ -9,6 +9,7 @@ import {
   View,
 } from '@mcro/ui'
 import * as React from 'react'
+import { normalizeItem } from '../helpers/normalizeItem'
 import { AppBitMainProps } from '../types/AppDefinition'
 
 const Cmd = gloss({
@@ -16,7 +17,8 @@ const Cmd = gloss({
   marginLeft: 4,
 })
 
-export const BitStatusBar = ({ normalizedItem /* , item */ }: AppBitMainProps) => {
+export const BitStatusBar = ({ item }: AppBitMainProps) => {
+  const normalizedItem = normalizeItem(item)
   const { location /* , locationLink */, updatedAt } = normalizedItem
   return (
     <StatusBar>

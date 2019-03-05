@@ -1,4 +1,3 @@
-import { AppStore } from '../stores/AppStore'
 import { AppConfig } from './AppConfig'
 
 export type AppProps = {
@@ -6,6 +5,5 @@ export type AppProps = {
   id?: string
   viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   title?: string
-  appStore: AppStore
   isActive?: boolean | (() => boolean)
 }

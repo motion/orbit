@@ -1,4 +1,4 @@
-import { AppView, getAppDefinition } from '@mcro/kit'
+import { AppView, getAppDefinition, Icon } from '@mcro/kit'
 import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme } from '@mcro/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
@@ -13,6 +13,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
     <Section>
       <TitleRow
         bordered
+        before={<Icon name={props.identifier} size={24} />}
         after={
           <>
             {!hasSetup && def.sync && (
@@ -68,5 +69,5 @@ export function AppsMainAddApp(props: { identifier: string }) {
 }
 
 function SubItem(props: ButtonProps) {
-  return <Button chromeless {...props} />
+  return <Button chromeless fontWeight={500} {...props} />
 }

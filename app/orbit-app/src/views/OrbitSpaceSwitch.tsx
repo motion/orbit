@@ -8,6 +8,7 @@ import { useHook, useStore } from '@mcro/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
 import avatar from '../../public/images/nate.jpg'
+import { useLocationLink } from '../stores/LocationStore'
 import FocusableShortcutHandler from './FocusableShortcutHandler'
 
 class SpaceSwitchStore {
@@ -63,6 +64,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const activeSpaceId = (user && user.activeSpace) || -1
   const [activeSpace] = useActiveSpace()
   const [spaces] = useModels(SpaceModel, {})
+  const accountLink = useLocationLink('settings?id=account')
 
   if (!activeSpace) {
     return null
@@ -108,6 +110,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
                 iconBefore
                 title={user.name}
                 subtitle="Active"
+                onClick={accountLink}
               />
             ) : (
               <div>No spaces</div>

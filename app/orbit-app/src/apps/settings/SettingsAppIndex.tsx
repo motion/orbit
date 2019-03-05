@@ -7,7 +7,7 @@ export function SettingsAppIndex() {
     items: [
       {
         group: 'Settings',
-        subType: 'general',
+        id: 'general',
         title: 'General',
         icon: 'gear',
         iconBefore: true,
@@ -15,7 +15,7 @@ export function SettingsAppIndex() {
       },
       {
         group: 'Settings',
-        subType: 'account',
+        id: 'account',
         title: 'Account',
         icon: 'users_badge',
         iconBefore: true,

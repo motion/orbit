@@ -1,8 +1,9 @@
-import { useStoreSimple } from '@mcro/use-store'
+import { useStore } from '@mcro/use-store'
 import React from 'react'
 import { configure } from '../helpers/configure'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { MergeContext } from '../helpers/MergeContext'
+import { useStores } from '../helpers/useStores'
 import { Omit } from '../types'
 import { SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
@@ -12,13 +13,10 @@ export type SelectionStoreProps = Omit<SelectableListProps, 'items'> & {
 }
 
 export type SelectionGroup = {
-  name?: string
   shouldAutoSelect?: boolean
-  indices: number[]
-  items?: any[] // optionally store full items...
+  items: { id?: any; index: number }[]
   type: 'row' | 'column'
   startIndex?: number
-  [key: string]: any
 }
 
 export enum Direction {
@@ -30,6 +28,7 @@ export enum Direction {
 
 export type MovesMap = {
   index: number
+  id: any
   shouldAutoSelect?: boolean
   moves?: Direction[]
 }
@@ -39,8 +38,16 @@ export enum SelectEvent {
   click = 'click',
 }
 
+// either uses one above it or uses a new one
+// for now its dangerous, conditional hooks
+// todo make it less dangerous
+// though, you shouldn't probably be changing this out in context
 export function useSelectionStore(props: SelectionStoreProps) {
-  return useStoreSimple(SelectionStore, props)
+  const stores = useStores({ optional: ['selectionStore', 'appStore'] })
+  const selectionStore = props.createNewSelectionStore
+    ? useStore(SelectionStore, props)
+    : props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+  return selectionStore
 }
 
 export const ProvideSelectionStore = memoIsEqualDeep(

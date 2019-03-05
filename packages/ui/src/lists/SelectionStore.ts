@@ -70,6 +70,16 @@ export class SelectionStore {
     }
   }
 
+  moveToId = (id: any) => {
+    const move = this.movesMap.find(x => x.id === id)
+    if (!move) {
+      console.warn('Not found', id, this.movesMap)
+      return
+    }
+    console.log('moving to', move)
+    this.setSelected(move.index)
+  }
+
   move = (direction: Direction, selectEvent = SelectEvent.key) => {
     if (!this.movesMap) {
       console.log('no SelectionStore.movesMap')
@@ -154,7 +164,7 @@ export class SelectionStore {
     this.selectEvent = val
   }
 
-  setResults = (resultGroups: SelectionGroup[]) => {
+  setSelectionResults = (resultGroups: SelectionGroup[]) => {
     // no results
     if (!resultGroups) {
       this.movesMap = null
@@ -166,15 +176,16 @@ export class SelectionStore {
     // calculate moves
     const numGroups = resultGroups.length
     for (const [groupIndex, selectionResult] of resultGroups.entries()) {
-      const { indices, type, shouldAutoSelect } = selectionResult
+      const { items, type, shouldAutoSelect } = selectionResult
       if (type === 'row') {
         const downMoves = groupIndex < numGroups ? [Direction.down, Direction.up] : [Direction.up]
-        const nextMoves = indices.map(index => ({
-          index,
+        const nextMoves = items.map(move => ({
+          id: move.id,
+          index: move.index,
           shouldAutoSelect,
           moves: [
-            index < indices.length - 1 ? Direction.right : null,
-            index > 0 ? Direction.left : null,
+            move.index < items.length - 1 ? Direction.right : null,
+            move.index > 0 ? Direction.left : null,
             ...downMoves,
           ].filter(Boolean),
         }))
@@ -182,15 +193,15 @@ export class SelectionStore {
       }
       if (type === 'column') {
         const hasPrevResults = !!results.length
-        const nextMoves = indices.map((_, index) => {
+        const nextMoves = items.map(({ id, index }) => {
           const moves = []
-          if (index < indices.length - 1) {
+          if (index < moves.length - 1) {
             moves.push(Direction.down)
           }
           if (hasPrevResults || index > 0) {
             moves.push(Direction.up)
           }
-          return { moves, index }
+          return { moves, index, id }
         })
         results = [...results, ...nextMoves]
       }

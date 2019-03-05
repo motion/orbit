@@ -14,9 +14,10 @@ import {
   SpaceStore,
   ThemeStore,
   useActiveSyncApps,
+  useIsAppActive,
 } from '@mcro/kit'
 import { CloseAppCommand } from '@mcro/models'
-import { Theme } from '@mcro/ui'
+import { SelectionStore, Theme } from '@mcro/ui'
 import { useStore, useStoreSimple } from '@mcro/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
@@ -25,6 +26,7 @@ import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutH
 import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
+import { useAppLocationEffects } from '../../effects/useAppLocationEffects'
 import { useUserEffects } from '../../effects/userEffects'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useActions } from '../../hooks/useActions'
@@ -184,7 +186,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         <InnerChrome torn={orbitStore.isTorn}>
           <OrbitContentArea>
             {stableSortedApps.map(app => (
-              <RenderApp key={app.id} id={app.id} identifier={app.identifier} />
+              <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />
             ))}
           </OrbitContentArea>
         </InnerChrome>
@@ -193,25 +195,40 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 })
 
-const RenderApp = ({ id, identifier }) => {
+const OrbitApp = ({ id, identifier }) => {
+  const appStore = useStoreSimple(AppStore, { id })
+  const isActive = useIsAppActive()
+  const selectionStore = useStoreSimple(SelectionStore, { isActive })
+  return (
+    <ProvideStores stores={{ selectionStore, appStore }}>
+      <OrbitAppRender id={id} identifier={identifier} />
+    </ProvideStores>
+  )
+}
+
+function OrbitAppRender({ id, identifier }) {
   const { app } = getAppDefinition(identifier)
+
   if (!app) {
+    console.warn('no app')
     return null
   }
-  const appStore = useStoreSimple(AppStore, { id })
+
   const App = app
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
+
+  // handle url changes
+  useAppLocationEffects()
+
   return (
-    <ProvideStores stores={{ appStore }}>
-      <AppLoadContext.Provider value={{ id, identifier }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
-          <App />
-        </AppViewsContext.Provider>
-      </AppLoadContext.Provider>
-    </ProvideStores>
+    <AppLoadContext.Provider value={{ id, identifier }}>
+      <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
+        <App />
+      </AppViewsContext.Provider>
+    </AppLoadContext.Provider>
   )
 }
 

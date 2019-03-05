@@ -8,7 +8,7 @@ export function SettingsAppMain(props: AppProps) {
     return null
   }
 
-  switch (props.appConfig.subType) {
+  switch (props.appConfig.id) {
     case 'general':
       return <SettingsAppGeneral {...props} />
     case 'account':

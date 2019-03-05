@@ -16,7 +16,6 @@ import {
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useActiveQuery } from '../hooks/useActiveQuery'
-import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppConfig } from '../types/AppConfig'
@@ -61,6 +60,7 @@ export type HandleOrbitSelect = ((
 ) => any)
 
 export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
+  isActive?: boolean
   query?: string
   items?: (Bit | OrbitListItemProps)[]
   onSelect?: HandleOrbitSelect
@@ -74,7 +74,6 @@ export function List(rawProps: ListProps) {
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...props } = rawProps
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
-  const isActive = useIsAppActive()
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGetter = useMemoGetValue(getItemProps || nullFn)
   const getItems = useMemoGetValue(items)
@@ -141,12 +140,7 @@ export function List(rawProps: ListProps) {
     [onOpen, selectableProps],
   )
 
-  selectionStore = useSelectionStore({
-    ...props,
-    onOpen: onOpenInner,
-    onSelect: onSelectInner,
-    isActive,
-  })
+  selectionStore = useSelectionStore(props)
   selectionStoreRef.current = selectionStore
 
   const hasItems = !!items.length
@@ -156,7 +150,7 @@ export function List(rawProps: ListProps) {
       <HighlightActiveQuery query={query}>
         {hasItems && (
           <SelectableList
-            allowMeasure={isActive}
+            allowMeasure={props.isActive}
             items={items}
             ItemView={ListItem}
             isRowLoaded={isRowLoaded}

@@ -57,7 +57,7 @@ function AppLoadView({ id, identifier, store }: AppLoaderProps) {
   const appDefinition = getAppDefinition(identifier)
   const appAppRef = useRef(appDefinition.app)
   const AppApp = appAppRef.current
-  const appViewProps = { id }
+  const appViewProps = { id, identifier }
   const appStore = useStoreSimple(AppStore, appViewProps)
 
   useEffect(() => {

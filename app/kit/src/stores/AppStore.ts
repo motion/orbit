@@ -5,7 +5,7 @@ import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
 
 export class AppStore {
-  props: Pick<AppProps, 'id' | 'isActive'>
+  props: { id: string; identifier: string; isActive: AppProps['isActive'] }
   stores = useHook(useStoresSimple)
 
   history = []
@@ -17,23 +17,22 @@ export class AppStore {
     this.sidebarWidth = next
   }
 
+  get identifier() {
+    return this.props.identifier
+  }
+
   get id() {
     return this.props.id
   }
 
   get isActive() {
-    const { id, isActive } = this.props
+    const { isActive } = this.props
     if (typeof isActive === 'boolean') {
       return isActive
     }
     if (typeof isActive === 'function') {
       return isActive()
     }
-    const { paneManagerStore } = this.stores
-    if (paneManagerStore) {
-      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
-    }
-    console.warn('no active prop or paneManagerStore', this.stores, this.props)
     return false
   }
 

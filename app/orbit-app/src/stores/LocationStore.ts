@@ -1,25 +1,29 @@
+import { isEqual } from '@mcro/fast-compare'
 import { useReaction } from '@mcro/use-store'
+import { fromEntries } from '@mcro/utils'
 import { useStoresSimple } from '../hooks/useStores'
 
-type Query = {
-  key: string
-  value: string
-}
+type URLSource = 'link' | 'internal'
 
 type URLState = {
   basename: string
-  query: Query[]
+  query: { [key: string]: string }
   at: number
+  source: URLSource
 }
 
 export class LocationStore {
   history: URLState[] = []
 
-  get current() {
+  get url() {
     return this.history[this.history.length - 1]
   }
 
-  push = (url: URLState) => {
+  go = (url: URLState) => {
+    if (isEqual(url, this.url)) {
+      console.warn('already on url...')
+      return
+    }
     this.history = [...this.history, url]
   }
 
@@ -28,7 +32,7 @@ export class LocationStore {
   }
 }
 
-export function parseUrl(url: string): URLState {
+export function parseUrl(url: string, source: URLSource): URLState {
   const basenameMatch = url.match(/(app:\/\/)?([a-z]+)[\/\?]?/i)
   const basename = basenameMatch && basenameMatch.length == 3 ? basenameMatch[2] : ''
   if (!basename) {
@@ -37,24 +41,24 @@ export function parseUrl(url: string): URLState {
   const queryMatch = url.match(/\?.*/)
   const query =
     (queryMatch &&
-      queryMatch[0]
-        .slice(1)
-        .split('&')
-        .map(query => {
-          const [key, value] = query.split('=')
-          return { key, value }
-        })) ||
-    []
+      fromEntries(
+        queryMatch[0]
+          .slice(1)
+          .split('&')
+          .map(query => query.split('=')),
+      )) ||
+    {}
   return {
     basename,
     query,
     at: Date.now(),
+    source,
   }
 }
 
 export function useLocationEffect(fn: (url: URLState) => void) {
   const { locationStore } = useStoresSimple()
-  useReaction(() => locationStore.current, fn)
+  useReaction(() => locationStore.url, fn)
 }
 
 export function useLocationLink(url: string, stopPropagation = false) {
@@ -64,7 +68,6 @@ export function useLocationLink(url: string, stopPropagation = false) {
       e.stopPropagation()
       e.preventDefault()
     }
-    console.log('Clicking link', url)
-    locationStore.push(parseUrl(url))
+    locationStore.go(parseUrl(url, 'link'))
   }
 }

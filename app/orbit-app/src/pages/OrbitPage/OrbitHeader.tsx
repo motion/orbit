@@ -13,7 +13,7 @@ import {
 } from '@mcro/ui'
 import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
-import { useStores } from '../../hooks/useStores'
+import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { WindowControls } from '../../views/WindowControls'
 import OrbitHeaderInput from './OrbitHeaderInput'
@@ -272,6 +272,8 @@ const LinkButton = memo(() => {
 })
 
 const BackButton = memo(() => {
+  const { locationStore } = useStoresSimple()
+
   return (
     <View width={40} marginLeft={-40} padding={[0, 10]}>
       <Button
@@ -282,6 +284,9 @@ const BackButton = memo(() => {
         icon="arrowminleft"
         iconSize={22}
         opacity={0.25}
+        onClick={() => {
+          locationStore.back()
+        }}
       />
     </View>
   )

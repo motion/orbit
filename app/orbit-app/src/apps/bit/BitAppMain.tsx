@@ -1,5 +1,5 @@
 import { useModel } from '@mcro/bridge'
-import { AppProps, HighlightedSearchable, normalizeItem } from '@mcro/kit'
+import { AppProps, HighlightedSearchable, ItemView } from '@mcro/kit'
 import { BitModel } from '@mcro/models'
 import { ItemPropsProvider } from '@mcro/ui'
 import * as React from 'react'
@@ -22,15 +22,14 @@ export function BitAppMain(props: AppProps) {
   if (!bit) {
     return null
   }
-  const normalizedItem = normalizeItem(bit)
+
   return (
     <ItemPropsProvider value={defaultItemProps}>
       <HighlightedSearchable>
         {({ searchBar }) => (
           <>
-            <BitTitleBar bit={bit} normalizedItem={normalizedItem} searchBar={searchBar} />
-            {/* !TODO */}
-            {/* <MediaView item={bit} normalizedItem={normalizedItem} {...props} /> */}
+            <BitTitleBar bit={bit} searchBar={searchBar} />
+            <ItemView item={bit} />
           </>
         )}
       </HighlightedSearchable>

@@ -33,10 +33,10 @@ function AppContainerInner(props: AppElements) {
 
   return (
     <>
-      <Statusbar />
-      <Main />
-      <Sidebar />
-      <Toolbar />
+      <Statusbar>{props.statusBar}</Statusbar>
+      <Main>{props.children}</Main>
+      <Sidebar>{props.index}</Sidebar>
+      <Toolbar>{props.toolBar}</Toolbar>
     </>
   )
 }

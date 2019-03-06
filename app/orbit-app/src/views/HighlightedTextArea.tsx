@@ -170,6 +170,7 @@ export class HighlightedTextArea extends React.Component<Props> {
           alignSelf="flex-start"
           WebkitAppRegion="no-drag"
           zIndex={0}
+          opacity={0}
         >
           {this.state.value}
         </UI.View>

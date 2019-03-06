@@ -239,19 +239,17 @@ const LaunchButton = memo(() => {
         clearTimeout(tm.current)
         setHovered(false)
       }}
-      tooltip="Persist app onto desktop"
+      tooltip="Open app (⌘ + ⏎)"
       sizeHeight={0.95}
       sizeRadius={2}
       onClick={Actions.tearApp}
-      width={80}
+      width={50}
     >
       {!isHovered ? (
-        <Text fontWeight={500} alpha={0.9}>
-          Open
-        </Text>
+        <Icon name="arrows-e_share-26" size={11} transform={{ x: -1.5 }} />
       ) : (
         <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
-          ⌘ ⏎
+          Open
         </Text>
       )}
     </Button>
@@ -264,10 +262,10 @@ const LinkButton = memo(() => {
     <Button
       sizeHeight={0.95}
       sizePadding={1.2}
-      tooltip={`Copy link: ${locationStore.urlString}`}
+      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
       sizeRadius={2}
       icon="link69"
-      iconSize={12}
+      iconSize={10}
     />
   )
 })

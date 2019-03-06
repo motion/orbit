@@ -19,6 +19,15 @@ export class LocationStore {
     return this.history[this.history.length - 1]
   }
 
+  get urlString() {
+    let res = `app://${this.url.basename}`
+    const queries = Object.entries(this.url.query)
+    if (queries.length) {
+      res = `${res}/?${queries.map(([k, v]) => `${k}=${v}`).join('')}`
+    }
+    return res
+  }
+
   go = (url: URLState) => {
     if (isEqual(url, this.url)) {
       console.warn('already on url...')

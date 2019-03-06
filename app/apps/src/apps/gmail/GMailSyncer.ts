@@ -1,30 +1,33 @@
 import { AppEntity, Bit, BitEntity } from '@mcro/models'
+import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
 import { sleep } from '@mcro/utils'
 import { chunk } from 'lodash'
 import { In } from 'typeorm'
-import { GMailMessageParser } from './GMailMessageParser'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
-import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
 import { GmailAppData } from './GmailAppData'
+import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
 import { GMailLoader } from './GMailLoader'
+import { GMailMessageParser } from './GMailMessageParser'
 import { GMailThread } from './GMailTypes'
 
 /**
  * Syncs GMail.
  */
 export const GMailSyncer = createSyncer(async ({ app, log }) => {
-
   const data: GmailAppData = app.data
-  const loader = new GMailLoader(app, log, source => getEntityManager().getRepository(AppEntity).save(source))
+  const loader = new GMailLoader(app, log, source =>
+    getEntityManager()
+      .getRepository(AppEntity)
+      .save(source),
+  )
 
   /**
    * Handles a single thread.
    */
   const handleThread = async (
-      thread: GMailThread,
-      cursor?: string,
-      loadedCount?: number,
-      isLast?: boolean,
+    thread: GMailThread,
+    cursor?: string,
+    loadedCount?: number,
+    isLast?: boolean,
   ) => {
     const lastSync = data.values.lastSync
 
@@ -33,7 +36,9 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSync.lastCursorHistoryId) {
       lastSync.lastCursorHistoryId = thread.historyId
       log.info('looks like its the first syncing thread, set history id', lastSync)
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
     }
 
     // sync a thread
@@ -49,7 +54,9 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       lastSync.lastCursor = undefined
       lastSync.lastCursorHistoryId = undefined
       lastSync.lastCursorLoadedCount = undefined
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
       return true
     }
 
@@ -58,7 +65,9 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       log.info('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
       lastSync.lastCursorLoadedCount = loadedCount
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
     }
 
     return true
@@ -77,8 +86,12 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     bit.people = participants.map(participant => createPersonBit(participant))
 
     log.verbose('syncing', { thread, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit.people, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit, { listeners: false })
   }
 
   /**
@@ -150,7 +163,7 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       {
         appIdentifier: 'gmail',
         appId: app.id,
-        type: 'mail',
+        type: 'thread',
         title,
         body,
         data: {
@@ -187,21 +200,25 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
 
   // load person because we need emails that we want to whitelist
   log.info('loading person bits')
-  const people = await getEntityManager().getRepository(BitEntity).find({
-    where: {
-      type: 'person',
-      appIdentifier: ['slack', 'github', 'drive', 'jira', 'confluence'],
-    },
-  })
+  const people = await getEntityManager()
+    .getRepository(BitEntity)
+    .find({
+      where: {
+        type: 'person',
+        appIdentifier: ['slack', 'github', 'drive', 'jira', 'confluence'],
+      },
+    })
   log.info('person bits were loaded', people)
   const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
   log.info('emails from the person bits', emails)
 
   // next we find all gmail Apps to add those emails to their whitelists
   log.info('loading gmail Apps')
-  const Apps = await getEntityManager().getRepository(AppEntity).find({
-    where: { identifier: 'gmail' },
-  })
+  const Apps = await getEntityManager()
+    .getRepository(AppEntity)
+    .find({
+      where: { identifier: 'gmail' },
+    })
   log.info('loaded gmail Apps', Apps)
 
   // update whitelist settings in Apps
@@ -217,7 +234,9 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       }
     }
     values.whitelist = whitelist
-    await getEntityManager().getRepository(AppEntity).save(App)
+    await getEntityManager()
+      .getRepository(AppEntity)
+      .save(App)
   }
   log.info('newly whitelisted emails', newWhiteListedEmails)
 
@@ -231,8 +250,7 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
   if (!data.values.daysLimit) data.values.daysLimit = 330
 
   // setup some local variables we are gonna work with
-  const queryFilter =
-    data.values.filter || `newer_than:${data.values.daysLimit}d`
+  const queryFilter = data.values.filter || `newer_than:${data.values.daysLimit}d`
   let lastSync = data.values.lastSync
 
   // update last sync configuration
@@ -240,20 +258,23 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
   lastSync.usedQueryFilter = queryFilter
   lastSync.usedDaysLimit = data.values.daysLimit
   lastSync.usedMax = data.values.max
-  await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+  await getEntityManager()
+    .getRepository(AppEntity)
+    .save(app, { listeners: false })
 
   // if user configuration has changed (max number of messages, days limitation or query filter)
   // we drop all bits to make complete sync again
   if (
     (lastSync.usedMax !== undefined && data.values.max !== lastSync.usedMax) ||
     (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
-    (lastSync.usedDaysLimit !== undefined &&
-      data.values.daysLimit !== lastSync.usedDaysLimit)
+    (lastSync.usedDaysLimit !== undefined && data.values.daysLimit !== lastSync.usedDaysLimit)
   ) {
     log.info(
       'last syncronization configuration mismatch, dropping bits and start sync from scratch',
     )
-    await getEntityManager().getRepository(BitEntity).delete({ appId: app.id }) // todo: drop people as well
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .delete({ appId: app.id }) // todo: drop people as well
     data.values.lastSync = lastSync = {}
   }
 
@@ -293,18 +314,24 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     // load bits for removed threads and remove them
     if (history.removedThreadIds.length) {
       log.info('found actions in history for thread removals', history.removedThreadIds)
-      const removedBits = await getEntityManager().getRepository(BitEntity).find({
-        appId: app.id,
-        id: In(history.removedThreadIds.map(threadId => BitUtils.id(app, threadId))),
-      })
+      const removedBits = await getEntityManager()
+        .getRepository(BitEntity)
+        .find({
+          appId: app.id,
+          id: In(history.removedThreadIds.map(threadId => BitUtils.id(app, threadId))),
+        })
       log.info('found bits to be removed, removing', removedBits)
-      await getEntityManager().getRepository(BitEntity).remove(removedBits) // todo: we also need to remove people
+      await getEntityManager()
+        .getRepository(BitEntity)
+        .remove(removedBits) // todo: we also need to remove people
     } else {
       log.info('no removed messages in history were found')
     }
 
     lastSync.historyId = history.historyId
-    await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+    await getEntityManager()
+      .getRepository(AppEntity)
+      .save(app, { listeners: false })
   } else {
     // else this is a first time sync, load all threads
     log.timer('sync all threads')
@@ -346,5 +373,4 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       log.info('no enabled people in whitelist were found')
     }
   }
-  
 })

@@ -5,27 +5,17 @@ import { configureUseStore } from '@mcro/use-store'
 import { configure as configureMobx } from 'mobx'
 import { StoreContext } from './contexts'
 
-// run these only once, and avoid HMR above it
 function configure() {
-  const hasConfigured = window['hasConfigured']
-  window['hasConfigured'] = true
-
   // stuff here will be re-run every save in development
   // so be sure it wants to run over and over
-
-  console.log(
-    '123',
-    require('./apps/orbitApps')
-      .getApps()
-      .find(x => x.id == 'search')
-      .app.toString(),
-  )
 
   configureKit({
     StoreContext,
     getApps: require('./apps/orbitApps').getApps,
   })
 
+  const hasConfigured = window['hasConfigured']
+  window['hasConfigured'] = true
   if (hasConfigured) {
     return
   }

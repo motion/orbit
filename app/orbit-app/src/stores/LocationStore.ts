@@ -16,10 +16,13 @@ export class LocationStore {
   history: URLState[] = []
 
   get url() {
-    return this.history[this.history.length - 1]
+    return this.history[this.history.length - 1] || null
   }
 
   get urlString() {
+    if (!this.url) {
+      return ''
+    }
     let res = `app://${this.url.basename}`
     const queries = Object.entries(this.url.query)
     if (queries.length) {

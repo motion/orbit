@@ -5,8 +5,8 @@
   "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc --emitDeclarationOnly || true",
-    "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
+    "build": "tsc || true",
+    "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@mcro/models": "*",

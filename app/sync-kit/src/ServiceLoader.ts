@@ -1,14 +1,84 @@
-import { getGlobalConfig } from '@mcro/config'
 import { Logger } from '@mcro/logger'
 import { AppBit } from '@mcro/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
-import {
-  ServiceLoaderAppSaveCallback,
-  ServiceLoaderDownloadFileOptions,
-  ServiceLoaderLoadOptions,
-} from './ServiceLoaderTypes'
+
+/**
+ * Callback to be executed to save a app.
+ */
+export type ServiceLoaderAppSaveCallback = (app: AppBit) => any
+
+/**
+ * Common type for key-value values like headers, query parameters, etc.
+ */
+export type ServiceLoaderKeyValue = { [key: string]: any }
+
+/**
+ * Options for service loader's load method.
+ */
+export interface ServiceLoaderLoadOptions<_T = any> {
+  /**
+   * Request url. Partial path can be specified in the case if basedUrl was defined in the service loader.
+   */
+  path: string
+
+  /**
+   * Request query params.
+   */
+  query?: ServiceLoaderKeyValue
+
+  /**
+   * Request headers.
+   */
+  headers?: ServiceLoaderKeyValue
+
+  /**
+   * Indicates if cors must be enabled.
+   */
+  cors?: boolean
+
+  /**
+   * Use plain text response instead of json.
+   */
+  plain?: boolean
+
+  /**
+   * Request method. GET by default.
+   */
+  method?: string
+
+  /**
+   * Request body.
+   */
+  body?: string
+}
+
+/**
+ * Options for service loader's downloadFile method.
+ */
+export interface ServiceLoaderDownloadFileOptions<_T = any> {
+  /**
+   * Destination path where file should be written into.
+   */
+  destination: string
+
+  /**
+   * Request url. Partial path can be specified in the case if basedUrl was defined in the service loader.
+   */
+  path: string
+
+  /**
+   * Request query params.
+   */
+  query?: ServiceLoaderKeyValue
+
+  /**
+   * Request headers.
+   */
+  headers?: ServiceLoaderKeyValue
+}
+
 
 /**
  * Loader (fetcher) from service.
@@ -17,11 +87,19 @@ export class ServiceLoader {
   private app: AppBit
   private log: Logger
   private saveCallback?: ServiceLoaderAppSaveCallback
+  private baseUrl: string
+  private headers?: { [name: string]: string }
 
-  constructor(app: AppBit, log: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
+  constructor(app: AppBit, log: Logger, options: {
+    baseUrl: string
+    headers?: { [name: string]: string }
+    saveCallback?: ServiceLoaderAppSaveCallback
+  }) {
     this.app = app
     this.log = log
-    this.saveCallback = saveCallback
+    this.baseUrl = options.baseUrl
+    this.headers = options.headers
+    this.saveCallback = options.saveCallback
   }
 
   /**
@@ -33,9 +111,9 @@ export class ServiceLoader {
   ): Promise<T> {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
-    const url = `${this.buildBaseUrl()}${options.path}${qs}`
+    const url = `${this.baseUrl}${options.path}${qs}`
     const headers: any = {
-      ...this.buildHeaders(),
+      ...this.headers,
       ...(options.headers || {}),
     }
 
@@ -78,9 +156,9 @@ export class ServiceLoader {
   downloadFile(options: ServiceLoaderDownloadFileOptions): Promise<void> {
     // prepare data
     const qs = this.queryObjectToQueryString(options.query)
-    const url = `${this.buildBaseUrl()}${options.path}${qs}`
+    const url = `${this.baseUrl}${options.path}${qs}`
     const headers = {
-      ...this.buildHeaders(),
+      ...this.headers,
       ...(options.headers || {}),
     }
 
@@ -118,6 +196,8 @@ export class ServiceLoader {
 
   /**
    * Refreshes Google API token.
+   *
+   * todo: this is still integration-specific.
    */
   private async refreshGoogleToken(app: AppBit) {
     // check if we have credentials defined
@@ -166,48 +246,6 @@ export class ServiceLoader {
     }
 
     return true
-  }
-
-  /**
-   * Builds base url to make request to.
-   */
-  private buildBaseUrl() {
-    if (this.app.identifier === 'jira' || this.app.identifier === 'confluence') {
-      return this.app.data.values.credentials.domain
-    } else if (this.app.identifier === 'drive') {
-      return 'https://content.googleapis.com/drive/v3'
-    } else if (this.app.identifier === 'github') {
-      return 'https://api.github.com/graphql'
-    } else if (this.app.identifier === 'gmail') {
-      return 'https://www.googleapis.com/gmail/v1'
-    }
-  }
-
-  /**
-   * Builds headers to be included in the main query.
-   */
-  private buildHeaders() {
-    if (this.app.identifier === 'jira' || this.app.identifier === 'confluence') {
-      const { username, password } = this.app.data.values.credentials
-      const credentials = Buffer.from(`${username}:${password}`).toString('base64')
-      return { Authorization: `Basic ${credentials}` }
-    } else if (this.app.identifier === 'drive') {
-      return {
-        Authorization: `Bearer ${this.app.token}`,
-        'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
-        'Access-Control-Allow-Methods': 'GET',
-      }
-    } else if (this.app.identifier === 'github') {
-      return {
-        Authorization: `Bearer ${this.app.token}`,
-      }
-    } else if (this.app.identifier === 'gmail') {
-      return {
-        Authorization: `Bearer ${this.app.token}`,
-        'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
-        'Access-Control-Allow-Methods': 'GET',
-      }
-    }
   }
 
   /**

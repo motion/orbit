@@ -1,15 +1,14 @@
 import { AppBit, Bit } from '@mcro/models'
-import { createBit, sanitizeHtml, stripHtml } from '@mcro/sync-kit'
-import { JiraIssue, JiraUser } from './JiraTypes'
-import { JiraAppData } from './JiraAppData'
-import { JiraBitData } from './JiraBitData'
+import { sanitizeHtml, stripHtml, SyncerUtils } from '@mcro/sync-kit'
+import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
 
 /**
  * Creates bits out of jira models.
  */
 export class JiraBitFactory {
 
-  constructor(private app: AppBit) {
+  constructor(private app: AppBit,
+              private utils: SyncerUtils) {
   }
 
   /**
@@ -18,8 +17,7 @@ export class JiraBitFactory {
   createDocumentBit(issue: JiraIssue, allPeople: Bit[]): Bit {
     const bitCreatedAt = new Date(issue.fields.created).getTime()
     const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = (this.app.data as JiraAppData).values['data']['values']
-    const domain = values.credentials.domain
+    const appData: JiraAppData = this.app.data
     const body = stripHtml(issue.renderedFields.description)
     const cleanHtml = sanitizeHtml(issue.renderedFields.description)
 
@@ -40,49 +38,42 @@ export class JiraBitFactory {
       return person.originalId === issue.fields.creator.accountId
     })
 
+    const data: JiraBitData = {
+      content: cleanHtml,
+    }
+
     // create or update a bit
-    return createBit(
-      {
-        appIdentifier: 'jira',
-        appId: this.app.id,
-        type: 'document',
-        title: issue.fields.summary,
-        body,
-        author,
-        data: {
-          content: cleanHtml,
-        } as JiraBitData,
-        location: {
-          id: issue.fields.project.id,
-          name: issue.fields.project.name,
-          webLink: domain + '/browse/' + issue.fields.project.key,
-          desktopLink: '',
-        },
-        webLink: domain + '/browse/' + issue.key,
-        people,
-        bitCreatedAt,
-        bitUpdatedAt,
+    return this.utils.createBit({
+      type: 'document',
+      originalId: issue.id,
+      title: issue.fields.summary,
+      body,
+      author,
+      data,
+      location: {
+        id: issue.fields.project.id,
+        name: issue.fields.project.name,
+        webLink: appData.values.credentials.domain + '/browse/' + issue.fields.project.key,
+        desktopLink: '',
       },
-      issue.id,
-    )
+      webLink: appData.values.credentials.domain + '/browse/' + issue.key,
+      people,
+      bitCreatedAt,
+      bitUpdatedAt,
+    })
   }
 
   /**
    * Creates person entity from a given Jira user.
    */
   createPersonBit(user: JiraUser): Bit {
-    return createBit(
-      {
-        appIdentifier: 'jira',
-        appId: this.app.id,
-        type: 'person',
-        originalId: user.accountId,
-        title: user.displayName,
-        email: user.emailAddress,
-        photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
-      },
-      user.accountId,
-    )
+    return this.utils.createBit({
+      type: 'person',
+      originalId: user.accountId,
+      title: user.displayName,
+      email: user.emailAddress,
+      photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
+    })
   }
 
 }

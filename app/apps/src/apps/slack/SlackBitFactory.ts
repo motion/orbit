@@ -1,40 +1,42 @@
-import { SlackAttachment, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
-import { SlackBitData } from './SlackBitData'
+import {
+  SlackAppData,
+  SlackAttachment,
+  SlackBitData,
+  SlackChannel,
+  SlackMessage,
+  SlackTeam,
+  SlackUser,
+} from './SlackModels'
 import { AppBit, Bit } from '@mcro/models'
-import { createBit } from '@mcro/sync-kit'
-import { SlackAppData } from './SlackAppData'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
+import { SyncerUtils } from '@mcro/sync-kit'
 
 /**
  * Creates bits out of slack models.
  */
 export class SlackBitFactory {
 
-  constructor(private app: AppBit) {
+  constructor(private app: AppBit,
+              private utils: SyncerUtils) {
   }
 
   /**
    * Creates a single app person from given Slack user.
    */
   createPersonBit(user: SlackUser, team: SlackTeam): Bit {
-    return createBit(
-      {
-        appIdentifier: 'slack',
-        appId: this.app.id,
-        type: 'person',
-        originalId: user.id,
-        title: user.profile.real_name || user.name,
-        webLink: `https://${team.domain}.slack.com/messages/${user.id}`,
-        desktopLink: `slack://user?team=${team.id}&id=${user.id}`,
-        email: user.profile.email,
-        photo: user.profile.image_512,
-        data: {
-          tz: user.tz,
-          team: user.id,
-        },
+    return this.utils.createBit({
+      type: 'person',
+      originalId: user.id,
+      title: user.profile.real_name || user.name,
+      webLink: `https://${team.domain}.slack.com/messages/${user.id}`,
+      desktopLink: `slack://user?team=${team.id}&id=${user.id}`,
+      email: user.profile.email,
+      photo: user.profile.image_512,
+      data: {
+        tz: user.tz,
+        team: user.id,
       },
-      user.id,
-    )
+    })
   }
 
   /**
@@ -79,28 +81,24 @@ export class SlackBitFactory {
       )
     })
 
-    return createBit(
-      {
-        appId: this.app.id,
-        appIdentifier: 'slack',
-        type: 'conversation',
-        title: '', // we will generate title later during bit insertion/updation
-        body: data.messages.map(message => message.text).join(' ... '),
-        data,
-        bitCreatedAt,
-        bitUpdatedAt,
-        people,
-        location: {
-          id: channel.id,
-          name: channel.name,
-          webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
-        },
-        webLink,
-        desktopLink,
+    return this.utils.createBit({
+      type: 'conversation',
+      originalId: channel.id + '_' + firstMessage.ts,
+      title: '', // we will generate title later during bit insertion/updation
+      body: data.messages.map(message => message.text).join(' ... '),
+      data,
+      bitCreatedAt,
+      bitUpdatedAt,
+      people,
+      location: {
+        id: channel.id,
+        name: channel.name,
+        webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
       },
-      channel.id + '_' + firstMessage.ts,
-    )
+      webLink,
+      desktopLink,
+    })
   }
 
   /**
@@ -122,32 +120,28 @@ export class SlackBitFactory {
       )
     })
 
-    return createBit(
-      {
-        appId: this.app.id,
-        appIdentifier: 'slack',
-        type: 'website',
+    return this.utils.createBit({
+      type: 'website',
+      originalId: channel.id + '_' + message.ts + '_' + attachment.id,
+      title: attachment.title,
+      body: attachment.text,
+      data: {
+        url: attachment.original_url,
         title: attachment.title,
-        body: attachment.text,
-        data: {
-          url: attachment.original_url,
-          title: attachment.title,
-          content: '',
-        },
-        bitCreatedAt: messageTime,
-        bitUpdatedAt: messageTime,
-        people,
-        location: {
-          id: channel.id,
-          name: channel.name,
-          webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
-          desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
-        },
-        webLink: attachment.original_url,
-        desktopLink: undefined,
+        content: '',
       },
-      channel.id + '_' + message.ts + '_' + attachment.id,
-    )
+      bitCreatedAt: messageTime,
+      bitUpdatedAt: messageTime,
+      people,
+      location: {
+        id: channel.id,
+        name: channel.name,
+        webLink: `https://${appData.values.team.domain}.slack.com/archives/${channel.id}`,
+        desktopLink: `slack://channel?id=${channel.id}&team=${appData.values.team.id}`,
+      },
+      webLink: attachment.original_url,
+      desktopLink: undefined,
+    })
   }
 
 }

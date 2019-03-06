@@ -1,11 +1,32 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
-import { ServiceLoadThrottlingOptions } from '../../options'
+import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@mcro/sync-kit'
 import { GMailQueries } from './GMailQueries'
-import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
+import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailModels'
 import { AppBit } from '@mcro/models'
+import { getGlobalConfig } from '@mcro/config'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before history list load.
+   */
+  history: 100,
+
+  /**
+   * Delay before threads load.
+   */
+  threads: 100,
+
+  /**
+   * Delay before messages load.
+   */
+  messages: 100,
+
+}
 
 /**
  * Loads data from GMail service.
@@ -18,7 +39,15 @@ export class GMailLoader {
   constructor(app: AppBit, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.app = app
     this.log = log || new Logger('service:gmail:loader:' + this.app.id)
-    this.loader = new ServiceLoader(this.app, this.log, saveCallback)
+    this.loader = new ServiceLoader(this.app, this.log, {
+      saveCallback,
+      baseUrl: 'https://www.googleapis.com/gmail/v1',
+      headers: {
+        Authorization: `Bearer ${this.app.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.serverHost,
+        'Access-Control-Allow-Methods': 'GET',
+      }
+    })
   }
 
   /**
@@ -37,7 +66,7 @@ export class GMailLoader {
    * For example when user receives new messages or removes exist messages.
    */
   async loadHistory(startHistoryId: string, pageToken?: string): Promise<GMailHistoryLoadResult> {
-    await sleep(ServiceLoadThrottlingOptions.gmail.history)
+    await sleep(THROTTLING.history)
 
     // load a history first
     this.log.verbose('loading history', { startHistoryId, pageToken })
@@ -112,7 +141,7 @@ export class GMailLoader {
   }): Promise<void> {
     const loadRecursively = async (pageToken?: string, loadedCount?: number) => {
 
-      await sleep(ServiceLoadThrottlingOptions.gmail.threads)
+      await sleep(THROTTLING.threads)
       let { count, queryFilter, filteredIds, handler } = options
 
       // load all threads first
@@ -202,7 +231,7 @@ export class GMailLoader {
    * Loads thread messages and pushes them into threads.
    */
   async loadMessages(threads: GMailThread[]): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.gmail.messages)
+    await sleep(THROTTLING.messages)
 
     this.log.verbose('loading thread messages', threads)
     await Promise.all(

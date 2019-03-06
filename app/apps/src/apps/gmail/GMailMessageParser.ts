@@ -1,5 +1,4 @@
-import { GMailMessage } from './GMailTypes'
-import { GmailBitDataParticipant } from './GmailBitData'
+import { GmailBitDataParticipant, GMailMessage } from './GMailModels'
 
 const createDOMPurify = require('dompurify')
 const JSDOM = require('jsdom').JSDOM

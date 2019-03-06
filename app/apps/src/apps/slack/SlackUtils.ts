@@ -1,6 +1,5 @@
-import { SlackChannel, SlackMessage } from './SlackTypes'
+import { SlackAppData, SlackChannel, SlackMessage } from './SlackModels'
 import { Bit } from '@mcro/models'
-import { SlackAppData } from './SlackAppData'
 
 const Autolinker = require('autolinker')
 

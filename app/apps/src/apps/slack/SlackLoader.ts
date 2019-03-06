@@ -1,9 +1,31 @@
 import { Logger } from '@mcro/logger'
 import { sleep } from '@mcro/sync-kit'
 import { channels, team, users } from 'slack'
-import { ServiceLoadThrottlingOptions } from '../../options'
-import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
+import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
 import { AppBit } from '@mcro/models'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before users load.
+   */
+  users: 100,
+
+  /**
+   * Delay before channels load.
+   */
+  channels: 100,
+
+  /**
+   * Delay before messages load.
+   */
+  messages: 100
+
+}
 
 /**
  * Loads the data from the Slack API.
@@ -38,7 +60,7 @@ export class SlackLoader {
    */
   async loadUsers(): Promise<SlackUser[]> {
     const loadRecursively = async (cursor?: string) => {
-      await sleep(ServiceLoadThrottlingOptions.slack.users)
+      await sleep(THROTTLING.users)
 
       const options = {
         token: this.app.token,
@@ -77,7 +99,7 @@ export class SlackLoader {
    */
   async loadChannels(): Promise<SlackChannel[]> {
     const recursiveLoad = async (cursor?: string) => {
-      await sleep(ServiceLoadThrottlingOptions.slack.channels)
+      await sleep(THROTTLING.channels)
 
       const options = {
         token: this.app.token,
@@ -121,7 +143,7 @@ export class SlackLoader {
       oldestMessageId?: string,
       latestMessageId?: string
     ) => {
-      await sleep(ServiceLoadThrottlingOptions.slack.messages)
+      await sleep(THROTTLING.messages)
 
       const options = {
         token: this.app.token,

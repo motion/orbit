@@ -1,7 +1,7 @@
 import { Logger } from '@mcro/logger'
 import * as fs from 'fs'
 import * as path from 'path'
-import { WebsiteCrawledData } from './WebsiteCrawledData'
+import { WebsiteCrawledData } from './WebsiteModels'
 import { WebsiteCrawlerUtils } from './WebsiteCrawlerUtils'
 
 const puppeteer = require('puppeteer')

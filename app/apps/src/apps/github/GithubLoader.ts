@@ -1,8 +1,6 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
+import { ServiceLoader, sleep } from '@mcro/sync-kit'
 import { AppBit } from '@mcro/models'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoadThrottlingOptions } from '../../options'
 import { GithubQueries } from './GithubQueries'
 import {
   GithubComment,
@@ -17,7 +15,45 @@ import {
   GithubRepository,
   GithubRepositoryQueryResult,
   GithubUserRepositoriesQueryResult,
-} from './GithubTypes'
+} from './GithubModels'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before organizations list load.
+   */
+  organizations: 100,
+
+  /**
+   * Delay before file repositories load.
+   */
+  repositories: 100,
+
+  /**
+   * Delay before issues load.
+   */
+  issues: 100,
+
+  /**
+   * Delay before issue or pull request comments load.
+   */
+  comments: 100,
+
+  /**
+   * Delay before pull requests load.
+   */
+  pullRequests: 100,
+
+  /**
+   * Delay before file users load.
+   */
+  users: 100
+
+}
 
 /**
  * Options for loadIssues and loadPullRequests methods.
@@ -48,7 +84,12 @@ export class GithubLoader {
   constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:github:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log)
+    this.loader = new ServiceLoader(this.app, this.log, {
+      baseUrl: 'https://api.github.com/graphql',
+      headers: {
+        Authorization: `Bearer ${this.app.token}`,
+      }
+    })
   }
 
   /**
@@ -89,7 +130,7 @@ export class GithubLoader {
 
     const repositories: GithubRepository[] = []
     for (let name of names) {
-      await sleep(ServiceLoadThrottlingOptions.github.repositories)
+      await sleep(THROTTLING.repositories)
       const [organization, repositoryName] = name
         .replace('http://github.com/', '')
         .replace('https://github.com/', '')
@@ -110,7 +151,7 @@ export class GithubLoader {
    */
   async loadIssues(options?: GithubLoaderIssueOrPullRequestStreamOptions): Promise<void> {
     const loadRecursively = async (options?: GithubLoaderIssueOrPullRequestStreamOptions) => {
-      await sleep(ServiceLoadThrottlingOptions.github.issues)
+      await sleep(THROTTLING.issues)
 
       const { organization, repository, cursor, loadedCount, handler } = options
       const first = 50 // number of issues to load per page
@@ -178,7 +219,7 @@ export class GithubLoader {
    */
   async loadPullRequests(options?: GithubLoaderIssueOrPullRequestStreamOptions): Promise<void> {
     const loadRecursively = async (options?: GithubLoaderIssueOrPullRequestStreamOptions) => {
-      await sleep(ServiceLoadThrottlingOptions.github.pullRequests)
+      await sleep(THROTTLING.pullRequests)
 
       const { organization, repository, cursor, loadedCount, handler } = options
       const first = 50 // number of issues to load per page
@@ -259,7 +300,7 @@ export class GithubLoader {
     cursor?: string,
     loadedCount = 0,
   ): Promise<GithubComment[]> {
-    await sleep(ServiceLoadThrottlingOptions.github.comments)
+    await sleep(THROTTLING.comments)
 
     // send a request to the github and load first/next 100 issues
     const first = 100 // number of issues to load per page
@@ -318,7 +359,7 @@ export class GithubLoader {
   }
 
   private async loadOrganizationsByCursor(cursor?: string): Promise<GithubOrganization[]> {
-    await sleep(ServiceLoadThrottlingOptions.github.organizations)
+    await sleep(THROTTLING.organizations)
 
     // send a request to the github and load first/next 100 repositories
     const results = await this.load<GithubOrganizationsQueryResult>(GithubQueries.organizations(), {
@@ -345,7 +386,7 @@ export class GithubLoader {
   }
 
   private async loadRepositoriesByCursor(cursor?: string): Promise<GithubRepository[]> {
-    await sleep(ServiceLoadThrottlingOptions.github.repositories)
+    await sleep(THROTTLING.repositories)
 
     // send a request to the github and load first/next 100 repositories
     const results = await this.load<GithubUserRepositoriesQueryResult>(
@@ -375,7 +416,7 @@ export class GithubLoader {
   }
 
   private async loadPeopleByCursor(organization: string, cursor?: string): Promise<GithubPerson[]> {
-    await sleep(ServiceLoadThrottlingOptions.github.users)
+    await sleep(THROTTLING.users)
 
     // send a request to the github and load first/next 100 people
     this.log.verbose(`Loading ${cursor ? 'next' : 'first'} 100 people`)

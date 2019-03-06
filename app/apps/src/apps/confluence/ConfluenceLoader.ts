@@ -1,10 +1,37 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoadThrottlingOptions } from '../../options'
-import { ConfluenceQueries } from './ConfluenceQueries'
-import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
 import { AppBit } from '@mcro/models'
+import { ServiceLoader, sleep } from '@mcro/sync-kit'
+import { ConfluenceQueries } from './ConfluenceQueries'
+import {
+  ConfluenceAppData,
+  ConfluenceComment,
+  ConfluenceContent,
+  ConfluenceGroup,
+  ConfluenceUser,
+} from './ConfluenceModels'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before users load.
+   */
+  users: 100,
+
+  /**
+   * Delay before content load.
+   */
+  contents: 100,
+
+  /**
+   * Delay before issue comments load.
+   */
+  comments: 100
+
+}
 
 /**
  * Loads confluence data from its API.
@@ -17,7 +44,17 @@ export class ConfluenceLoader {
   constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:confluence:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log)
+
+    const appData: ConfluenceAppData = this.app.data
+    const { username, password } = this.app.data.values.credentials
+    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+
+    this.loader = new ServiceLoader(this.app, this.log, {
+      baseUrl: appData.values.credentials.domain,
+      headers: {
+        Authorization: `Basic ${credentials}`
+      }
+    })
   }
 
   /**
@@ -45,7 +82,7 @@ export class ConfluenceLoader {
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
     const loadRecursively = async (cursor: number, loadedCount: number) => {
-      await sleep(ServiceLoadThrottlingOptions.confluence.contents)
+      await sleep(THROTTLING.contents)
 
       const maxResults = 25
       const response = await this.loader.load(ConfluenceQueries.contents(type, cursor, maxResults))
@@ -108,7 +145,7 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceComment[]> {
-    await sleep(ServiceLoadThrottlingOptions.confluence.comments)
+    await sleep(THROTTLING.comments)
     // scopes we use here:
     // 1. history.createdBy - used to get comment author
 
@@ -183,7 +220,7 @@ export class ConfluenceLoader {
     start = 0,
     limit = 200,
   ): Promise<ConfluenceUser[]> {
-    await sleep(ServiceLoadThrottlingOptions.confluence.users)
+    await sleep(THROTTLING.users)
 
     const response = await this.loader.load(ConfluenceQueries.groupMembers(groupName))
     if (response.results.length < response.size) {

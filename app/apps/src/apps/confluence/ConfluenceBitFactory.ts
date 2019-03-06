@@ -1,15 +1,14 @@
 import { AppBit, Bit } from '@mcro/models'
-import { createBit, sanitizeHtml, stripHtml } from '@mcro/sync-kit'
-import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
-import { ConfluenceBitData } from './ConfluenceBitData'
-import { ConfluenceAppData } from './ConfluenceAppData'
+import { sanitizeHtml, stripHtml, SyncerUtils } from '@mcro/sync-kit'
+import { ConfluenceAppData, ConfluenceBitData, ConfluenceContent, ConfluenceUser } from './ConfluenceModels'
 
 /**
  * Creates bits out of confluence models.
  */
 export class ConfluenceBitFactory {
 
-  constructor(private app: AppBit) {
+  constructor(private app: AppBit,
+              private utils: SyncerUtils) {
   }
 
   /**
@@ -17,8 +16,6 @@ export class ConfluenceBitFactory {
    */
   createDocumentBit(content: ConfluenceContent, allPeople: Bit[]): Bit {
     const appData: ConfluenceAppData = this.app.data
-    const values = appData.values
-    const domain = values.credentials.domain
     const bitCreatedAt = new Date(content.history.createdDate).getTime()
     const bitUpdatedAt = new Date(content.history.lastUpdated.when).getTime()
     const body = stripHtml(content.body.styled_view.value)
@@ -43,29 +40,28 @@ export class ConfluenceBitFactory {
       return person.originalId === content.history.createdBy.accountId
     })
 
-    // create or update a bit
-    return createBit(
-      {
-        appIdentifier: 'confluence',
-        appId: this.app.id,
-        type: 'document',
-        title: content.title,
-        author,
-        body,
-        data: { content: cleanHtml } as ConfluenceBitData,
-        location: {
-          id: content.space.id,
-          name: content.space.name,
-          webLink: domain + '/wiki' + content.space._links.webui,
-          desktopLink: '',
-        },
-        webLink: domain + '/wiki' + content._links.webui,
-        people,
-        bitCreatedAt,
-        bitUpdatedAt,
+    const data: ConfluenceBitData = {
+      content: cleanHtml
+    }
+
+    return this.utils.createBit({
+      type: 'document',
+      originalId: content.id,
+      title: content.title,
+      author,
+      body,
+      data,
+      location: {
+        id: content.space.id,
+        name: content.space.name,
+        webLink: appData.values.credentials.domain + '/wiki' + content.space._links.webui,
+        desktopLink: '',
       },
-      content.id,
-    )
+      webLink: appData.values.credentials.domain + '/wiki' + content._links.webui,
+      people,
+      bitCreatedAt,
+      bitUpdatedAt,
+    })
   }
 
   /**
@@ -74,18 +70,13 @@ export class ConfluenceBitFactory {
   createPersonBit(user: ConfluenceUser): Bit {
     const appData: ConfluenceAppData = this.app.data
 
-    return createBit(
-      {
-        appIdentifier: 'confluence',
-        appId: this.app.id,
-        type: 'person',
-        originalId: user.accountId,
-        title: user.displayName,
-        email: user.details.personal.email,
-        photo: appData.values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),
-      },
-      user.accountId,
-    )
+    return this.utils.createBit({
+      type: 'person',
+      originalId: user.accountId,
+      title: user.displayName,
+      email: user.details.personal.email,
+      photo: appData.values.credentials.domain + user.profilePicture.path.replace('s=48', 's=512'),
+    })
   }
 
 }

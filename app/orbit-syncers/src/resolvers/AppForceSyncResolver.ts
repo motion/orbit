@@ -2,8 +2,8 @@ import { Logger } from '@mcro/logger'
 import { resolveCommand } from '@mcro/mediator'
 import { AppEntity, AppForceSyncCommand } from '@mcro/models'
 import { getRepository } from 'typeorm'
-import { Syncer } from '../core/Syncer'
-import { Syncers } from '../core/Syncers'
+import { Syncer } from '../Syncer'
+import { Syncers } from '../Syncers'
 
 const log = new Logger('command:app-force-sync')
 

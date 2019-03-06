@@ -1,10 +1,32 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoadThrottlingOptions } from '../../options'
-import { JiraQueries } from './JiraQueries'
-import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
 import { AppBit } from '@mcro/models'
+import { Logger } from '@mcro/logger'
+import { ServiceLoader, sleep } from '@mcro/sync-kit'
+import { JiraQueries } from './JiraQueries'
+import { JiraComment, JiraIssue, JiraUser } from './JiraModels'
+import { ConfluenceAppData } from '../confluence/ConfluenceModels'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before users load.
+   */
+  users: 100,
+
+  /**
+   * Delay before issues load.
+   */
+  issues: 100,
+
+  /**
+   * Delay before issue comments load.
+   */
+  comments: 100
+  
+}
 
 /**
  * Loads jira data from its API.
@@ -17,7 +39,17 @@ export class JiraLoader {
   constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:jira:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log)
+
+    const appData: ConfluenceAppData = this.app.data
+    const { username, password } = this.app.data.values.credentials
+    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+
+    this.loader = new ServiceLoader(this.app, this.log, {
+      baseUrl: appData.values.credentials.domain,
+      headers: {
+        Authorization: `Basic ${credentials}`
+      }
+    })
   }
 
   /**
@@ -33,7 +65,7 @@ export class JiraLoader {
    */
   async loadUsers(): Promise<JiraUser[]> {
     const loadRecursively = async (startAt: number = 0) => {
-      await sleep(ServiceLoadThrottlingOptions.jira.users)
+      await sleep(THROTTLING.users)
 
       const maxResults = 1000
       const users = await this.loader.load(JiraQueries.users(startAt, maxResults))
@@ -79,7 +111,7 @@ export class JiraLoader {
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
     const loadRecursively = async (cursor: number, loadedCount: number) => {
-      await sleep(ServiceLoadThrottlingOptions.jira.issues)
+      await sleep(THROTTLING.issues)
 
       const maxResults = 100
       const response = await this.loader.load(JiraQueries.issues(cursor, maxResults))
@@ -137,7 +169,7 @@ export class JiraLoader {
     startAt = 0,
     maxResults = 25,
   ): Promise<JiraComment[]> {
-    await sleep(ServiceLoadThrottlingOptions.jira.comments)
+    await sleep(THROTTLING.comments)
 
     const query = JiraQueries.comments(issueId, startAt, maxResults)
     const response = await this.loader.load(query)

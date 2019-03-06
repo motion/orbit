@@ -1,7 +1,6 @@
 import { Bit } from '@mcro/models'
 import { createSyncer } from '@mcro/sync-kit'
-import { ConfluenceAppData, ConfluenceLastSyncInfo } from './ConfluenceAppData'
-import { ConfluenceContent } from './ConfluenceTypes'
+import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './ConfluenceModels'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceBitFactory } from './ConfluenceBitFactory'
 
@@ -10,7 +9,7 @@ import { ConfluenceBitFactory } from './ConfluenceBitFactory'
  */
 export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
 
-  const factory = new ConfluenceBitFactory(app)
+  const factory = new ConfluenceBitFactory(app, utils)
   const loader = new ConfluenceLoader(app, log)
   const appData: ConfluenceAppData = app.data
 
@@ -86,26 +85,21 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
     return true
   }
 
+  // setup initial app data properties
   if (!appData.values.pageLastSync) appData.values.pageLastSync = {}
   const pageLastSync = appData.values.pageLastSync
   if (!appData.values.blogLastSync) appData.values.blogLastSync = {}
   const blogLastSync = appData.values.blogLastSync
 
-  // load database data
-  const dbPeople = await utils.loadDatabasePeople()
-
-  // load users from confluence API
+  // load users from confluence API and create people bits for them
   const allUsers = await loader.loadUsers()
-
-  // create people for loaded user
   const apiPeople = allUsers.map(user => factory.createPersonBit(user))
   log.info('people created', apiPeople)
 
-  // saving people and person bits
-  await utils.syncPeople(apiPeople, dbPeople)
-
-  // reload database people again
-  const allDbPeople = await utils.loadDatabasePeople()
+  // load database people and execute sync. once sync is complete we must re-load people
+  const dbPeople = await utils.loadBits({ type: 'person' })
+  await utils.syncBits(apiPeople, dbPeople)
+  const allDbPeople = await utils.loadBits({ type: 'person' })
 
   // sync content - pages
   await loader.loadContents(

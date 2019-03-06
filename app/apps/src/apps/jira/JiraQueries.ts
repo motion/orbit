@@ -1,5 +1,5 @@
-import { ServiceLoaderLoadOptions } from '../../ServiceLoaderTypes'
-import { JiraCommentCollection, JiraIssueCollection, JiraUser } from './JiraTypes'
+import { ServiceLoaderLoadOptions } from '@mcro/sync-kit'
+import { JiraCommentCollection, JiraIssueCollection, JiraUser } from './JiraModels'
 
 /**
  * Jira queries.

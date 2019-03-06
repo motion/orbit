@@ -1,37 +1,32 @@
 import { createSyncer } from '@mcro/sync-kit'
 import { JiraLoader } from './JiraLoader'
 import { JiraBitFactory } from './JiraBitFactory'
-import { JiraAppData } from './JiraAppData'
+import { JiraAppData } from './JiraModels'
 
 /**
  * Syncs Jira issues.
  */
 export const JiraSyncer = createSyncer(async ({ app, log, utils }) => {
 
-  const factory = new JiraBitFactory(app)
+  const factory = new JiraBitFactory(app, utils)
   const loader = new JiraLoader(app, log)
   const appData: JiraAppData = app.data
 
+  // setup initial app data properties
   if (!appData.values.lastSync) appData.values.lastSync = {}
   const lastSync = appData.values.lastSync
 
-  // load database data
-  const dbPeople = await utils.loadDatabasePeople()
-
-  // load users from jira API
+  // load users from jira API and create person bits for them
   const apiUsers = await loader.loadUsers()
-
-  // create people for loaded user
   const apiPeople = apiUsers.map(user => factory.createPersonBit(user))
   log.info('bits for api users created', apiPeople)
 
-  // saving people and person bits
-  await utils.syncPeople(apiPeople, dbPeople)
+  // load database people and execute sync. once sync is complete we must re-load people
+  const dbPeople = await utils.loadBits({ type: 'person' })
+  await utils.syncBits(apiPeople, dbPeople)
+  const allDbPeople = await utils.loadBits({ type: 'person' })
 
-  // load all people (once again after sync)
-  const allDbPeople = await utils.loadDatabasePeople()
-
-  // load users from API
+  // load issues from API in a stream
   await loader.loadIssues(
     lastSync.lastCursor || 0,
     lastSync.lastCursorLoadedCount || 0,

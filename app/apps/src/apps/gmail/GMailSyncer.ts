@@ -1,10 +1,8 @@
-import { createSyncer, generateBitId, sleep } from '@mcro/sync-kit'
+import { createSyncer, sleep } from '@mcro/sync-kit'
 import { chunk } from 'lodash'
 import { GMailMessageParser } from './GMailMessageParser'
-import { GmailBitDataParticipant } from './GmailBitData'
-import { GmailAppData } from './GmailAppData'
+import { GmailAppData, GmailBitDataParticipant, GMailThread } from './GMailModels'
 import { GMailLoader } from './GMailLoader'
-import { GMailThread } from './GMailTypes'
 import { GMailBitFactory } from './GMailBitFactory'
 
 /**
@@ -14,16 +12,16 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
 
   const data: GmailAppData = app.data
   const loader = new GMailLoader(app, log, () => utils.updateAppData())
-  const factory = new GMailBitFactory(app)
+  const factory = new GMailBitFactory(utils)
 
   /**
    * Handles a single thread.
    */
   const handleThread = async (
-      thread: GMailThread,
-      cursor?: string,
-      loadedCount?: number,
-      isLast?: boolean,
+    thread: GMailThread,
+    cursor?: string,
+    loadedCount?: number,
+    isLast?: boolean,
   ) => {
     const lastSync = data.values.lastSync
 
@@ -202,7 +200,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
     if (history.removedThreadIds.length) {
       log.info('found actions in history for thread removals', history.removedThreadIds)
       const removedBits = await utils.loadBits({
-        ids: history.removedThreadIds.map(threadId => generateBitId(app, threadId))
+        ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId))
       })
       await utils.removeBits(removedBits)
     } else {

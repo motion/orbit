@@ -3,7 +3,7 @@ import { Logger } from '@mcro/logger'
 import {
   Bit,
   BitEntity,
-  BitUtils,
+  createBit,
   PinnedBitData,
   SettingEntity,
   WebsiteBitData,
@@ -111,7 +111,7 @@ export class PinnedUrlsSyncer {
     // const values = this.source.values as CrawlerSettingValues
 
     // create or update a bit
-    return BitUtils.create(
+    return createBit(
       {
         appIdentifier: 'pinned',
         type: 'website',

@@ -1,22 +1,27 @@
-import { AppBit, Bit } from '@mcro/models'
-import { createBit, hash } from '@mcro/sync-kit'
-import { GithubComment, GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from './GithubTypes'
-import { GithubBitData } from './GithubBitData'
+import { Bit } from '@mcro/models'
+import {
+  GithubBitData,
+  GithubComment,
+  GithubCommit,
+  GithubIssue,
+  GithubPerson,
+  GithubPullRequest,
+} from './GithubModels'
 import { uniqBy } from 'lodash'
+import { SyncerUtils } from '@mcro/sync-kit'
 
 /**
  * Creates bits out of github models.
  */
 export class GithubBitFactory {
 
-  constructor(private app: AppBit) {
+  constructor(private utils: SyncerUtils) {
   }
 
   /**
    * Creates a new bit from a given Github issue.
    */
   createTaskBit(issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit {
-    const id = hash(`github-${this.app.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
 
@@ -52,11 +57,9 @@ export class GithubBitFactory {
       })),
     }
 
-    return createBit({
-      id,
-      appId: this.app.id,
-      appIdentifier: 'github',
+    return this.utils.createBit({
       type: 'task',
+      originalId: issue.id,
       title: issue.title,
       body: issue.bodyText,
       webLink: issue.url,
@@ -115,38 +118,27 @@ export class GithubBitFactory {
    * Creates a single app person from given Github user.
    */
   createPersonBitFromGithubUser(githubPerson: GithubPerson): Bit {
-    return createBit(
-      {
-        appIdentifier: 'github',
-        appId: this.app.id,
-        type: 'person',
-        originalId: githubPerson.id,
-        title: githubPerson.login,
-        email: githubPerson.email,
-        photo: githubPerson.avatarUrl,
-        webLink: `https://github.com/${githubPerson.login}`,
-      },
-      githubPerson.id,
-    )
+    return this.utils.createBit({
+      type: 'person',
+      originalId: githubPerson.id,
+      title: githubPerson.login,
+      email: githubPerson.email,
+      photo: githubPerson.avatarUrl,
+      webLink: `https://github.com/${githubPerson.login}`,
+    })
   }
 
   /**
    * Creates a single app person from a commit.
    */
   createPersonBitFromCommit(commit: GithubCommit): Bit {
-    return createBit(
-      {
-        appIdentifier: 'github',
-        appId: this.app.id,
-        type: 'person',
-        originalId: commit.email,
-        title: commit.name,
-        email: commit.email,
-        photo: commit.avatarUrl,
-      },
-      commit.email,
-    )
+    return this.utils.createBit({
+      type: 'person',
+      originalId: commit.email,
+      title: commit.name,
+      email: commit.email,
+      photo: commit.avatarUrl,
+    })
   }
-
 
 }

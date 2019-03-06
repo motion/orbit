@@ -1,13 +1,44 @@
 import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
-import { uniqBy } from 'lodash'
 // import * as path from 'path'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
-import { ServiceLoadThrottlingOptions } from '../../options'
+import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@mcro/sync-kit'
+import { uniqBy } from 'lodash'
 import { DriveQueries } from './DriveQueries'
-import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
+import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'
 import { AppBit } from '@mcro/models'
+import { getGlobalConfig } from '@mcro/config'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before files load.
+   */
+  files: 100,
+
+  /**
+   * Delay before file content load.
+   */
+  fileContent: 100,
+
+  /**
+   * Delay before file comments load.
+   */
+  comments: 100,
+
+  /**
+   * Delay before file revisions load.
+   */
+  revisions: 100,
+
+  /**
+   * Delay before file thumbnail download.
+   */
+  thumbnailDownload: 100
+
+}
 
 /**
  * Loads data from google drive api.
@@ -20,7 +51,15 @@ export class DriveLoader {
   constructor(app: AppBit, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.app = app
     this.log = log || new Logger('service:drive:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log, saveCallback)
+    this.loader = new ServiceLoader(this.app, this.log, {
+      saveCallback,
+      baseUrl: 'https://content.googleapis.com/drive/v3',
+      headers: {
+        Authorization: `Bearer ${this.app.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
+        'Access-Control-Allow-Methods': 'GET',
+      }
+    })
   }
 
   /**
@@ -41,7 +80,7 @@ export class DriveLoader {
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
     const loadRecursively = async (cursor?: string) => {
-      await sleep(ServiceLoadThrottlingOptions.drive.files)
+      await sleep(THROTTLING.files)
 
       const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
       for (let i = 0; i < files.length; i++) {
@@ -108,7 +147,7 @@ export class DriveLoader {
   private async loadFileContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
-    await sleep(ServiceLoadThrottlingOptions.drive.fileContent)
+    await sleep(THROTTLING.fileContent)
 
     this.log.verbose('loading file content for', file)
     const content = await this.loader.load(DriveQueries.fileExport(file.id))
@@ -123,7 +162,7 @@ export class DriveLoader {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
-    await sleep(ServiceLoadThrottlingOptions.drive.comments)
+    await sleep(THROTTLING.comments)
 
     this.log.verbose('loading comments for', file)
     const result = await this.loader.load(DriveQueries.fileComments(file.id, pageToken))
@@ -141,7 +180,7 @@ export class DriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
-    await sleep(ServiceLoadThrottlingOptions.drive.revisions)
+    await sleep(THROTTLING.revisions)
 
     this.log.verbose('loading revisions for', file)
     const result = await this.loader.load(DriveQueries.fileRevisions(file.id, pageToken))
@@ -158,7 +197,7 @@ export class DriveLoader {
   // private async downloadThumbnail(file: DriveFile): Promise<string> {
   //   if (!file.thumbnailLink) return ''
 
-  //   await sleep(ServiceLoadThrottlingOptions.drive.thumbnailDownload)
+  //   await sleep(THROTTLING.thumbnailDownload)
 
   //   this.log.verbose('downloading file thumbnail for', file)
   //   const destination = path.normalize(

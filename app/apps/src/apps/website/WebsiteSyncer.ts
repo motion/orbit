@@ -8,11 +8,11 @@ import { createSyncer } from '@mcro/sync-kit'
 export const WebsiteSyncer = createSyncer(async ({ app, log, utils }) => {
 
   const crawler = new WebsiteCrawler(log)
-  const bitFactory = new WebsiteBitFactory(app)
+  const bitFactory = new WebsiteBitFactory(app, utils)
 
   // load database data
   // log.timer('load bits from the database')
-  // const dbBits = await syncerRepository.loadDatabaseBits()
+  // const dbBits = await syncerRepository.loadBits({ idsOnly: true })
   // log.timer('load bits from the database', { dbBits })
 
   // launch browser to start crawl

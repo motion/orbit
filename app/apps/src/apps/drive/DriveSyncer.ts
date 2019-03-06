@@ -1,14 +1,14 @@
 import { createSyncer } from '@mcro/sync-kit'
 import { DriveLoader } from './DriveLoader'
 import { DriveBitFactory } from './DriveBitFactory'
-import { DriveAppData } from './DriveAppData'
+import { DriveAppData } from './DriveModels'
 
 /**
  * Syncs Google Drive files.
  */
 export const DriveSyncer = createSyncer(async ({ app, log, utils }) => {
 
-  const factory = new DriveBitFactory(app)
+  const factory = new DriveBitFactory(utils)
   const loader = new DriveLoader(app, log, () => utils.updateAppData())
 
   const appData: DriveAppData = app.data

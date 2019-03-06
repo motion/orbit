@@ -1,3 +1,10 @@
+export interface WebsiteAppData {
+  data: {}
+  values: {
+    url: string
+  }
+}
+
 /**
  * Website additional bit information.
  */
@@ -15,5 +22,16 @@ export interface WebsiteBitData {
   /**
    * Html content of the rendered page.
    */
+  content: string
+}
+
+/**
+ * Crawled website data.
+ * Used to create a bit from.
+ */
+export interface WebsiteCrawledData {
+  url: string
+  title: string
+  textContent: string
   content: string
 }

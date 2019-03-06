@@ -1,15 +1,14 @@
-import { AppBit, Bit } from '@mcro/models'
+import { Bit } from '@mcro/models'
 import { GMailMessageParser } from './GMailMessageParser'
-import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
-import { GMailThread } from './GMailTypes'
-import { createBit } from '@mcro/sync-kit'
+import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModels'
+import { SyncerUtils } from '@mcro/sync-kit'
 
 /**
  * Creates bits out of gmail models.
  */
 export class GMailBitFactory {
 
-  constructor(private app: AppBit) {
+  constructor(private utils: SyncerUtils) {
   }
 
   /**
@@ -57,41 +56,32 @@ export class GMailBitFactory {
     // if we still have no title then skip this email
     if (!title) return undefined
 
-    return createBit(
-      {
-        appIdentifier: 'gmail',
-        appId: this.app.id,
-        type: 'mail',
-        title,
-        body,
-        data: {
-          messages,
-        } as GmailBitData,
-        bitCreatedAt: firstMessageParser.getDate(),
-        bitUpdatedAt: lastMessageParser.getDate(),
-        webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-      },
-      thread.id,
-    )
+    return this.utils.createBit({
+      type: 'mail',
+      originalId: thread.id,
+      title,
+      body,
+      data: {
+        messages,
+      } as GmailBitData,
+      bitCreatedAt: firstMessageParser.getDate(),
+      bitUpdatedAt: lastMessageParser.getDate(),
+      webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
+    })
   }
 
   /**
    * Creates a new person from a given GMail thread participant.
    */
   createPersonBit(participant: GmailBitDataParticipant): Bit {
-    return createBit(
-      {
-        appIdentifier: 'gmail',
-        appId: this.app.id,
-        type: 'person',
-        originalId: participant.email,
-        title: participant.name || '',
-        webLink: 'mailto:' + participant.email,
-        desktopLink: 'mailto:' + participant.email,
-        email: participant.email,
-      },
-      participant.email,
-    )
+    return this.utils.createBit({
+      type: 'person',
+      originalId: participant.email,
+      title: participant.name || '',
+      webLink: 'mailto:' + participant.email,
+      desktopLink: 'mailto:' + participant.email,
+      email: participant.email,
+    })
   }
 
 }

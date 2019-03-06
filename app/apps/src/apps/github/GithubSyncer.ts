@@ -1,6 +1,5 @@
 import { createSyncer } from '@mcro/sync-kit'
-import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
-import { GithubIssue, GithubPullRequest } from './GithubTypes'
+import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
 import { GithubLoader } from './GithubLoader'
 import { GithubBitFactory } from './GithubBitFactory'
 
@@ -15,7 +14,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
 
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
-  const factory = new GithubBitFactory(app)
+  const factory = new GithubBitFactory(utils)
 
   /**
    * Handles a single issue or pull request from loaded issues/PRs stream.
@@ -152,9 +151,7 @@ export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
       data.values.lastSyncPullRequests[repository.nameWithOwner] = {}
 
     const lastSyncIssues = data.values.lastSyncIssues[repository.nameWithOwner]
-    const lastSyncPullRequests = data.values.lastSyncPullRequests[
-      repository.nameWithOwner
-      ]
+    const lastSyncPullRequests = data.values.lastSyncPullRequests[repository.nameWithOwner]
     const [organization, repositoryName] = repository.nameWithOwner.split('/')
 
     // compare repository's first issue updated date with our last synced date to make sure

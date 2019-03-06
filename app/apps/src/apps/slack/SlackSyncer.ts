@@ -1,7 +1,6 @@
 import { createSyncer } from '@mcro/sync-kit'
-import { SlackBitData } from './SlackBitData'
+import { SlackAppData, SlackBitData } from './SlackModels'
 import { SlackLoader } from './SlackLoader'
-import { SlackAppData } from './SlackAppData'
 import { SlackBitFactory } from './SlackBitFactory'
 import { createConversation, filterChannelsBySettings } from './SlackUtils'
 
@@ -12,7 +11,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
 
   const appData: SlackAppData = app.data
   const loader = new SlackLoader(app, log)
-  const factory = new SlackBitFactory(app)
+  const factory = new SlackBitFactory(app, utils)
 
   // load team info and update app data with team info
   const team = await loader.loadTeam()
@@ -24,22 +23,14 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
   }
   await utils.updateAppData()
 
-  // load api users
+  // load api users and create person bits for them
   const apiUsers = await loader.loadUsers()
-
-  // creating bits for loaded users
   const apiPeople = apiUsers.map(user => factory.createPersonBit(user, team))
 
-  // load all people and person bits from the local database
-  const dbPeople = await utils.loadDatabasePeople()
-
-  // sync people
-  await utils.syncPeople(apiPeople, dbPeople)
-  // todo: looks like syncPeople can load dbPeople on its own
-  // todo: also looks like sync people can return people on its own
-
-  // re-load database people, we need them to deal with bits
-  const allDbPeople = await utils.loadDatabasePeople()
+  // load database people and execute sync. once sync is complete we must re-load people
+  const dbPeople = await utils.loadBits({ type: 'person' })
+  await utils.syncBits(apiPeople, dbPeople)
+  const allDbPeople = await utils.loadBits({ type: 'person' })
 
   // load all slack channels
   const allChannels = await loader.loadChannels()
@@ -63,7 +54,8 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
 
     // we need to load all bits in the data range period we are working with (oldestMessageId)
     // because we do comparision and update bits, also we remove removed messages
-    const dbBits = await utils.loadDatabaseBits({
+    const dbBits = await utils.loadBits({
+      idsOnly: true,
       locationId: channel.id,
       bitCreatedAtMoreThan: parseInt(oldestMessageId) * 1000,
     })

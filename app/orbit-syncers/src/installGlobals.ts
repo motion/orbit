@@ -2,7 +2,7 @@ import root from 'global'
 import * as Mobx from 'mobx'
 import * as Models from '@mcro/models'
 import { getGlobalConfig } from '@mcro/config'
-import { OrbitSyncersRoot } from '../OrbitSyncersRoot'
+import { OrbitSyncersRoot } from './OrbitSyncersRoot'
 
 export function installGlobals(syncersRoot: OrbitSyncersRoot) {
   root['Root'] = syncersRoot

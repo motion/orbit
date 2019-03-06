@@ -3,8 +3,8 @@ import { Subscription } from '@mcro/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
 import { SyncerOptions, SyncerUtils } from '@mcro/sync-kit'
 import { getManager, getRepository } from 'typeorm'
-import { syncersRoot } from '../OrbitSyncersRoot'
-import { checkCancelled } from '../resolvers/AppForceCancelResolver'
+import { syncersRoot } from './OrbitSyncersRoot'
+import { checkCancelled } from './resolvers/AppForceCancelResolver'
 import Timer = NodeJS.Timer
 
 /**

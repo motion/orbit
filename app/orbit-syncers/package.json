@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@mcro/apps": "^2.3.10",
-    "@mcro/kit": "^2.3.10",
     "@mcro/sync-kit": "^2.3.10",
     "@mcro/config": "^2.3.10",
     "@mcro/logger": "^2.3.10",

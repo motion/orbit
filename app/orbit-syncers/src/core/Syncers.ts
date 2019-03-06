@@ -1,6 +1,8 @@
-import { apps } from '@mcro/apps/_/apps'
+// import { apps } from '@mcro/apps/_/apps'
 import { syncers } from '@mcro/apps/_/syncers'
 import { Syncer } from './Syncer'
+
+const apps = []
 
 // const ONE_MINUTE = 1000 * 60
 // const FIVE_MINUTES = ONE_MINUTE * 5

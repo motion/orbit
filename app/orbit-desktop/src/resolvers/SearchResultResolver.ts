@@ -92,7 +92,7 @@ export class SearchResultResolver {
             bitsTotalCount,
             bits: firstBits,
           })
-        } else if (contentType === 'mail') {
+        } else if (contentType === 'thread') {
           searchResults.push({
             target: 'search-group',
             id: Math.random(),

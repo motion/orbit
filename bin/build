@@ -9,7 +9,6 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     # WATCH
 
     ARGS=${@:2}
-    (bin/in css npm run watch) &
     (bin/in gloss npm run watch) &
     (bin/in reactron npm run watch) &
     (bin/in ui npm run watch) &

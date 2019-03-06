@@ -52,7 +52,7 @@ export class AppEntity extends BaseEntity implements AppBit {
   @Column({ default: false })
   pinned?: boolean
 
-  @Column({ default: false })
+  @Column({ default: true })
   editable?: boolean
 
   @Column('simple-json', { default: '{}' })

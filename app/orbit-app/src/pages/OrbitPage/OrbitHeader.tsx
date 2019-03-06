@@ -233,7 +233,7 @@ const LaunchButton = memo(() => {
   return (
     <Button
       onMouseEnter={() => {
-        tm.current = setTimeout(() => setHovered(true), 400)
+        tm.current = setTimeout(() => setHovered(true), 100)
       }}
       onMouseLeave={() => {
         clearTimeout(tm.current)
@@ -259,11 +259,12 @@ const LaunchButton = memo(() => {
 })
 
 const LinkButton = memo(() => {
+  const { locationStore } = useStores()
   return (
     <Button
       sizeHeight={0.95}
       sizePadding={1.2}
-      tooltip={`Copy link: app://search/?query=something`}
+      tooltip={`Copy link: ${locationStore.urlString}`}
       sizeRadius={2}
       icon="link69"
       iconSize={12}
@@ -284,6 +285,9 @@ const BackButton = memo(() => {
         icon="arrowminleft"
         iconSize={22}
         opacity={0.25}
+        hoverStyle={{
+          opacity: 0.5,
+        }}
         onClick={() => {
           locationStore.back()
         }}

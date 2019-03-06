@@ -241,6 +241,8 @@ const OrbitNavChrome = gloss({
   flexFlow: 'row',
   position: 'relative',
   alignItems: 'flex-end',
+  // margin: [0, -40],
+  // padding: [0, 40],
   justifyContent: 'space-between',
 })
 

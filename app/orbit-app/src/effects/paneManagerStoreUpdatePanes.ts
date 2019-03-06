@@ -62,7 +62,7 @@ function getTornPanes(apps: AppBit[]): PaneManagerPane[] {
 
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
   if (getIsTorn()) {
-    getTornPanes(apps)
+    return getTornPanes(apps)
   } else {
     const appPanes = apps.map(appToPane)
     return [...defaultPanes, ...appPanes]

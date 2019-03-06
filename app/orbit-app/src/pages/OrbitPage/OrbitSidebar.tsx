@@ -1,5 +1,6 @@
+import { View } from '@mcro/gloss'
 import { AppLoadContext, AppSubViewProps, ProvideSelectionContext, SubPane } from '@mcro/kit'
-import { Sidebar } from '@mcro/ui'
+import { BorderTop, Sidebar } from '@mcro/ui'
 import { useReaction } from '@mcro/use-store'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -32,9 +33,12 @@ export const OrbitSidebar = memo((props: AppSubViewProps) => {
         noBorder
       >
         {props.hasToolbar && toolbarPadElement}
-        <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
-          {props.children}
-        </ProvideSelectionContext>
+        <View flex={1} position="relative">
+          {props.hasToolbar && <BorderTop opacity={0.5} />}
+          <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
+            {props.children}
+          </ProvideSelectionContext>
+        </View>
         {props.hasStatusbar && statusbarPadElement}
       </Sidebar>
     </SubPane>

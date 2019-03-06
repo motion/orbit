@@ -32,6 +32,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   if (!styles || typeof styles !== 'object') {
     return toReturn
   }
+
   for (let key in styles) {
     let value = styles[key]
     let valueType = typeof value

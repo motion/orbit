@@ -12,7 +12,7 @@ export function propsToTextSize(props) {
   if (typeof fontSize === 'undefined' && props.size) {
     fontSize = props.size * 14
   }
-  let styles: TextStyles = {}
+  let styles: TextStyles | null = null
   let lineHeight = props.lineHeight
   if (typeof lineHeight === 'undefined' && typeof fontSize === 'number') {
     lineHeight = Math.log(fontSize * 500) * 2.25 + fontSize / 1.4 - 9.5
@@ -25,10 +25,12 @@ export function propsToTextSize(props) {
   // find defaults and round them
   if (typeof fontSize === 'number') {
     fontSizeNum = Math.round(fontSize * 10) / 10
+    styles = styles || {}
     styles.fontSizeNum = fontSizeNum
   }
   if (typeof lineHeight === 'number') {
     lineHeightNum = Math.round(lineHeight * 10) / 10
+    styles = styles || {}
     styles.lineHeightNum = lineHeightNum
   }
   if (typeof lineHeightNum === 'number') {
@@ -41,9 +43,11 @@ export function propsToTextSize(props) {
     }
   }
   if (fontSize) {
+    styles = styles || {}
     styles.fontSize = fontSize
   }
   if (lineHeight) {
+    styles = styles || {}
     styles.lineHeight = lineHeight
   }
   return styles

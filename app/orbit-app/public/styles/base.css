@@ -334,6 +334,8 @@ body {
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
   overflow: hidden;
+  text-rendering: optimizeLegibility;
+  font-kerning: auto;
 }
 
 /* Change Autocomplete styles in Chrome*/

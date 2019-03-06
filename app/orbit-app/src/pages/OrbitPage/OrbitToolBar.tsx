@@ -1,4 +1,4 @@
-import { FullScreen, gloss, linearGradient, Row } from '@mcro/gloss'
+import { FullScreen, gloss, Row } from '@mcro/gloss'
 import { AppLoadContext } from '@mcro/kit'
 import { useReaction } from '@mcro/use-store'
 import React, { memo, useContext } from 'react'
@@ -32,7 +32,7 @@ const ToolbarChrome = gloss(Row, {
   zIndex: 1000000000,
   transition: 'none',
 }).theme((_, theme) => ({
-  background: linearGradient(theme.tabBackgroundBottom || theme.background, theme.background),
+  background: theme.background,
 }))
 
 const ToolbarInner = gloss<{ isActive: boolean }>({

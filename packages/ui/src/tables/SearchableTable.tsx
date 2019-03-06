@@ -89,9 +89,7 @@ export const SearchableTable = props => (
   <Searchable {...props}>
     {({ searchBar, ...rest }) => (
       <>
-        <View padding={[2, 15]} height={33}>
-          {searchBar}
-        </View>
+        <View padding={5}>{searchBar}</View>
         <SearchableManagedTable {...props} {...rest} />
       </>
     )}

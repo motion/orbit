@@ -44,6 +44,8 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
     ref,
   ) {
     const { activeTheme } = React.useContext(ThemeContext)
+    const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
+    console.log('clearVisible', clearVisible, visible, value)
     return (
       <SearchBar
         position="relative"
@@ -71,7 +73,7 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
           <SearchInnerInput placeholder={placeholder} ref={ref} {...props} />
           <SearchClearButton
             onClick={onClickClear}
-            visible={typeof visible === 'boolean' ? visible : value && !!value.length}
+            visible={clearVisible}
             opacity={1}
             position="relative"
             zIndex={2}
@@ -147,8 +149,9 @@ export const SearchBox = gloss(View, {
   flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
+  minHeight: 32,
   '&:focus-within': {
-    boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
+    boxShadow: `0 0 0 2px rgba(0,0,0,0.1)`,
   },
 }).theme((props, theme) => ({
   background: props.background || theme.background,

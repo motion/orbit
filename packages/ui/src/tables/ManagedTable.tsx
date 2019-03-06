@@ -34,7 +34,6 @@ function useComponentSize() {
 
   React.useEffect(() => {
     const node = measureRef.current
-
     const observer = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect
       const next = { width, height }
@@ -42,9 +41,7 @@ function useComponentSize() {
         setState(next)
       }
     })
-
     observer.observe(node)
-
     return () => {
       observer.disconnect()
     }

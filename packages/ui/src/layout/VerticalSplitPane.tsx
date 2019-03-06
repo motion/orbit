@@ -14,10 +14,7 @@ export function VerticalSplitPane(
   return (
     <Interactive
       resizable={props.index === 0 ? { right: true } : false}
-      onResize={x => {
-        console.log('set to', x)
-        setSize(x)
-      }}
+      onResize={x => setSize(x)}
       width={size}
       minWidth={props.parentWidth * 0.25}
       maxWidth={props.parentWidth * 0.8}

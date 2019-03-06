@@ -153,9 +153,10 @@ const dark = {
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
-    background: '#12112166',
-    backgroundHover: '#555',
-    backgroundActive: '#444',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    listItemBackground: orbitColor.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),

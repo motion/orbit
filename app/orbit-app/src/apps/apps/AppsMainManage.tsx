@@ -78,7 +78,6 @@ const AppIconContainer = gloss({
 
 export function AppsMainManage() {
   const { paneManagerStore } = useStores()
-  // const Actions = useActions()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()
   const [activeSpace] = useActiveSpace()
@@ -95,19 +94,6 @@ export function AppsMainManage() {
         console.log('double 2', x)
       },
     })),
-    // {
-    //   id: '10000',
-    //   icon: (
-    //     <View width={58} height={58} alignItems="center" justifyContent="center">
-    //       <Icon name="add" size={32} opacity={0.25} />
-    //     </View>
-    //   ),
-    //   onDoubleClick: Actions.setupNewApp,
-    //   title: 'Add',
-    //   type: 'add',
-    //   onClick: () => {},
-    //   disabled: true,
-    // },
   ]
 
   const resultsKey = results.map(x => x.id).join('')
@@ -135,8 +121,8 @@ export function AppsMainManage() {
   )
 
   return (
-    <Section sizePadding={0}>
-      <TitleRow bordered sizePadding={2} margin={0}>
+    <Section>
+      <TitleRow size={2} bordered>
         {activeSpace ? activeSpace.name : ''}
       </TitleRow>
       <SelectableGrid

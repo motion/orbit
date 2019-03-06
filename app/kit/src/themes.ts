@@ -200,9 +200,17 @@ export const themes = {
     ...Theme.fromStyles({
       iconFill: '#fff',
       background: '#449878',
-      // backgroundHover: '#449878',
-      // backgroundActive: '#449878',
       color: '#fff',
+    }),
+  },
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      borderColor: orbitActiveBg,
+      borderColorHover: orbitActiveBg,
     }),
   },
   // 'light-selected': {

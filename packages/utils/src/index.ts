@@ -35,3 +35,11 @@ export function randomString(length: number) {
 export function fromEntries(iterable: any[]): { [key: string]: any } {
   return [...iterable].reduce((obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }), {})
 }
+
+export function selectDefined(...args: any[]) {
+  for (const arg of args) {
+    if (typeof arg !== 'undefined') {
+      return arg
+    }
+  }
+}

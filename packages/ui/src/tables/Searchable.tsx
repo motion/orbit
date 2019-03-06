@@ -5,7 +5,7 @@
  * @format
  */
 
-import { attachTheme, ThemeObject } from '@mcro/gloss'
+import { attachTheme } from '@mcro/gloss'
 import { on } from '@mcro/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
@@ -52,7 +52,6 @@ type Props = {
   onEnter?: Function
   before?: React.ReactNode
   after?: React.ReactNode
-  theme?: ThemeObject
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`

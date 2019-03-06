@@ -2,6 +2,7 @@ import { CSSPropertySetStrict } from '@mcro/css'
 import {
   alphaColor,
   Color,
+  forwardTheme,
   gloss,
   propsToStyles,
   propsToTextSize,
@@ -11,6 +12,7 @@ import {
   ThemeSelect,
   View,
 } from '@mcro/gloss'
+import { selectDefined } from '@mcro/utils'
 import * as React from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -64,7 +66,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     spaced?: boolean
     stretch?: boolean
     tagName?: string
-    theme?: ThemeObject
+    theme?: ThemeObject | string
     tooltip?: string
     tooltipProps?: PopoverProps
     width?: number | string
@@ -122,10 +124,10 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     alignItems,
     justifyContent,
     forwardRef,
+    theme,
     ...rest
   } = props
   const segmentedStyle = getSegmentRadius(props, crumb)
-
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
@@ -223,7 +225,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  return (
+  const element = (
     <BreadcrumbReset>
       <SurfaceFrame
         ref={forwardRef}
@@ -233,6 +235,8 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
       />
     </BreadcrumbReset>
   )
+
+  return forwardTheme({ children: element, theme })
 })
 
 // fontFamily: inherit on both fixes elements
@@ -294,6 +298,8 @@ const SurfaceFrame = gloss(View, {
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       ...propStyles,
+      // TODO this could be automatically handled in propStyles if we want...
+      borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless &&
         props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
       ...propsToTextSize(props),

@@ -1,5 +1,5 @@
 import { color } from '@mcro/color'
-import { CSSPropertySet, gloss, Row, ThemeContext, ThemeObject, View } from '@mcro/gloss'
+import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@mcro/gloss'
 import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { colors } from '../helpers/colors'
@@ -18,7 +18,6 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     onClickClear?: Function
     focusedToken?: number
     filterProps?: Object
-    theme?: ThemeObject
     visible?: boolean
   }
 
@@ -45,7 +44,6 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
   ) {
     const { activeTheme } = React.useContext(ThemeContext)
     const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
-    console.log('clearVisible', clearVisible, visible, value)
     return (
       <SearchBar
         position="relative"

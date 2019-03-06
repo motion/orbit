@@ -33,6 +33,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
       >
         {def.name}
       </TitleRow>
+
       <SubTitle>
         <Row>
           <SubItem>{def['author'] || 'anonymous'}</SubItem>

@@ -32,6 +32,7 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   movesMap: MovesMap[] | null = null
+  originalItems = null
 
   get isActive() {
     return typeof this.finalProps.isActive === 'boolean' ? this.finalProps.isActive : true
@@ -59,6 +60,17 @@ export class SelectionStore {
       typeof this.finalProps.minSelected === 'number' ? this.finalProps.minSelected : -1,
       val,
     )
+  }
+
+  setOriginalItems = (items: { id: any }[]) => {
+    this.originalItems = items
+  }
+
+  get currentItems() {
+    if (!this.originalItems) {
+      return null
+    }
+    return this.movesMap.map(x => this.originalItems.find(item => item.id === x.id))
   }
 
   get hasActiveIndex() {

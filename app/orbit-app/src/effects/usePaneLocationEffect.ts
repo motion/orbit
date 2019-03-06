@@ -1,6 +1,6 @@
+import { parseUrl } from '@mcro/kit'
 import { ensure, useReaction } from '@mcro/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { parseUrl } from '../stores/LocationStore'
 
 export function usePaneLocationEffect() {
   const { locationStore, paneManagerStore } = useStoresSimple()

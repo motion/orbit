@@ -1,6 +1,7 @@
 import { command } from '@mcro/bridge'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
+  LocationStore,
   PaneManagerStore,
   ProvideStores,
   QueryStore,
@@ -27,7 +28,6 @@ import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
-import { LocationStore } from '../../stores/LocationStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'

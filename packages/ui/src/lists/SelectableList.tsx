@@ -2,6 +2,7 @@ import { ensure, react, useStore } from '@mcro/use-store'
 import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
+import { useMemoGetValue } from '../hooks/useMemoGetValue'
 import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
 import { SelectEvent, useSelectionStore } from './ProvideSelectionStore'
@@ -54,10 +55,12 @@ class SelectableStore {
   updateSelectionResults = react(
     () => this.props.itemsKey,
     () => {
+      const items = this.props.getItems()
+      this.props.selectionStore.setOriginalItems(items)
       this.props.selectionStore.setSelectionResults([
         {
           type: 'column' as 'column',
-          items: this.props.getItems().map(({ id }, index) => ({ id, index })),
+          items: items.map(({ id }, index) => ({ id, index })),
         },
       ])
     },
@@ -83,10 +86,8 @@ export function SelectableList({
   ...props
 }: SelectableListProps) {
   const selectionStore = useSelectionStore(props)
-
-  // TODO only calculate for the visible items (we can use listRef)
   const itemsKey = getItemsKey(items)
-  const getItems = useCallback(() => items, [itemsKey])
+  const getItems = useMemoGetValue(items)
   const selectableStore = useStore(SelectableStore, {
     selectionStore,
     itemsKey,

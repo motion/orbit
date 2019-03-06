@@ -1,4 +1,4 @@
-import { AppProps, getTargetValue, List, useStores } from '@mcro/kit'
+import { AppProps, getTargetValue, List, TreeList, useAppState, useStores } from '@mcro/kit'
 import {
   Absolute,
   BorderBottom,
@@ -16,29 +16,30 @@ import { API, ListContext } from '.'
 import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {
-  // const [state, updateState] = useAppState()
-  // const [bits] = useBits({ where: {} })
+  const [state] = useAppState()
+  // const [bits] = useBits()
+
   return (
     <>
       <ListAdd />
 
       <View flex={1}>
-        {/* <TreeList
-        sortable
-        minSelected={0}
-        rootItemID={0}
-        items={app.data.items}
-        getContextMenu={index => {
-          return [
-            {
-              label: 'Delete',
-              click: () => {
-                console.log('delete item', index)
+        <TreeList
+          sortable
+          minSelected={0}
+          rootItemID={0}
+          items={state.data.items}
+          getContextMenu={index => {
+            return [
+              {
+                label: 'Delete',
+                click: () => {
+                  console.log('delete item', index)
+                },
               },
-            },
-          ]
-        }}
-      /> */}
+            ]
+          }}
+        />
       </View>
 
       <ListSearchResults />

@@ -13,6 +13,17 @@ export const ListContext = createContext({
   listStore: null as ListStore,
 })
 
+function ListApp(props: AppProps) {
+  const listStore = useStore(ListStore, props)
+  return (
+    <ListContext.Provider value={{ listStore }}>
+      <App index={<ListsAppIndex {...props} />} statusBar={<ListAppStatusBar />}>
+        <ListsAppMain {...props} />
+      </App>
+    </ListContext.Provider>
+  )
+}
+
 export const API = {
   receive(
     app: AppBit,
@@ -55,16 +66,7 @@ export default createApp({
   id: 'lists',
   name: 'Lists',
   icon: '',
-  app: (props: AppProps) => {
-    const listStore = useStore(ListStore, props)
-    return (
-      <ListContext.Provider value={{ listStore }}>
-        <App index={<ListsAppIndex {...props} />} statusBar={<ListAppStatusBar />}>
-          <ListsAppMain {...props} />
-        </App>
-      </ListContext.Provider>
-    )
-  },
+  app: ListApp,
   API,
   appData: {
     rootItemID: 0,

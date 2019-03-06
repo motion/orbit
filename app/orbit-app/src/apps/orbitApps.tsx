@@ -27,7 +27,7 @@ export const orbitApps: AppDefinition[] = [
   ...apps.filter(x => !!x.app),
 ]
 
-console.log('orbitApps', orbitApps)
+console.debug('orbitApps', orbitApps)
 
 export function getApps() {
   return orbitApps

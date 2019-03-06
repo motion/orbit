@@ -80,6 +80,24 @@ export class SearchStore {
     }
   }
 
+  appToResult = (app: AppBit) => {
+    return {
+      title: app.name,
+      slim: true,
+      iconBefore: true,
+      icon: <AppIcon app={app} />,
+      group: 'Apps',
+      appConfig: {
+        icon: `orbit-${app.identifier}-full`,
+        identifier: 'message',
+        title: `Open ${app.name}`,
+      },
+      onOpen: () => {
+        this.stores.paneManagerStore.setActivePane(`${app.id}`)
+      },
+    }
+  }
+
   getApps(query: string): OrbitListItemProps[] {
     const { appStore } = this.stores
 
@@ -88,46 +106,23 @@ export class SearchStore {
       return []
     }
 
-    // const spaceName = this.stores.spaceStore.activeSpace.name
     const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
-    const searchedApps =
-      (query && apps.filter(x => ~x.name.toLowerCase().indexOf(query.toLowerCase()))) || []
-
-    const appToResult = (app: AppBit) => {
-      return {
-        title: app.name,
-        slim: true,
-        iconBefore: true,
-        icon: <AppIcon app={app} />,
-        group: 'Apps',
-        appConfig: {
-          icon: `orbit-${app.identifier}-full`,
-          identifier: 'message',
-          title: `Open ${app.name}`,
-        },
-        onOpen: () => {
-          this.stores.paneManagerStore.setActivePane(`${app.id}`)
-        },
-      }
-    }
 
     if (query) {
-      return searchedApps.map(appToResult)
+      return apps
+        .filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)
+        .map(this.appToResult)
     }
 
     return [
       this.homeItem,
-      ...apps.slice(0, Math.min(apps.length - 1, 5)).map(appToResult),
+      ...apps.slice(0, Math.min(apps.length - 1, 5)).map(this.appToResult),
       {
-        title: 'Create new app...',
+        title: 'Add app...',
         icon: 'orbit-custom-full',
         slim: true,
         iconBefore: true,
-        // group: 'Home',
-        appConfig: {
-          identifier: 'message',
-          title: `Create new app`,
-        },
+        identifier: 'message',
         onOpen: () => {
           console.warn('TODO restore this')
           // this.actions.setupNewApp

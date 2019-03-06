@@ -26,6 +26,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
+  const isOnSettings =
+    paneManagerStore.activePane.type === 'settings' || paneManagerStore.activePane.type === 'spaces'
 
   return (
     <OrbitHeaderContainer
@@ -101,9 +103,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           <Button
             chromeless
-            opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
+            opacity={isOnSettings ? 0.8 : 0.3}
             hoverStyle={{
-              opacity: paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.4,
+              opacity: isOnSettings ? 0.8 : 0.4,
             }}
             icon="gear"
             iconSize={isTorn ? 10 : 12}

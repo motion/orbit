@@ -6,7 +6,6 @@ export function SettingsAppIndex() {
   const results = useActiveQueryFilter({
     items: [
       {
-        group: 'Settings',
         id: 'general',
         title: 'General',
         icon: 'gear',
@@ -14,7 +13,6 @@ export function SettingsAppIndex() {
         subtitle: 'Shortcuts, startup, theme',
       },
       {
-        group: 'Settings',
         id: 'account',
         title: 'Account',
         icon: 'users_badge',

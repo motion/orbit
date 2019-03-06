@@ -1,7 +1,6 @@
 import { Icon } from '@mcro/kit'
 import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
-import { useReaction } from '@mcro/use-store'
-import React, { useState } from 'react'
+import React from 'react'
 import { useStores } from '../../hooks/useStores'
 
 const tabIconProps = {
@@ -14,14 +13,7 @@ const insetShadow = theme => [[0, 0, 0, 0.5, theme.borderColor]]
 
 export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
-  const [activePaneKey, setActivePaneKey] = useState(paneManagerStore.activePane.type)
-
-  useReaction(() => {
-    const next = paneManagerStore.activePane.type
-    if (next !== activePaneKey) {
-      setActivePaneKey(next)
-    }
-  })
+  const activePaneKey = paneManagerStore.activePane.type
 
   const onActive = React.useCallback(key => {
     if (typeof key === 'string') {

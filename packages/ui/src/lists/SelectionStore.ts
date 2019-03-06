@@ -1,28 +1,40 @@
-import { Direction, MovesMap, SelectEvent, SelectionGroup, SelectionStoreProps } from './ProvideSelectionStore';
+import { react } from '@mcro/use-store'
+import {
+  Direction,
+  MovesMap,
+  SelectEvent,
+  SelectionGroup,
+  SelectionStoreProps,
+} from './ProvideSelectionStore'
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)
 
-const getDefaultActiveIndex = (props: SelectionStoreProps) => {
-  if (typeof props.defaultSelected === 'number') {
-    return props.defaultSelected
-  }
-  if (typeof props.minSelected === 'number') {
-    return props.minSelected
-  }
-  return -1
-}
+type Props = Pick<SelectionStoreProps, 'isActive' | 'minSelected' | 'onSelect' | 'defaultSelected'>
 
 export class SelectionStore {
-  props: SelectionStoreProps
+  props: Props
+  childProps: Partial<Props> = {}
+
+  // we allow children to update props
+  get finalProps() {
+    return {
+      ...this.props,
+      ...this.childProps,
+    }
+  }
+
+  setChildProps(childProps: Props) {
+    this.childProps = childProps
+  }
 
   selectEvent: SelectEvent = SelectEvent.click
   lastSelectAt = 0
-  _activeIndex = getDefaultActiveIndex(this.props)
+  _activeIndex = -1
   movesMap: MovesMap[] | null = null
 
   get isActive() {
-    return typeof this.props.isActive === 'boolean' ? this.props.isActive : true
+    return typeof this.finalProps.isActive === 'boolean' ? this.finalProps.isActive : true
   }
 
   get activeIndex() {
@@ -36,7 +48,7 @@ export class SelectionStore {
   }
 
   get activeId() {
-    if (this.activeIndex === -1) {
+    if (this.activeIndex === -1 || !this.movesMap) {
       return null
     }
     return this.movesMap[this.activeIndex].id
@@ -44,7 +56,7 @@ export class SelectionStore {
 
   setActiveIndex = (val: number) => {
     this.activeIndex = Math.max(
-      typeof this.props.minSelected === 'number' ? this.props.minSelected : -1,
+      typeof this.finalProps.minSelected === 'number' ? this.finalProps.minSelected : -1,
       val,
     )
   }
@@ -70,6 +82,22 @@ export class SelectionStore {
       }
     }
   }
+
+  activeIndexDefaultEffect = react(
+    () => {
+      const { defaultSelected, minSelected } = this.finalProps
+      if (typeof defaultSelected === 'number') {
+        return defaultSelected
+      }
+      if (typeof minSelected === 'number') {
+        return minSelected
+      }
+      return -1
+    },
+    next => {
+      this._activeIndex = next
+    },
+  )
 
   moveToId = (id: any) => {
     const move = this.movesMap.find(x => x.id === id)
@@ -214,8 +242,8 @@ export class SelectionStore {
     // this is pretty weird, we are trigger updates from multiple places and all
     // are a bit wierd. we should unify in one area i think, likely in this store
     if (this.hasActiveIndex) {
-      if (this.props.onSelect) {
-        this.props.onSelect(this.activeIndex, this.selectEvent)
+      if (this.finalProps.onSelect) {
+        this.finalProps.onSelect(this.activeIndex, this.selectEvent)
       }
     }
   }

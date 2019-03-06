@@ -5,7 +5,7 @@ import { Button } from '@mcro/ui'
 import { ensure, react, useHook } from '@mcro/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
-import { searchGroupsToResults } from '../search/searchGroupsToResults'
+import { searchGroupsToResults } from '../search-app/searchGroupsToResults'
 import { ListAppDataItemFolder, ListsAppBit } from './types'
 
 export class ListStore {

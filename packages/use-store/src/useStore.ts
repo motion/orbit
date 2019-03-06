@@ -85,7 +85,10 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   }
 }
 
-function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
+function useReactiveStore<A extends any>(
+  Store: new () => A,
+  props?: any,
+): { store: A; hasChangedSource: boolean } {
   const forceUpdate = useForceUpdate()
   const state = useRef({
     store: null,
@@ -120,7 +123,7 @@ function useReactiveStore<A extends any>(Store: new () => A, props?: any): A {
     forceUpdate()
   }
 
-  return state.current.store
+  return { store: state.current.store, hasChangedSource }
 }
 
 // allows us to use instantiated or non-instantiated stores
@@ -132,29 +135,40 @@ export function useStore<A>(
 ): A {
   const component = useCurrentComponent()
   const rerender = useForceUpdate()
-  const instantiated = useRef(Store && Store['constructor'].name !== 'Function')
+  const lastStore = useRef(Store)
+  const instantiated = useRef(Store && Store['constructor'].name !== 'Function').current
   let store = null
 
-  if (instantiated.current) {
+  if (instantiated) {
+    // shouldUpdate handles if a new store comes down for the same hook, update it
+    const shouldUpdate = lastStore.current !== Store
+    lastStore.current = Store
     store = (Store as unknown) as A
-    store = useTrackableStore(store, rerender, { ...options, component })
+    store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
   } else {
     store = Store as new () => A
-    store = useReactiveStore(store, props)
+    const res = useReactiveStore(store, props)
+    store = res.store
     if (!options || options.react !== false) {
-      store = useTrackableStore(store, rerender, { ...options, component })
+      store = useTrackableStore(store, rerender, {
+        ...options,
+        component,
+        shouldUpdate: res.hasChangedSource,
+      })
     }
   }
 
   // dispose on unmount
   useEffect(() => {
-    if (instantiated.current) {
+    if (instantiated) {
       return () => disposeStore(store, component)
     }
   }, [])
 
   if (!Store) {
-    console.warn('no store given...')
+    // this bug was caused by having the app view not wrapped by HMR
+    // like `export default createApp({ app: (props) => <div /> })`
+    console.warn('no store given...', Store, store)
   }
 
   if (options && options.conditionalUse === false) {

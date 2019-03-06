@@ -7,7 +7,7 @@ import GmailApp from './gmail'
 import JiraApp from './jira'
 import ListsApp from './lists'
 import PeopleApp from './people'
-import SearchApp from './search'
+import SearchApp from './search-app'
 import SlackApp from './slack'
 import WebsiteApp from './website'
 

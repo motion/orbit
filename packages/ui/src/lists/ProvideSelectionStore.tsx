@@ -1,5 +1,5 @@
 import { useStore } from '@mcro/use-store'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { MergeContext } from '../helpers/MergeContext'
@@ -44,9 +44,20 @@ export enum SelectEvent {
 // though, you shouldn't probably be changing this out in context
 export function useSelectionStore(props: SelectionStoreProps) {
   const stores = useStores({ optional: ['selectionStore', 'appStore'] })
+  const existingStore = props.selectionStore || stores.selectionStore
   const selectionStore = props.createNewSelectionStore
     ? useStore(SelectionStore, props)
-    : props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)
+    : existingStore || useStore(SelectionStore, props)
+
+  useEffect(
+    () => {
+      if (existingStore) {
+        existingStore.setChildProps(props)
+      }
+    },
+    [props.minSelected, props.onSelect, props.defaultSelected],
+  )
+
   return selectionStore
 }
 

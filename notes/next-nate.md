@@ -13,6 +13,11 @@ First week of March:
 
 ---
 
+- fix settings panes, should account for "want to sync bits" generically
+- settings pane can show the app description
+
+---
+
 Month 1:
 
 "Make apps work for initially closing the loop"

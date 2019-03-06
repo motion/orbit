@@ -57,7 +57,7 @@
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-date-range": "1.0.0-beta",
-    "react-hot-loader": "4.7.1",
+    "react-hot-loader": "4.7.2",
     "react-spring": "8.0.7",
     "react-svg-inline": "2.1.1",
     "react-virtualized": "9.21.0",

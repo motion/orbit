@@ -75,7 +75,7 @@ export function List(rawProps: ListProps) {
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
-  const getItemPropsGetter = useMemoGetValue(getItemProps || nullFn)
+  const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
   const getItems = useMemoGetValue(items)
   let selectionStore: SelectionStore | null = null
   const selectionStoreRef = useRef<SelectionStore | null>(null)
@@ -102,12 +102,10 @@ export function List(rawProps: ListProps) {
     [onOpen],
   )
 
-  // only update this on props.items change....
-  // a bit risky but otherwise this is really  hard
   const getItemPropsInner = useCallback((item, index, items) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(item)
-    const extraProps = getItemPropsGetter()(item, index, items)
+    const extraProps = getItemPropsGet()(item, index, items)
     return { ...normalized, ...extraProps }
   }, [])
 

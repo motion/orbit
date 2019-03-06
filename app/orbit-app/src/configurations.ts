@@ -3,23 +3,28 @@ import { configureKit, Icon } from '@mcro/kit'
 import { configureUI } from '@mcro/ui'
 import { configureUseStore } from '@mcro/use-store'
 import { configure as configureMobx } from 'mobx'
-import { getApps } from './apps/orbitApps'
 import { StoreContext } from './contexts'
 
-// run these only once, and avoid HMR above it
-function setup() {
+function configure() {
+  // stuff here will be re-run every save in development
+  // so be sure it wants to run over and over
+
+  configureKit({
+    StoreContext,
+    getApps: require('./apps/orbitApps').getApps,
+  })
+
+  const hasConfigured = window['hasConfigured']
   window['hasConfigured'] = true
+  if (hasConfigured) {
+    return
+  }
 
   configureMobx({
     // for easier debugging mobx stack traces
     disableErrorBoundaries: false,
     // for safer mutation points
     enforceActions: 'never',
-  })
-
-  configureKit({
-    StoreContext,
-    getApps,
   })
 
   configureGloss({
@@ -40,19 +45,8 @@ function setup() {
   })
 }
 
-if (!window['hasConfigured']) {
-  setup()
-}
+configure()
 
 if (module['hot']) {
-  module['hot'].accept('./apps/orbitApps', () => {
-    console.log('accept meeee')
-    const apps = require('./apps/orbitApps').orbitApps
-    const getApps = () => apps
-    console.log('configurationsapply', getApps)
-    configureKit({
-      StoreContext,
-      getApps,
-    })
-  })
+  module['hot'].accept()
 }

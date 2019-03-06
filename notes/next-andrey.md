@@ -6,6 +6,20 @@ Github is just a little too heavy for us at this point.
 
 ---
 
+## Onboarding plan
+
+1. Get app running - Runthrough of some code together
+2. Go over some of the "far flung" ideas to be on same page
+3. Start a document organizing high level ideas
+
+## Get feedback
+
+I'd like you to have time to get familiar with the app and explicitly give feedback. I know you have years of interesting experience and probably have many patterns, tools, refactors, etc you recommend.
+
+In general, want to always work by collaborating on feedback in planning stage!
+
+---
+
 Goal #1: Getting Apps to build/share
 
 1. A way to publish and receive published apps (npm powered, like vscode)

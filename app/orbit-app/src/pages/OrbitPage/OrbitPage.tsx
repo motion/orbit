@@ -1,11 +1,6 @@
 import { command } from '@mcro/bridge'
-import { isEqual } from '@mcro/fast-compare'
 import { gloss, View, ViewProps } from '@mcro/gloss'
 import {
-  AppLoadContext,
-  AppStore,
-  AppViewsContext,
-  getAppDefinition,
   PaneManagerStore,
   ProvideStores,
   QueryStore,
@@ -13,35 +8,32 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
-  useActiveSyncApps,
 } from '@mcro/kit'
 import { CloseAppCommand } from '@mcro/models'
-import { SelectionStore, Theme } from '@mcro/ui'
+import { Theme } from '@mcro/ui'
 import { useStore, useStoreSimple } from '@mcro/use-store'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
-import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
+import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useUserEffects } from '../../effects/userEffects'
 import { getIsTorn } from '../../helpers/getIsTorn'
+import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
 import { LocationStore } from '../../stores/LocationStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
+import { OrbitApp } from './OrbitApp'
 import { OrbitHeader } from './OrbitHeader'
-import { OrbitMain } from './OrbitMain'
-import { OrbitSidebar } from './OrbitSidebar'
-import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitStore } from './OrbitStore'
-import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
@@ -54,7 +46,7 @@ export const OrbitPage = memo(() => {
             <OrbitPageProvideStores>
               <OrbitPageInner />
               {/* Inside provide stores to capture all our relevant stores */}
-              <OrbitStoreEffects />
+              <OrbitEffects />
             </OrbitPageProvideStores>
           </ActionsContext.Provider>
         </AppWrapper>
@@ -63,42 +55,12 @@ export const OrbitPage = memo(() => {
   )
 })
 
-function useManageQuerySources() {
-  const { queryStore } = useStoresSimple()
-  const syncApps = useActiveSyncApps()
-  useEffect(
-    () => {
-      queryStore.setSources(
-        syncApps.map(x => ({
-          name: x.name,
-          type: x.identifier,
-        })),
-      )
-    },
-    [syncApps],
-  )
-}
-
-function OrbitStoreEffects() {
+function OrbitEffects() {
   usePaneManagerEffects()
   useUserEffects()
-  useManageQuerySources()
+  querySourcesEffect()
   useMessageHandlers()
   return null
-}
-
-function useStableSort<A extends string>(ids: A[]): A[] {
-  const stableKeys = useRef<A[]>([])
-  const sortedIds = [...ids].sort()
-
-  if (!isEqual(stableKeys.current.sort(), sortedIds)) {
-    // we are building this up over time, so once we see an id
-    // we always show it in the same order in the DOM
-    const next = [...new Set([...stableKeys.current, ...sortedIds])]
-    stableKeys.current = next
-  }
-
-  return stableKeys.current
 }
 
 const OrbitPageInner = memo(function OrbitPageInner() {
@@ -193,48 +155,6 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     </ProvideStores>
   )
 })
-
-const OrbitApp = ({ id, identifier }) => {
-  const { paneManagerStore } = useStoresSimple()
-  const isActive = useCallback(() => {
-    if (paneManagerStore) {
-      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
-    }
-  }, [])
-  const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
-  const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
-  return (
-    <ProvideStores stores={{ selectionStore, appStore }}>
-      <OrbitAppRender id={id} identifier={identifier} />
-    </ProvideStores>
-  )
-}
-
-function OrbitAppRender({ id, identifier }) {
-  const { app } = getAppDefinition(identifier)
-
-  if (!app) {
-    console.warn('no app')
-    return null
-  }
-
-  const App = app
-  const Toolbar = OrbitToolBar
-  const Sidebar = OrbitSidebar
-  const Main = OrbitMain
-  const Statusbar = OrbitStatusBar
-
-  // handle url changes
-  useAppLocationEffect()
-
-  return (
-    <AppLoadContext.Provider value={{ id, identifier }}>
-      <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
-        <App />
-      </AppViewsContext.Provider>
-    </AppLoadContext.Provider>
-  )
-}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',

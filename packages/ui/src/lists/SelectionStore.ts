@@ -52,7 +52,11 @@ export class SelectionStore {
     if (this.activeIndex === -1 || !this.movesMap) {
       return null
     }
-    return this.movesMap[this.activeIndex].id
+    const activeItem = this.movesMap[this.activeIndex]
+    if (activeItem) {
+      return activeItem.id
+    }
+    return null
   }
 
   setActiveIndex = (val: number) => {

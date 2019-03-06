@@ -19,6 +19,10 @@ export function ListsAppIndex(_: AppProps) {
   const [state] = useAppState()
   // const [bits] = useBits()
 
+  if (!state) {
+    return null
+  }
+
   return (
     <>
       <ListAdd />

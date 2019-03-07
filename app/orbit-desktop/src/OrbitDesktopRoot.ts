@@ -37,7 +37,6 @@ import {
   SearchPinnedResultModel,
   SearchResultModel,
   SendClientDataCommand,
-  SettingModel,
   SetupProxyCommand,
   SlackAppBlacklistCommand,
   SlackChannelModel,
@@ -253,7 +252,6 @@ export class OrbitDesktopRoot {
     this.mediatorServer = new MediatorServer({
       models: [
         AppModel,
-        SettingModel,
         BitModel,
         JobModel,
         UserModel,

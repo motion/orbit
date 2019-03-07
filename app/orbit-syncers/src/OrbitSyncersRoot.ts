@@ -17,7 +17,6 @@ import {
   Entities,
   JobEntity,
   JobModel,
-  SettingModel,
   SpaceEntity,
   SpaceModel,
   UserEntity,
@@ -119,7 +118,7 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [AppModel, SettingModel, BitModel, JobModel, SpaceModel, UserModel],
+      models: [AppModel, BitModel, JobModel, SpaceModel, UserModel],
       commands: [AppForceSyncCommand, AppForceCancelCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,

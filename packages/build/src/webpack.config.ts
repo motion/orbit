@@ -135,6 +135,9 @@ const config = {
     globalObject: "(typeof self !== 'undefined' ? self : this)",
   },
   devServer: {
+    stats: {
+      warnings: false,
+    },
     historyApiFallback: true,
     hot: !isProd,
     headers: {

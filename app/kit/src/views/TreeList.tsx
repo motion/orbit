@@ -74,7 +74,6 @@ export class TreeListStore {
   }
 
   get currentFolder() {
-    console.log('this.props.getItems()', this.props.getItems())
     return this.props.getItems()[this.parentId]
   }
 
@@ -95,7 +94,6 @@ export class TreeListStore {
 export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: TreeListProps) {
   const isActive = useIsAppActive()
   const getItems = useMemoGetValue(props.items)
-  console.log('123', props.items, getItems())
   const treeListStore = useStore(TreeListStore, { getItems })
 
   if (!props.items) {

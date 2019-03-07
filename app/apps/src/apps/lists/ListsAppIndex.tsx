@@ -20,8 +20,6 @@ export function ListsAppIndex(_: AppProps) {
   const [state] = useAppState()
   const [treeState, update] = useTreeState('list')
 
-  console.log('treeState', treeState)
-
   // should be [treeState, actions]
   // actions.addItem()
 

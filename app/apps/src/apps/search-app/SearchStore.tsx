@@ -1,18 +1,18 @@
-import { loadMany } from '@o/bridge'
+import { loadOne, save } from '@o/bridge'
 import {
   AppIcon,
   MarkType,
   OrbitListItemProps,
+  searchBits,
   SearchState,
   SpaceIcon,
   useStoresSimple,
 } from '@o/kit'
-import { AppBit, SearchQuery, SearchResultModel } from '@o/models'
+import { AppBit, SearchQuery, UserModel } from '@o/models'
 import { ensure, react, useHook } from '@o/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'
-import { searchGroupsToResults } from './searchGroupsToResults'
 
 type SearchResults = {
   results: OrbitListItemProps[]
@@ -44,19 +44,15 @@ export class SearchStore {
     async (query, { sleep }) => {
       ensure('has query', !!query)
       await sleep(2000)
-      const { settingStore } = this.stores
-      // init
-      if (!settingStore.values) {
-        return
-      }
-      if (!settingStore.values.recentSearches) {
-        settingStore.update({ recentSearches: [query] })
-        return
-      }
-      const recentSearches = uniq([...settingStore.values.recentSearches, query]).slice(0, 50)
-      // TODO need to have recently opened as well so we can use that for search
-      settingStore.update({
-        recentSearches,
+      const user = await loadOne(UserModel, {})
+      save(UserModel, {
+        ...user,
+        settings: {
+          ...user.settings,
+          recentSearches: !user.settings.recentSearches
+            ? [query]
+            : uniq([...user.settings.recentSearches, query]).slice(0, 50),
+        },
       })
     },
   )
@@ -212,11 +208,11 @@ export class SearchStore {
           skip: startIndex,
           take: Math.max(0, endIndex - startIndex),
         }
-        const nextResults = await loadMany(SearchResultModel, { args })
+        const nextResults = await searchBits(args)
         if (!nextResults.length) {
           return false
         }
-        results = [...results, ...searchGroupsToResults(nextResults)]
+        results = [...results, ...nextResults]
         setValue({
           results,
           query,

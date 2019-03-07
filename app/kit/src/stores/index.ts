@@ -4,7 +4,6 @@ import { AppStore } from './AppStore'
 import { LocationStore } from './LocationStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { QueryStore } from './QueryStore'
-import { SettingStore } from './SettingStore'
 import { ShortcutStore } from './ShortcutStore'
 import { SpaceStore } from './SpaceStore'
 import { SubPaneStore } from './SubPaneStore'
@@ -18,7 +17,6 @@ export { NLPStore } from './NLPStore/NLPStore'
 export { PaneManagerStore } from './PaneManagerStore'
 export { QueryFilterStore } from './QueryFilterStore'
 export { QueryStore } from './QueryStore'
-export { SettingStore } from './SettingStore'
 export { ShortcutStore } from './ShortcutStore'
 export { SpaceStore } from './SpaceStore'
 export { SubPaneStore } from './SubPaneStore'
@@ -34,6 +32,5 @@ export type KitStores = {
   themeStore?: ThemeStore
   locationStore?: LocationStore
   spaceStore?: SpaceStore
-  settingStore?: SettingStore
   appsStore?: AppsStore
 }

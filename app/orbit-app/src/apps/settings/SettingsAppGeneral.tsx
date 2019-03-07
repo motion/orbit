@@ -2,7 +2,16 @@ import { command } from '@o/bridge'
 import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Button, CheckBoxRow, Divider, FormRow, Section, Theme, Title, VerticalSpace } from '@o/ui'
+import {
+  Button,
+  CheckBoxField,
+  Divider,
+  FormField,
+  Section,
+  Theme,
+  Title,
+  VerticalSpace,
+} from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { sleep } from '../../helpers'
@@ -83,20 +92,20 @@ export function SettingsAppGeneral(_props: AppProps) {
     <Section sizePadding={2}>
       <Title>General Settings</Title>
 
-      <CheckBoxRow
+      <CheckBoxField
         checked={settings.autoLaunch}
         onChange={autoLaunch => updateSettings({ autoLaunch })}
       >
         Start on Login
-      </CheckBoxRow>
-      <CheckBoxRow
+      </CheckBoxField>
+      <CheckBoxField
         checked={settings.autoUpdate}
         onChange={autoUpdate => updateSettings({ autoUpdate })}
       >
         Auto Update
-      </CheckBoxRow>
+      </CheckBoxField>
 
-      <FormRow label="Theme">
+      <FormField label="Theme">
         <select value={settings.theme} onChange={e => updateSettings({ theme: e.target.value })}>
           {['automatic', 'light', 'dark'].map(theme => (
             <option key={theme} value={theme}>
@@ -104,9 +113,9 @@ export function SettingsAppGeneral(_props: AppProps) {
             </option>
           ))}
         </select>
-      </FormRow>
+      </FormField>
 
-      <FormRow label="Vibrancy">
+      <FormField label="Vibrancy">
         <select
           value={settings.vibrancy}
           onChange={e => updateSettings({ vibrancy: e.target.value })}
@@ -121,9 +130,9 @@ export function SettingsAppGeneral(_props: AppProps) {
             </option>
           ))}
         </select>
-      </FormRow>
+      </FormField>
 
-      <FormRow label="Open shortcut">
+      <FormField label="Open shortcut">
         <ShortcutCapture
           defaultValue={electronToNiceChars(settings.openShortcut)}
           onUpdate={val => {
@@ -132,17 +141,17 @@ export function SettingsAppGeneral(_props: AppProps) {
           modifierChars={eventCharsToNiceChars}
           element={<Input onFocus={focusShortcut} onBlur={blurShortcut} />}
         />
-      </FormRow>
+      </FormField>
 
       <VerticalSpace />
       <Divider />
       <VerticalSpace />
 
-      <FormRow label="Reset">
+      <FormField label="Reset">
         <Theme name="selected">
           <Button onClick={handleClearAllData}>Reset all Orbit data</Button>
         </Theme>
-      </FormRow>
+      </FormField>
     </Section>
   )
 }

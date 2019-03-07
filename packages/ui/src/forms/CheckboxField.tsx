@@ -8,7 +8,7 @@ export const CheckBoxField = ({
   children,
   checked,
   onChange,
-}: InputProps & { onChange: (checked: boolean) => any }) => (
+}: InputProps & { checked?: boolean; onChange: (checked: boolean) => any }) => (
   <FormTableRow>
     <FormTableLabel>
       <Label htmlFor={name}>{children}</Label>

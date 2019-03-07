@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { AppView, Icon, QueryStore, SettingStore, SpaceStore } from '@o/kit'
+import { AppView, Icon, QueryStore, SpaceStore } from '@o/kit'
 import * as UI from '@o/ui'
 import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@o/ui'
 import { useStore } from '@o/use-store'
@@ -16,7 +16,6 @@ import { AppSearchable } from './AppSearchable'
 // see main.ts for setup for testing this in browser
 
 export default React.memo(() => {
-  const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
   const queryStore = useStore(QueryStore)
@@ -25,7 +24,6 @@ export default React.memo(() => {
   return (
     <StoreContext.Provider
       value={{
-        settingStore,
         spaceStore,
         appPageStore,
         queryStore,

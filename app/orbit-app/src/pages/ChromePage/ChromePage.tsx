@@ -1,4 +1,4 @@
-import { SettingStore, SpaceStore } from '@o/kit'
+import { SpaceStore } from '@o/kit'
 import { FullScreen, Theme } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
@@ -7,10 +7,9 @@ import { AppWrapper } from '../../views'
 import Menu from './menuLayer/Menu'
 
 export default function ChomePage() {
-  const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   return (
-    <StoreContext.Provider value={{ settingStore, spaceStore }}>
+    <StoreContext.Provider value={{ spaceStore }}>
       <Theme name="dark">
         <AppWrapper className="app-wrapper">
           <FullScreen pointerEvents="none">

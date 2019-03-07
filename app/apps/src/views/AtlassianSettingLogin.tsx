@@ -1,7 +1,7 @@
 import { command } from '@o/bridge'
 import { useActiveSpace } from '@o/kit'
 import { AppBit, AppSaveCommand } from '@o/models'
-import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@o/ui'
+import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import * as React from 'react'
 
 type Props = {
@@ -90,19 +90,19 @@ export function AtlassianSettingLogin(props: Props) {
       <Col margin="auto" width={370}>
         <Col>
           <Table>
-            <InputRow
+            <InputField
               label="Domain"
               value={credentials.domain}
               // !TODO
               onChange={handleChange('domain') as any}
             />
-            <InputRow
+            <InputField
               label="Username"
               value={credentials.username}
               // !TODO
               onChange={handleChange('username') as any}
             />
-            <InputRow
+            <InputField
               label="Password"
               type="password"
               value={credentials.password}

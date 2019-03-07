@@ -1,121 +1,100 @@
-import { AppProps, getTargetValue, List, TreeList, useAppState, useTreeState } from '@o/kit'
-import {
-  Absolute,
-  BorderBottom,
-  Button,
-  Input,
-  Panel,
-  PassProps,
-  preventDefault,
-  Row,
-  View,
-} from '@o/ui'
+import { ensure, useReaction } from '@mcro/use-store'
+import { getTargetValue, List, searchBits, TreeList, useTreeState } from '@o/kit'
+import { Button, InputRow, Panel, preventDefault, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
-import React, { useContext } from 'react'
-import { ListContext } from '.'
-import { ListStore } from './ListStore'
+import React, { useState } from 'react'
 
-export function ListsAppIndex(_: AppProps) {
-  // const [bits] = useBits()
-  const [state] = useAppState()
-  const [treeState, update] = useTreeState('list')
+// const [bits] = useBits()
 
-  // should be [treeState, actions]
-  // actions.addItem()
+export function ListsAppIndex() {
+  const [treeState, actions] = useTreeState('list')
+  const [addQuery, setAddQuery] = useState('')
+  const [showSearch, toggleShowSearch] = useToggle(false)
 
-  if (!state) {
-    return null
-  }
+  const searchResults = useReaction(
+    async (_, { sleep }) => {
+      ensure('query', !!addQuery)
+      await sleep(100)
+      const results = await searchBits({ query: addQuery, take: 20 })
+      return results.map(item => ({
+        ...item,
+        after: <Button margin={['auto', 0, 'auto', 10]} icon="add" />,
+      }))
+    },
+    {
+      defaultValue: [],
+    },
+    [addQuery],
+  )
 
   return (
     <>
-      <ListAdd />
+      <InputRow
+        value={addQuery}
+        onChange={flow(
+          preventDefault,
+          getTargetValue,
+          setAddQuery,
+        )}
+        onEnter={() => actions.addFolder(addQuery)}
+        placeholder="Add..."
+        buttons={
+          <>
+            <Button
+              active={showSearch}
+              tooltip="Search to add"
+              icon="zoom"
+              onClick={toggleShowSearch}
+            />
+            <Button
+              tooltip="Create folder"
+              icon="folder-15"
+              onClick={() => actions.addFolder(addQuery)}
+            />
+          </>
+        }
+      />
       <View flex={1}>
         <TreeList
           sortable
           minSelected={0}
           {...treeState}
-          getContextMenu={index => {
-            return [
-              {
-                label: 'Delete',
-                click: () => {
-                  console.log('delete item', index)
-                },
-              },
-            ]
-          }}
+          // actions={['delete']}
         />
       </View>
 
-      <ListSearchResults />
+      <Panel
+        boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
+        margin={[0, -10]}
+        padding={[0, 10]}
+        padded={false}
+        collapsable
+        collapsed={showSearch}
+        onCollapse={toggleShowSearch}
+        heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+      >
+        <List query={addQuery} items={searchResults || []} />
+      </Panel>
     </>
   )
 }
 
-const addFolder = (store: ListStore) => {
-  // API.receive(store.app, store.parentId, {
-  //   target: 'folder',
-  //   name: store.query,
-  // })
-  store.setQuery('')
-}
+// const addFolder = (store: ListStore) => {
+//   // API.receive(store.app, store.parentId, {
+//   //   target: 'folder',
+//   //   name: store.query,
+//   // })
+//   store.setQuery('')
+// }
 
-function ListAdd() {
-  const { listStore } = useContext(ListContext)
-  return (
-    <Row position="relative">
-      <BorderBottom opacity={0.25} />
-      <Input
-        chromeless
-        sizeRadius={0}
-        paddingLeft={12}
-        paddingRight={40}
-        height={33}
-        value={listStore.query}
-        onChange={flow(
-          preventDefault,
-          getTargetValue,
-          listStore.setQuery,
-        )}
-        onEnter={() => {
-          addFolder(listStore)
-        }}
-        flex={1}
-        placeholder="Add..."
-      />
-      <Absolute top={0} right={12} bottom={0}>
-        <Row flex={1} alignItems="center">
-          <PassProps chromeless opacity={0.35} hoverOpacity={1}>
-            <Button
-              active={!listStore.searchCollapsed}
-              tooltip="Search to add"
-              icon="zoom"
-              onClick={listStore.toggleSearchCollapsed}
-            />
-            <Button tooltip="Create folder" icon="folder-15" onClick={() => addFolder(listStore)} />
-          </PassProps>
-        </Row>
-      </Absolute>
-    </Row>
-  )
-}
-
-function ListSearchResults() {
-  const { listStore } = useContext(ListContext)
-  const { searchCollapsed, searchResults, query } = listStore
-  return (
-    <Panel
-      boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
-      margin={[0, -10]}
-      padding={[0, 10]}
-      padded={false}
-      collapsable
-      collapsed={searchCollapsed}
-      onCollapse={listStore.setSearchCollapsed}
-      heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
-    >
-      <List query={query} items={searchResults || []} />
-    </Panel>
-  )
-}
+// for <TreeList />
+// getContextMenu={index => {
+//   return [
+//     {
+//       label: 'Delete',
+//       click: () => {
+//         console.log('delete item', index)
+//       },
+//     },
+//   ]
+// }}

@@ -45,7 +45,15 @@ const defaultState = {
   },
 }
 
-export function useTreeState(subSelect: string) {
+const getActions = stateRef => {
+  return {
+    addFolder(name?: string) {},
+    selectFolder() {},
+    currentFolder() {},
+  }
+}
+
+export function useTreeState(subSelect: string): [DefaultTreeState, ReturnType<typeof getActions>] {
   useEnsureDefaultAppState<DefaultTreeState>(subSelect, defaultState)
   const [state, update] = useScopedAppState<DefaultTreeState>(subSelect, defaultState)
   const [userState, updateUserState] = useScopedUserState(`${subSelect}_treeState`)
@@ -53,13 +61,7 @@ export function useTreeState(subSelect: string) {
   const stateRef = useRef(null)
   stateRef.current = state
 
-  const actions = useMemo(() => {
-    return {
-      addFolder(name?: string) {},
-      selectFolder() {},
-      currentFolder() {},
-    }
-  }, [])
+  const actions = useMemo(() => getActions(stateRef), [])
 
   return [state, actions]
 }

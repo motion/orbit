@@ -1,6 +1,6 @@
+import { Bit } from '@o/models'
 import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
-import { ResolvableModel } from '../types/ResolvableModel'
 import { OrbitListItemProps } from '../views/ListItem'
 import { getAppDefinitions } from './getAppDefinitions'
 
@@ -35,18 +35,7 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   }
 }
 
-const modelTargetToAppType = (model: ResolvableModel) => {
-  // todo(nate): check it
-  // if (model.target === 'person-bit') {
-  //   return 'people'
-  // }
-  if (model.target === 'search-group') {
-    return 'search'
-  }
-  return model.target
-}
-
-export function getSourceAppConfig(appDef: AppDefinition, model: ResolvableModel): AppConfig {
+export function getSourceAppConfig(appDef: AppDefinition, model: Bit): AppConfig {
   if (!appDef) {
     throw new Error(`No source given: ${JSON.stringify(appDef)}`)
   }
@@ -55,7 +44,7 @@ export function getSourceAppConfig(appDef: AppDefinition, model: ResolvableModel
     icon: appDef.icon,
     iconLight: appDef.iconLight,
     title: model.target === 'bit' ? model.title : model['name'],
-    identifier: model ? modelTargetToAppType(model) : 'sources',
+    identifier: model ? model.target : 'sources',
     viewConfig: appDef.defaultViewConfig,
   }
 }

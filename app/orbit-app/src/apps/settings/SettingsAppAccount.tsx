@@ -1,7 +1,7 @@
 import { AppProps } from '@o/kit'
 import {
   Button,
-  InputRow,
+  InputField,
   Row,
   Section,
   SegmentedRow,
@@ -32,8 +32,8 @@ export default function SettingsAppAccount(_props: AppProps) {
       </SegmentedRow>
 
       <Section>
-        <InputRow label="Username" />
-        <InputRow label="Password" />
+        <InputField label="Username" />
+        <InputField label="Password" />
 
         <Row>
           <View flex={1} />

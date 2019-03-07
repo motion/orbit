@@ -2,8 +2,9 @@ import * as React from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
-export type InputProps = React.HTMLProps<HTMLInputElement> &
+export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   SizedSurfaceProps & {
+    value?: string
     sync?: { get: () => any; set: (a: any) => void }
     onEnter?: Function
     type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'

@@ -5,7 +5,7 @@ import {
   Col,
   FormRow,
   HorizontalSpace,
-  InputRow,
+  InputField,
   ListItem,
   Row,
   Section,
@@ -38,7 +38,7 @@ export default function SpacesAppEdit(props: AppProps) {
         <Text size={1.1}>Customize your space appearance.</Text>
         <VerticalSpace />
 
-        <InputRow
+        <InputField
           label="Name"
           placeholder="Name..."
           onChange={e => {

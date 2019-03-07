@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row, SimpleText } from '@mcro/gloss'
+import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
 import FilterRow from './FilterRow'
 import {

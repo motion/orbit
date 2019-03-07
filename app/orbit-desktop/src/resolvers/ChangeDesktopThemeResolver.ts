@@ -1,16 +1,19 @@
-import { resolveCommand } from '@mcro/mediator'
-import { Logger } from '@mcro/logger'
-import { ChangeDesktopThemeCommand } from '@mcro/models'
-import { Desktop } from '@mcro/stores'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { ChangeDesktopThemeCommand } from '@o/models'
+import { Desktop } from '@o/stores'
 
 const log = new Logger('command:change-desktop-theme')
 
-export const ChangeDesktopThemeResolver = resolveCommand(ChangeDesktopThemeCommand, async ({ theme }) => {
-  log.info(`changing desktop theme`, { theme })
+export const ChangeDesktopThemeResolver = resolveCommand(
+  ChangeDesktopThemeCommand,
+  async ({ theme }) => {
+    log.info(`changing desktop theme`, { theme })
 
-  Desktop.setState({
-    operatingSystem: {
-      theme,
-    },
-  })
-})
+    Desktop.setState({
+      operatingSystem: {
+        theme,
+      },
+    })
+  },
+)

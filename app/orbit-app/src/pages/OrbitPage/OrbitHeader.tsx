@@ -1,6 +1,6 @@
-import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
-import { Icon, useActiveApps } from '@mcro/kit'
-import { App } from '@mcro/stores'
+import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
+import { Icon, useActiveApps } from '@o/kit'
+import { App } from '@o/stores'
 import {
   BorderBottom,
   Button,
@@ -10,7 +10,7 @@ import {
   SegmentedRow,
   Text,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -26,6 +26,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
+  const isOnSettings =
+    paneManagerStore.activePane.type === 'settings' || paneManagerStore.activePane.type === 'spaces'
 
   return (
     <OrbitHeaderContainer
@@ -101,9 +103,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           <Button
             chromeless
-            opacity={paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.3}
+            opacity={isOnSettings ? 0.8 : 0.3}
             hoverStyle={{
-              opacity: paneManagerStore.activePane.type === 'settings' ? 0.8 : 0.4,
+              opacity: isOnSettings ? 0.8 : 0.4,
             }}
             icon="gear"
             iconSize={isTorn ? 10 : 12}
@@ -239,19 +241,17 @@ const LaunchButton = memo(() => {
         clearTimeout(tm.current)
         setHovered(false)
       }}
-      tooltip="Persist app onto desktop"
+      tooltip="Open app (⌘ + ⏎)"
       sizeHeight={0.95}
       sizeRadius={2}
       onClick={Actions.tearApp}
-      width={80}
+      width={50}
     >
       {!isHovered ? (
-        <Text fontWeight={500} alpha={0.9}>
-          Open
-        </Text>
+        <Icon name="arrows-e_share-26" size={11} transform={{ x: -1.5 }} />
       ) : (
         <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
-          ⌘ ⏎
+          Open
         </Text>
       )}
     </Button>
@@ -264,10 +264,10 @@ const LinkButton = memo(() => {
     <Button
       sizeHeight={0.95}
       sizePadding={1.2}
-      tooltip={`Copy link: ${locationStore.urlString}`}
+      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
       sizeRadius={2}
       icon="link69"
-      iconSize={12}
+      iconSize={10}
     />
   )
 })

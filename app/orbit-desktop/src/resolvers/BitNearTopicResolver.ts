@@ -1,8 +1,7 @@
-import { resolveMany } from '@mcro/mediator'
-import { BitsNearTopicModel } from '@mcro/models'
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
-import { BitEntity } from '@mcro/models'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
+import { resolveMany } from '@o/mediator'
+import { BitEntity, BitsNearTopicModel } from '@o/models'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('BitNearTopicResolver')

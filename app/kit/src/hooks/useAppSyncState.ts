@@ -1,5 +1,5 @@
-import { useModel, useModelCount } from '@mcro/bridge'
-import { AppBit, BitModel, Job, JobModel } from '@mcro/models'
+import { useModel, useModelCount } from '@o/bridge'
+import { AppBit, BitModel, Job, JobModel } from '@o/models'
 
 export function useAppSyncState(
   app: AppBit | false,

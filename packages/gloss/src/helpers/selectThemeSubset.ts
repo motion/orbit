@@ -1,4 +1,4 @@
-import { ThemeObject } from '@mcro/css'
+import { ThemeObject } from '@o/css'
 
 type PartialTheme = Partial<ThemeObject>
 

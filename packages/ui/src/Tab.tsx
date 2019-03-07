@@ -1,4 +1,4 @@
-import { gloss, Row, ViewProps } from '@mcro/gloss'
+import { gloss, Row, ViewProps } from '@o/gloss'
 import React from 'react'
 import { useBreadcrumb } from './Breadcrumbs'
 import { getSegmentRadius } from './SegmentedRow'

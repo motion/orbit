@@ -1,5 +1,5 @@
-import { useModel } from '@mcro/bridge'
-import { SpaceModel, UserModel } from '@mcro/models'
+import { useModel } from '@o/bridge'
+import { SpaceModel, UserModel } from '@o/models'
 
 export function useActiveSpace() {
   const [user] = useModel(UserModel, {})

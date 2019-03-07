@@ -1,5 +1,5 @@
-import { apps } from '@mcro/apps'
-import { AppDefinition, configureKit } from '@mcro/kit'
+import { apps } from '@o/apps'
+import { AppDefinition, configureKit } from '@o/kit'
 import { StoreContext } from '../contexts'
 import { AppsApp } from './apps/AppsApp'
 import { BitApp } from './bit/BitApp'

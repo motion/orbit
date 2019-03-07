@@ -1,6 +1,6 @@
-import { observeOne } from '@mcro/bridge'
-import { AppModel } from '@mcro/models'
-import { ensure, react, useHook } from '@mcro/use-store'
+import { observeOne } from '@o/bridge'
+import { AppModel } from '@o/models'
+import { ensure, react, useHook } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
 

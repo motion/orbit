@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "@mcro/babel-preset-motion",
+      "@o/babel-preset-motion",
       {
         "env": {
           "modules": false

@@ -1,5 +1,5 @@
-import { SubPaneStore } from '@mcro/kit'
-import { Section } from '@mcro/ui'
+import { SubPaneStore } from '@o/kit'
+import { Section } from '@o/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'

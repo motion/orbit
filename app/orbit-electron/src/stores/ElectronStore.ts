@@ -1,4 +1,4 @@
-import { configureUseStore, debugUseStore } from '@mcro/use-store'
+import { configureUseStore, debugUseStore } from '@o/use-store'
 import root from 'global'
 
 configureUseStore({

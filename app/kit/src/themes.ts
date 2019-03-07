@@ -1,4 +1,4 @@
-import { color, linearGradient, ThemeMaker } from '@mcro/gloss'
+import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
@@ -133,7 +133,7 @@ const dark = {
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     tabBackgroundTop: darkBackground.alpha(0.65),
-    tabBackgroundBottom: darkBackground.alpha(0.8),
+    tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [255, 255, 255, 0.015],
     tabInactiveHover: [0, 0, 0, 0.1],
@@ -200,9 +200,17 @@ export const themes = {
     ...Theme.fromStyles({
       iconFill: '#fff',
       background: '#449878',
-      // backgroundHover: '#449878',
-      // backgroundActive: '#449878',
       color: '#fff',
+    }),
+  },
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      borderColor: orbitActiveBg,
+      borderColorHover: orbitActiveBg,
     }),
   },
   // 'light-selected': {

@@ -1,4 +1,4 @@
-import { AppBit, Bit } from '@mcro/models'
+import { AppBit, Bit } from '@o/models'
 import * as React from 'react'
 import { NormalItem } from '../types/NormalItem'
 import { ResolvableModel } from '../types/ResolvableModel'

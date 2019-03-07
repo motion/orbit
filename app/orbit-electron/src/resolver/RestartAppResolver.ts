@@ -1,15 +1,12 @@
-import { Logger } from '@mcro/logger'
-import { resolveCommand } from '@mcro/mediator'
-import { RestartAppCommand } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { RestartAppCommand } from '@o/models'
 import { app } from 'electron'
 
 const log = new Logger('command:restart-app')
 
-export const RestartAppResolver: any = resolveCommand(
-  RestartAppCommand,
-  async () => {
-    log.info('restarting app...')
-    app.relaunch()
-    app.exit()
-  },
-)
+export const RestartAppResolver: any = resolveCommand(RestartAppCommand, async () => {
+  log.info('restarting app...')
+  app.relaunch()
+  app.exit()
+})

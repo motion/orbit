@@ -1,4 +1,4 @@
-import { createUseStores, UseStoresOptions } from '@mcro/use-store'
+import { createUseStores, UseStoresOptions } from '@o/use-store'
 import { UIStores } from '../UIStores'
 import { configure } from './configure'
 

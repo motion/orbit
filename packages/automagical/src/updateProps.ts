@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/fast-compare'
+import { isEqual } from '@o/fast-compare'
 import { transaction } from 'mobx'
 
 // updateProps

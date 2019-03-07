@@ -1,5 +1,5 @@
-import { AppConfig, HandleOrbitSelect } from '@mcro/kit'
-import { ensure, react, shallow, useHook } from '@mcro/use-store'
+import { AppConfig, HandleOrbitSelect } from '@o/kit'
+import { ensure, react, shallow, useHook } from '@o/use-store'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStoresSimple } from '../../hooks/useStores'
 
@@ -21,6 +21,10 @@ export class OrbitStore {
 
   setSelectItem: HandleOrbitSelect = (index, appConfig) => {
     this.nextItem = { index, appConfig }
+  }
+
+  setActiveConfig(id: string, config: AppConfig) {
+    this.activeConfig[id] = config
   }
 
   updateSelectedItem = react(

@@ -96,9 +96,10 @@ const alias = {
 const mcroClientOnly = {
   include: [
     Path.resolve(cwd, 'src'),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'kit', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'ui', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@mcro', 'apps', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit-internal', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'ui', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'apps', 'src')),
   ],
 }
 

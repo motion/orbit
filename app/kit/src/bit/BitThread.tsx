@@ -1,4 +1,4 @@
-import { ScrollableContent, Thread, Title, View } from '@mcro/ui'
+import { ScrollableContent, Thread, Title, View } from '@o/ui'
 import * as React from 'react'
 import { BitStatusBar } from '../views/BitStatusBar'
 

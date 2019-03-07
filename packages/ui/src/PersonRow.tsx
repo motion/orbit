@@ -1,4 +1,4 @@
-import { Inline, Row, ThemeContext } from '@mcro/gloss'
+import { Inline, Row, ThemeContext } from '@o/gloss'
 import { flow } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from './helpers/preventDefault'

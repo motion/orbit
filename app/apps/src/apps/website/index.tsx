@@ -1,4 +1,4 @@
-import { createApp } from '@mcro/kit'
+import { createApp } from '@o/kit'
 import WebsiteSetupPane from './WebsiteSetupPane'
 
 export default createApp({

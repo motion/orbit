@@ -1,5 +1,5 @@
-import { MediatorClient, WebSocketClientTransport } from '@mcro/mediator'
-import { randomString } from '@mcro/utils'
+import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { randomString } from '@o/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export const Mediator = new MediatorClient({

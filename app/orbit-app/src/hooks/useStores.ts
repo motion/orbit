@@ -1,4 +1,4 @@
-import { createUseStores } from '@mcro/use-store'
+import { createUseStores } from '@o/use-store'
 import { useContext } from 'react'
 import { StoreContext } from '../contexts'
 import { AllStores } from '../contexts/StoreContext'

@@ -1,6 +1,7 @@
-import { command } from '@mcro/bridge'
-import { gloss, View, ViewProps } from '@mcro/gloss'
+import { command } from '@o/bridge'
+import { gloss, View, ViewProps } from '@o/gloss'
 import {
+  LocationStore,
   PaneManagerStore,
   ProvideStores,
   QueryStore,
@@ -8,10 +9,10 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
-} from '@mcro/kit'
-import { CloseAppCommand } from '@mcro/models'
-import { Theme } from '@mcro/ui'
-import { useStore, useStoreSimple } from '@mcro/use-store'
+} from '@o/kit'
+import { CloseAppCommand } from '@o/models'
+import { Theme } from '@o/ui'
+import { useStore, useStoreSimple } from '@o/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { orbitStaticApps } from '../../apps/orbitApps'
@@ -27,7 +28,6 @@ import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
 import { useStores } from '../../hooks/useStores'
 import { HeaderStore } from '../../stores/HeaderStore'
-import { LocationStore } from '../../stores/LocationStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
@@ -175,9 +175,6 @@ function OrbitPageProvideStores(props: any) {
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
-    onPaneChange(index: number) {
-      orbitWindowStore.activePaneIndex = index
-    },
   })
 
   const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })

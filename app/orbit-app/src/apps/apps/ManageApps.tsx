@@ -1,4 +1,4 @@
-import { AppIcon, AppView, useActiveApps } from '@mcro/kit'
+import { AppIcon, AppView, useActiveApps } from '@o/kit'
 import {
   BorderLeft,
   Row,
@@ -9,7 +9,7 @@ import {
   Title,
   VerticalSplitPane,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import React, { useState } from 'react'
 
 export const ManageApps = function ManageApps() {

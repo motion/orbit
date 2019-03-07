@@ -9,7 +9,7 @@ import {
   useActiveAppsWithDefinition,
   useActiveSpace,
   useAppDefinitions,
-} from '@mcro/kit'
+} from '@o/kit'
 import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
@@ -50,7 +50,6 @@ export function AppsIndex(_props: AppProps) {
 
   return (
     <List
-      minSelected={0}
       items={[
         ...clientApps.map(x => getAppItem(x, { group: 'Apps' })),
         ...syncApps.map(x => getAppItem(x, { group: 'Sources', after: sourceIcon })),

@@ -1,4 +1,4 @@
-import { color } from '@mcro/color'
+import { color } from '@o/color'
 
 // mutate styles to have alpha if defined in props
 

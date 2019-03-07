@@ -1,10 +1,10 @@
-import { Logger } from '@mcro/logger'
-import * as Path from 'path'
-import { getGlobalConfig } from '@mcro/config'
-import Sudoer from '@mcro/electron-sudo'
-import { checkAuthProxy } from './checkAuthProxy'
+import { getGlobalConfig } from '@o/config'
+import Sudoer from '@o/electron-sudo'
+import { Logger } from '@o/logger'
 import { existsSync } from 'fs'
 import { userInfo } from 'os'
+import * as Path from 'path'
+import { checkAuthProxy } from './checkAuthProxy'
 
 const log = new Logger('startAuthProxy')
 const Config = getGlobalConfig()

@@ -1,5 +1,5 @@
-import { getGlobalConfig, setGlobalConfig } from '@mcro/config'
-import { ChildProcessProps, startChildProcess } from '@mcro/orbit-fork-process'
+import { getGlobalConfig, setGlobalConfig } from '@o/config'
+import { ChildProcessProps, startChildProcess } from '@o/orbit-fork-process'
 import { ChildProcess } from 'child_process'
 import root from 'global'
 import { join } from 'path'
@@ -55,10 +55,10 @@ export async function main() {
         require('./startElectron').startElectron({ mainProcess: true })
         return
       case 'desktop':
-        require('@mcro/orbit-desktop').main()
+        require('@o/orbit-desktop').main()
         return
       case 'syncers':
-        require('@mcro/orbit-syncers').main()
+        require('@o/orbit-syncers').main()
         return
       case 'electron-menus':
       case 'electron-apps':

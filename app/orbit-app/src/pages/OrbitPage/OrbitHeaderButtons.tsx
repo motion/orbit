@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import { ClearButton, Icon } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { ClearButton, Icon } from '@o/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 

@@ -1,7 +1,13 @@
-import { loadMany } from '@mcro/bridge'
-import { BitModel } from '@mcro/models'
-import { SelectableTreeList, SelectableTreeListProps, useMemoGetValue } from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
+import { loadMany } from '@o/bridge'
+import { BitModel } from '@o/models'
+import {
+  ListItemProps,
+  SelectableTreeItem,
+  SelectableTreeList,
+  SelectableTreeListProps,
+  useMemoGetValue,
+} from '@o/ui'
+import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
 import { useIsAppActive } from '../hooks/useIsAppActive'
@@ -9,9 +15,12 @@ import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { HandleOrbitSelect } from './List'
-import { OrbitListItemProps } from './ListItem'
 
-export type TreeListProps = Omit<SelectableTreeListProps, 'onSelect' | 'onOpen'> & {
+export type TreeListProps = Omit<
+  SelectableTreeListProps,
+  'onSelect' | 'onOpen' | 'loadItemProps'
+> & {
+  loadItemProps?: SelectableTreeListProps['loadItemProps']
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
@@ -33,8 +42,8 @@ export class TreeListStore {
     this.history = history
   }
 
-  loadItemProps = async (ids: number[]): Promise<OrbitListItemProps[]> => {
-    const bits = await loadMany(BitModel, { args: { where: { id: ids } } })
+  loadItemProps = async (ids: SelectableTreeItem[]): Promise<ListItemProps[]> => {
+    const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
     this.stores.appStore.setCurrentItems(bits)
     return []
   }

@@ -1,5 +1,5 @@
-import { CSSPropertySet, gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { CSSPropertySet, gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as React from 'react'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
@@ -18,7 +18,9 @@ const Block = gloss(UI.Block, {
   bottom: 0,
   padding: 0,
   whiteSpace: 'pre',
-}).theme((_, theme) => ({
+})
+
+const SelectableBlock = gloss(Block).theme((_, theme) => ({
   '&::selection': {
     color: theme.color.lighten(0.1),
     background: theme.background.darken(0.1),
@@ -160,6 +162,19 @@ export class HighlightedTextArea extends React.Component<Props> {
     const { onChange, highlight, value, forwardRef, ...props } = this.props
     return (
       <TextAreaOuter height={props.lineHeight || '100%'}>
+        {/* prevent dragging on text */}
+        <UI.View
+          fontWeight={props.fontWeight}
+          fontSize={props.fontSize}
+          lineHeight={props.lineHeight}
+          alignSelf="flex-start"
+          WebkitAppRegion="no-drag"
+          zIndex={0}
+          opacity={0}
+        >
+          {this.state.value}
+        </UI.View>
+        {/* highlights layere */}
         <Block
           {...props}
           ref={this.highlights}
@@ -169,7 +184,8 @@ export class HighlightedTextArea extends React.Component<Props> {
           overflowY="hidden"
           className="hideScrollBar"
         />
-        <Block
+        {/* actual input layer */}
+        <SelectableBlock
           tagName="textarea"
           rows={1}
           resize="none"

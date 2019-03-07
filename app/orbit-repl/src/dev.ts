@@ -1,4 +1,4 @@
-import debugApps from '@mcro/debug-apps'
+import debugApps from '@o/debug-apps'
 
 Error.stackTraceLimit = Infinity
 

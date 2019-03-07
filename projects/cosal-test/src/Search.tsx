@@ -1,4 +1,4 @@
-import { ensure, react } from '@mcro/use-store'
+import { ensure, react } from '@o/use-store'
 import * as React from 'react'
 import Saliency from './Saliency'
 

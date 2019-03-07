@@ -1,10 +1,15 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
-import { ServiceLoader } from '../../ServiceLoader'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { sleep } from '@o/utils'
 import { ServiceLoadThrottlingOptions } from '../../options'
+import { ServiceLoader } from '../../ServiceLoader'
 import { ConfluenceQueries } from './ConfluenceQueries'
-import { ConfluenceComment, ConfluenceContent, ConfluenceGroup, ConfluenceUser } from './ConfluenceTypes'
-import { AppBit } from '@mcro/models'
+import {
+  ConfluenceComment,
+  ConfluenceContent,
+  ConfluenceGroup,
+  ConfluenceUser,
+} from './ConfluenceTypes'
 
 /**
  * Loads confluence data from its API.

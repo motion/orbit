@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/fast-compare'
+import { isEqual } from '@o/fast-compare'
 import { cloneElement, memo, useMemo } from 'react'
 
 export function memoIsEqualDeep<A>(a: A): A {

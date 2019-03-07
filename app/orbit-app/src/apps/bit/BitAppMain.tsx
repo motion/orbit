@@ -1,7 +1,7 @@
-import { useModel } from '@mcro/bridge'
-import { AppProps, HighlightedSearchable, ItemView } from '@mcro/kit'
-import { BitModel } from '@mcro/models'
-import { ItemPropsProvider } from '@mcro/ui'
+import { useModel } from '@o/bridge'
+import { AppProps, HighlightedSearchable, ItemView } from '@o/kit'
+import { BitModel } from '@o/models'
+import { ItemPropsProvider } from '@o/ui'
 import * as React from 'react'
 import { BitTitleBar } from './BitTitlebar'
 

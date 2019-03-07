@@ -1,8 +1,8 @@
-import { Logger } from '@mcro/logger'
-import { resolveCommand } from '@mcro/mediator'
-import { AppBit, AppEntity, AppSaveCommand } from '@mcro/models'
-import { JiraLoader } from '@mcro/apps/_/apps/jira/JiraLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { ConfluenceLoader } from '@mcro/apps/_/apps/confluence/ConfluenceLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { ConfluenceLoader } from '@o/apps/_/apps/confluence/ConfluenceLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { JiraLoader } from '@o/apps/_/apps/jira/JiraLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { AppBit, AppEntity, AppSaveCommand } from '@o/models'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('command:app-save')
@@ -26,7 +26,7 @@ export const AppSaveResolver = resolveCommand(AppSaveCommand, async ({ app }) =>
       await loader.test()
       app.name = extractTeamNameFromDomain((app.data as any).values.credentials.domain)
     } else if (app.identifier === 'confluence') {
-      const loader = new ConfluenceLoader((app.data as any), log)
+      const loader = new ConfluenceLoader(app.data as any, log)
       await loader.test()
       app.name = extractTeamNameFromDomain((app.data as any).values.credentials.domain)
     } else if (app.identifier === 'website') {

@@ -1,5 +1,5 @@
-import { Bit } from '@mcro/models'
-import { Avatar, memoIsEqualDeep, Text } from '@mcro/ui'
+import { Bit } from '@o/models'
+import { Avatar, memoIsEqualDeep, Text } from '@o/ui'
 import * as React from 'react'
 
 // TODO basically just use a regular ListItem and make it support this

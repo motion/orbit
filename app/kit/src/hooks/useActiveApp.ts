@@ -1,5 +1,5 @@
-import { AppBit } from '@mcro/models'
-import { useReaction } from '@mcro/use-store'
+import { AppBit } from '@o/models'
+import { useReaction } from '@o/use-store'
 import { useState } from 'react'
 import { useActiveApps } from './useActiveApps'
 import { useStores } from './useStores'

@@ -1,4 +1,4 @@
-import { getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@o/config'
 import { app, dialog } from 'electron'
 import { handleExit } from './helpers/handleExit'
 
@@ -25,7 +25,7 @@ const finishLaunchingElectron = async ({ mainProcess }) => {
 
   const Config = getGlobalConfig()
   // start electron...
-  const ElectronApp = require('@mcro/orbit-electron')
+  const ElectronApp = require('@o/orbit-electron')
   ElectronApp.main()
 
   // PRODUCTION

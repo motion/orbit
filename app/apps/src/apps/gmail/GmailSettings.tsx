@@ -1,4 +1,4 @@
-import { AppProps, AppSubView } from '@mcro/kit'
+import { AppProps, AppSubView } from '@o/kit'
 import * as React from 'react'
 
 export function GmailSettings(_: AppProps) {

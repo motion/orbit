@@ -1,17 +1,8 @@
-import { command } from '@mcro/bridge'
-import { AppProps, showConfirmDialog, useActiveUser } from '@mcro/kit'
-import { ResetDataCommand, RestartAppCommand } from '@mcro/models'
-import { App } from '@mcro/stores'
-import {
-  Button,
-  CheckBoxRow,
-  Divider,
-  FormRow,
-  Section,
-  Theme,
-  Title,
-  VerticalSpace,
-} from '@mcro/ui'
+import { command } from '@o/bridge'
+import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
+import { ResetDataCommand, RestartAppCommand } from '@o/models'
+import { App } from '@o/stores'
+import { Button, CheckBoxRow, Divider, FormRow, Section, Theme, Title, VerticalSpace } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { sleep } from '../../helpers'

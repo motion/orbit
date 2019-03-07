@@ -1,5 +1,5 @@
-import { App, AppProps, createApp, useSearch } from '@mcro/kit'
-import { useStore } from '@mcro/use-store'
+import { App, AppProps, createApp, useSearch } from '@o/kit'
+import { useStore } from '@o/use-store'
 import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
 import { SearchAppMain } from './SearchAppMain'

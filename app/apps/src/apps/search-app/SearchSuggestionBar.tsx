@@ -1,6 +1,6 @@
-import { color, gloss } from '@mcro/gloss'
-import { useStores } from '@mcro/kit'
-import { Button, ButtonProps, Row } from '@mcro/ui'
+import { color, gloss } from '@o/gloss'
+import { useStores } from '@o/kit'
+import { Button, ButtonProps, Row } from '@o/ui'
 import * as React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'
 

@@ -1,4 +1,4 @@
-import { RoundButton } from '@mcro/ui'
+import { RoundButton } from '@o/ui'
 import * as React from 'react'
 
 export const RoundButtonSmall = props => (

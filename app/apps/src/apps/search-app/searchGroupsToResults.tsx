@@ -1,5 +1,5 @@
-import { SearchResult } from '@mcro/models'
-import { flatten } from 'lodash'
+import { SearchResult } from '@o/models';
+import { flatten } from 'lodash';
 
 const groupToName = {
   'last-day': 'Recently',

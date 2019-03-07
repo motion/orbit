@@ -1,7 +1,7 @@
-import Path from 'path'
-import { spawn, ChildProcess } from 'child_process'
+import { Logger } from '@o/logger'
+import { ChildProcess, spawn } from 'child_process'
 import electronUtil from 'electron-util/node'
-import { Logger } from '@mcro/logger'
+import Path from 'path'
 import { Server } from 'ws'
 
 const log = new Logger('screen')

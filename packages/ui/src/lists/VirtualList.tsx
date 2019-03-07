@@ -1,5 +1,5 @@
 import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-hoc'
-import { always, ensure, react, useStore } from '@mcro/use-store'
+import { always, ensure, react, useStore } from '@o/use-store'
 import { MenuItem } from 'electron'
 import { throttle } from 'lodash'
 import React, {

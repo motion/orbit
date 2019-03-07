@@ -1,7 +1,7 @@
 // test page for loading in browser to isolate
 export async function setupTestApp(/* testAppId?: string */) {
   // if (testAppId === 'bit') {
-  //   const lastBit = await require('@mcro/bridge').loadOne(BitModel, { args: {} })
+  //   const lastBit = await require('@o/bridge').loadOne(BitModel, { args: {} })
   //   AppActions.setPeekApp({
   //     position: [0, 0],
   //     size: [400, 400],
@@ -35,7 +35,7 @@ export async function setupTestApp(/* testAppId?: string */) {
   //   })
   // }
   // if (testAppId === 'people') {
-  //   const lastPerson = await require('@mcro/bridge').loadOne(PersonBitModel, {
+  //   const lastPerson = await require('@o/bridge').loadOne(PersonBitModel, {
   //     args: {},
   //   })
   //   AppActions.setPeekApp({

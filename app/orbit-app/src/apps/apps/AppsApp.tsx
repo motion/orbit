@@ -1,4 +1,4 @@
-import { App, AppDefinition } from '@mcro/kit'
+import { App, AppDefinition } from '@o/kit'
 import React from 'react'
 import { AppsIndex } from './AppsIndex'
 import { AppsMain } from './AppsMain'

@@ -1,6 +1,6 @@
+import { gloss } from '@o/gloss'
+import { Text } from '@o/ui'
 import * as React from 'react'
-import { gloss } from '@mcro/gloss'
-import { Text } from '@mcro/ui'
 import { ViewPortText } from './ViewPortText'
 
 export const Paragraph = gloss(Text, {

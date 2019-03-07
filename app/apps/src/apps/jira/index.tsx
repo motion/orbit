@@ -1,4 +1,4 @@
-import { createApp } from '@mcro/kit'
+import { createApp } from '@o/kit'
 import React from 'react'
 import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { jiraIcon } from './jiraIcon'

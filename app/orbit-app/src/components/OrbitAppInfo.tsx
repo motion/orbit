@@ -1,6 +1,6 @@
-import { Row, View } from '@mcro/gloss'
-import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@mcro/kit'
-import { HorizontalSpace, Text } from '@mcro/ui'
+import { Row, View } from '@o/gloss'
+import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@o/kit'
+import { HorizontalSpace, Text } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 

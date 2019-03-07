@@ -1,4 +1,4 @@
-import { CurrentComponent } from '@mcro/automagical'
+import { CurrentComponent } from '@o/automagical'
 import { throttle } from 'lodash'
 import { config } from './configure'
 

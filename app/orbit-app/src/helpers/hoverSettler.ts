@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { isEqual, throttle } from 'lodash'
 import * as Mobx from 'mobx'
 

@@ -1,5 +1,5 @@
-import { getGlobalConfig } from '@mcro/config'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { getGlobalConfig } from '@o/config'
+import { App, Desktop, Electron } from '@o/stores'
 import root from 'global'
 
 root['require'] = require

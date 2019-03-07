@@ -5,8 +5,8 @@
  * @format
  */
 
-import { attachTheme, ThemeObject } from '@mcro/gloss'
-import { on } from '@mcro/utils'
+import { attachTheme } from '@o/gloss'
+import { on } from '@o/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
@@ -52,7 +52,6 @@ type Props = {
   onEnter?: Function
   before?: React.ReactNode
   after?: React.ReactNode
-  theme?: ThemeObject
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -323,7 +322,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           before={before}
           after={after}
           width={width}
-          visible={!!this.state.searchTerm || this.state.filters.length > 0}
+          visible={!!this.state.searchTerm}
           onClickClear={this.clear}
           focusedToken={this.state.focusedToken}
           filters={this.state.filters}

@@ -1,4 +1,4 @@
-import { MergeContext } from '@mcro/ui'
+import { MergeContext } from '@o/ui'
 import React from 'react'
 import { config } from '../configureKit'
 

@@ -1,4 +1,4 @@
-import { AppProps } from '@mcro/kit'
+import { AppProps } from '@o/kit'
 import * as React from 'react'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'

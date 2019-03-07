@@ -1,5 +1,5 @@
-import { getAppDefinition } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
+import { getAppDefinition } from '@o/kit'
+import { AppBit } from '@o/models'
 
 export const defaultApps: AppBit[] = [
   {
@@ -51,8 +51,6 @@ export class NewAppStore {
   setApp(identifier: string) {
     const nextApp = defaultApps.find(x => x.identifier === identifier)
     if (!nextApp) {
-      console.warn('no next app?')
-      debugger
       return
     }
 

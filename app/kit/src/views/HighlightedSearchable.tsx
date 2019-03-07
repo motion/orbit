@@ -1,4 +1,4 @@
-import { MergeHighlightsContext, Searchable, SearchBarType, SelectionStore } from '@mcro/ui'
+import { MergeHighlightsContext, Searchable, SearchBarType, SelectionStore } from '@o/ui'
 import * as React from 'react'
 
 type SearchChildProps = {

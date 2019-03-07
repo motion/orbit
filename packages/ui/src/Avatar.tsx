@@ -1,4 +1,4 @@
-import { gloss, View } from '@mcro/gloss'
+import { gloss, View } from '@o/gloss'
 
 export const Avatar = gloss(View, {
   borderRadius: 100,

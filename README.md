@@ -131,9 +131,9 @@ Bootstrap sort of checks a lot of stuff, but its really fast, so you can general
 
 When you start the apps you'll see a Chromium instance pop up and hook into each running app. Right now there are three: Desktop (Node), Electron, and App (Web). They share a few small helpers:
 
-### `Logger` from @mcro/logger
+### `Logger` from @o/logger
 
-In dev mode we expose `Logger` from @mcro/logger so you can control logs:
+In dev mode we expose `Logger` from @o/logger so you can control logs:
 
 ```js
 LoggerSettings.namespaces // list things that log
@@ -185,7 +185,7 @@ window.enableLog = true
 Mediator.loadOne(Models.*).then(x => console.log(x))
 ```
 
-### The root level stores `App`, `Desktop` and `Electron` from `@mcro/stores`
+### The root level stores `App`, `Desktop` and `Electron` from `@o/stores`
 
 These are the base singleton stores that contain the app state for each app. The `.state` part of these stores is synced between every app. This is really nice to have in the REPL.
 
@@ -207,7 +207,7 @@ Apps can only set their own state. They can also send pre-defined messages to ea
 
 ```js
 // Message example
-import { App, Desktop, Electron } from '@mcro/stores'
+import { App, Desktop, Electron } from '@o/stores'
 
 App.messages // list of messages it supports
 

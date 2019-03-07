@@ -1,7 +1,7 @@
-import { command } from '@mcro/bridge'
-import { getGlobalConfig } from '@mcro/config'
-import { AppDefinition } from '@mcro/kit'
-import { OpenCommand, SetupProxyCommand } from '@mcro/models'
+import { command } from '@o/bridge'
+import { getGlobalConfig } from '@o/config'
+import { AppDefinition } from '@o/kit'
+import { OpenCommand, SetupProxyCommand } from '@o/models'
 import { memoize } from 'lodash'
 
 export const addAppClickHandler = memoize((app: AppDefinition) => async (e: any) => {

@@ -1,10 +1,9 @@
-import harmonicMean from './harmonicMean'
-import { range, sum } from 'lodash'
-import { toWords, sigmoid, getWordVector } from './helpers'
-import { Matrix, Vector } from '@mcro/vectorious'
-import { Covariance } from './getIncrementalCovariance'
+import { Matrix, Vector } from '@o/vectorious'
+import { range, sum, uniqBy } from 'lodash'
 import { VectorDB } from './cosal'
-import { uniqBy } from 'lodash'
+import { Covariance } from './getIncrementalCovariance'
+import harmonicMean from './harmonicMean'
+import { getWordVector, sigmoid, toWords } from './helpers'
 
 export { getIncrementalCovariance } from './getIncrementalCovariance'
 

@@ -1,4 +1,4 @@
-import { react } from '@mcro/use-store'
+import { react } from '@o/use-store'
 import {
   Direction,
   MovesMap,
@@ -32,6 +32,7 @@ export class SelectionStore {
   lastSelectAt = 0
   _activeIndex = -1
   movesMap: MovesMap[] | null = null
+  originalItems = null
 
   get isActive() {
     return typeof this.finalProps.isActive === 'boolean' ? this.finalProps.isActive : true
@@ -51,7 +52,11 @@ export class SelectionStore {
     if (this.activeIndex === -1 || !this.movesMap) {
       return null
     }
-    return this.movesMap[this.activeIndex].id
+    const activeItem = this.movesMap[this.activeIndex]
+    if (activeItem) {
+      return activeItem.id
+    }
+    return null
   }
 
   setActiveIndex = (val: number) => {
@@ -59,6 +64,17 @@ export class SelectionStore {
       typeof this.finalProps.minSelected === 'number' ? this.finalProps.minSelected : -1,
       val,
     )
+  }
+
+  setOriginalItems = (items: { id: any }[]) => {
+    this.originalItems = items
+  }
+
+  get currentItems() {
+    if (!this.originalItems) {
+      return null
+    }
+    return this.movesMap.map(x => this.originalItems.find(item => item.id === x.id))
   }
 
   get hasActiveIndex() {

@@ -1,14 +1,14 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
-import { MediatorServer, WebSocketServerTransport } from '@mcro/mediator'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { MediatorServer, WebSocketServerTransport } from '@o/mediator'
 import {
   CloseAppCommand,
   NewFallbackServerPortCommand,
   RestartAppCommand,
   TearAppCommand,
-} from '@mcro/models'
-import { render } from '@mcro/reactron'
-import { Electron } from '@mcro/stores'
+} from '@o/models'
+import { render } from '@o/reactron'
+import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
 import * as React from 'react'

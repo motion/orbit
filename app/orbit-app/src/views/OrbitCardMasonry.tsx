@@ -1,5 +1,5 @@
-import { normalizeItem } from '@mcro/kit'
-import { Card } from '@mcro/ui'
+import { normalizeItem } from '@o/kit'
+import { Card } from '@o/ui'
 import * as React from 'react'
 import { Masonry } from './Masonry'
 

@@ -1,4 +1,4 @@
-import { gloss, Row, View, ViewProps } from '@mcro/gloss'
+import { gloss, Row, View, ViewProps } from '@o/gloss'
 import * as React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButton } from '../buttons/RoundButton'

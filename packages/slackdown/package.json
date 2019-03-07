@@ -1,6 +1,6 @@
 {
-  "name": "@mcro/slackdown",
-  "version": "2.3.10",
+  "name": "@o/slackdown",
+  "version": "2.4.0",
   "description": "",
   "main": "_/slackdown.js",
   "sideEffects": false,

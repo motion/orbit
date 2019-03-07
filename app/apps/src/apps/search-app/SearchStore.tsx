@@ -1,4 +1,4 @@
-import { loadMany } from '@mcro/bridge'
+import { loadMany } from '@o/bridge'
 import {
   AppIcon,
   MarkType,
@@ -6,9 +6,9 @@ import {
   SearchState,
   SpaceIcon,
   useStoresSimple,
-} from '@mcro/kit'
-import { AppBit, SearchQuery, SearchResultModel } from '@mcro/models'
-import { ensure, react, useHook } from '@mcro/use-store'
+} from '@o/kit'
+import { AppBit, SearchQuery, SearchResultModel } from '@o/models'
+import { ensure, react, useHook } from '@o/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'

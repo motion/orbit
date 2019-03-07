@@ -1,4 +1,4 @@
-import { Color, CSSPropertySet, gloss, View } from '@mcro/gloss'
+import { Color, CSSPropertySet, gloss, View } from '@o/gloss'
 import fuzzy from 'fuzzy'
 import * as React from 'react'
 import { configure } from './helpers/configure'

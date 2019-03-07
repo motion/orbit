@@ -1,5 +1,5 @@
-import { AppBit, ItemType } from '@mcro/models'
-import { SearchBarType } from '@mcro/ui'
+import { AppBit, ItemType } from '@o/models'
+import { SearchBarType } from '@o/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 import { AppConfig } from './AppConfig'

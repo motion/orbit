@@ -1,12 +1,12 @@
-import * as React from 'react'
-import { FullScreen, View, Theme, Row } from '@mcro/ui'
-import { Parallax, ParallaxLayer } from 'react-spring/addons'
-import { ViewPortText } from '../views/ViewPortText'
-import { TitleText } from '../views/TitleText'
-import { FadeDown } from '../views/FadeDown'
-import { useWaitForFonts } from '@mcro/wait-for-fonts'
-import { Paragraph } from '../views/Paragraph'
+import { FullScreen, Row, Theme, View } from '@o/ui'
+import { useWaitForFonts } from '@o/wait-for-fonts'
 import { observer } from 'mobx-react-lite'
+import * as React from 'react'
+import { Parallax, ParallaxLayer } from 'react-spring/addons'
+import { FadeDown } from '../views/FadeDown'
+import { Paragraph } from '../views/Paragraph'
+import { TitleText } from '../views/TitleText'
+import { ViewPortText } from '../views/ViewPortText'
 
 // next:
 // make a thing that does multiline text sizing

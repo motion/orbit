@@ -1,10 +1,10 @@
-import { observeMany } from '@mcro/bridge'
-import { decorate, ensure, react } from '@mcro/use-store'
+import { observeMany } from '@o/bridge'
+import { BitModel } from '@o/models'
+import { decorate, ensure, react } from '@o/use-store'
 import { NLPResponse } from '../../types/NLPResponse'
 import { QueryStore } from '../QueryStore'
 // to run in web worker
 import initNlp from './nlpQueryWorker'
-import { BitModel } from '@mcro/models'
 
 const { parseSearchQuery, setUserNames } = initNlp()
 
@@ -27,7 +27,7 @@ export class NLPStore {
         title: true,
       },
       where: {
-        type: 'person'
+        type: 'person',
       },
       take: 100,
     },

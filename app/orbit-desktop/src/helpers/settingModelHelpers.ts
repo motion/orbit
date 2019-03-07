@@ -1,5 +1,5 @@
+import { Setting, SettingEntity } from '@o/models'
 import { getRepository } from 'typeorm'
-import { SettingEntity, Setting } from '@mcro/models'
 
 export async function getSetting() {
   return await getRepository(SettingEntity).findOne({ name: 'general' })

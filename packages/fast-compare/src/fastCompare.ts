@@ -19,7 +19,7 @@ export function isEqual(a, b) {
       // firefox: "InternalError", too much recursion"
       // edge: "Error", "Out of stack space"
       console.warn(
-        'Warning: @mcro/fast-compare does not handle circular references.',
+        'Warning: @o/fast-compare does not handle circular references.',
         err.name,
         err.message,
       )
@@ -69,7 +69,7 @@ function isEqualInner(a, b) {
     for (i = length; i-- !== 0; ) if (!hasProp.call(b, keys[i])) return false
     // end fast-deep-equal
 
-    // start @mcro/fast-compare
+    // start @o/fast-compare
     // custom handling for DOM elements
     if (hasElementType && a instanceof Element && b instanceof Element) return a === b
 

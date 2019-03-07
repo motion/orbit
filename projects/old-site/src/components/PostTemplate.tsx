@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as React from 'react'
 import * as Constants from '../constants'
 import { pProps, Renderer } from '../helpers'

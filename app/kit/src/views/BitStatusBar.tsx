@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import {
   DateFormat,
   StatusBar,
@@ -7,7 +7,7 @@ import {
   StatusBarSpace,
   StatusBarText,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import * as React from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { AppBitMainProps } from '../types/AppDefinition'

@@ -1,4 +1,4 @@
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row } from '@o/gloss'
 import * as React from 'react'
 import { Button, ButtonProps } from './buttons/Button'
 import { Text } from './text/Text'

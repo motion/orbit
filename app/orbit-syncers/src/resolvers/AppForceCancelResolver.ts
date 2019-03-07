@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { resolveCommand } from '@mcro/mediator'
-import { AppForceCancelCommand, JobEntity } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { AppForceCancelCommand, JobEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('SourceForceCancelResolver')

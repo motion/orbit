@@ -1,5 +1,5 @@
 import * as React from 'react'
-// import $ from '@mcro/color'
+// import $ from '@o/color'
 
 // type Props = {
 //   background?: Color,

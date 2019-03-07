@@ -1,6 +1,6 @@
-import { loadOne, save } from '@mcro/bridge'
-import { useActiveSpace, useActiveUser } from '@mcro/kit'
-import { Space, SpaceModel, User, UserModel } from '@mcro/models'
+import { loadOne, save } from '@o/bridge'
+import { useActiveSpace, useActiveUser } from '@o/kit'
+import { Space, SpaceModel, User, UserModel } from '@o/models'
 import immer from 'immer'
 import { useEffect } from 'react'
 

@@ -1,8 +1,8 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
-import { Screen } from '@mcro/screen'
-import { App, Desktop } from '@mcro/stores'
-import { decorate, react } from '@mcro/use-store'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { Screen } from '@o/screen'
+import { App, Desktop } from '@o/stores'
+import { decorate, react } from '@o/use-store'
 import { join } from 'path'
 import { screenOptions } from '../constants'
 

@@ -11,6 +11,11 @@ First week of March:
   - Fix lists app bugs
   - Improve demo app
 
+- Search:
+
+  - Make it search "App Store"
+  - Simplify "Add app" pane + how does that integrate with app store
+
 ---
 
 - fix settings panes, should account for "want to sync bits" generically

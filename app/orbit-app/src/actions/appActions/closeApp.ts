@@ -1,4 +1,4 @@
-import { App } from '@mcro/stores'
+import { App } from '@o/stores'
 import { PEEK_ID } from '../../constants'
 
 export const closeApp = (id = PEEK_ID) => {

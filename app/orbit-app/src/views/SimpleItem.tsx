@@ -1,6 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import { Icon } from '@mcro/kit'
-import { Text } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { Icon } from '@o/kit'
+import { Text } from '@o/ui'
 import * as React from 'react'
 
 const sidePad = 16

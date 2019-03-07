@@ -1,8 +1,8 @@
 {
-  "name": "@mcro/r2",
+  "name": "@o/r2",
   "main": "_/r2.js",
   "sideEffects": false,
-  "version": "2.3.10",
+  "version": "2.4.0",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

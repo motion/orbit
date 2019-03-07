@@ -1,5 +1,5 @@
-import { hash } from '@mcro/utils'
-import { AppBit, Bit } from '@mcro/models'
+import { AppBit, Bit } from '@o/models'
+import { hash } from '@o/utils'
 
 /**
  * Common Bit utility functions.

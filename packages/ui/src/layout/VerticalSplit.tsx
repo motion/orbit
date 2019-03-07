@@ -1,4 +1,4 @@
-import { Contents } from '@mcro/gloss'
+import { Contents } from '@o/gloss'
 import React, { Children, cloneElement, useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from '../hooks/useResizeObserver'
 

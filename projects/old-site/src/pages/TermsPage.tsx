@@ -1,9 +1,9 @@
+import * as UI from '@o/ui'
 import * as React from 'react'
-import { Header, Footer, PostTemplate } from '../components'
-import { P2, Section } from '../views'
-import { SectionContent } from '../views/sectionContent'
-import * as UI from '@mcro/ui'
+import { Footer, Header, PostTemplate } from '../components'
 import * as Constants from '../constants'
+import { Section } from '../views'
+import { SectionContent } from '../views/sectionContent'
 
 const text = `These Website Standard Terms And Conditions (these “Terms” or these “Website Standard Terms And Conditions”) contained herein on this webpage, shall govern your use of this website, including all pages within this website (collectively referred to herein below as this “Website”). These Terms apply in full force and effect to your use of this Website and by using this Website, you expressly accept all terms and conditions contained herein in full. You must not use this Website, if you have any objection to any of these Website Standard Terms And Conditions.
 

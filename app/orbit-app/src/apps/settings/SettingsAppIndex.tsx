@@ -1,12 +1,11 @@
-import { List, useActiveQueryFilter, useActiveUser } from '@mcro/kit'
-import * as React from 'react'
+import { List, useActiveQueryFilter, useActiveUser } from '@o/kit';
+import * as React from 'react';
 
 export function SettingsAppIndex() {
   const [user] = useActiveUser()
   const results = useActiveQueryFilter({
     items: [
       {
-        group: 'Settings',
         id: 'general',
         title: 'General',
         icon: 'gear',
@@ -14,7 +13,6 @@ export function SettingsAppIndex() {
         subtitle: 'Shortcuts, startup, theme',
       },
       {
-        group: 'Settings',
         id: 'account',
         title: 'Account',
         icon: 'users_badge',

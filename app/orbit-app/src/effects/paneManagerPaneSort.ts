@@ -1,5 +1,5 @@
-import { useActiveClientApps, useActiveSpace } from '@mcro/kit'
-import { AppBit, Space } from '@mcro/models'
+import { useActiveClientApps, useActiveSpace } from '@o/kit'
+import { AppBit, Space } from '@o/models'
 import { isEqual } from 'lodash'
 import { useEffect } from 'react'
 

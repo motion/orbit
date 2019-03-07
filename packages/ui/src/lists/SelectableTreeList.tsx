@@ -1,4 +1,4 @@
-import { always, cancel, ensure, react, useStore } from '@mcro/use-store'
+import { always, cancel, ensure, react, useStore } from '@o/use-store'
 import React, { forwardRef, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
 import { useMemoGetValue } from '../hooks/useMemoGetValue'
@@ -8,17 +8,19 @@ import { ListItemProps } from './ListItem'
 import { SelectableList, SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
 
+// TODO we have similar but not aligned types with Tree.tsx
+
 type BaseTreeItem = { id: string | number; type: string }
 type TreeItemFolder = BaseTreeItem & { type: 'folder'; children: number[] }
-type TreeItem = BaseTreeItem | TreeItemFolder
+export type SelectableTreeItem = BaseTreeItem | TreeItemFolder
 
 export type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
-  depth: number
-  onChangeDepth?: (depth: number, history: number[]) => void
   rootItemID: number
-  items: { [key: string]: TreeItem }
-  loadItemProps: (items: TreeItem[]) => Promise<ListItemProps[]>
-  onLoadItems: (items: ListItemProps[]) => any
+  items: { [key: string]: SelectableTreeItem }
+  depth?: number
+  onLoadItems?: (items: ListItemProps[]) => any
+  onChangeDepth?: (depth: number, history: number[]) => void
+  loadItemProps: (items: SelectableTreeItem[]) => Promise<ListItemProps[]>
   selectionStore?: SelectionStore
 }
 
@@ -29,7 +31,7 @@ export type SelectableTreeRef = {
 
 class SelectableTreeListStore {
   props: SelectableTreeListProps & {
-    getItems: () => { [key: string]: TreeItem }
+    getItems: () => { [key: string]: SelectableTreeItem }
     selectionStore: SelectionStore
   }
 

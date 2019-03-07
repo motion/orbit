@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row, ViewProps } from '@mcro/gloss'
+import { gloss, Row, ViewProps } from '@o/gloss'
 import * as React from 'react'
 import { colors } from './helpers/colors'
 import { Orderable } from './Orderable'

@@ -1,4 +1,4 @@
-import { Button, Icon, Input, InputProps, MergeHighlightsContext, Row } from '@mcro/ui'
+import { Button, Icon, Input, InputProps, MergeHighlightsContext, Row } from '@o/ui'
 import * as React from 'react'
 import { useStores } from '../../hooks/useStores'
 

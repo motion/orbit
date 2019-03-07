@@ -8,8 +8,8 @@ import {
   ThemeObject,
   View,
   ViewPropsStrict,
-} from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
+} from '@o/gloss'
+import { useStore } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import React from 'react'
 import { BorderBottom } from '../Border'

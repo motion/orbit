@@ -1,5 +1,5 @@
-import { Col } from '@mcro/gloss'
-import { Button, Popover, Row } from '@mcro/ui'
+import { Col } from '@o/gloss'
+import { Button, Popover, Row } from '@o/ui'
 import * as React from 'react'
 
 export function TestUIPopovers() {

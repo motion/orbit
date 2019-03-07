@@ -1,7 +1,7 @@
-import { command } from '@mcro/bridge'
-import { useActiveSpace } from '@mcro/kit'
-import { AppBit, AppSaveCommand } from '@mcro/models'
-import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
+import { command } from '@o/bridge'
+import { useActiveSpace } from '@o/kit'
+import { AppBit, AppSaveCommand } from '@o/models'
+import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import * as React from 'react'
 
 type Props = {

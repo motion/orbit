@@ -1,5 +1,4 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { sleep } from '@mcro/utils'
+import { AppEntity, Bit, BitEntity } from '@o/models'
 import {
   BitUtils,
   createSyncer,
@@ -9,17 +8,17 @@ import {
   sanitizeHtml,
   stripHtml,
   syncPeople,
-} from '@mcro/sync-kit'
+} from '@o/sync-kit'
+import { sleep } from '@o/utils'
 import { JiraAppData } from './JiraAppData'
 import { JiraBitData } from './JiraBitData'
-import { JiraIssue, JiraUser } from './JiraTypes'
 import { JiraLoader } from './JiraLoader'
+import { JiraIssue, JiraUser } from './JiraTypes'
 
 /**
  * Syncs Jira issues.
  */
 export const JiraSyncer = createSyncer(async ({ app, log }) => {
-
   const loader = new JiraLoader(app, log)
 
   /**
@@ -157,7 +156,9 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getEntityManager().getRepository(AppEntity).save(app)
+        await getEntityManager()
+          .getRepository(AppEntity)
+          .save(app)
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -167,12 +168,16 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         log.info('looks like its the first syncing issue, set last synced date', lastSync)
-        await getEntityManager().getRepository(AppEntity).save(app)
+        await getEntityManager()
+          .getRepository(AppEntity)
+          .save(app)
       }
 
       const bit = createDocumentBit(issue, allDbPeople)
       log.verbose('syncing', { issue, bit, people: bit.people })
-      await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+      await getEntityManager()
+        .getRepository(BitEntity)
+        .save(bit, { listeners: false })
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
@@ -183,7 +188,9 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getEntityManager().getRepository(AppEntity).save(app)
+        await getEntityManager()
+          .getRepository(AppEntity)
+          .save(app)
         return true
       }
 
@@ -192,7 +199,9 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
         log.info('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
         lastSync.lastCursorLoadedCount = loadedCount
-        await getEntityManager().getRepository(AppEntity).save(app)
+        await getEntityManager()
+          .getRepository(AppEntity)
+          .save(app)
       }
 
       return true

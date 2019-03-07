@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/fast-compare'
+import { isEqual } from '@o/fast-compare'
 import { CompositeDisposable } from 'event-kit'
 import { useEffect, useRef, useState } from 'react'
 import { createReaction } from './createReaction'

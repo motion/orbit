@@ -1,5 +1,5 @@
-import { App } from '@mcro/stores'
-import { ensure, react, useHook } from '@mcro/use-store'
+import { App } from '@o/stores'
+import { ensure, react, useHook } from '@o/use-store'
 import { createRef } from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
 import { sleep } from '../helpers'

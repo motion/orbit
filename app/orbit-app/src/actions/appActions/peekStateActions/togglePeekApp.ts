@@ -1,6 +1,6 @@
-import { AppConfig } from '@mcro/kit'
-import { Logger } from '@mcro/logger'
-import { App } from '@mcro/stores'
+import { AppConfig } from '@o/kit'
+import { Logger } from '@o/logger'
+import { App } from '@o/stores'
 import { AppActions } from '../AppActions'
 import { setPeekApp } from './setPeekApp'
 

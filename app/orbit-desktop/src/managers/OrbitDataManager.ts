@@ -1,5 +1,5 @@
-import { AppEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@mcro/models'
-import { DesktopActions } from '@mcro/stores'
+import { AppEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@o/models'
+import { DesktopActions } from '@o/stores'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
 import { homedir } from 'os'

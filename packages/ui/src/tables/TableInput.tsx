@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 
 export const TableInput = gloss('input', {
   borderRadius: 4,

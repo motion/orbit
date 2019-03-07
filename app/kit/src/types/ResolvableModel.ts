@@ -1,3 +1,3 @@
-import { Bit, SearchResult } from '@mcro/models'
+import { Bit, SearchResult } from '@o/models'
 
 export type ResolvableModel = Bit | SearchResult

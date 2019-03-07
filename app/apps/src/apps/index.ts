@@ -1,4 +1,4 @@
-import { AppDefinition } from '@mcro/kit'
+import { AppDefinition } from '@o/kit'
 import ConfluenceApp from './confluence'
 import CustomApp from './custom'
 import DriveApp from './drive'

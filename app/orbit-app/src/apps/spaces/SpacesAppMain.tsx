@@ -1,4 +1,4 @@
-import { AppProps } from '@mcro/kit'
+import { AppProps } from '@o/kit'
 import * as React from 'react'
 import SpacesAppEdit from './SpacesAppEdit'
 import { SpacesAppNewSpace } from './SpacesAppNewSpace'

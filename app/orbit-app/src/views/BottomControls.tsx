@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 
 export const BottomControls = gloss({
   flexFlow: 'row',

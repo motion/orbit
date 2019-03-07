@@ -1,7 +1,7 @@
-import { Logger } from '@mcro/logger'
-import { Subscription } from '@mcro/mediator'
-import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@mcro/models'
-import { SyncerOptions } from '@mcro/sync-kit'
+import { Logger } from '@o/logger'
+import { Subscription } from '@o/mediator'
+import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
+import { SyncerOptions } from '@o/sync-kit'
 import { getRepository } from 'typeorm'
 import { syncersRoot } from '../OrbitSyncersRoot'
 import Timer = NodeJS.Timer
@@ -54,9 +54,11 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = syncersRoot.mediatorClient.observeMany(AppModel, {
-          args: { where: { identifier: this.options.appIdentifier } },
-        }).subscribe(async apps => this.reactOnSettingsChanges(apps))
+        this.subscription = syncersRoot.mediatorClient
+          .observeMany(AppModel, {
+            args: { where: { identifier: this.options.appIdentifier } },
+          })
+          .subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {
       await this.runInterval(undefined, force)

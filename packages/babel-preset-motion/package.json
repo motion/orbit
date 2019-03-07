@@ -1,24 +1,24 @@
 {
-  "name": "@mcro/babel-preset-motion",
+  "name": "@o/babel-preset-motion",
   "main": "babel-preset-motion.js",
   "sideEffects": false,
-  "version": "2.3.10",
+  "version": "2.4.0",
   "dependencies": {
     "@babel/core": "7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "7.2.0",
     "@babel/plugin-proposal-class-properties": "7.2.1",
     "@babel/plugin-proposal-decorators": "7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
     "@babel/plugin-syntax-jsx": "7.2.0",
     "@babel/plugin-syntax-typescript": "7.2.0",
+    "@babel/plugin-transform-react-display-name": "7.2.0",
     "@babel/plugin-transform-react-inline-elements": "7.0.0",
     "@babel/plugin-transform-runtime": "7.2.0",
     "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
-    "@mcro/gloss": "^2.3.10",
-    "@mcro/gloss-displaynames": "^2.3.10",
-    "react-hot-loader": "4.7.2",
-    "@babel/plugin-transform-react-display-name": "7.2.0"
+    "@o/gloss": "^2.4.0",
+    "@o/gloss-displaynames": "^2.4.0",
+    "react-hot-loader": "4.7.2"
   },
   "license": "MIT",
   "gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"

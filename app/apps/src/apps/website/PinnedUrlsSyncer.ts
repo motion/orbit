@@ -1,5 +1,5 @@
 /*
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import {
   Bit,
   BitEntity,
@@ -7,9 +7,9 @@ import {
   PinnedBitData,
   SettingEntity,
   WebsiteBitData,
-} from '@mcro/models'
+} from '@o/models'
 import { getRepository } from 'typeorm'
-import { BitSyncer } from '@mcro/sync-kit'
+import { BitSyncer } from '@o/sync-kit'
 import { WebsiteCrawledData } from '../../../../apps/src/apps/website/WebsiteCrawledData'
 import { WebsiteCrawler } from '../../../../apps/src/apps/website/WebsiteCrawler'
 

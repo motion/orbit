@@ -1,4 +1,4 @@
-import { CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
+import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
 import { Config } from '../config'
 import { alphaColor } from './alphaColor'
 

@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as _ from 'lodash'
 import { throttle } from 'lodash'
 import * as React from 'react'

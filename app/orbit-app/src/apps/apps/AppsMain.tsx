@@ -1,9 +1,12 @@
-import { AppProps, AppSubView } from '@mcro/kit'
+import { AppProps, AppSubView } from '@o/kit'
+import { Title } from '@o/ui'
 import React from 'react'
+import { stringify } from '../../helpers'
 import { AppsMainAddApp } from './AppsMainAddApp'
-import { AppsMainManage } from './AppsMainManage'
 
 export function AppsMain(props: AppProps) {
+  return <Title>hi {stringify(props.appConfig)}</Title>
+
   if (props.appConfig.identifier !== 'apps') {
     return <AppSubView appConfig={props.appConfig} />
   }
@@ -12,5 +15,5 @@ export function AppsMain(props: AppProps) {
     return <AppsMainAddApp identifier={props.appConfig.subId} />
   }
 
-  return <AppsMainManage />
+  return <Title>hi</Title>
 }

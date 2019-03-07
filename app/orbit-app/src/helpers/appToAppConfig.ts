@@ -1,5 +1,5 @@
-import { AppConfig } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
+import { AppConfig } from '@o/kit'
+import { AppBit } from '@o/models'
 
 export function appToAppConfig(app: AppBit): AppConfig {
   return {

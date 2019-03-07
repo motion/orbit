@@ -1,4 +1,4 @@
-import { Absolute, gloss } from '@mcro/gloss'
+import { Absolute, gloss } from '@o/gloss'
 
 const Border = gloss(Absolute).theme((p, theme) => ({
   background: p.borderColor || theme.borderColor,

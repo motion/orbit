@@ -1,5 +1,5 @@
-import { useModels } from '@mcro/bridge'
-import { Job, JobModel } from '@mcro/models'
+import { useModels } from '@o/bridge'
+import { Job, JobModel } from '@o/models'
 
 export const useJobs = (
   appId: number | false,

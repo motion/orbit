@@ -1,4 +1,4 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 
 export type NormalItem = {
   id?: string

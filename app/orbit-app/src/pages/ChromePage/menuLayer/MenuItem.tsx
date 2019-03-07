@@ -1,6 +1,6 @@
+import { gloss } from '@o/gloss'
+import { Row, Text, View } from '@o/ui'
 import * as React from 'react'
-import { View, Row, Text } from '@mcro/ui'
-import { gloss } from '@mcro/gloss'
 
 const MenuItemFrame = gloss(Row, {
   padding: [5, 8],

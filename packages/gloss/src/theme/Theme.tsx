@@ -1,4 +1,4 @@
-import { ThemeObject } from '@mcro/css'
+import { ThemeObject } from '@o/css'
 import * as React from 'react'
 import { selectThemeSubset } from '../helpers/selectThemeSubset'
 import { ThemeContext } from './ThemeContext'
@@ -16,6 +16,14 @@ type ThemeProps = {
   name?: string
   select?: ThemeSelect
   children: any
+}
+
+function proxyParentTheme(parent: ThemeObject, next: ThemeObject) {
+  return new Proxy(next, {
+    get(target, key) {
+      return Reflect.get(target, key) || Reflect.get(parent, key)
+    },
+  })
 }
 
 // takes gloss themes and adds a "generate from base object/color"
@@ -64,6 +72,10 @@ export function Theme({ theme, name, select, children }: ThemeProps) {
     uniqThemeName = makeName()
   }
 
+  // inherit from previous theme
+  // this could be easily configurable
+  nextTheme = proxyParentTheme(contextTheme.activeTheme, nextTheme)
+
   return (
     <ThemeContext.Provider
       value={{
@@ -82,18 +94,21 @@ export function Theme({ theme, name, select, children }: ThemeProps) {
 
 export const ChangeThemeByName = React.memo(
   ({ name, children }: { name: string; children: any }) => {
-    const { allThemes } = React.useContext(ThemeContext)
+    const { activeTheme, allThemes } = React.useContext(ThemeContext)
     if (!name) {
       return children
     }
     if (!allThemes || !allThemes[name]) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
+
+    const nextTheme = activeTheme ? proxyParentTheme(activeTheme, allThemes[name]) : allThemes[name]
+
     return (
       <ThemeContext.Provider
         value={{
           allThemes,
-          activeTheme: allThemes[name],
+          activeTheme: nextTheme,
           activeThemeName: name,
         }}
       >

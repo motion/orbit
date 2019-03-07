@@ -1,8 +1,8 @@
-import { In, MoreThan } from 'typeorm'
-import { AppBit, Bit, BitEntity, CosalTopWordsModel } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { AppBit, Bit, BitEntity, CosalTopWordsModel } from '@o/models'
+import { sleep } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { In, MoreThan } from 'typeorm'
 import { getEntityManager, getMediatorClient, isAborted } from './index'
 
 const createDOMPurify = require('dompurify')
@@ -15,7 +15,7 @@ export interface BitSyncerOptions {
   app: AppBit
   apiBits: Bit[]
   dbBits: Bit[]
-  completeBitsData?: (bits: Bit[]) => void|Promise<void>
+  completeBitsData?: (bits: Bit[]) => void | Promise<void>
 }
 
 /**
@@ -78,42 +78,52 @@ export async function syncPeople(app: AppBit, apiPeople: Bit[], dbPeople: Bit[])
 /**
  * Loads bits in a given period.
  */
-export async function loadDatabaseBits(app: AppBit, options?: {
-  ids?: number[]
-  locationId?: string
-  oldestMessageId?: string
-}): Promise<Bit[]> {
+export async function loadDatabaseBits(
+  app: AppBit,
+  options?: {
+    ids?: number[]
+    locationId?: string
+    oldestMessageId?: string
+  },
+): Promise<Bit[]> {
   if (!options) options = {}
-  return getEntityManager().getRepository(BitEntity).find({
-    select: {
-      id: true,
-      contentHash: true,
-    },
-    where: {
-      id: options.ids ? In(options.ids) : undefined,
-      appId: app.id,
-      location: {
-        id: options.locationId ? options.locationId : undefined,
+  return getEntityManager()
+    .getRepository(BitEntity)
+    .find({
+      select: {
+        id: true,
+        contentHash: true,
       },
-      bitCreatedAt: options.oldestMessageId
-        ? MoreThan(parseInt(options.oldestMessageId) * 1000)
-        : undefined,
-    },
-  })
+      where: {
+        id: options.ids ? In(options.ids) : undefined,
+        appId: app.id,
+        location: {
+          id: options.locationId ? options.locationId : undefined,
+        },
+        bitCreatedAt: options.oldestMessageId
+          ? MoreThan(parseInt(options.oldestMessageId) * 1000)
+          : undefined,
+      },
+    })
 }
 
 /**
  * Loads all exist database people for the current App.
  */
-export async function loadDatabasePeople(app: AppBit, options?: { ids?: number[] }): Promise<Bit[]> {
+export async function loadDatabasePeople(
+  app: AppBit,
+  options?: { ids?: number[] },
+): Promise<Bit[]> {
   if (!options) options = {}
-  return getEntityManager().getRepository(BitEntity).find({
-    where: {
-      id: options.ids ? In(options.ids) : undefined,
-      type: 'person',
-      appId: app.id,
-    },
-  })
+  return getEntityManager()
+    .getRepository(BitEntity)
+    .find({
+      where: {
+        id: options.ids ? In(options.ids) : undefined,
+        type: 'person',
+        appId: app.id,
+      },
+    })
 }
 
 /**

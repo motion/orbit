@@ -1,4 +1,4 @@
-import { App, AppDefinition } from '@mcro/kit'
+import { App, AppDefinition } from '@o/kit'
 import * as React from 'react'
 import { BitAppMain } from './BitAppMain'
 

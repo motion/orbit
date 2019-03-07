@@ -1,4 +1,11 @@
-import { AppBit, AppEntity, SettingEntity, SpaceEntity, userDefaultValue, UserEntity } from '@mcro/models'
+import {
+  AppBit,
+  AppEntity,
+  SettingEntity,
+  SpaceEntity,
+  userDefaultValue,
+  UserEntity,
+} from '@o/models'
 import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {

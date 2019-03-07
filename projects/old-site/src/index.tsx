@@ -1,4 +1,4 @@
-import { ThemeProvide } from '@mcro/ui'
+import { ThemeProvide } from '@o/ui'
 import 'intersection-observer'
 import * as React from 'react'
 import ReactDOM from 'react-dom'

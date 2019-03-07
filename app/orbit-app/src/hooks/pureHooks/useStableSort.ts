@@ -1,4 +1,4 @@
-import { isEqual } from '@mcro/fast-compare'
+import { isEqual } from '@o/fast-compare'
 import { useRef } from 'react'
 
 export function useStableSort<A extends string>(ids: A[]): A[] {

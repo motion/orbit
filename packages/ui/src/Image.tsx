@@ -1,4 +1,4 @@
-import { gloss, View } from '@mcro/gloss'
+import { gloss, View } from '@o/gloss'
 
 export const Image = gloss(View, {
   display: 'block',

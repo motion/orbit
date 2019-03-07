@@ -1,5 +1,5 @@
 let express = require('express')
-let { Cosal } = require('@mcro/cosal')
+let { Cosal } = require('@o/cosal')
 let cors = require('cors')
 let Path = require('path')
 

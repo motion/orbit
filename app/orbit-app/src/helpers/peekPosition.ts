@@ -1,4 +1,4 @@
-import { AppConfig } from '@mcro/kit'
+import { AppConfig } from '@o/kit'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 60

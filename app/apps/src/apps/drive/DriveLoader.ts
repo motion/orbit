@@ -1,13 +1,13 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { sleep } from '@o/utils'
 import { uniqBy } from 'lodash'
+import { ServiceLoadThrottlingOptions } from '../../options'
 // import * as path from 'path'
 import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
-import { ServiceLoadThrottlingOptions } from '../../options'
 import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
-import { AppBit } from '@mcro/models'
 
 /**
  * Loads data from google drive api.

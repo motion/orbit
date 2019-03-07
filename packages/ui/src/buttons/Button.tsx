@@ -1,9 +1,11 @@
-import * as React from 'react'
+import { forwardTheme, useTheme } from '@o/gloss'
+import { selectDefined } from '@o/utils'
+import React, { forwardRef, useContext } from 'react'
 import { UIContext } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
-export type ButtonProps = SizedSurfaceProps &
-  React.HTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
+  SizedSurfaceProps & {
     acceptsHovered?: boolean
   }
 
@@ -29,6 +31,7 @@ function ButtonInner({
   forwardRef,
   ...props
 }: ButtonProps) {
+  const theme = useTheme()
   return (
     <SizedSurface
       forwardRef={forwardRef}
@@ -48,7 +51,7 @@ function ButtonInner({
       sizeHeight
       sizeLineHeight
       justifyContent="center"
-      borderWidth={1}
+      borderWidth={selectDefined(theme.borderWidth, 1)}
       chromeless={chromeless}
       glow={glow}
       glint
@@ -63,12 +66,15 @@ function ButtonInner({
   )
 }
 
-export const Button = React.forwardRef(function Button(props: ButtonProps, ref) {
-  const uiContext = React.useContext(UIContext)
+export const Button = forwardRef(function Button(props: ButtonProps, ref) {
+  const uiContext = useContext(UIContext)
 
+  let element = null
   if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
-    return <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
+    element = <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
+  } else {
+    element = <ButtonInner forwardRef={ref} {...props} />
   }
 
-  return <ButtonInner forwardRef={ref} {...props} />
+  return forwardTheme({ children: element, theme: props.theme })
 })

@@ -1,5 +1,5 @@
-import { Logger } from '@mcro/logger'
-import { AppBit } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
 
 /**
  * Options to be passed to Syncer.

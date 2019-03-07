@@ -1,14 +1,7 @@
-import { gloss, Row } from '@mcro/gloss'
-import { normalizeItem, SearchItemShareProvide } from '@mcro/kit'
-import { Bit } from '@mcro/models'
-import {
-  HorizontalSpace,
-  Popover,
-  SegmentedRow,
-  TitleBarButton,
-  TitleBarSpace,
-  View,
-} from '@mcro/ui'
+import { gloss, Row } from '@o/gloss'
+import { normalizeItem, SearchItemShareProvide } from '@o/kit'
+import { Bit } from '@o/models'
+import { HorizontalSpace, Popover, SegmentedRow, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'
 // import { AppActions } from '../../../actions/appActions/AppActions'
 

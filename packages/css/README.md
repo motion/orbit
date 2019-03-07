@@ -1,4 +1,4 @@
-## @mcro/css
+## @o/css
 
 Turns objects into nice CSS styles. Has a few helpers:
 

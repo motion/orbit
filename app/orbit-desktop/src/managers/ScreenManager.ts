@@ -1,7 +1,7 @@
-import { Screen } from '@mcro/screen'
-import { Desktop } from '@mcro/stores'
-import { decorate } from '@mcro/use-store'
-import { on } from '@mcro/utils'
+import { Screen } from '@o/screen'
+import { Desktop } from '@o/stores'
+import { decorate } from '@o/use-store'
+import { on } from '@o/utils'
 
 // handles the screen blur window as well as any information relating to the current
 // OS screen state like spaces.

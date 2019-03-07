@@ -3,9 +3,9 @@
     "development": {
       "presets": [
         [
-          "@mcro/babel-preset-motion",
+          "@o/babel-preset-motion",
           {
-            "disable": ["@mcro/gloss/transform", "react-hot-loader/babel"]
+            "disable": ["@o/gloss/transform", "react-hot-loader/babel"]
           }
         ]
       ]

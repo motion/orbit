@@ -40,7 +40,7 @@ export default async function connectModels(models) {
     console.error(`\n\nerror during connection create: `, err1)
 
     try {
-      connection.close()
+      await connection.close()
     } catch {
       // fine, just in case something odd kept it open
     }

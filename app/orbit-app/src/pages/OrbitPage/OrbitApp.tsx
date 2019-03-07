@@ -22,7 +22,6 @@ export const OrbitApp = ({ id, identifier }) => {
 
   // set default initial appConfig
   useOnMount(function setInitialConfig() {
-    console.log('mounting, setting', id)
     orbitStore.setActiveConfig(id, {
       identifier,
     })

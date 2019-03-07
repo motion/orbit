@@ -66,6 +66,7 @@ class SelectableTreeListStore {
   }
 
   get curFolder() {
+    console.log('this.props.items', this.props.items)
     return this.props.items[this.currentID] as TreeItemFolder
   }
 
@@ -74,6 +75,7 @@ class SelectableTreeListStore {
     async ([curFolder]) => {
       ensure('curFolder', !!curFolder)
       this.ensureValid()
+      debugger
       return await this.props.loadItemProps(curFolder.children.map(x => this.props.items[x]))
     },
     {

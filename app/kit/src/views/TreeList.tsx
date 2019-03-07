@@ -33,7 +33,7 @@ export type TreeListProps = Omit<
 type DefaultTreeState = { rootItemID: number; items: TreeItems }
 
 export function useTreeState(subSelect: string) {
-  useEnsureDefaultAppState<DefaultTreeState>(subSelect, {
+  const defaultState = {
     rootItemID: 0,
     items: {
       0: {
@@ -43,8 +43,9 @@ export function useTreeState(subSelect: string) {
         children: [],
       },
     },
-  })
-  return useScopedAppState<DefaultTreeState>(subSelect)
+  }
+  useEnsureDefaultAppState<DefaultTreeState>(subSelect, defaultState)
+  return useScopedAppState<DefaultTreeState>(subSelect, defaultState)
 }
 
 export class TreeListStore {
@@ -73,6 +74,7 @@ export class TreeListStore {
   }
 
   get currentFolder() {
+    console.log('this.props.getItems()', this.props.getItems())
     return this.props.getItems()[this.parentId]
   }
 
@@ -93,7 +95,12 @@ export class TreeListStore {
 export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: TreeListProps) {
   const isActive = useIsAppActive()
   const getItems = useMemoGetValue(props.items)
+  console.log('123', props.items, getItems())
   const treeListStore = useStore(TreeListStore, { getItems })
+
+  if (!props.items) {
+    return null
+  }
 
   // onSelect={index => {
   //   console.log('ON SELECT', index)

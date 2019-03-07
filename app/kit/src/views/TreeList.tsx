@@ -5,11 +5,13 @@ import {
   SelectableTreeItem,
   SelectableTreeList,
   SelectableTreeListProps,
+  TreeItems,
   useMemoGetValue,
 } from '@o/ui'
 import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
+import { useAppState } from '../hooks/useAppState'
 import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -25,6 +27,17 @@ export type TreeListProps = Omit<
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
   query?: string
+}
+
+export function useTreeState(subSelect: string): [TreeItems, (next: Partial<TreeItems>) => void] {
+  const [state, update] = useAppState()
+  return [
+    state.data[subSelect],
+    next => {
+      state.data[subSelect] = next
+      update(state)
+    },
+  ]
 }
 
 export class TreeListStore {

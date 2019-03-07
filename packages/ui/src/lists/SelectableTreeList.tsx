@@ -14,9 +14,11 @@ type BaseTreeItem = { id: string | number; type: string }
 type TreeItemFolder = BaseTreeItem & { type: 'folder'; children: number[] }
 export type SelectableTreeItem = BaseTreeItem | TreeItemFolder
 
+export type TreeItems = { [key: string]: SelectableTreeItem }
+
 export type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
-  rootItemID: number
-  items: { [key: string]: SelectableTreeItem }
+  rootItemID?: number
+  items: TreeItems
   depth?: number
   onLoadItems?: (items: ListItemProps[]) => any
   onChangeDepth?: (depth: number, history: number[]) => void
@@ -31,7 +33,7 @@ export type SelectableTreeRef = {
 
 class SelectableTreeListStore {
   props: SelectableTreeListProps & {
-    getItems: () => { [key: string]: SelectableTreeItem }
+    getItems: () => TreeItems
     selectionStore: SelectionStore
   }
 
@@ -122,8 +124,11 @@ class SelectableTreeListStore {
 }
 
 export const SelectableTreeList = forwardRef<SelectableTreeRef, SelectableTreeListProps>(
-  function SelectableTreeList({ items, ...restProps }, ref) {
-    const props = usePropsWithMemoFunctions(restProps)
+  function SelectableTreeList({ rootItemID = 0, items, ...restProps }, ref) {
+    const props = {
+      rootItemID,
+      ...usePropsWithMemoFunctions(restProps),
+    }
     const stores = useStores({ optional: ['selectionStore', 'shortcutStore'] })
     const selectionStore =
       props.selectionStore || stores.selectionStore || useStore(SelectionStore, props)

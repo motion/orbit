@@ -1,4 +1,4 @@
-import { AppProps, getTargetValue, List, TreeList, useAppState } from '@o/kit'
+import { AppProps, getTargetValue, List, TreeList, useAppState, useTreeState } from '@o/kit'
 import {
   Absolute,
   BorderBottom,
@@ -16,10 +16,11 @@ import { ListContext } from '.'
 import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {
-  const [state] = useAppState()
   // const [bits] = useBits()
-
-  console.log('list', state)
+  const [state] = useAppState()
+  const [treeState, update] = useTreeState('list')
+  // should be [treeState, actions]
+  // actions.addItem()
 
   if (!state) {
     return null
@@ -28,13 +29,11 @@ export function ListsAppIndex(_: AppProps) {
   return (
     <>
       <ListAdd />
-
       <View flex={1}>
         <TreeList
           sortable
           minSelected={0}
-          rootItemID={0}
-          items={state.data.items}
+          items={treeState}
           getContextMenu={index => {
             return [
               {

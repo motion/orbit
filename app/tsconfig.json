@@ -28,6 +28,7 @@
     { "path": "../packages/react-textfit" },
     { "path": "../packages/wait-for-fonts" },
     { "path": "../packages/orbit-fork-process" },
-    { "path": "../packages/fast-compare" }
+    { "path": "../packages/fast-compare" },
+    { "path": "../packages/gloss-displaynames" }
   ]
 }

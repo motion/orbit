@@ -37,7 +37,7 @@ const createSource = async (type: string, values: OauthValues) => {
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = (app.data.values as any)['data']['values']
+    const values = (app.data.values as any)
     values.team = {
       id: team.id,
       name: team.name,

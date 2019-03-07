@@ -1,6 +1,6 @@
 {
   "name": "@o/router",
-  "version": "2.3.10",
+  "version": "2.4.0",
   "main": "_/Router.js",
   "sideEffects": false,
   "author": "Motion (http://motion.io)",

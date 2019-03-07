@@ -1,6 +1,6 @@
 {
   "name": "@o/devcert",
-  "version": "1.0.0",
+  "version": "2.4.0",
   "description": "Generate trusted local SSL/TLS certificates for local SSL development",
   "main": "_/index.js",
   "scripts": {
@@ -8,7 +8,6 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "devDependencies": {
-    "standard-version": "^4.3.0",
     "@types/configstore": "^2.1.1",
     "@types/debug": "^0.0.30",
     "@types/get-port": "^3.2.0",
@@ -16,7 +15,8 @@
     "@types/lodash": "^4.14.92",
     "@types/mkdirp": "^0.5.2",
     "@types/rimraf": "^2.0.2",
-    "@types/tmp": "^0.0.33"
+    "@types/tmp": "^0.0.33",
+    "standard-version": "^4.3.0"
   },
   "dependencies": {
     "application-config-path": "^0.1.0",

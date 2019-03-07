@@ -1,0 +1,27 @@
+{
+  "name": "@mcro/kit-internal",
+  "version": "2.3.10",
+  "main": "_/index.js",
+  "ts:main": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly || true",
+    "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
+  },
+  "dependencies": {
+    "@mcro/kit": "*",
+    "@mcro/ui": "*",
+    "@mcro/gloss": "*",
+    "@mcro/stores": "*",
+    "@mcro/models": "*",
+    "@mcro/use-store": "*",
+    "@mcro/utils": "*",
+    "@mcro/bridge": "*",
+    "@mcro/fast-compare": "*",
+    "@mcro/react-sortable-hoc": "1.6.5"
+  },
+  "peerDependencies": {
+    "electron": "*",
+    "react": "*"
+  }
+}

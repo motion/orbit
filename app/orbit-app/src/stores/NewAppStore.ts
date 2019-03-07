@@ -51,8 +51,6 @@ export class NewAppStore {
   setApp(identifier: string) {
     const nextApp = defaultApps.find(x => x.identifier === identifier)
     if (!nextApp) {
-      console.warn('no next app?')
-      debugger
       return
     }
 

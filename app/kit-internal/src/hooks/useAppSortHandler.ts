@@ -1,22 +1,20 @@
-import { useActiveSpace } from '@mcro/kit'
+import { useActiveSpace, useStores } from '@mcro/kit'
 import { arrayMove } from '@mcro/react-sortable-hoc'
-import { useStoresSimple } from './useStores'
 
 export function useAppSortHandler() {
-  const { orbitWindowStore } = useStoresSimple()
+  const { paneManagerStore } = useStores()
+  const { paneIndex } = paneManagerStore
   const [space, updateSpace] = useActiveSpace()
 
   const handleSortEnd = ({ oldIndex, newIndex }) => {
     let paneSort = arrayMove([...space.paneSort], oldIndex, newIndex)
-    // console.log('paneSort', paneSort)
-    const { activePaneIndex } = orbitWindowStore
     // if they dragged active tab we need to sync the new activeIndex to PaneManager through here
-    const activePaneId = space.paneSort[activePaneIndex]
+    const activePaneId = space.paneSort[paneIndex]
 
-    console.log('sort finish', paneSort, space.paneSort, activePaneIndex, activePaneId)
-    if (activePaneId !== paneSort[activePaneIndex]) {
-      orbitWindowStore.activePaneIndex = paneSort.indexOf(activePaneId)
-      console.log('updating active index to', orbitWindowStore.activePaneIndex)
+    if (activePaneId !== paneSort[paneIndex]) {
+      const next = paneSort.indexOf(activePaneId)
+      console.log('updating active index to', next)
+      paneManagerStore.setPaneIndex(next)
     }
 
     // bug fix we had multiple of the same, we need to figure out why this can happen though...

@@ -1,5 +1,9 @@
-import { BorderBottom, HorizontalSpace, Row, TextProps, Title } from '@mcro/ui'
+import { Row } from '@mcro/gloss'
 import React from 'react'
+import { BorderBottom } from '../Border'
+import { HorizontalSpace } from '../layout/HorizontalSpace'
+import { TextProps } from './Text'
+import { Title } from './Title'
 
 type TitleRowProps = TextProps & {
   before?: React.ReactNode

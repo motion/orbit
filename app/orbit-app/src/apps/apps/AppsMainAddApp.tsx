@@ -1,9 +1,8 @@
 import { AppView, getAppDefinition, Icon } from '@mcro/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme } from '@mcro/ui'
+import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme, TitleRow } from '@mcro/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'
-import { TitleRow } from '../../views/TitleRow'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const def = getAppDefinition(props.identifier)

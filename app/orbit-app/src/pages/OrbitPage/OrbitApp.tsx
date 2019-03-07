@@ -26,8 +26,9 @@ export const OrbitApp = ({ id, identifier }) => {
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
   const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
 
-  // // set default initial appConfig
+  // set default initial appConfig
   useOnMount(function setInitialConfig() {
+    console.log('mounting, setting', id)
     orbitStore.setActiveConfig(id, {
       identifier,
     })

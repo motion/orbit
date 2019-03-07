@@ -175,9 +175,6 @@ function OrbitPageProvideStores(props: any) {
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
     defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
-    onPaneChange(index: number) {
-      orbitWindowStore.activePaneIndex = index
-    },
   })
 
   const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })

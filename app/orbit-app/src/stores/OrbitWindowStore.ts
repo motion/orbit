@@ -27,7 +27,6 @@ export class OrbitWindowStore {
     },
   )
 
-  activePaneIndex = 0
   contentHeight = 0
   inputFocused = false
 

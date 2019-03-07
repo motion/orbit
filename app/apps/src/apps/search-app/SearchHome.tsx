@@ -1,13 +1,9 @@
 import { Absolute, gloss, ViewProps } from '@mcro/gloss'
-import { AppIcon, useActiveAppsSorted, useActiveSpace } from '@mcro/kit'
+import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@mcro/kit'
+import { getAppContextItems, useAppSortHandler } from '@mcro/kit-internal'
 import { AppBit } from '@mcro/models'
-import { Icon, Section, Text, useContextMenu, View } from '@mcro/ui'
+import { Icon, Section, SelectableGrid, Text, TitleRow, useContextMenu, View } from '@mcro/ui'
 import React from 'react'
-import { SelectableGrid } from '../../components/SelectableGrid'
-import { getAppContextItems } from '../../helpers/getAppContextItems'
-import { useAppSortHandler } from '../../hooks/useAppSortHandler'
-import { useStores } from '../../hooks/useStores'
-import { TitleRow } from '../../views/TitleRow'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode
@@ -76,7 +72,7 @@ const AppIconContainer = gloss({
   },
 }))
 
-export function AppsMainManage() {
+export function SearchHome() {
   const { paneManagerStore } = useStores()
   const activeApps = useActiveAppsSorted()
   const handleSortEnd = useAppSortHandler()

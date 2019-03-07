@@ -16,7 +16,7 @@ export class PaneManagerStore {
   props: {
     disabled?: boolean
     defaultPanes: PaneManagerPane[]
-    onPaneChange: (index: number, pane: PaneManagerPane) => any
+    onPaneChange?: (index: number, pane: PaneManagerPane) => any
     defaultIndex?: number
   }
 

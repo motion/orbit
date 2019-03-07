@@ -29,6 +29,7 @@
     "@mcro/stores": "^2.3.10",
     "@mcro/ui": "^2.3.10",
     "@mcro/kit": "^2.3.10",
+    "@mcro/kit-internal": "^2.3.10",
     "@mcro/utils": "^2.3.10",
     "@mcro/react-textfit": "^2.3.10",
     "@mcro/use-store": "^2.3.10",

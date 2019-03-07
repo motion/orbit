@@ -11,6 +11,7 @@
   "dependencies": {
     "@mcro/config": "*",
     "@mcro/kit": "*",
+    "@mcro/kit-internal": "*",
     "@mcro/sync-kit": "*",
     "@mcro/gloss": "*",
     "@mcro/utils": "*",

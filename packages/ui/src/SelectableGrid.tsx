@@ -1,8 +1,7 @@
-import { SelectionStore } from '@mcro/ui'
 import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { SortableGrid, SortableGridProps } from '../views/SortableGrid'
+import { SelectionStore } from './lists/SelectionStore'
+import { SortableGrid, SortableGridProps } from './SortableGrid'
 
 type SelectableGridProps<A> = SortableGridProps<A> & {
   getItem?: (item: A, { isSelected: boolean, select: Function }) => any
@@ -29,12 +28,13 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
           selectionStore.setActiveIndex(index)
         }
         // this is complex so we can do single updates on selection move
-        return observer(function GridItem() {
+        return function GridItem() {
+          const store = useStore(selectionStore)
           return props.getItem(item, {
-            isSelected: selectionStore.activeIndex === index,
+            isSelected: store.activeIndex === index,
             select,
           })
-        })
+        }
       })
     },
     [itemsKey],

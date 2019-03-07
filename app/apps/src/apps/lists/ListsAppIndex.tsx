@@ -1,4 +1,4 @@
-import { AppProps, getTargetValue, List, TreeList, useAppState, useStores } from '@o/kit'
+import { AppProps, getTargetValue, List, TreeList, useAppState } from '@o/kit'
 import {
   Absolute,
   BorderBottom,
@@ -17,6 +17,8 @@ import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {
   const [state] = useAppState()
+
+  console.log('list', state)
   // const [bits] = useBits()
 
   if (!state) {
@@ -61,7 +63,6 @@ const addFolder = (store: ListStore) => {
 
 function ListAdd() {
   const { listStore } = useContext(ListContext)
-  return null
   return (
     <Row position="relative">
       <BorderBottom opacity={0.25} />
@@ -101,12 +102,8 @@ function ListAdd() {
 }
 
 function ListSearchResults() {
-  return null
-
-  // @ts-ignore
-  const { listStore } = useStores()
+  const { listStore } = useContext(ListContext)
   const { searchCollapsed, searchResults, query } = listStore
-
   return (
     <Panel
       boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}

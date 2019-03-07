@@ -66,6 +66,7 @@ const AppIconContainer = gloss({
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
+  borderRadius: 10,
 }).theme((_, theme) => ({
   '&:hover': {
     background: theme.backgroundHover.alpha(0.05),
@@ -118,7 +119,7 @@ export function SearchHome() {
 
   return (
     <Section>
-      <TitleRow size={2} bordered>
+      <TitleRow size={1.5} bordered>
         {activeSpace ? activeSpace.name : ''}
       </TitleRow>
       <SelectableGrid

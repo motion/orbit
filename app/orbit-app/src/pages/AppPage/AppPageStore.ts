@@ -1,4 +1,4 @@
-import { Bit, Setting } from '@o/models'
+import { Bit } from '@o/models'
 import { App, AppState } from '@o/stores'
 import { ensure, react } from '@o/use-store'
 import * as React from 'react'
@@ -6,7 +6,7 @@ import { AppActions } from '../../actions/appActions/AppActions'
 import { PEEK_ID } from '../../constants'
 
 type AppPageItemState = AppState & {
-  model: Bit | Setting
+  model: Bit
 }
 
 export type AppPageState = {

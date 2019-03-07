@@ -3,7 +3,7 @@ import { AppProps, OrbitOrb, useAppsForSpace } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import {
   Col,
-  FormRow,
+  FormField,
   HorizontalSpace,
   InputField,
   ListItem,
@@ -47,7 +47,7 @@ export default function SpacesAppEdit(props: AppProps) {
           }}
         />
 
-        <FormRow label="Theme">
+        <FormField label="Theme">
           <Row alignItems="center" overflow="hidden" flex={1}>
             <OrbitOrb size={48} colors={colors} />
             <HorizontalSpace />
@@ -69,7 +69,7 @@ export default function SpacesAppEdit(props: AppProps) {
               </HorizontalScroll>
             </Col>
           </Row>
-        </FormRow>
+        </FormField>
       </SubSection>
 
       <VerticalSpace />

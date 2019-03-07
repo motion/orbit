@@ -19,5 +19,5 @@ export class UserEntity implements User {
   settings: User['settings']
 
   @Column({ type: 'simple-json' })
-  appUserState: User['appUserState']
+  appState: User['appState']
 }

@@ -13,10 +13,10 @@ export function useScopedUserState<A>(
   const [user, update] = useModel(UserModel, {})
   // scopes user down
   return [
-    user ? user.appUserState[subSelect] : defaultState,
+    user ? user.appState[subSelect] : defaultState,
     next => {
       if (!user) throw new Error('State not loaded / not found yet!')
-      user.appUserState[subSelect] = next
+      user.appState[subSelect] = next
       update(user)
     },
   ]

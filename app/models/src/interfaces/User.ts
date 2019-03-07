@@ -39,5 +39,5 @@ export interface User {
     topTopics?: string[]
   }
 
-  appUserState?: any
+  appState?: { [key: string]: any }
 }

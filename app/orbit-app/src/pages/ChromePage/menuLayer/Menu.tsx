@@ -552,13 +552,7 @@ const MenuLayerContent = React.memo(() => {
         }}
       >
         {menuApps.map(app => (
-          <MenuApp
-            identifier={app.id}
-            index={app.index}
-            key={app.id}
-            viewType="index"
-            title={app.name}
-          />
+          <MenuApp identifier={app.id} index={app.index} key={app.id} viewType="index" />
         ))}
       </AppSearchable>
     </View>

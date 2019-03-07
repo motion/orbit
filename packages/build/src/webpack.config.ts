@@ -98,6 +98,7 @@ const mcroClientOnly = {
     Path.resolve(cwd, 'src'),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit', 'src')),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit-internal', 'src')),
+    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'gloss', 'src')),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'ui', 'src')),
     Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'apps', 'src')),
   ],

@@ -31,7 +31,7 @@ function CreateAppIndex() {
   )
 }
 
-function CreateAppMain(props: AppProps) {
+function CreateAppMain({ identifier }: AppProps) {
   const Actions = useActions()
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
@@ -41,8 +41,6 @@ function CreateAppMain(props: AppProps) {
     setShowPreviewApp(true)
   }, [])
 
-  const { identifier } = props.appProps || { identifier: null }
-
   useEffect(
     () => {
       if (identifier) {
@@ -51,10 +49,6 @@ function CreateAppMain(props: AppProps) {
     },
     [identifier],
   )
-
-  if (!props.appProps || !identifier) {
-    return null
-  }
 
   const app = { identifier } as AppBit
   const createApp = async () => {

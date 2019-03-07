@@ -1,4 +1,4 @@
-import { AppView } from '@o/kit'
+import { AppProps, AppView } from '@o/kit'
 import { AppBit } from '@o/models'
 import React from 'react'
 

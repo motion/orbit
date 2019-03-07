@@ -115,13 +115,7 @@ const AppPageContent = () => {
         >
           {appPageStore.isTorn && (
             <AppSearchable>
-              <AppView
-                id={appProps.id}
-                identifier={appProps.identifier}
-                viewType="index"
-                title={appProps.title}
-                isActive
-              />
+              <AppView id={appProps.id} identifier={appProps.identifier} viewType="index" />
             </AppSearchable>
           )}
         </Sidebar>
@@ -130,8 +124,6 @@ const AppPageContent = () => {
             id={appProps.id}
             identifier={appProps.identifier}
             viewType={appProps.viewType || 'main'}
-            title={appProps.title}
-            isActive
           />
         </Col>
       </Row>

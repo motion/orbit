@@ -1,4 +1,4 @@
-import { App, AppMainProps, createApp, useSearch } from '@o/kit'
+import { App, AppProps, createApp, useSearch } from '@o/kit'
 import { useStore } from '@o/use-store'
 import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
@@ -11,7 +11,7 @@ export const SearchContext = createContext({
   searchStore: null as SearchStore,
 })
 
-function SearchApp(props: AppMainProps) {
+function SearchApp(props: AppProps) {
   const searchStore = useStore(SearchStore)
 
   useSearch(state => {

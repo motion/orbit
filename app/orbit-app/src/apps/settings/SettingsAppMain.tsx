@@ -1,9 +1,9 @@
-import { AppMainProps } from '@o/kit'
+import { AppProps } from '@o/kit'
 import * as React from 'react'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 
-export function SettingsAppMain(props: AppMainProps) {
+export function SettingsAppMain(props: AppProps) {
   switch (props.id) {
     case 'general':
       return <SettingsAppGeneral {...props} />

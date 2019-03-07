@@ -10,7 +10,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id } = useContext(AppLoadContext)
   const { orbitStore, appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
-  const appConfig = orbitStore.activeConfig[id] || {}
+  const appProps = orbitStore.activeConfig[id] || {}
 
   if (!props.children) {
     return null
@@ -22,7 +22,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}
         {React.cloneElement(props.children, {
-          appConfig,
+          appProps,
         })}
         {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>

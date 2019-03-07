@@ -1,8 +1,8 @@
-import { AppMainProps, Icon } from '@o/kit'
+import { AppProps, Icon } from '@o/kit'
 import { Center, PassProps, Title, VerticalSpace } from '@o/ui'
 import React from 'react'
 
-export function MessageViewMain({ title, icon }: AppMainProps) {
+export function MessageViewMain({ title, icon }: AppProps) {
   if (!title) {
     return null
   }

@@ -1,5 +1,5 @@
 import { save } from '@o/bridge'
-import { App, AppMainProps, createApp } from '@o/kit'
+import { App, AppProps, createApp } from '@o/kit'
 import { AppBit, AppModel, Bit } from '@o/models'
 import React from 'react'
 import { ListsAppIndex } from './ListsAppIndex'
@@ -7,7 +7,7 @@ import { ListsAppMain } from './ListsAppMain'
 import { ListAppStatusBar } from './ListsAppStatusBar'
 import { ListsAppBit } from './types'
 
-function ListApp(props: AppMainProps) {
+function ListApp(props: AppProps) {
   return (
     <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
       <ListsAppMain {...props} />

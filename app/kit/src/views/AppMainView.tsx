@@ -1,8 +1,8 @@
 import React from 'react'
-import { AppMainProps } from '../types/AppMainProps'
+import { AppProps } from '../types/AppProps'
 import { AppView } from './AppView'
 
-export function AppMainView(props: AppMainProps) {
+export function AppMainView(props: AppProps) {
   if (!props.identifier) {
     console.debug('no app id given', props)
     return null
@@ -13,7 +13,7 @@ export function AppMainView(props: AppMainProps) {
       id={props.id}
       identifier={props.identifier}
       viewType="main"
-      appConfig={props}
+      appProps={props}
     />
   )
 }

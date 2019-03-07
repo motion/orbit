@@ -5,7 +5,7 @@ import React, { memo, useCallback } from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
-import { AppMainProps } from '../types/AppMainProps'
+import { AppProps } from '../types/AppProps'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 import { itemViewsListItem } from './itemViews'
@@ -25,7 +25,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   people?: Bit[]
   hidePeople?: boolean
   itemViewProps?: OrbitItemViewProps
-  appConfig?: AppMainProps
+  appProps?: AppProps
 }
 
 export const ListItem = memo(

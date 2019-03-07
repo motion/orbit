@@ -1,6 +1,6 @@
-import { AppMainProps } from '@o/kit'
+import { AppProps } from '@o/kit'
 import React from 'react'
 
-export function SpacesAppNewSpace(props: AppMainProps) {
+export function SpacesAppNewSpace(props: AppProps) {
   return <>div {JSON.stringify(props)}</>
 }

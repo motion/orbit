@@ -1,4 +1,4 @@
-import { AppConfig } from '@o/kit'
+import { AppProps } from '@o/kit'
 import { isEqual } from 'lodash'
 
 const MIN_Y = 60
@@ -42,14 +42,14 @@ let lastTarget = null
 
 export function peekPosition(
   target,
-  appConfig: AppConfig,
+  appProps: AppProps,
   parentBounds: Position,
 ): AppPosition | null {
   if (!target) {
     console.warn('no target..')
     return null
   }
-  const nextPosition = getPeekPositionFromTarget(target, lastPeek, appConfig, parentBounds)
+  const nextPosition = getPeekPositionFromTarget(target, lastPeek, appProps, parentBounds)
   lastPeek = nextPosition
   lastTarget = target
   return nextPosition
@@ -102,11 +102,11 @@ function getLazyPosition(target: Position, peekHeight: number, lastPeek: AppPosi
 function getPeekPositionFromTarget(
   target,
   lastPeek,
-  appConfig: AppConfig,
+  appProps: AppProps,
   parentBounds: Position,
   appOnLeft?: boolean,
 ): AppPosition | null {
-  console.log('appConfig', appConfig)
+  console.log('appProps', appProps)
 
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {

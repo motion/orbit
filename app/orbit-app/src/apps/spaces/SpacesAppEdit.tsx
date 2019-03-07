@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppMainProps, OrbitOrb, useAppsForSpace } from '@o/kit'
+import { AppProps, OrbitOrb, useAppsForSpace } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import {
   Col,
@@ -23,7 +23,7 @@ import { SubSection } from '../../views/SubSection'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
-export default function SpacesAppEdit(props: AppMainProps) {
+export default function SpacesAppEdit(props: AppProps) {
   const id = +props.id
   const [space] = useModel(SpaceModel, { where: { id } })
   const apps = useAppsForSpace(id)

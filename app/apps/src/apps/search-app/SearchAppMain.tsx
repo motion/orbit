@@ -1,8 +1,8 @@
-import { AppMainProps, AppMainView } from '@o/kit'
+import { AppMainView, AppProps } from '@o/kit'
 import React from 'react'
 import { SearchHome } from './SearchHome'
 
-export function SearchAppMain(props: AppMainProps) {
+export function SearchAppMain(props: AppProps) {
   if (props.identifier === 'apps') {
     return <SearchHome />
   }

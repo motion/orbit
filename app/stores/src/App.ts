@@ -7,7 +7,7 @@ export let App = null as AppStore
 
 export type AppState = {
   id: number
-  appConfig: any // TODO
+  appProps: any // TODO
   viewType?: 'index' | 'main' | 'setup'
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
@@ -20,7 +20,7 @@ export const defaultPeekState: AppState = {
   id: 0,
   torn: false,
   target: null,
-  appConfig: null,
+  appProps: null,
   peekOnLeft: false,
   position: [0, 0],
   size: [0, 0],
@@ -124,7 +124,7 @@ class AppStore {
   }
 
   get isShowingPeek() {
-    return this.peekState && !!this.peekState.appConfig
+    return this.peekState && !!this.peekState.appProps
   }
 
   get isShowingMenu() {

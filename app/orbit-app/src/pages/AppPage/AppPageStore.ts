@@ -29,7 +29,7 @@ export class AppPageStore {
 
   isPeek = react(() => !this.appState.torn, _ => _)
 
-  // appConfig given the id
+  // appProps given the id
   appState = react(
     () => App.getAppState(PEEK_ID),
     async (appState, { sleep, state }) => {
@@ -53,7 +53,7 @@ export class AppPageStore {
     async (appState, { getValue }) => {
       const lastState = getValue().curState
       const wasShown = !!(lastState && lastState.target)
-      const isShown = !!appState.appConfig
+      const isShown = !!appState.appProps
       return {
         torn: appState.torn,
         lastState,

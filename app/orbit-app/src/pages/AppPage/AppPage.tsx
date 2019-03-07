@@ -70,9 +70,9 @@ const AppPageContent = () => {
   if (!appPageStore.state) {
     return <div>no state</div>
   }
-  const { appConfig } = appPageStore.state
-  if (!appConfig) {
-    return <div>no appConfig or appType</div>
+  const { appProps } = appPageStore.state
+  if (!appProps) {
+    return <div>no appProps or appType</div>
   }
   return (
     <>
@@ -102,7 +102,7 @@ const AppPageContent = () => {
             fontWeight={500}
             alignItems="center"
           >
-            {appConfig.title}
+            {appProps.title}
           </Text>
         </CenteredTitle>
       </TitleBar>
@@ -116,10 +116,10 @@ const AppPageContent = () => {
           {appPageStore.isTorn && (
             <AppSearchable>
               <AppView
-                id={appConfig.id}
-                identifier={appConfig.identifier}
+                id={appProps.id}
+                identifier={appProps.identifier}
                 viewType="index"
-                title={appConfig.title}
+                title={appProps.title}
                 isActive
               />
             </AppSearchable>
@@ -127,10 +127,10 @@ const AppPageContent = () => {
         </Sidebar>
         <Col flex={1} overflow="hidden">
           <AppView
-            id={appConfig.id}
-            identifier={appConfig.identifier}
-            viewType={appConfig.viewType || 'main'}
-            title={appConfig.title}
+            id={appProps.id}
+            identifier={appProps.identifier}
+            viewType={appProps.viewType || 'main'}
+            title={appProps.title}
             isActive
           />
         </Col>

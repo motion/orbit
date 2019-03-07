@@ -1,8 +1,8 @@
-import { App, AppMainProps, createApp } from '@o/kit'
+import { App, AppProps, createApp } from '@o/kit'
 import React from 'react'
 import { CustomAppMain } from './CustomAppMain'
 
-function CustomApp(props: AppMainProps) {
+function CustomApp(props: AppProps) {
   return (
     <App>
       <CustomAppMain {...props} />

@@ -1,6 +1,6 @@
 import { loadMany, loadOne, observeMany } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import { AppMainProps, ListItem, useStores } from '@o/kit'
+import { AppProps, ListItem, useStores } from '@o/kit'
 import { Bit, BitModel, CosalTopicsModel } from '@o/models'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
@@ -19,7 +19,7 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppMainProps
+  props: AppProps
 
   person = react(
     () => this.props.id,
@@ -85,7 +85,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export function PeopleAppMain(props: AppMainProps) {
+export function PeopleAppMain(props: AppProps) {
   const { queryStore, themeStore } = useStores()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
 

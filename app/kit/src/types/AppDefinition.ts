@@ -2,7 +2,7 @@ import { AppBit, ItemType } from '@o/models'
 import { SearchBarType } from '@o/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
-import { AppMainProps } from './AppMainProps'
+import { AppProps } from './AppProps'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
 
 export type AppElements = {
@@ -14,12 +14,12 @@ export type AppElements = {
 }
 
 export type AppViews = {
-  index?: FunctionComponent<AppMainProps> | false | null
-  main?: FunctionComponent<AppMainProps> | false | null
-  toolBar?: FunctionComponent<AppMainProps> | false | null
-  statusBar?: FunctionComponent<AppMainProps> | false | null
-  settings?: FunctionComponent<AppMainProps> | false | null
-  setup?: FunctionComponent<AppMainProps> | false | null
+  index?: FunctionComponent<AppProps> | false | null
+  main?: FunctionComponent<AppProps> | false | null
+  toolBar?: FunctionComponent<AppProps> | false | null
+  statusBar?: FunctionComponent<AppProps> | false | null
+  settings?: FunctionComponent<AppProps> | false | null
+  setup?: FunctionComponent<AppProps> | false | null
 }
 
 export type AppDefinition = {
@@ -29,9 +29,9 @@ export type AppDefinition = {
   iconLight?: string
   context?: React.Context<any>
   itemType?: ItemType
-  app?: FunctionComponent<AppMainProps>
-  settings?: FunctionComponent<AppMainProps>
-  setup?: FunctionComponent<AppMainProps>
+  app?: FunctionComponent<AppProps>
+  settings?: FunctionComponent<AppProps>
+  setup?: FunctionComponent<AppProps>
   appData?: Object
   // TODO @umed this is where we can put syncer stuff
   sync?: {} // todo: it can be boolean at max
@@ -46,6 +46,6 @@ export type AppBitMainProps = OrbitItemViewProps & {
 }
 
 export type AppSettingsProps<T extends AppBit> = {
-  appConfig?: AppMainProps
+  appProps?: AppProps
   app: T
 }

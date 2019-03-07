@@ -1,28 +1,28 @@
 import { Bit } from '@o/models'
 import { AppDefinition } from '../types/AppDefinition'
-import { AppMainProps } from '../types/AppMainProps'
+import { AppProps } from '../types/AppProps'
 import { OrbitListItemProps } from '../views/ListItem'
 import { getAppDefinitions } from './getAppDefinitions'
 
-export function getAppConfig(props: OrbitListItemProps, id?: string): AppMainProps {
+export function getAppProps(props: OrbitListItemProps, id?: string): AppProps {
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
       const appDef = getAppDefinitions().find(x => x.id === item.appIdentifier)
-      return getSourceAppConfig(appDef, item)
+      return getSourceAppProps(appDef, item)
     }
     if (item.target === 'person-bit') {
       const appDef = getAppDefinitions().find(x => x.id === 'people')
-      return getSourceAppConfig(appDef, item)
+      return getSourceAppProps(appDef, item)
     }
   }
   return {
     id,
-    ...listItemToAppConfig(props),
+    ...listItemToAppProps(props),
   }
 }
 
-function listItemToAppConfig(props: OrbitListItemProps): AppMainProps {
+function listItemToAppProps(props: OrbitListItemProps): AppProps {
   return {
     id: props.id,
     identifier: props.identifier,
@@ -31,11 +31,11 @@ function listItemToAppConfig(props: OrbitListItemProps): AppMainProps {
     icon: typeof props.icon === 'string' ? props.icon : undefined,
     subType: props.subType,
     subId: props.subId ? `${props.subId}` : undefined,
-    ...props.appConfig,
+    ...props.appProps,
   }
 }
 
-export function getSourceAppConfig(appDef: AppDefinition, model: Bit): AppMainProps {
+export function getSourceAppProps(appDef: AppDefinition, model: Bit): AppProps {
   if (!appDef) {
     throw new Error(`No source given: ${JSON.stringify(appDef)}`)
   }

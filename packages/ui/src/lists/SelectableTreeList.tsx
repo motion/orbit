@@ -104,7 +104,7 @@ class SelectableTreeListStore {
     this.error = null
   }
 
-  handleOpen = (index: number, appConfig?: any, eventType?: any) => {
+  handleOpen = (index: number, appProps?: any, eventType?: any) => {
     const { curFolder, props, depth } = this
     if (curFolder.type !== 'folder' && curFolder.type !== 'root') {
       console.log('cant open', curFolder, 'not folder or root')
@@ -121,7 +121,7 @@ class SelectableTreeListStore {
     }
     if (this.props.onOpen) {
       // !TODO
-      this.props.onOpen(index, appConfig, eventType)
+      this.props.onOpen(index, appProps, eventType)
     }
   }
 }

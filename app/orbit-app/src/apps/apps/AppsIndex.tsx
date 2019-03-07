@@ -26,7 +26,7 @@ function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
     subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
-    appConfig: {
+    appProps: {
       viewType: 'settings' as 'settings',
       subId: `${app.app.id}`,
       identifier: app.app.identifier,
@@ -60,7 +60,7 @@ export function AppsIndex() {
           slim: true,
           subtitle: getDescription(def),
           after: sourceIcon,
-          appConfig: {
+          appProps: {
             identifier: 'apps',
             subType: 'add-app',
             subId: def.id,

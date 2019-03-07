@@ -5,11 +5,11 @@ import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
-import { AppMainProps } from '../types/AppMainProps'
+import { AppProps } from '../types/AppProps'
 import { AppViewsContext } from './App'
 
 export type AppViewProps = {
-  appConfig?: AppMainProps
+  appProps?: AppProps
   viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   id?: string
   identifier: string

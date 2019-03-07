@@ -1,8 +1,8 @@
-import { AppMainProps, AppMainView, List, OrbitListItemProps, useTreeList } from '@o/kit'
+import { AppMainView, AppProps, List, OrbitListItemProps, useTreeList } from '@o/kit'
 import { BarButtonSmall, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
-export function ListsAppMain(props: AppMainProps) {
+export function ListsAppMain(props: AppProps) {
   if (props.subType === 'folder') {
     return <ListsAppMainFolder {...props} />
   }
@@ -18,7 +18,7 @@ function ListAppTitle(props: TitleRowProps) {
   return <TitleRow bordered sizePadding={2} margin={0} {...props} />
 }
 
-function ListsAppMainFolder(props: AppMainProps) {
+function ListsAppMainFolder(props: AppProps) {
   const treeList = useTreeList('list')
   const selectedItem = treeList.userState.currentFolder[+props.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])

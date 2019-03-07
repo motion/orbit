@@ -83,7 +83,7 @@ export class SearchStore {
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
-      appConfig: {
+      appProps: {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,

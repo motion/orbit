@@ -1,4 +1,4 @@
-export type AppMainProps = {
+export type AppProps = {
   identifier?: string
   id?: string
   subId?: string

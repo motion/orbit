@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react'
 import { AppElements } from '../types/AppDefinition'
 
-const validAppMainProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
+const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 
 export const AppLoadContext = createContext({
   identifier: '',
@@ -27,7 +27,7 @@ export const AppViewsContext = createContext({
 
 export function App(props: AppElements) {
   for (const key in props) {
-    if (!validAppMainProps.find(x => x === key)) {
+    if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
     }
   }

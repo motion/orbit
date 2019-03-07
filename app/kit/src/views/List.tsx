@@ -14,11 +14,11 @@ import {
   View,
 } from '@o/ui'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
-import { getAppConfig } from '../helpers/getAppConfig'
+import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
-import { AppMainProps } from '../types/AppMainProps'
+import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
@@ -55,7 +55,7 @@ export function ProvideSelectionContext({
 
 export type HandleOrbitSelect = ((
   index: number,
-  appConfig: AppMainProps,
+  appProps: AppProps,
   eventType?: 'click' | 'key',
 ) => any)
 
@@ -111,15 +111,15 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
+      const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onSelect) {
-        onSelect(index, appConfig, eventType)
+        onSelect(index, appProps, eventType)
       }
       if (selectionStoreRef.current) {
         selectionStoreRef.current.setSelected(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, appConfig, eventType)
+        selectableProps.onSelectItem(index, appProps, eventType)
       }
     },
     [onSelect, selectableProps],
@@ -127,12 +127,12 @@ export function List(rawProps: ListProps) {
 
   const onOpenInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
+      const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onOpen) {
-        onOpen(index, appConfig)
+        onOpen(index, appProps)
       }
       if (selectableProps && selectableProps.onOpenItem) {
-        selectableProps.onOpenItem(index, appConfig, eventType)
+        selectableProps.onOpenItem(index, appProps, eventType)
       }
     },
     [onOpen, selectableProps],

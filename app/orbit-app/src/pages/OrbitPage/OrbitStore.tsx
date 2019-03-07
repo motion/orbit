@@ -1,4 +1,4 @@
-import { AppConfig, HandleOrbitSelect } from '@o/kit'
+import { AppProps, HandleOrbitSelect } from '@o/kit'
 import { ensure, react, shallow, useHook } from '@o/use-store'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -7,9 +7,9 @@ export class OrbitStore {
   stores = useHook(useStoresSimple)
 
   lastSelectAt = Date.now()
-  nextItem = { index: -1, appConfig: null }
+  nextItem = { index: -1, appProps: null }
   isEditing = false
-  activeConfig: { [key: string]: AppConfig } = shallow({})
+  activeConfig: { [key: string]: AppProps } = shallow({})
 
   get isTorn() {
     return getIsTorn()
@@ -19,26 +19,26 @@ export class OrbitStore {
     this.isEditing = true
   }
 
-  setSelectItem: HandleOrbitSelect = (index, appConfig) => {
-    this.nextItem = { index, appConfig }
+  setSelectItem: HandleOrbitSelect = (index, appProps) => {
+    this.nextItem = { index, appProps }
   }
 
-  setActiveConfig(id: string, config: AppConfig) {
+  setActiveConfig(id: string, config: AppProps) {
     this.activeConfig[id] = config
   }
 
   updateSelectedItem = react(
     () => this.nextItem,
-    async ({ appConfig }, { sleep }) => {
+    async ({ appProps }, { sleep }) => {
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()
       if (Date.now() - last < 50) {
         await sleep(50)
       }
-      ensure('app config', !!appConfig)
+      ensure('app config', !!appProps)
       const { id } = this.stores.paneManagerStore.activePane
-      this.activeConfig[id] = appConfig
+      this.activeConfig[id] = appProps
     },
   )
 }

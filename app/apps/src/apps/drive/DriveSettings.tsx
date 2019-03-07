@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppMainProps } from '@o/kit'
+import { AppProps } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@o/ui'
 import { useStore } from '@o/use-store'
@@ -40,7 +40,7 @@ class DriveSettingsStore {
   }
 }
 
-export function DriveSettings({ subId }: AppMainProps) {
+export function DriveSettings({ subId }: AppProps) {
   const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders

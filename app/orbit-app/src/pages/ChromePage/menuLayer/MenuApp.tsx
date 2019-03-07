@@ -5,7 +5,7 @@ import * as React from 'react'
 import { MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 
-type MenuAppMainProps = AppViewProps
+type MenuAppProps = AppViewProps
 
 const menuHeightSetter = memoize((index: number) => (height: number) => {
   App.setState({
@@ -19,7 +19,7 @@ const menuHeightSetter = memoize((index: number) => (height: number) => {
   })
 })
 
-export default function MenuApp(props: MenuAppMainProps & { index: number }) {
+export default function MenuApp(props: MenuAppProps & { index: number }) {
   const { menuStore } = useStores()
   // memo to prevent expensive renders on height changes
   const menuApp = React.useMemo(

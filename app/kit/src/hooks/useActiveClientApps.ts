@@ -1,4 +1,4 @@
-import { AppBit } from '@mcro/models'
+import { AppBit } from '@o/models'
 import { appDefinesClient } from '../helpers/appDefinesClient'
 import { useActiveApps } from './useActiveApps'
 

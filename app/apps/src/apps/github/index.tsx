@@ -1,4 +1,4 @@
-import { createApp } from '@mcro/kit'
+import { createApp } from '@o/kit'
 import { githubIcon } from './githubIcon'
 import { githubIconWhite } from './githubIconWhite'
 import GithubSettings from './GithubSettings'

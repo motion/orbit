@@ -1,5 +1,5 @@
-import { ensure, react, useHook } from '@mcro/use-store'
-import { on } from '@mcro/utils'
+import { ensure, react, useHook } from '@o/use-store'
+import { on } from '@o/utils'
 import { debounce, throttle } from 'lodash'
 import { createRef } from 'react'
 import { useStoresSimple } from '../hooks/useStores'

@@ -1,7 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import { App, Desktop } from '@mcro/stores'
-import * as UI from '@mcro/ui'
-import { observer } from 'mobx-react-lite'
+import { gloss } from '@o/gloss'
+import { App, Desktop } from '@o/stores'
+import * as UI from '@o/ui'
 import * as React from 'react'
 import * as Constants from '../constants'
 
@@ -17,7 +16,7 @@ const OrbitIndicatorContainer = gloss(UI.View, {
   transition: `opacity ease-in 70ms 100`,
 })
 
-export default observer(function OrbitIndicator({ orbitOnLeft }: { orbitOnLeft: boolean }) {
+export default function OrbitIndicator({ orbitOnLeft }: { orbitOnLeft: boolean }) {
   if (Date.now() - Desktop.state.lastAppChange < 100) {
     return null
   }
@@ -36,4 +35,4 @@ export default observer(function OrbitIndicator({ orbitOnLeft }: { orbitOnLeft: 
       }}
     />
   )
-})
+}

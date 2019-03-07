@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'

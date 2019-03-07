@@ -1,4 +1,4 @@
-import { react } from '@mcro/use-store'
+import { react } from '@o/use-store'
 import {
   Direction,
   MovesMap,

@@ -1,6 +1,6 @@
-import { useTheme } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
-import { IconProps, View } from '@mcro/ui'
+import { useTheme } from '@o/gloss'
+import * as UI from '@o/ui'
+import { IconProps, View } from '@o/ui'
 import * as React from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
@@ -51,7 +51,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   // find our custom streamline icons...
   const icon = icons[name]
 
-  // ...or fallback to @mcro/ui icon
+  // ...or fallback to @o/ui icon
   if (!icon) {
     return (
       <UI.Icon

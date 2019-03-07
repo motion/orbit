@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/router",
+  "name": "@o/router",
   "version": "2.3.10",
   "main": "_/Router.js",
   "sideEffects": false,

@@ -1,4 +1,4 @@
-import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySetStrict } from '@o/css'
 import {
   alphaColor,
   Color,
@@ -11,8 +11,8 @@ import {
   ThemeObject,
   ThemeSelect,
   View,
-} from '@mcro/gloss'
-import { selectDefined } from '@mcro/utils'
+} from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'

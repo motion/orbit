@@ -1,7 +1,7 @@
-import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { Screen } from '@mcro/screen'
-import { App, Desktop } from '@mcro/stores'
-import { decorate, react } from '@mcro/use-store'
+import { MAC_TOPBAR_HEIGHT } from '@o/constants'
+import { Screen } from '@o/screen'
+import { App, Desktop } from '@o/stores'
+import { decorate, react } from '@o/use-store'
 import { throttle } from 'lodash'
 
 type Point = [number, number]

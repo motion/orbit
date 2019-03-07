@@ -1,5 +1,5 @@
-import { color } from '@mcro/color'
-import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@mcro/gloss'
+import { color } from '@o/color'
+import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@o/gloss'
 import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { colors } from '../helpers/colors'

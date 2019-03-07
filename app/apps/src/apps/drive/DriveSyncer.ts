@@ -1,17 +1,18 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { sleep } from '@mcro/utils'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
+import { AppEntity, Bit, BitEntity } from '@o/models'
+import { BitUtils, createSyncer, getEntityManager, isAborted } from '@o/sync-kit'
+import { sleep } from '@o/utils'
 import { DriveBitData } from './DriveBitData'
-import { DriveLoadedFile, DriveUser } from './DriveTypes'
 import { DriveLoader } from './DriveLoader'
+import { DriveLoadedFile, DriveUser } from './DriveTypes'
 
 /**
  * Syncs Google Drive files.
  */
 export const DriveSyncer = createSyncer(async ({ app, log }) => {
-
   const loader = new DriveLoader(app, log, source =>
-    getEntityManager().getRepository(AppEntity).save(source),
+    getEntityManager()
+      .getRepository(AppEntity)
+      .save(source),
   )
 
   /**
@@ -47,11 +48,11 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
         webLink: file.file.webViewLink ? file.file.webViewLink : file.file.webContentLink,
         location: file.parent
           ? {
-            id: file.parent.id,
-            name: file.parent.name,
-            webLink: file.file.webViewLink || file.parent.webContentLink,
-            desktopLink: '',
-          }
+              id: file.parent.id,
+              name: file.parent.name,
+              webLink: file.file.webViewLink || file.parent.webContentLink,
+              desktopLink: '',
+            }
           : undefined,
         bitCreatedAt: new Date(file.file.createdTime).getTime(),
         bitUpdatedAt: new Date(file.file.modifiedTime).getTime(),
@@ -87,7 +88,9 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
       }
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -97,15 +100,21 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSync.lastCursorSyncedDate) {
       lastSync.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing file, set last synced date', lastSync)
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
     }
 
     const bit = createDocumentBit(file)
     bit.people = file.users.map(user => createPersonBit(user))
 
     log.verbose('syncing', { file, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit.people, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit, { listeners: false })
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -116,7 +125,9 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
       lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
       lastSync.lastCursor = undefined
       lastSync.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
       return true
     }
 
@@ -124,11 +135,12 @@ export const DriveSyncer = createSyncer(async ({ app, log }) => {
     if (lastSync.lastCursor !== cursor) {
       log.info('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
     }
 
     return true
   })
   log.timer('load files and people from API', files)
-
 })

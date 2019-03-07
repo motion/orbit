@@ -1,4 +1,4 @@
-import { Popover } from '@mcro/ui'
+import { Popover } from '@o/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { animated, interpolate, useSpring } from 'react-spring'

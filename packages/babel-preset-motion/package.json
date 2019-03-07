@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/babel-preset-motion",
+  "name": "@o/babel-preset-motion",
   "main": "babel-preset-motion.js",
   "sideEffects": false,
   "version": "2.3.10",
@@ -15,8 +15,8 @@
     "@babel/preset-env": "7.2.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
-    "@mcro/gloss": "^2.3.10",
-    "@mcro/gloss-displaynames": "^2.3.10",
+    "@o/gloss": "^2.3.10",
+    "@o/gloss-displaynames": "^2.3.10",
     "react-hot-loader": "4.7.2",
     "@babel/plugin-transform-react-display-name": "7.2.0"
   },

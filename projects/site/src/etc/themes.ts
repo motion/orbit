@@ -1,4 +1,4 @@
-import { ThemeMaker } from '@mcro/gloss'
+import { ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 const highlightColor = '#fff'

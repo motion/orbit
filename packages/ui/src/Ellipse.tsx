@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 
 export const Ellipse = gloss({
   display: 'block',

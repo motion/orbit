@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/vectorious",
+  "name": "@o/vectorious",
   "version": "2.3.10",
   "description": "vectorious with no blas dep",
   "main": "vectorious.js",

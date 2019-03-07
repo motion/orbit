@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/wait-for-fonts",
+  "name": "@o/wait-for-fonts",
   "main": "_/index.js",
   "sideEffects": false,
   "version": "2.3.10",

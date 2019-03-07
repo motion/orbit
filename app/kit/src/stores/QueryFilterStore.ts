@@ -1,4 +1,4 @@
-import { always, decorate, ensure, react } from '@mcro/use-store'
+import { always, decorate, ensure, react } from '@o/use-store'
 import { memoize, uniqBy } from 'lodash'
 import { MarkType } from '../types/NLPTypes'
 import { NLPStore } from './NLPStore/NLPStore'

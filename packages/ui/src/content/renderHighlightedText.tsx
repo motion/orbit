@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import React from 'react'
 import { HighlightText } from '../text/HighlightText'
 

@@ -1,5 +1,5 @@
-import { Color } from '@mcro/css'
-import { gloss } from '@mcro/gloss'
+import { Color } from '@o/css'
+import { gloss } from '@o/gloss'
 
 const isUndef = x => typeof x === 'undefined'
 

@@ -1,5 +1,5 @@
-import { AppView, getAppDefinition, Icon } from '@mcro/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme, TitleRow } from '@mcro/ui'
+import { AppView, getAppDefinition, Icon } from '@o/kit'
+import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme, TitleRow } from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'

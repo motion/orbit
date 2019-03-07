@@ -1,5 +1,5 @@
-import { Button, useScreenPosition } from '@mcro/ui'
-import { react, useStore } from '@mcro/use-store'
+import { Button, useScreenPosition } from '@o/ui'
+import { react, useStore } from '@o/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
 

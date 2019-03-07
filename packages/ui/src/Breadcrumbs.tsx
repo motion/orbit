@@ -1,4 +1,4 @@
-import { Row, ViewProps } from '@mcro/gloss'
+import { Row, ViewProps } from '@o/gloss'
 import React, {
   createContext,
   Dispatch,

@@ -1,6 +1,6 @@
-import { useModel } from '@mcro/bridge'
-import { AppProps, OrbitOrb, useAppsForSpace } from '@mcro/kit'
-import { SpaceModel } from '@mcro/models'
+import { useModel } from '@o/bridge'
+import { AppProps, OrbitOrb, useAppsForSpace } from '@o/kit'
+import { SpaceModel } from '@o/models'
 import {
   Col,
   FormRow,
@@ -14,7 +14,7 @@ import {
   Theme,
   Title,
   VerticalSpace,
-} from '@mcro/ui'
+} from '@o/ui'
 import randomColor from 'randomcolor'
 import * as React from 'react'
 import { HorizontalScroll } from '../../views'

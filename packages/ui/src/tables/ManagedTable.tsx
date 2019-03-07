@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'

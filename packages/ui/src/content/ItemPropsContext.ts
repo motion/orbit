@@ -1,4 +1,4 @@
-import { ViewProps } from '@mcro/gloss'
+import { ViewProps } from '@o/gloss'
 import { createContext } from 'react'
 import { TextProps } from '../text/Text'
 

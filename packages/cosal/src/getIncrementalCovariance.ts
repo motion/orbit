@@ -1,7 +1,7 @@
+import { Matrix } from '@o/vectorious'
 import computeCovariance from 'compute-covariance'
-import { toWords, getWordVector } from './helpers'
-import { Matrix } from '@mcro/vectorious'
 import { VectorDB } from './cosal'
+import { getWordVector, toWords } from './helpers'
 
 export type WeightedDocument = {
   doc: string

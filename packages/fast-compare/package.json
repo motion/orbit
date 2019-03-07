@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/fast-compare",
+  "name": "@o/fast-compare",
   "version": "2.3.10",
   "description": "none",
   "main": "_/fastCompare.js",

@@ -1,5 +1,5 @@
-import { command } from '@mcro/bridge'
-import { gloss, View, ViewProps } from '@mcro/gloss'
+import { command } from '@o/bridge'
+import { gloss, View, ViewProps } from '@o/gloss'
 import {
   LocationStore,
   PaneManagerStore,
@@ -9,10 +9,10 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
-} from '@mcro/kit'
-import { CloseAppCommand } from '@mcro/models'
-import { Theme } from '@mcro/ui'
-import { useStore, useStoreSimple } from '@mcro/use-store'
+} from '@o/kit'
+import { CloseAppCommand } from '@o/models'
+import { Theme } from '@o/ui'
+import { useStore, useStoreSimple } from '@o/use-store'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { orbitStaticApps } from '../../apps/orbitApps'

@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { globalShortcut } from 'electron'
 
 const log = new Logger('ElectronShortcutManager')

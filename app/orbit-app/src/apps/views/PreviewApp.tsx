@@ -1,5 +1,5 @@
-import { AppView } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
+import { AppView } from '@o/kit'
+import { AppBit } from '@o/models'
 import React from 'react'
 import { appToAppConfig } from '../../helpers/appToAppConfig'
 

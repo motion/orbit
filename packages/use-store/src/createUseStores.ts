@@ -1,4 +1,4 @@
-import { useCurrentComponent } from '@mcro/automagical'
+import { useCurrentComponent } from '@o/automagical'
 import { useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import { setupTrackableStore } from './setupTrackableStore'
 import { useForceUpdate } from './useStore'

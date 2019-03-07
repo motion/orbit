@@ -1,4 +1,4 @@
-import { Col, gloss, ViewProps } from '@mcro/gloss'
+import { Col, gloss, ViewProps } from '@o/gloss'
 import * as React from 'react'
 
 // TODO not a great view

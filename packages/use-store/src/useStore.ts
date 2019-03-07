@@ -1,4 +1,4 @@
-import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@mcro/automagical'
+import { CurrentComponent, decorate, updateProps, useCurrentComponent } from '@o/automagical'
 import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { config } from './configure'
@@ -16,7 +16,7 @@ export {
   ReactionRejectionError,
   useCurrentComponent,
   useReaction,
-} from '@mcro/automagical'
+} from '@o/automagical'
 export { configureUseStore } from './configure'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'

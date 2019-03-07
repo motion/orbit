@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/playground",
+  "name": "@o/playground",
   "private": true,
   "version": "2.3.10",
   "scripts": {
@@ -9,8 +9,8 @@
     "core-js": "2.6.5",
     "@babel/core": "7.2.0",
     "@babel/runtime": "7.2.0",
-    "@mcro/use-store": "*",
-    "@mcro/ui": "*",
+    "@o/use-store": "*",
+    "@o/ui": "*",
     "lodash": "^4.17.10",
     "mobx-react-lite": "1.1.0",
     "react": "16.8.3",

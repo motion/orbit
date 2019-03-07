@@ -1,7 +1,7 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
-import { Setting, SettingEntity } from '@mcro/models'
-import { decorate } from '@mcro/use-store'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { Setting, SettingEntity } from '@o/models'
+import { decorate } from '@o/use-store'
 import AutoLaunch from 'auto-launch'
 import { getRepository } from 'typeorm'
 

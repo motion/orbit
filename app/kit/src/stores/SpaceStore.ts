@@ -1,6 +1,6 @@
-import { observeMany, observeOne } from '@mcro/bridge'
-import { AppModel, SpaceModel, UserModel } from '@mcro/models'
-import { ensure, react } from '@mcro/use-store'
+import { observeMany, observeOne } from '@o/bridge'
+import { AppModel, SpaceModel, UserModel } from '@o/models'
+import { ensure, react } from '@o/use-store'
 import { sortApps } from '../hooks/useActiveAppsSorted'
 import { PaneManagerStore } from './PaneManagerStore'
 

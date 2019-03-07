@@ -1,5 +1,5 @@
-import { AppView, AppViewProps, SubPane } from '@mcro/kit'
-import { App } from '@mcro/stores'
+import { AppView, AppViewProps, SubPane } from '@o/kit'
+import { App } from '@o/stores'
 import { memoize } from 'lodash'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'

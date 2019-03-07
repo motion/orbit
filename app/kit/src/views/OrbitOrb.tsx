@@ -1,4 +1,4 @@
-import { gloss, View, ViewProps } from '@mcro/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {

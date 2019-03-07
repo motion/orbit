@@ -1,11 +1,11 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { sleep } from '@o/utils'
+import { ServiceLoadThrottlingOptions } from '../../options'
 import { ServiceLoader } from '../../ServiceLoader'
 import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
-import { ServiceLoadThrottlingOptions } from '../../options'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailTypes'
-import { AppBit } from '@mcro/models'
 
 /**
  * Loads data from GMail service.

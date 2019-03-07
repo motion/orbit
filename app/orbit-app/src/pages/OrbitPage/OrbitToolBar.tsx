@@ -1,6 +1,6 @@
-import { FullScreen, gloss, Row } from '@mcro/gloss'
-import { AppLoadContext } from '@mcro/kit'
-import { useReaction } from '@mcro/use-store'
+import { FullScreen, gloss, Row } from '@o/gloss'
+import { AppLoadContext } from '@o/kit'
+import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 

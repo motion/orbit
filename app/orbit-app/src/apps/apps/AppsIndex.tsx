@@ -1,7 +1,18 @@
-import { AppDefinition, AppProps, AppWithDefinition, Icon, List, OrbitListItemProps, useActiveApps, useActiveAppsWithDefinition, useActiveSpace, useAppDefinitions } from '@mcro/kit';
-import { partition } from 'lodash';
-import * as React from 'react';
-import { OrbitAppInfo } from '../../components/OrbitAppInfo';
+import {
+  AppDefinition,
+  AppProps,
+  AppWithDefinition,
+  Icon,
+  List,
+  OrbitListItemProps,
+  useActiveApps,
+  useActiveAppsWithDefinition,
+  useActiveSpace,
+  useAppDefinitions,
+} from '@o/kit'
+import { partition } from 'lodash'
+import * as React from 'react'
+import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 
 function getDescription(def: AppDefinition) {
   const hasSync = !!def.sync

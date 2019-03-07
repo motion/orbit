@@ -1,4 +1,4 @@
-import { CSSPropertySet, CSSPropertySetStrict, validCSSAttr } from '@mcro/css'
+import { CSSPropertySet, CSSPropertySetStrict, validCSSAttr } from '@o/css'
 import { gloss } from '../gloss'
 import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'

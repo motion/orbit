@@ -1,5 +1,5 @@
-import { List, useActiveQueryFilter, useActiveUser } from '@mcro/kit'
-import * as React from 'react'
+import { List, useActiveQueryFilter, useActiveUser } from '@o/kit';
+import * as React from 'react';
 
 export function SettingsAppIndex() {
   const [user] = useActiveUser()

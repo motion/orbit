@@ -1,5 +1,5 @@
-import { KitStores } from '@mcro/kit'
-import { UIStores } from '@mcro/ui'
+import { KitStores } from '@o/kit'
+import { UIStores } from '@o/ui'
 import { createContext } from 'react'
 import { AppFrameStore } from '../pages/AppPage/AppFrame'
 import { AppPageStore } from '../pages/AppPage/AppPageStore'

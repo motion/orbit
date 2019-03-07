@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 

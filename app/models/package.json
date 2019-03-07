@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/models",
+  "name": "@o/models",
   "version": "2.3.10",
   "main": "_/index.js",
   "private": true,
@@ -8,9 +8,9 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/config": "^2.3.10",
-    "@mcro/mediator": "^2.3.10",
-    "@mcro/utils": "^2.3.10",
+    "@o/config": "^2.3.10",
+    "@o/mediator": "^2.3.10",
+    "@o/utils": "^2.3.10",
     "global": "^4.3.2",
     "lodash": "^4.17.10",
     "reconnecting-websocket": "4.1.10",

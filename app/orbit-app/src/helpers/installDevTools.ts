@@ -1,4 +1,4 @@
-import { debugUseStore, IS_STORE } from '@mcro/use-store'
+import { debugUseStore, IS_STORE } from '@o/use-store'
 import { spy } from 'mobx'
 import { setConfig } from 'react-hot-loader'
 import './installGlobals'

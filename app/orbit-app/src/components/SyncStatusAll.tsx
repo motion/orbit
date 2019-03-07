@@ -1,6 +1,6 @@
-import { useModels } from '@mcro/bridge'
-import { JobModel } from '@mcro/models'
-import { SubTitle } from '@mcro/ui'
+import { useModels } from '@o/bridge'
+import { JobModel } from '@o/models'
+import { SubTitle } from '@o/ui'
 import * as React from 'react'
 
 export const SyncStatusAll = () => {

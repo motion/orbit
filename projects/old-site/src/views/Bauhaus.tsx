@@ -1,7 +1,7 @@
+import * as UI from '@o/ui'
 import * as React from 'react'
-import Warp from 'warpjs'
 import { findDOMNode } from 'react-dom'
-import * as UI from '@mcro/ui'
+import Warp from 'warpjs'
 
 export class Bauhaus extends React.Component<{
   showTriangle?: boolean

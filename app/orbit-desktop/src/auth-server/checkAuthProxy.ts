@@ -1,4 +1,4 @@
-import { getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@o/config'
 
 export async function checkAuthProxy() {
   const controller = new AbortController()

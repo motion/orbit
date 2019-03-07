@@ -1,4 +1,4 @@
-import { always, react, shallow, useHook } from '@mcro/use-store'
+import { always, react, shallow, useHook } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppDefinition, AppViews } from '../types/AppDefinition'
 import { AppStore } from './AppStore'

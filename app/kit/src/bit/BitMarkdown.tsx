@@ -1,4 +1,4 @@
-import { Markdown, ScrollableContent, Surface, View } from '@mcro/ui'
+import { Markdown, ScrollableContent, Surface, View } from '@o/ui'
 import * as React from 'react'
 import { BitStatusBar } from '../views/BitStatusBar'
 

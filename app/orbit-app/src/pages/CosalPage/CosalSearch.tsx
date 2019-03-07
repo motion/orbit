@@ -1,11 +1,11 @@
-import { loadMany } from '@mcro/bridge'
+import { loadMany } from '@o/bridge'
 import {
   CosalTopicsModel,
   CosalTopWordsModel,
   getSearchableText,
   SearchByTopicModel,
-} from '@mcro/models'
-import { react, useStore } from '@mcro/use-store'
+} from '@o/models'
+import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import CosalSaliency from './CosalSaliency'

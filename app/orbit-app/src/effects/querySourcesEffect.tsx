@@ -1,4 +1,4 @@
-import { useActiveSyncApps } from '@mcro/kit'
+import { useActiveSyncApps } from '@o/kit'
 import { useEffect } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
 

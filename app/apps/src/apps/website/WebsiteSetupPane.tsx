@@ -1,7 +1,7 @@
-import { command, useModel } from '@mcro/bridge'
-import { AppProps } from '@mcro/kit'
-import { AppModel, AppSaveCommand } from '@mcro/models'
-import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@mcro/ui'
+import { command, useModel } from '@o/bridge'
+import { AppProps } from '@o/kit'
+import { AppModel, AppSaveCommand } from '@o/models'
+import { Button, Col, InputRow, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import produce from 'immer'
 import React, { useEffect, useState } from 'react'
 

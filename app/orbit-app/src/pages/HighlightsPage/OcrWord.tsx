@@ -1,8 +1,8 @@
+import { MAC_TOPBAR_HEIGHT } from '@o/constants'
+import { gloss } from '@o/gloss'
+import { App } from '@o/stores'
 import * as React from 'react'
 import { HL_PAD } from './helpers'
-import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { App } from '@mcro/stores'
-import { gloss } from '@mcro/gloss'
 
 const Word = gloss({
   fontFamily: 'helvetica',

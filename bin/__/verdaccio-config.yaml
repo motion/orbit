@@ -6,7 +6,7 @@ uplinks:
     url: https://registry.npmjs.org/
 
 packages:
-  '@mcro/*':
+  '@o/*':
     #scoped packages
     access: $all
     publish: $all

@@ -1,7 +1,7 @@
-import { gloss, Row } from '@mcro/gloss'
-import { AppLoadContext } from '@mcro/kit'
-import { BorderTop } from '@mcro/ui'
-import { useReaction } from '@mcro/use-store'
+import { gloss, Row } from '@o/gloss'
+import { AppLoadContext } from '@o/kit'
+import { BorderTop } from '@o/ui'
+import { useReaction } from '@o/use-store'
 import React, { useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 

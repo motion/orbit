@@ -1,9 +1,9 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { sleep } from '@o/utils'
 import { channels, team, users } from 'slack'
 import { ServiceLoadThrottlingOptions } from '../../options'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
-import { AppBit } from '@mcro/models'
 
 /**
  * Loads the data from the Slack API.

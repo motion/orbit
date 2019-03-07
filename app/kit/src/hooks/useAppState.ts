@@ -1,5 +1,5 @@
-import { useModel } from '@mcro/bridge'
-import { AppModel } from '@mcro/models'
+import { useModel } from '@o/bridge'
+import { AppModel } from '@o/models'
 import { useStoresSimple } from './useStores'
 
 export function useAppState() {

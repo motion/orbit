@@ -1,4 +1,4 @@
-import { Contents, ViewProps } from '@mcro/gloss'
+import { Contents, ViewProps } from '@o/gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 

@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/electron-sudo",
+  "name": "@o/electron-sudo",
   "version": "2.3.10",
   "description": "Electron subprocess with administrative privileges, prompting the user with an OS dialog if necessary.",
   "main": "_/index.js",

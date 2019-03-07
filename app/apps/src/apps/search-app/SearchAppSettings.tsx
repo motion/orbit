@@ -1,6 +1,6 @@
-import { AppProps } from '@mcro/kit'
-import { Button, FormRow, HorizontalSpace, Input, Row, SubTitle } from '@mcro/ui'
-import React from 'react'
+import { AppProps } from '@o/kit';
+import { Button, FormRow, HorizontalSpace, Input, Row, SubTitle } from '@o/ui';
+import React from 'react';
 
 export function SearchAppSettings(_: AppProps) {
   return (

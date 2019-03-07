@@ -1,7 +1,7 @@
-import { AppProps, AppSubView } from '@mcro/kit'
-import { Title } from '@mcro/ui'
-import * as React from 'react'
-import { ListContext } from '.'
+import { AppProps, AppSubView } from '@o/kit';
+import { Title } from '@o/ui';
+import * as React from 'react';
+import { ListContext } from '.';
 
 export function ListsAppMain(props: AppProps) {
   return null

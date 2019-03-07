@@ -1,6 +1,6 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Oracle, OracleMessageHandler } from '@mcro/oracle'
-import { Desktop } from '@mcro/stores'
+import { getGlobalConfig } from '@o/config'
+import { Oracle, OracleMessageHandler } from '@o/oracle'
+import { Desktop } from '@o/stores'
 
 // handles the oracle, which includes OCR and screen watching
 

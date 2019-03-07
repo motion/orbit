@@ -1,4 +1,4 @@
-import { AppProps, getTargetValue, List, TreeList, useAppState, useStores } from '@mcro/kit'
+import { AppProps, getTargetValue, List, TreeList, useAppState, useStores } from '@o/kit'
 import {
   Absolute,
   BorderBottom,
@@ -9,7 +9,7 @@ import {
   preventDefault,
   Row,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import { flow } from 'lodash'
 import React, { useContext } from 'react'
 import { API, ListContext } from '.'

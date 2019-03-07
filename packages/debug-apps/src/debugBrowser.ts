@@ -1,6 +1,6 @@
-import * as r2 from '@mcro/r2'
-import puppeteer from 'puppeteer'
+import * as r2 from '@o/r2'
 import { flatten, range } from 'lodash'
+import puppeteer from 'puppeteer'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 type DevInfo = {
@@ -97,8 +97,7 @@ export default class DebugApps {
   }
 
   getSessions = async (): Promise<any> => {
-    const sessions = flatten(await Promise.all(this.sessions.map(this.getDevUrl)))
-      .filter(Boolean)
+    const sessions = flatten(await Promise.all(this.sessions.map(this.getDevUrl))).filter(Boolean)
     return sessions.sort((a, b) => `${a.url}${a.debugUrl}`.localeCompare(`${b.url}${b.debugUrl}`))
   }
 

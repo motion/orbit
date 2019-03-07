@@ -1,5 +1,5 @@
-import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@mcro/css'
-import { isEqual } from '@mcro/fast-compare'
+import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+import { isEqual } from '@o/fast-compare'
 import {
   createElement,
   forwardRef,

@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import { Col, HighlightText, ListItem, Row, Text } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { Col, HighlightText, ListItem, Row, Text } from '@o/ui'
 import * as React from 'react'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {

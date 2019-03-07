@@ -1,4 +1,4 @@
-import { useReaction } from '@mcro/use-store'
+import { useReaction } from '@o/use-store'
 import { AppStore } from '../stores'
 import { useStoresSimple } from './useStores'
 

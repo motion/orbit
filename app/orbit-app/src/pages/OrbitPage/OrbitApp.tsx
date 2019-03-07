@@ -1,12 +1,6 @@
-import {
-  AppLoadContext,
-  AppStore,
-  AppViewsContext,
-  getAppDefinition,
-  ProvideStores,
-} from '@mcro/kit'
-import { SelectionStore, useOnMount } from '@mcro/ui'
-import { useStoreSimple } from '@mcro/use-store'
+import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
+import { SelectionStore, useOnMount } from '@o/ui'
+import { useStoreSimple } from '@o/use-store'
 import React, { useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'

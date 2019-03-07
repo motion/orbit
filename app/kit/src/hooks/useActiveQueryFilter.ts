@@ -1,4 +1,4 @@
-import { useReaction } from '@mcro/use-store'
+import { useReaction } from '@o/use-store'
 import { useCallback } from 'react'
 import { useFilter, UseFilterProps } from './useFilter'
 import { useStoresSimple } from './useStores'

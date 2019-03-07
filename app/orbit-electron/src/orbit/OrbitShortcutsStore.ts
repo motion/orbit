@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { ensure, react } from '@mcro/use-store'
+import { Logger } from '@o/logger'
+import { App, Desktop, Electron } from '@o/stores'
+import { ensure, react } from '@o/use-store'
 import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
 
 const log = new Logger('ShortcutsManager')

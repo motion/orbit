@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/color",
+  "name": "@o/color",
   "version": "2.3.10",
   "main": "_/color.js",
   "sideEffects": false,

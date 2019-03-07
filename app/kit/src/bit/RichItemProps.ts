@@ -1,4 +1,4 @@
-import { ItemRenderText, ListItemHide } from '@mcro/ui'
+import { ItemRenderText, ListItemHide } from '@o/ui'
 import { NormalItem } from '../types/NormalItem'
 
 export type RichItemProps = {

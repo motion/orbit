@@ -1,6 +1,6 @@
-import { Absolute, FullScreen, gloss, Theme, useTheme } from '@mcro/gloss'
-import { Icon, useActiveApps } from '@mcro/kit'
-import { App } from '@mcro/stores'
+import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
+import { Icon, useActiveApps } from '@o/kit'
+import { App } from '@o/stores'
 import {
   BorderBottom,
   Button,
@@ -10,7 +10,7 @@ import {
   SegmentedRow,
   Text,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'

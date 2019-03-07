@@ -5,8 +5,8 @@
  * @format
  */
 
-import { attachTheme } from '@mcro/gloss'
-import { on } from '@mcro/utils'
+import { attachTheme } from '@o/gloss'
+import { on } from '@o/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'

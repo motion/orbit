@@ -1,4 +1,4 @@
-import { Space } from '@mcro/models'
+import { Space } from '@o/models'
 import React from 'react'
 import { OrbitIconProps } from './Icon'
 import { OrbitOrb } from './OrbitOrb'

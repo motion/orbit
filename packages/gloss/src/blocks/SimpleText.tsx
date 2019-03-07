@@ -1,4 +1,4 @@
-import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySetStrict } from '@o/css'
 import { gloss } from '../gloss'
 import { alphaColor } from '../helpers/alphaColor'
 import { propsToTextSize } from '../helpers/propsToTextSize'

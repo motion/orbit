@@ -76,8 +76,8 @@ else
   # start app
   npx nodemon \
     --watch _ \
-    --watch $(realpath node_modules/@mcro/orbit-electron)/_ \
-    --watch $(realpath node_modules/@mcro/orbit-desktop)/_ \
+    --watch $(realpath node_modules/@o/orbit-electron)/_ \
+    --watch $(realpath node_modules/@o/orbit-desktop)/_ \
     --delay 0.5 \
     --exec './scripts/run-orbit.sh'
 fi

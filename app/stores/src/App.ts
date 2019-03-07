@@ -1,6 +1,6 @@
-import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
-import { User } from '@mcro/models'
-import { decorate, deep } from '@mcro/use-store'
+import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
+import { User } from '@o/models'
+import { decorate, deep } from '@o/use-store'
 import { Desktop } from './Desktop'
 
 export let App = null as AppStore

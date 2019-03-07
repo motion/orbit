@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/logger",
+  "name": "@o/logger",
   "version": "2.3.10",
   "author": "Motion",
   "main": "_/index.js",

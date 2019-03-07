@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/cosal-test",
+  "name": "@o/cosal-test",
   "private": true,
   "version": "2.3.10",
   "scripts": {
@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/build": "^2.3.10",
-    "@mcro/cosal": "^2.3.10",
-    "@mcro/gloss": "^2.3.10",
-    "@mcro/ui": "^2.3.10",
-    "@mcro/use-store": "^2.3.10",
+    "@o/build": "^2.3.10",
+    "@o/cosal": "^2.3.10",
+    "@o/gloss": "^2.3.10",
+    "@o/ui": "^2.3.10",
+    "@o/use-store": "^2.3.10",
     "big-json": "2.0.2",
     "compute-covariance": "1.0.1",
     "cors": "2.8.5",

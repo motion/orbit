@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStore } from '@o/use-store'
 import React, { useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'

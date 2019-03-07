@@ -1,4 +1,4 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 import {
   Center,
   Direction,
@@ -12,7 +12,7 @@ import {
   useMemoGetValue,
   useSelectionStore,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppConfig } from '../helpers/getAppConfig'
 import { useActiveQuery } from '../hooks/useActiveQuery'

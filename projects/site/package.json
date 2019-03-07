@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/site",
+  "name": "@o/site",
   "version": "2.3.10",
   "private": true,
   "scripts": {
@@ -8,12 +8,12 @@
   "dependencies": {
     "@babel/runtime": "7.2.0",
     "@kennethormandy/react-fittext": "0.5.1",
-    "@mcro/color": "^2.3.10",
-    "@mcro/gloss": "^2.3.10",
-    "@mcro/react-textfit": "^2.3.10",
-    "@mcro/ui": "^2.3.10",
-    "@mcro/use-store": "^2.3.10",
-    "@mcro/wait-for-fonts": "^2.3.10",
+    "@o/color": "^2.3.10",
+    "@o/gloss": "^2.3.10",
+    "@o/react-textfit": "^2.3.10",
+    "@o/ui": "^2.3.10",
+    "@o/use-store": "^2.3.10",
+    "@o/wait-for-fonts": "^2.3.10",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "jsonp": "^0.2.1",

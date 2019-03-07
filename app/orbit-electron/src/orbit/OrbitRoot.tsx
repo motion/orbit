@@ -1,5 +1,5 @@
-import { App } from '@mcro/reactron'
-import { useStore } from '@mcro/use-store'
+import { App } from '@o/reactron'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'

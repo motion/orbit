@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, ResizableSides } from './Interactive'

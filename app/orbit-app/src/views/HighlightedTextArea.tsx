@@ -1,5 +1,5 @@
-import { CSSPropertySet, gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { CSSPropertySet, gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as React from 'react'
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')

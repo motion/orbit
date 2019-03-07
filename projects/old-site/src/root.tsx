@@ -1,10 +1,10 @@
+import * as UI from '@o/ui'
 import * as React from 'react'
-import Router from './router'
-import { NotFoundPage } from './pages/NotFoundPage'
-import * as UI from '@mcro/ui'
-import * as Constants from './constants'
 import { hot } from 'react-hot-loader'
+import * as Constants from './constants'
 import { scrollTo } from './helpers'
+import { NotFoundPage } from './pages/NotFoundPage'
+import Router from './router'
 
 class Root extends React.Component {
   componentDidMount() {

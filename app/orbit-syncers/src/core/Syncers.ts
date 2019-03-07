@@ -1,5 +1,5 @@
-// import { apps } from '@mcro/apps/_/apps'
-import { syncers } from '@mcro/apps/_/syncers'
+// import { apps } from '@o/apps/_/apps'
+import { syncers } from '@o/apps/_/syncers'
 import { Syncer } from './Syncer'
 
 const apps = []

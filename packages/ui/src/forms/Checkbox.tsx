@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import { observable } from 'mobx'
 import * as React from 'react'
 import { SizedSurface } from '../SizedSurface'

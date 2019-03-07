@@ -1,6 +1,6 @@
-import { isEqual } from '@mcro/fast-compare'
-import { gloss } from '@mcro/gloss'
-import { on } from '@mcro/utils'
+import { isEqual } from '@o/fast-compare'
+import { gloss } from '@o/gloss'
+import { on } from '@o/utils'
 import * as React from 'react'
 
 const rowHeight = 1

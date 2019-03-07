@@ -1,4 +1,4 @@
-import { cleanupChildren } from '@mcro/orbit-fork-process'
+import { cleanupChildren } from '@o/orbit-fork-process'
 import { once } from 'lodash'
 
 export async function main() {

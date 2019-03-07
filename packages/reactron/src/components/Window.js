@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { BrowserWindow } from 'electron'
 import isEqual from 'lodash.isequal'
 import { BaseComponent } from './BaseComponent'

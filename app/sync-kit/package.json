@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/sync-kit",
+  "name": "@o/sync-kit",
   "version": "2.3.10",
   "main": "_/index.js",
   "ts:main": "src/index.ts",
@@ -9,10 +9,10 @@
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@mcro/models": "*",
-    "@mcro/logger": "*",
-    "@mcro/mediator": "*",
-    "@mcro/utils": "*",
+    "@o/models": "*",
+    "@o/logger": "*",
+    "@o/mediator": "*",
+    "@o/utils": "*",
     "lodash": "^4.17.10",
     "typeorm": "^0.3.0-alpha.22",
     "dompurify": "^1.0.7",

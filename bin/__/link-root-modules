@@ -1,6 +1,6 @@
 #!/bin/bash
 
 npx lerna exec -- yarn link
-yarn link @mcro/gloss &
-yarn link @mcro/babel-preset-motion &
+yarn link @o/gloss &
+yarn link @o/babel-preset-motion &
 wait

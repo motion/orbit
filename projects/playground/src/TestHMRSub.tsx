@@ -1,7 +1,7 @@
+import { useStore } from '@o/use-store'
+import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { SomeOtherSubView } from './SomeOtherSubView'
-import { useStore } from '@mcro/use-store'
-import { observer } from 'mobx-react-lite'
 
 class TestStore {
   x = [0]

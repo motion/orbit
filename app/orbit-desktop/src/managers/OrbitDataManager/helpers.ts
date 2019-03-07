@@ -1,4 +1,4 @@
-import { DesktopActions } from '@mcro/stores'
+import { DesktopActions } from '@o/stores'
 import { mkdir, pathExists } from 'fs-extra'
 
 // ensures we have a ~/.orbit like directory

@@ -1,5 +1,5 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import { isEqual, isPlainObject } from 'lodash'
 import * as Mobx from 'mobx'
 import { action } from 'mobx'

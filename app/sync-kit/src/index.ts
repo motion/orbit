@@ -1,10 +1,10 @@
+import { MediatorClient } from '@o/mediator'
+import { AppBit } from '@o/models'
 import { EntityManager } from 'typeorm'
-import { MediatorClient } from '@mcro/mediator'
-import { AppBit } from '@mcro/models'
 
 export * from './AppSyncer'
-export * from './SyncerUtils'
 export * from './BitUtils'
+export * from './SyncerUtils'
 
 let entityManager: EntityManager
 export function getEntityManager() {

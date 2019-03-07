@@ -1,6 +1,6 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
+import { getGlobalConfig } from '@o/config'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
 import {
   MediatorClient,
   MediatorServer,
@@ -9,7 +9,7 @@ import {
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
-} from '@mcro/mediator'
+} from '@o/mediator'
 import {
   AppEntity,
   AppModel,
@@ -48,9 +48,9 @@ import {
   TrendingTopicsModel,
   UserEntity,
   UserModel,
-} from '@mcro/models'
-import { Screen } from '@mcro/screen'
-import { App, Desktop, Electron } from '@mcro/stores'
+} from '@o/models'
+import { Screen } from '@o/screen'
+import { App, Desktop, Electron } from '@o/stores'
 import { writeJSON } from 'fs-extra'
 import root from 'global'
 import open from 'opn'

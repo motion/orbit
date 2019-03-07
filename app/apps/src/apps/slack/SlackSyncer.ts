@@ -1,4 +1,4 @@
-import { AppEntity, Bit } from '@mcro/models'
+import { AppEntity, Bit } from '@o/models'
 import {
   BitUtils,
   createSyncer,
@@ -9,16 +9,15 @@ import {
   loadTextTopWords,
   syncBits,
   syncPeople,
-} from '@mcro/sync-kit'
+} from '@o/sync-kit'
 import { SlackBitData } from './SlackBitData'
-import { SlackAttachment, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
 import { SlackLoader } from './SlackLoader'
+import { SlackAttachment, SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackTypes'
 
 /**
  * Syncs Slack messages.
  */
 export const SlackSyncer = createSyncer(async ({ app, log }) => {
-
   const Autolinker = require('autolinker')
   const appData = app.data
   const loader = new SlackLoader(app, log)
@@ -104,7 +103,11 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
   /**
    * Creates a new slack conversation bit.
    */
-  const createConversationBit = (channel: SlackChannel, messages: SlackMessage[], allPeople: Bit[]): Bit => {
+  const createConversationBit = (
+    channel: SlackChannel,
+    messages: SlackMessage[],
+    allPeople: Bit[],
+  ): Bit => {
     // we need message in a reverse order
     // by default messages we get are in last-first order,
     // but we need in last-last order here
@@ -115,10 +118,10 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
     const bitUpdatedAt = +lastMessage.ts.split('.')[0] * 1000
     const webLink = `https://${appData.values.team.domain}.slack.com/archives/${
       channel.id
-      }/p${firstMessage.ts.replace('.', '')}`
+    }/p${firstMessage.ts.replace('.', '')}`
     const desktopLink = `slack://channel?id=${channel.id}&message=${firstMessage.ts}&team=${
       appData.values.team.id
-      }`
+    }`
     const mentionedPeople = findMessageMentionedPeople(messages, allPeople)
     const data: SlackBitData = {
       messages: messages.reverse().map(message => ({
@@ -170,7 +173,7 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
     message: SlackMessage,
     attachment: SlackAttachment,
     allPeople: Bit[],
-): Bit => {
+  ): Bit => {
     const messageTime = +message.ts.split('.')[0] * 1000
     const mentionedPeople = findMessageMentionedPeople([message], allPeople)
     const people = allPeople.filter(person => {
@@ -253,7 +256,9 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
     domain: team.domain,
     icon: team.icon.image_132,
   }
-  await getEntityManager().getRepository(AppEntity).save(app)
+  await getEntityManager()
+    .getRepository(AppEntity)
+    .save(app)
 
   // load api users
   log.timer('load API users')
@@ -362,7 +367,7 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
               bit.title = (await loadTextTopWords(flatBody, 6)).join(' ')
             }
           }
-        }
+        },
       })
 
       // update last message sync app
@@ -372,8 +377,9 @@ export const SlackSyncer = createSyncer(async ({ app, log }) => {
       // update apps
       log.info('update apps', { lastMessageSync })
       values.lastMessageSync = lastMessageSync
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
     }
   }
-
 })

@@ -1,8 +1,8 @@
-import { resolveMany } from '@mcro/mediator'
-import { BitEntity, SearchPinnedResultModel } from '@mcro/models'
-import { getRepository } from 'typeorm'
-import { flatten, uniqBy, zip } from 'lodash'
+import { resolveMany } from '@o/mediator'
+import { BitEntity, SearchPinnedResultModel } from '@o/models'
 import fuzzySort from 'fuzzysort'
+import { flatten, uniqBy, zip } from 'lodash'
+import { getRepository } from 'typeorm'
 
 const max = 15
 
@@ -44,7 +44,7 @@ const searchPeople = async query => {
           name: {
             $like: `%${word}%`,
           },
-        }))
+        })),
       },
       {
         type: 'person',
@@ -53,7 +53,7 @@ const searchPeople = async query => {
             $like: `%${word}%`,
           },
         })),
-      }
+      },
     ],
   })
   console.timeEnd(`searchPeople ${query}`)

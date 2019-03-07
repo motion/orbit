@@ -1,7 +1,7 @@
+import { logFile } from '@o/logger'
 import { clipboard, dialog } from 'electron'
-import open from 'opn'
-import { logFile } from '@mcro/logger'
 import { pathExists, readFile } from 'fs-extra'
+import open from 'opn'
 import Raven from 'raven'
 import { handleExit } from './handleExit'
 

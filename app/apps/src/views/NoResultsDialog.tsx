@@ -1,5 +1,5 @@
-import { useStores } from '@mcro/kit'
-import { Button, SubTitle, VerticalSpace, View } from '@mcro/ui'
+import { useStores } from '@o/kit'
+import { Button, SubTitle, VerticalSpace, View } from '@o/ui'
 import * as React from 'react'
 
 type Props = {

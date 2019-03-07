@@ -1,4 +1,4 @@
-export { color } from '@mcro/color'
+export { color } from '@o/color'
 export {
   Color,
   configureCSS,
@@ -9,7 +9,7 @@ export {
   psuedoKeys,
   ThemeObject,
   validCSSAttr,
-} from '@mcro/css'
+} from '@o/css'
 // blocks
 export { Absolute } from './blocks/Absolute'
 export { Block } from './blocks/Block'

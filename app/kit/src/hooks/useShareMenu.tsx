@@ -1,4 +1,4 @@
-import { Icon, Popover, preventDefault, View } from '@mcro/ui'
+import { Icon, Popover, preventDefault, View } from '@o/ui'
 import { flow, memoize } from 'lodash'
 import React, { useCallback } from 'react'
 import { OrbitListItemProps } from '../views/ListItem'

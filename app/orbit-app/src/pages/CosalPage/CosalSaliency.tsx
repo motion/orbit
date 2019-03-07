@@ -1,7 +1,7 @@
-import { loadMany } from '@mcro/bridge'
-import { gloss } from '@mcro/gloss'
-import { CosalSaliencyModel } from '@mcro/models'
-import { react, useStore } from '@mcro/use-store'
+import { loadMany } from '@o/bridge'
+import { gloss } from '@o/gloss'
+import { CosalSaliencyModel } from '@o/models'
+import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 

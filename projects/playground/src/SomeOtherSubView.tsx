@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 
 class TestStore2 {

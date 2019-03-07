@@ -1,4 +1,4 @@
-import { Row } from '@mcro/gloss'
+import { Row } from '@o/gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
 import { HorizontalSpace } from '../layout/HorizontalSpace'

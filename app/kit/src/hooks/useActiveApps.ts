@@ -1,5 +1,5 @@
-import { useModels } from '@mcro/bridge'
-import { AppBit, AppModel } from '@mcro/models'
+import { useModels } from '@o/bridge'
+import { AppBit, AppModel } from '@o/models'
 import { useActiveSpace } from './useActiveSpace'
 
 export function useActiveApps(type?: string): AppBit[] {

@@ -1,8 +1,8 @@
-import { Absolute, gloss, ViewProps } from '@mcro/gloss'
-import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@mcro/kit'
-import { getAppContextItems, useAppSortHandler } from '@mcro/kit-internal'
-import { AppBit } from '@mcro/models'
-import { Icon, Section, SelectableGrid, Text, TitleRow, useContextMenu, View } from '@mcro/ui'
+import { Absolute, gloss, ViewProps } from '@o/gloss'
+import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
+import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
+import { AppBit } from '@o/models'
+import { Icon, Section, SelectableGrid, Text, TitleRow, useContextMenu, View } from '@o/ui'
 import React from 'react'
 
 type LargeIconProps = ViewProps & {

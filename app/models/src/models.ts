@@ -1,4 +1,4 @@
-import { Model } from '@mcro/mediator'
+import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'

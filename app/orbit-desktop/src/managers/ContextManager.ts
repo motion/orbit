@@ -1,10 +1,10 @@
-import { Screen } from '@mcro/screen'
-import { Desktop } from '@mcro/stores'
-import { decorate, ensure, react } from '@mcro/use-store'
+import { Screen } from '@o/screen'
+import { Desktop } from '@o/stores'
+import { decorate, ensure, react } from '@o/use-store'
 // import { toJS } from 'mobx'
-// import { getGlobalConfig } from '@mcro/config'
+// import { getGlobalConfig } from '@o/config'
 // import { last, isEqual } from 'lodash'
-// import { Logger } from '@mcro/logger'
+// import { Logger } from '@o/logger'
 
 // const log = new Logger('ContextManager')
 // const Config = getGlobalConfig()

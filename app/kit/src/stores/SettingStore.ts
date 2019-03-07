@@ -1,6 +1,6 @@
-import { observeOne, save } from '@mcro/bridge'
-import { Setting, SettingModel } from '@mcro/models'
-import { react } from '@mcro/use-store'
+import { observeOne, save } from '@o/bridge'
+import { Setting, SettingModel } from '@o/models'
+import { react } from '@o/use-store'
 
 export class SettingStore {
   setting: Setting = {

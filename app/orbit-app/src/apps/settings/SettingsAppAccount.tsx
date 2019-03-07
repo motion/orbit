@@ -1,4 +1,4 @@
-import { AppProps } from '@mcro/kit'
+import { AppProps } from '@o/kit'
 import {
   Button,
   InputRow,
@@ -9,7 +9,7 @@ import {
   Title,
   VerticalSpace,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import * as React from 'react'
 import { IntroText } from '../../views'
 

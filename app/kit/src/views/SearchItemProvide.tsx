@@ -1,5 +1,5 @@
-import { Bit } from '@mcro/models'
-import { MergeContext } from '@mcro/ui'
+import { Bit } from '@o/models'
+import { MergeContext } from '@o/ui'
 import React, { createContext, memo } from 'react'
 
 export const SearchItemShareContext = createContext<{ item: Bit }>({ item: null })

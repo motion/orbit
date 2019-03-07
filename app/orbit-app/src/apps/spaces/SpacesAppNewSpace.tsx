@@ -1,4 +1,4 @@
-import { AppProps } from '@mcro/kit'
+import { AppProps } from '@o/kit'
 import React from 'react'
 
 export function SpacesAppNewSpace(props: AppProps) {

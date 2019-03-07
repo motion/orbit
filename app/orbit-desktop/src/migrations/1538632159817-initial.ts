@@ -1,4 +1,4 @@
-import { getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@o/config'
 import { pathExists, writeJSON } from 'fs-extra'
 import { MigrationInterface, QueryRunner } from 'typeorm'
 

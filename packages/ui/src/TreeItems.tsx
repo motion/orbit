@@ -5,7 +5,7 @@
  * @format
  */
 
-import { Col, gloss, Row } from '@mcro/gloss'
+import { Col, gloss, Row } from '@o/gloss'
 // import { ContextMenu } from './ContextMenu'
 import * as React from 'react'
 import { colors } from './helpers/colors'
@@ -14,7 +14,7 @@ import { Image } from './Image'
 import { FixedList } from './lists/FixedList'
 import { Text } from './text/Text'
 import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
-// import { isEqual } from '@mcro/fast-compare'
+// import { isEqual } from '@o/fast-compare'
 
 const ROW_HEIGHT = 23
 

@@ -1,4 +1,4 @@
-import { ensure, react, useStore } from '@mcro/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'

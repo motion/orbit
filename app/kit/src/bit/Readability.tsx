@@ -1,4 +1,4 @@
-import { Block } from '@mcro/ui'
+import { Block } from '@o/ui'
 import * as React from 'react'
 
 export function Readability({ children }) {

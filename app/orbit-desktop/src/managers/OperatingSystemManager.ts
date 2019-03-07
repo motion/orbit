@@ -1,5 +1,5 @@
-import { Logger } from '@mcro/logger'
-import { Desktop } from '@mcro/stores'
+import { Logger } from '@o/logger'
+import { Desktop } from '@o/stores'
 import macosVersion from 'macos-version'
 
 const log = new Logger('OperatingSystemManager')

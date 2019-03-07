@@ -1,7 +1,7 @@
+import { MAC_TOPBAR_HEIGHT } from '@o/constants'
+import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { LINE_Y_ADJ } from './helpers'
-import { MAC_TOPBAR_HEIGHT } from '@mcro/constants'
-import { gloss } from '@mcro/gloss'
 
 const OcrLine = gloss({
   borderBottom: [2, '#EDD71E'],

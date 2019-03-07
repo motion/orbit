@@ -1,5 +1,5 @@
-import { useActiveSpace, useStores } from '@mcro/kit'
 import { arrayMove } from '@mcro/react-sortable-hoc'
+import { useActiveSpace, useStores } from '@o/kit'
 
 export function useAppSortHandler() {
   const { paneManagerStore } = useStores()

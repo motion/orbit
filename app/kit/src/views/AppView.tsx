@@ -1,5 +1,5 @@
-import { Contents } from '@mcro/gloss'
-import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
+import { Contents } from '@o/gloss'
+import { ItemPropsProviderSmall, memoIsEqualDeep } from '@o/ui'
 import { capitalize } from 'lodash'
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'

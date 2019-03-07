@@ -1,5 +1,5 @@
-import { Icon } from '@mcro/kit'
-import { SegmentedRow, Tab, Tabs, View } from '@mcro/ui'
+import { Icon } from '@o/kit'
+import { SegmentedRow, Tab, Tabs, View } from '@o/ui'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
 

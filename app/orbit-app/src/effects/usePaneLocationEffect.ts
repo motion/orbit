@@ -1,5 +1,5 @@
-import { parseUrl } from '@mcro/kit'
-import { ensure, useReaction } from '@mcro/use-store'
+import { parseUrl } from '@o/kit'
+import { ensure, useReaction } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
 export function usePaneLocationEffect() {

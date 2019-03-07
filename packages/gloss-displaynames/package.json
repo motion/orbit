@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/gloss-displaynames",
+  "name": "@o/gloss-displaynames",
   "version": "2.3.10",
   "main": "_/index.js",
   "sideEffects": false,

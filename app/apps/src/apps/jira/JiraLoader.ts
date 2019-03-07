@@ -1,10 +1,10 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/utils'
-import { ServiceLoader } from '../../ServiceLoader'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { sleep } from '@o/utils'
 import { ServiceLoadThrottlingOptions } from '../../options'
+import { ServiceLoader } from '../../ServiceLoader'
 import { JiraQueries } from './JiraQueries'
 import { JiraComment, JiraIssue, JiraUser } from './JiraTypes'
-import { AppBit } from '@mcro/models'
 
 /**
  * Loads jira data from its API.

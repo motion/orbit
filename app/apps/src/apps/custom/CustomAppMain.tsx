@@ -1,4 +1,4 @@
-import { AppProps, Icon } from '@mcro/kit'
+import { AppProps, Icon } from '@o/kit'
 import {
   BorderLeft,
   Button,
@@ -13,7 +13,7 @@ import {
   VerticalSplit,
   VerticalSplitPane,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import faker from 'faker'
 import immer from 'immer'
 import React, { useState } from 'react'

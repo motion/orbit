@@ -1,6 +1,6 @@
 {
   "alias": "blog.orbitauth.com",
-  "name": "@mcro/blog",
+  "name": "@o/blog",
   "scale": {
     "sfo1": {
       "min": 1,

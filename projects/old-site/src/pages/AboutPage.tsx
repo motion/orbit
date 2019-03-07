@@ -1,10 +1,10 @@
-import { Header, Footer, PostTemplate } from '../components'
-import { P2, Section, SubTitle } from '../views'
-import { SectionContent } from '../views/sectionContent'
+import * as UI from '@o/ui'
 import * as React from 'react'
-import * as UI from '@mcro/ui'
+import { Footer, Header, PostTemplate } from '../components'
 import * as Constants from '../constants'
+import { P2, Section, SubTitle } from '../views'
 import { Bauhaus } from '../views/Bauhaus'
+import { SectionContent } from '../views/sectionContent'
 
 export class AboutPage extends React.Component {
   render() {

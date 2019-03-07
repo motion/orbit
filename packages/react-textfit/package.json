@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/react-textfit",
+  "name": "@o/react-textfit",
   "version": "2.3.10",
   "description": "React component to fit headlines and paragraphs into any element",
   "main": "_/Textfit.js",

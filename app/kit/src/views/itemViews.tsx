@@ -1,4 +1,4 @@
-import { Document, Markdown, Task, Thread } from '@mcro/ui'
+import { Document, Markdown, Task, Thread } from '@o/ui'
 import React from 'react'
 import { Conversation } from '../bit/BitConversation'
 import { ConversationItem } from '../bit/BitConversationItem'

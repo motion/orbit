@@ -1,5 +1,5 @@
-// import { MediatorClient, WebSocketClientTransport } from '@mcro/mediator'
-// import { getGlobalConfig } from '@mcro/config'
+// import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+// import { getGlobalConfig } from '@o/config'
 // import ReconnectingWebSocket from 'reconnecting-websocket'
 //
 // export const Mediator = new MediatorClient({

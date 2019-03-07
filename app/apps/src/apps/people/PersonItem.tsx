@@ -1,4 +1,4 @@
-import { OrbitItemViewProps } from '@mcro/kit'
+import { OrbitItemViewProps } from '@o/kit'
 import * as React from 'react'
 
 export class PersonItem extends React.Component<OrbitItemViewProps> {

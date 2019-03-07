@@ -1,4 +1,4 @@
-import { App, defaultPeekState } from '@mcro/stores'
+import { App, defaultPeekState } from '@o/stores'
 
 export function tearPeek() {
   const [curPeek, ...rest] = App.peeksState

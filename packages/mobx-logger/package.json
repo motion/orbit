@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/mobx-logger",
+  "name": "@o/mobx-logger",
   "main": "_/mobxLogger.js",
   "sideEffects": false,
   "version": "2.3.10",

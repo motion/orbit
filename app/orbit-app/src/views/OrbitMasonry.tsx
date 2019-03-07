@@ -1,5 +1,5 @@
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { Card, ListItemProps } from '@mcro/ui'
+import { ORBIT_WIDTH } from '@o/constants'
+import { Card, ListItemProps } from '@o/ui'
 import * as React from 'react'
 import {
   CellMeasurer,

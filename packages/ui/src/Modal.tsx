@@ -1,6 +1,6 @@
+import { gloss } from '@o/gloss'
 import React from 'react'
 import { Portal } from './helpers/portal'
-import { gloss } from '@mcro/gloss'
 
 const ModalBackground = gloss({
   position: 'absolute',

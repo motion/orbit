@@ -1,5 +1,5 @@
-import { AppProps, AppSubView } from '@mcro/kit'
-import { Title } from '@mcro/ui'
+import { AppProps, AppSubView } from '@o/kit'
+import { Title } from '@o/ui'
 import React from 'react'
 
 export function SearchAppMain({ appConfig }: AppProps) {

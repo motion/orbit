@@ -1,4 +1,4 @@
-import { useStore } from '@mcro/use-store'
+import { useStore } from '@o/use-store'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { SelectionStore } from './lists/SelectionStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'

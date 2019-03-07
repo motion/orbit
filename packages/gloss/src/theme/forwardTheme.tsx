@@ -1,4 +1,4 @@
-import { ThemeObject } from '@mcro/css'
+import { ThemeObject } from '@o/css'
 import React from 'react'
 import { Theme } from './Theme'
 

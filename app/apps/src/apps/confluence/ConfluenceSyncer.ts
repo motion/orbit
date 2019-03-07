@@ -1,5 +1,4 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { sleep } from '@mcro/utils'
+import { AppEntity, Bit, BitEntity } from '@o/models'
 import {
   BitUtils,
   createSyncer,
@@ -9,17 +8,17 @@ import {
   sanitizeHtml,
   stripHtml,
   syncPeople,
-} from '@mcro/sync-kit'
+} from '@o/sync-kit'
+import { sleep } from '@o/utils'
 import { ConfluenceLastSyncInfo } from './ConfluenceAppData'
 import { ConfluenceBitData } from './ConfluenceBitData'
-import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
 import { ConfluenceLoader } from './ConfluenceLoader'
+import { ConfluenceContent, ConfluenceUser } from './ConfluenceTypes'
 
 /**
  * Syncs Confluence pages and blogs.
  */
 export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
-
   const loader = new ConfluenceLoader(app, log)
 
   /**
@@ -55,7 +54,9 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       }
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
 
       return false // this tells from the callback to stop file proceeding
     }
@@ -65,12 +66,16 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing content, set last synced date', lastSyncInfo)
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
     }
 
     const bit = createDocumentBit(content, allDbPeople)
     log.verbose('syncing', { content, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit, { listeners: false })
 
     // in the case if its the last content we need to cleanup last cursor stuff and save last synced date
     if (isLast) {
@@ -81,7 +86,9 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastSyncedDate = lastSyncInfo.lastCursorSyncedDate
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
       return true
     }
 
@@ -90,7 +97,9 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
       log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getEntityManager().getRepository(AppEntity).save(app)
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app)
     }
 
     return true
@@ -99,7 +108,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
   /**
    * Checks if confluence user is acceptable and can be used to create person entity from.
    */
-  const checkUser  = (user: ConfluenceUser): boolean => {
+  const checkUser = (user: ConfluenceUser): boolean => {
     const email = user.details.personal.email || ''
     const ignoredEmail = '@connect.atlassian.com'
     return email.substr(ignoredEmail.length * -1) !== ignoredEmail
@@ -250,6 +259,4 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log }) => {
     },
   )
   log.timer('sync API blogs')
-
 })
-

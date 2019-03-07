@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/config",
+  "name": "@o/config",
   "main": "_/config.js",
   "sideEffects": false,
   "private": true,

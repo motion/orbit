@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/reactron",
+  "name": "@o/reactron",
   "version": "2.3.10",
   "description": "React renderer for Electron apps",
   "main": "_/index.js",
@@ -17,7 +17,7 @@
     "scheduler": "0.13.1"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.10",
+    "@o/logger": "^2.3.10",
     "lodash.isequal": "^4.5.0",
     "react-reconciler": "0.19.1"
   },

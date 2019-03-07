@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/oracle",
+  "name": "@o/oracle",
   "version": "2.3.10",
   "private": true,
   "main": "./_/Oracle.js",
@@ -9,7 +9,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.10",
+    "@o/logger": "^2.3.10",
     "ws": "6.1.2",
     "electron-util": "0.9.0",
     "fs-extra": "7.0.0",

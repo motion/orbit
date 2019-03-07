@@ -1,6 +1,6 @@
-import { resolveCommand } from '@mcro/mediator'
-import { ResetDataCommand } from '@mcro/models'
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { ResetDataCommand } from '@o/models'
 import root from 'global'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
 

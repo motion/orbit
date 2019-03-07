@@ -1,11 +1,17 @@
-import { AppEntity, Bit, BitEntity } from '@mcro/models'
-import { hash } from '@mcro/utils'
+import { AppEntity, Bit, BitEntity } from '@o/models'
+import { BitUtils, createSyncer, getEntityManager, isAborted } from '@o/sync-kit'
+import { hash } from '@o/utils'
 import { uniqBy } from 'lodash'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@mcro/sync-kit'
-import { GithubBitData } from './GithubBitData'
 import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
-import { GithubComment, GithubCommit, GithubIssue, GithubPerson, GithubPullRequest } from './GithubTypes'
+import { GithubBitData } from './GithubBitData'
 import { GithubLoader } from './GithubLoader'
+import {
+  GithubComment,
+  GithubCommit,
+  GithubIssue,
+  GithubPerson,
+  GithubPullRequest,
+} from './GithubTypes'
 
 /**
  * Syncs Github.
@@ -15,7 +21,6 @@ import { GithubLoader } from './GithubLoader'
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
 export const GithubSyncer = createSyncer(async ({ app, log }) => {
-
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
 
@@ -61,7 +66,9 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -71,7 +78,9 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
     }
 
     const comments =
@@ -89,8 +98,12 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
     }
 
     log.verbose('syncing', { issueOrPullRequest, bit, people: bit.people })
-    await getEntityManager().getRepository(BitEntity).save(bit.people, { listeners: false })
-    await getEntityManager().getRepository(BitEntity).save(bit, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit.people, { listeners: false })
+    await getEntityManager()
+      .getRepository(BitEntity)
+      .save(bit, { listeners: false })
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
@@ -102,7 +115,9 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
       return true
     }
 
@@ -111,7 +126,9 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       log.info('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getEntityManager().getRepository(AppEntity).save(app, { listeners: false })
+      await getEntityManager()
+        .getRepository(AppEntity)
+        .save(app, { listeners: false })
     }
 
     return true
@@ -143,10 +160,7 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
     //   'Microsoft/TypeScript',
     // ]
     if (values.externalRepositories && values.externalRepositories.length > 0) {
-      log.info(
-        'externalRepositories are found, adding them as well',
-        values.externalRepositories,
-      )
+      log.info('externalRepositories are found, adding them as well', values.externalRepositories)
       repositories.push(...(await loader.loadRepositories(values.externalRepositories)))
     }
 
@@ -156,7 +170,10 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
   /**
    * Creates a new bit from a given Github issue.
    */
-  const createTaskBit = (issue: GithubIssue | GithubPullRequest, comments: GithubComment[]): Bit => {
+  const createTaskBit = (
+    issue: GithubIssue | GithubPullRequest,
+    comments: GithubComment[],
+  ): Bit => {
     const id = hash(`github-${app.id}-${issue.id}`)
     const createdAt = new Date(issue.createdAt).getTime()
     const updatedAt = new Date(issue.updatedAt).getTime()
@@ -169,10 +186,10 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
         return {
           author: comment.author
             ? {
-              avatarUrl: comment.author.avatarUrl,
-              login: comment.author.login,
-              email: comment.author.email,
-            }
+                avatarUrl: comment.author.avatarUrl,
+                login: comment.author.login,
+                email: comment.author.email,
+              }
             : undefined,
           createdAt: comment.createdAt,
           body: comment.body,
@@ -180,10 +197,10 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       }),
       author: issue.author
         ? {
-          avatarUrl: issue.author.avatarUrl,
-          login: issue.author.login,
-          email: issue.author.email,
-        }
+            avatarUrl: issue.author.avatarUrl,
+            login: issue.author.login,
+            email: issue.author.email,
+          }
         : undefined,
       labels: issue.labels.edges.map(label => ({
         name: label.node.name,
@@ -311,9 +328,7 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       data.values.lastSyncPullRequests[repository.nameWithOwner] = {}
 
     const lastSyncIssues = data.values.lastSyncIssues[repository.nameWithOwner]
-    const lastSyncPullRequests = data.values.lastSyncPullRequests[
-      repository.nameWithOwner
-      ]
+    const lastSyncPullRequests = data.values.lastSyncPullRequests[repository.nameWithOwner]
     const [organization, repositoryName] = repository.nameWithOwner.split('/')
 
     // compare repository's first issue updated date with our last synced date to make sure
@@ -326,7 +341,7 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-          } repository issues from our last sync, skipping`,
+        } repository issues from our last sync, skipping`,
       )
     } else {
       // load repository issues and sync them in a stream
@@ -358,12 +373,12 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncPullRequests.lastSyncedDate &&
       repository.pullRequests.nodes.length &&
       new Date(repository.pullRequests.nodes[0].updatedAt).getTime() ===
-      lastSyncPullRequests.lastSyncedDate
+        lastSyncPullRequests.lastSyncedDate
     ) {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-          } repository PRs from our last sync, skipping`,
+        } repository PRs from our last sync, skipping`,
       )
     } else {
       // load repository pull requests and sync them in a stream
@@ -390,5 +405,4 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
     }
   }
   log.timer('load api bits and people')
-  
 })

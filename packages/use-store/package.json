@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/use-store",
+  "name": "@o/use-store",
   "version": "2.3.10",
   "description": "",
   "main": "_/useStore.js",
@@ -11,8 +11,8 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/automagical": "^2.3.10",
-    "@mcro/fast-compare": "*"
+    "@o/automagical": "^2.3.10",
+    "@o/fast-compare": "*"
   },
   "peerDependencies": {
     "react": "16.8.3"

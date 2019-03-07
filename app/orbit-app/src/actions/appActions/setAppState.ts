@@ -1,4 +1,4 @@
-import { App, AppState, defaultPeekState } from '@mcro/stores'
+import { App, AppState, defaultPeekState } from '@o/stores'
 import { PEEK_ID } from '../../constants'
 import { deepClone } from '../../helpers'
 

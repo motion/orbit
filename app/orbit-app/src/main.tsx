@@ -1,7 +1,7 @@
 // Be careful not to import anything that depends on getGlobalConfig() here
 // we set it up once with setGlobalConfig() and then import the rest of the app
 
-import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@mcro/config'
+import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-hot-loader' // must be imported before react
@@ -33,7 +33,7 @@ async function fetchInitialConfig() {
   }
   setGlobalConfig(config)
 
-  // TODO im just doing this mid-big refactor until we fix it in @mcro/bridge
+  // TODO im just doing this mid-big refactor until we fix it in @o/bridge
   window['GlobalConfig'] = config
 }
 
@@ -53,7 +53,7 @@ async function main() {
   document.documentElement.style.overflow = 'hidden'
 
   let x = Date.now()
-  const { App } = require('@mcro/stores')
+  const { App } = require('@o/stores')
   await App.start()
   if (Date.now() - x > 300) console.log('long start....', Date.now() - x)
 

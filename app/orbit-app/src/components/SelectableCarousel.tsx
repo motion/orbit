@@ -1,6 +1,6 @@
-import { ORBIT_WIDTH } from '@mcro/constants'
-import { Carousel, CarouselProps, SelectionStore } from '@mcro/ui'
-import { cancel, ensure, react, useStore } from '@mcro/use-store'
+import { ORBIT_WIDTH } from '@o/constants'
+import { Carousel, CarouselProps, SelectionStore } from '@o/ui'
+import { cancel, ensure, react, useStore } from '@o/use-store'
 import * as React from 'react'
 import { useStores } from '../hooks/useStores'
 

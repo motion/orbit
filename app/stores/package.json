@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/stores",
+  "name": "@o/stores",
   "version": "2.3.10",
   "private": true,
   "main": "_/index.js",
@@ -8,11 +8,11 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/use-store": "^2.3.10",
-    "@mcro/config": "^2.3.10",
-    "@mcro/constants": "^2.3.10",
-    "@mcro/mobx-bridge": "^2.3.10",
-    "@mcro/models": "^2.3.10",
+    "@o/use-store": "^2.3.10",
+    "@o/config": "^2.3.10",
+    "@o/constants": "^2.3.10",
+    "@o/mobx-bridge": "^2.3.10",
+    "@o/models": "^2.3.10",
     "global": "^4.3.2",
     "lodash": "^4.17.10"
   },

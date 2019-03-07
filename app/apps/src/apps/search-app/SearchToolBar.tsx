@@ -1,5 +1,5 @@
-import { AppFilterButton, useStores } from '@mcro/kit'
-import { BarButtonSmall, Calendar, HorizontalSpace, Popover, SegmentedRow, View } from '@mcro/ui'
+import { AppFilterButton, useStores } from '@o/kit'
+import { BarButtonSmall, Calendar, HorizontalSpace, Popover, SegmentedRow, View } from '@o/ui'
 import React from 'react'
 import { SearchSuggestionBar } from './SearchSuggestionBar'
 

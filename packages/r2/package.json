@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/r2",
+  "name": "@o/r2",
   "main": "_/r2.js",
   "sideEffects": false,
   "version": "2.3.10",

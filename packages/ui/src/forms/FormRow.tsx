@@ -1,4 +1,4 @@
-import { Row } from '@mcro/gloss'
+import { Row } from '@o/gloss'
 import React from 'react'
 import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { FormTableLabel, FormTableRow, FormTableValue, RowProps } from '../tables/Table'

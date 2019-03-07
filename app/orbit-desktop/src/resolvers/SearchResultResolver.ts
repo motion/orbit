@@ -1,5 +1,5 @@
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
 import {
   AppEntity,
   Bit,
@@ -7,7 +7,7 @@ import {
   BitContentTypes,
   SearchQuery,
   SearchResult,
-} from '@mcro/models'
+} from '@o/models'
 import { uniq, uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'

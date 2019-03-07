@@ -1,5 +1,5 @@
 {
-	"name": "@mcro/orbit-fork-process",
+	"name": "@o/orbit-fork-process",
 	"main": "_/forkProcess.js",
 	"private": true,
 	"version": "2.3.10",
@@ -8,7 +8,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
 	"dependencies": {
-		"@mcro/config": "*",
+		"@o/config": "*",
 		"ps-tree": "1.1.0"
 	}
 }

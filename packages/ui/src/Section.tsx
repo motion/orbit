@@ -1,4 +1,4 @@
-import { gloss, View, ViewProps } from '@mcro/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import * as React from 'react'
 import { TextProps } from './text/Text'
 import { Title } from './text/Title'

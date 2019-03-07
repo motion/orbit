@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import React, { createContext, useRef } from 'react'
 
 export type ContextMenuHandler = {

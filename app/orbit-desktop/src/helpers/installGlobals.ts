@@ -1,8 +1,8 @@
-import { getGlobalConfig } from '@mcro/config'
-import * as Cosal from '@mcro/cosal'
-import { Entities } from '@mcro/models'
-import r2 from '@mcro/r2'
-import { App, Desktop, Electron } from '@mcro/stores'
+import { getGlobalConfig } from '@o/config'
+import * as Cosal from '@o/cosal'
+import { Entities } from '@o/models'
+import r2 from '@o/r2'
+import { App, Desktop, Electron } from '@o/stores'
 import root from 'global'
 import * as Mobx from 'mobx'
 import { OrbitDesktopRoot } from '../OrbitDesktopRoot'
@@ -22,7 +22,7 @@ export function installGlobals(AppRoot: OrbitDesktopRoot) {
   root['Electron'] = Electron
   root['toJS'] = Mobx.toJS
   root['Cosal'] = Cosal
-  root['Models'] = require('@mcro/models')
+  root['Models'] = require('@o/models')
 
   for (const model of Entities) {
     root[`${model.name}`] = model

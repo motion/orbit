@@ -1,7 +1,7 @@
+import { getGlobalConfig } from '@o/config'
+import * as Models from '@o/models'
 import root from 'global'
 import * as Mobx from 'mobx'
-import * as Models from '@mcro/models'
-import { getGlobalConfig } from '@mcro/config'
 import { OrbitSyncersRoot } from '../OrbitSyncersRoot'
 
 export function installGlobals(syncersRoot: OrbitSyncersRoot) {

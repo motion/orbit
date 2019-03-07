@@ -1,8 +1,8 @@
-import 'react-hot-loader' // must be imported before react
-import './../public/styles/siteBase.css'
+import { Theme, ThemeProvide } from '@o/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
-import { ThemeProvide, Theme } from '@mcro/ui'
+import 'react-hot-loader' // must be imported before react
+import './../public/styles/siteBase.css'
 import { themes } from './etc/themes'
 
 export function render() {

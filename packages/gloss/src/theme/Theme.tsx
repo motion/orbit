@@ -1,4 +1,4 @@
-import { ThemeObject } from '@mcro/css'
+import { ThemeObject } from '@o/css'
 import * as React from 'react'
 import { selectThemeSubset } from '../helpers/selectThemeSubset'
 import { ThemeContext } from './ThemeContext'

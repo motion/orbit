@@ -1,4 +1,4 @@
-import { always, cancel, ensure, react, useStore } from '@mcro/use-store'
+import { always, cancel, ensure, react, useStore } from '@o/use-store'
 import React, { forwardRef, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
 import { useMemoGetValue } from '../hooks/useMemoGetValue'

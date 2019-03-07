@@ -1,7 +1,7 @@
-import { resolveMany } from '@mcro/mediator'
-import { BitEntity, PeopleNearTopicModel } from '@mcro/models'
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
+import { resolveMany } from '@o/mediator'
+import { BitEntity, PeopleNearTopicModel } from '@o/models'
 import { getRepository, In } from 'typeorm'
 
 const log = new Logger('BitNearTopicResolver')
@@ -11,7 +11,7 @@ export const getPeopleNearTopicsResolver = (cosal: Cosal) => {
     const ids = await cosal.search(topic, count)
     const results = await getRepository(BitEntity).find({
       type: 'person',
-      id: In(ids)
+      id: In(ids),
     })
     log.info(`Sending ${results.length} topics back`)
     return results

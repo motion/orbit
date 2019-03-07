@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { action } from 'mobx'
 
 const log = new Logger('setupActions')

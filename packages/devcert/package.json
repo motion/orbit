@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/devcert",
+  "name": "@o/devcert",
   "version": "1.0.0",
   "description": "Generate trusted local SSL/TLS certificates for local SSL development",
   "main": "_/index.js",

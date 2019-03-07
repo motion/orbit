@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/orbit-syncers",
+  "name": "@o/orbit-syncers",
   "version": "2.3.10",
   "main": "./_/main.js",
   "private": true,
@@ -9,13 +9,13 @@
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
   "dependencies": {
-    "@mcro/apps": "^2.3.10",
-    "@mcro/sync-kit": "^2.3.10",
-    "@mcro/config": "^2.3.10",
-    "@mcro/logger": "^2.3.10",
-    "@mcro/mediator": "^2.3.10",
-    "@mcro/models": "^2.3.10",
-    "@mcro/utils": "^2.3.10",
+    "@o/apps": "^2.3.10",
+    "@o/sync-kit": "^2.3.10",
+    "@o/config": "^2.3.10",
+    "@o/logger": "^2.3.10",
+    "@o/mediator": "^2.3.10",
+    "@o/models": "^2.3.10",
+    "@o/utils": "^2.3.10",
     "autolinker": "^1.7.1",
     "dompurify": "^1.0.7",
     "email-addresses": "^3.0.1",

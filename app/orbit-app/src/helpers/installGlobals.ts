@@ -14,14 +14,14 @@
 // ⚠️ ️
 // ⚠️ ️
 
-import { Mediator } from '@mcro/bridge'
-import { getGlobalConfig } from '@mcro/config'
-import { color } from '@mcro/gloss'
-import { LoggerSettings } from '@mcro/logger'
-import * as Models from '@mcro/models'
-import r2 from '@mcro/r2'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { PopoverState } from '@mcro/ui'
+import { Mediator } from '@o/bridge'
+import { getGlobalConfig } from '@o/config'
+import { color } from '@o/gloss'
+import { LoggerSettings } from '@o/logger'
+import * as Models from '@o/models'
+import r2 from '@o/r2'
+import { App, Desktop, Electron } from '@o/stores'
+import { PopoverState } from '@o/ui'
 import * as dateFns from 'date-fns'
 import * as Mobx from 'mobx'
 import * as React from 'react'
@@ -70,7 +70,7 @@ window['stringify'] = JSON.stringify.bind(JSON)
 window['AppActions'] = AppActions
 window['Models'] = Models
 
-const { isEqual } = require('@mcro/fast-compare')
+const { isEqual } = require('@o/fast-compare')
 window['isEqualDebug'] = (a, b) => {
   for (const key in a) {
     if (!isEqual(a[key], b[key])) {

@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/constants",
+  "name": "@o/constants",
   "main": "./_/constants.js",
   "sideEffects": false,
   "version": "2.3.10",

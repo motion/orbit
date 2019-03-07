@@ -1,4 +1,4 @@
-import { Row, Sidebar } from '@mcro/ui';
+import { Row, Sidebar } from '@o/ui';
 import * as React from 'react';
 
 export function TestUI() {

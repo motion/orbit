@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/orbit-cli",
+  "name": "@o/orbit-cli",
   "version": "2.3.10",
   "main": "./_/main.js",
   "private": true,

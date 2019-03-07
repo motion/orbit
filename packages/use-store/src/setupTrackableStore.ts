@@ -1,5 +1,5 @@
-import { useCurrentComponent } from '@mcro/automagical'
-import { isEqual } from '@mcro/fast-compare'
+import { useCurrentComponent } from '@o/automagical'
+import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'

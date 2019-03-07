@@ -1,5 +1,5 @@
 {
-  "name": "@mcro/mobx-bridge",
+  "name": "@o/mobx-bridge",
   "main": "_/Bridge.js",
   "sideEffects": false,
   "version": "2.3.10",
@@ -8,8 +8,8 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/config": "^2.3.10",
-    "@mcro/logger": "^2.3.10",
+    "@o/config": "^2.3.10",
+    "@o/logger": "^2.3.10",
     "html5-websocket": "^2.0.2",
     "kill-port": "1.3.1",
     "lodash": "^4.17.10",

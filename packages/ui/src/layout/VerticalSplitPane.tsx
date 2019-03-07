@@ -1,4 +1,4 @@
-import { View } from '@mcro/gloss'
+import { View } from '@o/gloss'
 import React, { useState } from 'react'
 import { Interactive, InteractiveProps } from '../Interactive'
 

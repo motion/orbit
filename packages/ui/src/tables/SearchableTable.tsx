@@ -5,8 +5,8 @@
  * @format
  */
 
-import { isEqual } from '@mcro/fast-compare'
-import { View } from '@mcro/gloss'
+import { isEqual } from '@o/fast-compare'
+import { View } from '@o/gloss'
 import * as React from 'react'
 import textContent from '../helpers/textContent'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'

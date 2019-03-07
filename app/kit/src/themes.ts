@@ -1,4 +1,4 @@
-import { color, linearGradient, ThemeMaker } from '@mcro/gloss'
+import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 

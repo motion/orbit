@@ -1,4 +1,4 @@
-import { IconProps, ThemeContext } from '@mcro/ui'
+import { IconProps, ThemeContext } from '@o/ui'
 import React, { useContext } from 'react'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { SVG } from '../views/SVG'

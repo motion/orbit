@@ -1,13 +1,13 @@
-import { loadMany } from '@mcro/bridge'
-import { BitModel } from '@mcro/models'
+import { loadMany } from '@o/bridge'
+import { BitModel } from '@o/models'
 import {
   ListItemProps,
   SelectableTreeItem,
   SelectableTreeList,
   SelectableTreeListProps,
   useMemoGetValue,
-} from '@mcro/ui'
-import { useHook, useStore } from '@mcro/use-store'
+} from '@o/ui'
+import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
 import { useIsAppActive } from '../hooks/useIsAppActive'

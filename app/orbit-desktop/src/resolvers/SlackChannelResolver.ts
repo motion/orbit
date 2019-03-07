@@ -1,7 +1,7 @@
-import { Logger } from '@mcro/logger'
-import { resolveMany } from '@mcro/mediator'
-import { AppEntity, SlackChannelModel } from '@mcro/models'
-import { SlackLoader } from '@mcro/apps/_/apps/slack/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { SlackLoader } from '@o/apps/_/apps/slack/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { Logger } from '@o/logger'
+import { resolveMany } from '@o/mediator'
+import { AppEntity, SlackChannelModel } from '@o/models'
 import { getRepository } from 'typeorm'
 
 const log = new Logger('resolver:slack-channel')

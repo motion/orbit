@@ -76,7 +76,7 @@ export const ConfluenceSyncer = createSyncer(async ({ app, log, utils }) => {
 
     // update last sync settings to make sure we continue from the last point in the case if application will stop
     if (lastSyncInfo.lastCursor !== cursor) {
-      log.info('updating last cursor in settings', { cursor })
+      log.verbose('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
       await utils.updateAppData()

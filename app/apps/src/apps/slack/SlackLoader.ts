@@ -118,9 +118,9 @@ export class SlackLoader {
     }
 
     this.log.timer('load API channels')
-    const channels = recursiveLoad()
-    this.log.timer('load API channels', channels)
-    return channels
+    const loadedChannels = await recursiveLoad()
+    this.log.timer('load API channels', loadedChannels)
+    return loadedChannels
   }
 
   /**
@@ -172,7 +172,7 @@ export class SlackLoader {
 
     // load messages
     this.log.timer(`loading ${channel.name}(#${channel.id}) API messages`, { oldestMessageId })
-    const messages = loadRecursively()
+    const messages = await loadRecursively()
     this.log.timer(`loading ${channel.name}(#${channel.id}) API messages`, messages)
 
     // left only messages we need - real user messages, no system or bot messages

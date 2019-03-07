@@ -9,6 +9,7 @@ import {
 } from './SlackModels'
 import { AppBit, Bit } from '@mcro/models'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
+import { uniqBy } from 'lodash'
 import { SyncerUtils } from '@mcro/sync-kit'
 
 /**
@@ -71,14 +72,9 @@ export class SlackBitFactory {
       })),
     }
     const people = allPeople.filter(person => {
-      return (
-        messages.some(message => {
-          return message.user === person.originalId
-        }) ||
-        mentionedPeople.some(mentionedPerson => {
-          return person.id === mentionedPerson.id
-        })
-      )
+      return messages.some(message => {
+        return message.user === person.originalId
+      })
     })
 
     return this.utils.createBit({
@@ -89,7 +85,7 @@ export class SlackBitFactory {
       data,
       bitCreatedAt,
       bitUpdatedAt,
-      people,
+      people: uniqBy([...people, ...mentionedPeople], person => person.id),
       location: {
         id: channel.id,
         name: channel.name,

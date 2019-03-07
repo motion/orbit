@@ -78,7 +78,7 @@ export const JiraSyncer = createSyncer(async ({ app, log, utils }) => {
 
       // update last sync settings to make sure we continue from the last point in the case if application will stop
       if (lastSync.lastCursor !== cursor) {
-        log.info('updating last cursor in settings', { cursor })
+        log.verbose('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
         lastSync.lastCursorLoadedCount = loadedCount
         await utils.updateAppData()

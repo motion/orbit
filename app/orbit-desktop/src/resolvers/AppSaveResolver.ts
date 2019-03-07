@@ -26,7 +26,7 @@ export const AppSaveResolver = resolveCommand(AppSaveCommand, async ({ app }) =>
       await loader.test()
       app.name = extractTeamNameFromDomain((app.data as any).values.credentials.domain)
     } else if (app.identifier === 'confluence') {
-      const loader = new ConfluenceLoader((app.data as any), log)
+      const loader = new ConfluenceLoader(app as AppBit, log)
       await loader.test()
       app.name = extractTeamNameFromDomain((app.data as any).values.credentials.domain)
     } else if (app.identifier === 'website') {

@@ -30,7 +30,7 @@ export function buildSlackText(message: string, people: Bit[]): string {
 /**
  * Finds all the mentioned people in the given slack messages.
  */
-export function findMessageMentionedPeople(messages: SlackMessage[], people: Bit[]){
+export function findMessageMentionedPeople(messages: SlackMessage[], people: Bit[]) {
   const body = messages.map(message => message.text).join('')
   return people.filter(person => new RegExp(`<@${person.originalId}>`).test(body))
 }

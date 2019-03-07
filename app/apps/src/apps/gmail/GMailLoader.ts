@@ -139,10 +139,10 @@ export class GMailLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean
   }): Promise<void> {
-    const loadRecursively = async (pageToken?: string, loadedCount?: number) => {
+    const loadRecursively = async (count: number, filteredIds?: string[], pageToken?: string, loadedCount?: number) => {
 
       await sleep(THROTTLING.threads)
-      let { count, queryFilter, filteredIds, handler } = options
+      let { queryFilter, handler } = options
 
       // load all threads first
       this.log.info('loading threads', { count, queryFilter, filteredIds, pageToken })
@@ -218,12 +218,12 @@ export class GMailLoader {
           return
         }
 
-        await loadRecursively(result.nextPageToken, loadedCount + threads.length)
+        await loadRecursively(count, filteredIds, result.nextPageToken, loadedCount + threads.length)
       }
     }
 
     this.log.timer('sync all threads')
-    await loadRecursively(options.pageToken, options.loadedCount)
+    await loadRecursively(options.count, options.filteredIds, options.pageToken, options.loadedCount)
     this.log.timer('sync all threads')
   }
 

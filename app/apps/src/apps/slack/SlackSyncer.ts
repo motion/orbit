@@ -57,7 +57,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
     const dbBits = await utils.loadBits({
       idsOnly: true,
       locationId: channel.id,
-      bitCreatedAtMoreThan: parseInt(oldestMessageId) * 1000,
+      bitCreatedAtMoreThan: oldestMessageId ? parseInt(oldestMessageId) * 1000 : undefined,
     })
 
     // load messages

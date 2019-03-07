@@ -1,10 +1,9 @@
 import { EntityManager, In, MoreThan } from 'typeorm'
-import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel } from '@mcro/models'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@mcro/models'
 import { uniqBy } from 'lodash'
 import { Logger } from '@mcro/logger'
 import { MediatorClient } from '@mcro/mediator'
 import { hash } from '@mcro/utils'
-import { Location } from '@mcro/models/_'
 
 /**
  * Common utils for syncers.
@@ -57,15 +56,14 @@ export class SyncerUtils {
     locationId?: string
     bitCreatedAtMoreThan?: number
   }): Promise<Bit[]> {
-    this.log.timer('load bits from the database', options)
-    const bits = await this.manager.getRepository(BitEntity).find({
+    const findOptions = {
       select: options && options.idsOnly ? {
         id: true,
         contentHash: true,
       } : undefined,
       where: {
         appId: this.app.id,
-        id: options ? In(options.ids) : undefined,
+        id: options && options.ids ? In(options.ids) : undefined,
         type: options ? options.type : undefined,
         appIdentifier: options && options.appIdentifiers && options.appIdentifiers.length ? In(options.appIdentifiers) : undefined,
         location: {
@@ -75,7 +73,9 @@ export class SyncerUtils {
           ? MoreThan(options.bitCreatedAtMoreThan)
           : undefined,
       }
-    })
+    }
+    this.log.timer('load bits from the database', options, findOptions)
+    const bits = await this.manager.getRepository(BitEntity).find(findOptions)
     this.log.timer('load bits from the database', bits)
     return bits
   }
@@ -264,7 +264,7 @@ export class SyncerUtils {
    * Updates app bit's data in the database.
    */
   async updateAppData(): Promise<void> {
-    this.log.info('update app data', this.app.data)
+    this.log.verbose('update app data', this.app.data)
     await this.manager.getRepository(AppEntity).save(this.app, { listeners: false })
   }
 
@@ -299,10 +299,10 @@ export class SyncerUtils {
     crawled?: boolean
   }) {
     const bit: Bit = { target: 'bit', ...properties }
-    bit.contentHash = this.bitContentHash(bit) // todo: find out why contentHash is generated before everything else
     bit.appId = this.app.id
     bit.appIdentifier = this.app.identifier
     bit.id = this.generateBitId(bit.originalId)
+    bit.contentHash = this.bitContentHash(bit) // todo: find out why contentHash is generated before everything else
     return bit
   }
 

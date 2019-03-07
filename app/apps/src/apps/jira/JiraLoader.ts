@@ -81,7 +81,7 @@ export class JiraLoader {
     }
 
     this.log.timer('load API people')
-    const users = loadRecursively(0)
+    const users = await loadRecursively(0)
     this.log.timer('load API people', users)
 
     // we don't need some jira users, like system or bot users

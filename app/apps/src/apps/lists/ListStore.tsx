@@ -1,23 +1,15 @@
-import { loadMany, observeOne } from '@o/bridge'
+import { loadMany } from '@o/bridge'
 import { AppProps, useStoresSimple } from '@o/kit'
-import { AppModel, SearchResultModel } from '@o/models'
+import { SearchResultModel } from '@o/models'
 import { Button } from '@o/ui'
 import { ensure, react, useHook } from '@o/use-store'
-import { dropRight, last } from 'lodash'
 import React from 'react'
 import { searchGroupsToResults } from '../search-app/searchGroupsToResults'
-import { ListAppDataItemFolder, ListsAppBit } from './types'
 
 export class ListStore {
   props: AppProps
-
   stores = useHook(useStoresSimple)
-
   query = ''
-  selectedIndex = 0
-  depth = 0
-  history = [0]
-  appRaw = react(() => +this.props.id, id => observeOne(AppModel, { args: { where: { id } } }))
   searchCollapsed = true
 
   setSearchCollapsedOnQuery = react(
@@ -34,33 +26,6 @@ export class ListStore {
   setSearchCollapsed = val => {
     console.log('setting to ', val)
     this.searchCollapsed = val
-  }
-
-  get app() {
-    return this.appRaw as ListsAppBit
-  }
-
-  get parentId() {
-    return last(this.history)
-  }
-
-  get currentFolder() {
-    if (!this.app) {
-      return null
-    }
-    return this.app.data.items[this.parentId] as ListAppDataItemFolder
-  }
-
-  get selectedItem() {
-    if (!this.currentFolder) {
-      return null
-    }
-    const id = this.currentFolder.children[this.selectedIndex]
-    return this.items[id]
-  }
-
-  get items() {
-    return (this.app && this.app.data && this.app.data.items) || {}
   }
 
   searchResults = react(
@@ -89,10 +54,5 @@ export class ListStore {
 
   setQuery = val => {
     this.query = val
-  }
-
-  back = () => {
-    this.depth--
-    this.history = dropRight(this.history)
   }
 }

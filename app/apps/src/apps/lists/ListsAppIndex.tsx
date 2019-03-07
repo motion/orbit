@@ -12,14 +12,14 @@ import {
 } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useContext } from 'react'
-import { API, ListContext } from '.'
+import { ListContext } from '.'
 import { ListStore } from './ListStore'
 
 export function ListsAppIndex(_: AppProps) {
   const [state] = useAppState()
+  // const [bits] = useBits()
 
   console.log('list', state)
-  // const [bits] = useBits()
 
   if (!state) {
     return null
@@ -54,10 +54,10 @@ export function ListsAppIndex(_: AppProps) {
 }
 
 const addFolder = (store: ListStore) => {
-  API.receive(store.app, store.parentId, {
-    target: 'folder',
-    name: store.query,
-  })
+  // API.receive(store.app, store.parentId, {
+  //   target: 'folder',
+  //   name: store.query,
+  // })
   store.setQuery('')
 }
 

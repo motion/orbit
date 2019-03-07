@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppMainProps } from '@o/kit/_/types/AppProps'
+import { AppMainProps } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { CheckboxReactive, SearchableTable, Text, View } from '@o/ui'
 import { useStore } from '@o/use-store'

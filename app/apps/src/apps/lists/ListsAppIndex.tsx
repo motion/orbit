@@ -1,13 +1,11 @@
 import { ensure, useReaction } from '@mcro/use-store'
-import { getTargetValue, List, searchBits, TreeList, useTreeState } from '@o/kit'
+import { getTargetValue, List, searchBits, TreeList, useTreeList } from '@o/kit'
 import { Button, InputRow, Panel, preventDefault, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
 
-// const [bits] = useBits()
-
 export function ListsAppIndex() {
-  const [treeState, actions] = useTreeState('list')
+  const treeList = useTreeList('list')
   const [addQuery, setAddQuery] = useState('')
   const [showSearch, toggleShowSearch] = useToggle(false)
 
@@ -36,7 +34,7 @@ export function ListsAppIndex() {
           getTargetValue,
           setAddQuery,
         )}
-        onEnter={() => actions.addFolder(addQuery)}
+        onEnter={() => treeList.actions.addFolder(addQuery)}
         placeholder="Add..."
         buttons={
           <>
@@ -49,7 +47,7 @@ export function ListsAppIndex() {
             <Button
               tooltip="Create folder"
               icon="folder-15"
-              onClick={() => actions.addFolder(addQuery)}
+              onClick={() => treeList.actions.addFolder(addQuery)}
             />
           </>
         }
@@ -58,7 +56,7 @@ export function ListsAppIndex() {
         <TreeList
           sortable
           minSelected={0}
-          {...treeState}
+          {...treeList.state}
           // actions={['delete']}
         />
       </View>

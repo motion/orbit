@@ -5,7 +5,7 @@ import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { TextProps } from './Text'
 import { Title } from './Title'
 
-type TitleRowProps = TextProps & {
+export type TitleRowProps = TextProps & {
   before?: React.ReactNode
   bordered?: boolean
   after?: React.ReactNode

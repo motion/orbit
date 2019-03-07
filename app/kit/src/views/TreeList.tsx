@@ -31,7 +31,8 @@ export type TreeListProps = Omit<
   query?: string
 }
 
-type DefaultTreeState = { rootItemID: number; items: TreeItems }
+type TreeState = { rootItemID: number; items: TreeItems }
+type TreeUserState = { depth?: number; currentFolder?: any[] }
 
 const defaultState = {
   rootItemID: 0,
@@ -47,15 +48,25 @@ const defaultState = {
 
 const getActions = stateRef => {
   return {
-    addFolder(name?: string) {},
-    selectFolder() {},
-    currentFolder() {},
+    addFolder(name?: string) {
+      console.log(name)
+    },
+    selectFolder() {
+      console.log(stateRef.current)
+    },
+    back() {},
   }
 }
 
-export function useTreeState(subSelect: string): [DefaultTreeState, ReturnType<typeof getActions>] {
-  useEnsureDefaultAppState<DefaultTreeState>(subSelect, defaultState)
-  const [state, update] = useScopedAppState<DefaultTreeState>(subSelect, defaultState)
+type UseTreeList = {
+  state: TreeState
+  userState: TreeUserState
+  actions: ReturnType<typeof getActions>
+}
+
+export function useTreeList(subSelect: string): UseTreeList {
+  useEnsureDefaultAppState<TreeState>(subSelect, defaultState)
+  const [state, update] = useScopedAppState<TreeState>(subSelect, defaultState)
   const [userState, updateUserState] = useScopedUserState(`${subSelect}_treeState`)
 
   const stateRef = useRef(null)
@@ -63,7 +74,11 @@ export function useTreeState(subSelect: string): [DefaultTreeState, ReturnType<t
 
   const actions = useMemo(() => getActions(stateRef), [])
 
-  return [state, actions]
+  return {
+    state,
+    userState: userState.currentFolder || null,
+    actions,
+  }
 }
 
 export class TreeListStore {

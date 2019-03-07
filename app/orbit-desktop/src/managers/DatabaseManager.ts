@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { Entities, SettingEntity } from '@o/models'
+import { Entities, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
@@ -34,7 +34,7 @@ export class DatabaseManager {
       }
       try {
         tries++
-        await getRepository(SettingEntity).findOne({})
+        await getRepository(UserEntity).findOne({})
         connected = true
       } catch (err) {
         console.log('got err, migrations may not be done yet...', err)

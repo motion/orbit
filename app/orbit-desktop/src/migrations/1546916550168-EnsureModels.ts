@@ -1,34 +1,11 @@
-import {
-  AppBit,
-  AppEntity,
-  SettingEntity,
-  SpaceEntity,
-  userDefaultValue,
-  UserEntity,
-} from '@o/models'
+import { AppBit, AppEntity, SpaceEntity, userDefaultValue, UserEntity } from '@o/models'
 import { getRepository, MigrationInterface } from 'typeorm'
 
 export class EnsureModels1546916550168 implements MigrationInterface {
   public async up(): Promise<any> {
-    await this.ensureDefaultSetting()
     await this.ensureDefaultSpace()
-    await this.ensureDefaultApps()
     await this.ensureDefaultUser()
-  }
-
-  private async ensureDefaultSetting() {
-    let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-
-    if (!setting) {
-      console.log('Creating initial general setting')
-      const settingEntity = new SettingEntity()
-      Object.assign(settingEntity, {
-        name: 'general',
-        values: {},
-      })
-      await getRepository(SettingEntity).save(settingEntity)
-      setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    }
+    await this.ensureDefaultApps()
   }
 
   private async ensureDefaultSpace() {
@@ -46,6 +23,22 @@ export class EnsureModels1546916550168 implements MigrationInterface {
           colors: ['#ACEACE', '#D48D48'],
         },
       ])
+    }
+  }
+
+  private async ensureDefaultUser() {
+    const user = await getRepository(UserEntity).findOne({})
+    const firstSpace = await getRepository(SpaceEntity).findOne({})
+
+    if (!firstSpace) {
+      throw new Error('Should be at least one space...')
+    }
+
+    if (!user) {
+      await getRepository(UserEntity).save({
+        ...userDefaultValue,
+        activeSpace: firstSpace.id,
+      })
     }
   }
 
@@ -104,22 +97,6 @@ export class EnsureModels1546916550168 implements MigrationInterface {
         }
       }),
     )
-  }
-
-  private async ensureDefaultUser() {
-    const user = await getRepository(UserEntity).findOne({})
-    const firstSpace = await getRepository(SpaceEntity).findOne({})
-
-    if (!firstSpace) {
-      throw new Error('Should be at least one space...')
-    }
-
-    if (!user) {
-      await getRepository(UserEntity).save({
-        ...userDefaultValue,
-        activeSpace: firstSpace.id,
-      })
-    }
   }
 
   public async down(): Promise<any> {}

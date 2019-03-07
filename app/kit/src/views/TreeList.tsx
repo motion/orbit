@@ -10,10 +10,11 @@ import {
 } from '@o/ui'
 import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
-import React from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useEnsureDefaultAppState } from '../hooks/useEnsureDefaultAppState'
 import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useScopedAppState } from '../hooks/useScopedAppState'
+import { useScopedUserState } from '../hooks/useScopedUserState'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
@@ -32,20 +33,35 @@ export type TreeListProps = Omit<
 
 type DefaultTreeState = { rootItemID: number; items: TreeItems }
 
-export function useTreeState(subSelect: string) {
-  const defaultState = {
-    rootItemID: 0,
-    items: {
-      0: {
-        id: 0,
-        name: 'Root',
-        type: 'root',
-        children: [],
-      },
+const defaultState = {
+  rootItemID: 0,
+  items: {
+    0: {
+      id: 0,
+      name: 'Root',
+      type: 'root',
+      children: [],
     },
-  }
+  },
+}
+
+export function useTreeState(subSelect: string) {
   useEnsureDefaultAppState<DefaultTreeState>(subSelect, defaultState)
-  return useScopedAppState<DefaultTreeState>(subSelect, defaultState)
+  const [state, update] = useScopedAppState<DefaultTreeState>(subSelect, defaultState)
+  const [userState, updateUserState] = useScopedUserState(`${subSelect}_treeState`)
+
+  const stateRef = useRef(null)
+  stateRef.current = state
+
+  const actions = useMemo(() => {
+    return {
+      addFolder(name?: string) {},
+      selectFolder() {},
+      currentFolder() {},
+    }
+  }, [])
+
+  return [state, actions]
 }
 
 export class TreeListStore {

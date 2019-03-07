@@ -14,7 +14,7 @@ export const SlackAppBlacklistCommand = new Command<
   { appId: number; channel: string; blacklisted: boolean }
 >('slack-setting-blacklist')
 
-export const SettingOnboardFinishCommand = new Command<void, void>('setting-onboard-finish')
+export const UserOnboardFinishCommand = new Command<void, void>('user-onboard-finish')
 
 export const GithubAppBlacklistCommand = new Command<
   void,

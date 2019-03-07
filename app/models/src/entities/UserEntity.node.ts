@@ -17,4 +17,7 @@ export class UserEntity implements User {
 
   @Column({ type: 'simple-json' })
   settings: User['settings']
+
+  @Column({ type: 'simple-json' })
+  appUserState: User['appUserState']
 }

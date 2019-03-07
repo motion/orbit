@@ -37,7 +37,6 @@ import {
   SearchPinnedResultModel,
   SearchResultModel,
   SendClientDataCommand,
-  SettingEntity,
   SettingModel,
   SetupProxyCommand,
   SlackAppBlacklistCommand,
@@ -294,7 +293,6 @@ export class OrbitDesktopRoot {
       resolvers: [
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },
-          { entity: SettingEntity, models: [SettingModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
           { entity: SpaceEntity, models: [SpaceModel] },

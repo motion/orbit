@@ -17,7 +17,6 @@ import {
   Entities,
   JobEntity,
   JobModel,
-  SettingEntity,
   SettingModel,
   SpaceEntity,
   SpaceModel,
@@ -128,7 +127,6 @@ export class OrbitSyncersRoot {
       resolvers: [
         ...typeormResolvers(this.connection, [
           { entity: AppEntity, models: [AppModel] },
-          { entity: SettingEntity, models: [SettingModel] },
           { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },

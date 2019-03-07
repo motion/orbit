@@ -22,7 +22,6 @@ export function ListsAppMain(props: AppProps) {
 
 function ListAppTitle(props) {
   return null
-  const { listStore } = React.useContext(ListContext)
   return (
     // !TODO merge TitleRow into Title so we have bordered/padded
     <Title bordered sizePadding={2} margin={0} {...props}>

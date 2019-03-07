@@ -19,6 +19,9 @@ export function ListsAppIndex(_: AppProps) {
   // const [bits] = useBits()
   const [state] = useAppState()
   const [treeState, update] = useTreeState('list')
+
+  console.log('treeState', treeState)
+
   // should be [treeState, actions]
   // actions.addItem()
 
@@ -33,7 +36,7 @@ export function ListsAppIndex(_: AppProps) {
         <TreeList
           sortable
           minSelected={0}
-          items={treeState}
+          {...treeState}
           getContextMenu={index => {
             return [
               {

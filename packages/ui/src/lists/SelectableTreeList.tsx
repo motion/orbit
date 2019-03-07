@@ -10,8 +10,9 @@ import { SelectionStore } from './SelectionStore'
 
 // TODO we have similar but not aligned types with Tree.tsx
 
-type BaseTreeItem = { id: string | number; type: string }
-type TreeItemFolder = BaseTreeItem & { type: 'folder'; children: number[] }
+type BaseTreeItem = { id: string | number; type: string; name?: string }
+type TreeItemFolder = BaseTreeItem & { type: 'folder'; name?: string; children: number[] }
+
 export type SelectableTreeItem = BaseTreeItem | TreeItemFolder
 
 export type TreeItems = { [key: string]: SelectableTreeItem }

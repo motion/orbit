@@ -95,7 +95,7 @@ export function PeopleAppMain(props: AppProps) {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
 
   if (!person) {
-    return <div>No one selected</div>
+    return null
   }
 
   return (

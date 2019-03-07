@@ -11,8 +11,9 @@ import {
 import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
 import React from 'react'
-import { useAppState } from '../hooks/useAppState'
+import { useEnsureDefaultAppState } from '../hooks/useEnsureDefaultAppState'
 import { useIsAppActive } from '../hooks/useIsAppActive'
+import { useScopedAppState } from '../hooks/useScopedAppState'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
@@ -29,15 +30,21 @@ export type TreeListProps = Omit<
   query?: string
 }
 
-export function useTreeState(subSelect: string): [TreeItems, (next: Partial<TreeItems>) => void] {
-  const [state, update] = useAppState()
-  return [
-    state.data[subSelect],
-    next => {
-      state.data[subSelect] = next
-      update(state)
+type DefaultTreeState = { rootItemID: number; items: TreeItems }
+
+export function useTreeState(subSelect: string) {
+  useEnsureDefaultAppState<DefaultTreeState>(subSelect, {
+    rootItemID: 0,
+    items: {
+      0: {
+        id: 0,
+        name: 'Root',
+        type: 'root',
+        children: [],
+      },
     },
-  ]
+  })
+  return useScopedAppState<DefaultTreeState>(subSelect)
 }
 
 export class TreeListStore {

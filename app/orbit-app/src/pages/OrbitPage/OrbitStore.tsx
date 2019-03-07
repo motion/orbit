@@ -23,6 +23,10 @@ export class OrbitStore {
     this.nextItem = { index, appConfig }
   }
 
+  setActiveConfig(id: string, config: AppConfig) {
+    this.activeConfig[id] = config
+  }
+
   updateSelectedItem = react(
     () => this.nextItem,
     async ({ appConfig }, { sleep }) => {

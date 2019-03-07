@@ -5,7 +5,7 @@ import {
   getAppDefinition,
   ProvideStores,
 } from '@mcro/kit'
-import { SelectionStore } from '@mcro/ui'
+import { SelectionStore, useOnMount } from '@mcro/ui'
 import { useStoreSimple } from '@mcro/use-store'
 import React, { useCallback } from 'react'
 import '../../apps/orbitApps'
@@ -17,7 +17,7 @@ import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }) => {
-  const { paneManagerStore } = useStoresSimple()
+  const { orbitStore, paneManagerStore } = useStoresSimple()
   const isActive = useCallback(() => {
     if (paneManagerStore) {
       return paneManagerStore.activePane && paneManagerStore.activePane.id === id
@@ -25,6 +25,14 @@ export const OrbitApp = ({ id, identifier }) => {
   }, [])
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
   const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
+
+  // // set default initial appConfig
+  useOnMount(function setInitialConfig() {
+    orbitStore.setActiveConfig(id, {
+      identifier,
+    })
+  })
+
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
       <OrbitAppRender id={id} identifier={identifier} />

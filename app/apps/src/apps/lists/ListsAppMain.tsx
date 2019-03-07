@@ -3,6 +3,7 @@ import { BarButtonSmall, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {
+  return null
   if (props.subType === 'folder') {
     return <ListsAppMainFolder {...props} />
   }

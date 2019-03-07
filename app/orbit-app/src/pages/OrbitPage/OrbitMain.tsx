@@ -21,9 +21,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}
-        {React.cloneElement(props.children, {
-          appProps,
-        })}
+        {React.cloneElement(props.children, appProps)}
         {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>
     </SubPane>

@@ -50,6 +50,10 @@ function CreateAppMain({ identifier }: AppProps) {
     [identifier],
   )
 
+  if (!identifier) {
+    return null
+  }
+
   const app = { identifier } as AppBit
   const createApp = async () => {
     const app = {

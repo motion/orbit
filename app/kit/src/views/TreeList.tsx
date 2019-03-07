@@ -10,11 +10,10 @@ import {
 } from '@o/ui'
 import { useHook, useStore } from '@o/use-store'
 import { dropRight, last } from 'lodash'
-import React, { useMemo, useRef } from 'react'
-import { useEnsureDefaultAppState } from '../hooks/useEnsureDefaultAppState'
+import React, { useMemo } from 'react'
 import { useIsAppActive } from '../hooks/useIsAppActive'
-import { useScopedAppState } from '../hooks/useScopedAppState'
-import { useScopedUserState } from '../hooks/useScopedUserState'
+import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
+import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
@@ -46,13 +45,16 @@ const defaultState = {
   },
 }
 
-const getActions = stateRef => {
+const getActions = (
+  ts: () => ScopedAppState<TreeState>,
+  us: () => ScopedUserState<TreeUserState>,
+) => {
   return {
     addFolder(name?: string) {
-      console.log(name)
+      console.log(name, us(), ts())
     },
     selectFolder() {
-      console.log(stateRef.current)
+      console.log(us(), ts())
     },
     back() {},
   }
@@ -65,18 +67,16 @@ type UseTreeList = {
 }
 
 export function useTreeList(subSelect: string): UseTreeList {
-  useEnsureDefaultAppState<TreeState>(subSelect, defaultState)
-  const [state, update] = useScopedAppState<TreeState>(subSelect, defaultState)
-  const [userState, updateUserState] = useScopedUserState(`${subSelect}_treeState`)
-
-  const stateRef = useRef(null)
-  stateRef.current = state
-
-  const actions = useMemo(() => getActions(stateRef), [])
-
+  const ts = useScopedAppState<TreeState>(subSelect, defaultState)
+  const us = useScopedUserState(`${subSelect}_treeState`, {
+    currentFolder: null,
+  })
+  const getTs = useMemoGetValue(ts)
+  const getUs = useMemoGetValue(us)
+  const actions = useMemo(() => getActions(getTs, getUs), [])
   return {
-    state,
-    userState: userState.currentFolder || null,
+    state: ts[0],
+    userState: us[0].currentFolder,
     actions,
   }
 }

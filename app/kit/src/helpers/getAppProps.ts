@@ -17,14 +17,7 @@ export function getAppProps(props: OrbitListItemProps, id?: string): AppProps {
     }
   }
   return {
-    id,
-    ...listItemToAppProps(props),
-  }
-}
-
-function listItemToAppProps(props: OrbitListItemProps): AppProps {
-  return {
-    id: props.id,
+    id: props.id || id,
     identifier: props.identifier,
     // dont accept react elements
     title: typeof props.title === 'string' ? props.title : undefined,

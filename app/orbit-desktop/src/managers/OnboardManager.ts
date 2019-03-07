@@ -36,7 +36,7 @@ export class OnboardManager {
 
   async start() {
     log.info('start()')
-    const user = await getRepository(UserEntity).findOne()
+    const user = await getRepository(UserEntity).findOne({})
     if (!user.settings.hasOnboarded) {
       this.scanHistory()
     }

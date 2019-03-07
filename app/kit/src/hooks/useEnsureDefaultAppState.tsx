@@ -10,7 +10,7 @@ export function useEnsureDefaultAppState<A>(subSelect: string, ensure: A) {
 
       // ensure default
       state.data[subSelect] = ensure
-      console.log('updating state', ensure, subSelect, update)
+      console.log('updating app default state', ensure, subSelect, update)
       update(state)
     },
     [state, subSelect],

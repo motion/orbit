@@ -1,9 +1,11 @@
 import { useAppState } from './useAppState'
+import { useEnsureDefaultAppState } from './useEnsureDefaultAppState'
 
-export function useScopedAppState<A>(
-  subSelect: string,
-  defaultState?: A,
-): [A, (next: Partial<A>) => void] {
+export type ScopedAppState<A> = [A, (next: Partial<A>) => void]
+
+export function useScopedAppState<A>(subSelect: string, defaultState?: A): ScopedAppState<A> {
+  useEnsureDefaultAppState<A>(subSelect, defaultState)
+
   const [state, update] = useAppState()
   // scopes state down
   return [

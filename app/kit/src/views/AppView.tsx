@@ -47,12 +47,15 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 const ChildrenOnly = props => props.children
 
 export const AppView = memoIsEqualDeep(
-  forwardRef<AppViewRef, AppViewProps>(function AppView(props, ref) {
+  forwardRef<AppViewRef, AppViewProps>(function AppView({ appProps, ...props }, ref) {
     const rootRef = useRef<HTMLDivElement>(null)
+
+    // TODO AVOID LOOPS BY USING SOME CONTEXT
+    console.log('hello?', props, appProps)
 
     if (!props.identifier) {
       console.log('props for error', props)
-      throw new Error('No app id')
+      throw new Error('No app identifier')
     }
 
     const definition = getAppDefinition(props.identifier)
@@ -80,7 +83,7 @@ export const AppView = memoIsEqualDeep(
 
     const element = (
       <Contents ref={rootRef}>
-        <View {...props} />
+        <View {...props} {...appProps} />
       </Contents>
     )
 

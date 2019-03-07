@@ -1,6 +1,6 @@
 {
   "name": "@o/gloss",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "description": "Higher order component for nicer component styles",
   "main": "_/index.js",
   "sideEffects": false,

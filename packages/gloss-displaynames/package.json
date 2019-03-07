@@ -1,6 +1,6 @@
 {
   "name": "@o/gloss-displaynames",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "main": "_/index.js",
   "sideEffects": false,
   "scripts": {

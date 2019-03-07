@@ -2,7 +2,7 @@
   "name": "@o/babel-preset-motion",
   "main": "babel-preset-motion.js",
   "sideEffects": false,
-  "version": "2.3.10",
+  "version": "2.3.11",
   "dependencies": {
     "@babel/core": "7.2.0",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",

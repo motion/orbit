@@ -414,6 +414,13 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
+"@babel/plugin-syntax-dynamic-import@7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-dynamic-import/-/plugin-syntax-dynamic-import-7.2.0.tgz#69c159ffaf4998122161ad8ebc5e6d1f55df8612"
+  integrity sha512-mVxuJ0YroI/h/tbFTPGZR8cv6ai+STMKNBq0f8hFxsxWjl94qqhsb+wXbpNMDPU3cfR1TIsVFzU3nXyZMqyK4w==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+
 "@babel/plugin-syntax-json-strings@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-json-strings/-/plugin-syntax-json-strings-7.2.0.tgz#72bd13f6ffe1d25938129d2a186b11fd62951470"
@@ -611,7 +618,7 @@
     "@babel/helper-get-function-arity" "^7.0.0"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-transform-react-display-name@^7.0.0":
+"@babel/plugin-transform-react-display-name@7.2.0", "@babel/plugin-transform-react-display-name@^7.0.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.2.0.tgz#ebfaed87834ce8dc4279609a4f0c324c156e3eb0"
   integrity sha512-Htf/tPa5haZvRMiNSQSFifK12gtr/8vwfr+A9y69uF0QcU77AVu4K7MiHEkTxF7lQoHOL0F9ErqgfNEAKgXj7A==
@@ -1515,50 +1522,6 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@mcro/babel-preset-motion@2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@mcro/babel-preset-motion/-/babel-preset-motion-2.3.10.tgz#a6f64f4ab16071e1ae2a40c8c6e513cdffcccc92"
-  integrity sha512-HcpYVA8JQd1Y/OgtfrGmoon+9hXMqglO2Re/YAa8LnRBH7fu6u7w9c1Invo1jD3LoRIQNRrljahOTOhKDn+EMw==
-  dependencies:
-    "@babel/core" "7.2.0"
-    "@babel/plugin-proposal-class-properties" "7.2.1"
-    "@babel/plugin-proposal-decorators" "7.2.0"
-    "@babel/plugin-syntax-jsx" "7.2.0"
-    "@babel/plugin-syntax-typescript" "7.2.0"
-    "@babel/plugin-transform-react-inline-elements" "7.0.0"
-    "@babel/plugin-transform-runtime" "7.2.0"
-    "@babel/preset-env" "7.2.0"
-    "@babel/preset-react" "7.0.0"
-    "@babel/preset-typescript" "7.1.0"
-    "@mcro/gloss" "^2.3.10"
-    "@mcro/gloss-displaynames" "^2.3.10"
-    react-hot-loader "4.6.3"
-
-"@mcro/color@^2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@mcro/color/-/color-2.3.10.tgz#e2ab244a18c36bb07b468b652177eda8287cf86a"
-  integrity sha512-QIk1hiU82vrSCQoVWn9yFVUaZrHFtO+8tlFZwCrmZT/FhKi4gx3V6RkOrSQFnJDdpickGl8cLP6wYefDWLbHag==
-
-"@mcro/css@^2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@mcro/css/-/css-2.3.10.tgz#94a2f1273dd7e87d3c064e4063afff1d43f6ec0b"
-  integrity sha512-dz6Xh8FU++oGNbzXj6wiPqPZuP3rPbyvCB06+3i6GYc2SmsUIMWPo4oa3n1V3GWi07tfkG7e9sgUSnXuOQJVcw==
-
-"@mcro/gloss-displaynames@^2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@mcro/gloss-displaynames/-/gloss-displaynames-2.3.10.tgz#f1f6d46234e7f8017af391de63589d126847d746"
-  integrity sha512-U3qXGO5M+2aSRsade2ENtcUzs/q/nF+p6jq/1Xtd+Q+OvnuUDG9NfyxdehKeY5FlplUF6HWK+TrUVaWKS2ot6Q==
-  dependencies:
-    babel-plugin-macros "^2.1.0"
-
-"@mcro/gloss@^2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@mcro/gloss/-/gloss-2.3.10.tgz#fc48ec6df73b1b73ad64b8708453d5e7b6be252c"
-  integrity sha512-2839+9TX2DwGAPYDBshmeDCH0WIO+ELaEqcrlPr4GjCgJQXlYu9jwkDb5BZA9cMa9ReCicVEV8Z/8eXl55g0IA==
-  dependencies:
-    "@mcro/color" "^2.3.10"
-    "@mcro/css" "^2.3.10"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1571,6 +1534,58 @@
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
+
+"@o/babel-preset-motion@2.3.11":
+  version "2.3.11"
+  resolved "https://registry.yarnpkg.com/@o/babel-preset-motion/-/babel-preset-motion-2.3.11.tgz#5c70b670165befb9c7f3e65cc5857f66418b73d3"
+  integrity sha512-v3g1o1koUTjp+ZOhKIxLvLH4a1zKBHUrMITc2kCcjZCZM1fRsMs8xayI32iWG7eLzhkvyTqeOvfCDGgKlXGY7Q==
+  dependencies:
+    "@babel/core" "7.2.0"
+    "@babel/plugin-proposal-class-properties" "7.2.1"
+    "@babel/plugin-proposal-decorators" "7.2.0"
+    "@babel/plugin-syntax-dynamic-import" "7.2.0"
+    "@babel/plugin-syntax-jsx" "7.2.0"
+    "@babel/plugin-syntax-typescript" "7.2.0"
+    "@babel/plugin-transform-react-display-name" "7.2.0"
+    "@babel/plugin-transform-react-inline-elements" "7.0.0"
+    "@babel/plugin-transform-runtime" "7.2.0"
+    "@babel/preset-env" "7.2.0"
+    "@babel/preset-react" "7.0.0"
+    "@babel/preset-typescript" "7.1.0"
+    "@o/gloss" "^2.3.10"
+    "@o/gloss-displaynames" "^2.3.10"
+    react-hot-loader "4.7.2"
+
+"@o/color@^2.3.10":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@o/color/-/color-2.3.10.tgz#17a3478bc777ce3b7acbe93d0d55fa9300dbee09"
+  integrity sha512-t2pUAsZL+lzmUBbA3XsGM8D3nTDtKq7S8yTWfmi4PUzj+0mOrLv0lJ9vETFgll+OuZ8kttaN/J+hmDJZCUHdWQ==
+
+"@o/css@^2.3.10":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@o/css/-/css-2.3.10.tgz#712f040d44257fcbb34289b58fdddda6ae983c4c"
+  integrity sha512-FOAj1DNl3ZWPdlC16L93tThEWS79DbYqhLGEyLeh7HkkaFWMB2tI8+d1iFe1+8bwukMCepz1Hh7xN3U9X6M8PQ==
+
+"@o/fast-compare@*":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@o/fast-compare/-/fast-compare-2.3.10.tgz#3428901fcec410787ed5bbc2daa65a02859fc79d"
+  integrity sha512-Mo3jJnDn+wA2tH9L8d+CVPwC5+mxU/CLkyGcVujumj10IfzKWk72bTSIw6IRRcHXHv5CvyjZ7M6bEuHYW3TuTw==
+
+"@o/gloss-displaynames@^2.3.10":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@o/gloss-displaynames/-/gloss-displaynames-2.3.10.tgz#2065075373a6eee9e8f87a2e535e6dfe74a170c1"
+  integrity sha512-6aXyPiibuxq9hhO1Q0xocnEdK8MFgOg/R4bzqm3Z0m/bV+m3+faXzl/7h2O7XLm95jx3GankNEZwKF9iLt7fyw==
+  dependencies:
+    babel-plugin-macros "^2.1.0"
+
+"@o/gloss@^2.3.10":
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@o/gloss/-/gloss-2.3.10.tgz#01245f672c83f49d12b9b509abf7f285e5870393"
+  integrity sha512-thA6PGMy3ZXgcgAV0AL3KQ/WpiaUGs6VIzu9iV8XzjaIkmQvtiVyhOlqO8xy9b+GbHnom1NfYO7/2IG6gb70Eg==
+  dependencies:
+    "@o/color" "^2.3.10"
+    "@o/css" "^2.3.10"
+    "@o/fast-compare" "*"
 
 "@octokit/endpoint@^3.1.1":
   version "3.1.3"
@@ -4771,10 +4786,12 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-hoist-non-react-statics@^2.5.0:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
-  integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
+hoist-non-react-statics@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"
+  integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==
+  dependencies:
+    react-is "^16.7.0"
 
 hosted-git-info@^2.1.4, hosted-git-info@^2.6.0:
   version "2.7.1"
@@ -5827,11 +5844,6 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
-
-lodash.merge@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
-  integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
 
 lodash.once@^4.0.0:
   version "4.1.1"
@@ -8024,20 +8036,25 @@ react-dom@16.8.3:
     prop-types "^15.6.2"
     scheduler "^0.13.3"
 
-react-hot-loader@4.6.3:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.6.3.tgz#d9c8923c45b35fd51538ba4297081a00be6bccb1"
-  integrity sha512-FUvRO8dwbeLnc3mgLn8ARuSh8NnLBYJyiRjFn+grY/5GupSyPqv0U7ixgwXro77hwDplhm8z9wU7FlJ8kZqiAQ==
+react-hot-loader@4.7.2:
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.7.2.tgz#54cd99441c2d594bdc58c90673690c245dcfcaff"
+  integrity sha512-kkvGHmvLrbg6RH7svQ28T1swM2JFsHYBRT92xz4k4ubSyPcE2i8YVPQmoKWsDk/zNNpC710M9Md10oZzugecOw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
-    hoist-non-react-statics "^2.5.0"
+    hoist-non-react-statics "^3.3.0"
     loader-utils "^1.1.0"
-    lodash.merge "^4.6.1"
+    lodash "^4.17.11"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
     shallowequal "^1.0.2"
     source-map "^0.7.3"
+
+react-is@^16.7.0:
+  version "16.8.4"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
+  integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"

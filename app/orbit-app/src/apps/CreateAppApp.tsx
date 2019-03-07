@@ -1,5 +1,5 @@
 import { save } from '@o/bridge'
-import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@o/kit'
+import { App, AppDefinition, AppIcon, AppMainProps, AppView, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { Button, HorizontalSpace, Section, Theme, TitleRow } from '@o/ui'
 import React, { useEffect, useState } from 'react'
@@ -31,7 +31,7 @@ function CreateAppIndex() {
   )
 }
 
-function CreateAppMain(props: AppProps) {
+function CreateAppMain(props: AppMainProps) {
   const Actions = useActions()
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()

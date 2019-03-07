@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppProps, HighlightedSearchable, ItemView } from '@o/kit'
+import { AppMainProps, HighlightedSearchable, ItemView } from '@o/kit'
 import { BitModel } from '@o/models'
 import { ItemPropsProvider } from '@o/ui'
 import * as React from 'react'
@@ -14,9 +14,9 @@ const defaultItemProps = {
   },
 }
 
-export function BitAppMain(props: AppProps) {
+export function BitAppMain(props: AppMainProps) {
   const [bit] = useModel(BitModel, {
-    where: { id: +props.appConfig.id },
+    where: { id: +props.id },
     relations: ['people'],
   })
   if (!bit) {

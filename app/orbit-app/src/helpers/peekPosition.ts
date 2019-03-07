@@ -26,22 +26,9 @@ const sizes = [[500, 960]]
 // dynamic peek size
 // always slightly taller than wide
 // capped between a set range
-const getPeekSize = ([screenWidth]: number[], appConfig?: AppConfig) => {
-  const config = appConfig && appConfig.viewConfig
-  let preferred
-  if (config && config.dimensions) {
-    preferred = config.dimensions
-  } else {
-    if (config && config.contentSize) {
-      const index = Math.min(
-        sizes.length - 1,
-        Math.max(0, Math.round(config.contentSize / 50 - 0.5)),
-      )
-      preferred = sizes[index]
-    } else {
-      preferred = [screenWidth / 3.25, screenWidth / 2.75]
-    }
-  }
+const getPeekSize = () => {
+  const index = Math.min(sizes.length - 1, Math.max(0, Math.round(1000 / 50 - 0.5)))
+  const preferred = sizes[index]
   const max = [930, 920]
   const min = [480, 300] // pretty cute small window
   return preferred
@@ -119,6 +106,8 @@ function getPeekPositionFromTarget(
   parentBounds: Position,
   appOnLeft?: boolean,
 ): AppPosition | null {
+  console.log('appConfig', appConfig)
+
   // dont reset position on same target re-opening
   if (isEqual(target, lastTarget)) {
     return lastPeek
@@ -128,7 +117,7 @@ function getPeekPositionFromTarget(
   const leftSpace = parentBounds.left
   const rightSpace = screenW - (parentBounds.left + parentBounds.width)
   let peekOnLeft = leftSpace > rightSpace
-  let [pW, pH] = getPeekSize(screenSize(), appConfig)
+  let [pW, pH] = getPeekSize()
   let x = 0
   let y = getLazyPosition(target, pH, lastPeek)
 

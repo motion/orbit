@@ -1,6 +1,6 @@
 import { loadMany, loadOne, observeMany } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import { AppProps, ListItem, useStores } from '@o/kit'
+import { AppMainProps, ListItem, useStores } from '@o/kit'
 import { Bit, BitModel, CosalTopicsModel } from '@o/models'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@o/ui'
 import { ensure, react, useStore } from '@o/use-store'
@@ -19,21 +19,16 @@ const getBitTexts = (bits: Bit[]) => {
 }
 
 class PeopleAppStore {
-  props: AppProps
-
-  get appConfig() {
-    return this.props.appConfig
-  }
+  props: AppMainProps
 
   person = react(
-    () => this.appConfig,
-    appConfig => {
-      ensure('appConfig', !!appConfig)
+    () => this.props.id,
+    id => {
       return loadOne(BitModel, {
         args: {
           where: {
             type: 'person',
-            id: +appConfig.id,
+            id: +id,
           },
           // relations: ['people'], // todo(nate): check why do we need it here
         },
@@ -90,7 +85,7 @@ class PeopleAppStore {
 
 const PersonHeader = gloss()
 
-export function PeopleAppMain(props: AppProps) {
+export function PeopleAppMain(props: AppMainProps) {
   const { queryStore, themeStore } = useStores()
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
 

@@ -1,14 +1,14 @@
 import React, { createContext, useContext } from 'react'
 import { AppElements } from '../types/AppDefinition'
 
-const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
+const validAppMainProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 
 export const AppLoadContext = createContext({
   identifier: '',
   id: '',
 })
 
-export type AppSubViewProps = {
+export type AppMainViewProps = {
   children: React.ReactElement<any>
   hasSidebar: boolean
   hasStatusbar: boolean
@@ -16,18 +16,18 @@ export type AppSubViewProps = {
   hasMain: boolean
 }
 
-type AppSubView = React.FunctionComponent<AppSubViewProps>
+type AppMainView = React.FunctionComponent<AppMainViewProps>
 
 export const AppViewsContext = createContext({
-  Toolbar: null as AppSubView,
-  Statusbar: null as AppSubView,
-  Main: null as AppSubView,
-  Sidebar: null as AppSubView,
+  Toolbar: null as AppMainView,
+  Statusbar: null as AppMainView,
+  Main: null as AppMainView,
+  Sidebar: null as AppMainView,
 })
 
 export function App(props: AppElements) {
   for (const key in props) {
-    if (!validAppProps.find(x => x === key)) {
+    if (!validAppMainProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
     }
   }

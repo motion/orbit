@@ -1,19 +1,15 @@
-import { AppProps } from '@o/kit'
+import { AppMainProps } from '@o/kit'
 import * as React from 'react'
 import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 
-export function SettingsAppMain(props: AppProps) {
-  if (!props.appConfig) {
-    return null
-  }
-
-  switch (props.appConfig.id) {
+export function SettingsAppMain(props: AppMainProps) {
+  switch (props.id) {
     case 'general':
       return <SettingsAppGeneral {...props} />
     case 'account':
-      return <SettingsAppAccount {...props} />
+      return <SettingsAppAccount />
     default:
-      return <div>no found pane in settings {JSON.stringify(props.appConfig)}</div>
+      return <div>no found pane in settings {JSON.stringify(props)}</div>
   }
 }

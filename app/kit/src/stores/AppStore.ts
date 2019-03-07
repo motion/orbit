@@ -2,10 +2,9 @@ import { observeOne } from '@o/bridge'
 import { AppModel } from '@o/models'
 import { ensure, react, useHook } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppProps } from '../types/AppProps'
 
 export class AppStore {
-  props: { id: string; identifier: string; isActive: AppProps['isActive'] }
+  props: { id: string; identifier: string; isActive: boolean | (() => boolean) }
   stores = useHook(useStoresSimple)
 
   history = []

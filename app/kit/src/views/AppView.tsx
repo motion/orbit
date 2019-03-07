@@ -5,10 +5,12 @@ import React, { forwardRef, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
-import { AppProps } from '../types/AppProps'
+import { AppMainProps } from '../types/AppMainProps'
 import { AppViewsContext } from './App'
 
-export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
+export type AppViewProps = {
+  appConfig?: AppMainProps
+  viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   id?: string
   identifier: string
   appStore?: AppStore

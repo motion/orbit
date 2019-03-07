@@ -12,7 +12,6 @@ export type AppState = {
   torn: boolean
   target?: { top: number; left: number; width: number; height: number }
   peekOnLeft: boolean
-  viewConfig?: any
   position: [number, number]
   size: [number, number]
 }

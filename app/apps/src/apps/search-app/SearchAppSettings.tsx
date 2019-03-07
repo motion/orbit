@@ -1,8 +1,7 @@
-import { AppProps } from '@o/kit'
 import { Button, FormField, HorizontalSpace, Input, Row, SubTitle } from '@o/ui'
 import React from 'react'
 
-export function SearchAppSettings(_: AppProps) {
+export function SearchAppSettings() {
   return (
     <>
       <SubTitle>Filters</SubTitle>

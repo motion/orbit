@@ -1,4 +1,4 @@
-import { AppProps, Icon } from '@o/kit'
+import { AppMainProps, Icon } from '@o/kit'
 import {
   BorderLeft,
   Button,
@@ -105,7 +105,7 @@ const DEFAULT_FILTERS = [
   },
 ]
 
-export function CustomAppMain(_props: AppProps) {
+export function CustomAppMain(_props: AppMainProps) {
   const [treeState, setTreeState] = useState(treeData)
 
   return (

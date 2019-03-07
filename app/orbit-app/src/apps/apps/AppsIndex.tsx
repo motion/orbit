@@ -1,6 +1,5 @@
 import {
   AppDefinition,
-  AppProps,
   AppWithDefinition,
   Icon,
   List,
@@ -36,7 +35,7 @@ function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
   }
 }
 
-export function AppsIndex(_props: AppProps) {
+export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)

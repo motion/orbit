@@ -18,7 +18,7 @@ import { getAppConfig } from '../helpers/getAppConfig'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
-import { AppConfig } from '../types/AppConfig'
+import { AppMainProps } from '../types/AppMainProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
@@ -55,7 +55,7 @@ export function ProvideSelectionContext({
 
 export type HandleOrbitSelect = ((
   index: number,
-  appConfig: AppConfig,
+  appConfig: AppMainProps,
   eventType?: 'click' | 'key',
 ) => any)
 

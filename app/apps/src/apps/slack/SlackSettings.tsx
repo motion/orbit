@@ -1,5 +1,5 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, WhitelistManager } from '@o/kit'
+import { AppMainProps, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
 import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@o/ui'
 import { useStore } from '@o/use-store'
@@ -8,8 +8,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-export function SlackSettings(props: AppProps) {
-  const { subId } = props.appConfig
+export function SlackSettings({ subId }: AppMainProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,

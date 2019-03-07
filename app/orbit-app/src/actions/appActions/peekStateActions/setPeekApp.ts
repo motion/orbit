@@ -22,11 +22,6 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   subType: '',
 }
 
-const DEFAULT_VIEW_CONFIG: AppConfig['viewConfig']['initialState'] = {
-  dimensions: null,
-  initialState: null,
-}
-
 const getParentBounds = (target: HTMLDivElement) => {
   const node = target.closest('.app-parent-bounds') as HTMLDivElement
   if (!node) {
@@ -58,10 +53,6 @@ function setPeekState({ target, appConfig, parentBounds, position, size }: PeekA
     appConfig: {
       ...DEFAULT_APP_CONFIG,
       ...appConfig,
-      viewConfig: {
-        ...DEFAULT_VIEW_CONFIG,
-        ...appConfig.viewConfig,
-      },
     },
     target: realTarget,
     position,

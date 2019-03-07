@@ -1,10 +1,10 @@
 import { Bit } from '@o/models'
-import { AppConfig } from '../types/AppConfig'
 import { AppDefinition } from '../types/AppDefinition'
+import { AppMainProps } from '../types/AppMainProps'
 import { OrbitListItemProps } from '../views/ListItem'
 import { getAppDefinitions } from './getAppDefinitions'
 
-export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig {
+export function getAppConfig(props: OrbitListItemProps, id?: string): AppMainProps {
   const { item } = props
   if (item) {
     if (item.target === 'bit') {
@@ -22,7 +22,7 @@ export function getAppConfig(props: OrbitListItemProps, id?: string): AppConfig 
   }
 }
 
-function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
+function listItemToAppConfig(props: OrbitListItemProps): AppMainProps {
   return {
     id: props.id,
     identifier: props.identifier,
@@ -35,7 +35,7 @@ function listItemToAppConfig(props: OrbitListItemProps): AppConfig {
   }
 }
 
-export function getSourceAppConfig(appDef: AppDefinition, model: Bit): AppConfig {
+export function getSourceAppConfig(appDef: AppDefinition, model: Bit): AppMainProps {
   if (!appDef) {
     throw new Error(`No source given: ${JSON.stringify(appDef)}`)
   }
@@ -45,6 +45,5 @@ export function getSourceAppConfig(appDef: AppDefinition, model: Bit): AppConfig
     iconLight: appDef.iconLight,
     title: model.target === 'bit' ? model.title : model['name'],
     identifier: model ? model.target : 'sources',
-    viewConfig: appDef.defaultViewConfig,
   }
 }

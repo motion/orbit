@@ -1,9 +1,9 @@
-import { App, AppProps, createApp } from '@o/kit'
+import { App, AppMainProps, createApp } from '@o/kit'
 import React from 'react'
 import { PeopleAppIndex } from './PeopleAppIndex'
 import { PeopleAppMain } from './PeopleAppMain'
 
-function PeopleApp(props: AppProps) {
+function PeopleApp(props: AppMainProps) {
   return (
     <App index={<PeopleAppIndex />}>
       <PeopleAppMain {...props} />

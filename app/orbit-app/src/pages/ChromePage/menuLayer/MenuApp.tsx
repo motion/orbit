@@ -1,12 +1,11 @@
 import { AppView, AppViewProps, SubPane } from '@o/kit'
 import { App } from '@o/stores'
 import { memoize } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { MENU_WIDTH } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
 
-type MenuAppProps = AppViewProps
+type MenuAppMainProps = AppViewProps
 
 const menuHeightSetter = memoize((index: number) => (height: number) => {
   App.setState({
@@ -20,7 +19,7 @@ const menuHeightSetter = memoize((index: number) => (height: number) => {
   })
 })
 
-export default observer(function MenuApp(props: MenuAppProps & { index: number }) {
+export default function MenuApp(props: MenuAppMainProps & { index: number }) {
   const { menuStore } = useStores()
   // memo to prevent expensive renders on height changes
   const menuApp = React.useMemo(
@@ -42,4 +41,4 @@ export default observer(function MenuApp(props: MenuAppProps & { index: number }
       {menuApp}
     </SubPane>
   )
-})
+}

@@ -1,21 +1,17 @@
-import { AppProps, AppSubView } from '@o/kit'
+import { AppMainProps, AppMainView } from '@o/kit'
 import { Title } from '@o/ui'
 import * as React from 'react'
 
-export function ListsAppMain(props: AppProps) {
+export function ListsAppMain(props: AppMainProps) {
   return null
-
-  if (!props.appConfig) {
-    return null
-  }
-  if (props.appConfig.subType === 'folder') {
+  if (props.subType === 'folder') {
     return null
     // return <ListsAppMainFolder {...props} />
   }
   return (
     <>
       <ListAppTitle />
-      <AppSubView appConfig={props.appConfig} />
+      <AppMainView {...props} />
     </>
   )
 }
@@ -30,11 +26,11 @@ function ListAppTitle(props) {
   )
 }
 
-// function ListsAppMainFolder(/* props: AppProps */) {
+// function ListsAppMainFolder(/* props: AppMainProps */) {
 // @ts-ignore
 // const { listStore } = useStores()
-// const [list] = useModel(AppModel, { where: { id: +props.appConfig.id } }) as [ListsAppBit, any]
-// const selectedItem = list && list.data.items[+props.appConfig.subId]
+// const [list] = useModel(AppModel, { where: { id: +props.id } }) as [ListsAppBit, any]
+// const selectedItem = list && list.data.items[+props.subId]
 // const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
 
 // React.useEffect(

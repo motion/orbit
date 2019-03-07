@@ -1,5 +1,5 @@
 import { command, useModel } from '@o/bridge'
-import { AppProps } from '@o/kit'
+import { AppMainProps } from '@o/kit'
 import { AppModel, AppSaveCommand } from '@o/models'
 import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import produce from 'immer'
@@ -16,10 +16,10 @@ export interface WebsiteCrawledData {
   content: string
 }
 
-type Props = AppProps
+type Props = AppMainProps
 
 export default function WebsiteSetupPane(props: Props) {
-  const [app, update] = useModel(AppModel, { where: { id: +props.appConfig.subId } })
+  const [app, update] = useModel(AppModel, { where: { id: +props.subId } })
   const [values, setValues] = useState({ url: '' })
 
   useEffect(

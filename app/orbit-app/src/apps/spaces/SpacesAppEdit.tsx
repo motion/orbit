@@ -1,5 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppProps, OrbitOrb, useAppsForSpace } from '@o/kit'
+import { AppMainProps, OrbitOrb, useAppsForSpace } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import {
   Col,
@@ -23,8 +23,8 @@ import { SubSection } from '../../views/SubSection'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
 
-export default function SpacesAppEdit(props: AppProps) {
-  const id = +props.appConfig.id
+export default function SpacesAppEdit(props: AppMainProps) {
+  const id = +props.id
   const [space] = useModel(SpaceModel, { where: { id } })
   const apps = useAppsForSpace(id)
   const [colors, setColors] = React.useState(defaultColors)
@@ -32,7 +32,7 @@ export default function SpacesAppEdit(props: AppProps) {
   return (
     <Section>
       <SubTitle>Space</SubTitle>
-      <Title>{props.appConfig.title}</Title>
+      <Title>{props.title}</Title>
 
       <SubSection title="General">
         <Text size={1.1}>Customize your space appearance.</Text>

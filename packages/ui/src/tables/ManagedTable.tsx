@@ -533,7 +533,7 @@ class ManagedTableInner extends React.Component<
   )
 
   renderRow = ({ index, style }) => {
-    const { onAddFilter, multiline, zebra, rowLineHeight } = this.props
+    const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
     return (
@@ -541,6 +541,7 @@ class ManagedTableInner extends React.Component<
         key={sortedRows[index].key}
         columnSizes={columnSizes}
         columnKeys={columnKeys}
+        columns={columns}
         onMouseDown={e => this.onHighlight(e, sortedRows[index], index)}
         onMouseEnter={e => this.onMouseEnterRow(e, sortedRows[index], index)}
         multiline={multiline}

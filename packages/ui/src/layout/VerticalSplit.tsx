@@ -1,4 +1,4 @@
-import { Contents } from '@o/gloss'
+import { Row } from '@o/gloss'
 import React, { Children, cloneElement, useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from '../hooks/useResizeObserver'
 
@@ -24,13 +24,13 @@ export function VerticalSplit(props: { children: any }) {
   })
 
   return (
-    <Contents ref={node}>
+    <Row flex={1} ref={node}>
       {Children.map(props.children, (child, index) => {
         return cloneElement(child, {
           index,
           parentWidth: width,
         })
       })}
-    </Contents>
+    </Row>
   )
 }

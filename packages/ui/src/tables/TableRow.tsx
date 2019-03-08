@@ -12,6 +12,7 @@ import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
   TableBodyRow,
+  TableColumnKeys,
   TableColumns,
   TableColumnSizes,
   TableOnAddFilter,
@@ -73,6 +74,7 @@ const TableBodyColumnContainer = gloss({
 }))
 
 type Props = {
+  columnKeys: TableColumnKeys
   columnSizes: TableColumnSizes
   columns: TableColumns
   onMouseDown: (e: React.MouseEvent) => any
@@ -101,14 +103,13 @@ export class TableRow extends React.PureComponent<Props> {
       style,
       multiline,
       columns,
+      columnKeys,
       columnSizes,
       onMouseEnter,
       onMouseDown,
       zebra,
       onAddFilter,
     } = this.props
-    const columnKeys = Object.keys(columns)
-
     return (
       <TableBodyRowContainer
         rowLineHeight={rowLineHeight}
@@ -142,7 +143,7 @@ export class TableRow extends React.PureComponent<Props> {
           if (col.type === 'date') {
             element = (
               <SimpleText ellipse>
-                <DateFormat date={new Date(value)} />
+                <DateFormat date={value} />
               </SimpleText>
             )
           } else {

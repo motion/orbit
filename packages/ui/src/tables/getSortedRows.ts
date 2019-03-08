@@ -19,12 +19,14 @@ export function getSortedRows(maybeSortOrder: TableRowSortOrder, rows: TableRows
   }
 
   let sortedRows = rows.sort((a, b) => {
-    const aVal = a.columns[sortOrder.key].sortValue
-    const bVal = b.columns[sortOrder.key].sortValue
+    const aVal = a.values[sortOrder.key]
+    const bVal = b.values[sortOrder.key]
     if (typeof aVal === 'string' && typeof bVal === 'string') {
       return aVal.localeCompare(bVal)
     } else if (typeof aVal === 'number' && typeof bVal === 'number') {
       return aVal - bVal
+    } else if (aVal instanceof Date && bVal instanceof Date) {
+      return aVal.getTime() - bVal.getTime()
     } else {
       console.error('Unsure how to sort this')
       return 0

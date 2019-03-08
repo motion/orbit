@@ -21,3 +21,24 @@ Goal by end of March
 - initial syncing of config p2p
 - onboarding
 - postgres example
+
+---
+
+Invidivual app improvements:
+
+- Search
+
+  - Filters can be moved into <Search.Settings /> + <Lists />
+    - and made to work nicely together / with query bar
+
+- People:
+
+  - <People.Settings /> should let you manage people
+    - Could let you just choose sources that sync people
+
+- Lists:
+  - Need to make <Stack /> <ListStack /> work
+  - Then make <TreeList /> work
+  - Then link back into lists app and make delete/sort work
+  - Then make editing titles work
+  - Then make main views quite a bit better

@@ -7,6 +7,7 @@
 
 import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
+import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { DateFormat } from '../text/DateFormat'
 import FilterRow from './FilterRow'
 import {
@@ -146,6 +147,8 @@ export class TableRow extends React.PureComponent<Props> {
                 <DateFormat date={value} />
               </SimpleText>
             )
+          } else if (col.type === 'boolean') {
+            element = <CheckboxReactive isActive={() => value} />
           } else {
             element = <SimpleText>{value}</SimpleText>
           }

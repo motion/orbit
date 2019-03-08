@@ -21,7 +21,10 @@ export function getSortedRows(maybeSortOrder: TableRowSortOrder, rows: TableRows
   let sortedRows = rows.sort((a, b) => {
     const aVal = a.values[sortOrder.key]
     const bVal = b.values[sortOrder.key]
-    if (typeof aVal === 'string' && typeof bVal === 'string') {
+    console.log(a, sortOrder.key)
+    if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
+      return aVal === true && bVal === false ? 1 : -1
+    } else if (typeof aVal === 'string' && typeof bVal === 'string') {
       return aVal.localeCompare(bVal)
     } else if (typeof aVal === 'number' && typeof bVal === 'number') {
       return aVal - bVal

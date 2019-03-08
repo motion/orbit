@@ -12,7 +12,8 @@ const rows = [...new Array(10000)].map((_, index) => ({
     name: faker.name.firstName(),
     topic: faker.lorem.sentence(),
     members: faker.random.number(),
-    created: new Date(faker.date.past() * 1000),
+    createdAt: new Date(faker.date.past() * 1000),
+    active: false,
   },
 }))
 

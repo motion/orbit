@@ -32,6 +32,12 @@ Goal by end of April
 
 ---
 
+Goal by end of May
+
+- Distribute a beta with basic custom editing apps
+
+---
+
 Invidivual app improvements:
 
 - Search

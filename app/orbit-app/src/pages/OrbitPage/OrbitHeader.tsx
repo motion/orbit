@@ -241,7 +241,7 @@ const LaunchButton = memo(() => {
       width={50}
     >
       {!isHovered ? (
-        <Icon name="arrows-e_share-26" size={11} transform={{ x: -1.5 }} />
+        <Icon name="arrows-e_share-26" size={11} />
       ) : (
         <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
           Open

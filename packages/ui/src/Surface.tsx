@@ -13,10 +13,11 @@ import {
   View,
 } from '@o/gloss'
 import { selectDefined } from '@o/utils'
-import * as React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { ConfiguredIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
@@ -85,11 +86,18 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     iconPad?: number
   }
 
-export const Surface = React.memo(function Surface(props: SurfaceProps) {
-  const crumb = useBreadcrumb()
-  const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
+// const proxyGet = (a: any, b: any) =>
+//   new Proxy(a, {
+//     get: (_, k) => (Reflect.has(a, k) ? a[k] : b[k]),
+//   })
 
-  React.useEffect(() => {
+export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
+  const extraProps = useContext(SurfacePropsContext)
+  const props = extraProps ? { ...extraProps, ...rawProps } : rawProps
+  const crumb = useBreadcrumb()
+  const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+
+  useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
     setTooltipState({ id, show: false })
     let tm = setTimeout(() => {
@@ -225,7 +233,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  const element = (
+  let element = (
     <BreadcrumbReset>
       <SurfaceFrame
         ref={forwardRef}
@@ -236,7 +244,14 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     </BreadcrumbReset>
   )
 
-  return forwardTheme({ children: element, theme })
+  element = forwardTheme({ children: element, theme })
+
+  // dont nest PassProps, use once and clear context below
+  if (extraProps) {
+    return <SurfacePropsContext.Provider value={null}>{element}</SurfacePropsContext.Provider>
+  }
+
+  return element
 })
 
 // fontFamily: inherit on both fixes elements
@@ -387,4 +402,10 @@ export function getSurfaceShadow(elevation: number) {
     return null
   }
   return [elevatedShadow(elevation) as any]
+}
+
+const SurfacePropsContext = React.createContext(null)
+
+export function SurfacePassProps(props: SurfaceProps) {
+  return <SurfacePropsContext.Provider value={props}>{props.children}</SurfacePropsContext.Provider>
 }

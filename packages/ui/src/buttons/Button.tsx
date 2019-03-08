@@ -18,23 +18,10 @@ const activeStyle = {
   opacity: 0.8,
 }
 
-function ButtonInner({
-  badge,
-  children,
-  chromeless,
-  type,
-  glow,
-  badgeProps,
-  elementProps,
-  opacity,
-  disabled,
-  forwardRef,
-  ...props
-}: ButtonProps) {
+function ButtonInner({ children, elementProps, disabled, ...props }: ButtonProps) {
   const theme = useTheme()
   return (
     <SizedSurface
-      forwardRef={forwardRef}
       themeSelect="button"
       tagName="button"
       alignItems="center"
@@ -43,7 +30,6 @@ function ButtonInner({
       outline="0"
       cursor="default"
       elementProps={elementProps}
-      type={type}
       clickable
       sizeFont
       sizePadding
@@ -52,10 +38,7 @@ function ButtonInner({
       sizeLineHeight
       justifyContent="center"
       borderWidth={selectDefined(theme.borderWidth, 1)}
-      chromeless={chromeless}
-      glow={glow}
       glint
-      opacity={disabled ? 0.5 : opacity}
       pointerEvents={disabled ? 'none' : undefined}
       activeStyle={activeStyle}
       glowProps={glowProps}

@@ -1,7 +1,7 @@
 import { Absolute, Row } from '@o/gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
-import { PassProps } from '../helpers/passProps'
+import { SurfacePassProps } from '../Surface'
 import { Input, InputProps } from './Input'
 
 export function InputRow({ buttons, ...props }: InputProps & { buttons: React.ReactNode }) {
@@ -19,9 +19,9 @@ export function InputRow({ buttons, ...props }: InputProps & { buttons: React.Re
       />
       <Absolute top={0} right={12} bottom={0}>
         <Row flex={1} alignItems="center">
-          <PassProps chromeless opacity={0.35} hoverOpacity={1}>
+          <SurfacePassProps chromeless opacity={0.35} hoverStyle={{ opacity: 1 }}>
             {buttons}
-          </PassProps>
+          </SurfacePassProps>
         </Row>
       </Absolute>
     </Row>

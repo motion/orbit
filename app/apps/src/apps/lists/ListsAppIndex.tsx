@@ -79,14 +79,6 @@ export function ListsAppIndex() {
   )
 }
 
-// const addFolder = (store: ListStore) => {
-//   // API.receive(store.app, store.parentId, {
-//   //   target: 'folder',
-//   //   name: store.query,
-//   // })
-//   store.setQuery('')
-// }
-
 // for <TreeList />
 // getContextMenu={index => {
 //   return [

@@ -26,20 +26,20 @@ const channels = [...new Array(10000)].map(() => ({
 }))
 
 const treeData = {
-  '0': {
-    id: '0',
+  0: {
+    id: 0,
     name: 'Root Item',
     expanded: true,
-    children: ['1', '2'],
+    children: [1, 2],
   },
-  '1': {
-    id: '1',
+  1: {
+    id: 1,
     name: 'test one',
     expanded: false,
     children: [],
   },
-  '2': {
-    id: '2',
+  2: {
+    id: 2,
     name: 'test two',
     expanded: false,
     children: [],
@@ -121,7 +121,7 @@ export function CustomAppMain(_props: AppProps) {
           </Section>
 
           <Tree
-            root="0"
+            root={0}
             onTreeItemSelected={id => {
               console.log('select', id)
             }}

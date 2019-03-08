@@ -8,6 +8,8 @@ export function useEnsureDefaultAppState<A>(subSelect: string, ensure: A) {
       if (!state) return
       if (state.data[subSelect]) return
 
+      console.log('it is', JSON.stringify({ state, subSelect }))
+
       // ensure default
       state.data[subSelect] = ensure
       console.log('updating app default state', ensure, subSelect, update)

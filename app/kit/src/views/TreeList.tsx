@@ -8,9 +8,7 @@ import {
   TreeItems,
   useMemoGetValue,
 } from '@o/ui'
-import { useHook, useStore } from '@o/use-store'
-import { dropRight, last } from 'lodash'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useIsAppActive } from '../hooks/useIsAppActive'
 import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
 import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
@@ -59,7 +57,7 @@ const getActions = (
       update(state)
     },
     currentFolder() {
-      return userState()[0].currentFolder
+      return userState()[0].currentFolder || 0
     },
     selectFolder(id: number) {
       const [state, update] = userState()
@@ -98,57 +96,41 @@ export function useTreeList(subSelect: string): UseTreeList {
   }
 }
 
-export class TreeListStore {
-  stores = useHook(useStoresSimple)
-  props: {
-    getItems: (id?: number) => Object
-  }
-
-  selectedIndex = 0
-  depth = 0
-  history = [0]
-
-  onChange = (depth, history) => {
-    this.depth = depth
-    this.history = history
-  }
-
-  loadItemProps = async (ids: SelectableTreeItem[]): Promise<ListItemProps[]> => {
-    const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
-    this.stores.appStore.setCurrentItems(bits)
-    return []
-  }
-
-  get parentId() {
-    return last(this.history)
-  }
-
-  get currentFolder() {
-    return this.props.getItems()[this.parentId]
-  }
-
-  get selectedItem() {
-    if (!this.currentFolder) {
-      return null
-    }
-    const id = this.currentFolder.children[this.selectedIndex]
-    return this.props.getItems()[id]
-  }
-
-  back = () => {
-    this.depth--
-    this.history = dropRight(this.history)
-  }
-}
-
 export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: TreeListProps) {
+  const stores = useStoresSimple()
   const isActive = useIsAppActive()
-  const getItems = useMemoGetValue(props.items)
-  const treeListStore = useStore(TreeListStore, { getItems })
 
   if (!props.items) {
     return null
   }
+
+  console.warn('render trelist', props)
+
+  const loadItemProps = useCallback(async (ids: SelectableTreeItem[]): Promise<ListItemProps[]> => {
+    console.log('loading item props', ids)
+    const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
+    stores.appStore.setCurrentItems(bits)
+    return []
+  }, [])
+
+  // const activeIndex = useRef(-1)
+  // useEffect(
+  //   () => {
+  //     if (stores.shortcutStore) {
+  //       return stores.shortcutStore.onShortcut(shortcut => {
+  //         switch (shortcut) {
+  //           case 'left':
+  //             store.back()
+  //             return
+  //           case 'right':
+  //             store.handleOpen(activeIndex.current)
+  //             break
+  //         }
+  //       })
+  //     }
+  //   },
+  //   [stores],
+  // )
 
   // onSelect={index => {
   //   console.log('ON SELECT', index)
@@ -169,12 +151,7 @@ export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: Tre
 
   return (
     <HighlightActiveQuery query={query}>
-      <SelectableTreeList
-        allowMeasure={isActive}
-        loadItemProps={treeListStore.loadItemProps}
-        onChangeDepth={treeListStore.onChange}
-        {...props}
-      />
+      <SelectableTreeList allowMeasure={isActive} loadItemProps={loadItemProps} {...props} />
     </HighlightActiveQuery>
   )
 }

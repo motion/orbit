@@ -1,7 +1,7 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, WhitelistManager } from '@o/kit'
+import { AppProps, Table, WhitelistManager } from '@o/kit'
 import { AppModel, GithubRepositoryModel } from '@o/models'
-import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@o/ui'
+import { CheckboxReactive, DateFormat, Text, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -73,44 +73,24 @@ export default function GithubSettings({ subId }: AppProps) {
         opacity={whitelist.isWhitelisting ? 0.5 : 1}
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
-        <SearchableTable
-          virtual
-          rowLineHeight={28}
-          floating={false}
-          columnSizes={{
-            repo: 'flex',
-            org: 'flex',
-            lastCommit: '20%',
-            numIssues: '17%',
-            active: '13%',
-          }}
+        <Table
           columns={{
             repo: {
               value: 'Repository',
-              sortable: true,
-              resizable: true,
             },
             org: {
               value: 'Organization',
-              sortable: true,
-              resizable: true,
             },
             lastCommit: {
               value: 'Last Commit',
-              sortable: true,
-              resizable: true,
             },
             numIssues: {
               value: 'Open Issues',
-              sortable: true,
-              resizable: true,
             },
             active: {
               value: 'Active',
-              sortable: true,
             },
           }}
-          // onRowsHighlighted={this.onRowsHighlighted}
           sortOrder={sortOrder}
           onSort={setSortOrder}
           multiHighlight
@@ -153,11 +133,6 @@ export default function GithubSettings({ subId }: AppProps) {
               },
             }
           })}
-          bodyPlaceholder={
-            <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>{repositories ? 'No repositories found' : 'Loading...'}</Text>
-            </div>
-          }
         />
       </View>
     </>

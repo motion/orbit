@@ -1,7 +1,7 @@
 import { useModel } from '@o/bridge'
-import { AppProps } from '@o/kit'
+import { AppProps, Table } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { CheckboxReactive, SearchableTable, Text, View } from '@o/ui'
+import { CheckboxReactive, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
@@ -49,23 +49,13 @@ export function DriveSettings({ subId }: AppProps) {
     <>
       <SettingManageRow app={app} whitelist={null} />
       <View flex={1} opacity={1}>
-        <SearchableTable
-          virtual
-          rowLineHeight={28}
-          floating={false}
-          columnSizes={{
-            name: 'flex',
-            active: '14%',
-          }}
+        <Table
           columns={{
             name: {
               value: 'Folder Name',
-              sortable: true,
-              resizable: true,
             },
             active: {
               value: 'Active',
-              sortable: true,
             },
           }}
           multiHighlight
@@ -84,11 +74,6 @@ export function DriveSettings({ subId }: AppProps) {
               },
             }
           })}
-          bodyPlaceholder={
-            <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>Loading...</Text>
-            </div>
-          }
         />
       </View>
     </>

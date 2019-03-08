@@ -15,7 +15,7 @@ import { TableBodyRow, TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
   Partial<SearchableProps> & {
-    defaultFilters: TableFilter[]
+    defaultFilters?: TableFilter[]
     filter?: any
     filterValue?: any
   }

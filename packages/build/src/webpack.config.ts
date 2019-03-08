@@ -1,6 +1,7 @@
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
+import { readJSONSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
@@ -91,20 +92,13 @@ const alias = {
   lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
 }
 
-// console.log('alias', alias)
-
-const mcroClientOnly = {
-  include: [
-    Path.resolve(cwd, 'src'),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'kit-internal', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'gloss', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'ui', 'src')),
-    Fs.realpathSync(Path.resolve(cwd, 'node_modules', '@o', 'apps', 'src')),
-  ],
+let tsEntries = [Path.resolve(cwd, 'src')]
+const packageJSON = readJSONSync(Path.join(cwd, 'package.json'))
+if (packageJSON.tsEntries) {
+  tsEntries = packageJSON.tsEntries.map(moduleName => {
+    return Fs.realpathSync(Path.resolve(cwd, 'node_modules', moduleName, 'src'))
+  })
 }
-
-console.log('mcroClientOnly', mcroClientOnly)
 
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
@@ -115,6 +109,8 @@ const babelrcOptions = {
 }
 
 console.log('babelrcOptions', babelrcOptions)
+
+const tsmain = packageJSON.tsEntries ? ['ts:main'] : []
 
 const config = {
   target,
@@ -152,7 +148,7 @@ const config = {
   devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    mainFields: isProd ? ['ts:main', 'module', 'browser', 'main'] : ['ts:main', 'browser', 'main'],
+    mainFields: isProd ? [...tsmain, 'module', 'browser', 'main'] : [...tsmain, 'browser', 'main'],
     // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
     alias,
   },
@@ -178,6 +174,7 @@ const config = {
       },
       {
         test: /\.tsx?$/,
+        include: tsEntries,
         use: [
           'thread-loader',
           {
@@ -193,7 +190,6 @@ const config = {
           },
           'react-hot-loader/webpack',
         ],
-        ...mcroClientOnly,
       },
       {
         test: /\.css$/,

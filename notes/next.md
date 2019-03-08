@@ -24,6 +24,14 @@ Goal by end of March
 
 ---
 
+Goal by end of April
+
+- Website launch
+- Documentation as well
+- .app working with basic apps
+
+---
+
 Invidivual app improvements:
 
 - Search

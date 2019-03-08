@@ -12,7 +12,7 @@ import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
   TableBodyRow,
-  TableColumnKeys,
+  TableColumns,
   TableColumnSizes,
   TableOnAddFilter,
 } from './types'
@@ -74,7 +74,7 @@ const TableBodyColumnContainer = gloss({
 
 type Props = {
   columnSizes: TableColumnSizes
-  columnKeys: TableColumnKeys
+  columns: TableColumns
   onMouseDown: (e: React.MouseEvent) => any
   onMouseEnter?: (e: React.MouseEvent) => void
   multiline?: boolean
@@ -100,13 +100,14 @@ export class TableRow extends React.PureComponent<Props> {
       row,
       style,
       multiline,
-      columnKeys,
+      columns,
       columnSizes,
       onMouseEnter,
       onMouseDown,
       zebra,
       onAddFilter,
     } = this.props
+    const columnKeys = Object.keys(columns)
 
     return (
       <TableBodyRowContainer
@@ -125,27 +126,20 @@ export class TableRow extends React.PureComponent<Props> {
         {...row.style}
       >
         {columnKeys.map(key => {
-          const col = row.columns[key]
+          const value = row.values[key]
+          const col = columns[key]
+          // TODO we could let them configure but seems weird, when do they want an "unfilterable" row?
+          const isFilterable = true
 
           if (col == null) {
             throw new Error(
               `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
             )
           }
-          const isFilterable = col.isFilterable || false
-          const value = col ? col.value : ''
-          const title = col ? col.title : ''
-          const type = col ? col.type : ''
 
           let element: React.ReactNode = null
 
-          if (isFilterable && onAddFilter != null) {
-            element = (
-              <FilterRow addFilter={onAddFilter} filterKey={key}>
-                <SimpleText>{value}</SimpleText>
-              </FilterRow>
-            )
-          } else if (type === 'date') {
+          if (col.type === 'date') {
             element = (
               <SimpleText ellipse>
                 <DateFormat date={new Date(value)} />
@@ -155,10 +149,17 @@ export class TableRow extends React.PureComponent<Props> {
             element = <SimpleText>{value}</SimpleText>
           }
 
+          if (isFilterable && onAddFilter != null) {
+            element = (
+              <FilterRow addFilter={onAddFilter} filterKey={key}>
+                {element}
+              </FilterRow>
+            )
+          }
+
           return (
             <TableBodyColumnContainer
               key={key}
-              title={title}
               multiline={multiline}
               width={normaliseColumnWidth(columnSizes[key])}
             >

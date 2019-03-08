@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect } from 'react'
 import { useStores } from '../helpers/useStores'
 import { useMemoGetValue } from '../hooks/useMemoGetValue'
 import { usePropsWithMemoFunctions } from '../hooks/usePropsWithMemoFunctions'
+import { TreeItem } from '../Tree'
 import { Omit } from '../types'
 import { ListItemProps } from './ListItem'
 import { SelectableList, SelectableListProps } from './SelectableList'
@@ -10,12 +11,12 @@ import { SelectionStore } from './SelectionStore'
 
 // TODO we have similar but not aligned types with Tree.tsx
 
-type BaseTreeItem = { id: string | number; type: string; name?: string }
+type BaseTreeItem = { id: number; type?: string; name?: string }
 type TreeItemFolder = BaseTreeItem & { type: 'folder'; name?: string; children: number[] }
 
 export type SelectableTreeItem = BaseTreeItem | TreeItemFolder
 
-export type TreeItems = { [key: string]: SelectableTreeItem }
+export type TreeItems = { [key: number]: TreeItem }
 
 export type SelectableTreeListProps = Omit<SelectableListProps, 'items'> & {
   rootItemID?: number

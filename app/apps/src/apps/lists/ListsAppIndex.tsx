@@ -9,6 +9,8 @@ export function ListsAppIndex() {
   const [addQuery, setAddQuery] = useState('')
   const [showSearch, toggleShowSearch] = useToggle(false)
 
+  console.log('treeList', treeList)
+
   const searchResults = useReaction(
     async (_, { sleep }) => {
       ensure('query', !!addQuery)

@@ -31,7 +31,7 @@ export type TreeListProps = Omit<
 }
 
 type TreeState = { rootItemID: number; items: TreeItems }
-type TreeUserState = { depth?: number; currentFolder?: any[] }
+type TreeUserState = { depth?: number; currentFolder?: number }
 
 const defaultState = {
   rootItemID: 0,
@@ -46,18 +46,35 @@ const defaultState = {
 }
 
 const getActions = (
-  ts: () => ScopedAppState<TreeState>,
-  us: () => ScopedUserState<TreeUserState>,
+  treeState: () => ScopedAppState<TreeState>,
+  userState: () => ScopedUserState<TreeUserState>,
 ) => {
-  return {
+  const Actions = {
     addFolder(name?: string) {
-      console.log(name, us(), ts())
+      const [state, update] = treeState()
+      const curId = Actions.currentFolder()
+      const id = Math.random()
+      state.items[curId].children.push(id)
+      state.items[id] = { id, name, type: 'folder', children: [] }
+      update(state)
     },
-    selectFolder() {
-      console.log(us(), ts())
+    currentFolder() {
+      return userState()[0].currentFolder
     },
-    back() {},
+    selectFolder(id: number) {
+      const [state, update] = userState()
+      state.currentFolder = id
+      update(state)
+    },
+    back() {
+      const [state, update] = userState()
+      if (state.depth > 0) {
+        state.depth--
+        update(state)
+      }
+    },
   }
+  return Actions
 }
 
 type UseTreeList = {
@@ -69,14 +86,14 @@ type UseTreeList = {
 export function useTreeList(subSelect: string): UseTreeList {
   const ts = useScopedAppState<TreeState>(subSelect, defaultState)
   const us = useScopedUserState(`${subSelect}_treeState`, {
-    currentFolder: null,
+    currentFolder: 0,
   })
   const getTs = useMemoGetValue(ts)
   const getUs = useMemoGetValue(us)
   const actions = useMemo(() => getActions(getTs, getUs), [])
   return {
     state: ts[0],
-    userState: us[0].currentFolder,
+    userState: us[0],
     actions,
   }
 }

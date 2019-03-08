@@ -8,10 +8,10 @@ import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
-import { itemViewsListItem } from './itemViews'
+import { listItemDecorators } from './itemViews'
 
-type OrbitItemComponent = React.FunctionComponent<OrbitItemViewProps> & {
-  itemProps?: OrbitItemViewProps
+export type ListItemComponent = React.FunctionComponent<OrbitItemViewProps> & {
+  getItemProps?: (item: any) => OrbitListItemProps
 }
 
 export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
@@ -33,14 +33,24 @@ export const ListItem = memo(
     const { appStore, selectionStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
-    let ItemView: OrbitItemComponent = null
+    let ItemView: ListItemComponent = null
     let itemProps: Partial<ListItemProps> = null
     let normalized: NormalItem = null
+    let getItemProps = null
 
     if (item && item.target) {
       normalized = normalizeItem(item)
       itemProps = getNormalPropsForListItem(normalized)
-      ItemView = itemViewsListItem[item.type]
+
+      // TODO this could be better
+      const decorator = listItemDecorators[item.type]
+      if (decorator) {
+        if (typeof decorator === 'function') {
+          ItemView = decorator.View
+        } else {
+          getItemProps = decorator.getItemProps
+        }
+      }
     }
 
     const icon =
@@ -59,22 +69,15 @@ export const ListItem = memo(
       <UIListItem
         searchTerm={props.query}
         subtitleSpaceBetween={spaceBetween}
-        {...ItemView && ItemView.itemProps}
         {...itemProps}
         isSelected={getIsSelected}
         {...props}
         icon={icon}
         date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
         location={normalized ? normalized.location : props.location}
+        {...getItemProps && getItemProps(item)}
       >
-        {!!ItemView && (
-          <ItemView
-            item={item}
-            normalizedItem={normalized}
-            {...ItemView.itemProps}
-            {...itemViewProps}
-          />
-        )}
+        {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
         {showPeople && (
           <Bottom>
             <PersonRow people={people} />

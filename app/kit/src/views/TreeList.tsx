@@ -1,27 +1,17 @@
-import { loadMany } from '@o/bridge'
-import { BitModel } from '@o/models'
-import {
-  ListItemProps,
-  SelectableTreeItem,
-  SelectableTreeList,
-  SelectableTreeListProps,
-  TreeItems,
-  useMemoGetValue,
-} from '@o/ui'
-import React, { useCallback, useMemo } from 'react'
-import { useIsAppActive } from '../hooks/useIsAppActive'
+import { ListItemProps, SelectableListProps, TreeItem, useMemoGetValue } from '@o/ui'
+import React, { useMemo } from 'react'
 import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
 import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
-import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { HandleOrbitSelect } from './List'
 
-export type TreeListProps = Omit<
-  SelectableTreeListProps,
-  'onSelect' | 'onOpen' | 'loadItemProps'
-> & {
-  loadItemProps?: SelectableTreeListProps['loadItemProps']
+type TreeItems = { [key: number]: TreeItem }
+
+export type TreeListProps = Omit<SelectableListProps, 'items'> & {
+  items: TreeItems
+  rootItemID?: number
+  getItemProps?: (items: TreeItem[]) => Promise<ListItemProps[]>
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
@@ -97,8 +87,8 @@ export function useTreeList(subSelect: string): UseTreeList {
 }
 
 export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: TreeListProps) {
-  const stores = useStoresSimple()
-  const isActive = useIsAppActive()
+  // const stores = useStoresSimple()
+  // const isActive = useIsAppActive()
 
   if (!props.items) {
     return null
@@ -106,12 +96,11 @@ export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: Tre
 
   console.warn('render trelist', props)
 
-  const loadItemProps = useCallback(async (ids: SelectableTreeItem[]): Promise<ListItemProps[]> => {
-    console.log('loading item props', ids)
-    const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
-    stores.appStore.setCurrentItems(bits)
-    return []
-  }, [])
+  // const getItemProps = useCallback(async (ids: TreeItem[]): Promise<ListItemProps[]> => {
+  //   console.log('loading item props', ids)
+  //   const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
+  //   return bits.map(toListItemProps)
+  // }, [])
 
   // const activeIndex = useRef(-1)
   // useEffect(
@@ -151,7 +140,7 @@ export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: Tre
 
   return (
     <HighlightActiveQuery query={query}>
-      <SelectableTreeList allowMeasure={isActive} loadItemProps={loadItemProps} {...props} />
+      {/* <ListStack allowMeasure={isActive} {...props} /> */}
     </HighlightActiveQuery>
   )
 }

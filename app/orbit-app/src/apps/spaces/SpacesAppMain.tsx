@@ -5,7 +5,7 @@ import { SpacesAppNewSpace } from './SpacesAppNewSpace'
 
 export default function SpacesAppMain(props: AppProps) {
   if (props.subType === 'new-space') {
-    return <SpacesAppNewSpace {...props} />
+    return <SpacesAppNewSpace />
   }
 
   return <SpacesAppEdit {...props} />

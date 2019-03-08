@@ -152,12 +152,12 @@ export class DatabaseManager {
       await getRepository(SpaceEntity).save([
         {
           name: 'Orbit',
-          paneSort: [1, 2, 3],
+          paneSort: [],
           colors: ['#CACCAC', '#270769'],
         },
         {
           name: 'Me',
-          paneSort: [1, 2, 3],
+          paneSort: [],
           colors: ['#ACEACE', '#D48D48'],
         },
       ])

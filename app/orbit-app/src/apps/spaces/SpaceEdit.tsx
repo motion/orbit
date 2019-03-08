@@ -1,0 +1,97 @@
+import { OrbitOrb, useAppDefinitions, useAppsForSpace } from '@o/kit'
+import { Space } from '@o/models'
+import {
+  Col,
+  FormField,
+  HorizontalSpace,
+  InputField,
+  ListItem,
+  Paragraph,
+  Row,
+  Theme,
+  Title,
+  VerticalSpace,
+} from '@o/ui'
+import { pick } from 'lodash'
+import randomColor from 'randomcolor'
+import * as React from 'react'
+import { HorizontalScroll } from '../../views'
+import { ColorPicker } from '../../views/ColorPicker'
+import { SubSection } from '../../views/SubSection'
+import { getApps } from '../orbitApps'
+
+const defaultColors = randomColor({ count: 2, luminosity: 'dark' })
+const appOrDefToDesc = x => pick(x, ['name', 'id', 'identifier'])
+
+export function SpaceEdit({ space }: { space: Space }) {
+  if (!space) return null
+  const appDefs = getApps()
+
+  // TODO x.auth check instead
+  const apps = space.id
+    ? useAppsForSpace(+space.id)
+        .filter(app => {
+          const def = appDefs.find(x => x.id === app.identifier)
+          return def && !!def.sync
+        })
+        .map(appOrDefToDesc)
+    : useAppDefinitions()
+        .filter(x => !!x.sync)
+        .map(appOrDefToDesc)
+  const [colors, setColors] = React.useState(space.colors || defaultColors)
+
+  return (
+    <>
+      <Title>{space.name}</Title>
+
+      <SubSection title="General">
+        <Paragraph>Customize your space appearance.</Paragraph>
+
+        <InputField
+          label="Name"
+          placeholder="Name..."
+          onChange={e => {
+            console.log('change name', e)
+            // update name...
+          }}
+        />
+
+        <FormField label="Theme">
+          <Row alignItems="center" overflow="hidden" flex={1}>
+            <OrbitOrb size={48} colors={colors} />
+            <HorizontalSpace />
+            <Col flex={1}>
+              <HorizontalScroll height={30}>
+                <ColorPicker
+                  count={50}
+                  activeColor={colors[0]}
+                  onChangeColor={x => setColors([x, colors[1]])}
+                />
+              </HorizontalScroll>
+              <VerticalSpace small />
+              <HorizontalScroll height={30}>
+                <ColorPicker
+                  count={50}
+                  activeColor={colors[1]}
+                  onChangeColor={x => setColors([colors[0], x])}
+                />
+              </HorizontalScroll>
+            </Col>
+          </Row>
+        </FormField>
+      </SubSection>
+
+      <VerticalSpace />
+
+      <SubSection title="Authentication">
+        <Paragraph>Choose which source grants access to this space.</Paragraph>
+
+        {(apps || []).map((int, index) => (
+          <Theme key={int.id} name={index === 0 ? 'selected' : null}>
+            <ListItem icon={int.identifier} title={int.name} />
+          </Theme>
+        ))}
+      </SubSection>
+    </>
+  )
+}

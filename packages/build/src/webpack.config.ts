@@ -95,10 +95,15 @@ const alias = {
 let tsEntries = [Path.resolve(cwd, 'src')]
 const packageJSON = readJSONSync(Path.join(cwd, 'package.json'))
 if (packageJSON.tsEntries) {
-  tsEntries = packageJSON.tsEntries.map(moduleName => {
-    return Fs.realpathSync(Path.resolve(cwd, 'node_modules', moduleName, 'src'))
-  })
+  tsEntries = [
+    ...tsEntries,
+    ...packageJSON.tsEntries.map(moduleName => {
+      return Fs.realpathSync(Path.resolve(cwd, 'node_modules', moduleName, 'src'))
+    }),
+  ]
 }
+
+console.log('tsEntries', tsEntries)
 
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),

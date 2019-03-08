@@ -5,10 +5,6 @@
   "scripts": {
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
-  "hotModules": [
-    "@o/gloss",
-    "@o/ui"
-  ],
   "dependencies": {
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",

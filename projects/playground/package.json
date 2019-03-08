@@ -6,9 +6,12 @@
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
+    "@react-navigation/core": "3.0.2",
+    "@react-navigation/web": "1.0.0-alpha.7",
     "@babel/core": "7.2.0",
     "@babel/runtime": "7.2.0",
     "@o/ui": "^2.4.0",
+    "@o/gloss": "^2.4.0",
     "@o/use-store": "^2.4.0",
     "core-js": "2.6.5",
     "lodash": "^4.17.10",

@@ -1,26 +1,13 @@
 NEXT
 
-After this we will move into new data sources, first up, Postgres:
+Queryable:
 
-- Postgres App with Query API
-- We need a fake local postgres we can all test against, in the app
-  - Set up on bootstrap
-  - Runs alongside the app for now
-  - Show working Query on client side just from REPL
+1. Make Slack API accessible we can do CRUD actions on
+2. Make Gmail, Github as well
+3. THEN do postgres (since its new) (with docker image to test internally)
 
-Notes:
+Umed, your long term goal is basically to get a bunch of integrations really nicely working, as consistently as possible. Just go one at a time and we can discuss as we go.
 
-We need to figure out how to do this fairly similary across any type of data source.
+Here's a great reference for them:
 
-Found this:
-
-- https://github.com/dbohdan/automatic-api
-
-Question is do we want to go graphql based? It has some upsides and downsides...
-
----
-
-- types: models/entities dont have required types, can we make that enforced?
-  - AppBit should have required types: identifier, spaceId, name
-- bugfix: if you rm sqlite database, then startup, it gives a sql error first time
-- Turn on strict null checks in TS and fix so we can use it going forward
+https://tryretool.com/integrations

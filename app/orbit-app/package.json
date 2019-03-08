@@ -12,6 +12,13 @@
     "deploy": "./scripts/deploy.sh",
     "test-electron": "electron ./scripts/test-electron.js"
   },
+  "tsEntries": [
+    "@o/kit",
+    "@o/kit-internal",
+    "@o/gloss",
+    "@o/ui",
+    "@o/apps"
+  ],
   "dependencies": {
     "@babel/runtime": "7.2.0",
     "@mcro/react-hotkeys": "1.1.5",

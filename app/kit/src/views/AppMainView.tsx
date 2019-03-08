@@ -7,7 +7,6 @@ export function AppMainView(props: AppProps) {
     console.debug('no app id given', props)
     return null
   }
-  console.log('wut', props)
   return (
     <AppView
       key={JSON.stringify(props)}

@@ -12,7 +12,7 @@ import { DateFormat } from '../text/DateFormat'
 import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
-  TableBodyRow,
+  GenericDataRow,
   TableColumnKeys,
   TableColumns,
   TableColumnSizes,
@@ -83,7 +83,7 @@ type Props = {
   multiline?: boolean
   rowLineHeight: number
   highlighted: boolean
-  row: TableBodyRow
+  row: GenericDataRow
   index: number
   style?: Object
   onAddFilter?: TableOnAddFilter

@@ -1,9 +1,10 @@
-import { ManagedTable, SearchableTable, SearchableTableProps } from '@o/ui'
-import React from 'react'
+import { ManagedTable, SearchableTable, SearchableTableProps, useMemoGetValue } from '@o/ui'
+import React, { useCallback } from 'react'
 import { Icon } from './Icon'
 
 export type TableProps = SearchableTableProps & {
   searchable?: boolean
+  onHighlightedRows?: (rows: any[]) => void
 }
 
 const defaultRowTypes = {
@@ -64,12 +65,33 @@ function addDefaults<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ searchable, columns, ...props }: TableProps) {
+export function Table({ searchable, columns, onHighlightedRows, ...props }: TableProps) {
   const columnsWithDefaults = addDefaults(columns, defaultColumns)
+  const ogOnHighlightedIndices = useMemoGetValue(props.onHighlightedIndices)
+  const onHighlightedIndices = useCallback(keys => {
+    if (onHighlightedRows) {
+      onHighlightedRows(keys.map(key => props.rows.find(x => x.key === key)))
+    }
+    if (ogOnHighlightedIndices()) {
+      ogOnHighlightedIndices()(keys)
+    }
+  }, [])
 
   if (searchable) {
-    return <SearchableTable columns={columnsWithDefaults} {...props} />
+    return (
+      <SearchableTable
+        columns={columnsWithDefaults}
+        {...props}
+        onHighlightedIndices={onHighlightedIndices}
+      />
+    )
   } else {
-    return <ManagedTable columns={columnsWithDefaults} {...props} />
+    return (
+      <ManagedTable
+        columns={columnsWithDefaults}
+        {...props}
+        onHighlightedIndices={onHighlightedIndices}
+      />
+    )
   }
 }

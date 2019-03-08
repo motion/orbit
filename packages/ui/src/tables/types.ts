@@ -1,3 +1,5 @@
+import { GenericDataRow } from '../types'
+
 /**
  * Copyright 2018-present Facebook.
  * This source code is licensed under the MIT license found in the
@@ -47,9 +49,9 @@ export type TableColumnSizes = {
   [key: string]: string | number
 }
 
-export type TableHighlightedRows = Array<string>
+export type TableHighlightedRows = string[]
 
-export type TableColumnKeys = Array<string>
+export type TableColumnKeys = string[]
 
 export type TableOnColumnResize = (sizes: TableColumnSizes) => void
 export type TableOnColumnOrder = (order: TableColumnOrder) => void
@@ -64,26 +66,6 @@ export type TableHeaderColumn = {
   type?: 'date' | 'number' | 'string' | 'boolean' | null
 }
 
-export type TableBodyRow = {
-  key: string
-  height?: number | void
-  type?: string
-  filterValue?: string | void
-  backgroundColor?: string | void
-  sortKey?: string | number
-  style?: Object
-  highlightedBackgroundColor?: string | void
-  onDoubleClick?: (e: MouseEvent) => void
-  copyText?: string
-  highlightOnHover?: boolean
-  values: {
-    [key: string]: any
-  }
-  // columns: {
-  //   [key: string]: TableBodyColumn
-  // }
-}
-
 export type TableBodyColumn = {
   sortValue?: string | number | boolean
   isFilterable?: boolean
@@ -96,7 +78,7 @@ export type TableColumns = {
   [key: string]: TableHeaderColumn
 }
 
-export type TableRows = Array<TableBodyRow>
+export type TableRows = GenericDataRow[]
 
 export type TableRowSortOrder = {
   key: string

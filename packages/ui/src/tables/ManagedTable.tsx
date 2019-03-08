@@ -13,12 +13,12 @@ import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { ResizeObserver } from '../ResizeObserver'
 import { Text } from '../text/Text'
+import { GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
 import {
   DEFAULT_ROW_HEIGHT,
-  TableBodyRow,
   TableColumnOrder,
   TableColumns,
   TableColumnSizes,
@@ -61,7 +61,7 @@ const clipboard = Electron.clipboard
 const filterRows = (
   rows: TableRows,
   filterValue?: string,
-  filter?: (row: TableBodyRow) => boolean,
+  filter?: (row: GenericDataRow) => boolean,
 ): TableRows => {
   // check that we don't have a filter
   const hasFilterValue = filterValue !== '' && filterValue != null
@@ -105,7 +105,7 @@ export type ManagedTableProps = {
   /**
    * Row data
    */
-  rows: TableBodyRow[]
+  rows: GenericDataRow[]
   /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
@@ -131,11 +131,11 @@ export type ManagedTableProps = {
   /**
    * Callback to filter rows.
    */
-  filter?: (row: TableBodyRow) => boolean
+  filter?: (row: GenericDataRow) => boolean
   /**
    * Callback when the highlighted rows change.
    */
-  onRowsHighlighted?: (keys: TableHighlightedRows) => void
+  onHighlightedIndices?: (keys: TableHighlightedRows) => void
   /**
    * Disable highlighting rows
    */
@@ -342,7 +342,7 @@ class ManagedTableInner extends React.Component<
         highlightedRows.clear()
       }
       highlightedRows.add(sortedRows[newIndex].key)
-      this.onRowsHighlighted(highlightedRows, () => {
+      this.onHighlightedIndices(highlightedRows, () => {
         const { current } = this.tableRef
         if (current) {
           current.scrollToItem(newIndex)
@@ -351,12 +351,12 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onRowsHighlighted = (highlightedRows: Set<string>, cb = () => {}) => {
+  onHighlightedIndices = (highlightedRows: Set<string>, cb = () => {}) => {
     if (this.props.disableHighlight) return
     this.setState({ highlightedRows }, cb)
-    const { onRowsHighlighted } = this.props
-    if (onRowsHighlighted) {
-      onRowsHighlighted(Array.from(highlightedRows))
+    const { onHighlightedIndices } = this.props
+    if (onHighlightedIndices) {
+      onHighlightedIndices(Array.from(highlightedRows))
     }
   }
 
@@ -386,7 +386,7 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onHighlight = (e: React.MouseEvent, row: TableBodyRow, index: number) => {
+  onHighlight = (e: React.MouseEvent, row: GenericDataRow, index: number) => {
     if (e.button !== 0 || this.props.disableHighlight) {
       // Only highlight rows when using primary mouse button,
       // otherwise do nothing, to not interfere context menus.
@@ -418,7 +418,7 @@ class ManagedTableInner extends React.Component<
       this.state.highlightedRows.add(row.key)
     }
 
-    this.onRowsHighlighted(highlightedRows)
+    this.onHighlightedIndices(highlightedRows)
   }
 
   onStopDragSelecting = () => {
@@ -452,7 +452,7 @@ class ManagedTableInner extends React.Component<
     return selected
   }
 
-  onMouseEnterRow = (_: React.MouseEvent, row: TableBodyRow, index: number) => {
+  onMouseEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
     const { dragStartIndex } = this
     const { current } = this.tableRef
     if (this.props.disableHighlight || !this.props.multiHighlight) {
@@ -462,7 +462,7 @@ class ManagedTableInner extends React.Component<
       current.scrollToItem(index + 1)
       const startKey = this.state.sortedRows[dragStartIndex].key
       const highlightedRows = new Set(this.selectInRange(startKey, row.key))
-      this.onRowsHighlighted(highlightedRows)
+      this.onHighlightedIndices(highlightedRows)
     }
   }
 
@@ -492,7 +492,7 @@ class ManagedTableInner extends React.Component<
     return sortedRows
       .filter(row => highlightedRows.has(row.key))
       .map(
-        (row: TableBodyRow) =>
+        (row: GenericDataRow) =>
           row.copyText ||
           Array.from(document.querySelectorAll(`[data-key='${row.key}'] > *`) || [])
             .map(node => node.textContent)

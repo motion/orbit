@@ -9,9 +9,10 @@ import { isEqual } from '@o/fast-compare'
 import { View } from '@o/gloss'
 import * as React from 'react'
 import textContent from '../helpers/textContent'
+import { GenericDataRow } from '../types'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
-import { TableBodyRow, TableFilter } from './types'
+import { TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
   Partial<SearchableProps> & {
@@ -21,25 +22,23 @@ export type SearchableTableProps = ManagedTableProps &
   }
 
 type State = {
-  filterRows: (row: TableBodyRow) => boolean
+  filterRows: (row: GenericDataRow) => boolean
   filters: TableFilter[]
   searchTerm?: string
 }
 
 const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
-  row: TableBodyRow,
+  row: GenericDataRow,
 ): boolean =>
   filters
     .map((filter: TableFilter) => {
-      if (filter.type === 'enum' && row.type != null) {
-        return filter.value.length === 0 || filter.value.indexOf(row.type) > -1
+      if (filter.type === 'enum' && row.category != null) {
+        return filter.value.length === 0 || filter.value.indexOf(row.category) > -1
       } else if (filter.type === 'include') {
-        return (
-          textContent(row.columns[filter.key].value).toLowerCase() === filter.value.toLowerCase()
-        )
+        return textContent(row.values[filter.key]).toLowerCase() === filter.value.toLowerCase()
       } else if (filter.type === 'exclude') {
         return (
-          textContent(row.columns[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
+          textContent(row.values[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
         )
       } else {
         return true
@@ -47,8 +46,8 @@ const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
     })
     .reduce((acc, cv) => acc && cv, true) &&
   (searchTerm != null && searchTerm.length > 0
-    ? Object.keys(row.columns)
-        .map(key => textContent(row.columns[key].value))
+    ? Object.keys(row.values)
+        .map(key => textContent(row.values[key]))
         .join('~~') // prevent from matching text spanning multiple columns
         .toLowerCase()
         .includes(searchTerm.toLowerCase())

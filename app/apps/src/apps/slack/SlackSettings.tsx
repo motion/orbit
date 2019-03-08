@@ -1,7 +1,7 @@
 import { loadMany, useModel } from '@o/bridge'
 import { AppProps, Table, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
-import { CheckboxReactive, DateFormat, Text, View } from '@o/ui'
+import { CheckboxReactive, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -79,59 +79,34 @@ export function SlackSettings({ subId }: AppProps) {
           columns={{
             name: {
               value: 'Name',
-              sortable: true,
-              resizable: true,
               flex: 2,
             },
             topic: {
               value: 'Topic',
-              sortable: true,
-              resizable: true,
               flex: 2,
             },
             members: {
               value: 'Members',
-              sortable: true,
-              resizable: true,
             },
             createdAt: {
               value: 'Created',
-              sortable: true,
-              resizable: true,
             },
             active: {
               value: 'Active',
-              sortable: true,
             },
           }}
           multiHighlight
-          onRowsHighlighted={setHighlightedRows}
+          onHighlightedIndices={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
             const isActive = whitelist.whilistStatusGetter(channel.id)
             return {
               key: `${index}`,
-              columns: {
-                name: {
-                  sortValue: channel.name,
-                  value: channel.name,
-                },
-                topic: {
-                  sortValue: topic,
-                  value: topic,
-                },
-                members: {
-                  sortValue: channel.num_members,
-                  value: channel.num_members,
-                },
-                createdAt: {
-                  sortValue: channel.created,
-                  value: (
-                    <Text ellipse>
-                      <DateFormat date={new Date(channel.created * 1000)} />
-                    </Text>
-                  ),
-                },
+              values: {
+                name: channel.name,
+                topic: topic,
+                members: channel.num_members,
+                createdAt: new Date(channel.created * 1000),
                 active: {
                   sortValue: whitelist.whilistStatusGetter(channel.id),
                   value: (

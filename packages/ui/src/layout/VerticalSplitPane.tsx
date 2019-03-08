@@ -1,11 +1,18 @@
 import { View } from '@o/gloss'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Interactive, InteractiveProps } from '../Interactive'
 
 export function VerticalSplitPane(
   props: Partial<InteractiveProps> & { index?: number; parentWidth?: number },
 ) {
   const [size, setSize] = useState(400)
+
+  useEffect(
+    () => {
+      setSize(props.parentWidth / 2)
+    },
+    [props.parentWidth],
+  )
 
   if (props.index === 1) {
     return <View flex={1} {...props} />

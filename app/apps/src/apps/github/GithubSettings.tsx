@@ -110,7 +110,7 @@ export default function GithubSettings({ subId }: AppProps) {
               sortable: true,
             },
           }}
-          // onRowHighlighted={this.onRowHighlighted}
+          // onRowsHighlighted={this.onRowsHighlighted}
           sortOrder={sortOrder}
           onSort={setSortOrder}
           multiHighlight

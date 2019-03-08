@@ -106,10 +106,6 @@ export type ManagedTableProps = {
    */
   rows: TableRows
   /**
-   * Whether the table has a border.
-   */
-  floating?: boolean
-  /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
    */
@@ -138,11 +134,11 @@ export type ManagedTableProps = {
   /**
    * Callback when the highlighted rows change.
    */
-  onRowHighlighted?: (keys: TableHighlightedRows) => void
+  onRowsHighlighted?: (keys: TableHighlightedRows) => void
   /**
-   * Whether rows can be highlighted or not.
+   * Disable highlighting rows
    */
-  highlightableRows?: boolean
+  disableHighlight?: false
   /**
    * Whether multiple rows can be highlighted or not.
    */
@@ -197,6 +193,7 @@ class ManagedTableInner extends React.Component<
     highlightableRows: true,
     multiHighlight: false,
     autoHeight: false,
+    rowLineHeight: 28,
   }
 
   static getDerivedStateFromProps = (props, state) => {
@@ -339,7 +336,7 @@ class ManagedTableInner extends React.Component<
         highlightedRows.clear()
       }
       highlightedRows.add(sortedRows[newIndex].key)
-      this.onRowHighlighted(highlightedRows, () => {
+      this.onRowsHighlighted(highlightedRows, () => {
         const { current } = this.tableRef
         if (current) {
           current.scrollToItem(newIndex)
@@ -348,14 +345,12 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onRowHighlighted = (highlightedRows: Set<string>, cb = () => {}) => {
-    if (!this.props.highlightableRows) {
-      return
-    }
+  onRowsHighlighted = (highlightedRows: Set<string>, cb = () => {}) => {
+    if (this.props.disableHighlight) return
     this.setState({ highlightedRows }, cb)
-    const { onRowHighlighted } = this.props
-    if (onRowHighlighted) {
-      onRowHighlighted(Array.from(highlightedRows))
+    const { onRowsHighlighted } = this.props
+    if (onRowsHighlighted) {
+      onRowsHighlighted(Array.from(highlightedRows))
     }
   }
 
@@ -386,7 +381,7 @@ class ManagedTableInner extends React.Component<
   }
 
   onHighlight = (e: React.MouseEvent, row: TableBodyRow, index: number) => {
-    if (e.button !== 0 || !this.props.highlightableRows) {
+    if (e.button !== 0 || this.props.disableHighlight) {
       // Only highlight rows when using primary mouse button,
       // otherwise do nothing, to not interfere context menus.
       return
@@ -400,6 +395,14 @@ class ManagedTableInner extends React.Component<
 
     this.dragStartIndex = index
     document.addEventListener('mouseup', this.onStopDragSelecting)
+
+    console.log(
+      'multi highlight',
+      process.platform,
+      e.metaKey,
+      highlightedRows,
+      this.props.multiHighlight,
+    )
 
     if (
       ((e.metaKey && process.platform === 'darwin') ||
@@ -417,7 +420,7 @@ class ManagedTableInner extends React.Component<
       this.state.highlightedRows.add(row.key)
     }
 
-    this.onRowHighlighted(highlightedRows)
+    this.onRowsHighlighted(highlightedRows)
   }
 
   onStopDragSelecting = () => {
@@ -454,16 +457,14 @@ class ManagedTableInner extends React.Component<
   onMouseEnterRow = (_: React.MouseEvent, row: TableBodyRow, index: number) => {
     const { dragStartIndex } = this
     const { current } = this.tableRef
-    if (
-      typeof dragStartIndex === 'number' &&
-      current &&
-      this.props.multiHighlight &&
-      this.props.highlightableRows
-    ) {
+    if (this.props.disableHighlight || !this.props.multiHighlight) {
+      return
+    }
+    if (typeof dragStartIndex === 'number' && current) {
       current.scrollToItem(index + 1)
       const startKey = this.state.sortedRows[dragStartIndex].key
       const highlightedRows = new Set(this.selectInRange(startKey, row.key))
-      this.onRowHighlighted(highlightedRows)
+      this.onRowsHighlighted(highlightedRows)
     }
   }
 
@@ -534,7 +535,7 @@ class ManagedTableInner extends React.Component<
   )
 
   renderRow = ({ index, style }) => {
-    const { onAddFilter, multiline, zebra } = this.props
+    const { onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
     return (
@@ -545,7 +546,7 @@ class ManagedTableInner extends React.Component<
         onMouseDown={e => this.onHighlight(e, sortedRows[index], index)}
         onMouseEnter={e => this.onMouseEnterRow(e, sortedRows[index], index)}
         multiline={multiline}
-        rowLineHeight={24}
+        rowLineHeight={rowLineHeight}
         highlighted={highlightedRows.has(sortedRows[index].key)}
         row={sortedRows[index]}
         index={index}

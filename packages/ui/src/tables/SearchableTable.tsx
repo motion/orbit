@@ -13,17 +13,17 @@ import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
 import { Filter, TableBodyRow } from './types'
 
-type Props = ManagedTableProps &
-  SearchableProps & {
+export type SearchableTableProps = ManagedTableProps &
+  Partial<SearchableProps> & {
     defaultFilters: Filter[]
-    filter: any
-    filterValue: any
+    filter?: any
+    filterValue?: any
   }
 
 type State = {
   filterRows: (row: TableBodyRow) => boolean
   filters: Filter[]
-  searchTerm: string
+  searchTerm?: string
 }
 
 const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: TableBodyRow): boolean =>
@@ -53,7 +53,7 @@ const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: Table
         .includes(searchTerm.toLowerCase())
     : true)
 
-class SearchableManagedTable extends React.PureComponent<Props, State> {
+class SearchableManagedTable extends React.PureComponent<SearchableTableProps, State> {
   static defaultProps = {
     defaultFilters: [],
   }
@@ -85,7 +85,7 @@ class SearchableManagedTable extends React.PureComponent<Props, State> {
   }
 }
 
-export const SearchableTable = props => (
+export const SearchableTable = (props: SearchableTableProps) => (
   <Searchable {...props}>
     {({ searchBar, ...rest }) => (
       <>

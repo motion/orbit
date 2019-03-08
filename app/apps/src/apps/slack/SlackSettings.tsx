@@ -83,9 +83,6 @@ export function SlackSettings({ subId }: AppProps) {
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <SearchableTable
-          virtual
-          rowLineHeight={28}
-          floating={false}
           columnSizes={columnSizes}
           columns={{
             name: {
@@ -115,7 +112,7 @@ export function SlackSettings({ subId }: AppProps) {
           }}
           multiHighlight
           highlightedRows={highlightedRows}
-          onRowHighlighted={setHighlightedRows}
+          onRowsHighlighted={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
             const isActive = whitelist.whilistStatusGetter(channel.id)

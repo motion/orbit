@@ -50,10 +50,7 @@ export type TableColumnKeys = Array<string>
 export type TableOnColumnResize = (sizes: TableColumnSizes) => void
 export type TableOnColumnOrder = (order: TableColumnOrder) => void
 export type TableOnSort = (order: TableRowSortOrder) => void
-export type TableOnHighlight = (
-  highlightedRows: TableHighlightedRows,
-  e: Event,
-) => void
+export type TableOnHighlight = (highlightedRows: TableHighlightedRows, e: Event) => void
 
 export type TableHeaderColumn = {
   value: string
@@ -79,7 +76,7 @@ export type TableBodyRow = {
 }
 
 export type TableBodyColumn = {
-  sortValue?: string | number
+  sortValue?: string | number | boolean
   isFilterable?: boolean
   value: any
   title?: string
@@ -96,10 +93,6 @@ export type TableRowSortOrder = {
   direction: 'up' | 'down'
 }
 
-export type TableOnDragSelect = (
-  e: MouseEvent,
-  key: string,
-  index: number,
-) => void
+export type TableOnDragSelect = (e: MouseEvent, key: string, index: number) => void
 
 export type TableOnAddFilter = (filter: Filter) => void

@@ -4,16 +4,12 @@ import SettingsAppAccount from './SettingsAppAccount'
 import { SettingsAppGeneral } from './SettingsAppGeneral'
 
 export function SettingsAppMain(props: AppProps) {
-  if (!props.appConfig) {
-    return null
-  }
-
-  switch (props.appConfig.id) {
+  switch (props.id) {
     case 'general':
       return <SettingsAppGeneral {...props} />
     case 'account':
-      return <SettingsAppAccount {...props} />
+      return <SettingsAppAccount />
     default:
-      return <div>no found pane in settings {JSON.stringify(props.appConfig)}</div>
+      return <div>no found pane in settings {JSON.stringify(props)}</div>
   }
 }

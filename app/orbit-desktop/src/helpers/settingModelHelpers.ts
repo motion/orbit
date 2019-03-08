@@ -1,35 +1,35 @@
-import { Setting, SettingEntity } from '@o/models'
+import { User, UserEntity } from '@o/models'
 import { getRepository } from 'typeorm'
 
-export async function getSetting() {
-  return await getRepository(SettingEntity).findOne({ name: 'general' })
+export async function getUser() {
+  return await getRepository(UserEntity).findOne({})
 }
 
 class SettingValueError extends Error {}
 
-export async function getSettingValue<A extends keyof Setting['values']>(key?: A) {
-  const setting = await getSetting()
-  if (!setting) {
+export async function getSettingValue<A extends keyof User['settings']>(key?: A) {
+  const user = await getUser()
+  if (!user) {
     throw new SettingValueError('No setting!')
   }
-  if (typeof setting.values[key] !== 'undefined') {
-    return setting.values[key]
+  if (typeof user.settings[key] !== 'undefined') {
+    return user.settings[key]
   }
   throw new SettingValueError(`No key found on setting: ${key}`)
 }
 
-export async function updateSetting(values: Partial<Setting['values']>) {
-  const setting = await getSetting()
-  setting.values = {
-    ...setting.values,
-    ...values,
+export async function updateSetting(next: Partial<User['settings']>) {
+  const user = await getUser()
+  user.settings = {
+    ...user.settings,
+    ...next,
   }
-  await getRepository(SettingEntity).save(setting)
+  await getRepository(UserEntity).save(user)
 }
 
-export async function ensureSetting<A extends keyof Setting['values']>(
+export async function ensureSetting<A extends keyof User['settings']>(
   key: A,
-  value: Setting['values'][A],
+  value: User['settings'][A],
 ) {
   try {
     await getSettingValue(key)

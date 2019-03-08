@@ -5,7 +5,6 @@ import {
   PaneManagerStore,
   ProvideStores,
   QueryStore,
-  SettingStore,
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
@@ -167,7 +166,6 @@ const OrbitContentArea = gloss({
 }))
 
 function OrbitPageProvideStores(props: any) {
-  const settingStore = useStoreSimple(SettingStore)
   const queryStore = useStoreSimple(QueryStore)
   const orbitWindowStore = useStoreSimple(OrbitWindowStore, { queryStore })
   const newAppStore = useStoreSimple(NewAppStore)
@@ -180,7 +178,6 @@ function OrbitPageProvideStores(props: any) {
   const spaceStore = useStoreSimple(SpaceStore, { paneManagerStore })
 
   const stores = {
-    settingStore,
     orbitWindowStore,
     spaceStore,
     queryStore,

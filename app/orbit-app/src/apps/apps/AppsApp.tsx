@@ -8,7 +8,7 @@ export const AppsApp: AppDefinition = {
   name: 'Apps',
   icon: '',
   app: props => (
-    <App index={<AppsIndex {...props} />}>
+    <App index={<AppsIndex />}>
       <AppsMain {...props} />
     </App>
   ),

@@ -8,7 +8,7 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
     <ListItem
       padding={[9, 11]}
       {...props}
-      // appConfig={{ id: `${Math.random()}`, identifier: 'search', subType: 'group', title: item.title }}
+      // appProps={{ id: `${Math.random()}`, identifier: 'search', subType: 'group', title: item.title }}
     >
       <Row flex={1}>
         <Circle style={{ fontSize: num.length > 2 ? 15 : 18 }}>{num}</Circle>

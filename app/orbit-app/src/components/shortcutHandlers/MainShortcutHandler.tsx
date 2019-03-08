@@ -77,7 +77,7 @@ export default memo(function MainShortcutHandler(props: {
         return
       }
       // clear peek first
-      if (App.peekState.appConfig) {
+      if (App.peekState.appProps) {
         return AppActions.clearPeek()
       }
       // then orbit query

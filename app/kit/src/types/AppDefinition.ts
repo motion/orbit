@@ -2,7 +2,6 @@ import { AppBit, ItemType } from '@o/models'
 import { SearchBarType } from '@o/ui'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
-import { AppConfig } from './AppConfig'
 import { AppProps } from './AppProps'
 import { OrbitItemViewProps } from './OrbitItemViewProps'
 
@@ -28,7 +27,6 @@ export type AppDefinition = {
   name: string
   icon: string
   iconLight?: string
-  defaultViewConfig?: AppConfig['viewConfig']
   context?: React.Context<any>
   itemType?: ItemType
   app?: FunctionComponent<AppProps>
@@ -48,6 +46,6 @@ export type AppBitMainProps = OrbitItemViewProps & {
 }
 
 export type AppSettingsProps<T extends AppBit> = {
-  appConfig?: AppConfig
+  appProps?: AppProps
   app: T
 }

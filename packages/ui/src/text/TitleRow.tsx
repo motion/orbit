@@ -5,7 +5,7 @@ import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { TextProps } from './Text'
 import { Title } from './Title'
 
-type TitleRowProps = TextProps & {
+export type TitleRowProps = TextProps & {
   before?: React.ReactNode
   bordered?: boolean
   after?: React.ReactNode
@@ -25,7 +25,7 @@ export function TitleRow({
       position="relative"
       alignItems="center"
       overflow="hidden"
-      padding={[5 * sizePadding, 0, 10 * sizePadding + 5]}
+      padding={[2.5 * sizePadding, 0, 10 * sizePadding + 5]}
       margin={typeof margin !== 'undefined' ? margin : [0, 0, 10]}
     >
       {before && (

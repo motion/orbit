@@ -1,13 +1,12 @@
-import { AppProps } from '@o/kit';
-import { Button, FormRow, HorizontalSpace, Input, Row, SubTitle } from '@o/ui';
-import React from 'react';
+import { Button, FormField, HorizontalSpace, Input, Row, SubTitle } from '@o/ui'
+import React from 'react'
 
-export function SearchAppSettings(_: AppProps) {
+export function SearchAppSettings() {
   return (
     <>
       <SubTitle>Filters</SubTitle>
 
-      <FormRow
+      <FormField
         label={
           <select style={{ width: '100%' }}>
             <option>Date</option>
@@ -19,7 +18,7 @@ export function SearchAppSettings(_: AppProps) {
           <HorizontalSpace />
           <Button circular icon="add" />
         </Row>
-      </FormRow>
+      </FormField>
     </>
   )
 }

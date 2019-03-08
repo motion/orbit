@@ -1,12 +1,12 @@
 import { View } from '@o/gloss'
-import { AppLoadContext, AppSubViewProps, ProvideSelectionContext, SubPane } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, ProvideSelectionContext, SubPane } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { toolbarPadElement } from './OrbitToolBar'
 
-export const OrbitSidebar = memo((props: AppSubViewProps) => {
+export const OrbitSidebar = memo((props: AppMainViewProps) => {
   const { identifier, id } = useContext(AppLoadContext)
   const { orbitStore, appStore } = useStores()
 

@@ -1,5 +1,5 @@
-import { SearchResult } from '@o/models';
-import { flatten } from 'lodash';
+import { SearchResult } from '@o/models'
+import { flatten } from 'lodash'
 
 const groupToName = {
   'last-day': 'Recently',
@@ -8,7 +8,7 @@ const groupToName = {
   overall: 'Overall',
 }
 
-export function searchGroupsToResults(
+export function flattenGroupedSearchResults(
   results: SearchResult[],
   {
     max = 6,

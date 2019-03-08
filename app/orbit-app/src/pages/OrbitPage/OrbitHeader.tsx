@@ -1,16 +1,7 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  HorizontalSpace,
-  Row,
-  SegmentedRow,
-  Text,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -67,13 +58,15 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 opacity={theme.color.isDark() ? 0.4 : 0.2}
               />
             </View>
-
             <OrbitHeaderInput />
 
-            <SegmentedRow>
-              <LinkButton />
-              {!isTorn && <LaunchButton />}
-            </SegmentedRow>
+            <LinkButton />
+            {!isTorn && (
+              <>
+                <HorizontalSpace />
+                <LaunchButton />
+              </>
+            )}
           </HeaderContain>
 
           <View flex={1} />
@@ -248,7 +241,7 @@ const LaunchButton = memo(() => {
       width={50}
     >
       {!isHovered ? (
-        <Icon name="arrows-e_share-26" size={11} transform={{ x: -1.5 }} />
+        <Icon name="arrows-e_share-26" size={11} />
       ) : (
         <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
           Open
@@ -262,12 +255,12 @@ const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
     <Button
-      sizeHeight={0.95}
-      sizePadding={1.2}
+      size={0.9}
+      iconSize={9}
+      circular
       tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
       sizeRadius={2}
       icon="link69"
-      iconSize={10}
     />
   )
 })

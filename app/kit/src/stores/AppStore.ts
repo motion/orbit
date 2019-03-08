@@ -2,14 +2,12 @@ import { observeOne } from '@o/bridge'
 import { AppModel } from '@o/models'
 import { ensure, react, useHook } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
-import { AppProps } from '../types/AppProps'
 
 export class AppStore {
-  props: { id: string; identifier: string; isActive: AppProps['isActive'] }
+  props: { id: string; identifier: string; isActive: boolean | (() => boolean) }
   stores = useHook(useStoresSimple)
 
   history = []
-  currentItems = []
   selectedIndex = -1
   sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
 
@@ -47,14 +45,6 @@ export class AppStore {
       deferFirstRun: true,
     },
   )
-
-  getCurrentItems = () => {
-    return this.currentItems
-  }
-
-  setCurrentItems = (items: any[]) => {
-    this.currentItems = items
-  }
 
   back = () => {}
 

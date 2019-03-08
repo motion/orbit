@@ -1,16 +1,16 @@
-import { AppProps, AppSubView } from '@o/kit'
+import { AppMainView, AppProps } from '@o/kit'
 import React from 'react'
 import { SearchHome } from './SearchHome'
 
-export function SearchAppMain({ appConfig }: AppProps) {
-  if (appConfig.identifier === 'apps') {
+export function SearchAppMain(props: AppProps) {
+  if (props.identifier === 'apps') {
     return <SearchHome />
   }
 
-  if (appConfig.identifier === 'search') {
+  if (props.identifier === 'search') {
     console.warn('todo: search')
     return null
   }
 
-  return <AppSubView appConfig={appConfig} />
+  return <AppMainView {...props} />
 }

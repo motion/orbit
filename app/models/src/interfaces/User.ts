@@ -34,5 +34,10 @@ export interface User {
     vibrancy?: 'some' | 'more' | 'none'
     openShortcut?: string
     recentSearches?: string[]
+    cosalIndexUpdatedTo?: number
+    topicsIndexUpdatedTo?: number
+    topTopics?: string[]
   }
+
+  appState?: { [key: string]: any }
 }

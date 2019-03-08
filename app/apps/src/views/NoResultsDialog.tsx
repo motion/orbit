@@ -10,11 +10,11 @@ export default function NoResultsDialog(props: Props) {
   const { paneManagerStore } = useStores()
   return (
     <>
-      <View alignItems="center" justifyContent="center" padding={25}>
-        <SubTitle>You're searching {props.subName} & no results found.</SubTitle>
+      <View alignItems="center" justifyContent="center" padding={25} flex={1}>
+        <SubTitle>Nothing loaded in {props.subName}.</SubTitle>
         <VerticalSpace />
         <Button onClick={() => paneManagerStore.setActivePaneByType('search')} size={1.2}>
-          Search Orbit Instead
+          Search Everything
         </Button>
       </View>
     </>

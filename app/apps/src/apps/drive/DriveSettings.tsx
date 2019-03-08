@@ -6,8 +6,6 @@ import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-type Props = AppProps
-
 class DriveSettingsStore {
   props: { app?: AppBit }
   popularFolders = []
@@ -42,8 +40,7 @@ class DriveSettingsStore {
   }
 }
 
-export function DriveSettings(props: Props) {
-  const { subId } = props.appConfig
+export function DriveSettings({ subId }: AppProps) {
   const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders

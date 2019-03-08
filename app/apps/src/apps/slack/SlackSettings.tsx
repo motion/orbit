@@ -8,8 +8,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 
-export function SlackSettings(props: AppProps) {
-  const { subId } = props.appConfig
+export function SlackSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,

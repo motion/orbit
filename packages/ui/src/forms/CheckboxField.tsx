@@ -3,12 +3,12 @@ import { FormTableLabel, FormTableRow, FormTableValue } from '../tables/Table'
 import { InputProps } from './Input'
 import { Label } from './Label'
 
-export const CheckBoxRow = ({
+export const CheckBoxField = ({
   name = `checkbox-${Math.random()}`,
   children,
   checked,
   onChange,
-}: InputProps & { onChange: (checked: boolean) => any }) => (
+}: InputProps & { checked?: boolean; onChange: (checked: boolean) => any }) => (
   <FormTableRow>
     <FormTableLabel>
       <Label htmlFor={name}>{children}</Label>

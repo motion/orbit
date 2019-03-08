@@ -5,33 +5,33 @@ export async function setupTestApp(/* testAppId?: string */) {
   //   AppActions.setPeekApp({
   //     position: [0, 0],
   //     size: [400, 400],
-  //     appConfig: {
+  //     appProps: {
   //       id: `${lastBit.id}`,
   //       title: lastBit.title,
   //       type: 'bit',
-  //     } as AppConfig,
+  //     } as AppProps,
   //   })
   // }
   // if (testAppId === 'lists') {
   //   AppActions.setPeekApp({
   //     position: [0, 0],
   //     size: [400, 400],
-  //     appConfig: {
+  //     appProps: {
   //       id: '0',
   //       title: 'Lists',
   //       type: 'lists',
-  //     } as AppConfig,
+  //     } as AppProps,
   //   })
   // }
   // if (testAppId === 'topics') {
   //   AppActions.setPeekApp({
   //     position: [0, 0],
   //     size: [500, 500],
-  //     appConfig: {
+  //     appProps: {
   //       id: '1',
   //       title: 'Topics',
   //       type: 'topics',
-  //     } as AppConfig,
+  //     } as AppProps,
   //   })
   // }
   // if (testAppId === 'people') {
@@ -41,11 +41,11 @@ export async function setupTestApp(/* testAppId?: string */) {
   //   AppActions.setPeekApp({
   //     position: [0, 0],
   //     size: [500, 500],
-  //     appConfig: {
+  //     appProps: {
   //       id: `${lastPerson.id}`,
   //       title: lastPerson.title,
   //       type: 'people',
-  //     } as AppConfig,
+  //     } as AppProps,
   //   })
   // }
 }

@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { AppBit, AppModel, Space, SpaceModel } from '@o/models'
 import * as UI from '@o/ui'
-import { InputRow, Message, Table, VerticalSpace } from '@o/ui'
+import { InputField, Message, Table, VerticalSpace } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -86,7 +86,7 @@ export default observer(function SpaceEditView(props: Props) {
         <UI.Col padding={[0, 10]}>
           <Table>
             {/* !TODO */}
-            <InputRow label="Name" value={values.name} onChange={handleChange('name') as any} />
+            <InputField label="Name" value={values.name} onChange={handleChange('name') as any} />
           </Table>
           <VerticalSpace />
           <UI.Theme

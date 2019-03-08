@@ -1,7 +1,7 @@
-import { command } from '@o/bridge'
+import { command, loadOne, save } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { useAppDefinitions } from '@o/kit'
-import { CheckProxyCommand, SetupProxyCommand } from '@o/models'
+import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@o/ui'
 import { react, useHook, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
@@ -56,8 +56,13 @@ class OnboardStore {
     2: async () => {
       this.stores.paneManagerStore.setActivePaneByType('home')
       // save setting
-      await this.stores.settingStore.update({
-        hasOnboarded: true,
+      const user = await loadOne(UserModel, {})
+      save(UserModel, {
+        ...user,
+        settings: {
+          ...user.settings,
+          hasOnboarded: true,
+        },
       })
     },
   }

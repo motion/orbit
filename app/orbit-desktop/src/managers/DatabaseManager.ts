@@ -1,12 +1,12 @@
+import { AppBit, AppEntity, SpaceEntity, userDefaultValue } from '@mcro/models'
 import { Logger } from '@o/logger'
-import { Entities, SettingEntity } from '@o/models'
+import { Entities, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { getConnection, getRepository } from 'typeorm'
 import { COSAL_DB, DATABASE_PATH } from '../constants'
 import connectModels from '../helpers/connectModels'
-import { AppBit, AppEntity, SpaceEntity, userDefaultValue, UserEntity } from '@mcro/models'
 
 const log = new Logger('database')
 
@@ -22,7 +22,6 @@ export class DatabaseManager {
     await connectModels(Entities)
 
     // setup default data
-    await this.ensureDefaultSetting()
     await this.ensureDefaultSpace()
     await this.ensureDefaultApps()
     await this.ensureDefaultUser()
@@ -41,7 +40,7 @@ export class DatabaseManager {
       }
       try {
         tries++
-        await getRepository(SettingEntity).findOne({})
+        await getRepository(UserEntity).findOne({})
         connected = true
       } catch (err) {
         console.log('got err, migrations may not be done yet...', err)
@@ -147,21 +146,6 @@ export class DatabaseManager {
     await getConnection().query('DROP TRIGGER after_bit_delete')
   }
 
-  private async ensureDefaultSetting() {
-    let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-
-    if (!setting) {
-      console.log('Creating initial general setting')
-      const settingEntity = new SettingEntity()
-      Object.assign(settingEntity, {
-        name: 'general',
-        values: {},
-      })
-      await getRepository(SettingEntity).save(settingEntity)
-      setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    }
-  }
-
   private async ensureDefaultSpace() {
     let spaces = await getRepository(SpaceEntity).find()
     if (!spaces.length) {
@@ -252,5 +236,4 @@ export class DatabaseManager {
       })
     }
   }
-
 }

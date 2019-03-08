@@ -1,26 +1,17 @@
 import { save } from '@o/bridge'
 import { App, AppProps, createApp } from '@o/kit'
 import { AppBit, AppModel, Bit } from '@o/models'
-import { useStore } from '@o/use-store'
-import React, { createContext } from 'react'
+import React from 'react'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'
 import { ListAppStatusBar } from './ListsAppStatusBar'
-import { ListStore } from './ListStore'
 import { ListsAppBit } from './types'
 
-export const ListContext = createContext({
-  listStore: null as ListStore,
-})
-
 function ListApp(props: AppProps) {
-  const listStore = useStore(ListStore, props)
   return (
-    <ListContext.Provider value={{ listStore }}>
-      <App index={<ListsAppIndex {...props} />} statusBar={<ListAppStatusBar />}>
-        <ListsAppMain {...props} />
-      </App>
-    </ListContext.Provider>
+    <App index={<ListsAppIndex />} statusBar={<ListAppStatusBar />}>
+      <ListsAppMain {...props} />
+    </App>
   )
 }
 

@@ -98,7 +98,7 @@ const light = {
   }),
 }
 
-const darkBackground = color([66, 66, 66])
+const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,

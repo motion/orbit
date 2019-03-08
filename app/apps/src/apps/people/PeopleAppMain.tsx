@@ -21,19 +21,14 @@ const getBitTexts = (bits: Bit[]) => {
 class PeopleAppStore {
   props: AppProps
 
-  get appConfig() {
-    return this.props.appConfig
-  }
-
   person = react(
-    () => this.appConfig,
-    appConfig => {
-      ensure('appConfig', !!appConfig)
+    () => this.props.id,
+    id => {
       return loadOne(BitModel, {
         args: {
           where: {
             type: 'person',
-            id: +appConfig.id,
+            id: +id,
           },
           // relations: ['people'], // todo(nate): check why do we need it here
         },
@@ -95,7 +90,7 @@ export function PeopleAppMain(props: AppProps) {
   const { person, topics, recentBits } = useStore(PeopleAppStore, props)
 
   if (!person) {
-    return <div>No one selected</div>
+    return null
   }
 
   return (

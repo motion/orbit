@@ -1,18 +1,19 @@
-import { AppProps, AppSubView } from '@o/kit'
+import { AppMainView, AppProps } from '@o/kit'
 import { Title } from '@o/ui'
 import React from 'react'
-import { stringify } from '../../helpers'
 import { AppsMainAddApp } from './AppsMainAddApp'
 
 export function AppsMain(props: AppProps) {
-  return <Title>hi {stringify(props.appConfig)}</Title>
+  console.log('props213', props)
 
-  if (props.appConfig.identifier !== 'apps') {
-    return <AppSubView appConfig={props.appConfig} />
+  return null
+
+  if (props.identifier !== 'apps') {
+    return <AppMainView {...props} />
   }
 
-  if (props.appConfig.subType === 'add-app') {
-    return <AppsMainAddApp identifier={props.appConfig.subId} />
+  if (props.subType === 'add-app') {
+    return <AppsMainAddApp identifier={props.subId} />
   }
 
   return <Title>hi</Title>

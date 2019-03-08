@@ -1,4 +1,4 @@
-import { AppEntity, SettingEntity, Space, SpaceEntity, UserEntity } from '@o/models'
+import { AppEntity, Space, SpaceEntity, UserEntity } from '@o/models'
 import { DesktopActions } from '@o/stores'
 import { ensureDir, pathExists, writeJSON } from 'fs-extra'
 import { debounce } from 'lodash'
@@ -60,11 +60,6 @@ export class OrbitDataManager {
     }
 
     const persist = debounce(() => writeJSON(join(dataSettingsDir, 'settings.json'), state), 300)
-
-    addObserveMany(this.subscriptions, SettingEntity, {}, values => {
-      state.settings = values
-      persist()
-    })
 
     addObserveMany(this.subscriptions, UserEntity, {}, value => {
       state.user = value

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { TreeItems } from './TreeItems'
 
-export type TreeItemID = string
+export type TreeItemID = number
 
 export type TreeItemSearchResultSet = {
   query: string
@@ -29,11 +29,12 @@ export type TreeItemAttribute = {
 export type TreeItem = {
   id: TreeItemID
   name: string
-  children: Array<TreeItemID>
+  children: TreeItemID[]
   expanded?: boolean
-  attributes?: Array<TreeItemAttribute>
+  attributes?: TreeItemAttribute[]
   data?: TreeItemData
   decoration?: string
+  type?: string
 }
 
 export type TreeProps = {

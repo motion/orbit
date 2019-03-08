@@ -11,26 +11,27 @@ import * as React from 'react'
 import textContent from '../helpers/textContent'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
-import { Filter, TableBodyRow } from './types'
+import { TableBodyRow, TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
   Partial<SearchableProps> & {
-    defaultFilters: Filter[]
+    defaultFilters: TableFilter[]
     filter?: any
     filterValue?: any
   }
 
 type State = {
   filterRows: (row: TableBodyRow) => boolean
-  filters: Filter[]
+  filters: TableFilter[]
   searchTerm?: string
 }
 
-const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: TableBodyRow): boolean =>
+const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
+  row: TableBodyRow,
+): boolean =>
   filters
-    .map((filter: Filter) => {
+    .map((filter: TableFilter) => {
       if (filter.type === 'enum' && row.type != null) {
-        // @ts-ignore
         return filter.value.length === 0 || filter.value.indexOf(row.type) > -1
       } else if (filter.type === 'include') {
         return (

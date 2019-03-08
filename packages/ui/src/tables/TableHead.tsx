@@ -193,15 +193,32 @@ class TableHeadColumn extends React.PureComponent<{
   }
 }
 
-export class TableHead extends React.PureComponent<{
-  columnOrder: TableColumnOrder
-  onColumnOrder?: (order: TableColumnOrder) => void
-  columns: TableColumns
-  sortOrder?: TableRowSortOrder
-  onSort?: TableOnSort
-  columnSizes: TableColumnSizes
-  onColumnResize?: TableOnColumnResize
-}> {
+function calculateColumnSizes(columns: TableColumns): TableColumnSizes {
+  const totalFlex = Object.keys(columns).reduce((a, k) => a + columns[k].flex || 1, 0)
+  const sizes = {}
+  for (const key of Object.keys(columns)) {
+    const flex = columns[key].flex
+    sizes[key] = (flex / totalFlex) * 100
+  }
+  return sizes
+}
+
+export class TableHead extends React.PureComponent<
+  {
+    columnOrder: TableColumnOrder
+    onColumnOrder?: (order: TableColumnOrder) => void
+    columns: TableColumns
+    sortOrder?: TableRowSortOrder
+    onSort?: TableOnSort
+    columnSizes?: TableColumnSizes
+    onColumnResize?: TableOnColumnResize
+  },
+  { columnSizes: TableColumnSizes }
+> {
+  state = {
+    columnSizes: this.props.columnSizes || calculateColumnSizes(this.props.columns),
+  }
+
   buildContextMenu = (): any[] => {
     const visibles = this.props.columnOrder
       .map(c => (c.visible ? c.key : null))
@@ -240,7 +257,8 @@ export class TableHead extends React.PureComponent<{
   }
 
   render() {
-    const { columnOrder, columns, columnSizes, onColumnResize, onSort, sortOrder } = this.props
+    const { columnOrder, columns, onColumnResize, onSort, sortOrder } = this.props
+    const { columnSizes } = this.state
     const elems = []
 
     let hasFlex = false

@@ -12,6 +12,7 @@ import debounceRender from 'react-debounce-render'
 import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { ResizeObserver } from '../ResizeObserver'
+import { Text } from '../text/Text'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
@@ -102,9 +103,9 @@ export type ManagedTableProps = {
    */
   columns: TableColumns
   /**
-   * Row definitions.
+   * Row data
    */
-  rows: TableRows
+  rows: TableBodyRow[]
   /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
@@ -194,6 +195,11 @@ class ManagedTableInner extends React.Component<
     multiHighlight: false,
     autoHeight: false,
     rowLineHeight: 28,
+    bodyPlaceholder: (
+      <div style={{ margin: 'auto' }}>
+        <Text size={1.2}>Loading...</Text>
+      </div>
+    ),
   }
 
   static getDerivedStateFromProps = (props, state) => {
@@ -323,7 +329,7 @@ class ManagedTableInner extends React.Component<
       e.keyCode === 67
     ) {
       this.onCopy()
-    } else if ((e.keyCode === 38 || e.keyCode === 40) && this.props.highlightableRows) {
+    } else if ((e.keyCode === 38 || e.keyCode === 40) && !this.props.disableHighlight) {
       // arrow navigation
       const { highlightedRows, sortedRows } = this.state
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
@@ -395,14 +401,6 @@ class ManagedTableInner extends React.Component<
 
     this.dragStartIndex = index
     document.addEventListener('mouseup', this.onStopDragSelecting)
-
-    console.log(
-      'multi highlight',
-      process.platform,
-      e.metaKey,
-      highlightedRows,
-      this.props.multiHighlight,
-    )
 
     if (
       ((e.metaKey && process.platform === 'darwin') ||

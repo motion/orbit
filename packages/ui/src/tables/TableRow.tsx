@@ -7,6 +7,7 @@
 
 import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
+import { DateFormat } from '../text/DateFormat'
 import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
@@ -134,6 +135,25 @@ export class TableRow extends React.PureComponent<Props> {
           const isFilterable = col.isFilterable || false
           const value = col ? col.value : ''
           const title = col ? col.title : ''
+          const type = col ? col.type : ''
+
+          let element: React.ReactNode = null
+
+          if (isFilterable && onAddFilter != null) {
+            element = (
+              <FilterRow addFilter={onAddFilter} filterKey={key}>
+                <SimpleText>{value}</SimpleText>
+              </FilterRow>
+            )
+          } else if (type === 'date') {
+            element = (
+              <SimpleText ellipse>
+                <DateFormat date={new Date(value)} />
+              </SimpleText>
+            )
+          } else {
+            element = <SimpleText>{value}</SimpleText>
+          }
 
           return (
             <TableBodyColumnContainer
@@ -142,13 +162,7 @@ export class TableRow extends React.PureComponent<Props> {
               multiline={multiline}
               width={normaliseColumnWidth(columnSizes[key])}
             >
-              {isFilterable && onAddFilter != null ? (
-                <FilterRow addFilter={onAddFilter} filterKey={key}>
-                  <SimpleText>{value}</SimpleText>
-                </FilterRow>
-              ) : (
-                <SimpleText>{value}</SimpleText>
-              )}
+              {element}
             </TableBodyColumnContainer>
           )
         })}

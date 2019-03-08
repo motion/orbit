@@ -7,24 +7,28 @@
 
 export type FilterIncludeExclude = 'include' | 'exclude'
 
-export type Filter =
+export type EnumFilterOption = {
+  label: string
+  color: string
+  value: string
+}
+
+export type EnumTableFilter = {
+  key: string
+  value: Array<string>
+  type: 'enum'
+  enum: EnumFilterOption[]
+  persistent?: boolean
+}
+
+export type TableFilter =
   | {
       key: string
       value: string
       type: FilterIncludeExclude
       persistent?: boolean
     }
-  | {
-      key: string
-      value: Array<string>
-      type: 'enum'
-      enum: Array<{
-        label: string
-        color: string
-        value: string
-      }>
-      persistent?: boolean
-    }
+  | EnumTableFilter
 
 export const MINIMUM_COLUMN_WIDTH = 100
 export const DEFAULT_COLUMN_WIDTH = 200
@@ -56,23 +60,28 @@ export type TableHeaderColumn = {
   value: string
   sortable?: boolean
   resizable?: boolean
+  flex?: number
+  type?: 'date' | 'number' | 'string' | 'boolean' | null
 }
 
 export type TableBodyRow = {
   key: string
   height?: number | void
+  type?: string
   filterValue?: string | void
   backgroundColor?: string | void
   sortKey?: string | number
   style?: Object
-  type?: string | void
   highlightedBackgroundColor?: string | void
   onDoubleClick?: (e: MouseEvent) => void
   copyText?: string
   highlightOnHover?: boolean
-  columns: {
-    [key: string]: TableBodyColumn
+  values: {
+    [key: string]: any
   }
+  // columns: {
+  //   [key: string]: TableBodyColumn
+  // }
 }
 
 export type TableBodyColumn = {
@@ -80,6 +89,7 @@ export type TableBodyColumn = {
   isFilterable?: boolean
   value: any
   title?: string
+  type?: 'date'
 }
 
 export type TableColumns = {
@@ -95,4 +105,4 @@ export type TableRowSortOrder = {
 
 export type TableOnDragSelect = (e: MouseEvent, key: string, index: number) => void
 
-export type TableOnAddFilter = (filter: Filter) => void
+export type TableOnAddFilter = (filter: TableFilter) => void

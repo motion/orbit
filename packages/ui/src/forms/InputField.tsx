@@ -1,17 +1,14 @@
-import React, { forwardRef } from 'react'
-import { FormTableLabel, FormTableRow, FormTableValue, RowProps } from '../tables/Table'
-import { Input, InputProps } from './Input'
-import { Label } from './Label'
+import React, { HTMLAttributes } from 'react'
+import { SimpleFormField, SimpleFormFieldProps } from './FormField'
+import { Input } from './Input'
 
-export const InputField = forwardRef(
-  ({ label, type = 'input', ...props }: InputProps & RowProps, ref) => (
-    <FormTableRow>
-      <FormTableLabel>
-        <Label>{label}</Label>
-      </FormTableLabel>
-      <FormTableValue>
-        <Input ref={ref as any} type={type} {...props} />
-      </FormTableValue>
-    </FormTableRow>
-  ),
-)
+export function InputField({
+  label,
+  ...props
+}: SimpleFormFieldProps & HTMLAttributes<HTMLInputElement>) {
+  return (
+    <SimpleFormField label={label}>
+      <Input id={name} name={name} {...props} />
+    </SimpleFormField>
+  )
+}

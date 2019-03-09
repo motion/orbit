@@ -76,5 +76,5 @@ function Form(props: { values: GenericDataRow[] | null }) {
   const firstRow = props.values[0]
   const fieldTypes = Object.keys(firstRow.values).map(k => getDataType(firstRow.values[k]))
   console.log('highlighted', props.values, fieldTypes)
-  return <Title>{JSON.stringify({ fieldTypes })}</Title>
+  return <Title>{JSON.stringify({ props, fieldTypes })}</Title>
 }

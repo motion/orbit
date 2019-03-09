@@ -82,7 +82,6 @@ function Form({ columns, rows }: FormProps) {
 
   return (
     <>
-      <Title>{JSON.stringify({ columns, rows })}</Title>
       {rows.map(row => {
         return Object.keys(row.values).map(valKey => {
           const value = row.values[valKey]

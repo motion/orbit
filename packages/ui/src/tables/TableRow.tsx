@@ -9,10 +9,10 @@ import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { DateFormat } from '../text/DateFormat'
+import { GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
 import {
   DEFAULT_ROW_HEIGHT,
-  GenericDataRow,
   TableColumnKeys,
   TableColumns,
   TableColumnSizes,

@@ -5,28 +5,19 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
-import { debounce, isEqual } from 'lodash'
-import * as React from 'react'
-import debounceRender from 'react-debounce-render'
-import { VariableSizeList } from 'react-window'
-import { ContextMenu } from '../ContextMenu'
-import { ResizeObserver } from '../ResizeObserver'
-import { Text } from '../text/Text'
-import { GenericDataRow } from '../types'
-import { getSortedRows } from './getSortedRows'
-import { TableHead } from './TableHead'
-import { TableRow } from './TableRow'
-import {
-  DEFAULT_ROW_HEIGHT,
-  TableColumnOrder,
-  TableColumns,
-  TableColumnSizes,
-  TableHighlightedRows,
-  TableOnAddFilter,
-  TableRows,
-  TableRowSortOrder,
-} from './types'
+import { gloss } from '@o/gloss';
+import { debounce, isEqual } from 'lodash';
+import * as React from 'react';
+import debounceRender from 'react-debounce-render';
+import { VariableSizeList } from 'react-window';
+import { ContextMenu } from '../ContextMenu';
+import { ResizeObserver } from '../ResizeObserver';
+import { Text } from '../text/Text';
+import { GenericDataRow } from '../types';
+import { getSortedRows } from './getSortedRows';
+import { TableHead } from './TableHead';
+import { TableRow } from './TableRow';
+import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumns, TableColumnSizes, TableHighlightedRows, TableOnAddFilter, TableRows } from './types';
 
 // TODO this can move to useResizeObserver
 function useComponentSize() {
@@ -166,14 +157,16 @@ export type ManagedTableProps = {
    */
   hideHeader?: boolean
 
-  sortOrder?: TableRowSortOrder
+  defaultSortOrder?: SortOrder
+  sortOrder?: SortOrder
+  onSortOrder?: (next: SortOrder) => any
   onCreatePaste?: Function
   bodyPlaceholder?: React.ReactNode
 }
 
 type ManagedTableState = {
   highlightedRows: Set<string>
-  sortOrder?: TableRowSortOrder
+  sortOrder?: SortOrder
   sortedRows?: TableRows
   columnOrder: TableColumnOrder
   columnSizes: TableColumnSizes
@@ -275,7 +268,7 @@ class ManagedTableInner extends React.Component<
       Object.keys(this.props.columns).map(key => ({ key, visible: true })),
     columnSizes: this.props.columnSizes || {},
     highlightedRows: new Set(),
-    sortOrder: null,
+    sortOrder: this.props.defaultSortOrder,
     sortedRows: null,
     shouldScrollToBottom: Boolean(this.props.stickyBottom),
     prevProps: {},
@@ -360,12 +353,15 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onSort = (sortOrder: TableRowSortOrder) => {
+  onSort = (sortOrder: SortOrder) => {
     const sortedRows = getSortedRows(
       sortOrder,
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
     this.setState({ sortOrder, sortedRows })
+    if (this.props.onSort) {
+      this.props.onSort(sortOrder)
+    }
   }
 
   onColumnOrder = (columnOrder: TableColumnOrder) => {

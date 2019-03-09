@@ -55,7 +55,7 @@ export type TableColumnKeys = string[]
 
 export type TableOnColumnResize = (sizes: TableColumnSizes) => void
 export type TableOnColumnOrder = (order: TableColumnOrder) => void
-export type TableOnSort = (order: TableRowSortOrder) => void
+export type TableOnSort = (order: SortOrder) => void
 export type TableOnHighlight = (highlightedRows: TableHighlightedRows, e: Event) => void
 
 export type TableHeaderColumn = {
@@ -80,7 +80,7 @@ export type TableColumns = {
 
 export type TableRows = GenericDataRow[]
 
-export type TableRowSortOrder = {
+export type SortOrder = {
   key: string
   direction: 'up' | 'down'
 }

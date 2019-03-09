@@ -1,18 +1,18 @@
-import { TableRows, TableRowSortOrder } from './types'
+import { SortOrder, TableRows } from './types';
 
 const sortedBodyCache: WeakMap<
   TableRows,
   {
-    sortOrder: TableRowSortOrder
+    sortOrder: SortOrder
     rows: TableRows
   }
 > = new WeakMap()
 
-export function getSortedRows(maybeSortOrder: TableRowSortOrder, rows: TableRows): TableRows {
+export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): TableRows {
   if (!maybeSortOrder) {
     return rows
   }
-  const sortOrder: TableRowSortOrder = maybeSortOrder
+  const sortOrder: SortOrder = maybeSortOrder
   const cached = sortedBodyCache.get(rows)
   if (cached && cached.sortOrder === sortOrder) {
     return cached.rows

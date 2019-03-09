@@ -5,21 +5,14 @@
  * @format
  */
 
-import { gloss, Row } from '@o/gloss'
-import invariant from 'invariant'
-import * as React from 'react'
-import { ContextMenu } from '../ContextMenu'
+import { gloss, Row } from '@o/gloss';
+import invariant from 'invariant';
+import * as React from 'react';
+import { ContextMenu } from '../ContextMenu';
 // import ContextMenu from '../ContextMenu.js'
-import { Interactive } from '../Interactive'
-import {
-  TableColumnOrder,
-  TableColumns,
-  TableColumnSizes,
-  TableOnColumnResize,
-  TableOnSort,
-  TableRowSortOrder,
-} from './types'
-import { isPercentage, normaliseColumnWidth } from './utils'
+import { Interactive } from '../Interactive';
+import { SortOrder, TableColumnOrder, TableColumns, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types';
+import { isPercentage, normaliseColumnWidth } from './utils';
 
 const TableHeaderArrow = gloss({
   display: 'block',
@@ -105,7 +98,7 @@ class TableHeadColumn extends React.PureComponent<{
   isResizable: boolean
   leftHasResizer: boolean
   hasFlex: boolean
-  sortOrder?: TableRowSortOrder
+  sortOrder?: SortOrder
   onSort?: TableOnSort
   columnSizes: TableColumnSizes
   onColumnResize?: TableOnColumnResize
@@ -208,7 +201,7 @@ export class TableHead extends React.PureComponent<
     columnOrder: TableColumnOrder
     onColumnOrder?: (order: TableColumnOrder) => void
     columns: TableColumns
-    sortOrder?: TableRowSortOrder
+    sortOrder?: SortOrder
     onSort?: TableOnSort
     columnSizes?: TableColumnSizes
     onColumnResize?: TableOnColumnResize

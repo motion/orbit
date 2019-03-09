@@ -1,5 +1,6 @@
 import { View } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
+import { BorderLeft } from '../Border'
 import { Interactive, InteractiveProps } from '../Interactive'
 
 export function VerticalSplitPane(
@@ -15,7 +16,12 @@ export function VerticalSplitPane(
   )
 
   if (props.index === 1) {
-    return <View flex={1} {...props} />
+    return (
+      <View flex={1} position="relative">
+        <BorderLeft />
+        {props.children}
+      </View>
+    )
   }
 
   return (

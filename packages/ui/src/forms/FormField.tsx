@@ -1,5 +1,6 @@
 import { Row } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
+import { getDataType } from '../helpers/getDataType'
 import { HorizontalSpace } from '../layout/HorizontalSpace'
 import { FormTableLabel, FormTableRow, FormTableValue, RowProps } from '../tables/Table'
 import { DataType } from '../types'
@@ -43,7 +44,9 @@ export function FormField({ type, ...props }: FormFieldProps) {
     [props.name],
   )
 
-  switch (type) {
+  console.log('type', type)
+
+  switch (type || getDataType(props.value)) {
     case DataType.boolean:
       return <CheckBoxField name={name} {...props} />
     case DataType.date:

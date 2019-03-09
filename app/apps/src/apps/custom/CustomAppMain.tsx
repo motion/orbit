@@ -55,6 +55,7 @@ export function CustomAppMain(_props: AppProps) {
     <VerticalSplit>
       <VerticalSplitPane>
         <Table
+          searchable
           multiHighlight
           onHighlightedRows={setHighlighted}
           rows={rows}

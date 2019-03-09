@@ -1,57 +1,56 @@
 import { ManagedTable, SearchableTable, SearchableTableProps, useMemoGetValue } from '@o/ui'
 import React, { useCallback } from 'react'
-import { Icon } from './Icon'
 
 export type TableProps = SearchableTableProps & {
   searchable?: boolean
   onHighlightedRows?: (rows: any[]) => void
 }
 
-const defaultRowTypes = {
-  verbose: {
-    label: 'Verbose',
-    color: 'purple',
-  },
-  debug: {
-    label: 'Debug',
-    color: 'grey',
-  },
-  info: {
-    label: 'Info',
-    icon: <Icon name="info-circle" color="cyan" />,
-    color: 'cyan',
-  },
-  warn: {
-    label: 'Warn',
-    style: {
-      backgroundColor: 'yellowTint',
-      color: 'yellow',
-      fontWeight: 500,
-    },
-    icon: <Icon name="caution-triangle" color="yellow" />,
-    color: 'yellow',
-  },
-  error: {
-    label: 'Error',
-    style: {
-      backgroundColor: 'redTint',
-      color: 'red',
-      fontWeight: 500,
-    },
-    icon: <Icon name="caution-octagon" color="red" />,
-    color: 'red',
-  },
-  fatal: {
-    label: 'Fatal',
-    style: {
-      backgroundColor: 'redTint',
-      color: 'darkred',
-      fontWeight: 700,
-    },
-    icon: <Icon name="stop" color="red" />,
-    color: 'darkred',
-  },
-}
+// const defaultRowTypes = {
+//   verbose: {
+//     label: 'Verbose',
+//     color: 'purple',
+//   },
+//   debug: {
+//     label: 'Debug',
+//     color: 'grey',
+//   },
+//   info: {
+//     label: 'Info',
+//     icon: <Icon name="info-circle" color="cyan" />,
+//     color: 'cyan',
+//   },
+//   warn: {
+//     label: 'Warn',
+//     style: {
+//       backgroundColor: 'yellowTint',
+//       color: 'yellow',
+//       fontWeight: 500,
+//     },
+//     icon: <Icon name="caution-triangle" color="yellow" />,
+//     color: 'yellow',
+//   },
+//   error: {
+//     label: 'Error',
+//     style: {
+//       backgroundColor: 'redTint',
+//       color: 'red',
+//       fontWeight: 500,
+//     },
+//     icon: <Icon name="caution-octagon" color="red" />,
+//     color: 'red',
+//   },
+//   fatal: {
+//     label: 'Fatal',
+//     style: {
+//       backgroundColor: 'redTint',
+//       color: 'darkred',
+//       fontWeight: 700,
+//     },
+//     icon: <Icon name="stop" color="red" />,
+//     color: 'darkred',
+//   },
+// }
 
 const defaultColumns = {
   resizable: true,

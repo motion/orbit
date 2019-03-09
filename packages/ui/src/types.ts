@@ -48,3 +48,15 @@ export enum DataType {
   date = 'date',
   unknown = 'unknown',
 }
+
+export type DataColumn ={
+  value: string
+  sortable?: boolean
+  resizable?: boolean
+  flex?: number
+  type?: DataType
+}
+
+export type DataColumns = {
+  [key: string]: DataColumn
+}

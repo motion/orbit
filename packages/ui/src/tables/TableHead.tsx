@@ -9,9 +9,9 @@ import { gloss, Row } from '@o/gloss';
 import invariant from 'invariant';
 import * as React from 'react';
 import { ContextMenu } from '../ContextMenu';
-// import ContextMenu from '../ContextMenu.js'
 import { Interactive } from '../Interactive';
-import { SortOrder, TableColumnOrder, TableColumns, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types';
+import { DataColumns, DataType } from '../types';
+import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types';
 import { isPercentage, normaliseColumnWidth } from './utils';
 
 const TableHeaderArrow = gloss({
@@ -186,8 +186,21 @@ class TableHeadColumn extends React.PureComponent<{
   }
 }
 
-function calculateColumnSizes(columns: TableColumns): TableColumnSizes {
-  const totalFlex = Object.keys(columns).reduce((a, k) => a + columns[k].flex || 1, 0)
+// this will:
+//    1. if no flex provided, assume that strings should flex double anything else
+//    2. if any flex provided, default rest to flex 1
+//    3. calculate the percentage width based on flexes
+function calculateColumnSizes(columns: DataColumns): TableColumnSizes {
+  const values = Object.keys(columns).map(k => columns[k])
+  const isUncontrolled = values.some(x => typeof x.flex !== 'undefined')
+  const flexes = values.map(val => {
+    if (isUncontrolled) {
+      return !val.type || val.type === DataType.string ? 2 : 1
+    } else {
+      return val.flex || 1
+    }
+  })
+  const totalFlex = flexes.reduce((a, flex) => a + flex, 0)
   const sizes = {}
   for (const key of Object.keys(columns)) {
     const flex = columns[key].flex
@@ -200,7 +213,7 @@ export class TableHead extends React.PureComponent<
   {
     columnOrder: TableColumnOrder
     onColumnOrder?: (order: TableColumnOrder) => void
-    columns: TableColumns
+    columns: DataColumns
     sortOrder?: SortOrder
     onSort?: TableOnSort
     columnSizes?: TableColumnSizes

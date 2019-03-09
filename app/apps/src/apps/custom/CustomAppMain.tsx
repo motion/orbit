@@ -1,9 +1,11 @@
 import { AppProps, Table } from '@o/kit'
 import {
   createEnumFilter,
+  DataColumns,
   DataType,
+  FormField,
   GenericDataRow,
-  getDataType,
+  Section,
   Title,
   VerticalSplit,
   VerticalSplitPane,
@@ -25,6 +27,27 @@ const rows = [...new Array(10000)].map((_, index) => ({
   },
 }))
 
+const columns = {
+  name: {
+    value: 'Name',
+  },
+  topic: {
+    value: 'Topic',
+  },
+  members: {
+    value: 'Members',
+    type: DataType.number,
+  },
+  createdAt: {
+    value: 'Created',
+    type: DataType.date,
+  },
+  active: {
+    value: 'Active',
+    type: DataType.boolean,
+  },
+}
+
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
 
@@ -36,45 +59,43 @@ export function CustomAppMain(_props: AppProps) {
           onHighlightedRows={setHighlighted}
           rows={rows}
           defaultFilters={[createEnumFilter(rowTypes)]}
-          columns={{
-            name: {
-              value: 'Name',
-              flex: 2,
-            },
-            topic: {
-              value: 'Topic',
-              flex: 2,
-            },
-            members: {
-              value: 'Members',
-              type: DataType.number,
-            },
-            createdAt: {
-              value: 'Created',
-              type: DataType.date,
-            },
-            active: {
-              value: 'Active',
-              type: DataType.boolean,
-            },
-          }}
+          columns={columns}
         />
       </VerticalSplitPane>
 
       <VerticalSplitPane>
-        <Title bordered>Hello World</Title>
-        <Form values={highlighted} />
+        <Section>
+          <Title>Hello World</Title>
+          <Form columns={columns} rows={highlighted} />
+        </Section>
       </VerticalSplitPane>
     </VerticalSplit>
   )
 }
 
-function Form(props: { values: GenericDataRow[] | null }) {
-  if (!props.values || props.values.length === 0) {
+type FormProps = { columns: DataColumns; rows: GenericDataRow[] | null }
+
+function Form({ columns, rows }: FormProps) {
+  if (!rows || rows.length === 0) {
     return null
   }
-  const firstRow = props.values[0]
-  const fieldTypes = Object.keys(firstRow.values).map(k => getDataType(firstRow.values[k]))
-  console.log('highlighted', props.values, fieldTypes)
-  return <Title>{JSON.stringify({ props, fieldTypes })}</Title>
+
+  return (
+    <>
+      <Title>{JSON.stringify({ columns, rows })}</Title>
+      {rows.map(row => {
+        return Object.keys(row.values).map(valKey => {
+          const value = row.values[valKey]
+          return (
+            <FormField
+              key={value.key}
+              type={columns[valKey].type}
+              label={columns[valKey].value}
+              value={value}
+            />
+          )
+        })
+      })}
+    </>
+  )
 }

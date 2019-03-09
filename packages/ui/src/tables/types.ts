@@ -1,4 +1,4 @@
-import { GenericDataRow } from '../types'
+import { GenericDataRow } from '../types';
 
 /**
  * Copyright 2018-present Facebook.
@@ -58,24 +58,12 @@ export type TableOnColumnOrder = (order: TableColumnOrder) => void
 export type TableOnSort = (order: SortOrder) => void
 export type TableOnHighlight = (highlightedRows: TableHighlightedRows, e: Event) => void
 
-export type TableHeaderColumn = {
-  value: string
-  sortable?: boolean
-  resizable?: boolean
-  flex?: number
-  type?: 'date' | 'number' | 'string' | 'boolean' | null
-}
-
 export type TableBodyColumn = {
   sortValue?: string | number | boolean
   isFilterable?: boolean
   value: any
   title?: string
   type?: 'date'
-}
-
-export type TableColumns = {
-  [key: string]: TableHeaderColumn
 }
 
 export type TableRows = GenericDataRow[]

@@ -13,11 +13,11 @@ import { VariableSizeList } from 'react-window';
 import { ContextMenu } from '../ContextMenu';
 import { ResizeObserver } from '../ResizeObserver';
 import { Text } from '../text/Text';
-import { GenericDataRow } from '../types';
+import { DataColumns, GenericDataRow } from '../types';
 import { getSortedRows } from './getSortedRows';
 import { TableHead } from './TableHead';
 import { TableRow } from './TableRow';
-import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumns, TableColumnSizes, TableHighlightedRows, TableOnAddFilter, TableRows } from './types';
+import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableHighlightedRows, TableOnAddFilter, TableRows } from './types';
 
 // TODO this can move to useResizeObserver
 function useComponentSize() {
@@ -92,7 +92,7 @@ export type ManagedTableProps = {
   /**
    * Column definitions.
    */
-  columns: TableColumns
+  columns: DataColumns
   /**
    * Row data
    */
@@ -195,6 +195,19 @@ class ManagedTableInner extends React.Component<
     ),
   }
 
+  state: ManagedTableState = {
+    columnOrder:
+      JSON.parse(window.localStorage.getItem(this.getTableKey()) || 'null') ||
+      this.props.columnOrder ||
+      Object.keys(this.props.columns).map(key => ({ key, visible: true })),
+    columnSizes: this.props.columnSizes || {},
+    highlightedRows: new Set(),
+    sortOrder: this.props.defaultSortOrder,
+    sortedRows: null,
+    shouldScrollToBottom: Boolean(this.props.stickyBottom),
+    prevProps: {},
+  }
+
   static getDerivedStateFromProps = (props, state) => {
     const { prevProps } = state
     let nextState = {}
@@ -252,26 +265,10 @@ class ManagedTableInner extends React.Component<
     return null
   }
 
-  getTableKey = (): string => {
-    return (
-      'TABLE_COLUMNS_' +
-      Object.keys(this.props.columns)
-        .join('_')
-        .toUpperCase()
-    )
-  }
-
-  state: ManagedTableState = {
-    columnOrder:
-      JSON.parse(window.localStorage.getItem(this.getTableKey()) || 'null') ||
-      this.props.columnOrder ||
-      Object.keys(this.props.columns).map(key => ({ key, visible: true })),
-    columnSizes: this.props.columnSizes || {},
-    highlightedRows: new Set(),
-    sortOrder: this.props.defaultSortOrder,
-    sortedRows: null,
-    shouldScrollToBottom: Boolean(this.props.stickyBottom),
-    prevProps: {},
+  getTableKey() {
+    return `TABLE_COLUMNS_${Object.keys(this.props.columns)
+      .join('_')
+      .toUpperCase()}`
   }
 
   tableRef: {
@@ -359,8 +356,8 @@ class ManagedTableInner extends React.Component<
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
     this.setState({ sortOrder, sortedRows })
-    if (this.props.onSort) {
-      this.props.onSort(sortOrder)
+    if (this.props.onSortOrder) {
+      this.props.onSortOrder(sortOrder)
     }
   }
 

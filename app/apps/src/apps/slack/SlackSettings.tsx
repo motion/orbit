@@ -16,7 +16,7 @@ export function SlackSettings({ subId }: AppProps) {
   })
   // setup state
   const [channels, setChannels] = useState(null)
-  const [highlightedRows, setHighlightedRows] = useState([])
+  const [, setHighlightedRows] = useState([])
 
   // load and set channels when app changes
   useEffect(

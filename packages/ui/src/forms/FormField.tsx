@@ -27,12 +27,20 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
   )
 }
 
-type FormFieldProps = {
-  type: DataType
-  label: React.ReactNode
-  value: any
-  name?: string
-}
+type FormFieldProps =
+  | {
+      type: DataType
+      label: React.ReactNode
+      value: any
+      name?: string
+    }
+  | {
+      label: React.ReactNode
+      children: React.ReactNode
+      type?: undefined
+      value?: undefined
+      name?: string
+    }
 
 export function FormField({ type, ...props }: FormFieldProps) {
   const [name, setName] = useState(props.name || `field-${type}-${Math.random()}`)
@@ -44,11 +52,9 @@ export function FormField({ type, ...props }: FormFieldProps) {
     [props.name],
   )
 
-  console.log('type', type)
-
   switch (type || getDataType(props.value)) {
     case DataType.boolean:
-      return <CheckBoxField name={name} {...props} />
+      return <CheckBoxField name={name} {...props as any} />
     case DataType.date:
       // TODO calendar option after input
       return <InputField name={name} {...props} />
@@ -58,6 +64,10 @@ export function FormField({ type, ...props }: FormFieldProps) {
       return <InputField name={name} {...props} />
     case DataType.unknown:
     default:
+      if (typeof type === 'undefined') {
+        // @ts-ignore
+        return props.children
+      }
       console.error('Unknown data type to render', type, props)
       return null
   }

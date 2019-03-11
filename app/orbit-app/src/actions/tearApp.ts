@@ -1,8 +1,8 @@
-import { App } from '@mcro/stores'
+import { command } from '@o/bridge'
+import { TearAppCommand } from '@o/models'
+import { App } from '@o/stores'
 import { last } from 'lodash'
 import { AllStores } from '../contexts/StoreContext'
-import { command } from '@mcro/bridge'
-import { TearAppCommand } from '@mcro/models'
 
 export function tearApp(stores: AllStores) {
   return () => {

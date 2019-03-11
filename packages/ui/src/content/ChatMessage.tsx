@@ -1,4 +1,4 @@
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row, View } from '@o/gloss'
 import React, { useContext } from 'react'
 import { ButtonPerson } from '../buttons/ButtonPerson'
 import { DateFormat } from '../text/DateFormat'

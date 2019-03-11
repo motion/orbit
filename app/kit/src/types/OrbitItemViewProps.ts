@@ -1,6 +1,6 @@
-import { ItemRenderText, ListItemHide } from '@mcro/ui'
+import { Bit } from '@o/models'
+import { ItemRenderText, ListItemHide } from '@o/ui'
 import { NormalItem } from './NormalItem'
-import { Bit } from '@mcro/models'
 
 export type OrbitItemViewProps = {
   item?: Bit

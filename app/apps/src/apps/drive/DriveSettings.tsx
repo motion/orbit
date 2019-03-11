@@ -1,12 +1,10 @@
-import { useModel } from '@mcro/bridge'
-import { AppProps } from '@mcro/kit'
-import { AppBit, AppModel } from '@mcro/models'
-import { CheckboxReactive, SearchableTable, Text, View } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { useModel } from '@o/bridge'
+import { AppProps } from '@o/kit'
+import { AppBit, AppModel } from '@o/models'
+import { CheckboxReactive, SearchableTable, Text, View } from '@o/ui'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
-
-type Props = AppProps
 
 class DriveSettingsStore {
   props: { app?: AppBit }
@@ -42,8 +40,7 @@ class DriveSettingsStore {
   }
 }
 
-export function DriveSettings(props: Props) {
-  const { subId } = props.appConfig
+export function DriveSettings({ subId }: AppProps) {
   const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders

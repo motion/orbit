@@ -1,4 +1,4 @@
-import { AppBit } from '@mcro/models'
+import { AppBit } from '@o/models'
 import { useActiveApps } from './useActiveApps'
 import { useActiveSpace } from './useActiveSpace'
 

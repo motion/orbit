@@ -1,5 +1,5 @@
-import { Bridge, BridgeOptions, proxySetters } from '@mcro/mobx-bridge'
-import { decorate, deep } from '@mcro/use-store'
+import { Bridge, BridgeOptions, proxySetters } from '@o/mobx-bridge'
+import { decorate, deep } from '@o/use-store'
 
 // store export
 export let Desktop = null as DesktopStore

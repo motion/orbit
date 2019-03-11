@@ -1,4 +1,4 @@
-import { ListItem, Separator, View } from '@mcro/ui'
+import { ListItem, Separator, View } from '@o/ui'
 import { flatten } from 'lodash'
 import React, { memo, useContext } from 'react'
 import { useActiveApps } from '../hooks/useActiveApps'

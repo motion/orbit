@@ -1,5 +1,5 @@
-import { resolveMany } from '@mcro/mediator'
-import { SearchLocationsModel } from '@mcro/models'
+import { resolveMany } from '@o/mediator'
+import { SearchLocationsModel } from '@o/models'
 
 // TODO: DISTINCT() query
 

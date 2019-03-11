@@ -1,6 +1,5 @@
 import {
   AppDefinition,
-  AppProps,
   AppWithDefinition,
   Icon,
   List,
@@ -8,11 +7,11 @@ import {
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
-} from '@mcro/kit'
+  useAppDefinitions,
+} from '@o/kit'
 import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
-import { orbitApps } from '../orbitApps'
 
 function getDescription(def: AppDefinition) {
   const hasSync = !!def.sync
@@ -27,7 +26,7 @@ function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
     subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
-    appConfig: {
+    appProps: {
       viewType: 'settings' as 'settings',
       subId: `${app.app.id}`,
       identifier: app.app.identifier,
@@ -36,12 +35,11 @@ function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
   }
 }
 
-export function AppsIndex(_props: AppProps) {
+export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
-  const allSourceDefinitions = orbitApps.filter(x => !!x.sync)
+  const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
   const [syncApps, clientApps] = partition(useActiveAppsWithDefinition(), x => !!x.definition.sync)
-  console.log('useActiveAppsWithDefinition 123()', allSourceDefinitions)
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -51,7 +49,6 @@ export function AppsIndex(_props: AppProps) {
 
   return (
     <List
-      minSelected={0}
       items={[
         ...clientApps.map(x => getAppItem(x, { group: 'Apps' })),
         ...syncApps.map(x => getAppItem(x, { group: 'Sources', after: sourceIcon })),
@@ -63,7 +60,7 @@ export function AppsIndex(_props: AppProps) {
           slim: true,
           subtitle: getDescription(def),
           after: sourceIcon,
-          appConfig: {
+          appProps: {
             identifier: 'apps',
             subType: 'add-app',
             subId: def.id,

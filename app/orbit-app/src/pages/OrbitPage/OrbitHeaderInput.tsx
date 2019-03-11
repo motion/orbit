@@ -1,6 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import { useActiveSpace } from '@mcro/kit'
-import { ClearButton, ThemeContext, View } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { useActiveSpace } from '@o/kit'
+import { ClearButton, ThemeContext, View } from '@o/ui'
 import React, { memo } from 'react'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStores } from '../../hooks/useStores'
@@ -76,15 +76,15 @@ const After = gloss({
 const FakeInput = gloss(View, {
   position: 'relative',
   height: 34,
-  padding: [2, 10],
+  padding: [2, 12],
   alignItems: 'center',
   justifyContent: 'center',
   flexFlow: 'row',
   flex: 1,
   cursor: 'text',
   transition: 'none',
-  '&:active': {
-    background: [0, 0, 0, 0.035],
-    transition: 'all ease-out 350ms 350ms',
-  },
+  // '&:active': {
+  //   background: [0, 0, 0, 0.035],
+  //   transition: 'all ease-out 350ms 350ms',
+  // },
 })

@@ -1,6 +1,6 @@
-import { AppConfig } from '@mcro/kit'
-import { Logger } from '@mcro/logger'
-import { App } from '@mcro/stores'
+import { AppProps } from '@o/kit'
+import { Logger } from '@o/logger'
+import { App } from '@o/stores'
 import { AppActions } from '../AppActions'
 import { setPeekApp } from './setPeekApp'
 
@@ -9,16 +9,16 @@ const id = x => `${x.type}${x.id}${x.subType}${x.title}`
 const isEqual = (a, b) => a && b && id(a) === id(b)
 
 export function togglePeekApp({
-  appConfig,
+  appProps,
   target,
 }: {
-  appConfig: AppConfig
+  appProps: AppProps
   target?: HTMLDivElement
 }) {
-  log.info('togglePeekApp', appConfig)
-  if (isEqual(App.peekState.appConfig, appConfig)) {
+  log.info('togglePeekApp', appProps)
+  if (isEqual(App.peekState.appProps, appProps)) {
     AppActions.clearPeek()
   } else {
-    setPeekApp({ appConfig, target })
+    setPeekApp({ appProps, target })
   }
 }

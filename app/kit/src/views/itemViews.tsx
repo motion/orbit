@@ -1,9 +1,8 @@
-import { Document, Markdown, Task, Thread } from '@mcro/ui'
+import { Avatar, Document, Markdown, Task, Thread } from '@o/ui'
 import React from 'react'
 import { Conversation } from '../bit/BitConversation'
 import { ConversationItem } from '../bit/BitConversationItem'
 import { Readability } from '../bit/Readability'
-import { ListItemPerson } from './ListItemPerson'
 
 export const itemViewsApp = {
   conversation: Conversation,
@@ -14,12 +13,18 @@ export const itemViewsApp = {
   thread: Thread,
 }
 
-export const itemViewsListItem = {
+// we could allow custom ones...
+export const listItemDecorators = {
   conversation: ConversationItem,
   document: ({ item }) => <Document {...item} />,
   markdown: ({ item }) => <Markdown {...item} />,
   text: ({ item }) => <Readability {...item} />,
   task: ({ item }) => <Task {...item} />,
   thread: ({ item }) => <Thread {...item} />,
-  person: ListItemPerson,
+  person: {
+    getItemProps: item => ({
+      icon: <Avatar width={40} height={40} src={item.photo} />,
+      paddingLeft: 30,
+    }),
+  },
 }

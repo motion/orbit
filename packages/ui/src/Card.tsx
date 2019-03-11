@@ -1,5 +1,5 @@
-import { CSSPropertySet, gloss, View } from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
+import { CSSPropertySet, gloss, View } from '@o/gloss'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Glint } from './effects/Glint'

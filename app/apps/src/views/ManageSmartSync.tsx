@@ -1,5 +1,5 @@
-import { WhitelistManager } from '@mcro/kit'
-import { CheckboxReactive, HorizontalSpace, Surface, Text, Theme } from '@mcro/ui'
+import { WhitelistManager } from '@o/kit'
+import { CheckboxReactive, HorizontalSpace, Surface, Text, Theme } from '@o/ui'
 import * as React from 'react'
 
 export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {

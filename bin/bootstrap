@@ -27,7 +27,7 @@ ensure-dep "tsc" -- npm i -g typescript
 #   bin/__/build-builder-modules
 # fi
 # # link second
-# if [ ! -L "./node_modules/@mcro/gloss" ]; then
+# if [ ! -L "./node_modules/@o/gloss" ]; then
 #   bin/__/link-root-modules
 # fi
 

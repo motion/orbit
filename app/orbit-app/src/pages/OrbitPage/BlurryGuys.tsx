@@ -1,6 +1,6 @@
-import { FullScreen, gloss } from '@mcro/gloss'
-import { View } from '@mcro/ui'
-import { react, useStore } from '@mcro/use-store'
+import { FullScreen, gloss } from '@o/gloss'
+import { View } from '@o/ui'
+import { react, useStore } from '@o/use-store'
 import { now } from 'mobx-utils'
 import * as React from 'react'
 

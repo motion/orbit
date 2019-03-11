@@ -1,7 +1,7 @@
-import { useModels } from '@mcro/bridge'
-import { List, OrbitOrb, useActiveQueryFilter, useActiveUser } from '@mcro/kit'
-import { SpaceModel } from '@mcro/models'
-import { Button } from '@mcro/ui'
+import { useModels } from '@o/bridge'
+import { List, OrbitOrb, useActiveQueryFilter, useActiveUser } from '@o/kit'
+import { SpaceModel } from '@o/models'
+import { Button } from '@o/ui'
 import * as React from 'react'
 
 export default function SpacesAppIndex() {

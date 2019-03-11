@@ -1,4 +1,4 @@
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer } from '@o/sync-kit'
 import { DriveLoader } from './DriveLoader'
 import { DriveBitFactory } from './DriveBitFactory'
 import { DriveAppData } from './DriveModels'

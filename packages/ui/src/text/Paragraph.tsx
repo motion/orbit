@@ -1,6 +1,7 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import { Text } from './Text'
 
 export const Paragraph = gloss(Text, {
   margin: [0, 0, '1rem'],
+  alpha: 0.85,
 })

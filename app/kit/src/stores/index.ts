@@ -1,22 +1,22 @@
-import { SelectionStore } from '@mcro/ui'
+import { SelectionStore } from '@o/ui'
 import { AppsStore } from './AppsStore'
 import { AppStore } from './AppStore'
+import { LocationStore } from './LocationStore'
 import { PaneManagerStore } from './PaneManagerStore'
 import { QueryStore } from './QueryStore'
-import { SettingStore } from './SettingStore'
 import { ShortcutStore } from './ShortcutStore'
 import { SpaceStore } from './SpaceStore'
 import { SubPaneStore } from './SubPaneStore'
 import { ThemeStore } from './ThemeStore'
 
-export { SelectionStore } from '@mcro/ui'
+export { SelectionStore } from '@o/ui'
 export { AppsStore } from './AppsStore'
 export { AppStore } from './AppStore'
+export { LocationStore } from './LocationStore'
 export { NLPStore } from './NLPStore/NLPStore'
 export { PaneManagerStore } from './PaneManagerStore'
 export { QueryFilterStore } from './QueryFilterStore'
 export { QueryStore } from './QueryStore'
-export { SettingStore } from './SettingStore'
 export { ShortcutStore } from './ShortcutStore'
 export { SpaceStore } from './SpaceStore'
 export { SubPaneStore } from './SubPaneStore'
@@ -30,7 +30,7 @@ export type KitStores = {
   selectionStore?: SelectionStore
   shortcutStore?: ShortcutStore
   themeStore?: ThemeStore
+  locationStore?: LocationStore
   spaceStore?: SpaceStore
-  settingStore?: SettingStore
   appsStore?: AppsStore
 }

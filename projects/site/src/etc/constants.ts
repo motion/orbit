@@ -1,4 +1,4 @@
-import { color } from '@mcro/color'
+import { color } from '@o/color'
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 

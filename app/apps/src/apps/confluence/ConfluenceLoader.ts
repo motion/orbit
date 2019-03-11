@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { AppBit } from '@mcro/models'
-import { ServiceLoader, sleep } from '@mcro/sync-kit'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
+import { ServiceLoader, sleep } from '@o/sync-kit'
 import { ConfluenceQueries } from './ConfluenceQueries'
 import {
   ConfluenceAppData,

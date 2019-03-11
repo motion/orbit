@@ -1,4 +1,4 @@
-import { getGlobalConfig } from '@mcro/config'
+import { getGlobalConfig } from '@o/config'
 import { ChildProcess, spawn } from 'child_process'
 
 export type ChildProcessProps = {

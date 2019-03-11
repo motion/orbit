@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { resolveCommand } from '@mcro/mediator'
-import { AppBit, AppEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { AppBit, AppEntity, AppRemoveCommand, BitEntity, Job, JobEntity } from '@o/models'
 import { getManager, getRepository } from 'typeorm'
 
 const log = new Logger('command:app-remove')

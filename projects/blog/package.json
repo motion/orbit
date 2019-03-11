@@ -1,6 +1,6 @@
 {
-  "name": "@mcro/blog",
-  "version": "2.3.10",
+  "name": "@o/blog",
+  "version": "2.4.0",
   "private": true,
   "dependencies": {
     "gatsby": "^2.0.0",

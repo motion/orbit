@@ -1,6 +1,6 @@
-import { isEqual } from '@mcro/fast-compare'
-import { useActiveUser } from '@mcro/kit'
-import { App } from '@mcro/stores'
+import { isEqual } from '@o/fast-compare'
+import { useActiveUser } from '@o/kit'
+import { App } from '@o/stores'
 import { useEffect, useRef } from 'react'
 import { getIsTorn } from '../helpers/getIsTorn'
 

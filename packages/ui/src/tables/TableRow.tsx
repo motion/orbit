@@ -5,16 +5,10 @@
  * @format
  */
 
-import { gloss, Row, SimpleText } from '@mcro/gloss'
+import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
 import FilterRow from './FilterRow'
-import {
-  DEFAULT_ROW_HEIGHT,
-  TableBodyRow,
-  TableColumnKeys,
-  TableColumnSizes,
-  TableOnAddFilter,
-} from './types'
+import { DEFAULT_ROW_HEIGHT, TableBodyRow, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
 const backgroundColor = (props, theme) => {

@@ -8,7 +8,7 @@ export const AppLoadContext = createContext({
   id: '',
 })
 
-export type AppSubViewProps = {
+export type AppMainViewProps = {
   children: React.ReactElement<any>
   hasSidebar: boolean
   hasStatusbar: boolean
@@ -16,13 +16,13 @@ export type AppSubViewProps = {
   hasMain: boolean
 }
 
-type AppSubView = React.FunctionComponent<AppSubViewProps>
+type AppMainView = React.FunctionComponent<AppMainViewProps>
 
 export const AppViewsContext = createContext({
-  Toolbar: null as AppSubView,
-  Statusbar: null as AppSubView,
-  Main: null as AppSubView,
-  Sidebar: null as AppSubView,
+  Toolbar: null as AppMainView,
+  Statusbar: null as AppMainView,
+  Main: null as AppMainView,
+  Sidebar: null as AppMainView,
 })
 
 export function App(props: AppElements) {

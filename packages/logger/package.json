@@ -1,6 +1,6 @@
 {
-  "name": "@mcro/logger",
-  "version": "2.3.10",
+  "name": "@o/logger",
+  "version": "2.4.0",
   "author": "Motion",
   "main": "_/index.js",
   "sideEffects": false,

@@ -1,5 +1,5 @@
+import { ThemeObject } from '@o/css'
 import memoize from 'memoize-weak'
-import { ThemeObject } from '@mcro/css'
 
 export default memoize(function selectThemeSubset(prefix: string, theme: ThemeObject) {
   const len = prefix.length

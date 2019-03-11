@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { HorizontalSpace } from '../layout/HorizontalSpace'

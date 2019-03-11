@@ -1,7 +1,7 @@
-import { save } from '@mcro/bridge'
-import { isEqual } from '@mcro/fast-compare'
-import { AppModel } from '@mcro/models'
-import { ensure, react } from '@mcro/use-store'
+import { save } from '@o/bridge'
+import { isEqual } from '@o/fast-compare'
+import { AppModel } from '@o/models'
+import { ensure, react } from '@o/use-store'
 import produce from 'immer'
 import { memoize } from 'lodash'
 

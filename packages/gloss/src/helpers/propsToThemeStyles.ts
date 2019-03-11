@@ -1,4 +1,4 @@
-import { ThemeObject } from '@mcro/css'
+import { ThemeObject } from '@o/css'
 import { styleVal } from './propsToStyles'
 
 // resolves props into styles for valid css

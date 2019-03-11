@@ -1,19 +1,19 @@
 {
-  "name": "@mcro/automagical",
+  "name": "@o/automagical",
   "main": "_/automagical.js",
   "sideEffects": false,
-  "version": "2.3.10",
+  "version": "2.4.0",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@mcro/logger": "^2.3.10",
-    "@mcro/fast-compare": "*",
+    "@o/fast-compare": "^2.4.0",
+    "@o/logger": "^2.4.0",
+    "event-kit": "2.5.3",
     "global": "^4.3.2",
     "json-stringify-pretty-compact": "1.2.0",
-    "zen-observable": "0.8.13",
-    "event-kit": "2.5.3"
+    "zen-observable": "0.8.13"
   },
   "devDependencies": {
     "@types/webpack-env": "*"

@@ -1,7 +1,7 @@
-import { PaneManagerStore, QueryStore, useActiveApps } from '@mcro/kit'
-import { App, Desktop, Electron } from '@mcro/stores'
-import { MergeContext, View, VirtualListDefaultProps } from '@mcro/ui'
-import { always, ensure, react, useStore } from '@mcro/use-store'
+import { PaneManagerStore, QueryStore, useActiveApps } from '@o/kit'
+import { App, Desktop, Electron } from '@o/stores'
+import { MergeContext, View, VirtualListDefaultProps } from '@o/ui'
+import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
 import * as React from 'react'
 import { createRef } from 'react'
@@ -552,13 +552,7 @@ const MenuLayerContent = React.memo(() => {
         }}
       >
         {menuApps.map(app => (
-          <MenuApp
-            identifier={app.id}
-            index={app.index}
-            key={app.id}
-            viewType="index"
-            title={app.name}
-          />
+          <MenuApp identifier={app.id} index={app.index} key={app.id} viewType="index" />
         ))}
       </AppSearchable>
     </View>

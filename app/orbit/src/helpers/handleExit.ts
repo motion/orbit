@@ -1,4 +1,4 @@
-import { cleanupChildren } from '@mcro/orbit-fork-process'
+import { cleanupChildren } from '@o/orbit-fork-process'
 import { ChildProcess, exec } from 'child_process'
 import root from 'global'
 import { once } from 'lodash'

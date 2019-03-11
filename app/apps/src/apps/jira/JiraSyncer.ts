@@ -1,4 +1,4 @@
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer } from '@o/sync-kit'
 import { JiraLoader } from './JiraLoader'
 import { JiraBitFactory } from './JiraBitFactory'
 import { JiraAppData } from './JiraModels'

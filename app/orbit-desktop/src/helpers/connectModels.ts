@@ -1,4 +1,4 @@
-import { AppBit, AppEntity } from '@mcro/models'
+import { AppBit, AppEntity } from '@o/models'
 import { remove } from 'fs-extra'
 import { Connection, ConnectionOptions, createConnection } from 'typeorm'
 import { DATABASE_PATH } from '../constants'
@@ -40,7 +40,7 @@ export default async function connectModels(models) {
     console.error(`\n\nerror during connection create: `, err1)
 
     try {
-      connection.close()
+      await connection.close()
     } catch {
       // fine, just in case something odd kept it open
     }

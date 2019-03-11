@@ -1,6 +1,6 @@
-import { MediatorClient, WebSocketClientTransport } from '@mcro/mediator'
-import { getGlobalConfig } from '@mcro/config'
-import { randomString } from '@mcro/utils'
+import { getGlobalConfig } from '@o/config'
+import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { randomString } from '@o/utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export const Mediator = new MediatorClient({
@@ -11,6 +11,6 @@ export const Mediator = new MediatorClient({
         WebSocket,
         minReconnectionDelay: 1,
       }),
-    )
-  ]
+    ),
+  ],
 })

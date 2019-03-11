@@ -1,21 +1,16 @@
-import { gloss } from '@mcro/gloss'
-import { AppLoadContext, AppSubViewProps, SubPane } from '@mcro/kit'
-import { BorderLeft } from '@mcro/ui'
-import { useReaction } from '@mcro/use-store'
+import { gloss } from '@o/gloss'
+import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
+import { BorderLeft } from '@o/ui'
 import React, { memo, useContext } from 'react'
-import { useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { toolbarPadElement } from './OrbitToolBar'
 
-export const OrbitMain = memo((props: AppSubViewProps) => {
+export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id } = useContext(AppLoadContext)
-  const { orbitStore, appStore } = useStoresSimple()
-  const sidebarWidth = useReaction(() => {
-    return props.hasSidebar ? appStore.sidebarWidth : 0
-  })
-  const appConfig = useReaction(() => {
-    return orbitStore.activeConfig[id] || {}
-  })
+  const { orbitStore, appStore } = useStores()
+  const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
+  const appProps = orbitStore.activeConfig[id] || {}
 
   if (!props.children) {
     return null
@@ -26,9 +21,7 @@ export const OrbitMain = memo((props: AppSubViewProps) => {
       <OrbitMainContainer isTorn={orbitStore.isTorn}>
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}
-        {React.cloneElement(props.children, {
-          appConfig,
-        })}
+        {React.cloneElement(props.children, appProps)}
         {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>
     </SubPane>

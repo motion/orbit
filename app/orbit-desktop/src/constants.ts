@@ -1,5 +1,5 @@
+import { getGlobalConfig } from '@o/config'
 import * as Path from 'path'
-import { getGlobalConfig } from '@mcro/config'
 
 const Config = getGlobalConfig()
 const env = process.env.NODE_ENV !== 'development' ? 'orbit' : 'dev'

@@ -1,4 +1,4 @@
-import { App, AppDefinition } from '@mcro/kit'
+import { App, AppDefinition } from '@o/kit'
 import React from 'react'
 import { OrbitSettingsToolbar } from '../views/OrbitSettingsToolbar'
 import { SettingsAppIndex } from './SettingsAppIndex'

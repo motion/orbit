@@ -1,12 +1,12 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import {
   MediatorClient,
   MediatorServer,
   typeormResolvers,
   WebSocketClientTransport,
   WebSocketServerTransport,
-} from '@mcro/mediator'
+} from '@o/mediator'
 import {
   AppEntity,
   AppForceCancelCommand,
@@ -17,13 +17,11 @@ import {
   Entities,
   JobEntity,
   JobModel,
-  SettingEntity,
-  SettingModel,
   SpaceEntity,
   SpaceModel,
   UserEntity,
   UserModel,
-} from '@mcro/models'
+} from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -111,15 +109,13 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [AppModel, SettingModel, BitModel, JobModel, SpaceModel, UserModel],
+      models: [AppModel, BitModel, JobModel, SpaceModel, UserModel],
       commands: [AppForceSyncCommand, AppForceCancelCommand],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
-          { entity: AppEntity, models: [AppModel] },
-          { entity: SettingEntity, models: [SettingModel] },
           { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },

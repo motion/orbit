@@ -1,9 +1,9 @@
-import { Logger } from '@mcro/logger'
-import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@mcro/sync-kit'
+import { Logger } from '@o/logger'
+import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailModels'
-import { AppBit } from '@mcro/models'
-import { getGlobalConfig } from '@mcro/config'
+import { AppBit } from '@o/models'
+import { getGlobalConfig } from '@o/config'
 
 /**
  * Defines a loading throttling.

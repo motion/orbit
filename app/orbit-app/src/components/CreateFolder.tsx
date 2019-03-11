@@ -1,4 +1,4 @@
-import { Absolute, BarButton, Button, Input, Popover, Row, SegmentedRow, View } from '@mcro/ui'
+import { Absolute, BarButton, Button, Input, Popover, Row, SegmentedRow, View } from '@o/ui'
 import { Picker } from 'emoji-mart'
 import React, { useState } from 'react'
 

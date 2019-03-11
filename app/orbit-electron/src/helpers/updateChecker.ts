@@ -1,9 +1,9 @@
-import { autoUpdater } from 'electron-updater'
-import { getGlobalConfig } from '@mcro/config'
-import logger from 'electron-log'
-import { Electron } from '@mcro/stores'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { Electron } from '@o/stores'
 import { app } from 'electron'
-import { Logger } from '@mcro/logger'
+import logger from 'electron-log'
+import { autoUpdater } from 'electron-updater'
 
 const log = new Logger('updateChecked')
 

@@ -1,4 +1,4 @@
-import { gloss, View } from '@mcro/gloss'
+import { gloss, View } from '@o/gloss'
 import * as React from 'react'
 import { useResizeObserver } from './hooks/useResizeObserver'
 

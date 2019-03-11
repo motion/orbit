@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import { Col, HighlightText, ListItem, Row, Text } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { Col, HighlightText, ListItem, Row, Text } from '@o/ui'
 import * as React from 'react'
 
 export const GroupedSearchItem = ({ item, query, ...props }) => {
@@ -8,7 +8,7 @@ export const GroupedSearchItem = ({ item, query, ...props }) => {
     <ListItem
       padding={[9, 11]}
       {...props}
-      // appConfig={{ id: `${Math.random()}`, identifier: 'search', subType: 'group', title: item.title }}
+      // appProps={{ id: `${Math.random()}`, identifier: 'search', subType: 'group', title: item.title }}
     >
       <Row flex={1}>
         <Circle style={{ fontSize: num.length > 2 ? 15 : 18 }}>{num}</Circle>

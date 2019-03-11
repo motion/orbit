@@ -1,5 +1,5 @@
-import { useModel } from '@mcro/bridge'
-import { userDefaultValue, UserModel } from '@mcro/models'
+import { useModel } from '@o/bridge'
+import { userDefaultValue, UserModel } from '@o/models'
 
 export function useActiveUser() {
   return useModel(

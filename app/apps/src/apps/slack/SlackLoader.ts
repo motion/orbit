@@ -1,8 +1,8 @@
-import { Logger } from '@mcro/logger'
-import { sleep } from '@mcro/sync-kit'
+import { Logger } from '@o/logger'
+import { sleep } from '@o/sync-kit'
 import { channels, team, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
-import { AppBit } from '@mcro/models'
+import { AppBit } from '@o/models'
 
 /**
  * Defines a loading throttling.

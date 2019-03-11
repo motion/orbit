@@ -1,4 +1,4 @@
-import { AppBit } from '@mcro/models'
+import { AppBit } from '@o/models'
 
 export type ItemID = number | string
 

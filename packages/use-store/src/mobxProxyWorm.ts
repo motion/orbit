@@ -1,5 +1,5 @@
-import { IS_STORE } from '@mcro/automagical'
-import { EQUALITY_KEY } from '@mcro/fast-compare'
+import { IS_STORE } from '@o/automagical'
+import { EQUALITY_KEY } from '@o/fast-compare'
 import { isAction, isObservableObject } from 'mobx'
 
 const IS_PROXY = Symbol('IS_PROXY')

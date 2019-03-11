@@ -1,4 +1,4 @@
-import { gloss, Row, View } from '@mcro/gloss'
+import { gloss, Row, View } from '@o/gloss'
 import React from 'react'
 
 export const Table = gloss(View, {

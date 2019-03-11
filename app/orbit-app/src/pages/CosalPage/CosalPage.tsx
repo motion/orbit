@@ -1,7 +1,7 @@
+import { gloss } from '@o/gloss'
 import * as React from 'react'
 import CosalSaliency from './CosalSaliency'
 import CosalSearch from './CosalSearch'
-import { gloss } from '@mcro/gloss'
 
 export default function CosalPage() {
   return (

@@ -1,4 +1,4 @@
-import { Col, Color, Contents, CSSPropertySet, gloss, ThemeContext } from '@mcro/gloss'
+import { Col, Color, Contents, CSSPropertySet, gloss, ThemeContext } from '@o/gloss'
 import * as React from 'react'
 
 type Props = CSSPropertySet & {

@@ -1,9 +1,11 @@
-import { AppConfig } from './AppConfig'
-
 export type AppProps = {
-  appConfig?: AppConfig
+  identifier?: string
   id?: string
-  viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
+  subId?: string
   title?: string
-  isActive?: boolean | (() => boolean)
+  data?: any
+  icon?: string
+  iconLight?: string
+  subType?: string
+  viewType?: 'main' | 'index' | 'setup' | 'settings'
 }

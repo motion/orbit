@@ -1,5 +1,5 @@
-import { useModels } from '@mcro/bridge'
-import { AppModel } from '@mcro/models'
+import { useModels } from '@o/bridge'
+import { AppModel } from '@o/models'
 
 export function useAppsForSpace(spaceId: number | false) {
   return useModels(

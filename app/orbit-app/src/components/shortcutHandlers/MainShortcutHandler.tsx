@@ -1,7 +1,7 @@
-import { ShortcutStore } from '@mcro/kit'
-import { App } from '@mcro/stores'
-import { Direction, MergeContext, PopoverState } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { ShortcutStore } from '@o/kit'
+import { App } from '@o/stores'
+import { Direction, MergeContext, PopoverState } from '@o/ui'
+import { useStore } from '@o/use-store'
 import React, { memo } from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { StoreContext } from '../../contexts'
@@ -69,7 +69,6 @@ export default memo(function MainShortcutHandler(props: {
       // }
       // Actions.copySelectedItemLink()
       // Actions.copyLink(searchStore.selectedItem)
-
     },
     escape: () => {
       console.log('escape')
@@ -78,7 +77,7 @@ export default memo(function MainShortcutHandler(props: {
         return
       }
       // clear peek first
-      if (App.peekState.appConfig) {
+      if (App.peekState.appProps) {
         return AppActions.clearPeek()
       }
       // then orbit query

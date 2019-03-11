@@ -1,5 +1,5 @@
-import { useCurrentComponent } from '@mcro/automagical'
-import { isEqual } from '@mcro/fast-compare'
+import { useCurrentComponent } from '@o/automagical'
+import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
@@ -10,6 +10,7 @@ import { queueUpdate, removeUpdate } from './queueUpdate'
 type TrackableStoreOptions = {
   component: any
   debug?: boolean
+  shouldUpdate?: boolean
 }
 
 const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
@@ -149,17 +150,21 @@ export function useTrackableStore<A>(
     untrack: null,
     dispose: null,
   })
-  if (!trackableStore.current.store) {
+  const shouldUpdate = opts && opts.shouldUpdate
+  if (shouldUpdate) {
+    trackableStore.current.store.dispose()
+  }
+  if (!trackableStore.current.store || shouldUpdate) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
   }
-  useEffect(() => {
-    return () => {
-      const { dispose } = trackableStore.current
-      dispose()
-    }
-  }, [])
+
+  // dispose on unmount
+  useEffect(() => () => trackableStore.current.dispose(), [])
+
+  // tracking
   const { store, track, untrack } = trackableStore.current
   track()
   useLayoutEffect(untrack)
+
   return store
 }

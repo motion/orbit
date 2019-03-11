@@ -1,8 +1,9 @@
-import { ChatMessage, HighlightText, ItemPropsContext } from '@mcro/ui'
+import { ChatMessage, HighlightText, ItemPropsContext } from '@o/ui'
 import * as React from 'react'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'
 
-const getMessages = (messages: any[], { shownLimit, searchTerm }) => { // todo: fix any type
+const getMessages = (messages: any[], { shownLimit, searchTerm }) => {
+  // todo: fix any type
   let res = messages.slice(0, shownLimit)
   if (searchTerm) {
     const filtered = res.filter(m => m.text.includes(searchTerm))

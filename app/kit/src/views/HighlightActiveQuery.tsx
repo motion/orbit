@@ -1,4 +1,4 @@
-import { MergeHighlightsContext, MergeHighlightsContextProps } from '@mcro/ui'
+import { MergeHighlightsContext, MergeHighlightsContextProps } from '@o/ui'
 import React, { memo } from 'react'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 

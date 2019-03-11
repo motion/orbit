@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { Server } from 'ws'
 
 const log = new Logger('scrn')

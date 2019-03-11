@@ -1,14 +1,17 @@
-import { Contents } from '@mcro/gloss'
-import { ItemPropsProviderSmall, memoIsEqualDeep } from '@mcro/ui'
+import { isEqual } from '@o/fast-compare'
+import { Contents } from '@o/gloss'
+import { ItemPropsProviderSmall, memoIsEqualDeep } from '@o/ui'
 import { capitalize } from 'lodash'
-import React, { forwardRef, useEffect, useRef } from 'react'
+import React, { createContext, forwardRef, useContext, useEffect, useRef } from 'react'
 import { findDOMNode } from 'react-dom'
 import { getAppDefinition } from '../helpers/getAppDefinition'
 import { AppStore } from '../stores'
 import { AppProps } from '../types/AppProps'
 import { AppViewsContext } from './App'
 
-export type AppViewProps = Pick<AppProps, 'title' | 'viewType' | 'isActive' | 'appConfig'> & {
+export type AppViewProps = {
+  appProps?: AppProps
+  viewType?: 'index' | 'main' | 'setup' | 'settings' | 'toolBar' | 'statusBar'
   id?: string
   identifier: string
   appStore?: AppStore
@@ -44,13 +47,22 @@ function useHandleAppViewRef(ref: any, rootRef: any) {
 
 const ChildrenOnly = props => props.children
 
+const AppViewContext = createContext({} as AppViewProps)
+
 export const AppView = memoIsEqualDeep(
-  forwardRef<AppViewRef, AppViewProps>(function AppView(props, ref) {
+  forwardRef<AppViewRef, AppViewProps>(function AppView({ appProps, ...props }, ref) {
+    const prev = useContext(AppViewContext)
     const rootRef = useRef<HTMLDivElement>(null)
+
+    // prevent infinite loop of nesting, which can be relatively easy to do
+    if (isEqual(prev, props)) {
+      console.error(`Rendering the same view as a sub-view, preventing infinite loop.`)
+      return null
+    }
 
     if (!props.identifier) {
       console.log('props for error', props)
-      throw new Error('No app id')
+      throw new Error('No app identifier')
     }
 
     const definition = getAppDefinition(props.identifier)
@@ -77,9 +89,11 @@ export const AppView = memoIsEqualDeep(
     }
 
     const element = (
-      <Contents ref={rootRef}>
-        <View {...props} />
-      </Contents>
+      <AppViewContext.Provider value={props}>
+        <Contents ref={rootRef}>
+          <View {...props} {...appProps} />
+        </Contents>
+      </AppViewContext.Provider>
     )
 
     // small rendering for index views

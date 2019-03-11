@@ -1,4 +1,4 @@
-import { App, AppDefinition } from '@mcro/kit'
+import { App, AppDefinition } from '@o/kit'
 import React from 'react'
 import { AppsIndex } from './AppsIndex'
 import { AppsMain } from './AppsMain'
@@ -8,7 +8,7 @@ export const AppsApp: AppDefinition = {
   name: 'Apps',
   icon: '',
   app: props => (
-    <App index={<AppsIndex {...props} />}>
+    <App index={<AppsIndex />}>
       <AppsMain {...props} />
     </App>
   ),

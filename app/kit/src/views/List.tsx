@@ -1,4 +1,4 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 import {
   Center,
   Direction,
@@ -12,13 +12,13 @@ import {
   useMemoGetValue,
   useSelectionStore,
   View,
-} from '@mcro/ui'
+} from '@o/ui'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
-import { getAppConfig } from '../helpers/getAppConfig'
+import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
-import { AppConfig } from '../types/AppConfig'
+import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
@@ -55,7 +55,7 @@ export function ProvideSelectionContext({
 
 export type HandleOrbitSelect = ((
   index: number,
-  appConfig: AppConfig,
+  appProps: AppProps,
   eventType?: 'click' | 'key',
 ) => any)
 
@@ -75,7 +75,7 @@ export function List(rawProps: ListProps) {
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
-  const getItemPropsGetter = useMemoGetValue(getItemProps || nullFn)
+  const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
   const getItems = useMemoGetValue(items)
   let selectionStore: SelectionStore | null = null
   const selectionStoreRef = useRef<SelectionStore | null>(null)
@@ -102,26 +102,24 @@ export function List(rawProps: ListProps) {
     [onOpen],
   )
 
-  // only update this on props.items change....
-  // a bit risky but otherwise this is really  hard
   const getItemPropsInner = useCallback((item, index, items) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(item)
-    const extraProps = getItemPropsGetter()(item, index, items)
+    const extraProps = getItemPropsGet()(item, index, items)
     return { ...normalized, ...extraProps }
   }, [])
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
+      const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onSelect) {
-        onSelect(index, appConfig, eventType)
+        onSelect(index, appProps, eventType)
       }
       if (selectionStoreRef.current) {
         selectionStoreRef.current.setSelected(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, appConfig, eventType)
+        selectableProps.onSelectItem(index, appProps, eventType)
       }
     },
     [onSelect, selectableProps],
@@ -129,12 +127,12 @@ export function List(rawProps: ListProps) {
 
   const onOpenInner = useCallback(
     (index, eventType) => {
-      const appConfig = getAppConfig(toListItemProps(getItems()[index]))
+      const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onOpen) {
-        onOpen(index, appConfig)
+        onOpen(index, appProps)
       }
       if (selectableProps && selectableProps.onOpenItem) {
-        selectableProps.onOpenItem(index, appConfig, eventType)
+        selectableProps.onOpenItem(index, appProps, eventType)
       }
     },
     [onOpen, selectableProps],

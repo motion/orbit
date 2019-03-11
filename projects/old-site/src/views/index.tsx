@@ -1,5 +1,5 @@
-import { attachTheme, gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { attachTheme, gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as React from 'react'
 import Media from 'react-media'
 import * as Constants from '../constants'

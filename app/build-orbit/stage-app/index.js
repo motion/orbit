@@ -5,4 +5,4 @@ process.env.FIRST_RUN = 'true'
 
 console.log('Starting Orbit version', process.env.ORBIT_VERSION)
 
-require('@mcro/orbit').main()
+require('@o/orbit').main()

@@ -1,5 +1,5 @@
-import { isEqual } from '@mcro/fast-compare'
-import { useReaction } from '@mcro/use-store'
+import { isEqual } from '@o/fast-compare'
+import { useReaction } from '@o/use-store'
 import { useRef } from 'react'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
 import { useStores } from './useStores'

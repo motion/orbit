@@ -1,5 +1,5 @@
-import { Direction } from '@mcro/ui'
-import { ensure, react, ReactionRejectionError } from '@mcro/use-store'
+import { Direction } from '@o/ui'
+import { ensure, react, ReactionRejectionError } from '@o/use-store'
 import { memoize } from 'lodash'
 
 export type PaneManagerPane = {
@@ -16,7 +16,7 @@ export class PaneManagerStore {
   props: {
     disabled?: boolean
     defaultPanes: PaneManagerPane[]
-    onPaneChange: (index: number, pane: PaneManagerPane) => any
+    onPaneChange?: (index: number, pane: PaneManagerPane) => any
     defaultIndex?: number
   }
 

@@ -1,7 +1,8 @@
-import { CSSPropertySetStrict } from '@mcro/css'
+import { CSSPropertySetStrict } from '@o/css'
 import {
   alphaColor,
   Color,
+  forwardTheme,
   gloss,
   propsToStyles,
   propsToTextSize,
@@ -10,11 +11,13 @@ import {
   ThemeObject,
   ThemeSelect,
   View,
-} from '@mcro/gloss'
-import * as React from 'react'
+} from '@o/gloss'
+import { selectDefined } from '@o/utils'
+import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { ConfiguredIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
@@ -64,7 +67,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     spaced?: boolean
     stretch?: boolean
     tagName?: string
-    theme?: ThemeObject
+    theme?: ThemeObject | string
     tooltip?: string
     tooltipProps?: PopoverProps
     width?: number | string
@@ -83,11 +86,18 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     iconPad?: number
   }
 
-export const Surface = React.memo(function Surface(props: SurfaceProps) {
-  const crumb = useBreadcrumb()
-  const [tooltipState, setTooltipState] = React.useState({ id: null, show: false })
+// const proxyGet = (a: any, b: any) =>
+//   new Proxy(a, {
+//     get: (_, k) => (Reflect.has(a, k) ? a[k] : b[k]),
+//   })
 
-  React.useEffect(() => {
+export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
+  const extraProps = useContext(SurfacePropsContext)
+  const props = extraProps ? { ...extraProps, ...rawProps } : rawProps
+  const crumb = useBreadcrumb()
+  const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+
+  useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
     setTooltipState({ id, show: false })
     let tm = setTimeout(() => {
@@ -122,10 +132,10 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     alignItems,
     justifyContent,
     forwardRef,
+    theme,
     ...rest
   } = props
   const segmentedStyle = getSegmentRadius(props, crumb)
-
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
@@ -223,7 +233,7 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
     )
   }
 
-  return (
+  let element = (
     <BreadcrumbReset>
       <SurfaceFrame
         ref={forwardRef}
@@ -233,6 +243,15 @@ export const Surface = React.memo(function Surface(props: SurfaceProps) {
       />
     </BreadcrumbReset>
   )
+
+  element = forwardTheme({ children: element, theme })
+
+  // dont nest PassProps, use once and clear context below
+  if (extraProps) {
+    return <SurfacePropsContext.Provider value={null}>{element}</SurfacePropsContext.Provider>
+  }
+
+  return element
 })
 
 // fontFamily: inherit on both fixes elements
@@ -294,6 +313,8 @@ const SurfaceFrame = gloss(View, {
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       ...propStyles,
+      // TODO this could be automatically handled in propStyles if we want...
+      borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless &&
         props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
       ...propsToTextSize(props),
@@ -381,4 +402,10 @@ export function getSurfaceShadow(elevation: number) {
     return null
   }
   return [elevatedShadow(elevation) as any]
+}
+
+const SurfacePropsContext = React.createContext(null)
+
+export function SurfacePassProps(props: SurfaceProps) {
+  return <SurfacePropsContext.Provider value={props}>{props.children}</SurfacePropsContext.Provider>
 }

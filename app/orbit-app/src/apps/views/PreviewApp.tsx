@@ -1,24 +1,24 @@
-import { AppView } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
-import { BorderLeft, Section, Title } from '@mcro/ui'
+import { AppProps, AppView } from '@o/kit'
+import { AppBit } from '@o/models'
 import React from 'react'
-import { appToAppConfig } from '../../helpers/appToAppConfig'
 
 export default function PreviewApp(props: { app: AppBit }) {
   return (
-    <>
-      <BorderLeft />
-      <Section paddingBottom={0}>
-        <Title>Preview</Title>
-      </Section>
-      <AppView
-        identifier={props.app.identifier}
-        viewType="index"
-        appConfig={{
-          ...appToAppConfig(props.app),
-          id: `preview-${props.app.id}`,
-        }}
-      />
-    </>
+    <AppView
+      identifier={props.app.identifier}
+      viewType="index"
+      appProps={{
+        ...appToAppProps(props.app),
+        id: `preview-${props.app.id}`,
+      }}
+    />
   )
+}
+
+export function appToAppProps(app: AppBit): AppProps {
+  return {
+    id: `${app.id}`,
+    title: app.name,
+    identifier: app.identifier,
+  }
 }

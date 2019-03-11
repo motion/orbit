@@ -1,13 +1,5 @@
-import { Icon, useStores } from '@mcro/kit'
-import {
-  BarButtonSmall,
-  Breadcrumbs,
-  ButtonProps,
-  StatusBarText,
-  Text,
-  useBreadcrumb,
-  View,
-} from '@mcro/ui'
+import { Icon, useStores } from '@o/kit'
+import { BarButtonSmall, Breadcrumbs, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 

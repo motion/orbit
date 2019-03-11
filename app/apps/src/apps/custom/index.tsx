@@ -1,14 +1,18 @@
-import { App, AppProps, createApp } from '@mcro/kit'
+import { App, AppProps, createApp } from '@o/kit'
 import React from 'react'
 import { CustomAppMain } from './CustomAppMain'
+
+function CustomApp(props: AppProps) {
+  return (
+    <App>
+      <CustomAppMain {...props} />
+    </App>
+  )
+}
 
 export default createApp({
   id: 'custom',
   name: 'Custom',
   icon: '',
-  app: (props: AppProps) => (
-    <App>
-      <CustomAppMain {...props} />
-    </App>
-  ),
+  app: CustomApp,
 })

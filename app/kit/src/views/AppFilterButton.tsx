@@ -1,4 +1,4 @@
-import { BarButtonSmall, Col, ListItem, Popover, Text, View, ViewProps } from '@mcro/ui'
+import { BarButtonSmall, Col, ListItem, Popover, Text, View, ViewProps } from '@o/ui'
 import React from 'react'
 import { useStores } from '../hooks/useStores'
 import { QueryFilterStore } from '../stores/QueryFilterStore'

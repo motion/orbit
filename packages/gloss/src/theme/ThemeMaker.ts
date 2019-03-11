@@ -1,5 +1,5 @@
-import { color } from '@mcro/color'
-import { Color, LinearGradient, ThemeObject } from '@mcro/css'
+import { color } from '@o/color'
+import { Color, LinearGradient, ThemeObject } from '@o/css'
 
 type ColorObject = { [a: string]: Color }
 

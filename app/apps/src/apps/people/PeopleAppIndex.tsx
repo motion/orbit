@@ -1,4 +1,4 @@
-import { useModels } from '@mcro/bridge'
+import { useModels } from '@o/bridge'
 import {
   groupByFirstLetter,
   List,
@@ -7,8 +7,8 @@ import {
   useActiveQueryFilter,
   useShareMenu,
   useStores,
-} from '@mcro/kit'
-import { BitModel } from '@mcro/models'
+} from '@o/kit'
+import { BitModel } from '@o/models'
 import * as React from 'react'
 import NoResultsDialog from '../../views/NoResultsDialog'
 

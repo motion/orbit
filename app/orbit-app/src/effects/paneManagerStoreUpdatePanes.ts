@@ -1,7 +1,7 @@
-import { isEqual } from '@mcro/fast-compare'
-import { PaneManagerPane, PaneManagerStore } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
-import { ensure, useReaction } from '@mcro/use-store'
+import { isEqual } from '@o/fast-compare'
+import { PaneManagerPane, PaneManagerStore } from '@o/kit'
+import { AppBit } from '@o/models'
+import { ensure, useReaction } from '@o/use-store'
 import { getAppState } from '../helpers/getAppState'
 import { getIsTorn } from '../helpers/getIsTorn'
 import { useActions } from '../hooks/useActions'
@@ -62,7 +62,7 @@ function getTornPanes(apps: AppBit[]): PaneManagerPane[] {
 
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
   if (getIsTorn()) {
-    getTornPanes(apps)
+    return getTornPanes(apps)
   } else {
     const appPanes = apps.map(appToPane)
     return [...defaultPanes, ...appPanes]

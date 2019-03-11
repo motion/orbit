@@ -1,5 +1,5 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
 import bodyParser from 'body-parser'
 import express from 'express'
 import proxy from 'http-proxy-middleware'

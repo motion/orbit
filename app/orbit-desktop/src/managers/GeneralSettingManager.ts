@@ -1,7 +1,7 @@
-import { getGlobalConfig } from '@mcro/config'
-import { Logger } from '@mcro/logger'
-import { Setting, SettingEntity } from '@mcro/models'
-import { decorate } from '@mcro/use-store'
+import { getGlobalConfig } from '@o/config'
+import { Logger } from '@o/logger'
+import { User, UserEntity } from '@o/models'
+import { decorate } from '@o/use-store'
 import AutoLaunch from 'auto-launch'
 import { getRepository } from 'typeorm'
 
@@ -28,19 +28,19 @@ export class GeneralSettingManager {
   }
 
   async start() {
-    let setting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    this.handleAutoLaunch(setting)
+    let user = await getRepository(UserEntity).findOne({ name: 'general' })
+    this.handleAutoLaunch(user)
   }
 
   dispose() {}
 
-  handleAutoLaunch = (setting: Setting) => {
+  handleAutoLaunch = (user: User) => {
     if (!this.autoLaunch) {
       log.verbose('Autolaunch disabled in dev mode')
       return
     }
     const isEnabled = this.autoLaunch.isEnabled()
-    const values = setting.values
+    const values = user.settings
     if (values.autoLaunch) {
       if (!isEnabled) {
         this.autoLaunch.enable()

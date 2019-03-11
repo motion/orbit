@@ -7,10 +7,10 @@ import {
   SlackTeam,
   SlackUser,
 } from './SlackModels'
-import { AppBit, Bit } from '@mcro/models'
+import { AppBit, Bit } from '@o/models'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
 import { uniqBy } from 'lodash'
-import { SyncerUtils } from '@mcro/sync-kit'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of slack models.

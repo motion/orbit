@@ -1,11 +1,11 @@
+import { ThemeObject } from '@o/css'
 import * as React from 'react'
 import { ThemeContext } from './ThemeContext'
-import { ThemeObject } from '@mcro/css'
 
 type ThemeProvideProps = {
   activeTheme?: string
   themes: {
-    [key: string]: ThemeObject
+    [key: string]: Partial<ThemeObject>
   }
   children: React.ReactNode
 }
@@ -24,7 +24,7 @@ export const ThemeProvide = ({ activeTheme, children, themes }: ThemeProvideProp
         if (activeTheme) {
           val.activeThemeName = activeTheme
         }
-        return <ThemeContext.Provider value={val}>{children}</ThemeContext.Provider>
+        return <ThemeContext.Provider value={val as any}>{children}</ThemeContext.Provider>
       }}
     </ThemeContext.Consumer>
   )

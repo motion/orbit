@@ -1,8 +1,8 @@
-import { gloss } from '@mcro/gloss'
-import { AppView, Icon, QueryStore, SettingStore, SpaceStore } from '@mcro/kit'
-import * as UI from '@mcro/ui'
-import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@mcro/ui'
-import { useStore } from '@mcro/use-store'
+import { gloss } from '@o/gloss'
+import { AppView, Icon, QueryStore, SpaceStore } from '@o/kit'
+import * as UI from '@o/ui'
+import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@o/ui'
+import { useStore } from '@o/use-store'
 import * as React from 'react'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { StoreContext } from '../../contexts'
@@ -16,7 +16,6 @@ import { AppSearchable } from './AppSearchable'
 // see main.ts for setup for testing this in browser
 
 export default React.memo(() => {
-  const settingStore = useStore(SettingStore)
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
   const queryStore = useStore(QueryStore)
@@ -25,7 +24,6 @@ export default React.memo(() => {
   return (
     <StoreContext.Provider
       value={{
-        settingStore,
         spaceStore,
         appPageStore,
         queryStore,
@@ -72,9 +70,9 @@ const AppPageContent = () => {
   if (!appPageStore.state) {
     return <div>no state</div>
   }
-  const { appConfig } = appPageStore.state
-  if (!appConfig) {
-    return <div>no appConfig or appType</div>
+  const { appProps } = appPageStore.state
+  if (!appProps) {
+    return <div>no appProps or appType</div>
   }
   return (
     <>
@@ -104,7 +102,7 @@ const AppPageContent = () => {
             fontWeight={500}
             alignItems="center"
           >
-            {appConfig.title}
+            {appProps.title}
           </Text>
         </CenteredTitle>
       </TitleBar>
@@ -117,23 +115,15 @@ const AppPageContent = () => {
         >
           {appPageStore.isTorn && (
             <AppSearchable>
-              <AppView
-                id={appConfig.id}
-                identifier={appConfig.identifier}
-                viewType="index"
-                title={appConfig.title}
-                isActive
-              />
+              <AppView id={appProps.id} identifier={appProps.identifier} viewType="index" />
             </AppSearchable>
           )}
         </Sidebar>
         <Col flex={1} overflow="hidden">
           <AppView
-            id={appConfig.id}
-            identifier={appConfig.identifier}
-            viewType={appConfig.viewType || 'main'}
-            title={appConfig.title}
-            isActive
+            id={appProps.id}
+            identifier={appProps.identifier}
+            viewType={appProps.viewType || 'main'}
           />
         </Col>
       </Row>

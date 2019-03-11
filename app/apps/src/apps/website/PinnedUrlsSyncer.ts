@@ -1,15 +1,14 @@
 /*
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import {
   Bit,
   BitEntity,
   createBit,
   PinnedBitData,
-  SettingEntity,
   WebsiteBitData,
-} from '@mcro/models'
+} from '@o/models'
 import { getRepository } from 'typeorm'
-import { BitSyncer } from '@mcro/sync-kit'
+import { BitSyncer } from '@o/sync-kit'
 import { WebsiteCrawledData } from '../../../../apps/src/apps/website/WebsiteCrawledData'
 import { WebsiteCrawler } from '../../../../apps/src/apps/website/WebsiteCrawler'
 
@@ -33,10 +32,8 @@ export class PinnedUrlsSyncer {
   async run() {
     // load person because we need emails that we want to whitelist
     this.log.info('loading general settings')
-    const setting = await getRepository(SettingEntity).findOne({
-      name: 'general',
-    })
-    this.log.info('general settings were loaded', setting)
+    const user = await getRepository(UserEntity).findOne()
+    this.log.info('general users were loaded', user)
 
     // load not crawled website bits
     const websiteBits = await getRepository(BitEntity).find({
@@ -45,7 +42,7 @@ export class PinnedUrlsSyncer {
     })
 
     // check if we have any pinned url or not crawled website bits
-    if ((!setting.values.pinnedUrls || !setting.values.pinnedUrls.length) && !websiteBits.length) {
+    if ((!user.settings.pinnedUrls || !user.settings.pinnedUrls.length) && !websiteBits.length) {
       this.log.info('no pinned urls or not crawled bits found, skipping')
       return
     }
@@ -56,10 +53,10 @@ export class PinnedUrlsSyncer {
     this.log.timer('launch browser')
 
     // crawl urls
-    if (setting.values.pinnedUrls && setting.values.pinnedUrls.length) {
+    if (user.settings.pinnedUrls && user.settings.pinnedUrls.length) {
       const apiBits: Bit[] = []
       this.log.timer('crawl pinned urls')
-      for (let url of setting.values.pinnedUrls) {
+      for (let url of user.settings.pinnedUrls) {
         this.log.info('crawling', url)
         await this.crawler.run({
           url: url,

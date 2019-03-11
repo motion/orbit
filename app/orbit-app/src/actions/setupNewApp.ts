@@ -1,4 +1,4 @@
-import { sleep } from '@mcro/utils'
+import { sleep } from '@o/utils'
 import { AllStores } from '../contexts/StoreContext'
 
 export function setupNewApp({ newAppStore, paneManagerStore }: AllStores) {

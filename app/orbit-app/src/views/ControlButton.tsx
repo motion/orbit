@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import * as UI from '@o/ui'
 import * as React from 'react'
 import controlX from '../../public/images/control-x.png'
 import controlY from '../../public/images/control-y.png'

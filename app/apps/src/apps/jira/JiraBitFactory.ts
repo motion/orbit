@@ -1,5 +1,5 @@
-import { AppBit, Bit } from '@mcro/models'
-import { sanitizeHtml, stripHtml, SyncerUtils } from '@mcro/sync-kit'
+import { AppBit, Bit } from '@o/models'
+import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
 import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
 
 /**

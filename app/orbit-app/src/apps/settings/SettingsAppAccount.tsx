@@ -1,19 +1,8 @@
-import { AppProps } from '@mcro/kit'
-import {
-  Button,
-  InputRow,
-  Row,
-  Section,
-  SegmentedRow,
-  Theme,
-  Title,
-  VerticalSpace,
-  View,
-} from '@mcro/ui'
+import { Button, InputField, Row, Section, SegmentedRow, Theme, Title, VerticalSpace, View } from '@o/ui'
 import * as React from 'react'
 import { IntroText } from '../../views'
 
-export default function SettingsAppAccount(_props: AppProps) {
+export default function SettingsAppAccount() {
   // const [user] = useActiveUser()
 
   return (
@@ -32,8 +21,8 @@ export default function SettingsAppAccount(_props: AppProps) {
       </SegmentedRow>
 
       <Section>
-        <InputRow label="Username" />
-        <InputRow label="Password" />
+        <InputField label="Username" />
+        <InputField label="Password" />
 
         <Row>
           <View flex={1} />

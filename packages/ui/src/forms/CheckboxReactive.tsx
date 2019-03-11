@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import { useReaction } from '@mcro/use-store'
+import { gloss } from '@o/gloss'
+import { useReaction } from '@o/use-store'
 import * as React from 'react'
 
 type Props = {

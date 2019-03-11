@@ -1,13 +1,12 @@
-import { useModels } from '@mcro/bridge'
-import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useStoresSimple } from '@mcro/kit'
-import { SpaceModel } from '@mcro/models'
-import { App } from '@mcro/stores'
-import { Avatar, Col, ListItem, Popover, View } from '@mcro/ui'
-import { ensure, react, useHook, useStore } from '@mcro/use-store'
+import { useModels } from '@o/bridge'
+import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink, useStoresSimple } from '@o/kit'
+import { SpaceModel } from '@o/models'
+import { App } from '@o/stores'
+import { Avatar, Col, ListItem, Popover, View } from '@o/ui'
+import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
 import avatar from '../../public/images/nate.jpg'
-import { useLocationLink } from '../stores/LocationStore'
 import FocusableShortcutHandler from './FocusableShortcutHandler'
 
 class SpaceSwitchStore {

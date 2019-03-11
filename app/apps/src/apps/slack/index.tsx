@@ -1,4 +1,4 @@
-import { createApp } from '@mcro/kit'
+import { createApp } from '@o/kit'
 import { slackIcon } from './slackIcon'
 import { SlackSettings } from './SlackSettings'
 

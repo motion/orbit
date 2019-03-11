@@ -1,6 +1,6 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 import { DriveLoadedFile, DriveUser } from './DriveModels'
-import { SyncerUtils } from '@mcro/sync-kit'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of drive models.

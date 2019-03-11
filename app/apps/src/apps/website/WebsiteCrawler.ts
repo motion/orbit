@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import * as fs from 'fs'
 import * as path from 'path'
 import { WebsiteCrawledData } from './WebsiteModels'
@@ -24,11 +24,9 @@ const readabilityCode = `(function(){
  * Crawl a website options.
  */
 export interface WebsiteCrawlerOptions {
-
   url: string
   deep: boolean
-  handler: (data: WebsiteCrawledData) => Promise<boolean>|boolean
-
+  handler: (data: WebsiteCrawledData) => Promise<boolean> | boolean
 }
 
 /**
@@ -66,7 +64,7 @@ export class WebsiteCrawler {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--user-data-dir=/Users/pleerock/Library/Application Support/Google/Chrome'
+        '--user-data-dir=/Users/pleerock/Library/Application Support/Google/Chrome',
       ],
     })
     this.log.timer('launch browser')
@@ -106,7 +104,7 @@ export class WebsiteCrawler {
       })
       await page.waitFor(1000)
     } catch (err) {
-      this.log.warning('couldn\'t open this link', err)
+      this.log.warning("couldn't open this link", err)
       return
     }
 
@@ -154,9 +152,7 @@ export class WebsiteCrawler {
       // we get links from the html content
       if (!links.length) {
         this.log.verbose('no links found, trying to find it right from the html content')
-        links = Array.from(
-          (getUrls(data.content) as Set<string>).values(),
-        )
+        links = Array.from((getUrls(data.content) as Set<string>).values())
         this.log.verbose('found links from html content', links)
       }
 
@@ -178,6 +174,5 @@ export class WebsiteCrawler {
         await this.visit(page, link, options)
       }
     }
-
   }
 }

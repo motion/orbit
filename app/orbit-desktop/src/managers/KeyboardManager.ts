@@ -1,6 +1,6 @@
-import { Screen } from '@mcro/screen'
-import { App, Desktop } from '@mcro/stores'
-import { decorate, ensure, react } from '@mcro/use-store'
+import { Screen } from '@o/screen'
+import { App, Desktop } from '@o/stores'
+import { decorate, ensure, react } from '@o/use-store'
 
 const OPTION_PEEK_DELAY = 300
 

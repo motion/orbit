@@ -1,7 +1,8 @@
-import { Logger } from '@mcro/logger'
-import { Entities, SettingEntity } from '@mcro/models'
-import { Desktop } from '@mcro/stores'
-import { sleep } from '@mcro/utils'
+import { AppBit, AppEntity, SpaceEntity, userDefaultValue } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { Entities, UserEntity } from '@o/models'
+import { Desktop } from '@o/stores'
+import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'
 import { getConnection, getRepository } from 'typeorm'
 import { COSAL_DB, DATABASE_PATH } from '../constants'
@@ -20,6 +21,11 @@ export class DatabaseManager {
     log.info('Connecting models...')
     await connectModels(Entities)
 
+    // setup default data
+    await this.ensureDefaultSpace()
+    await this.ensureDefaultApps()
+    await this.ensureDefaultUser()
+
     await sleep(100)
 
     log.info('Connected models...')
@@ -34,7 +40,7 @@ export class DatabaseManager {
       }
       try {
         tries++
-        await getRepository(SettingEntity).findOne({})
+        await getRepository(UserEntity).findOne({})
         connected = true
       } catch (err) {
         console.log('got err, migrations may not be done yet...', err)
@@ -138,5 +144,96 @@ export class DatabaseManager {
     await getConnection().query('DROP TRIGGER after_bit_insert')
     await getConnection().query('DROP TRIGGER after_bit_update')
     await getConnection().query('DROP TRIGGER after_bit_delete')
+  }
+
+  private async ensureDefaultSpace() {
+    let spaces = await getRepository(SpaceEntity).find()
+    if (!spaces.length) {
+      await getRepository(SpaceEntity).save([
+        {
+          name: 'Orbit',
+          paneSort: [],
+          colors: ['#CACCAC', '#270769'],
+        },
+        {
+          name: 'Me',
+          paneSort: [],
+          colors: ['#ACEACE', '#D48D48'],
+        },
+      ])
+    }
+  }
+
+  private async ensureDefaultApps() {
+    const spaces = await getRepository(SpaceEntity).find()
+
+    await Promise.all(
+      spaces.map(async space => {
+        const apps = await getRepository(AppEntity).find({ spaceId: space.id })
+        if (!apps.length) {
+          const defaultApps: AppBit[] = [
+            {
+              target: 'app',
+              identifier: 'search' as any, // todo(nate) add this item into identifier type?
+              name: 'Search',
+              colors: ['#D48D48', '#ACEACE'],
+              pinned: true,
+              editable: false,
+              spaceId: space.id,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'Directory',
+              identifier: 'people' as any, // todo(nate) add this item into identifier type?
+              colors: ['#0F1453', '#449878'],
+              spaceId: space.id,
+              pinned: true,
+              data: {},
+            },
+            {
+              target: 'app',
+              name: 'Home',
+              identifier: 'lists' as any, // todo(nate) add this item into identifier type?
+              spaceId: space.id,
+              colors: ['#353353', '#EADEAD'],
+              pinned: true,
+              data: {
+                rootItemID: 0,
+                items: {
+                  0: {
+                    id: 0,
+                    name: 'Root',
+                    type: 'root',
+                    children: [],
+                  },
+                },
+              },
+            },
+          ]
+          await Promise.all(
+            defaultApps.map(app => {
+              return getRepository(AppEntity).save(app)
+            }),
+          )
+        }
+      }),
+    )
+  }
+
+  private async ensureDefaultUser() {
+    const user = await getRepository(UserEntity).findOne({})
+    const firstSpace = await getRepository(SpaceEntity).findOne({})
+
+    if (!firstSpace) {
+      throw new Error('Should be at least one space...')
+    }
+
+    if (!user) {
+      await getRepository(UserEntity).save({
+        ...userDefaultValue,
+        activeSpace: firstSpace.id,
+      })
+    }
   }
 }

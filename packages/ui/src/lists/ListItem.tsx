@@ -8,8 +8,8 @@ import {
   ThemeObject,
   View,
   ViewPropsStrict,
-} from '@mcro/gloss'
-import { useStore } from '@mcro/use-store'
+} from '@o/gloss'
+import { useStore } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns/esm/fp'
 import React from 'react'
 import { BorderBottom } from '../Border'
@@ -189,7 +189,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     <AfterHeader>
       <Row>
         {showDate && (
-          <Text alpha={0.6} size={0.9} fontWeight={500}>
+          <Text alpha={0.6} size={0.9} fontWeight={400}>
             <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
           </Text>
         )}
@@ -221,7 +221,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
         {!!separator && (
           <Theme name={activeThemeName}>
             <Separator {...separatorProps}>
-              <Text size={0.9} fontWeight={500}>
+              <Text size={0.9} fontWeight={400}>
                 {separator}
               </Text>
             </Separator>
@@ -243,7 +243,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
             {showTitle && (
               <Title>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
+                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={300} {...titleProps}>
                   {title}
                 </HighlightText>
                 <TitleSpace slim={slim} />

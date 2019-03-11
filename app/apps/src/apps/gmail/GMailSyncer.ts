@@ -1,4 +1,4 @@
-import { createSyncer, sleep } from '@mcro/sync-kit'
+import { createSyncer, sleep } from '@o/sync-kit'
 import { chunk } from 'lodash'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailAppData, GmailBitDataParticipant, GMailThread } from './GMailModels'

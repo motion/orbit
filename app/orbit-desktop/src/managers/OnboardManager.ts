@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { SettingEntity } from '@mcro/models'
-import { Desktop } from '@mcro/stores'
+import { Logger } from '@o/logger'
+import { UserEntity } from '@o/models'
+import { Desktop } from '@o/stores'
 import Fs from 'fs-extra'
 import Os from 'os'
 import Path from 'path'
@@ -31,14 +31,13 @@ const sourcePatterns = [
 ]
 
 export class OnboardManager {
-  generalSetting: SettingEntity
   history = []
   foundSources = null
 
   async start() {
     log.info('start()')
-    this.generalSetting = await getRepository(SettingEntity).findOne({ name: 'general' })
-    if (!this.generalSetting.values.hasOnboarded) {
+    const user = await getRepository(UserEntity).findOne({})
+    if (!user.settings.hasOnboarded) {
       this.scanHistory()
     }
   }

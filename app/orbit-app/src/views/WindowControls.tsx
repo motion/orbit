@@ -1,4 +1,4 @@
-import { Row, View } from '@mcro/ui'
+import { Row, View } from '@o/ui'
 import * as React from 'react'
 import { ControlButton } from './ControlButton'
 

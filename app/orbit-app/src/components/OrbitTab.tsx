@@ -1,7 +1,7 @@
-import { invertLightness } from '@mcro/color'
-import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@mcro/gloss'
-import { Icon, OrbitIconProps } from '@mcro/kit'
-import { AppBit } from '@mcro/models'
+import { invertLightness } from '@o/color'
+import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@o/gloss'
+import { Icon, OrbitIconProps } from '@o/kit'
+import { AppBit } from '@o/models'
 import {
   BorderBottom,
   Button,
@@ -11,7 +11,7 @@ import {
   MenuTemplate,
   Tooltip,
   useContextMenu,
-} from '@mcro/ui'
+} from '@o/ui'
 import * as React from 'react'
 
 export const tabHeight = 29
@@ -255,9 +255,9 @@ const Separator = gloss({
   bottom: 0,
   transform: {
     x: 0.5,
-    y: -1,
+    y: -1.5,
   },
   width: 1,
 }).theme((_, theme) => ({
-  background: `linear-gradient(transparent, ${theme.background.alpha(alpha => alpha * 0.65)})`,
+  background: `linear-gradient(transparent, ${theme.borderColor.alpha(alpha => alpha * 0.65)})`,
 }))

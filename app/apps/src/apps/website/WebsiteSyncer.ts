@@ -1,6 +1,6 @@
 import { WebsiteBitFactory } from './WebsiteBitFactory'
 import { WebsiteCrawler } from './WebsiteCrawler'
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer } from '@o/sync-kit'
 
 /**
  * Syncs crawled websites.

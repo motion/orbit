@@ -1,4 +1,4 @@
-import { gloss } from '@mcro/gloss'
+import { gloss } from '@o/gloss'
 import { Text } from '../text/Text'
 
 export const Label = gloss(Text, {

@@ -1,5 +1,5 @@
+import { Color } from '@o/gloss'
 import * as React from 'react'
-import { Color } from '@mcro/gloss'
 
 type Props = {
   percent: number

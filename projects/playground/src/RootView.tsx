@@ -1,4 +1,4 @@
-import { Theme, ThemeProvide } from '@mcro/gloss'
+import { Theme, ThemeProvide } from '@o/gloss'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
 import { TestUI } from './TestUI'

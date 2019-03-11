@@ -1,6 +1,6 @@
-import { gloss } from '@mcro/gloss'
-import * as UI from '@mcro/ui'
-import { Row, Text, TextProps } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import * as UI from '@o/ui'
+import { Row, Text, TextProps } from '@o/ui'
 import * as React from 'react'
 
 export const HorizontalScroll = gloss(Row, {

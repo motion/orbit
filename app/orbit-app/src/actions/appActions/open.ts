@@ -1,5 +1,5 @@
-import { command } from '@mcro/bridge'
-import { Bit, OpenCommand } from '@mcro/models'
+import { command } from '@o/bridge'
+import { Bit, OpenCommand } from '@o/models'
 
 export async function open(item: Bit | string) {
   let url = ''

@@ -1,13 +1,6 @@
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
-import {
-  AppEntity,
-  Bit,
-  BitContentType,
-  BitContentTypes,
-  SearchQuery,
-  SearchResult,
-} from '@mcro/models'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
+import { AppEntity, Bit, BitContentType, BitContentTypes, SearchQuery, SearchResult } from '@o/models'
 import { uniq, uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
@@ -92,7 +85,7 @@ export class SearchResultResolver {
             bitsTotalCount,
             bits: firstBits,
           })
-        } else if (contentType === 'mail') {
+        } else if (contentType === 'thread') {
           searchResults.push({
             target: 'search-group',
             id: Math.random(),

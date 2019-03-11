@@ -1,7 +1,7 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModels'
-import { SyncerUtils } from '@mcro/sync-kit'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of gmail models.
@@ -57,7 +57,7 @@ export class GMailBitFactory {
     if (!title) return undefined
 
     return this.utils.createBit({
-      type: 'mail',
+      type: 'thread',
       originalId: thread.id,
       title,
       body,

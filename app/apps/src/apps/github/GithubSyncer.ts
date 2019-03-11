@@ -1,4 +1,4 @@
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer } from '@o/sync-kit'
 import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
 import { GithubLoader } from './GithubLoader'
 import { GithubBitFactory } from './GithubBitFactory'

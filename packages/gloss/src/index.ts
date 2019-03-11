@@ -1,4 +1,4 @@
-export { color } from '@mcro/color'
+export { color } from '@o/color'
 export {
   Color,
   configureCSS,
@@ -9,7 +9,7 @@ export {
   psuedoKeys,
   ThemeObject,
   validCSSAttr,
-} from '@mcro/css'
+} from '@o/css'
 // blocks
 export { Absolute } from './blocks/Absolute'
 export { Block } from './blocks/Block'
@@ -35,6 +35,7 @@ export { propsToThemeStyles } from './helpers/propsToThemeStyles'
 export { selectThemeSubset } from './helpers/selectThemeSubset'
 export { useTheme } from './helpers/useTheme'
 export { attachTheme } from './theme/attachTheme'
+export { forwardTheme } from './theme/forwardTheme'
 export { Theme, ThemeSelect } from './theme/Theme'
 export { ThemeContext } from './theme/ThemeContext'
 export { ThemeMaker } from './theme/ThemeMaker'

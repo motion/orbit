@@ -1,4 +1,4 @@
-import { App } from '@mcro/stores'
+import { App } from '@o/stores'
 
 type Position = {
   top: number

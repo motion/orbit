@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row, ThemeObject, View, ViewProps } from '@mcro/gloss'
+import { gloss, Row, ThemeObject, View, ViewProps } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { Icon } from './Icon'
 import { Text } from './text/Text'

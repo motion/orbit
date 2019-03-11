@@ -1,5 +1,5 @@
-import { Bit } from '@mcro/models'
-import { createSyncer } from '@mcro/sync-kit'
+import { Bit } from '@o/models'
+import { createSyncer } from '@o/sync-kit'
 import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './ConfluenceModels'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceBitFactory } from './ConfluenceBitFactory'

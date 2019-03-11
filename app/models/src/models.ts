@@ -1,21 +1,16 @@
-import { Model } from '@mcro/mediator'
+import { Model } from '@o/mediator'
 import { FindOptions, FindOptionsWhere } from 'typeorm'
 import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
 import { SearchResult } from './interfaces/Search'
-import { Setting } from './interfaces/Setting'
 import { Space } from './interfaces/Space'
 import { User } from './interfaces/User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')
 
 export const JobModel = new Model<Job, FindOptions<Job>, FindOptionsWhere<Job>>('Job')
-
-export const SettingModel = new Model<Setting, FindOptions<Setting>, FindOptionsWhere<Setting>>(
-  'Setting',
-)
 
 export const SpaceModel = new Model<Space, FindOptions<Space>, FindOptionsWhere<Space>>('Space')
 

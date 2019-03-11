@@ -1,7 +1,7 @@
-import { resolveMany } from '@mcro/mediator'
-import { SalientWordsModel } from '@mcro/models'
-import { Cosal } from '@mcro/cosal'
-import { Logger } from '@mcro/logger'
+import { Cosal } from '@o/cosal'
+import { Logger } from '@o/logger'
+import { resolveMany } from '@o/mediator'
+import { SalientWordsModel } from '@o/models'
 
 const log = new Logger('SalientWordsResolver')
 

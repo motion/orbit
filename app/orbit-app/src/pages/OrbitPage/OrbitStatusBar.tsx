@@ -1,14 +1,20 @@
-import { gloss, Row } from '@mcro/gloss'
-import { BorderTop } from '@mcro/ui'
-import React from 'react'
+import { gloss, Row } from '@o/gloss'
+import { AppLoadContext } from '@o/kit'
+import { BorderTop } from '@o/ui'
+import { useReaction } from '@o/use-store'
+import React, { useContext } from 'react'
+import { useStoresSimple } from '../../hooks/useStores'
 
 const statusBarHeight = 26
 
 export const statusbarPadElement = <div style={{ height: statusBarHeight }} />
 
 export function OrbitStatusBar({ children }) {
+  const { id } = useContext(AppLoadContext)
+  const { paneManagerStore } = useStoresSimple()
+  const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <StatusBarChrome>
+    <StatusBarChrome isActive={isActive}>
       {children}
       <BorderTop />
     </StatusBarChrome>
@@ -26,6 +32,12 @@ const StatusBarChrome = gloss(Row, {
   justifyContent: 'center',
   zIndex: 1000000000,
   padding: [0, 8],
+  opacity: 0,
+  pointerEvents: 'none',
+  isActive: {
+    opacity: 1,
+    pointerEvents: 'auto',
+  },
 }).theme((_, theme) => ({
-  background: theme.background.darken(0.05),
+  background: theme.background,
 }))

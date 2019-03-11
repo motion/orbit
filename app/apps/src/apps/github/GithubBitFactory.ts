@@ -1,4 +1,4 @@
-import { Bit } from '@mcro/models'
+import { Bit } from '@o/models'
 import {
   GithubBitData,
   GithubComment,
@@ -8,7 +8,7 @@ import {
   GithubPullRequest,
 } from './GithubModels'
 import { uniqBy } from 'lodash'
-import { SyncerUtils } from '@mcro/sync-kit'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates bits out of github models.

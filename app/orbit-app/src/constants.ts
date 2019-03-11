@@ -1,4 +1,4 @@
-export * from '@mcro/constants'
+export * from '@o/constants'
 
 export const MENU_WIDTH = 300
 

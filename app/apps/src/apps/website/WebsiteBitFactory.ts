@@ -1,6 +1,6 @@
-import { AppBit, Bit } from '@mcro/models'
+import { AppBit, Bit } from '@o/models'
 import { WebsiteBitData, WebsiteCrawledData } from './WebsiteModels'
-import { SyncerUtils } from '@mcro/sync-kit'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates a website Bit.

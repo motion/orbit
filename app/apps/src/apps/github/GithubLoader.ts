@@ -1,6 +1,6 @@
-import { Logger } from '@mcro/logger'
-import { ServiceLoader, sleep } from '@mcro/sync-kit'
-import { AppBit } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { ServiceLoader, sleep } from '@o/sync-kit'
+import { AppBit } from '@o/models'
 import { GithubQueries } from './GithubQueries'
 import {
   GithubComment,

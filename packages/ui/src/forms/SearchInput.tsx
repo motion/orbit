@@ -1,5 +1,5 @@
-import { color } from '@mcro/color'
-import { CSSPropertySet, gloss, Row, ThemeContext, ThemeObject, View } from '@mcro/gloss'
+import { color } from '@o/color'
+import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@o/gloss'
 import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { colors } from '../helpers/colors'
@@ -18,7 +18,6 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     onClickClear?: Function
     focusedToken?: number
     filterProps?: Object
-    theme?: ThemeObject
     visible?: boolean
   }
 
@@ -44,6 +43,7 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
     ref,
   ) {
     const { activeTheme } = React.useContext(ThemeContext)
+    const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
     return (
       <SearchBar
         position="relative"
@@ -71,7 +71,7 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
           <SearchInnerInput placeholder={placeholder} ref={ref} {...props} />
           <SearchClearButton
             onClick={onClickClear}
-            visible={typeof visible === 'boolean' ? visible : value && !!value.length}
+            visible={clearVisible}
             opacity={1}
             position="relative"
             zIndex={2}
@@ -147,8 +147,9 @@ export const SearchBox = gloss(View, {
   flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
+  minHeight: 32,
   '&:focus-within': {
-    boxShadow: `0 0 0 2px rgba(255,255,255,0.2)`,
+    boxShadow: `0 0 0 2px rgba(0,0,0,0.1)`,
   },
 }).theme((props, theme) => ({
   background: props.background || theme.background,

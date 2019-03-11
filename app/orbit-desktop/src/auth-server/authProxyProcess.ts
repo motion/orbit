@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let devcert = require('@mcro/devcert')
+let devcert = require('@o/devcert')
 let httpProxy = require('http-proxy')
 let exec = require('execa')
 let killPort = require('kill-port')

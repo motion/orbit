@@ -1,5 +1,5 @@
-import { Logger } from '@mcro/logger'
-import { Bit, SearchQuery } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { Bit, SearchQuery } from '@o/models'
 import { getConnection } from 'typeorm'
 import { SqliteDriver } from 'typeorm/driver/sqlite/SqliteDriver'
 

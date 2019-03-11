@@ -5,7 +5,7 @@
   "description": "Orbit",
   "version": "2.2.382",
   "dependencies": {
-    "@mcro/orbit": "*"
+    "@o/orbit": "*"
   },
   "devDependencies": {
     "electron": "4.0.6"

@@ -1,5 +1,6 @@
-import * as UI from '@mcro/ui'
-import { IconProps, ThemeContext, View } from '@mcro/ui'
+import { useTheme } from '@o/gloss'
+import * as UI from '@o/ui'
+import { IconProps, View } from '@o/ui'
 import * as React from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
@@ -15,8 +16,8 @@ export type OrbitIconProps = IconProps & {
 
 export const Icon = React.memo((props: OrbitIconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
-  const { activeTheme } = React.useContext(ThemeContext)
-  const finalColor = color || activeTheme.color.toString()
+  const theme = useTheme()
+  const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
   // image based source icons
   const sourceIcon = useAppIcon(props)
@@ -50,7 +51,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   // find our custom streamline icons...
   const icon = icons[name]
 
-  // ...or fallback to @mcro/ui icon
+  // ...or fallback to @o/ui icon
   if (!icon) {
     return (
       <UI.Icon

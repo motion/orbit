@@ -1,11 +1,12 @@
-import { save } from '@mcro/bridge'
-import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@mcro/kit'
-import { AppBit, AppModel } from '@mcro/models'
-import { BorderTop, Button, Row, Section, Theme, VerticalSplitPane, View } from '@mcro/ui'
+import { save } from '@o/bridge'
+import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@o/kit'
+import { AppBit, AppModel } from '@o/models'
+import { Button, HorizontalSpace, Section, Theme, TitleRow } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
+import { SubSection } from '../views/SubSection'
 import { AppsMainNew } from './apps/AppsMainNew'
 import PreviewApp from './views/PreviewApp'
 
@@ -30,7 +31,7 @@ function CreateAppIndex() {
   )
 }
 
-function CreateAppMain(props: AppProps) {
+function CreateAppMain({ identifier }: AppProps) {
   const Actions = useActions()
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
@@ -40,12 +41,6 @@ function CreateAppMain(props: AppProps) {
     setShowPreviewApp(true)
   }, [])
 
-  if (!props.appConfig) {
-    return null
-  }
-
-  const { identifier } = props.appConfig
-
   useEffect(
     () => {
       if (identifier) {
@@ -54,6 +49,10 @@ function CreateAppMain(props: AppProps) {
     },
     [identifier],
   )
+
+  if (!identifier) {
+    return null
+  }
 
   const app = { identifier } as AppBit
   const createApp = async () => {
@@ -66,37 +65,33 @@ function CreateAppMain(props: AppProps) {
     Actions.previousTab()
   }
 
-  if (!identifier) {
-    return null
-  }
-
   return (
-    <Row flex={1}>
-      <View width="50%">
-        <Section paddingTop={0}>
-          <AppsMainNew />
-        </Section>
-
-        <Section paddingTop={0}>
-          <AppView identifier={identifier} viewType="settings" />
-        </Section>
-      </View>
-
-      <VerticalSplitPane>
-        {showPreviewApp && <PreviewApp app={app} />}
-
-        <View flex={1} />
-
-        <Section>
-          <BorderTop />
-          <Theme name="selected">
-            <Button elevation={2} size={1.4} onClick={createApp}>
-              Create
+    <Section>
+      <TitleRow
+        bordered
+        after={
+          <>
+            <Button theme="bordered" icon="lock">
+              Preview
             </Button>
-          </Theme>
-        </Section>
-      </VerticalSplitPane>
-    </Row>
+            <HorizontalSpace />
+            <Theme name="selected">
+              <Button icon="add" onClick={createApp}>
+                Add
+              </Button>
+            </Theme>
+          </>
+        }
+      >
+        <AppsMainNew />
+      </TitleRow>
+
+      <SubSection title="App Settings">
+        <AppView identifier={identifier} viewType="settings" />
+      </SubSection>
+
+      <SubSection title="Preview">{showPreviewApp && <PreviewApp app={app} />}</SubSection>
+    </Section>
   )
 }
 

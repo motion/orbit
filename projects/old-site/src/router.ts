@@ -1,8 +1,8 @@
-import { Router } from '@mcro/router'
-import { HomePage } from './pages/HomePage'
+import { Router } from '@o/router'
 // import { FeaturesPage } from './pages/FeaturesPage'
 // import { UseCasesPage } from './pages/UseCasesPage'
 import { AboutPage } from './pages/AboutPage'
+import { HomePage } from './pages/HomePage'
 import { PrivacyPage } from './pages/PrivacyPage'
 import { TermsPage } from './pages/TermsPage'
 

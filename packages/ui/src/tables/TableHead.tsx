@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row } from '@mcro/gloss'
+import { gloss, Row } from '@o/gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 import { ContextMenu } from '../ContextMenu'

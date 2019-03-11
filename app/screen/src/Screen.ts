@@ -1,4 +1,4 @@
-import { Logger } from '@mcro/logger'
+import { Logger } from '@o/logger'
 import { ChildProcess, spawn } from 'child_process'
 import electronUtil from 'electron-util/node'
 import { mkdir } from 'fs'

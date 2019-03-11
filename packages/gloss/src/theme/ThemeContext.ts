@@ -1,5 +1,5 @@
+import { ThemeObject } from '@o/css'
 import * as React from 'react'
-import { ThemeObject } from '@mcro/css'
 
 const themeContext = {
   allThemes: {} as { [key: string]: ThemeObject },

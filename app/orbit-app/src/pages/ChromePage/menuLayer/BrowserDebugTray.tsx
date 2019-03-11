@@ -1,4 +1,4 @@
-import { Absolute, Row, View } from '@mcro/ui'
+import { Absolute, Row, View } from '@o/ui'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'

@@ -1,4 +1,4 @@
-import { HighlightOptions } from '@mcro/utils'
+import { HighlightOptions } from '@o/utils'
 import * as React from 'react'
 import { MergeContext } from '../helpers/MergeContext'
 import { Text, TextProps } from '../text/Text'

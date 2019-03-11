@@ -1,19 +1,20 @@
-import { Command, SaveOptions } from '@mcro/mediator'
+import { Command, SaveOptions } from '@o/mediator'
 import { AppBit } from './AppBit'
 
 export const NewFallbackServerPortCommand = new Command<number, void>('new-fallback-server-port')
 export const AppRemoveCommand = new Command<void, { appId: number }>('app-remove')
 export const AppForceSyncCommand = new Command<void, { appId: number }>('app-force-sync')
 export const AppForceCancelCommand = new Command<void, { appId: number }>('app-force-cancel')
-export const AppSaveCommand = new Command<{ success: boolean; error?: string }, { app: SaveOptions<AppBit> }>(
-  'setting-save',
-)
+export const AppSaveCommand = new Command<
+  { success: boolean; error?: string },
+  { app: SaveOptions<AppBit> }
+>('setting-save')
 export const SlackAppBlacklistCommand = new Command<
   void,
   { appId: number; channel: string; blacklisted: boolean }
 >('slack-setting-blacklist')
 
-export const SettingOnboardFinishCommand = new Command<void, void>('setting-onboard-finish')
+export const UserOnboardFinishCommand = new Command<void, void>('user-onboard-finish')
 
 export const GithubAppBlacklistCommand = new Command<
   void,

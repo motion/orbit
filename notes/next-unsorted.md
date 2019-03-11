@@ -44,7 +44,7 @@
     - content type views: Thread/Message/etc
   - creating a thing that downloads our webpack setup on demand for development
     - interface to show that
-    - creating npm package `orbit-dev-tools` that has webpack, @mcro/build, etc
+    - creating npm package `orbit-dev-tools` that has webpack, @o/build, etc
     - `npm install orbit-dev-tools` basically our dev tools
     - check to keep them up to date in the app
 

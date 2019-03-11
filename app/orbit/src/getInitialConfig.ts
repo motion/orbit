@@ -1,4 +1,4 @@
-import { GlobalConfig } from '@mcro/config'
+import { GlobalConfig } from '@o/config'
 import { app } from 'electron'
 import * as Path from 'path'
 import { findContiguousPorts } from './helpers/findContiguousPorts'
@@ -19,8 +19,8 @@ export async function getInitialConfig({ appEntry }: { appEntry: string }): Prom
     throw new Error('no ports found!')
   }
 
-  const desktopRoot = Path.join(require.resolve('@mcro/orbit-desktop'), '..', '..')
-  const appStatic = Path.join(require.resolve('@mcro/orbit-app'), '..', 'dist')
+  const desktopRoot = Path.join(require.resolve('@o/orbit-desktop'), '..', '..')
+  const appStatic = Path.join(require.resolve('@o/orbit-app'), '..', 'dist')
   const nodeBinary = isProd ? app.getPath('exe') : (await execa('which', ['node'])).stdout
   const dotApp = Path.join(__dirname, '..', '..', '..', '..', '..')
   const userData = app.getPath('userData')

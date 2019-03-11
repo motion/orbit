@@ -1,5 +1,5 @@
-import { gloss } from '@mcro/gloss'
-import { color, Row, View, ViewProps } from '@mcro/ui'
+import { gloss } from '@o/gloss'
+import { color, Row, View, ViewProps } from '@o/ui'
 import React from 'react'
 
 const niceColors = [

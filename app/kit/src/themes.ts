@@ -1,4 +1,4 @@
-import { color, linearGradient, ThemeMaker } from '@mcro/gloss'
+import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
@@ -98,7 +98,7 @@ const light = {
   }),
 }
 
-const darkBackground = color([66, 66, 66])
+const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
@@ -111,10 +111,10 @@ const dark = {
     backgroundHighlight: orbitColor,
     color: [250, 250, 250],
     borderColor: [180, 180, 180, 0.25],
-    sidebarBackground: [22, 22, 22, 0.52],
+    sidebarBackground: [15, 15, 15, 0.52],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
-    headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.25]),
+    headerBackground: linearGradient([0, 0, 0, 0.25], [0, 0, 0, 0.3]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     headerFadeBackground: linearGradient(
@@ -133,7 +133,7 @@ const dark = {
     cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
     tabBackgroundTop: darkBackground.alpha(0.65),
-    tabBackgroundBottom: darkBackground.alpha(0.8),
+    tabBackgroundBottom: darkBackground,
     tabBackgroundActive: darkBackground.lighten(0.2),
     tabBackgroundHover: [255, 255, 255, 0.015],
     tabInactiveHover: [0, 0, 0, 0.1],
@@ -153,9 +153,10 @@ const dark = {
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
-    background: '#12112166',
-    backgroundHover: '#555',
-    backgroundActive: '#444',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    listItemBackground: orbitColor.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
@@ -199,9 +200,17 @@ export const themes = {
     ...Theme.fromStyles({
       iconFill: '#fff',
       background: '#449878',
-      // backgroundHover: '#449878',
-      // backgroundActive: '#449878',
       color: '#fff',
+    }),
+  },
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      borderColor: orbitActiveBg,
+      borderColorHover: orbitActiveBg,
     }),
   },
   // 'light-selected': {

@@ -1,4 +1,4 @@
-import { Contents, ViewProps } from '@mcro/gloss'
+import { Contents, ViewProps } from '@o/gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
@@ -41,7 +41,13 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
 })
 
 export function useContextMenu({ items, buildItems }: UseContextProps) {
-  const { setItems } = useContext(ContextMenuContext)
+  const context = useContext(ContextMenuContext)
+
+  if (!context) {
+    console.warn('no context')
+  }
+
+  const { setItems } = context
 
   const onContextMenu = React.useCallback(
     () => {

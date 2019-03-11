@@ -1,9 +1,9 @@
+import * as UI from '@o/ui'
 import * as React from 'react'
-import { Logo } from '../views/logo'
-import * as UI from '@mcro/ui'
-import Router from '../router'
-import * as Constants from '../constants'
 import Media from 'react-media'
+import * as Constants from '../constants'
+import Router from '../router'
+import { Logo } from '../views/logo'
 
 export class BrandLogo extends React.Component<{ white?: boolean }> {
   state = { hovered: false }

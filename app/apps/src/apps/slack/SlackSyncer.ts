@@ -1,4 +1,4 @@
-import { createSyncer } from '@mcro/sync-kit'
+import { createSyncer } from '@o/sync-kit'
 import { SlackAppData, SlackBitData } from './SlackModels'
 import { SlackLoader } from './SlackLoader'
 import { SlackBitFactory } from './SlackBitFactory'

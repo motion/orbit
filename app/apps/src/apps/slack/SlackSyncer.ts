@@ -61,7 +61,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
     })
 
     // load messages
-    const { messages, lastMessageTz } = await loader.loadMessages(channel, oldestMessageId)
+    const { messages, lastMessageTz } = await loader.loadMessages(channel.id, oldestMessageId)
 
     // sync messages if we found them
     if (messages.length) {

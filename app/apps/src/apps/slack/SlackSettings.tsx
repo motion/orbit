@@ -7,6 +7,7 @@ import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
+import slackApp from './index'
 
 export function SlackSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
@@ -24,6 +25,12 @@ export function SlackSettings({ subId }: AppProps) {
       if (!app) return
       // for some reason we can get any app here, so filter out everything except slack
       if (app.identifier !== 'slack') return
+
+      // todo: remove it
+      // load slack channels (testing api)
+      slackApp.API
+        .loadChannels(app.id)
+        .then(channels => console.log('loaded api channels', channels));
 
       // if we have channels stored in the app - use them at first
       if (app.data.channels) {

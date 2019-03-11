@@ -1,7 +1,7 @@
 import { loadMany, useModel } from '@o/bridge'
 import { AppProps, Table, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
-import { CheckboxReactive, View } from '@o/ui'
+import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -86,20 +86,25 @@ export function SlackSettings({ subId }: AppProps) {
               flex: 2,
             },
             members: {
+              type: DataType.number,
               value: 'Members',
             },
             createdAt: {
+              type: DataType.date,
               value: 'Created',
             },
             active: {
               value: 'Active',
+              type: DataType.boolean,
+              onChange(index) {
+                whitelist.toggleWhitelisted(channels[index].id)
+              },
             },
           }}
           multiHighlight
           onHighlightedIndices={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
-            const isActive = whitelist.whilistStatusGetter(channel.id)
             return {
               key: `${index}`,
               values: {
@@ -107,15 +112,7 @@ export function SlackSettings({ subId }: AppProps) {
                 topic: topic,
                 members: channel.num_members,
                 createdAt: new Date(channel.created * 1000),
-                active: {
-                  sortValue: whitelist.whilistStatusGetter(channel.id),
-                  value: (
-                    <CheckboxReactive
-                      onChange={whitelist.updateWhitelistValueSetter(channel.id)}
-                      isActive={isActive}
-                    />
-                  ),
-                },
+                active: whitelist.getWhitelisted(channel.id),
               },
             }
           })}

@@ -1,7 +1,7 @@
 import { loadMany, useModel } from '@o/bridge'
 import { AppProps, Table, WhitelistManager } from '@o/kit'
 import { AppModel, GithubRepositoryModel } from '@o/models'
-import { CheckboxReactive, View } from '@o/ui'
+import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -78,12 +78,18 @@ export default function GithubSettings({ subId }: AppProps) {
             },
             lastCommit: {
               value: 'Last Commit',
+              type: DataType.number,
             },
             numIssues: {
               value: 'Open Issues',
+              type: DataType.number,
             },
             active: {
               value: 'Active',
+              type: DataType.boolean,
+              onChange(index) {
+                whitelist.toggleWhitelisted(repositories[index].nameWithOwner)
+              },
             },
           }}
           defaultSortOrder={{
@@ -93,24 +99,14 @@ export default function GithubSettings({ subId }: AppProps) {
           multiHighlight
           rows={(repositories || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
-            const lastCommit = new Date(repository.pushedAt)
-            const isActive = whitelist.whilistStatusGetter(repository.nameWithOwner)
             return {
               key: `${repository.id}`,
               values: {
                 org: orgName,
                 repo: repository.name,
-                lastCommit: lastCommit.getTime(),
+                lastCommit: new Date(repository.pushedAt),
                 numIssues: repository.issues.totalCount,
-                active: {
-                  sortValue: isActive,
-                  value: (
-                    <CheckboxReactive
-                      onChange={whitelist.updateWhitelistValueSetter(repository.nameWithOwner)}
-                      isActive={isActive}
-                    />
-                  ),
-                },
+                active: whitelist.getWhitelisted(repository.nameWithOwner),
               },
             }
           })}

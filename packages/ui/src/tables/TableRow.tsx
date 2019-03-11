@@ -140,7 +140,18 @@ export class TableRow extends React.PureComponent<Props> {
               </SimpleText>
             )
           } else if (col.type === 'boolean') {
-            element = <CheckboxReactive isActive={() => value} />
+            element = (
+              <CheckboxReactive
+                isActive={() => value}
+                onChange={next => {
+                  if (col.onChange) {
+                    col.onChange(index, next)
+                  } else {
+                    console.warn(`No onChange event passed to table column ${key}`)
+                  }
+                }}
+              />
+            )
           } else {
             element = <SimpleText>{value}</SimpleText>
           }

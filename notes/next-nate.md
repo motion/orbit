@@ -44,3 +44,23 @@ Make most really dynamic and bigger views in @o/kit the main name: Table, Form, 
 Make the lowest level ones prefixed with `Simple`, so SimpleTable, SimpleForm.
 
 The in between ones can be descriptive like SearchableTable.
+
+---
+
+components:
+
+(Be sure to cross reference Expo, Flipper, Retool)
+
+- <FilePicker /> (=> Table easy integration)
+- <Table />
+  - column type: `action` to support buttons on each row
+    - then you can have an easy effect here, for ex POST somewhere
+- <Select /> (can just be native, but with types)
+- <Toggle /> on/off button
+- <Query />
+  - we need a few ways to help people put together CRUD/query interfaces
+  - <QuerySQL />, <QueryGraphQL />, <QueryREST />
+- <Autocomplete /> with options you can fill in
+- <Table />
+  - Allow validators
+-

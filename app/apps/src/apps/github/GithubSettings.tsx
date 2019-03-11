@@ -78,7 +78,7 @@ export default function GithubSettings({ subId }: AppProps) {
             },
             lastCommit: {
               value: 'Last Commit',
-              type: DataType.number,
+              type: DataType.date,
             },
             numIssues: {
               value: 'Open Issues',

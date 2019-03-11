@@ -60,7 +60,7 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
     })
   }
 
-  whilistStatusGetter = memoize((id: string) => () => {
+  getWhitelisted = (id: string) => {
     if (!this.values.whitelist) {
       return true
     }
@@ -68,9 +68,11 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
       return this.values.whitelist.includes(id)
     }
     return this.values.whitelist[id]
-  })
+  }
 
-  updateWhitelistValueSetter = memoize((id: string) => () => {
+  whilistStatusGetter = memoize((id: string) => this.getWhitelisted(id))
+
+  toggleWhitelisted = (id: string) => {
     this.updateValues(values => {
       if (!values.whitelist) {
         values.whitelist = this.props.getAll()
@@ -82,5 +84,7 @@ export class WhitelistManager<T extends { data?: { values?: { whitelist?: string
         values.whitelist.splice(index, 1)
       }
     })
-  })
+  }
+
+  updateWhitelistValueSetter = memoize((id: string) => this.toggleWhitelisted(id))
 }

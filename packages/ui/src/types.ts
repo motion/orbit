@@ -49,12 +49,13 @@ export enum DataType {
   unknown = 'unknown',
 }
 
-export type DataColumn ={
+export type DataColumn = {
   value: string
   sortable?: boolean
   resizable?: boolean
   flex?: number
   type?: DataType
+  onChange?: (index: number, value: any) => void
 }
 
 export type DataColumns = {

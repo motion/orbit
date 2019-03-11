@@ -1,7 +1,7 @@
 import { Row, ViewProps } from '@o/gloss'
 import React, { createContext, Dispatch, ReactNode, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { MergeContext } from './helpers/MergeContext'
-import { Text, TextProps } from './text/Text'
+import { Text } from './text/Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
@@ -37,9 +37,7 @@ export function Breadcrumbs(props: ViewProps) {
   )
 }
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
-export type BreadcrumbsProps = Omit<TextProps, 'children'> & {
+export type BreadcrumbsProps = {
   separator?: ReactNode
   children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }

@@ -5,10 +5,10 @@
  * @format
  */
 
-import { Filter } from './types'
 import { PureComponent } from 'react'
 // import ContextMenu from '../ContextMenu'
 import textContent from '../helpers/textContent'
+import { TableFilter } from './types'
 // import { colors } from '../helpers/colors'
 
 // const FilterText = gloss({
@@ -39,7 +39,7 @@ import textContent from '../helpers/textContent'
 
 type Props = {
   children: any
-  addFilter: (filter: Filter) => void
+  addFilter: (filter: TableFilter) => void
   filterKey: string
 }
 

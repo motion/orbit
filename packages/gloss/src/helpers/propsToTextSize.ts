@@ -5,9 +5,17 @@ type TextStyles = {
   fontSizeNum?: number
 }
 
+export type TextSizeProps = {
+  sizeLineHeight?: number
+  lineHeight?: number | string
+  fontSize?: number | string
+  size?: number
+  sizeMethod?: string
+}
+
 // dont return undefined
 
-export function propsToTextSize(props) {
+export function propsToTextSize(props: TextSizeProps) {
   let fontSize = props.fontSize
   if (typeof fontSize === 'undefined' && props.size) {
     fontSize = props.size * 14
@@ -40,6 +48,9 @@ export function propsToTextSize(props) {
     } else if (props.sizeMethod === 'vw') {
       lineHeight = `${lineHeightNum / 12}vw`
       fontSize = `${fontSizeNum / 12}vw`
+    } else {
+      lineHeight = `${lineHeightNum}${props.sizeMethod}`
+      fontSize = `${fontSizeNum}${props.sizeMethod}`
     }
   }
   if (fontSize) {

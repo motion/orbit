@@ -11,7 +11,7 @@ import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 import { colors } from '../helpers/colors'
 import { Text } from '../text/Text'
-import { Filter } from './types'
+import { TableFilter } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -97,13 +97,13 @@ const Chevron = gloss({
 Chevron.ignoreAttrs = ['focused']
 
 type Props = {
-  filter: Filter
+  filter: TableFilter
   focused: boolean
   index: number
   onFocus?: (focusedToken: number) => void
   onBlur?: () => void
   onDelete?: (deletedToken: number) => void
-  onReplace?: (index: number, filter: Filter) => void
+  onReplace?: (index: number, filter: TableFilter) => void
 }
 
 export class FilterToken extends PureComponent {
@@ -172,7 +172,7 @@ export class FilterToken extends PureComponent {
   toggleFilter = () => {
     const { filter, index } = this.props
     if (filter.type !== 'enum') {
-      const newFilter: Filter = {
+      const newFilter: TableFilter = {
         ...filter,
         type: filter.type === 'include' ? 'exclude' : 'include',
       }
@@ -192,7 +192,7 @@ export class FilterToken extends PureComponent {
       if (value.length === filter.enum.length) {
         value = []
       }
-      const newFilter: Filter = {
+      const newFilter: TableFilter = {
         type: 'enum',
         ...filter,
         value,

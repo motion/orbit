@@ -5,21 +5,14 @@
  * @format
  */
 
-import { gloss, Row } from '@o/gloss'
-import invariant from 'invariant'
-import * as React from 'react'
-import { ContextMenu } from '../ContextMenu'
-// import ContextMenu from '../ContextMenu.js'
-import { Interactive } from '../Interactive'
-import {
-  TableColumnOrder,
-  TableColumns,
-  TableColumnSizes,
-  TableOnColumnResize,
-  TableOnSort,
-  TableRowSortOrder,
-} from './types'
-import { isPercentage, normaliseColumnWidth } from './utils'
+import { gloss, Row } from '@o/gloss';
+import invariant from 'invariant';
+import * as React from 'react';
+import { ContextMenu } from '../ContextMenu';
+import { Interactive } from '../Interactive';
+import { DataColumns, DataType } from '../types';
+import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types';
+import { isPercentage, normaliseColumnWidth } from './utils';
 
 const TableHeaderArrow = gloss({
   display: 'block',
@@ -105,7 +98,7 @@ class TableHeadColumn extends React.PureComponent<{
   isResizable: boolean
   leftHasResizer: boolean
   hasFlex: boolean
-  sortOrder?: TableRowSortOrder
+  sortOrder?: SortOrder
   onSort?: TableOnSort
   columnSizes: TableColumnSizes
   onColumnResize?: TableOnColumnResize
@@ -193,15 +186,45 @@ class TableHeadColumn extends React.PureComponent<{
   }
 }
 
-export class TableHead extends React.PureComponent<{
-  columnOrder: TableColumnOrder
-  onColumnOrder?: (order: TableColumnOrder) => void
-  columns: TableColumns
-  sortOrder?: TableRowSortOrder
-  onSort?: TableOnSort
-  columnSizes: TableColumnSizes
-  onColumnResize?: TableOnColumnResize
-}> {
+// this will:
+//    1. if no flex provided, assume that strings should flex double anything else
+//    2. if any flex provided, default rest to flex 1
+//    3. calculate the percentage width based on flexes
+function calculateColumnSizes(columns: DataColumns): TableColumnSizes {
+  const values = Object.keys(columns).map(k => columns[k])
+  const isUncontrolled = values.some(x => typeof x.flex !== 'undefined')
+  const flexes = values.map(val => {
+    if (isUncontrolled) {
+      return !val.type || val.type === DataType.string ? 2 : 1
+    } else {
+      return val.flex || 1
+    }
+  })
+  const totalFlex = flexes.reduce((a, flex) => a + flex, 0)
+  const sizes = {}
+  for (const key of Object.keys(columns)) {
+    const flex = columns[key].flex
+    sizes[key] = (flex / totalFlex) * 100
+  }
+  return sizes
+}
+
+export class TableHead extends React.PureComponent<
+  {
+    columnOrder: TableColumnOrder
+    onColumnOrder?: (order: TableColumnOrder) => void
+    columns: DataColumns
+    sortOrder?: SortOrder
+    onSort?: TableOnSort
+    columnSizes?: TableColumnSizes
+    onColumnResize?: TableOnColumnResize
+  },
+  { columnSizes: TableColumnSizes }
+> {
+  state = {
+    columnSizes: this.props.columnSizes || calculateColumnSizes(this.props.columns),
+  }
+
   buildContextMenu = (): any[] => {
     const visibles = this.props.columnOrder
       .map(c => (c.visible ? c.key : null))
@@ -240,7 +263,8 @@ export class TableHead extends React.PureComponent<{
   }
 
   render() {
-    const { columnOrder, columns, columnSizes, onColumnResize, onSort, sortOrder } = this.props
+    const { columnOrder, columns, onColumnResize, onSort, sortOrder } = this.props
+    const { columnSizes } = this.state
     const elems = []
 
     let hasFlex = false

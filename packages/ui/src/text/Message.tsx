@@ -10,9 +10,8 @@ export const Message = gloss(Text, {
   width: '100%',
   borderRadius: 8,
   padding: [10, 10],
-  margin: [0, 0, 20],
 }).theme((_, theme) => ({
-  background: theme.background,
+  background: theme.backgroundAlternate || theme.background,
   color: theme.color,
 }))
 

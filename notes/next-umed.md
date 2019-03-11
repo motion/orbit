@@ -11,3 +11,17 @@ Umed, your long term goal is basically to get a bunch of integrations really nic
 Here's a great reference for them:
 
 https://tryretool.com/integrations
+
+---
+
+Integrations ordered priority:
+
+1. Postgres
+2. Current Integrations READ/WRITE simple api
+   1. (slack, gmail, github for read/write, the rest just read)
+3. Google Sheets read/write
+4. MySQL, Redshift
+5. S3
+6. Stripe
+7. Twilio
+8. Firebase

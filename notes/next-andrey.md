@@ -1,22 +1,62 @@
-Organizing general plan for Andrey start, as best I can see.
+Andrey,
 
-Generally these are not set in stone and we can work through them. Just a good source of truth for our best list of next up.
+We just use this at the moment to plan next steps, plus Github PRs.
 
-Github is just a little too heavy for us at this point.
+The tickets in Github are a bit to heavy for us atm.
+
+We should both edit it as we go.
+
+Welcome 🙌
 
 ---
 
-## Onboarding plan
+## Onboarding
 
-1. Get app running - Runthrough of some code together
-2. Go over some of the "far flung" ideas to be on same page
-3. Start a document organizing high level ideas
+1. Get app running
+   - Go over important areas and review tech
+2. Go over current plan
+   - Discuss broad strategy + upcoming months
+3. Edit this together and create our detailed plan for next months
 
-## Get feedback
+## Feedback
 
-I'd like you to have time to get familiar with the app and explicitly give feedback. I know you have years of interesting experience and probably have many patterns, tools, refactors, etc you recommend.
+I'd like you to have time to get familiar with the app and explicitly give feedback. I know you have years of interesting experience and probably have many patterns, tools, refactors, etc you recommend. Please do send them my way in the initial weeks and ongoing.
 
-In general, want to always work by collaborating on feedback in planning stage!
+---
+
+## Initial idea for how we plan
+
+The ideal way I see things going is:
+
+- We all establish the desired goals
+- Plan together best way to split that up and rough estimates
+- Then, we individually fill in details for the high level bullet points we planned together
+
+---
+
+## My plan, currently
+
+The best way I can see us going over the next six months involves achieving multiple things.
+
+1. A great demo that is roughly running on real code.
+2. Polish / productionize the demo while building a website/docs.
+3. Sell that demo while building out "supporting" features (more integrated apps, onboarding, account, etc)
+
+### Step 1
+
+I think my best duty here is to come up with the examples ahead of time so we can split out the work to best get there. Then, you and Umed essentially split up the steps to make it real and we track that as we go.
+
+There would be a decent amount of me helping out on UI and app-side stuff I imagine, while you focus on the "running on real code" part, ie: making custom apps a thing + making syncing and space-level features actually work. But I don't mind as long as we are tracking directly towards a good demo.
+
+### Step 2
+
+Here I'd imagine we get more isolated. In general, I'd be on design and you'd be on architecture, but we'd all be focusing on having a few apps we can show and getting the various features behind them polished: dev environment, syncing layers, APIs, and so on.
+
+### Step 3
+
+This is longer term, but basically if we make it here we are in good shape. Ideally, I'm fully on website. I also set up the framework for docs, and you and umed are help fill them in with me.
+
+Umed likely stays on fleshing out integrations and their APIs. While you move into onboarding, account, app store infrastructure, etc.
 
 ---
 

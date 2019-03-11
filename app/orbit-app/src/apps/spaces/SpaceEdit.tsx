@@ -2,12 +2,12 @@ import { OrbitOrb, useAppDefinitions, useAppsForSpace } from '@o/kit'
 import { Space } from '@o/models'
 import {
   Col,
-  FormField,
   HorizontalSpace,
   InputField,
   ListItem,
   Paragraph,
   Row,
+  SimpleFormField,
   Theme,
   Title,
   VerticalSpace,
@@ -56,7 +56,7 @@ export function SpaceEdit({ space }: { space: Space }) {
           }}
         />
 
-        <FormField label="Theme">
+        <SimpleFormField label="Theme">
           <Row alignItems="center" overflow="hidden" flex={1}>
             <OrbitOrb size={48} colors={colors} />
             <HorizontalSpace />
@@ -78,7 +78,7 @@ export function SpaceEdit({ space }: { space: Space }) {
               </HorizontalScroll>
             </Col>
           </Row>
-        </FormField>
+        </SimpleFormField>
       </SubSection>
 
       <VerticalSpace />

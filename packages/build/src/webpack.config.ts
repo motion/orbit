@@ -39,6 +39,7 @@ const getFlag = flag => {
 
 const target = getFlag('--target') || 'electron-renderer'
 const defines = {
+  'process.platform': JSON.stringify('darwin'),
   'process.env.NODE_ENV': JSON.stringify(mode),
   'process.env.RENDER_TARGET': JSON.stringify(target),
   'process.env.PROCESS_NAME': JSON.stringify(process.env.PROCESS_NAME || readPackage('name')),

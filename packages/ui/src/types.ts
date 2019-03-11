@@ -25,3 +25,38 @@ export type RowRenderer = (
 export type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+export type GenericDataRow = {
+  key: string
+  height?: number | void
+  category?: string
+  filterValue?: string | void
+  sortKey?: string | number
+  style?: Object
+  onDoubleClick?: (e: MouseEvent) => void
+  copyText?: string
+  highlightOnHover?: boolean
+  values: {
+    [key: string]: any
+  }
+}
+
+export enum DataType {
+  number = 'number',
+  boolean = 'boolean',
+  string = 'string',
+  date = 'date',
+  unknown = 'unknown',
+}
+
+export type DataColumn ={
+  value: string
+  sortable?: boolean
+  resizable?: boolean
+  flex?: number
+  type?: DataType
+}
+
+export type DataColumns = {
+  [key: string]: DataColumn
+}

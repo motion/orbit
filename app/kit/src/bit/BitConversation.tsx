@@ -84,12 +84,7 @@ export function Conversation(props: AppBitMainProps) {
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
-        <SegmentedRow
-          spaced={0}
-          active={activePane}
-          onChange={setActivePane}
-          itemProps={{ chromeless: true, fontWeight: 600, sizeFont: 1.1, size: 0.9 }}
-        >
+        <SegmentedRow chromeless fontWeight={600} size={0.9}>
           <Button onClick={() => setActivePane(0)}>Conversation</Button>
           <Button onClick={() => setActivePane(1)}>Previously</Button>
           <Button onClick={() => setActivePane(2)}>Afterwards</Button>

@@ -1,27 +1,17 @@
-import React from 'react'
-import { FormTableLabel, FormTableRow, FormTableValue } from '../tables/Table'
-import { InputProps } from './Input'
-import { Label } from './Label'
+import React, { HTMLProps } from 'react'
+import { SimpleFormField, SimpleFormFieldProps } from './FormField'
 
-export const CheckBoxField = ({
-  name = `checkbox-${Math.random()}`,
+export function CheckBoxField({
+  label,
   children,
-  checked,
-  onChange,
-}: InputProps & { checked?: boolean; onChange: (checked: boolean) => any }) => (
-  <FormTableRow>
-    <FormTableLabel>
-      <Label htmlFor={name}>{children}</Label>
-    </FormTableLabel>
-    <FormTableValue>
-      <input
-        id={name}
-        name={name}
-        checked={checked}
-        onChange={onChange && (e => onChange(e.target.checked))}
-        style={{ margin: `auto 4px` }}
-        type="checkbox"
-      />
-    </FormTableValue>
-  </FormTableRow>
-)
+  ...props
+}: SimpleFormFieldProps & HTMLProps<HTMLInputElement>) {
+  if (children) {
+    console.warn('no children allowed for checkbox', children)
+  }
+  return (
+    <SimpleFormField label={label}>
+      <input id={name} name={name} style={{ margin: `auto 4px` }} type="checkbox" {...props} />
+    </SimpleFormField>
+  )
+}

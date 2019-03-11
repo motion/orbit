@@ -9,36 +9,36 @@ import { isEqual } from '@o/fast-compare'
 import { View } from '@o/gloss'
 import * as React from 'react'
 import textContent from '../helpers/textContent'
+import { GenericDataRow } from '../types'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
-import { Filter, TableBodyRow } from './types'
+import { TableFilter } from './types'
 
-type Props = ManagedTableProps &
-  SearchableProps & {
-    defaultFilters: Filter[]
-    filter: any
-    filterValue: any
+export type SearchableTableProps = ManagedTableProps &
+  Partial<SearchableProps> & {
+    defaultFilters?: TableFilter[]
+    filter?: any
+    filterValue?: any
   }
 
 type State = {
-  filterRows: (row: TableBodyRow) => boolean
-  filters: Filter[]
-  searchTerm: string
+  filterRows: (row: GenericDataRow) => boolean
+  filters: TableFilter[]
+  searchTerm?: string
 }
 
-const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: TableBodyRow): boolean =>
+const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
+  row: GenericDataRow,
+): boolean =>
   filters
-    .map((filter: Filter) => {
-      if (filter.type === 'enum' && row.type != null) {
-        // @ts-ignore
-        return filter.value.length === 0 || filter.value.indexOf(row.type) > -1
+    .map((filter: TableFilter) => {
+      if (filter.type === 'enum' && row.category != null) {
+        return filter.value.length === 0 || filter.value.indexOf(row.category) > -1
       } else if (filter.type === 'include') {
-        return (
-          textContent(row.columns[filter.key].value).toLowerCase() === filter.value.toLowerCase()
-        )
+        return textContent(row.values[filter.key]).toLowerCase() === filter.value.toLowerCase()
       } else if (filter.type === 'exclude') {
         return (
-          textContent(row.columns[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
+          textContent(row.values[filter.key].value).toLowerCase() !== filter.value.toLowerCase()
         )
       } else {
         return true
@@ -46,14 +46,14 @@ const filterRowsFactory = (filters: Filter[], searchTerm: string) => (row: Table
     })
     .reduce((acc, cv) => acc && cv, true) &&
   (searchTerm != null && searchTerm.length > 0
-    ? Object.keys(row.columns)
-        .map(key => textContent(row.columns[key].value))
+    ? Object.keys(row.values)
+        .map(key => textContent(row.values[key]))
         .join('~~') // prevent from matching text spanning multiple columns
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     : true)
 
-class SearchableManagedTable extends React.PureComponent<Props, State> {
+class SearchableManagedTable extends React.PureComponent<SearchableTableProps, State> {
   static defaultProps = {
     defaultFilters: [],
   }
@@ -85,7 +85,7 @@ class SearchableManagedTable extends React.PureComponent<Props, State> {
   }
 }
 
-export const SearchableTable = props => (
+export const SearchableTable = (props: SearchableTableProps) => (
   <Searchable {...props}>
     {({ searchBar, ...rest }) => (
       <>

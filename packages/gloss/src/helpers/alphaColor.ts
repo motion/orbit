@@ -2,7 +2,12 @@ import { color } from '@o/color'
 
 // mutate styles to have alpha if defined in props
 
-export function alphaColor(styles, { alpha, alphaHover }: { alpha?: number; alphaHover?: number }) {
+export type AlphaColorProps = {
+  alpha?: number
+  alphaHover?: number
+}
+
+export function alphaColor(styles, { alpha, alphaHover }: AlphaColorProps) {
   if (styles.color) {
     if (styles.color !== 'inherit') {
       const clr = color(styles.color)

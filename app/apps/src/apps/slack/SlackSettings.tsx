@@ -1,7 +1,7 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, WhitelistManager } from '@o/kit'
+import { AppProps, Table, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
-import { CheckboxReactive, DateFormat, SearchableTable, Text, View } from '@o/ui'
+import { CheckboxReactive, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
@@ -16,14 +16,7 @@ export function SlackSettings({ subId }: AppProps) {
   })
   // setup state
   const [channels, setChannels] = useState(null)
-  const [highlightedRows, setHighlightedRows] = useState([])
-  const columnSizes = {
-    name: '25%',
-    topic: '25%',
-    members: '20%',
-    createdAt: '15%',
-    active: '15%',
-  }
+  const [, setHighlightedRows] = useState([])
 
   // load and set channels when app changes
   useEffect(
@@ -82,66 +75,38 @@ export function SlackSettings({ subId }: AppProps) {
         opacity={whitelist.isWhitelisting ? 0.5 : 1}
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
-        <SearchableTable
-          virtual
-          rowLineHeight={28}
-          floating={false}
-          columnSizes={columnSizes}
+        <Table
           columns={{
             name: {
               value: 'Name',
-              sortable: true,
-              resizable: true,
+              flex: 2,
             },
             topic: {
               value: 'Topic',
-              sortable: true,
-              resizable: true,
+              flex: 2,
             },
             members: {
               value: 'Members',
-              sortable: true,
-              resizable: true,
             },
             createdAt: {
               value: 'Created',
-              sortable: true,
-              resizable: true,
             },
             active: {
               value: 'Active',
-              sortable: true,
             },
           }}
           multiHighlight
-          highlightedRows={highlightedRows}
-          onRowHighlighted={setHighlightedRows}
+          onHighlightedIndices={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
             const isActive = whitelist.whilistStatusGetter(channel.id)
             return {
               key: `${index}`,
-              columns: {
-                name: {
-                  sortValue: channel.name,
-                  value: channel.name,
-                },
-                topic: {
-                  sortValue: topic,
-                  value: topic,
-                },
-                members: {
-                  sortValue: channel.num_members,
-                  value: channel.num_members,
-                },
-                createdAt: {
-                  sortValue: channel.created,
-                  value: (
-                    <Text ellipse>
-                      <DateFormat date={new Date(channel.created * 1000)} />
-                    </Text>
-                  ),
-                },
+              values: {
+                name: channel.name,
+                topic: topic,
+                members: channel.num_members,
+                createdAt: new Date(channel.created * 1000),
                 active: {
                   sortValue: whitelist.whilistStatusGetter(channel.id),
                   value: (
@@ -154,11 +119,6 @@ export function SlackSettings({ subId }: AppProps) {
               },
             }
           })}
-          bodyPlaceholder={
-            <div style={{ margin: 'auto' }}>
-              <Text size={1.2}>Loading...</Text>
-            </div>
-          }
         />
       </View>
     </>

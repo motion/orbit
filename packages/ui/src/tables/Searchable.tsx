@@ -10,28 +10,28 @@ import { on } from '@o/utils'
 import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import { SearchInput, SearchInputProps } from '../forms/SearchInput'
-import { Filter, FilterIncludeExclude } from './types'
+import { FilterIncludeExclude, TableFilter } from './types'
 
 type State = {
-  filters: Filter[]
+  filters: TableFilter[]
   focusedToken: number
   searchTerm: string
   hasFocus: boolean
 }
 
 export type SearchableProps = Props & {
-  addFilter: (filter: Filter) => void
+  addFilter: (filter: TableFilter) => void
   searchTerm: string
-  filters: Filter[]
+  filters: TableFilter[]
 }
 
 export type SearchBarType = React.ReactElement<React.SFC<SearchInputProps>>
 
 export type SearchableChildProps = {
-  addFilter: (filter: Filter) => void
+  addFilter: (filter: TableFilter) => void
   searchTerm: string
   searchBar: SearchBarType
-  filters: Filter[]
+  filters: TableFilter[]
 }
 
 type Props = {
@@ -40,8 +40,8 @@ type Props = {
   placeholder?: string
   actions?: React.ReactNode
   tableKey?: string
-  onFilterChange?: (filters: Array<Filter>) => void
-  defaultFilters?: Array<Filter>
+  onFilterChange?: (filters: Array<TableFilter>) => void
+  defaultFilters?: Array<TableFilter>
   searchBarTheme?: Object
   searchBarProps?: Object
   searchInputProps?: Object
@@ -110,7 +110,7 @@ export class Searchable extends React.PureComponent<Props, State> {
         defaultFilters.forEach(defaultFilter => {
           const filterIndex = savedStateFilters.findIndex(f => f.key === defaultFilter.key)
           if (filterIndex > -1) {
-            const defaultFilter: Filter = defaultFilters[filterIndex]
+            const defaultFilter: TableFilter = defaultFilters[filterIndex]
             if (defaultFilter.type === 'enum') {
               savedStateFilters[filterIndex].enum = defaultFilter.enum
             }
@@ -227,11 +227,11 @@ export class Searchable extends React.PureComponent<Props, State> {
     this.setState({ searchTerm })
   }
 
-  addFilter = (filter: Filter) => {
+  addFilter = (filter: TableFilter) => {
     const filterIndex = this.state.filters.findIndex(f => f.key === filter.key)
     if (filterIndex > -1) {
       const filters = [...this.state.filters]
-      const defaultFilter: Filter = this.props.defaultFilters[filterIndex]
+      const defaultFilter: TableFilter = this.props.defaultFilters[filterIndex]
       if (
         defaultFilter != null &&
         defaultFilter.type === 'enum' &&
@@ -264,7 +264,7 @@ export class Searchable extends React.PureComponent<Props, State> {
     })
   }
 
-  replaceFilter = (index: number, filter: Filter) => {
+  replaceFilter = (index: number, filter: TableFilter) => {
     const filters = [...this.state.filters]
     filters.splice(index, 1, filter)
     this.setState({ filters })

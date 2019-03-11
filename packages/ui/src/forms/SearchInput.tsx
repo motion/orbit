@@ -6,7 +6,7 @@ import { colors } from '../helpers/colors'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
-import { Filter } from '../tables/types'
+import { TableFilter } from '../tables/types'
 
 export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
   CSSPropertySet & {
@@ -14,7 +14,7 @@ export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
     searchBarProps?: Object
     after?: React.ReactNode
     actions?: React.ReactNode
-    filters?: Filter[]
+    filters?: TableFilter[]
     onClickClear?: Function
     focusedToken?: number
     filterProps?: Object

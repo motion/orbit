@@ -7,8 +7,11 @@
 
 import { gloss, Row, SimpleText } from '@o/gloss'
 import * as React from 'react'
+import { CheckboxReactive } from '../forms/CheckboxReactive'
+import { DateFormat } from '../text/DateFormat'
+import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
-import { DEFAULT_ROW_HEIGHT, TableBodyRow, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
+import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
 const backgroundColor = (props, theme) => {
@@ -66,14 +69,15 @@ const TableBodyColumnContainer = gloss({
 }))
 
 type Props = {
-  columnSizes: TableColumnSizes
   columnKeys: TableColumnKeys
+  columnSizes: TableColumnSizes
+  columns: DataColumns
   onMouseDown: (e: React.MouseEvent) => any
   onMouseEnter?: (e: React.MouseEvent) => void
   multiline?: boolean
   rowLineHeight: number
   highlighted: boolean
-  row: TableBodyRow
+  row: GenericDataRow
   index: number
   style?: Object
   onAddFilter?: TableOnAddFilter
@@ -93,6 +97,7 @@ export class TableRow extends React.PureComponent<Props> {
       row,
       style,
       multiline,
+      columns,
       columnKeys,
       columnSizes,
       onMouseEnter,
@@ -100,12 +105,9 @@ export class TableRow extends React.PureComponent<Props> {
       zebra,
       onAddFilter,
     } = this.props
-
     return (
       <TableBodyRowContainer
         rowLineHeight={rowLineHeight}
-        highlightedBackgroundColor={row.highlightedBackgroundColor}
-        backgroundColor={row.backgroundColor}
         highlighted={highlighted}
         multiline={multiline}
         even={index % 2 === 0}
@@ -118,31 +120,46 @@ export class TableRow extends React.PureComponent<Props> {
         {...row.style}
       >
         {columnKeys.map(key => {
-          const col = row.columns[key]
+          const value = row.values[key]
+          const col = columns[key]
+          // TODO we could let them configure but seems weird, when do they want an "unfilterable" row?
+          const isFilterable = true
 
           if (col == null) {
             throw new Error(
               `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
             )
           }
-          const isFilterable = col.isFilterable || false
-          const value = col ? col.value : ''
-          const title = col ? col.title : ''
+
+          let element: React.ReactNode = null
+
+          if (col.type === 'date') {
+            element = (
+              <SimpleText ellipse>
+                <DateFormat date={value} />
+              </SimpleText>
+            )
+          } else if (col.type === 'boolean') {
+            element = <CheckboxReactive isActive={() => value} />
+          } else {
+            element = <SimpleText>{value}</SimpleText>
+          }
+
+          if (isFilterable && onAddFilter != null) {
+            element = (
+              <FilterRow addFilter={onAddFilter} filterKey={key}>
+                {element}
+              </FilterRow>
+            )
+          }
 
           return (
             <TableBodyColumnContainer
               key={key}
-              title={title}
               multiline={multiline}
               width={normaliseColumnWidth(columnSizes[key])}
             >
-              {isFilterable && onAddFilter != null ? (
-                <FilterRow addFilter={onAddFilter} filterKey={key}>
-                  <SimpleText>{value}</SimpleText>
-                </FilterRow>
-              ) : (
-                <SimpleText>{value}</SimpleText>
-              )}
+              {element}
             </TableBodyColumnContainer>
           )
         })}

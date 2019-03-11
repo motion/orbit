@@ -5,27 +5,19 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
-import { debounce, isEqual } from 'lodash'
-import * as React from 'react'
-import debounceRender from 'react-debounce-render'
-import { VariableSizeList } from 'react-window'
-import { ContextMenu } from '../ContextMenu'
-import { ResizeObserver } from '../ResizeObserver'
-import { getSortedRows } from './getSortedRows'
-import { TableHead } from './TableHead'
-import { TableRow } from './TableRow'
-import {
-  DEFAULT_ROW_HEIGHT,
-  TableBodyRow,
-  TableColumnOrder,
-  TableColumns,
-  TableColumnSizes,
-  TableHighlightedRows,
-  TableOnAddFilter,
-  TableRows,
-  TableRowSortOrder,
-} from './types'
+import { gloss } from '@o/gloss';
+import { debounce, isEqual } from 'lodash';
+import * as React from 'react';
+import debounceRender from 'react-debounce-render';
+import { VariableSizeList } from 'react-window';
+import { ContextMenu } from '../ContextMenu';
+import { ResizeObserver } from '../ResizeObserver';
+import { Text } from '../text/Text';
+import { DataColumns, GenericDataRow } from '../types';
+import { getSortedRows } from './getSortedRows';
+import { TableHead } from './TableHead';
+import { TableRow } from './TableRow';
+import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableHighlightedRows, TableOnAddFilter, TableRows } from './types';
 
 // TODO this can move to useResizeObserver
 function useComponentSize() {
@@ -60,7 +52,7 @@ const clipboard = Electron.clipboard
 const filterRows = (
   rows: TableRows,
   filterValue?: string,
-  filter?: (row: TableBodyRow) => boolean,
+  filter?: (row: GenericDataRow) => boolean,
 ): TableRows => {
   // check that we don't have a filter
   const hasFilterValue = filterValue !== '' && filterValue != null
@@ -100,15 +92,11 @@ export type ManagedTableProps = {
   /**
    * Column definitions.
    */
-  columns: TableColumns
+  columns: DataColumns
   /**
-   * Row definitions.
+   * Row data
    */
-  rows: TableRows
-  /**
-   * Whether the table has a border.
-   */
-  floating?: boolean
+  rows: GenericDataRow[]
   /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
@@ -134,15 +122,15 @@ export type ManagedTableProps = {
   /**
    * Callback to filter rows.
    */
-  filter?: (row: TableBodyRow) => boolean
+  filter?: (row: GenericDataRow) => boolean
   /**
    * Callback when the highlighted rows change.
    */
-  onRowHighlighted?: (keys: TableHighlightedRows) => void
+  onHighlightedIndices?: (keys: TableHighlightedRows) => void
   /**
-   * Whether rows can be highlighted or not.
+   * Disable highlighting rows
    */
-  highlightableRows?: boolean
+  disableHighlight?: false
   /**
    * Whether multiple rows can be highlighted or not.
    */
@@ -169,14 +157,16 @@ export type ManagedTableProps = {
    */
   hideHeader?: boolean
 
-  sortOrder?: TableRowSortOrder
+  defaultSortOrder?: SortOrder
+  sortOrder?: SortOrder
+  onSortOrder?: (next: SortOrder) => any
   onCreatePaste?: Function
   bodyPlaceholder?: React.ReactNode
 }
 
 type ManagedTableState = {
   highlightedRows: Set<string>
-  sortOrder?: TableRowSortOrder
+  sortOrder?: SortOrder
   sortedRows?: TableRows
   columnOrder: TableColumnOrder
   columnSizes: TableColumnSizes
@@ -197,6 +187,25 @@ class ManagedTableInner extends React.Component<
     highlightableRows: true,
     multiHighlight: false,
     autoHeight: false,
+    rowLineHeight: 28,
+    bodyPlaceholder: (
+      <div style={{ margin: 'auto' }}>
+        <Text size={1.2}>Loading...</Text>
+      </div>
+    ),
+  }
+
+  state: ManagedTableState = {
+    columnOrder:
+      JSON.parse(window.localStorage.getItem(this.getTableKey()) || 'null') ||
+      this.props.columnOrder ||
+      Object.keys(this.props.columns).map(key => ({ key, visible: true })),
+    columnSizes: this.props.columnSizes || {},
+    highlightedRows: new Set(),
+    sortOrder: this.props.defaultSortOrder,
+    sortedRows: null,
+    shouldScrollToBottom: Boolean(this.props.stickyBottom),
+    prevProps: {},
   }
 
   static getDerivedStateFromProps = (props, state) => {
@@ -256,26 +265,10 @@ class ManagedTableInner extends React.Component<
     return null
   }
 
-  getTableKey = (): string => {
-    return (
-      'TABLE_COLUMNS_' +
-      Object.keys(this.props.columns)
-        .join('_')
-        .toUpperCase()
-    )
-  }
-
-  state: ManagedTableState = {
-    columnOrder:
-      JSON.parse(window.localStorage.getItem(this.getTableKey()) || 'null') ||
-      this.props.columnOrder ||
-      Object.keys(this.props.columns).map(key => ({ key, visible: true })),
-    columnSizes: this.props.columnSizes || {},
-    highlightedRows: new Set(),
-    sortOrder: null,
-    sortedRows: null,
-    shouldScrollToBottom: Boolean(this.props.stickyBottom),
-    prevProps: {},
+  getTableKey() {
+    return `TABLE_COLUMNS_${Object.keys(this.props.columns)
+      .join('_')
+      .toUpperCase()}`
   }
 
   tableRef: {
@@ -326,7 +319,7 @@ class ManagedTableInner extends React.Component<
       e.keyCode === 67
     ) {
       this.onCopy()
-    } else if ((e.keyCode === 38 || e.keyCode === 40) && this.props.highlightableRows) {
+    } else if ((e.keyCode === 38 || e.keyCode === 40) && !this.props.disableHighlight) {
       // arrow navigation
       const { highlightedRows, sortedRows } = this.state
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
@@ -339,7 +332,7 @@ class ManagedTableInner extends React.Component<
         highlightedRows.clear()
       }
       highlightedRows.add(sortedRows[newIndex].key)
-      this.onRowHighlighted(highlightedRows, () => {
+      this.onHighlightedIndices(highlightedRows, () => {
         const { current } = this.tableRef
         if (current) {
           current.scrollToItem(newIndex)
@@ -348,23 +341,24 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onRowHighlighted = (highlightedRows: Set<string>, cb = () => {}) => {
-    if (!this.props.highlightableRows) {
-      return
-    }
+  onHighlightedIndices = (highlightedRows: Set<string>, cb = () => {}) => {
+    if (this.props.disableHighlight) return
     this.setState({ highlightedRows }, cb)
-    const { onRowHighlighted } = this.props
-    if (onRowHighlighted) {
-      onRowHighlighted(Array.from(highlightedRows))
+    const { onHighlightedIndices } = this.props
+    if (onHighlightedIndices) {
+      onHighlightedIndices(Array.from(highlightedRows))
     }
   }
 
-  onSort = (sortOrder: TableRowSortOrder) => {
+  onSort = (sortOrder: SortOrder) => {
     const sortedRows = getSortedRows(
       sortOrder,
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
     this.setState({ sortOrder, sortedRows })
+    if (this.props.onSortOrder) {
+      this.props.onSortOrder(sortOrder)
+    }
   }
 
   onColumnOrder = (columnOrder: TableColumnOrder) => {
@@ -385,8 +379,8 @@ class ManagedTableInner extends React.Component<
     }
   }
 
-  onHighlight = (e: React.MouseEvent, row: TableBodyRow, index: number) => {
-    if (e.button !== 0 || !this.props.highlightableRows) {
+  onHighlight = (e: React.MouseEvent, row: GenericDataRow, index: number) => {
+    if (e.button !== 0 || this.props.disableHighlight) {
       // Only highlight rows when using primary mouse button,
       // otherwise do nothing, to not interfere context menus.
       return
@@ -417,7 +411,7 @@ class ManagedTableInner extends React.Component<
       this.state.highlightedRows.add(row.key)
     }
 
-    this.onRowHighlighted(highlightedRows)
+    this.onHighlightedIndices(highlightedRows)
   }
 
   onStopDragSelecting = () => {
@@ -451,19 +445,17 @@ class ManagedTableInner extends React.Component<
     return selected
   }
 
-  onMouseEnterRow = (_: React.MouseEvent, row: TableBodyRow, index: number) => {
+  onMouseEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
     const { dragStartIndex } = this
     const { current } = this.tableRef
-    if (
-      typeof dragStartIndex === 'number' &&
-      current &&
-      this.props.multiHighlight &&
-      this.props.highlightableRows
-    ) {
+    if (this.props.disableHighlight || !this.props.multiHighlight) {
+      return
+    }
+    if (typeof dragStartIndex === 'number' && current) {
       current.scrollToItem(index + 1)
       const startKey = this.state.sortedRows[dragStartIndex].key
       const highlightedRows = new Set(this.selectInRange(startKey, row.key))
-      this.onRowHighlighted(highlightedRows)
+      this.onHighlightedIndices(highlightedRows)
     }
   }
 
@@ -493,7 +485,7 @@ class ManagedTableInner extends React.Component<
     return sortedRows
       .filter(row => highlightedRows.has(row.key))
       .map(
-        (row: TableBodyRow) =>
+        (row: GenericDataRow) =>
           row.copyText ||
           Array.from(document.querySelectorAll(`[data-key='${row.key}'] > *`) || [])
             .map(node => node.textContent)
@@ -534,7 +526,7 @@ class ManagedTableInner extends React.Component<
   )
 
   renderRow = ({ index, style }) => {
-    const { onAddFilter, multiline, zebra } = this.props
+    const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
     return (
@@ -542,10 +534,11 @@ class ManagedTableInner extends React.Component<
         key={sortedRows[index].key}
         columnSizes={columnSizes}
         columnKeys={columnKeys}
+        columns={columns}
         onMouseDown={e => this.onHighlight(e, sortedRows[index], index)}
         onMouseEnter={e => this.onMouseEnterRow(e, sortedRows[index], index)}
         multiline={multiline}
-        rowLineHeight={24}
+        rowLineHeight={rowLineHeight}
         highlighted={highlightedRows.has(sortedRows[index].key)}
         row={sortedRows[index]}
         index={index}

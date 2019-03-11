@@ -23,30 +23,8 @@
   - invite generation + validation in the app
 - make it much easier to create apps / have them in their own area
   - with their own data they can easily hook into
-- syncers bugfixing and improving performance and data storage
-- memory as a source
 - const [key, setKey] = useSetting('key')
   - easy way to be able to have a new UI-related query/update on setting
-- back button:
-  - simple simple version:
-    - store a log of searches and pane switches:
-      - appid of the pane
-      - text content of search
-    - be sure to debounce the search log entry quite a bit
-    - then on back just look at entry and either set input or pane...
-      - should be good enough for most use cases
-    - next step would be selected item inside, but thats already way more complex
-- prep for apps split:
-  - splitting out all the views for the app kit
-    - fixing their types
-    - Icon, most things in views/\*
-    - VirutalList/VirtualListItem => List/ListItem etc
-    - content type views: Thread/Message/etc
-  - creating a thing that downloads our webpack setup on demand for development
-    - interface to show that
-    - creating npm package `orbit-dev-tools` that has webpack, @o/build, etc
-    - `npm install orbit-dev-tools` basically our dev tools
-    - check to keep them up to date in the app
 
 for me once split out:
 

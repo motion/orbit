@@ -6,8 +6,6 @@ import { AppsMainAddApp } from './AppsMainAddApp'
 export function AppsMain(props: AppProps) {
   console.log('props213', props)
 
-  return null
-
   if (props.identifier !== 'apps') {
     return <AppMainView {...props} />
   }

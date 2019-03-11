@@ -1,6 +1,6 @@
-import { AppProps, AppView } from '@o/kit';
-import * as React from 'react';
-import { ManageApps } from './ManageApps';
+import { AppProps, AppView } from '@o/kit'
+import * as React from 'react'
+import { ManageApps } from './ManageApps'
 
 export function AppsMainSetup(props: AppProps) {
   if (props.subType === 'manage-apps') {

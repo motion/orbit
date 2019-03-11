@@ -1,5 +1,5 @@
 import { Button, Input, Message, Section, SegmentedRow, Theme, Title, VerticalSpace } from '@o/ui'
-import * as React from 'react'
+import React from 'react'
 
 export default function SettingsAppAccount() {
   // const [user] = useActiveUser()

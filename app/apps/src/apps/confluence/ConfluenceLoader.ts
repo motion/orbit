@@ -1,15 +1,37 @@
 import { Logger } from '@o/logger'
 import { AppBit } from '@o/models'
-import { sleep } from '@o/utils'
-import { ServiceLoadThrottlingOptions } from '../../options'
-import { ServiceLoader } from '../../ServiceLoader'
+import { ServiceLoader, sleep } from '@o/sync-kit'
 import { ConfluenceQueries } from './ConfluenceQueries'
 import {
+  ConfluenceAppData,
   ConfluenceComment,
   ConfluenceContent,
   ConfluenceGroup,
   ConfluenceUser,
-} from './ConfluenceTypes'
+} from './ConfluenceModels'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before users load.
+   */
+  users: 100,
+
+  /**
+   * Delay before content load.
+   */
+  contents: 100,
+
+  /**
+   * Delay before issue comments load.
+   */
+  comments: 100
+
+}
 
 /**
  * Loads confluence data from its API.
@@ -22,7 +44,17 @@ export class ConfluenceLoader {
   constructor(app: AppBit, log?: Logger) {
     this.app = app
     this.log = log || new Logger('service:confluence:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log)
+
+    const appData: ConfluenceAppData = this.app.data
+    const { username, password } = this.app.data.values.credentials
+    const credentials = Buffer.from(`${username}:${password}`).toString('base64')
+
+    this.loader = new ServiceLoader(this.app, this.log, {
+      baseUrl: appData.values.credentials.domain,
+      headers: {
+        Authorization: `Basic ${credentials}`
+      }
+    })
   }
 
   /**
@@ -49,54 +81,58 @@ export class ConfluenceLoader {
       isLast?: boolean,
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.confluence.contents)
+    const loadRecursively = async (cursor: number, loadedCount: number) => {
+      await sleep(THROTTLING.contents)
 
-    const maxResults = 25
-    const response = await this.loader.load(ConfluenceQueries.contents(type, cursor, maxResults))
-    const hasNextPage = response.size > cursor + maxResults
+      const maxResults = 25
+      const response = await this.loader.load(ConfluenceQueries.contents(type, cursor, maxResults))
+      const hasNextPage = response.size > cursor + maxResults
 
-    // traverse over loaded issues and call streaming function
-    for (let i = 0; i < response.results.length; i++) {
-      const content = response.results[i]
-      try {
-        // load content comments
-        if (content.childTypes.comment.value === true) {
-          content.comments = await this.loadComments(content.id)
-        } else {
-          content.comments = []
+      // traverse over loaded issues and call streaming function
+      for (let i = 0; i < response.results.length; i++) {
+        const content = response.results[i]
+        try {
+          // load content comments
+          if (content.childTypes.comment.value === true) {
+            content.comments = await this.loadComments(content.id)
+          } else {
+            content.comments = []
+          }
+
+          const isLast = i === response.results.length - 1 && hasNextPage === false
+          const result = await handler(
+            content,
+            cursor + maxResults,
+            loadedCount + response.results.length,
+            isLast,
+          )
+
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped issue syncing, no need to sync more', {
+              issue: content,
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('Error during issue handling ', content, error)
         }
+      }
 
-        const isLast = i === response.results.length - 1 && hasNextPage === false
-        const result = await handler(
-          content,
+      // since we can only load max 100 pages per request, we check if we have more pages to load
+      // then execute recursive call to load next 100 pages. Do it until we reach the end (total)
+      if (hasNextPage) {
+        await loadRecursively(
           cursor + maxResults,
           loadedCount + response.results.length,
-          isLast,
         )
-
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped issue syncing, no need to sync more', {
-            issue: content,
-            index: i,
-          })
-          return // return from the function, not from the loop!
-        }
-      } catch (error) {
-        this.log.warning('Error during issue handling ', content, error)
       }
     }
 
-    // since we can only load max 100 pages per request, we check if we have more pages to load
-    // then execute recursive call to load next 100 pages. Do it until we reach the end (total)
-    if (hasNextPage) {
-      await this.loadContents(
-        type,
-        cursor + maxResults,
-        loadedCount + response.results.length,
-        handler,
-      )
-    }
+    this.log.timer(`sync ${type}s`)
+    await loadRecursively(cursor, loadedCount)
+    this.log.timer(`sync ${type}s`)
   }
 
   /**
@@ -109,7 +145,7 @@ export class ConfluenceLoader {
     start = 0,
     limit = 25,
   ): Promise<ConfluenceComment[]> {
-    await sleep(ServiceLoadThrottlingOptions.confluence.comments)
+    await sleep(THROTTLING.comments)
     // scopes we use here:
     // 1. history.createdBy - used to get comment author
 
@@ -128,6 +164,8 @@ export class ConfluenceLoader {
    * @see https://developer.atlassian.com/cloud/confluence/rest/#api-group-groupName-member-get
    */
   async loadUsers(): Promise<ConfluenceUser[]> {
+    this.log.info('loading confluence API users')
+
     // get groups first
     const groups = await this.loadGroups()
 
@@ -143,7 +181,19 @@ export class ConfluenceLoader {
         if (hasSameUser === false) users.push(member)
       }
     }
-    return users
+    this.log.info('got confluence API users', users)
+
+    // we don't need some confluence users, like system or bot users
+    // so we are filtering them out
+    this.log.info('filter out users we don\'t need')
+    const filteredUsers = users.filter(member => {
+      const email = member.details.personal.email || ''
+      const ignoredEmail = '@connect.atlassian.com'
+      return email.substr(ignoredEmail.length * -1) !== ignoredEmail
+    })
+    this.log.info('updated users after filtering', filteredUsers)
+
+    return filteredUsers
   }
 
   /**
@@ -170,7 +220,7 @@ export class ConfluenceLoader {
     start = 0,
     limit = 200,
   ): Promise<ConfluenceUser[]> {
-    await sleep(ServiceLoadThrottlingOptions.confluence.users)
+    await sleep(THROTTLING.users)
 
     const response = await this.loader.load(ConfluenceQueries.groupMembers(groupName))
     if (response.results.length < response.size) {

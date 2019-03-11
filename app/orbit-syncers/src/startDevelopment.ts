@@ -1,4 +1,4 @@
-import { OrbitSyncersRoot } from '../OrbitSyncersRoot'
+import { OrbitSyncersRoot } from './OrbitSyncersRoot'
 
 export function startDevelopment(appRoot: OrbitSyncersRoot) {
   Error.stackTraceLimit = Infinity

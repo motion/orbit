@@ -1,216 +1,187 @@
-import { Logger } from '@o/logger'
-import { AppBit, Bit, BitEntity, CosalTopWordsModel } from '@o/models'
-import { sleep } from '@o/utils'
-import { chunk, uniqBy } from 'lodash'
-import { In, MoreThan } from 'typeorm'
-import { getEntityManager, getMediatorClient, isAborted } from './index'
-
-const createDOMPurify = require('dompurify')
-const JSDOM = require('jsdom').JSDOM
+import { EntityManager, In, MoreThan } from 'typeorm'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@mcro/models'
+import { uniqBy } from 'lodash'
+import { Logger } from '@mcro/logger'
+import { MediatorClient } from '@mcro/mediator'
+import { hash } from '@mcro/utils'
 
 /**
- * Sync Bits options.
+ * Common utils for syncers.
  */
-export interface BitSyncerOptions {
-  app: AppBit
-  apiBits: Bit[]
-  dbBits: Bit[]
-  completeBitsData?: (bits: Bit[]) => void | Promise<void>
-}
+export class SyncerUtils {
+  private app: AppBit
+  private manager: EntityManager
+  private log: Logger
+  private mediator: MediatorClient
 
-/**
- * Syncs given people in the database.
- * Returns saved (inserted and updated) people.
- */
-export async function syncPeople(app: AppBit, apiPeople: Bit[], dbPeople: Bit[]): Promise<Bit[]> {
-  const log = new Logger('syncer:' + app.identifier)
+  isAborted: () => Promise<boolean>
 
-  log.info('syncing people and person bits', { apiPeople, dbPeople })
-
-  // filter out duplicate people, left only unique people
-  apiPeople = uniqBy(apiPeople, person => person.id)
-  dbPeople = uniqBy(dbPeople, person => person.id)
-
-  // calculate people that we need to update in the database
-  log.timer('calculating people change set')
-  const insertedPeople = apiPeople.filter(apiPerson => {
-    return !dbPeople.some(dbPerson => dbPerson.id === apiPerson.id)
-  })
-  const updatedPeople = apiPeople.filter(apiPerson => {
-    const dbPerson = dbPeople.find(dbPerson => dbPerson.id === apiPerson.id)
-    return dbPerson && dbPerson.contentHash !== apiPerson.contentHash
-  })
-  const removedPeople = dbPeople.filter(dbPerson => {
-    return !apiPeople.some(apiPerson => apiPerson.id === dbPerson.id)
-  })
-  log.timer('calculating people change set', {
-    insertedPeople,
-    updatedPeople,
-    removedPeople,
-  })
-
-  // perform database operations on synced bits
-  if (!insertedPeople.length && !updatedPeople.length && !removedPeople.length) {
-    log.info('no changes were detected, people and person bits were not synced')
-    return
+  constructor(
+    app: AppBit,
+    log: Logger,
+    manager: EntityManager,
+    isAborted: () => Promise<boolean>,
+    mediator: MediatorClient
+  ) {
+    this.app = app
+    this.manager = manager
+    this.log = log
+    this.isAborted = isAborted
+    this.mediator = mediator
   }
 
-  // there is one problematic use case - if user removes Source during synchronization
-  // we should not sync anything (shouldn't write any new person or bit into the database)
-  // that's why we check if we have job for this particular setting registered
-  // and we do it twice - before saving anything to prevent further operations
-  // and after saving everything to make sure setting wasn't removed or requested for removal
-  // while we were inserting new bits
-  // if (await this.syncerRepository.isSettingRemoved()) {
-  //   log.warning(`found a setting in a process of removal, skip syncing`)
-  //   return
-  // }
 
-  log.timer('save people and person bits in the database')
-  await getEntityManager().transaction(async manager => {
-    await manager.save(BitEntity, insertedPeople, { chunk: 100 })
-    await manager.save(BitEntity, updatedPeople, { chunk: 100 })
-    await manager.remove(BitEntity, removedPeople as any, { chunk: 100 })
-  })
-  log.timer('save people and person bits in the database')
-}
+  /**
+   * Loads apps from the database.
+   */
+  async loadApps(options?: {
+    identifier: string
+  }): Promise<AppBit[]> {
+    this.log.timer('load apps from the database', options)
+    const apps = await this.manager.getRepository(AppEntity).find({
+      identifier: options ? options.identifier : undefined,
+    })
+    this.log.timer('load apps from the database', apps)
+    return apps
+  }
 
-/**
- * Loads bits in a given period.
- */
-export async function loadDatabaseBits(
-  app: AppBit,
-  options?: {
+  /**
+   * Loads bits from the database.
+   */
+  async loadBits(options?: {
+    idsOnly?: boolean
     ids?: number[]
+    type?: BitContentType
+    appIdentifiers?: string[]
     locationId?: string
-    oldestMessageId?: string
-  },
-): Promise<Bit[]> {
-  if (!options) options = {}
-  return getEntityManager()
-    .getRepository(BitEntity)
-    .find({
-      select: {
+    bitCreatedAtMoreThan?: number
+  }): Promise<Bit[]> {
+    const findOptions = {
+      select: options && options.idsOnly ? {
         id: true,
         contentHash: true,
-      },
+      } : undefined,
       where: {
-        id: options.ids ? In(options.ids) : undefined,
-        appId: app.id,
+        appId: this.app.id,
+        id: options && options.ids ? In(options.ids) : undefined,
+        type: options ? options.type : undefined,
+        appIdentifier: options && options.appIdentifiers && options.appIdentifiers.length ? In(options.appIdentifiers) : undefined,
         location: {
           id: options.locationId ? options.locationId : undefined,
         },
-        bitCreatedAt: options.oldestMessageId
-          ? MoreThan(parseInt(options.oldestMessageId) * 1000)
+        bitCreatedAt: options.bitCreatedAtMoreThan
+          ? MoreThan(options.bitCreatedAtMoreThan)
           : undefined,
-      },
-    })
-}
-
-/**
- * Loads all exist database people for the current App.
- */
-export async function loadDatabasePeople(
-  app: AppBit,
-  options?: { ids?: number[] },
-): Promise<Bit[]> {
-  if (!options) options = {}
-  return getEntityManager()
-    .getRepository(BitEntity)
-    .find({
-      where: {
-        id: options.ids ? In(options.ids) : undefined,
-        type: 'person',
-        appId: app.id,
-      },
-    })
-}
-
-/**
- * Strips HTML from the given HTML text content.
- */
-export function stripHtml(value: string) {
-  if (!value) return ''
-
-  const window = new JSDOM('').window
-  const DOMPurify = createDOMPurify(window)
-  return DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/•/gi, '')
-    .trim()
-}
-
-/**
- * Sanitizes given HTML text content.
- */
-export function sanitizeHtml(value: string) {
-  if (!value) return ''
-
-  const window = new JSDOM('').window
-  const DOMPurify = createDOMPurify(window)
-  return DOMPurify.sanitize(value).trim()
-}
-
-/**
- * Syncs given bits in the database.
- */
-export async function syncBits(options: BitSyncerOptions) {
-  const log = new Logger('syncer:' + options.app.identifier)
-
-  log.info('syncing bits', options)
-  const { apiBits, dbBits } = options
-
-  // calculate bits that we need to update in the database
-  let insertedBits = apiBits.filter(apiBit => {
-    return !dbBits.some(dbBit => dbBit.id === apiBit.id)
-  })
-  const updatedBits = apiBits.filter(apiBit => {
-    const dbBit = dbBits.find(dbBit => dbBit.id === apiBit.id)
-    return dbBit && dbBit.contentHash !== apiBit.contentHash
-  })
-  const removedBits = dbBits.filter(dbBit => {
-    return !apiBits.some(apiBit => apiBit.id === dbBit.id)
-  })
-
-  // from inserted bits we filter out bits with same content hash
-  const duplicateInsertBits = insertedBits.filter(bit => {
-    return insertedBits.filter(b => b.contentHash === bit.contentHash).length > 1
-  })
-  insertedBits = insertedBits.filter(bit => {
-    return insertedBits.filter(b => b.contentHash === bit.contentHash).length === 1
-  })
-
-  // perform database operations on synced bits
-  if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
-    log.info('no changes were detected, no bits were synced')
-    return
+      }
+    }
+    this.log.timer('load bits from the database', options, findOptions)
+    const bits = await this.manager.getRepository(BitEntity).find(findOptions)
+    this.log.timer('load bits from the database', bits)
+    return bits
   }
 
-  // there is one problematic use case - if user removes App during synchronization
-  // we should not sync anything (shouldn't write any new person or bit into the database)
-  // that's why we check if we have job for this particular app registered
-  // and we do it twice - before saving anything to prevent further operations
-  // and after saving everything to make sure app wasn't removed or requested for removal
-  // while we were inserting new bits
-  // if (await this.syncerRepository.isSettingRemoved()) {
-  //   log.warning('found a app in a process of removal, skip syncing')
-  //   return
-  // }
+  /**
+   * Saves a given bit.
+   */
+  async saveBit(bit: Bit): Promise<void> {
+    this.log.verbose('saving bit', bit)
+    await this.manager.getRepository(BitEntity).save(bit, { listeners: false })
+  }
 
-  log.timer('save bits in the database', {
-    insertedBits,
-    updatedBits,
-    removedBits,
-    duplicateInsertBits,
-  })
-  try {
-    await getEntityManager().transaction(async manager => {
+  /**
+   * Saves a given bits.
+   */
+  async saveBits(bits: Bit[]): Promise<void> {
+    this.log.verbose('saving bits', bits)
+    await this.manager.getRepository(BitEntity).save(bits, { listeners: false })
+  }
+
+  /**
+   * Removes a given bit.
+   */
+  async removeBit(bit: Bit): Promise<void> {
+    this.log.verbose('remove bit', bit)
+    await this.manager.getRepository(BitEntity).remove(bit as BitEntity, { listeners: false })
+  }
+
+  /**
+   * Removes given bits.
+   */
+  async removeBits(bits: Bit[]): Promise<void> {
+    this.log.verbose('removing bits', bits)
+    await this.manager.getRepository(BitEntity).remove(bits as BitEntity[], { listeners: false })
+  }
+
+  /**
+   * Deletes all the app bits from the database.
+   */
+  async clearBits(): Promise<void> {
+    const bits = await this.manager.getRepository(BitEntity).find({ appId: this.app.id })
+    await this.manager.getRepository(BitEntity).remove(bits, { listeners: false })
+  }
+
+  /**
+   * Syncs given bits in the database.
+   */
+  async syncBits(apiBits: Bit[], dbBits: Bit[], options?: {
+    completeBitsData?: (bits: Bit[]) => void|Promise<void>
+  }) {
+    this.log.info('syncing bits', { apiBits, dbBits, options })
+
+    // make sure we don't have duplicated bits
+    apiBits = uniqBy(apiBits, bit => bit.id)
+    dbBits = uniqBy(dbBits, bit => bit.id)
+
+    // calculate bits that we need to update in the database
+    this.log.timer('calculating bits change set')
+    let insertedBits = apiBits.filter(apiBit => {
+      return !dbBits.some(dbBit => dbBit.id === apiBit.id)
+    })
+    const updatedBits = apiBits.filter(apiBit => {
+      const dbBit = dbBits.find(dbBit => dbBit.id === apiBit.id)
+      return dbBit && dbBit.contentHash !== apiBit.contentHash
+    })
+    const removedBits = dbBits.filter(dbBit => {
+      return !apiBits.some(apiBit => apiBit.id === dbBit.id)
+    })
+    this.log.timer('calculating bits change set', {
+      insertedBits,
+      updatedBits,
+      removedBits,
+    })
+
+    // from inserted bits we filter out bits with same content hash
+    const duplicateInsertBits = insertedBits.filter(bit => {
+      return insertedBits.filter(b => b.contentHash === bit.contentHash).length > 1
+    })
+    insertedBits = insertedBits.filter(bit => {
+      return insertedBits.filter(b => b.contentHash === bit.contentHash).length === 1
+    })
+
+    // perform database operations on synced bits
+    if (!insertedBits.length && !updatedBits.length && !removedBits.length) {
+      this.log.info('no changes were detected, no bits were synced')
+      return
+    }
+
+    this.log.timer('save bits in the database', {
+      insertedBits,
+      updatedBits,
+      removedBits,
+      duplicateInsertBits,
+    })
+
+    await this.manager.save(BitEntity, insertedBits, { chunk: 100 })
+    await this.manager.save(BitEntity, updatedBits, { chunk: 100 })
+    await this.manager.remove(BitEntity, removedBits as any[], { chunk: 100 })
+
+    /*await this.manager.transaction(async manager => {
       // insert new bits
       if (insertedBits.length > 0) {
         const insertedBitChunks = chunk(insertedBits, 50)
         for (let bits of insertedBitChunks) {
-          if (options.app) {
-            await isAborted(options.app)
+          if (this.app) {
+            await this.isAborted()
           }
           if (options.completeBitsData) {
             await options.completeBitsData(bits)
@@ -233,8 +204,8 @@ export async function syncBits(options: BitSyncerOptions) {
         await options.completeBitsData(updatedBits)
       }
       for (let bit of updatedBits) {
-        if (options.app) {
-          await isAborted(options.app)
+        if (this.app) {
+          await this.isAborted()
         }
         await manager.update(BitEntity, { id: bit.id }, bit)
 
@@ -258,7 +229,7 @@ export async function syncBits(options: BitSyncerOptions) {
         })
 
         if (newPeople.length || removedPeople.length) {
-          log.info('found people changes in a bit', bit, { newPeople, removedPeople })
+          this.log.info('found people changes in a bit', bit, { newPeople, removedPeople })
 
           await manager
             .createQueryBuilder(BitEntity, 'bit')
@@ -276,22 +247,86 @@ export async function syncBits(options: BitSyncerOptions) {
       // before committing transaction we make sure nobody removed app during period of save
       // we use non-transactional manager inside this method intentionally
       // if (await this.syncerRepository.isSettingRemoved()) throw 'app removed'
-    })
-    log.timer('save bits in the database')
-  } catch (error) {
-    // if (error === 'app removed') {
-    //   log.warning('found a app in a process of removal, skip syncing')
-    //   return
-    // }
-    throw error
+    })*/
+    this.log.timer('save bits in the database')
   }
-}
 
-/**
- * Loads top words in the given text.
- */
-export async function loadTextTopWords(text: string, max: number): Promise<string[]> {
-  return getMediatorClient().loadMany(CosalTopWordsModel, {
-    args: { text, max },
-  })
+  /**
+   * Loads top words in the given text.
+   */
+  async loadTextTopWords(text: string, max: number): Promise<string[]> {
+    return this.mediator.loadMany(CosalTopWordsModel, {
+      args: { text, max },
+    })
+  }
+
+  /**
+   * Updates app bit's data in the database.
+   */
+  async updateAppData(): Promise<void> {
+    this.log.verbose('update app data', this.app.data)
+    await this.manager.getRepository(AppEntity).save(this.app, { listeners: false })
+  }
+
+  /**
+   * Creates a bit id.
+   */
+  generateBitId(data: string): number {
+    return hash(`${this.app.identifier}-${this.app.id}-${data}`)
+  }
+
+  /**
+   * Creates a new bit and sets given properties to it.
+   */
+  createBit(properties: {
+    type: BitContentType
+    originalId: string
+    title: string
+    bitUpdatedAt?: number
+    bitCreatedAt?: number
+    body?: string
+    authorId?: number
+    // createdAt?: Date
+    // updatedAt?: Date
+    email?: string
+    photo?: string
+    webLink?: string
+    desktopLink?: string
+    author?: Bit
+    people?: Bit[]
+    data?: any
+    location?: Location
+    crawled?: boolean
+  }) {
+    const bit: Bit = { target: 'bit', ...properties }
+    bit.appId = this.app.id
+    bit.appIdentifier = this.app.identifier
+    bit.id = this.generateBitId(bit.originalId)
+    bit.contentHash = this.bitContentHash(bit) // todo: find out why contentHash is generated before everything else
+    return bit
+  }
+
+  /**
+   * Creates a content hash for a given bit.
+   */
+  bitContentHash(bit: Bit): number {
+    return hash(
+      [
+        bit.id,
+        bit.appId,
+        bit.app ? bit.app.id : bit.appId,
+        bit.title,
+        bit.body,
+        bit.type,
+        bit.webLink,
+        bit.desktopLink,
+        bit.data,
+        bit.location,
+        bit.bitCreatedAt,
+        bit.bitUpdatedAt,
+        bit.authorId,
+      ].filter(item => item !== null && item !== undefined),
+    )
+  }
+
 }

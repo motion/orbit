@@ -2,23 +2,8 @@ import { SortableContainer, SortableContainerProps } from '@mcro/react-sortable-
 import { always, ensure, react, useStore } from '@o/use-store'
 import { MenuItem } from 'electron'
 import { throttle } from 'lodash'
-import React, {
-  Component,
-  createContext,
-  createRef,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react'
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  InfiniteLoader,
-  List,
-  WindowScroller,
-} from 'react-virtualized'
+import React, { Component, createContext, createRef, memo, useCallback, useContext, useEffect, useRef } from 'react'
+import { CellMeasurer, CellMeasurerCache, InfiniteLoader, List, WindowScroller } from 'react-virtualized'
 import { ContextMenu } from '../ContextMenu'
 import { useResizeObserver } from '../hooks/useResizeObserver'
 import { GenericComponent } from '../types'

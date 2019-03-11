@@ -1,146 +1,37 @@
-import { AppEntity, Bit, BitEntity } from '@o/models'
-import {
-  BitUtils,
-  createSyncer,
-  getEntityManager,
-  isAborted,
-  loadDatabasePeople,
-  sanitizeHtml,
-  stripHtml,
-  syncPeople,
-} from '@o/sync-kit'
-import { sleep } from '@o/utils'
-import { JiraAppData } from './JiraAppData'
-import { JiraBitData } from './JiraBitData'
+import { createSyncer } from '@o/sync-kit'
 import { JiraLoader } from './JiraLoader'
-import { JiraIssue, JiraUser } from './JiraTypes'
+import { JiraBitFactory } from './JiraBitFactory'
+import { JiraAppData } from './JiraModels'
 
 /**
  * Syncs Jira issues.
  */
-export const JiraSyncer = createSyncer(async ({ app, log }) => {
+export const JiraSyncer = createSyncer(async ({ app, log, utils }) => {
+
+  const factory = new JiraBitFactory(app, utils)
   const loader = new JiraLoader(app, log)
+  const appData: JiraAppData = app.data
 
-  /**
-   * Checks if confluence user is acceptable and can be used to create person entity from.
-   */
-  const checkUser = (user: JiraUser): boolean => {
-    const email = user.emailAddress || ''
-    const ignoredEmail = '@connect.atlassian.com'
-    return email.substr(ignoredEmail.length * -1) !== ignoredEmail
-  }
+  // setup initial app data properties
+  if (!appData.values.lastSync) appData.values.lastSync = {}
+  const lastSync = appData.values.lastSync
 
-  /**
-   * Builds a bit from the given jira issue.
-   */
-  const createDocumentBit = (issue: JiraIssue, allPeople: Bit[]): Bit => {
-    const bitCreatedAt = new Date(issue.fields.created).getTime()
-    const bitUpdatedAt = new Date(issue.fields.updated).getTime()
-    const values = (app.data as JiraAppData).values['data']['values']
-    const domain = values.credentials.domain
-    const body = stripHtml(issue.renderedFields.description)
-    const cleanHtml = sanitizeHtml(issue.renderedFields.description)
-
-    // get people contributed to this bit (content author, editors, commentators)
-    const peopleIds = []
-    if (issue.fields.comment)
-      peopleIds.push(...issue.comments.map(comment => comment.author.accountId))
-    if (issue.fields.assignee) peopleIds.push(issue.fields.assignee.accountId)
-    if (issue.fields.creator) peopleIds.push(issue.fields.creator.accountId)
-    if (issue.fields.reporter) peopleIds.push(issue.fields.reporter.accountId)
-
-    const people = allPeople.filter(person => {
-      return peopleIds.indexOf(person.originalId) !== -1
-    })
-
-    // find original content creator
-    const author = allPeople.find(person => {
-      return person.originalId === issue.fields.creator.accountId
-    })
-
-    // create or update a bit
-    return BitUtils.create(
-      {
-        appIdentifier: 'jira',
-        appId: app.id,
-        type: 'document',
-        title: issue.fields.summary,
-        body,
-        author,
-        data: {
-          content: cleanHtml,
-        } as JiraBitData,
-        location: {
-          id: issue.fields.project.id,
-          name: issue.fields.project.name,
-          webLink: domain + '/browse/' + issue.fields.project.key,
-          desktopLink: '',
-        },
-        webLink: domain + '/browse/' + issue.key,
-        people,
-        bitCreatedAt,
-        bitUpdatedAt,
-      },
-      issue.id,
-    )
-  }
-
-  /**
-   * Creates person entity from a given Jira user.
-   */
-  const createPersonBit = (user: JiraUser): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'jira',
-        appId: app.id,
-        type: 'person',
-        originalId: user.accountId,
-        title: user.displayName,
-        email: user.emailAddress,
-        photo: user.avatarUrls['48x48'].replace('s=48', 's=512'),
-      },
-      user.accountId,
-    )
-  }
-
-  if (!app.data.values.lastSync) app.data.values.lastSync = {}
-  const lastSync = app.data.values.lastSync
-
-  // load database data
-  log.timer('load people, person bits and bits from the database')
-  const dbPeople = await loadDatabasePeople(app)
-  log.timer('load people, person bits and bits from the database', dbPeople)
-
-  // load users from jira API
-  log.timer('load API people')
+  // load users from jira API and create person bits for them
   const apiUsers = await loader.loadUsers()
-  log.timer('load API people', apiUsers)
+  const apiPeople = apiUsers.map(user => factory.createPersonBit(user))
+  log.info('bits for api users created', apiPeople)
 
-  // we don't need some jira users, like system or bot users
-  // so we are filtering them out
-  log.info("filter out users we don't need")
-  const filteredUsers = apiUsers.filter(user => checkUser(user))
-  log.info('updated users after filtering', filteredUsers)
+  // load database people and execute sync. once sync is complete we must re-load people
+  const dbPeople = await utils.loadBits({ type: 'person' })
+  await utils.syncBits(apiPeople, dbPeople)
+  const allDbPeople = await utils.loadBits({ type: 'person' })
 
-  // create people for loaded user
-  log.info('creating people for api users')
-  const apiPeople = filteredUsers.map(user => createPersonBit(user))
-  log.info('people created', apiPeople)
-
-  // saving people and person bits
-  await syncPeople(app, apiPeople, dbPeople)
-
-  // load all people (once again after sync)
-  const allDbPeople = await loadDatabasePeople(app)
-
-  // load users from API
-  log.timer('load issues from API')
-  const files = await loader.loadIssues(
+  // load issues from API in a stream
+  await loader.loadIssues(
     lastSync.lastCursor || 0,
     lastSync.lastCursorLoadedCount || 0,
     async (issue, cursor, loadedCount, isLast) => {
-      await isAborted(app)
-      await sleep(2)
+      await utils.isAborted()
 
       const updatedAt = new Date(issue.fields.updated).getTime()
 
@@ -156,9 +47,7 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
         }
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getEntityManager()
-          .getRepository(AppEntity)
-          .save(app)
+        await utils.updateAppData()
 
         return false // this tells from the callback to stop file proceeding
       }
@@ -168,16 +57,11 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
       if (!lastSync.lastCursorSyncedDate) {
         lastSync.lastCursorSyncedDate = updatedAt
         log.info('looks like its the first syncing issue, set last synced date', lastSync)
-        await getEntityManager()
-          .getRepository(AppEntity)
-          .save(app)
+        await utils.updateAppData()
       }
 
-      const bit = createDocumentBit(issue, allDbPeople)
-      log.verbose('syncing', { issue, bit, people: bit.people })
-      await getEntityManager()
-        .getRepository(BitEntity)
-        .save(bit, { listeners: false })
+      const bit = factory.createDocumentBit(issue, allDbPeople)
+      await utils.saveBit(bit)
 
       // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
       if (isLast) {
@@ -188,24 +72,19 @@ export const JiraSyncer = createSyncer(async ({ app, log }) => {
         lastSync.lastSyncedDate = lastSync.lastCursorSyncedDate
         lastSync.lastCursor = undefined
         lastSync.lastCursorSyncedDate = undefined
-        await getEntityManager()
-          .getRepository(AppEntity)
-          .save(app)
+        await utils.updateAppData()
         return true
       }
 
       // update last sync settings to make sure we continue from the last point in the case if application will stop
       if (lastSync.lastCursor !== cursor) {
-        log.info('updating last cursor in settings', { cursor })
+        log.verbose('updating last cursor in settings', { cursor })
         lastSync.lastCursor = cursor
         lastSync.lastCursorLoadedCount = loadedCount
-        await getEntityManager()
-          .getRepository(AppEntity)
-          .save(app)
+        await utils.updateAppData()
       }
 
       return true
     },
   )
-  log.timer('load issues from API', files)
 })

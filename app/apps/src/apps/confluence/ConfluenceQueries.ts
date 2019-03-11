@@ -1,11 +1,11 @@
-import { ServiceLoaderLoadOptions } from '../../ServiceLoaderTypes'
+import { ServiceLoaderLoadOptions } from '@o/sync-kit'
 import {
   ConfluenceCollection,
   ConfluenceComment,
   ConfluenceContent,
   ConfluenceGroup,
   ConfluenceUser,
-} from './ConfluenceTypes'
+} from './ConfluenceModels'
 
 /**
  * Confluence queries.

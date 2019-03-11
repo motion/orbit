@@ -2,16 +2,7 @@ import { command } from '@o/bridge'
 import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import {
-  Button,
-  CheckBoxField,
-  Divider,
-  FormField,
-  Section,
-  Theme,
-  Title,
-  VerticalSpace,
-} from '@o/ui'
+import { Button, CheckBoxField, Divider, FormField, Section, Theme, Title, VerticalSpace } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { sleep } from '../../helpers'

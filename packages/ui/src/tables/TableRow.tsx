@@ -5,14 +5,14 @@
  * @format
  */
 
-import { gloss, Row, SimpleText } from '@o/gloss';
-import * as React from 'react';
-import { CheckboxReactive } from '../forms/CheckboxReactive';
-import { DateFormat } from '../text/DateFormat';
-import { DataColumns, GenericDataRow } from '../types';
-import FilterRow from './FilterRow';
-import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types';
-import { normaliseColumnWidth } from './utils';
+import { gloss, Row, SimpleText } from '@o/gloss'
+import * as React from 'react'
+import { CheckboxReactive } from '../forms/CheckboxReactive'
+import { DateFormat } from '../text/DateFormat'
+import { DataColumns, GenericDataRow } from '../types'
+import FilterRow from './FilterRow'
+import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
+import { normaliseColumnWidth } from './utils'
 
 const backgroundColor = (props, theme) => {
   if (props.highlighted) {

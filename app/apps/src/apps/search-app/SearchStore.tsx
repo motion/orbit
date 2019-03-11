@@ -1,13 +1,5 @@
 import { loadOne, save } from '@o/bridge'
-import {
-  AppIcon,
-  MarkType,
-  OrbitListItemProps,
-  searchBits,
-  SearchState,
-  SpaceIcon,
-  useStoresSimple,
-} from '@o/kit'
+import { AppIcon, MarkType, OrbitListItemProps, searchBits, SearchState, SpaceIcon, useStoresSimple } from '@o/kit'
 import { AppBit, SearchQuery, UserModel } from '@o/models'
 import { ensure, react, useHook } from '@o/use-store'
 import { uniq } from 'lodash'

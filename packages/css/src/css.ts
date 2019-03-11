@@ -1,11 +1,4 @@
-import {
-  COLOR_KEYS,
-  FALSE_VALUES,
-  psuedoKeys,
-  SHORTHANDS,
-  UNDEFINED,
-  unitlessNumberProperties,
-} from './constants'
+import { COLOR_KEYS, FALSE_VALUES, psuedoKeys, SHORTHANDS, UNDEFINED, unitlessNumberProperties } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
 import { toColor } from './toColor'

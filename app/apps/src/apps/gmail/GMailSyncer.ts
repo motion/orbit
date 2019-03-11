@@ -1,24 +1,18 @@
-import { AppEntity, Bit, BitEntity } from '@o/models'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@o/sync-kit'
-import { sleep } from '@o/utils'
+import { createSyncer, sleep } from '@o/sync-kit'
 import { chunk } from 'lodash'
-import { In } from 'typeorm'
-import { GmailAppData } from './GmailAppData'
-import { GmailBitData, GmailBitDataParticipant } from './GmailBitData'
-import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
-import { GMailThread } from './GMailTypes'
+import { GmailAppData, GmailBitDataParticipant, GMailThread } from './GMailModels'
+import { GMailLoader } from './GMailLoader'
+import { GMailBitFactory } from './GMailBitFactory'
 
 /**
  * Syncs GMail.
  */
-export const GMailSyncer = createSyncer(async ({ app, log }) => {
+export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
+
   const data: GmailAppData = app.data
-  const loader = new GMailLoader(app, log, source =>
-    getEntityManager()
-      .getRepository(AppEntity)
-      .save(source),
-  )
+  const loader = new GMailLoader(app, log, () => utils.updateAppData())
+  const factory = new GMailBitFactory(utils)
 
   /**
    * Handles a single thread.
@@ -36,9 +30,7 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSync.lastCursorHistoryId) {
       lastSync.lastCursorHistoryId = thread.historyId
       log.info('looks like its the first syncing thread, set history id', lastSync)
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
     }
 
     // sync a thread
@@ -54,20 +46,16 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       lastSync.lastCursor = undefined
       lastSync.lastCursorHistoryId = undefined
       lastSync.lastCursorLoadedCount = undefined
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
       return true
     }
 
     // update last sync settings to make sure we continue from the last point in the case if application will stop
     if (lastSync.lastCursor !== cursor) {
-      log.info('updating last cursor in settings', { cursor })
+      log.verbose('updating last cursor in settings', { cursor })
       lastSync.lastCursor = cursor
       lastSync.lastCursorLoadedCount = loadedCount
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
     }
 
     return true
@@ -78,20 +66,15 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
    */
   const syncThread = async (thread: GMailThread) => {
     const participants = extractThreadParticipants(thread)
-    const bit = createMailBit(thread)
+    const bit = factory.createMailBit(thread)
 
     // if email doesn't have body messages we don't need to sync it
     if (!bit) return
 
-    bit.people = participants.map(participant => createPersonBit(participant))
+    bit.people = participants.map(participant => factory.createPersonBit(participant))
 
-    log.verbose('syncing', { thread, bit, people: bit.people })
-    await getEntityManager()
-      .getRepository(BitEntity)
-      .save(bit.people, { listeners: false })
-    await getEntityManager()
-      .getRepository(BitEntity)
-      .save(bit, { listeners: false })
+    await utils.saveBits(bit.people)
+    await utils.saveBit(bit)
   }
 
   /**
@@ -114,112 +97,18 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     return allParticipants
   }
 
-  /**
-   * Creates a new bit from a given GMail thread.
-   */
-  const createMailBit = (thread: GMailThread): Bit | undefined => {
-    const body = thread.messages
-      .map(message => {
-        const parser = new GMailMessageParser(message)
-        return parser.getTextBody()
-      })
-      .join('\r\n\r\n')
-
-    // in the case if body is not defined (e.g. message without content)
-    // we return undefined - to skip bit creation, we don't need bits with empty body
-    if (!body) return undefined
-
-    const messages = thread.messages.map(message => {
-      const parser = new GMailMessageParser(message)
-      return {
-        id: message.id,
-        date: parser.getDate(),
-        body: parser.getHtmlBody(),
-        participants: parser.getParticipants(),
-      }
-    })
-
-    const firstMessage = thread.messages[0]
-    const lastMessage = thread.messages[thread.messages.length - 1]
-    const firstMessageParser = new GMailMessageParser(firstMessage)
-    const lastMessageParser = new GMailMessageParser(lastMessage)
-    let title = firstMessageParser.getTitle()
-
-    // if there is no title it can be a hangouts conversation, check if it is and generate a title
-    if (!title && firstMessage.labelIds.indexOf('CHAT') !== -1) {
-      const participantNames: string[] = []
-      for (let message of messages) {
-        for (let participant of message.participants) {
-          participantNames.push(participant.name ? participant.name : participant.email)
-        }
-      }
-      title = 'Chat with ' + participantNames.join(', ')
-    }
-
-    // if we still have no title then skip this email
-    if (!title) return undefined
-
-    return BitUtils.create(
-      {
-        appIdentifier: 'gmail',
-        appId: app.id,
-        type: 'thread',
-        title,
-        body,
-        data: {
-          messages,
-        } as GmailBitData,
-        bitCreatedAt: firstMessageParser.getDate(),
-        bitUpdatedAt: lastMessageParser.getDate(),
-        webLink: 'https://mail.google.com/mail/u/0/#inbox/' + thread.id,
-      },
-      thread.id,
-    )
-  }
-
-  /**
-   * Creates a new person from a given GMail thread participant.
-   */
-  const createPersonBit = (participant: GmailBitDataParticipant): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'gmail',
-        appId: app.id,
-        type: 'person',
-        originalId: participant.email,
-        title: participant.name || '',
-        webLink: 'mailto:' + participant.email,
-        desktopLink: 'mailto:' + participant.email,
-        email: participant.email,
-      },
-      participant.email,
-    )
-  }
-
   // mail whitelister
 
   // load person because we need emails that we want to whitelist
-  log.info('loading person bits')
-  const people = await getEntityManager()
-    .getRepository(BitEntity)
-    .find({
-      where: {
-        type: 'person',
-        appIdentifier: ['slack', 'github', 'drive', 'jira', 'confluence'],
-      },
-    })
-  log.info('person bits were loaded', people)
+  const people = await utils.loadBits({
+    type: 'person',
+    appIdentifiers: ['slack', 'github', 'drive', 'jira', 'confluence'],
+  })
   const emails = people.map(person => person.email).filter(email => email.indexOf('@') !== -1)
   log.info('emails from the person bits', emails)
 
   // next we find all gmail Apps to add those emails to their whitelists
-  log.info('loading gmail Apps')
-  const Apps = await getEntityManager()
-    .getRepository(AppEntity)
-    .find({
-      where: { identifier: 'gmail' },
-    })
-  log.info('loaded gmail Apps', Apps)
+  const Apps = await utils.loadApps({ identifier: 'gmail' })
 
   // update whitelist settings in Apps
   const newWhiteListedEmails: string[] = []
@@ -234,9 +123,7 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       }
     }
     values.whitelist = whitelist
-    await getEntityManager()
-      .getRepository(AppEntity)
-      .save(App)
+    await utils.updateAppData()
   }
   log.info('newly whitelisted emails', newWhiteListedEmails)
 
@@ -250,7 +137,8 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
   if (!data.values.daysLimit) data.values.daysLimit = 330
 
   // setup some local variables we are gonna work with
-  const queryFilter = data.values.filter || `newer_than:${data.values.daysLimit}d`
+  const queryFilter =
+    data.values.filter || `newer_than:${data.values.daysLimit}d`
   let lastSync = data.values.lastSync
 
   // update last sync configuration
@@ -258,23 +146,20 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
   lastSync.usedQueryFilter = queryFilter
   lastSync.usedDaysLimit = data.values.daysLimit
   lastSync.usedMax = data.values.max
-  await getEntityManager()
-    .getRepository(AppEntity)
-    .save(app, { listeners: false })
+  await utils.updateAppData()
 
   // if user configuration has changed (max number of messages, days limitation or query filter)
   // we drop all bits to make complete sync again
   if (
     (lastSync.usedMax !== undefined && data.values.max !== lastSync.usedMax) ||
     (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
-    (lastSync.usedDaysLimit !== undefined && data.values.daysLimit !== lastSync.usedDaysLimit)
+    (lastSync.usedDaysLimit !== undefined &&
+      data.values.daysLimit !== lastSync.usedDaysLimit)
   ) {
     log.info(
       'last syncronization configuration mismatch, dropping bits and start sync from scratch',
     )
-    await getEntityManager()
-      .getRepository(BitEntity)
-      .delete({ appId: app.id }) // todo: drop people as well
+    await utils.clearBits()
     data.values.lastSync = lastSync = {}
   }
 
@@ -301,7 +186,7 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
 
       // sync threads
       for (let thread of addedThreads) {
-        await isAborted(app)
+        await utils.isAborted()
         await sleep(10)
         await syncThread(thread)
       }
@@ -314,27 +199,19 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
     // load bits for removed threads and remove them
     if (history.removedThreadIds.length) {
       log.info('found actions in history for thread removals', history.removedThreadIds)
-      const removedBits = await getEntityManager()
-        .getRepository(BitEntity)
-        .find({
-          appId: app.id,
-          id: In(history.removedThreadIds.map(threadId => BitUtils.id(app, threadId))),
-        })
-      log.info('found bits to be removed, removing', removedBits)
-      await getEntityManager()
-        .getRepository(BitEntity)
-        .remove(removedBits) // todo: we also need to remove people
+      const removedBits = await utils.loadBits({
+        ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId))
+      })
+      await utils.removeBits(removedBits)
     } else {
       log.info('no removed messages in history were found')
     }
 
     lastSync.historyId = history.historyId
-    await getEntityManager()
-      .getRepository(AppEntity)
-      .save(app, { listeners: false })
+    await utils.updateAppData()
+
   } else {
     // else this is a first time sync, load all threads
-    log.timer('sync all threads')
 
     await loader.loadThreads({
       count: data.values.max,
@@ -343,7 +220,6 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       loadedCount: lastSync.lastCursorLoadedCount || 0,
       handler: handleThread.bind(this),
     })
-    log.timer('sync all threads')
   }
 
   // load emails for whitelisted people separately
@@ -373,4 +249,5 @@ export const GMailSyncer = createSyncer(async ({ app, log }) => {
       log.info('no enabled people in whitelist were found')
     }
   }
+  
 })

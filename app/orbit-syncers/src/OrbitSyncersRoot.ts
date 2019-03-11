@@ -22,15 +22,14 @@ import {
   UserEntity,
   UserModel,
 } from '@o/models'
-import { setAbortionLogic, setEntityManager, setMediatorClient } from '@o/sync-kit'
 import root from 'global'
 import * as Path from 'path'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import * as typeorm from 'typeorm'
 import { Connection, createConnection } from 'typeorm'
-import { Syncers } from './core/Syncers'
-import { AppForceCancelResolver, checkCancelled } from './resolvers/AppForceCancelResolver'
+import { Syncers } from './Syncers'
+import { AppForceCancelResolver } from './resolvers/AppForceCancelResolver'
 import { AppForceSyncResolver } from './resolvers/AppForceSyncResolver'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class OrbitSyncersRoot {
   config = getGlobalConfig()
@@ -47,23 +46,15 @@ export class OrbitSyncersRoot {
       transports: [
         new WebSocketClientTransport(
           'syncers', // randomString(5)
-          new ReconnectingWebSocket(
-            `ws://localhost:${getGlobalConfig().ports.desktopMediator}`,
-            [],
-            {
-              WebSocket,
-              minReconnectionDelay: 1,
-            },
-          ),
-        ),
-      ],
+          new ReconnectingWebSocket(`ws://localhost:${getGlobalConfig().ports.desktopMediator}`, [], {
+            WebSocket,
+            minReconnectionDelay: 1,
+          }),
+        )
+      ]
     })
 
     // setup proper instances to use inside sync-kit package
-    setMediatorClient(this.mediatorClient)
-    setEntityManager(this.connection.manager)
-    setAbortionLogic(app => checkCancelled(app.id))
-
     setTimeout(() => {
       this.startSyncers()
     }, 10000)
@@ -125,7 +116,6 @@ export class OrbitSyncersRoot {
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
-          { entity: AppEntity, models: [AppModel] },
           { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },

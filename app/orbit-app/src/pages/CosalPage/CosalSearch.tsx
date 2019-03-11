@@ -1,10 +1,5 @@
 import { loadMany } from '@o/bridge'
-import {
-  CosalTopicsModel,
-  CosalTopWordsModel,
-  getSearchableText,
-  SearchByTopicModel,
-} from '@o/models'
+import { CosalTopicsModel, CosalTopWordsModel, getSearchableText, SearchByTopicModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'

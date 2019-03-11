@@ -9,6 +9,7 @@ import * as Path from 'path'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+
 const TerserPlugin = require('terser-webpack-plugin')
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 

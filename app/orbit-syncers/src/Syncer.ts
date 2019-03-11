@@ -1,9 +1,10 @@
 import { Logger } from '@o/logger'
 import { Subscription } from '@o/mediator'
 import { AppBit, AppEntity, AppModel, Job, JobEntity } from '@o/models'
-import { SyncerOptions } from '@o/sync-kit'
-import { getRepository } from 'typeorm'
-import { syncersRoot } from '../OrbitSyncersRoot'
+import { SyncerOptions, SyncerUtils } from '@o/sync-kit'
+import { getManager, getRepository } from 'typeorm'
+import { syncersRoot } from './OrbitSyncersRoot'
+import { checkCancelled } from './resolvers/AppForceCancelResolver'
 import Timer = NodeJS.Timer
 
 /**
@@ -54,11 +55,9 @@ export class Syncer {
           await this.runInterval(app as AppBit, true)
         }
       } else {
-        this.subscription = syncersRoot.mediatorClient
-          .observeMany(AppModel, {
-            args: { where: { identifier: this.options.appIdentifier } },
-          })
-          .subscribe(async apps => this.reactOnSettingsChanges(apps))
+        this.subscription = syncersRoot.mediatorClient.observeMany(AppModel, {
+          args: { where: { identifier: this.options.appIdentifier } },
+        }).subscribe(async apps => this.reactOnSettingsChanges(apps))
       }
     } else {
       await this.runInterval(undefined, force)
@@ -250,15 +249,19 @@ export class Syncer {
       await this.options.runner({
         app,
         log,
+        manager: getManager(),
+        isAborted: async () => checkCancelled(app.id) && void 0,
+        utils: new SyncerUtils(app, log, getManager(), async () => !!checkCancelled(app.id), syncersRoot.mediatorClient),
       })
 
       // update our job (finish successfully)
       job.status = 'COMPLETE'
       await getRepository(JobEntity).save(job)
       log.info('job updated', job)
-      log.timer(`${this.options.constructor.name} sync`)
+      log.timer(`${this.options.name} sync`)
     } catch (error) {
-      log.error(`${this.options.constructor.name} sync err`, error)
+      log.error(`${this.options.name} sync err`, error)
+      log.timer(`${this.options.name} sync`)
 
       // update our job (finish with error)
       job.status = 'FAILED'

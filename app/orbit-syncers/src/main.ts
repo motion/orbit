@@ -9,7 +9,7 @@ process.on('unhandledRejection', error => {
 export async function main() {
 
   if (process.env.NODE_ENV === 'development') {
-    require('./helpers/startDevelopment').startDevelopment(syncersRoot)
+    require('./startDevelopment').startDevelopment(syncersRoot)
   }
 
   const dispose = once(() => {

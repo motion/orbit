@@ -1,12 +1,5 @@
 import { useModels } from '@o/bridge'
-import {
-  Icon,
-  SpaceIcon,
-  useActiveSpace,
-  useActiveUser,
-  useLocationLink,
-  useStoresSimple,
-} from '@o/kit'
+import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink, useStoresSimple } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
 import { Avatar, Col, ListItem, Popover, View } from '@o/ui'

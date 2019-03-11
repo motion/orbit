@@ -1,14 +1,5 @@
 import { Row, ViewProps } from '@o/gloss'
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react'
+import React, { createContext, Dispatch, ReactNode, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { MergeContext } from './helpers/MergeContext'
 import { Text, TextProps } from './text/Text'
 

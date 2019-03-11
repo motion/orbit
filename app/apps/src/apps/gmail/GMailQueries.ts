@@ -1,5 +1,5 @@
-import { ServiceLoaderLoadOptions } from '../../ServiceLoaderTypes'
-import { GMailHistory, GMailThread, GMailThreadResult, GMailUserProfile } from './GMailTypes'
+import { ServiceLoaderLoadOptions } from '@o/sync-kit'
+import { GMailHistory, GMailThread, GMailThreadResult, GMailUserProfile } from './GMailModels'
 
 /**
  * GMail queries.

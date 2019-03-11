@@ -1,7 +1,7 @@
 import { Logger } from '@o/logger'
 import * as fs from 'fs'
 import * as path from 'path'
-import { WebsiteCrawledData } from './WebsiteCrawledData'
+import { WebsiteCrawledData } from './WebsiteModels'
 import { WebsiteCrawlerUtils } from './WebsiteCrawlerUtils'
 
 const puppeteer = require('puppeteer')
@@ -53,6 +53,7 @@ export class WebsiteCrawler {
    * Starts the browser to crawl websites data.
    */
   async start(): Promise<void> {
+    this.log.timer('launch browser')
     if (this.browser) {
       await this.close()
     }
@@ -66,6 +67,7 @@ export class WebsiteCrawler {
         '--user-data-dir=/Users/pleerock/Library/Application Support/Google/Chrome',
       ],
     })
+    this.log.timer('launch browser')
   }
 
   /**
@@ -82,9 +84,11 @@ export class WebsiteCrawler {
    * Runs crawling process.
    */
   async run(options: WebsiteCrawlerOptions): Promise<void> {
+    this.log.timer('crawl site')
     const page = await this.browser.newPage()
     this.visitedLinks.push(options.url)
     await this.visit(page, options.url, options)
+    this.log.timer('crawl site')
   }
 
   /**

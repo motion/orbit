@@ -1,6 +1,6 @@
-import { isEqual } from '@o/fast-compare';
-import { Logger } from '@o/logger';
-import { MagicalObject, ReactionOptions } from './types';
+import { isEqual } from '@o/fast-compare'
+import { Logger } from '@o/logger'
+import { MagicalObject, ReactionOptions } from './types'
 
 export const Root = typeof window !== 'undefined' ? window : require('global')
 

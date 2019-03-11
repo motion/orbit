@@ -1,16 +1,14 @@
 import { AppBit, Bit } from '@o/models'
-import { BitUtils } from '@o/sync-kit'
-import { WebsiteBitData } from './WebsiteBitData'
-import { WebsiteCrawledData } from './WebsiteCrawledData'
+import { WebsiteBitData, WebsiteCrawledData } from './WebsiteModels'
+import { SyncerUtils } from '@o/sync-kit'
 
 /**
  * Creates a website Bit.
  */
 export class WebsiteBitFactory {
-  private app: AppBit
 
-  constructor(app: AppBit) {
-    this.app = app
+  constructor(private app: AppBit,
+              private utils: SyncerUtils) {
   }
 
   /**
@@ -19,34 +17,24 @@ export class WebsiteBitFactory {
   create(crawledData: WebsiteCrawledData): Bit {
     const bitCreatedAt = new Date().getTime()
     const bitUpdatedAt = new Date().getTime()
-    // const values = this.app.values as CrawlerSettingValues
+    const data: WebsiteBitData = {
+      url: crawledData.url,
+      title: crawledData.title,
+      content: crawledData.content,
+    }
 
     // create or update a bit
-    return BitUtils.create(
-      {
-        appIdentifier: 'website',
-        appId: this.app.id,
-        type: 'website',
-        title: crawledData.title,
-        body: crawledData.textContent,
-        data: {
-          url: crawledData.url,
-          title: crawledData.title,
-          content: crawledData.content,
-        } as WebsiteBitData,
-        // location: {
-        //   id: undefined,
-        //   name: undefined,
-        //   webLink: undefined,
-        //   desktopLink: undefined,
-        // },
-        webLink: crawledData.url,
-        people: [],
-        bitCreatedAt,
-        bitUpdatedAt,
-        crawled: true,
-      },
-      this.app.id + '_' + crawledData.url,
-    )
+    return this.utils.createBit({
+      type: 'website',
+      originalId: this.app.id + '_' + crawledData.url,
+      title: crawledData.title,
+      body: crawledData.textContent,
+      data,
+      webLink: crawledData.url,
+      people: [],
+      bitCreatedAt,
+      bitUpdatedAt,
+      crawled: true,
+    })
   }
 }

@@ -1,5 +1,5 @@
-import { ServiceLoaderLoadOptions } from '../../ServiceLoaderTypes'
-import { DriveAbout, DriveCommentResponse, DriveFileResponse, DriveRevisionResponse } from './DriveTypes'
+import { ServiceLoaderLoadOptions } from '@o/sync-kit'
+import { DriveAbout, DriveCommentResponse, DriveFileResponse, DriveRevisionResponse } from './DriveModels'
 
 /**
  * Queries for Google Drive API.

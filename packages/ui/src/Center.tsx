@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss';
+import { gloss } from '@o/gloss'
 
 export const Center = gloss({
   position: 'absolute',

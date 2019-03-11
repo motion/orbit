@@ -1,14 +1,4 @@
-import {
-  Button,
-  InputField,
-  Row,
-  Section,
-  SegmentedRow,
-  Theme,
-  Title,
-  VerticalSpace,
-  View,
-} from '@o/ui'
+import { Button, InputField, Row, Section, SegmentedRow, Theme, Title, VerticalSpace, View } from '@o/ui'
 import * as React from 'react'
 import { IntroText } from '../../views'
 

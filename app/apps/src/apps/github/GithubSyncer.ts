@@ -1,17 +1,7 @@
-import { AppEntity, Bit, BitEntity } from '@o/models'
-import { BitUtils, createSyncer, getEntityManager, isAborted } from '@o/sync-kit'
-import { hash } from '@o/utils'
-import { uniqBy } from 'lodash'
-import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo } from './GithubAppData'
-import { GithubBitData } from './GithubBitData'
+import { createSyncer } from '@o/sync-kit'
+import { GithubAppData, GithubAppValuesLastSyncRepositoryInfo, GithubIssue, GithubPullRequest } from './GithubModels'
 import { GithubLoader } from './GithubLoader'
-import {
-  GithubComment,
-  GithubCommit,
-  GithubIssue,
-  GithubPerson,
-  GithubPullRequest,
-} from './GithubTypes'
+import { GithubBitFactory } from './GithubBitFactory'
 
 /**
  * Syncs Github.
@@ -20,9 +10,11 @@ import {
  * which means we never remove github bits during regular sync.
  * We only remove when some app change (for example user don't sync specific repository anymore).
  */
-export const GithubSyncer = createSyncer(async ({ app, log }) => {
+export const GithubSyncer = createSyncer(async ({ app, log, utils }) => {
+
   const data: GithubAppData = app.data
   const loader = new GithubLoader(app, log)
+  const factory = new GithubBitFactory(utils)
 
   /**
    * Handles a single issue or pull request from loaded issues/PRs stream.
@@ -66,9 +58,7 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
 
       return false // this tells from the callback to stop issue proceeding
     }
@@ -78,32 +68,24 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
     if (!lastSyncInfo.lastCursorSyncedDate) {
       lastSyncInfo.lastCursorSyncedDate = updatedAt
       log.info('looks like its the first syncing issue, set last synced date', lastSyncInfo)
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
     }
 
-    const comments =
-      issueOrPullRequest.comments.totalCount > 0
+    const comments = issueOrPullRequest.comments.totalCount > 0
         ? await loader.loadComments(organization, repositoryName, issueOrPullRequest.number)
         : []
 
     // load issue bit from the database
-    const bit = createTaskBit(issueOrPullRequest, comments)
+    const bit = factory.createTaskBit(issueOrPullRequest, comments)
     if (type === 'issue') {
-      bit.people = createPersonBitFromIssue(issueOrPullRequest)
+      bit.people = factory.createPersonBitFromIssue(issueOrPullRequest)
     } else {
       // pull request
-      bit.people = createPersonBitFromPullRequest(issueOrPullRequest as GithubPullRequest)
+      bit.people = factory.createPersonBitFromPullRequest(issueOrPullRequest as GithubPullRequest)
     }
 
-    log.verbose('syncing', { issueOrPullRequest, bit, people: bit.people })
-    await getEntityManager()
-      .getRepository(BitEntity)
-      .save(bit.people, { listeners: false })
-    await getEntityManager()
-      .getRepository(BitEntity)
-      .save(bit, { listeners: false })
+    await utils.saveBits(bit.people)
+    await utils.saveBit(bit)
 
     // in the case if its the last issue we need to cleanup last cursor stuff and save last synced date
     if (lastIssue) {
@@ -115,199 +97,40 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncInfo.lastCursor = undefined
       lastSyncInfo.lastCursorSyncedDate = undefined
       lastSyncInfo.lastCursorLoadedCount = undefined
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
       return true
     }
 
     // update last sync settings to make sure we continue from the last point in the case if application will stop
     if (lastSyncInfo.lastCursor !== cursor) {
-      log.info('updating last cursor in settings', { cursor })
+      log.verbose('updating last cursor in settings', { cursor })
       lastSyncInfo.lastCursor = cursor
       lastSyncInfo.lastCursorLoadedCount = loadedCount
-      await getEntityManager()
-        .getRepository(AppEntity)
-        .save(app, { listeners: false })
+      await utils.updateAppData()
     }
 
     return true
   }
 
-  /**
-   * Loads repositories from the github api.
-   * Gets into count whitelisted repositories.
-   */
-  const loadApiRepositories = async () => {
-    // load repositories from the API first
-    log.timer('load API repositories')
-    let repositories = await loader.loadUserRepositories()
-    log.timer('load API repositories', repositories)
+  // load repositories from the API first
+  let repositories = await loader.loadUserRepositories()
 
-    // get whitelist, if its not defined just return all loaded repositories
-    const values = data.values['values']
-    if (values.whitelist !== undefined) {
-      log.info('whitelist is defined, filtering settings by a whitelist', values.whitelist)
-      repositories = repositories.filter(repository => {
-        return values.whitelist.indexOf(repository.nameWithOwner) !== -1
-      })
-      log.info('filtered repositories by whitelist', repositories)
-    }
-
-    // if it was defined return filtered repositories
-    // values.externalRepositories = [
-    //   /*'motion/orbit', */ 'mobxjs/mobx-state-tree',
-    //   'Microsoft/TypeScript',
-    // ]
-    if (values.externalRepositories && values.externalRepositories.length > 0) {
-      log.info('externalRepositories are found, adding them as well', values.externalRepositories)
-      repositories.push(...(await loader.loadRepositories(values.externalRepositories)))
-    }
-
-    return repositories
-  }
-
-  /**
-   * Creates a new bit from a given Github issue.
-   */
-  const createTaskBit = (
-    issue: GithubIssue | GithubPullRequest,
-    comments: GithubComment[],
-  ): Bit => {
-    const id = hash(`github-${app.id}-${issue.id}`)
-    const createdAt = new Date(issue.createdAt).getTime()
-    const updatedAt = new Date(issue.updatedAt).getTime()
-
-    const data: GithubBitData = {
-      closed: issue.closed,
-      body: issue.body,
-      comments: comments.map(comment => {
-        // note: if user is removed on a github comment will have author set to "null"
-        return {
-          author: comment.author
-            ? {
-                avatarUrl: comment.author.avatarUrl,
-                login: comment.author.login,
-                email: comment.author.email,
-              }
-            : undefined,
-          createdAt: comment.createdAt,
-          body: comment.body,
-        }
-      }),
-      author: issue.author
-        ? {
-            avatarUrl: issue.author.avatarUrl,
-            login: issue.author.login,
-            email: issue.author.email,
-          }
-        : undefined,
-      labels: issue.labels.edges.map(label => ({
-        name: label.node.name,
-        description: label.node.description,
-        color: label.node.color,
-        url: label.node.url,
-      })),
-    }
-
-    return BitUtils.create({
-      id,
-      appId: app.id,
-      appIdentifier: 'github',
-      type: 'task',
-      title: issue.title,
-      body: issue.bodyText,
-      webLink: issue.url,
-      location: {
-        id: issue.repository.id,
-        name: issue.repository.name,
-        webLink: issue.repository.url,
-        desktopLink: '',
-      },
-      data,
-      bitCreatedAt: createdAt,
-      bitUpdatedAt: updatedAt,
+  // get whitelist, if its not defined just return all loaded repositories
+  const values = data.values
+  if (values.whitelist !== undefined) {
+    log.info('whitelist is defined, filtering settings by a whitelist', values.whitelist)
+    repositories = repositories.filter(repository => {
+      return values.whitelist.indexOf(repository.nameWithOwner) !== -1
     })
+    log.info('filtered repositories by whitelist', repositories)
   }
 
-  /**
-   * Finds all participated people in a github issue and creates app
-   * people from them.
-   */
-  const createPersonBitFromIssue = (issue: GithubIssue): Bit[] => {
-    return issue.participants.edges
-      .map(user => user.node)
-      .filter(user => !!user)
-      .map(githubPerson => createPersonBitFromGithubUser(githubPerson))
+  // if it was defined return filtered repositories
+  if (values.externalRepositories && values.externalRepositories.length > 0) {
+    log.info('externalRepositories were found', values.externalRepositories)
+    repositories.push(...(await loader.loadRepositories(values.externalRepositories)))
   }
 
-  /**
-   * Finds all participated people in a github pull request and creates app
-   * people from them.
-   */
-  const createPersonBitFromPullRequest = (pr: GithubPullRequest): Bit[] => {
-    const commits = pr.commits.edges.map(edge => edge.node.commit)
-    const reviews = pr.reviews.edges.map(edge => edge.node)
-
-    const githubPeople = uniqBy(
-      [
-        pr.author,
-        ...pr.participants.edges.map(user => user.node),
-        ...reviews.map(user => user.author),
-        ...commits.filter(commit => !!commit.user).map(commit => commit.user),
-      ],
-      'id',
-    ).filter(user => !!user)
-
-    const usersFromCommit = commits.filter(commit => {
-      return !commit.user && githubPeople.find(person => person.email === commit.email)
-    })
-
-    return [
-      ...githubPeople.map(githubPerson => createPersonBitFromGithubUser(githubPerson)),
-      ...usersFromCommit.map(commit => createPersonBitFromCommit(commit)),
-    ]
-  }
-
-  /**
-   * Creates a single app person from given Github user.
-   */
-  const createPersonBitFromGithubUser = (githubPerson: GithubPerson): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'github',
-        appId: app.id,
-        type: 'person',
-        originalId: githubPerson.id,
-        title: githubPerson.login,
-        email: githubPerson.email,
-        photo: githubPerson.avatarUrl,
-        webLink: `https://github.com/${githubPerson.login}`,
-      },
-      githubPerson.id,
-    )
-  }
-
-  /**
-   * Creates a single app person from a commit.
-   */
-  const createPersonBitFromCommit = (commit: GithubCommit): Bit => {
-    return BitUtils.create(
-      {
-        appIdentifier: 'github',
-        appId: app.id,
-        type: 'person',
-        originalId: commit.email,
-        title: commit.name,
-        email: commit.email,
-        photo: commit.avatarUrl,
-      },
-      commit.email,
-    )
-  }
-
-  // if no repositories were selected in settings, we don't do anything
-  const repositories = await loadApiRepositories()
   if (!repositories.length) {
     log.info('no repositories were selected in the settings, skip sync')
     return
@@ -320,7 +143,7 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
   // go through all repositories and sync them all
   log.timer('load api bits and people')
   for (let repository of repositories) {
-    await isAborted(app)
+    await utils.isAborted()
 
     if (!data.values.lastSyncIssues[repository.nameWithOwner])
       data.values.lastSyncIssues[repository.nameWithOwner] = {}
@@ -341,11 +164,10 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-        } repository issues from our last sync, skipping`,
+          } repository issues from our last sync, skipping`,
       )
     } else {
       // load repository issues and sync them in a stream
-      log.vtimer(`sync ${repository.nameWithOwner} issues`)
       await loader.loadIssues({
         organization,
         repository: repositoryName,
@@ -364,7 +186,6 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
           })
         },
       })
-      log.vtimer(`sync ${repository.nameWithOwner} issues`)
     }
 
     // compare repository's first PR updated date with our last synced date to make sure
@@ -373,16 +194,15 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
       lastSyncPullRequests.lastSyncedDate &&
       repository.pullRequests.nodes.length &&
       new Date(repository.pullRequests.nodes[0].updatedAt).getTime() ===
-        lastSyncPullRequests.lastSyncedDate
+      lastSyncPullRequests.lastSyncedDate
     ) {
       log.verbose(
         `looks like nothing was changed in a ${
           repository.nameWithOwner
-        } repository PRs from our last sync, skipping`,
+          } repository PRs from our last sync, skipping`,
       )
     } else {
       // load repository pull requests and sync them in a stream
-      log.vtimer(`sync ${repository.nameWithOwner} pull requests`)
       await loader.loadPullRequests({
         organization,
         repository: repositoryName,
@@ -401,8 +221,8 @@ export const GithubSyncer = createSyncer(async ({ app, log }) => {
           })
         },
       })
-      log.vtimer(`sync ${repository.nameWithOwner} pull requests`)
     }
   }
   log.timer('load api bits and people')
+  
 })

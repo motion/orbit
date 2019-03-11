@@ -1,5 +1,5 @@
-import { Logger } from '@o/logger';
-import { sortBy } from 'lodash';
+import { Logger } from '@o/logger'
+import { sortBy } from 'lodash'
 
 const log = new Logger('crawler:db')
 

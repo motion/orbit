@@ -3,7 +3,7 @@ import { Logger } from '@o/logger'
 import {
   Bit,
   BitEntity,
-  BitUtils,
+  createBit,
   PinnedBitData,
   WebsiteBitData,
 } from '@o/models'
@@ -108,7 +108,7 @@ export class PinnedUrlsSyncer {
     // const values = this.source.values as CrawlerSettingValues
 
     // create or update a bit
-    return BitUtils.create(
+    return createBit(
       {
         appIdentifier: 'pinned',
         type: 'website',

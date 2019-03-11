@@ -1,13 +1,44 @@
 import { Logger } from '@o/logger'
-import { AppBit } from '@o/models'
-import { sleep } from '@o/utils'
-import { uniqBy } from 'lodash'
-import { ServiceLoadThrottlingOptions } from '../../options'
 // import * as path from 'path'
-import { ServiceLoader } from '../../ServiceLoader'
-import { ServiceLoaderAppSaveCallback } from '../../ServiceLoaderTypes'
+import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
+import { uniqBy } from 'lodash'
 import { DriveQueries } from './DriveQueries'
-import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveTypes'
+import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'
+import { AppBit } from '@o/models'
+import { getGlobalConfig } from '@o/config'
+
+/**
+ * Defines a loading throttling.
+ * This is required to not overload user network with service queries.
+ */
+const THROTTLING = {
+
+  /**
+   * Delay before files load.
+   */
+  files: 100,
+
+  /**
+   * Delay before file content load.
+   */
+  fileContent: 100,
+
+  /**
+   * Delay before file comments load.
+   */
+  comments: 100,
+
+  /**
+   * Delay before file revisions load.
+   */
+  revisions: 100,
+
+  /**
+   * Delay before file thumbnail download.
+   */
+  thumbnailDownload: 100
+
+}
 
 /**
  * Loads data from google drive api.
@@ -20,7 +51,15 @@ export class DriveLoader {
   constructor(app: AppBit, log?: Logger, saveCallback?: ServiceLoaderAppSaveCallback) {
     this.app = app
     this.log = log || new Logger('service:drive:loader:' + app.id)
-    this.loader = new ServiceLoader(this.app, this.log, saveCallback)
+    this.loader = new ServiceLoader(this.app, this.log, {
+      saveCallback,
+      baseUrl: 'https://content.googleapis.com/drive/v3',
+      headers: {
+        Authorization: `Bearer ${this.app.token}`,
+        'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
+        'Access-Control-Allow-Methods': 'GET',
+      }
+    })
   }
 
   /**
@@ -34,67 +73,72 @@ export class DriveLoader {
    * Loads google drive files.
    */
   async loadFiles(
-    cursor: string | undefined,
     handler: (
       file: DriveLoadedFile,
       cursor?: string,
       isLast?: boolean,
     ) => Promise<boolean> | boolean,
   ): Promise<void> {
-    await sleep(ServiceLoadThrottlingOptions.drive.files)
+    const loadRecursively = async (cursor?: string) => {
+      await sleep(THROTTLING.files)
 
-    const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      // try to find a file folder to create a Bit.location later on
-      let parent: DriveFile
-      if (file.parents && file.parents.length)
-        parent = files.find(otherFile => otherFile.id === file.parents[0])
+      const { files, nextPageToken } = await this.loader.load(DriveQueries.files(cursor))
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        // try to find a file folder to create a Bit.location later on
+        let parent: DriveFile
+        if (file.parents && file.parents.length)
+          parent = files.find(otherFile => otherFile.id === file.parents[0])
 
-      // const thumbnailFilePath = await this.downloadThumbnail(file)
-      const content = await this.loadFileContent(file)
-      const comments = await this.loadComments(file)
-      const revisions = await this.loadRevisions(file)
-      const users = [
-        ...file.owners,
-        ...comments.map(comment => comment.author),
-        ...revisions.map(revision => revision.lastModifyingUser),
-      ].filter(user => {
-        // some users are not defined in where they come from. we skip such cases
-        // some users don't have emails. we skip such cases
-        // if author of the comment is current user we don't need to add him to users list
-        return user && user.emailAddress && user.me === false
-      })
+        // const thumbnailFilePath = await this.downloadThumbnail(file)
+        const content = await this.loadFileContent(file)
+        const comments = await this.loadComments(file)
+        const revisions = await this.loadRevisions(file)
+        const users = [
+          ...file.owners,
+          ...comments.map(comment => comment.author),
+          ...revisions.map(revision => revision.lastModifyingUser),
+        ].filter(user => {
+          // some users are not defined in where they come from. we skip such cases
+          // some users don't have emails. we skip such cases
+          // if author of the comment is current user we don't need to add him to users list
+          return user && user.emailAddress && user.me === false
+        })
 
-      const driveFile: DriveLoadedFile = {
-        file,
-        thumbnailFilePath: '',
-        content,
-        comments,
-        revisions,
-        users: uniqBy(users, user => user.emailAddress),
-        parent,
-      }
-      try {
-        const isLast = i === files.length - 1 && !!nextPageToken
-        const result = await handler(driveFile, nextPageToken, isLast)
-
-        // if callback returned true we don't continue syncing
-        if (result === false) {
-          this.log.info('stopped issues syncing, no need to sync more', {
-            file: driveFile,
-            index: i,
-          })
-          return // return from the function, not from the loop!
+        const driveFile: DriveLoadedFile = {
+          file,
+          thumbnailFilePath: '',
+          content,
+          comments,
+          revisions,
+          users: uniqBy(users, user => user.emailAddress),
+          parent,
         }
-      } catch (error) {
-        this.log.warning('error during file handling', driveFile, error)
+        try {
+          const isLast = i === files.length - 1 && !!nextPageToken
+          const result = await handler(driveFile, nextPageToken, isLast)
+
+          // if callback returned true we don't continue syncing
+          if (result === false) {
+            this.log.info('stopped issues syncing, no need to sync more', {
+              file: driveFile,
+              index: i,
+            })
+            return // return from the function, not from the loop!
+          }
+        } catch (error) {
+          this.log.warning('error during file handling', driveFile, error)
+        }
+      }
+
+      if (nextPageToken) {
+        await loadRecursively(nextPageToken)
       }
     }
 
-    if (nextPageToken) {
-      await this.loadFiles(nextPageToken, handler)
-    }
+    this.log.timer('load files and people from API')
+    await loadRecursively()
+    this.log.timer('load files and people from API')
   }
 
   /**
@@ -103,7 +147,7 @@ export class DriveLoader {
   private async loadFileContent(file: DriveFile): Promise<string> {
     if (file.mimeType !== 'application/vnd.google-apps.document') return ''
 
-    await sleep(ServiceLoadThrottlingOptions.drive.fileContent)
+    await sleep(THROTTLING.fileContent)
 
     this.log.verbose('loading file content for', file)
     const content = await this.loader.load(DriveQueries.fileExport(file.id))
@@ -118,7 +162,7 @@ export class DriveLoader {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
     if (file.mimeType === 'application/vnd.google-apps.map') return []
 
-    await sleep(ServiceLoadThrottlingOptions.drive.comments)
+    await sleep(THROTTLING.comments)
 
     this.log.verbose('loading comments for', file)
     const result = await this.loader.load(DriveQueries.fileComments(file.id, pageToken))
@@ -136,7 +180,7 @@ export class DriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
-    await sleep(ServiceLoadThrottlingOptions.drive.revisions)
+    await sleep(THROTTLING.revisions)
 
     this.log.verbose('loading revisions for', file)
     const result = await this.loader.load(DriveQueries.fileRevisions(file.id, pageToken))
@@ -153,7 +197,7 @@ export class DriveLoader {
   // private async downloadThumbnail(file: DriveFile): Promise<string> {
   //   if (!file.thumbnailLink) return ''
 
-  //   await sleep(ServiceLoadThrottlingOptions.drive.thumbnailDownload)
+  //   await sleep(THROTTLING.thumbnailDownload)
 
   //   this.log.verbose('downloading file thumbnail for', file)
   //   const destination = path.normalize(

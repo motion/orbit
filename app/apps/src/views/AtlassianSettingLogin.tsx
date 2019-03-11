@@ -3,6 +3,7 @@ import { useActiveSpace } from '@o/kit'
 import { AppBit, AppSaveCommand } from '@o/models'
 import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import * as React from 'react'
+import { SyntheticEvent } from 'react'
 
 type Props = {
   identifier: string
@@ -31,10 +32,11 @@ export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
+  console.log(activeSpace)
   const [app] = React.useState<Partial<AppBit>>({
     target: 'app',
     identifier: props.identifier as 'confluence',
-    token: null,
+    token: '',
     data: (props.app && props.app.data) || {},
   })
   const [credentials, setCredentials] = React.useState(
@@ -54,6 +56,7 @@ export function AtlassianSettingLogin(props: Props) {
     if (!app.spaces.find(space => space.id === activeSpace.id)) {
       app.spaces.push(activeSpace)
     }
+    app.spaceId = activeSpace.id
     // send command to the desktop
     setStatus(Statuses.LOADING)
     const result = await command(AppSaveCommand, {
@@ -72,11 +75,11 @@ export function AtlassianSettingLogin(props: Props) {
   }
 
   const handleChange = (prop: keyof AtlassianAppValuesCredentials) => (
-    val: AtlassianAppValuesCredentials[typeof prop],
+    val: SyntheticEvent,
   ) => {
     setCredentials({
       ...credentials,
-      [prop]: val,
+      [prop]: ((val as SyntheticEvent).target as any).value,
     })
   }
 

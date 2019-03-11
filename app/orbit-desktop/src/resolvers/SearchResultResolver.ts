@@ -1,13 +1,6 @@
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
-import {
-  AppEntity,
-  Bit,
-  BitContentType,
-  BitContentTypes,
-  SearchQuery,
-  SearchResult,
-} from '@o/models'
+import { AppEntity, Bit, BitContentType, BitContentTypes, SearchQuery, SearchResult } from '@o/models'
 import { uniq, uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'

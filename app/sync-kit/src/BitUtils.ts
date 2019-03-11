@@ -1,71 +1,27 @@
-import { AppBit, Bit } from '@o/models'
-import { hash } from '@o/utils'
+const createDOMPurify = require('dompurify')
+const JSDOM = require('jsdom').JSDOM
 
 /**
- * Common Bit utility functions.
+ * Strips HTML from the given HTML text content.
  */
-export class BitUtils {
-  /**
-   * Creates a bit id.
-   */
-  static id(App: string, appId: number | undefined, data: string): number
-  static id(app: AppBit, data: string): number
-  static id(bitOrBitType: AppBit | string, appIdOrData: any, maybeData?: string): number {
-    if (typeof bitOrBitType === 'object') {
-      // App
-      return hash(`${bitOrBitType.identifier}-${bitOrBitType.id}-${appIdOrData}`)
-    } else if (bitOrBitType && appIdOrData && maybeData) {
-      return hash(`${bitOrBitType}-${appIdOrData}-${maybeData}`)
-    } else if (bitOrBitType && !appIdOrData) {
-      return hash(`${bitOrBitType}-${maybeData}`)
-    }
-    return 0
-  }
+export function stripHtml(value: string) {
+  if (!value) return ''
 
-  /**
-   * Returns missing elements of the first bits based on given list of second bits.
-   */
-  static difference<T extends Bit>(firstBits: T[], secondBits: T[]): T[] {
-    return firstBits.filter(firstBit => {
-      return !secondBits.some(secondBit => {
-        return firstBit.id === secondBit.id
-      })
-    })
-  }
+  const window = new JSDOM('').window
+  const DOMPurify = createDOMPurify(window)
+  return DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/•/gi, '')
+    .trim()
+}
 
-  /**
-   * Creates a new bit and sets given properties to it.
-   */
-  static create(properties: Partial<Bit>, AppId?: any) {
-    const bit: Bit = { target: 'bit', ...properties }
-    bit.contentHash = this.contentHash(bit)
-    if (!bit.appId && bit.app) bit.appId = bit.app.id
-    if (bit.appIdentifier && bit.appId && AppId) {
-      bit.id = this.id(bit.appIdentifier, bit.appId, AppId)
-    }
-    return bit
-  }
+/**
+ * Sanitizes given HTML text content.
+ */
+export function sanitizeHtml(value: string) {
+  if (!value) return ''
 
-  /**
-   * Creates a content hash for a given bit.
-   */
-  static contentHash(bit: Bit): number {
-    return hash(
-      [
-        bit.id,
-        bit.appId,
-        bit.app ? bit.app.id : bit.appId,
-        bit.title,
-        bit.body,
-        bit.type,
-        bit.webLink,
-        bit.desktopLink,
-        bit.data,
-        bit.location,
-        bit.bitCreatedAt,
-        bit.bitUpdatedAt,
-        bit.authorId,
-      ].filter(item => item !== null && item !== undefined),
-    )
-  }
+  const window = new JSDOM('').window
+  const DOMPurify = createDOMPurify(window)
+  return DOMPurify.sanitize(value).trim()
 }

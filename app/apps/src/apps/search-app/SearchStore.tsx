@@ -105,9 +105,7 @@ export class SearchStore {
     const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
 
     if (query) {
-      return apps
-        .filter(x => x.name.toLowerCase().indexOf(query.toLowerCase()) === 0)
-        .map(this.appToResult)
+      return apps.map(this.appToResult)
     }
 
     return [
@@ -129,7 +127,9 @@ export class SearchStore {
 
   getQuickResults(query: string) {
     // TODO recent history
-    return [...this.getApps(query)]
+    return [...this.getApps(query)].filter(
+      x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
+    )
   }
 
   get results() {

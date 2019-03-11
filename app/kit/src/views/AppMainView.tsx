@@ -12,7 +12,7 @@ export function AppMainView(props: AppProps) {
       key={JSON.stringify(props)}
       id={props.id}
       identifier={props.identifier}
-      viewType="main"
+      viewType={props.viewType || 'main'}
       appProps={props}
     />
   )

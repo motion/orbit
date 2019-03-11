@@ -1,7 +1,7 @@
 import { CSSPropertySetStrict } from '@o/css'
 import { gloss } from '../gloss'
-import { alphaColor } from '../helpers/alphaColor'
-import { propsToTextSize } from '../helpers/propsToTextSize'
+import { alphaColor, AlphaColorProps } from '../helpers/alphaColor'
+import { propsToTextSize, TextSizeProps } from '../helpers/propsToTextSize'
 
 const ellipseStyle = {
   display: 'block',
@@ -11,13 +11,12 @@ const ellipseStyle = {
 }
 
 export const SimpleText = gloss<
-  {
-    size?: number
-    ellipse?: boolean
-    alpha?: number
-    alphaHover?: number
-    children?: any
-  } & CSSPropertySetStrict
+  AlphaColorProps &
+    TextSizeProps &
+    CSSPropertySetStrict & {
+      ellipse?: boolean
+      children?: any
+    }
 >({
   display: 'contents',
 }).theme((props, theme) => {

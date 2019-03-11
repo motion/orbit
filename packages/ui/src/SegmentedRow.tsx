@@ -1,8 +1,21 @@
 import * as React from 'react'
 import { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
+import { SurfacePassProps, SurfaceProps } from './Surface'
 
-export function SegmentedRow(props: BreadcrumbsProps) {
-  return <Breadcrumbs {...props} />
+// manages a row of surfaces nicely
+// will round the start/end corners
+// will pass props deeply down to them if they need
+
+export function SegmentedRow({
+  children,
+  separator,
+  ...surfaceProps
+}: BreadcrumbsProps & SurfaceProps) {
+  return (
+    <SurfacePassProps {...surfaceProps}>
+      <Breadcrumbs children={children} separator={separator} />
+    </SurfacePassProps>
+  )
 }
 
 export function getSegmentRadius(

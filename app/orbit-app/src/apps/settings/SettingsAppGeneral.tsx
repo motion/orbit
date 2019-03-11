@@ -93,17 +93,15 @@ export function SettingsAppGeneral(_props: AppProps) {
       <Title>General Settings</Title>
 
       <CheckBoxField
+        label="Start on Login"
         checked={settings.autoLaunch}
         onChange={autoLaunch => updateSettings({ autoLaunch })}
-      >
-        Start on Login
-      </CheckBoxField>
+      />
       <CheckBoxField
+        label="Auto Update"
         checked={settings.autoUpdate}
         onChange={autoUpdate => updateSettings({ autoUpdate })}
-      >
-        Auto Update
-      </CheckBoxField>
+      />
 
       <FormField label="Theme">
         <select value={settings.theme} onChange={e => updateSettings({ theme: e.target.value })}>

@@ -43,3 +43,16 @@ export function selectDefined(...args: any[]) {
     }
   }
 }
+
+export function mergeDefined<A>(...args: A[]): A {
+  const res = {}
+  const keys = [...new Set([].concat(...args.map(a => Object.keys(a))))]
+  for (const key of keys) {
+    for (const obj of args) {
+      if (typeof obj[key] !== 'undefined') {
+        res[key] = obj[key]
+      }
+    }
+  }
+  return res as A
+}

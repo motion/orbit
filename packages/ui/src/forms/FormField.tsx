@@ -65,8 +65,7 @@ export function FormField({ type, ...props }: FormFieldProps) {
     case DataType.unknown:
     default:
       if (typeof type === 'undefined') {
-        // @ts-ignore
-        return props.children
+        return <SimpleFormField {...props} />
       }
       console.error('Unknown data type to render', type, props)
       return null

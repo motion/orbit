@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Surface, SurfaceProps } from './Surface'
+import React, { useContext } from 'react'
+import { Surface, SurfaceProps, SurfacePropsContext } from './Surface'
 
 const LINE_HEIGHT = 28
 
@@ -25,8 +25,9 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
 }
 
 export function SizedSurface(props: SizedSurfaceProps) {
+  const extraProps = useContext(SurfacePropsContext)
   const {
-    size = 1,
+    size = (extraProps && extraProps.size) || 1,
     sizeHeight,
     sizeMargin,
     sizeFont,

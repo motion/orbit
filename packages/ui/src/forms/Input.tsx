@@ -21,7 +21,6 @@ type InputDecoratedProps = InputProps & {
 
 class InputPlain extends React.PureComponent<InputDecoratedProps> {
   static defaultProps = {
-    size: 1,
     type: 'input',
     tagName: 'input',
     forwardRef: React.createRef<HTMLInputElement>(),

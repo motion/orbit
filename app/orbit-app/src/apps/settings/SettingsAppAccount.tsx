@@ -1,16 +1,5 @@
-import {
-  Button,
-  InputField,
-  Row,
-  Section,
-  SegmentedRow,
-  Theme,
-  Title,
-  VerticalSpace,
-  View,
-} from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Theme, Title, VerticalSpace } from '@o/ui'
 import * as React from 'react'
-import { IntroText } from '../../views'
 
 export default function SettingsAppAccount() {
   // const [user] = useActiveUser()
@@ -19,27 +8,20 @@ export default function SettingsAppAccount() {
     <Section sizePadding={2}>
       <Title>My Account</Title>
 
-      <IntroText>Set up an account to sync preferences, spaces, and basic configuration.</IntroText>
+      <Message>
+        Orbit syncs your configuration including which spaces you are a member of, and your personal
+        perferences, so you can use Orbit on different computers.
+      </Message>
 
       <VerticalSpace />
 
-      <SegmentedRow flex={1} stretch>
-        <Button background="transparent" fontWeight={600}>
-          Login
-        </Button>
-        <Button>Signup</Button>
-      </SegmentedRow>
-
       <Section>
-        <InputField label="Username" />
-        <InputField label="Password" />
-
-        <Row>
-          <View flex={1} />
+        <SegmentedRow size={1.5}>
+          <Input type="email" flex={1} placeholder="address@example.com" />
           <Theme name="selected">
-            <Button>Login</Button>
+            <Button>Send Login Link</Button>
           </Theme>
-        </Row>
+        </SegmentedRow>
       </Section>
     </Section>
   )

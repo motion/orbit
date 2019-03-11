@@ -8,8 +8,6 @@ export type SectionProps = ViewProps & {
 }
 
 export const Section = gloss<SectionProps>(View, {
-  overflowY: 'auto',
-  maxHeight: '100%',
   position: 'relative',
 }).theme(({ sizePadding = 1, padding }) => ({
   padding: padding || [sizePadding * 15, sizePadding * 15],

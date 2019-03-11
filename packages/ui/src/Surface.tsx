@@ -12,7 +12,7 @@ import {
   ThemeSelect,
   View,
 } from '@o/gloss'
-import { selectDefined } from '@o/utils'
+import { mergeDefined, selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -93,7 +93,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
 
 export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
   const extraProps = useContext(SurfacePropsContext)
-  const props = extraProps ? { ...extraProps, ...rawProps } : rawProps
+  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
 
@@ -404,8 +404,8 @@ export function getSurfaceShadow(elevation: number) {
   return [elevatedShadow(elevation) as any]
 }
 
-const SurfacePropsContext = React.createContext(null)
+export const SurfacePropsContext = React.createContext(null as SurfaceProps)
 
-export function SurfacePassProps(props: SurfaceProps) {
-  return <SurfacePropsContext.Provider value={props}>{props.children}</SurfacePropsContext.Provider>
+export function SurfacePassProps({ children, ...rest }: SurfaceProps) {
+  return <SurfacePropsContext.Provider value={rest}>{children}</SurfacePropsContext.Provider>
 }

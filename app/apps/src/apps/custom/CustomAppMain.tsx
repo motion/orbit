@@ -1,5 +1,6 @@
 import { AppProps, Table } from '@o/kit'
 import {
+  BorderBottom,
   createEnumFilter,
   DataColumns,
   DataType,
@@ -84,18 +85,31 @@ function Form({ columns, rows }: FormProps) {
   return (
     <>
       {rows.map(row => {
-        return Object.keys(row.values).map(valKey => {
-          const value = row.values[valKey]
-          return (
-            <FormField
-              key={value.key}
-              type={columns[valKey].type}
-              label={columns[valKey].value}
-              value={value}
-            />
-          )
-        })
+        return (
+          <Fieldset key={row.key}>
+            {Object.keys(row.values).map(valKey => {
+              const value = row.values[valKey]
+              return (
+                <FormField
+                  key={value.key}
+                  type={columns[valKey].type}
+                  label={columns[valKey].value}
+                  value={value}
+                />
+              )
+            })}
+          </Fieldset>
+        )
       })}
     </>
+  )
+}
+
+function Fieldset(props) {
+  return (
+    <Section>
+      {props.children}
+      <BorderBottom />
+    </Section>
   )
 }

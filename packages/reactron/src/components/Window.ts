@@ -36,7 +36,6 @@ export class Window extends BaseComponent {
   updatePosition = () => configurePosition.call(this, this.props)
 
   mount() {
-    console.log('MOUNTING WINDOW')
     const { props } = this
     this.options = filterUndefined({
       show: props.show === undefined ? true : props.show,

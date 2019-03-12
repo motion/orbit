@@ -9,9 +9,9 @@ export function sortPanes(space: Space, apps: AppBit[]) {
 
   let next = [
     ...new Set([
-      // keep current sort
+      // keep current sort, remove deleted
       ...space.paneSort.filter(id => appDict[id]),
-      // newly added apps
+      // add new
       ...apps.map(x => x.id),
     ]),
   ]
@@ -19,6 +19,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   // ensure:
   //  1. editable at front
   //  2. pinned after that
+  //  3. stable sort after that
   next = sortBy(next, id => {
     const a = appDict[id]
     return `${a.editable ? 1 : 0}${a.pinned ? 1 : 0}${a.id}`

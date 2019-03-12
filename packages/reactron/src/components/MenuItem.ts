@@ -1,14 +1,8 @@
 import { MenuItem as ElectronMenuItem } from 'electron'
-import EventEmitter from 'events'
 import { BaseComponent } from './BaseComponent'
 
-class MenuItemOk extends BaseComponent {
-  emitter = new EventEmitter()
+export class MenuItem extends BaseComponent {
   menuItem = null
-
-  mount() {
-    this.update()
-  }
 
   handleNewProps() {
     // electron doesnt like undefined values
@@ -37,5 +31,3 @@ class MenuItemOk extends BaseComponent {
     this.menuItem = new ElectronMenuItem(menuItem)
   }
 }
-
-export const MenuItem = MenuItemOk as any

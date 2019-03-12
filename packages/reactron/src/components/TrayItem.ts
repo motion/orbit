@@ -5,10 +5,6 @@ export class TrayItem extends BaseComponent {
   trayItem = null
   emitter = new EventEmitter()
 
-  mount() {
-    this.update()
-  }
-
   handleClick = (_menuItem, _browserWindow, event) => {
     this.emitter.emit('click', event)
   }

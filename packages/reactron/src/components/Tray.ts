@@ -28,7 +28,6 @@ export class Tray extends BaseComponent {
       throw new Error('Expects an image prop with path to image file')
     }
     this.tray = new ElectronTray(this.props.image)
-    this.update()
   }
 
   propHandlers = {

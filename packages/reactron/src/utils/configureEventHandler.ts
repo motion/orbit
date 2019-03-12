@@ -1,9 +1,11 @@
+import { EventEmitter } from 'events'
+
 export default function configureEventHandler(
-  emitter,
-  attachedHandlers,
-  eventKey,
-  rawHandler,
-  wrapper,
+  emitter: EventEmitter,
+  attachedHandlers: Object,
+  eventKey: string,
+  rawHandler?: Function,
+  wrapper?: Function,
 ) {
   const removingHandler = rawHandler === undefined && attachedHandlers[eventKey] !== undefined
 

@@ -4,10 +4,6 @@ import { BaseComponent } from './BaseComponent'
 export class SubMenu extends BaseComponent {
   menuItem = null
 
-  mount() {
-    this.update()
-  }
-
   handleNewProps() {
     const { props } = this
     const submenu = new Menu()

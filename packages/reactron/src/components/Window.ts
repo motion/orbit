@@ -36,6 +36,7 @@ export class Window extends BaseComponent {
   updatePosition = () => configurePosition.call(this, this.props)
 
   mount() {
+    console.log('MOUNTING WINDOW')
     const { props } = this
     this.options = filterUndefined({
       show: props.show === undefined ? true : props.show,
@@ -136,10 +137,7 @@ export class Window extends BaseComponent {
   }
 
   handleNewProps(keys) {
-    if (!this.window) {
-      log.info('no window ey')
-      return
-    }
+    console.log('WINDOW HANDLE NEW PROPS')
     try {
       for (const key of keys) {
         const val = this.props[key]

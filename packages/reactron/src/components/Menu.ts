@@ -4,10 +4,6 @@ import { BaseComponent } from './BaseComponent'
 export class Menu extends BaseComponent {
   menu = null
 
-  mount() {
-    this.update()
-  }
-
   handleNewProps() {
     this.menu = new ElectronMenu()
     for (const child of this.children) {

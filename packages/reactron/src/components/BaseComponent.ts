@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events'
 import isEqual from 'lodash.isequal'
 import configureEventHandler from '../utils/configureEventHandler'
 
@@ -12,29 +13,34 @@ interface ReactronComponent {
   props: any
   parent: any
   children: any
-  attachedHandlers: any
-  mount: Function
+  mount?: Function
   handleNewProps(keys: string[], prev: Object): void
   update(): void
   update(prevProps?: Object): void
+  emitter: EventEmitter
 }
 
 export class BaseComponent implements ReactronComponent {
   _id = `${this.constructor.name}${Math.random()}`
+  emitter = new EventEmitter()
   parent = null
   children = []
   attachedHandlers = {}
   props = null
   root = null
-  unmounted = true
+  unmounted = false
+  mounted = false
 
-  mount() {}
-  handleNewProps(_a, _b) {}
+  mount() {
+    // console.log('mount', this)
+  }
+  handleNewProps(_a, _b) {
+    // console.log('new props', _a)
+  }
 
   constructor(root, props) {
     this.root = root
     this.props = props
-    this.unmounted = false
   }
 
   appendChild(child) {
@@ -70,17 +76,21 @@ export class BaseComponent implements ReactronComponent {
   }
 
   update(prevProps?) {
+    if (!this.mounted) {
+      this.mount()
+      this.mounted = true
+    }
     const currentPropKeys = Object.keys(this.props)
     const newPropKeys = !prevProps
       ? currentPropKeys
       : currentPropKeys
           .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : NOT_NEW))
           .filter(x => x !== NOT_NEW)
-    this.handleNewProps(newPropKeys, prevProps)
+    this.handleNewProps.call(this, newPropKeys, prevProps)
   }
 
   // helpers for events
-  handleEvent(emitter, key, val, wrapper = cb => cb()) {
+  handleEvent(emitter: EventEmitter, key: string, val: any, wrapper = cb => cb()) {
     configureEventHandler(emitter, this.attachedHandlers, key, val, wrapper)
   }
 }

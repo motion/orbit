@@ -3,7 +3,7 @@ import { AppBit, Space } from '@o/models'
 import { isEqual, keyBy } from 'lodash'
 import { useEffect } from 'react'
 
-function sortPanes(space: Space, apps: AppBit[]) {
+export function sortPanes(space: Space, apps: AppBit[]) {
   const appDict = keyBy(apps, 'id')
 
   let next = [
@@ -18,7 +18,9 @@ function sortPanes(space: Space, apps: AppBit[]) {
   // ensure:
   //  1. editable at front
   //  2. pinned after that
-  next = next.sort((a, b) => (apps[a].editable ? 1 : apps[a].pinned && !apps[b].pinned ? 1 : -1))
+  next = next.sort((a, b) =>
+    apps[a].editable === false ? 1 : apps[a].pinned && !apps[b].pinned ? 1 : -1,
+  )
 
   return next
 }

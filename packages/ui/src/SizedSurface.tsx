@@ -1,3 +1,4 @@
+import { mergeDefined } from '@o/utils'
 import React, { useContext } from 'react'
 import { Surface, SurfaceProps, SurfacePropsContext } from './Surface'
 
@@ -24,10 +25,11 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
   return height % 2 === 1 ? height : height + 1
 }
 
-export function SizedSurface(props: SizedSurfaceProps) {
+export function SizedSurface(rawProps: SizedSurfaceProps) {
   const extraProps = useContext(SurfacePropsContext)
+  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const {
-    size = (extraProps && extraProps.size) || 1,
+    size = 1,
     sizeHeight,
     sizeMargin,
     sizeFont,

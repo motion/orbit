@@ -21,6 +21,7 @@ import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { ConfiguredIcon } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
+import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
 
 // an element for creating surfaces that look like buttons
@@ -388,13 +389,13 @@ const getIconSize = (props: SurfaceProps) => {
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-const round = (x: number) => Math.round(x * 4) / 4
-const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
+const round = (x: number) => Math.round(x * 10) / 10
+const smoother = (base: number, amt = 1) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
 const elevatedShadow = (x: number) => [
   0,
-  smoother(x, 3),
-  smoother(x, 17),
-  [0, 0, 0, round(0.12 * smoother(x, 1))],
+  smoother(x, 2),
+  smoother(x, 14),
+  [0, 0, 0, round(0.05 * smoother(x))],
 ]
 
 export function getSurfaceShadow(elevation: number) {
@@ -404,8 +405,8 @@ export function getSurfaceShadow(elevation: number) {
   return [elevatedShadow(elevation) as any]
 }
 
-export const SurfacePropsContext = React.createContext(null as SurfaceProps)
+export const SurfacePropsContext = React.createContext(null as SizedSurfaceProps)
 
-export function SurfacePassProps({ children, ...rest }: SurfaceProps) {
+export function SurfacePassProps({ children, ...rest }: SizedSurfaceProps) {
   return <SurfacePropsContext.Provider value={rest}>{children}</SurfacePropsContext.Provider>
 }

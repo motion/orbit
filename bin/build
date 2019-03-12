@@ -9,8 +9,6 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     # WATCH
 
     ARGS=${@:2}
-    (bin/in gloss npm run watch) &
-    (bin/in reactron npm run watch) &
     (bin/in ui npm run watch) &
     (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
     sleep 3
@@ -26,8 +24,6 @@ if [ "$(realpath .)" = "$ROOT" ]; then
 
     ARGS=${@:1}
     (bin/in ui npm run build) &
-    (bin/in gloss npm run build) &
-    (bin/in reactron npm run build) &
     wait
     (bin/in kit npm run build) &
     (bin/in kit-internal npm run build) &

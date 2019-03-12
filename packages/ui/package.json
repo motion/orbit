@@ -6,7 +6,7 @@
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build": "tsc || true",
+    "build": "tsc -b || true",
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {

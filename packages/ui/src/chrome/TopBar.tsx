@@ -6,14 +6,19 @@ import { SurfacePassProps } from '../Surface'
 export type TopBarProps = {
   before?: React.ReactNode
   after?: React.ReactNode
+  bordered?: boolean
 }
 
-export function TopBar({ before, after }: TopBarProps) {
+export function TopBar({ bordered, before, after }: TopBarProps) {
   return (
-    <Row position="relative">
-      <SurfacePassProps chromeless sizeRadius={0} height={33}>
-        {before}
-      </SurfacePassProps>
+    <Row position="relative" alignItems="center" justifyContent="center">
+      {bordered && <BorderBottom opacity={0.33} />}
+
+      <Row flex={1}>
+        <SurfacePassProps chromeless sizeRadius={0} height={33}>
+          {before}
+        </SurfacePassProps>
+      </Row>
 
       {!!after && (
         <Row padding={[0, 6, 0, 12]}>
@@ -22,8 +27,6 @@ export function TopBar({ before, after }: TopBarProps) {
           </SurfacePassProps>
         </Row>
       )}
-
-      <BorderBottom opacity={0.25} />
     </Row>
   )
 }

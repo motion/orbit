@@ -1,11 +1,12 @@
-import { Color, CSSPropertySet, gloss, View } from '@o/gloss'
+import { Color, CSSPropertySetStrict, gloss, View } from '@o/gloss'
+import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
-import * as React from 'react'
+import React, { createContext, memo, useContext } from 'react'
 import { configure } from './helpers/configure'
 import { iconNames } from './iconNames'
 
 export type IconProps = React.HTMLAttributes<HTMLDivElement> &
-  CSSPropertySet & {
+  CSSPropertySetStrict & {
     size?: number
     color?: Color
     type?: 'mini' | 'outline'
@@ -13,7 +14,10 @@ export type IconProps = React.HTMLAttributes<HTMLDivElement> &
     tooltip?: string
     tooltipProps?: Object
     name: string
+    hoverStyle?: any
   }
+
+export const IconPropsContext = createContext(null as Partial<IconProps>)
 
 const widthPadding = x => {
   if (typeof x === 'number') {
@@ -46,13 +50,19 @@ const findMatch = (name: string) => {
 }
 
 // lets users wrap around icons
-export function ConfiguredIcon(props: IconProps) {
+export function ConfiguredIcon(rawProps: IconProps) {
+  const extraProps = useContext(IconPropsContext)
+  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+  extraProps && console.log('123', extraProps, props)
   const ResolvedIcon = configure.useIcon || Icon
   return <ResolvedIcon {...props} />
 }
 
-export const Icon = React.memo(
-  ({
+export const Icon = memo((rawProps: IconProps) => {
+  const extraProps = useContext(IconPropsContext)
+  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+
+  const {
     tooltip,
     tooltipProps,
     name,
@@ -60,41 +70,41 @@ export const Icon = React.memo(
     children,
     color,
     margin = 0,
-    ...props
-  }: IconProps) => {
-    if (!name) {
-      return null
-    }
-    let content: any
-    if (name[0] === '/') {
-      // @ts-ignore
-      return <img src={name} {...props} />
-    }
-    if (!name) {
-      console.warn('no name given for icon')
-      return null
-    }
-    content = content || children
+    ...restProps
+  } = props
 
-    const iconName = findMatch(name)
-    // icons here are consistently a bit too big...
-    const size = props.size > 18 ? props.size * 0.65 : props.size || 16
+  if (!name) {
+    return null
+  }
+  let content: any
+  if (name[0] === '/') {
+    // @ts-ignore
+    return <img src={name} {...props} />
+  }
+  if (!name) {
+    console.warn('no name given for icon')
+    return null
+  }
+  content = content || children
 
-    return (
-      <IconInner color={color} {...props} size={size}>
-        <div
-          className={`icon nc-icon-${type} ${iconName}`}
-          style={{
-            margin: 'auto',
-            textRendering: 'geometricPrecision',
-          }}
-        >
-          {content}
-        </div>
-      </IconInner>
-    )
-  },
-)
+  const iconName = findMatch(name)
+  // icons here are consistently a bit too big...
+  const size = props.size > 18 ? props.size * 0.65 : props.size || 16
+
+  return (
+    <IconInner color={color} {...restProps} size={size}>
+      <div
+        className={`icon nc-icon-${type} ${iconName}`}
+        style={{
+          margin: 'auto',
+          textRendering: 'geometricPrecision',
+        }}
+      >
+        {content}
+      </div>
+    </IconInner>
+  )
+})
 
 const IconInner = gloss(View, {
   userSelect: 'none',

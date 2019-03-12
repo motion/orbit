@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { Button, HorizontalSpace, Section, Theme, TitleRow } from '@o/ui'
+import { Button, HorizontalSpace, Section, Theme, TitleRow, TopBar } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
@@ -19,17 +19,20 @@ const descriptions = {
 
 function CreateAppIndex() {
   return (
-    <List
-      minSelected={0}
-      items={defaultApps.map(app => ({
-        title: app.name,
-        identifier: app.identifier,
-        subtitle: descriptions[app.identifier],
-        icon: <AppIcon app={app} />,
-        iconBefore: true,
-        group: 'Configure app',
-      }))}
-    />
+    <>
+      <TopBar after={<Button icon="add">Create</Button>} />
+      <List
+        minSelected={0}
+        items={defaultApps.map(app => ({
+          title: app.name,
+          identifier: app.identifier,
+          subtitle: descriptions[app.identifier],
+          icon: <AppIcon app={app} />,
+          iconBefore: true,
+          group: 'Configure app',
+        }))}
+      />
+    </>
   )
 }
 

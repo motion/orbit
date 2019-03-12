@@ -8,6 +8,7 @@ import {
   propsToTextSize,
   propsToThemeStyles,
   selectThemeSubset,
+  ThemeContext,
   ThemeObject,
   ThemeSelect,
   View,
@@ -18,7 +19,7 @@ import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
-import { ConfiguredIcon } from './Icon'
+import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
@@ -58,7 +59,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     icon?: React.ReactNode
     iconAfter?: boolean
     iconColor?: Color
-    iconProps?: Object
+    iconProps?: IconProps
     iconSize?: number
     inline?: boolean
     noInnerElement?: boolean
@@ -87,16 +88,16 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     iconPad?: number
   }
 
-// const proxyGet = (a: any, b: any) =>
-//   new Proxy(a, {
-//     get: (_, k) => (Reflect.has(a, k) ? a[k] : b[k]),
-//   })
-
 export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
   const extraProps = useContext(SurfacePropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+  const themeContext = useContext(ThemeContext)
+  const theme =
+    (props.theme && typeof props.theme === 'string' && themeContext.allThemes[props.theme]) ||
+    (typeof props.theme === 'object' && props.theme) ||
+    themeContext.activeTheme
 
   useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -133,7 +134,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     alignItems,
     justifyContent,
     forwardRef,
-    theme,
     ...rest
   } = props
   const segmentedStyle = getSegmentRadius(props, crumb)
@@ -200,7 +200,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
         )}
         <div
           style={{
-            opacity: typeof props.alpha === 'number' ? props.alpha : 1,
             order: icon && iconAfter ? 3 : 'inherit',
           }}
         >
@@ -234,18 +233,52 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     )
   }
 
+  console.log('passing down', {
+    opacity: typeof props.alpha !== 'undefined' ? +props.alpha : +props.opacity,
+    pointerEvents: 'none',
+    justifyContent: 'center',
+    color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+    hoverStyle: {
+      // todo this is kind of a mess, consistency-wise
+      opacity:
+        typeof props.alphaHover !== 'undefined'
+          ? +props.alphaHover
+          : +props.hoverStyle && props.hoverStyle.opacity,
+      color: 'green' || (props.hoverStyle && props.hoverStyle.color) || theme.colorHover,
+    },
+  })
+
   let element = (
-    <BreadcrumbReset>
-      <SurfaceFrame
-        ref={forwardRef}
-        themeSelect={themeSelect}
-        {...surfaceProps}
-        opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
-      />
-    </BreadcrumbReset>
+    <IconPropsContext.Provider
+      value={{
+        opacity: typeof props.alpha !== 'undefined' ? +props.alpha : +props.opacity,
+        pointerEvents: 'none',
+        justifyContent: 'center',
+        color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+        hoverStyle: {
+          // todo this is kind of a mess, consistency-wise
+          opacity:
+            typeof props.alphaHover !== 'undefined'
+              ? +props.alphaHover
+              : props.hoverStyle
+              ? props.hoverStyle.opacity
+              : 'inherit',
+          color: 'green' || (props.hoverStyle && props.hoverStyle.color) || theme.colorHover,
+        },
+      }}
+    >
+      <BreadcrumbReset>
+        <SurfaceFrame
+          ref={forwardRef}
+          themeSelect={themeSelect}
+          {...surfaceProps}
+          opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
+        />
+      </BreadcrumbReset>
+    </IconPropsContext.Provider>
   )
 
-  element = forwardTheme({ children: element, theme })
+  element = forwardTheme({ children: element, theme: props.theme })
 
   // dont nest PassProps, use once and clear context below
   if (extraProps) {
@@ -275,11 +308,6 @@ const SurfaceFrame = gloss(View, {
     width: props.height,
   }
 
-  // icon
-  const hoverIconStyle = {
-    color: props.iconHoverColor || themeStyles.colorHover,
-  }
-
   const hoverStyle = props.active
     ? null
     : {
@@ -302,11 +330,6 @@ const SurfaceFrame = gloss(View, {
       alignSelf: props.alignSelf,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-      '& > div > .icon': {
-        pointerEvents: 'none',
-        justifyContent: 'center',
-      },
-      '&:hover > div > .icon': hoverIconStyle,
       ...(props.dimmed && {
         opacity: 0.2,
       }),

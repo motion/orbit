@@ -143,7 +143,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   return button
 })
 
-function OrbitTabIcon(props: IconProps) {
+function OrbitTabIcon(props: IconProps & TabProps) {
   const theme = useTheme()
   let opacity = props.isActive ? 1 : props.thicc ? 0.5 : 0.3
   opacity += props.iconAdjustOpacity || 0

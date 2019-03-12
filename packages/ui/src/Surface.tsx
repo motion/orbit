@@ -59,7 +59,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     icon?: React.ReactNode
     iconAfter?: boolean
     iconColor?: Color
-    iconProps?: IconProps
+    iconProps?: Partial<IconProps>
     iconSize?: number
     inline?: boolean
     noInnerElement?: boolean

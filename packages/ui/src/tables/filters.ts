@@ -1,23 +1,8 @@
 import { capitalize } from 'lodash'
+import { guessTheme } from './presetTheme'
 import { EnumFilterOption, EnumTableFilter, TableFilter } from './types'
 
 type PartialEnumFilter = Pick<EnumFilterOption, 'value'> & Partial<EnumFilterOption>
-
-const guessColor = {
-  fail: 'red',
-  failure: 'red',
-  fatal: 'red',
-  error: 'red',
-  warn: 'yellow',
-  warning: 'yellow',
-  alert: 'yellow',
-  success: 'green',
-  valid: 'green',
-  pass: 'green',
-  ok: 'green',
-  debug: 'orange',
-  verbose: 'grey',
-}
 
 export function createEnumFilter(
   options: (string | PartialEnumFilter)[],
@@ -30,7 +15,7 @@ export function createEnumFilter(
       return {
         label: obj.label || capitalize(obj.value),
         value: obj.value,
-        color: obj.color || guessColor[obj.value] || 'transparent',
+        color: obj.color || (guessTheme[obj.value] ? guessTheme[obj.value].color : null) || null,
       }
     }),
     key: 'type',

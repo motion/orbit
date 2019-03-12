@@ -14,6 +14,7 @@ const descriptions = {
   search: 'Custom search with filters',
   lists: 'Controlled or controllable list',
   people: 'Manageable list of people',
+  custom: 'Create your app',
 }
 
 function CreateAppIndex() {
@@ -26,6 +27,7 @@ function CreateAppIndex() {
         subtitle: descriptions[app.identifier],
         icon: <AppIcon app={app} />,
         iconBefore: true,
+        group: 'Configure app',
       }))}
     />
   )

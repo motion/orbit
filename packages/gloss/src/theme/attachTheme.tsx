@@ -1,29 +1,14 @@
 import * as React from 'react'
-import { ThemeContext } from './ThemeContext'
+import { useTheme } from '../helpers/useTheme'
 
 // HoC for active theme attaching
 
 export const wrapTheme = (props, Klass, avoidTheme?) => {
+  const theme = useTheme()
   if (avoidTheme) {
     return <Klass {...props} />
   }
-  return (
-    <ThemeContext.Consumer>
-      {({ allThemes, activeThemeName }) => {
-        let theme = allThemes[activeThemeName]
-        // allow simple overriding of the theme using props:
-        // <Button theme={{ backgroundHover: 'transparent' }} />
-        // if (typeof props.theme === 'object') {
-        //   console.log('merging theme', theme, props.theme)
-        //   theme = {
-        //     ...theme,
-        //     ...props.theme,
-        //   }
-        // }
-        return <Klass {...props} theme={theme} />
-      }}
-    </ThemeContext.Consumer>
-  )
+  return <Klass {...props} theme={theme} />
 }
 
 export function attachTheme<T>(Klass: T): T {

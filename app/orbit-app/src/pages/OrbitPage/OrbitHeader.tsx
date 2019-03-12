@@ -69,7 +69,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </View>
             <OrbitHeaderInput />
 
-            <SegmentedRow sizeHeight={0.95} sizeRadius={2}>
+            <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
               <LinkButton />
               {!isTorn && <LaunchButton />}
             </SegmentedRow>
@@ -224,7 +224,7 @@ const OrbitClose = gloss({
 const LaunchButton = memo(() => {
   const Actions = useActions()
   const { orbitStore } = useStores()
-  const [isHovered, setHovered] = useState(false)
+  const [_isHovered, setHovered] = useState(false)
   const tm = useRef(null)
 
   if (orbitStore.isTorn) {
@@ -244,7 +244,7 @@ const LaunchButton = memo(() => {
       width={50}
       onClick={Actions.tearApp}
     >
-      <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
+      <Text size={0.75} fontWeight={500} alpha={0.5} transform={{ y: 1 }}>
         Open
       </Text>
     </Button>
@@ -254,12 +254,7 @@ const LaunchButton = memo(() => {
 const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
-    <Button
-      iconSize={9}
-      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
-      sizeRadius={2}
-      icon="link69"
-    />
+    <Button iconSize={9} tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`} icon="link69" />
   )
 })
 

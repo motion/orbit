@@ -23,8 +23,8 @@ export const listItemDecorators = {
   thread: ({ item }) => <Thread {...item} />,
   person: {
     getItemProps: item => ({
-      icon: <Avatar width={40} height={40} src={item.photo} />,
-      paddingLeft: 30,
+      iconBefore: true,
+      before: <Avatar width={30} height={30} marginRight={6} src={item.photo} />,
     }),
   },
 }

@@ -118,7 +118,7 @@ const dark = {
     sidebarBackground: [15, 15, 15, 0.52],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
-    headerBackground: linearGradient([0, 0, 0, 0.25], [0, 0, 0, 0.3]),
+    headerBackground: linearGradient([0, 0, 0, 0.25], [0, 0, 0, 0.35]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     headerFadeBackground: linearGradient(

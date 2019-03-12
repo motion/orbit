@@ -2,11 +2,13 @@ import { forwardTheme, useTheme } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { forwardRef, useContext } from 'react'
 import { UIContext } from '../helpers/contexts'
+import { IconProps } from '../Icon'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
     acceptsHovered?: boolean
+    iconProps?: Partial<IconProps>
   }
 
 const glowProps = {

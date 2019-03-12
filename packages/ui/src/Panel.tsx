@@ -75,7 +75,7 @@ export type PanelProps = {
   elevation?: number
 } & ViewProps
 
-const PanelContainer = gloss<PanelProps>(View).theme((props, theme) => ({
+const PanelContainer = gloss<Partial<PanelProps>>(View).theme((props, theme) => ({
   boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
   borderBottom: props.collapsed ? 'none' : [1, theme.sidebarBorderColor || theme.borderColor],
   flex: props.collapsed ? 'initial' : props.openFlex || 1,

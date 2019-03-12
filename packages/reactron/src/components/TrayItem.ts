@@ -1,15 +1,15 @@
-import { BaseComponent } from './BaseComponent'
 import { EventEmitter } from 'events'
+import { BaseComponent } from './BaseComponent'
 
 export class TrayItem extends BaseComponent {
   trayItem = null
+  emitter = new EventEmitter()
 
   mount() {
-    this.emitter = new EventEmitter()
     this.update()
   }
 
-  handleClick = (menuItem, browserWindow, event) => {
+  handleClick = (_menuItem, _browserWindow, event) => {
     this.emitter.emit('click', event)
   }
 

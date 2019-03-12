@@ -1,5 +1,5 @@
 import React from 'react'
-import { MenuItem } from '../index'
+import { MenuItem } from './MenuItem'
 
 export const Separator = props => <MenuItem type="separator" {...props} />
 export const Undo = props => <MenuItem role="Undo" {...props} />

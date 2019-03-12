@@ -2,6 +2,8 @@ import { Menu as ElectronMenu } from 'electron'
 import { BaseComponent } from './BaseComponent'
 
 export class Menu extends BaseComponent {
+  menu = null
+
   mount() {
     this.update()
   }

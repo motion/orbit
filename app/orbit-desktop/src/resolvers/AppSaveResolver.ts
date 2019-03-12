@@ -1,12 +1,14 @@
-import { ConfluenceLoader } from '@o/apps/_/apps/confluence/ConfluenceLoader'; // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { JiraLoader } from '@o/apps/_/apps/jira/JiraLoader'; // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { Logger } from '@o/logger';
-import { resolveCommand } from '@o/mediator';
-import { AppBit, AppEntity, AppSaveCommand } from '@o/models';
-import { getRepository } from 'typeorm';
+// todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { ConfluenceLoader } from '@o/apps/_/apps/confluence/ConfluenceLoader'
+// todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { JiraLoader } from '@o/apps/_/apps/jira/JiraLoader'
+import { Logger } from '@o/logger'
+import { resolveCommand } from '@o/mediator'
+import { AppBit, AppEntity, AppSaveCommand } from '@o/models'
+import { getRepository } from 'typeorm'
 
 const log = new Logger('command:app-save')
-.
+
 const extractTeamNameFromDomain = (domain: string) => {
   return domain
     .replace('http://', '')

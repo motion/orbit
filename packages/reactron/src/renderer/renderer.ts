@@ -40,7 +40,7 @@ const HostConfig = {
     return text
   },
 
-  finalizeInitialChildren(instance, type, props) {
+  finalizeInitialChildren(instance, _type, props) {
     if (!instance) return
     instance.applyProps(props)
     // return false
@@ -50,7 +50,7 @@ const HostConfig = {
     return instance
   },
 
-  prepareUpdate(instance, type, oldProps, newProps) {
+  prepareUpdate(instance, _type, oldProps, newProps) {
     instance.applyProps(newProps, oldProps)
     return emptyObject
   },
@@ -91,12 +91,12 @@ const HostConfig = {
     parent.removeChild(child)
   },
 
-  commitUpdate(instance, updatePayload, type, oldProps, newProps) {
+  commitUpdate(instance, _updatePayload, _type, oldProps, newProps) {
     if (!instance) return
     instance.applyProps.call(instance, newProps, oldProps)
   },
 
-  commitTextUpdate(textInstance, oldText, newText) {
+  commitTextUpdate(textInstance, _oldText, newText) {
     textInstance.children = newText
   },
 }

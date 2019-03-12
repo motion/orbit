@@ -5,19 +5,36 @@ import configureEventHandler from '../utils/configureEventHandler'
 
 const NOT_NEW = '__NOT_NEW__'
 
-export class BaseComponent {
+interface ReactronComponent {
+  unmounted: boolean
+  _id: any
+  root: any
+  props: any
+  parent: any
+  children: any
+  attachedHandlers: any
+  mount: Function
+  handleNewProps(keys: string[], prev: Object): void
+  update(): void
+  update(prevProps?: Object): void
+}
+
+export class BaseComponent implements ReactronComponent {
+  _id = `${this.constructor.name}${Math.random()}`
+  parent = null
+  children = []
+  attachedHandlers = {}
+  props = null
+  root = null
+  unmounted = true
+
+  mount() {}
+  handleNewProps(_a, _b) {}
+
   constructor(root, props) {
-    this._id = `${this.constructor.name}${Math.random()}`
     this.root = root
     this.props = props
-    this.parent = null
-    this.children = []
-    this.attachedHandlers = {}
-    if (this.mount) {
-      this.unmounted = true
-      this.mount()
-      this.unmounted = false
-    }
+    this.unmounted = false
   }
 
   appendChild(child) {
@@ -43,7 +60,7 @@ export class BaseComponent {
     this.children.splice(index, 1)
   }
 
-  commitUpdate(instance, updatePayload, type, lastRawProps, nextRawProps) {
+  commitUpdate(_instance, _updatePayload, _type, lastRawProps, nextRawProps) {
     this.applyProps(lastRawProps, nextRawProps)
   }
 
@@ -52,16 +69,14 @@ export class BaseComponent {
     this.update(oldProps)
   }
 
-  update(prevProps) {
+  update(prevProps?) {
     const currentPropKeys = Object.keys(this.props)
     const newPropKeys = !prevProps
       ? currentPropKeys
       : currentPropKeys
           .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : NOT_NEW))
           .filter(x => x !== NOT_NEW)
-    if (this.handleNewProps) {
-      this.handleNewProps(newPropKeys, prevProps)
-    }
+    this.handleNewProps(newPropKeys, prevProps)
   }
 
   // helpers for events

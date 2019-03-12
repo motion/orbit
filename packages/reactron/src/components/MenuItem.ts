@@ -2,9 +2,11 @@ import { MenuItem as ElectronMenuItem } from 'electron'
 import EventEmitter from 'events'
 import { BaseComponent } from './BaseComponent'
 
-export class MenuItem extends BaseComponent {
+class MenuItemOk extends BaseComponent {
+  emitter = new EventEmitter()
+  menuItem = null
+
   mount() {
-    this.emitter = new EventEmitter()
     this.update()
   }
 
@@ -12,7 +14,7 @@ export class MenuItem extends BaseComponent {
     // electron doesnt like undefined values
     const { props } = this
     this.handleEvent(this.emitter, 'click', props.onClick)
-    let menuItem = {}
+    let menuItem: any = {}
     if (props.role) {
       menuItem.role = props.role
     } else {
@@ -35,3 +37,5 @@ export class MenuItem extends BaseComponent {
     this.menuItem = new ElectronMenuItem(menuItem)
   }
 }
+
+export const MenuItem = MenuItemOk as any

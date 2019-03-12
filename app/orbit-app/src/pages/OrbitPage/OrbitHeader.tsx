@@ -1,7 +1,16 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  HorizontalSpace,
+  Row,
+  SegmentedRow,
+  Text,
+  View,
+} from '@o/ui'
 import React, { memo, useRef, useState } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -60,13 +69,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </View>
             <OrbitHeaderInput />
 
-            <LinkButton />
-            {!isTorn && (
-              <>
-                <HorizontalSpace />
-                <LaunchButton />
-              </>
-            )}
+            <SegmentedRow sizeHeight={0.95} sizeRadius={2}>
+              <LinkButton />
+              {!isTorn && <LaunchButton />}
+            </SegmentedRow>
           </HeaderContain>
 
           <View flex={1} />
@@ -235,18 +241,12 @@ const LaunchButton = memo(() => {
         setHovered(false)
       }}
       tooltip="Open app (⌘ + ⏎)"
-      sizeHeight={0.95}
-      sizeRadius={2}
-      onClick={Actions.tearApp}
       width={50}
+      onClick={Actions.tearApp}
     >
-      {!isHovered ? (
-        <Icon name="arrows-e_share-26" size={11} />
-      ) : (
-        <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
-          Open
-        </Text>
-      )}
+      <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
+        Open
+      </Text>
     </Button>
   )
 })
@@ -255,9 +255,7 @@ const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
     <Button
-      size={0.9}
       iconSize={9}
-      circular
       tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
       sizeRadius={2}
       icon="link69"
@@ -274,12 +272,11 @@ const BackButton = memo(() => {
         chromeless
         sizeHeight={0.95}
         sizePadding={1.2}
-        sizeRadius={2}
         icon="arrowminleft"
         iconSize={22}
         opacity={0.25}
         hoverStyle={{
-          opacity: 0.5,
+          opacity: 0.75,
         }}
         onClick={() => {
           locationStore.back()

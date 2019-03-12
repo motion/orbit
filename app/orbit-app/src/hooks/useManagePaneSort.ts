@@ -19,7 +19,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   //  1. editable at front
   //  2. pinned after that
   next = next.sort((a, b) =>
-    apps[a].editable === false ? -1 : apps[a].pinned && !apps[b].pinned ? 1 : -1,
+    appDict[a].editable === false ? -1 : appDict[a].pinned && !appDict[b].pinned ? 1 : -1,
   )
 
   return next

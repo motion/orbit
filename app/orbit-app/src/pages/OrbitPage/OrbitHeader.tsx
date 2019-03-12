@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -224,8 +224,8 @@ const OrbitClose = gloss({
 const LaunchButton = memo(() => {
   const Actions = useActions()
   const { orbitStore } = useStores()
-  const [_isHovered, setHovered] = useState(false)
-  const tm = useRef(null)
+  // const [_isHovered, setHovered] = useState(false)
+  // const tm = useRef(null)
 
   if (orbitStore.isTorn) {
     return null
@@ -233,13 +233,13 @@ const LaunchButton = memo(() => {
 
   return (
     <Button
-      onMouseEnter={() => {
-        tm.current = setTimeout(() => setHovered(true), 100)
-      }}
-      onMouseLeave={() => {
-        clearTimeout(tm.current)
-        setHovered(false)
-      }}
+      // onMouseEnter={() => {
+      //   tm.current = setTimeout(() => setHovered(true), 100)
+      // }}
+      // onMouseLeave={() => {
+      //   clearTimeout(tm.current)
+      //   setHovered(false)
+      // }}
       tooltip="Open app (⌘ + ⏎)"
       width={50}
       onClick={Actions.tearApp}

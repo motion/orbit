@@ -136,7 +136,7 @@ export class SlackLoader {
    * @see https://api.slack.com/methods/channels.history
    */
   async loadMessages(
-    channel: SlackChannel,
+    channelId: string,
     oldestMessageId?: string,
   ): Promise<{ messages: SlackMessage[], lastMessageTz: string }> {
     const loadRecursively = async (
@@ -147,7 +147,7 @@ export class SlackLoader {
 
       const options = {
         token: this.app.token,
-        channel: channel.id,
+        channel: channelId,
         count: 1000,
         oldest: oldestMessageId,
         latest: latestMessageId,
@@ -171,9 +171,9 @@ export class SlackLoader {
     }
 
     // load messages
-    this.log.timer(`loading ${channel.name}(#${channel.id}) API messages`, { oldestMessageId })
+    this.log.timer(`loading #${channelId} API messages`, { oldestMessageId })
     const messages = await loadRecursively()
-    this.log.timer(`loading ${channel.name}(#${channel.id}) API messages`, messages)
+    this.log.timer(`loading #${channelId} API messages`, messages)
 
     // left only messages we need - real user messages, no system or bot messages
     const filteredMessages = messages.filter(message => {

@@ -1,9 +1,10 @@
 import { EntityManager, In, MoreThan } from 'typeorm'
 import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@mcro/models'
-import { uniqBy } from 'lodash'
+import { chunk, uniqBy } from 'lodash'
 import { Logger } from '@mcro/logger'
 import { MediatorClient } from '@mcro/mediator'
 import { hash } from '@mcro/utils'
+import { sleep } from '@o/utils'
 
 /**
  * Common utils for syncers.
@@ -21,7 +22,7 @@ export class SyncerUtils {
     log: Logger,
     manager: EntityManager,
     isAborted: () => Promise<boolean>,
-    mediator: MediatorClient
+    mediator: MediatorClient,
   ) {
     this.app = app
     this.manager = manager
@@ -72,7 +73,7 @@ export class SyncerUtils {
         bitCreatedAt: options.bitCreatedAtMoreThan
           ? MoreThan(options.bitCreatedAtMoreThan)
           : undefined,
-      }
+      },
     }
     this.log.timer('load bits from the database', options, findOptions)
     const bits = await this.manager.getRepository(BitEntity).find(findOptions)
@@ -171,11 +172,11 @@ export class SyncerUtils {
       duplicateInsertBits,
     })
 
-    await this.manager.save(BitEntity, insertedBits, { chunk: 100 })
-    await this.manager.save(BitEntity, updatedBits, { chunk: 100 })
-    await this.manager.remove(BitEntity, removedBits as any[], { chunk: 100 })
+    // await this.manager.save(BitEntity, insertedBits, { chunk: 100 })
+    // await this.manager.save(BitEntity, updatedBits, { chunk: 100 })
+    // await this.manager.remove(BitEntity, removedBits as any[], { chunk: 100 })
 
-    /*await this.manager.transaction(async manager => {
+    await this.manager.transaction(async manager => {
       // insert new bits
       if (insertedBits.length > 0) {
         const insertedBitChunks = chunk(insertedBits, 50)
@@ -183,7 +184,7 @@ export class SyncerUtils {
           if (this.app) {
             await this.isAborted()
           }
-          if (options.completeBitsData) {
+          if (options && options.completeBitsData) {
             await options.completeBitsData(bits)
           }
           await manager.insert(BitEntity, bits)
@@ -200,7 +201,7 @@ export class SyncerUtils {
       }
 
       // update changed bits
-      if (options.completeBitsData) {
+      if (options && options.completeBitsData) {
         await options.completeBitsData(updatedBits)
       }
       for (let bit of updatedBits) {
@@ -247,7 +248,7 @@ export class SyncerUtils {
       // before committing transaction we make sure nobody removed app during period of save
       // we use non-transactional manager inside this method intentionally
       // if (await this.syncerRepository.isSettingRemoved()) throw 'app removed'
-    })*/
+    })
     this.log.timer('save bits in the database')
   }
 

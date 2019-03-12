@@ -1,0 +1,162 @@
+import * as React from 'react'
+import { SyntheticEvent } from 'react'
+import { command, useModel } from '@o/bridge'
+import { AppModel, AppSaveCommand } from '@o/models'
+import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
+import { PostgresAppData } from './PostgresModels'
+import { AppProps, useActiveSpace } from '@o/kit'
+
+type Props = {
+  identifier: string
+  app?: AppProps
+}
+
+const Statuses = {
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  FAIL: 'FAIL',
+}
+
+const buttonThemes = {
+  [Statuses.LOADING]: '#999',
+  [Statuses.SUCCESS]: 'darkgreen',
+  [Statuses.FAIL]: 'darkred',
+}
+
+export function PostgresSettings({ app }: Props) {
+  const [activeSpace] = useActiveSpace()
+  let [appBit] = useModel(
+    AppModel,
+    (app && app.subId) ? {
+      where: {
+        id: +app.subId
+      }
+    } : false,
+    {
+      defaultValue: {
+          target: 'app',
+          identifier: 'postgres',
+          token: '',
+          data: {},
+        }
+    }
+  )
+  const [status, setStatus] = React.useState('')
+  const [error, setError] = React.useState('')
+  const [credentials, setCredentials] = React.useState({
+    hostname: "",
+    username: "",
+    password: "",
+    port: "",
+    database: "",
+  } as PostgresAppData["credentials"])
+
+  React.useEffect(() => {
+    const appData: PostgresAppData = appBit.data
+    if (appData.credentials) {
+      setCredentials(appData.credentials)
+    }
+  }, [appBit])
+
+  console.log('credentials', credentials)
+
+  const addApp = async e => {
+    e.preventDefault()
+    appBit.data = { credentials }
+    if (!appBit.spaces) {
+      appBit.spaces = []
+    }
+    if (!appBit.spaces.find(space => space.id === activeSpace.id)) {
+      appBit.spaces.push(activeSpace)
+    }
+    appBit.spaceId = activeSpace.id
+    appBit.name = `Postgres on ${credentials.database}@${credentials.hostname}`
+
+    // send command to the desktop
+    setStatus(Statuses.LOADING)
+    const result = await command(AppSaveCommand, {
+      app: appBit,
+    })
+    // update status on success of fail
+    if (result.success) {
+      setStatus(Statuses.SUCCESS)
+      setError(null)
+      // !TODO
+      // AppActions.clearPeek()
+    } else {
+      setStatus(Statuses.FAIL)
+      setError(result.error)
+    }
+  }
+
+  const handleChange = (prop: keyof PostgresAppData["credentials"]) => (
+    val: SyntheticEvent,
+  ) => {
+    setCredentials({
+      ...credentials,
+      [prop]: ((val as SyntheticEvent).target as any).value,
+    })
+  }
+
+  return (
+    <Col tagName="form" onSubmit={addApp}>
+      <Message>
+        Please enter postgres database connection credentials.
+      </Message>
+      <VerticalSpace />
+      <Col margin="auto" width={370}>
+        <Col>
+          <Table>
+            <InputField
+              label="Hostname"
+              value={credentials.hostname}
+              // !TODO
+              onChange={handleChange('hostname') as any}
+            />
+            <InputField
+              label="Username"
+              value={credentials.username}
+              // !TODO
+              onChange={handleChange('username') as any}
+            />
+            <InputField
+              label="Password"
+              type="password"
+              value={credentials.password}
+              // !TODO
+              onChange={handleChange('password') as any}
+            />
+            <InputField
+              label="Port"
+              value={credentials.port}
+              // !TODO
+              onChange={handleChange('port') as any}
+            />
+            <InputField
+              label="Database"
+              value={credentials.database}
+              // !TODO
+              onChange={handleChange('database') as any}
+            />
+          </Table>
+          <VerticalSpace />
+          <Theme
+            theme={{
+              color: '#fff',
+              background: buttonThemes[status] || '#4C36C4',
+            }}
+          >
+            {status === Statuses.LOADING && <Button>Saving...</Button>}
+            {status !== Statuses.LOADING && (
+              <Button type="submit" onClick={addApp}>
+                Save
+              </Button>
+            )}
+          </Theme>
+          <VerticalSpace />
+          {error && <Message>{error}</Message>}
+        </Col>
+      </Col>
+    </Col>
+  )
+}

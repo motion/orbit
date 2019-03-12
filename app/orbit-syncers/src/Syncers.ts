@@ -1,4 +1,4 @@
-import { syncers } from '../../apps/_/syncers'
+import { syncers } from '@o/apps/_/syncers'
 import { Syncer } from './Syncer'
 
 export const Syncers = []

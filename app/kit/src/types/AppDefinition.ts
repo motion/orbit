@@ -35,9 +35,9 @@ export type AppDefinition = {
   appData?: Object
   // TODO @umed this is where we can put syncer stuff
   sync?: {} // todo: it can be boolean at max
-  API?: {
-    receive(app: AppBit, parentID: number, child: any): any
-  }
+  API?: any // {
+  //   receive(app: AppBit, parentID: number, child: any): any
+  // }
 }
 
 export type AppBitMainProps = OrbitItemViewProps & {

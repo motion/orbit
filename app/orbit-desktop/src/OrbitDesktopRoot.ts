@@ -18,6 +18,7 @@ import {
   BitEntity,
   BitModel,
   BitsNearTopicModel,
+  CallAppBitApiMethodCommand,
   ChangeDesktopThemeCommand,
   CheckProxyCommand,
   CosalSaliencyModel,
@@ -89,6 +90,7 @@ import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { WebServer } from './WebServer'
+import { CallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 
 export class OrbitDesktopRoot {
   // public
@@ -273,6 +275,7 @@ export class OrbitDesktopRoot {
       ],
       commands: [
         NewFallbackServerPortCommand,
+        CallAppBitApiMethodCommand,
         AppSaveCommand,
         AppRemoveCommand,
         GithubAppBlacklistCommand,
@@ -299,6 +302,7 @@ export class OrbitDesktopRoot {
         AppRemoveResolver,
         AppSaveResolver,
         NewFallbackServerPortResolver,
+        CallAppBitApiMethodResolver,
         GithubRepositoryManyResolver,
         SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),

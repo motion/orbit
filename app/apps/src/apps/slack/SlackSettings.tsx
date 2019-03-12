@@ -7,6 +7,8 @@ import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
+import slackApp from './index'
+import postgresApp from '../postgres/index'
 
 export function SlackSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
@@ -24,6 +26,37 @@ export function SlackSettings({ subId }: AppProps) {
       if (!app) return
       // for some reason we can get any app here, so filter out everything except slack
       if (app.identifier !== 'slack') return
+
+      // todo: remove it
+      // load slack channels (testing api)
+      slackApp.API
+        .loadChannels(app.id)
+        .then(channels => console.log('loaded api channels', channels));
+
+      // todo: remove it
+      // execute postgres query (testing api)
+      loadMany(AppModel, { args: { where: { identifier: 'postgres' } } })
+        .then(postgresApps => {
+          console.log('postgresApps', postgresApps)
+          for (let app of postgresApps) {
+            postgresApp
+              .API
+              .query(app.id, `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`, [])
+              .then(results => {
+                console.log(`table created`, results)
+                return postgresApp.API.query(app.id, "INSERT INTO categories(name) VALUES ($1)", ['dummy category'])
+
+              }).then(results => {
+                console.log(`new row inserted`, results)
+                return postgresApp.API.query(app.id, "SELECT * FROM categories")
+              })
+              .then(results => {
+                console.log(`got results from ${app.name}:`, results)
+              })
+          }
+        })
+
+
 
       // if we have channels stored in the app - use them at first
       if (app.data.channels) {

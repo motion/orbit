@@ -42,3 +42,13 @@ export const SendClientDataCommand = new Command<
   }
 >('send-client-data')
 // export const TrayEventCommand = new Command<{ type: string, value: string }, void>('tray-event')
+
+export const CallAppBitApiMethodCommand = new Command<
+  any,
+  {
+    appId: number
+    appIdentifier: string
+    method: string
+    args: any[]
+  }
+>('CallAppBitApiMethodCommand')

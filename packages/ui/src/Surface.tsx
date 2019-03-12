@@ -233,21 +233,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     )
   }
 
-  console.log('passing down', {
-    opacity: typeof props.alpha !== 'undefined' ? +props.alpha : +props.opacity,
-    pointerEvents: 'none',
-    justifyContent: 'center',
-    color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
-    hoverStyle: {
-      // todo this is kind of a mess, consistency-wise
-      opacity:
-        typeof props.alphaHover !== 'undefined'
-          ? +props.alphaHover
-          : +props.hoverStyle && props.hoverStyle.opacity,
-      color: 'green' || (props.hoverStyle && props.hoverStyle.color) || theme.colorHover,
-    },
-  })
-
   let element = (
     <IconPropsContext.Provider
       value={{

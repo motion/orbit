@@ -53,7 +53,6 @@ const findMatch = (name: string) => {
 export function ConfiguredIcon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  extraProps && console.log('123', extraProps, props)
   const ResolvedIcon = configure.useIcon || Icon
   return <ResolvedIcon {...props} />
 }

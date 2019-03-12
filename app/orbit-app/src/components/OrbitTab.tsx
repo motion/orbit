@@ -172,11 +172,11 @@ export function OrbitTabButton(props: ButtonProps) {
       width={18}
       height={18}
       icon="downArrow"
-      iconProps={{ size: 8 }}
-      opacity={0}
+      iconSize={10}
+      opacity={0.4}
       position="absolute"
       hoverStyle={{
-        opacity: 0.4,
+        opacity: 0.8,
       }}
       {...props}
     />

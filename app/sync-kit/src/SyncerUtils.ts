@@ -1,10 +1,17 @@
-import { EntityManager, In, MoreThan } from 'typeorm'
-import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { MediatorClient } from '@o/mediator'
+import {
+  AppBit,
+  AppEntity,
+  Bit,
+  BitContentType,
+  BitEntity,
+  CosalTopWordsModel,
+  Location,
+} from '@o/models'
+import { hash, sleep } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
-import { Logger } from '@mcro/logger'
-import { MediatorClient } from '@mcro/mediator'
-import { hash } from '@mcro/utils'
-import { sleep } from '@o/utils'
+import { EntityManager, In, MoreThan } from 'typeorm'
 
 /**
  * Common utils for syncers.
@@ -31,13 +38,10 @@ export class SyncerUtils {
     this.mediator = mediator
   }
 
-
   /**
    * Loads apps from the database.
    */
-  async loadApps(options?: {
-    identifier: string
-  }): Promise<AppBit[]> {
+  async loadApps(options?: { identifier: string }): Promise<AppBit[]> {
     this.log.timer('load apps from the database', options)
     const apps = await this.manager.getRepository(AppEntity).find({
       identifier: options ? options.identifier : undefined,
@@ -58,15 +62,21 @@ export class SyncerUtils {
     bitCreatedAtMoreThan?: number
   }): Promise<Bit[]> {
     const findOptions = {
-      select: options && options.idsOnly ? {
-        id: true,
-        contentHash: true,
-      } : undefined,
+      select:
+        options && options.idsOnly
+          ? {
+              id: true,
+              contentHash: true,
+            }
+          : undefined,
       where: {
         appId: this.app.id,
         id: options && options.ids ? In(options.ids) : undefined,
         type: options ? options.type : undefined,
-        appIdentifier: options && options.appIdentifiers && options.appIdentifiers.length ? In(options.appIdentifiers) : undefined,
+        appIdentifier:
+          options && options.appIdentifiers && options.appIdentifiers.length
+            ? In(options.appIdentifiers)
+            : undefined,
         location: {
           id: options.locationId ? options.locationId : undefined,
         },
@@ -124,9 +134,13 @@ export class SyncerUtils {
   /**
    * Syncs given bits in the database.
    */
-  async syncBits(apiBits: Bit[], dbBits: Bit[], options?: {
-    completeBitsData?: (bits: Bit[]) => void|Promise<void>
-  }) {
+  async syncBits(
+    apiBits: Bit[],
+    dbBits: Bit[],
+    options?: {
+      completeBitsData?: (bits: Bit[]) => void | Promise<void>
+    },
+  ) {
     this.log.info('syncing bits', { apiBits, dbBits, options })
 
     // make sure we don't have duplicated bits
@@ -329,5 +343,4 @@ export class SyncerUtils {
       ].filter(item => item !== null && item !== undefined),
     )
   }
-
 }

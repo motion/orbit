@@ -4,7 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "_",
-    "rootDir": "src"
+    "baseUrl": "./src"
   },
   "references": [
     { "path": "../fast-compare" },

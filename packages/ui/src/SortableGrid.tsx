@@ -1,10 +1,10 @@
+import { Grid, View, ViewProps } from '@o/gloss'
 import {
   SortableContainer,
   SortableContainerProps,
   SortableElement,
   SortableElementProps,
-} from '@mcro/react-sortable-hoc'
-import { Grid, View, ViewProps } from '@o/gloss'
+} from '@o/react-sortable-hoc'
 import React from 'react'
 import { isRightClick } from './helpers/isRightClick'
 

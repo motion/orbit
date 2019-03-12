@@ -1,5 +1,5 @@
-import { Logger } from '@mcro/logger'
-import { AppBit } from '@mcro/models'
+import { Logger } from '@o/logger'
+import { AppBit } from '@o/models'
 import * as fs from 'fs'
 import * as https from 'https'
 import { URL } from 'url'
@@ -79,7 +79,6 @@ export interface ServiceLoaderDownloadFileOptions<_T = any> {
   headers?: ServiceLoaderKeyValue
 }
 
-
 /**
  * Loader (fetcher) from service.
  */
@@ -90,11 +89,15 @@ export class ServiceLoader {
   private baseUrl: string
   private headers?: { [name: string]: string }
 
-  constructor(app: AppBit, log: Logger, options: {
-    baseUrl: string
-    headers?: { [name: string]: string }
-    saveCallback?: ServiceLoaderAppSaveCallback
-  }) {
+  constructor(
+    app: AppBit,
+    log: Logger,
+    options: {
+      baseUrl: string
+      headers?: { [name: string]: string }
+      saveCallback?: ServiceLoaderAppSaveCallback
+    },
+  ) {
     this.app = app
     this.log = log
     this.baseUrl = options.baseUrl

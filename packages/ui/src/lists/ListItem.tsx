@@ -243,7 +243,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
             {showTitle && (
               <Title>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={300} {...titleProps}>
+                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
                   {title}
                 </HighlightText>
                 <TitleSpace slim={slim} />

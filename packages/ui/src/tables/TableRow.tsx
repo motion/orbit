@@ -5,16 +5,18 @@
  * @format
  */
 
-import { gloss, Row, SimpleText } from '@o/gloss'
+import { Color } from '@o/color'
+import { gloss, Row, SimpleText, ThemeObject } from '@o/gloss'
 import * as React from 'react'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { DateFormat } from '../text/DateFormat'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
+import { guessTheme } from './presetTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
-const backgroundColor = (props, theme) => {
+const backgroundColor = (props: Props, theme: ThemeObject) => {
   if (props.highlighted) {
     if (props.highlightedBackgroundColor) {
       return props.highlightedBackgroundColor
@@ -22,8 +24,15 @@ const backgroundColor = (props, theme) => {
       return theme.highlightBackground
     }
   } else {
-    if (props.backgroundColor) {
-      return props.backgroundColor
+    if (!props.background && props.row) {
+      const cat = props.row.category
+      if (cat && guessTheme[cat]) {
+        console.log('should have', cat)
+        return guessTheme[cat].background || 'transparent'
+      }
+    }
+    if (props.background) {
+      return props.background
     } else if (props.even && props.zebra) {
       return theme.backgroundAlternate
     } else {
@@ -32,28 +41,38 @@ const backgroundColor = (props, theme) => {
   }
 }
 
+const getColor = (props: Props) => {
+  let color = props.color
+  if (props.row) {
+    const cat = props.row.category
+    if (guessTheme[cat]) {
+      color = color || guessTheme[cat].color
+    }
+  }
+  return color || 'inherit'
+}
+
 const TableBodyRowContainer = gloss(Row, {
   overflow: 'hidden',
   width: '100%',
   userSelect: 'none',
 }).theme((props, theme) => ({
-  backgroundColor: backgroundColor(props, theme),
+  background: backgroundColor(props, theme),
   boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
-  color: props.highlighted ? theme.white : props.color || 'inherit',
+  color: props.highlighted ? theme.colorHighlight : getColor(props),
   '& *': {
-    color: props.highlighted ? `${theme.white} !important` : null,
+    color: props.highlighted ? `${theme.colorHighlight} !important` : null,
   },
   '& img': {
-    backgroundColor: props.highlighted ? `${theme.white} !important` : 'none',
+    background: props.highlighted ? `${theme.colorHighlight} !important` : 'none',
   },
   height: props.multiline ? 'auto' : props.rowLineHeight,
   lineHeight: `${String(props.rowLineHeight || DEFAULT_ROW_HEIGHT)}px`,
   fontWeight: props.fontWeight || 'inherit',
   flexShrink: 0,
-  '&:hover': {
-    backgroundColor:
-      !props.highlighted && props.highlightOnHover ? theme.backgroundAlternate : 'none',
-  },
+  // '&:hover': {
+  //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundAlternate : 'none',
+  // },
 }))
 
 const TableBodyColumnContainer = gloss({
@@ -69,6 +88,10 @@ const TableBodyColumnContainer = gloss({
 }))
 
 type Props = {
+  color?: Color
+  even?: boolean
+  background?: Color
+  highlightedBackgroundColor?: Color
   columnKeys: TableColumnKeys
   columnSizes: TableColumnSizes
   columns: DataColumns
@@ -105,8 +128,10 @@ export class TableRow extends React.PureComponent<Props> {
       zebra,
       onAddFilter,
     } = this.props
+
     return (
       <TableBodyRowContainer
+        {...this.props}
         rowLineHeight={rowLineHeight}
         highlighted={highlighted}
         multiline={multiline}

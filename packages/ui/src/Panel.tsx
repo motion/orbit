@@ -8,6 +8,7 @@
 import { gloss, Row, ThemeObject, View, ViewProps } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { Icon } from './Icon'
+import { getSurfaceShadow } from './Surface'
 import { Text } from './text/Text'
 
 const Chevron = gloss(Icon, {
@@ -69,9 +70,13 @@ export type PanelProps = {
 
   // how much the panel flexes when open
   openFlex?: number
+
+  // default shadow
+  elevation?: number
 } & ViewProps
 
-const PanelContainer = gloss(View).theme((props, theme) => ({
+const PanelContainer = gloss<PanelProps>(View).theme((props, theme) => ({
+  boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
   borderBottom: props.collapsed ? 'none' : [1, theme.sidebarBorderColor || theme.borderColor],
   flex: props.collapsed ? 'initial' : props.openFlex || 1,
   ...(props.floating && {

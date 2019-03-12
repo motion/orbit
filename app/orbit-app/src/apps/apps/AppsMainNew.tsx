@@ -1,9 +1,8 @@
 import { AppIcon } from '@o/kit'
-import { HorizontalSpace, Popover, Row, View } from '@o/ui'
+import { HorizontalSpace, Input, Popover, Row, View } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { ColorPicker } from '../../views/ColorPicker'
-import { Input } from '../../views/Input'
 
 export function AppsMainNew() {
   const { newAppStore } = useStores()

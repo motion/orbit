@@ -2,9 +2,10 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    'jest/globals': true,
   },
   extends: ['eslint:recommended', 'prettier', 'prettier/react'],
-  plugins: ['react', 'prettier'],
+  plugins: ['jest', 'react', 'prettier'],
   parser: 'typescript-eslint-parser',
   rules: {
     indent: 'off',

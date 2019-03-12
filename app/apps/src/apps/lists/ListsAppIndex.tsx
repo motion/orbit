@@ -1,6 +1,6 @@
-import { ensure, useReaction } from '@o/use-store'
 import { getTargetValue, List, searchBits, TreeList, useTreeList } from '@o/kit'
-import { Button, InputRow, Panel, preventDefault, useToggle, View } from '@o/ui'
+import { Button, Panel, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
+import { ensure, useReaction } from '@o/use-store'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
 
@@ -8,8 +8,6 @@ export function ListsAppIndex() {
   const treeList = useTreeList('list')
   const [addQuery, setAddQuery] = useState('')
   const [showSearch, toggleShowSearch] = useToggle(false)
-
-  console.log('treeList', treeList)
 
   const searchResults = useReaction(
     async (_, { sleep }) => {
@@ -29,7 +27,7 @@ export function ListsAppIndex() {
 
   return (
     <>
-      <InputRow
+      <SearchableTopBar
         value={addQuery}
         onChange={flow(
           preventDefault,
@@ -64,10 +62,7 @@ export function ListsAppIndex() {
       </View>
 
       <Panel
-        boxShadow={[[0, 0, 10, [0, 0, 0, 0.1]]]}
-        margin={[0, -10]}
-        padding={[0, 10]}
-        padded={false}
+        elevation={1}
         collapsable
         collapsed={showSearch}
         onCollapse={toggleShowSearch}

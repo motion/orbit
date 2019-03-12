@@ -6,7 +6,7 @@ import { OrbitIconProps } from './Icon'
 import { appIcons } from './icons'
 import { SVG } from './SVG'
 
-export type AppIconProps = { app: AppBit; removeStroke?: boolean } & Partial<OrbitIconProps>
+export type AppIconProps = Partial<OrbitIconProps> & { app: AppBit; removeStroke?: boolean }
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 
@@ -16,7 +16,7 @@ export function AppIconInner({
   style,
   removeStroke = true,
   ...props
-}: OrbitIconProps) {
+}: Partial<AppIconProps>) {
   const theme = useTheme()
   const fill = color(props.color || theme.iconFill || '#fff').hex()
 

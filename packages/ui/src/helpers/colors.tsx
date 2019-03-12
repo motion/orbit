@@ -30,6 +30,7 @@ export const colors = {
   highlightTint90: '#ecf2ff', // Highlight - Tint 90 (illustrations only)
   highlightBackground: '#edf2fa', // Highlight Background - Background fill for unread or highlighted states. Not intended for hover / pressed states
   green: '#42b72a', // Green - Confirmation, success, commerce and status
+  greenTint: '#C1F6B6',
   red: '#FC3A4B', // Red - Badges, error states
   redTint: '#FEF2F1',
   white: '#ffffff', // White - Text and glyphs in Dark UI and media views

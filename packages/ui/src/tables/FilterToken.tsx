@@ -9,7 +9,6 @@ import { gloss, Row } from '@o/gloss'
 import * as React from 'react'
 import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import { colors } from '../helpers/colors'
 import { Text } from '../text/Text'
 import { TableFilter } from './types'
 
@@ -26,12 +25,11 @@ const Token = gloss(Row, {
   '&:first-of-type': {
     marginLeft: 3,
   },
-}).theme(({ focused, color }, theme) => ({
-  backgroundColor: focused ? theme.backgroundHighlightActive : color || theme.backgroundHighlight,
-  color: focused ? 'white' : 'inherit',
+}).theme(({ focused, background }, theme) => ({
+  background: focused ? theme.backgroundHighlightActive : background || theme.backgroundHighlight,
+  color: theme.colorActiveHighlight || 'white',
   '&:active': {
-    backgroundColor: theme.backgroundHighlightActive,
-    color: colors.white,
+    background: theme.backgroundHighlightActive,
   },
 }))
 
@@ -49,8 +47,9 @@ const Key = gloss(Text, {
     fontSize: 14,
   },
 }).theme(({ type }, theme) => ({
+  color: theme.colorActiveHighlight || 'white',
   '&:active:after': {
-    backgroundColor: theme.backgroundHighlightActive,
+    background: theme.backgroundHighlightActive,
   },
   '&:after': {
     content: type === 'exclude' ? '"≠"' : '"="',
@@ -68,7 +67,9 @@ const Value = gloss(Text, {
   textOverflow: 'ellipsis',
   lineHeight: '21px',
   paddingLeft: 3,
-})
+}).theme((_, theme) => ({
+  color: theme.colorActiveHighlight || 'white',
+}))
 
 Value.defaultProps = {
   size: 0.95,
@@ -86,13 +87,10 @@ const Chevron = gloss({
   height: 'auto',
   lineHeight: 'initial',
   '&:hover, &:active, &:focus': {
-    color: 'inherit',
     border: 0,
     backgroundColor: 'transparent',
   },
-}).theme(({ focused }) => ({
-  color: focused ? colors.white : 'inherit',
-}))
+})
 
 Chevron.ignoreAttrs = ['focused']
 
@@ -210,7 +208,7 @@ export class FilterToken extends PureComponent {
 
   render() {
     const { filter } = this.props
-    let color
+    let background
     let value = ''
 
     if (filter.type === 'enum') {
@@ -222,8 +220,9 @@ export class FilterToken extends PureComponent {
       } else if (filter.value.length === 2 && firstValue && secondValue) {
         value = `${firstValue.label} or ${secondValue.label}`
       } else if (filter.value.length === 1 && firstValue) {
+        console.log('firstValue.color', firstValue.color)
         value = firstValue.label
-        color = firstValue.color
+        background = firstValue.color
       } else if (firstValue) {
         value = `${firstValue.label} or ${filter.value.length - 1} others`
       }
@@ -237,7 +236,7 @@ export class FilterToken extends PureComponent {
         tabIndex={-1}
         onMouseDown={this.onMouseDown}
         focused={this.props.focused}
-        color={color}
+        background={background}
         ref={this.setRef}
       >
         <Key type={this.props.filter.type} focused={this.props.focused}>

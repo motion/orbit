@@ -149,9 +149,9 @@ export const SearchBox = gloss(View, {
   paddingLeft: 4,
   minHeight: 32,
   '&:focus-within': {
-    boxShadow: `0 0 0 2px rgba(0,0,0,0.1)`,
+    boxShadow: `0 0 0 2px rgba(0,0,0,0.05)`,
   },
 }).theme((props, theme) => ({
   background: props.background || theme.background,
-  border: [1, theme.borderColor.alpha(a => a * 0.5)],
+  border: [1, theme.borderColor],
 }))

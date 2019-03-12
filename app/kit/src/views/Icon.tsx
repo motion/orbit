@@ -21,7 +21,6 @@ export const Icon = React.memo((props: OrbitIconProps) => {
 
   // image based source icons
   const sourceIcon = useAppIcon(props)
-
   if (sourceIcon) {
     const sizeProps = {
       width: size,
@@ -49,10 +48,9 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   }
 
   // find our custom streamline icons...
-  const icon = icons[name]
+  const customIcon = icons[name]
 
-  // ...or fallback to @o/ui icon
-  if (!icon) {
+  if (!customIcon) {
     return (
       <UI.Icon
         name={name}
@@ -66,11 +64,20 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   }
 
   return (
-    <View {...restProps}>
+    <View
+      {...restProps}
+      className={`icon ${props.className || ''}`}
+      fill={`${finalColor}`}
+      opacity={opacity}
+      hoverStyle={{
+        ...props.hoverStyle,
+        fill: props.hoverStyle ? props.hoverStyle.color : null,
+      }}
+    >
       <SVG
         className={restProps.className}
-        fill={`${finalColor}`}
-        svg={icon}
+        fill="inherit"
+        svg={customIcon}
         width={`${size}`}
         height={`${size}`}
         style={{
@@ -79,7 +86,6 @@ export const Icon = React.memo((props: OrbitIconProps) => {
           display: 'flex',
           width: size,
           height: size,
-          opacity,
           ...style,
         }}
         cleanup={[finalColor ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(Boolean)}

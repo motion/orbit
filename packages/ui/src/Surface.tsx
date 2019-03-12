@@ -8,6 +8,7 @@ import {
   propsToTextSize,
   propsToThemeStyles,
   selectThemeSubset,
+  ThemeContext,
   ThemeObject,
   ThemeSelect,
   View,
@@ -18,9 +19,10 @@ import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
-import { ConfiguredIcon } from './Icon'
+import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentRadius } from './SegmentedRow'
+import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
 
 // an element for creating surfaces that look like buttons
@@ -57,7 +59,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     icon?: React.ReactNode
     iconAfter?: boolean
     iconColor?: Color
-    iconProps?: Object
+    iconProps?: Partial<IconProps>
     iconSize?: number
     inline?: boolean
     noInnerElement?: boolean
@@ -86,16 +88,16 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     iconPad?: number
   }
 
-// const proxyGet = (a: any, b: any) =>
-//   new Proxy(a, {
-//     get: (_, k) => (Reflect.has(a, k) ? a[k] : b[k]),
-//   })
-
 export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
   const extraProps = useContext(SurfacePropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+  const themeContext = useContext(ThemeContext)
+  const theme =
+    (props.theme && typeof props.theme === 'string' && themeContext.allThemes[props.theme]) ||
+    (typeof props.theme === 'object' && props.theme) ||
+    themeContext.activeTheme
 
   useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -132,7 +134,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     alignItems,
     justifyContent,
     forwardRef,
-    theme,
     ...rest
   } = props
   const segmentedStyle = getSegmentRadius(props, crumb)
@@ -199,7 +200,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
         )}
         <div
           style={{
-            opacity: typeof props.alpha === 'number' ? props.alpha : 1,
             order: icon && iconAfter ? 3 : 'inherit',
           }}
         >
@@ -234,17 +234,36 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   }
 
   let element = (
-    <BreadcrumbReset>
-      <SurfaceFrame
-        ref={forwardRef}
-        themeSelect={themeSelect}
-        {...surfaceProps}
-        opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
-      />
-    </BreadcrumbReset>
+    <IconPropsContext.Provider
+      value={{
+        opacity: typeof props.alpha !== 'undefined' ? +props.alpha : +props.opacity,
+        pointerEvents: 'none',
+        justifyContent: 'center',
+        color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+        hoverStyle: {
+          // todo this is kind of a mess, consistency-wise
+          opacity:
+            typeof props.alphaHover !== 'undefined'
+              ? +props.alphaHover
+              : props.hoverStyle
+              ? props.hoverStyle.opacity
+              : 'inherit',
+          color: 'green' || (props.hoverStyle && props.hoverStyle.color) || theme.colorHover,
+        },
+      }}
+    >
+      <BreadcrumbReset>
+        <SurfaceFrame
+          ref={forwardRef}
+          themeSelect={themeSelect}
+          {...surfaceProps}
+          opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
+        />
+      </BreadcrumbReset>
+    </IconPropsContext.Provider>
   )
 
-  element = forwardTheme({ children: element, theme })
+  element = forwardTheme({ children: element, theme: props.theme })
 
   // dont nest PassProps, use once and clear context below
   if (extraProps) {
@@ -274,11 +293,6 @@ const SurfaceFrame = gloss(View, {
     width: props.height,
   }
 
-  // icon
-  const hoverIconStyle = {
-    color: props.iconHoverColor || themeStyles.colorHover,
-  }
-
   const hoverStyle = props.active
     ? null
     : {
@@ -301,11 +315,6 @@ const SurfaceFrame = gloss(View, {
       alignSelf: props.alignSelf,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-      '& > div > .icon': {
-        pointerEvents: 'none',
-        justifyContent: 'center',
-      },
-      '&:hover > div > .icon': hoverIconStyle,
       ...(props.dimmed && {
         opacity: 0.2,
       }),
@@ -388,13 +397,13 @@ const getIconSize = (props: SurfaceProps) => {
   return props.iconSize || Math.round(size * 100) / 100
 }
 
-const round = (x: number) => Math.round(x * 4) / 4
-const smoother = (base: number, amt: number) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
+const round = (x: number) => Math.round(x * 10) / 10
+const smoother = (base: number, amt = 1) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
 const elevatedShadow = (x: number) => [
   0,
-  smoother(x, 3),
-  smoother(x, 17),
-  [0, 0, 0, round(0.12 * smoother(x, 1))],
+  smoother(x, 2),
+  smoother(x, 14),
+  [0, 0, 0, round(0.05 * smoother(x))],
 ]
 
 export function getSurfaceShadow(elevation: number) {
@@ -404,8 +413,8 @@ export function getSurfaceShadow(elevation: number) {
   return [elevatedShadow(elevation) as any]
 }
 
-export const SurfacePropsContext = React.createContext(null as SurfaceProps)
+export const SurfacePropsContext = React.createContext(null as SizedSurfaceProps)
 
-export function SurfacePassProps({ children, ...rest }: SurfaceProps) {
+export function SurfacePassProps({ children, ...rest }: SizedSurfaceProps) {
   return <SurfacePropsContext.Provider value={rest}>{children}</SurfacePropsContext.Provider>
 }

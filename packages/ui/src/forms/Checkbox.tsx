@@ -1,7 +1,7 @@
-import { gloss } from '@o/gloss'
-import { observable } from 'mobx'
-import * as React from 'react'
-import { SizedSurface } from '../SizedSurface'
+import { gloss } from '@o/gloss';
+import { observable } from 'mobx';
+import * as React from 'react';
+import { SizedSurface } from '../SizedSurface';
 
 const HiddenInput = gloss({
   position: 'absolute',
@@ -49,15 +49,6 @@ export class Checkbox extends React.Component<Props> {
         alignItems="center"
         justifyContent="center"
         flex={0}
-        iconProps={{
-          css: {
-            opacity: isChecked ? 1 : 0,
-            transform: {
-              y: 1,
-              scale: isChecked ? 1 : 1,
-            },
-          },
-        }}
         {...props}
       >
         <HiddenInput type="checkbox" onChange={this.onChange} />

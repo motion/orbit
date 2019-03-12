@@ -10,6 +10,7 @@ import PeopleApp from './people'
 import SearchApp from './search-app'
 import SlackApp from './slack'
 import WebsiteApp from './website'
+import PostgresApp from './postgres'
 
 export const apps: AppDefinition[] = [
   ListsApp,
@@ -23,4 +24,5 @@ export const apps: AppDefinition[] = [
   GithubApp,
   SlackApp,
   WebsiteApp,
+  PostgresApp,
 ]

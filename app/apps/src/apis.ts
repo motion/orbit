@@ -4,6 +4,7 @@
 // import GmailApi from './apps/gmail/api.node'
 // import JiraApi from './apps/jira/api.node'
 import SlackApi from './apps/slack/api.node'
+import PostgresApi from './apps/postgres/api.node'
 // import WebsiteApi from './apps/website/api.node'
 
 export const apis = {
@@ -13,5 +14,6 @@ export const apis = {
   // gmail: GmailApi,
   // jira: JiraApi,
   slack: SlackApi,
+  postgres: PostgresApi,
   // website: WebsiteApi,
 }

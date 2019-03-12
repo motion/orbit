@@ -5,7 +5,7 @@ import { loadCount, loadMany, loadOne, observeCount, observeMany, observeOne, sa
 
 type UseModelOptions = {
   defaultValue?: any
-  observe?: true
+  observe?: boolean
 }
 
 const defaultValues = {
@@ -52,6 +52,7 @@ function use<ModelType, Args>(
       const update = next => {
         if (cancelled) return
         if (next === valueRef.current) return
+        if (valueRef.current === options.defaultValue && next === null) return
         valueRef.current = next
         forceUpdate(Math.random())
       }

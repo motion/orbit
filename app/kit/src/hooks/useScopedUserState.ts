@@ -34,7 +34,6 @@ export function useEnsureDefaultUserState<A>(subSelect: string, ensure: A) {
       if (user.appState[subSelect]) return
       // ensure default
       user.appState[subSelect] = ensure
-      console.log('updating user default state', ensure, subSelect, update)
       update(user)
     },
     [user, subSelect],

@@ -236,7 +236,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   let element = (
     <IconPropsContext.Provider
       value={{
-        opacity: typeof props.alpha !== 'undefined' ? +props.alpha : +props.opacity,
+        opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
         pointerEvents: 'none',
         justifyContent: 'center',
         color: (props.iconProps && props.iconProps.color) || props.color || theme.color,

@@ -1,13 +1,18 @@
-import { Icon, useStores } from '@o/kit'
-import { BarButtonSmall, Breadcrumbs, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@o/ui'
+import { Icon } from '@o/kit'
+import {
+  BarButtonSmall,
+  Breadcrumbs,
+  ButtonProps,
+  StatusBarText,
+  Text,
+  useBreadcrumb,
+  View,
+} from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 
 export function ListAppStatusBar() {
-  return null
-  // @ts-ignore
-  const { listStore } = useStores()
-  const numItems = Object.keys(listStore.items).length
+  const numItems = 0
 
   return (
     <>
@@ -17,11 +22,11 @@ export function ListAppStatusBar() {
             id: 0,
             name: <Icon name="home" size={12} opacity={0.5} />,
           },
-          ...listStore.history
-            .slice(1)
-            .filter(Boolean)
-            .map(id => listStore.items[id]),
-          listStore.selectedItem,
+          // ...listStore.history
+          //   .slice(1)
+          //   .filter(Boolean)
+          //   .map(id => listStore.items[id]),
+          // listStore.selectedItem,
         ].filter(Boolean)}
       />
       <View flex={1} />

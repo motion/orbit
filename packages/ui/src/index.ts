@@ -1,4 +1,3 @@
-export { arrayMove } from '@mcro/react-sortable-hoc'
 export { color } from '@o/color'
 export {
   Absolute,
@@ -17,6 +16,7 @@ export {
   View,
   ViewProps,
 } from '@o/gloss'
+export { arrayMove } from '@o/react-sortable-hoc'
 export * from './Arrow'
 export * from './Avatar'
 export * from './Border'

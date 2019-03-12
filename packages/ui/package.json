@@ -6,12 +6,12 @@
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build": "tsc || true",
+    "build": "tsc -b || true",
     "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/react-sortable-hoc": "*",
+    "@o/react-sortable-hoc": "*",
     "@o/color": "^2.4.0",
     "@o/css": "^2.4.0",
     "@o/fast-compare": "^2.4.0",

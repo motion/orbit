@@ -5,11 +5,11 @@
   "ts:main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc --emitDeclarationOnly || true",
+    "build": "tsc -b || true",
     "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
-    "@mcro/react-sortable-hoc": "1.6.5",
+    "@o/react-sortable-hoc": "1.6.5",
     "@o/bridge": "^2.4.0",
     "@o/fast-compare": "^2.4.0",
     "@o/gloss": "^2.4.0",

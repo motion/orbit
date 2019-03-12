@@ -1,4 +1,4 @@
-import { SortableElement } from '@mcro/react-sortable-hoc'
+import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
 import { GenericComponent } from '../types'
 import { ListItem, ListItemProps } from './ListItem'

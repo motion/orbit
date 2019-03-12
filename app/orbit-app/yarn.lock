@@ -156,10 +156,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@mcro/react-hotkeys@1.1.5":
+"@o/react-hotkeys@1.1.5":
   version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@mcro/react-hotkeys/-/react-hotkeys-1.1.5.tgz#4c561431279248e5c74297aadcafac01c65a09cd"
-  integrity sha512-TuGii0y8CUnmi7rM1AOwovrW8jzbcBIvFRa+qp2AGdcBMpWOdKpl8zC6Y6KeJBQvnA6A7jVLoFc1xkyYi3Lpxg==
+  resolved "https://registry.yarnpkg.com/@o/react-hotkeys/-/react-hotkeys-1.1.5.tgz#a0179e8a095f6bb9820dc0576e1761281ac40d4a"
+  integrity sha512-EzVh8eVMIwnKEpAZ7+y58ewqHIzYBz3EPHdElZKci0jgV58ua7SerzpArmVaOJnqWS1z/WPMjp7rDd17xQrR7w==
   dependencies:
     lodash.isboolean "^3.0.3"
     lodash.isequal "^4.5.0"
@@ -167,10 +167,10 @@
     mousetrap "^1.5.2"
     prop-types "^15.6.0"
 
-"@mcro/react-sortable-hoc@1.6.5":
+"@o/react-sortable-hoc@1.6.5":
   version "1.6.5"
-  resolved "https://registry.yarnpkg.com/@mcro/react-sortable-hoc/-/react-sortable-hoc-1.6.5.tgz#4a5c05685aadf5e2e9b60325ce2eac723cfc7e6e"
-  integrity sha512-xW/Ssuf2oh4im6uhnra7puV+w8eQ0SRbGU98CxTPqRtefmSYaMAwNM3psv5Ngk7pbR44bKfSr1DaVXKKhvb7mw==
+  resolved "https://registry.yarnpkg.com/@o/react-sortable-hoc/-/react-sortable-hoc-1.6.5.tgz#7c49e2177dee2a67d812a299c04e55ae1045b03a"
+  integrity sha512-c5X5SFjqWLRYcXoA7BXtmmOxjMU9NDfx83rRL4ATvlQX+DMiNSCv85t38bZvG6Af0qK6HrYWY9kzgWUVvTe7Zw==
   dependencies:
     "@babel/runtime" "^7.2.0"
     invariant "^2.2.4"

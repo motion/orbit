@@ -8,14 +8,14 @@ export function getHostContextNode(rootNode) {
     ROOT = rootNode
   } else {
     console.warn(`${rootNode} is not an instance of electron app.`)
-    ROOT = new Components.Root()
+    ROOT = new Components.Root(null, null)
   }
   return ROOT
 }
 
-export function createElement(type, props) {
+export function createElement(type, props?) {
   const COMPONENTS = {
-    ROOT: () => new Components.Root(),
+    ROOT: () => new Components.Root(null, null),
     APP: () => new Components.App(ROOT, props),
     MENU: () => new Components.Menu(ROOT, props),
     MENUITEM: () => new Components.MenuItem(ROOT, props),

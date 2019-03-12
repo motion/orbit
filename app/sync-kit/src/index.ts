@@ -1,5 +1,5 @@
+export { hash, sleep } from '@o/utils'
 export * from './AppSyncer'
-export * from './SyncerUtils'
 export * from './BitUtils'
 export * from './ServiceLoader'
-export {sleep, hash} from '@mcro/utils'
+export * from './SyncerUtils'

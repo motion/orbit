@@ -1,10 +1,8 @@
-import { BaseComponent } from './BaseComponent'
 import { Menu, MenuItem } from 'electron'
+import { BaseComponent } from './BaseComponent'
 
 export class SubMenu extends BaseComponent {
-  mount() {
-    this.update()
-  }
+  menuItem = null
 
   handleNewProps() {
     const { props } = this

@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events'
 import isEqual from 'lodash.isequal'
 import configureEventHandler from '../utils/configureEventHandler'
 
@@ -5,19 +6,41 @@ import configureEventHandler from '../utils/configureEventHandler'
 
 const NOT_NEW = '__NOT_NEW__'
 
-export class BaseComponent {
+interface ReactronComponent {
+  unmounted: boolean
+  _id: any
+  root: any
+  props: any
+  parent: any
+  children: any
+  mount?: Function
+  handleNewProps(keys: string[], prev: Object): void
+  update(): void
+  update(prevProps?: Object): void
+  emitter: EventEmitter
+}
+
+export class BaseComponent implements ReactronComponent {
+  _id = `${this.constructor.name}${Math.random()}`
+  emitter = new EventEmitter()
+  parent = null
+  children = []
+  attachedHandlers = {}
+  props = null
+  root = null
+  unmounted = false
+  mounted = false
+
+  mount() {
+    // console.log('mount', this)
+  }
+  handleNewProps(_a, _b) {
+    // console.log('new props', _a)
+  }
+
   constructor(root, props) {
-    this._id = `${this.constructor.name}${Math.random()}`
     this.root = root
     this.props = props
-    this.parent = null
-    this.children = []
-    this.attachedHandlers = {}
-    if (this.mount) {
-      this.unmounted = true
-      this.mount()
-      this.unmounted = false
-    }
   }
 
   appendChild(child) {
@@ -43,7 +66,7 @@ export class BaseComponent {
     this.children.splice(index, 1)
   }
 
-  commitUpdate(instance, updatePayload, type, lastRawProps, nextRawProps) {
+  commitUpdate(_instance, _updatePayload, _type, lastRawProps, nextRawProps) {
     this.applyProps(lastRawProps, nextRawProps)
   }
 
@@ -52,20 +75,22 @@ export class BaseComponent {
     this.update(oldProps)
   }
 
-  update(prevProps) {
+  update(prevProps?) {
+    if (!this.mounted) {
+      this.mount()
+      this.mounted = true
+    }
     const currentPropKeys = Object.keys(this.props)
     const newPropKeys = !prevProps
       ? currentPropKeys
       : currentPropKeys
           .map(k => (!isEqual(this.props[k], prevProps[k]) ? k : NOT_NEW))
           .filter(x => x !== NOT_NEW)
-    if (this.handleNewProps) {
-      this.handleNewProps(newPropKeys, prevProps)
-    }
+    this.handleNewProps.call(this, newPropKeys, prevProps)
   }
 
   // helpers for events
-  handleEvent(emitter, key, val, wrapper = cb => cb()) {
+  handleEvent(emitter: EventEmitter, key: string, val: any, wrapper = cb => cb()) {
     configureEventHandler(emitter, this.attachedHandlers, key, val, wrapper)
   }
 }

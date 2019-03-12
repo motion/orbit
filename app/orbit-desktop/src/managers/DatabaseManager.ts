@@ -1,6 +1,5 @@
-import { AppBit, AppEntity, SpaceEntity, userDefaultValue } from '@mcro/models'
 import { Logger } from '@o/logger'
-import { Entities, UserEntity } from '@o/models'
+import { AppBit, AppEntity, Entities, SpaceEntity, userDefaultValue, UserEntity } from '@o/models'
 import { Desktop } from '@o/stores'
 import { sleep } from '@o/utils'
 import { remove } from 'fs-extra'

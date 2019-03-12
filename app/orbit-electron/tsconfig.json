@@ -9,6 +9,7 @@
   "references": [
     { "path": "../stores" },
     { "path": "../../packages/use-store" },
+    { "path": "../../packages/reactron" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/r2" },

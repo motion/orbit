@@ -21,8 +21,8 @@
   ],
   "dependencies": {
     "@babel/runtime": "7.2.0",
-    "@mcro/react-hotkeys": "1.1.5",
-    "@mcro/react-sortable-hoc": "1.6.5",
+    "@o/react-hotkeys": "1.1.5",
+    "@o/react-sortable-hoc": "1.6.5",
     "@o/apps": "^2.4.0",
     "@o/bridge": "^2.4.0",
     "@o/color": "^2.4.0",

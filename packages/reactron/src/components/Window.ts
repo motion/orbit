@@ -27,9 +27,15 @@ const filterUndefined = obj => {
 }
 
 export class Window extends BaseComponent {
-  mount() {
-    this.extensionNames = {}
+  extensionNames = {}
+  options = null
+  window = null
+  propHandlers = null
 
+  updateSize = () => configureSize.call(this, this.props)
+  updatePosition = () => configurePosition.call(this, this.props)
+
+  mount() {
     const { props } = this
     this.options = filterUndefined({
       show: props.show === undefined ? true : props.show,
@@ -51,9 +57,6 @@ export class Window extends BaseComponent {
     console.log('new BrowserWindow(', this.options, ')')
 
     this.window = new BrowserWindow(this.options)
-
-    this.updateSize = () => configureSize.call(this, this.props)
-    this.updatePosition = () => configurePosition.call(this, this.props)
 
     this.propHandlers = {
       kiosk: this.handleSetProp('kiosk'),
@@ -133,10 +136,7 @@ export class Window extends BaseComponent {
   }
 
   handleNewProps(keys) {
-    if (!this.window) {
-      log.info('no window ey')
-      return
-    }
+    console.log('WINDOW HANDLE NEW PROPS')
     try {
       for (const key of keys) {
         const val = this.props[key]

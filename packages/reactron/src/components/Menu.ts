@@ -2,9 +2,7 @@ import { Menu as ElectronMenu } from 'electron'
 import { BaseComponent } from './BaseComponent'
 
 export class Menu extends BaseComponent {
-  mount() {
-    this.update()
-  }
+  menu = null
 
   handleNewProps() {
     this.menu = new ElectronMenu()

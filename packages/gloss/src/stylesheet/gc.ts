@@ -5,6 +5,7 @@
  * @format
  */
 
+import invariant from 'invariant'
 import { StyleSheet } from './sheet'
 
 type BaseRules = {
@@ -24,8 +25,6 @@ type Tracker = Map<
 
 type RulesToClass = WeakMap<BaseRules, string>
 
-const invariant = require('invariant')
-
 export class GarbageCollector {
   // used to keep track of what classes are actively in use
   usedClasses = new Map<string, number>()
@@ -43,7 +42,7 @@ export class GarbageCollector {
 
   tracker: Tracker
   sheet: StyleSheet
-  garbageTimer?: NodeJS.Timer
+  garbageTimer?: NodeJS.Timeout
   rulesToClass: RulesToClass
 
   hasQueuedCollection(): boolean {

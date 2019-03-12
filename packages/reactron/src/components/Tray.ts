@@ -1,4 +1,4 @@
-import { Tray as ElectronTray, Menu } from 'electron'
+import { Menu, Tray as ElectronTray } from 'electron'
 import { BaseComponent } from './BaseComponent'
 
 const EVENT_KEYS = {
@@ -20,12 +20,14 @@ const EVENT_KEYS = {
 }
 
 export class Tray extends BaseComponent {
+  tray = null
+  trayMenu = null
+
   mount() {
     if (!this.props.image) {
       throw new Error('Expects an image prop with path to image file')
     }
     this.tray = new ElectronTray(this.props.image)
-    this.update()
   }
 
   propHandlers = {

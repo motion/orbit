@@ -12,7 +12,7 @@ import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { DateFormat } from '../text/DateFormat'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
-import { guessTheme } from './presetTheme'
+import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
@@ -26,9 +26,8 @@ const backgroundColor = (props: Props, theme: ThemeObject) => {
   } else {
     if (!props.background && props.row) {
       const cat = props.row.category
-      if (cat && guessTheme[cat]) {
-        console.log('should have', cat)
-        return guessTheme[cat].background || 'transparent'
+      if (cat && guesses[cat]) {
+        return guessTheme(cat, theme).background || 'transparent'
       }
     }
     if (props.background) {
@@ -41,12 +40,12 @@ const backgroundColor = (props: Props, theme: ThemeObject) => {
   }
 }
 
-const getColor = (props: Props) => {
+const getColor = (props: Props, theme: ThemeObject) => {
   let color = props.color
   if (props.row) {
     const cat = props.row.category
-    if (guessTheme[cat]) {
-      color = color || guessTheme[cat].color
+    if (guesses[cat]) {
+      color = color || guessTheme(cat, theme).color
     }
   }
   return color || 'inherit'
@@ -59,7 +58,7 @@ const TableBodyRowContainer = gloss(Row, {
 }).theme((props, theme) => ({
   background: backgroundColor(props, theme),
   boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
-  color: props.highlighted ? theme.colorHighlight : getColor(props),
+  color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
   '& *': {
     color: props.highlighted ? `${theme.colorHighlight} !important` : null,
   },

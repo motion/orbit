@@ -1,6 +1,6 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
 import { SelectionStore, useOnMount } from '@o/ui'
-import { useStoreSimple } from '@o/use-store'
+import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
@@ -12,13 +12,10 @@ import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }) => {
   const { orbitStore, paneManagerStore } = useStoresSimple()
-  const isActive = useCallback(() => {
-    if (paneManagerStore) {
-      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
-    }
-  }, [])
+  const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
+  const isActive = useCallback(getIsActive, [])
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
-  const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
+  const selectionStore = useStoreSimple(SelectionStore, { isActive: useReaction(getIsActive) })
 
   // set default initial appProps
   useOnMount(function setInitialConfig() {

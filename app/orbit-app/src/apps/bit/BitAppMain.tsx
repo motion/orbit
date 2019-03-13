@@ -22,7 +22,6 @@ export function BitAppMain(props: AppProps) {
   if (!bit) {
     return null
   }
-
   return (
     <ItemPropsProvider value={defaultItemProps}>
       <HighlightedSearchable>

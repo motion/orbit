@@ -1,9 +1,7 @@
-import { ensure, react, useStore } from '@o/use-store'
-import React, { createContext, useCallback, useContext, useEffect } from 'react'
+import { ensure, useReaction } from '@o/use-store'
+import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
-import { useMemoGetValue } from '../hooks/useMemoGetValue'
-import { getItemsKey } from './helpers'
 import { HandleSelection } from './ListItem'
 import { SelectEvent, useSelectionStore } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
@@ -38,47 +36,6 @@ export function ProvideSelectableHandlers({
   )
 }
 
-// child of SelectionStore, more specifically for Orbit lists
-
-class SelectableStore {
-  props: {
-    selectionStore?: SelectionStore
-    itemsKey: string
-    getItems: Function
-  }
-  listRef = null
-
-  setListRef = ref => {
-    this.listRef = ref
-  }
-
-  updateSelectionResults = react(
-    () => this.props.itemsKey,
-    () => {
-      const items = this.props.getItems()
-      this.props.selectionStore.setOriginalItems(items)
-      this.props.selectionStore.setSelectionResults([
-        {
-          type: 'column' as 'column',
-          items: items.map(({ id }, index) => ({ id, index })),
-        },
-      ])
-    },
-  )
-
-  // handle scroll to row
-  handleSelection = react(
-    () => this.props.selectionStore.activeIndex,
-    activeIndex => {
-      ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
-      ensure('has list', !!this.listRef)
-      ensure('is active', this.props.selectionStore.isActive)
-      ensure('used key', this.props.selectionStore.selectEvent === SelectEvent.key)
-      this.listRef.scrollToRow(activeIndex)
-    },
-  )
-}
-
 export function SelectableList({
   items,
   createNewSelectionStore,
@@ -86,14 +43,21 @@ export function SelectableList({
   ...props
 }: SelectableListProps) {
   const selectionStore = useSelectionStore(props)
-  const itemsKey = getItemsKey(items)
-  const getItems = useMemoGetValue(items)
-  const selectableStore = useStore(SelectableStore, {
-    selectionStore,
-    itemsKey,
-    getItems,
-  })
   const selectableProps = useContext(SelectableListContext)
+  const listRef = useRef(null)
+
+  useEffect(
+    () => {
+      selectionStore.setOriginalItems(items)
+      selectionStore.setSelectionResults([
+        {
+          type: 'column' as 'column',
+          items: items.map(({ id }, index) => ({ id, index })),
+        },
+      ])
+    },
+    [items],
+  )
 
   useEffect(() => {
     if (typeof props.defaultSelected === 'number' && selectionStore) {
@@ -103,6 +67,17 @@ export function SelectableList({
       }
     }
   }, [])
+
+  useReaction(
+    () => selectionStore.activeIndex,
+    activeIndex => {
+      ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
+      ensure('has list', !!listRef.current)
+      ensure('is active', selectionStore.isActive)
+      ensure('used key', selectionStore.selectEvent === SelectEvent.key)
+      listRef.current.scrollToRow(activeIndex)
+    },
+  )
 
   const onSelect = useCallback(
     (index, eventType, element) => {
@@ -123,7 +98,7 @@ export function SelectableList({
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
       <VirtualList
         items={items}
-        forwardRef={selectableStore.setListRef}
+        forwardRef={x => (listRef.current = x)}
         onOpen={selectableProps && selectableProps.onSelectItem}
         getItemProps={getItemProps}
         {...props}

@@ -86,7 +86,7 @@ export class SearchStore {
     }
   }
 
-  getApps(query: string): OrbitListItemProps[] {
+  getApps(query: string, all = false): OrbitListItemProps[] {
     const { appStore } = this.stores
 
     // non editable apps don't search apps, just the Home app
@@ -102,7 +102,7 @@ export class SearchStore {
 
     return [
       this.homeItem,
-      ...apps.slice(0, Math.min(apps.length - 1, 5)).map(this.appToResult),
+      ...apps.slice(0, all ? Infinity : Math.min(apps.length - 1, 5)).map(this.appToResult),
       {
         title: 'Add app...',
         icon: 'orbit-custom-full',
@@ -117,9 +117,9 @@ export class SearchStore {
     ]
   }
 
-  getQuickResults(query: string) {
+  getQuickResults(query: string, all = false) {
     // TODO recent history
-    return [...this.getApps(query)].filter(
+    return [...this.getApps(query, all)].filter(
       x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
     )
   }
@@ -213,8 +213,17 @@ export class SearchStore {
         return true
       }
 
+      if (activeQuery[0] === '/') {
+        const query = activeQuery.slice(1)
+        return {
+          query,
+          results: this.getQuickResults(query, true),
+          finished: true,
+        }
+      }
+
       // app search
-      results = [...this.getQuickResults(activeQuery)]
+      results = this.getQuickResults(activeQuery)
       setValue({ results, query, finished: false })
 
       await updateNextResults({

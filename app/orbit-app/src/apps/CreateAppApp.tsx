@@ -14,13 +14,28 @@ const descriptions = {
   search: 'Custom search with filters',
   lists: 'Controlled or controllable list',
   people: 'Manageable list of people',
-  custom: 'Create your app',
+  custom: 'Internal development test app',
 }
 
 function CreateAppIndex() {
+  const Actions = useActions()
+
   return (
     <>
-      <TopBar after={<Button icon="add">Create</Button>} />
+      <TopBar
+        after={
+          <Button
+            onClick={() => {
+              // TODO @umed type broke here
+              // @ts-ignore
+              Actions.createCustomApp()
+            }}
+            icon="add"
+          >
+            Create
+          </Button>
+        }
+      />
       <List
         minSelected={0}
         items={defaultApps.map(app => ({

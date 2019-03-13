@@ -24,9 +24,9 @@ export default function WebsiteSetupPane(props: Props) {
 
   useEffect(
     () => {
-      if (!app) return
-
-      setValues({ ...app.data.values })
+      if (app) {
+        setValues({ ...app.data.values })
+      }
     },
     [app],
   )

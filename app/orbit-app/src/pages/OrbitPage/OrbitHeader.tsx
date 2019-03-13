@@ -1,8 +1,8 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, Text, View } from '@o/ui'
-import React, { memo, useRef, useState } from 'react'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, SegmentedRow, Text, View } from '@o/ui'
+import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
@@ -60,13 +60,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </View>
             <OrbitHeaderInput />
 
-            <LinkButton />
-            {!isTorn && (
-              <>
-                <HorizontalSpace />
-                <LaunchButton />
-              </>
-            )}
+            <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
+              <LinkButton />
+              {!isTorn && <LaunchButton />}
+            </SegmentedRow>
           </HeaderContain>
 
           <View flex={1} />
@@ -96,9 +93,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           <Button
             chromeless
-            opacity={isOnSettings ? 0.8 : 0.3}
+            opacity={isOnSettings ? 0.8 : 0.4}
             hoverStyle={{
-              opacity: isOnSettings ? 0.8 : 0.4,
+              opacity: isOnSettings ? 1 : 0.6,
             }}
             icon="gear"
             iconSize={isTorn ? 10 : 12}
@@ -218,8 +215,8 @@ const OrbitClose = gloss({
 const LaunchButton = memo(() => {
   const Actions = useActions()
   const { orbitStore } = useStores()
-  const [isHovered, setHovered] = useState(false)
-  const tm = useRef(null)
+  // const [_isHovered, setHovered] = useState(false)
+  // const tm = useRef(null)
 
   if (orbitStore.isTorn) {
     return null
@@ -227,26 +224,20 @@ const LaunchButton = memo(() => {
 
   return (
     <Button
-      onMouseEnter={() => {
-        tm.current = setTimeout(() => setHovered(true), 100)
-      }}
-      onMouseLeave={() => {
-        clearTimeout(tm.current)
-        setHovered(false)
-      }}
+      // onMouseEnter={() => {
+      //   tm.current = setTimeout(() => setHovered(true), 100)
+      // }}
+      // onMouseLeave={() => {
+      //   clearTimeout(tm.current)
+      //   setHovered(false)
+      // }}
       tooltip="Open app (⌘ + ⏎)"
-      sizeHeight={0.95}
-      sizeRadius={2}
-      onClick={Actions.tearApp}
       width={50}
+      onClick={Actions.tearApp}
     >
-      {!isHovered ? (
-        <Icon name="arrows-e_share-26" size={11} />
-      ) : (
-        <Text size={0.7} alpha={0.5} transform={{ y: 1 }}>
-          Open
-        </Text>
-      )}
+      <Text size={0.75} fontWeight={500} alpha={0.5} transform={{ y: 1 }}>
+        Open
+      </Text>
     </Button>
   )
 })
@@ -254,14 +245,7 @@ const LaunchButton = memo(() => {
 const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
-    <Button
-      size={0.9}
-      iconSize={9}
-      circular
-      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
-      sizeRadius={2}
-      icon="link69"
-    />
+    <Button iconSize={9} tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`} icon="link69" />
   )
 })
 
@@ -274,12 +258,11 @@ const BackButton = memo(() => {
         chromeless
         sizeHeight={0.95}
         sizePadding={1.2}
-        sizeRadius={2}
         icon="arrowminleft"
         iconSize={22}
         opacity={0.25}
         hoverStyle={{
-          opacity: 0.5,
+          opacity: 0.75,
         }}
         onClick={() => {
           locationStore.back()

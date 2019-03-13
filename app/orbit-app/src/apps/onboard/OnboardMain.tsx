@@ -1,6 +1,6 @@
 import { command, loadOne, save } from '@o/bridge'
 import { gloss } from '@o/gloss'
-import { useAppDefinitions } from '@o/kit'
+import { ListItem, useAppDefinitions } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
 import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@o/ui'
 import { react, useHook, useStore } from '@o/use-store'
@@ -10,7 +10,6 @@ import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { useStoresSimple } from '../../hooks/useStores'
 import BlurryGuys from '../../pages/OrbitPage/BlurryGuys'
 import { BottomControls } from '../../views/BottomControls'
-import { SimpleItem } from '../../views/SimpleItem'
 
 const framePad = 30
 const buttonText = ['Start Local Proxy', 'Next', 'Done!']
@@ -182,12 +181,10 @@ export function OnboardMain() {
           <Unpad>
             {allDefs.map(def => {
               return (
-                <SimpleItem
+                <ListItem
                   key={def.id}
                   title={def.name}
                   icon={def.icon}
-                  // !TODO true === item.isActive
-                  inactive={true}
                   onClick={true ? null : addAppClickHandler(def)}
                   after={
                     <AddButton size={0.9} disabled={true}>

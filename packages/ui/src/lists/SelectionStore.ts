@@ -65,7 +65,7 @@ export class SelectionStore {
   }
 
   get currentItems() {
-    if (!this.originalItems) {
+    if (!this.originalItems || !this.movesMap) {
       return null
     }
     return this.movesMap.map(x => this.originalItems.find(item => item.id === x.id))
@@ -115,7 +115,6 @@ export class SelectionStore {
       console.warn('Not found', id, this.movesMap)
       return
     }
-    console.log('moving to', move)
     this.setSelected(move.index)
   }
 

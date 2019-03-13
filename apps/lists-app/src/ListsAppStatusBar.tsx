@@ -1,13 +1,5 @@
 import { Icon } from '@o/kit'
-import {
-  BarButtonSmall,
-  Breadcrumbs,
-  ButtonProps,
-  StatusBarText,
-  Text,
-  useBreadcrumb,
-  View,
-} from '@o/ui'
+import { BarButtonSmall, Breadcrumbs, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 

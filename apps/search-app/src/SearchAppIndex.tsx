@@ -1,7 +1,7 @@
 import { List, useShareMenu } from '@o/kit'
 import { useStore } from '@o/use-store'
 import React, { useContext } from 'react'
-import { SearchContext } from '.'
+import { SearchContext } from './index'
 
 export function SearchAppIndex() {
   const context = useContext(SearchContext)

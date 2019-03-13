@@ -2,6 +2,7 @@ import { useModels } from '@o/bridge'
 import {
   groupByFirstLetter,
   List,
+  NoResultsDialog,
   removePrefixIfExists,
   useActiveQuery,
   useActiveQueryFilter,
@@ -10,7 +11,6 @@ import {
 } from '@o/kit'
 import { BitModel } from '@o/models'
 import * as React from 'react'
-import NoResultsDialog from '../../views/NoResultsDialog'
 
 export function PeopleAppIndex() {
   // people and query

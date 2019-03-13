@@ -1,4 +1,4 @@
-import { useStores } from '@o/kit'
+import { useStores } from '../'
 import { Button, SubTitle, VerticalSpace, View } from '@o/ui'
 import * as React from 'react'
 
@@ -6,7 +6,7 @@ type Props = {
   subName: string
 }
 
-export default function NoResultsDialog(props: Props) {
+export function NoResultsDialog(props: Props) {
   const { paneManagerStore } = useStores()
   return (
     <>

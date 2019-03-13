@@ -27,8 +27,12 @@
     "@o/postgres-app": "^2.4.0",
     "@o/slack-app": "^2.4.0",
     "@o/website-app": "^2.4.0",
+    "@o/search-app": "^2.4.0",
+    "@o/custom-app": "^2.4.0",
+    "@o/custom-tree-app": "^2.4.0",
+    "@o/lists-app": "^2.4.0",
+    "@o/people-app": "^2.4.0",
     "@o/utils": "^2.4.0",
-    "faker": "4.1.0",
     "lodash": "*"
   },
   "peerDependencies": {

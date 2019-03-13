@@ -1,6 +1,6 @@
-import { WhitelistManager } from '../'
 import { CheckboxReactive, HorizontalSpace, Surface, Text, Theme } from '@o/ui'
 import * as React from 'react'
+import { WhitelistManager } from '../helpers/WhitelistManager'
 
 export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {
   return (

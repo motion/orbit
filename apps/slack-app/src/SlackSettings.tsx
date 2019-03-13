@@ -1,13 +1,14 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, SettingManageRow, Table, WhitelistManager } from '@o/kit'
+import { AppProps, Table } from '@o/kit'
+import { SettingManageRow, WhitelistManager } from '@o/kit-internal'
 import { AppModel, SlackChannelModel } from '@o/models'
+import postgresApp from '@o/postgres-app'
 import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import slackApp from '.'
-import postgresApp from '@o/postgres-app'
 
 export function SlackSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
@@ -28,34 +29,35 @@ export function SlackSettings({ subId }: AppProps) {
 
       // todo: remove it
       // load slack channels (testing api)
-      slackApp.API
-        .loadChannels(app.id)
-        .then(channels => console.log('loaded api channels', channels));
+      slackApp.API.loadChannels(app.id).then(channels =>
+        console.log('loaded api channels', channels),
+      )
 
       // todo: remove it
       // execute postgres query (testing api)
-      loadMany(AppModel, { args: { where: { identifier: 'postgres' } } })
-        .then(postgresApps => {
-          console.log('postgresApps', postgresApps)
-          for (let app of postgresApps) {
-            postgresApp
-              .API
-              .query(app.id, `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`, [])
-              .then(results => {
-                console.log(`table created`, results)
-                return postgresApp.API.query(app.id, "INSERT INTO categories(name) VALUES ($1)", ['dummy category'])
-
-              }).then(results => {
-                console.log(`new row inserted`, results)
-                return postgresApp.API.query(app.id, "SELECT * FROM categories")
-              })
-              .then(results => {
-                console.log(`got results from ${app.name}:`, results)
-              })
-          }
-        })
-
-
+      loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
+        console.log('postgresApps', postgresApps)
+        for (let app of postgresApps) {
+          postgresApp.API.query(
+            app.id,
+            `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`,
+            [],
+          )
+            .then(results => {
+              console.log(`table created`, results)
+              return postgresApp.API.query(app.id, 'INSERT INTO categories(name) VALUES ($1)', [
+                'dummy category',
+              ])
+            })
+            .then(results => {
+              console.log(`new row inserted`, results)
+              return postgresApp.API.query(app.id, 'SELECT * FROM categories')
+            })
+            .then(results => {
+              console.log(`got results from ${app.name}:`, results)
+            })
+        }
+      })
 
       // if we have channels stored in the app - use them at first
       if (app.data.channels) {

@@ -1,7 +1,7 @@
 import { AppBit } from '@o/models'
 import { Row, Text, View } from '@o/ui'
 import * as React from 'react'
-import { WhitelistManager } from '..'
+import { WhitelistManager } from '../helpers/WhitelistManager'
 import { ManageSmartSync } from './ManageSmartSync'
 import { ManageSyncStatus } from './ManageSyncStatus'
 

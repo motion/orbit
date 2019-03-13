@@ -109,7 +109,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               display="flex"
               flex={1}
               opacity={isActive ? 1 : inactiveOpacity}
-              fontWeight={400}
+              fontWeight={300}
               size={0.98}
               {...textProps}
               transition={isActive ? 'none' : tabTransition}

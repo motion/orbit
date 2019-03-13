@@ -1,26 +1,14 @@
 import { command } from '@o/bridge'
-import { showConfirmDialog, useAppSyncState, useJobs } from '../'
-import { AppBit, AppForceCancelCommand, AppForceSyncCommand, AppRemoveCommand } from '@o/models'
+import { useAppSyncState, useJobs } from '@o/kit'
+import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
 import { SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'
+import { removeApp } from '../helpers/removeApp'
 
 const handleRefresh = async (appId: number) => {
   command(AppForceSyncCommand, {
     appId,
   })
-}
-
-const removeApp = async (app: AppBit) => {
-  if (
-    showConfirmDialog({
-      title: 'Remove app?',
-      message: `Are you sure you want to remove ${app.name}?`,
-    })
-  ) {
-    command(AppRemoveCommand, {
-      appId: app.id,
-    })
-  }
 }
 
 export function ManageSyncStatus(props: { app: AppBit }) {

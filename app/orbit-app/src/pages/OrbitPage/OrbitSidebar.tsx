@@ -1,5 +1,11 @@
 import { View } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, ListPropsContext, ProvideSelectionContext, SubPane } from '@o/kit'
+import {
+  AppLoadContext,
+  AppMainViewProps,
+  ListPropsContext,
+  ProvideSelectionContext,
+  SubPane,
+} from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'
@@ -31,7 +37,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         noBorder
       >
         {props.hasToolbar && toolbarPadElement}
-        <View flex={1} position="relative">
+        <View flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <ListPropsContext.Provider value={{ searchable: true, minSelected: 0 }}>
             <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>

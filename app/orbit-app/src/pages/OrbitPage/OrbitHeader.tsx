@@ -102,9 +102,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           <Button
             chromeless
-            opacity={isOnSettings ? 0.8 : 0.3}
+            opacity={isOnSettings ? 0.8 : 0.4}
             hoverStyle={{
-              opacity: isOnSettings ? 0.8 : 0.4,
+              opacity: isOnSettings ? 1 : 0.6,
             }}
             icon="gear"
             iconSize={isTorn ? 10 : 12}

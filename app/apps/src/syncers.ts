@@ -1,12 +1,13 @@
-import ConfluenceSyncer from './apps/confluence/index.sync'
-import DriveSyncer from './apps/drive/index.sync'
-import GithubSyncer from './apps/github/index.sync'
-import GmailSyncer from './apps/gmail/index.sync'
-import JiraSyncer from './apps/jira/index.sync'
-import SlackSyncer from './apps/slack/index.sync'
-import WebsiteSyncer from './apps/website/index.sync'
+import { SyncerOptions } from '@o/sync-kit'
+import ConfluenceSyncer from '@o/confluence-app/_/index.sync'
+import DriveSyncer from '@o/drive-app/_/index.sync'
+import GithubSyncer from '@o/github-app/_/index.sync'
+import GmailSyncer from '@o/gmail-app/_/index.sync'
+import JiraSyncer from '@o/jira-app/_/index.sync'
+import SlackSyncer from '@o/slack-app/_/index.sync'
+import WebsiteSyncer from '@o/website-app/_/index.sync'
 
-export const syncers = [
+export const syncers: SyncerOptions[] = [
   ConfluenceSyncer,
   DriveSyncer,
   GithubSyncer,

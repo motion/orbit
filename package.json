@@ -39,7 +39,6 @@
     "typescript-eslint-parser": "21.0.2",
     "lerna": "3.13.0",
     "mobx": "5.9.0",
-    "pg": "^7.8.1",
     "prettier": "1.15.3",
     "sb-promisify": "^2.0.2",
     "typescript": "3.3.3333",

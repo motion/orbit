@@ -1,11 +1,5 @@
 import { View } from '@o/gloss'
-import {
-  AppLoadContext,
-  AppMainViewProps,
-  ListPropsContext,
-  ProvideSelectionContext,
-  SubPane,
-} from '@o/kit'
+import { AppLoadContext, AppMainViewProps, ListPropsContext, ProvideSelectionContext, SubPane } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'

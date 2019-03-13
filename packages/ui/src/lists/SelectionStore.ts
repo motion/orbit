@@ -1,11 +1,5 @@
 import { react } from '@o/use-store'
-import {
-  Direction,
-  MovesMap,
-  SelectEvent,
-  SelectionGroup,
-  SelectionStoreProps,
-} from './ProvideSelectionStore'
+import { Direction, MovesMap, SelectEvent, SelectionGroup, SelectionStoreProps } from './ProvideSelectionStore'
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)

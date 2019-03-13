@@ -1,3 +1,6 @@
+- restore searching in lists
+- simplify lists like SettingsIndex
+
 March:
 
 - Working app demo with code

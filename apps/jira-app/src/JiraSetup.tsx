@@ -1,4 +1,4 @@
 import * as React from 'react'
-import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
+import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
 export const JiraSetup = () => <AtlassianSettingLogin identifier="jira" />

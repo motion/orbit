@@ -2,8 +2,7 @@ import { AppBit } from '@o/models'
 import { Logger } from '@o/logger'
 import { ServiceLoader, sleep } from '@o/sync-kit'
 import { JiraQueries } from './JiraQueries'
-import { JiraComment, JiraIssue, JiraUser } from './JiraModels'
-import { ConfluenceAppData } from '../confluence/ConfluenceModels'
+import { JiraAppData, JiraComment, JiraIssue, JiraUser } from './JiraModels'
 
 /**
  * Defines a loading throttling.
@@ -40,7 +39,7 @@ export class JiraLoader {
     this.app = app
     this.log = log || new Logger('service:jira:loader:' + app.id)
 
-    const appData: ConfluenceAppData = this.app.data
+    const appData: JiraAppData = this.app.data
     const { username, password } = this.app.data.values.credentials
     const credentials = Buffer.from(`${username}:${password}`).toString('base64')
 

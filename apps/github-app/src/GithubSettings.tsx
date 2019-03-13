@@ -1,11 +1,10 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, Table, WhitelistManager } from '@o/kit'
+import { AppProps, SettingManageRow, Table, WhitelistManager } from '@o/kit'
 import { AppModel, GithubRepositoryModel } from '@o/models'
 import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { SettingManageRow } from '../../../../kit/src/views/SettingManageRow'
 
 export default function GithubSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })

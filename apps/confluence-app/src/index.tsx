@@ -1,8 +1,8 @@
 import { createApp } from '@o/kit'
 import React from 'react'
-import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { confluenceIcon } from './confluenceIcon'
 import { ConfluenceSetup } from './ConfluenceSetup'
+import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
 export default createApp({
   id: 'confluence',

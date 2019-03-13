@@ -1,8 +1,8 @@
 import { createApp } from '@o/kit'
 import React from 'react'
-import { AtlassianSettingLogin } from '../../views/AtlassianSettingLogin'
 import { jiraIcon } from './jiraIcon'
 import { JiraSetup } from './JiraSetup'
+import { AtlassianSettingLogin } from './AtlassianSettingLogin'
 
 export default createApp({
   id: 'jira',

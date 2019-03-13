@@ -1,9 +1,7 @@
-import { AppBit, ItemType } from '@o/models'
-import { SearchBarType } from '@o/ui'
+import { AppBit, Bit, ItemType } from '@o/models'
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 import { AppProps } from './AppProps'
-import { OrbitItemViewProps } from './OrbitItemViewProps'
 
 export type AppElements = {
   index?: React.ReactElement<any>
@@ -40,10 +38,7 @@ export type AppDefinition = {
   // }
 }
 
-export type AppBitMainProps = OrbitItemViewProps & {
-  searchBar: SearchBarType
-  searchTerm: string
-}
+export type AppBitMainProps = { item: Bit }
 
 export type AppSettingsProps<T extends AppBit> = {
   appProps?: AppProps

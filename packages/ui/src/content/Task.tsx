@@ -9,7 +9,7 @@ export type TaskLike = {
   comments: TaskCommentLike[]
 }
 
-export function Task(rawProps: TaskLike & ItemsPropsContextType) {
+export function Task(rawProps: TaskLike & Partial<ItemsPropsContextType>) {
   const itemProps = useContext(ItemPropsContext)
   const { body, oneLine, renderText, comments } = { ...itemProps, ...rawProps }
   if (renderText) {

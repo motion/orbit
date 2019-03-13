@@ -48,7 +48,6 @@ export function SelectableList({
 
   useEffect(
     () => {
-      console.log('set it off', items)
       selectionStore.setOriginalItems(items)
       selectionStore.setSelectionResults([
         {

@@ -40,7 +40,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
   )
 }
 
-export function Conversation(props: AppBitMainProps) {
+export function BitConversation(props: AppBitMainProps) {
   const { item } = props
 
   const [nextConvos] = useModels(BitModel, {

@@ -4,7 +4,7 @@ import { AppBit, AppModel } from '@o/models'
 import { View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
-import { SettingManageRow } from '../../views/SettingManageRow'
+import { SettingManageRow } from '../../../../kit/src/views/SettingManageRow'
 
 class DriveSettingsStore {
   props: { app?: AppBit }

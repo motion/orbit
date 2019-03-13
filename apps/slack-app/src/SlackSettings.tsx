@@ -1,13 +1,12 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, Table, WhitelistManager } from '@o/kit'
+import { AppProps, SettingManageRow, Table, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
 import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { SettingManageRow } from '../../views/SettingManageRow'
-import slackApp from './index'
+import slackApp from '.'
 import postgresApp from '@o/postgres-app'
 
 export function SlackSettings({ subId }: AppProps) {

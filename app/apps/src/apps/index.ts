@@ -8,7 +8,7 @@ import JiraApp from './jira'
 import ListsApp from './lists'
 import PeopleApp from './people'
 import SearchApp from './search-app'
-import SlackApp from './slack'
+import SlackApp from '@o/slack-app'
 import WebsiteApp from './website'
 import PostgresApp from '@o/postgres-app'
 

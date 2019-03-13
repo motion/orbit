@@ -3,11 +3,9 @@
 // import GithubApi from './apps/github/api.node'
 // import GmailApi from './apps/gmail/api.node'
 // import JiraApi from './apps/jira/api.node'
-import SlackApi from './apps/slack/api.node'
+import SlackApi from '@o/slack-app/_/api.node'
 import PostgresApi from '@o/postgres-app/_/api.node'
 // import WebsiteApi from './apps/website/api.node'
-
-console.log(PostgresApi)
 
 export const apis = {
   // confluence: ConfluenceApi,

@@ -5,7 +5,7 @@ import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { SettingManageRow } from '../../views/SettingManageRow'
+import { SettingManageRow } from '../../../../kit/src/views/SettingManageRow'
 
 export default function GithubSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })

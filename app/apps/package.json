@@ -20,8 +20,8 @@
     "@o/ui": "^2.4.0",
     "@o/use-store": "^2.4.0",
     "@o/postgres-app": "^2.4.0",
+    "@o/slack-app": "^2.4.0",
     "@o/utils": "^2.4.0",
-    "autolinker": "^1.7.1",
     "dompurify": "^1.0.7",
     "email-addresses": "^3.0.1",
     "faker": "4.1.0",
@@ -31,7 +31,6 @@
     "lodash": "*",
     "puppeteer": "^1.9.0",
     "readability": "^0.1.0",
-    "slack": "11.0.2",
     "typeorm": "^0.3.0-alpha.22",
     "urijs": "^1.19.0"
   },

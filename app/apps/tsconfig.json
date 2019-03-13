@@ -11,6 +11,7 @@
     { "path": "../../packages/use-store" },
     { "path": "../../packages/ui" },
     { "path": "../../apps/postgres-app" },
+    { "path": "../../apps/slack-app" },
     { "path": "../bridge" },
     { "path": "../kit" },
     { "path": "../sync-kit" },

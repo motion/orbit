@@ -1,5 +1,5 @@
 import { command } from '@o/bridge'
-import { showConfirmDialog, useAppSyncState, useJobs, WhitelistManager } from '@o/kit'
+import { showConfirmDialog, useAppSyncState, useJobs, WhitelistManager } from '../'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand, AppRemoveCommand } from '@o/models'
 import { Row, SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'

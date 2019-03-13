@@ -1,5 +1,5 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { SelectionStore, useOnMount } from '@o/ui'
+import { useOnMount } from '@o/ui'
 import { useStoreSimple } from '@o/use-store'
 import React, { useCallback } from 'react'
 import '../../apps/orbitApps'
@@ -17,8 +17,8 @@ export const OrbitApp = ({ id, identifier }) => {
     [],
   )
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
-  console.log('create app', id, identifier)
-  const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
+  // console.log('create app', id, identifier)
+  // const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
 
   // set default initial appProps
   useOnMount(function setInitialConfig() {
@@ -28,7 +28,7 @@ export const OrbitApp = ({ id, identifier }) => {
   })
 
   return (
-    <ProvideStores stores={{ selectionStore, appStore }}>
+    <ProvideStores stores={{ /* selectionStore, */ appStore }}>
       <OrbitAppRender id={id} identifier={identifier} />
     </ProvideStores>
   )

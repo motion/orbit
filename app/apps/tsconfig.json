@@ -10,6 +10,7 @@
     { "path": "../../packages/gloss" },
     { "path": "../../packages/use-store" },
     { "path": "../../packages/ui" },
+    { "path": "../../apps/postgres-app" },
     { "path": "../bridge" },
     { "path": "../kit" },
     { "path": "../sync-kit" },

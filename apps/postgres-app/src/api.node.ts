@@ -2,6 +2,9 @@ import { AppBit } from '@o/models'
 import { createConnection } from 'typeorm'
 import { PostgresAppData } from './PostgresModels'
 
+const pg = require("pg")
+console.log(pg)
+
 const connect = (appData: PostgresAppData) => {
   return createConnection({
     type: "postgres",

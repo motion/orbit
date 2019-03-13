@@ -4,6 +4,7 @@
   "packages": [
     "app/*",
     "packages/*",
+    "apps/*",
     "projects/*"
   ],
   "version": "2.4.0",

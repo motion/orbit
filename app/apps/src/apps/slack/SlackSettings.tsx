@@ -8,7 +8,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { SettingManageRow } from '../../views/SettingManageRow'
 import slackApp from './index'
-import postgresApp from '../postgres/index'
+import postgresApp from '@o/postgres-app'
 
 export function SlackSettings({ subId }: AppProps) {
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })

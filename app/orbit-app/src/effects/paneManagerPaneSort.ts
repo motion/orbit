@@ -22,7 +22,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   //  3. stable sort after that
   next = sortBy(next, id => {
     const a = appDict[id]
-    return `${a.editable ? 0 : 1}${a.pinned ? 0 : 1}${a.id}`
+    return `${a.editable ? 1 : 0}${a.pinned ? 0 : 1}${a.id}`
   })
 
   return next

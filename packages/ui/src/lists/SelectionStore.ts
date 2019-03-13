@@ -25,7 +25,6 @@ export class SelectionStore {
   }
 
   setChildProps(childProps: Props) {
-    console.log('what', childProps)
     this.childProps = childProps
   }
 
@@ -122,7 +121,6 @@ export class SelectionStore {
       console.warn('Not found', id, this.movesMap)
       return
     }
-    console.log('moving to', move)
     this.setSelected(move.index)
   }
 

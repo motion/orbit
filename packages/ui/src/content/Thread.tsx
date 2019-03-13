@@ -8,7 +8,7 @@ export type ThreadLike = {
   messages: ThreadMessageLike[]
 }
 
-export type ThreadProps = ThreadLike & ItemsPropsContextType
+export type ThreadProps = ThreadLike & Partial<ItemsPropsContextType>
 
 export function Thread(rawProps: ThreadProps) {
   const itemProps = React.useContext(ItemPropsContext)

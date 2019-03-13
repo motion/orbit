@@ -24,7 +24,9 @@ export const listItemDecorators = {
   person: {
     getItemProps: item => ({
       iconBefore: true,
-      before: <Avatar width={30} height={30} marginRight={6} src={item.photo} />,
+      before: item.photo ? (
+        <Avatar width={30} height={30} marginRight={6} src={item.photo} />
+      ) : null,
     }),
   },
 }

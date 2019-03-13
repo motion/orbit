@@ -22,8 +22,8 @@ const normalizers = {
         bit.desktopLink || bit.webLink || bit.location.desktopLink || bit.location.webLink,
       desktopLink: bit.desktopLink,
       subType: bit.type,
-      createdAt: new Date(bit.bitCreatedAt),
-      updatedAt: new Date(bit.bitUpdatedAt),
+      createdAt: new Date(bit.bitCreatedAt || bit.createdAt),
+      updatedAt: new Date(bit.bitUpdatedAt || bit.updatedAt),
     }
   },
   app: (app: AppBit): NormalItem => ({

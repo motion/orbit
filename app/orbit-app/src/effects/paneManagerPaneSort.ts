@@ -38,8 +38,8 @@ export function usePaneManagerPaneSort() {
         return
       }
       const paneSort = sortPanes(space, activeApps)
-      console.log('setting pane sort', paneSort)
       if (!isEqual(paneSort, space.paneSort)) {
+        console.log('setting pane sort', paneSort)
         updateSpace({ paneSort })
       }
     },

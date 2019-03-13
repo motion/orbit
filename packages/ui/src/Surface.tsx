@@ -21,7 +21,7 @@ import { HoverGlow } from './effects/HoverGlow'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
-import { getSegmentRadius } from './SegmentedRow'
+import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
 
@@ -136,7 +136,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     forwardRef,
     ...rest
   } = props
-  const segmentedStyle = getSegmentRadius(props, crumb)
+  const segmentedStyle = getSegmentedStyle(props, crumb)
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element

@@ -12,12 +12,12 @@ import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }) => {
   const { orbitStore, paneManagerStore } = useStoresSimple()
-  const isActive = useCallback(() => {
-    if (paneManagerStore) {
-      return paneManagerStore.activePane && paneManagerStore.activePane.id === id
-    }
-  }, [])
+  const isActive = useCallback(
+    () => paneManagerStore.activePane && paneManagerStore.activePane.id === id,
+    [],
+  )
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
+  console.log('create app', id, identifier)
   const selectionStore = useStoreSimple(SelectionStore, { isActive: isActive() })
 
   // set default initial appProps

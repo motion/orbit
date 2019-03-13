@@ -12,9 +12,10 @@ import {
 import { CloseAppCommand } from '@o/models'
 import { Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
+import { keyBy } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { orbitStaticApps } from '../../apps/orbitApps'
+import { getApps, orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
@@ -127,13 +128,13 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     id: pane.id,
     identifier: pane.type,
   }))
-
   const staticApps = orbitStaticApps.map(app => ({
     id: app.id,
     identifier: app.id,
   }))
 
   const allApps = [...activeApps, ...staticApps]
+  const appsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
 
   const stableSortedApps = useStableSort(allApps.map(x => x.id)).map(id =>
     allApps.find(x => x.id === id),
@@ -145,9 +146,11 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         <OrbitHeader />
         <InnerChrome torn={orbitStore.isTorn}>
           <OrbitContentArea>
-            {stableSortedApps.map(app => (
-              <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />
-            ))}
+            {stableSortedApps
+              .filter(x => appsWithViews[x.identifier])
+              .map(app => (
+                <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />
+              ))}
           </OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>

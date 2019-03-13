@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { configure } from '../helpers/configure'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { MergeContext } from '../helpers/MergeContext'
-import { useStores } from '../helpers/useStores'
+import { useStoresSimple } from '../helpers/useStores'
 import { Omit } from '../types'
 import { SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
@@ -43,7 +43,7 @@ export enum SelectEvent {
 // todo make it less dangerous
 // though, you shouldn't probably be changing this out in context
 export function useSelectionStore(props: SelectionStoreProps) {
-  const stores = useStores({ optional: ['selectionStore', 'appStore'] })
+  const stores = useStoresSimple()
   const existingStore = props.selectionStore || stores.selectionStore
   const selectionStore = props.createNewSelectionStore
     ? useStore(SelectionStore, props)

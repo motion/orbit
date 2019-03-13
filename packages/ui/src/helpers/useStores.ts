@@ -1,4 +1,5 @@
 import { createUseStores, UseStoresOptions } from '@o/use-store'
+import { useContext } from 'react'
 import { UIStores } from '../UIStores'
 import { configure } from './configure'
 
@@ -14,3 +15,5 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): A {
   }
   return useStoresResolved(options)
 }
+
+export const useStoresSimple = () => useContext(configure.StoreContext)

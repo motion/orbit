@@ -19,7 +19,7 @@ export function SegmentedRow({
   )
 }
 
-export function getSegmentRadius(
+export function getSegmentedStyle(
   props: { ignoreSegment?: boolean; borderRadius?: number },
   item: BreadcrumbItem,
 ) {

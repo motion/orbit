@@ -13,14 +13,30 @@ import {
   useSelectionStore,
   View,
 } from '@o/ui'
+import { mergeDefined } from '@o/utils'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
+import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
+import { UseFilterProps } from '../hooks/useFilter'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
+
+export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> &
+  Partial<UseFilterProps<any>> & {
+    isActive?: boolean
+    query?: string
+    items?: (Bit | OrbitListItemProps)[]
+    onSelect?: HandleOrbitSelect
+    onOpen?: HandleOrbitSelect
+    placeholder?: React.ReactNode
+    searchable?: boolean
+  }
+
+export const ListPropsContext = createContext(null as Partial<ListProps>)
 
 export function toListItemProps(props?: any): OrbitListItemProps {
   if (!props) {
@@ -32,16 +48,17 @@ export function toListItemProps(props?: any): OrbitListItemProps {
   return props
 }
 
+// technically, these are "non overridable", whereas the ListPropsContext is overrideable
+// what we should do is make this a standard pattern with a nice utility for it in UI
+
 type SelectionContextType = {
   onSelectItem?: HandleOrbitSelect
   onOpenItem?: HandleOrbitSelect
 }
-
 const SelectionContext = createContext({
   onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
   onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
 } as SelectionContextType)
-
 export function ProvideSelectionContext({
   children,
   ...rest
@@ -59,26 +76,33 @@ export type HandleOrbitSelect = ((
   eventType?: 'click' | 'key',
 ) => any)
 
-export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> & {
-  isActive?: boolean
-  query?: string
-  items?: (Bit | OrbitListItemProps)[]
-  onSelect?: HandleOrbitSelect
-  onOpen?: HandleOrbitSelect
-  placeholder?: React.ReactNode
-}
-
 const nullFn = () => null
 
 export function List(rawProps: ListProps) {
-  const { items, onSelect, onOpen, placeholder, getItemProps, query, ...props } = rawProps
+  const extraProps = useContext(ListPropsContext)
+  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+  const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
-  const getItems = useMemoGetValue(items)
   let selectionStore: SelectionStore | null = null
   const selectionStoreRef = useRef<SelectionStore | null>(null)
+
+  // TODO non conditional hook
+  const results =
+    props.searchable &&
+    useActiveQueryFilter({
+      items: props.items,
+      sortBy: props.sortBy,
+      query: props.query,
+      filterKey: props.filterKey,
+      removePrefix: props.removePrefix,
+      groupByLetter: props.groupByLetter,
+      groupMinimum: props.groupMinimum,
+    })
+
+  const getItems = useMemoGetValue(results)
 
   useEffect(
     () => {
@@ -141,7 +165,7 @@ export function List(rawProps: ListProps) {
   selectionStore = useSelectionStore(props)
   selectionStoreRef.current = selectionStore
 
-  const hasItems = !!items.length
+  const hasItems = !!results.length
 
   return (
     <ProvideSelectionStore selectionStore={selectionStore}>
@@ -149,10 +173,10 @@ export function List(rawProps: ListProps) {
         {hasItems && (
           <SelectableList
             allowMeasure={props.isActive}
-            items={items}
+            items={results}
             ItemView={ListItem}
             isRowLoaded={isRowLoaded}
-            {...props}
+            {...restProps}
             getItemProps={getItemPropsInner}
             onSelect={onSelectInner}
             onOpen={onOpenInner}

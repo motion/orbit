@@ -26,8 +26,6 @@ function CreateAppIndex() {
         after={
           <Button
             onClick={() => {
-              // TODO @umed type broke here
-              // @ts-ignore
               Actions.createCustomApp()
             }}
             icon="add"

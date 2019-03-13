@@ -25,10 +25,8 @@ export function OrbitSettingsToolbar() {
 
   return (
     <View margin="auto" width={320}>
-      <SegmentedRow
-        borderRadius={200} /* boxShadow={theme => [[0, 0, 0, 0.5, theme.borderColor]]} */
-      >
-        <Tabs active={activePaneKey} height={20} onActive={onActive}>
+      <SegmentedRow borderWidth={1}>
+        <Tabs active={activePaneKey} height={22} onActive={onActive}>
           <Tab
             key="spaces"
             label={

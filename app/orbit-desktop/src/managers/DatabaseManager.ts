@@ -173,7 +173,7 @@ export class DatabaseManager {
           const defaultApps: AppBit[] = [
             {
               target: 'app',
-              identifier: 'search' as any, // todo(nate) add this item into identifier type?
+              identifier: 'search',
               name: 'Search',
               colors: ['#D48D48', '#ACEACE'],
               pinned: true,
@@ -184,7 +184,7 @@ export class DatabaseManager {
             {
               target: 'app',
               name: 'Directory',
-              identifier: 'people' as any, // todo(nate) add this item into identifier type?
+              identifier: 'people',
               colors: ['#0F1453', '#449878'],
               spaceId: space.id,
               pinned: true,
@@ -193,7 +193,7 @@ export class DatabaseManager {
             {
               target: 'app',
               name: 'Home',
-              identifier: 'lists' as any, // todo(nate) add this item into identifier type?
+              identifier: 'lists',
               spaceId: space.id,
               colors: ['#353353', '#EADEAD'],
               pinned: true,

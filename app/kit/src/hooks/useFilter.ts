@@ -5,14 +5,14 @@ import { fuzzyFilter } from '../helpers/fuzzyFilter'
 export type UseFilterProps<A> = {
   items: A[]
   query?: string
-  filterKey?: string
   sortBy?: (item: A) => string
+  filterKey?: string
   removePrefix?: string
   groupByLetter?: boolean
   groupMinimum?: number
 }
 
-export function useFilter({ filterKey = 'id', groupMinimum, ...props }: UseFilterProps<any>) {
+export function useMemoSort({ filterKey = 'id', groupMinimum, ...props }: UseFilterProps<any>) {
   const query = props.removePrefix
     ? removePrefixIfExists(props.query || '', props.removePrefix)
     : props.query || ''

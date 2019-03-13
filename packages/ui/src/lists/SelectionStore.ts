@@ -1,5 +1,11 @@
 import { react } from '@o/use-store'
-import { Direction, MovesMap, SelectEvent, SelectionGroup, SelectionStoreProps } from './ProvideSelectionStore'
+import {
+  Direction,
+  MovesMap,
+  SelectEvent,
+  SelectionGroup,
+  SelectionStoreProps,
+} from './ProvideSelectionStore'
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)
@@ -19,6 +25,7 @@ export class SelectionStore {
   }
 
   setChildProps(childProps: Props) {
+    console.log('what', childProps)
     this.childProps = childProps
   }
 
@@ -65,7 +72,7 @@ export class SelectionStore {
   }
 
   get currentItems() {
-    if (!this.originalItems) {
+    if (!this.originalItems || !this.movesMap) {
       return null
     }
     return this.movesMap.map(x => this.originalItems.find(item => item.id === x.id))

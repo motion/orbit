@@ -1,7 +1,8 @@
 import { gloss, Row, ViewProps } from '@o/gloss'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useBreadcrumb } from './Breadcrumbs'
-import { getSegmentRadius } from './SegmentedRow'
+import { getSegmentedStyle } from './SegmentedRow'
+import { SurfacePropsContext } from './Surface'
 
 /**
  * Copyright 2018-present Facebook.
@@ -39,14 +40,15 @@ export function Tab(_: {
 }
 
 export function TabItem(props: ViewProps) {
-  const crumbs = useBreadcrumb()
+  const extraProps = useContext(SurfacePropsContext)
+  const crumb = useBreadcrumb()
   const segmentedProps =
-    crumbs &&
-    getSegmentRadius(
+    crumb &&
+    getSegmentedStyle(
       { borderRadius: typeof props.borderRadius === 'number' ? props.borderRadius : 100 },
-      crumbs,
+      crumb,
     )
-  return <TabItemChrome {...segmentedProps} {...props} />
+  return <TabItemChrome borderWidth={1} {...segmentedProps} {...extraProps} {...props} />
 }
 
 const TabItemChrome = gloss(Row, {
@@ -67,6 +69,8 @@ const TabItemChrome = gloss(Row, {
     ? theme.tabBackgroundActive || theme.backgroundActive
     : theme.tabBackground || theme.background
   return {
+    borderStyle: 'solid',
+    borderColor: theme.borderColor,
     width,
     flex: typeof width === 'number' ? 'none' : 1,
     color: active ? theme.colorActive : theme.colorBlur,

@@ -22,7 +22,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   //  3. stable sort after that
   next = sortBy(next, id => {
     const a = appDict[id]
-    return `${a.editable ? 1 : 0}${a.pinned ? 1 : 0}${a.id}`
+    return `${a.editable ? 0 : 1}${a.pinned ? 0 : 1}${a.id}`
   })
 
   return next
@@ -37,12 +37,12 @@ export function usePaneManagerPaneSort() {
       if (!space || !activeApps.length) {
         return
       }
-      const nextPaneSort = sortPanes(space, activeApps)
-      console.log('setting pane sort', nextPaneSort)
-      if (!isEqual(nextPaneSort, space.paneSort)) {
-        updateSpace({ paneSort: nextPaneSort })
+      const paneSort = sortPanes(space, activeApps)
+      console.log('setting pane sort', paneSort)
+      if (!isEqual(paneSort, space.paneSort)) {
+        updateSpace({ paneSort })
       }
     },
-    [space && space.paneSort, activeApps.map(x => x.pinned).join('')],
+    [space, activeApps],
   )
 }

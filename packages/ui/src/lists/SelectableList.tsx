@@ -74,8 +74,8 @@ export function SelectableList({
     activeIndex => {
       ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
       ensure('has list', !!listRef.current)
-      ensure('is active', this.props.selectionStore.isActive)
-      ensure('used key', this.props.selectionStore.selectEvent === SelectEvent.key)
+      ensure('is active', selectionStore.isActive)
+      ensure('used key', selectionStore.selectEvent === SelectEvent.key)
       listRef.current.scrollToRow(activeIndex)
     },
   )

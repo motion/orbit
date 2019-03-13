@@ -86,8 +86,10 @@ export function List(rawProps: ListProps) {
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
-  let selectionStore: SelectionStore | null = null
+
+  const selectionStore = useSelectionStore(restProps)
   const selectionStoreRef = useRef<SelectionStore | null>(null)
+  selectionStoreRef.current = selectionStore
 
   // TODO non conditional hook
   const results =
@@ -107,18 +109,19 @@ export function List(rawProps: ListProps) {
   useEffect(
     () => {
       return shortcutStore.onShortcut(shortcut => {
-        if (selectionStore && !selectionStore.isActive) {
+        const selStore = selectionStoreRef.current
+        if (selStore && !selStore.isActive) {
           return false
         }
         switch (shortcut) {
           case 'open':
             if (onOpen) {
-              onOpen(selectionStore.activeIndex, null)
+              onOpen(selStore.activeIndex, null)
             }
             break
           case 'up':
           case 'down':
-            selectionStore.move(Direction[shortcut])
+            selStore.move(Direction[shortcut])
             break
         }
       })
@@ -161,9 +164,6 @@ export function List(rawProps: ListProps) {
     },
     [onOpen, selectableProps],
   )
-
-  selectionStore = useSelectionStore(props)
-  selectionStoreRef.current = selectionStore
 
   const hasItems = !!results.length
 

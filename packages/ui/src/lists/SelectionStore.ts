@@ -25,6 +25,7 @@ export class SelectionStore {
   }
 
   setChildProps(childProps: Props) {
+    console.log('what', childProps)
     this.childProps = childProps
   }
 
@@ -127,7 +128,6 @@ export class SelectionStore {
 
   move = (direction: Direction, selectEvent = SelectEvent.key) => {
     if (!this.movesMap) {
-      debugger
       console.log('no SelectionStore.movesMap')
       return
     }

@@ -4,6 +4,7 @@ import {
   Color,
   forwardTheme,
   gloss,
+  GlossThemeFn,
   propsToStyles,
   propsToTextSize,
   propsToThemeStyles,
@@ -13,7 +14,6 @@ import {
   ThemeSelect,
   View,
 } from '@o/gloss'
-import { GlossThemeFn } from '@o/gloss/_/gloss'
 import { mergeDefined, selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -184,9 +184,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
   if (noInnerElement) {
-    if (children) {
-      surfaceProps.children = children
-    }
+    surfaceProps.children = children || null
   } else {
     surfaceProps.children = (
       <>
@@ -266,9 +264,10 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
           ref={forwardRef}
           themeSelect={themeSelect}
           lineHeight={lineHeight}
-          {...segmentedStyle}
           {...throughProps}
           {...rest}
+          {...segmentedStyle}
+          {...surfaceProps}
         />
       </BreadcrumbReset>
     </IconPropsContext.Provider>

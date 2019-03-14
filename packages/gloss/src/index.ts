@@ -26,7 +26,7 @@ export { SimpleText } from './blocks/SimpleText'
 export { View, ViewProps, ViewPropsStrict } from './blocks/View'
 // configureGloss
 export { configureGloss } from './config'
-export { gloss, GlossView } from './gloss'
+export { gloss, GlossThemeFn, GlossView } from './gloss'
 export { alphaColor } from './helpers/alphaColor'
 export { colorToString } from './helpers/helpers'
 export { propsToStyles } from './helpers/propsToStyles'

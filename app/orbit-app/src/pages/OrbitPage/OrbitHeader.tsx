@@ -1,7 +1,7 @@
 import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, SegmentedRow, Text, View } from '@o/ui'
+import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, SegmentedRow, View } from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -175,7 +175,7 @@ const HeaderContain = gloss<{ isActive?: boolean }>({
   alignItems: 'center',
   flex: 10,
   flexFlow: 'row',
-  maxWidth: 'calc(100% - 260px)',
+  maxWidth: 'calc(100% - 300px)',
   minWidth: 400,
   padding: [1, 5],
   borderRadius: 100,
@@ -234,10 +234,14 @@ const LaunchButton = memo(() => {
       tooltip="Open app (⌘ + ⏎)"
       width={50}
       onClick={Actions.tearApp}
+      fontWeight={500}
+      sizeFont={0.9}
+      alpha={0.5}
+      elementProps={{
+        transform: { y: -0.5 },
+      }}
     >
-      <Text size={0.75} fontWeight={500} alpha={0.5} transform={{ y: 1 }}>
-        Open
-      </Text>
+      Open
     </Button>
   )
 })

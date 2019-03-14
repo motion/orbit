@@ -89,7 +89,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </Row>
           )}
 
-          <OrbitSpaceSwitch />
+          {!isTorn && <OrbitSpaceSwitch />}
 
           <Button
             chromeless

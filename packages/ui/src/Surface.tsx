@@ -269,6 +269,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
           {...rest}
           {...segmentedStyle}
           {...surfaceProps}
+          opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>
     </IconPropsContext.Provider>

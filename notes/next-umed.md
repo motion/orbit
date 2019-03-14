@@ -1,5 +1,16 @@
 NEXT
 
+- mediator make resolvers simpler:
+
+"maybe theres a way to fix up the problems we have on electron side and my complaints too about mediator being too hard to manage
+what if
+you dont need to do this
+instead whenever you call `resolveCommand()`
+it will automatically register it with mediator
+we just have to assume that theres only one mediator per process which i think is right
+that would save us a lot of typing
+and would also let me put command resolvers into the react tree"
+
 Queryable:
 
 1. Make Slack API accessible we can do CRUD actions on

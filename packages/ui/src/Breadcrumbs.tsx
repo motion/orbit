@@ -1,5 +1,14 @@
 import { Row, ViewProps } from '@o/gloss'
-import React, { createContext, Dispatch, ReactNode, useContext, useEffect, useReducer, useRef, useState } from 'react'
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import { MergeContext } from './helpers/MergeContext'
 import { Text } from './text/Text'
 
@@ -26,12 +35,15 @@ export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
   const [children, setChildren] = useState<any[]>([])
 
-  useEffect(() => {
-    setChildren([...state.children])
-  }, [])
+  useEffect(
+    () => {
+      setChildren([...state.children])
+    },
+    [state],
+  )
 
   return (
-    <MergeContext Context={BreadcrumbsContext as any} value={{ dispatch, children }}>
+    <MergeContext Context={BreadcrumbsContext} value={{ dispatch, children }}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
@@ -89,9 +101,7 @@ export function useBreadcrumb(): BreadcrumbItem | null {
       context.dispatch({ type: 'mount', value: id })
     }
     return () => {
-      if (context.children.indexOf(id) !== -1) {
-        context.dispatch({ type: 'unmount', value: id })
-      }
+      context.dispatch({ type: 'unmount', value: id })
     }
   }, [])
 

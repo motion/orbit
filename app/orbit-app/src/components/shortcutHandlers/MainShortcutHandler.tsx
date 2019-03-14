@@ -9,6 +9,8 @@ import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
 import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 
+// TODO these would be easier to search if they all prefixed with something
+
 const rootShortcuts = {
   closeApp: 'command+q',
   closeTab: 'command+w',
@@ -39,12 +41,12 @@ export default memo(function MainShortcutHandler(props: {
   children?: React.ReactNode
   handlers?: any
 }) {
-  const { newAppStore, queryStore, paneManagerStore } = useStores()
+  const { queryStore, paneManagerStore } = useStores()
   const shortcutStore = useStore(ShortcutStore)
   const Actions = useActions()
 
   let handlers: any = {
-    commandNew: () => newAppStore.setShowCreateNew(true),
+    commandNew: Actions.setupNewApp,
     commandOpen: () => {
       console.log('tear app', Actions.tearApp)
       Actions.tearApp()

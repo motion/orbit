@@ -1,8 +1,10 @@
 import { sortBy } from 'lodash'
 import { useMemo } from 'react'
 import { fuzzyFilter } from '../helpers/fuzzyFilter'
+import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 
 export type UseFilterProps<A> = {
+  searchable?: boolean
   items: A[]
   query?: string
   sortBy?: (item: A) => string
@@ -14,8 +16,10 @@ export type UseFilterProps<A> = {
   groupMinimum?: number
 }
 
-export function useMemoSort(props: UseFilterProps<any>) {
-  const query = props.removePrefix
+export function useFilteredList({ filterKey = 'name', ...props }: UseFilterProps<any>) {
+  const query = !props.searchable
+    ? ''
+    : props.removePrefix
     ? removePrefixIfExists(props.query || '', props.removePrefix)
     : props.query || ''
 
@@ -25,9 +29,17 @@ export function useMemoSort(props: UseFilterProps<any>) {
     [props.items, props.sortBy],
   )
 
-  return props.query
-    ? fuzzyFilter(query, sortedItems, { key: props.filterKey || 'id' })
+  const filteredItems = props.query
+    ? fuzzyFilter(query, sortedItems, { key: filterKey })
     : sortedItems
+
+  const shouldGroup = (props.groupByLetter && filteredItems.length > props.groupMinimum) || 0
+  const getGroupProps = shouldGroup && groupByFirstLetter(filterKey)
+
+  return {
+    results: filteredItems,
+    getItemProps: shouldGroup ? getGroupProps : null,
+  }
 }
 
 export function removePrefixIfExists(text: string, prefix: string) {

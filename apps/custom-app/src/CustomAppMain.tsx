@@ -1,13 +1,21 @@
-import { AppProps, Table } from '@o/kit';
-import { createEnumFilter, DataType, Form, Section, Title, VerticalSplit, VerticalSplitPane } from '@o/ui';
-import faker from 'faker';
-import React, { useState } from 'react';
+import { AppProps, Table } from '@o/kit'
+import {
+  createEnumFilter,
+  DataType,
+  Form,
+  Section,
+  Title,
+  VerticalSplit,
+  VerticalSplitPane,
+} from '@o/ui'
+import faker from 'faker'
+import React, { useState } from 'react'
 
 const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
 
 const rows = [...new Array(10000)].map((_, index) => ({
   key: `${index}`,
-  category: rowTypes[index % 3],
+  category: rowTypes[index % 20],
   values: {
     name: faker.name.firstName(),
     topic: faker.lorem.sentence(),

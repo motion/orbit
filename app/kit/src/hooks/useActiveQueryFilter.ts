@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { useActiveQuery } from './useActiveQuery'
-import { UseFilterProps, useMemoSort } from './useFilter'
+import { useFilteredList, UseFilterProps } from './useFilteredList'
 
-export function useActiveQueryFilter<A>(props: UseFilterProps<A>): A[] {
+export function useActiveQueryFilter(props: UseFilterProps<any>) {
   const activeQuery = useActiveQuery()
   const sortBy = useCallback(props.sortBy, [])
   const query = typeof props.query === 'string' ? props.query : activeQuery
-  return useMemoSort({
+  return useFilteredList({
     ...props,
     query,
     // never update this because it should be pure

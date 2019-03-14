@@ -1,5 +1,6 @@
 - restore searching in lists
-- simplify lists like SettingsIndex
+
+---
 
 March:
 

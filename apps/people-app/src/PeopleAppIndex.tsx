@@ -1,24 +1,15 @@
 import { useModels } from '@o/bridge'
-import {
-  groupByFirstLetter,
-  List,
-  NoResultsDialog,
-  removePrefixIfExists,
-  useActiveQuery,
-  useActiveQueryFilter,
-  useShareMenu,
-  useStores,
-} from '@o/kit'
+import { List, NoResultsDialog, useShareMenu, useStores } from '@o/kit'
 import { BitModel } from '@o/models'
-import * as React from 'react'
+import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {
   // people and query
+
+  // TODO reduce all this mess down
   const { queryStore } = useStores()
   const { appFilters } = queryStore.queryFilters
   const { getShareMenuItemProps } = useShareMenu()
-  const activeQuery = useActiveQuery()
-
   let where = []
   if (appFilters.length) {
     for (const filter of appFilters) {
@@ -30,33 +21,28 @@ export function PeopleAppIndex() {
       }
     }
   }
-  if (!where.length) where.push({ type: 'person' })
-
+  if (!where.length) {
+    where.push({ type: 'person' })
+  }
   const [people] = useModels(BitModel, { take: 50000, where })
-  const results = useActiveQueryFilter({
-    items: people,
-    filterKey: 'name',
-    sortBy: x => x.title.toLowerCase(),
-    removePrefix: '@',
-  })
 
   if (!people.length) {
     return <NoResultsDialog subName="the directory" />
   }
 
-  const getItemGroupProps = results.length > 12 ? groupByFirstLetter('name') : () => null
-
   return (
     <List
       getItemProps={(a, b, c) => {
         return {
-          ...getItemGroupProps(a, b, c),
           ...getShareMenuItemProps(a, b, c),
         }
       }}
-      minSelected={0}
-      items={results}
-      query={removePrefixIfExists(activeQuery, '@')}
+      items={people}
+      filterKey="name"
+      removePrefix="@"
+      sortBy={useCallback(x => x.title.toLowerCase(), [])}
+      groupByLetter
+      groupMinimum={12}
     />
   )
 }

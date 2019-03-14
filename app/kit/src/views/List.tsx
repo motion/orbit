@@ -18,7 +18,7 @@ import React, { createContext, useCallback, useContext, useEffect, useRef } from
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
-import { UseFilterProps } from '../hooks/useFilter'
+import { UseFilterProps } from '../hooks/useFilteredList'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
@@ -91,20 +91,19 @@ export function List(rawProps: ListProps) {
   const selectionStoreRef = useRef<SelectionStore | null>(null)
   selectionStoreRef.current = selectionStore
 
-  // TODO non conditional hook
-  const results =
-    props.searchable &&
-    useActiveQueryFilter({
-      items: props.items,
-      sortBy: props.sortBy,
-      query: props.query,
-      filterKey: props.filterKey,
-      removePrefix: props.removePrefix,
-      groupByLetter: props.groupByLetter,
-      groupMinimum: props.groupMinimum,
-    })
+  const filtered = useActiveQueryFilter({
+    searchable: props.searchable,
+    items: props.items,
+    sortBy: props.sortBy,
+    query: props.query,
+    filterKey: props.filterKey,
+    removePrefix: props.removePrefix,
+    groupByLetter: props.groupByLetter,
+    groupMinimum: props.groupMinimum,
+  })
+  const filteredGetItemPropsGet = useMemoGetValue(filtered.getItemProps || nullFn)
 
-  const getItems = useMemoGetValue(results)
+  const getItems = useMemoGetValue(filtered.results)
 
   useEffect(
     () => {
@@ -133,7 +132,8 @@ export function List(rawProps: ListProps) {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(item)
     const extraProps = getItemPropsGet()(item, index, items)
-    return { ...normalized, ...extraProps }
+    const filterExtraProps = filteredGetItemPropsGet()(item, index, items)
+    return { ...normalized, ...extraProps, ...filterExtraProps }
   }, [])
 
   const onSelectInner = useCallback(
@@ -165,7 +165,7 @@ export function List(rawProps: ListProps) {
     [onOpen, selectableProps],
   )
 
-  const hasItems = !!results.length
+  const hasItems = !!filtered.results.length
 
   return (
     <ProvideSelectionStore selectionStore={selectionStore}>
@@ -173,7 +173,7 @@ export function List(rawProps: ListProps) {
         {hasItems && (
           <SelectableList
             allowMeasure={props.isActive}
-            items={results}
+            items={filtered.results}
             ItemView={ListItem}
             isRowLoaded={isRowLoaded}
             {...restProps}

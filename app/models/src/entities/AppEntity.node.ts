@@ -49,7 +49,7 @@ export class AppEntity extends BaseEntity implements AppBit {
   @Column({ type: 'simple-json', default: '[]' })
   colors?: string[]
 
-  @Column({ default: false })
+  @Column({ type: 'varchar', default: 'plain' })
   tabDisplay?: AppBit['tabDisplay']
 
   @Column({ default: true })

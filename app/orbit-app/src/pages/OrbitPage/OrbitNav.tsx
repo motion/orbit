@@ -102,7 +102,10 @@ export const OrbitNav = memo(() => {
               {
                 label: isPinned ? 'Unpin' : 'Pin',
                 click() {
-                  save(AppModel, { ...app, pinned: !app.pinned })
+                  save(AppModel, {
+                    ...app,
+                    tabDisplay: app.tabDisplay === 'pinned' ? 'plain' : 'pinned',
+                  })
                 },
               },
               ...getAppContextItems(app),
@@ -126,7 +129,9 @@ export const OrbitNav = memo(() => {
 
   const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
   const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
-  const pinnedItemsWidth = pinWidth * pinnedItems.length
+  const plainItems = items.filter(x => x.tabDisplay === 'plain')
+
+  const pinnedItemsWidth = pinWidth * (pinnedItems.length + permanentItems.length)
 
   const epad = showCreateNew ? 0 : 3
 
@@ -169,7 +174,7 @@ export const OrbitNav = memo(() => {
             lockAxis="x"
             distance={8}
             maxWidth={`calc(100% - ${pinnedItemsWidth + extraButtonsWidth - epad * 2}px)`}
-            items={items.filter(x => !x.isPinned)}
+            items={plainItems}
             shouldCancelStart={isRightClick}
             onSortEnd={handleSortEnd}
             // let shadows from tabs go up above

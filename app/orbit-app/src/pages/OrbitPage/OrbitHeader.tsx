@@ -12,13 +12,14 @@ import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
-  const activePaneType = paneManagerStore.activePane.type
+  const { activePane } = paneManagerStore
+  const activePaneType = activePane.type
   const { isTorn } = orbitStore
   const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
-  const isOnSettings =
-    paneManagerStore.activePane.type === 'settings' || paneManagerStore.activePane.type === 'spaces'
+  const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
+  const isOnTearablePane = activePaneType !== activePane.id
 
   return (
     <OrbitHeaderContainer
@@ -60,10 +61,12 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </View>
             <OrbitHeaderInput />
 
-            <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
-              <LinkButton />
-              {!isTorn && <LaunchButton />}
-            </SegmentedRow>
+            {isOnTearablePane && (
+              <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
+                <LinkButton />
+                {!isTorn && <LaunchButton />}
+              </SegmentedRow>
+            )}
           </HeaderContain>
 
           <View flex={1} />
@@ -101,7 +104,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             iconSize={isTorn ? 10 : 12}
             onClick={() => {
               newAppStore.setShowCreateNew(false)
-              if (paneManagerStore.activePane.type === 'settings') {
+              if (activePaneType === 'settings') {
                 paneManagerStore.back()
               } else {
                 paneManagerStore.setActivePaneByType('settings')

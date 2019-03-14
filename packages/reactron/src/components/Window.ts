@@ -136,7 +136,6 @@ export class Window extends BaseComponent {
   }
 
   handleNewProps(keys) {
-    console.log('WINDOW HANDLE NEW PROPS')
     try {
       for (const key of keys) {
         const val = this.props[key]

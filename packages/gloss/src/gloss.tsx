@@ -24,12 +24,17 @@ export type BaseRules = {
   [key: string]: string | number
 }
 
-type GlossProps<Props> = Props & HTMLAttributes<any> & { tagName?: string }
-type GlossThemeFn<Props> = ((props: GlossProps<Props>, theme: ThemeObject) => CSSPropertySet | null)
+type GlossProps<Props> = Props &
+  HTMLAttributes<any> & { tagName?: string; children?: ReactNode; ref?: any }
+
+export type GlossThemeFn<Props> = ((
+  props: GlossProps<Props>,
+  theme: ThemeObject,
+) => CSSPropertySet | null)
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
-  (props: Props & { children?: ReactNode }, context?: any): ReactElement<any> | null
+  (props: GlossProps<Props>, context?: any): ReactElement<any> | null
   propTypes?: ValidationMap<Props>
   contextTypes?: ValidationMap<any>
   defaultProps?: Partial<Props>
@@ -184,10 +189,7 @@ function glossify(
   return nextClassNames
 }
 
-export function gloss<Props = GlossProps<any>>(
-  a?: CSSPropertySet | any,
-  b?: CSSPropertySet,
-): GlossView<Props> {
+export function gloss<Props = any>(a?: CSSPropertySet | any, b?: CSSPropertySet): GlossView<Props> {
   let target = a || 'div'
   let rawStyles = b
   let targetConfig

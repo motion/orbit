@@ -169,7 +169,7 @@ class ManagedTableInner extends React.Component<
     highlightableRows: true,
     multiHighlight: false,
     autoHeight: false,
-    rowLineHeight: 28,
+    rowLineHeight: 26,
     bodyPlaceholder: (
       <div style={{ margin: 'auto' }}>
         <Text size={1.2}>Loading...</Text>

@@ -98,6 +98,7 @@ const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     backgroundAlt: darkBackground.lighten(0.1).alpha(0.2),
+    backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],

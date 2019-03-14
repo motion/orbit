@@ -33,7 +33,7 @@ const backgroundColor = (props: Props, theme: ThemeObject) => {
     if (props.background) {
       return props.background
     } else if (props.even && props.zebra) {
-      return theme.backgroundAlt
+      return theme.backgroundZebra || theme.backgroundAlt
     } else {
       return 'transparent'
     }
@@ -159,7 +159,7 @@ export class TableRow extends React.PureComponent<Props> {
 
           if (col.type === 'date') {
             element = (
-              <SimpleText ellipse>
+              <SimpleText alpha={0.7} ellipse>
                 <DateFormat date={value} />
               </SimpleText>
             )
@@ -177,7 +177,7 @@ export class TableRow extends React.PureComponent<Props> {
               />
             )
           } else {
-            element = <SimpleText>{value}</SimpleText>
+            element = <SimpleText alpha={0.7}>{value}</SimpleText>
           }
 
           if (isFilterable && onAddFilter != null) {

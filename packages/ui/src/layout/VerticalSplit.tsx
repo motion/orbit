@@ -24,7 +24,7 @@ export function VerticalSplit(props: { children: any }) {
   })
 
   return (
-    <Row flex={1} ref={node}>
+    <Row flex={1} overflow="hidden" ref={node}>
       {Children.map(props.children, (child, index) => {
         return cloneElement(child, {
           index,

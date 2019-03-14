@@ -1,10 +1,10 @@
-import { gloss } from '@o/gloss'
-import { Text } from '../text/Text'
+import { gloss, SimpleText } from '@o/gloss'
 
-export const Label = gloss(Text, {
+export const Label = gloss(SimpleText, {
   padding: 5,
 })
 
 Label.defaultProps = {
   tagName: 'label',
+  alpha: 0.5,
 }

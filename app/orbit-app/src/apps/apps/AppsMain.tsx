@@ -18,11 +18,14 @@ export function AppsMain(props: AppProps) {
             bordered
             before={<Icon opacity={0.2} name="gear" />}
             after={
-              <TitleBarButton
-                icon="boldremove"
-                tooltip={`Remove ${props.title}`}
-                onClick={() => removeApp(app)}
-              />
+              app &&
+              app.tabDisplay !== 'permanent' && (
+                <TitleBarButton
+                  icon="boldremove"
+                  tooltip={`Remove ${props.title}`}
+                  onClick={() => removeApp(app)}
+                />
+              )
             }
           >
             {props.title}

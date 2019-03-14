@@ -1,7 +1,7 @@
 import { AppBit } from '@o/models'
 import { getAppDefinitions } from '../helpers/getAppDefinitions'
 import { AppDefinition } from '../types/AppDefinition'
-import { useActiveApps } from './useActiveApps'
+import { useActiveAppsSorted } from './useActiveAppsSorted'
 
 // TODO when we unify apps + apps this will change
 // essentially app definition + app instance
@@ -13,7 +13,7 @@ export type AppWithDefinition = {
 }
 
 export function useActiveAppsWithDefinition(): AppWithDefinition[] {
-  return useActiveApps().map(app => ({
+  return useActiveAppsSorted().map(app => ({
     definition: getAppDefinitions().find(def => def.id === app.identifier),
     app,
   }))

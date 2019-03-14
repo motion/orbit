@@ -31,15 +31,35 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
   return state
 }
 
+const useDebounced = (val, amt = 0) => {
+  const [state, setState] = useState(val)
+
+  useEffect(
+    () => {
+      let tm = setTimeout(() => {
+        setState(val)
+      }, amt)
+
+      return () => {
+        clearTimeout(tm)
+      }
+    },
+    [val],
+  )
+
+  return state
+}
+
 export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
   const [children, setChildren] = useState<any[]>([])
+  const debouncedState = useDebounced(state, 16)
 
   useEffect(
     () => {
       setChildren([...state.children])
     },
-    [state],
+    [debouncedState],
   )
 
   return (

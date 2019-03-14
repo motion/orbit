@@ -18,7 +18,9 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
     <FormTableRow>
       <FormTableLabel>
         <Row flex={1} alignItems="center">
-          <Label htmlFor={name}>{label}</Label>
+          <Label width="100%" htmlFor={name}>
+            {label}
+          </Label>
           <HorizontalSpace />
         </Row>
       </FormTableLabel>

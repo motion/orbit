@@ -18,7 +18,7 @@ export const SimpleText = gloss<
       children?: any
     }
 >({
-  display: 'contents',
+  display: 'block',
 }).theme((props, theme) => {
   const textProps = propsToTextSize(props)
   const color = props.color || theme.color

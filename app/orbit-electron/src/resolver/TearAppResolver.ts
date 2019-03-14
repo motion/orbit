@@ -11,6 +11,7 @@ import { appProcesses, getOrbitShortcutsStore } from '../orbit/OrbitWindow'
 
 const log = new Logger('TearAppResolver')
 
+// TODO umed can we make this type not bread
 export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appType, appId }) => {
   log.info('Tearing app', appType, appId)
 
@@ -19,8 +20,10 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
     dialog.showErrorBox('No icon found for app...', 'Oops')
     console.error('no icon!', iconPath)
     return
+  } else {
+    app.dock.setIcon(iconPath)
   }
-  app.dock.setIcon(iconPath)
+
   Electron.setIsTorn()
   getOrbitShortcutsStore().dispose()
 

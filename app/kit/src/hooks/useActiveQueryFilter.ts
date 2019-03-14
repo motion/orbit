@@ -1,15 +1,14 @@
-import { useReaction } from '@o/use-store'
 import { useCallback } from 'react'
-import { UseFilterProps, useMemoSort } from './useFilter'
-import { useStoresSimple } from './useStores'
+import { useActiveQuery } from './useActiveQuery'
+import { useFilteredList, UseFilterProps } from './useFilteredList'
 
-export function useActiveQueryFilter<A>(props: UseFilterProps<A>): A[] {
-  const { appStore } = useStoresSimple()
-  const activeQuery = useReaction(() => appStore.activeQuery)
+export function useActiveQueryFilter(props: UseFilterProps<any>) {
+  const activeQuery = useActiveQuery()
   const sortBy = useCallback(props.sortBy, [])
-  return useMemoSort({
-    query: typeof props.query === 'string' ? props.query : activeQuery,
+  const query = typeof props.query === 'string' ? props.query : activeQuery
+  return useFilteredList({
     ...props,
+    query,
     // never update this because it should be pure
     sortBy,
   })

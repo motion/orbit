@@ -46,6 +46,7 @@ const macModernTheme = Theme.colorize({
   },
 })
 
+const lightColor = '#444'
 const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
@@ -57,7 +58,7 @@ const light = {
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
-    color: '#444',
+    color,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     borderColor: [215, 215, 215],
@@ -78,6 +79,7 @@ const light = {
     inputBackgroundHover: '#fff',
     inputBackgroundActive: '#fff',
     inputBorderColorActive: [215, 215, 215],
+    inputBackgroundSelection: '#ddd',
     cardBackground: [250, 250, 250],
     cardBorderColor: [0, 0, 0, 0.1],
   }),
@@ -90,20 +92,33 @@ const light = {
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      color: lightColor,
+      borderColor: lightColor,
+      borderColorHover: lightColor,
+    }),
+  },
 }
 
+const darkColor = [250, 250, 250]
 const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
     backgroundAlt: darkBackground.lighten(0.1).alpha(0.2),
+    backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
     backgroundHighlightActive: orbitColor.lighten(0.2),
     backgroundHighlight: orbitColor,
-    color: [250, 250, 250],
+    color: darkColor,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     borderColor: [180, 180, 180, 0.25],
@@ -139,6 +154,7 @@ const dark = {
     inputBackgroundHover: 'transparent',
     inputBackgroundActive: 'transparent',
     inputBackgroundFocus: 'transparent',
+    inputBackgroundSelection: '#111',
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.13],
@@ -158,6 +174,17 @@ const dark = {
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      color: darkColor,
+      borderColor: darkColor,
+      borderColorHover: darkColor,
+    }),
+  },
 }
 
 const clearLight = {
@@ -199,17 +226,6 @@ export const themes = {
       iconFill: '#fff',
       background: '#449878',
       color: '#fff',
-    }),
-  },
-  bordered: {
-    borderWidth: 2,
-    ...Theme.colorize({
-      background: 'transparent',
-      backgroundHover: 'transparent',
-      backgroundActive: 'transparent',
-      color: orbitActiveBg,
-      borderColor: orbitActiveBg,
-      borderColorHover: orbitActiveBg,
     }),
   },
   tooltip: {

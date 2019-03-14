@@ -41,13 +41,11 @@ export function AppsMainAddApp(props: { identifier: string }) {
       >
         {def.name}
       </TitleRow>
-
       {hasSetup && (
         <SubSection title="Setup">
           <AppView identifier={props.identifier} viewType="setup" />
         </SubSection>
       )}
-
       <SubSection title="Description">
         <Paragraph>
           Features Fuzzy-matching autocomplete to create new file relative to existing path Create

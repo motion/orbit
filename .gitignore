@@ -31,6 +31,7 @@ app/screen/train
 app/screen/orbit/orbit.xcodeproj/project.xcworkspace
 app/screen/orbit/orbit.xcodeproj/xcuserdata
 app/screen/orbit/Carthage
+app/screen/swindler/Carthage
 app/screen/orbit/Index
 app/screen/orbit/Build
 app/screen/orbit/orbit.xcodeproj

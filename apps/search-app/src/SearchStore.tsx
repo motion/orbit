@@ -98,7 +98,7 @@ export class SearchStore {
     const { appStore } = this.stores
 
     // non editable apps don't search apps, just the Home app
-    if (appStore && appStore.app && appStore.app.tabDisplay === 'permanent') {
+    if (appStore && appStore.app && appStore.app.tabDisplay !== 'permanent') {
       return []
     }
 

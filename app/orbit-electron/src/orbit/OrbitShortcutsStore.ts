@@ -1,6 +1,6 @@
 import { Logger } from '@o/logger'
 import { App, Desktop, Electron } from '@o/stores'
-import { ensure, react } from '@o/use-store'
+import { react } from '@o/use-store'
 import { ElectronShortcutManager } from '../helpers/ElectronShortcutManager'
 
 const log = new Logger('ShortcutsManager')
@@ -11,14 +11,12 @@ export class OrbitShortcutsStore {
   props: {
     onToggleOpen?: Function
   }
-  disposed = false
 
   start() {
     this.globalShortcut.registerShortcuts()
   }
 
   dispose() {
-    this.disposed = true
     this.globalShortcut.unregisterShortcuts()
     this.peekShortcuts.unregisterShortcuts()
   }
@@ -39,7 +37,6 @@ export class OrbitShortcutsStore {
   disableGlobalShortcutsDuringShortcutSettingInputFocus = react(
     () => App.orbitState.shortcutInputFocused,
     focused => {
-      ensure('not disposed', !this.disposed)
       if (focused) {
         log.info('Removing global shortcut temporarily...')
         this.globalShortcut.unregisterShortcuts()
@@ -52,6 +49,8 @@ export class OrbitShortcutsStore {
       deferFirstRun: true,
     },
   )
+
+  // these are basically unused until/if we bring back peek:
 
   peekShortcuts = new ElectronShortcutManager({
     shortcuts: {
@@ -79,7 +78,6 @@ export class OrbitShortcutsStore {
   enablePeekShortcutsWhenHoldingOption = react(
     () => Desktop.keyboardState.isHoldingOption,
     async (optionDown, { sleep }) => {
-      ensure('not torn', !this.disposed)
       if (optionDown) {
         await sleep(500)
         this.peekShortcuts.registerShortcuts()

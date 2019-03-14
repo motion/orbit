@@ -126,7 +126,6 @@ function SimpleInput(props: SizedSurfaceProps) {
 
 const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
   ...(!props.chromeless && {
-    background: theme.background.alpha(0.5),
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
       boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(a => a * 0.5)]],
@@ -134,7 +133,7 @@ const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
   }),
   '&::selection': {
     color: theme.color.lighten(0.1),
-    background: theme.background.darken(0.1),
+    background: theme.backgroundSelection || theme.background.darken(0.2),
   },
 })
 

@@ -49,6 +49,8 @@ type VirtualProps = {
   scrollToIndex?: number
   padTop?: number
   sortable?: boolean
+
+  // allows the list to dynamically size height up to a limit (maxHeight)
   dynamicHeight?: boolean
   keyMapper?: (index: number) => string | number
   allowMeasure?: boolean

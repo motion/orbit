@@ -47,7 +47,7 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
   const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
   return (
     <AppIconContainer>
-      {app.pinned && (
+      {app.tabDisplay !== 'plain' && (
         <Icon name="pin" position="absolute" top={20} left={20} size={12} opacity={0.35} />
       )}
       <LargeIcon
@@ -85,7 +85,7 @@ export function SearchHome() {
       title: x.name,
       type: 'installed',
       group: 'Installed Apps',
-      disabled: x.pinned || x.editable === false,
+      disabled: x.tabDisplay !== 'plain',
       onDoubleClick: () => {
         paneManagerStore.setActivePane(`${x.id}`)
         console.log('double 2', x)

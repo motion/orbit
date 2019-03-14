@@ -56,13 +56,6 @@ export default observer(function SpaceEditView(props: Props) {
       name: 'Lists',
       identifier: 'lists',
       spaceId: savedSpace.id,
-      // data: {
-      //   lists: [
-      //     { name: 'list #1', order: 0, pinned: false },
-      //     { name: 'list #2', order: 0, pinned: false },
-      //     { name: 'list #3', order: 0, pinned: false },
-      //   ],
-      // },
     }
     await save(AppModel, listsApp)
 

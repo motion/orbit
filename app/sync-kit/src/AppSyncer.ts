@@ -7,6 +7,8 @@ import { SyncerUtils } from './SyncerUtils'
  * Options to be passed to Syncer.
  */
 export interface SyncerOptions {
+  id: string
+
   /**
    * Syncer name.
    * By default equals to implementation constructor name.

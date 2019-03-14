@@ -5,14 +5,20 @@
  * @format
  */
 
-import { gloss, Row } from '@o/gloss';
-import invariant from 'invariant';
-import * as React from 'react';
-import { ContextMenu } from '../ContextMenu';
-import { Interactive } from '../Interactive';
-import { DataColumns, DataType } from '../types';
-import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnColumnResize, TableOnSort } from './types';
-import { isPercentage, normaliseColumnWidth } from './utils';
+import { gloss, Row } from '@o/gloss'
+import invariant from 'invariant'
+import * as React from 'react'
+import { ContextMenu } from '../ContextMenu'
+import { Interactive } from '../Interactive'
+import { DataColumns, DataType } from '../types'
+import {
+  SortOrder,
+  TableColumnOrder,
+  TableColumnSizes,
+  TableOnColumnResize,
+  TableOnSort,
+} from './types'
+import { isPercentage, normaliseColumnWidth } from './utils'
 
 const TableHeaderArrow = gloss({
   display: 'block',
@@ -52,7 +58,7 @@ const TableHeadContainer = gloss(Row, {
   top: 0,
   zIndex: 2,
 }).theme((_, theme) => ({
-  borderBottom: [1, theme.borderColor],
+  borderBottom: [1, theme.borderColorLight],
   color: theme.color,
 }))
 

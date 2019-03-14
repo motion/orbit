@@ -176,8 +176,7 @@ export class DatabaseManager {
               identifier: 'search',
               name: 'Search',
               colors: ['#D48D48', '#ACEACE'],
-              pinned: true,
-              editable: false,
+              tabDisplay: 'permanent',
               spaceId: space.id,
               data: {},
             },
@@ -187,7 +186,7 @@ export class DatabaseManager {
               identifier: 'people',
               colors: ['#0F1453', '#449878'],
               spaceId: space.id,
-              pinned: true,
+              tabDisplay: 'pinned',
               data: {},
             },
             {
@@ -196,7 +195,7 @@ export class DatabaseManager {
               identifier: 'lists',
               spaceId: space.id,
               colors: ['#353353', '#EADEAD'],
-              pinned: true,
+              tabDisplay: 'pinned',
               data: {
                 rootItemID: 0,
                 items: {

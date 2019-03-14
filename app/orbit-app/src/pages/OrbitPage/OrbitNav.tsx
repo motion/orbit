@@ -57,7 +57,7 @@ export const OrbitNav = memo(() => {
     )
   }
 
-  const numUnpinned = activeAppsSorted.filter(x => !x.pinned).length
+  const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
   const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
 
   const items = space.paneSort
@@ -71,12 +71,12 @@ export const OrbitNav = memo(() => {
         const isActive = !showCreateNew && `${paneId}` === activePaneId
         const next = activeAppsSorted[index + 1]
         const nextIsActive = next && paneManagerStore.activePane.id === `${next.id}`
-        const isPinned = app.pinned
+        const isPinned = app.tabDisplay === 'pinned' || app.tabDisplay === 'permanent'
         return {
           app,
           width: tabWidth,
           separator: !isActive && !isLast && !nextIsActive,
-          isPinned,
+          tabDisplay: app.tabDisplay,
           label: isPinned
             ? ''
             : app.identifier === 'search' && index === 0
@@ -86,7 +86,6 @@ export const OrbitNav = memo(() => {
           thicc: isPinned,
           isActive,
           icon: `orbit-${app.identifier}`,
-          // iconProps: isPinned ? { color: app.colors[0] } : null,
           iconSize: isPinned ? 16 : 12,
           getContext() {
             return [
@@ -125,7 +124,8 @@ export const OrbitNav = memo(() => {
   const showCreateNewWidth = showCreateNew ? tabWidth : 46
   const extraButtonsWidth = showCreateNewWidth
 
-  const pinnedItems = items.filter(x => x.isPinned)
+  const permanentItems = items.filter(x => x.tabDisplay === 'permanent')
+  const pinnedItems = items.filter(x => x.tabDisplay === 'pinned')
   const pinnedItemsWidth = pinWidth * pinnedItems.length
 
   const epad = showCreateNew ? 0 : 3
@@ -133,10 +133,35 @@ export const OrbitNav = memo(() => {
   return (
     <OrbitNavClip>
       <OrbitNavChrome>
-        <Row height={tabHeight + 10} padding={5} margin={-5} overflow="hidden" flex={1}>
-          {pinnedItems.map(props => (
+        <Row
+          transition="opacity ease 300ms"
+          height={tabHeight + 10}
+          padding={5}
+          margin={-5}
+          overflow="hidden"
+          flex={1}
+          opacity={onSettings ? 0.5 : 1}
+        >
+          {permanentItems.map(props => (
             <OrbitTab key={props.app.id} {...props} />
           ))}
+
+          {/* Pinned tabs */}
+          <SortableTabs
+            className="hide-scrollbars"
+            axis="x"
+            lockAxis="x"
+            distance={8}
+            items={pinnedItems}
+            shouldCancelStart={isRightClick}
+            onSortEnd={handleSortEnd}
+            // let shadows from tabs go up above
+            padding={epad}
+            margin={-epad}
+            height={tabHeight + 20}
+            overflowX="auto"
+            overflowY="hidden"
+          />
 
           <SortableTabs
             className="hide-scrollbars"
@@ -153,8 +178,6 @@ export const OrbitNav = memo(() => {
             height={tabHeight + 20}
             overflowX="auto"
             overflowY="hidden"
-            opacity={onSettings ? 0.5 : 1}
-            transition="opacity ease 300ms"
           />
 
           {showCreateNew && (
@@ -181,7 +204,7 @@ export const OrbitNav = memo(() => {
               tooltip={showCreateNew ? 'Cancel' : 'Add'}
               thicc
               icon={showCreateNew ? 'remove' : 'add'}
-              iconAdjustOpacity={-0.1}
+              iconAdjustOpacity={-0.2}
               onClick={Actions.setupNewApp}
             />
           )}

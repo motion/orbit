@@ -1,5 +1,13 @@
 import { loadOne, save } from '@o/bridge'
-import { AppIcon, MarkType, OrbitListItemProps, searchBits, SearchState, SpaceIcon, useStoresSimple } from '@o/kit'
+import {
+  AppIcon,
+  MarkType,
+  OrbitListItemProps,
+  searchBits,
+  SearchState,
+  SpaceIcon,
+  useStoresSimple,
+} from '@o/kit'
 import { AppBit, SearchQuery, UserModel } from '@o/models'
 import { ensure, react, useHook } from '@o/use-store'
 import { uniq } from 'lodash'
@@ -90,11 +98,11 @@ export class SearchStore {
     const { appStore } = this.stores
 
     // non editable apps don't search apps, just the Home app
-    if (appStore && appStore.app && appStore.app.editable === true) {
+    if (appStore && appStore.app && appStore.app.tabDisplay === 'permanent') {
       return []
     }
 
-    const apps = this.stores.spaceStore.apps.filter(x => x.editable !== false)
+    const apps = this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent')
 
     if (query) {
       return apps.map(this.appToResult)

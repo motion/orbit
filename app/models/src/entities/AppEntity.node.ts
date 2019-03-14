@@ -50,7 +50,7 @@ export class AppEntity extends BaseEntity implements AppBit {
   colors?: string[]
 
   @Column({ default: false })
-  pinned?: boolean
+  tabDisplay?: AppBit['tabDisplay']
 
   @Column({ default: true })
   editable?: boolean

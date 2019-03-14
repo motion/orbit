@@ -4,6 +4,12 @@ import { AppBit, Space } from '@o/models'
 import { keyBy, sortBy } from 'lodash'
 import { useEffect } from 'react'
 
+const tabDisplaySort = {
+  permanent: 0,
+  pinned: 1,
+  plain: 2,
+}
+
 export function sortPanes(space: Space, apps: AppBit[]) {
   const appDict = keyBy(apps, 'id')
 
@@ -22,7 +28,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
   //  3. stable sort after that
   next = sortBy(next, id => {
     const a = appDict[id]
-    return `${a.editable ? 1 : 0}${a.pinned ? 0 : 1}${a.id}`
+    return `${tabDisplaySort[a.tabDisplay]}${a.id}`
   })
 
   return next

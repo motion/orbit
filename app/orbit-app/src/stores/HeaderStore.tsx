@@ -46,7 +46,7 @@ export class HeaderStore {
   }
 
   focusInputOnVisible = react(
-    () => App.orbitState.pinned || App.orbitState.docked,
+    () => App.orbitState.docked,
     async (shown, { sleep }) => {
       ensure('shown', shown)
       ensure('ref', !!this.inputRef.current)

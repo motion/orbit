@@ -5,45 +5,27 @@
  * @format
  */
 
-import { gloss } from '@o/gloss';
-import { debounce, isEqual } from 'lodash';
-import * as React from 'react';
-import debounceRender from 'react-debounce-render';
-import { VariableSizeList } from 'react-window';
-import { ContextMenu } from '../ContextMenu';
-import { ResizeObserver } from '../ResizeObserver';
-import { Text } from '../text/Text';
-import { DataColumns, GenericDataRow } from '../types';
-import { getSortedRows } from './getSortedRows';
-import { TableHead } from './TableHead';
-import { TableRow } from './TableRow';
-import { DEFAULT_ROW_HEIGHT, SortOrder, TableColumnOrder, TableColumnSizes, TableHighlightedRows, TableOnAddFilter, TableRows } from './types';
-
-// TODO this can move to useResizeObserver
-function useComponentSize() {
-  const [state, setState] = React.useState({ width: 0, height: 0 })
-  const measureRef = React.useRef<HTMLDivElement>(null)
-
-  React.useEffect(() => {
-    const node = measureRef.current
-    const observer = new ResizeObserver(entries => {
-      const { width, height } = entries[0].contentRect
-      const next = { width, height }
-      if (!isEqual(next, state)) {
-        setState(next)
-      }
-    })
-    observer.observe(node)
-    return () => {
-      observer.disconnect()
-    }
-  })
-
-  return {
-    ...state,
-    measureRef,
-  }
-}
+import { gloss } from '@o/gloss'
+import { debounce, isEqual } from 'lodash'
+import * as React from 'react'
+import debounceRender from 'react-debounce-render'
+import { VariableSizeList } from 'react-window'
+import { ContextMenu } from '../ContextMenu'
+import { ResizeObserver } from '../ResizeObserver'
+import { Text } from '../text/Text'
+import { DataColumns, GenericDataRow } from '../types'
+import { getSortedRows } from './getSortedRows'
+import { TableHead } from './TableHead'
+import { TableRow } from './TableRow'
+import {
+  DEFAULT_ROW_HEIGHT,
+  SortOrder,
+  TableColumnOrder,
+  TableColumnSizes,
+  TableHighlightedRows,
+  TableOnAddFilter,
+  TableRows,
+} from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
@@ -603,4 +585,30 @@ export const DebouncedManagedTable = debounceRender(ManagedTableInner, 150, {
 export function ManagedTable(props: ManagedTableProps) {
   const { width, height, measureRef } = useComponentSize()
   return <DebouncedManagedTable measureRef={measureRef} width={width} height={height} {...props} />
+}
+
+// TODO this can move to useResizeObserver
+function useComponentSize() {
+  const [state, setState] = React.useState({ width: 0, height: 0 })
+  const measureRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const node = measureRef.current
+    const observer = new ResizeObserver(entries => {
+      const { width, height } = entries[0].contentRect
+      const next = { width, height }
+      if (!isEqual(next, state)) {
+        setState(next)
+      }
+    })
+    observer.observe(node)
+    return () => {
+      observer.disconnect()
+    }
+  })
+
+  return {
+    ...state,
+    measureRef,
+  }
 }

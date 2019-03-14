@@ -56,12 +56,12 @@ export function FormField({ type, ...props }: FormFieldProps) {
     case DataType.boolean:
       return <CheckBoxField name={name} {...props as any} />
     case DataType.date:
-      // TODO calendar option after input
+      // TODO calendar after input
       return <InputField name={name} {...props} />
     case DataType.number:
       return <InputField name={name} {...props} />
     case DataType.string:
-      return <InputField name={name} {...props} />
+      return <InputField name={name} width="100%" {...props} />
     case DataType.unknown:
     default:
       if (typeof type === 'undefined') {

@@ -11,6 +11,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
   return (
     <Section>
       <TitleRow
+        backgrounded
         bordered
         before={<Icon name={props.identifier} size={24} />}
         after={
@@ -29,16 +30,17 @@ export function AppsMainAddApp(props: { identifier: string }) {
             )}
           </>
         }
+        below={
+          <SubTitle>
+            <Row>
+              <SubItem>{def['author'] || 'anonymous'}</SubItem>
+              <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
+            </Row>
+          </SubTitle>
+        }
       >
         {def.name}
       </TitleRow>
-
-      <SubTitle>
-        <Row>
-          <SubItem>{def['author'] || 'anonymous'}</SubItem>
-          <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
-        </Row>
-      </SubTitle>
 
       {hasSetup && (
         <SubSection title="Setup">

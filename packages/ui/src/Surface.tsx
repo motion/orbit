@@ -264,6 +264,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
           ref={forwardRef}
           themeSelect={themeSelect}
           lineHeight={lineHeight}
+          whiteSpace="pre"
           {...throughProps}
           {...rest}
           {...segmentedStyle}

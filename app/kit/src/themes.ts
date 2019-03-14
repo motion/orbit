@@ -50,7 +50,7 @@ const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: '#f6f7f9aa',
+    backgroundAlt: '#f6f7f9aa',
     backgroundHighlightActive: orbitColor.lighten(0.1),
     backgroundHighlight: orbitColor,
     background: lightBackground,
@@ -97,7 +97,7 @@ const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: darkBackground.lighten(0.1).alpha(0.25),
+    backgroundAlt: darkBackground.lighten(0.1).alpha(0.2),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],

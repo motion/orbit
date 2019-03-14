@@ -1,4 +1,4 @@
-import { Row } from '@o/gloss'
+import { Row, View } from '@o/gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
 import { HorizontalSpace } from '../layout/HorizontalSpace'
@@ -9,7 +9,9 @@ export type TitleRowProps = TextProps & {
   before?: React.ReactNode
   bordered?: boolean
   after?: React.ReactNode
+  below?: React.ReactNode
   sizePadding?: number
+  backgrounded?: boolean
 }
 
 export function TitleRow({
@@ -18,30 +20,39 @@ export function TitleRow({
   after,
   margin,
   sizePadding = 1,
+  backgrounded,
+  below,
   ...props
 }: TitleRowProps) {
+  const unpad = 20
   return (
-    <Row
+    <View
       position="relative"
-      alignItems="center"
       overflow="hidden"
-      padding={[2.5 * sizePadding, 0, 10 * sizePadding + 5]}
-      margin={typeof margin !== 'undefined' ? margin : [0, 0, 10]}
+      paddingTop={unpad + 2.5 * sizePadding}
+      paddingBottom={10 * sizePadding + 5}
+      paddingLeft={unpad}
+      paddingRight={unpad}
+      margin={typeof margin !== 'undefined' ? margin : [-unpad, -unpad, 10]}
+      background={backgrounded ? theme => theme.backgroundAlt : null}
     >
-      {before && (
-        <>
-          {before}
-          <HorizontalSpace />
-        </>
-      )}
-      <Title margin={0} {...props} />
-      {after && (
-        <>
-          <div style={{ flex: 1 }} />
-          {after}
-        </>
-      )}
+      <Row alignItems="center">
+        {before && (
+          <>
+            {before}
+            <HorizontalSpace />
+          </>
+        )}
+        <Title margin={0} {...props} />
+        {after && (
+          <>
+            <div style={{ flex: 1 }} />
+            {after}
+          </>
+        )}
+      </Row>
+      {below}
       {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
-    </Row>
+    </View>
   )
 }

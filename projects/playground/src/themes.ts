@@ -5,7 +5,7 @@ const Theme = new ThemeMaker()
 const lightBackground = color('#fff')
 const light = {
   ...Theme.fromStyles({
-    backgroundAlternate: '#f6f7f9aa',
+    backgroundAlt: '#f6f7f9aa',
     background: lightBackground,
     mainBackground: lightBackground,
     backgroundActive: '#eee',

@@ -24,7 +24,7 @@ const backgroundColor = (props, theme) => {
       (theme.selected && theme.selected.background) || theme.backgroundSelected || theme.background
     )
   } else if (props.even) {
-    return theme.backgroundAlternate
+    return theme.backgroundAlt
   } else {
     return ''
   }
@@ -105,7 +105,7 @@ const TreeItemsRowAttributeValue = gloss({
 })
 
 const HighlightedText = gloss().theme(({ selected }, theme) => ({
-  backgroundColor: theme.backgroundAlternate,
+  backgroundColor: theme.backgroundAlt,
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
 }))
 

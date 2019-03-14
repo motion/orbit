@@ -1,4 +1,5 @@
 import React from 'react'
+import { SurfacePassProps } from '../Surface'
 import { DataColumns, GenericDataRow } from '../types'
 import { Fieldset } from './Fieldset'
 import { FormField } from './FormField'
@@ -11,7 +12,7 @@ export function Form({ columns, rows }: FormProps) {
   }
 
   return (
-    <>
+    <SurfacePassProps size={1.1}>
       {rows.map(row => {
         return (
           <Fieldset key={row.key}>
@@ -29,6 +30,6 @@ export function Form({ columns, rows }: FormProps) {
           </Fieldset>
         )
       })}
-    </>
+    </SurfacePassProps>
   )
 }

@@ -2,8 +2,17 @@ import { Absolute, gloss, ViewProps } from '@o/gloss'
 import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
 import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
 import { AppBit } from '@o/models'
-import { Icon, Section, SelectableGrid, Text, TitleRow, useContextMenu, View } from '@o/ui'
-import React from 'react'
+import {
+  Icon,
+  Section,
+  SelectableGrid,
+  Text,
+  TitleRow,
+  useContextMenu,
+  useMemoGetValue,
+  View,
+} from '@o/ui'
+import React, { useCallback } from 'react'
 
 type LargeIconProps = ViewProps & {
   icon?: React.ReactNode
@@ -76,57 +85,50 @@ const AppIconContainer = gloss({
 export function SearchHome() {
   const { paneManagerStore } = useStores()
   const activeApps = useActiveAppsSorted()
+  const getActiveApps = useMemoGetValue(activeApps)
   const handleSortEnd = useAppSortHandler()
   const [activeSpace] = useActiveSpace()
-
-  const results = [
-    ...activeApps.map(x => ({
-      id: x.id,
-      title: x.name,
-      type: 'installed',
-      group: 'Installed Apps',
-      disabled: x.tabDisplay !== 'plain',
-      onDoubleClick: () => {
-        paneManagerStore.setActivePane(`${x.id}`)
-        console.log('double 2', x)
-      },
-    })),
-  ]
-
-  const resultsKey = results.map(x => x.id).join('')
-
-  const getItem = React.useCallback(
-    ({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
-      if (item.type === 'add') {
-        // TODO on click to new app pane
-        return (
-          <AppIconContainer onClick={onClick} onDoubleClick={onDoubleClick}>
-            <LargeIcon {...item} />
-          </AppIconContainer>
-        )
-      }
-      return (
-        <OrbitAppIcon
-          app={activeApps.find(x => x.id === item.id)}
-          isSelected={isSelected}
-          onClick={select}
-          onDoubleClick={onDoubleClick}
-        />
-      )
-    },
-    [resultsKey],
-  )
 
   return (
     <Section>
       <TitleRow size={1.5} bordered>
         {activeSpace ? activeSpace.name : ''}
       </TitleRow>
+
       <SelectableGrid
         autoFitColumns
         minWidth={180}
-        items={results}
-        getItem={getItem}
+        items={[
+          ...activeApps.map(x => ({
+            id: x.id,
+            title: x.name,
+            type: 'installed',
+            group: 'Installed Apps',
+            disabled: x.tabDisplay !== 'plain',
+            onDoubleClick: () => {
+              paneManagerStore.setActivePane(`${x.id}`)
+              console.log('double 2', x)
+            },
+          })),
+        ]}
+        getItem={useCallback(({ onClick, onDoubleClick, ...item }, { isSelected, select }) => {
+          if (item.type === 'add') {
+            // TODO on click to new app pane
+            return (
+              <AppIconContainer onClick={onClick} onDoubleClick={onDoubleClick}>
+                <LargeIcon {...item} />
+              </AppIconContainer>
+            )
+          }
+          return (
+            <OrbitAppIcon
+              app={getActiveApps().find(x => x.id === item.id)}
+              isSelected={isSelected}
+              onClick={select}
+              onDoubleClick={onDoubleClick}
+            />
+          )
+        }, [])}
         distance={10}
         onSortEnd={handleSortEnd}
         getSortableItemProps={item => {

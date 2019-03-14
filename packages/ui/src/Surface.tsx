@@ -49,7 +49,6 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     circular?: boolean
     className?: string
     clickable?: boolean
-    dim?: boolean
     elementProps?: Object
     elevation?: number
     forwardRef?: React.Ref<any>
@@ -78,7 +77,6 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     width?: number | string
     alpha?: number
     alphaHover?: number
-    dimmed?: boolean
     disabled?: boolean
     placeholderColor?: Color
     highlightBackground?: Color
@@ -127,7 +125,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     badgeProps,
     children,
     className,
-    dimmed,
     disabled,
     elementProps,
     forwardRef,
@@ -221,7 +218,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
             />
           )}
         </div>
-        {glow && !dimmed && !disabled && (
+        {glow && !disabled && (
           <HoverGlow
             full
             scale={1.1}
@@ -322,9 +319,6 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
-      ...(props.dimmed && {
-        opacity: 0.2,
-      }),
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       ...propStyles,

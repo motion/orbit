@@ -89,7 +89,7 @@ function CreateAppMain({ identifier }: AppProps) {
         bordered
         after={
           <>
-            <Button theme="bordered" icon="lock">
+            <Button themeSelect={theme => theme.bordered} icon="lock">
               Preview
             </Button>
             <HorizontalSpace />

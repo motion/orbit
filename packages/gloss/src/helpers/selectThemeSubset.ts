@@ -16,8 +16,15 @@ export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): Them
     return theme
   }
 
+  const proxyParentTheme = child =>
+    new Proxy(child, {
+      get(target, key) {
+        return Reflect.get(target, key) || Reflect.get(theme, key)
+      },
+    }) as ThemeObject
+
   if (typeof prefix === 'function') {
-    return prefix(theme)
+    return proxyParentTheme(prefix(theme))
   }
 
   // read from cache
@@ -42,11 +49,7 @@ export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): Them
   }
 
   // proxy back to full theme
-  const fullTheme = new Proxy(selectedTheme, {
-    get(target, key) {
-      return Reflect.get(target, key) || Reflect.get(theme, key)
-    },
-  }) as ThemeObject
+  const fullTheme = proxyParentTheme(selectedTheme)
 
   // write to cache
   if (!cacheKey.get(theme)) {

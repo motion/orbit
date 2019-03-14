@@ -168,6 +168,7 @@ class TableHeadColumn extends React.PureComponent<{
     children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
     if (isResizable) {
+      console.log('resizable eh')
       children = (
         <TableHeaderColumnInteractive
           fill={true}
@@ -229,6 +230,12 @@ export class TableHead extends React.PureComponent<
 > {
   state = {
     columnSizes: this.props.columnSizes || calculateColumnSizes(this.props.columns),
+  }
+
+  static getDerivedStateFromProps(props) {
+    return {
+      columnSizes: props.columnSizes || calculateColumnSizes(props.columns),
+    }
   }
 
   buildContextMenu = (): any[] => {

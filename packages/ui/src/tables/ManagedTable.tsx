@@ -196,9 +196,10 @@ class ManagedTableInner extends React.Component<
 
     // if columnSizes has changed
     if (props.columnSizes !== prevProps.columnSizes) {
+      console.log('new col size')
       nextState = {
         columnSizes: {
-          ...(state.columnSizes || {}),
+          ...state.columnSizes,
           ...props.columnSizes,
         },
       }
@@ -350,6 +351,7 @@ class ManagedTableInner extends React.Component<
   }
 
   onColumnResize = (columnSizes: TableColumnSizes) => {
+    console.log('reizin', columnSizes)
     this.setState({ columnSizes })
   }
 

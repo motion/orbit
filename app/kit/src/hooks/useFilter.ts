@@ -8,22 +8,26 @@ export type UseFilterProps<A> = {
   sortBy?: (item: A) => string
   filterKey?: string
   removePrefix?: string
+
+  // TODO implement again
   groupByLetter?: boolean
   groupMinimum?: number
 }
 
-export function useMemoSort({ filterKey = 'id', groupMinimum, ...props }: UseFilterProps<any>) {
+export function useMemoSort(props: UseFilterProps<any>) {
   const query = props.removePrefix
     ? removePrefixIfExists(props.query || '', props.removePrefix)
     : props.query || ''
 
   // cache the sort before we do the rest
-  let items = useMemo(() => (props.sortBy ? sortBy(props.items, props.sortBy) : props.items), [
-    props.items,
-    props.sortBy,
-  ])
+  let sortedItems = useMemo(
+    () => (props.sortBy ? sortBy(props.items, props.sortBy) : props.items),
+    [props.items, props.sortBy],
+  )
 
-  return props.query ? fuzzyFilter(query, items, { key: filterKey }) : items
+  return props.query
+    ? fuzzyFilter(query, sortedItems, { key: props.filterKey || 'id' })
+    : sortedItems
 }
 
 export function removePrefixIfExists(text: string, prefix: string) {

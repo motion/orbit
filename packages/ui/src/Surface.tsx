@@ -4,6 +4,7 @@ import {
   Color,
   forwardTheme,
   gloss,
+  GlossThemeFn,
   propsToStyles,
   propsToTextSize,
   propsToThemeStyles,
@@ -27,6 +28,8 @@ import { Tooltip } from './Tooltip'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
+
+// TODO replace forwardRef prop with React.forwardRef()
 
 export type SurfaceProps = React.HTMLAttributes<any> &
   CSSPropertySetStrict & {
@@ -86,11 +89,21 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     type?: string
     themeSelect?: ThemeSelect
     iconPad?: number
+    getTheme?: GetSurfaceTheme
   }
 
-export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
+export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
+
+export const useSurfaceProps = (rawProps: SurfaceProps) => {
   const extraProps = useContext(SurfacePropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+  return {
+    props: extraProps ? mergeDefined(extraProps, rawProps) : rawProps,
+    hasExtraProps: !!extraProps,
+  }
+}
+
+export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
+  const { props, hasExtraProps } = useSurfaceProps(rawProps)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const themeContext = useContext(ThemeContext)
@@ -109,31 +122,31 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   }, [])
 
   const {
-    size = 1,
-    iconPad = 8,
-    glint,
+    alignItems,
     badge,
     badgeProps,
-    icon,
-    iconAfter,
-    iconProps,
-    glow,
+    children,
+    className,
     dimmed,
     disabled,
-    glowProps,
-    children,
     elementProps,
-    tooltip,
-    tooltipProps,
+    forwardRef,
+    glint,
+    glow,
+    glowProps,
     height,
-    sizeLineHeight,
+    icon,
+    iconAfter,
+    iconPad = 8,
+    iconProps,
+    justifyContent,
     noInnerElement,
+    size = 1,
+    sizeLineHeight,
     tagName,
     themeSelect,
-    className,
-    alignItems,
-    justifyContent,
-    forwardRef,
+    tooltip,
+    tooltipProps,
     ...rest
   } = props
   const segmentedStyle = getSegmentedStyle(props, crumb)
@@ -165,20 +178,13 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   }
 
   const surfaceProps = {
-    whiteSpace: 'pre',
-    segmentedStyle,
-    lineHeight,
-    ...throughProps,
-    ...rest,
-    className: `${tooltipState.id} ${className || ''}`,
+    children: null,
   }
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
   if (noInnerElement) {
-    if (children) {
-      surfaceProps.children = children
-    }
+    surfaceProps.children = children || null
   } else {
     surfaceProps.children = (
       <>
@@ -254,10 +260,15 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     >
       <BreadcrumbReset>
         <SurfaceFrame
+          className={`${tooltipState.id} ${className || ''}`}
           ref={forwardRef}
           themeSelect={themeSelect}
+          lineHeight={lineHeight}
+          whiteSpace="pre"
+          {...throughProps}
+          {...rest}
+          {...segmentedStyle}
           {...surfaceProps}
-          opacity={crumb && crumb.total === 0 ? 0 : surfaceProps.opacity || 1}
         />
       </BreadcrumbReset>
     </IconPropsContext.Provider>
@@ -266,7 +277,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   element = forwardTheme({ children: element, theme: props.theme })
 
   // dont nest PassProps, use once and clear context below
-  if (extraProps) {
+  if (hasExtraProps) {
     return <SurfacePropsContext.Provider value={null}>{element}</SurfacePropsContext.Provider>
   }
 
@@ -274,7 +285,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
 })
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss(View, {
+const SurfaceFrame = gloss<SurfaceProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
 }).theme((props, baseTheme) => {
@@ -302,38 +313,31 @@ const SurfaceFrame = gloss(View, {
 
   return alphaColor(
     {
-      padding: props.padding,
-      margin: props.margin,
-      fontWeight: props.fontWeight,
       color: props.color || theme.color,
       ...(props.inline && {
         display: 'inline',
       }),
       boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
-      justifyContent: props.justify || props.justifyContent,
-      alignSelf: props.alignSelf,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
       ...(props.dimmed && {
         opacity: 0.2,
       }),
-      ...props.style,
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       ...propStyles,
       // TODO this could be automatically handled in propStyles if we want...
       borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
-      ...(!props.chromeless &&
-        props.active && { '&:hover': props.activeHoverStyle || themeStyles['&:active'] }),
+      ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
       ...propsToTextSize(props),
       ...(props.chromeless && {
         borderColor: 'transparent',
         background: 'transparent',
       }),
-      ...props.segmentedStyle,
       ...circularStyles,
       '&:hover': hoverStyle,
+      ...(props.getTheme && props.getTheme(props, theme)),
     },
     { alpha: props.alpha, alphaHover: props.alphaHover },
   )

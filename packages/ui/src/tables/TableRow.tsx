@@ -33,7 +33,7 @@ const backgroundColor = (props: Props, theme: ThemeObject) => {
     if (props.background) {
       return props.background
     } else if (props.even && props.zebra) {
-      return theme.backgroundAlternate
+      return theme.backgroundAlt
     } else {
       return 'transparent'
     }
@@ -70,7 +70,7 @@ const TableBodyRowContainer = gloss(Row, {
   fontWeight: props.fontWeight || 'inherit',
   flexShrink: 0,
   // '&:hover': {
-  //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundAlternate : 'none',
+  //   background: !props.highlighted && props.highlightOnHover ? theme.backgroundAlt : 'none',
   // },
 }))
 

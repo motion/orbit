@@ -2,56 +2,10 @@ import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
-const macModernTheme = Theme.colorize({
-  // shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
-  borderSelected: '#90b1e4ee',
-
-  white: '#fff',
-  light02: '#f6f7f9', // Light 02 – Modal Headers & Nav - Modal headers and navigation elements that sit above primary UI
-  light05: '#e9ebee', // Light 05 – Mobile & Desktop Wash - Background wash color for desktop and mobile
-  light10: '#dddfe2', // Light 10 – Desktop Dividers, Strokes, Borders - Desktop dividers, strokes, borders
-  light15: '#ced0d4', // Light 15 – Mobile Dividers, Strokes, Borders - Mobile dividers, strokes, borders
-  light20: '#bec2c9', // Light 20 – Inactive Nav Glyphs - Inactive-state nav glyphs, tertiary glyphs
-  light30: '#90949c', // Light 30 – Secondary Text & Glyphs - Secondary text and glyphs, meta text and glyphs
-  light50: '#4b4f56', // Light 50 – Medium Text & Primary Glyphs - Medium text and primary glyphs
-  light80: '#1d2129', // Light 80 – Primary Text - Primary text
-  highlightColor: '#fff',
-  highlightBackground: '#4080ff', // used for text selection, tokens, etc.
-  highlightBackgroundActive: '#85afee', // active tokens
-  frameBorderColor: '#aaa',
-
-  // sub-themes go into their own objects so they can be narrowed into
-  titleBar: {
-    tabBackgroundActive: '#E8E8E8',
-    tabBackground: '#dfdfdf',
-    tabBackgroundHover: '#bfbfbf',
-    background: '#efefef',
-    backgroundBottom: '#e2e2e2',
-    backgroundBlur: '#f6f6f6',
-    borderColor: '#ccc',
-    borderColorActive: '#bbb',
-    borderBottomColor: '#ccc',
-    borderColorBlur: '#cecece',
-    icon: '#6f6f6f',
-    iconBlur: '#acacac',
-    iconSelected: '#4d84f5',
-    // backgroundGradient: 'linear-gradient(#efefef, #e2e2e2)',
-    // buttonBackground: 'linear-gradient(#FDFDFD, #F3F3F3)',
-    iconSelectedBlur: '#80a6f5',
-    iconActive: '#4c4c4c',
-    buttonBorderColor: '#d3d2d3',
-    buttonBorderBottom: '#b0afb0',
-    buttonBorderBlur: '#dbdbdb',
-    buttonBackgroundBlur: '#f6f6f6',
-    buttonBackgroundActiveHighlight: '#ededed',
-  },
-})
-
 const lightBackground = color('#fff')
 const light = {
-  ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: '#f6f7f9aa',
+    backgroundAlt: '#f6f7f9aa',
     background: lightBackground,
     mainBackground: lightBackground,
     backgroundActive: '#eee',

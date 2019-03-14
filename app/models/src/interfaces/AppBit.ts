@@ -24,11 +24,9 @@ export interface AppBit {
 
   name?: string
 
-  pinned?: boolean
+  tabDisplay?: 'permanent' | 'pinned' | 'plain'
 
   colors?: string[]
-
-  editable?: boolean
 
   createdAt?: Date
 
@@ -37,5 +35,4 @@ export interface AppBit {
   token?: string
 
   data?: any
-
 }

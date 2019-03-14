@@ -9,6 +9,7 @@
     "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
   },
   "dependencies": {
+    "@o/mediator": "^2.4.0",
     "@o/bridge": "^2.4.0",
     "@o/fast-compare": "^2.4.0",
     "@o/gloss": "^2.4.0",

@@ -5,6 +5,7 @@ export const Syncers = []
 syncers.forEach(app => {
   Syncers.push(
     new Syncer({
+      id: app.id,
       name: app.name,
       appIdentifier: app.id,
       runner: app.runner,

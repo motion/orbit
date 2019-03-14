@@ -1,4 +1,5 @@
 import { ThemeObject } from '@o/css'
+import { ThemeSelect } from '../theme/Theme'
 
 type PartialTheme = Partial<ThemeObject>
 
@@ -10,12 +11,13 @@ const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-export function selectThemeSubset(
-  prefix: string | undefined | false,
-  theme: ThemeObject,
-): ThemeObject {
+export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): ThemeObject {
   if (!prefix) {
     return theme
+  }
+
+  if (typeof prefix === 'function') {
+    return prefix(theme)
   }
 
   // read from cache

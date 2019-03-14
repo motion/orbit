@@ -8,7 +8,7 @@ export const SubTitle = ({ verticalSpacing = 1, children, ...props }) => (
     size={1.2}
     alignItems="center"
     flexFlow="row"
-    padding={[3 * verticalSpacing, 0, 10 * verticalSpacing]}
+    margin={[3 * verticalSpacing, 0, 10 * verticalSpacing]}
     {...props}
   >
     {children}

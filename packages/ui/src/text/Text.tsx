@@ -6,7 +6,7 @@ import * as React from 'react'
 
 type ChildrenHlFn = ((Highlights) => JSX.Element | null)
 
-export type TextProps = CSSPropertySet &
+export type TextProps = CSSPropertySetStrict &
   React.HTMLAttributes<HTMLParagraphElement> & {
     color?: CSSPropertySet['color'] | false
     editable?: boolean
@@ -34,6 +34,7 @@ export type TextProps = CSSPropertySet &
     theme?: Object
     children: React.ReactNode | ChildrenHlFn
     ignoreColor?: boolean
+    renderAsHtml?: boolean
   }
 
 export type Highlights = {

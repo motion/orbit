@@ -91,3 +91,10 @@ Goal #4: App building CLI
    5. Should finish by hitting "Preview" at which point it will compile into prod mode
    6. Should in "Preview" mode let you use the app with prod compile, then hit "Publish"
    7. Publish should then work with the p2p publishing service to push app and update everyone
+
+---
+
+Questions:
+
+-
+- Apps + APIs and how "far" we should go: libaries / NLP is a good example case

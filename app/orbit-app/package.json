@@ -17,12 +17,7 @@
     "@o/kit-internal",
     "@o/gloss",
     "@o/ui",
-    "@o/apps",
-    "@o/search-app",
-    "@o/lists-app",
-    "@o/people-app",
-    "@o/custom-app",
-    "@o/custom-tree-app"
+    "@o/apps"
   ],
   "dependencies": {
     "@babel/runtime": "7.2.0",

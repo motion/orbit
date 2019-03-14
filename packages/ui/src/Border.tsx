@@ -1,7 +1,10 @@
-import { Absolute, gloss } from '@o/gloss'
+import { Absolute, CSSPropertySet, gloss } from '@o/gloss'
 
-const Border = gloss(Absolute).theme((p, theme) => ({
-  background: p.borderColor || theme.borderColor,
+const Border = gloss<{
+  light?: boolean
+  borderColor: CSSPropertySet['borderColor']
+}>(Absolute).theme((p, theme) => ({
+  background: p.borderColor || (p.light ? theme.borderColorLight : theme.borderColor),
 }))
 
 export const BorderTop = gloss(Border, {

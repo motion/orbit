@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { GetSurfaceTheme } from '../Surface'
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   SizedSurfaceProps & {
@@ -88,19 +89,7 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
       finalProps.onChange = this.syncSet
     }
     return (
-      <SizedSurface
-        className={`ui-input ${className || ''}`}
-        maxWidth="100%"
-        alignItems="center"
-        flexFlow="row"
-        themeSelect="input"
-        sizePadding
-        sizeHeight
-        sizeLineHeight
-        sizeRadius={0.75}
-        noInnerElement
-        glint={false}
-        borderWidth={1}
+      <SimpleInput
         onKeyDown={this.onKeyDown}
         {...{
           value,
@@ -114,32 +103,42 @@ class InputPlain extends React.PureComponent<InputDecoratedProps> {
   }
 }
 
-export const Input = React.forwardRef(function Input(props: InputProps, ref) {
-  const uiContext = React.useContext(UIContext)
-  // @ts-ignore
-  return <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
+function SimpleInput(props: SizedSurfaceProps) {
+  return (
+    <SizedSurface
+      maxWidth="100%"
+      alignItems="center"
+      flexFlow="row"
+      themeSelect="input"
+      sizePadding
+      sizeHeight
+      sizeLineHeight
+      sizeRadius={0.75}
+      noInnerElement
+      glint={false}
+      borderWidth={1}
+      {...props}
+      className={`ui-input ${props.className || ''}`}
+      getTheme={inputSurfaceTheme}
+    />
+  )
+}
+
+const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
+  ...(!props.chromeless && {
+    background: theme.background.alpha(0.5),
+    border: [1, theme.borderColor.desaturate(0.1)],
+    '&:focus-within': {
+      boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(a => a * 0.5)]],
+    },
+  }),
+  '&::selection': {
+    color: theme.color.lighten(0.1),
+    background: theme.background.darken(0.1),
+  },
 })
 
-// export const Input = gloss(View, {
-//   position: 'relative',
-//   flex: 1,
-//   flexFlow: 'row',
-//   borderRadius: 7,
-//   alignItems: 'center',
-//   padding: [8, 12],
-// }).theme((_, theme) => ({
-//   color: theme.color,
-//   background: theme.background.alpha(0.5),
-//   border: [1, theme.borderColor.desaturate(0.1)],
-//   '&:focus-within': {
-//     boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(a => a * 0.5)]],
-//   },
-//   '&::selection': {
-//     color: theme.color.lighten(0.1),
-//     background: theme.background.darken(0.1),
-//   },
-// }))
-
-// Input.defaultProps = {
-//   tagName: 'input',
-// }
+export const Input = React.forwardRef(function Input(props: InputProps, ref) {
+  const uiContext = React.useContext(UIContext)
+  return <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
+})

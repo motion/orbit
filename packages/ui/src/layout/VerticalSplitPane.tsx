@@ -17,7 +17,7 @@ export function VerticalSplitPane(
 
   if (props.index === 1) {
     return (
-      <View flex={1} position="relative">
+      <View flex={1} position="relative" overflowY="auto">
         <BorderLeft />
         {props.children}
       </View>
@@ -31,6 +31,7 @@ export function VerticalSplitPane(
       width={size}
       minWidth={props.parentWidth * 0.25}
       maxWidth={props.parentWidth * 0.8}
+      overflowY="auto"
       {...props}
     />
   )

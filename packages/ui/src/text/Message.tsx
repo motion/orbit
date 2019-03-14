@@ -11,7 +11,7 @@ export const Message = gloss(Text, {
   borderRadius: 8,
   padding: [10, 10],
 }).theme((_, theme) => ({
-  background: theme.backgroundAlternate || theme.background,
+  background: theme.backgroundAlt || theme.background,
   color: theme.color,
 }))
 

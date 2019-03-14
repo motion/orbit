@@ -73,13 +73,10 @@ class AppStore {
       },
     ] as AppStateEntry[],
     orbitState: {
-      blurred: false,
-      pinned: false,
       docked: false,
       orbitOnLeft: false,
       position: [0, 0],
       size: [0, 0],
-      inputFocused: false,
       shortcutInputFocused: false,
     },
     trayState: {

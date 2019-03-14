@@ -13,16 +13,7 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 const macModernTheme = Theme.colorize({
   // shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
   borderSelected: '#90b1e4ee',
-
   white: '#fff',
-  light02: '#f6f7f9', // Light 02 – Modal Headers & Nav - Modal headers and navigation elements that sit above primary UI
-  light05: '#e9ebee', // Light 05 – Mobile & Desktop Wash - Background wash color for desktop and mobile
-  light10: '#dddfe2', // Light 10 – Desktop Dividers, Strokes, Borders - Desktop dividers, strokes, borders
-  light15: '#ced0d4', // Light 15 – Mobile Dividers, Strokes, Borders - Mobile dividers, strokes, borders
-  light20: '#bec2c9', // Light 20 – Inactive Nav Glyphs - Inactive-state nav glyphs, tertiary glyphs
-  light30: '#90949c', // Light 30 – Secondary Text & Glyphs - Secondary text and glyphs, meta text and glyphs
-  light50: '#4b4f56', // Light 50 – Medium Text & Primary Glyphs - Medium text and primary glyphs
-  light80: '#1d2129', // Light 80 – Primary Text - Primary text
   highlightColor: '#fff',
   highlightBackground: '#4080ff', // used for text selection, tokens, etc.
   highlightBackgroundActive: '#85afee', // active tokens
@@ -59,7 +50,7 @@ const lightBackground = color('#fff')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: '#f6f7f9aa',
+    backgroundAlt: '#f6f7f9aa',
     backgroundHighlightActive: orbitColor.lighten(0.1),
     backgroundHighlight: orbitColor,
     background: lightBackground,
@@ -70,6 +61,7 @@ const light = {
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     borderColor: [215, 215, 215],
+    borderColorLight: [215, 215, 215, 0.5],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
     headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.85]),
@@ -105,7 +97,7 @@ const darkFadeBackground = [0, 0, 0, 0.15]
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
-    backgroundAlternate: darkBackground.lighten(0.1).alpha(0.25),
+    backgroundAlt: darkBackground.lighten(0.1).alpha(0.2),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],
     backgroundActive: [30, 30, 30, 0.65],
@@ -115,10 +107,11 @@ const dark = {
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     borderColor: [180, 180, 180, 0.25],
+    borderColorLight: [180, 180, 180, 0.15],
     sidebarBackground: [15, 15, 15, 0.52],
     sidebarBorderColor: '#444',
     headerBorderBottom: '#151515',
-    headerBackground: linearGradient([0, 0, 0, 0.25], [0, 0, 0, 0.35]),
+    headerBackground: linearGradient([0, 0, 0, 0.2], [0, 0, 0, 0.34]),
     headerBackgroundOpaque: linearGradient('#3f3f3f', '#353535'),
     orbitHeaderBackgroundEditing: linearGradient('#163278', '#192B5C'),
     headerFadeBackground: linearGradient(
@@ -153,8 +146,8 @@ const dark = {
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
     panelHeaderBackground: [60, 60, 60, 0.4],
-    redTint: '#C8000033',
-    yellowTint: '#FFCA0022',
+    redTint: '#ff000011',
+    yellowTint: '#FFCA0011',
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
@@ -219,24 +212,6 @@ export const themes = {
       borderColorHover: orbitActiveBg,
     }),
   },
-  // 'light-selected': {
-  //   ...Theme.fromStyles({
-  //     background: [0, 0, 0, 0.015],
-  //     backgroundHover: [0, 0, 0, 0.015],
-  //     backgroundActive: [0, 0, 0, 0.015],
-  //     color: light.color,
-  //     borderColor: orbitActiveBg,
-  //   }),
-  // },
-  // 'dark-selected': {
-  //   ...Theme.fromStyles({
-  //     background: [255, 255, 255, 0.05],
-  //     backgroundHover: [255, 255, 255, 0.05],
-  //     backgroundActive: [255, 255, 255, 0.05],
-  //     color: dark.color,
-  //     borderColor: orbitActiveBg,
-  //   }),
-  // },
   tooltip: {
     background: 'rgba(20,20,20,0.94)',
     backgroundHover: 'rgba(28,28,28,0.94)',
@@ -256,49 +231,3 @@ export const themes = {
     }),
   },
 }
-
-// more traditional osx theme
-// const macTheme = Theme.colorize({
-//   shadowSelected: [0, 0, 0, 3, '#90b1e433'],
-//   borderSelected: '#90b1e4ee',
-
-//   white: '#fff',
-//   light02: '#f6f7f9', // Light 02 – Modal Headers & Nav - Modal headers and navigation elements that sit above primary UI
-//   light05: '#e9ebee', // Light 05 – Mobile & Desktop Wash - Background wash color for desktop and mobile
-//   light10: '#dddfe2', // Light 10 – Desktop Dividers, Strokes, Borders - Desktop dividers, strokes, borders
-//   light15: '#ced0d4', // Light 15 – Mobile Dividers, Strokes, Borders - Mobile dividers, strokes, borders
-//   light20: '#bec2c9', // Light 20 – Inactive Nav Glyphs - Inactive-state nav glyphs, tertiary glyphs
-//   light30: '#90949c', // Light 30 – Secondary Text & Glyphs - Secondary text and glyphs, meta text and glyphs
-//   light50: '#4b4f56', // Light 50 – Medium Text & Primary Glyphs - Medium text and primary glyphs
-//   light80: '#1d2129', // Light 80 – Primary Text - Primary text
-//   highlightBackground: '#4080ff', // used for text selection, tokens, etc.
-//   highlightBackgroundActive: '#85afee', // active tokens
-//   frameBorderColor: '#aaa',
-
-//   sidebarBackground: '#E8E7E7',
-
-//   // sub-themes go into their own objects so they can be narrowed into
-//   titleBar: {
-//     tabBackgroundActive: 'linear-gradient(#D5D5D5, #CBCBCC)',
-//     tabBackground: 'linear-gradient(#BFBFBF, #B1B1B1)',
-//     tabBackgroundHover: 'linear-gradient(#B1B1B1, #A1A1A1)',
-//     background: '#eae9eb',
-//     backgroundBottom: '#dcdbdc',
-//     backgroundGradient: 'linear-gradient(#E5E4E5, #CDCDCD)',
-//     backgroundBlur: '#f6f6f6',
-//     borderColor: '#c1c0c2',
-//     borderBottomColor: '#B2B2B3',
-//     borderColorBlur: '#cecece',
-//     icon: '#6f6f6f',
-//     iconBlur: '#acacac',
-//     iconSelected: '#4d84f5',
-//     iconSelectedBlur: '#80a6f5',
-//     iconActive: '#4c4c4c',
-//     buttonBorderColor: '#d3d2d3',
-//     buttonBorderBottom: '#b0afb0',
-//     buttonBorderBlur: '#dbdbdb',
-//     buttonBackground: 'linear-gradient(#FDFDFD, #F3F3F3)',
-//     buttonBackgroundBlur: '#f6f6f6',
-//     buttonBackgroundActiveHighlight: '#ededed',
-//   },
-// })

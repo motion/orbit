@@ -1,18 +1,7 @@
-import { AppProps, Table } from '@o/kit'
-import {
-  BorderBottom,
-  createEnumFilter,
-  DataColumns,
-  DataType,
-  FormField,
-  GenericDataRow,
-  Section,
-  Title,
-  VerticalSplit,
-  VerticalSplitPane,
-} from '@o/ui'
-import faker from 'faker'
-import React, { useState } from 'react'
+import { AppProps, Table } from '@o/kit';
+import { createEnumFilter, DataType, Form, Section, Title, VerticalSplit, VerticalSplitPane } from '@o/ui';
+import faker from 'faker';
+import React, { useState } from 'react';
 
 const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
 
@@ -72,44 +61,5 @@ export function CustomAppMain(_props: AppProps) {
         </Section>
       </VerticalSplitPane>
     </VerticalSplit>
-  )
-}
-
-type FormProps = { columns: DataColumns; rows: GenericDataRow[] | null }
-
-function Form({ columns, rows }: FormProps) {
-  if (!rows || rows.length === 0) {
-    return null
-  }
-
-  return (
-    <>
-      {rows.map(row => {
-        return (
-          <Fieldset key={row.key}>
-            {Object.keys(row.values).map(valKey => {
-              const value = row.values[valKey]
-              return (
-                <FormField
-                  key={value.key}
-                  type={columns[valKey].type}
-                  label={columns[valKey].value}
-                  value={value}
-                />
-              )
-            })}
-          </Fieldset>
-        )
-      })}
-    </>
-  )
-}
-
-function Fieldset(props) {
-  return (
-    <Section>
-      {props.children}
-      <BorderBottom />
-    </Section>
   )
 }

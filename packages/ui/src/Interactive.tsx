@@ -5,11 +5,12 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import * as React from 'react'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
+import { Omit } from './types'
 
 const invariant = require('invariant')
 
@@ -34,7 +35,7 @@ const ALL_RESIZABLE: ResizableSides = {
   top: true,
 }
 
-export type InteractiveProps = {
+export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
   isMovableAnchor?: (event: MouseEvent) => boolean
   onMoveStart?: () => void
   onMoveEnd?: () => void
@@ -49,12 +50,12 @@ export type InteractiveProps = {
   zIndex?: number
   top?: number
   left?: number
-  minTop: number
-  minLeft: number
+  minTop?: number
+  minLeft?: number
   width?: number | string
   height?: number | string
-  minWidth: number
-  minHeight: number
+  minWidth?: number
+  minHeight?: number
   maxWidth?: number
   maxHeight?: number
   onCanResize?: (sides?: ResizableSides) => void
@@ -81,7 +82,7 @@ type InteractiveState = {
   resizingInitialCursor: CursorState | void
 }
 
-const InteractiveContainer = gloss({
+const InteractiveContainer = gloss(View, {
   willChange: 'transform, height, width, z-index',
 })
 
@@ -565,7 +566,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 
   render() {
-    const { fill, height, left, movable, top, width, zIndex } = this.props
+    const { fill, height, left, movable, top, width, zIndex, ...props } = this.props
     const style = {
       cursor: this.state.cursor,
       zIndex: zIndex == null ? 'auto' : zIndex,
@@ -607,6 +608,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
         onMouseMove={this.onLocalMouseMove}
         onMouseLeave={this.onMouseLeave} // eslint-disable-next-line
         style={style}
+        {...props}
       >
         {this.props.children}
       </InteractiveContainer>

@@ -1,4 +1,16 @@
-- restore searching in lists
+- Make search hook into the table
+
+- App Actions
+
+  - <ActionBar /> would be nice alongside simpler <FloatingBar bottom />
+  - API => <ActionButton />
+  - Demo app with action to send to slack
+
+- Unification app <=> searchbar <=> table
+
+  - EnumFilter support in searchbar
+  - App settings can define JSON-style EnumFilter
+  - useSearch has filter state from OrbitSearchBar
 
 ---
 

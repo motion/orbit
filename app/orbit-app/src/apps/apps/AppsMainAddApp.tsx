@@ -31,7 +31,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
           </>
         }
         below={
-          <SubTitle>
+          <SubTitle margin={0}>
             <Row>
               <SubItem>{def['author'] || 'anonymous'}</SubItem>
               <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>

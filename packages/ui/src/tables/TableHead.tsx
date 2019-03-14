@@ -168,7 +168,6 @@ class TableHeadColumn extends React.PureComponent<{
     children = <TableHeaderColumnContainer>{children}</TableHeaderColumnContainer>
 
     if (isResizable) {
-      console.log('resizable eh')
       children = (
         <TableHeaderColumnInteractive
           fill={true}

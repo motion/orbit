@@ -94,6 +94,25 @@ export class SearchStore {
     }
   }
 
+  staticApps(): AppBit[] {
+    return [
+      {
+        id: -1,
+        identifier: 'settings',
+        name: 'Settings',
+        colors: ['black', 'white'],
+        target: 'app',
+      },
+      {
+        id: -1,
+        identifier: 'apps',
+        name: 'Manage Apps',
+        colors: ['black', 'white'],
+        target: 'app',
+      },
+    ]
+  }
+
   getApps(query: string, all = false): OrbitListItemProps[] {
     const { appStore } = this.stores
 
@@ -102,7 +121,10 @@ export class SearchStore {
       return []
     }
 
-    const apps = this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent')
+    const apps = [
+      ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
+      ...this.staticApps(),
+    ]
 
     if (query) {
       return apps.map(this.appToResult)

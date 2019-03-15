@@ -1,4 +1,4 @@
-import { Absolute, FullScreen, gloss, Theme, useTheme } from '@o/gloss'
+import { FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, HorizontalSpace, Row, SegmentedRow, View } from '@o/ui'
@@ -32,6 +32,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
         <OrbitClose dontDim={isTorn}>
           <WindowControls
             itemProps={{ size: 10 }}
+            spaceBetween={3}
+            showOnHover={{ min: true, max: true }}
             onClose={() => {
               if (isTorn) {
                 console.log('close me...app')
@@ -44,50 +46,40 @@ export const OrbitHeader = memo(function OrbitHeader() {
           />
         </OrbitClose>
 
-        {/* header input area */}
-        <Row flex={1} alignItems="center">
+        <HeaderSide>
+          <HeaderButton icon="sidebar" />
           <View flex={1} />
-
           <BackButton />
+        </HeaderSide>
 
-          <HeaderContain isActive={false}>
-            <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
-              <Icon
-                color={theme.color}
-                name={`orbit-${icon}`}
-                size={18}
-                opacity={theme.color.isDark() ? 0.4 : 0.2}
-              />
-            </View>
-            <OrbitHeaderInput />
+        <HeaderContain isActive={false}>
+          <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
+            <Icon
+              color={theme.color}
+              name={`orbit-${icon}`}
+              size={18}
+              opacity={theme.color.isDark() ? 0.4 : 0.2}
+            />
+          </View>
+          <OrbitHeaderInput />
 
-            {isOnTearablePane && (
-              <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
-                <LinkButton />
-                {!isTorn && <LaunchButton />}
-              </SegmentedRow>
-            )}
-          </HeaderContain>
+          {isOnTearablePane && (
+            <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
+              <LinkButton />
+              {!isTorn && <LaunchButton />}
+            </SegmentedRow>
+          )}
+        </HeaderContain>
 
-          <View flex={1} />
-        </Row>
-
-        <Absolute
-          top={0}
-          right={isTorn ? 3 : 6}
-          bottom={0}
-          alignItems="center"
-          justifyContent="center"
-          flexFlow="row"
-        >
+        <HeaderSide rightSide>
           <OrbitEditAppButton />
 
           {isEditing && (
             <Row>
-              <HeaderButton icon="edit" tooltip="Open in VSCode" />
+              <HeaderInputButton icon="edit" tooltip="Open in VSCode" />
               <HorizontalSpace small />
               <Theme name="selected">
-                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
+                <HeaderInputButton tooltip="Deploy to space">Publish</HeaderInputButton>
               </Theme>
             </Row>
           )}
@@ -111,7 +103,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
               }
             }}
           />
-        </Absolute>
+        </HeaderSide>
       </HeaderTop>
       {!isTorn && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
@@ -124,7 +116,20 @@ export const OrbitHeader = memo(function OrbitHeader() {
   )
 })
 
-function HeaderButton(props: ButtonProps) {
+const HeaderSide = gloss({
+  flexFlow: 'row',
+  flex: 1,
+  height: '100%',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  padding: [0, 0, 0, 10],
+  rightSide: {
+    padding: [0, 10, 0, 0],
+    justifyContent: 'flex-end',
+  },
+})
+
+function HeaderInputButton(props: ButtonProps) {
   return <Button size={0.9} sizeHeight={0.9} {...props} />
 }
 
@@ -141,7 +146,7 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <HeaderButton
+    <HeaderInputButton
       icon="tool"
       tooltip="Edit app"
       onClick={async () => {
@@ -150,7 +155,7 @@ function OrbitEditAppButton() {
       }}
     >
       Edit
-    </HeaderButton>
+    </HeaderInputButton>
   )
 }
 
@@ -176,7 +181,7 @@ const OrbitHeaderContainer = gloss(View, {
 const HeaderContain = gloss<{ isActive?: boolean }>({
   margin: 'auto',
   alignItems: 'center',
-  flex: 10,
+  flex: 100,
   flexFlow: 'row',
   maxWidth: 'calc(100% - 300px)',
   minWidth: 400,
@@ -203,8 +208,8 @@ const HeaderTop = gloss(View, {
 
 const OrbitClose = gloss({
   position: 'absolute',
-  top: 2,
-  left: 3,
+  top: 0,
+  left: 2,
   padding: 4,
   opacity: 0.1,
   '&:hover': {
@@ -249,6 +254,20 @@ const LaunchButton = memo(() => {
   )
 })
 
+function HeaderButton(props: ButtonProps) {
+  return (
+    <Button
+      chromeless
+      opacity={0.5}
+      hoverStyle={{ opacity: 0.75 }}
+      sizeHeight={0.95}
+      sizePadding={1.2}
+      iconSize={16}
+      {...props}
+    />
+  )
+}
+
 const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
@@ -260,21 +279,13 @@ const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
 
   return (
-    <View width={40} marginLeft={-40} padding={[0, 10]}>
-      <Button
-        chromeless
-        sizeHeight={0.95}
-        sizePadding={1.2}
-        icon="arrowminleft"
-        iconSize={22}
-        opacity={0.25}
-        hoverStyle={{
-          opacity: 0.75,
-        }}
-        onClick={() => {
-          locationStore.back()
-        }}
-      />
-    </View>
+    <HeaderButton
+      icon="arrowminleft"
+      opacity={locationStore.history.length ? 0.4 : 0.1}
+      iconSize={24}
+      onClick={() => {
+        locationStore.back()
+      }}
+    />
   )
 })

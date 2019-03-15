@@ -52,7 +52,5 @@ export function useBits({ type, ...args }: UseBitsProps = {}) {
 
   const finalArgs = { ...args, take, where }
 
-  console.log('finalArgs', finalArgs)
-
   return useModels(BitModel, finalArgs)[0]
 }

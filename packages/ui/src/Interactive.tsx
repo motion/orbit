@@ -5,13 +5,11 @@
  * @format
  */
 
-import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
-import React, { useRef, useState } from 'react'
-import { FloatingChrome } from './helpers/FloatingChrome'
+import { gloss, View, ViewProps } from '@o/gloss'
+import React from 'react'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
-import { useScreenPosition } from './hooks/useScreenPosition'
 import { Omit } from './types'
 
 const invariant = require('invariant')
@@ -601,7 +599,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (this.props.style) {
       Object.assign(style, this.props.style)
     }
-    const resizable = this.getResizable()
+    // const resizable = this.getResizable()
     return (
       <InteractiveContainer
         className={this.props.className}
@@ -613,73 +611,74 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
         style={style}
         {...props}
       >
-        {resizable &&
-          Object.keys(resizable).map(side => <FakeResize key={side} {...{ [side]: true }} />)}
+        {/* Almost working! to have a better grabbable bar */}
+        {/* {resizable &&
+          Object.keys(resizable).map(side => <FakeResize key={side} {...{ [side]: true }} />)} */}
         {this.props.children}
       </InteractiveContainer>
     )
   }
 }
 
-const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
-  const chromeRef = useRef<HTMLElement>(null)
-  const parentRef = useRef<HTMLElement>(null)
-  const [measureKey, setMeasureKey] = useState(0)
+// const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
+//   const chromeRef = useRef<HTMLElement>(null)
+//   const parentRef = useRef<HTMLElement>(null)
+//   const [measureKey, setMeasureKey] = useState(0)
 
-  useScreenPosition({
-    ref: parentRef,
-    preventMeasure: true,
-    onChange: () => {
-      console.log('parent size...')
-      setMeasureKey(Math.random())
-    },
-  })
+//   useScreenPosition({
+//     ref: parentRef,
+//     preventMeasure: true,
+//     onChange: () => {
+//       console.log('parent size...')
+//       setMeasureKey(Math.random())
+//     },
+//   })
 
-  return (
-    <FullScreen ref={parentRef} background="yellow">
-      <FakeResizeChrome
-        ref={chromeRef}
-        onLeft={left}
-        onRight={right}
-        onBottom={bottom}
-        onTop={top}
-      />
-      <FloatingChrome measureKey={measureKey} target={chromeRef} />
-    </FullScreen>
-  )
-}
+//   return (
+//     <FullScreen ref={parentRef} background="yellow">
+//       <FakeResizeChrome
+//         ref={chromeRef}
+//         onLeft={left}
+//         onRight={right}
+//         onBottom={bottom}
+//         onTop={top}
+//       />
+//       <FloatingChrome measureKey={measureKey} target={chromeRef} />
+//     </FullScreen>
+//   )
+// }
 
-const vertical = {
-  top: 0,
-  bottom: 0,
-  width: SIZE,
-}
+// const vertical = {
+//   top: 0,
+//   bottom: 0,
+//   width: SIZE,
+// }
 
-const horizontal = {
-  left: 0,
-  right: 0,
-  height: SIZE,
-}
+// const horizontal = {
+//   left: 0,
+//   right: 0,
+//   height: SIZE,
+// }
 
-const OFFSET = 0 // SIZE / 2
+// const OFFSET = 0 // SIZE / 2
 
-const FakeResizeChrome = gloss({
-  position: 'absolute',
-  background: '#55550055',
-  onLeft: {
-    ...vertical,
-    left: -OFFSET,
-  },
-  onRight: {
-    ...vertical,
-    right: -OFFSET,
-  },
-  onBottom: {
-    ...horizontal,
-    bottom: -OFFSET,
-  },
-  onTop: {
-    ...horizontal,
-    top: -OFFSET,
-  },
-})
+// const FakeResizeChrome = gloss({
+//   position: 'absolute',
+//   background: '#55550055',
+//   onLeft: {
+//     ...vertical,
+//     left: -OFFSET,
+//   },
+//   onRight: {
+//     ...vertical,
+//     right: -OFFSET,
+//   },
+//   onBottom: {
+//     ...horizontal,
+//     bottom: -OFFSET,
+//   },
+//   onTop: {
+//     ...horizontal,
+//     top: -OFFSET,
+//   },
+// })

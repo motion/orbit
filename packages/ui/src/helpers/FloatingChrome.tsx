@@ -26,13 +26,12 @@ export function FloatingChrome(props: {
 
   useScreenPosition({
     ref: props.target,
-    onChange: setStyle,
+    onChange: x => x.visible && setStyle(x.rect),
   })
 
   useEffect(
     () => {
       const rect = getRect(props.target.current.getBoundingClientRect())
-      console.log('re measuer', rect)
       setStyle(rect)
     },
     [props.target, props.measureKey],

@@ -17,7 +17,7 @@ export function getRect(o: any) {
 
 type UseScreenPositionProps = {
   ref: RefObject<HTMLElement>
-  onChange: ((rect: Rect | undefined) => any) | null
+  onChange: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
   preventMeasure?: true
   debounce?: number
 }
@@ -27,11 +27,17 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
   const intersected = useRef(false)
 
   const measure = useCallback(
-    _.debounce((rect?) => {
+    _.debounce((nodeRect?) => {
+      if (nodeRect === false) {
+        onChange({ visible: false, rect: null })
+      }
       const node = ref.current
-      if (!node || !isVisible(node)) return
+      if (!node) return
       if (!intersected.current) return
-      onChange(preventMeasure ? undefined : getRect(rect || node.getBoundingClientRect()))
+      const visible = isVisible(node)
+      const rect =
+        !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
+      onChange({ visible, rect })
     }, debounce),
     [props.preventMeasure],
   )
@@ -45,10 +51,10 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
     const [entry] = entries
     if (entry.isIntersecting) {
       intersected.current = true
-      onChange(preventMeasure ? undefined : getRect(entry.boundingClientRect))
+      measure(entry.boundingClientRect)
     } else {
       intersected.current = false
-      onChange(undefined)
+      measure(false)
     }
   })
 

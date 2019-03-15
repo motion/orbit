@@ -28,7 +28,6 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
   const { ref, preventMeasure, debounce = 100 } = props
   const onChange = useRefGetter(props.onChange)
   const disable = useVisiblity() === false
-  if (!disable) console.warn('hiiiiiiiiiiii', props)
   const intersected = useRef(false)
 
   const measure = useCallback(
@@ -41,8 +40,7 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
       const node = ref.current
       if (!node) return
       if (!intersected.current) return
-      const visible = isVisible(node) && !disable
-      if (!disable) console.warn('yupppppppp', isVisible(node))
+      const visible = disable === false || !isVisible(node)
       const rect =
         !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
       callback({ visible, rect })

@@ -6,7 +6,8 @@
  */
 
 import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
-import React, { useRef, useState } from 'react'
+import { throttle } from 'lodash'
+import React, { useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
@@ -570,8 +571,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   render() {
     const { fill, height, left, movable, top, width, zIndex, ...props } = this.props
+    const { resizingSides } = this.state
+    const cursor = this.state.cursor
     const style = {
-      cursor: this.state.cursor,
+      cursor,
       zIndex: zIndex == null ? 'auto' : zIndex,
       left: null,
       top: null,
@@ -615,42 +618,68 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       >
         {/* Almost working! to have a better grabbable bar */}
         {resizable &&
-          Object.keys(resizable).map(side => <FakeResize key={side} {...{ [side]: true }} />)}
+          Object.keys(resizable).map(side => (
+            <FakeResize
+              key={side}
+              hovered={resizingSides && resizingSides[side]}
+              side={side as keyof ResizableSides}
+            />
+          ))}
         {this.props.children}
       </InteractiveContainer>
     )
   }
 }
 
-const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
+const FakeResize = ({ side, hovered }: { side: keyof ResizableSides; hovered?: boolean }) => {
   const chromeRef = useRef<HTMLElement>(null)
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
   const [visible, setVisible] = useState(false)
+  // fixes bug where clicking makes it go away
+  const [intHovered, setIntHovered] = useState(false)
+
+  const onChange = useCallback(
+    throttle(({ visible }) => {
+      setMeasureKey(Math.random())
+      setVisible(visible)
+    }, 32),
+    [],
+  )
 
   useScreenPosition({
     ref: parentRef,
     preventMeasure: true,
-    onChange: ({ visible }) => {
-      console.log('parent size...', visible)
-      setMeasureKey(Math.random())
-      setVisible(visible)
-    },
+    onChange,
   })
 
+  const shouldCover = intHovered || (visible && hovered)
+
   return (
-    <FullScreen ref={parentRef} background="yellow" opacity={visible ? 1 : 0}>
+    <FullScreen ref={parentRef}>
       <FakeResizeChrome
         ref={chromeRef}
-        onLeft={left}
-        onRight={right}
-        onBottom={bottom}
-        onTop={top}
+        onLeft={side === 'left'}
+        onRight={side === 'right'}
+        onBottom={side === 'bottom'}
+        onTop={side === 'top'}
       />
       <FloatingChrome
         measureKey={measureKey}
         target={chromeRef}
-        style={{ opacity: visible ? 1 : 0 }}
+        onMouseEnter={() => setIntHovered(true)}
+        onMouseLeave={() => setIntHovered(false)}
+        onMouseDown={e => {
+          if (shouldCover) {
+            console.warn('no more bad click')
+            e.preventDefault()
+          }
+        }}
+        style={{
+          cursor: side === 'left' || side === 'right' ? 'ew-resize' : 'nw-resize',
+          pointerEvents: (shouldCover ? 'all' : 'none') as any,
+          opacity: shouldCover ? 1 : 0,
+        }}
       />
     </FullScreen>
   )
@@ -672,7 +701,7 @@ const OFFSET = 0 // SIZE / 2
 
 const FakeResizeChrome = gloss({
   position: 'absolute',
-  background: '#55550055',
+  pointerEvents: 'none',
   onLeft: {
     ...vertical,
     left: -OFFSET,

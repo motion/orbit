@@ -7,9 +7,9 @@ import {
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
+  useActiveSyncAppsWithDefinition,
   useAppDefinitions,
 } from '@o/kit'
-import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 
@@ -42,7 +42,8 @@ export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
-  const [syncApps, clientApps] = partition(useActiveAppsWithDefinition(), x => !!x.definition.sync)
+  const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
+  const syncApps = useActiveSyncAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null

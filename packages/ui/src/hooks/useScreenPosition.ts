@@ -1,61 +1,92 @@
-import { debounce } from 'lodash'
-import { useEffect, useRef } from 'react'
+import _ from 'lodash'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { useVisiblity } from '../Visibility'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
+import { useRefGetter } from './useRefGetter'
 import { useResizeObserver } from './useResizeObserver'
 
-type Rect = {
+export type Rect = {
   width: number
   height: number
   top: number
   left: number
 }
 
-function getRect(o: any) {
+export function getRect(o: any) {
   return { width: o.width, height: o.height, left: o.left, top: o.top }
 }
 
-// function useForceUpdate() {
-//   const forceUpdate = useState(0)[1]
-//   return useCallback(() => forceUpdate(Math.random()), [])
-// }
+type UseScreenPositionProps = {
+  ref: RefObject<HTMLElement>
+  onChange: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
+  preventMeasure?: true
+  debounce?: number
+}
 
-export function useScreenPosition<T extends React.RefObject<HTMLDivElement>>(
-  ref: T,
-  cb: (rect: Rect | null) => any,
-) {
+export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
+  const { ref, preventMeasure, debounce = 100 } = props
+  const onChange = useRefGetter(props.onChange)
+  const disable = useVisiblity() === false
   const intersected = useRef(false)
-  const curNode = useRef<HTMLDivElement | null>(null)
-  const triggerMeasure = () => {
-    const node = ref.current
-    if (!node || !isVisible(node)) return
-    if (!intersected.current) return
-    cb(getRect(node.getBoundingClientRect()))
-  }
 
-  useResizeObserver(
-    curNode.current,
-    debounce(() => {
-      console.log('has resized')
-    }, 32),
+  const measure = useCallback(
+    _.debounce((nodeRect?) => {
+      const callback = onChange()
+      if (nodeRect === false) {
+        callback({ visible: false, rect: null })
+        return
+      }
+      const node = ref.current
+      if (!node) return
+      if (!intersected.current) return
+      const visible = disable === false || !isVisible(node)
+      const rect =
+        !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
+      callback({ visible, rect })
+    }, debounce),
+    [ref, props.preventMeasure, disable],
   )
 
-  useMutationObserver(curNode, { attributes: true }, debounce(() => {}, 32))
-
-  useIntersectionObserver(ref, entries => {
-    console.log('wut', entries, ref.current)
-    if (!entries) return
-    const [entry] = entries
-    if (entry.isIntersecting) {
-      intersected.current = true
-      cb(getRect(entry.boundingClientRect))
-    } else {
-      intersected.current = false
-      cb(null)
-    }
+  useResizeObserver({
+    ref,
+    onChange: entries => measure(entries[0].contentRect),
+    disable,
   })
 
-  useEffect(triggerMeasure, [ref.current])
+  useMutationObserver({
+    disable,
+    ref,
+    options: { attributes: true },
+    onChange: measure,
+  })
+
+  useIntersectionObserver({
+    disable,
+    ref,
+    onChange: entries => {
+      if (!entries) return
+      const [entry] = entries
+      if (entry.isIntersecting) {
+        intersected.current = true
+        measure(entry.boundingClientRect)
+      } else {
+        intersected.current = false
+        measure(false)
+      }
+    },
+  })
+
+  useEffect(measure, [ref, ...mountArgs])
+
+  useEffect(
+    () => {
+      if (disable) {
+        measure(false)
+      }
+    },
+    [disable],
+  )
 }
 
 function isVisible(ele) {

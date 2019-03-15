@@ -2,6 +2,12 @@ import { App } from '@o/stores'
 import { themes } from '../themes'
 
 export class ThemeStore {
+  showSidebar = true
+
+  setToggleShowSidebar = () => {
+    this.showSidebar = !this.showSidebar
+  }
+
   get theme() {
     return themes[this.themeColor]
   }

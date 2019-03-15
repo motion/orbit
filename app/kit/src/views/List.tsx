@@ -9,7 +9,7 @@ import {
   SelectionStore,
   SubTitle,
   Text,
-  useMemoGetValue,
+  useRefGetter,
   useSelectionStore,
   View,
 } from '@o/ui'
@@ -19,6 +19,7 @@ import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
+import { useShareMenu } from '../hooks/useShareMenu'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
@@ -34,6 +35,7 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
     onOpen?: HandleOrbitSelect
     placeholder?: React.ReactNode
     searchable?: boolean
+    shareable?: boolean
   }
 
 export const ListPropsContext = createContext(null as Partial<ListProps>)
@@ -79,13 +81,14 @@ export type HandleOrbitSelect = ((
 const nullFn = () => null
 
 export function List(rawProps: ListProps) {
+  const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
-  const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
+  const getItemPropsGet = useRefGetter(getItemProps || nullFn)
 
   const selectionStore = useSelectionStore(restProps)
   const selectionStoreRef = useRef<SelectionStore | null>(null)
@@ -101,9 +104,9 @@ export function List(rawProps: ListProps) {
     groupByLetter: props.groupByLetter,
     groupMinimum: props.groupMinimum,
   })
-  const filteredGetItemPropsGet = useMemoGetValue(filtered.getItemProps || nullFn)
+  const filteredGetItemPropsGet = useRefGetter(filtered.getItemProps || nullFn)
 
-  const getItems = useMemoGetValue(filtered.results)
+  const getItems = useRefGetter(filtered.results)
 
   useEffect(
     () => {
@@ -128,12 +131,13 @@ export function List(rawProps: ListProps) {
     [onOpen],
   )
 
-  const getItemPropsInner = useCallback((item, index, items) => {
+  const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
-    const normalized = toListItemProps(item)
-    const extraProps = getItemPropsGet()(item, index, items)
-    const filterExtraProps = filteredGetItemPropsGet()(item, index, items)
-    return { ...normalized, ...extraProps, ...filterExtraProps }
+    const normalized = toListItemProps(a)
+    const extraProps = getItemPropsGet()(a, b, c)
+    const filterExtraProps = filteredGetItemPropsGet()(a, b, c)
+    const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
+    return { ...normalized, ...extraProps, ...filterExtraProps, ...shareProps }
   }, [])
 
   const onSelectInner = useCallback(

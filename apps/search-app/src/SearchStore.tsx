@@ -32,10 +32,6 @@ export class SearchStore {
     return this.searchState ? this.searchState.query : ''
   }
 
-  get queryFilters() {
-    return this.stores.queryStore.queryFilters
-  }
-
   nextRows = { startIndex: 0, endIndex: 0 }
   curFindOptions = null
 
@@ -79,7 +75,7 @@ export class SearchStore {
   appToResult = (app: AppBit) => {
     return {
       title: app.name,
-      slim: true,
+      // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
@@ -135,7 +131,7 @@ export class SearchStore {
       {
         title: 'Add app...',
         icon: 'orbit-custom-full',
-        slim: true,
+        // slim: true,
         iconBefore: true,
         identifier: 'message',
         onOpen: () => {
@@ -195,7 +191,7 @@ export class SearchStore {
         dateState,
         sortBy,
         searchBy,
-      } = this.queryFilters
+      } = this.searchState.queryFilters
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)

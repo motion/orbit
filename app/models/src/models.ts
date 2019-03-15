@@ -26,8 +26,8 @@ export const SearchPinnedResultModel = new Model<Bit, { query: string }>('Search
 
 export type SearchQuery = {
   query: string
+  contentType?: BitContentType
   sortBy?: 'Recent' | 'Relevant'
-  searchBy?: 'Topic' | 'Bit'
   startDate?: Date
   endDate?: Date
   appFilters?: string[]
@@ -41,7 +41,6 @@ export type SearchQuery = {
   maxBitsCount?: number
   spaceId?: number
   ids?: number[]
-  contentType?: BitContentType
 }
 
 export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchResult')

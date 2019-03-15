@@ -10,10 +10,21 @@ export class AppStore {
   history = []
   selectedIndex = -1
   sidebarWidth = Math.min(450, Math.max(240, window.innerWidth / 3))
+  lastSidebarWidth = react(() => this.sidebarWidth, {
+    delayValue: true,
+    defaultValue: this.sidebarWidth,
+  })
 
   setSidebarWidth = next => {
     this.sidebarWidth = next
   }
+
+  updateSidebar = react(
+    () => this.stores.themeStore.showSidebar,
+    shown => {
+      this.sidebarWidth = shown ? this.lastSidebarWidth : 0
+    },
+  )
 
   get identifier() {
     return this.props.identifier

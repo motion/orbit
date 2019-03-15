@@ -1,6 +1,6 @@
 import { gloss } from '@o/gloss'
 import { color, Row, View, ViewProps } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 
 const niceColors = [
   ['rgb(17, 17, 17)', 'rgb(127, 219, 255)'],
@@ -98,7 +98,8 @@ const niceColors = [
   ['rgb(46, 204, 64)', 'rgb(133, 20, 75)'],
 ]
 
-export function ColorPicker({
+// @ts-ignore
+export const ColorPicker = memo(function ColorPicker({
   count = 40,
   luminosity = 'dark',
   hue,
@@ -136,7 +137,7 @@ export function ColorPicker({
       <View flex={1} />
     </Row>
   )
-}
+})
 
 const SVG = gloss(View)
 SVG.defaultProps = {

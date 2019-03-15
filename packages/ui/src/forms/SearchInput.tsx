@@ -2,7 +2,6 @@ import { color } from '@o/color'
 import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@o/gloss'
 import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
-import { colors } from '../helpers/colors'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
@@ -115,16 +114,9 @@ export const SearchInnerInput = gloss(TableInput, {
   width: 'calc(100% - 30px)',
   lineHeight: '100%',
   marginLeft: 2,
-  '&::-webkit-input-placeholder': {
-    color: colors.placeholder,
-    fontWeight: 300,
-  },
 }).theme(({ focus }, theme) => ({
   color: theme.color,
   border: focus ? '1px solid black' : 0,
-  '&::-webkit-input-placeholder': {
-    color: theme.color,
-  },
 }))
 
 export const SearchIcon = gloss(Icon, {

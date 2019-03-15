@@ -1,7 +1,7 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { SelectionStore, useOnMount } from '@o/ui'
+import { SelectionStore, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -10,9 +10,10 @@ import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
-export const OrbitApp = ({ id, identifier }) => {
+export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
   const { orbitStore, paneManagerStore } = useStoresSimple()
   const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
+  const visible = useReaction(getIsActive)
   const isActive = useCallback(getIsActive, [])
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
   const selectionStore = useStoreSimple(SelectionStore, { isActive: useReaction(getIsActive) })
@@ -24,14 +25,18 @@ export const OrbitApp = ({ id, identifier }) => {
     })
   })
 
+  console.log('render app', visible)
+
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
-      <OrbitAppRender id={id} identifier={identifier} />
+      <Visibility visible={visible}>
+        <OrbitAppRender id={id} identifier={identifier} />
+      </Visibility>
     </ProvideStores>
   )
 }
 
-function OrbitAppRender({ id, identifier }) {
+const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
   // handle url changes
   useAppLocationEffect()
 
@@ -55,7 +60,7 @@ function OrbitAppRender({ id, identifier }) {
       </AppViewsContext.Provider>
     </AppLoadContext.Provider>
   )
-}
+})
 
 if (module['hot']) {
   module['hot'].accept()

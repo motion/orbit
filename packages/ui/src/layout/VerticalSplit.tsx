@@ -5,7 +5,14 @@ import { useResizeObserver } from '../hooks/useResizeObserver'
 export function VerticalSplit(props: { children: any }) {
   const [width, setWidth] = useState(0)
   const node = useRef<HTMLDivElement>(null)
-  const parentNode = node.current && node.current.parentElement
+  const parent = useRef(null)
+
+  useEffect(
+    () => {
+      parent.current = node.current && node.current.parentElement
+    },
+    [node],
+  )
 
   useEffect(
     () => {
@@ -16,11 +23,14 @@ export function VerticalSplit(props: { children: any }) {
     [node.current],
   )
 
-  useResizeObserver(parentNode, entries => {
-    const next = entries[0].contentRect.width
-    if (next !== width) {
-      setWidth(next)
-    }
+  useResizeObserver({
+    ref: parent,
+    onChange: entries => {
+      const next = entries[0].contentRect.width
+      if (next !== width) {
+        setWidth(next)
+      }
+    },
   })
 
   return (

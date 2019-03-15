@@ -14,7 +14,7 @@ import {
 } from '@o/ui'
 import * as React from 'react'
 
-export const tabHeight = 29
+export const tabHeight = 28
 const inactiveOpacity = 0.45
 const borderSize = 5
 
@@ -110,7 +110,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
               flex={1}
               opacity={isActive ? 1 : inactiveOpacity}
               fontWeight={300}
-              size={0.98}
+              fontSize={12}
               {...textProps}
               transition={isActive ? 'none' : tabTransition}
             >

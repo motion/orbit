@@ -7,9 +7,9 @@ import {
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
+  useActiveSyncAppsWithDefinition,
   useAppDefinitions,
 } from '@o/kit'
-import { partition } from 'lodash'
 import * as React from 'react'
 import { OrbitAppInfo } from '../../components/OrbitAppInfo'
 
@@ -42,7 +42,8 @@ export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
-  const [syncApps, clientApps] = partition(useActiveAppsWithDefinition(), x => !!x.definition.sync)
+  const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
+  const syncApps = useActiveSyncAppsWithDefinition()
 
   if (!activeSpace || !activeApps.length) {
     return null
@@ -53,10 +54,18 @@ export function AppsIndex() {
   return (
     <List
       items={[
-        ...clientApps.map(x => getAppItem(x, { group: 'Apps' })),
-        ...syncApps.map(x => getAppItem(x, { group: 'Sources', after: sourceIcon })),
+        {
+          group: 'Settings',
+          title: 'Manage Apps',
+          subtitle: 'Manage space apps',
+          icon: 'orbit-apps-full',
+          iconBefore: true,
+          subType: 'manage',
+        },
+        ...clientApps.map(x => getAppItem(x, { group: 'App Settings' })),
+        ...syncApps.map(x => getAppItem(x, { group: 'Source Settings', after: sourceIcon })),
         ...allSourceDefinitions.map(def => ({
-          group: 'App Store',
+          group: 'Install App',
           title: def.name,
           icon: def.id,
           iconBefore: true,

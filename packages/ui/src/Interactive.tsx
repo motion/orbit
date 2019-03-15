@@ -5,12 +5,13 @@
  * @format
  */
 
-import { gloss, View, ViewProps } from '@o/gloss'
-import React, { useRef } from 'react'
+import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
+import React, { useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
+import { useScreenPosition } from './hooks/useScreenPosition'
 import { Omit } from './types'
 
 const invariant = require('invariant')
@@ -622,8 +623,20 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
 const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
   const chromeRef = useRef<HTMLElement>(null)
+  const parentRef = useRef<HTMLElement>(null)
+  const [measureKey, setMeasureKey] = useState(0)
+
+  useScreenPosition({
+    ref: parentRef,
+    preventMeasure: true,
+    onChange: () => {
+      console.log('parent size...')
+      setMeasureKey(measureKey + 1)
+    },
+  })
+
   return (
-    <>
+    <FullScreen ref={parentRef} background="yellow">
       <FakeResizeChrome
         ref={chromeRef}
         onLeft={left}
@@ -631,8 +644,8 @@ const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
         onBottom={bottom}
         onTop={top}
       />
-      <FloatingChrome target={chromeRef} />
-    </>
+      <FloatingChrome measureKey={measureKey} target={chromeRef} />
+    </FullScreen>
   )
 }
 

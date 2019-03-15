@@ -8,7 +8,7 @@ import { Portal } from './portal'
 export function FloatingChrome(props: {
   target: RefObject<HTMLElement>
   style?: any
-  measureKey: number
+  measureKey?: number
 }) {
   const [style, setStyle] = useState<Rect | null>(null)
   const element = (
@@ -24,7 +24,13 @@ export function FloatingChrome(props: {
     />
   )
 
-  useScreenPosition(props.target, setStyle, [props.measureKey])
+  useScreenPosition(
+    {
+      ref: props.target,
+      onChange: setStyle,
+    },
+    [props.measureKey],
+  )
 
   return (
     <Portal>

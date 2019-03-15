@@ -36,8 +36,11 @@ export function TestStores() {
 
   console.log('render with', ref)
 
-  useScreenPosition(ref, pos => {
-    console.log('pos', pos, 'ref', ref)
+  useScreenPosition({
+    ref,
+    onChange: pos => {
+      console.log('pos', pos, 'ref', ref)
+    },
   })
 
   window.store = store

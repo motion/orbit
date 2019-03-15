@@ -376,9 +376,6 @@ const ListItemChrome = gloss({
     ...style,
     ...listStyle,
     padding,
-    '&:active': {
-      opacity: isSelected ? 1 : 0.8,
-    },
   }
   return style
 })

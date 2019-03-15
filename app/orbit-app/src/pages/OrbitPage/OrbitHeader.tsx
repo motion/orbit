@@ -28,7 +28,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
-      <HeaderTop padding={isTorn ? [3, 10] : [7, 10]}>
+      <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
         <OrbitClose dontDim={isTorn}>
           <WindowControls
             itemProps={{ size: 10 }}
@@ -47,7 +47,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
         </OrbitClose>
 
         <HeaderSide>
-          <HeaderButton icon="sidebar" />
+          <HeaderButtonChromeless icon="sidebar" />
           <View flex={1} />
           <BackButton />
         </HeaderSide>
@@ -64,7 +64,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <OrbitHeaderInput />
 
           {isOnTearablePane && (
-            <SegmentedRow sizeHeight={0.95} sizeRadius={2} sizePadding={1.25}>
+            <SegmentedRow sizeHeight={0.9} sizeRadius={2} sizePadding={1.25}>
               <LinkButton />
               {!isTorn && <LaunchButton />}
             </SegmentedRow>
@@ -76,10 +76,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {isEditing && (
             <Row>
-              <HeaderInputButton icon="edit" tooltip="Open in VSCode" />
+              <HeaderButton icon="edit" tooltip="Open in VSCode" />
               <HorizontalSpace small />
               <Theme name="selected">
-                <HeaderInputButton tooltip="Deploy to space">Publish</HeaderInputButton>
+                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
               </Theme>
             </Row>
           )}
@@ -129,7 +129,7 @@ const HeaderSide = gloss({
   },
 })
 
-function HeaderInputButton(props: ButtonProps) {
+function HeaderButton(props: ButtonProps) {
   return <Button size={0.9} sizeHeight={0.9} {...props} />
 }
 
@@ -146,7 +146,7 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <HeaderInputButton
+    <HeaderButton
       icon="tool"
       tooltip="Edit app"
       onClick={async () => {
@@ -155,7 +155,7 @@ function OrbitEditAppButton() {
       }}
     >
       Edit
-    </HeaderInputButton>
+    </HeaderButton>
   )
 }
 
@@ -181,9 +181,9 @@ const OrbitHeaderContainer = gloss(View, {
 const HeaderContain = gloss<{ isActive?: boolean }>({
   margin: 'auto',
   alignItems: 'center',
-  flex: 100,
   flexFlow: 'row',
-  maxWidth: 'calc(100% - 300px)',
+  width: 'calc(100% - 300px)',
+  maxWidth: 800,
   minWidth: 400,
   padding: [1, 5],
   borderRadius: 100,
@@ -232,13 +232,6 @@ const LaunchButton = memo(() => {
 
   return (
     <Button
-      // onMouseEnter={() => {
-      //   tm.current = setTimeout(() => setHovered(true), 100)
-      // }}
-      // onMouseLeave={() => {
-      //   clearTimeout(tm.current)
-      //   setHovered(false)
-      // }}
       tooltip="Open app (⌘ + ⏎)"
       width={50}
       onClick={Actions.tearApp}
@@ -254,7 +247,7 @@ const LaunchButton = memo(() => {
   )
 })
 
-function HeaderButton(props: ButtonProps) {
+function HeaderButtonChromeless(props: ButtonProps) {
   return (
     <Button
       chromeless
@@ -279,7 +272,7 @@ const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
   const opacity = locationStore.history.length ? 0.4 : 0.1
   return (
-    <HeaderButton
+    <HeaderButtonChromeless
       icon="arrowminleft"
       opacity={opacity}
       iconSize={24}

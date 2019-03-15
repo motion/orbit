@@ -36,7 +36,7 @@ export class LocationStore {
       console.warn('already on url...')
       return
     }
-    this.history = [...this.history, url]
+    this.history = [...this.history, url].slice(0, 500)
   }
 
   back = () => {

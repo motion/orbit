@@ -1,6 +1,13 @@
 import { Cosal } from '@o/cosal'
 import { Logger } from '@o/logger'
-import { AppEntity, Bit, BitContentType, BitContentTypes, SearchQuery, SearchResult } from '@o/models'
+import {
+  AppEntity,
+  Bit,
+  BitContentType,
+  BitContentTypes,
+  SearchQuery,
+  SearchResult,
+} from '@o/models'
 import { uniq, uniqBy } from 'lodash'
 import { getRepository } from 'typeorm'
 import { SearchQueryExecutor } from '../search/SearchQueryExecutor'
@@ -52,24 +59,6 @@ export class SearchResultResolver {
           bits.map(bit => bit.body),
         )
         const firstBits = this.args.maxBitsCount ? bits.slice(0, this.args.maxBitsCount) : bits
-
-        // loading person bits count and person bits
-        // for (let bit of firstBits) {
-        // todo(umed) just redo it to make it to return people from the desktop
-        // bit.people = await getRepository(BitEntity).find({
-        //   where: {
-        //     people: {
-        //       id: bit.id
-        //     }
-        //   },
-        //   take: 10
-        // })
-        // bit.peopleCount = await getRepository(BitEntity).count({
-        //   bits: {
-        //     id: bit.id
-        //   }
-        // })
-        // }
 
         if (contentType === 'conversation') {
           const title = SearchResultUtils.buildSearchResultTitle(

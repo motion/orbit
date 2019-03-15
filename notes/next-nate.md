@@ -1,3 +1,12 @@
+Small bugs
+
+- Make <Interactive /> show a real div above other things so it catches mouse events
+- Fix overflow scroll in virtual table demo
+
+---
+
+High level
+
 - Make search hook into the table
 
 - App Actions

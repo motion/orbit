@@ -9,18 +9,21 @@ export type SearchState = {
   queryFilters: QueryFilterStore
 }
 
-export function useSearch(cb: (state: SearchState) => any) {
+export function useSearchState(cb?: (state: SearchState) => any) {
   const { appStore, queryStore } = useStores()
   const last = useRef(null)
-
-  useReaction(() => {
+  return useReaction(() => {
     const next = {
       query: queryStore.queryFilters.activeQuery,
       queryFilters: queryStore.queryFilters,
     }
     if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
       last.current = next
-      cb(next)
+      if (cb) {
+        cb(next)
+      } else {
+        return next
+      }
     }
   })
 }

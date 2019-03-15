@@ -17,4 +17,9 @@ export default createApp({
   icon: 'person',
   itemType: 'person',
   app: PeopleApp,
+  // settings: {
+  //   searchFilters: {
+  //     type: 'person',
+  //   }
+  // }
 })

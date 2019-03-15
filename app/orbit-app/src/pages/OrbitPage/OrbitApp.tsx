@@ -4,15 +4,16 @@ import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { memo, useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
-import { useStores } from '../../hooks/useStores'
+import { useStoresSimple } from '../../hooks/useStores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
-  const { orbitStore, paneManagerStore } = useStores()
+  const { orbitStore, paneManagerStore } = useStoresSimple()
   const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
+  const visible = useReaction(getIsActive)
   const isActive = useCallback(getIsActive, [])
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
   const selectionStore = useStoreSimple(SelectionStore, { isActive: useReaction(getIsActive) })
@@ -24,9 +25,11 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     })
   })
 
+  console.log('render app', visible)
+
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
-      <Visibility visible={getIsActive()}>
+      <Visibility visible={visible}>
         <OrbitAppRender id={id} identifier={identifier} />
       </Visibility>
     </ProvideStores>

@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import React, { useContext } from 'react'
 
 // memoized to avoid updates...
@@ -11,6 +12,10 @@ export type MergeContextProps<A> = {
 export function MergeContext<A>(props: MergeContextProps<A>): any {
   const { Context } = props
   const context = useContext(props.Context)
+
+  if (isEqual(context, props.value)) {
+    return props.children
+  }
 
   if (context && typeof context === 'object') {
     const value = Object.assign({}, context, props.value)

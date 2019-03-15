@@ -212,10 +212,10 @@ const HeaderTop = gloss(View, {
 
 const OrbitClose = gloss({
   position: 'absolute',
-  top: 0,
+  top: 1,
   left: 2,
   padding: 4,
-  opacity: 0.1,
+  opacity: 0.25,
   '&:hover': {
     opacity: 1,
   },

@@ -26,7 +26,7 @@ export function useMutationObserver<T extends RefObject<HTMLElement>>(
       }
       return dispose.current
     },
-    [node, JSON.stringify(options), ...(mountArgs || [])],
+    [node, disable, JSON.stringify(options), ...(mountArgs || [])],
   )
 
   return () => dispose.current && dispose.current()

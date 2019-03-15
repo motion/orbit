@@ -9,7 +9,7 @@ import {
   Text,
   TitleRow,
   useContextMenu,
-  useMemoGetValue,
+  useRefGetter,
   View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
@@ -85,7 +85,7 @@ const AppIconContainer = gloss({
 export function ManageApps() {
   const { paneManagerStore } = useStores()
   const activeApps = useActiveAppsSorted()
-  const getActiveApps = useMemoGetValue(activeApps)
+  const getActiveApps = useRefGetter(activeApps)
   const handleSortEnd = useAppSortHandler()
   const [activeSpace] = useActiveSpace()
 

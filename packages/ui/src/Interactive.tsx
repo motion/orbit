@@ -632,7 +632,7 @@ const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
     ref: parentRef,
     preventMeasure: true,
     onChange: ({ visible }) => {
-      console.log('parent size...')
+      console.log('parent size...', visible)
       setMeasureKey(Math.random())
       setVisible(visible)
     },
@@ -647,7 +647,11 @@ const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
         onBottom={bottom}
         onTop={top}
       />
-      <FloatingChrome measureKey={measureKey} target={chromeRef} />
+      <FloatingChrome
+        measureKey={measureKey}
+        target={chromeRef}
+        style={{ opacity: visible ? 1 : 0 }}
+      />
     </FullScreen>
   )
 }

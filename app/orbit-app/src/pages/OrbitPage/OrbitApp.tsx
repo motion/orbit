@@ -1,17 +1,17 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
 import { SelectionStore, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
-import { useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 import { OrbitMain } from './OrbitMain'
 import { OrbitSidebar } from './OrbitSidebar'
 import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
-export const OrbitApp = ({ id, identifier }) => {
-  const { orbitStore, paneManagerStore } = useStoresSimple()
+export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
+  const { orbitStore, paneManagerStore } = useStores()
   const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
   const isActive = useCallback(getIsActive, [])
   const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
@@ -33,7 +33,7 @@ export const OrbitApp = ({ id, identifier }) => {
   )
 }
 
-function OrbitAppRender({ id, identifier }) {
+const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
   // handle url changes
   useAppLocationEffect()
 
@@ -57,7 +57,7 @@ function OrbitAppRender({ id, identifier }) {
       </AppViewsContext.Provider>
     </AppLoadContext.Provider>
   )
-}
+})
 
 if (module['hot']) {
   module['hot'].accept()

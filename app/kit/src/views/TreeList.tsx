@@ -1,4 +1,4 @@
-import { ListItemProps, SelectableListProps, TreeItem, useMemoGetValue } from '@o/ui'
+import { ListItemProps, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
 import React, { useMemo } from 'react'
 import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
 import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
@@ -76,8 +76,8 @@ export function useTreeList(subSelect: string): UseTreeList {
   const us = useScopedUserState(`${subSelect}_treeState`, {
     currentFolder: 0,
   })
-  const getTs = useMemoGetValue(ts)
-  const getUs = useMemoGetValue(us)
+  const getTs = useRefGetter(ts)
+  const getUs = useRefGetter(us)
   const actions = useMemo(() => getActions(getTs, getUs), [])
   return {
     state: ts[0],

@@ -9,7 +9,7 @@ import {
   SelectionStore,
   SubTitle,
   Text,
-  useMemoGetValue,
+  useRefGetter,
   useSelectionStore,
   View,
 } from '@o/ui'
@@ -88,7 +88,7 @@ export function List(rawProps: ListProps) {
   const { shortcutStore } = useStoresSimple()
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
-  const getItemPropsGet = useMemoGetValue(getItemProps || nullFn)
+  const getItemPropsGet = useRefGetter(getItemProps || nullFn)
 
   const selectionStore = useSelectionStore(restProps)
   const selectionStoreRef = useRef<SelectionStore | null>(null)
@@ -104,9 +104,9 @@ export function List(rawProps: ListProps) {
     groupByLetter: props.groupByLetter,
     groupMinimum: props.groupMinimum,
   })
-  const filteredGetItemPropsGet = useMemoGetValue(filtered.getItemProps || nullFn)
+  const filteredGetItemPropsGet = useRefGetter(filtered.getItemProps || nullFn)
 
-  const getItems = useMemoGetValue(filtered.results)
+  const getItems = useRefGetter(filtered.results)
 
   useEffect(
     () => {

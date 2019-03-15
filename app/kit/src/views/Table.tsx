@@ -1,4 +1,4 @@
-import { ManagedTable, SearchableTable, SearchableTableProps, useMemoGetValue } from '@o/ui'
+import { ManagedTable, SearchableTable, SearchableTableProps, useRefGetter } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export type TableProps = SearchableTableProps & {
@@ -20,7 +20,7 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
 
 export function Table({ searchable, columns, onHighlightedRows, ...props }: TableProps) {
   const colsWithDefaults = deepMergeDefined(columns, defaultColumns)
-  const ogOnHighlightedIndices = useMemoGetValue(props.onHighlightedIndices)
+  const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
   const onHighlightedIndices = useCallback(keys => {
     if (onHighlightedRows) {
       onHighlightedRows(keys.map(key => props.rows.find(x => x.key === key)))

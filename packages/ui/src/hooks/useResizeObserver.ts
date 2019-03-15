@@ -1,5 +1,6 @@
 import { EffectCallback, RefObject, useEffect, useRef } from 'react'
 import { ResizeObserver, ResizeObserverCallback } from '../ResizeObserver'
+import { useRefGetter } from './useRefGetter'
 
 export function useResizeObserver(
   props: {
@@ -9,21 +10,24 @@ export function useResizeObserver(
   },
   mountArgs?: any[],
 ): Function {
-  const { ref, onChange, disable } = props
+  const { ref, disable } = props
+  const onChange = useRefGetter(props.onChange)
   const dispose = useRef<EffectCallback | null>(null)
 
   useEffect(
     () => {
       if (disable) return
       if (!ref || !ref.current) return
-      let resizeObserver = new ResizeObserver(onChange)
+      let resizeObserver = new ResizeObserver((...args) => {
+        onChange()(...args)
+      })
       resizeObserver.observe(ref.current)
       dispose.current = () => {
         resizeObserver.disconnect()
       }
       return dispose.current
     },
-    [ref, ...(mountArgs || [])],
+    [ref, disable, ...(mountArgs || [])],
   )
 
   return () => dispose.current && dispose.current()

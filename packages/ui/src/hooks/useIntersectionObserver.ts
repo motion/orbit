@@ -1,4 +1,5 @@
 import { RefObject, useEffect, useRef } from 'react'
+import { useRefGetter } from './useRefGetter'
 
 export function useIntersectionObserver(
   props: {
@@ -9,7 +10,8 @@ export function useIntersectionObserver(
   },
   mountArgs?: any[],
 ) {
-  const { ref, onChange, options, disable } = props
+  const { ref, options, disable } = props
+  const onChange = useRefGetter(props.onChange)
   const dispose = useRef<any>(null)
 
   useEffect(
@@ -17,14 +19,16 @@ export function useIntersectionObserver(
       if (disable) return
       const node = ref.current
       if (!node) return
-      const observer = new IntersectionObserver(onChange, options)
+      const observer = new IntersectionObserver((...args) => {
+        onChange()(...args)
+      }, options)
       observer.observe(node)
       dispose.current = () => {
         observer.disconnect()
       }
       return dispose.current
     },
-    [ref, disable, ...(mountArgs || [])],
+    [ref, disable, JSON.stringify(options), ...(mountArgs || [])],
   )
 
   return () => dispose.current && dispose.current()

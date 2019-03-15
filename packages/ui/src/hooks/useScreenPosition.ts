@@ -3,6 +3,7 @@ import { RefObject, useCallback, useEffect, useRef } from 'react'
 import { useVisiblity } from '../Visibility'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
+import { useRefGetter } from './useRefGetter'
 import { useResizeObserver } from './useResizeObserver'
 
 export type Rect = {
@@ -24,29 +25,34 @@ type UseScreenPositionProps = {
 }
 
 export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
-  const { ref, onChange, preventMeasure, debounce = 100 } = props
+  const { ref, preventMeasure, debounce = 100 } = props
+  const onChange = useRefGetter(props.onChange)
   const disable = useVisiblity() === false
+  if (!disable) console.warn('hiiiiiiiiiiii', props)
   const intersected = useRef(false)
 
   const measure = useCallback(
     _.debounce((nodeRect?) => {
+      const callback = onChange()
       if (nodeRect === false) {
-        onChange({ visible: false, rect: null })
+        callback({ visible: false, rect: null })
+        return
       }
       const node = ref.current
       if (!node) return
       if (!intersected.current) return
       const visible = isVisible(node) && !disable
+      if (!disable) console.warn('yupppppppp', isVisible(node))
       const rect =
         !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
-      onChange({ visible, rect })
+      callback({ visible, rect })
     }, debounce),
-    [props.preventMeasure],
+    [ref, props.preventMeasure, disable],
   )
 
   useResizeObserver({
     ref,
-    onChange: _.debounce(entries => measure(entries[0].contentRect)),
+    onChange: entries => measure(entries[0].contentRect),
     disable,
   })
 
@@ -74,6 +80,15 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
   })
 
   useEffect(measure, [ref, ...mountArgs])
+
+  useEffect(
+    () => {
+      if (disable) {
+        measure(false)
+      }
+    },
+    [disable],
+  )
 }
 
 function isVisible(ele) {

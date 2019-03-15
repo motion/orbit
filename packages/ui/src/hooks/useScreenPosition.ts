@@ -11,7 +11,7 @@ export type Rect = {
   left: number
 }
 
-function getRect(o: any) {
+export function getRect(o: any) {
   return { width: o.width, height: o.height, left: o.left, top: o.top }
 }
 

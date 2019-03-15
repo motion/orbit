@@ -631,7 +631,7 @@ const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
     preventMeasure: true,
     onChange: () => {
       console.log('parent size...')
-      setMeasureKey(measureKey + 1)
+      setMeasureKey(Math.random())
     },
   })
 

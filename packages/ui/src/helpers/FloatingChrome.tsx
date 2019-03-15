@@ -1,6 +1,6 @@
 import { FullScreen } from '@o/gloss'
-import React, { RefObject, useState } from 'react'
-import { Rect, useScreenPosition } from '../hooks/useScreenPosition'
+import React, { RefObject, useEffect, useState } from 'react'
+import { getRect, Rect, useScreenPosition } from '../hooks/useScreenPosition'
 import { Portal } from './portal'
 
 // puts an item on top of render stack, but pinned to another items location
@@ -24,12 +24,18 @@ export function FloatingChrome(props: {
     />
   )
 
-  useScreenPosition(
-    {
-      ref: props.target,
-      onChange: setStyle,
+  useScreenPosition({
+    ref: props.target,
+    onChange: setStyle,
+  })
+
+  useEffect(
+    () => {
+      const rect = getRect(props.target.current.getBoundingClientRect())
+      console.log('re measuer', rect)
+      setStyle(rect)
     },
-    [props.measureKey],
+    [props.target, props.measureKey],
   )
 
   return (

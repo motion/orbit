@@ -190,7 +190,6 @@ export class SearchStore {
         activeQuery,
         dateState,
         sortBy,
-        searchBy,
       } = this.searchState.queryFilters
 
       // filters
@@ -213,7 +212,6 @@ export class SearchStore {
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,
-          searchBy,
           sortBy,
           startDate,
           endDate,

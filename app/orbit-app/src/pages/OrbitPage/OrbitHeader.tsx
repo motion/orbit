@@ -11,7 +11,7 @@ import OrbitHeaderInput from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore, themeStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const { isTorn } = orbitStore
@@ -47,7 +47,11 @@ export const OrbitHeader = memo(function OrbitHeader() {
         </OrbitClose>
 
         <HeaderSide>
-          <HeaderButtonChromeless icon="sidebar" />
+          <HeaderButtonChromeless
+            icon="sidebar"
+            onClick={themeStore.setToggleShowSidebar}
+            opacity={themeStore.showSidebar ? 0.6 : 0.3}
+          />
           <View flex={1} />
           <BackButton />
         </HeaderSide>

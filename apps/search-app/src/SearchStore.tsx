@@ -79,7 +79,7 @@ export class SearchStore {
   appToResult = (app: AppBit) => {
     return {
       title: app.name,
-      slim: true,
+      // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
@@ -135,7 +135,7 @@ export class SearchStore {
       {
         title: 'Add app...',
         icon: 'orbit-custom-full',
-        slim: true,
+        // slim: true,
         iconBefore: true,
         identifier: 'message',
         onOpen: () => {

@@ -25,6 +25,7 @@ export function PeopleAppIndex() {
     where.push({ type: 'person' })
   }
   const [people] = useModels(BitModel, { take: 50000, where })
+  const sortBy = useCallback(x => x.title.toLowerCase(), [])
 
   if (!people.length) {
     return <NoResultsDialog subName="the directory" />
@@ -40,7 +41,7 @@ export function PeopleAppIndex() {
       items={people}
       filterKey="name"
       removePrefix="@"
-      sortBy={useCallback(x => x.title.toLowerCase(), [])}
+      sortBy={sortBy}
       groupByLetter
       groupMinimum={12}
     />

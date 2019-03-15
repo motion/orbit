@@ -1,10 +1,11 @@
 import { useModels } from '@o/bridge'
 import { Bit, BitContentType, BitModel } from '@o/models'
+import { useReaction } from '@o/use-store'
 import { useContext } from 'react'
 import { FindOptions } from 'typeorm'
 import { ListPropsContext } from '../views/List'
-import { useActiveQuery } from './useActiveQuery'
 import { useSearchState } from './useSearchState'
+import { useStoresSimple } from './useStores'
 
 type UseBitsProps = FindOptions<Bit> & {
   type?: BitContentType
@@ -15,7 +16,8 @@ type UseBitsProps = FindOptions<Bit> & {
 export function useBits({ type, ...args }: UseBitsProps = {}) {
   const listProps = useContext(ListPropsContext)
   const searchable = typeof args.searchable === 'undefined' ? listProps.searchable : args.searchable
-  const activeQuery = useActiveQuery()
+  const { appStore } = useStoresSimple()
+  const activeQuery = useReaction(() => appStore.activeQuery, { delay: 100, defaultValue: '' })
   const query = searchable ? activeQuery : args.query
 
   const { queryFilters } = useSearchState()

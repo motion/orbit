@@ -626,18 +626,20 @@ const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
   const chromeRef = useRef<HTMLElement>(null)
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
+  const [visible, setVisible] = useState(false)
 
   useScreenPosition({
     ref: parentRef,
     preventMeasure: true,
-    onChange: () => {
+    onChange: ({ visible }) => {
       console.log('parent size...')
       setMeasureKey(Math.random())
+      setVisible(visible)
     },
   })
 
   return (
-    <FullScreen ref={parentRef} background="yellow">
+    <FullScreen ref={parentRef} background="yellow" opacity={visible ? 1 : 0}>
       <FakeResizeChrome
         ref={chromeRef}
         onLeft={left}

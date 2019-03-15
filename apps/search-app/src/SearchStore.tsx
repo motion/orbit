@@ -131,7 +131,6 @@ export class SearchStore {
     }
 
     return [
-      this.homeItem,
       ...apps.slice(0, all ? Infinity : Math.min(apps.length - 1, 5)).map(this.appToResult),
       {
         title: 'Add app...',

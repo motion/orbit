@@ -22,6 +22,7 @@ kubeconfig
 .toc
 *.pyc
 .rts2_cache_cjs
+tsconfig.tsbuildinfo
 
 common/temp/**
 

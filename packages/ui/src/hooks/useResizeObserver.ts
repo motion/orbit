@@ -1,18 +1,18 @@
 import { EffectCallback, useEffect, useRef } from 'react'
 import { ResizeObserver, ResizeObserverCallback } from '../ResizeObserver'
 
-export function useResizeObserver<T extends HTMLElement>(
-  node: T | false | null | undefined,
+export function useResizeObserver<T extends React.RefObject<HTMLElement>>(
+  node: T,
   onResize: ResizeObserverCallback,
 ): Function {
   const dispose = useRef<EffectCallback | null>(null)
 
   useEffect(
     () => {
-      if (!node) return
+      if (!node || !node.current) return
 
       let resizeObserver = new ResizeObserver(onResize)
-      resizeObserver.observe(node)
+      resizeObserver.observe(node.current)
 
       dispose.current = () => {
         resizeObserver.disconnect()

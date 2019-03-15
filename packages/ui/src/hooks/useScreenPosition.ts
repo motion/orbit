@@ -1,10 +1,10 @@
 import { debounce } from 'lodash'
-import { useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
-type Rect = {
+export type Rect = {
   width: number
   height: number
   top: number
@@ -20,13 +20,15 @@ function getRect(o: any) {
 //   return useCallback(() => forceUpdate(Math.random()), [])
 // }
 
-export function useScreenPosition<T extends React.RefObject<HTMLDivElement>>(
+export function useScreenPosition<T extends RefObject<HTMLElement>>(
   ref: T,
-  cb: (rect: Rect | null) => any,
+  cb: ((rect: Rect | null) => any) | null,
+  mountArgs?: any[],
 ) {
   const intersected = useRef(false)
-  const curNode = useRef<HTMLDivElement | null>(null)
-  const triggerMeasure = () => {
+  const curNode = useRef<HTMLElement | null>(null)
+
+  const measure = () => {
     const node = ref.current
     if (!node || !isVisible(node)) return
     if (!intersected.current) return
@@ -34,13 +36,17 @@ export function useScreenPosition<T extends React.RefObject<HTMLDivElement>>(
   }
 
   useResizeObserver(
-    curNode.current,
+    curNode,
     debounce(() => {
       console.log('has resized')
     }, 32),
   )
 
-  useMutationObserver(curNode, { attributes: true }, debounce(() => {}, 32))
+  useMutationObserver(
+    curNode,
+    { attributes: true, subtree: true, childList: true },
+    debounce(() => {}, 32),
+  )
 
   useIntersectionObserver(ref, entries => {
     console.log('wut', entries, ref.current)
@@ -55,7 +61,7 @@ export function useScreenPosition<T extends React.RefObject<HTMLDivElement>>(
     }
   })
 
-  useEffect(triggerMeasure, [ref.current])
+  useEffect(measure, [ref.current, ...mountArgs])
 }
 
 function isVisible(ele) {

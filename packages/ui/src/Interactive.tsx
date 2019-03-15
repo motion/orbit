@@ -6,7 +6,8 @@
  */
 
 import { gloss, View, ViewProps } from '@o/gloss'
-import * as React from 'react'
+import React, { useRef } from 'react'
+import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
@@ -14,7 +15,7 @@ import { Omit } from './types'
 
 const invariant = require('invariant')
 
-const WINDOW_CURSOR_BOUNDARY = 5
+const SIZE = 5
 
 type CursorState = {
   top: number
@@ -83,6 +84,7 @@ type InteractiveState = {
 }
 
 const InteractiveContainer = gloss(View, {
+  position: 'relative',
   willChange: 'transform, height, width, z-index',
 })
 
@@ -123,7 +125,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  startAction = (event: MouseEvent) => {
+  startAction = event => {
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -465,10 +467,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
-    const atTop: boolean = y <= WINDOW_CURSOR_BOUNDARY
-    const atBottom: boolean = y >= height - WINDOW_CURSOR_BOUNDARY
-    const atLeft: boolean = x <= WINDOW_CURSOR_BOUNDARY
-    const atRight: boolean = x >= width - WINDOW_CURSOR_BOUNDARY
+    const atTop: boolean = y <= SIZE
+    const atBottom: boolean = y >= height - SIZE
+    const atLeft: boolean = x <= SIZE
+    const atRight: boolean = x >= width - SIZE
     return {
       bottom: canResize.bottom === true && atBottom,
       left: canResize.left === true && atLeft,
@@ -559,7 +561,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  onLocalMouseMove = (event: MouseEvent) => {
+  onLocalMouseMove = event => {
     if (!this.globalMouse) {
       this.onMouseMove(event)
     }
@@ -598,7 +600,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (this.props.style) {
       Object.assign(style, this.props.style)
     }
-
+    const resizable = this.getResizable()
     return (
       <InteractiveContainer
         className={this.props.className}
@@ -610,8 +612,61 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
         style={style}
         {...props}
       >
+        {resizable &&
+          Object.keys(resizable).map(side => <FakeResize key={side} {...{ [side]: true }} />)}
         {this.props.children}
       </InteractiveContainer>
     )
   }
 }
+
+const FakeResize = ({ top, left, right, bottom }: ResizableSides) => {
+  const chromeRef = useRef<HTMLElement>(null)
+  return (
+    <>
+      <FakeResizeChrome
+        ref={chromeRef}
+        onLeft={left}
+        onRight={right}
+        onBottom={bottom}
+        onTop={top}
+      />
+      <FloatingChrome target={chromeRef} />
+    </>
+  )
+}
+
+const vertical = {
+  top: 0,
+  bottom: 0,
+  width: SIZE,
+}
+
+const horizontal = {
+  left: 0,
+  right: 0,
+  height: SIZE,
+}
+
+const OFFSET = 0 // SIZE / 2
+
+const FakeResizeChrome = gloss({
+  position: 'absolute',
+  background: '#55550055',
+  onLeft: {
+    ...vertical,
+    left: -OFFSET,
+  },
+  onRight: {
+    ...vertical,
+    right: -OFFSET,
+  },
+  onBottom: {
+    ...horizontal,
+    bottom: -OFFSET,
+  },
+  onTop: {
+    ...horizontal,
+    top: -OFFSET,
+  },
+})

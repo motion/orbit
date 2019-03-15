@@ -25,7 +25,12 @@ export type BaseRules = {
 }
 
 type GlossProps<Props> = Props &
-  HTMLAttributes<any> & { tagName?: string; children?: ReactNode; ref?: any }
+  HTMLAttributes<HTMLElement> & {
+    tagName?: string
+    children?: ReactNode
+    ref?: any
+    style?: any
+  }
 
 export type GlossThemeFn<Props> = ((
   props: GlossProps<Props>,

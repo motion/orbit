@@ -1,6 +1,6 @@
-import { EffectCallback, useEffect, useRef } from 'react'
+import { EffectCallback, RefObject, useEffect, useRef } from 'react'
 
-export function useMutationObserver<T extends React.RefObject<HTMLDivElement>>(
+export function useMutationObserver<T extends RefObject<HTMLElement>>(
   ref: T,
   attributes: MutationObserverInit,
   onChange: ((node: T['current']) => any),

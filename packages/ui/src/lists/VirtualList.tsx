@@ -244,7 +244,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
   const store = useStore(props.store)
   const frameRef = useRef<HTMLDivElement>(null)
 
-  useResizeObserver(frameRef.current, () => {
+  useResizeObserver(frameRef, () => {
     store.measure()
     store.measureHeight()
   })

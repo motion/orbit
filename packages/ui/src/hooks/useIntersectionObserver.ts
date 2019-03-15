@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 
 export function useIntersectionObserver(
-  ref: React.RefObject<HTMLDivElement>,
+  ref: RefObject<HTMLElement>,
   onIntersection: IntersectionObserverCallback,
   options?: IntersectionObserverInit,
 ) {

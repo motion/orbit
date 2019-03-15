@@ -28,7 +28,8 @@ export const Slider = React.memo(function Slider(props: SliderProps) {
   let currentHeight = 0
 
   const node = frameRef.current
-  useResizeObserver(frameRef.current, () => {
+
+  useResizeObserver(frameRef, () => {
     if (node.parentNode && node.parentNode.clientWidth !== width) {
       setWidth(node.parentNode.clientWidth)
     }

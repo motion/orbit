@@ -1,25 +1,30 @@
 import { RefObject, useEffect, useRef } from 'react'
 
 export function useIntersectionObserver(
-  ref: RefObject<HTMLElement>,
-  onIntersection: IntersectionObserverCallback,
-  options?: IntersectionObserverInit,
+  props: {
+    ref: RefObject<HTMLElement>
+    onChange: IntersectionObserverCallback
+    options?: IntersectionObserverInit
+    disable?: boolean
+  },
+  mountArgs?: any[],
 ) {
+  const { ref, onChange, options, disable } = props
   const dispose = useRef<any>(null)
 
   useEffect(
     () => {
+      if (disable) return
       const node = ref.current
-      console.log('observing', node)
       if (!node) return
-      const observer = new IntersectionObserver(onIntersection, options)
+      const observer = new IntersectionObserver(onChange, options)
       observer.observe(node)
       dispose.current = () => {
         observer.disconnect()
       }
       return dispose.current
     },
-    [ref.current],
+    [ref, disable, ...(mountArgs || [])],
   )
 
   return () => dispose.current && dispose.current()

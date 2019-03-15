@@ -23,11 +23,14 @@ export function VerticalSplit(props: { children: any }) {
     [node.current],
   )
 
-  useResizeObserver(parent, entries => {
-    const next = entries[0].contentRect.width
-    if (next !== width) {
-      setWidth(next)
-    }
+  useResizeObserver({
+    ref: parent,
+    onChange: entries => {
+      const next = entries[0].contentRect.width
+      if (next !== width) {
+        setWidth(next)
+      }
+    },
   })
 
   return (

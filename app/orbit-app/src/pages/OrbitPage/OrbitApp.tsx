@@ -1,5 +1,5 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { SelectionStore, useOnMount } from '@o/ui'
+import { SelectionStore, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { useCallback } from 'react'
 import '../../apps/orbitApps'
@@ -26,7 +26,9 @@ export const OrbitApp = ({ id, identifier }) => {
 
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
-      <OrbitAppRender id={id} identifier={identifier} />
+      <Visibility visible={getIsActive()}>
+        <OrbitAppRender id={id} identifier={identifier} />
+      </Visibility>
     </ProvideStores>
   )
 }

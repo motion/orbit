@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { useVisiblity } from '../Visibility'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
@@ -24,6 +25,7 @@ type UseScreenPositionProps = {
 
 export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
   const { ref, onChange, preventMeasure, debounce = 100 } = props
+  const disable = useVisiblity() === false
   const intersected = useRef(false)
 
   const measure = useCallback(
@@ -34,7 +36,7 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
       const node = ref.current
       if (!node) return
       if (!intersected.current) return
-      const visible = isVisible(node)
+      const visible = isVisible(node) && !disable
       const rect =
         !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
       onChange({ visible, rect })
@@ -42,20 +44,33 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
     [props.preventMeasure],
   )
 
-  useResizeObserver(ref, _.debounce(entries => measure(entries[0].contentRect)))
+  useResizeObserver({
+    ref,
+    onChange: _.debounce(entries => measure(entries[0].contentRect)),
+    disable,
+  })
 
-  useMutationObserver(ref, { attributes: true }, measure)
+  useMutationObserver({
+    disable,
+    ref,
+    options: { attributes: true },
+    onChange: measure,
+  })
 
-  useIntersectionObserver(ref, entries => {
-    if (!entries) return
-    const [entry] = entries
-    if (entry.isIntersecting) {
-      intersected.current = true
-      measure(entry.boundingClientRect)
-    } else {
-      intersected.current = false
-      measure(false)
-    }
+  useIntersectionObserver({
+    disable,
+    ref,
+    onChange: entries => {
+      if (!entries) return
+      const [entry] = entries
+      if (entry.isIntersecting) {
+        intersected.current = true
+        measure(entry.boundingClientRect)
+      } else {
+        intersected.current = false
+        measure(false)
+      }
+    },
   })
 
   useEffect(measure, [ref, ...mountArgs])

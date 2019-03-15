@@ -27,12 +27,14 @@ export const Slider = React.memo(function Slider(props: SliderProps) {
   const [heights, setHeight] = React.useState([])
   let currentHeight = 0
 
-  const node = frameRef.current
-
-  useResizeObserver(frameRef, () => {
-    if (node.parentNode && node.parentNode.clientWidth !== width) {
-      setWidth(node.parentNode.clientWidth)
-    }
+  useResizeObserver({
+    ref: frameRef,
+    onChange: () => {
+      const node = frameRef.current
+      if (node.parentNode && node.parentNode.clientWidth !== width) {
+        setWidth(node.parentNode.clientWidth)
+      }
+    },
   })
 
   if (fixHeightToTallest) {
@@ -90,10 +92,14 @@ export const SliderPane = ({
 }: SliderPaneProps) => {
   // height management
   const ref = React.useRef(null)
-  useResizeObserver(ref.current, entries => {
-    if (onChangeHeight) {
-      onChangeHeight(entries[0].contentRect.height)
-    }
+
+  useResizeObserver({
+    ref: ref,
+    onChange: entries => {
+      if (onChangeHeight) {
+        onChangeHeight(entries[0].contentRect.height)
+      }
+    },
   })
 
   return (

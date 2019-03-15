@@ -277,11 +277,11 @@ const LinkButton = memo(() => {
 
 const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
-
+  const opacity = locationStore.history.length ? 0.4 : 0.1
   return (
     <HeaderButton
       icon="arrowminleft"
-      opacity={locationStore.history.length ? 0.4 : 0.1}
+      opacity={opacity}
       iconSize={24}
       onClick={() => {
         locationStore.back()

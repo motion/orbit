@@ -1,6 +1,7 @@
 import { IS_STORE } from '@o/automagical'
 import { EQUALITY_KEY } from '@o/fast-compare'
 import { isAction, isObservableObject } from 'mobx'
+import { getCurrentComponent } from './getCurrentComponent'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -8,15 +9,15 @@ export const GET_STORE = Symbol('GET_STORE')
 type ProxyWorm<A extends Function> = {
   state: ProxyWormState
   store: A
-  track(debug?: boolean): () => Set<string>
+  track(component: any, debug?: boolean): () => Set<string>
 }
 
 type ProxyWormState = {
-  ids: Set<number>
+  ids: Set<any>
   loops: WeakMap<any, any>
-  keys: Map<number, Set<string>>
+  keys: Map<any, Set<string>>
   add: (s: string) => void
-  activeId: number
+  current: number | any
   debug: boolean
 }
 
@@ -32,11 +33,7 @@ const filterShallowKeys = (set: Set<string>) => {
   return set
 }
 
-let id = 0
-const nextId = () => {
-  id = (id + 1) % Number.MAX_SAFE_INTEGER
-  return id
-}
+const emptySet = new Set()
 
 export function mobxProxyWorm<A extends Function>(
   obj: A,
@@ -45,20 +42,26 @@ export function mobxProxyWorm<A extends Function>(
 ): ProxyWorm<A> {
   const state: ProxyWormState = parentState || {
     debug: false,
-    activeId: -1,
+    current: -1,
     ids: new Set(),
     loops: new WeakMap(),
-    keys: new Map<number, Set<string>>(),
+    keys: new Map<any, Set<string>>(),
     add: (next: string) => {
-      if (state.activeId !== -1) {
-        if (state.debug) console.log('add key', next, state.activeId)
-        state.keys.get(state.activeId).add(next)
+      if (state.current !== -1) {
+        if (state.debug) console.log('add key', next, state.current)
+        state.keys.get(state.current).add(next)
       }
     },
   }
 
   const store = new Proxy(obj, {
     get(target, key) {
+      // we are doing stricter checks now to be sure its the right component
+      // but now relying unfortunately on the super secret api for correctness
+      if (getCurrentComponent() !== state.current) {
+        return Reflect.get(target, key)
+      }
+
       if (key === GET_STORE) return obj
       if (key === EQUALITY_KEY) return obj
       if (key === IS_PROXY) return true
@@ -105,17 +108,17 @@ export function mobxProxyWorm<A extends Function>(
   return {
     state,
     store,
-    track(dbg?: boolean) {
-      const id = nextId()
+    track(component, dbg?: boolean) {
+      const id = component
       state.debug = dbg || false
       // if (state.debug) console.log('track start', id, [...state.ids])
-      state.activeId = id
+      state.current = id
       state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
         // we may call untrack() then dispose() later so only do once
         if (state.ids.has(id)) {
-          state.activeId = -1
+          state.current = -1
           state.ids.delete(id)
           const res = state.keys.get(id)
           state.keys.delete(id)
@@ -123,6 +126,7 @@ export function mobxProxyWorm<A extends Function>(
           filterShallowKeys(res)
           return res
         }
+        return emptySet
       }
     },
   }

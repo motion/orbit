@@ -140,6 +140,9 @@ export function useStore<A>(
   let store = null
 
   if (instantiated) {
+    if (options && options.react === false) {
+      throw new Error(`Doesn't make sense to not react to an instatiated store.`)
+    }
     // shouldUpdate handles if a new store comes down for the same hook, update it
     const shouldUpdate = lastStore.current !== Store
     lastStore.current = Store

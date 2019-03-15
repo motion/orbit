@@ -4,6 +4,7 @@ import { get } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
+import { getCurrentComponent } from './getCurrentComponent'
 import { GET_STORE, mobxProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
 
@@ -109,7 +110,7 @@ export function setupTrackableStore(
     store: config.store,
     track() {
       paused = true
-      done = config.track(debug())
+      done = config.track(getCurrentComponent(), debug())
     },
     untrack() {
       if (disposed) return

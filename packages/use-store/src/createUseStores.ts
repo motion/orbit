@@ -38,13 +38,12 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
             if (state.has(store)) {
               return state.get(store).store
             }
-            const next =
-              process.env.NODE_ENV === 'development'
-                ? setupTrackableStore(store, render, {
-                    ...options,
-                    component,
-                  })
-                : setupTrackableStore(store, render)
+
+            const next = setupTrackableStore(store, render, {
+              ...options,
+              component,
+            })
+
             // track immediately because it will be missed by track block below
             next.track()
             state.set(store, next)

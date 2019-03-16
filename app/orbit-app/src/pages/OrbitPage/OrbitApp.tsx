@@ -25,7 +25,7 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     })
   })
 
-  console.log('render app', visible)
+  console.log('render app', id, identifier, visible)
 
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>

@@ -1,7 +1,6 @@
 import { IS_STORE } from '@o/automagical'
 import { EQUALITY_KEY } from '@o/fast-compare'
 import { isAction, isObservableObject } from 'mobx'
-import { getCurrentComponent } from './getCurrentComponent'
 
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
@@ -35,6 +34,12 @@ const filterShallowKeys = (set: Set<string>) => {
 
 const emptySet = new Set()
 
+// helpful for passing down context
+let resetTrack = new Set()
+export function resetTracking() {
+  ;[...resetTrack].map(x => x())
+}
+
 export function mobxProxyWorm<A extends Function>(
   obj: A,
   parentPath = '',
@@ -54,19 +59,16 @@ export function mobxProxyWorm<A extends Function>(
     },
   }
 
+  resetTrack.add(() => {
+    state.current = -1
+  })
+
   const store = new Proxy(obj, {
     get(target, key) {
-      // we are doing stricter checks now to be sure its the right component
-      // but now relying unfortunately on the super secret api for correctness
-      if (getCurrentComponent() !== state.current) {
-        return Reflect.get(target, key)
-      }
-
       if (key === GET_STORE) return obj
       if (key === EQUALITY_KEY) return obj
       if (key === IS_PROXY) return true
       const val = Reflect.get(target, key)
-      if (state.ids.size === 0) return val
       if (key === 'constructor') return val
       if (
         typeof key !== 'string' ||
@@ -96,6 +98,7 @@ export function mobxProxyWorm<A extends Function>(
           if (state.loops.has(val)) {
             return state.loops.get(val)
           }
+          // nested tracking for deep observables
           const next = mobxProxyWorm(val, nextPath, state).store
           state.loops.set(val, next)
           return next
@@ -108,11 +111,9 @@ export function mobxProxyWorm<A extends Function>(
   return {
     state,
     store,
-    track(component, dbg?: boolean) {
-      const id = component
-      state.debug = dbg || false
-      // if (state.debug) console.log('track start', id, [...state.ids])
+    track(id, dbg?: boolean) {
       state.current = id
+      state.debug = dbg || false
       state.ids.add(id)
       state.keys.set(id, new Set())
       return () => {
@@ -122,7 +123,6 @@ export function mobxProxyWorm<A extends Function>(
           state.ids.delete(id)
           const res = state.keys.get(id)
           state.keys.delete(id)
-          // if (state.debug) console.log('track fin', id, [...res], [...state.ids])
           filterShallowKeys(res)
           return res
         }

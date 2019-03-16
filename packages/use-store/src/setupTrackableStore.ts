@@ -4,7 +4,6 @@ import { get } from 'lodash'
 import { observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
-import { getCurrentComponent } from './getCurrentComponent'
 import { GET_STORE, mobxProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
 
@@ -19,7 +18,9 @@ const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
 export function setupTrackableStore(
   store: any,
   rerender: Function,
-  opts: TrackableStoreOptions = { component: {} },
+  opts: TrackableStoreOptions = {
+    component: {},
+  },
 ) {
   const debug = () => {
     if (typeof window !== 'undefined' && window['enableLog'] > 1) {
@@ -110,7 +111,7 @@ export function setupTrackableStore(
     store: config.store,
     track() {
       paused = true
-      done = config.track(getCurrentComponent(), debug())
+      done = config.track(debug())
     },
     untrack() {
       if (disposed) return

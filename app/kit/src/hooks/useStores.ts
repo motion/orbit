@@ -1,4 +1,4 @@
-import { createUseStores, UseStoresOptions } from '@o/use-store'
+import { createUseStores, resetTracking, UseStoresOptions } from '@o/use-store'
 import { useContext } from 'react'
 import { config } from '../configureKit'
 import { KitStores } from '../stores'
@@ -18,4 +18,7 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): Guar
   return useStoresResolved(options)
 }
 
-export const useStoresSimple = () => useContext(config.StoreContext)
+export const useStoresSimple = () => {
+  resetTracking()
+  return useContext(config.StoreContext)
+}

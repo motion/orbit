@@ -1,4 +1,4 @@
-import { createUseStores, resetTracking, UseStoresOptions } from '@o/use-store'
+import { createUseStores, UseStoresOptions } from '@o/use-store'
 import { useContext } from 'react'
 import { UIStores } from '../UIStores'
 import { configure } from './configure'
@@ -17,6 +17,6 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): A {
 }
 
 export const useStoresSimple = () => {
-  resetTracking()
+  // resetTracking()
   return useContext(configure.StoreContext)
 }

@@ -1,7 +1,6 @@
 import { gloss } from '@o/gloss'
 import { useActiveSpace } from '@o/kit'
 import { ClearButton, ThemeContext, View } from '@o/ui'
-import { useStoreDebug } from '@o/use-store'
 import React, { memo } from 'react'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStores } from '../../hooks/useStores'
@@ -21,7 +20,6 @@ function useActivePane() {
 }
 
 export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
-  useStoreDebug()
   const { orbitWindowStore, queryStore, headerStore } = useStores()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()

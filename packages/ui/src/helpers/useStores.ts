@@ -16,4 +16,7 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): A {
   return useStoresResolved(options)
 }
 
-export const useStoresSimple = () => useContext(configure.StoreContext)
+export const useStoresSimple = () => {
+  // resetTracking()
+  return useContext(configure.StoreContext)
+}

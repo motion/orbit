@@ -7,4 +7,7 @@ type GuaranteedAllStores = { [P in keyof AllStores]-?: AllStores[P] }
 
 export const useStores = createUseStores(StoreContext as React.Context<GuaranteedAllStores>)
 
-export const useStoresSimple = () => useContext(StoreContext)
+export const useStoresSimple = () => {
+  // resetTracking()
+  return useContext(StoreContext)
+}

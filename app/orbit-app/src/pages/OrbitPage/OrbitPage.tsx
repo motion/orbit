@@ -37,7 +37,7 @@ import { OrbitStore } from './OrbitStore'
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
-  const locationStore = useStoreSimple(LocationStore)
+  const locationStore = useStore(LocationStore)
   return (
     <ProvideStores stores={{ locationStore, themeStore }}>
       <Theme name={themeStore.themeColor}>

@@ -7,7 +7,7 @@ import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { WindowControls } from '../../views/WindowControls'
-import OrbitHeaderInput from './OrbitHeaderInput'
+import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
@@ -274,6 +274,7 @@ const LinkButton = memo(() => {
 
 const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
+  console.log('location store is', locationStore)
   const opacity = locationStore.history.length ? 0.4 : 0.1
   return (
     <HeaderButtonChromeless

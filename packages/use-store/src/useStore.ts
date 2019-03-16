@@ -20,6 +20,7 @@ export {
 export { configureUseStore } from './configure'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
+export { GET_STORE, resetTracking } from './mobxProxyWorm'
 
 // helpers for deep/shallow objects, which dont mess up types
 

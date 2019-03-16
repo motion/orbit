@@ -19,7 +19,7 @@ function useActivePane() {
   return paneManagerStore.activePane
 }
 
-export default memo(function OrbitHeaderInput() {
+export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
   const { orbitWindowStore, queryStore, headerStore } = useStores()
   const { activeTheme } = React.useContext(ThemeContext)
   const [activeSpace] = useActiveSpace()

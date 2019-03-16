@@ -40,6 +40,13 @@ export function resetTracking() {
   ;[...resetTrack].map(x => x())
 }
 
+// short ids for debug mode
+let id = 0
+const nextId = () => {
+  id = (id + 1) % Number.MAX_SAFE_INTEGER
+  return id
+}
+
 export function mobxProxyWorm<A extends Function>(
   obj: A,
   parentPath = '',
@@ -111,7 +118,8 @@ export function mobxProxyWorm<A extends Function>(
   return {
     state,
     store,
-    track(id, dbg?: boolean) {
+    track(dbg?: boolean) {
+      const id = nextId()
       state.current = id
       state.debug = dbg || false
       state.ids.add(id)

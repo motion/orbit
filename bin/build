@@ -28,7 +28,12 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in kit npm run build) &
     (bin/in kit-internal npm run build) &
     wait
-    (cd app && npx tsc --build $ARGS) &
+    (cd app && npx tsc -b $ARGS) &
+    wait
+    # todo(umed) once we fix @o/apps we can remove these
+    (bin/in apps npm run build) &
+    (bin/in desktop npm run build) &
+    (bin/in syncers npm run build) &
     wait
     (bin/in apps npm run build) &
     wait

@@ -1,18 +1,16 @@
 {
   "files": [],
   "references": [
-    { "path": "./orbit-desktop" },
+    // todo(umed) we can restore these once apps split
+    // { "path": "./orbit-desktop" },
+    // { "path": "./orbit-syncers" },
     { "path": "./orbit-electron" },
-    { "path": "./orbit-syncers" },
     { "path": "./orbit-repl" },
     { "path": "./orbit" },
     { "path": "./bridge" },
     { "path": "./sync-kit" },
     // projects necessary for orbit
     // references from orbit-app since we want to have that one empty
-    // { "path": "./models" },
-    // { "path": "./services" },
-    // { "path": "./stores" },
     { "path": "../packages/css" },
     { "path": "../packages/config" },
     { "path": "../packages/color" },

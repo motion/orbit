@@ -12,7 +12,6 @@ type ProvideStoresProps = {
 
 export function ProvideStores(props: ProvideStoresProps) {
   const next = mapValues(props.stores, val => val[GET_STORE] || val) as KitStores
-  console.log('next', next)
   return (
     <MergeContext Context={config.StoreContext} value={next}>
       {props.children}

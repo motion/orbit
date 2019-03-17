@@ -241,8 +241,8 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
       value={{
         opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
         pointerEvents: 'none',
-        justifyContent: 'center',
         color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+        justifyContent: 'center',
         hoverStyle: {
           // todo this is kind of a mess, consistency-wise
           opacity:

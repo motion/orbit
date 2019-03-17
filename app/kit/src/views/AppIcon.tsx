@@ -1,4 +1,4 @@
-import { useTheme } from '@o/gloss'
+import { useTheme, View } from '@o/gloss'
 import { AppBit } from '@o/models'
 import { color } from '@o/ui'
 import React from 'react'
@@ -67,22 +67,16 @@ export function AppIconInner({
   )
 
   return (
-    <SVG
-      fill={`${fill}`}
-      svg={iconSrc}
-      width={`${size}px`}
-      height={`${size}px`}
+    <View
       style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
         width: size,
         height: size,
         ...style,
       }}
-      cleanup
       {...props}
-    />
+    >
+      <SVG fill={`${fill}`} svg={iconSrc} width={`${size}px`} height={`${size}px`} cleanup />
+    </View>
   )
 }
 

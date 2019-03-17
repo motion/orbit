@@ -15,7 +15,10 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in kit npm run watch) &
     (bin/in kit-internal npm run watch) &
     sleep 3
+    # todo(umed) once we fix @o/apps we can remove these
     (bin/in apps npm run watch) &
+    (bin/in orbit-desktop npm run watch) &
+    (bin/in orbit-syncers npm run watch) &
     echo "RAN WATCH"
     wait
   else
@@ -32,10 +35,8 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     wait
     # todo(umed) once we fix @o/apps we can remove these
     (bin/in apps npm run build) &
-    (bin/in desktop npm run build) &
-    (bin/in syncers npm run build) &
-    wait
-    (bin/in apps npm run build) &
+    (bin/in orbit-desktop npm run build) &
+    (bin/in orbit-syncers npm run build) &
     wait
     echo "RAN BUILD"
   fi

@@ -7,6 +7,7 @@ process.on('unhandledRejection', error => {
 })
 
 export async function main() {
+  console.log('start syncers')
 
   if (process.env.NODE_ENV === 'development') {
     require('./startDevelopment').startDevelopment(syncersRoot)

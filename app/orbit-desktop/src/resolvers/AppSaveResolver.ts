@@ -1,7 +1,7 @@
 // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { ConfluenceLoader } from '@o/apps/_/apps/confluence/ConfluenceLoader'
+import { ConfluenceLoader } from '@o/confluence-app/_/ConfluenceLoader'
 // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { JiraLoader } from '@o/apps/_/apps/jira/JiraLoader'
+import { JiraLoader } from '@o/jira-app/_/JiraLoader'
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { AppBit, AppEntity, AppSaveCommand } from '@o/models'

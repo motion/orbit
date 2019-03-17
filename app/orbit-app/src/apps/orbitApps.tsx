@@ -4,6 +4,7 @@ import { StoreContext } from '../contexts'
 import { AppsApp } from './apps/AppsApp'
 import { BitApp } from './bit/BitApp'
 import { CreateApp } from './CreateAppApp'
+import { HomeApp } from './HomeApp'
 import { MessageApp } from './MessageApp'
 import { OnboardApp } from './onboard/OnboardApp'
 import { SettingsApp } from './settings/SettingsApp'
@@ -17,6 +18,7 @@ export const orbitStaticApps: AppDefinition[] = [
   OnboardApp,
   CreateApp,
   MessageApp,
+  HomeApp,
   // get our "bit/source" apps for now...
   ...apps.filter(x => !x.app),
 ]

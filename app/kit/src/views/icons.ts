@@ -8,12 +8,14 @@ export const appIcons = {
   ['orbit-people-full']: require('!raw-loader!../../public/icons/appicon-people.svg'),
   ['orbit-lists-full']: require('!raw-loader!../../public/icons/appicon-lists.svg'),
   ['orbit-apps-full']: require('!raw-loader!../../public/icons/appicon-apps.svg'),
+  ['orbit-home-full']: require('!raw-loader!../../public/icons/appicon-home.svg'),
   ['orbit-custom-full']: require('!raw-loader!../../public/icons/appicon-custom.svg'),
 }
 
 export const icons = {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
   ['orbit-search']: require('!raw-loader!../../public/icons/icon-search.svg'),
+  ['orbit-home']: require('!raw-loader!../../public/icons/icon-home.svg'),
   ['orbit-topics']: require('!raw-loader!../../public/icons/icon-topics.svg'),
   ['orbit-people']: require('!raw-loader!../../public/icons/icon-people.svg'),
   ['orbit-lists']: require('!raw-loader!../../public/icons/icon-lists.svg'),

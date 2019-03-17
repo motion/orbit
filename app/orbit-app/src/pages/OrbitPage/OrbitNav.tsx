@@ -2,7 +2,7 @@ import { save } from '@o/bridge'
 import { gloss, Row, ViewProps } from '@o/gloss'
 import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
 import { useAppSortHandler } from '@o/kit-internal'
-import { AppModel } from '@o/models'
+import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
@@ -38,7 +38,17 @@ export const OrbitNav = memo(() => {
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
-  const activeAppsSorted = useActiveAppsSorted()
+  const activeAppsSorted: AppBit[] = [
+    {
+      id: -1,
+      target: 'app',
+      name: 'Home',
+      colors: ['black', 'white'],
+      tabDisplay: 'permanent',
+      identifier: 'home',
+    },
+    ...useActiveAppsSorted(),
+  ]
   const { activePaneId } = paneManagerStore
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
@@ -60,7 +70,7 @@ export const OrbitNav = memo(() => {
   const numUnpinned = activeAppsSorted.filter(x => x.tabDisplay === 'plain').length
   const tabWidth = numUnpinned > 5 ? 120 : numUnpinned < 3 ? 180 : 150
 
-  const items = space.paneSort
+  const items = [-1, ...space.paneSort]
     .map(
       (paneId, index): TabProps => {
         const app = activeAppsSorted.find(x => x.id === paneId)

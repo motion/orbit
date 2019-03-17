@@ -19,6 +19,7 @@
     { "path": "../../apps/slack-app" },
     { "path": "../../apps/website-app" },
     { "path": "../../apps/custom-app" },
+    { "path": "../../apps/custom-tree-app" },
     { "path": "../../apps/lists-app" },
     { "path": "../../apps/people-app" },
     { "path": "../../apps/search-app" },

@@ -32,8 +32,8 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     wait
     # todo(umed) once we fix @o/apps we can remove these
     (bin/in apps npm run build) &
-    (bin/in desktop npm run build) &
-    (bin/in syncers npm run build) &
+    (bin/in orbit-desktop npm run build) &
+    (bin/in orbit-syncers npm run build) &
     wait
     echo "RAN BUILD"
   fi

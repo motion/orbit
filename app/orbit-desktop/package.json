@@ -4,7 +4,7 @@
   "main": "./_/main.js",
   "private": true,
   "scripts": {
-    "build": "tsc || true",
+    "build": "tsc -b || true",
     "watch": "tsc --watch --preserveWatchOutput",
     "build-app": "NODE_ENV=production mcro-build --build --target node"
   },
@@ -21,6 +21,9 @@
     "@o/models": "^2.4.0",
     "@o/oracle": "^2.4.0",
     "@o/orbit-app": "^2.4.0",
+    "@o/drive-app": "^2.4.0",
+    "@o/slack-app": "^2.4.0",
+    "@o/gmail-app": "^2.4.0",
     "@o/orbit-fork-process": "^2.4.0",
     "@o/r2": "^2.4.0",
     "@o/screen": "^2.4.0",

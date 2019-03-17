@@ -1,7 +1,7 @@
-import { DriveLoader } from '@o/apps/_/apps/drive/DriveLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { GMailLoader } from '@o/apps/_/apps/gmail/GMailLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
-import { SlackLoader } from '@o/apps/_/apps/slack/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { DriveLoader } from '@o/drive-app/_/DriveLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { GMailLoader } from '@o/gmail-app/_/GMailLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@o/models'
+import { SlackLoader } from '@o/slack-app/_/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
 
@@ -37,7 +37,7 @@ const createSource = async (type: string, values: OauthValues) => {
     const team = await loader.loadTeam()
 
     // update settings with team info
-    const values = (app.data.values as any)
+    const values = app.data.values as any
     values.team = {
       id: team.id,
       name: team.name,

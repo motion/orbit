@@ -39,14 +39,15 @@ export const OrbitNav = memo(() => {
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
   const activeAppsSorted: AppBit[] = [
-    {
-      id: -1,
-      target: 'app',
-      name: 'Home',
-      colors: ['black', 'white'],
-      tabDisplay: 'permanent',
-      identifier: 'home',
-    },
+    // for testing home
+    // {
+    //   id: -1,
+    //   target: 'app',
+    //   name: 'Home',
+    //   colors: ['black', 'white'],
+    //   tabDisplay: 'permanent',
+    //   identifier: 'home',
+    // },
     ...useActiveAppsSorted(),
   ]
   const { activePaneId } = paneManagerStore

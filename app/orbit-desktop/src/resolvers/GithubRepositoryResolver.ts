@@ -1,4 +1,4 @@
-import { GithubLoader } from '@o/apps/_/apps/github/GithubLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
+import { GithubLoader } from '@o/github-app/_/GithubLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { Logger } from '@o/logger'
 import { resolveMany } from '@o/mediator'
 import { AppEntity, GithubRepositoryModel } from '@o/models'

@@ -16,7 +16,18 @@
     "@o/kit",
     "@o/kit-internal",
     "@o/gloss",
-    "@o/ui"
+    "@o/ui",
+    "@o/custom-app",
+    "@o/drive-app",
+    "@o/github-app",
+    "@o/confluence-app",
+    "@o/jira-app",
+    "@o/lists-app",
+    "@o/people-app",
+    "@o/search-app",
+    "@o/slack-app",
+    "@o/gmail-app",
+    "@o/postgres-app"
   ],
   "dependencies": {
     "@babel/runtime": "7.2.0",

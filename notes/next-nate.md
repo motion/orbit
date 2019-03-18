@@ -1,3 +1,21 @@
+Views
+
+- First class Filters
+
+  - Either filter (Enum / <Select />)
+  - Any filter (<MultiSelect />)
+
+- Card
+
+Should have the structure of:
+
+[ TITLE ]
+
+[ DT: DD ][ dt: dd ]
+[ DT: DD ]
+
+[ CONTENT ] (can be a simple table, list etc)
+
 Small bugs
 
 - Make <Interactive /> show a real div above other things so it catches mouse events

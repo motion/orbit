@@ -9,6 +9,8 @@ which adheres to a set of conventions:
 
 2. Its `package.json` has `"orbit"` section which has the following format:
 
+- `"id"` optional, lets you reserve a name in orbit app registry
+
 - `"title"` specifies application title
 
 - `"require"` specifies runtime requirements for the app, the following is
@@ -27,6 +29,7 @@ The example `package.json` for an app could look like:
 {
   "name": "my-app",
   "orbit": {
+    "id": "my-app",
     "title": "My App",
     "require": {
       "orbit": 1
@@ -79,7 +82,10 @@ You can start an install an app with following invocation:
 This will install it into your current workspace, which if you are working with
 a team will install it for your entire team to use.
 
-By default, Orbit creates your apps inside `~/orbit-[workspacename]/[package-name]`. Where package-name is the unique name in the package.json
+By default, Orbit creates your apps inside
+`~/orbit-[workspacename]/[package-name]`. Where package-name is the unique name
+in the package.json. You can configure this location in the orbit configuration,
+at `~/.orbit.json`.
 
 ## Listing Orbit Apps
 
@@ -105,9 +111,44 @@ You can view information on a specific workspace:
 
 And view members of your current workspace:
 
-    $ orbit ws members
+    % orbit ws members
+
+To switch a workspace:
+
+    % orbit ws switch [name]
+
+And to create a new workspace:
+
+    % orbit ws create [name]
 
 ## Editing apps
 
-If you have access to the github repo, you can make changes to your the source
-freely and submit them to the app.
+You can edit apps through the GUI by hitting the `Edit` option in the menu of
+any app. You can also just work on it through the command line.
+
+You can run `orbit dev` inside any app folder to edit it. As a helper, you can
+type `orbit dev [package-name]` to edit any app within your current workspace.
+
+Publishing is as simple as pushing to your git repo. Other members of your
+workspace will be prompted to update the app with a notification that shows the
+message you include in your commit message.
+
+## Searching for apps
+
+Orbit hosts an app store that helps you find new apps. To search them just use:
+
+    % orbit search [query]
+
+That will return a list of apps that you can install by their unique github
+repo. Apps that are published in the main orbit repo will reserve their
+package.json name for easier usage. So you can install search and install:
+
+```
+% orbit search slack
+
+  - slack  (https://github.com/orbit/slack)
+
+% orbit install slack
+% orbit run slack
+
+```

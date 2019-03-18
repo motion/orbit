@@ -1,5 +1,6 @@
 import { AppProps, Table } from '@o/kit'
 import {
+  Card,
   createEnumFilter,
   DataType,
   Form,
@@ -64,7 +65,12 @@ export function CustomAppMain(_props: AppProps) {
 
       <VerticalSplitPane>
         <Section>
-          <Title>Hello World</Title>
+          <Title>Hello World2</Title>
+
+          <Card title="test" subtitle="another">
+            hello world
+          </Card>
+
           <Form columns={columns} rows={highlighted} />
         </Section>
       </VerticalSplitPane>

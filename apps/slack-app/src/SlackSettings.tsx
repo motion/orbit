@@ -1,6 +1,5 @@
 import { loadMany, useModel } from '@o/bridge'
-import { AppProps, Table } from '@o/kit'
-import { SettingManageRow, WhitelistManager } from '@o/kit-internal'
+import { AppProps, SettingManageRow, Table, WhitelistManager } from '@o/kit'
 import { AppModel, SlackChannelModel } from '@o/models'
 import postgresApp from '@o/postgres-app'
 import { DataType, View } from '@o/ui'

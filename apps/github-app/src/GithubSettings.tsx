@@ -1,6 +1,5 @@
 import { loadMany } from '@o/bridge'
-import { AppProps, Table, useApp } from '@o/kit'
-import { SettingManageRow, WhitelistManager } from '@o/kit-internal'
+import { AppProps, SettingManageRow, Table, useApp, WhitelistManager } from '@o/kit'
 import { GithubRepositoryModel } from '@o/models'
 import { DataType, View } from '@o/ui'
 import { useStore } from '@o/use-store'

@@ -1,6 +1,5 @@
 import { useModel } from '@o/bridge'
-import { AppProps, Table } from '@o/kit'
-import { SettingManageRow } from '@o/kit-internal'
+import { AppProps, SettingManageRow, Table } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { View } from '@o/ui'
 import { useStore } from '@o/use-store'

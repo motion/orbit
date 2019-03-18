@@ -1,5 +1,4 @@
-import { AppMainView, AppProps, Icon, useApp } from '@o/kit'
-import { removeApp } from '@o/kit-internal'
+import { AppMainView, AppProps, Icon, removeApp, useApp } from '@o/kit'
 import { Section, Title, TitleBarButton, TitleRow } from '@o/ui'
 import React from 'react'
 import { AppsMainAddApp } from './AppsMainAddApp'

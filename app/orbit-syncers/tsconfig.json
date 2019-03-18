@@ -9,6 +9,7 @@
   "include": ["src/**/*"],
   "references": [
     { "path": "../models" },
+    { "path": "../sync-kit" },
     { "path": "../../apps/drive-app" },
     { "path": "../../apps/github-app" },
     { "path": "../../apps/confluence-app" },

@@ -13,6 +13,7 @@ export class AppStore {
   lastSidebarWidth = react(() => this.sidebarWidth, {
     delayValue: true,
     defaultValue: this.sidebarWidth,
+    log: false,
   })
 
   setSidebarWidth = next => {

@@ -60,6 +60,12 @@ Umed likely stays on fleshing out integrations and their APIs. While you move in
 
 ---
 
+- Create app creates new app and folder somewhere on machine
+- Folder installs @o/kit and other things for app building
+- When you hit "edit" it runs a dev server and shows the development app
+- When you hit "publihs" it builds and updates
+- Publish to github and other apps see it
+
 Goal #1: Getting Apps to build/share
 
 1. A way to publish and receive published apps (npm powered, like vscode)
@@ -97,4 +103,5 @@ Goal #4: App building CLI
 Questions:
 
 -
+
 - Apps + APIs and how "far" we should go: libaries / NLP is a good example case

@@ -1,3 +1,4 @@
+import * as LernaProject from '@lerna/project'
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
@@ -8,7 +9,6 @@ import * as Path from 'path'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import * as LernaProject from '@lerna/project'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
@@ -108,7 +108,6 @@ const babelrcOptions = {
 console.log('babelrcOptions', babelrcOptions)
 
 async function makeConfig() {
-
   // get the list of paths to all monorepo packages to apply ts-loader too
   const packages = await LernaProject.getPackages(repoRoot)
   const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))

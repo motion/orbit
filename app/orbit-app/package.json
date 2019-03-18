@@ -12,24 +12,6 @@
     "deploy": "./scripts/deploy.sh",
     "test-electron": "electron ./scripts/test-electron.js"
   },
-  "tsEntries": [
-    "@o/kit",
-    "@o/kit-internal",
-    "@o/gloss",
-    "@o/ui",
-    "@o/custom-app",
-    "@o/drive-app",
-    "@o/github-app",
-    "@o/confluence-app",
-    "@o/jira-app",
-    "@o/lists-app",
-    "@o/people-app",
-    "@o/search-app",
-    "@o/slack-app",
-    "@o/gmail-app",
-    "@o/postgres-app",
-    "@o/website-app"
-  ],
   "dependencies": {
     "@babel/runtime": "7.2.0",
     "@o/react-hotkeys": "1.1.5",

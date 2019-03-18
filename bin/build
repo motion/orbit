@@ -14,9 +14,6 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     sleep 3
     (bin/in kit npm run watch) &
     (bin/in kit-internal npm run watch) &
-    sleep 3
-    (bin/in orbit-desktop npm run watch) &
-    (bin/in orbit-syncers npm run watch) &
     echo "RAN WATCH"
     wait
   else
@@ -30,9 +27,6 @@ if [ "$(realpath .)" = "$ROOT" ]; then
     (bin/in kit-internal npm run build) &
     wait
     (cd app && npx tsc -b $ARGS) &
-    wait
-    (bin/in orbit-desktop npm run build) &
-    (bin/in orbit-syncers npm run build) &
     wait
     echo "RAN BUILD"
   fi

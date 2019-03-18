@@ -5,11 +5,7 @@ import { SlackLoader } from '@o/slack-app/_/SlackLoader' // todo(umed) fix it, w
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
 
-export const finishAuth = (type: string, values: OauthValues) => {
-  createSource(type, values)
-}
-
-const createSource = async (type: string, values: OauthValues) => {
+export const finishAuth = async (type: string, values: OauthValues) => {
   console.log('createSource', values)
 
   if (!values.token) {

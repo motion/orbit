@@ -1,8 +1,6 @@
-import { Model } from '../common'
-
 export type ObserverCacheType = 'one' | 'many' | string
 export type ObserverCacheArgs = {
-  model: Model<any>
+  model: string
   type: ObserverCacheType
   query: Object
   defaultValue: any
@@ -25,7 +23,7 @@ export const ObserverCache = {
   entries: new Map<string, ObserverCacheEntry>(),
 
   getKey({ model, type, query }: ObserverCacheArgs) {
-    return JSON.stringify(`${model.name}${type}${JSON.stringify(query)}`)
+    return JSON.stringify(`${model}${type}${JSON.stringify(query)}`)
   },
 
   get(args: ObserverCacheArgs) {
@@ -92,7 +90,7 @@ export const ObserverCache = {
     return entry
   },
 
-  updateModels(model: Model<any>, values: any[]) {
+  updateModels(model: string, values: any[]) {
     const toUpdate = new Set<ObserverCacheEntry>()
 
     for (const value of values) {

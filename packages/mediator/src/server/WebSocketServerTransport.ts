@@ -1,6 +1,7 @@
 import { Server as WebSocketServer } from 'ws'
 import { log } from '../common/logger'
 import { ServerTransport, TransportRequest, TransportResponse } from '../index'
+import { randomString } from '@o/utils'
 
 export class WebSocketServerTransport implements ServerTransport {
   private websocket: WebSocketServer
@@ -65,6 +66,7 @@ export class WebSocketServerTransport implements ServerTransport {
       return client.id === clientId && client.client.readyState === client.client.OPEN
     })
     if (client) {
+      data = { ...data, sendIdentifier: randomString(5) }
       log.verbose(`sending data to "${clientId}" client`, data, this.clients.length)
       client.client.send(JSON.stringify(data))
     }

@@ -82,6 +82,7 @@ export class WebSocketClientTransport implements ClientTransport {
         id: data.id,
         type: subscription.type,
         name: subscription.name,
+        values
       })
 
       // we need to send request to the server - here we create a function that does it
@@ -201,7 +202,9 @@ export class WebSocketClientTransport implements ClientTransport {
         type: subscription.type,
         name: subscription.name,
         result: data.result,
+        resultString: JSON.stringify(data.result), // useful for debugging because original object can be changed
         notFound: data.notFound,
+        sendIdentifier: data.sendIdentifier,
       })
     }
 

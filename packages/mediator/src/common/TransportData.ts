@@ -30,4 +30,5 @@ export type TransportResponse = {
   id: string
   result: any
   notFound?: boolean
+  sendIdentifier?: string
 }

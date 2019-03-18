@@ -88,33 +88,65 @@ export class MediatorServer {
 
           if (data.type === 'save') {
             this.options.fallbackClient
-              .save(model, data.value)
+              .save(data.model, data.value)
               .then(onSuccess, onError)
 
           } else if (data.type === 'remove') {
             this.options.fallbackClient
-              .remove(model, data.value)
+              .remove(data.model, data.value)
               .then(onSuccess, onError)
 
           } else if (data.type === 'loadOne') {
             this.options.fallbackClient
-              .loadOne(model, { args: data.args })
+              .loadOne(data.model, { args: data.args })
               .then(onSuccess, onError)
 
           } else if (data.type === 'loadMany') {
             this.options.fallbackClient
-              .loadMany(model, { args: data.args })
+              .loadMany(data.model, { args: data.args })
               .then(onSuccess, onError)
 
           } else if (data.type === 'loadManyAndCount') {
             this.options.fallbackClient
-              .loadManyAndCount(model, { args: data.args })
+              .loadManyAndCount(data.model, { args: data.args })
               .then(onSuccess, onError)
 
           } else if (data.type === 'loadCount') {
             this.options.fallbackClient
-              .loadCount(model, { args: data.args })
+              .loadCount(data.model, { args: data.args })
               .then(onSuccess, onError)
+
+          } else if (data.type === 'observeOne') {
+            this.subscriptions.push({
+              id: data.id,
+              subscription: this.options.fallbackClient
+                .observeOne(data.model, { args: data.args })
+                .subscribe(onSuccess, onError)
+            })
+
+          } else if (data.type === 'observeMany') {
+            this.subscriptions.push({
+              id: data.id,
+              subscription: this.options.fallbackClient
+                .observeMany(data.model, { args: data.args })
+                .subscribe(onSuccess, onError)
+            })
+
+          } else if (data.type === 'observeManyAndCount') {
+            this.subscriptions.push({
+              id: data.id,
+              subscription: this.options.fallbackClient
+                .observeManyAndCount(data.model, { args: data.args })
+                .subscribe(onSuccess, onError)
+            })
+
+          } else if (data.type === 'observeCount') {
+            this.subscriptions.push({
+              id: data.id,
+              subscription: this.options.fallbackClient
+                .observeCount(data.model, { args: data.args })
+                .subscribe(onSuccess, onError)
+            })
           }
 
         } else {
@@ -210,40 +242,40 @@ export class MediatorServer {
       // }
     }
 
-    if (this.options.fallbackClient) {
-      if (data.type === 'observeOne') {
-        this.subscriptions.push({
-          id: data.id,
-          subscription: this.options.fallbackClient
-            .observeOne(model, { args: data.args })
-            .subscribe(onSuccess, onError)
-        })
-
-      } else if (data.type === 'observeMany') {
-        this.subscriptions.push({
-          id: data.id,
-          subscription: this.options.fallbackClient
-            .observeMany(model, { args: data.args })
-            .subscribe(onSuccess, onError)
-        })
-
-      } else if (data.type === 'observeManyAndCount') {
-        this.subscriptions.push({
-          id: data.id,
-          subscription: this.options.fallbackClient
-            .observeManyAndCount(model, { args: data.args })
-            .subscribe(onSuccess, onError)
-        })
-
-      } else if (data.type === 'observeCount') {
-        this.subscriptions.push({
-          id: data.id,
-          subscription: this.options.fallbackClient
-            .observeCount(model, { args: data.args })
-            .subscribe(onSuccess, onError)
-        })
-      }
-    }
+    // if (this.options.fallbackClient) {
+    //   if (data.type === 'observeOne') {
+    //     this.subscriptions.push({
+    //       id: data.id,
+    //       subscription: this.options.fallbackClient
+    //         .observeOne(model, { args: data.args })
+    //         .subscribe(onSuccess, onError)
+    //     })
+    //
+    //   } else if (data.type === 'observeMany') {
+    //     this.subscriptions.push({
+    //       id: data.id,
+    //       subscription: this.options.fallbackClient
+    //         .observeMany(model, { args: data.args })
+    //         .subscribe(onSuccess, onError)
+    //     })
+    //
+    //   } else if (data.type === 'observeManyAndCount') {
+    //     this.subscriptions.push({
+    //       id: data.id,
+    //       subscription: this.options.fallbackClient
+    //         .observeManyAndCount(model, { args: data.args })
+    //         .subscribe(onSuccess, onError)
+    //     })
+    //
+    //   } else if (data.type === 'observeCount') {
+    //     this.subscriptions.push({
+    //       id: data.id,
+    //       subscription: this.options.fallbackClient
+    //         .observeCount(model, { args: data.args })
+    //         .subscribe(onSuccess, onError)
+    //     })
+    //   }
+    // }
 
   }
 }

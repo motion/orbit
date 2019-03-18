@@ -1,7 +1,0 @@
-{
-  "env": {
-    "development": {
-      "presets": [["@o/babel-preset-motion"]]
-    }
-  }
-}

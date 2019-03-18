@@ -1,9 +1,8 @@
 {
   "files": [],
   "references": [
-    // todo(umed) we can restore these once apps split
-    // { "path": "./orbit-desktop" },
-    // { "path": "./orbit-syncers" },
+    { "path": "./orbit-desktop" },
+    { "path": "./orbit-syncers" },
     { "path": "./orbit-electron" },
     { "path": "./orbit-repl" },
     { "path": "./orbit" },

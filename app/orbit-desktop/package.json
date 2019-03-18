@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "@o/apps": "^2.4.0",
     "@o/config": "^2.4.0",
     "@o/constants": "^2.4.0",
     "@o/cosal": "^2.4.0",
@@ -27,6 +26,7 @@
     "@o/jira-app": "^2.4.0",
     "@o/slack-app": "^2.4.0",
     "@o/gmail-app": "^2.4.0",
+    "@o/postgres-app": "^2.4.0",
     "@o/orbit-fork-process": "^2.4.0",
     "@o/r2": "^2.4.0",
     "@o/screen": "^2.4.0",

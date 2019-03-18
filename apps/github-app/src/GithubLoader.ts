@@ -1,6 +1,4 @@
-import { Logger } from '@o/logger'
-import { ServiceLoader, sleep } from '@o/sync-kit'
-import { AppBit } from '@o/models'
+import { AppBit, Logger, ServiceLoader, sleep } from '@o/sync-kit'
 import { GithubQueries } from './GithubQueries'
 import {
   GithubComment,

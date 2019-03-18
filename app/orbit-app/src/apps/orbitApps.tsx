@@ -1,4 +1,3 @@
-import { apps } from '@o/apps'
 import { AppDefinition, configureKit } from '@o/kit'
 import { StoreContext } from '../contexts'
 import { AppsApp } from './apps/AppsApp'
@@ -9,6 +8,33 @@ import { MessageApp } from './MessageApp'
 import { OnboardApp } from './onboard/OnboardApp'
 import { SettingsApp } from './settings/SettingsApp'
 import { SpacesApp } from './spaces/SpacesApp'
+import ConfluenceApp from '@o/confluence-app'
+import CustomApp from '@o/custom-app'
+import DriveApp from '@o/drive-app'
+import GithubApp from '@o/github-app'
+import GmailApp from '@o/gmail-app'
+import JiraApp from '@o/jira-app'
+import ListsApp from '@o/lists-app'
+import PeopleApp from '@o/people-app'
+import SearchApp from '@o/search-app'
+import SlackApp from '@o/slack-app'
+import WebsiteApp from '@o/website-app'
+import PostgresApp from '@o/postgres-app'
+
+const apps: AppDefinition[] = [
+  ListsApp,
+  SearchApp,
+  PeopleApp,
+  CustomApp,
+  ConfluenceApp,
+  JiraApp,
+  GmailApp,
+  DriveApp,
+  GithubApp,
+  SlackApp,
+  WebsiteApp,
+  PostgresApp,
+]
 
 export const orbitStaticApps: AppDefinition[] = [
   SettingsApp,

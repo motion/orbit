@@ -1,4 +1,4 @@
-import { AppBit, Bit } from '@o/models'
+import { AppBit, Bit } from '@o/kit'
 import { WebsiteBitData, WebsiteCrawledData } from './WebsiteModels'
 import { SyncerUtils } from '@o/sync-kit'
 

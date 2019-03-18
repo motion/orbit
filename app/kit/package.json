@@ -13,6 +13,8 @@
     "@o/bridge": "^2.4.0",
     "@o/fast-compare": "^2.4.0",
     "@o/gloss": "^2.4.0",
+    "@o/config": "^2.4.0",
+    "@o/logger": "^2.4.0",
     "@o/models": "^2.4.0",
     "@o/stores": "^2.4.0",
     "@o/ui": "^2.4.0",

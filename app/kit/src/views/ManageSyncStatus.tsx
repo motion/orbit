@@ -1,5 +1,5 @@
 import { command } from '@o/bridge'
-import { useAppSyncState, useJobs } from '@o/kit'
+import { useAppSyncState, useJobs } from '../'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
 import { SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'

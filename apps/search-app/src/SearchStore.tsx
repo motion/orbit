@@ -1,15 +1,20 @@
-import { loadOne, save } from '@o/bridge'
 import {
+  AppBit,
   AppIcon,
+  ensure,
+  loadOne,
   MarkType,
   OrbitListItemProps,
+  react,
+  save,
   searchBits,
+  SearchQuery,
   SearchState,
   SpaceIcon,
+  useHook,
+  UserModel,
   useStoresSimple,
 } from '@o/kit'
-import { AppBit, SearchQuery, UserModel } from '@o/models'
-import { ensure, react, useHook } from '@o/use-store'
 import { uniq } from 'lodash'
 import React from 'react'
 // import { useActions } from '../../actions/Actions'

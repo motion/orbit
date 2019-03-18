@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
-import { command, useModel } from '@o/bridge'
-import { AppModel, AppSaveCommand } from '@o/models'
+import { AppModel, AppProps, AppSaveCommand, command, useActiveSpace, useModel } from '@o/kit'
 import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import { PostgresAppData } from './PostgresModels'
-import { AppProps, useActiveSpace } from '@o/kit'
 
 type Props = {
   identifier: string

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@o/logger": "^2.4.0",
+    "@o/config": "^2.4.0",
     "@o/mediator": "^2.4.0",
     "@o/models": "^2.4.0",
     "@o/utils": "^2.4.0",

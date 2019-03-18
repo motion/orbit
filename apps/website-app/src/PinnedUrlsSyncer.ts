@@ -1,12 +1,12 @@
 /*
-import { Logger } from '@o/logger'
+import { Logger } from '@o/kit'
 import {
   Bit,
   BitEntity,
   createBit,
   PinnedBitData,
   WebsiteBitData,
-} from '@o/models'
+} from '@o/kit'
 import { getRepository } from 'typeorm'
 import { BitSyncer } from '@o/sync-kit'
 import { WebsiteCrawledData } from '../../../../apps/src/apps/website/WebsiteCrawledData'

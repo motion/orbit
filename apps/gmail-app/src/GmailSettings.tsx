@@ -1,5 +1,4 @@
-import { AppMainView, AppProps, useApp } from '@o/kit'
-import { ManageSyncStatus } from '@o/kit-internal'
+import { AppMainView, AppProps, ManageSyncStatus, useApp } from '@o/kit'
 import { Row, Section } from '@o/ui'
 import * as React from 'react'
 

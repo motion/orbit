@@ -1,6 +1,4 @@
-import { command } from '@o/bridge'
-import { useActiveSpace } from '@o/kit'
-import { AppBit, AppSaveCommand } from '@o/models'
+import { AppBit, AppSaveCommand, command, useActiveSpace } from '@o/kit'
 import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'

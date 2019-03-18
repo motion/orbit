@@ -1,6 +1,4 @@
-import { save } from '@o/bridge'
-import { App, AppProps, createApp } from '@o/kit'
-import { AppBit, AppModel, Bit } from '@o/models'
+import { App, AppBit, AppModel, AppProps, Bit, createApp, save } from '@o/kit'
 import React from 'react'
 import { ListsAppIndex } from './ListsAppIndex'
 import { ListsAppMain } from './ListsAppMain'

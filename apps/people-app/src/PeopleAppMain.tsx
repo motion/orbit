@@ -1,9 +1,19 @@
-import { loadMany, loadOne, observeMany } from '@o/bridge'
+import {
+  AppProps,
+  Bit,
+  BitModel,
+  CosalTopicsModel,
+  ensure,
+  ListItem,
+  loadMany,
+  loadOne,
+  observeMany,
+  react,
+  useStore,
+  useStores,
+} from '@o/kit'
 import { gloss } from '@o/gloss'
-import { AppProps, ListItem, useStores } from '@o/kit'
-import { Bit, BitModel, CosalTopicsModel } from '@o/models'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@o/ui'
-import { ensure, react, useStore } from '@o/use-store'
 import * as React from 'react'
 
 const getBitTexts = (bits: Bit[]) => {

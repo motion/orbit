@@ -7,21 +7,7 @@ import {
   WebSocketClientTransport,
   WebSocketServerTransport,
 } from '@o/mediator'
-import {
-  AppEntity,
-  AppForceCancelCommand,
-  AppForceSyncCommand,
-  AppModel,
-  BitEntity,
-  BitModel,
-  Entities,
-  JobEntity,
-  JobModel,
-  SpaceEntity,
-  SpaceModel,
-  UserEntity,
-  UserModel,
-} from '@o/models'
+import { AppForceCancelCommand, AppForceSyncCommand, Entities, JobEntity, JobModel } from '@o/models'
 import root from 'global'
 import * as Path from 'path'
 import * as typeorm from 'typeorm'
@@ -109,18 +95,19 @@ export class OrbitSyncersRoot {
    */
   private setupMediatorServer(): void {
     this.mediatorServer = new MediatorServer({
-      models: [AppModel, BitModel, JobModel, SpaceModel, UserModel],
-      commands: [AppForceSyncCommand, AppForceCancelCommand],
+      models: [
+        JobModel
+      ],
+      commands: [
+        AppForceSyncCommand,
+        AppForceCancelCommand
+      ],
       transport: new WebSocketServerTransport({
         port: getGlobalConfig().ports.syncersMediator,
       }),
       resolvers: [
         ...typeormResolvers(this.connection, [
-          { entity: AppEntity, models: [AppModel] },
-          { entity: BitEntity, models: [BitModel] },
           { entity: JobEntity, models: [JobModel] },
-          { entity: SpaceEntity, models: [SpaceModel] },
-          { entity: UserEntity, models: [UserModel] },
         ]),
         AppForceSyncResolver,
         AppForceCancelResolver,

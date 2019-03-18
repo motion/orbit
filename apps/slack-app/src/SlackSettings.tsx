@@ -1,10 +1,16 @@
-import { loadMany, useModel } from '@o/bridge'
-import { AppProps, Table } from '@o/kit'
-import { SettingManageRow, WhitelistManager } from '@o/kit-internal'
-import { AppModel, SlackChannelModel } from '@o/models'
+import {
+  AppModel,
+  AppProps,
+  loadMany,
+  SettingManageRow,
+  SlackChannelModel,
+  Table,
+  useModel,
+  useStore,
+  WhitelistManager,
+} from '@o/kit'
 import postgresApp from '@o/postgres-app'
 import { DataType, View } from '@o/ui'
-import { useStore } from '@o/use-store'
 import { orderBy } from 'lodash'
 import * as React from 'react'
 import { useEffect, useState } from 'react'

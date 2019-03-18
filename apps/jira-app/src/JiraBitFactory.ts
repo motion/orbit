@@ -1,4 +1,4 @@
-import { AppBit, Bit } from '@o/models'
+import { AppBit, Bit } from '@o/kit'
 import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
 import { JiraAppData, JiraBitData, JiraIssue, JiraUser } from './JiraModels'
 

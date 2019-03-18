@@ -26,8 +26,6 @@ import {
   CosalTopWordsModel,
   GithubAppBlacklistCommand,
   GithubRepositoryModel,
-  JobEntity,
-  JobModel,
   NewFallbackServerPortCommand,
   OpenCommand,
   PeopleNearTopicModel,
@@ -255,7 +253,6 @@ export class OrbitDesktopRoot {
       models: [
         AppModel,
         BitModel,
-        JobModel,
         UserModel,
         GithubRepositoryModel,
         SlackChannelModel,
@@ -295,7 +292,6 @@ export class OrbitDesktopRoot {
         ...typeormResolvers(getConnection(), [
           { entity: AppEntity, models: [AppModel] },
           { entity: BitEntity, models: [BitModel] },
-          { entity: JobEntity, models: [JobModel] },
           { entity: SpaceEntity, models: [SpaceModel] },
           { entity: UserEntity, models: [UserModel] },
         ]),

@@ -1,4 +1,4 @@
-import { AppBit, Bit } from '@o/models'
+import { AppBit, Bit } from '@o/kit'
 import { sanitizeHtml, stripHtml, SyncerUtils } from '@o/sync-kit'
 import { ConfluenceAppData, ConfluenceBitData, ConfluenceContent, ConfluenceUser } from './ConfluenceModels'
 

@@ -1,7 +1,6 @@
 import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import * as Fs from 'fs'
-import { readJSONSync } from 'fs-extra'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import * as Path from 'path'
@@ -9,11 +8,15 @@ import * as Path from 'path'
 import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import * as LernaProject from '@lerna/project'
 
 const TerserPlugin = require('terser-webpack-plugin')
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
+// TODO: this doesn't seem to be the correct way to get the monorepo root.
+const repoRoot = Path.join(cwd, '..', '..')
+
 const readPackage = (key: string) => {
   try {
     const packageJson = Fs.readFileSync(Path.join(cwd, 'package.json'))
@@ -94,19 +97,6 @@ const alias = {
   lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
 }
 
-let tsEntries = [Path.resolve(cwd, 'src')]
-const packageJSON = readJSONSync(Path.join(cwd, 'package.json'))
-if (packageJSON.tsEntries) {
-  tsEntries = [
-    ...tsEntries,
-    ...packageJSON.tsEntries.map(moduleName => {
-      return Fs.realpathSync(Path.resolve(cwd, 'node_modules', moduleName, 'src'))
-    }),
-  ]
-}
-
-console.log('tsEntries', tsEntries)
-
 const babelrcOptions = {
   ...JSON.parse(Fs.readFileSync(Path.resolve(cwd, '.babelrc'), 'utf-8')),
   babelrc: false,
@@ -117,171 +107,180 @@ const babelrcOptions = {
 
 console.log('babelrcOptions', babelrcOptions)
 
-const tsmain = packageJSON.tsEntries ? ['ts:main'] : []
+async function makeConfig() {
 
-const config = {
-  target,
-  mode,
-  entry,
-  optimization: process.env.NO_OPTIMIZE
-    ? {
-        ...optimizeSplit,
-        minimize: false,
-      }
-    : optimization[isProd ? 'prod' : 'dev'],
-  output: {
-    path: outputPath,
-    pathinfo: !isProd,
-    filename: 'bundle.js',
-    publicPath: '/',
-    // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
-    globalObject: "(typeof self !== 'undefined' ? self : this)",
-  },
-  devServer: {
-    stats: {
-      warnings: false,
+  // get the list of paths to all monorepo packages to apply ts-loader too
+  const packages = await LernaProject.getPackages(repoRoot)
+  const tsEntries = packages.map(pkg => Path.join(pkg.location, 'src'))
+  console.log('tsEntries', tsEntries)
+
+  const config = {
+    target,
+    mode,
+    entry,
+    optimization: process.env.NO_OPTIMIZE
+      ? {
+          ...optimizeSplit,
+          minimize: false,
+        }
+      : optimization[isProd ? 'prod' : 'dev'],
+    output: {
+      path: outputPath,
+      pathinfo: !isProd,
+      filename: 'bundle.js',
+      publicPath: '/',
+      // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
+      globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
-    historyApiFallback: true,
-    hot: !isProd,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
+    devServer: {
+      stats: {
+        warnings: false,
+      },
+      historyApiFallback: true,
+      hot: !isProd,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
     },
-  },
-  // for a faster dev mode you can do:
-  //   eval-source-map (causes errors to not show stack trace in react development...)
-  //   cheap-source-map (no line numbers...)
-  //   cheap-module-eval-source-map (seems alright in both...)
-  //   cheap-module-source-map (works well in electron, no line numbers in browser...)
-  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    mainFields: isProd ? [...tsmain, 'module', 'browser', 'main'] : [...tsmain, 'browser', 'main'],
-    // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
-    alias,
-  },
-  resolveLoader: {
-    modules: [buildNodeModules],
-  },
-  module: {
-    rules: [
-      {
-        test: /[wW]orker\.[jt]sx?$/,
-        use: ['workerize-loader'],
-        // exclude: /node_modules/,
-      },
-      // ignore .node.js modules
-      {
-        test: /\.node.[jt]sx?/,
-        use: 'ignore-loader',
-      },
-      // ignore .electron.js modules if in web mode
-      target !== 'electron-renderer' && {
-        test: /\.electron.[jt]sx?/,
-        use: 'ignore-loader',
-      },
-      {
-        test: /\.tsx?$/,
-        include: tsEntries,
-        use: [
-          'thread-loader',
-          {
-            loader: 'ts-loader',
-            options: {
-              happyPackMode: true,
-              transpileOnly: true, // disable - we use it in fork plugin
-            },
-          },
-          {
-            loader: 'babel-loader',
-            options: babelrcOptions,
-          },
-          'react-hot-loader/webpack',
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(ttf|eot|woff|woff2)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[ext]',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              bypassOnDebug: true,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(mp4)$/,
-        use: ['file-loader'],
-      },
-      {
-        test: /\.(md)$/,
-        use: 'raw-loader',
-      },
-    ].filter(Boolean),
-  },
-  plugins: [
-    new ErrorOverlayPlugin(),
-
-    new webpack.DefinePlugin(defines),
-
-    new webpack.IgnorePlugin(/electron-log/),
-
-    target === 'web' && new webpack.IgnorePlugin(/^electron$/),
-
-    new ForkTsCheckerWebpackPlugin(),
-
-    isProd &&
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          ecma: 6,
+    // for a faster dev mode you can do:
+    //   eval-source-map (causes errors to not show stack trace in react development...)
+    //   cheap-source-map (no line numbers...)
+    //   cheap-module-eval-source-map (seems alright in both...)
+    //   cheap-module-source-map (works well in electron, no line numbers in browser...)
+    devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
+    resolve: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      mainFields: isProd
+        ? ['ts:main', 'module', 'browser', 'main']
+        : ['ts:main', 'browser', 'main'],
+      // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
+      alias,
+    },
+    resolveLoader: {
+      modules: [buildNodeModules],
+    },
+    module: {
+      rules: [
+        {
+          test: /[wW]orker\.[jt]sx?$/,
+          use: ['workerize-loader'],
+          // exclude: /node_modules/,
         },
+        // ignore .node.js modules
+        {
+          test: /\.node.[jt]sx?/,
+          use: 'ignore-loader',
+        },
+        // ignore .electron.js modules if in web mode
+        target !== 'electron-renderer' && {
+          test: /\.electron.[jt]sx?/,
+          use: 'ignore-loader',
+        },
+        {
+          test: /\.tsx?$/,
+          include: tsEntries,
+          use: [
+            'thread-loader',
+            {
+              loader: 'ts-loader',
+              options: {
+                happyPackMode: true,
+                transpileOnly: true, // disable - we use it in fork plugin
+              },
+            },
+            {
+              loader: 'babel-loader',
+              options: babelrcOptions,
+            },
+            'react-hot-loader/webpack',
+          ],
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(ttf|eot|woff|woff2)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: 'fonts/[name].[ext]',
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(gif|png|jpe?g|svg)$/,
+          use: [
+            'file-loader',
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                bypassOnDebug: true,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(mp4)$/,
+          use: ['file-loader'],
+        },
+        {
+          test: /\.(md)$/,
+          use: 'raw-loader',
+        },
+      ].filter(Boolean),
+    },
+    plugins: [
+      new ErrorOverlayPlugin(),
+
+      new webpack.DefinePlugin(defines),
+
+      new webpack.IgnorePlugin(/electron-log/),
+
+      target === 'web' && new webpack.IgnorePlugin(/^electron$/),
+
+      new ForkTsCheckerWebpackPlugin(),
+
+      isProd &&
+        new TerserPlugin({
+          parallel: true,
+          terserOptions: {
+            ecma: 6,
+          },
+        }),
+
+      new HtmlWebpackPlugin({
+        favicon: 'public/favicon.png',
+        template: 'index.html',
       }),
 
-    new HtmlWebpackPlugin({
-      favicon: 'public/favicon.png',
-      template: 'index.html',
-    }),
+      !!process.env['ANALYZE_BUNDLE'] &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+        }),
 
-    !!process.env['ANALYZE_BUNDLE'] &&
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-      }),
+      !!process.env['ANALYZE_BUNDLE'] &&
+        new DuplicatesPlugin({
+          emitErrors: false,
+          verbose: true,
+        }),
 
-    !!process.env['ANALYZE_BUNDLE'] &&
-      new DuplicatesPlugin({
-        emitErrors: false,
-        verbose: true,
-      }),
+      !isProd && new webpack.NamedModulesPlugin(),
 
-    !isProd && new webpack.NamedModulesPlugin(),
+      isProd && new DuplicatePackageCheckerPlugin(),
 
-    isProd && new DuplicatePackageCheckerPlugin(),
-
-    isProd &&
-      new PrepackPlugin({
-        reactEnabled: true,
-        compatibility: 'node-react',
-        // avoid worker modules
-        test: /^(?!.*worker\.[tj]sx?)$/i,
-      }),
-  ].filter(Boolean),
+      isProd &&
+        new PrepackPlugin({
+          reactEnabled: true,
+          compatibility: 'node-react',
+          // avoid worker modules
+          test: /^(?!.*worker\.[tj]sx?)$/i,
+        }),
+    ].filter(Boolean),
+  }
+  return config
 }
 
-export default config
+export default makeConfig

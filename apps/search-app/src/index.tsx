@@ -1,5 +1,4 @@
-import { App, AppProps, createApp, useSearchState } from '@o/kit'
-import { useStore } from '@o/use-store'
+import { App, AppProps, createApp, useSearchState, useStore } from '@o/kit'
 import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
 import { SearchAppMain } from './SearchAppMain'

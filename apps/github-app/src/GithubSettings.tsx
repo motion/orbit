@@ -1,8 +1,14 @@
-import { loadMany } from '@o/bridge'
-import { AppProps, SettingManageRow, Table, useApp, WhitelistManager } from '@o/kit'
-import { GithubRepositoryModel } from '@o/models'
+import {
+  AppProps,
+  GithubRepositoryModel,
+  loadMany,
+  SettingManageRow,
+  Table,
+  useApp,
+  useStore,
+  WhitelistManager,
+} from '@o/kit'
 import { DataType, View } from '@o/ui'
-import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 

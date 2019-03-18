@@ -1,4 +1,4 @@
-import { Bit } from '@o/models'
+import { Bit } from '@o/kit'
 import { createSyncer } from '@o/sync-kit'
 import { ConfluenceAppData, ConfluenceContent, ConfluenceLastSyncInfo } from './ConfluenceModels'
 import { ConfluenceLoader } from './ConfluenceLoader'

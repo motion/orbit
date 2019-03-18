@@ -1,8 +1,5 @@
-import { useModel } from '@o/bridge'
-import { AppProps, SettingManageRow, Table } from '@o/kit'
-import { AppBit, AppModel } from '@o/models'
+import { AppBit, AppModel, AppProps, SettingManageRow, Table, useModel, useStore } from '@o/kit'
 import { View } from '@o/ui'
-import { useStore } from '@o/use-store'
 import * as React from 'react'
 
 class DriveSettingsStore {

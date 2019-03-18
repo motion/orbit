@@ -1,4 +1,4 @@
-import { AppBit } from '@o/models'
+import { AppBit } from '@o/kit'
 
 export type ItemID = number | string
 

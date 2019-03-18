@@ -1,5 +1,4 @@
-import { command } from '@o/bridge'
-import { CallAppBitApiMethodCommand } from '@o/models'
+import { CallAppBitApiMethodCommand, command } from '@o/kit'
 
 export default {
   query: (appId: number, query: string, parameters: any[] = []) => {

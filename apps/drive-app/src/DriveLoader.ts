@@ -1,11 +1,9 @@
-import { Logger } from '@o/logger'
+import { AppBit } from '@o/kit'
 // import * as path from 'path'
-import { ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
+import { getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
 import { uniqBy } from 'lodash'
 import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'
-import { AppBit } from '@o/models'
-import { getGlobalConfig } from '@o/config'
 
 /**
  * Defines a loading throttling.

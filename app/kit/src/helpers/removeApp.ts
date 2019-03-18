@@ -1,5 +1,5 @@
 import { command } from '@o/bridge'
-import { showConfirmDialog } from '@o/kit'
+import { showConfirmDialog } from '../'
 import { AppBit, AppRemoveCommand } from '@o/models'
 
 export const removeApp = async (app: AppBit) => {

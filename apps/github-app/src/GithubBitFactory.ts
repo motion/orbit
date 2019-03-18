@@ -1,4 +1,4 @@
-import { Bit } from '@o/models'
+import { Bit } from '@o/kit'
 import {
   GithubBitData,
   GithubComment,

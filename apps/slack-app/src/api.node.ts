@@ -1,4 +1,4 @@
-import { AppBit } from '@o/models'
+import { AppBit } from '@o/sync-kit'
 import { SlackLoader } from './SlackLoader'
 import { SlackChannel, SlackMessage } from './SlackModels'
 

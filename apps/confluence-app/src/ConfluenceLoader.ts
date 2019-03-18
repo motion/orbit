@@ -1,6 +1,4 @@
-import { Logger } from '@o/logger'
-import { AppBit } from '@o/models'
-import { ServiceLoader, sleep } from '@o/sync-kit'
+import { AppBit, Logger, ServiceLoader, sleep } from '@o/sync-kit'
 import { ConfluenceQueries } from './ConfluenceQueries'
 import {
   ConfluenceAppData,

@@ -1,4 +1,4 @@
-import { Bit } from '@o/models'
+import { Bit } from '@o/kit'
 import { DriveLoadedFile, DriveUser } from './DriveModels'
 import { SyncerUtils } from '@o/sync-kit'
 

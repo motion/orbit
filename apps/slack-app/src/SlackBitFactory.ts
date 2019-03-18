@@ -7,7 +7,7 @@ import {
   SlackTeam,
   SlackUser,
 } from './SlackModels'
-import { AppBit, Bit } from '@o/models'
+import { AppBit, Bit } from '@o/kit'
 import { buildSlackText, findMessageMentionedPeople } from './SlackUtils'
 import { uniqBy } from 'lodash'
 import { SyncerUtils } from '@o/sync-kit'

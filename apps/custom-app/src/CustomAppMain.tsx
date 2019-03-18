@@ -1,13 +1,5 @@
 import { AppProps, Table } from '@o/kit'
-import {
-  createEnumFilter,
-  DataType,
-  Form,
-  Section,
-  Title,
-  VerticalSplit,
-  VerticalSplitPane,
-} from '@o/ui'
+import { createEnumFilter, DataType, Form, Section, Title, VerticalSplit, VerticalSplitPane } from '@o/ui'
 import faker from 'faker'
 import React, { useState } from 'react'
 

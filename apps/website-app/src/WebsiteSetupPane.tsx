@@ -1,6 +1,4 @@
-import { command, useModel } from '@o/bridge'
-import { AppProps } from '@o/kit'
-import { AppModel, AppSaveCommand } from '@o/models'
+import { AppModel, AppProps, AppSaveCommand, command, useModel } from '@o/kit'
 import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import produce from 'immer'
 import React, { useEffect, useState } from 'react'

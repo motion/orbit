@@ -1,5 +1,4 @@
-import { List, useShareMenu } from '@o/kit'
-import { useStore } from '@o/use-store'
+import { List, useShareMenu, useStore } from '@o/kit'
 import React, { useContext } from 'react'
 import { SearchContext } from './index'
 

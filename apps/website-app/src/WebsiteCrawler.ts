@@ -1,4 +1,4 @@
-import { Logger } from '@o/logger'
+import { Logger } from '@o/kit'
 import * as fs from 'fs'
 import * as path from 'path'
 import { WebsiteCrawledData } from './WebsiteModels'

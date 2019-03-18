@@ -1,4 +1,4 @@
-import { Bit } from '@o/models'
+import { Bit } from '@o/kit'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailBitData, GmailBitDataParticipant, GMailThread } from './GMailModels'
 import { SyncerUtils } from '@o/sync-kit'

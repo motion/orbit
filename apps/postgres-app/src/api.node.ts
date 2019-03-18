@@ -1,4 +1,4 @@
-import { AppBit } from '@o/models'
+import { AppBit } from '@o/sync-kit'
 import { createConnection } from 'typeorm'
 import { PostgresAppData } from './PostgresModels'
 

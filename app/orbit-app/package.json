@@ -27,7 +27,8 @@
     "@o/search-app",
     "@o/slack-app",
     "@o/gmail-app",
-    "@o/postgres-app"
+    "@o/postgres-app",
+    "@o/website-app"
   ],
   "dependencies": {
     "@babel/runtime": "7.2.0",

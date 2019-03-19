@@ -3,7 +3,6 @@ import {
   Card,
   DefinitionList,
   Form,
-  HorizontalSpace,
   Row,
   SearchInput,
   Section,
@@ -30,10 +29,10 @@ export function CustomAppMain(_props: AppProps) {
     <VerticalSplit>
       <VerticalSplitPane>
         <Row alignItems="center" padding={[0, 5]} width="100%">
-          <SearchInput />
-          <HorizontalSpace />
+          <SearchInput name="search" />
+          <Space />
           <Select options={active} />
-          <HorizontalSpace />
+          <Space />
           <Select isMulti options={type} />
         </Row>
 

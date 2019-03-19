@@ -1,7 +1,7 @@
 import { useModel } from '@o/bridge'
 import { AppProps } from '@o/kit'
 import { SpaceModel } from '@o/models'
-import { Section, Text, VerticalSpace } from '@o/ui'
+import { Section, Space, Text } from '@o/ui'
 import * as React from 'react'
 import { SubSection } from '../../views/SubSection'
 import { SpaceEdit } from './SpaceEdit'
@@ -16,7 +16,7 @@ export default function SpacesAppEdit(props: AppProps) {
 
       <SubSection title="Members">
         <Text size={1.1}>View and manage memebers who have joined this space.</Text>
-        <VerticalSpace />
+        <Space />
       </SubSection>
 
       {JSON.stringify(space)}

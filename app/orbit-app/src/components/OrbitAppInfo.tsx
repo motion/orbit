@@ -1,6 +1,6 @@
 import { Row, View } from '@o/gloss'
 import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@o/kit'
-import { HorizontalSpace, Text } from '@o/ui'
+import { Space, Text } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 
@@ -32,7 +32,7 @@ export const OrbitAppInfo = ({ definition, app }: AppWithDefinition) => {
           {countSubtitle}&nbsp;{pluralize(getItemName(definition.itemType), countSubtitle)}
         </Text>
       </View>
-      <HorizontalSpace />
+      <Space />
       {!!isSyncing && (
         <Text size={0.9} alpha={0.75}>
           Syncing...

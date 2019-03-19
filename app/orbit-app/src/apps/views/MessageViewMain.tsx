@@ -1,5 +1,5 @@
 import { AppProps, Icon } from '@o/kit'
-import { PassProps, SubTitle, Title, VerticalSpace, View } from '@o/ui'
+import { PassProps, Space, SubTitle, Title, View } from '@o/ui'
 import React from 'react'
 
 export function MessageViewMain({ title, icon, subType }: AppProps) {
@@ -14,7 +14,7 @@ export function MessageViewMain({ title, icon, subType }: AppProps) {
           <SubTitle>{subType}</SubTitle>
         </>
       )}
-      <VerticalSpace small />
+      <Space small />
       <PassProps size={88}>
         {typeof icon === 'string' ? <Icon name={icon} /> : icon || null}
       </PassProps>

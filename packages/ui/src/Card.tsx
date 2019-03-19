@@ -3,7 +3,7 @@ import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { ConfiguredIcon } from './Icon'
-import { VerticalSpace } from './layout/VerticalSpace'
+import { Space } from './layout/Space'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemStore } from './lists/ListItemStore'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -111,7 +111,7 @@ export function Card({
                     {dateContent}
                   </>
                 )}
-                {hasPreview && <VerticalSpace small />}
+                {hasPreview && <Space small />}
               </SubTitle>
             )}
             {hasPreview && (

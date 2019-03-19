@@ -1,7 +1,7 @@
 import { Row, View } from '@o/gloss'
 import React from 'react'
 import { BorderBottom } from '../Border'
-import { HorizontalSpace } from '../layout/HorizontalSpace'
+import { Space } from '../layout/Space'
 import { TextProps } from './Text'
 import { Title } from './Title'
 
@@ -40,7 +40,7 @@ export function TitleRow({
         {before && (
           <>
             {before}
-            <HorizontalSpace />
+            <Space />
           </>
         )}
         <Title margin={0} {...props} />

@@ -1,5 +1,5 @@
 import { AppIcon } from '@o/kit'
-import { HorizontalSpace, Input, Popover, Row, View } from '@o/ui'
+import { Input, Popover, Row, Space, View } from '@o/ui'
 import React, { useEffect, useRef } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { ColorPicker } from '../../views/ColorPicker'
@@ -46,7 +46,7 @@ export function AppsMainNew() {
           />
         </Popover>
 
-        <HorizontalSpace />
+        <Space />
 
         <Input
           ref={inputRef}

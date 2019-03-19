@@ -3,8 +3,7 @@ import * as React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButton } from '../buttons/RoundButton'
 import { Icon } from '../Icon'
-import { HorizontalSpace } from '../layout/HorizontalSpace'
-import { VerticalSpace } from '../layout/VerticalSpace'
+import { Space } from '../layout/Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
 import { Markdown } from './Markdown'
@@ -38,14 +37,14 @@ export function TaskComment({ author, createdAt, body, onClickPerson }: TaskComm
         <RoundButton size={0.9} onClick={onClickPerson}>
           {login} <Icon size={8} name="link" opacity={0.8} marginLeft={2} />
         </RoundButton>
-        <HorizontalSpace />
+        <Space />
         {!!createdAt && (
           <Text size={0.95} fontWeight={600} alpha={0.8}>
             <DateFormat date={new Date(createdAt)} />
           </Text>
         )}
       </Row>
-      <VerticalSpace small />
+      <Space small />
       <Markdown source={body} />
     </HighlightSection>
   )

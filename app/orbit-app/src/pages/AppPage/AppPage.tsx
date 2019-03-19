@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import { AppView, Icon, QueryStore, SpaceStore } from '@o/kit'
 import * as UI from '@o/ui'
-import { Col, HorizontalSpace, Row, SelectionStore, Sidebar, Text } from '@o/ui'
+import { Col, Row, SelectionStore, Sidebar, Space, Text } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -85,7 +85,7 @@ const AppPageContent = () => {
             size: 10,
           }}
         />
-        <HorizontalSpace />
+        <Space />
         <Icon
           onClick={appFrameStore.toggleSidebar}
           name="sidebar"

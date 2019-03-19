@@ -1,7 +1,7 @@
 import { Row } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { getDataType } from '../helpers/getDataType'
-import { HorizontalSpace } from '../layout/HorizontalSpace'
+import { Space } from '../layout/Space'
 import { FormTableLabel, FormTableRow, FormTableValue, RowProps } from '../tables/Table'
 import { DataType } from '../types'
 import { CheckBoxField } from './CheckboxField'
@@ -21,7 +21,7 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
           <Label width="100%" htmlFor={name}>
             {label}
           </Label>
-          <HorizontalSpace />
+          <Space />
         </Row>
       </FormTableLabel>
       <FormTableValue>{children}</FormTableValue>

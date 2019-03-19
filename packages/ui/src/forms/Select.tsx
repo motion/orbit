@@ -1,5 +1,4 @@
 import { SimpleText, ThemeContext, View } from '@o/gloss'
-import { Omit } from 'lodash'
 import React, { useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
@@ -56,9 +55,7 @@ const themes = {
   }),
 }
 
-export type SelectProps = Omit<Props, 'options'> & {
-  options: { value: string; label: string }[] | string[]
-}
+export type SelectProps = Props<{ value: string; label: string } | string>
 
 export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number }) {
   const { activeThemeName } = useContext(ThemeContext)

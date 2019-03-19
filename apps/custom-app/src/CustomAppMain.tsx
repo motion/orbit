@@ -2,6 +2,7 @@ import { AppProps, Table, useFetch } from '@o/kit'
 import {
   Card,
   createEnumFilter,
+  DefinitionList,
   Form,
   Section,
   Title,
@@ -22,6 +23,7 @@ export function CustomAppMain(_props: AppProps) {
       <VerticalSplitPane>
         <Table
           searchable
+          multiHighlight
           onHighlighted={setHighlighted}
           rows={rows}
           defaultFilters={[createEnumFilter(rowTypes)]}
@@ -33,7 +35,7 @@ export function CustomAppMain(_props: AppProps) {
           <Title>Hello World2</Title>
 
           <Card title="test" subtitle="another">
-            hello world
+            {rows.length && <DefinitionList row={rows[0]} />}
           </Card>
 
           <Form rows={highlighted} />

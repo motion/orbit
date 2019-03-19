@@ -1,3 +1,4 @@
+import { Row } from '@o/gloss'
 import React from 'react'
 import { DataValue } from './DataValue'
 import { guessColumns } from './forms/guessColumns'
@@ -39,9 +40,12 @@ export type DefinitionItem = {
 
 export function DefinitionItem(props: DefinitionItem) {
   return (
-    <>
-      <Label fontWeight={400}>{props.label}</Label>:&nbsp;
+    <Row alignItems="center">
+      <Label padding={0} fontWeight={400}>
+        {props.label}
+      </Label>
+      :&nbsp;
       <DataValue type={props.type} value={props.value} />
-    </>
+    </Row>
   )
 }

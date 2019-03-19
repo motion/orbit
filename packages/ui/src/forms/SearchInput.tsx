@@ -125,13 +125,13 @@ export const SearchIcon = gloss(Icon, {
 })
 
 const SearchBar = gloss(Row, {
-  height: '100%',
   maxHeight: 40,
+  minHeight: 22,
   padding: 5,
   alignItems: 'center',
 })
 
-export const SearchBox = gloss(View, {
+const SearchBox = gloss(View, {
   position: 'relative',
   flexFlow: 'row',
   borderRadius: '999em',

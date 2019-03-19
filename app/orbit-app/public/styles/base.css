@@ -531,12 +531,6 @@ a {
 /* reset elements from flex */
 
 a,
-input,
-textarea {
-  align-self: flex-start;
-}
-
-a,
 span,
 em,
 b,

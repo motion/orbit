@@ -18,6 +18,14 @@ const selectStyles = {
     ...provided,
     padding: 4,
   }),
+  clearIndicator: provided => ({
+    ...provided,
+    padding: 4,
+  }),
+  multiValue: provided => ({
+    ...provided,
+    padding: 1,
+  }),
   control: provided => ({
     ...provided,
     minHeight: 28,
@@ -52,12 +60,12 @@ export type SelectProps = Omit<Props, 'options'> & {
   options: { value: string; label: string }[] | string[]
 }
 
-export function Select(props: SelectProps) {
+export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number }) {
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
 
   return (
-    <View margin={[1, 1]} className="reset">
+    <View minWidth={minWidth || 100} flex={1} margin={1} className="reset">
       <SimpleText tagName="div">
         <ReactSelect
           styles={selectStyles}

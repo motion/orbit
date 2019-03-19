@@ -1,19 +1,22 @@
 import React from 'react'
 import { SurfacePassProps } from '../Surface'
-import { DataColumns, GenericDataRow } from '../types'
+import { DataColumnsShort, GenericDataRow } from '../types'
 import { Fieldset } from './Fieldset'
 import { FormField } from './FormField'
+import { guessColumns } from './guessColumns'
 
-type FormProps = { columns: DataColumns; rows: GenericDataRow[] | null }
+type FormProps = { columns?: DataColumnsShort; rows: GenericDataRow[] | null }
 
-export function Form({ columns, rows }: FormProps) {
-  if (!rows || rows.length === 0) {
+export function Form(props: FormProps) {
+  if (!props.rows || props.rows.length === 0) {
     return null
   }
 
+  const columns = guessColumns(props.columns, props.rows)
+
   return (
     <SurfacePassProps size={1.1}>
-      {rows.map(row => {
+      {props.rows.map(row => {
         return (
           <Fieldset key={row.key}>
             {Object.keys(row.values).map(valKey => {

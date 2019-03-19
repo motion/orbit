@@ -1,4 +1,4 @@
-import { CSSPropertySet, gloss, View } from '@o/gloss'
+import { gloss, View } from '@o/gloss'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
@@ -6,9 +6,11 @@ import { Glint } from './effects/Glint'
 import { ConfiguredIcon } from './Icon'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemStore } from './lists/ListItemStore'
+import { SizedSurface } from './SizedSurface'
 import { DateFormat } from './text/DateFormat'
-import { HighlightText } from './text/HighlightText'
+import { SubTitle } from './text/SubTitle'
 import { Text } from './text/Text'
+import { Title } from './text/Title'
 
 export function Card({
   borderRadius = 7,
@@ -67,12 +69,11 @@ export function Card({
   )
   return (
     <CardWrap ref={store.setCardWrapRef} {...props} {...isSelected && activeStyle}>
-      <CardChrome
-        isSelected={isSelected}
+      <SizedSurface
+        themeSelect="card"
         borderRadius={borderRadius}
-        inGrid={inGrid}
         onClick={store.handleClick}
-        disableShadow={disableShadow}
+        borderWidth={1}
         chromeless={chromeless}
         {...cardProps}
       >
@@ -83,33 +84,24 @@ export function Card({
             <Glint opacity={0.75} borderRadius={borderRadius} />
             <Padding style={{ borderRadius, padding }}>
               {hasTitle && (
-                <Title padRight>
-                  <HighlightText
-                    fontSize={14}
-                    sizeLineHeight={0.78}
-                    ellipse={hasSubtitle && hasMeta ? true : 2}
-                    fontWeight={500}
-                    selectable={false}
-                    {...titleProps}
-                  >
+                <>
+                  <Title margin={0} highlight>
                     {title}
-                  </HighlightText>
+                  </Title>
                   {afterTitle}
-                </Title>
+                </>
               )}
               {!!titleFlex && <div style={{ flex: titleFlex }} />}
               {hasSubtitle && (
-                <CardSubtitle padRight={!hasTitle} paddingRight={30}>
+                <SubTitle>
                   <Text alpha={0.55} ellipse {...subtitleProps}>
                     {subtitle}
                   </Text>
-                </CardSubtitle>
+                </SubTitle>
               )}
-              {!hasFourRows && hasDate && (
-                <CardSubtitle padRight={!hasTitle}>{dateContent}</CardSubtitle>
-              )}
+              {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
               {hasMeta && (
-                <CardSubtitle padRight={!hasTitle}>
+                <SubTitle>
                   {!!location && (
                     <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
                       {location}
@@ -123,7 +115,7 @@ export function Card({
                     </>
                   )}
                   {hasPreview && <VerticalSpaceSmall />}
-                </CardSubtitle>
+                </SubTitle>
               )}
               {hasPreview && (
                 <Preview>
@@ -159,7 +151,7 @@ export function Card({
             </Padding>
           </>
         )}
-      </CardChrome>
+      </SizedSurface>
       {/* Keep this below card because Masonry uses a simple .firstChild to measure */}
       {/* {!disableShadow && (
         <HoverGlow
@@ -192,7 +184,7 @@ const CardWrap = gloss(View, {
   },
 })
 
-const CardChrome = gloss({
+const CardChrome = gloss(View, {
   overflow: 'hidden',
   position: 'relative',
   maxHeight: '100%',
@@ -203,103 +195,19 @@ const CardChrome = gloss({
   },
   chromeless: {
     background: 'transparent',
-    '&:hover': {
-      background: [0, 0, 0, 0.025],
-    },
   },
-}).theme(
-  ({
-    borderRadius,
-    inGrid,
-    theme,
-    isSelected,
-    background,
-    padding,
-    disableShadow,
-    chromeless,
-    color,
-  }) => {
-    let card: CSSPropertySet = {
-      flex: inGrid ? 1 : 'none',
-      color: color || theme.color,
-    }
-    const disabledShadow = disableShadow ? 'none' : null
-    const cardShadow = theme.cardShadow || [0, 6, 14, [0, 0, 0, 0.12]]
-    card = {
-      ...card,
-      padding,
-      borderRadius,
-      background: background || theme.cardBackground || theme.background.alpha(0.9),
-      ...theme.card,
-    }
-    if (isSelected === true) {
-      const borderShadow = ['inset', 0, 0, 0, 1, theme.borderSelected]
-      const boxShadow = disabledShadow || [cardShadow, theme.shadowSelected, borderShadow]
-      card = {
-        ...card,
-        boxShadow,
-        '&:hover': {
-          boxShadow,
-        },
-      }
-    } else {
-      const borderColor = theme.cardBorderColor || 'transparent'
-      const borderShadow = chromeless ? null : ['inset', 0, 0, 0, 1, borderColor]
-      const hoverBorderShadow = ['inset', 0, 0, 0, 1, theme.cardBorderColorHover || borderColor]
-      card = {
-        ...card,
-        boxShadow: disabledShadow || [cardShadow, borderShadow],
-        '&:hover': {
-          boxShadow: disabledShadow || [
-            cardShadow,
-            hoverBorderShadow,
-            chromeless ? null : theme.cardHoverGlow,
-          ],
-        },
-      }
-    }
-    card = {
-      ...card,
-      '&:active': {
-        opacity: 0.8,
-      },
-    }
-    if (chromeless) {
-      return {
-        ...card,
-        background: 'transparent',
-      }
-    }
-    return card
-  },
-)
-
-const Title = gloss({
-  maxWidth: '100%',
-  flexFlow: 'row',
-  justifyContent: 'space-between',
-  padding: [0, 0, 2],
-  padRight: {
-    paddingRight: 20,
-  },
+}).theme((props, theme) => {
+  return {
+    flex: props.inGrid ? 1 : 'none',
+    color: props.color || theme.color,
+    background: props.background || theme.cardBackground || theme.background.alpha(0.9),
+    ...theme.card,
+  }
 })
 
 const Preview = gloss({
   flex: 1,
   zIndex: -1,
-})
-
-const CardSubtitle = gloss(View, {
-  height: 20,
-  padding: [0, 0, 2, 0],
-  flexFlow: 'row',
-  alignItems: 'center',
-  listItem: {
-    margin: [6, 0, 0],
-  },
-  padRight: {
-    paddingRight: 20,
-  },
 })
 
 const orbitIconProps = {

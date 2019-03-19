@@ -61,3 +61,5 @@ export type DataColumn = {
 export type DataColumns = {
   [key: string]: DataColumn
 }
+
+export type DataColumnsShort = { [key: string]: DataColumn | string }

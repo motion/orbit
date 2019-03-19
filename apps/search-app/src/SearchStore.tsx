@@ -10,6 +10,7 @@ import {
   searchBits,
   SearchQuery,
   SearchState,
+  sleep,
   SpaceIcon,
   useHook,
   UserModel,
@@ -139,9 +140,11 @@ export class SearchStore {
         // slim: true,
         iconBefore: true,
         identifier: 'message',
-        onOpen: () => {
-          console.warn('TODO restore this')
-          // this.actions.setupNewApp
+        onOpen: async () => {
+          // @ts-ignore
+          this.stores.newAppStore.setShowCreateNew(true)
+          await sleep(10)
+          this.stores.paneManagerStore.setActivePane('createApp')
         },
       },
     ]

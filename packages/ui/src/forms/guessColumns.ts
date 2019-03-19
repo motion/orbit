@@ -10,7 +10,9 @@ export function guessColumns(
   if (!rows.length) return {}
 
   const hasCols = !!Object.keys(cols)
-  const guessRow = normalizeRow(rows[0])
+  const guessRow = normalizeRow(rows[0], 0)
+
+  console.log('guessRow', guessRow)
 
   if (!guessRow) return {}
 
@@ -36,7 +38,7 @@ export function guessColumns(
       typeof val === 'string'
         ? {
             value: val,
-            type: getDataType(guessRow[key]),
+            type: getDataType(guessRow.values[key]),
           }
         : val
   }

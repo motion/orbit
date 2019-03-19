@@ -42,9 +42,9 @@ export function DefinitionItem(props: DefinitionItem) {
   return (
     <Row alignItems="center">
       <Label padding={0} fontWeight={400}>
-        {props.label}
+        {props.label}:
       </Label>
-      :&nbsp;
+      &nbsp;
       <DataValue type={props.type} value={props.value} />
     </Row>
   )

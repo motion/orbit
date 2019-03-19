@@ -1,3 +1,4 @@
+import { capitalize } from 'lodash'
 import { getDataType } from '../helpers/getDataType'
 import { DataColumns, DataColumnsShort, GenericDataRow } from '../types'
 import { normalizeRow } from './normalizeRow'
@@ -9,7 +10,7 @@ export function guessColumns(
   let cols = userCols
   if (!rows.length) return {}
 
-  const hasCols = !!Object.keys(cols)
+  const hasCols = cols && !!Object.keys(cols)
   const guessRow = normalizeRow(rows[0], 0)
 
   if (!guessRow) return {}
@@ -18,8 +19,7 @@ export function guessColumns(
   if (!hasCols) {
     cols = {}
     for (const key of Object.keys(guessRow.values)) {
-      const val = guessRow.values[key]
-      cols[key] = typeof val
+      cols[key] = capitalize(key)
     }
   }
 
@@ -40,5 +40,6 @@ export function guessColumns(
           }
         : val
   }
+
   return res
 }

@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useAppDefinitions } from '@o/kit'
 import { BorderLeft } from '@o/ui'
 import React, { memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
@@ -7,7 +7,8 @@ import { statusbarPadElement } from './OrbitStatusBar'
 import { toolbarPadElement } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppMainViewProps) => {
-  const { id } = useContext(AppLoadContext)
+  const { id, identifier } = useContext(AppLoadContext)
+  const definition = useAppDefinitions().find(x => x.id === identifier)
   const { orbitStore, appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
   const appProps = orbitStore.activeConfig[id] || {}
@@ -18,7 +19,10 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
 
   return (
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
-      <OrbitMainContainer isTorn={orbitStore.isTorn}>
+      <OrbitMainContainer
+        isTorn={orbitStore.isTorn}
+        transparent={definition.config && definition.config.transparentBackground}
+      >
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
         {props.hasToolbar && toolbarPadElement}
         {React.cloneElement(props.children, appProps)}
@@ -28,10 +32,12 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitMainContainer = gloss<{ isTorn: boolean }>({
+const OrbitMainContainer = gloss<{ isTorn: boolean; transparent?: boolean }>({
   flex: 1,
-}).theme(({ isTorn }, theme) => ({
-  background: isTorn
+}).theme(({ isTorn, transparent }, theme) => ({
+  background: transparent
+    ? 'transparent'
+    : isTorn
     ? theme.mainBackground || theme.background
     : theme.mainBackground || theme.background || 'transparent',
 }))

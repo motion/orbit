@@ -13,7 +13,7 @@ import { Omit } from '../types'
 export type TableColumns = { [key: string]: DataColumn | string }
 
 export type TableProps = Omit<SearchableTableProps, 'columns'> & {
-  columns: TableColumns
+  columns?: TableColumns
   searchable?: boolean
   onHighlighted?: (rows: any[]) => void
 }
@@ -32,14 +32,11 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
 
 export function Table({ multiHighlight = true, searchable, onHighlighted, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
-  let columns = guessColumns(props.columns, rows)
-  columns = deepMergeDefined(columns, defaultColumns)
-
+  const columns = deepMergeDefined(guessColumns(props.columns, rows), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
   const onHighlightedIndices = useCallback(
     keys => {
       if (onHighlighted) {
-        console.log('got keys', keys, rows)
         onHighlighted(keys.map(key => rows.find(x => x.key === key)))
       }
       if (ogOnHighlightedIndices()) {
@@ -59,15 +56,15 @@ export function Table({ multiHighlight = true, searchable, onHighlighted, ...pro
         onHighlightedIndices={onHighlightedIndices}
       />
     )
-  } else {
-    return (
-      <ManagedTable
-        multiHighlight={multiHighlight}
-        {...props}
-        columns={columns}
-        rows={rows}
-        onHighlightedIndices={onHighlightedIndices}
-      />
-    )
   }
+
+  return (
+    <ManagedTable
+      multiHighlight={multiHighlight}
+      {...props}
+      columns={columns}
+      rows={rows}
+      onHighlightedIndices={onHighlightedIndices}
+    />
+  )
 }

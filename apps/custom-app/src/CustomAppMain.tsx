@@ -37,7 +37,12 @@ export function CustomAppMain(_props: AppProps) {
           <Select isMulti options={type} />
         </Row>
 
-        <Table multiHighlight onHighlighted={setHighlighted} rows={rows} />
+        <Table
+          multiHighlight
+          onHighlighted={setHighlighted}
+          rows={rows}
+          filters={[{ type: 'include', value: 'active', key: 'active' }]}
+        />
       </VerticalSplitPane>
 
       <VerticalSplitPane>

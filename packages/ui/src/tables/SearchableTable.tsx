@@ -68,12 +68,19 @@ class SearchableManagedTable extends React.PureComponent<SearchableTableProps, S
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.searchTerm !== state.searchTerm || !isEqual(state.filters, props.filters)) {
-      return {
+    let next: Partial<State> = {}
+    if (props.searchTerm !== state.searchTerm) {
+      next.searchTerm = props.searchTerm
+    }
+    if (!isEqual(state.filters, props.filters)) {
+      next = {
+        ...next,
         filterRows: filterRowsFactory(props.filters || [], props.searchTerm),
-        searchTerm: props.searchTerm,
         filters: props.filters,
       }
+    }
+    if (Object.keys(next).length) {
+      return next
     }
     return null
   }

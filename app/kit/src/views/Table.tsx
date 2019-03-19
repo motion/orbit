@@ -32,7 +32,7 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
 
 export function Table({ multiHighlight = true, searchable, onHighlighted, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
-  const columns = deepMergeDefined(guessColumns(props.columns, rows), defaultColumns)
+  const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
   const onHighlightedIndices = useCallback(
     keys => {

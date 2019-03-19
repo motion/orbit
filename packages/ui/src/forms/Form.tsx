@@ -13,7 +13,7 @@ export function Form(props: FormProps) {
     return null
   }
 
-  const columns = guessColumns(props.columns, props.rows)
+  const columns = guessColumns(props.columns, props.rows[0])
 
   return (
     <SurfacePassProps size={1.1}>

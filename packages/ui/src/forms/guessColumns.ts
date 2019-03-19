@@ -5,15 +5,13 @@ import { normalizeRow } from './normalizeRow'
 
 export function guessColumns(
   userCols: DataColumnsShort | undefined,
-  rows: GenericDataRow[],
+  firstRow: GenericDataRow | false,
 ): DataColumns {
   let cols = userCols
-  if (!rows.length) return {}
+  if (!firstRow) return {}
 
   const hasCols = cols && !!Object.keys(cols)
-  const guessRow = normalizeRow(rows[0], 0)
-
-  if (!guessRow) return {}
+  const guessRow = normalizeRow(firstRow, 0)
 
   // fill in empty cols
   if (!hasCols) {

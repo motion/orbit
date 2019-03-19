@@ -4,6 +4,7 @@ import {
   BitModel,
   CosalTopicsModel,
   ensure,
+  gloss,
   ListItem,
   loadMany,
   loadOne,
@@ -12,7 +13,6 @@ import {
   useStore,
   useStores,
 } from '@o/kit'
-import { gloss } from '@o/gloss'
 import { HorizontalSpace, RoundButton, Row, SubTitle } from '@o/ui'
 import * as React from 'react'
 

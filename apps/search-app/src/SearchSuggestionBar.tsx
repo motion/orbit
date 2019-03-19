@@ -1,5 +1,4 @@
-import { color, gloss } from '@o/gloss'
-import { useStores } from '@o/kit'
+import { color, gloss, useStores } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
 import * as React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'

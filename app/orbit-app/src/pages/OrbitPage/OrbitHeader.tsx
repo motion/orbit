@@ -79,16 +79,22 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <OrbitHeaderInput />
 
           {isOnTearablePane && (
-            <SegmentedRow sizeHeight={0.9} sizeRadius={2} sizePadding={1.25}>
+            <SegmentedRow
+              sizeHeight={0.9}
+              sizeRadius={2}
+              sizePadding={1.25}
+              fontWeight={500}
+              sizeFont={0.95}
+              alpha={0.5}
+            >
               <LinkButton />
+              <OrbitEditAppButton />
               {!isTorn && <LaunchButton />}
             </SegmentedRow>
           )}
         </HeaderContain>
 
         <HeaderSide rightSide>
-          <OrbitEditAppButton />
-
           {isEditing && (
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
@@ -161,8 +167,8 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <HeaderButton
-      icon="tool"
+    <Button
+      // icon="tool"
       tooltip="Edit app"
       onClick={async () => {
         Actions.tearApp()
@@ -170,7 +176,7 @@ function OrbitEditAppButton() {
       }}
     >
       Edit
-    </HeaderButton>
+    </Button>
   )
 }
 
@@ -246,17 +252,7 @@ const LaunchButton = memo(() => {
   }
 
   return (
-    <Button
-      tooltip="Open app (⌘ + ⏎)"
-      width={50}
-      onClick={Actions.tearApp}
-      fontWeight={500}
-      sizeFont={0.9}
-      alpha={0.5}
-      elementProps={{
-        transform: { y: -0.5 },
-      }}
-    >
+    <Button tooltip="Open app (⌘ + ⏎)" width={50} onClick={Actions.tearApp}>
       Open
     </Button>
   )

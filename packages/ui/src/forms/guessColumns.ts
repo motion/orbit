@@ -12,8 +12,6 @@ export function guessColumns(
   const hasCols = !!Object.keys(cols)
   const guessRow = normalizeRow(rows[0], 0)
 
-  console.log('guessRow', guessRow)
-
   if (!guessRow) return {}
 
   // fill in empty cols
@@ -42,6 +40,5 @@ export function guessColumns(
           }
         : val
   }
-  console.log('res', res)
   return res
 }

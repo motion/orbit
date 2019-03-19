@@ -1,4 +1,5 @@
 import React from 'react'
+import { getRowValues } from '../helpers/getRowValues'
 import { SurfacePassProps } from '../Surface'
 import { DataColumnsShort, GenericDataRow } from '../types'
 import { Fieldset } from './Fieldset'
@@ -17,15 +18,16 @@ export function Form(props: FormProps) {
   return (
     <SurfacePassProps size={1.1}>
       {props.rows.map(row => {
+        const values = getRowValues(row)
         return (
           <Fieldset key={row.key}>
-            {Object.keys(row.values).map(valKey => {
-              const value = row.values[valKey]
+            {Object.keys(columns).map((colKey, index) => {
+              const value = values[colKey]
               return (
                 <FormField
-                  key={value.key}
-                  type={columns[valKey].type}
-                  label={columns[valKey].value}
+                  key={value.key || index}
+                  type={columns[colKey].type}
+                  label={columns[colKey].value}
                   value={value}
                 />
               )

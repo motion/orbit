@@ -11,6 +11,7 @@ import * as React from 'react'
 import debounceRender from 'react-debounce-render'
 import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
+import { normalizeRows } from '../forms/normalizeRows'
 import { ResizeObserver } from '../ResizeObserver'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
@@ -585,7 +586,15 @@ export const DebouncedManagedTable = debounceRender(ManagedTableInner, 150, {
 
 export function ManagedTable(props: ManagedTableProps) {
   const { width, height, measureRef } = useComponentSize()
-  return <DebouncedManagedTable measureRef={measureRef} width={width} height={height} {...props} />
+  return (
+    <DebouncedManagedTable
+      measureRef={measureRef}
+      width={width}
+      height={height}
+      {...props}
+      rows={normalizeRows(props.rows)}
+    />
+  )
 }
 
 // TODO this can move to useResizeObserver

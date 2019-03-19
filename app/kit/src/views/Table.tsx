@@ -2,6 +2,7 @@ import {
   DataColumn,
   guessColumns,
   ManagedTable,
+  normalizeRows,
   SearchableTable,
   SearchableTableProps,
   useRefGetter,
@@ -38,8 +39,7 @@ export function Table({
 }: TableProps) {
   const colsWithDefaults = deepMergeDefined(columns, defaultColumns)
   const normalizedColumns = guessColumns(colsWithDefaults, props.rows)
-
-  console.log(normalizedColumns, props.rows)
+  const rows = normalizeRows(props.rows)
 
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
   const onHighlightedIndices = useCallback(keys => {
@@ -57,6 +57,7 @@ export function Table({
         multiHighlight={multiHighlight}
         columns={normalizedColumns}
         {...props}
+        rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />
     )
@@ -66,6 +67,7 @@ export function Table({
         multiHighlight={multiHighlight}
         columns={normalizedColumns}
         {...props}
+        rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />
     )

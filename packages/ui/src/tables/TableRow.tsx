@@ -9,6 +9,7 @@ import { Color } from '@o/color'
 import { gloss, Row, SimpleText, ThemeObject } from '@o/gloss'
 import * as React from 'react'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
+import { getRowValues } from '../helpers/getRowValues'
 import { DateFormat } from '../text/DateFormat'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
@@ -144,7 +145,7 @@ export class TableRow extends React.PureComponent<Props> {
         {...row.style}
       >
         {columnKeys.map(key => {
-          const value = row.values[key]
+          const value = getRowValues(row)[key]
           const col = columns[key]
           // TODO we could let them configure but seems weird, when do they want an "unfilterable" row?
           const isFilterable = true

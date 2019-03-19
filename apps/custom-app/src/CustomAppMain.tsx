@@ -22,7 +22,7 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <Select options={[{ x: 1 }, { y: 1 }]} />
+        <Select options={['unknown', 'active', 'inactive']} />
 
         <Table
           searchable

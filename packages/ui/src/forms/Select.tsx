@@ -1,4 +1,5 @@
-import { ThemeContext, View } from '@o/gloss'
+import { SimpleText, ThemeContext, View } from '@o/gloss'
+import { Omit } from 'lodash'
 import React, { useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
@@ -27,7 +28,9 @@ const themes = {
       neutral70: '#888',
       neutral80: '#999',
       neutral90: '#aaa',
+      primary: 'rgb(28, 102, 205)',
       primary25: 'rgba(222, 235, 255, 0.15)',
+      primary50: 'rgba(222, 235, 255, 0.2)',
     },
   }),
   light: theme => ({
@@ -35,11 +38,33 @@ const themes = {
   }),
 }
 
-export function Select(props: Props) {
+export type SelectProps = Omit<Props, 'options'> & {
+  options: { value: string; label: string }[] | string[]
+}
+
+export function Select(props: SelectProps) {
   const { activeThemeName } = useContext(ThemeContext)
+  const options = normalizeOptions(props.options)
+
   return (
     <View margin={[1, 1]} className="reset">
-      <ReactSelect styles={selectStyles} theme={themes[activeThemeName]} {...props} />
+      <SimpleText tagName="div">
+        <ReactSelect
+          styles={selectStyles}
+          theme={themes[activeThemeName]}
+          {...props}
+          options={options}
+        />
+      </SimpleText>
     </View>
   )
+}
+
+function normalizeOptions(options: SelectProps['options']): { value: string; label: string }[] {
+  if (options.some(x => typeof x === 'string')) {
+    // @ts-ignore
+    return options.map(x => (typeof x === 'string' ? { value: x, label: x } : x))
+  }
+  // @ts-ignore
+  return options
 }

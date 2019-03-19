@@ -178,8 +178,10 @@ export class TableRow extends React.PureComponent<Props> {
                 }}
               />
             )
-          } else {
+          } else if (col.type === 'string') {
             element = <SimpleText alpha={0.7}>{value}</SimpleText>
+          } else {
+            element = <SimpleText alpha={0.7}>{`${value}`}</SimpleText>
           }
 
           if (isFilterable && onAddFilter != null) {

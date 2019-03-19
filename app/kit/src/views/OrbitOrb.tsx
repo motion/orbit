@@ -1,4 +1,4 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { linearGradient, View, ViewProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -31,29 +31,14 @@ export const OrbitOrb = forwardRef<any, ViewProps>(function OrbitOrb(
     innerSize -= 1
   }
   return (
-    <OrbBackground
+    <View
       ref={ref}
       width={size}
       height={size}
+      background={linearGradient(colors[0], colors[1])}
       borderRadius={size * 2}
       {...props}
       className={`undraggable ${props.className || ''}`}
-    >
-      <GradientOutlineCircle
-        width={innerSize}
-        height={innerSize}
-        startColor={colors[0]}
-        stopColor={colors[1]}
-      />
-    </OrbBackground>
+    />
   )
 })
-
-const OrbBackground = gloss(View, {
-  alignItems: 'center',
-  justifyContent: 'center',
-}).theme((_, theme) => ({
-  background: theme.background.isDark()
-    ? theme.background.darken(0.4)
-    : theme.background.lighten(0.4),
-}))

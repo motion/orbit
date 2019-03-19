@@ -41,8 +41,16 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 App.setOrbitState({ docked: !App.orbitState.docked })
               }
             }}
-            onMin={() => console.log('min')}
-            onMax={() => console.log('min')}
+            onMin={() =>
+              require('electron')
+                .remote.getCurrentWindow()
+                .minimize()
+            }
+            onMax={() =>
+              require('electron')
+                .remote.getCurrentWindow()
+                .maximize()
+            }
           />
         </OrbitClose>
 
@@ -52,7 +60,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
             onClick={themeStore.setToggleShowSidebar}
             opacity={themeStore.showSidebar ? 0.6 : 0.3}
           />
+
           <View flex={1} />
+
           <BackButton />
         </HeaderSide>
 
@@ -65,6 +75,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
               opacity={theme.color.isDark() ? 0.4 : 0.2}
             />
           </View>
+
           <OrbitHeaderInput />
 
           {isOnTearablePane && (
@@ -280,7 +291,7 @@ const BackButton = memo(() => {
     <HeaderButtonChromeless
       icon="arrowminleft"
       opacity={opacity}
-      iconSize={24}
+      iconSize={20}
       onClick={() => {
         locationStore.back()
       }}

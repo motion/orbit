@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// @flow
 
 import chalk from 'chalk'
 import coolTrim from 'cool-trim'

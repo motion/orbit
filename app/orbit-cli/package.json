@@ -2,6 +2,8 @@
   "name": "@o/orbit-cli",
   "version": "2.4.0",
   "main": "./_/main.js",
+  "private": true,
+  "bin": "./_/main.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
@@ -12,5 +14,8 @@
     "lodash": "4.17.11",
     "minimist": "1.2.0",
     "strip-ansi": "5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "*"
   }
 }

@@ -16,7 +16,8 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "@types/node": "11.9.6",
-    "@types/ws": "5.1.2"
+    "@types/ws": "5.1.2",
+    "typescript": "3.3.3333"
   },
   "devDependencies": {
     "@o/babel-preset-motion": "2.3.11",

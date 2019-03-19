@@ -147,7 +147,8 @@ export class TableRow extends React.PureComponent<Props> {
         {columnKeys.map(key => {
           const value = getRowValues(row)[key]
           const col = columns[key]
-          // TODO we could let them configure but seems weird, when do they want an "unfilterable" row?
+
+          // TODO we could let them configure but seems weird, when do you want an "unfilterable" row?
           const isFilterable = true
 
           if (col == null) {

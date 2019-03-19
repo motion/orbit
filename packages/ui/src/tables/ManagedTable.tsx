@@ -11,7 +11,7 @@ import * as React from 'react'
 import debounceRender from 'react-debounce-render'
 import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
-import { normalizeRows } from '../forms/normalizeRows'
+import { normalizeRow } from '../forms/normalizeRow'
 import { ResizeObserver } from '../ResizeObserver'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
@@ -592,7 +592,7 @@ export function ManagedTable(props: ManagedTableProps) {
       width={width}
       height={height}
       {...props}
-      rows={normalizeRows(props.rows)}
+      rows={props.rows.map(normalizeRow)}
     />
   )
 }

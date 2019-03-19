@@ -1,5 +1,6 @@
 import { getDataType } from '../helpers/getDataType'
 import { DataColumns, DataColumnsShort, GenericDataRow } from '../types'
+import { normalizeRow } from './normalizeRow'
 
 export function guessColumns(
   userCols: DataColumnsShort | undefined,
@@ -9,7 +10,9 @@ export function guessColumns(
   if (!rows.length) return {}
 
   const hasCols = !!Object.keys(cols)
-  const guessRow = rows[0]
+  const guessRow = normalizeRow(rows[0])
+
+  if (!guessRow) return {}
 
   // fill in empty cols
   if (!hasCols) {

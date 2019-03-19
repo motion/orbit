@@ -2,7 +2,7 @@ import {
   DataColumn,
   guessColumns,
   ManagedTable,
-  normalizeRows,
+  normalizeRow,
   SearchableTable,
   SearchableTableProps,
   useRefGetter,
@@ -30,33 +30,31 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({
-  multiHighlight = true,
-  searchable,
-  columns,
-  onHighlighted,
-  ...props
-}: TableProps) {
-  const colsWithDefaults = deepMergeDefined(columns, defaultColumns)
-  const normalizedColumns = guessColumns(colsWithDefaults, props.rows)
-  const rows = normalizeRows(props.rows)
+export function Table({ multiHighlight = true, searchable, onHighlighted, ...props }: TableProps) {
+  const rows = props.rows.map(normalizeRow)
+  let columns = guessColumns(props.columns, rows)
+  columns = deepMergeDefined(columns, defaultColumns)
 
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
-  const onHighlightedIndices = useCallback(keys => {
-    if (onHighlighted) {
-      onHighlighted(keys.map(key => props.rows.find(x => x.key === key)))
-    }
-    if (ogOnHighlightedIndices()) {
-      ogOnHighlightedIndices()(keys)
-    }
-  }, [])
+  const onHighlightedIndices = useCallback(
+    keys => {
+      if (onHighlighted) {
+        console.log('got keys', keys, rows)
+        onHighlighted(keys.map(key => rows.find(x => x.key === key)))
+      }
+      if (ogOnHighlightedIndices()) {
+        ogOnHighlightedIndices()(keys)
+      }
+    },
+    [props.rows],
+  )
 
   if (searchable) {
     return (
       <SearchableTable
         multiHighlight={multiHighlight}
-        columns={normalizedColumns}
         {...props}
+        columns={columns}
         rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />
@@ -65,8 +63,8 @@ export function Table({
     return (
       <ManagedTable
         multiHighlight={multiHighlight}
-        columns={normalizedColumns}
         {...props}
+        columns={columns}
         rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />

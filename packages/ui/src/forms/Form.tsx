@@ -23,6 +23,7 @@ export function Form(props: FormProps) {
           <Fieldset key={row.key}>
             {Object.keys(columns).map((colKey, index) => {
               const value = values[colKey]
+              console.log('go', value, columns)
               return (
                 <FormField
                   key={value.key || index}

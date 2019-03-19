@@ -1,7 +1,6 @@
 import { AppProps, Table, useFetch } from '@o/kit'
 import {
   Card,
-  createEnumFilter,
   DefinitionList,
   Form,
   HorizontalSpace,
@@ -16,30 +15,29 @@ import {
 import React, { useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
-const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
+const type = ['paid', 'trial', 'enterprise', 'power']
+const active = ['active', 'inactive']
 
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
-  const rows = useFetch(`${endpoint}/users`)
+  const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
+    ...row,
+    category: type[i % (type.length - 1)],
+    active: active[i % 2],
+  }))
 
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <Row alignItems="center" padding={2} width="100%">
+        <Row alignItems="center" padding={[0, 5]} width="100%">
           <SearchInput />
           <HorizontalSpace />
-          <Select options={['unknown', 'active', 'inactive']} />
+          <Select options={active} />
           <HorizontalSpace />
-          <Select options={['1', '2', '3']} isMulti />
+          <Select isMulti options={type} />
         </Row>
 
-        <Table
-          searchable
-          multiHighlight
-          onHighlighted={setHighlighted}
-          rows={rows}
-          defaultFilters={[createEnumFilter(rowTypes)]}
-        />
+        <Table multiHighlight onHighlighted={setHighlighted} rows={rows} />
       </VerticalSplitPane>
 
       <VerticalSplitPane>
@@ -56,3 +54,6 @@ export function CustomAppMain(_props: AppProps) {
     </VerticalSplit>
   )
 }
+
+// searchable
+// defaultFilters={[createEnumFilter(['error', 'debug', 'warn', 'fatal', 'verbose'])]}

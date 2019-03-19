@@ -3,11 +3,10 @@ import {
   Card,
   DefinitionList,
   Form,
-  Row,
   SearchInput,
   Section,
   Select,
-  Space,
+  SpacedRow,
   Title,
   VerticalSplit,
   VerticalSplitPane,
@@ -22,26 +21,25 @@ export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
   const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
     ...row,
-    category: type[i % (type.length - 1)],
+    type: type[i % (type.length - 1)],
     active: active[i % 2],
   }))
 
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <Row alignItems="center" padding={[0, 5]} width="100%">
+        <SpacedRow>
           <SearchInput name="search" />
-          <Space />
-          <Select options={active} />
-          <Space />
-          <Select isMulti options={type} />
-        </Row>
+          <Select name="active" options={active} />
+          <Select name="type" isMulti options={type} />
+        </SpacedRow>
 
         <Table
           multiHighlight
           onHighlighted={setHighlighted}
           rows={rows}
-          filters={[{ type: 'include', value: 'active', key: 'active' }]}
+          // filters={useFilters('active', 'type')}
+          // filters={[{ type: 'include', value: 'active', key: 'active' }]}
         />
       </VerticalSplitPane>
 
@@ -50,7 +48,7 @@ export function CustomAppMain(_props: AppProps) {
           <Title>Hello World2</Title>
 
           <Card title="test" subtitle="another">
-            {rows.length && <DefinitionList row={rows[0]} />}
+            {highlighted.length && <DefinitionList row={highlighted[0]} />}
           </Card>
 
           <Form rows={highlighted} />

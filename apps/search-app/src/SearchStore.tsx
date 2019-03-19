@@ -91,6 +91,7 @@ export class SearchStore {
         title: `Open ${app.name}`,
       },
       onOpen: () => {
+        console.log('on open...', app)
         this.stores.paneManagerStore.setActivePane(`${app.id}`)
       },
     }

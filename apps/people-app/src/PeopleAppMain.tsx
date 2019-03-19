@@ -13,7 +13,7 @@ import {
   useStore,
   useStores,
 } from '@o/kit'
-import { HorizontalSpace, RoundButton, Row, SubTitle } from '@o/ui'
+import { RoundButton, Row, Space, SubTitle } from '@o/ui'
 import * as React from 'react'
 
 const getBitTexts = (bits: Bit[]) => {
@@ -126,7 +126,7 @@ export function PeopleAppMain(props: AppProps) {
               >
                 Documents
               </SourceButton>
-              <HorizontalSpace />
+              <Space />
               <SourceButton
                 icon="zoom"
                 onClick={() => queryStore.setQuery(`${person.title} tasks`)}

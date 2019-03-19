@@ -7,6 +7,7 @@ import {
   SearchInput,
   Section,
   Select,
+  Space,
   Title,
   VerticalSplit,
   VerticalSplitPane,

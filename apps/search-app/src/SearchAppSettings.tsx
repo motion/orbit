@@ -1,4 +1,4 @@
-import { Button, FormField, HorizontalSpace, Input, Row, SubTitle } from '@o/ui'
+import { Button, FormField, Input, Row, Space, SubTitle } from '@o/ui'
 import React from 'react'
 
 export function SearchAppSettings() {
@@ -15,7 +15,7 @@ export function SearchAppSettings() {
       >
         <Row alignItems="center">
           <Input />
-          <HorizontalSpace />
+          <Space />
           <Button circular icon="add" />
         </Row>
       </FormField>

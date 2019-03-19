@@ -30,9 +30,9 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ multiHighlight = true, searchable, onHighlighted, ...props }: TableProps) {
+export function Table({ searchable, onHighlighted, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
-  const columns = deepMergeDefined(guessColumns(props.columns, rows), defaultColumns)
+  const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
   const onHighlightedIndices = useCallback(
     keys => {
@@ -49,7 +49,6 @@ export function Table({ multiHighlight = true, searchable, onHighlighted, ...pro
   if (searchable) {
     return (
       <SearchableTable
-        multiHighlight={multiHighlight}
         {...props}
         columns={columns}
         rows={rows}
@@ -60,7 +59,6 @@ export function Table({ multiHighlight = true, searchable, onHighlighted, ...pro
 
   return (
     <ManagedTable
-      multiHighlight={multiHighlight}
       {...props}
       columns={columns}
       rows={rows}

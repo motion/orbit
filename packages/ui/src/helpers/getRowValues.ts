@@ -1,8 +1,8 @@
-import { GenericDataRow } from '../types'
+import { DataRow, GenericDataRow } from '../types'
 
-export function getRowValues(row: GenericDataRow) {
+export function getRowValues(row: GenericDataRow): DataRow {
   if (row.type === 'row') {
     return row.values
   }
-  return row
+  return row as DataRow
 }

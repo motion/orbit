@@ -1,5 +1,13 @@
 import { useModels } from '@o/bridge'
-import { Icon, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink, useStoresSimple } from '@o/kit'
+import {
+  Icon,
+  OrbitOrb,
+  SpaceIcon,
+  useActiveSpace,
+  useActiveUser,
+  useLocationLink,
+  useStoresSimple,
+} from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
 import { Avatar, Col, ListItem, Popover, View } from '@o/ui'
@@ -96,8 +104,16 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         group="filters"
         onChangeVisibility={store.setOpen}
         target={
-          <View>
-            <Avatar src={avatar} width={22} height={22} margin={[0, 6, 0, 12]} />
+          <View position="relative" margin={[0, 6, 0, 12]}>
+            <Avatar src={avatar} width={22} height={22} />
+            <OrbitOrb
+              position="absolute"
+              top="50%"
+              marginTop={-12 / 2}
+              left={-8}
+              size={12}
+              colors={activeSpace.colors}
+            />
           </View>
         }
       >

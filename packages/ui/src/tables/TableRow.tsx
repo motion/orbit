@@ -6,11 +6,11 @@
  */
 
 import { Color } from '@o/color'
-import { gloss, Row, SimpleText, ThemeObject } from '@o/gloss'
+import { gloss, Row, ThemeObject } from '@o/gloss'
 import * as React from 'react'
+import { DataValue } from '../DataValue'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { getRowValues } from '../helpers/getRowValues'
-import { DateFormat } from '../text/DateFormat'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
 import { guesses, guessTheme } from './guessTheme'
@@ -159,13 +159,7 @@ export class TableRow extends React.PureComponent<Props> {
 
           let element: React.ReactNode = null
 
-          if (col.type === 'date') {
-            element = (
-              <SimpleText alpha={0.7} ellipse>
-                <DateFormat date={value} />
-              </SimpleText>
-            )
-          } else if (col.type === 'boolean') {
+          if (col.type === 'boolean') {
             element = (
               <CheckboxReactive
                 isActive={() => value}
@@ -178,14 +172,8 @@ export class TableRow extends React.PureComponent<Props> {
                 }}
               />
             )
-          } else if (col.type === 'string') {
-            element = (
-              <SimpleText ellipse alpha={0.7}>
-                {value}
-              </SimpleText>
-            )
           } else {
-            element = <SimpleText ellipse alpha={0.7}>{`${value}`}</SimpleText>
+            element = <DataValue type={col.type} value={value} />
           }
 
           if (isFilterable && onAddFilter != null) {

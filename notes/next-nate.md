@@ -1,5 +1,7 @@
 Views
 
+- Theme can control fontWeight for themeing texts
+
 - First class Filters
 
   - Either filter (Enum / <Select />)

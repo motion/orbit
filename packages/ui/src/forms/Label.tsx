@@ -6,6 +6,6 @@ export const Label = gloss(SimpleText, {
 
 Label.defaultProps = {
   tagName: 'label',
-  alpha: 0.5,
+  alpha: 0.65,
   ellipse: true,
 }

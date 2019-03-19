@@ -22,7 +22,7 @@ const selectStyles = {
     ...provided,
     padding: 4,
   }),
-  multiValue: provided => ({
+  multiValueLabel: provided => ({
     ...provided,
     padding: 1,
   }),

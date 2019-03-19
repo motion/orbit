@@ -5,6 +5,7 @@ import {
   DefinitionList,
   Form,
   Section,
+  Select,
   Title,
   VerticalSplit,
   VerticalSplitPane,
@@ -21,6 +22,8 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <VerticalSplit>
       <VerticalSplitPane>
+        <Select options={[{ x: 1 }, { y: 1 }]} />
+
         <Table
           searchable
           multiHighlight

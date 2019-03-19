@@ -7,7 +7,9 @@ import { useStoresSimple } from '../../hooks/useStores'
 const toolbarHeight = 30
 const minHeight = 3
 
-export const toolbarPadElement = <div style={{ height: toolbarHeight }} />
+export const ToolBarPad = ({ hasToolbar }: { hasToolbar?: boolean }) => (
+  <div style={{ height: hasToolbar ? toolbarHeight : 3 }} />
+)
 
 export const OrbitToolBar = memo((props: { children: any }) => {
   const { id } = useContext(AppLoadContext)

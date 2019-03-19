@@ -1,3 +1,9 @@
+/* go back to default browser style */
+.reset * {
+  display: block;
+  flex-direction: row;
+}
+
 .react-hot-loader-error-overlay * {
   pointer-events: auto;
 }

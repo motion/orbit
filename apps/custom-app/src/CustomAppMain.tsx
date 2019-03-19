@@ -13,9 +13,6 @@ import {
 } from '@o/ui'
 import React, { useState } from 'react'
 
-const useInputValue = null
-const useFilters = null
-
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
@@ -31,19 +28,21 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <SpacedRow>
-          <SearchInput name="search" />
-          <Select name="active" options={active} />
-          <Select name="type" isMulti options={type} />
-        </SpacedRow>
+        <Form>
+          <SpacedRow>
+            <SearchInput name="search" />
+            <Select name="active" options={active} />
+            <Select name="type" isMulti options={type} />
+          </SpacedRow>
 
-        <Table
-          multiHighlight
-          onHighlighted={setHighlighted}
-          rows={rows}
-          searchTerm={useInputValue('search')}
-          filters={useFilters(['active', 'type'])}
-        />
+          <Table
+            multiHighlight
+            onHighlighted={setHighlighted}
+            rows={rows}
+            // searchTerm={useInputValue('search')}
+            // filters={useFilters(['active', 'type'])}
+          />
+        </Form>
       </VerticalSplitPane>
 
       <VerticalSplitPane>

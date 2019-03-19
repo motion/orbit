@@ -1,40 +1,37 @@
-import React from 'react'
-import { getRowValues } from '../helpers/getRowValues'
-import { SurfacePassProps } from '../Surface'
-import { DataColumnsShort, GenericDataRow } from '../types'
-import { Fieldset } from './Fieldset'
-import { FormField } from './FormField'
-import { guessColumns } from './guessColumns'
+import React, { createContext, Dispatch, useReducer } from 'react'
+import { MergeContext } from '../helpers/MergeContext'
 
-type FormProps = { columns?: DataColumnsShort; rows: GenericDataRow[] | null }
+export type FormProps = { children?: React.ReactNode }
+export type FieldState = {}
+
+type FormActions =
+  | { type: 'addField'; value: FieldState }
+  | { type: 'removeField'; value: FieldState }
+
+type FormState = {
+  fields: Set<FieldState>
+}
+
+const FormContext = createContext<FormState & { dispatch: Dispatch<FormActions> } | null>(null)
+
+function fieldsReducer(state: FormState, action: FormActions) {
+  switch (action.type) {
+    case 'addField':
+      state.fields.add(action.value)
+      return state
+    case 'removeField':
+      state.fields.delete(action.value)
+      return state
+  }
+  return state
+}
 
 export function Form(props: FormProps) {
-  if (!props.rows || props.rows.length === 0) {
-    return null
-  }
-
-  const columns = guessColumns(props.columns, props.rows[0])
+  const [state, dispatch] = useReducer(fieldsReducer, { fields: new Set() })
 
   return (
-    <SurfacePassProps size={1.1}>
-      {props.rows.map(row => {
-        const values = getRowValues(row)
-        return (
-          <Fieldset key={row.key}>
-            {Object.keys(columns).map((colKey, index) => {
-              const value = values[colKey]
-              return (
-                <FormField
-                  key={value.key || index}
-                  type={columns[colKey].type}
-                  label={columns[colKey].value}
-                  value={value}
-                />
-              )
-            })}
-          </Fieldset>
-        )
-      })}
-    </SurfacePassProps>
+    <MergeContext Context={FormContext} value={{ dispatch, state }}>
+      {props.children}
+    </MergeContext>
   )
 }

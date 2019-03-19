@@ -1,24 +1,24 @@
 import { color } from '@o/color'
-import { CSSPropertySet, gloss, Row, ThemeContext, View } from '@o/gloss'
+import { gloss, Row, ThemeContext, View } from '@o/gloss'
 import * as React from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
 import { TableFilter } from '../tables/types'
+import { Input, InputProps } from './Input'
 
-export type SearchInputProps = React.HTMLAttributes<HTMLInputElement> &
-  CSSPropertySet & {
-    before?: React.ReactNode
-    searchBarProps?: Object
-    after?: React.ReactNode
-    actions?: React.ReactNode
-    filters?: TableFilter[]
-    onClickClear?: Function
-    focusedToken?: number
-    filterProps?: Object
-    visible?: boolean
-  }
+export type SearchInputProps = InputProps & {
+  before?: React.ReactNode
+  searchBarProps?: Object
+  after?: React.ReactNode
+  actions?: React.ReactNode
+  filters?: TableFilter[]
+  onClickClear?: Function
+  focusedToken?: number
+  filterProps?: Object
+  visible?: boolean
+}
 
 export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProps>(
   function SearchInput(
@@ -67,7 +67,7 @@ export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProp
               {...filterProps}
             />
           ))}
-          <SearchInnerInput placeholder={placeholder} ref={ref} {...props} />
+          <Input chromeless padding={0} placeholder={placeholder} ref={ref} {...props} />
           <SearchClearButton
             onClick={onClickClear}
             visible={clearVisible}

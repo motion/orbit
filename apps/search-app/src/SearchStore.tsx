@@ -84,13 +84,14 @@ export class SearchStore {
       // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
-      group: 'Apps',
+      group: 'Apps 123',
       appProps: {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,
       },
       onOpen: () => {
+        this.stores.queryStore.clearQuery()
         this.stores.paneManagerStore.setActivePane(`${app.id}`)
       },
     }

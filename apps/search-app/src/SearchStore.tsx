@@ -84,7 +84,7 @@ export class SearchStore {
       // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
-      group: 'Apps 123',
+      group: 'Apps',
       appProps: {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',

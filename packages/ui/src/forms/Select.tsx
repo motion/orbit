@@ -11,6 +11,16 @@ const selectStyles = {
   menu: provided => ({
     ...provided,
     zIndex: 1000,
+    margin: '1px 0 0',
+    borderRadius: 0,
+  }),
+  dropdownIndicator: provided => ({
+    ...provided,
+    padding: 4,
+  }),
+  control: provided => ({
+    ...provided,
+    minHeight: 28,
   }),
 }
 
@@ -52,6 +62,7 @@ export function Select(props: SelectProps) {
         <ReactSelect
           styles={selectStyles}
           theme={themes[activeThemeName]}
+          minMenuHeight={20}
           {...props}
           options={options}
         />

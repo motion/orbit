@@ -47,7 +47,7 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
 
   return (
     <SearchableTable
-      showSearchBar={searchable}
+      showSearchBar={searchable || !!props.searchTerm}
       {...props}
       columns={columns}
       rows={rows}

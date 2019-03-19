@@ -13,6 +13,9 @@ import {
 } from '@o/ui'
 import React, { useState } from 'react'
 
+const useInputValue = null
+const useFilters = null
+
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
@@ -38,25 +41,26 @@ export function CustomAppMain(_props: AppProps) {
           multiHighlight
           onHighlighted={setHighlighted}
           rows={rows}
-          // filters={useFilters('active', 'type')}
-          // filters={[{ type: 'include', value: 'active', key: 'active' }]}
+          searchTerm={useInputValue('search')}
+          filters={useFilters(['active', 'type'])}
         />
       </VerticalSplitPane>
 
       <VerticalSplitPane>
         <Section>
           <Title>Hello World2</Title>
-
           <Card title="test" subtitle="another">
             {highlighted.length && <DefinitionList row={highlighted[0]} />}
           </Card>
-
           <Form rows={highlighted} />
         </Section>
       </VerticalSplitPane>
     </VerticalSplit>
   )
 }
+
+// filters={useFilters('active', 'type')}
+// filters={[{ type: 'include', value: 'active', key: 'active' }]}
 
 // searchable
 // defaultFilters={[createEnumFilter(['error', 'debug', 'warn', 'fatal', 'verbose'])]}

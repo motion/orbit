@@ -2,6 +2,7 @@ import { AppProps, Table, useFetch } from '@o/kit'
 import {
   Card,
   DefinitionList,
+  Fieldsets,
   Form,
   SearchInput,
   Section,
@@ -12,6 +13,9 @@ import {
   VerticalSplitPane,
 } from '@o/ui'
 import React, { useState } from 'react'
+
+const useFormValue = (...a) => null
+const useFormFilters = (...a) => null
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
@@ -39,8 +43,8 @@ export function CustomAppMain(_props: AppProps) {
             multiHighlight
             onHighlighted={setHighlighted}
             rows={rows}
-            // searchTerm={useInputValue('search')}
-            // filters={useFilters(['active', 'type'])}
+            searchTerm={useFormValue('search')}
+            filters={useFormFilters(['active', 'type'])}
           />
         </Form>
       </VerticalSplitPane>
@@ -51,7 +55,7 @@ export function CustomAppMain(_props: AppProps) {
           <Card title="test" subtitle="another">
             {highlighted.length && <DefinitionList row={highlighted[0]} />}
           </Card>
-          <Form rows={highlighted} />
+          <Fieldsets rows={highlighted} />
         </Section>
       </VerticalSplitPane>
     </VerticalSplit>

@@ -56,7 +56,7 @@ function getOrbitBrowser() {
   return OrbitBrowser
 }
 
-export const OrbitRoot = hot(module)(function OrbitRoot() {
+function OrbitRootInner() {
   const OrbitBrowser = getOrbitBrowser()
 
   // capture un-captured links
@@ -89,4 +89,17 @@ export const OrbitRoot = hot(module)(function OrbitRoot() {
       </ThemeProvide>
     </ContextMenuProvider>
   )
-})
+}
+
+// class OrbitRootError extends React.Component {
+//   componentDidCatch(error) {
+//     console.log('got error')
+//     console.error(error)
+//   }
+
+//   render() {
+//     return <OrbitRootInner />
+//   }
+// }
+
+export const OrbitRoot = hot(module)(OrbitRootInner)

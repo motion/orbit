@@ -80,7 +80,9 @@ const light = {
     inputBackgroundActive: '#fff',
     inputBorderColorActive: [215, 215, 215],
     inputBackgroundSelection: '#ddd',
-    cardBackground: [250, 250, 250],
+    cardBackground: [255, 255, 255],
+    cardBackgroundHover: [255, 255, 255],
+    cardBackgroundActive: [255, 255, 255],
     cardBorderColor: [0, 0, 0, 0.1],
   }),
   selected: Theme.fromStyles({

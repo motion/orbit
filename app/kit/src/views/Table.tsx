@@ -1,9 +1,21 @@
-import { ManagedTable, SearchableTable, SearchableTableProps, useRefGetter } from '@o/ui'
+import {
+  DataColumn,
+  guessColumns,
+  ManagedTable,
+  normalizeRow,
+  SearchableTable,
+  SearchableTableProps,
+  useRefGetter,
+} from '@o/ui'
 import React, { useCallback } from 'react'
+import { Omit } from '../types'
 
-export type TableProps = SearchableTableProps & {
+export type TableColumns = { [key: string]: DataColumn | string }
+
+export type TableProps = Omit<SearchableTableProps, 'columns'> & {
+  columns: TableColumns
   searchable?: boolean
-  onHighlightedRows?: (rows: any[]) => void
+  onHighlighted?: (rows: any[]) => void
 }
 
 const defaultColumns = {
@@ -18,31 +30,42 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ searchable, columns, onHighlightedRows, ...props }: TableProps) {
-  const colsWithDefaults = deepMergeDefined(columns, defaultColumns)
+export function Table({ multiHighlight = true, searchable, onHighlighted, ...props }: TableProps) {
+  const rows = props.rows.map(normalizeRow)
+  let columns = guessColumns(props.columns, rows)
+  columns = deepMergeDefined(columns, defaultColumns)
+
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
-  const onHighlightedIndices = useCallback(keys => {
-    if (onHighlightedRows) {
-      onHighlightedRows(keys.map(key => props.rows.find(x => x.key === key)))
-    }
-    if (ogOnHighlightedIndices()) {
-      ogOnHighlightedIndices()(keys)
-    }
-  }, [])
+  const onHighlightedIndices = useCallback(
+    keys => {
+      if (onHighlighted) {
+        console.log('got keys', keys, rows)
+        onHighlighted(keys.map(key => rows.find(x => x.key === key)))
+      }
+      if (ogOnHighlightedIndices()) {
+        ogOnHighlightedIndices()(keys)
+      }
+    },
+    [props.rows],
+  )
 
   if (searchable) {
     return (
       <SearchableTable
-        columns={colsWithDefaults}
+        multiHighlight={multiHighlight}
         {...props}
+        columns={columns}
+        rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />
     )
   } else {
     return (
       <ManagedTable
-        columns={colsWithDefaults}
+        multiHighlight={multiHighlight}
         {...props}
+        columns={columns}
+        rows={rows}
         onHighlightedIndices={onHighlightedIndices}
       />
     )

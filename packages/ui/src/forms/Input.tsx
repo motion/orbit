@@ -2,13 +2,14 @@ import * as React from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
+import { DataType } from '../types'
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   SizedSurfaceProps & {
     value?: string
     sync?: { get: () => any; set: (a: any) => void }
     onEnter?: Function
-    type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email'
+    type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email' | DataType
     name?: string
     form?: Object
     elementProps?: Object

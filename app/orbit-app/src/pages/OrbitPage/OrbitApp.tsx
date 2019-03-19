@@ -1,7 +1,7 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { SelectionStore, useOnMount, Visibility } from '@o/ui'
+import { Center, SelectionStore, Title, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { memo, useCallback } from 'react'
+import React, { memo, Suspense, useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -52,11 +52,19 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
   const Statusbar = OrbitStatusBar
 
   return (
-    <AppLoadContext.Provider value={{ id, identifier }}>
-      <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
-        <App />
-      </AppViewsContext.Provider>
-    </AppLoadContext.Provider>
+    <Suspense
+      fallback={
+        <Center>
+          <Title>Loading...</Title>
+        </Center>
+      }
+    >
+      <AppLoadContext.Provider value={{ id, identifier }}>
+        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
+          <App />
+        </AppViewsContext.Provider>
+      </AppLoadContext.Provider>
+    </Suspense>
   )
 })
 

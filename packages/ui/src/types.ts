@@ -26,8 +26,12 @@ export type GenericComponent<T> = React.ComponentClass<T> | React.SFC<T>
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-export type GenericDataRow = {
+export type DataRow = {
+  type: 'row'
   key: string
+  values: {
+    [key: string]: any
+  }
   height?: number | void
   category?: string
   filterValue?: string | void
@@ -36,10 +40,10 @@ export type GenericDataRow = {
   onDoubleClick?: (e: MouseEvent) => void
   copyText?: string
   highlightOnHover?: boolean
-  values: {
-    [key: string]: any
-  }
 }
+
+// simple rows vs adding more information
+export type GenericDataRow = DataRow | { [key: string]: any }
 
 export enum DataType {
   number = 'number',
@@ -61,3 +65,5 @@ export type DataColumn = {
 export type DataColumns = {
   [key: string]: DataColumn
 }
+
+export type DataColumnsShort = { [key: string]: DataColumn | string }

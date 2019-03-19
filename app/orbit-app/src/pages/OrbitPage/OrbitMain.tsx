@@ -4,7 +4,7 @@ import { BorderLeft } from '@o/ui'
 import React, { memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
-import { toolbarPadElement } from './OrbitToolBar'
+import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id, identifier } = useContext(AppLoadContext)
@@ -24,7 +24,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         transparent={definition.config && definition.config.transparentBackground}
       >
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
-        {props.hasToolbar && toolbarPadElement}
+        <ToolBarPad hasToolbar={props.hasToolbar} />
         {React.cloneElement(props.children, appProps)}
         {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>

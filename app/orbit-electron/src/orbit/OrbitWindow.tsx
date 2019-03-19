@@ -134,6 +134,13 @@ class OrbitWindowStore {
     },
   )
 
+  get show() {
+    if (Electron.isTorn) {
+      return true
+    }
+    return this.initialShow ? App.orbitState.docked : false
+  }
+
   showOnNewSpace() {
     console.log('Show on new space...')
     this.orbitRef.setVisibleOnAllWorkspaces(true) // put the window on all screens
@@ -150,13 +157,6 @@ class OrbitWindowStore {
 
   handleBlur = () => {
     this.blurred = true
-  }
-
-  get show() {
-    if (Electron.isTorn) {
-      return true
-    }
-    return this.initialShow ? App.orbitState.docked : false
   }
 
   setInitialShow = () => {

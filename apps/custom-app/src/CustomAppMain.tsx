@@ -4,7 +4,11 @@ import {
   createEnumFilter,
   DefinitionList,
   Form,
+  HorizontalSpace,
+  Row,
+  SearchInput,
   Section,
+  Select,
   Title,
   VerticalSplit,
   VerticalSplitPane,
@@ -21,6 +25,14 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <VerticalSplit>
       <VerticalSplitPane>
+        <Row alignItems="center" padding={2} width="100%">
+          <SearchInput />
+          <HorizontalSpace />
+          <Select options={['unknown', 'active', 'inactive']} />
+          <HorizontalSpace />
+          <Select options={['1', '2', '3']} isMulti />
+        </Row>
+
         <Table
           searchable
           multiHighlight

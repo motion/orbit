@@ -117,6 +117,10 @@ export function List(rawProps: ListProps) {
         }
         switch (shortcut) {
           case 'open':
+            const item = getItems()[selStore.activeIndex]
+            if (item.onOpen) {
+              item.onOpen(selStore.activeIndex, null)
+            }
             if (onOpen) {
               onOpen(selStore.activeIndex, null)
             }

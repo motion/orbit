@@ -10,7 +10,7 @@ import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
-import { toolbarPadElement } from './OrbitToolBar'
+import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitSidebar = memo((props: AppMainViewProps) => {
   const { identifier, id } = useContext(AppLoadContext)
@@ -36,7 +36,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         maxWidth={500}
         noBorder
       >
-        {props.hasToolbar && toolbarPadElement}
+        <ToolBarPad hasToolbar={props.hasToolbar} />
         <View flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <ListPropsContext.Provider value={{ searchable: true, minSelected: 0 }}>

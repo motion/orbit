@@ -30,6 +30,9 @@ export type AppDefinition = {
   app?: FunctionComponent<AppProps>
   settings?: FunctionComponent<AppProps>
   setup?: FunctionComponent<AppProps>
+  config?: {
+    transparentBackground?: boolean
+  }
   appData?: Object
   // TODO @umed this is where we can put syncer stuff
   sync?: {} // todo: it can be boolean at max

@@ -23,8 +23,6 @@ export function guessColumns(
     }
   }
 
-  console.log('cols', cols)
-
   // fully filled out
   if (Object.keys(cols).every(key => typeof cols[key] !== 'string')) {
     return cols as DataColumns

@@ -161,6 +161,8 @@ const dark = {
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.13],
     cardBackground: [110, 110, 110, 0.4],
+    cardBackgroundHover: [110, 110, 110, 0.4],
+    cardBackgroundActive: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
     panelHeaderBackground: [60, 60, 60, 0.4],

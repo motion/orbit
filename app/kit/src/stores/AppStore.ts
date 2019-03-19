@@ -20,12 +20,9 @@ export class AppStore {
     this.sidebarWidth = next
   }
 
-  updateSidebar = react(
-    () => this.stores.themeStore.showSidebar,
-    shown => {
-      this.sidebarWidth = shown ? this.lastSidebarWidth : 0
-    },
-  )
+  get showSidebar() {
+    return this.stores.themeStore.showSidebar
+  }
 
   get identifier() {
     return this.props.identifier

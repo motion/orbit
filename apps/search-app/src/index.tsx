@@ -32,4 +32,7 @@ export default createApp({
   icon: '',
   app: SearchApp,
   settings: SearchAppSettings,
+  config: {
+    transparentBackground: true,
+  },
 })

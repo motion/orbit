@@ -179,9 +179,13 @@ export class TableRow extends React.PureComponent<Props> {
               />
             )
           } else if (col.type === 'string') {
-            element = <SimpleText alpha={0.7}>{value}</SimpleText>
+            element = (
+              <SimpleText ellipse alpha={0.7}>
+                {value}
+              </SimpleText>
+            )
           } else {
-            element = <SimpleText alpha={0.7}>{`${value}`}</SimpleText>
+            element = <SimpleText ellipse alpha={0.7}>{`${value}`}</SimpleText>
           }
 
           if (isFilterable && onAddFilter != null) {

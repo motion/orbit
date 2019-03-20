@@ -97,17 +97,17 @@ export class SearchStore {
     }
   }
 
-  staticApps(): AppBit[] {
+  staticApps() {
     return [
       {
-        id: -1,
+        id: 'settings',
         identifier: 'settings',
         name: 'Settings',
         colors: ['black', 'white'],
         target: 'app',
       },
       {
-        id: -2,
+        id: 'apps',
         identifier: 'apps',
         name: 'Manage Apps',
         colors: ['black', 'white'],

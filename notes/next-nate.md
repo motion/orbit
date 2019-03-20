@@ -1,5 +1,7 @@
 Views
 
+- <Searchable /> and <SearchTable /> both handle filters
+- Moving into its own area useFilters or similar
 - Theme can control fontWeight for themeing texts
 
 ---

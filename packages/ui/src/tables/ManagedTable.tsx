@@ -229,7 +229,10 @@ class ManagedTableInner extends React.Component<
       !isEqual(prevProps.filterValue, props.filterValue) ||
       !isEqual(prevProps.sortOrder, props.sortOrder) ||
       !prevProps.rows ||
-      prevProps.rows.length !== props.rows.length
+      prevProps.rows.length !== props.rows.length ||
+      // TODO
+      // rough check, we should enforce changing key but need to figure out
+      (props.rows.length && !isEqual(prevProps.rows[0], props.rows[0]))
     ) {
       // need to reorder or refilter the rows
       nextState = {

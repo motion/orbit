@@ -1,6 +1,7 @@
 import { gloss, Row, ViewProps } from '@o/gloss'
-import React, { useContext } from 'react'
+import React, { Suspense, useContext } from 'react'
 import { useBreadcrumb } from './Breadcrumbs'
+import { Loading } from './progress/Loading'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SurfacePropsContext } from './Surface'
 
@@ -52,7 +53,11 @@ export function TabItem(props: ViewProps) {
       { borderRadius: typeof props.borderRadius === 'number' ? props.borderRadius : 100 },
       crumb,
     )
-  return <TabItemChrome borderWidth={1} {...extraProps} {...props} {...segmentedProps} />
+  return (
+    <Suspense fallback={<Loading />}>
+      <TabItemChrome borderWidth={1} {...extraProps} {...props} {...segmentedProps} />
+    </Suspense>
+  )
 }
 
 const TabItemChrome = gloss(Row, {

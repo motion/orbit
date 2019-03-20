@@ -22,8 +22,6 @@ export function useFetch(input: RequestInfo, userOptions?: UseFetchOptions) {
     ...userOptions,
   }
 
-  console.log('check', input)
-
   for (const fetchCache of fetchCaches) {
     if (isEqual(input, fetchCache.input) && isEqual(options.init, fetchCache.init)) {
       // hasn't changed
@@ -36,8 +34,6 @@ export function useFetch(input: RequestInfo, userOptions?: UseFetchOptions) {
       throw fetchCache.fetch
     }
   }
-
-  console.log('request', input)
 
   // new or has changed
   const fetchCache: FetchCache = {

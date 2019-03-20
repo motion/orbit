@@ -32,16 +32,23 @@ interface FetchCache {
   response?: any
 }
 
+type UseFetchOptions = {
+  disabled?: boolean
+  init?: RequestInit | undefined
+  lifespan: number
+}
+
 const fetchCaches: FetchCache[] = []
 
-export const useFetch = (
-  input: RequestInfo,
-  init?: RequestInit | undefined,
-  lifespan: number = 0,
-) => {
+export const useFetch = (input: RequestInfo, userOptions?: UseFetchOptions) => {
+  const options: UseFetchOptions = {
+    lifespan: 0,
+    ...userOptions,
+  }
+
   for (const fetchCache of fetchCaches) {
     // The request hasn't changed since the last call.
-    if (isEqual(input, fetchCache.input) && isEqual(init, fetchCache.init)) {
+    if (isEqual(input, fetchCache.input) && isEqual(options.init, fetchCache.init)) {
       // If an error occurred,
       if (Object.prototype.hasOwnProperty.call(fetchCache, 'error')) {
         throw fetchCache.error
@@ -59,7 +66,7 @@ export const useFetch = (
   const fetchCache: FetchCache = {
     fetch:
       // Make the fetch request.
-      fetch(input, init)
+      fetch(input, options.init)
         // Parse the response.
         .then(response => {
           const contentType = response.headers.get('Content-Type')
@@ -79,16 +86,16 @@ export const useFetch = (
 
         // Invalidate the cache.
         .then(() => {
-          if (lifespan > 0) {
+          if (options.lifespan > 0) {
             setTimeout(() => {
               const index = fetchCaches.indexOf(fetchCache)
               if (index !== -1) {
                 fetchCaches.splice(index, 1)
               }
-            }, lifespan)
+            }, options.lifespan)
           }
         }),
-    init,
+    init: options.init,
     input,
   }
   fetchCaches.push(fetchCache)

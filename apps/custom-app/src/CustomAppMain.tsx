@@ -48,7 +48,7 @@ export function CustomAppMain(_props: AppProps) {
           />
         </VerticalSplitPane>
         <VerticalSplitPane>
-          <Tabs>
+          <Tabs borderRadius={20} margin={2}>
             <Tab label="ok">hello world</Tab>
             <Tab label="ok2">hello world2</Tab>
           </Tabs>

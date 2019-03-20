@@ -52,7 +52,7 @@ export function TabItem(props: ViewProps) {
       { borderRadius: typeof props.borderRadius === 'number' ? props.borderRadius : 100 },
       crumb,
     )
-  return <TabItemChrome borderWidth={1} {...segmentedProps} {...extraProps} {...props} />
+  return <TabItemChrome borderWidth={1} {...extraProps} {...props} {...segmentedProps} />
 }
 
 const TabItemChrome = gloss(Row, {
@@ -73,7 +73,6 @@ const TabItemChrome = gloss(Row, {
     ? theme.tabBackgroundActive || theme.backgroundActive
     : theme.tabBackground || theme.background
   return {
-    borderTop: [0, 'transparent'],
     borderStyle: 'solid',
     borderColor: theme.borderColor,
     width,

@@ -5,15 +5,16 @@
  * @format
  */
 
-import { gloss, Row, ViewProps } from '@o/gloss'
+import { gloss, Row, View, ViewProps } from '@o/gloss'
 import * as React from 'react'
 import { Breadcrumbs } from './Breadcrumbs'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Tab, TabItem } from './Tab'
+import { Omit } from './types'
 
-export type TabsProps = {
+export type TabsProps = Omit<ViewProps, 'order'> & {
   // height
   height?: number
   // Callback for when the active tab has changed.
@@ -47,7 +48,16 @@ export type TabsProps = {
 }
 
 function TabsControlled(props: TabsProps) {
-  const { TabComponent = TabItem, tabProps, tabPropsActive, onActive, height = 26 } = props
+  const {
+    TabComponent = TabItem,
+    tabProps,
+    tabPropsActive,
+    onActive,
+    height = 26,
+    borderRadius = 0,
+    ...rest
+  } = props
+  const minHeight = props.minHeight || height
   // array of other components that aren't tabs
   const before = props.before || []
   const after = props.after || []
@@ -109,7 +119,7 @@ function TabsControlled(props: TabsProps) {
           key={key}
           className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
-          borderRadius={0}
+          borderRadius={borderRadius}
           {...tabProps}
           {...isActive && tabPropsActive}
           active={isActive}
@@ -161,7 +171,7 @@ function TabsControlled(props: TabsProps) {
   }
 
   return (
-    <TabContainer>
+    <TabContainer minHeight={minHeight} {...rest}>
       <Row>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
@@ -179,11 +189,11 @@ function TabsControlled(props: TabsProps) {
   )
 }
 
-const TabContainer = gloss({
+const TabContainer = gloss(View, {
   flex: 1,
 })
 
-export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive: string }) {
+export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {
   const controlledProps = useUncontrolled(
     { defaultActive, ...props },
     {

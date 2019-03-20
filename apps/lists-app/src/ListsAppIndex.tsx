@@ -1,4 +1,12 @@
-import { ensure, getTargetValue, List, searchBits, TreeList, useReaction, useTreeList } from '@o/kit'
+import {
+  ensure,
+  getTargetValue,
+  List,
+  searchBits,
+  TreeList,
+  useReaction,
+  useTreeList,
+} from '@o/kit'
 import { Button, Panel, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
@@ -51,11 +59,11 @@ export function ListsAppIndex() {
           </>
         }
       />
+
       <View flex={1}>
         <TreeList
+          use={treeList}
           sortable
-          minSelected={0}
-          {...treeList.state}
           // actions={['delete']}
         />
       </View>

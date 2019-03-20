@@ -121,6 +121,7 @@ export function TreeList({
   ...props
 }: TreeListProps) {
   const items = use ? use.state.items : props.items
+  const rootItemID = use ? use.state.rootItemID : props.rootItemID
   const [loadedItems, setLoadedItems] = useState([])
 
   console.warn('render trelist', props, loadedItems)
@@ -128,7 +129,7 @@ export function TreeList({
   useEffect(
     () => {
       let cancel = false
-      Promise.all(items[props.rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
+      Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
         !cancel && setLoadedItems(res)
       })
 
@@ -136,7 +137,7 @@ export function TreeList({
         cancel = true
       }
     },
-    [items, props.rootItemID],
+    [items, rootItemID],
   )
 
   if (!items) {
@@ -181,7 +182,7 @@ export function TreeList({
 
   return (
     <HighlightActiveQuery query={query}>
-      <List />
+      <List {...props} items={loadedItems} />
     </HighlightActiveQuery>
   )
 }

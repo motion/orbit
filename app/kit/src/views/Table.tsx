@@ -48,6 +48,8 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
   return (
     <SearchableTable
       showSearchBar={searchable || !!props.searchTerm}
+      minWidth={100}
+      minHeight={100}
       {...props}
       columns={columns}
       rows={rows}

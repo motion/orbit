@@ -8,6 +8,8 @@ import {
   Section,
   Select,
   SpacedRow,
+  Tab,
+  Tabs,
   Title,
   useForm,
   VerticalSplit,
@@ -46,6 +48,15 @@ export function CustomAppMain(_props: AppProps) {
           />
         </VerticalSplitPane>
         <VerticalSplitPane>
+          <Tabs>
+            <Tab key="0" label="ok">
+              hello world
+            </Tab>
+            <Tab key="1" label="ok2">
+              hello world2
+            </Tab>
+          </Tabs>
+
           <Section>
             <Title>Hello World2</Title>
             <Card title="test" subtitle="another">

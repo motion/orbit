@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
+import { gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
@@ -71,6 +71,9 @@ const filterRows = (
 export type ManagedTableProps = {
   width?: number
   height?: number
+
+  minWidth?: number
+  minHeight?: number
 
   /**
    * Column definitions.
@@ -158,7 +161,7 @@ type ManagedTableState = {
   prevProps: Partial<ManagedTableProps> | {}
 }
 
-const Container = gloss({
+const Container = gloss(View, {
   flex: 1,
 })
 
@@ -534,11 +537,11 @@ class ManagedTableInner extends React.Component<
   }
 
   render() {
-    const { columns, rowLineHeight, width, height, measureRef } = this.props
+    const { columns, rowLineHeight, width, height, measureRef, minHeight, minWidth } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
-      <Container>
+      <Container minHeight={minHeight} minWidth={minWidth}>
         <TableHead
           columnOrder={columnOrder}
           onColumnOrder={this.onColumnOrder}

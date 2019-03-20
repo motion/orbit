@@ -34,6 +34,10 @@ export function Tab(_: {
    * Callback for when tab is closed.
    */
   onClose?: () => void
+  /**
+   * Children shows inside the tab content
+   */
+  children?: React.ReactNode
 }) {
   console.error("don't render me")
   return null

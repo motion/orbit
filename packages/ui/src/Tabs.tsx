@@ -56,6 +56,7 @@ export function Tabs(props: TabsProps) {
   // a list of keys
   const keys = props.order ? props.order.slice() : []
   const tabSiblings = []
+  const tabContents = []
 
   function add(comps) {
     for (const comp of [].concat(comps || [])) {
@@ -72,7 +73,7 @@ export function Tabs(props: TabsProps) {
         tabSiblings.push(comp)
         continue
       }
-      const { closable, label, onClose, width } = comp.props
+      const { children, closable, label, onClose, width } = comp.props
       const key = comp.key
       if (typeof key !== 'string') {
         throw new Error('tab needs a string key')
@@ -81,6 +82,14 @@ export function Tabs(props: TabsProps) {
         keys.push(key)
       }
       const isActive: boolean = active === key
+
+      if (isActive || props.persist === true || comp.props.persist === true) {
+        tabContents.push(
+          <TabContent key={key} hidden={!isActive}>
+            {children}
+          </TabContent>,
+        )
+      }
 
       // this tab has been hidden from the tab bar but can still be selected if it's key is active
       if (comp.props.hidden) {
@@ -156,12 +165,13 @@ export function Tabs(props: TabsProps) {
       <TabList>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
-          <HideScrollBar>
+          <HideScrollbar className="hide-scrollbars">
             {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
-          </HideScrollBar>
+          </HideScrollbar>
         </div>
         {after}
       </TabList>
+      {tabContents}
       {tabSiblings}
     </>
   )
@@ -171,14 +181,12 @@ const TabList = gloss(Row, {
   flex: 1,
 })
 
-const HideScrollBar = gloss({
+const HideScrollbar = gloss({
   flexFlow: 'row',
   overflowX: 'auto',
   overflowY: 'hidden',
   width: '100%',
   height: '100%',
-  // scrollbar height
-  paddingBottom: 16,
   boxSizing: 'content-box',
 })
 
@@ -209,4 +217,10 @@ const CloseButton = gloss({
 
 const OrderableContainer = gloss({
   display: 'inline-block',
+})
+
+const TabContent = gloss({
+  height: 'auto',
+  overflow: 'auto',
+  width: '100%',
 })

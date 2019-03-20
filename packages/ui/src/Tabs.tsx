@@ -249,4 +249,6 @@ const TabContent = gloss({
   height: 'auto',
   overflow: 'auto',
   width: '100%',
+  flex: 1,
+  minHeight: 'min-content',
 })

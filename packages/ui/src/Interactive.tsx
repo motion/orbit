@@ -87,6 +87,7 @@ type InteractiveState = {
 
 const InteractiveContainer = gloss(View, {
   position: 'relative',
+  overflow: 'hidden',
   willChange: 'transform, height, width, z-index',
 })
 

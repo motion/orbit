@@ -72,7 +72,7 @@ export type SurfaceProps = React.HTMLAttributes<any> &
     stretch?: boolean
     tagName?: string
     theme?: ThemeObject | string
-    tooltip?: string
+    tooltip?: React.ReactNode
     tooltipProps?: PopoverProps
     width?: number | string
     alpha?: number

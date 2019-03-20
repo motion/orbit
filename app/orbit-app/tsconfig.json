@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.client",
+  "extends": "../../tsconfig.tspackage",
   "compilerOptions": {
     "baseUrl": "./src",
     "rootDir": "src",

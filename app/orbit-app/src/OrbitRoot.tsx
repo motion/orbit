@@ -6,6 +6,7 @@ import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
+import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import './helpers/installDevelopmentHelpers'
 import ChromePage from './pages/ChromePage/ChromePage'
@@ -79,7 +80,7 @@ function OrbitRootInner() {
   return (
     <ContextMenuProvider
       onContextMenu={items => {
-        if (ContextMenu) {
+        if (IS_ELECTRON) {
           ContextMenu.update({ prepend: items })
         }
       }}

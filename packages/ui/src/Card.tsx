@@ -82,7 +82,7 @@ export function Card({
           <Padding style={{ padding }}>
             {hasTitle && (
               <>
-                <Title margin={0} highlight>
+                <Title ellipse margin={0} highlight>
                   {title}
                 </Title>
                 {afterTitle}
@@ -90,7 +90,7 @@ export function Card({
             )}
             {!!titleFlex && <div style={{ flex: titleFlex }} />}
             {hasSubtitle && (
-              <SubTitle>
+              <SubTitle ellipse>
                 <Text alpha={0.55} ellipse {...subtitleProps}>
                   {subtitle}
                 </Text>
@@ -98,7 +98,7 @@ export function Card({
             )}
             {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
             {hasMeta && (
-              <SubTitle>
+              <SubTitle ellipse>
                 {!!location && (
                   <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
                     {location}

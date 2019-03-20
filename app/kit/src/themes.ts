@@ -10,6 +10,11 @@ const orbitColor = color('#1A71E3')
 const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
+const colors = {
+  selected: orbitColor,
+  red: '#7B0000',
+}
+
 const macModernTheme = Theme.colorize({
   // shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
   borderSelected: '#90b1e4ee',
@@ -171,10 +176,10 @@ const dark = {
   }),
   selected: Theme.fromStyles({
     iconFill: '#fff',
-    background: orbitColor,
-    backgroundHover: orbitColor,
-    backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.5),
+    background: colors.selected,
+    backgroundHover: colors.selected,
+    backgroundActive: colors.selected,
+    listItemBackground: colors.selected.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
@@ -218,11 +223,20 @@ export const themes = {
   selected: {
     ...Theme.fromStyles({
       iconFill: '#fff',
-      background: orbitColor,
-      backgroundHover: orbitColor,
-      backgroundActive: orbitColor,
+      background: colors.selected,
+      backgroundHover: colors.selected,
+      backgroundActive: colors.selected,
       color: '#fff',
       borderColor: orbitActiveBg,
+    }),
+  },
+  remove: {
+    ...Theme.fromStyles({
+      iconFill: '#fff',
+      color: '#fff',
+      background: colors.red,
+      backgroundHover: colors.red,
+      backgroundActive: colors.red,
     }),
   },
   action: {

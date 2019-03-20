@@ -2,15 +2,14 @@ import { OrbitOrb, useAppDefinitions, useAppsForSpace } from '@o/kit'
 import { Space } from '@o/models'
 import {
   Col,
-  HorizontalSpace,
   InputField,
   ListItem,
   Paragraph,
   Row,
   SimpleFormField,
+  Space as UISpace,
   Theme,
   Title,
-  VerticalSpace,
 } from '@o/ui'
 import { pick } from 'lodash'
 import randomColor from 'randomcolor'
@@ -59,7 +58,7 @@ export function SpaceEdit({ space }: { space: Space }) {
         <SimpleFormField label="Theme">
           <Row alignItems="center" overflow="hidden" flex={1}>
             <OrbitOrb size={48} colors={colors} />
-            <HorizontalSpace />
+            <UISpace />
             <Col flex={1}>
               <HorizontalScroll height={30}>
                 <ColorPicker
@@ -68,7 +67,7 @@ export function SpaceEdit({ space }: { space: Space }) {
                   onChangeColor={x => setColors([x, colors[1]])}
                 />
               </HorizontalScroll>
-              <VerticalSpace small />
+              <UISpace small />
               <HorizontalScroll height={30}>
                 <ColorPicker
                   count={50}
@@ -81,7 +80,7 @@ export function SpaceEdit({ space }: { space: Space }) {
         </SimpleFormField>
       </SubSection>
 
-      <VerticalSpace />
+      <UISpace />
 
       <SubSection title="Authentication">
         <Paragraph>Choose which source grants access to this space.</Paragraph>

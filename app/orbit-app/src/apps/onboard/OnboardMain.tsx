@@ -2,7 +2,7 @@ import { command, loadOne, save } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { ListItem, useAppDefinitions } from '@o/kit'
 import { CheckProxyCommand, SetupProxyCommand, UserModel } from '@o/models'
-import { Button, Icon, Slider, SliderPane, Text, Theme, Title, VerticalSpace, View } from '@o/ui'
+import { Button, Icon, Slider, SliderPane, Space, Text, Theme, Title, View } from '@o/ui'
 import { react, useHook, useStore } from '@o/use-store'
 import { sleep } from '@o/utils'
 import * as React from 'react'
@@ -112,18 +112,18 @@ export function OnboardMain() {
               <View height={30} />
               <Text selectable textAlign="left" size={1.2} sizeLineHeight={1.025} alpha={0.9}>
                 Orbit is your team knowledge manager.
-                <VerticalSpace />
+                <Space />
                 It gives you easy access to <b>shortcuts</b>, <b>people</b>, and <b>search</b>{' '}
                 within your company without exposing any of your team data to us. To do so it runs
                 privately each persons computer.
-                <VerticalSpace />
+                <Space />
                 Orbit will set up a local proxy now to enable private sync and the access quick URLs
                 you can access in your browser.
               </Text>
-              <VerticalSpace />
-              <VerticalSpace />
-              <VerticalSpace />
-              <VerticalSpace />
+              <Space />
+              <Space />
+              <Space />
+              <Space />
             </Centered>
           )}
           {store.accepted === false && (
@@ -154,7 +154,7 @@ export function OnboardMain() {
               <Text size={2.2} fontWeight={600}>
                 Success!
               </Text>
-              <VerticalSpace />
+              <Space />
               <Text size={1.5} alpha={0.5}>
                 Lets set you up...
               </Text>
@@ -166,17 +166,17 @@ export function OnboardMain() {
             Insider: unlock with email.
           </Title>
 
-          <VerticalSpace />
+          <Space />
 
           <InputRow label="Email Address" />
 
-          <VerticalSpace />
-          <VerticalSpace />
+          <Space />
+          <Space />
         </SliderPane> */}
         <SliderPane>
           <Title>Set up a few apps</Title>
 
-          <VerticalSpace />
+          <Space />
 
           <Unpad>
             {allDefs.map(def => {
@@ -196,23 +196,23 @@ export function OnboardMain() {
             })}
           </Unpad>
 
-          <VerticalSpace />
-          <VerticalSpace />
+          <Space />
+          <Space />
         </SliderPane>
         <SliderPane>
           <Centered>
             <Text size={2.5} fontWeight={600}>
               All set!
             </Text>
-            <VerticalSpace />
+            <Space />
             <Text size={1.5} alpha={0.5}>
               Toggle Orbit with the shortcut:
             </Text>
-            <VerticalSpace />
-            <VerticalSpace />
+            <Space />
+            <Space />
             <Text size={2.2}>Option + Space</Text>
-            <VerticalSpace />
-            <VerticalSpace />
+            <Space />
+            <Space />
             <Text size={1.5} alpha={0.5}>
               Orbit has many keyboard controls, try using your arrow keys from the home screen!
             </Text>

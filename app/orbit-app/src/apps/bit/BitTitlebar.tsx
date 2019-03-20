@@ -1,7 +1,7 @@
 import { gloss, Row } from '@o/gloss'
 import { normalizeItem, SearchItemShareProvide } from '@o/kit'
 import { Bit } from '@o/models'
-import { HorizontalSpace, Popover, SegmentedRow, TitleBarButton, TitleBarSpace, View } from '@o/ui'
+import { Popover, SegmentedRow, Space, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'
 
 // import { AppActions } from '../../../actions/appActions/AppActions'
@@ -42,7 +42,7 @@ export class BitTitleBar extends React.Component<{
           </TitleBarButton>
         </SegmentedRow>
 
-        <HorizontalSpace />
+        <Space />
 
         <SearchItemShareProvide item={bit}>
           <Popover

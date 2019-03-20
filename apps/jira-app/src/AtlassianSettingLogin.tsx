@@ -1,5 +1,5 @@
 import { AppBit, AppSaveCommand, command, useActiveSpace } from '@o/kit'
-import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
+import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
 
@@ -72,9 +72,7 @@ export function AtlassianSettingLogin(props: Props) {
     }
   }
 
-  const handleChange = (prop: keyof AtlassianAppValuesCredentials) => (
-    val: SyntheticEvent,
-  ) => {
+  const handleChange = (prop: keyof AtlassianAppValuesCredentials) => (val: SyntheticEvent) => {
     setCredentials({
       ...credentials,
       [prop]: ((val as SyntheticEvent).target as any).value,
@@ -87,7 +85,7 @@ export function AtlassianSettingLogin(props: Props) {
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
-      <VerticalSpace />
+      <Space />
       <Col margin="auto" width={370}>
         <Col>
           <Table>
@@ -111,7 +109,7 @@ export function AtlassianSettingLogin(props: Props) {
               onChange={handleChange('password') as any}
             />
           </Table>
-          <VerticalSpace />
+          <Space />
           <Theme
             theme={{
               color: '#fff',
@@ -125,7 +123,7 @@ export function AtlassianSettingLogin(props: Props) {
               </Button>
             )}
           </Theme>
-          <VerticalSpace />
+          <Space />
           {error && <Message>{error}</Message>}
         </Col>
       </Col>

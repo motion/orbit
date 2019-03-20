@@ -1,15 +1,24 @@
-import * as React from 'react'
+import React, { useCallback, useContext } from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
 import { DataType } from '../types'
+import { FormContext } from './Form'
+
+export type InputType =
+  | 'input'
+  | 'checkbox'
+  | 'submit'
+  | 'textarea'
+  | 'password'
+  | 'email'
+  | DataType
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
   SizedSurfaceProps & {
     value?: string
-    sync?: { get: () => any; set: (a: any) => void }
     onEnter?: Function
-    type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password' | 'email' | DataType
+    type?: InputType
     name?: string
     form?: Object
     elementProps?: Object
@@ -21,92 +30,52 @@ type InputDecoratedProps = InputProps & {
   uiContext: UIContextType
 }
 
-class InputPlain extends React.PureComponent<InputDecoratedProps> {
-  static defaultProps = {
-    type: 'input',
-    tagName: 'input',
-    forwardRef: React.createRef<HTMLInputElement>(),
-  }
-
-  componentDidMount() {
-    this.setValues()
-  }
-
-  componentDidUpdate() {
-    this.setValues()
-  }
-
-  get shouldSyncToForm() {
-    const { uiContext, sync } = this.props
-    return uiContext && uiContext.inForm && !sync
-  }
-
-  get inputNode() {
-    return this.props.forwardRef.current
-  }
-
-  setValues = () => {
-    if (this.shouldSyncToForm && this.inputNode) {
-      const inForm = this.props.uiContext.inForm
-      const { name } = this.props
-      if (name && inForm) {
-        inForm.formValues[name] = () => this.inputNode && this.inputNode.value
+export function InputPlain({ onEnter, type = 'input', ...props }: InputDecoratedProps) {
+  const context = useContext(FormContext)
+  const onKeyDown = useCallback(
+    e => {
+      if (e.keyCode === 13) {
+        if (onEnter) {
+          onEnter(e)
+        }
       }
-    }
-  }
-
-  onClick = e => {
-    e.preventDefault()
-    if (this.shouldSyncToForm && this.props.uiContext.inForm) {
-      this.props.uiContext.inForm.submit()
-    }
-    if (this.props.onClick) {
-      this.props.onClick(e)
-    }
-  }
-
-  onKeyDown = e => {
-    if (e.keyCode === 13) {
-      if (this.props.onEnter) {
-        this.props.onEnter(e)
+      if (props.onKeyDown) {
+        props.onKeyDown(e)
       }
-    }
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e)
-    }
-  }
+    },
+    [props.onKeyDown, onEnter],
+  )
 
-  syncSet = e => {
-    if (this.props.sync) {
-      this.props.sync.set(e.target.value)
-    }
-  }
+  const onChange = useCallback(
+    e => {
+      if (context) {
+        context.dispatch({
+          type: 'changeField',
+          value: {
+            name: props.name,
+            value: e.target.value,
+            type: type,
+          },
+        })
+      }
+      if (props.onChange) {
+        props.onChange(e)
+      }
+      return () => {
+        context.dispatch({ type: 'removeField', value: props.name })
+      }
+    },
+    [props.name, props.onChange, context],
+  )
 
-  render() {
-    const { sync, onChange, value, forwardRef, uiContext, className, ...props } = this.props
-    const finalProps = {} as InputProps
-    if (sync) {
-      finalProps.value = sync.get()
-      finalProps.onChange = this.syncSet
-    }
-    return (
-      <SimpleInput
-        onKeyDown={this.onKeyDown}
-        {...{
-          value,
-          onChange,
-          forwardRef,
-          ...finalProps,
-        }}
-        {...props}
-      />
-    )
-  }
+  return <SimpleInput {...props} type={type} onKeyDown={onKeyDown} onChange={onChange} />
 }
 
 function SimpleInput(props: SizedSurfaceProps) {
   return (
     <SizedSurface
+      tagName="input"
+      type="input"
       maxWidth="100%"
       alignItems="center"
       flexFlow="row"
@@ -129,7 +98,7 @@ const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
   ...(!props.chromeless && {
     border: [1, theme.borderColor.desaturate(0.1)],
     '&:focus-within': {
-      boxShadow: [[0, 0, 0, 2, theme.borderColor.alpha(a => a * 0.5)]],
+      boxShadow: [[0, 0, 0, 3, theme.borderColor.alpha(a => a * 0.5)]],
     },
   }),
   '&::selection': {

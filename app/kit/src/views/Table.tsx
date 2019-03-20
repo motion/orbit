@@ -1,7 +1,6 @@
 import {
   DataColumn,
   guessColumns,
-  ManagedTable,
   normalizeRow,
   SearchableTable,
   SearchableTableProps,
@@ -46,19 +45,9 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
     [props.rows],
   )
 
-  if (searchable) {
-    return (
-      <SearchableTable
-        {...props}
-        columns={columns}
-        rows={rows}
-        onHighlightedIndices={onHighlightedIndices}
-      />
-    )
-  }
-
   return (
-    <ManagedTable
+    <SearchableTable
+      showSearchBar={searchable || !!props.searchTerm}
       {...props}
       columns={columns}
       rows={rows}

@@ -1,7 +1,7 @@
+import { AppModel, AppProps, AppSaveCommand, command, useActiveSpace, useModel } from '@o/kit'
+import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
-import { AppModel, AppProps, AppSaveCommand, command, useActiveSpace, useModel } from '@o/kit'
-import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
 import { PostgresAppData } from './PostgresModels'
 
 type Props = {
@@ -25,36 +25,41 @@ export function PostgresSettings({ app }: Props) {
   const [activeSpace] = useActiveSpace()
   let [appBit] = useModel(
     AppModel,
-    (app && app.subId) ? {
-      where: {
-        id: +app.subId
-      }
-    } : false,
+    app && app.subId
+      ? {
+          where: {
+            id: +app.subId,
+          },
+        }
+      : false,
     {
       defaultValue: {
-          target: 'app',
-          identifier: 'postgres',
-          token: '',
-          data: {},
-        }
-    }
+        target: 'app',
+        identifier: 'postgres',
+        token: '',
+        data: {},
+      },
+    },
   )
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
   const [credentials, setCredentials] = React.useState({
-    hostname: "",
-    username: "",
-    password: "",
-    port: "",
-    database: "",
-  } as PostgresAppData["credentials"])
+    hostname: '',
+    username: '',
+    password: '',
+    port: '',
+    database: '',
+  } as PostgresAppData['credentials'])
 
-  React.useEffect(() => {
-    const appData: PostgresAppData = appBit.data
-    if (appData.credentials) {
-      setCredentials(appData.credentials)
-    }
-  }, [appBit])
+  React.useEffect(
+    () => {
+      const appData: PostgresAppData = appBit.data
+      if (appData.credentials) {
+        setCredentials(appData.credentials)
+      }
+    },
+    [appBit],
+  )
 
   console.log('credentials', credentials)
 
@@ -87,9 +92,7 @@ export function PostgresSettings({ app }: Props) {
     }
   }
 
-  const handleChange = (prop: keyof PostgresAppData["credentials"]) => (
-    val: SyntheticEvent,
-  ) => {
+  const handleChange = (prop: keyof PostgresAppData['credentials']) => (val: SyntheticEvent) => {
     setCredentials({
       ...credentials,
       [prop]: ((val as SyntheticEvent).target as any).value,
@@ -98,10 +101,8 @@ export function PostgresSettings({ app }: Props) {
 
   return (
     <Col tagName="form" onSubmit={addApp}>
-      <Message>
-        Please enter postgres database connection credentials.
-      </Message>
-      <VerticalSpace />
+      <Message>Please enter postgres database connection credentials.</Message>
+      <Space />
       <Col margin="auto" width={370}>
         <Col>
           <Table>
@@ -137,7 +138,7 @@ export function PostgresSettings({ app }: Props) {
               onChange={handleChange('database') as any}
             />
           </Table>
-          <VerticalSpace />
+          <Space />
           <Theme
             theme={{
               color: '#fff',
@@ -151,7 +152,7 @@ export function PostgresSettings({ app }: Props) {
               </Button>
             )}
           </Theme>
-          <VerticalSpace />
+          <Space />
           {error && <Message>{error}</Message>}
         </Col>
       </Col>

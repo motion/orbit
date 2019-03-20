@@ -16,6 +16,7 @@ import { TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
   Partial<SearchableProps> & {
+    showSearchBar?: boolean
     defaultFilters?: TableFilter[]
     filter?: any
     filterValue?: any
@@ -54,27 +55,32 @@ const filterRowsFactory = (filters: TableFilter[], searchTerm: string) => (
     : true)
 
 class SearchableManagedTable extends React.PureComponent<SearchableTableProps, State> {
-  static defaultProps = {
-    defaultFilters: [],
-  }
-
   state = {
-    filterRows: filterRowsFactory(this.props.filters, this.props.searchTerm),
+    filterRows: null,
     filters: null,
     searchTerm: '',
   }
 
   componentDidMount() {
-    this.props.defaultFilters.map(this.props.addFilter)
+    if (this.props.defaultFilters) {
+      this.props.defaultFilters.map(this.props.addFilter)
+    }
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.searchTerm !== state.searchTerm || !isEqual(state.filters, props.filters)) {
-      return {
-        filterRows: filterRowsFactory(props.filters, props.searchTerm),
-        searchTerm: props.searchTerm,
+    let next: Partial<State> = {}
+    if (props.searchTerm !== state.searchTerm) {
+      next.searchTerm = props.searchTerm
+    }
+    if (!isEqual(state.filters, props.filters)) {
+      next = {
+        ...next,
+        filterRows: filterRowsFactory(props.filters || [], props.searchTerm),
         filters: props.filters,
       }
+    }
+    if (Object.keys(next).length) {
+      return next
     }
     return null
   }
@@ -85,13 +91,18 @@ class SearchableManagedTable extends React.PureComponent<SearchableTableProps, S
   }
 }
 
-export const SearchableTable = (props: SearchableTableProps) => (
-  <Searchable {...props}>
-    {({ searchBar, ...rest }) => (
-      <>
-        <View padding={5}>{searchBar}</View>
-        <SearchableManagedTable {...props} {...rest} />
-      </>
-    )}
-  </Searchable>
-)
+export const SearchableTable = (props: SearchableTableProps) => {
+  if (!props.showSearchBar) {
+    return <SearchableManagedTable {...props} />
+  }
+  return (
+    <Searchable {...props}>
+      {({ searchBar, ...rest }) => (
+        <>
+          <View padding={5}>{searchBar}</View>
+          <SearchableManagedTable {...props} {...rest} />
+        </>
+      )}
+    </Searchable>
+  )
+}

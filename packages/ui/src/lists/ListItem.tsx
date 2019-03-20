@@ -16,7 +16,7 @@ import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { ConfiguredIcon } from '../Icon'
-import { HorizontalSpace } from '../layout/HorizontalSpace'
+import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
@@ -284,7 +284,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
                 )}
                 {!showTitle && (
                   <>
-                    <HorizontalSpace />
+                    <Space />
                     {afterHeaderElement}
                   </>
                 )}

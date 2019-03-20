@@ -9,9 +9,9 @@ import {
   FormField,
   Input,
   Section,
+  Space,
   Theme,
   Title,
-  VerticalSpace,
 } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
@@ -141,9 +141,9 @@ export function SettingsAppGeneral(_props: AppProps) {
         />
       </FormField>
 
-      <VerticalSpace />
+      <Space />
       <Divider />
-      <VerticalSpace />
+      <Space />
 
       <FormField label="Reset">
         <Theme name="selected">

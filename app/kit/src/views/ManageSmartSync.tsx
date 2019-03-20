@@ -1,4 +1,4 @@
-import { CheckboxReactive, HorizontalSpace, Surface, Text, Theme } from '@o/ui'
+import { CheckboxReactive, Space, Surface, Text, Theme } from '@o/ui'
 import * as React from 'react'
 import { WhitelistManager } from '../helpers/WhitelistManager'
 
@@ -15,7 +15,7 @@ export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any
             onChange={whitelist.toggleActive}
             isActive={whitelist.getIsWhitelisting}
           />
-          <HorizontalSpace />
+          <Space />
           <Text>Smart sync</Text>
         </label>
       </Surface>

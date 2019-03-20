@@ -1,5 +1,5 @@
 import { AppModel, AppProps, AppSaveCommand, command, useModel } from '@o/kit'
-import { Button, Col, InputField, Message, Table, Theme, VerticalSpace } from '@o/ui'
+import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import produce from 'immer'
 import React, { useEffect, useState } from 'react'
 
@@ -44,7 +44,7 @@ export default function WebsiteSetupPane(props: Props) {
   return (
     <Col tagName="form" onSubmit={addApp} padding={20}>
       <Message>Enter website URL</Message>
-      <VerticalSpace />
+      <Space />
       <Col margin="auto" width={370}>
         <Col padding={[0, 10]}>
           <Table>
@@ -56,13 +56,13 @@ export default function WebsiteSetupPane(props: Props) {
               }}
             />
           </Table>
-          <VerticalSpace />
+          <Space />
           <Theme>
             <Button type="submit" onClick={addApp}>
               Save
             </Button>
           </Theme>
-          <VerticalSpace />
+          <Space />
         </Col>
       </Col>
     </Col>

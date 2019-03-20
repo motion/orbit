@@ -1,58 +1,68 @@
 import { AppProps, Table, useFetch } from '@o/kit'
 import {
   Card,
-  createEnumFilter,
   DefinitionList,
+  Fieldsets,
   Form,
-  HorizontalSpace,
-  Row,
   SearchInput,
   Section,
   Select,
+  SpacedRow,
   Title,
+  useForm,
   VerticalSplit,
   VerticalSplitPane,
 } from '@o/ui'
 import React, { useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
-const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
+const type = ['paid', 'trial', 'enterprise', 'power']
+const active = ['active', 'inactive']
 
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
+  const form = useForm()
   const rows = useFetch(`${endpoint}/users`)
 
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <Row alignItems="center" padding={2} width="100%">
-          <SearchInput />
-          <HorizontalSpace />
-          <Select options={['unknown', 'active', 'inactive']} />
-          <HorizontalSpace />
-          <Select options={['1', '2', '3']} isMulti />
-        </Row>
-
-        <Table
-          searchable
-          multiHighlight
-          onHighlighted={setHighlighted}
-          rows={rows}
-          defaultFilters={[createEnumFilter(rowTypes)]}
-        />
+        <Form use={form}>
+          <SpacedRow>
+            <SearchInput name="search" />
+            <Select name="active" options={active} />
+            <Select name="type" isMulti options={type} />
+          </SpacedRow>
+          <Table
+            multiselect
+            onHighlighted={setHighlighted}
+            rows={rows}
+            searchTerm={form.getValue('search')}
+            filters={form.getFilters(['active', 'type'])}
+          />
+        </Form>
       </VerticalSplitPane>
-
       <VerticalSplitPane>
         <Section>
           <Title>Hello World2</Title>
-
           <Card title="test" subtitle="another">
-            {rows.length && <DefinitionList row={rows[0]} />}
+            {highlighted.length && <DefinitionList row={highlighted[0]} />}
           </Card>
-
-          <Form rows={highlighted} />
+          <Fieldsets rows={highlighted} />
         </Section>
       </VerticalSplitPane>
     </VerticalSplit>
   )
 }
+
+// .map((row, i) => ({
+//   ...row,
+//   type: type[i % (type.length - 1)],
+//   active: active[i % 2],
+// }))
+
+// filters={useFilters('active', 'type')}
+// filters={[{ type: 'include', value: 'active', key: 'active' }]}
+
+// searchable
+// defaultFilters={[createEnumFilter(['error', 'debug', 'warn', 'fatal', 'verbose'])]}

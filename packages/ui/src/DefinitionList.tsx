@@ -19,6 +19,9 @@ export function DefinitionList(props: DefinitionListProps) {
     <>
       {Object.keys(columns).map((colKey, index) => {
         const value = values[colKey]
+        if (!value) {
+          return null
+        }
         return (
           <DefinitionItem
             key={value.key || index}

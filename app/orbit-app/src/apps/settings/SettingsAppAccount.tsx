@@ -1,4 +1,4 @@
-import { Button, Input, Message, Section, SegmentedRow, Theme, Title, VerticalSpace } from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Space, Theme, Title } from '@o/ui'
 import React from 'react'
 
 export default function SettingsAppAccount() {
@@ -13,7 +13,7 @@ export default function SettingsAppAccount() {
         perferences, so you can use Orbit on different computers.
       </Message>
 
-      <VerticalSpace />
+      <Space />
 
       <Section>
         <SegmentedRow size={1.5}>

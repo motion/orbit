@@ -70,12 +70,24 @@ function constructWithProps(Store: any, args: any[], props?: Object) {
   return instance
 }
 
+type AutomagicDecription = {
+  getters: Object
+  reactions: Object
+  subscriptions: CompositeDisposable
+  decorations: { [key: string]: 'action' | 'ref' | 'reaction' }
+}
+
+export type AutomagicStore = {
+  dispose: Function
+  __automagic: AutomagicDecription
+}
+
 export function decorate<T>(
   obj: {
     new (...args: any[]): T
   },
   props?: Object,
-): { new (...args: any[]): T & { dispose: Function } } {
+): { new (...args: any[]): T & AutomagicStore } {
   if (!Getters.get(obj)) {
     Getters.set(obj, decoratePrototype(obj))
   }
@@ -108,7 +120,7 @@ export function decorate<T>(
 
       Object.defineProperty(instance, '__automagic', {
         enumerable: false,
-        get: () => ({
+        get: (): AutomagicDecription => ({
           getters,
           reactions,
           subscriptions,

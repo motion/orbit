@@ -3,6 +3,7 @@ import { observable } from 'mobx'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { config } from './configure'
 import { debugEmit } from './debugUseStore'
+import { dehydrate, hydrate, HydrationState } from './hydration'
 import { useTrackableStore } from './setupTrackableStore'
 
 export {
@@ -93,6 +94,7 @@ function useReactiveStore<A extends any>(
   const forceUpdate = useForceUpdate()
   const state = useRef({
     store: null,
+    initialState: null as HydrationState, // for hmr hydration
     hooks: null,
     hasProps: null,
   })
@@ -100,10 +102,22 @@ function useReactiveStore<A extends any>(
   const hasChangedSource = store && !isSourceEqual(store, Store)
 
   if (!store || hasChangedSource) {
+    // sets up store and does some hmr state preservation logic
+    let previousState: HydrationState
+    let previousInitialState: HydrationState
     if (hasChangedSource) {
+      previousInitialState = state.current.initialState
+      previousState = dehydrate(state.current.store)
       disposeStore(state.current.store)
     }
-    state.current = setupReactiveStore(Store, props)
+    const next = setupReactiveStore(Store, props)
+    state.current = {
+      ...next,
+      initialState: dehydrate(next.store),
+    }
+    if (hasChangedSource && previousInitialState) {
+      hydrate(state.current.store, previousInitialState, previousState)
+    }
   } else {
     // ensure we dont have different number of hooks by re-running them
     if (state.current.hooks) {

@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { Button, HorizontalSpace, Section, Theme, TitleRow, TopBar } from '@o/ui'
+import { Button, Section, Space, Theme, TitleRow, TopBar } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
@@ -92,7 +92,7 @@ function CreateAppMain({ identifier }: AppProps) {
             <Button themeSelect={theme => theme.bordered} icon="lock">
               Preview
             </Button>
-            <HorizontalSpace />
+            <Space />
             <Theme name="selected">
               <Button icon="add" onClick={createApp}>
                 Add

@@ -3,8 +3,9 @@ import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
 import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
 import { AppBit } from '@o/models'
 import {
-  Icon,
+  Button,
   Section,
+  SegmentedRow,
   SelectableGrid,
   Text,
   TitleRow,
@@ -56,9 +57,17 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
   const contextMenuProps = useContextMenu({ items: getAppContextItems(app) })
   return (
     <AppIconContainer>
-      {app.tabDisplay !== 'plain' && (
-        <Icon name="pin" position="absolute" top={20} left={20} size={12} opacity={0.35} />
-      )}
+      <View position="absolute" top={20} left={20}>
+        <SegmentedRow chromeless iconSize={12} opacity={0.5}>
+          {app.tabDisplay === 'permanent' && <Button icon="lock" />}
+          {app.tabDisplay === 'pinned' && (
+            <Button hoverStyle={{ opacity: 1 }} tooltip="Unpin" icon="pin" />
+          )}
+          {app.tabDisplay !== 'permanent' && (
+            <Button hoverStyle={{ opacity: 1 }} tooltip="Remove" icon="uiremove" />
+          )}
+        </SegmentedRow>
+      </View>
       <LargeIcon
         {...contextMenuProps}
         title={app.name}

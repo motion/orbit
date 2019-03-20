@@ -91,6 +91,7 @@ export class SearchStore {
         title: `Open ${app.name}`,
       },
       onOpen: () => {
+        this.stores.queryStore.clearQuery()
         this.stores.paneManagerStore.setActivePane(`${app.id}`)
       },
     }

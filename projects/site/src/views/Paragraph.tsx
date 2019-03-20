@@ -10,6 +10,7 @@ export const Paragraph = gloss(Text, {
 
 Paragraph.defaultProps = {
   tagName: 'p',
+  selectable: true,
 }
 
 export const ViewportParagraph = ({

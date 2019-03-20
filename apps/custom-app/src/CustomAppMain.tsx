@@ -28,8 +28,6 @@ export function CustomAppMain(_props: AppProps) {
     active: active[i % 2],
   }))
 
-  console.log('form.getfilters', form.getFilters(['active', 'type']))
-
   return (
     <Form use={form}>
       <VerticalSplit>
@@ -60,9 +58,3 @@ export function CustomAppMain(_props: AppProps) {
     </Form>
   )
 }
-
-// filters={useFilters('active', 'type')}
-// filters={[{ type: 'include', value: 'active', key: 'active' }]}
-
-// searchable
-// defaultFilters={[createEnumFilter(['error', 'debug', 'warn', 'fatal', 'verbose'])]}

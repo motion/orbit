@@ -71,26 +71,26 @@ export function useFormValue(name: string) {
   return getFormValue(context, name)
 }
 
+function createIncludeFilter(label: string, value: any): TableFilterIncludeExclude {
+  return {
+    value,
+    type: 'include',
+    key: label,
+  }
+}
+
 function getFormFilters(context: FormContextType, names: string[]): TableFilter[] {
   const fields = Object.keys(context.fields)
     .filter(x => names.some(y => y === x))
     .map(key => context.fields[key])
-  const selectFields: TableFilterIncludeExclude[] = flatten(
+  const selectFields = flatten(
     fields
       .filter(x => x.type === 'select')
       // can have multiple values
       .map(x =>
-        x.value.map(
-          val =>
-            ({
-              // keep field name
-              label: x.name,
-              // use individual value
-              value: val.value,
-              type: 'include',
-              key: 'type',
-            } as TableFilterIncludeExclude),
-        ),
+        Array.isArray(x.value)
+          ? x.value.map(y => createIncludeFilter(x.name, y.value))
+          : createIncludeFilter(x.name, x.value.value),
       ),
   )
   return selectFields

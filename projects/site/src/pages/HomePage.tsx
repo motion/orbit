@@ -1,20 +1,16 @@
-import { FullScreen, Row, Theme, View } from '@o/ui'
+import { FullScreen, Row, Theme, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import { observer } from 'mobx-react-lite'
-import * as React from 'react'
-import { Parallax, ParallaxLayer } from 'react-spring/addons'
+import React, { useState } from 'react'
+import { Parallax, ParallaxLayer } from 'react-spring/renderprops-addons'
 import { FadeDown } from '../views/FadeDown'
 import { Paragraph } from '../views/Paragraph'
 import { TitleText } from '../views/TitleText'
 import { ViewPortText } from '../views/ViewPortText'
 
-// next:
-// make a thing that does multiline text sizing
-// where the longest line is fit, and then the rest just use that font size
-// for the sub-paragraph
-
 function HomePage() {
-  const [measured, setMeasured] = React.useState(false)
+  const [measured, setMeasured] = useState(false)
+  const setMeasuredDelayed = useDebounce(setMeasured, 1)
   const fontsLoaded = useWaitForFonts(['Eesti Pro'])
 
   if (!fontsLoaded) {
@@ -30,15 +26,7 @@ function HomePage() {
               <View width="100%">
                 <FadeDown disable={!measured}>
                   <TitleText>
-                    <ViewPortText
-                      onReady={() => {
-                        if (!measured) {
-                          setTimeout(() => {
-                            setMeasured(true)
-                          })
-                        }
-                      }}
-                    >
+                    <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
                       Apps for teamwork
                     </ViewPortText>
                   </TitleText>

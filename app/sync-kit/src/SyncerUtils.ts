@@ -1,14 +1,6 @@
 import { Logger } from '@o/logger'
 import { MediatorClient } from '@o/mediator'
-import {
-  AppBit,
-  AppEntity,
-  Bit,
-  BitContentType,
-  BitEntity,
-  CosalTopWordsModel,
-  Location,
-} from '@o/models'
+import { AppBit, AppEntity, Bit, BitContentType, BitEntity, CosalTopWordsModel, Location } from '@o/models'
 import { hash, sleep } from '@o/utils'
 import { chunk, uniqBy } from 'lodash'
 import { EntityManager, In, MoreThan } from 'typeorm'
@@ -206,11 +198,13 @@ export class SyncerUtils {
           await sleep(20)
         }
         for (let bit of insertedBits) {
-          await manager
-            .createQueryBuilder(BitEntity, 'bit')
-            .relation('people')
-            .of(bit)
-            .add(bit.people)
+          if (bit.people && bit.people.length) {
+            await manager
+              .createQueryBuilder(BitEntity, 'bit')
+              .relation('people')
+              .of(bit)
+              .add(bit.people)
+          }
         }
       }
 

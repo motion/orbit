@@ -1,0 +1,16 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        [
+          "@o/babel-preset-motion",
+          {
+            "env": {
+              "modules": false
+            }
+          }
+        ]
+      ]
+    }
+  }
+}

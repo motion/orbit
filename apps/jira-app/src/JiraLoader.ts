@@ -1,4 +1,4 @@
-import { AppBit, Logger, ServiceLoader, sleep } from '@o/sync-kit'
+import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit-common'
 import { JiraQueries } from './JiraQueries'
 import { JiraAppData, JiraComment, JiraIssue, JiraUser } from './JiraModels'
 

@@ -1,6 +1,6 @@
 import { AppBit } from '@o/kit'
 // import * as path from 'path'
-import { getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
+import { getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit-common'
 import { uniqBy } from 'lodash'
 import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'

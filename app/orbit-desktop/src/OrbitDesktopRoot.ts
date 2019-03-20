@@ -14,7 +14,6 @@ import {
   AppEntity,
   AppModel,
   AppRemoveCommand,
-  AppSaveCommand,
   BitEntity,
   BitModel,
   BitsNearTopicModel,
@@ -24,8 +23,6 @@ import {
   CosalSaliencyModel,
   CosalTopicsModel,
   CosalTopWordsModel,
-  GithubAppBlacklistCommand,
-  GithubRepositoryModel,
   NewFallbackServerPortCommand,
   OpenCommand,
   PeopleNearTopicModel,
@@ -37,8 +34,6 @@ import {
   SearchResultModel,
   SendClientDataCommand,
   SetupProxyCommand,
-  SlackAppBlacklistCommand,
-  SlackChannelModel,
   SpaceEntity,
   SpaceModel,
   TrendingTermsModel,
@@ -73,11 +68,9 @@ import { OrbitDataManager } from './managers/OrbitDataManager'
 // import { ScreenManager } from './managers/ScreenManager'
 import { TopicsManager } from './managers/TopicsManager'
 import { AppRemoveResolver } from './resolvers/AppRemoveResolver'
-import { AppSaveResolver } from './resolvers/AppSaveResolver'
 import { getBitNearTopicsResolver } from './resolvers/BitNearTopicResolver'
 import { ChangeDesktopThemeResolver } from './resolvers/ChangeDesktopThemeResolver'
 import { getCosalResolvers } from './resolvers/getCosalResolvers'
-import { GithubRepositoryManyResolver } from './resolvers/GithubRepositoryResolver'
 import { NewFallbackServerPortResolver } from './resolvers/NewFallbackServerPortResolver'
 import { getPeopleNearTopicsResolver } from './resolvers/PeopleNearTopicResolver'
 import { ResetDataResolver } from './resolvers/ResetDataResolver'
@@ -86,7 +79,6 @@ import { SearchLocationsResolver } from './resolvers/SearchLocationsResolver'
 import { SearchPinnedResolver } from './resolvers/SearchPinnedResolver'
 import { SearchResultResolver } from './resolvers/SearchResultResolver'
 import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
-import { SlackChannelManyResolver } from './resolvers/SlackChannelResolver'
 import { WebServer } from './WebServer'
 import { CallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 
@@ -254,8 +246,6 @@ export class OrbitDesktopRoot {
         AppModel,
         BitModel,
         UserModel,
-        GithubRepositoryModel,
-        SlackChannelModel,
         SearchResultModel,
         SalientWordsModel,
         SearchLocationsModel,
@@ -273,10 +263,7 @@ export class OrbitDesktopRoot {
       commands: [
         NewFallbackServerPortCommand,
         CallAppBitApiMethodCommand,
-        AppSaveCommand,
         AppRemoveCommand,
-        GithubAppBlacklistCommand,
-        SlackAppBlacklistCommand,
         SetupProxyCommand,
         CheckProxyCommand,
         OpenCommand,
@@ -296,11 +283,8 @@ export class OrbitDesktopRoot {
           { entity: UserEntity, models: [UserModel] },
         ]),
         AppRemoveResolver,
-        AppSaveResolver,
         NewFallbackServerPortResolver,
         CallAppBitApiMethodResolver,
-        GithubRepositoryManyResolver,
-        SlackChannelManyResolver,
         ...getCosalResolvers(this.cosal),
         getBitNearTopicsResolver(this.cosal),
         getPeopleNearTopicsResolver(this.cosal),

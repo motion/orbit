@@ -1,4 +1,4 @@
-import { ServiceLoaderLoadOptions } from '@o/sync-kit'
+import { ServiceLoaderLoadOptions } from '@o/kit-common'
 import {
   ConfluenceCollection,
   ConfluenceComment,

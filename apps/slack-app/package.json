@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@o/kit": "^2.4.0",
+    "@o/kit-common": "^2.4.0",
     "@o/ui": "^2.4.0",
     "@o/sync-kit": "^2.4.0",
     "@o/postgres-app": "^2.4.0",
     "autolinker": "^1.7.1",
     "lodash": "^4.17.10",
-    "slack": "^11.0.1"
+    "slack": "^11.0.1",
+    "@slack/client": "^4.11.0"
   }
 }

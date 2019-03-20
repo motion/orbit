@@ -1,4 +1,4 @@
-import { AppBit, Logger, sleep } from '@o/sync-kit'
+import { AppBit, Logger, sleep } from '@o/kit-common'
 import { channels, team, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
 
@@ -99,10 +99,12 @@ export class SlackLoader {
     const recursiveLoad = async (cursor?: string) => {
       await sleep(THROTTLING.channels)
 
-      const options = {
+      const options: any = {
         token: this.app.token,
-        cursor: cursor,
       }
+      if (cursor)
+        options.cursor = cursor
+
       this.log.verbose('request to channels.list', options)
       const response = await channels.list(options)
 
@@ -152,6 +154,7 @@ export class SlackLoader {
       }
       this.log.verbose('request to channels.history', options)
       const response = await channels.history(options)
+      this.log.verbose('request to channels.history response', response)
 
       if (response.has_more === true) {
         const latest = response.messages[0].ts
@@ -170,7 +173,7 @@ export class SlackLoader {
 
     // load messages
     this.log.timer(`loading #${channelId} API messages`, { oldestMessageId })
-    const messages = await loadRecursively()
+    const messages = await loadRecursively(oldestMessageId)
     this.log.timer(`loading #${channelId} API messages`, messages)
 
     // left only messages we need - real user messages, no system or bot messages
@@ -181,7 +184,7 @@ export class SlackLoader {
 
     return {
       messages: filteredMessages,
-      lastMessageTz: messages[0].ts // note: we must use loaded messages, not filtered
+      lastMessageTz: messages.length ? messages[messages.length - 1].ts : undefined // note: we must use loaded messages, not filtered
     }
   }
 }

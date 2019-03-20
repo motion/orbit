@@ -8,9 +8,9 @@ import {
   SearchInput,
   Select,
   SpacedRow,
-  SubTitle,
   Tab,
   Tabs,
+  Title,
   useForm,
   VerticalSplit,
   VerticalSplitPane,
@@ -80,15 +80,19 @@ function PersonInfo(props: { row: any }) {
   const albumPhotos = album && useFetch(`${endpoint}/photos?albumId=${album.id}`)
   const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
 
+  console.log('albumPhotos', albumPhotos)
+
   return (
     <>
       <Fieldsets rows={[props.row]} />
-      <SubTitle>Albums</SubTitle>
+      <Title>Albums</Title>
       <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />
 
       {!!album && (
         <>
-          <SubTitle>Album {album.title} Pictures</SubTitle>
+          <Title>
+            {album.id} Album {album.title} Pictures
+          </Title>
           <Table rows={albumPhotos} />
         </>
       )}

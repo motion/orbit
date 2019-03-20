@@ -1,17 +1,21 @@
-import { ListItemProps, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
-import React, { useMemo } from 'react'
+import { loadOne } from '@o/bridge'
+import { BitModel } from '@o/models'
+import { Button, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
 import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
-import { HandleOrbitSelect } from './List'
+import { HandleOrbitSelect, List } from './List'
+import { OrbitListItemProps } from './ListItem'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<SelectableListProps, 'items'> & {
-  items: TreeItems
+export type TreeListProps = Omit<SelectableListProps, 'items' | 'getItemProps'> & {
+  use?: UseTreeList
+  items?: TreeItems
   rootItemID?: number
-  getItemProps?: (items: TreeItem[]) => Promise<ListItemProps[]>
+  getItemProps?: (item: TreeItem) => Promise<OrbitListItemProps>
   onSelect?: HandleOrbitSelect
   onOpen?: HandleOrbitSelect
   placeholder?: React.ReactNode
@@ -71,11 +75,14 @@ type UseTreeList = {
   actions: ReturnType<typeof getActions>
 }
 
+const defaultUserState = {
+  currentFolder: 0,
+}
+
+// persists to app state
 export function useTreeList(subSelect: string): UseTreeList {
   const ts = useScopedAppState<TreeState>(subSelect, defaultState)
-  const us = useScopedUserState(`${subSelect}_treeState`, {
-    currentFolder: 0,
-  })
+  const us = useScopedUserState(`${subSelect}_treeState`, defaultUserState)
   const getTs = useRefGetter(ts)
   const getUs = useRefGetter(us)
   const actions = useMemo(() => getActions(getTs, getUs), [])
@@ -86,21 +93,55 @@ export function useTreeList(subSelect: string): UseTreeList {
   }
 }
 
-export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: TreeListProps) {
-  // const stores = useStoresSimple()
-  // const isActive = useIsAppActive()
+async function loadListItem(item: TreeItem): Promise<OrbitListItemProps> {
+  switch (item.type) {
+    case 'folder':
+      return {
+        title: item.name,
+        subtitle: `${item.children.length} items`,
+        after: <Button circular chromeless size={0.9} icon="arrowright" />,
+        subId: `${item.id}`,
+        subType: 'folder',
+      }
+    case 'bit':
+      return {
+        item: await loadOne(BitModel, { args: { where: { id: +item.id } } }),
+      }
+  }
+  return null
+}
 
-  if (!props.items) {
+export function TreeList({
+  use,
+  query,
+  onSelect,
+  onOpen,
+  placeholder,
+  getItemProps = loadListItem,
+  ...props
+}: TreeListProps) {
+  const items = use ? use.state.items : props.items
+  const [loadedItems, setLoadedItems] = useState([])
+
+  console.warn('render trelist', props, loadedItems)
+
+  useEffect(
+    () => {
+      let cancel = false
+      Promise.all(items[props.rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
+        !cancel && setLoadedItems(res)
+      })
+
+      return () => {
+        cancel = true
+      }
+    },
+    [items, props.rootItemID],
+  )
+
+  if (!items) {
     return null
   }
-
-  console.warn('render trelist', props)
-
-  // const getItemProps = useCallback(async (ids: TreeItem[]): Promise<ListItemProps[]> => {
-  //   console.log('loading item props', ids)
-  //   const bits = await loadMany(BitModel, { args: { where: { id: ids.map(x => +x.id) } } })
-  //   return bits.map(toListItemProps)
-  // }, [])
 
   // const activeIndex = useRef(-1)
   // useEffect(
@@ -140,7 +181,7 @@ export function TreeList({ query, onSelect, onOpen, placeholder, ...props }: Tre
 
   return (
     <HighlightActiveQuery query={query}>
-      {/* <ListStack allowMeasure={isActive} {...props} /> */}
+      <List />
     </HighlightActiveQuery>
   )
 }

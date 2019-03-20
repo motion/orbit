@@ -2,9 +2,9 @@ import React from 'react'
 import { Stack } from '../Stack'
 
 type ListStackProps = {
-  lists?: React.ReactNode[]
+  children?: React.ReactNode[]
 }
 
 export function ListStack(props: ListStackProps) {
-  return <Stack items={props.lists} />
+  return <Stack items={props.children} />
 }

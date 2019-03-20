@@ -5,16 +5,16 @@ import { Slider } from './Slider'
 
 type StackProps = {
   frame?: number
-  items?: React.ReactNode[]
+  children?: React.ReactNode
 }
 
 class StackStore {
   props: StackProps
 
   frame = this.props.frame || 0
-  stack = this.props.items || []
+  stack = this.props.children || []
 
-  syncStackProp = react(() => this.props.items, x => (this.stack = x))
+  syncStackProp = react(() => this.props.children, x => (this.stack = x))
   syncFrameProp = react(() => this.props.frame, x => (this.frame = x))
 }
 
@@ -24,6 +24,10 @@ export const Stack = forwardRef<StackStore, StackProps>(function Stack(props, st
   useOnMount(() => {
     stackRef['current'] = store
   })
+
+  console.log('store.stack', store.stack)
+
+  return null
 
   return (
     <>

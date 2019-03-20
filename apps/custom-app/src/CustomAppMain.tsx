@@ -4,7 +4,6 @@ import {
   DefinitionList,
   Fieldsets,
   Form,
-  Loading,
   Row,
   SearchInput,
   Select,
@@ -16,7 +15,7 @@ import {
   VerticalSplit,
   VerticalSplitPane,
 } from '@o/ui'
-import React, { Suspense, useState } from 'react'
+import React, { useState } from 'react'
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
@@ -82,7 +81,7 @@ function PersonInfo(props: { row: any }) {
   const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <Fieldsets rows={[props.row]} />
       <SubTitle>Albums</SubTitle>
       <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />
@@ -93,6 +92,6 @@ function PersonInfo(props: { row: any }) {
           <Table rows={albumPhotos} />
         </>
       )}
-    </Suspense>
+    </>
   )
 }

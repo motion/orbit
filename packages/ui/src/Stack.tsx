@@ -1,7 +1,6 @@
 import { react, useStore } from '@o/use-store'
 import React, { forwardRef } from 'react'
 import { useOnMount } from './hooks/useOnMount'
-import { Slider } from './Slider'
 
 type StackProps = {
   frame?: number
@@ -29,9 +28,9 @@ export const Stack = forwardRef<StackStore, StackProps>(function Stack(props, st
 
   return null
 
-  return (
-    <>
-      <Slider curFrame={store.frame}>{store.stack.map(stackItem => ({ stackItem }))}</Slider>
-    </>
-  )
+  // return (
+  //   <>
+  //     <Slider curFrame={store.frame}>{store.stack.map(stackItem => ({ stackItem }))}</Slider>
+  //   </>
+  // )
 })

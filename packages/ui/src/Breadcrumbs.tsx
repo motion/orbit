@@ -23,10 +23,10 @@ function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbAct
   switch (action.type) {
     case 'mount':
       state.children.add(action.value)
-      return state
+      return { ...state }
     case 'unmount':
       state.children.delete(action.value)
-      return state
+      return { ...state }
   }
   return state
 }

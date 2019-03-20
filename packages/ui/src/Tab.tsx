@@ -56,6 +56,7 @@ export function TabItem(props: ViewProps) {
 }
 
 const TabItemChrome = gloss(Row, {
+  display: 'block',
   fontSize: 12,
   fontWeight: 500,
   lineHeight: 22,
@@ -65,6 +66,7 @@ const TabItemChrome = gloss(Row, {
   position: 'relative',
   height: '100%',
   justifyContent: 'center',
+  textAlign: 'center',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   userSelect: 'none',

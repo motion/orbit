@@ -4,13 +4,12 @@ import {
   DefinitionList,
   Fieldsets,
   Form,
+  Row,
   SearchInput,
-  Section,
   Select,
   SpacedRow,
   Tab,
   Tabs,
-  Title,
   useForm,
   VerticalSplit,
   VerticalSplitPane,
@@ -46,20 +45,28 @@ export function CustomAppMain(_props: AppProps) {
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
           />
+          <Row overflowX="auto">
+            {highlighted.map(row => (
+              <Card
+                key={row.id}
+                title={row.name}
+                subtitle={row.username}
+                minWidth={200}
+                minHeight={200}
+              >
+                <DefinitionList row={row} />
+              </Card>
+            ))}
+          </Row>
         </VerticalSplitPane>
         <VerticalSplitPane>
           <Tabs borderRadius={20} margin={2}>
-            <Tab label="ok">hello world</Tab>
-            <Tab label="ok2">hello world2</Tab>
+            {highlighted.map(row => (
+              <Tab label={row.name}>
+                <Fieldsets rows={[row]} />
+              </Tab>
+            ))}
           </Tabs>
-
-          <Section>
-            <Title>Hello World2</Title>
-            <Card title="test" subtitle="another">
-              {highlighted.length && <DefinitionList row={highlighted[0]} />}
-            </Card>
-            <Fieldsets rows={highlighted} />
-          </Section>
         </VerticalSplitPane>
       </VerticalSplit>
     </Form>

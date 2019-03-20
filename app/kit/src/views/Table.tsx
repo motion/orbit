@@ -36,7 +36,7 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
   const onHighlightedIndices = useCallback(
     keys => {
       if (onHighlighted) {
-        onHighlighted(keys.map(key => rows.find(x => x.key === key)))
+        onHighlighted(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)

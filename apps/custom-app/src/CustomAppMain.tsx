@@ -9,13 +9,12 @@ import {
   Select,
   SpacedRow,
   Title,
+  useFormFilters,
+  useFormValue,
   VerticalSplit,
   VerticalSplitPane,
 } from '@o/ui'
 import React, { useState } from 'react'
-
-const useFormValue = (...a) => null
-const useFormFilters = (...a) => null
 
 const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
@@ -38,9 +37,8 @@ export function CustomAppMain(_props: AppProps) {
             <Select name="active" options={active} />
             <Select name="type" isMulti options={type} />
           </SpacedRow>
-
           <Table
-            multiHighlight
+            multiselect
             onHighlighted={setHighlighted}
             rows={rows}
             searchTerm={useFormValue('search')}
@@ -48,7 +46,6 @@ export function CustomAppMain(_props: AppProps) {
           />
         </Form>
       </VerticalSplitPane>
-
       <VerticalSplitPane>
         <Section>
           <Title>Hello World2</Title>

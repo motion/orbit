@@ -117,7 +117,7 @@ export type ManagedTableProps = {
   /**
    * Whether multiple rows can be highlighted or not.
    */
-  multiHighlight?: boolean
+  multiselect?: boolean
   /**
    * Height of each row.
    */
@@ -168,7 +168,7 @@ class ManagedTableInner extends React.Component<
 > {
   static defaultProps = {
     highlightableRows: true,
-    multiHighlight: false,
+    multiselect: false,
     autoHeight: false,
     rowLineHeight: 24,
     bodyPlaceholder: (
@@ -382,10 +382,10 @@ class ManagedTableInner extends React.Component<
     if (
       ((e.metaKey && process.platform === 'darwin') ||
         (e.ctrlKey && process.platform !== 'darwin')) &&
-      this.props.multiHighlight
+      this.props.multiselect
     ) {
       highlightedRows.add(row.key)
-    } else if (e.shiftKey && this.props.multiHighlight) {
+    } else if (e.shiftKey && this.props.multiselect) {
       // range select
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
       highlightedRows = new Set([...highlightedRows, ...this.selectInRange(lastItemKey, row.key)])
@@ -432,7 +432,7 @@ class ManagedTableInner extends React.Component<
   onMouseEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
     const { dragStartIndex } = this
     const { current } = this.tableRef
-    if (this.props.disableHighlight || !this.props.multiHighlight) {
+    if (this.props.disableHighlight || !this.props.multiselect) {
       return
     }
     if (typeof dragStartIndex === 'number' && current) {

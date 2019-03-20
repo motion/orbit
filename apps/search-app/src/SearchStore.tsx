@@ -107,7 +107,7 @@ export class SearchStore {
         target: 'app',
       },
       {
-        id: -1,
+        id: -2,
         identifier: 'apps',
         name: 'Manage Apps',
         colors: ['black', 'white'],
@@ -134,7 +134,7 @@ export class SearchStore {
     }
 
     return [
-      ...apps.slice(0, all ? Infinity : Math.min(apps.length - 1, 5)).map(this.appToResult),
+      ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
       {
         title: 'Add app...',
         icon: 'orbit-custom-full',

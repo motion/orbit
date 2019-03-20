@@ -29,7 +29,7 @@ export type TextFitProps = {
   mode: 'single' | 'multi'
   forceSingleModeWidth: boolean
   throttle: number
-  onReady: Function
+  onReady: (size: number) => any
   autoResize: boolean
   resizable: boolean
   style?: Object
@@ -41,7 +41,7 @@ export default class TextFit extends React.Component<TextFitProps> {
     max: 100,
     mode: 'multi',
     forceSingleModeWidth: true,
-    throttle: 50,
+    throttle: 200,
     autoResize: true,
     onReady: noop,
     children: undefined,

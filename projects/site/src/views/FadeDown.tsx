@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { animated, Spring } from 'react-spring'
+import { animated, Spring } from 'react-spring/renderprops'
 
 export const FadeDown = ({ disable = false, from = null, to = null, children, ...rest }) => {
   const fromConf = {

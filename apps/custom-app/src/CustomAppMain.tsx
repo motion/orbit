@@ -22,12 +22,16 @@ const active = ['active', 'inactive']
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
-  const rows = useFetch(`${endpoint}/users`)
+  const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
+    ...row,
+    type: type[i % (type.length - 1)],
+    active: active[i % 2],
+  }))
 
   return (
-    <VerticalSplit>
-      <VerticalSplitPane>
-        <Form use={form}>
+    <Form use={form}>
+      <VerticalSplit>
+        <VerticalSplitPane>
           <SpacedRow>
             <SearchInput name="search" />
             <Select name="active" options={active} />
@@ -40,29 +44,17 @@ export function CustomAppMain(_props: AppProps) {
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
           />
-        </Form>
-      </VerticalSplitPane>
-      <VerticalSplitPane>
-        <Section>
-          <Title>Hello World2</Title>
-          <Card title="test" subtitle="another">
-            {highlighted.length && <DefinitionList row={highlighted[0]} />}
-          </Card>
-          <Fieldsets rows={highlighted} />
-        </Section>
-      </VerticalSplitPane>
-    </VerticalSplit>
+        </VerticalSplitPane>
+        <VerticalSplitPane>
+          <Section>
+            <Title>Hello World2</Title>
+            <Card title="test" subtitle="another">
+              {highlighted.length && <DefinitionList row={highlighted[0]} />}
+            </Card>
+            <Fieldsets rows={highlighted} />
+          </Section>
+        </VerticalSplitPane>
+      </VerticalSplit>
+    </Form>
   )
 }
-
-// .map((row, i) => ({
-//   ...row,
-//   type: type[i % (type.length - 1)],
-//   active: active[i % 2],
-// }))
-
-// filters={useFilters('active', 'type')}
-// filters={[{ type: 'include', value: 'active', key: 'active' }]}
-
-// searchable
-// defaultFilters={[createEnumFilter(['error', 'debug', 'warn', 'fatal', 'verbose'])]}

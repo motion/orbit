@@ -30,8 +30,7 @@ type InputDecoratedProps = InputProps & {
   uiContext: UIContextType
 }
 
-export function InputPlain(props: InputDecoratedProps) {
-  const { onEnter, ...rest } = props
+export function InputPlain({ onEnter, type = 'input', ...props }: InputDecoratedProps) {
   const context = useContext(FormContext)
   const onKeyDown = useCallback(
     e => {
@@ -50,13 +49,12 @@ export function InputPlain(props: InputDecoratedProps) {
   const onChange = useCallback(
     e => {
       if (context) {
-        console.log('syncing to context', e.target.value)
         context.dispatch({
           type: 'changeField',
           value: {
             name: props.name,
             value: e.target.value,
-            type: props.type,
+            type: type,
           },
         })
       }
@@ -70,7 +68,7 @@ export function InputPlain(props: InputDecoratedProps) {
     [props.name, props.onChange, context],
   )
 
-  return <SimpleInput {...rest} onKeyDown={onKeyDown} onChange={onChange} />
+  return <SimpleInput {...props} type={type} onKeyDown={onKeyDown} onChange={onChange} />
 }
 
 function SimpleInput(props: SizedSurfaceProps) {

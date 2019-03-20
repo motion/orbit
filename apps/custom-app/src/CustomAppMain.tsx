@@ -9,8 +9,7 @@ import {
   Select,
   SpacedRow,
   Title,
-  useFormFilters,
-  useFormValue,
+  useForm,
   VerticalSplit,
   VerticalSplitPane,
 } from '@o/ui'
@@ -22,6 +21,7 @@ const active = ['active', 'inactive']
 
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
+  const form = useForm()
   const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
     ...row,
     type: type[i % (type.length - 1)],
@@ -31,7 +31,7 @@ export function CustomAppMain(_props: AppProps) {
   return (
     <VerticalSplit>
       <VerticalSplitPane>
-        <Form>
+        <Form use={form}>
           <SpacedRow>
             <SearchInput name="search" />
             <Select name="active" options={active} />
@@ -41,8 +41,8 @@ export function CustomAppMain(_props: AppProps) {
             multiselect
             onHighlighted={setHighlighted}
             rows={rows}
-            searchTerm={useFormValue('search')}
-            filters={useFormFilters(['active', 'type'])}
+            searchTerm={form.getValue('search')}
+            filters={form.getFilters(['active', 'type'])}
           />
         </Form>
       </VerticalSplitPane>

@@ -252,7 +252,7 @@ const LaunchButton = memo(() => {
   }
 
   return (
-    <Button tooltip="Open app (⌘ + ⏎)" width={50} onClick={Actions.tearApp}>
+    <Button tooltip="Open app (⌘ + ⏎)" onClick={Actions.tearApp}>
       Open
     </Button>
   )

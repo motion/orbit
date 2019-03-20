@@ -22,11 +22,7 @@ const active = ['active', 'inactive']
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
-  const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
-    ...row,
-    type: type[i % (type.length - 1)],
-    active: active[i % 2],
-  }))
+  const rows = useFetch(`${endpoint}/users`)
 
   return (
     <VerticalSplit>
@@ -58,6 +54,12 @@ export function CustomAppMain(_props: AppProps) {
     </VerticalSplit>
   )
 }
+
+// .map((row, i) => ({
+//   ...row,
+//   type: type[i % (type.length - 1)],
+//   active: active[i % 2],
+// }))
 
 // filters={useFilters('active', 'type')}
 // filters={[{ type: 'include', value: 'active', key: 'active' }]}

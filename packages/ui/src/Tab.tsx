@@ -73,6 +73,7 @@ const TabItemChrome = gloss(Row, {
     ? theme.tabBackgroundActive || theme.backgroundActive
     : theme.tabBackground || theme.background
   return {
+    borderTop: [0, 'transparent'],
     borderStyle: 'solid',
     borderColor: theme.borderColor,
     width,

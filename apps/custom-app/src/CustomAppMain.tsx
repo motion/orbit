@@ -49,12 +49,8 @@ export function CustomAppMain(_props: AppProps) {
         </VerticalSplitPane>
         <VerticalSplitPane>
           <Tabs>
-            <Tab key="0" label="ok">
-              hello world
-            </Tab>
-            <Tab key="1" label="ok2">
-              hello world2
-            </Tab>
+            <Tab label="ok">hello world</Tab>
+            <Tab label="ok2">hello world2</Tab>
           </Tabs>
 
           <Section>

@@ -7,7 +7,9 @@
 
 import { gloss, Row, ViewProps } from '@o/gloss'
 import * as React from 'react'
+import { Breadcrumbs } from './Breadcrumbs'
 import { colors } from './helpers/colors'
+import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
 import { Tab, TabItem } from './Tab'
 
@@ -16,8 +18,6 @@ export type TabsProps = {
   height?: number
   // Callback for when the active tab has changed.
   onActive?: (key: string | void) => void
-  // The key of the default active tab.
-  defaultActive?: string
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
@@ -46,9 +46,8 @@ export type TabsProps = {
   TabComponent?: any
 }
 
-export function Tabs(props: TabsProps) {
+function TabsControlled(props: TabsProps) {
   const { TabComponent = TabItem, tabProps, tabPropsActive, onActive, height = 26 } = props
-  const active = props.active == null ? props.defaultActive : props.active
   // array of other components that aren't tabs
   const before = props.before || []
   const after = props.after || []
@@ -59,7 +58,7 @@ export function Tabs(props: TabsProps) {
   const tabContents = []
 
   function add(comps) {
-    for (const comp of [].concat(comps || [])) {
+    for (const [index, comp] of [].concat(comps || []).entries()) {
       if (Array.isArray(comp)) {
         add(comp)
         continue
@@ -74,14 +73,14 @@ export function Tabs(props: TabsProps) {
         continue
       }
       const { children, closable, label, onClose, width } = comp.props
-      const key = comp.key
+      let key = comp.key
       if (typeof key !== 'string') {
-        throw new Error('tab needs a string key')
+        key = `${index}`
       }
       if (!keys.includes(key)) {
         keys.push(key)
       }
-      const isActive: boolean = active === key
+      const isActive: boolean = props.active === key
 
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
@@ -110,6 +109,7 @@ export function Tabs(props: TabsProps) {
           key={key}
           className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
+          borderRadius={0}
           {...tabProps}
           {...isActive && tabPropsActive}
           active={isActive}
@@ -161,25 +161,41 @@ export function Tabs(props: TabsProps) {
   }
 
   return (
-    <>
-      <TabList>
+    <TabContainer>
+      <Row>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
           <HideScrollbar className="hide-scrollbars">
-            {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
+            <Breadcrumbs flex={1}>
+              {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
+            </Breadcrumbs>
           </HideScrollbar>
         </div>
         {after}
-      </TabList>
+      </Row>
       {tabContents}
       {tabSiblings}
-    </>
+    </TabContainer>
   )
 }
 
-const TabList = gloss(Row, {
+const TabContainer = gloss({
   flex: 1,
 })
+
+export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive: string }) {
+  const controlledProps = useUncontrolled(
+    { defaultActive, ...props },
+    {
+      active: 'onActive',
+    },
+  )
+  return (
+    // <Theme select={theme => theme.titleBar}>
+    <TabsControlled {...controlledProps} />
+    // </Theme>
+  )
+}
 
 const HideScrollbar = gloss({
   flexFlow: 'row',

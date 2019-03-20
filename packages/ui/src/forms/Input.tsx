@@ -12,6 +12,7 @@ export type InputType =
   | 'textarea'
   | 'password'
   | 'email'
+  | 'select'
   | DataType
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &

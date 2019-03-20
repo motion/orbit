@@ -1,11 +1,11 @@
 import { capitalize } from 'lodash'
-import { EnumFilterOption, EnumTableFilter, TableFilter } from './types'
+import { EnumFilterOption, TableFilter, TableFilterEnum } from './types'
 
 type PartialEnumFilter = Pick<EnumFilterOption, 'value'> & Partial<EnumFilterOption>
 
 export function createEnumFilter(
   options: (string | PartialEnumFilter)[],
-  filter?: Partial<EnumTableFilter>,
+  filter?: Partial<TableFilterEnum>,
 ): TableFilter {
   return {
     type: 'enum',

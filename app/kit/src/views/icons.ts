@@ -10,6 +10,7 @@ export const appIcons = {
   ['orbit-apps-full']: require('!raw-loader!../../public/icons/appicon-apps.svg'),
   ['orbit-home-full']: require('!raw-loader!../../public/icons/appicon-home.svg'),
   ['orbit-custom-full']: require('!raw-loader!../../public/icons/appicon-custom.svg'),
+  ['orbit-settings-full']: require('!raw-loader!../../public/icons/appicon-settings.svg'),
 }
 
 export const icons = {

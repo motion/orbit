@@ -1,4 +1,4 @@
-import { GenericDataRow } from '../types';
+import { GenericDataRow } from '../types'
 
 /**
  * Copyright 2018-present Facebook.
@@ -15,7 +15,7 @@ export type EnumFilterOption = {
   value: string
 }
 
-export type EnumTableFilter = {
+export type TableFilterEnum = {
   key: string
   value: Array<string>
   type: 'enum'
@@ -23,14 +23,14 @@ export type EnumTableFilter = {
   persistent?: boolean
 }
 
-export type TableFilter =
-  | {
-      key: string
-      value: string
-      type: FilterIncludeExclude
-      persistent?: boolean
-    }
-  | EnumTableFilter
+export type TableFilterIncludeExclude = {
+  key: string
+  value: string
+  type: FilterIncludeExclude
+  persistent?: boolean
+}
+
+export type TableFilter = TableFilterIncludeExclude | TableFilterEnum
 
 export const MINIMUM_COLUMN_WIDTH = 100
 export const DEFAULT_COLUMN_WIDTH = 200

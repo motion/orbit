@@ -1,6 +1,7 @@
+import { flatten } from 'lodash'
 import React, { createContext, Dispatch, useContext, useReducer } from 'react'
 import { MergeContext } from '../helpers/MergeContext'
-import { TableFilter } from '../tables/types'
+import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { InputType } from './Input'
 
 export type FormProps = {
@@ -8,11 +9,17 @@ export type FormProps = {
   use?: UseForm
 }
 
-export type FieldState = {
-  name: string
-  type: InputType
-  value: any
-}
+export type FieldState =
+  | {
+      name: string
+      type: InputType
+      value: any
+    }
+  | {
+      name: string
+      type: 'select'
+      value: { label: string; value: string }[]
+    }
 
 type FormActions =
   | { type: 'changeField'; value: FieldState }
@@ -68,8 +75,25 @@ function getFormFilters(context: FormContextType, names: string[]): TableFilter[
   const fields = Object.keys(context.fields)
     .filter(x => names.some(y => y === x))
     .map(key => context.fields[key])
-  console.log('got fields', fields)
-  return []
+  const selectFields: TableFilterIncludeExclude[] = flatten(
+    fields
+      .filter(x => x.type === 'select')
+      // can have multiple values
+      .map(x =>
+        x.value.map(
+          val =>
+            ({
+              // keep field name
+              label: x.name,
+              // use individual value
+              value: val.value,
+              type: 'include',
+              key: 'type',
+            } as TableFilterIncludeExclude),
+        ),
+      ),
+  )
+  return selectFields
 }
 
 export function useFormFilters(names: string[]): TableFilter[] {

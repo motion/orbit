@@ -1,7 +1,8 @@
 import { SimpleText, ThemeContext, View } from '@o/gloss'
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
+import { FormContext } from './Form'
 
 const selectStyles = {
   option: provided => ({
@@ -60,6 +61,30 @@ export type SelectProps = Props<{ value: string; label: string } | string>
 export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number }) {
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
+  const context = useContext(FormContext)
+
+  const onChange = useCallback(
+    (items, action) => {
+      if (!props.name) return
+      if (!context) return
+      console.log('got event', items, action)
+      context.dispatch({
+        type: 'changeField',
+        value: {
+          name: props.name,
+          value: items,
+          type: 'select',
+        },
+      })
+      if (props.onChange) {
+        props.onChange(items, action)
+      }
+      return () => {
+        context.dispatch({ type: 'removeField', value: props.name })
+      }
+    },
+    [props.name, props.onChange, context],
+  )
 
   return (
     <View minWidth={minWidth || 100} flex={1} margin={1} className="reset">
@@ -70,6 +95,7 @@ export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number
           minMenuHeight={20}
           {...props}
           options={options}
+          onChange={onChange}
         />
       </SimpleText>
     </View>

@@ -57,7 +57,7 @@ function TabsControlled(props: TabsProps) {
     borderRadius = 0,
     ...rest
   } = props
-  const minHeight = props.minHeight || height
+  const minHeight = props.minHeight || 'auto'
   // array of other components that aren't tabs
   const before = props.before || []
   const after = props.after || []
@@ -191,6 +191,7 @@ function TabsControlled(props: TabsProps) {
 
 const TabContainer = gloss(View, {
   flex: 1,
+  minHeight: 'min-content',
 })
 
 export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {

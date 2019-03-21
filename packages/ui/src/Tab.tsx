@@ -48,7 +48,16 @@ export function Tab(_: {
 export function TabItem(props: ButtonProps) {
   return (
     <Suspense fallback={<Loading />}>
-      <Button sizeHeight={0.75} flex={typeof props.width === 'number' ? 'none' : 1} {...props} />
+      <Button
+        ellipse
+        spacing="min-content"
+        sizeHeight={0.75}
+        sizeFont={0.9}
+        sizeIcon={1.2}
+        fontWeight={500}
+        flex={typeof props.width === 'number' ? 'none' : 1}
+        {...props}
+      />
     </Suspense>
   )
 }

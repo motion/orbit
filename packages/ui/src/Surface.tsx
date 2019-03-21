@@ -33,6 +33,7 @@ import { Tooltip } from './Tooltip'
 
 export type SurfaceProps = React.HTMLAttributes<any> &
   CSSPropertySetStrict & {
+    spacing?: 'min-content'
     hover?: boolean
     hoverStyle?: any
     active?: boolean
@@ -134,7 +135,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     height,
     icon,
     iconAfter,
-    iconPad = 8,
+    iconPad,
     iconProps,
     justifyContent,
     noInnerElement,
@@ -144,6 +145,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     themeSelect,
     tooltip,
     tooltipProps,
+    spacing,
     ...rest
   } = props
   const segmentedStyle = getSegmentedStyle(props, crumb)
@@ -152,7 +154,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   // goes to BOTH the outer element and inner element
   const throughProps = {
     height,
-    iconPad,
+    iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -230,7 +232,13 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
           />
         )}
         {!!children && (
-          <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
+          <Element
+            spacing={spacing}
+            {...throughProps}
+            {...elementProps}
+            disabled={disabled}
+            tagName={tagName}
+          >
             {children}
           </Element>
         )}
@@ -383,6 +391,7 @@ const Element = gloss({
   }
   return {
     overflow: 'hidden',
+    maxWidth: props.spacing,
     ...props,
     ...(props.inline && {
       display: 'inline',

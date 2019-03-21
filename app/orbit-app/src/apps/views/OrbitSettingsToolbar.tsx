@@ -1,13 +1,6 @@
-import { Icon } from '@o/kit'
 import { SegmentedRow, Tab, Tabs, View } from '@o/ui'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
-
-const tabIconProps = {
-  size: 10,
-  marginRight: 8,
-  color: 'inherit',
-}
 
 export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
@@ -27,24 +20,8 @@ export function OrbitSettingsToolbar() {
     <View margin="auto" width={320}>
       <SegmentedRow borderWidth={1}>
         <Tabs borderRadius={100} active={activePaneKey} height={22} onActive={onActive}>
-          <Tab
-            key="spaces"
-            label={
-              <>
-                <Icon name="layer" {...tabIconProps} />
-                Spaces
-              </>
-            }
-          />
-          <Tab
-            key="settings"
-            label={
-              <>
-                <Icon name="gear" {...tabIconProps} />
-                Settings
-              </>
-            }
-          />
+          <Tab key="spaces" icon="layer" label="Spaces" />
+          <Tab key="settings" icon="gear" label="Settings" />
         </Tabs>
       </SegmentedRow>
     </View>

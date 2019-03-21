@@ -44,7 +44,7 @@ export function SizedSurface(rawProps: SizedSurfaceProps) {
     typeof props.height === 'number'
       ? props.height
       : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
-  let iconPad = Math.round(LINE_HEIGHT * 0.2 * num(sizeHeight || 1))
+  let iconPad = Math.round(LINE_HEIGHT * 0.3 * num(sizeHeight || 1))
   // adjust for border x 2 (just looks good)
   if (props.inline) {
     height = height - 4
@@ -62,7 +62,7 @@ export function SizedSurface(rawProps: SizedSurfaceProps) {
     const topPad = sizeHeight ? 0 : Math.round(padSize * 1.5)
     const sidePad = Math.round(9 * padSize)
     pass.padding = [topPad, sidePad]
-    iconPad = sidePad * 0.45
+    iconPad = iconPad * padSize
   }
   if (sizeMargin) {
     const margin = num(sizeMargin) * 0.25 * size

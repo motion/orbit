@@ -7,13 +7,15 @@ import React, {
   useEffect,
   useReducer,
   useRef,
-  useState,
 } from 'react'
 import { MergeContext } from './helpers/MergeContext'
 import { useDebounceValue } from './hooks/useDebounce'
 import { Text } from './text/Text'
 
-type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
+type BreadcrumbActions =
+  | { type: 'mount'; value: any }
+  | { type: 'unmount'; value: any }
+  | { type: 'commit' }
 
 const Context = createContext<{
   children: number[]
@@ -28,23 +30,24 @@ function reduce(state: { children: Set<any> }, action: BreadcrumbActions) {
     case 'unmount':
       state.children.delete(action.value)
       return state
+    case 'commit':
+      return { ...state }
   }
 }
 
 export function Breadcrumbs(props: ViewProps) {
   const [state, dispatch] = useReducer(reduce, { children: new Set() })
-  const [children, setChildren] = useState<any[]>([])
   const debouncedState = useDebounceValue(state, 16)
 
   useEffect(
     () => {
-      setChildren([...state.children])
+      dispatch({ type: 'commit' })
     },
     [debouncedState],
   )
 
   return (
-    <MergeContext Context={Context} value={{ dispatch, children }}>
+    <MergeContext Context={Context} value={{ dispatch, children: [...state.children] }}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )

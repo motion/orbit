@@ -1,6 +1,9 @@
 import { cleanupChildren } from '@o/orbit-fork-process'
 import { once } from 'lodash'
 
+declare const GLOBAL: typeof global
+(GLOBAL as any).window = global
+
 export async function main() {
   console.log('starting desktop')
 

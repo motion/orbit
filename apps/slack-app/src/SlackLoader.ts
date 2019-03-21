@@ -1,4 +1,4 @@
-import { AppBit, Logger, sleep } from '@o/kit-common'
+import { AppBit, Logger, sleep } from '@o/kit'
 import { channels, team, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
 

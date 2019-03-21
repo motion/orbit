@@ -1,4 +1,4 @@
-import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit-common'
+import { AppBit, Logger, ServiceLoader, sleep } from '@o/kit'
 import { GithubQueries } from './GithubQueries'
 import {
   GithubComment,

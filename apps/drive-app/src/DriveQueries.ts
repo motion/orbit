@@ -1,4 +1,4 @@
-import { ServiceLoaderLoadOptions } from '@o/kit-common'
+import { ServiceLoaderLoadOptions } from '@o/kit'
 import { DriveAbout, DriveCommentResponse, DriveFileResponse, DriveRevisionResponse } from './DriveModels'
 
 /**

@@ -63,3 +63,5 @@ app/apps-website/site/build
 packages/screendump/build
 
 coverage/*
+
+projects/docs/public

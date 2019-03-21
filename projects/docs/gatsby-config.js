@@ -23,13 +23,13 @@ module.exports = {
         mdPlugins: [remarkSlug],
       },
     },
-    {
-      resolve: 'gatsby-source-filesystem',
-      options: {
-        path: path.resolve(__dirname, '../src'),
-        name: 'source',
-      },
-    },
+    // {
+    //   resolve: 'gatsby-source-filesystem',
+    //   options: {
+    //     path: path.resolve(__dirname, './node_modules/@o/ui/_'),
+    //     name: 'source',
+    //   },
+    // },
     {
       resolve: 'gatsby-transformer-react-docgen',
       options: {

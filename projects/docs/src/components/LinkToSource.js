@@ -2,7 +2,7 @@ import styled from 'astroturf'
 import React from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { version } from '../../../package.json'
+import { version } from '../../package.json'
 
 const Link = styled('a')`
   font-size: 1rem;

@@ -27,9 +27,8 @@ exports.onCreateWebpackConfig = function onCreateWebpackConfig({
     },
     resolve: {
       alias: {
-        react: path.resolve(__dirname, '../node_modules/react'),
-        'react-dom': path.resolve(__dirname, '../node_modules/react-dom'),
-        'react-bootstrap': path.resolve(__dirname, '../src'),
+        // react: path.resolve(__dirname, '../node_modules/react'),
+        // 'react-dom': path.resolve(__dirname, '../node_modules/react-dom'),
       },
     },
     plugins: [

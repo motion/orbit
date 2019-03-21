@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Row from 'react-bootstrap/Row'
 import withProps from 'recompose/withProps'
-import pkg from '../../../package.json'
+import pkg from '../../package.json'
 import withLayout from '../withLayout'
 
 const MastHead = styled(Jumbotron)`

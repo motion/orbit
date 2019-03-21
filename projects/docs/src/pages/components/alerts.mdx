@@ -4,12 +4,6 @@ import Callout from '../../components/Callout'
 import ComponentApi from '../../components/ComponentApi'
 import ReactPlayground from '../../components/ReactPlayground'
 
-import AdditionalContent from '../../examples/Alert/AdditionalContent'
-import Basic from '../../examples/Alert/Basic'
-import Dismissible from '../../examples/Alert/Dismissible'
-import DismissibleControlled from '../../examples/Alert/DismissibleControlled'
-import Link from '../../examples/Alert/Link'
-
 # Alerts
 
 <p className="lead">
@@ -36,25 +30,25 @@ dismiss button. For proper styling, use one of the eight `variant`s.
 For links, use the `<Alert.Link>` component to provide matching
 colored links within any alert.
 
-<ReactPlayground codeText={Link} />
+// <ReactPlayground codeText={Link} />
 
 ### Additional content
 
 Alerts can content whatever content you like. Headers, paragraphs, dividers, go crazy.
 
-<ReactPlayground codeText={AdditionalContent} />
+// <ReactPlayground codeText={AdditionalContent} />
 
 ### Dismissing
 
 Add the `dismissible` prop to add a functioning dismiss
 button to the Alert.
 
-<ReactPlayground codeText={Dismissible} />
+// <ReactPlayground codeText={Dismissible} />
 
 You can also control the visual state directly which is great if you
 want to build more complicated alerts.
 
-<ReactPlayground codeText={DismissibleControlled} />
+// <ReactPlayground codeText={DismissibleControlled} />
 
 ## API
 
@@ -62,6 +56,7 @@ want to build more complicated alerts.
 <ComponentApi metadata={props.data.AlertHeading} exportedBy={props.data.Alert} />
 <ComponentApi metadata={props.data.AlertLink} exportedBy={props.data.Alert} />
 
+```
 export const query = graphql`
   query AlertQuery {
     Alert: componentMetadata(displayName: { eq: "Alert" }) {
@@ -75,3 +70,4 @@ export const query = graphql`
     }
   }
 `
+```

@@ -113,7 +113,5 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
   const isLast = index === total - 1
   const isFirst = index === 0
 
-  console.log('ok', id, context.children, { index, total, isLast, isFirst })
-
   return { index, total, isLast, isFirst }
 }

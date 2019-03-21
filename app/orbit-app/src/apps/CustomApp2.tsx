@@ -5,7 +5,7 @@ import React from 'react'
 function CustomApp2(_props: AppProps) {
   return (
     <App>
-      <Title>hi</Title>
+      <Title>hi 2</Title>
     </App>
   )
 }

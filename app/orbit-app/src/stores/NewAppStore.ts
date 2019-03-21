@@ -57,7 +57,9 @@ export class NewAppStore {
 
   setApp(identifier: string) {
     const nextApp = defaultApps.find(x => x.identifier === identifier)
+    console.log('next app', nextApp)
     if (!nextApp) {
+      console.warn('no app', nextApp)
       return
     }
 
@@ -76,7 +78,6 @@ export class NewAppStore {
     const def = getAppDefinition(identifier)
     if (!def) {
       console.warn('no wapp?')
-      debugger
       return
     }
 
@@ -90,7 +91,7 @@ export class NewAppStore {
       name,
       colors,
       // always update
-      identifier: identifier,
+      identifier,
       data,
     }
   }

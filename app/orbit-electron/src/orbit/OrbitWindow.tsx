@@ -215,6 +215,7 @@ export default function OrbitWindow() {
       show={store.show}
       webPreferences={{
         nodeIntegration: true,
+        webSecurity: false,
       }}
       onReadyToShow={store.setInitialShow}
       focus

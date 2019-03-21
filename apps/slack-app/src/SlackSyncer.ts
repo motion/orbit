@@ -64,7 +64,7 @@ export const SlackSyncer = createSyncer(async ({ app, log, utils }) => {
     const { messages, lastMessageTz } = await loader.loadMessages(channel.id, oldestMessageId)
 
     // sync messages if we found them
-    if (messages.length) {
+    if (messages.length && lastMessageTz) {
 
       // group messages into special "conversations" to avoid insertion of multiple bits for each message
       const conversations = createConversation(messages)

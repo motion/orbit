@@ -1,5 +1,5 @@
 import compromise from 'compromise'
-import { differenceInDays, getDaysInMonth, getYear, subDays } from 'date-fns/esm'
+import { differenceInDays, getDaysInMonth, getYear, subDays } from 'date-fns'
 import Sherlockjs from 'sherlockjs'
 import { NLPResponse } from '../../types/NLPResponse'
 import { DateRange, Mark, MarkType, QueryFragment } from '../../types/NLPTypes'

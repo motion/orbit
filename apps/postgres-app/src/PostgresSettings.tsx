@@ -1,4 +1,4 @@
-import { AppModel, AppProps, AppSaveCommand, command, useActiveSpace, useModel } from '@o/kit'
+import { AppModel, AppProps, save, useActiveSpace, useModel } from '@o/kit'
 import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
@@ -77,18 +77,16 @@ export function PostgresSettings({ app }: Props) {
 
     // send command to the desktop
     setStatus(Statuses.LOADING)
-    const result = await command(AppSaveCommand, {
-      app: appBit,
-    })
-    // update status on success of fail
-    if (result.success) {
+
+    // save app
+    try {
+      await save(AppModel, appBit)
       setStatus(Statuses.SUCCESS)
       setError(null)
-      // !TODO
-      // AppActions.clearPeek()
-    } else {
+
+    } catch (err) {
       setStatus(Statuses.FAIL)
-      setError(result.error)
+      setError(err.message)
     }
   }
 

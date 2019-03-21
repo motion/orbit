@@ -1,3 +1,4 @@
+;(global as any).window = global
 import { once } from 'lodash'
 import { syncersRoot } from './OrbitSyncersRoot'
 

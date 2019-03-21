@@ -140,7 +140,7 @@ export class BridgeManager {
       this.setState(initialState, true)
     }
     // setup start/quit actions
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.addEventListener instanceof Function) {
       window.addEventListener('beforeunload', this.dispose)
     }
     // wait for initial state

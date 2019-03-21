@@ -1,6 +1,7 @@
 import { AppBit } from '@o/sync-kit'
-import { SlackLoader } from './SlackLoader'
+import { WebClient } from '@slack/client'
 import { SlackChannel, SlackMessage } from './SlackModels'
+import { SlackLoader } from './SlackLoader'
 
 export default {
   loadChannels(app: AppBit): Promise<SlackChannel[]> {
@@ -12,4 +13,10 @@ export default {
     const { messages } = await loader.loadMessages(channelId)
     return messages
   }
+}
+
+export function slackApi(app: AppBit) {
+  const client = new WebClient(app.token)
+  client.channels.list()
+  return client
 }

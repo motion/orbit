@@ -1,8 +1,5 @@
 import { Logger } from '@o/logger'
 import { AppBit } from '@o/models'
-import * as fs from 'fs'
-import * as https from 'https'
-import { URL } from 'url'
 
 /**
  * Callback to be executed to save a app.
@@ -54,30 +51,6 @@ export interface ServiceLoaderLoadOptions<_T = any> {
   body?: string
 }
 
-/**
- * Options for service loader's downloadFile method.
- */
-export interface ServiceLoaderDownloadFileOptions<_T = any> {
-  /**
-   * Destination path where file should be written into.
-   */
-  destination: string
-
-  /**
-   * Request url. Partial path can be specified in the case if basedUrl was defined in the service loader.
-   */
-  path: string
-
-  /**
-   * Request query params.
-   */
-  query?: ServiceLoaderKeyValue
-
-  /**
-   * Request headers.
-   */
-  headers?: ServiceLoaderKeyValue
-}
 
 /**
  * Loader (fetcher) from service.
@@ -124,14 +97,18 @@ export class ServiceLoader {
       headers['Content-Type'] = 'application/json'
     }
 
-    // execute query
-    this.log.vtimer(`request to ${url}`, headers)
-    const result = await fetch(url, {
-      mode: options.cors ? 'cors' : undefined,
+    const fetchOptions: any = {
       method: options.method || 'get',
       body: options.body || undefined,
       headers,
-    })
+    }
+    if (options.cors === true) {
+      fetchOptions.mode = 'cors'
+    }
+
+    // execute query
+    this.log.vtimer(`request to ${url}`, fetchOptions)
+    const result = await fetch(url, fetchOptions)
     const responseBody: any = options.plain ? await result.text() : await result.json()
     this.log.vtimer(`request to ${url}`, { response: result, body: responseBody })
 
@@ -151,50 +128,6 @@ export class ServiceLoader {
     }
 
     return responseBody
-  }
-
-  /**
-   * Downloads given file.
-   */
-  downloadFile(options: ServiceLoaderDownloadFileOptions): Promise<void> {
-    // prepare data
-    const qs = this.queryObjectToQueryString(options.query)
-    const url = `${this.baseUrl}${options.path}${qs}`
-    const headers = {
-      ...this.headers,
-      ...(options.headers || {}),
-    }
-
-    return new Promise((ok, fail) => {
-      try {
-        const file = fs.createWriteStream(options.destination)
-        const urlObject = new URL(url)
-        https.get(
-          {
-            protocol: urlObject.protocol,
-            host: urlObject.host,
-            port: urlObject.port,
-            path: urlObject.pathname,
-            method: 'GET',
-            headers,
-          },
-          function(response) {
-            response.pipe(file)
-            file
-              .on('finish', function() {
-                file.close()
-                ok()
-              })
-              .on('error', function(err) {
-                // Handle errors
-                fail(err.message)
-              })
-          },
-        )
-      } catch (err) {
-        fail(err)
-      }
-    })
   }
 
   /**
@@ -222,6 +155,7 @@ export class ServiceLoader {
       .join('&')
 
     // make a query
+    this.log.info('refreshing oauth token', { formData, body })
     const response = await fetch('https://www.googleapis.com/oauth2/v4/token', {
       body,
       method: 'post',

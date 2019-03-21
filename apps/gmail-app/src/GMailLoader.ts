@@ -1,4 +1,4 @@
-import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
+import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit'
 import { GMailQueries } from './GMailQueries'
 import { GMailHistoryLoadResult, GMailThread, GMailUserProfile } from './GMailModels'
 
@@ -231,12 +231,10 @@ export class GMailLoader {
     await sleep(THROTTLING.messages)
 
     this.log.verbose('loading thread messages', threads)
-    await Promise.all(
-      threads.map(async thread => {
-        const result = await this.loader.load(GMailQueries.thread(thread.id))
-        Object.assign(thread, result)
-      }),
-    )
+    for (let thread of threads) {
+      const result = await this.loader.load(GMailQueries.thread(thread.id))
+      Object.assign(thread, result)
+    }
     this.log.verbose('thread messages are loaded', threads)
   }
 }

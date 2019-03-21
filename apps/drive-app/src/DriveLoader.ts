@@ -1,6 +1,5 @@
-import { AppBit } from '@o/kit'
 // import * as path from 'path'
-import { getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/sync-kit'
+import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit'
 import { uniqBy } from 'lodash'
 import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'
@@ -158,7 +157,11 @@ export class DriveLoader {
    */
   private async loadComments(file: DriveFile, pageToken?: string): Promise<DriveComment[]> {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
-    if (file.mimeType === 'application/vnd.google-apps.map') return []
+    if (
+      file.mimeType === 'application/vnd.google-apps.map' ||
+      file.mimeType === 'application/vnd.google-apps.script'
+    )
+      return []
 
     await sleep(THROTTLING.comments)
 
@@ -177,6 +180,13 @@ export class DriveLoader {
   private async loadRevisions(file: DriveFile, pageToken?: string): Promise<DriveRevision[]> {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
+
+    // for some reason google gives fatal errors when comments for map items are requested, so we skip them
+    if (
+      file.mimeType === 'application/vnd.google-apps.map' ||
+      file.mimeType === 'application/vnd.google-apps.script'
+    )
+      return []
 
     await sleep(THROTTLING.revisions)
 

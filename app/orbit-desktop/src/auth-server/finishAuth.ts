@@ -4,6 +4,9 @@ import { AppBit, AppEntity, SpaceEntity, UserEntity } from '@o/models'
 import { SlackLoader } from '@o/slack-app/_/SlackLoader' // todo(umed) fix it, we don't need to have desktop app dependency on apps
 import { getRepository } from 'typeorm'
 import { OauthValues } from './oauthTypes'
+import OAuthStrategies from './oauthStrategies'
+import { GmailAppData } from '@o/gmail-app/_/GMailModels'
+import { DriveAppData } from '@o/drive-app/_/DriveModels'
 
 export const finishAuth = async (type: string, values: OauthValues) => {
   console.log('createSource', values)
@@ -48,11 +51,15 @@ export const finishAuth = async (type: string, values: OauthValues) => {
     const loader = new DriveLoader(app)
     const about = await loader.loadAbout()
     app.name = about.user.emailAddress
+    ;(app.data as DriveAppData).values.oauth.secret = OAuthStrategies.drive.config.credentials.clientSecret
+    ;(app.data as DriveAppData).values.oauth.clientId = OAuthStrategies.drive.config.credentials.clientID
   } else if (app.identifier === 'gmail') {
     // load account info
     const loader = new GMailLoader(app)
     const profile = await loader.loadProfile()
     app.name = profile.emailAddress
+    ;(app.data as GmailAppData).values.oauth.secret = OAuthStrategies.gmail.config.credentials.clientSecret
+    ;(app.data as GmailAppData).values.oauth.clientId = OAuthStrategies.gmail.config.credentials.clientID
   }
 
   // TODO @umed i think this got a bit confusing in refactor

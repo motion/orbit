@@ -10,7 +10,7 @@ import {
   ViewPropsStrict,
 } from '@o/gloss'
 import { useStore } from '@o/use-store'
-import { differenceInCalendarDays } from 'date-fns/esm/fp'
+import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
@@ -190,7 +190,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
       <Row>
         {showDate && (
           <Text alpha={0.6} size={0.9} fontWeight={400}>
-            <DateFormat date={date} nice={differenceInCalendarDays(Date.now, date) < 7} />
+            <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
           </Text>
         )}
       </Row>

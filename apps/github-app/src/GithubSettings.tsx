@@ -1,16 +1,8 @@
-import {
-  AppProps,
-  GithubRepositoryModel,
-  loadMany,
-  SettingManageRow,
-  Table,
-  useApp,
-  useStore,
-  WhitelistManager,
-} from '@o/kit'
+import { AppProps, SettingManageRow, Table, useApp, useStore, WhitelistManager } from '@o/kit'
 import { DataType, View } from '@o/ui'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+import { GithubLoader } from './GithubLoader'
 
 export default function GithubSettings({ subId }: AppProps) {
   const [app, updateApp] = useApp(+subId)
@@ -35,32 +27,31 @@ export default function GithubSettings({ subId }: AppProps) {
         setRepositories(app.data.repositories)
       }
 
-      // to make sure we always have a fresh repositories we load them form API
-      loadMany(GithubRepositoryModel, {
-        args: {
-          appId: app.id,
-        },
-      }).then(freshApiRepositories => {
-        // console.log(`loaded repositories from remote`, freshApiRepositories)
+      // to make sure we always have a fresh repositories we load them from API
+      const loader = new GithubLoader(app)
+      loader
+        .loadUserRepositories()
+        .then(freshApiRepositories => {
+          // console.log(`loaded repositories from remote`, freshApiRepositories)
 
-        // we check if api repositories are changed
-        const appRepositories = app.data.repositories
-        if (
-          !freshApiRepositories ||
-          JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
-        )
-          return
+          // we check if api repositories are changed
+          const appRepositories = app.data.repositories
+          if (
+            !freshApiRepositories ||
+            JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
+          )
+            return
 
-        // console.log(`repositories changed, updating`)
+          // console.log(`repositories changed, updating`)
 
-        // then we update app data in the db
-        setRepositories(freshApiRepositories)
-        app.data = {
-          ...app.data,
-          repositories: freshApiRepositories,
-        }
-        updateApp(app)
-      })
+          // then we update app data in the db
+          setRepositories(freshApiRepositories)
+          app.data = {
+            ...app.data,
+            repositories: freshApiRepositories,
+          }
+          updateApp(app)
+        })
     },
     [app && app.id],
   )

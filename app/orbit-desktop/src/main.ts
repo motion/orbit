@@ -1,3 +1,4 @@
+;(global as any).window = global
 import { cleanupChildren } from '@o/orbit-fork-process'
 import { once } from 'lodash'
 

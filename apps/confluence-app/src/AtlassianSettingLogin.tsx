@@ -1,7 +1,9 @@
-import { AppBit, AppSaveCommand, command, useActiveSpace } from '@o/kit'
+import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
 import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
+import { ConfluenceLoader } from './ConfluenceLoader'
+import { ConfluenceAppData } from './ConfluenceModels'
 
 type Props = {
   identifier: string
@@ -24,6 +26,14 @@ interface AtlassianAppValuesCredentials {
   domain: string
   username: string
   password: string
+}
+
+const extractTeamNameFromDomain = (domain: string) => {
+  return domain
+    .replace('http://', '')
+    .replace('https://', '')
+    .replace('.atlassian.net/', '')
+    .replace('.atlassian.net', '')
 }
 
 export function AtlassianSettingLogin(props: Props) {
@@ -57,18 +67,19 @@ export function AtlassianSettingLogin(props: Props) {
     app.spaceId = activeSpace.id
     // send command to the desktop
     setStatus(Statuses.LOADING)
-    const result = await command(AppSaveCommand, {
-      app,
-    })
-    // update status on success of fail
-    if (result.success) {
+
+    // save app
+    try {
+      const loader = new ConfluenceLoader(app as AppBit)
+      await loader.test()
+      app.name = extractTeamNameFromDomain((app.data as ConfluenceAppData).values.credentials.domain)
+      await save(AppModel, app)
       setStatus(Statuses.SUCCESS)
       setError(null)
-      // !TODO
-      // AppActions.clearPeek()
-    } else {
+
+    } catch (err) {
       setStatus(Statuses.FAIL)
-      setError(result.error)
+      setError(err.message)
     }
   }
 

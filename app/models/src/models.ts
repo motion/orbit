@@ -18,10 +18,6 @@ export const AppModel = new Model<AppBit, FindOptions<AppBit>, FindOptionsWhere<
 
 export const UserModel = new Model<User, FindOptions<User>, FindOptionsWhere<User>>('User')
 
-export const GithubRepositoryModel = new Model<any, { appId: number }>('GithubRepository')
-
-export const SlackChannelModel = new Model<any, { appId: number }>('SlackChannel')
-
 export const SearchPinnedResultModel = new Model<Bit, { query: string }>('SearchPinnedResultModel')
 
 export type SearchQuery = {

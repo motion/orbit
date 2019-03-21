@@ -1,7 +1,8 @@
-import { AppModel, AppProps, AppSaveCommand, command, useModel } from '@o/kit'
+import { AppModel, AppProps, save, useModel } from '@o/kit'
 import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
 import produce from 'immer'
 import React, { useEffect, useState } from 'react'
+import { WebsiteAppData } from './WebsiteModels'
 
 /**
  * Crawled website data.
@@ -36,9 +37,10 @@ export default function WebsiteSetupPane(props: Props) {
         next.data.values = { ...app.data.values, ...values }
       }),
     )
-    await command(AppSaveCommand, {
-      app,
-    })
+
+    // save app
+    app.name = (app.data as WebsiteAppData).values.url
+    await save(AppModel, app)
   }
 
   return (

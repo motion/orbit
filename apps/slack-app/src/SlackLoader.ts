@@ -184,7 +184,7 @@ export class SlackLoader {
 
     return {
       messages: filteredMessages,
-      lastMessageTz: messages.length ? messages[messages.length - 1].ts : undefined // note: we must use loaded messages, not filtered
+      lastMessageTz: messages.length ? messages[0].ts : undefined // note: we must use loaded messages, not filtered
     }
   }
 }

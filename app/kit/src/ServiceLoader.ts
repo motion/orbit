@@ -97,14 +97,18 @@ export class ServiceLoader {
       headers['Content-Type'] = 'application/json'
     }
 
-    // execute query
-    this.log.vtimer(`request to ${url}`, headers)
-    const result = await fetch(url, {
-      mode: options.cors ? 'cors' : undefined,
+    const fetchOptions: any = {
       method: options.method || 'get',
       body: options.body || undefined,
       headers,
-    })
+    }
+    if (options.cors === true) {
+      fetchOptions.mode = 'cors'
+    }
+
+    // execute query
+    this.log.vtimer(`request to ${url}`, fetchOptions)
+    const result = await fetch(url, fetchOptions)
     const responseBody: any = options.plain ? await result.text() : await result.json()
     this.log.vtimer(`request to ${url}`, { response: result, body: responseBody })
 
@@ -151,6 +155,7 @@ export class ServiceLoader {
       .join('&')
 
     // make a query
+    this.log.info('refreshing oauth token', { formData, body })
     const response = await fetch('https://www.googleapis.com/oauth2/v4/token', {
       body,
       method: 'post',

@@ -79,7 +79,7 @@ export function AtlassianSettingLogin(props: Props) {
 
     } catch (err) {
       setStatus(Statuses.FAIL)
-      setError(err)
+      setError(err.message)
     }
   }
 

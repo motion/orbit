@@ -157,7 +157,11 @@ export class DriveLoader {
    */
   private async loadComments(file: DriveFile, pageToken?: string): Promise<DriveComment[]> {
     // for some reason google gives fatal errors when comments for map items are requested, so we skip them
-    if (file.mimeType === 'application/vnd.google-apps.map') return []
+    if (
+      file.mimeType === 'application/vnd.google-apps.map' ||
+      file.mimeType === 'application/vnd.google-apps.script'
+    )
+      return []
 
     await sleep(THROTTLING.comments)
 

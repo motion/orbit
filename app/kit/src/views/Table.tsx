@@ -59,8 +59,10 @@ export function Table({ searchable, onHighlighted, title, subTitle, ...props }: 
         {!!subTitle && <SubTitle>{subTitle}</SubTitle>}
       </Section>
       <SearchableTable
+        height="content-height"
         minWidth={100}
         minHeight={100}
+        maxHeight={800}
         {...props}
         columns={columns}
         rows={rows}

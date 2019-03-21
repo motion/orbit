@@ -657,7 +657,7 @@ const FakeResize = ({ side, hovered }: { side: keyof ResizableSides; hovered?: b
   const shouldCover = intHovered || (visible && hovered)
 
   return (
-    <FullScreen ref={parentRef}>
+    <FullScreen pointerEvents="none" ref={parentRef}>
       <FakeResizeChrome
         ref={chromeRef}
         onLeft={side === 'left'}

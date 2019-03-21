@@ -3,7 +3,17 @@ export * from '@o/config'
 export * from '@o/gloss'
 export * from '@o/logger'
 export * from '@o/mediator'
-export { AppBit, AppModel, Bit, BitModel } from '@o/models'
+export {
+  AppBit,
+  AppModel,
+  Bit,
+  BitModel,
+  CallAppBitApiMethodCommand,
+  CosalTopicsModel,
+  SearchQuery,
+  User,
+  UserModel,
+} from '@o/models'
 export * from '@o/use-store'
 export * from '@o/utils'
 export * from './bit/Readability'
@@ -44,6 +54,7 @@ export * from './hooks/useSearchState'
 export * from './hooks/useShareMenu'
 export * from './hooks/useStores'
 export * from './libraries/NLP'
+export * from './ServiceLoader'
 export * from './stores'
 export * from './stores/LocationStore'
 export * from './stores/PaneManagerStore'
@@ -77,4 +88,3 @@ export * from './views/SubPane'
 export * from './views/SVG'
 export * from './views/Table'
 export * from './views/TreeList'
-export * from './ServiceLoader'

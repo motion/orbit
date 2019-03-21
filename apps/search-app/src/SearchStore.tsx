@@ -6,14 +6,13 @@ import {
   MarkType,
   OrbitListItemProps,
   react,
-  save,
+  saveUser,
   searchBits,
   SearchQuery,
   SearchState,
   sleep,
   SpaceIcon,
   useHook,
-  UserModel,
   useStoresSimple,
 } from '@o/kit'
 import { uniq } from 'lodash'
@@ -47,8 +46,7 @@ export class SearchStore {
       ensure('has query', !!query)
       await sleep(2000)
       const user = await getUser()
-      save(UserModel, {
-        ...user,
+      saveUser({
         settings: {
           ...user.settings,
           recentSearches: !user.settings.recentSearches

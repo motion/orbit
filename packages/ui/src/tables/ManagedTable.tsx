@@ -12,7 +12,6 @@ import debounceRender from 'react-debounce-render'
 import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
-import { useComponentSize } from '../hooks/useComponentSize'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
@@ -162,10 +161,7 @@ const Container = gloss(View, {
   minHeight: 'min-content',
 })
 
-class ManagedTableInner extends React.Component<
-  ManagedTableProps & { measureRef?: any },
-  ManagedTableState
-> {
+class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps = {
     highlightableRows: true,
     multiselect: false,
@@ -398,6 +394,10 @@ class ManagedTableInner extends React.Component<
     }
 
     this.onHighlightedIndices(highlightedRows)
+
+    this.setState({
+      highlightedRows,
+    })
   }
 
   onStopDragSelecting = () => {
@@ -558,7 +558,7 @@ class ManagedTableInner extends React.Component<
   }
 
   render() {
-    const { columns, rowLineHeight, width, height, measureRef, minHeight, minWidth } = this.props
+    const { columns, rowLineHeight, width, minHeight, minWidth, height } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
@@ -572,26 +572,28 @@ class ManagedTableInner extends React.Component<
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        <Container ref={measureRef}>
-          {(!sortedRows.length && this.props.bodyPlaceholder) || null}
-          <ContextMenu buildItems={this.buildContextMenuItems}>
-            {width && (
-              <VariableSizeList
-                itemCount={sortedRows.length}
-                itemSize={this.getRowHeight}
-                ref={this.tableRef}
-                width={width}
-                height={height === 'content-height' ? this.getContentHeight() : height}
-                estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
-                overscanCount={20}
-                forwardRef={this.scrollRef}
-                onScroll={this.onScroll}
-              >
-                {this.renderRow}
-              </VariableSizeList>
-            )}
-          </ContextMenu>
-        </Container>
+        {(!sortedRows.length && this.props.bodyPlaceholder) || null}
+        <ContextMenu buildItems={this.buildContextMenuItems}>
+          <VariableSizeList
+            itemCount={sortedRows.length}
+            itemSize={this.getRowHeight}
+            // whenever this view renders, update list, otherwise highlights break
+            itemData={Math.random()}
+            ref={this.tableRef}
+            width={width}
+            height={
+              height === 'content-height'
+                ? this.getContentHeight()
+                : Math.min(minHeight, height || Infinity)
+            }
+            estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
+            overscanCount={20}
+            forwardRef={this.scrollRef}
+            onScroll={this.onScroll}
+          >
+            {this.renderRow}
+          </VariableSizeList>
+        </ContextMenu>
       </Container>
     )
   }
@@ -602,14 +604,5 @@ export const DebouncedManagedTable = debounceRender(ManagedTableInner, 150, {
 })
 
 export function ManagedTable(props: ManagedTableProps) {
-  const { width, height, measureRef } = useComponentSize()
-  return (
-    <DebouncedManagedTable
-      measureRef={measureRef}
-      width={width}
-      height={height}
-      {...props}
-      rows={props.rows.map(normalizeRow)}
-    />
-  )
+  return <DebouncedManagedTable {...props} rows={props.rows.map(normalizeRow)} />
 }

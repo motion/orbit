@@ -76,7 +76,6 @@ const light = {
     tabBackgroundBottom: lightBackground,
     tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
-    buttonBackground: '#f2f2f2',
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: 'eee',
     listItemBackgroundHover: [100, 100, 100, 0.024],

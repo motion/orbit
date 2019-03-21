@@ -11,7 +11,6 @@ import {
   SpacedRow,
   Tab,
   Tabs,
-  Title,
   useFetch,
   useForm,
   VerticalSplit,
@@ -83,21 +82,13 @@ function PersonInfo(props: { row: any }) {
   return (
     <>
       <Fieldsets rows={[props.row]} />
-      <Title>Albums</Title>
       <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-        {albums => <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
+        {albums => <Table title="Albums" rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
       </Fetch>
 
       {!!album && (
         <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
-          {photos => (
-            <>
-              <Title>
-                {album.id} Album {album.title} Pictures
-              </Title>
-              <Table rows={photos} />
-            </>
-          )}
+          {photos => <Table title={`${album.id} Album ${album.title} Pictures`} rows={photos} />}
         </Fetch>
       )}
     </>

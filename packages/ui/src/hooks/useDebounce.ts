@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function useDebounce(fn: Function, amount: number) {
   const tm = useRef(null)
@@ -20,4 +20,23 @@ export function useDebounce(fn: Function, amount: number) {
     },
     [fn, amount],
   )
+}
+
+export function useDebounceValue(val: any, amt = 0) {
+  const [state, setState] = useState(val)
+
+  useEffect(
+    () => {
+      let tm = setTimeout(() => {
+        setState(val)
+      }, amt)
+
+      return () => {
+        clearTimeout(tm)
+      }
+    },
+    [val],
+  )
+
+  return state
 }

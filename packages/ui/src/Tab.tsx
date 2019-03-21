@@ -1,9 +1,6 @@
-import { gloss, Row, ViewProps } from '@o/gloss'
-import React, { Suspense, useContext } from 'react'
-import { useBreadcrumb } from './Breadcrumbs'
+import React, { Suspense } from 'react'
+import { Button, ButtonProps } from './buttons/Button'
 import { Loading } from './progress/Loading'
-import { getSegmentedStyle } from './SegmentedRow'
-import { SurfacePropsContext } from './Surface'
 
 /**
  * Copyright 2018-present Facebook.
@@ -39,56 +36,28 @@ export function Tab(_: {
    * Children shows inside the tab content
    */
   children?: React.ReactNode
+  /**
+   * Icon for tab
+   */
+  icon?: React.ReactNode
 }) {
   console.error("don't render me")
   return null
 }
 
-export function TabItem(props: ViewProps) {
-  const extraProps = useContext(SurfacePropsContext)
-  const crumb = useBreadcrumb()
-  const segmentedProps =
-    crumb &&
-    getSegmentedStyle(
-      { borderRadius: typeof props.borderRadius === 'number' ? props.borderRadius : 100 },
-      crumb,
-    )
+export function TabItem(props: ButtonProps) {
   return (
     <Suspense fallback={<Loading />}>
-      <TabItemChrome borderWidth={1} {...extraProps} {...props} {...segmentedProps} />
+      <Button
+        ellipse
+        spacing="min-content"
+        sizeHeight={0.75}
+        sizeFont={0.9}
+        sizeIcon={1.2}
+        fontWeight={500}
+        flex={typeof props.width === 'number' ? 'none' : 1}
+        {...props}
+      />
     </Suspense>
   )
 }
-
-const TabItemChrome = gloss(Row, {
-  display: 'block',
-  fontSize: 12,
-  fontWeight: 500,
-  lineHeight: 22,
-  alignItems: 'center',
-  overflow: 'hidden',
-  padding: [1, 10],
-  position: 'relative',
-  height: '100%',
-  justifyContent: 'center',
-  textAlign: 'center',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  userSelect: 'none',
-}).theme(({ active, width }, theme) => {
-  const background = active
-    ? theme.tabBackgroundActive || theme.backgroundActive
-    : theme.tabBackground || theme.background
-  return {
-    borderStyle: 'solid',
-    borderColor: theme.borderColor,
-    width,
-    flex: typeof width === 'number' ? 'none' : 1,
-    color: active ? theme.colorActive : theme.colorBlur,
-    background,
-    '&:hover': {
-      background: active ? background : theme.tabBackgroundHover,
-      transition: active ? 'none' : 'all ease 400ms',
-    },
-  }
-})

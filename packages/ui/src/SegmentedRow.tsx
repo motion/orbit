@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
+import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
 import { SizedSurfaceProps } from './SizedSurface'
 import { SurfacePassProps } from './Surface'
 
@@ -21,7 +21,7 @@ export function SegmentedRow({
 
 export function getSegmentedStyle(
   props: { ignoreSegment?: boolean; borderRadius?: number },
-  item: BreadcrumbItem,
+  item: BreadcrumbInfo,
 ) {
   const radius = typeof props.borderRadius === 'number' ? props.borderRadius : 0
   // support being inside a segmented list

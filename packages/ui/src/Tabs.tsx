@@ -82,7 +82,7 @@ function TabsControlled(props: TabsProps) {
         tabSiblings.push(comp)
         continue
       }
-      const { children, closable, label, onClose, width } = comp.props
+      const { children, closable, label, icon, onClose, width } = comp.props
       let key = comp.key
       if (typeof key !== 'string') {
         key = `${index}`
@@ -124,6 +124,7 @@ function TabsControlled(props: TabsProps) {
           {...isActive && tabPropsActive}
           active={isActive}
           onMouseDown={onMouseDown}
+          icon={icon}
         >
           {label}
           {closable && (

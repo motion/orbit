@@ -77,15 +77,12 @@ export function CustomAppMain(_props: AppProps) {
 
 function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
-  // const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
-
   return (
     <>
       <Fieldsets rows={[props.row]} />
       <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
         {albums => <Table title="Albums" rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
       </Fetch>
-
       {!!album && (
         <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
           {photos => <Table title={`${album.id} Album ${album.title} Pictures`} rows={photos} />}

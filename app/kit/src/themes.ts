@@ -53,6 +53,7 @@ const macModernTheme = Theme.colorize({
 
 const lightColor = '#444'
 const lightBackground = color('#fff')
+const lightButtonBg = linearGradient('#fcfcfc', '#f4f4f4')
 const light = {
   ...macModernTheme,
   ...Theme.fromStyles({
@@ -66,6 +67,10 @@ const light = {
     color,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
+    buttonBackground: lightButtonBg,
+    buttonBackgroundActive: [45, 45, 45, 0.8],
+    buttonBackgroundFocus: [45, 45, 45, 0.8],
+    buttonBackgroundHover: lightButtonBg,
     borderColor: [215, 215, 215],
     borderColorLight: [215, 215, 215, 0.5],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
@@ -114,6 +119,7 @@ const light = {
 const darkColor = [250, 250, 250]
 const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
+const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
 const dark = {
   ...macModernTheme,
   ...Theme.fromStyles({
@@ -142,9 +148,9 @@ const dark = {
       'transparent',
       darkFadeBackground,
     ),
-    buttonBackground: [60, 60, 60, 0.8],
+    buttonBackground: darkButtonBg,
     buttonBackgroundActive: [45, 45, 45, 0.8],
-    buttonBackgroundHover: [70, 70, 70, 0.8],
+    buttonBackgroundHover: darkButtonBg,
     buttonBorderColor: [35, 35, 35],
     buttonBorderColorActive: [35, 35, 35],
     buttonBorderColorHover: [40, 40, 40],

@@ -1,6 +1,6 @@
-import { CSSPropertySet, gloss } from '@o/gloss'
-import * as UI from '@o/ui'
-import * as React from 'react'
+import { CSSPropertySet, gloss } from '@o/gloss';
+import * as UI from '@o/ui';
+import * as React from 'react';
 
 const oneLine = str => str.replace(/\r?\n|\r/g, '')
 
@@ -26,7 +26,7 @@ const SelectableBlock = gloss(Block).theme((_, theme) => ({
     background: theme.background.darken(0.1),
   },
   '&::placeholder': {
-    color: theme.color.alpha(0.7),
+    color: theme.color.alpha(0.6),
   },
 }))
 

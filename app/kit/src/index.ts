@@ -9,10 +9,8 @@ export {
   Bit,
   BitModel,
   CallAppBitApiMethodCommand,
-  CosalTopicsModel,
   SearchQuery,
   User,
-  UserModel,
 } from '@o/models'
 export * from '@o/use-store'
 export * from '@o/utils'
@@ -25,6 +23,7 @@ export * from './helpers/getAppDefinition'
 export * from './helpers/getAppDefinitions'
 export * from './helpers/getItemName'
 export * from './helpers/getTargetValue'
+export * from './helpers/getUser'
 export * from './helpers/groupByFirstLetter'
 export * from './helpers/normalizeItem'
 export * from './helpers/removeApp'

@@ -1,5 +1,6 @@
 import { loadMany } from '@o/bridge'
-import { CosalTopicsModel, CosalTopWordsModel, getSearchableText, SearchByTopicModel } from '@o/models'
+import { NLP } from '@o/kit'
+import { getSearchableText, SearchByTopicModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -22,13 +23,13 @@ class SearchStore {
 
   topics = react(
     () => this.results.map(x => `${x.title}${x.body}`).join(' '),
-    query => loadMany(CosalTopicsModel, { args: { query, count: 10 } }),
+    query => NLP.getTopics({ query, count: 10 }),
     {
       defaultValue: [],
     },
   )
 
-  topWords = react(() => this.query, text => loadMany(CosalTopWordsModel, { args: { text } }), {
+  topWords = react(() => this.query, text => NLP.getMostSalientWords({ text }), {
     defaultValue: [],
   })
 }

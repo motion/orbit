@@ -2,7 +2,7 @@ import {
   AppBit,
   AppIcon,
   ensure,
-  loadOne,
+  getUser,
   MarkType,
   OrbitListItemProps,
   react,
@@ -46,7 +46,7 @@ export class SearchStore {
     async (query, { sleep }) => {
       ensure('has query', !!query)
       await sleep(2000)
-      const user = await loadOne(UserModel, {})
+      const user = await getUser()
       save(UserModel, {
         ...user,
         settings: {

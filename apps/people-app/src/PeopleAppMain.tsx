@@ -2,12 +2,11 @@ import {
   AppProps,
   Bit,
   BitModel,
-  CosalTopicsModel,
   ensure,
   gloss,
   ListItem,
-  loadMany,
   loadOne,
+  NLP,
   observeMany,
   react,
   useStore,
@@ -80,11 +79,9 @@ class PeopleAppStore {
     async bits => {
       ensure('bits', !!bits.length)
       const query = getBitTexts(bits)
-      return await loadMany(CosalTopicsModel, {
-        args: {
-          query,
-          count: 10,
-        },
+      return await NLP.getTopics({
+        query,
+        count: 10,
       })
     },
     {

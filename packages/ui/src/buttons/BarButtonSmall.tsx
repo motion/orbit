@@ -1,10 +1,7 @@
-import * as React from 'react'
+import React, { forwardRef } from 'react'
 import { Button, ButtonProps } from './Button'
 
-export const BarButtonSmall = React.forwardRef(function FloatingBarButtonSmall(
-  props: ButtonProps,
-  ref,
-) {
+export const BarButtonSmall = forwardRef(function BarButtonSmall(props: ButtonProps, ref) {
   return (
     <Button
       ref={ref}
@@ -15,7 +12,6 @@ export const BarButtonSmall = React.forwardRef(function FloatingBarButtonSmall(
       fontWeight={400}
       size={0.95}
       sizeRadius={3}
-      opacity={0.8}
       {...props}
     />
   )

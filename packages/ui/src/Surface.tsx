@@ -193,12 +193,14 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
         {glint && !props.chromeless && (
           <Glint
             key={0}
-            borderLeftRadius={
-              (segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius) - 1
-            }
-            borderRightRadius={
-              (segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius) - 1
-            }
+            borderLeftRadius={Math.min(
+              (segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius) - 1,
+              height / 2 - 1,
+            )}
+            borderRightRadius={Math.min(
+              (segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius) - 1,
+              height / 2 - 1,
+            )}
           />
         )}
         <div

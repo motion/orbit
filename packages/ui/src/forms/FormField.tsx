@@ -67,10 +67,6 @@ export function FormField(props: FormFieldProps) {
       return <InputField name={name} type={type} width="100%" {...props} />
     case DataType.unknown:
     default:
-      if (typeof type === 'undefined') {
-        return <SimpleFormField {...props} />
-      }
-      console.error('Unknown data type to render', type, props)
-      return null
+      return <SimpleFormField {...props} />
   }
 }

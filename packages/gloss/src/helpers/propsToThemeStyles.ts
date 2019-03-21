@@ -18,7 +18,7 @@ type ThemeObjectWithPseudo = ThemeObject & {
   '&:active'?: ThemeObject
 }
 
-const pseudoConfig = {
+const stateConfig = {
   hover: {
     pseudoKey: '&:hover',
     postfix: 'Hover',
@@ -42,7 +42,7 @@ const pseudoConfig = {
 export const propsToThemeStyles = (
   props: any,
   theme: ThemeObject,
-  mapPropStylesToPseudos?: boolean,
+  stylePseudos?: boolean,
 ): ThemeObjectWithPseudo => {
   if (!theme) {
     throw new Error('No theme passed to propsToThemeStyles')
@@ -69,34 +69,28 @@ export const propsToThemeStyles = (
     }
   }
 
-  for (const key in pseudoConfig) {
-    const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudoConfig[key]
-    // forced on
-    const forcedOn = forceOnProp && props[forceOnProp] === true
-    // forced off
-    if (props[forceOnProp] === false) {
-      continue
-    }
-    let pseudoStyle = pseudoKey || forcedOn ? collectStylesForPseudo(theme, postfix) : null
+  for (const key in stateConfig) {
+    const { postfix, pseudoKey, forceOnProp, extraStyleProp } = stateConfig[key]
+    if (props[forceOnProp] === false) continue // forced off
+
+    let stateStyle = collectStylesForPseudo(theme, postfix)
+
     // add in any overrideStyles
-    if (mapPropStylesToPseudos) {
-      if (props[extraStyleProp] === null) {
-        pseudoStyle = null
-      } else if (typeof props[extraStyleProp] === 'object') {
-        pseudoStyle = {
-          ...pseudoStyle,
-          ...props[extraStyleProp],
-        }
-      }
+    if (typeof props[extraStyleProp] === 'object') {
+      Object.assign(stateStyle, props[extraStyleProp])
     }
-    // merge now into the psuedo state
-    if (pseudoKey) {
-      styles[pseudoKey] = {
-        ...styles[pseudoKey],
-        ...pseudoStyle,
-        // propogate overrides on the base style props like <Surface background="transparent" />
-        ...propOverrides,
-      }
+
+    if (propOverrides) {
+      Object.assign(stateStyle, propOverrides)
+    }
+
+    if (stylePseudos) {
+      styles[pseudoKey] = stateStyle
+    }
+
+    const booleanOn = forceOnProp && props[forceOnProp] === true
+    if (booleanOn) {
+      Object.assign(styles, stateStyle)
     }
   }
 

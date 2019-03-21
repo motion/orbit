@@ -7,5 +7,8 @@
   },
   "include": ["src/**/*"],
   "references": [
+    { "path": "../../app/kit" },
+    { "path": "../../app/sync-kit" },
+    { "path": "../../packages/ui" }
   ]
 }

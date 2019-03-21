@@ -1,5 +1,5 @@
 import { AppBit } from '@o/sync-kit'
-import { WebClient } from '@slack/client'
+// import { WebClient } from '@slack/client'
 import { SlackChannel, SlackMessage } from './SlackModels'
 import { SlackLoader } from './SlackLoader'
 
@@ -15,8 +15,8 @@ export default {
   }
 }
 
-export function slackApi(app: AppBit) {
-  const client = new WebClient(app.token)
-  client.channels.list()
-  return client
-}
+// export function slackApi(app: AppBit) {
+//   const client = new WebClient(app.token)
+//   client.channels.list()
+//   return client
+// }

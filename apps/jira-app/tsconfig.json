@@ -6,5 +6,9 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": []
+  "references": [
+    { "path": "../../app/kit" },
+    { "path": "../../app/sync-kit" },
+    { "path": "../../packages/ui" }
+  ]
 }

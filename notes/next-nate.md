@@ -1,27 +1,10 @@
 Views
 
+- Multi-step flows + Multi-step forms
+- Query editor views
+- <Searchable /> and <SearchTable /> both handle filters
+- Moving into its own area useFilters or similar
 - Theme can control fontWeight for themeing texts
-
-- First class Filters
-
-  - Either filter (Enum / <Select />)
-  - Any filter (<MultiSelect />)
-
-- Card
-
-Should have the structure of:
-
-[ TITLE ]
-
-[ DT: DD ][ dt: dd ]
-[ DT: DD ]
-
-[ CONTENT ] (can be a simple table, list etc)
-
-Small bugs
-
-- Make <Interactive /> show a real div above other things so it catches mouse events
-- Fix overflow scroll in virtual table demo
 
 ---
 

@@ -8,6 +8,11 @@
     { "path": "./orbit" },
     { "path": "./bridge" },
     { "path": "./sync-kit" },
+    // todo until we get apps properly split
+    { "path": "../apps/lists-app" },
+    { "path": "../apps/search-app" },
+    { "path": "../apps/custom-app" },
+    { "path": "../apps/people-app" },
     // projects necessary for orbit
     // references from orbit-app since we want to have that one empty
     { "path": "../packages/css" },

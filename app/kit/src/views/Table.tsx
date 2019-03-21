@@ -36,7 +36,7 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
   const onHighlightedIndices = useCallback(
     keys => {
       if (onHighlighted) {
-        onHighlighted(keys.map(key => rows.find(x => x.key === key)))
+        onHighlighted(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)
@@ -48,6 +48,8 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
   return (
     <SearchableTable
       showSearchBar={searchable || !!props.searchTerm}
+      minWidth={100}
+      minHeight={100}
       {...props}
       columns={columns}
       rows={rows}

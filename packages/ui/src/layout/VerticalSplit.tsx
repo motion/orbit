@@ -33,11 +33,14 @@ export function VerticalSplit(props: { children: any }) {
     },
   })
 
+  const total = Children.count(props.children)
+
   return (
-    <Row flex={1} overflow="hidden" ref={node}>
+    <Row flex={1} overflowY="hidden" overflowX="auto" ref={node}>
       {Children.map(props.children, (child, index) => {
         return cloneElement(child, {
           index,
+          total,
           parentWidth: width,
         })
       })}

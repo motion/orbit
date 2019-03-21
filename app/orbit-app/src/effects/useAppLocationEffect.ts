@@ -10,11 +10,14 @@ export function useAppLocationEffect() {
       ensure('location', !!location)
       ensure('external url', location.source === 'link')
       ensure('matches type', appStore.identifier === location.basename)
-      ensure('matches app id', appStore.id === location.query.id)
-      console.log('got location lets do it', location)
-      paneManagerStore.setActivePane(location.basename)
-      if (location.query.itemId) {
+
+      if (appStore.id === location.query.id) {
+        paneManagerStore.setActivePane(location.basename)
         selectionStore.moveToId(location.query.itemId)
+      }
+
+      if (!location.query.id) {
+        paneManagerStore.setActivePaneByType(location.basename)
       }
     },
   )

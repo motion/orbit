@@ -1,14 +1,18 @@
-import { AppProps, Table, useFetch } from '@o/kit'
+import { AppProps, Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
+  Fetch,
   Fieldsets,
   Form,
+  Row,
   SearchInput,
-  Section,
   Select,
   SpacedRow,
+  Tab,
+  Tabs,
   Title,
+  useFetch,
   useForm,
   VerticalSplit,
   VerticalSplitPane,
@@ -22,7 +26,7 @@ const active = ['active', 'inactive']
 export function CustomAppMain(_props: AppProps) {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
-  const rows = useFetch(`${endpoint}/users`).map((row, i) => ({
+  const users = useFetch(`${endpoint}/users`).map((row, i) => ({
     ...row,
     type: type[i % (type.length - 1)],
     active: active[i % 2],
@@ -40,21 +44,62 @@ export function CustomAppMain(_props: AppProps) {
           <Table
             multiselect
             onHighlighted={setHighlighted}
-            rows={rows}
+            rows={users}
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
           />
+          <Row overflowX="auto">
+            {highlighted.map(row => (
+              <Card
+                key={row.id}
+                title={row.name}
+                subtitle={row.username}
+                minWidth={200}
+                minHeight={200}
+              >
+                <DefinitionList row={row} />
+              </Card>
+            ))}
+          </Row>
         </VerticalSplitPane>
         <VerticalSplitPane>
-          <Section>
-            <Title>Hello World2</Title>
-            <Card title="test" subtitle="another">
-              {highlighted.length && <DefinitionList row={highlighted[0]} />}
-            </Card>
-            <Fieldsets rows={highlighted} />
-          </Section>
+          <Tabs borderRadius={20} margin={2}>
+            {highlighted.map(row => (
+              <Tab key={row.id} label={row.name}>
+                <PersonInfo row={row} />
+              </Tab>
+            ))}
+          </Tabs>
         </VerticalSplitPane>
       </VerticalSplit>
     </Form>
+  )
+}
+
+function PersonInfo(props: { row: any }) {
+  const [album, setAlbum] = useState(null)
+  // const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
+
+  return (
+    <>
+      <Fieldsets rows={[props.row]} />
+      <Title>Albums</Title>
+      <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
+        {albums => <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
+      </Fetch>
+
+      {!!album && (
+        <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
+          {photos => (
+            <>
+              <Title>
+                {album.id} Album {album.title} Pictures
+              </Title>
+              <Table rows={photos} />
+            </>
+          )}
+        </Fetch>
+      )}
+    </>
   )
 }

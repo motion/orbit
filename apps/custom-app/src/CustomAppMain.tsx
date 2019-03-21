@@ -1,7 +1,8 @@
-import { AppProps, Table, useFetch } from '@o/kit'
+import { AppProps, Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
+  Fetch,
   Fieldsets,
   Form,
   Row,
@@ -11,6 +12,7 @@ import {
   Tab,
   Tabs,
   Title,
+  useFetch,
   useForm,
   VerticalSplit,
   VerticalSplitPane,
@@ -63,7 +65,7 @@ export function CustomAppMain(_props: AppProps) {
         <VerticalSplitPane>
           <Tabs borderRadius={20} margin={2}>
             {highlighted.map(row => (
-              <Tab label={row.name}>
+              <Tab key={row.id} label={row.name}>
                 <PersonInfo row={row} />
               </Tab>
             ))}
@@ -75,26 +77,28 @@ export function CustomAppMain(_props: AppProps) {
 }
 
 function PersonInfo(props: { row: any }) {
-  const albums = useFetch(`${endpoint}/albums?userId=${props.row.id}`)
   const [album, setAlbum] = useState(null)
-  const albumPhotos = album && useFetch(`${endpoint}/photos?albumId=${album.id}`)
-  const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
-
-  console.log('albumPhotos', albumPhotos)
+  // const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
 
   return (
     <>
       <Fieldsets rows={[props.row]} />
       <Title>Albums</Title>
-      <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />
+      <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
+        {albums => <Table rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
+      </Fetch>
 
       {!!album && (
-        <>
-          <Title>
-            {album.id} Album {album.title} Pictures
-          </Title>
-          <Table rows={albumPhotos} />
-        </>
+        <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
+          {photos => (
+            <>
+              <Title>
+                {album.id} Album {album.title} Pictures
+              </Title>
+              <Table rows={photos} />
+            </>
+          )}
+        </Fetch>
       )}
     </>
   )

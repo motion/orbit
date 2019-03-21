@@ -15,11 +15,11 @@ const descriptions = {
   lists: 'Controlled or controllable list',
   people: 'Manageable list of people',
   custom: 'Internal development test app',
+  custom2: 'Internal development test app',
 }
 
 function CreateAppIndex() {
   const Actions = useActions()
-
   return (
     <>
       <TopBar

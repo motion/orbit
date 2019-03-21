@@ -78,7 +78,7 @@ export function CustomAppMain(_props: AppProps) {
 
 function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
-  const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
+  // const posts = useFetch(`${endpoint}/posts?userId=${props.row.id}`)
 
   return (
     <>

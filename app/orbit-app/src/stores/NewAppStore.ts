@@ -30,6 +30,13 @@ export const defaultApps: AppBit[] = [
     colors: ['gray'],
     data: {},
   },
+  {
+    target: 'app',
+    name: 'Custom 2',
+    identifier: 'custom2',
+    colors: ['gray'],
+    data: {},
+  },
 ]
 
 export class NewAppStore {

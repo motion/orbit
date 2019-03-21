@@ -162,7 +162,7 @@ type ManagedTableState = {
 }
 
 const Container = gloss(View, {
-  flex: 1,
+  minHeight: 'min-content',
 })
 
 class ManagedTableInner extends React.Component<
@@ -172,7 +172,7 @@ class ManagedTableInner extends React.Component<
   static defaultProps = {
     highlightableRows: true,
     multiselect: false,
-    autoHeight: false,
+    autoHeight: true,
     rowLineHeight: 24,
     bodyPlaceholder: (
       <div style={{ margin: 'auto' }}>

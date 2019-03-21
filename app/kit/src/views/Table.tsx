@@ -4,6 +4,9 @@ import {
   normalizeRow,
   SearchableTable,
   SearchableTableProps,
+  Section,
+  SubTitle,
+  Title,
   useRefGetter,
 } from '@o/ui'
 import React, { useCallback } from 'react'
@@ -15,6 +18,8 @@ export type TableProps = Omit<SearchableTableProps, 'columns'> & {
   columns?: TableColumns
   searchable?: boolean
   onHighlighted?: (rows: any[]) => void
+  title?: React.ReactNode
+  subTitle?: React.ReactNode
 }
 
 const defaultColumns = {
@@ -29,7 +34,7 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ searchable, onHighlighted, ...props }: TableProps) {
+export function Table({ searchable, onHighlighted, title, subTitle, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
@@ -45,15 +50,22 @@ export function Table({ searchable, onHighlighted, ...props }: TableProps) {
     [props.rows],
   )
 
+  const hasChrome = !!title || !!subTitle
+
   return (
-    <SearchableTable
-      showSearchBar={searchable || !!props.searchTerm}
-      minWidth={100}
-      minHeight={100}
-      {...props}
-      columns={columns}
-      rows={rows}
-      onHighlightedIndices={onHighlightedIndices}
-    />
+    <>
+      <Section sizePadding={hasChrome ? 1 : 0} paddingBottom={0}>
+        {!!title && <Title>{title}</Title>}
+        {!!subTitle && <SubTitle>{subTitle}</SubTitle>}
+      </Section>
+      <SearchableTable
+        minWidth={100}
+        minHeight={100}
+        {...props}
+        columns={columns}
+        rows={rows}
+        onHighlightedIndices={onHighlightedIndices}
+      />
+    </>
   )
 }

@@ -1,3 +1,7 @@
+Plan
+
+- Need to plan full authentication/syncs
+
 Views
 
 - Multi-step flows + Multi-step forms

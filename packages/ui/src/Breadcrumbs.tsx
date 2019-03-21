@@ -10,50 +10,31 @@ import React, {
   useState,
 } from 'react'
 import { MergeContext } from './helpers/MergeContext'
+import { useDebounceValue } from './hooks/useDebounce'
 import { Text } from './text/Text'
 
 type BreadcrumbActions = { type: 'mount'; value: any } | { type: 'unmount'; value: any }
 
-const BreadcrumbsContext = createContext<{
+const Context = createContext<{
   children: number[]
   dispatch: Dispatch<BreadcrumbActions>
 } | null>(null)
 
-function breadcrumbsReducer(state: { children: Set<any> }, action: BreadcrumbActions) {
+function reduce(state: { children: Set<any> }, action: BreadcrumbActions) {
   switch (action.type) {
     case 'mount':
       state.children.add(action.value)
-      return { ...state }
+      return state
     case 'unmount':
       state.children.delete(action.value)
-      return { ...state }
+      return state
   }
-  return state
-}
-
-const useDebounced = (val, amt = 0) => {
-  const [state, setState] = useState(val)
-
-  useEffect(
-    () => {
-      let tm = setTimeout(() => {
-        setState(val)
-      }, amt)
-
-      return () => {
-        clearTimeout(tm)
-      }
-    },
-    [val],
-  )
-
-  return state
 }
 
 export function Breadcrumbs(props: ViewProps) {
-  const [state, dispatch] = useReducer(breadcrumbsReducer, { children: new Set() })
+  const [state, dispatch] = useReducer(reduce, { children: new Set() })
   const [children, setChildren] = useState<any[]>([])
-  const debouncedState = useDebounced(state, 16)
+  const debouncedState = useDebounceValue(state, 16)
 
   useEffect(
     () => {
@@ -63,7 +44,7 @@ export function Breadcrumbs(props: ViewProps) {
   )
 
   return (
-    <MergeContext Context={BreadcrumbsContext} value={{ dispatch, children }}>
+    <MergeContext Context={Context} value={{ dispatch, children }}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
@@ -100,26 +81,24 @@ export function Breadcrumb({
 
 // recommended to use below each breadcrumb to avoid accidental nesting
 export function BreadcrumbReset(props: { children: any }) {
-  return <BreadcrumbsContext.Provider value={null}>{props.children}</BreadcrumbsContext.Provider>
+  return <Context.Provider value={null}>{props.children}</Context.Provider>
 }
 
-export type BreadcrumbItem = {
+export type BreadcrumbInfo = {
   index: number
   total: number
   isFirst: boolean
   isLast: boolean
 }
 
-export function useBreadcrumb(): BreadcrumbItem | null {
+export function useBreadcrumb(): BreadcrumbInfo | null {
   const idRef = useRef(Math.random())
   const id = idRef.current
-  const context = useContext(BreadcrumbsContext)
+  const context = useContext(Context)
 
   useEffect(() => {
     if (!context) return
-    if (context.children.indexOf(id) === -1) {
-      context.dispatch({ type: 'mount', value: id })
-    }
+    context.dispatch({ type: 'mount', value: id })
     return () => {
       context.dispatch({ type: 'unmount', value: id })
     }
@@ -133,6 +112,8 @@ export function useBreadcrumb(): BreadcrumbItem | null {
   const index = context.children.indexOf(id)
   const isLast = index === total - 1
   const isFirst = index === 0
+
+  console.log('ok', id, context.children, { index, total, isLast, isFirst })
 
   return { index, total, isLast, isFirst }
 }

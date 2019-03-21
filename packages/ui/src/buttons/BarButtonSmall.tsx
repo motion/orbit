@@ -11,6 +11,7 @@ export const BarButtonSmall = forwardRef(function BarButtonSmall(props: ButtonPr
       sizeIcon={1.5}
       fontWeight={400}
       size={0.95}
+      sizePadding={1.4}
       sizeRadius={3}
       {...props}
     />

@@ -92,9 +92,6 @@ export function SettingsAppGeneral(_props: AppProps) {
     <Section sizePadding={2}>
       <Title>General Settings</Title>
 
-      <Button active>test</Button>
-      <Button>test</Button>
-
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}

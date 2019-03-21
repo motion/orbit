@@ -8,7 +8,7 @@ interface FetchCache {
   response?: any
 }
 
-type UseFetchOptions = {
+export type UseFetchOptions = {
   disabled?: boolean
   init?: RequestInit | undefined
   lifespan: number

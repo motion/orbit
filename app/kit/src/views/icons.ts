@@ -2,7 +2,9 @@
 // these are here because they mess up HMR
 // leave them in their own file
 
-export const appIcons = {
+const isNode = process.env.PROCESS_NAME === 'syncers' || process.env.PROCESS_NAME === 'desktop'
+
+export const appIcons = isNode ? {} : {
   ['orbit-search-full']: require('!raw-loader!../../public/icons/appicon-search.svg'),
   ['orbit-topics-full']: require('!raw-loader!../../public/icons/appicon-topics.svg'),
   ['orbit-people-full']: require('!raw-loader!../../public/icons/appicon-people.svg'),
@@ -13,7 +15,7 @@ export const appIcons = {
   ['orbit-settings-full']: require('!raw-loader!../../public/icons/appicon-settings.svg'),
 }
 
-export const icons = {
+export const icons = isNode ? {} : {
   orbit: require('!raw-loader!../../public/icons/icon-orbit.svg'),
   ['orbit-search']: require('!raw-loader!../../public/icons/icon-search.svg'),
   ['orbit-home']: require('!raw-loader!../../public/icons/icon-home.svg'),

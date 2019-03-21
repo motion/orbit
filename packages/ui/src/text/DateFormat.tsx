@@ -1,4 +1,4 @@
-import { differenceInCalendarDays, differenceInCalendarYears } from 'date-fns/esm/fp'
+import { differenceInCalendarDays, differenceInCalendarYears } from 'date-fns'
 import * as React from 'react'
 import { TimeAgo } from './TimeAgo'
 

@@ -181,6 +181,13 @@ export class DriveLoader {
     // check if user have access to the revisions of this file
     if (!file.capabilities.canReadRevisions) return []
 
+    // for some reason google gives fatal errors when comments for map items are requested, so we skip them
+    if (
+      file.mimeType === 'application/vnd.google-apps.map' ||
+      file.mimeType === 'application/vnd.google-apps.script'
+    )
+      return []
+
     await sleep(THROTTLING.revisions)
 
     this.log.verbose('loading revisions for', file)

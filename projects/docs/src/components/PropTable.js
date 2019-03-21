@@ -1,5 +1,4 @@
 import styled from 'astroturf'
-import { graphql } from 'gatsby'
 import capitalize from 'lodash/capitalize'
 import sortBy from 'lodash/sortBy'
 import PropTypes from 'prop-types'
@@ -209,37 +208,37 @@ class PropTable extends React.Component {
   }
 }
 
-export const metadataFragment = graphql`
-  fragment Description_markdown on ComponentDescription {
-    childMarkdownRemark {
-      html
-    }
-  }
+// export const metadataFragment = graphql`
+//   fragment Description_markdown on ComponentDescription {
+//     childMarkdownRemark {
+//       html
+//     }
+//   }
 
-  fragment PropTable_metadata on ComponentMetadata {
-    composes
-    displayName
-    description {
-      ...Description_markdown
-    }
-    props {
-      name
-      doclets
-      defaultValue {
-        value
-        computed
-      }
-      description {
-        ...Description_markdown
-      }
-      required
-      type {
-        name
-        value
-        raw
-      }
-    }
-  }
-`
+//   fragment PropTable_metadata on ComponentMetadata {
+//     composes
+//     displayName
+//     description {
+//       ...Description_markdown
+//     }
+//     props {
+//       name
+//       doclets
+//       defaultValue {
+//         value
+//         computed
+//       }
+//       description {
+//         ...Description_markdown
+//       }
+//       required
+//       type {
+//         name
+//         value
+//         raw
+//       }
+//     }
+//   }
+// `
 
 export default PropTable

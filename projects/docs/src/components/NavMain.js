@@ -91,17 +91,9 @@ function NavMain({ activePage }) {
         <OverlayTrigger
           placement="bottom"
           delay={{ show: 200 }}
-          overlay={
-            <Tooltip id="t-version">
-              Compatible with Bootstrap v
-              {config.bootstrapVersion
-                .split('.')
-                .slice(0, 2)
-                .join('.')}
-            </Tooltip>
-          }
+          overlay={<Tooltip id="t-version">Compatible with Bootstrap v</Tooltip>}
         >
-          <StyledNavLink>v{config.version}</StyledNavLink>
+          <StyledNavLink>v</StyledNavLink>
         </OverlayTrigger>
         <OverlayTrigger
           placement="bottom"

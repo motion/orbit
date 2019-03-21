@@ -1,4 +1,5 @@
 import React from 'react'
+import config from '../../package.json'
 import CodeBlock from './CodeBlock'
 
 const propTypes = {}

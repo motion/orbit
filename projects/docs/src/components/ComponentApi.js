@@ -1,5 +1,4 @@
 import styled from 'astroturf'
-import { graphql } from 'gatsby'
 import kebabCase from 'lodash/kebabCase'
 import React from 'react'
 import Anchor from './Anchor'
@@ -63,15 +62,15 @@ ComponentApi.propTypes = propTypes
 
 export default ComponentApi
 
-export const metadataFragment = graphql`
-  fragment ComponentApi_metadata on ComponentMetadata {
-    composes
-    displayName
-    description {
-      childMarkdownRemark {
-        html
-      }
-    }
-    ...PropTable_metadata
-  }
-`
+// export const metadataFragment = graphql`
+//   fragment ComponentApi_metadata on ComponentMetadata {
+//     composes
+//     displayName
+//     description {
+//       childMarkdownRemark {
+//         html
+//       }
+//     }
+//     ...PropTable_metadata
+//   }
+// `

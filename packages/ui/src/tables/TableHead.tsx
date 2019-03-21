@@ -33,6 +33,7 @@ const TableHeadColumnText = gloss({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
+  opacity: 0.65,
 })
 
 const TableHeaderColumnInteractive = gloss(Interactive, {

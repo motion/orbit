@@ -74,16 +74,19 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       <NavButtonChromeInner sidePad={sidePad} isActive={isActive}>
         {isActive && (
           <>
-            <Absolute
-              borderTopRadius={borderSize}
-              height={100}
-              top={0}
-              left={0}
-              right={0}
-              overflow="hidden"
-              boxShadow={[['inset', 0, 1, theme.glintColor || theme.background.alpha(0.5)]]}
-              transform={{ y: -0.5 }}
-            />
+            {/* extra glint on dark background */}
+            {theme.background.isDark() && (
+              <Absolute
+                borderTopRadius={borderSize}
+                height={100}
+                top={0}
+                left={0}
+                right={0}
+                overflow="hidden"
+                boxShadow={[['inset', 0, 1, theme.glintColor || theme.background.alpha(0.5)]]}
+                transform={{ y: -0.5 }}
+              />
+            )}
             <BorderBottom opacity={0.15} transform={{ y: 0 }} />
           </>
         )}

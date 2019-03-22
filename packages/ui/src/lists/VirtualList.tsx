@@ -172,7 +172,7 @@ class VirtualListStore {
 
   setWidth = throttle((next: number) => {
     this.width = next
-  }, 100)
+  }, 32)
 
   triggerRecomputeHeights = 0
   runRecomputeHeights = react(

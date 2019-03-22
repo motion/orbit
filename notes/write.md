@@ -342,3 +342,15 @@ Or monetizing monetizing.
 - App building
 - data needs to be separate from apps
 - app building is impossible and requires heavy infrastructure
+
+---
+
+# Developers are bad at Vertical Integration
+
+- Developers love small, pure, composable, blazing, etc etc
+- This is great, but we have a huge problem
+- We are allergic to vertical integration
+- For example, we love libraries and hate frameworks
+- We're willing to fragment entire ecosystems because we don't like a couple apis in a library
+- This sets back our industry, big time
+- We should be building more upwards, less sideways

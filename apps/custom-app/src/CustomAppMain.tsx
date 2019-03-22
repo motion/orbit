@@ -4,6 +4,7 @@ import {
   DefinitionList,
   Fetch,
   Fieldsets,
+  FloatingCard,
   Form,
   Row,
   SearchInput,
@@ -47,6 +48,9 @@ export function CustomAppMain(_props: AppProps) {
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
           />
+
+          <FloatingCard title="Hello">lorem</FloatingCard>
+
           <Row overflowX="auto">
             {highlighted.map(row => (
               <Card

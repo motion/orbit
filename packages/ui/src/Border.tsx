@@ -9,7 +9,7 @@ const Border = gloss<{
 
 export const BorderTop = gloss(Border, {
   height: 1,
-  zIndex: 100000000,
+  zIndex: 100000,
   top: 0,
   left: 0,
   right: 0,
@@ -20,7 +20,7 @@ export const BorderTop = gloss(Border, {
 
 export const BorderBottom = gloss(Border, {
   height: 1,
-  zIndex: 100000000,
+  zIndex: 100000,
   bottom: 0,
   left: 0,
   right: 0,
@@ -31,7 +31,7 @@ export const BorderBottom = gloss(Border, {
 
 export const BorderLeft = gloss(Border, {
   width: 1,
-  zIndex: 100000000,
+  zIndex: 100000,
   top: 0,
   bottom: 0,
   left: 0,
@@ -42,7 +42,7 @@ export const BorderLeft = gloss(Border, {
 
 export const BorderRight = gloss(Border, {
   width: 1,
-  zIndex: 100000000,
+  zIndex: 100000,
   top: 0,
   bottom: 0,
   right: 0,

@@ -7,6 +7,7 @@ import { FadeDown } from '../views/FadeDown'
 import { Page } from '../views/Page'
 import { Paragraph } from '../views/Paragraph'
 import { TitleText } from '../views/TitleText'
+import { TopBlur } from '../views/TopBlur'
 import { ViewPortText } from '../views/ViewPortText'
 
 export function HomePage() {
@@ -31,11 +32,13 @@ export function HomePage() {
     <Parallax pages={3}>
       <ParallaxLayer offset={0} speed={0.5}>
         <Theme name="dark">
-          <FullScreen background={theme => theme.background}>
+          <FullScreen background={theme => theme.background} />
+          <TopBlur />
+          <FullScreen>
             <Page>
               <Header />
 
-              <Row height="80%" margin="auto" alignItems="center">
+              <Row height="80%" flex={1} alignItems="center">
                 <View width="100%">
                   <FadeDown disable={!measured}>
                     <TitleText fontWeight={100}>

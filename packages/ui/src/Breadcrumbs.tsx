@@ -1,53 +1,27 @@
 import { Row, ViewProps } from '@o/gloss'
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-} from 'react'
+import { useReaction, useStore } from '@o/use-store'
+import { ObservableSet } from 'mobx'
+import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
-import { useDebounceValue } from './hooks/useDebounce'
 import { Text } from './text/Text'
 
-type BreadcrumbActions =
-  | { type: 'mount'; value: any }
-  | { type: 'unmount'; value: any }
-  | { type: 'commit' }
+const Context = createContext<BreadcrumbStore | null>(null)
 
-const Context = createContext<{
-  children: number[]
-  dispatch: Dispatch<BreadcrumbActions>
-} | null>(null)
-
-function reduce(state: { children: Set<any> }, action: BreadcrumbActions) {
-  switch (action.type) {
-    case 'mount':
-      state.children.add(action.value)
-      return state
-    case 'unmount':
-      state.children.delete(action.value)
-      return state
-    case 'commit':
-      return { ...state }
+class BreadcrumbStore {
+  children = new ObservableSet<number>()
+  mount(id: number) {
+    this.children.add(id)
+  }
+  unmount(id: number) {
+    this.children.delete(id)
   }
 }
 
 export function Breadcrumbs(props: ViewProps) {
-  const [state, dispatch] = useReducer(reduce, { children: new Set() })
-  const debouncedState = useDebounceValue(state, 16)
-
-  useEffect(
-    () => {
-      dispatch({ type: 'commit' })
-    },
-    [debouncedState],
-  )
-
+  const store = useStore(BreadcrumbStore)
+  console.log('store', store)
   return (
-    <MergeContext Context={Context} value={{ dispatch, children: [...state.children] }}>
+    <MergeContext Context={Context} value={store}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
@@ -99,20 +73,22 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
   const id = idRef.current
   const context = useContext(Context)
 
-  useEffect(() => {
-    if (!context) return
-    context.dispatch({ type: 'mount', value: id })
-    return () => {
-      context.dispatch({ type: 'unmount', value: id })
-    }
-  }, [])
+  useEffect(
+    () => {
+      if (!context) return
+      context.mount(id)
+      return () => context.unmount(id)
+    },
+    [context],
+  )
 
   if (!context) {
     return null
   }
 
-  const total = context.children.length
-  const index = context.children.indexOf(id)
+  const children = useReaction(() => [...context.children], { delay: 16, defaultValue: [] })
+  const total = children.length
+  const index = children.indexOf(id)
   const isLast = index === total - 1
   const isFirst = index === 0
 

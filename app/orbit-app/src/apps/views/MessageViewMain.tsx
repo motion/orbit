@@ -2,13 +2,18 @@ import { AppProps, Icon } from '@o/kit'
 import { PassProps, Space, SubTitle, Title, View } from '@o/ui'
 import React from 'react'
 
-export function MessageViewMain({ title, icon, subType }: AppProps) {
+export function MessageViewMain({ title, icon, subTitle, subType }: AppProps) {
   if (!title) {
     return null
   }
   return (
     <View flex={1} alignItems="center" justifyContent="center">
       <Title size={title.length > 40 ? 1.4 : 2.2}>{title}</Title>
+      {subTitle && (
+        <>
+          <SubTitle>{subTitle}</SubTitle>
+        </>
+      )}
       {subType && (
         <>
           <SubTitle>{subType}</SubTitle>

@@ -4,6 +4,7 @@ Plan
 
 Views
 
+- Floating Card
 - Multi-step flows + Multi-step forms
 - Query editor views
 - <Searchable /> and <SearchTable /> both handle filters

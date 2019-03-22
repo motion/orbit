@@ -153,7 +153,8 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
     } = this.state
 
     return (
-      <SidebarInteractiveContainer
+      <Interactive
+        flex="none"
         className={this.props.className}
         minWidth={minWidth}
         maxWidth={maxWidth}
@@ -168,14 +169,10 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
           {!noBorder && borderByPosition[position]}
           {children}
         </SidebarContainer>
-      </SidebarInteractiveContainer>
+      </Interactive>
     )
   }
 }
-
-const SidebarInteractiveContainer = gloss(Interactive, {
-  flex: 'none',
-})
 
 const borderByPosition = {
   left: <BorderRight />,

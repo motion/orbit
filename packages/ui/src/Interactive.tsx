@@ -39,6 +39,7 @@ const ALL_RESIZABLE: ResizableSides = {
 }
 
 export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
+  disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean
   onMoveStart?: () => void
   onMoveEnd?: () => void
@@ -64,7 +65,13 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
   onCanResize?: (sides?: ResizableSides) => void
   onResizeStart?: () => void
   onResizeEnd?: () => void
-  onResize?: (width: number, height?: number, desiredWidth?: number, desiredHeight?: number) => void
+  onResize?: (
+    width: number,
+    height?: number,
+    desiredWidth?: number,
+    desiredHeight?: number,
+    resizingSides?: ResizableSides,
+  ) => void
   resizing?: boolean
   resizable?: boolean | ResizableSides
   innerRef?: (elem: HTMLElement) => void
@@ -91,6 +98,7 @@ const InteractiveContainer = gloss(View, {
   willChange: 'transform, height, width, z-index',
 })
 
+// controlled
 export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
   static defaultProps = {
     minHeight: 0,
@@ -345,7 +353,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (maxHeight != null) {
       fheight = Math.min(maxHeight, fheight)
     }
-    onResize(fwidth, fheight, width, height)
+    onResize(fwidth, fheight, width, height, this.state.resizingSides)
   }
 
   move(top: number, left: number, event: MouseEvent) {
@@ -571,7 +579,17 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 
   render() {
-    const { fill, height, left, movable, top, width, zIndex, ...props } = this.props
+    const {
+      fill,
+      height,
+      left,
+      movable,
+      top,
+      width,
+      zIndex,
+      disableFloatingGrabbers,
+      ...props
+    } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
     const style = {
@@ -617,8 +635,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
         style={style}
         {...props}
       >
-        {/* Almost working! to have a better grabbable bar */}
+        {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
         {resizable &&
+          !disableFloatingGrabbers &&
           Object.keys(resizable).map(side => (
             <FakeResize
               key={side}

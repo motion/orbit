@@ -4,6 +4,7 @@ import {
   DefinitionList,
   Fetch,
   Fieldsets,
+  FloatingView,
   Form,
   Row,
   SearchInput,
@@ -11,6 +12,7 @@ import {
   SpacedRow,
   Tab,
   Tabs,
+  Title,
   useFetch,
   useForm,
   VerticalSplit,
@@ -47,6 +49,17 @@ export function CustomAppMain(_props: AppProps) {
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
           />
+
+          <FloatingView
+            resizable
+            zIndex={10000000}
+            defaultTop={20}
+            defaultLeft={20}
+            background="red"
+          >
+            <Title>hello</Title>
+          </FloatingView>
+
           <Row overflowX="auto">
             {highlighted.map(row => (
               <Card

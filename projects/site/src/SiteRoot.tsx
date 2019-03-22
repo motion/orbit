@@ -2,7 +2,7 @@ import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 import { hot } from 'react-hot-loader'
-import HomePage from './pages/HomePage'
+import { HomePage } from './pages/HomePage'
 
 function getSiteNavigator() {
   const Site = ({ descriptors, navigation }) => {

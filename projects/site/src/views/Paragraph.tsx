@@ -5,7 +5,7 @@ import * as React from 'react'
 import { ViewPortText } from './ViewPortText'
 
 export const Paragraph = gloss(Text, {
-  fontFamily: 'Eesti Pro',
+  fontFamily: 'gt eesti pro display trial',
 })
 
 Paragraph.defaultProps = {

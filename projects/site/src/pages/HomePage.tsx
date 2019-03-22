@@ -1,24 +1,29 @@
-import { FullScreen, Row, Space, Theme, useDebounce, View } from '@o/ui'
+import { FullScreen, Row, Theme, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
-import { observer } from 'mobx-react-lite'
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Parallax, ParallaxLayer } from 'react-spring/renderprops-addons'
 import { FadeDown } from '../views/FadeDown'
 import { Paragraph } from '../views/Paragraph'
 import { TitleText } from '../views/TitleText'
 import { ViewPortText } from '../views/ViewPortText'
 
-function HomePage() {
-  const [measured, setMeasured] = useState(false)
-  const setMeasuredDelayed = useDebounce(setMeasured, 1)
-  const fontsLoaded = useWaitForFonts(['Eesti Pro'])
-  const [parSize, setParSize] = useState(16)
+export function HomePage() {
+  let [measured, setMeasured] = useState(false)
+  let setMeasuredDelayed = useDebounce(setMeasured, 1)
+  let fontsLoaded = useWaitForFonts(['Eesti Pro'])
+  let pSize = 16
+  let [parSize, setParSize] = useState(pSize)
 
   if (!fontsLoaded) {
     return null
   }
 
-  const longestText = `Unified search, team vocabulary, and who is good at what.`
+  let texts = [
+    `The decentralized internal app platform for teams who want to do more.`,
+    `Workflows, database views, custom spreadsheets, dashboards, and more.`,
+    `Runs behind your firewall, without a cloud.`,
+  ]
+  let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   return (
     <Parallax pages={3}>
@@ -27,7 +32,7 @@ function HomePage() {
           <FullScreen background={theme => theme.background}>
             <Row
               height="80%"
-              width="70%"
+              width="78%"
               maxWidth={900}
               minWidth={360}
               margin="auto"
@@ -35,30 +40,28 @@ function HomePage() {
             >
               <View width="100%">
                 <FadeDown disable={!measured}>
-                  <TitleText>
+                  <TitleText fontWeight={100}>
                     <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                      Apps for teamwork
+                      Build internal tools without stress.
                     </ViewPortText>
                   </TitleText>
 
-                  <Space />
-                  <Space />
-
-                  <ViewPortText style={{ opacity: 0 }} min={16} onReady={setParSize}>
-                    {longestText}
+                  <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
+                    {longest}
                   </ViewPortText>
 
                   <Paragraph
-                    fontSize={parSize - 2}
-                    sizeLineHeight={1.2}
+                    fontSize={parSize * 0.9}
+                    sizeLineHeight={1.5}
                     textAlign="center"
                     alpha={0.7}
                   >
-                    Orbit is a home for team knowledge.
-                    <br />
-                    {longestText}
-                    <br />
-                    It's a smart new way to manage your knowledge.
+                    {texts.map((t, i) => (
+                      <Fragment key={t}>
+                        {i > 0 && <br />}
+                        {t}
+                      </Fragment>
+                    ))}
                   </Paragraph>
                 </FadeDown>
               </View>
@@ -75,5 +78,3 @@ HomePage.navigationOptions = {
   title: 'Home',
   linkName: 'Home Page',
 }
-
-export default observer(HomePage)

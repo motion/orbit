@@ -1,5 +1,5 @@
 import { Row, ViewProps } from '@o/gloss'
-import { useReaction, useStore } from '@o/use-store'
+import { react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
@@ -8,12 +8,28 @@ import { Text } from './text/Text'
 const Context = createContext<BreadcrumbStore | null>(null)
 
 class BreadcrumbStore {
-  children = new ObservableSet<number>()
-  mount(id: number) {
-    this.children.add(id)
+  selectors = new ObservableSet<string>()
+
+  orderedChildren = react(
+    () => [...this.selectors],
+    async (selectors, { sleep }) => {
+      await sleep()
+      const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
+      const orderedSelectors = nodes.map(node =>
+        selectors.find(sel => node.classList.contains(sel)),
+      )
+      return orderedSelectors
+    },
+    {
+      defaultValue: [],
+    },
+  )
+
+  mount(node: string) {
+    this.selectors.add(node)
   }
-  unmount(id: number) {
-    this.children.delete(id)
+  unmount(node: string) {
+    this.selectors.delete(node)
   }
 }
 
@@ -65,28 +81,32 @@ export type BreadcrumbInfo = {
   total: number
   isFirst: boolean
   isLast: boolean
+  selector: string
 }
 
 export function useBreadcrumb(): BreadcrumbInfo | null {
-  const idRef = useRef(Math.random())
-  const id = idRef.current
+  const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
   const context = useContext(Context)
 
   useEffect(() => {
     if (!context) return
-    context.mount(id)
-    return () => context.unmount(id)
+    context.mount(selector)
+    return () => {
+      context.unmount(selector)
+    }
   }, [])
+
+  const index = useReaction(() =>
+    context ? context.orderedChildren.findIndex(x => x === selector) : -1,
+  )
 
   if (!context) {
     return null
   }
 
-  const children = useReaction(() => [...context.children], { delay: 16, defaultValue: [] })
-  const total = children.length
-  const index = children.indexOf(id)
+  const total = context.orderedChildren.length
   const isLast = index === total - 1
   const isFirst = index === 0
 
-  return { index, total, isLast, isFirst }
+  return { selector, index, total, isLast, isFirst }
 }

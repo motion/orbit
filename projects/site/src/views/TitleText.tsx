@@ -7,4 +7,5 @@ export const TitleText = gloss(Text, {
 
 TitleText.defaultProps = {
   fontWeight: 800,
+  selectable: true,
 }

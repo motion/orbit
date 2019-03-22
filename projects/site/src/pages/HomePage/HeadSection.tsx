@@ -73,7 +73,14 @@ export function HeadSection() {
                 </View>
               </Row>
 
-              <View position="absolute" top="30%" left={0} right={0} zIndex={0}>
+              <View
+                pointerEvents="none"
+                position="absolute"
+                top="30%"
+                left={0}
+                right={0}
+                zIndex={0}
+              >
                 <img src={glow} />
               </View>
 
@@ -85,13 +92,13 @@ export function HeadSection() {
                   margin={[0, -120]}
                 />
 
-                <Center>
-                  <img src={macbook} />
-                </Center>
-
                 <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
                   <img src={lineSep} />
                 </FullScreen>
+
+                <Center marginTop={100}>
+                  <img src={macbook} />
+                </Center>
               </Row>
             </Page>
           </FullScreen>

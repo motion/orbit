@@ -1,6 +1,7 @@
-import { gloss, SimpleText } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { Row } from '@o/ui'
 import React from 'react'
+import { Text } from '../views/Text'
 import { LogoVertical } from './LogoVertical'
 
 export function Header() {
@@ -31,8 +32,8 @@ const LinkSection = gloss({
   },
 })
 
-const Link = gloss(SimpleText, {
-  fontSize: 18,
+const Link = gloss(Text, {
+  fontSize: 16,
   textDecoration: 'none',
   padding: [0, '8%'],
 })

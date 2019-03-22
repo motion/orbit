@@ -4,7 +4,7 @@ import {
   DefinitionList,
   Fetch,
   Fieldsets,
-  FloatingView,
+  FloatingCard,
   Form,
   Row,
   SearchInput,
@@ -49,11 +49,7 @@ export function CustomAppMain(_props: AppProps) {
             filters={form.getFilters(['active', 'type'])}
           />
 
-          <FloatingView resizable defaultTop={20} defaultLeft={20}>
-            <Card title="Hello" elevation={2} flex={1}>
-              lorem
-            </Card>
-          </FloatingView>
+          <FloatingCard title="Hello">lorem</FloatingCard>
 
           <Row overflowX="auto">
             {highlighted.map(row => (

@@ -1,17 +1,11 @@
 import { gloss } from '@o/gloss'
 import { TextFitProps } from '@o/react-textfit'
-import { Text, TextProps } from '@o/ui'
+import { TextProps } from '@o/ui'
 import * as React from 'react'
+import { Text } from './Text'
 import { ViewPortText } from './ViewPortText'
 
-export const Paragraph = gloss(Text, {
-  fontFamily: 'gt eesti pro display trial',
-})
-
-Paragraph.defaultProps = {
-  tagName: 'p',
-  selectable: true,
-}
+export const Paragraph = gloss(Text)
 
 export const ViewportParagraph = ({
   min = 16,

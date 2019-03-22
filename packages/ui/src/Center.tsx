@@ -1,6 +1,6 @@
-import { gloss } from '@o/gloss'
+import { gloss, View } from '@o/gloss'
 
-export const Center = gloss({
+export const Center = gloss(View, {
   position: 'absolute',
   top: 0,
   left: 0,

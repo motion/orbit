@@ -8,6 +8,7 @@ import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
 import screen from '../../../public/images/screen.jpg'
 import { Header } from '../../components/Header'
+import { useScreenSize } from '../../hooks/useScreenSize'
 import { FadeDown } from '../../views/FadeDown'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
@@ -16,22 +17,43 @@ import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { ViewPortText } from '../../views/ViewPortText'
 
+let allTitles = {
+  large: 'A new way to build apps together.',
+  medium: 'A new way to build apps together.',
+  small: 'Build apps together.',
+}
+
+let allTexts = {
+  large: [
+    `Make powerful, beautiful apps in minutes with no configuration & deploy without a server.`,
+    `Custom internal tools made easy. Workflows, spreadsheets, dashboards, and more.`,
+    `Runs behind the firewall, without a cloud.`,
+  ],
+  medium: [
+    `Make powerful, beautiful apps in minutes, no configuration & no servers.`,
+    `Make internal workflows, spreadsheets, dashboards, and more.`,
+    `Runs behind the firewall, without a cloud.`,
+  ],
+  small: [
+    `Powerful apps in minutes, no configuration, no servers.`,
+    `Workflows, spreadsheets, dashboards, and more.`,
+    `Runs behind the firewall, without a cloud.`,
+  ],
+}
+
 export function HeadSection() {
   let [measured, setMeasured] = useState(false)
   let setMeasuredDelayed = useDebounce(setMeasured, 1)
   let fontsLoaded = useWaitForFonts(['Eesti Pro'])
   let pSize = 16
   let [parSize, setParSize] = useState(pSize)
+  const size = useScreenSize()
 
   if (!fontsLoaded) {
     return null
   }
 
-  let texts = [
-    `The decentralized internal app platform for teams who want to do more.`,
-    `Workflows, database views, custom spreadsheets, dashboards, and more.`,
-    `Runs behind your firewall, without a cloud.`,
-  ]
+  let texts = allTexts[size]
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   return (
@@ -49,7 +71,7 @@ export function HeadSection() {
                   <FadeDown disable={!measured}>
                     <TitleText fontWeight={100}>
                       <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                        Build internal tools without stress.
+                        {allTitles[size]}
                       </ViewPortText>
                     </TitleText>
 
@@ -58,7 +80,7 @@ export function HeadSection() {
                     </ViewPortText>
 
                     <Paragraph
-                      fontSize={parSize * 0.9}
+                      fontSize={parSize * 0.94}
                       sizeLineHeight={1.5}
                       textAlign="center"
                       fontWeight={100}

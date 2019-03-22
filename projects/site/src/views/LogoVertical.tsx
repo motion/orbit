@@ -9,7 +9,7 @@ export function LogoVertical() {
       <img src={mark} />
       <Space />
       <Space />
-      <img src={orbit} style={{ shapeRendering: 'crispEdges' }} />
+      <img width={103} height={23} src={orbit} style={{ shapeRendering: 'crispEdges' }} />
     </View>
   )
 }

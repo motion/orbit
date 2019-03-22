@@ -16,9 +16,9 @@ export function Header() {
       <LogoVertical />
 
       <LinkSection>
-        <Link>Examples</Link>
-        <Link>Docs</Link>
-        <Link>Security</Link>
+        <Link>Pricing</Link>
+        <Link>Team</Link>
+        <Link>Blog</Link>
       </LinkSection>
     </Row>
   )
@@ -27,6 +27,7 @@ export function Header() {
 const LinkSection = gloss({
   width: '30%',
   flexFlow: 'row',
+  justifyContent: 'space-around',
   alignRight: {
     justifyContent: 'flex-end',
   },

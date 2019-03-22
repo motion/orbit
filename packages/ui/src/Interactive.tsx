@@ -638,6 +638,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
               onMouseDown={listenerProps.onMouseDown}
               hovered={resizingSides && resizingSides[side]}
               side={side as keyof ResizableSides}
+              zIndex={zIndex + 1}
             />
           ))}
         {this.props.children}
@@ -646,7 +647,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 }
 
-type FakeResizeProps = ViewProps & {
+type FakeResizeProps = Omit<ViewProps, 'zIndex'> & {
+  zIndex?: number
   parent?: RefObject<HTMLElement>
   side: keyof ResizableSides
   hovered?: boolean

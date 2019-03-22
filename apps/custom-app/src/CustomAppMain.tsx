@@ -49,7 +49,7 @@ export function CustomAppMain(_props: AppProps) {
             filters={form.getFilters(['active', 'type'])}
           />
 
-          <FloatingView resizable zIndex={10000000} defaultTop={20} defaultLeft={20}>
+          <FloatingView resizable defaultTop={20} defaultLeft={20}>
             <Card title="Hello" elevation={2} flex={1}>
               lorem
             </Card>

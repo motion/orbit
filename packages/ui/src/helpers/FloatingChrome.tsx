@@ -7,6 +7,7 @@ import { Portal } from './portal'
 
 export function FloatingChrome(
   props: {
+    zIndex?: number
     target: RefObject<HTMLElement>
     style?: any
     measureKey?: number
@@ -19,7 +20,7 @@ export function FloatingChrome(
       style={{
         position: 'absolute',
         pointerEvents: 'auto',
-        zIndex: 1500000,
+        zIndex: props.zIndex || 1500000,
         ...pos,
         ...style,
       }}

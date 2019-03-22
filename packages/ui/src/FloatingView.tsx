@@ -87,7 +87,7 @@ export function FloatingView({
           height={state.height}
           top={state.top}
           left={state.left}
-          zIndex={12000}
+          zIndex={12000000}
           {...restProps}
           onResize={onResize}
         >

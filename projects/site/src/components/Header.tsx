@@ -1,8 +1,8 @@
 import { gloss } from '@o/gloss'
 import { Row } from '@o/ui'
 import React from 'react'
+import { LogoVertical } from '../views/LogoVertical'
 import { Text } from '../views/Text'
-import { LogoVertical } from './LogoVertical'
 
 export function Header() {
   return (

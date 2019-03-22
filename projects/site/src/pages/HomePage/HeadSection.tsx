@@ -1,11 +1,12 @@
-import { Center, FullScreen, Row, Theme, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, Image, Row, Theme, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { Fragment, useState } from 'react'
 import { Parallax, ParallaxLayer } from 'react-spring/renderprops-addons'
+import download from '../../../public/images/download.svg'
+import glow from '../../../public/images/glow.svg'
+import lineSep from '../../../public/images/line-sep.svg'
 import macbook from '../../../public/images/macbook.png'
 import screen from '../../../public/images/screen.jpg'
-import glow from '../../../public/ux/glow.svg'
-import lineSep from '../../../public/ux/line-sep.svg'
 import { Header } from '../../components/Header'
 import { FadeDown } from '../../views/FadeDown'
 import { Page } from '../../views/Page'
@@ -79,15 +80,15 @@ export function HeadSection() {
                 top="30%"
                 left={0}
                 right={0}
-                zIndex={0}
+                zIndex={1}
               >
                 <img src={glow} />
               </View>
 
               <Row width="100%" height={340} position="relative">
                 <View
-                  background={`url(${screen})`}
-                  backgroundSize="cover"
+                  background={`url(${screen}) no-repeat top left`}
+                  backgroundSize="contain"
                   flex={1}
                   margin={[0, -120]}
                 />
@@ -98,6 +99,10 @@ export function HeadSection() {
 
                 <Center marginTop={100}>
                   <img src={macbook} />
+                </Center>
+
+                <Center bottom="auto" top="16%">
+                  <Image src={download} width={159} height={45} />
                 </Center>
               </Row>
             </Page>

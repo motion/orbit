@@ -5,7 +5,7 @@ import { LogoVertical } from './LogoVertical'
 
 export function Header() {
   return (
-    <Row alignItems="center" justifyContent="space-between" padding={[20, 0]}>
+    <Row alignItems="center" justifyContent="space-between" padding={[40, 0]}>
       <LinkSection alignRight>
         <Link>Examples</Link>
         <Link>Docs</Link>

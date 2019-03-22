@@ -11,6 +11,7 @@ import { Header } from '../../components/Header'
 import { FadeDown } from '../../views/FadeDown'
 import { Page } from '../../views/Page'
 import { Paragraph } from '../../views/Paragraph'
+import { Text } from '../../views/Text'
 import { TitleText } from '../../views/TitleText'
 import { TopBlur } from '../../views/TopBlur'
 import { ViewPortText } from '../../views/ViewPortText'
@@ -43,8 +44,8 @@ export function HeadSection() {
             <Page>
               <Header />
 
-              <Row height="80%" flex={1} alignItems="center">
-                <View width="100%">
+              <Row height="80%" flex={1} alignItems="center" justifyContent="center">
+                <View width="90%">
                   <FadeDown disable={!measured}>
                     <TitleText fontWeight={100}>
                       <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
@@ -102,7 +103,26 @@ export function HeadSection() {
                 </Center>
 
                 <Center bottom="auto" top="16%">
-                  <Image src={download} width={159} height={45} />
+                  <Row
+                    width={159}
+                    height={45}
+                    position="relative"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Image position="absolute" src={download} />
+                    <Text
+                      transform={{ y: 2 }}
+                      zIndex={1}
+                      size={1.1}
+                      fontWeight={500}
+                      letterSpacing={1}
+                      pointerEvents="none"
+                    >
+                      Download
+                    </Text>
+                    <div style={{ width: 25 }} />
+                  </Row>
                 </Center>
               </Row>
             </Page>

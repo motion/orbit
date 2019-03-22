@@ -12,6 +12,8 @@ import { SubTitle } from './text/SubTitle'
 import { Text } from './text/Text'
 import { Title } from './text/Title'
 
+export type CardProps = SizedSurfaceProps & ListItemProps
+
 export function Card({
   padding = 8,
   sizeRadius = true,
@@ -36,7 +38,7 @@ export function Card({
   subtitle,
   date,
   ...props
-}: SizedSurfaceProps & ListItemProps) {
+}: CardProps) {
   const store = useStore(ListItemStore, props)
   // allow either custom subtitle or resolved one
   const { isSelected } = store

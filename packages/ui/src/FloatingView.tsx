@@ -12,6 +12,10 @@ import { useVisiblity } from './Visibility'
 
 export type FloatingViewProps = InteractiveProps & {
   disableDrag?: boolean
+  defaultTop?: number
+  defaultLeft?: number
+  defaultWidth?: number
+  defaultHeight?: number
 }
 
 export function FloatingView({

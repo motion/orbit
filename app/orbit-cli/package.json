@@ -2,7 +2,6 @@
   "name": "@o/orbit-cli",
   "version": "2.4.0",
   "main": "./_/main.js",
-  "private": true,
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"

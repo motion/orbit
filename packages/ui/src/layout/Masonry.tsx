@@ -1,7 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import { on } from '@o/utils'
-import * as React from 'react'
+import React, { Children, cloneElement, isValidElement } from 'react'
 
 const rowHeight = 1
 const gridGap = 7
@@ -60,9 +60,9 @@ export class Masonry extends React.PureComponent<MasonryProps> {
       const rowSpan = Math.ceil((contentHeight + gridGap) / (rowHeight + gridGap))
       styles.push({ gridRowEnd: `span ${rowSpan}` })
     }
-    const gridChildren = React.Children.map(this.props.children, (child, index) => {
-      if (React.isValidElement(child)) {
-        return React.cloneElement(child as any, {
+    const gridChildren = Children.map(this.props.children, (child, index) => {
+      if (isValidElement(child)) {
+        return cloneElement(child as any, {
           inGrid: true,
           style: {
             ...styles[index],

@@ -1,5 +1,4 @@
-import { gloss } from '@o/gloss'
-import { View } from '@o/ui'
+import { gloss, View } from '@o/gloss'
 import * as React from 'react'
 
 const GridFrame = gloss(View, {

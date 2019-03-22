@@ -3,6 +3,7 @@ export type AppProps = {
   id?: string
   subId?: string
   title?: string
+  subTitle?: string
   data?: any
   icon?: string
   iconLight?: string

@@ -1,53 +1,43 @@
 import { Row, ViewProps } from '@o/gloss'
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-} from 'react'
+import { react, useReaction, useStore } from '@o/use-store'
+import { ObservableSet } from 'mobx'
+import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
-import { useDebounceValue } from './hooks/useDebounce'
-import { Text } from './text/Text'
+import { Text, TextProps } from './text/Text'
+import { Omit } from './types'
 
-type BreadcrumbActions =
-  | { type: 'mount'; value: any }
-  | { type: 'unmount'; value: any }
-  | { type: 'commit' }
+const Context = createContext<BreadcrumbStore | null>(null)
 
-const Context = createContext<{
-  children: number[]
-  dispatch: Dispatch<BreadcrumbActions>
-} | null>(null)
+class BreadcrumbStore {
+  selectors = new ObservableSet<string>()
 
-function reduce(state: { children: Set<any> }, action: BreadcrumbActions) {
-  switch (action.type) {
-    case 'mount':
-      state.children.add(action.value)
-      return state
-    case 'unmount':
-      state.children.delete(action.value)
-      return state
-    case 'commit':
-      return { ...state }
+  orderedChildren = react(
+    () => [...this.selectors],
+    async (selectors, { sleep }) => {
+      await sleep()
+      const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
+      const orderedSelectors = nodes.map(node =>
+        selectors.find(sel => node.classList.contains(sel)),
+      )
+      return orderedSelectors
+    },
+    {
+      defaultValue: [],
+    },
+  )
+
+  mount(node: string) {
+    this.selectors.add(node)
+  }
+  unmount(node: string) {
+    this.selectors.delete(node)
   }
 }
 
 export function Breadcrumbs(props: ViewProps) {
-  const [state, dispatch] = useReducer(reduce, { children: new Set() })
-  const debouncedState = useDebounceValue(state, 16)
-
-  useEffect(
-    () => {
-      dispatch({ type: 'commit' })
-    },
-    [debouncedState],
-  )
-
+  const store = useStore(BreadcrumbStore)
   return (
-    <MergeContext Context={Context} value={{ dispatch, children: [...state.children] }}>
+    <MergeContext Context={Context} value={store}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
@@ -62,7 +52,7 @@ export function Breadcrumb({
   separator = <Text>{' >'}</Text>,
   children,
   ...props
-}: BreadcrumbsProps) {
+}: Omit<TextProps, 'children'> & BreadcrumbsProps) {
   const crumb = useBreadcrumb()
 
   if (typeof children === 'function') {
@@ -76,7 +66,9 @@ export function Breadcrumb({
 
   return (
     <BreadcrumbReset>
-      <Text {...props}>{children}</Text>
+      <Text {...props} className={`${(crumb && crumb.selector) || ''} ${props.className || ''}`}>
+        {children}
+      </Text>
       {crumb && crumb.isLast ? '' : separator}
     </BreadcrumbReset>
   )
@@ -92,29 +84,32 @@ export type BreadcrumbInfo = {
   total: number
   isFirst: boolean
   isLast: boolean
+  selector: string
 }
 
 export function useBreadcrumb(): BreadcrumbInfo | null {
-  const idRef = useRef(Math.random())
-  const id = idRef.current
+  const selector = useRef(`crumb-${Math.random()}`.replace('.', '')).current
   const context = useContext(Context)
 
   useEffect(() => {
     if (!context) return
-    context.dispatch({ type: 'mount', value: id })
+    context.mount(selector)
     return () => {
-      context.dispatch({ type: 'unmount', value: id })
+      context.unmount(selector)
     }
   }, [])
+
+  const index = useReaction(() =>
+    context ? context.orderedChildren.findIndex(x => x === selector) : -1,
+  )
 
   if (!context) {
     return null
   }
 
-  const total = context.children.length
-  const index = context.children.indexOf(id)
+  const total = context.orderedChildren.length
   const isLast = index === total - 1
   const isFirst = index === 0
 
-  return { index, total, isLast, isFirst }
+  return { selector, index, total, isLast, isFirst }
 }

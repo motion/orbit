@@ -76,7 +76,7 @@ export class SearchStore {
     }
   }
 
-  appToResult = (app: AppBit) => {
+  appToResult = (app: AppBit): OrbitListItemProps => {
     return {
       title: app.name,
       // slim: true,
@@ -87,6 +87,7 @@ export class SearchStore {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,
+        subtitle: 'Command: ⮐',
       },
       onOpen: () => {
         this.stores.queryStore.clearQuery()

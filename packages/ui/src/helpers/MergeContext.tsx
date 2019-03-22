@@ -17,7 +17,8 @@ export function MergeContext<A>(props: MergeContextProps<A>): any {
     return props.children
   }
 
-  if (context && typeof context === 'object') {
+  // merge...
+  if (context && typeof context === 'object' && context.constructor.name === 'Object') {
     const value = Object.assign({}, context, props.value)
     return <Context.Provider value={value}>{props.children}</Context.Provider>
   }

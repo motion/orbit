@@ -267,7 +267,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     >
       <BreadcrumbReset>
         <SurfaceFrame
-          className={`${tooltipState.id} ${className || ''}`}
+          className={`${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`}
           ref={forwardRef}
           themeSelect={themeSelect}
           lineHeight={lineHeight}

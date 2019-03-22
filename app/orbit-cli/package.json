@@ -9,13 +9,21 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "@o/orbit-app": "*",
+    "@o/build": "*",
+    "fs-extra": "^7.0.0",
+    "webpack": "4.29.3",
+    "webpack-dev-server": "3.1.14",
     "chalk": "2.4.2",
     "cool-trim": "1.1.1",
     "lodash": "4.17.11",
     "minimist": "1.2.0",
-    "strip-ansi": "5.0.0"
+    "strip-ansi": "5.0.0",
+    "yargs": "^13.2.2"
   },
   "devDependencies": {
-    "typescript": "*"
+    "typescript": "*",
+    "@types/yargs": "^12.0.10",
+    "@types/fs-extra": "*"
   }
 }

@@ -5,6 +5,7 @@
     { "path": "./orbit-syncers" },
     { "path": "./orbit-electron" },
     { "path": "./orbit-repl" },
+    { "path": "./orbit-cli" },
     { "path": "./orbit" },
     { "path": "./bridge" },
     { "path": "./sync-kit" },

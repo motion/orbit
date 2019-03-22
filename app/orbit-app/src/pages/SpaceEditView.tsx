@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { AppBit, AppModel, Space, SpaceModel } from '@o/models'
 import * as UI from '@o/ui'
-import { InputField, Message, Table } from '@o/ui'
+import { InputField, Message, Space as UISpace, Table } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import { observer } from 'mobx-react-lite'
 import * as React from 'react'
@@ -74,14 +74,14 @@ export default observer(function SpaceEditView(props: Props) {
   return (
     <UI.Col tagName="form" onSubmit={handleSave} padding={20}>
       <Message>Enter space name and choose the color.</Message>
-      <Space />
+      <UISpace />
       <UI.Col margin="auto" width={370}>
         <UI.Col padding={[0, 10]}>
           <Table>
             {/* !TODO */}
             <InputField label="Name" value={values.name} onChange={handleChange('name') as any} />
           </Table>
-          <Space />
+          <UISpace />
           <UI.Theme
             theme={{
               color: '#fff',
@@ -90,7 +90,7 @@ export default observer(function SpaceEditView(props: Props) {
           >
             <UI.Button type="submit">Save</UI.Button>
           </UI.Theme>
-          <Space />
+          <UISpace />
         </UI.Col>
       </UI.Col>
     </UI.Col>

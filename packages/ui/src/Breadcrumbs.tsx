@@ -19,7 +19,6 @@ class BreadcrumbStore {
 
 export function Breadcrumbs(props: ViewProps) {
   const store = useStore(BreadcrumbStore)
-  console.log('store', store)
   return (
     <MergeContext Context={Context} value={store}>
       <Row alignItems="center" {...props} />
@@ -73,14 +72,11 @@ export function useBreadcrumb(): BreadcrumbInfo | null {
   const id = idRef.current
   const context = useContext(Context)
 
-  useEffect(
-    () => {
-      if (!context) return
-      context.mount(id)
-      return () => context.unmount(id)
-    },
-    [context],
-  )
+  useEffect(() => {
+    if (!context) return
+    context.mount(id)
+    return () => context.unmount(id)
+  }, [])
 
   if (!context) {
     return null

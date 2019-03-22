@@ -19,7 +19,7 @@ export function Draggable(props: DraggableProps & ViewProps) {
 
 export function useDraggable(
   props: DraggableProps & {
-    onChange?: (pos: { top: number; left: number }) => any
+    onChange?: (pos: { top: number; left: number }, diffTop: number, diffLeft: number) => any
   },
 ) {
   const ref = useRef<HTMLElement>(null)
@@ -37,6 +37,7 @@ export function useDraggable(
         top: 0,
         left: 0,
       }
+      let endPos = null
 
       const curPos = (e: MouseEvent) => ({
         top: e.pageY,
@@ -50,15 +51,16 @@ export function useDraggable(
           top: getPosition().top - diffTop,
           left: getPosition().left - diffLeft,
         }
+        endPos = next
         if (getOnChange()) {
-          getOnChange()(next)
+          getOnChange()(next, diffTop, diffLeft)
         } else {
           setPosition(next)
         }
       }
 
-      const onMouseUp = (e: MouseEvent) => {
-        startPos = curPos(e)
+      const onMouseUp = () => {
+        setPosition(endPos)
         document.removeEventListener('mousemove', onMouseMove)
       }
 

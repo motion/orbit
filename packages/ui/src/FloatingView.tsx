@@ -71,17 +71,12 @@ export function FloatingView({
     },
   })
 
-  const visibilityProps = {
-    pointerEvents: isVisible ? 'auto' : 'none',
-    opacity: isVisible ? 1 : 0,
-  }
-
   return (
     <Portal>
       <FullScreen pointerEvents="none">
         <Interactive
-          pointerEvents="auto"
-          {...visibilityProps}
+          pointerEvents={isVisible ? 'auto' : 'none'}
+          opacity={isVisible ? 1 : 0}
           position="fixed"
           width={state.width}
           height={state.height}

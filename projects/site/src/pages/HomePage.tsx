@@ -2,7 +2,9 @@ import { FullScreen, Row, Theme, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { Fragment, useState } from 'react'
 import { Parallax, ParallaxLayer } from 'react-spring/renderprops-addons'
+import { Header } from '../components/Header'
 import { FadeDown } from '../views/FadeDown'
+import { Page } from '../views/Page'
 import { Paragraph } from '../views/Paragraph'
 import { TitleText } from '../views/TitleText'
 import { ViewPortText } from '../views/ViewPortText'
@@ -30,42 +32,39 @@ export function HomePage() {
       <ParallaxLayer offset={0} speed={0.5}>
         <Theme name="dark">
           <FullScreen background={theme => theme.background}>
-            <Row
-              height="80%"
-              width="78%"
-              maxWidth={900}
-              minWidth={360}
-              margin="auto"
-              alignItems="center"
-            >
-              <View width="100%">
-                <FadeDown disable={!measured}>
-                  <TitleText fontWeight={100}>
-                    <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                      Build internal tools without stress.
+            <Page>
+              <Header />
+
+              <Row height="80%" margin="auto" alignItems="center">
+                <View width="100%">
+                  <FadeDown disable={!measured}>
+                    <TitleText fontWeight={100}>
+                      <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
+                        Build internal tools without stress.
+                      </ViewPortText>
+                    </TitleText>
+
+                    <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
+                      {longest}
                     </ViewPortText>
-                  </TitleText>
 
-                  <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
-                    {longest}
-                  </ViewPortText>
-
-                  <Paragraph
-                    fontSize={parSize * 0.9}
-                    sizeLineHeight={1.5}
-                    textAlign="center"
-                    alpha={0.7}
-                  >
-                    {texts.map((t, i) => (
-                      <Fragment key={t}>
-                        {i > 0 && <br />}
-                        {t}
-                      </Fragment>
-                    ))}
-                  </Paragraph>
-                </FadeDown>
-              </View>
-            </Row>
+                    <Paragraph
+                      fontSize={parSize * 0.9}
+                      sizeLineHeight={1.5}
+                      textAlign="center"
+                      alpha={0.7}
+                    >
+                      {texts.map((t, i) => (
+                        <Fragment key={t}>
+                          {i > 0 && <br />}
+                          {t}
+                        </Fragment>
+                      ))}
+                    </Paragraph>
+                  </FadeDown>
+                </View>
+              </Row>
+            </Page>
           </FullScreen>
         </Theme>
       </ParallaxLayer>

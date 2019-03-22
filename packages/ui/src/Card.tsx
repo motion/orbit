@@ -1,4 +1,4 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
@@ -20,7 +20,6 @@ export function Card({
   preview,
   title,
   afterTitle,
-  cardProps,
   children,
   iconProps,
   inGrid,
@@ -33,7 +32,6 @@ export function Card({
   // ignore so it doesnt add tooltip to div
   title: _ignoreTitle,
   onClickLocation,
-  chromeless,
   activeStyle,
   subtitle,
   date,
@@ -67,89 +65,76 @@ export function Card({
     </Text>
   )
   return (
-    <CardWrap ref={store.setCardWrapRef} {...props} {...isSelected && activeStyle}>
-      <SizedSurface
-        themeSelect="card"
-        onClick={store.handleClick}
-        borderWidth={1}
-        chromeless={chromeless}
-        sizeRadius={sizeRadius}
-        {...cardProps}
-      >
-        {chromeless ? (
-          children
-        ) : (
-          <Padding style={{ padding }}>
-            {hasTitle && (
+    <SizedSurface
+      ref={store.setCardWrapRef}
+      borderWidth={1}
+      {...props}
+      {...isSelected && activeStyle}
+      themeSelect="card"
+      onClick={store.handleClick}
+      sizeRadius={sizeRadius}
+    >
+      <Padding style={{ padding }}>
+        {hasTitle && (
+          <>
+            <Title ellipse margin={0} highlight>
+              {title}
+            </Title>
+            {afterTitle}
+          </>
+        )}
+        {!!titleFlex && <div style={{ flex: titleFlex }} />}
+        {hasSubtitle && (
+          <SubTitle ellipse>
+            <Text alpha={0.55} ellipse {...subtitleProps}>
+              {subtitle}
+            </Text>
+          </SubTitle>
+        )}
+        {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
+        {hasMeta && (
+          <SubTitle ellipse>
+            {!!location && (
+              <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
+                {location}
+              </RoundButtonSmall>
+            )}
+            {subtitleSpaceBetween}
+            {hasFourRows && hasDate && (
               <>
-                <Title ellipse margin={0} highlight>
-                  {title}
-                </Title>
-                {afterTitle}
+                {!!location && <div style={{ width: 5 }} />}
+                {dateContent}
               </>
             )}
-            {!!titleFlex && <div style={{ flex: titleFlex }} />}
-            {hasSubtitle && (
-              <SubTitle ellipse>
-                <Text alpha={0.55} ellipse {...subtitleProps}>
-                  {subtitle}
-                </Text>
-              </SubTitle>
-            )}
-            {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
-            {hasMeta && (
-              <SubTitle ellipse>
-                {!!location && (
-                  <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
-                    {location}
-                  </RoundButtonSmall>
-                )}
-                {subtitleSpaceBetween}
-                {hasFourRows && hasDate && (
-                  <>
-                    {!!location && <div style={{ width: 5 }} />}
-                    {dateContent}
-                  </>
-                )}
-                {hasPreview && <Space small />}
-              </SubTitle>
-            )}
-            {hasPreview && (
-              <Preview>
-                {typeof preview !== 'string' && preview}
-                {typeof preview === 'string' && (
-                  <Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
-                    {preview}
-                  </Text>
-                )}
-              </Preview>
-            )}
-            {showChildren && children}
-            {!!icon && !props.hideIcon && (
-              <ConfiguredIcon
-                name={icon}
-                size={14}
-                {...orbitIconProps}
-                position="absolute"
-                top={topPad}
-                right={sidePad}
-                {...iconProps}
-              />
-            )}
-          </Padding>
+            {hasPreview && <Space small />}
+          </SubTitle>
         )}
-      </SizedSurface>
-    </CardWrap>
+        {hasPreview && (
+          <Preview>
+            {typeof preview !== 'string' && preview}
+            {typeof preview === 'string' && (
+              <Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
+                {preview}
+              </Text>
+            )}
+          </Preview>
+        )}
+        {showChildren && children}
+        {!!icon && !props.hideIcon && (
+          <ConfiguredIcon
+            name={icon}
+            size={14}
+            {...orbitIconProps}
+            position="absolute"
+            top={topPad}
+            right={sidePad}
+            {...iconProps}
+          />
+        )}
+      </Padding>
+    </SizedSurface>
   )
 }
-
-const CardWrap = gloss(View, {
-  position: 'relative',
-  flex: 1,
-  transform: {
-    z: 0,
-  },
-})
 
 const Preview = gloss({
   flex: 1,

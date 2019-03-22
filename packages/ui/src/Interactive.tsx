@@ -7,7 +7,7 @@
 
 import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
 import { throttle } from 'lodash'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { createRef, RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
 import LowPassFilter from './helpers/LowPassFilter'
@@ -74,7 +74,6 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
   ) => void
   resizing?: boolean
   resizable?: boolean | ResizableSides
-  innerRef?: (elem: HTMLElement) => void
   style?: Object
   className?: string
   children?: any
@@ -94,7 +93,6 @@ type InteractiveState = {
 
 const InteractiveContainer = gloss(View, {
   position: 'relative',
-  overflow: 'hidden',
   willChange: 'transform, height, width, z-index',
 })
 
@@ -107,7 +105,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     minWidth: 0,
   }
 
-  ref = null
+  ref = createRef<HTMLElement>()
   globalMouse = false
 
   state = {
@@ -444,10 +442,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const { props, ref } = this
     invariant(ref, 'expected ref')
     return {
-      height: ref.offsetHeight || 0,
+      height: ref.current.offsetHeight || 0,
       left: props.left || 0,
       top: props.top || 0,
-      width: ref.offsetWidth || 0,
+      width: ref.current.offsetWidth || 0,
     }
   }
 
@@ -474,7 +472,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!canResize) {
       return
     }
-    const { left: offsetLeft, top: offsetTop } = this.ref.getBoundingClientRect()
+    const { left: offsetLeft, top: offsetTop } = this.ref.current.getBoundingClientRect()
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
@@ -564,14 +562,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     })
   }
 
-  setRef = (ref: HTMLElement) => {
-    this.ref = ref
-    const { innerRef } = this.props
-    if (innerRef) {
-      innerRef(ref)
-    }
-  }
-
   onLocalMouseMove = event => {
     if (!this.globalMouse) {
       this.onMouseMove(event)
@@ -624,23 +614,28 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       Object.assign(style, this.props.style)
     }
     const resizable = this.getResizable()
+    const listenerProps = {
+      onMouseDown: this.startAction,
+      onMouseMove: this.onLocalMouseMove,
+      onMouseLeave: this.onMouseLeave,
+    }
+    const useFloatingGrabbers = resizable && !disableFloatingGrabbers
     return (
       <InteractiveContainer
         className={this.props.className}
         hidden={this.props.hidden}
-        ref={this.setRef}
-        onMouseDown={this.startAction}
-        onMouseMove={this.onLocalMouseMove}
-        onMouseLeave={this.onMouseLeave} // eslint-disable-next-line
+        ref={this.ref}
         style={style}
+        {...listenerProps}
         {...props}
       >
         {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-        {resizable &&
-          !disableFloatingGrabbers &&
+        {useFloatingGrabbers &&
           Object.keys(resizable).map(side => (
             <FakeResize
               key={side}
+              parent={this.ref}
+              onMouseDown={listenerProps.onMouseDown}
               hovered={resizingSides && resizingSides[side]}
               side={side as keyof ResizableSides}
             />
@@ -651,7 +646,13 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 }
 
-const FakeResize = ({ side, hovered }: { side: keyof ResizableSides; hovered?: boolean }) => {
+type FakeResizeProps = ViewProps & {
+  parent?: RefObject<HTMLElement>
+  side: keyof ResizableSides
+  hovered?: boolean
+}
+
+const FakeResize = ({ side, hovered, parent, ...rest }: FakeResizeProps) => {
   const chromeRef = useRef<HTMLElement>(null)
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
@@ -668,7 +669,7 @@ const FakeResize = ({ side, hovered }: { side: keyof ResizableSides; hovered?: b
   )
 
   useScreenPosition({
-    ref: parentRef,
+    ref: parent || parentRef,
     preventMeasure: true,
     onChange,
   })
@@ -687,13 +688,19 @@ const FakeResize = ({ side, hovered }: { side: keyof ResizableSides; hovered?: b
       <FloatingChrome
         measureKey={measureKey}
         target={chromeRef}
+        {...rest}
         onMouseEnter={() => setIntHovered(true)}
-        onMouseLeave={() => setIntHovered(false)}
+        onMouseLeave={e => {
+          setIntHovered(false)
+          rest.onMouseLeave && rest.onMouseLeave(e)
+        }}
         onMouseDown={e => {
           if (shouldCover) {
             console.warn('no more bad click')
             e.preventDefault()
+            e.stopPropagation()
           }
+          rest.onMouseDown && rest.onMouseDown(e)
         }}
         style={{
           cursor: side === 'left' || side === 'right' ? 'ew-resize' : 'nw-resize',

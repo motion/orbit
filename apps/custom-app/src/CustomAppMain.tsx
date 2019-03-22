@@ -12,7 +12,6 @@ import {
   SpacedRow,
   Tab,
   Tabs,
-  Title,
   useFetch,
   useForm,
   VerticalSplit,
@@ -50,14 +49,10 @@ export function CustomAppMain(_props: AppProps) {
             filters={form.getFilters(['active', 'type'])}
           />
 
-          <FloatingView
-            resizable
-            zIndex={10000000}
-            defaultTop={20}
-            defaultLeft={20}
-            background="red"
-          >
-            <Title>hello</Title>
+          <FloatingView resizable zIndex={10000000} defaultTop={20} defaultLeft={20}>
+            <Card title="Hello" elevation={2} flex={1}>
+              lorem
+            </Card>
           </FloatingView>
 
           <Row overflowX="auto">

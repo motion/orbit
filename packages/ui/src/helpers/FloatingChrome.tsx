@@ -16,10 +16,10 @@ export function FloatingChrome(
   const [pos, setPos] = useState<Rect | null>(null)
   const element = (
     <div
-      className="testme"
       style={{
         position: 'absolute',
-        zIndex: 10000000000000000000,
+        pointerEvents: 'auto',
+        zIndex: 1500000,
         ...pos,
         ...style,
       }}

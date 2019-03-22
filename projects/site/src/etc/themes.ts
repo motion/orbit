@@ -26,7 +26,7 @@ export const themes = {
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,
-    background: '#111',
+    background: '#000',
     color: '#fff',
     borderColor: '#222',
   }),

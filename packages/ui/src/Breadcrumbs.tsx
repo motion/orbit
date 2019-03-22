@@ -3,7 +3,8 @@ import { react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
-import { Text } from './text/Text'
+import { Text, TextProps } from './text/Text'
+import { Omit } from './types'
 
 const Context = createContext<BreadcrumbStore | null>(null)
 
@@ -51,7 +52,7 @@ export function Breadcrumb({
   separator = <Text>{' >'}</Text>,
   children,
   ...props
-}: BreadcrumbsProps) {
+}: Omit<TextProps, 'children'> & BreadcrumbsProps) {
   const crumb = useBreadcrumb()
 
   if (typeof children === 'function') {
@@ -65,7 +66,9 @@ export function Breadcrumb({
 
   return (
     <BreadcrumbReset>
-      <Text {...props}>{children}</Text>
+      <Text {...props} className={`${(crumb && crumb.selector) || ''} ${props.className || ''}`}>
+        {children}
+      </Text>
       {crumb && crumb.isLast ? '' : separator}
     </BreadcrumbReset>
   )

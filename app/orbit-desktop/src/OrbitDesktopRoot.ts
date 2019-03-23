@@ -44,6 +44,7 @@ import {
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
 import { writeJSON } from 'fs-extra'
+import bonjour from 'bonjour'
 import root from 'global'
 import open from 'opn'
 import * as Path from 'path'
@@ -82,6 +83,8 @@ import { SendClientDataResolver } from './resolvers/SendClientDataResolver'
 import { WebServer } from './WebServer'
 import { CallAppBitApiMethodResolver } from './resolvers/CallAppBitApiMethodResolver'
 
+const log = new Logger('desktop')
+
 export class OrbitDesktopRoot {
   // public
   stores = null
@@ -95,6 +98,8 @@ export class OrbitDesktopRoot {
   private disposed = false
   private webServer: WebServer
   private cosal: Cosal
+  private bonjour: bonjour.Bonjour
+  private bonjourService: bonjour.Service
 
   // managers
   private orbitDataManager: OrbitDataManager
@@ -210,6 +215,14 @@ export class OrbitDesktopRoot {
       console.log('stop auth server...')
       await this.authServer.stop()
     }
+    if (this.bonjourService) {
+      this.bonjourService.stop(() => {})
+      this.bonjourService = null
+    }
+    if (this.bonjour) {
+      this.bonjour.destroy()
+      this.bonjour = null
+    }
     this.disposed = true
     return true
   }
@@ -241,6 +254,7 @@ export class OrbitDesktopRoot {
 
     const client = new MediatorClient({ transports: [syncersTransport] })
 
+    let mediatorServerPort = this.config.ports.desktopMediator
     this.mediatorServer = new MediatorServer({
       models: [
         AppModel,
@@ -272,7 +286,7 @@ export class OrbitDesktopRoot {
         ChangeDesktopThemeCommand,
       ],
       transport: new WebSocketServerTransport({
-        port: this.config.ports.desktopMediator,
+        port: mediatorServerPort,
       }),
       fallbackClient: client,
       resolvers: [
@@ -315,5 +329,15 @@ export class OrbitDesktopRoot {
       ],
     })
     this.mediatorServer.bootstrap()
+    log.info(`mediatorServer starts listening at ${mediatorServerPort}`)
+
+    // start announcing on bonjour
+    this.bonjour = bonjour()
+    this.bonjourService = this.bonjour.publish({
+      name: 'orbitDesktop',
+      type: 'orbitDesktop',
+      port: mediatorServerPort,
+    })
+    this.bonjourService.start()
   }
 }

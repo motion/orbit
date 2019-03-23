@@ -40,6 +40,7 @@ import {
   TrendingTopicsModel,
   UserEntity,
   UserModel,
+  AppDevOpenCommand,
 } from '@o/models'
 import { Screen } from '@o/screen'
 import { App, Desktop, Electron } from '@o/stores'
@@ -284,6 +285,7 @@ export class OrbitDesktopRoot {
         ResetDataCommand,
         SendClientDataCommand,
         ChangeDesktopThemeCommand,
+        AppDevOpenCommand,
       ],
       transport: new WebSocketServerTransport({
         port: mediatorServerPort,
@@ -326,6 +328,9 @@ export class OrbitDesktopRoot {
             return false
           }
         }),
+        resolveCommand(AppDevOpenCommand, async (params) => {
+          console.log('AppDevOpenCommand', params);
+        })
       ],
     })
     this.mediatorServer.bootstrap()

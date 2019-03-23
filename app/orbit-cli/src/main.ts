@@ -13,6 +13,7 @@ import WebpackDevServer from 'webpack-dev-server'
 import WebSocket from 'ws'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
+import { AppDevOpenCommand } from '@o/models'
 import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
 import { randomString } from '@o/utils'
 
@@ -97,7 +98,7 @@ async function getOrbitDesktop() {
     throw new Error('orbit-desktop is not running')
   }
 
-  console.log(`orbit-desktop found at ${port} connecting...`);
+  console.log(`orbit-desktop found at ${port} connecting...`)
   let Mediator = new MediatorClient({
     transports: [
       new WebSocketClientTransport(
@@ -125,24 +126,28 @@ class OrbitCLI {
       mode: 'development',
     })
     // @ts-ignore
-    let _orbitDesktop = await getOrbitDesktop()
-    await bundlerPromise
+    let orbitDesktop = await getOrbitDesktop()
+    let bundler = await bundlerPromise
+    await orbitDesktop.command(AppDevOpenCommand, {
+      bundleUrl: `http://${bundler.host}:${bundler.port}/dist/bundle.js`,
+      path: this.options.projectRoot
+    })
     return
   }
 }
 
-async function withOrbitCLI(options: Options, f: (OrbitCLI) => Promise<void>) {
-  let orbit: OrbitCLI
-  try {
-    orbit = await new OrbitCLI(options)
-    await f(orbit)
-  } catch (error) {
-    console.error(error)
-    process.exit(2)
-  }
-}
-
 function main() {
+  async function withOrbitCLI(options: Options, f: (OrbitCLI) => Promise<void>) {
+    let orbit: OrbitCLI
+    try {
+      orbit = await new OrbitCLI(options)
+      await f(orbit)
+    } catch (error) {
+      console.error(error)
+      process.exit(2)
+    }
+  }
+
   const app = (p: Yargs.Argv) =>
     p.positional('app', {
       type: 'string',

@@ -25,7 +25,7 @@ let allTitles = {
 
 let allTexts = {
   large: [
-    `Make powerful, beautiful apps in minutes with no configuration & deploy without a server.`,
+    `Make powerful apps in minutes with no configuration and deploy without a server.`,
     `Custom internal tools made easy. Workflows, spreadsheets, dashboards, and more.`,
     `Runs behind the firewall, without a cloud.`,
   ],
@@ -83,7 +83,7 @@ export function HeadSection() {
                       fontSize={parSize * 0.94}
                       sizeLineHeight={1.5}
                       textAlign="center"
-                      fontWeight={100}
+                      fontWeight={300}
                       alpha={0.5}
                     >
                       {texts.map((t, i) => (

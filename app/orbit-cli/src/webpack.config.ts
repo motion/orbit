@@ -66,6 +66,13 @@ async function makeConfig(params: Params) {
     cacheDirectory: true,
   }
 
+  let externals = {
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+    '@o/kit': 'OrbitKit',
+    '@o/ui': 'OrbitUI',
+  }
+
   const config = {
     context: projectRoot,
     target,
@@ -92,6 +99,7 @@ async function makeConfig(params: Params) {
       },
     },
     devtool: mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+    externals,
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       mainFields:

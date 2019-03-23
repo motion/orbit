@@ -4,10 +4,17 @@
 // ts complains otherwise
 const packageJson = require('../package.json')
 
+import bonjour from 'bonjour'
 import * as Path from 'path'
+import getPort from 'get-port'
 import Yargs from 'yargs'
 import Webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
+import WebSocket from 'ws'
+import ReconnectingWebSocket from 'reconnecting-websocket'
+
+import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { randomString } from '@o/utils'
 
 import makeWebpackConfig from './webpack.config'
 
@@ -19,6 +26,92 @@ type Options = {
   projectRoot: string
 }
 
+function orTimeout<T>(promise: Promise<T>, timeout): Promise<T | null> {
+  let waitForTimeout = new Promise<null>(resolve => {
+    setTimeout(() => resolve(null), timeout)
+  })
+  return Promise.race([promise, waitForTimeout])
+}
+
+async function findBonjourService(type: string, timeout: number) {
+  let bonjourInstance = bonjour()
+  let waitForService = new Promise(resolve => {
+    bonjourInstance.findOne({ type: type }, service => {
+      resolve(service.port)
+    })
+  })
+  let service
+  try {
+    service = await orTimeout(waitForService, timeout)
+  } finally {
+    bonjourInstance.destroy()
+  }
+  return service
+}
+
+type Bundler = {
+  dispose(): void
+  host: string
+  port: number
+}
+
+async function startBundler(options): Promise<Bundler> {
+  let config = await makeWebpackConfig(options)
+  let compiler = Webpack(config)
+
+  let server = new WebpackDevServer(compiler, config.devServer)
+  let serverDispose = () =>
+    new Promise((resolve, reject) => {
+      server.close(err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve()
+        }
+      })
+    })
+
+  let port = await getPort()
+  let host = 'localhost'
+
+  return new Promise((resolve, reject) => {
+    server.listen(port, host, err => {
+      if (err) {
+        reject()
+      } else {
+        resolve({
+          host,
+          port,
+          dispose: serverDispose,
+        })
+      }
+    })
+  })
+}
+
+async function getOrbitDesktop() {
+  let port = await findBonjourService('orbitDesktop', 5000)
+
+  if (port == null) {
+    // TODO(andreypopp): start orbit instead
+    throw new Error('orbit-desktop is not running')
+  }
+
+  console.log(`orbit-desktop found at ${port} connecting...`);
+  let Mediator = new MediatorClient({
+    transports: [
+      new WebSocketClientTransport(
+        'cli-client-' + randomString(5),
+        new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+          WebSocket,
+          minReconnectionDelay: 1,
+        }),
+      ),
+    ],
+  })
+  return Mediator
+}
+
 class OrbitCLI {
   options: Options
 
@@ -26,48 +119,26 @@ class OrbitCLI {
     this.options = options
   }
 
-  async initialize() {}
-
-  dispose() {}
-
   async dev(_opts: {}) {
-    let config = await makeWebpackConfig({
+    let bundlerPromise = startBundler({
       projectRoot: this.options.projectRoot,
       mode: 'development',
     })
-    console.log('webpack config:')
-    console.log({ context: config.context, entry: config.entry })
-    let compiler = Webpack(config)
-    let server = new WebpackDevServer(compiler, config.devServer)
-    let port = 9000
-    let host = 'localhost'
-    return new Promise((_resolve, reject) => {
-      server.listen(port, host, err => {
-        if (err) {
-          reject()
-        } else {
-          console.log(`Server started at ${host}:${port}`)
-        }
-      })
-    })
+    // @ts-ignore
+    let _orbitDesktop = await getOrbitDesktop()
+    await bundlerPromise
+    return
   }
 }
 
 async function withOrbitCLI(options: Options, f: (OrbitCLI) => Promise<void>) {
   let orbit: OrbitCLI
-  let exitCode = 1
   try {
     orbit = await new OrbitCLI(options)
-    await orbit.initialize()
     await f(orbit)
   } catch (error) {
-    exitCode = 2
     console.error(error)
-  } finally {
-    if (orbit) {
-      orbit.dispose()
-    }
-    process.exit(exitCode)
+    process.exit(2)
   }
 }
 

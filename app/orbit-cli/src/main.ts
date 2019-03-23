@@ -2,10 +2,16 @@
 
 // XXX(andreypopp): using require here because it's outside of ts's rootDir and
 // ts complains otherwise
-const packageJson = require('../package.json');
+const packageJson = require('../package.json')
 
+import * as Path from 'path'
 import Yargs from 'yargs'
+import Webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
 
+import makeWebpackConfig from './webpack.config'
+
+let cwd = process.cwd()
 let version = packageJson.version
 let description = `Orbit v${version} - Build Amazing Apps Together`
 
@@ -24,8 +30,26 @@ class OrbitCLI {
 
   dispose() {}
 
-  async dev(opts: {}) {
-    console.log('dev', opts)
+  async dev(_opts: {}) {
+    let config = await makeWebpackConfig({
+      projectRoot: this.options.projectRoot,
+      mode: 'development',
+    })
+    console.log('webpack config:')
+    console.log({ context: config.context, entry: config.entry })
+    let compiler = Webpack(config)
+    let server = new WebpackDevServer(compiler, config.devServer)
+    let port = 9000
+    let host = 'localhost'
+    return new Promise((_resolve, reject) => {
+      server.listen(port, host, err => {
+        if (err) {
+          reject()
+        } else {
+          console.log(`Server started at ${host}:${port}`)
+        }
+      })
+    })
   }
 }
 
@@ -48,18 +72,6 @@ async function withOrbitCLI(options: Options, f: (OrbitCLI) => Promise<void>) {
 }
 
 function main() {
-  let getCommonOptions = _argv => {
-    let projectRoot = process.cwd();
-    return {projectRoot}
-  }
-
-  const configure = (p, ...options) => {
-    for (let option of options) {
-      p = option(p)
-    }
-    return p
-  }
-
   const app = (p: Yargs.Argv) =>
     p.positional('app', {
       type: 'string',
@@ -72,15 +84,17 @@ function main() {
     .command(
       'dev [app]',
       'Run an Orbit app in development mode',
-      p => configure(p, app),
+      p => app(p),
       async argv => {
-        let options = getCommonOptions(argv)
+        let projectRoot = Path.resolve(cwd, argv.app)
+        let options = { projectRoot }
+        // @ts-ignore
         await withOrbitCLI(options, app => {
           return app.dev(argv)
         })
       },
     )
-    .version(version, description)
+    .version('version', 'Show version', description)
     .help().argv
 }
 

@@ -1,10 +1,8 @@
-import * as Fs from 'fs-extra'
 import * as Path from 'path'
 
 import webpack from 'webpack'
 
 const TerserPlugin = require('terser-webpack-plugin')
-const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 type Params = {
   projectRoot: string
@@ -18,12 +16,13 @@ async function makeConfig(params: Params) {
     mode = 'development',
   } = params
 
-  let pkgJson = await Fs.readJson(Path.join(projectRoot, 'package.json'))
-
-  const entry = pkgJson.main || './src/index'
+  const entry = './'
   const target = 'electron-renderer'
   const outputPath = Path.join(projectRoot, 'dist')
-  const buildNodeModules = Path.join(__dirname, '..', 'node_modules')
+  const buildNodeModules = [
+    Path.join(__dirname, '..', 'node_modules'),
+    Path.join(__dirname, '..', '..', '..', 'node_modules'),
+  ]
 
   const defines = {
     'process.platform': JSON.stringify('darwin'),
@@ -48,21 +47,27 @@ async function makeConfig(params: Params) {
       noEmitOnErrors: true,
       removeAvailableModules: false,
       namedModules: true,
-      // ...optimizeSplit,
     },
   }
 
   const babelrcOptions = {
-    ...JSON.parse(Fs.readFileSync(Path.resolve(projectRoot, '.babelrc'), 'utf-8')),
+    presets: [
+      [
+        '@o/babel-preset-motion',
+        {
+          env: {
+            modules: false,
+          },
+          disableTypescript: true,
+        },
+      ],
+    ],
     babelrc: false,
-    // this caused some errors with HMR where gloss-displaynames wouldnt pick up
-    // changed view names
-    // im presuming because it cached the output and gloss-displaynames needs a
-    // redo somehow
     cacheDirectory: true,
   }
 
   const config = {
+    context: projectRoot,
     target,
     mode,
     entry,
@@ -72,7 +77,8 @@ async function makeConfig(params: Params) {
       pathinfo: mode === 'development',
       filename: 'bundle.js',
       publicPath: '/',
-      // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
+      // fixes react-hmr bug, pending
+      // https://github.com/webpack/webpack/issues/6642
       globalObject: "(typeof self !== 'undefined' ? self : this)",
     },
     devServer: {
@@ -85,11 +91,6 @@ async function makeConfig(params: Params) {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    // for a faster dev mode you can do:
-    //   eval-source-map (causes errors to not show stack trace in react development...)
-    //   cheap-source-map (no line numbers...)
-    //   cheap-module-eval-source-map (seems alright in both...)
-    //   cheap-module-source-map (works well in electron, no line numbers in browser...)
     devtool: mode === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -100,7 +101,7 @@ async function makeConfig(params: Params) {
       alias: {},
     },
     resolveLoader: {
-      modules: [buildNodeModules],
+      modules: buildNodeModules,
     },
     module: {
       rules: [
@@ -175,7 +176,6 @@ async function makeConfig(params: Params) {
       ].filter(Boolean),
     },
     plugins: [
-      new ErrorOverlayPlugin(),
       new webpack.DefinePlugin(defines),
       new webpack.IgnorePlugin(/electron-log/),
       mode === 'production' &&

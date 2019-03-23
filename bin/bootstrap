@@ -31,10 +31,9 @@ ensure-dep "tsc" -- npm i -g typescript
 #   bin/__/link-root-modules
 # fi
 
-echo "installing root"
-yarn install
-echo "installing packages"
-npx lerna bootstrap --loglevel=warn
+echo "installing dependencies"
+yarn
+
 # build everything
 if [ ! -d "./app/orbit-desktop/_" ]; then
   bin/build

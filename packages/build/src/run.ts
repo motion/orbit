@@ -19,10 +19,8 @@ if (process.env.NODE_ENV !== 'production') {
 console.log(`Running ${cmd} ${args.join(' ')}`)
 
 const proc = execa(cmd, args, {
-  // cwd: root,
   env: {
     ENTRY: `${process.cwd()}/src`,
-    WEBPACK_MODULES: Path.join(root, 'node_modules'),
   },
 })
 

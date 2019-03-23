@@ -32,7 +32,13 @@ const isProd = mode === 'production'
 const entry = process.env.ENTRY || readPackage('main') || './src'
 const tsConfig = Path.join(cwd, 'tsconfig.json')
 const outputPath = Path.join(cwd, 'dist')
-const buildNodeModules = process.env.WEBPACK_MODULES || Path.join(__dirname, '..', 'node_modules')
+
+const buildNodeModules = [
+  // <repo>/packages/build/node_modules
+  Path.join(__dirname, '..', 'node_modules'),
+  // <repo>/node_modules
+  Path.join(__dirname, '..', '..', '..', 'node_modules'),
+]
 
 const getFlag = flag => {
   const matcher = new RegExp(`${flag} ([a-z0-9]+)`, 'i')
@@ -82,19 +88,10 @@ const optimization = {
   },
 }
 
-console.log('buildNodeModules', buildNodeModules)
-
 const alias = {
-  // if you want to profile in production...
+  // Uncomment lines below if you want to profile in production...
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
-  '@babel/runtime': Path.resolve(cwd, 'node_modules', '@babel/runtime'),
-  'core-js': Path.resolve(cwd, 'node_modules', 'core-js'),
-  react: Path.resolve(cwd, 'node_modules', 'react'),
-  // 'react-dom': Path.resolve(cwd, 'node_modules', 'react-dom'),
-  'react-dom': Path.resolve(buildNodeModules, '@hot-loader/react-dom'),
-  'react-hot-loader': Path.resolve(cwd, 'node_modules', 'react-hot-loader'),
-  lodash: Path.resolve(cwd, 'node_modules', 'lodash'),
 }
 
 const babelrcOptions = {
@@ -152,11 +149,10 @@ async function makeConfig() {
       mainFields: isProd
         ? ['ts:main', 'module', 'browser', 'main']
         : ['ts:main', 'browser', 'main'],
-      // modules: [Path.join(entry, 'node_modules'), buildNodeModules],
       alias,
     },
     resolveLoader: {
-      modules: [buildNodeModules],
+      modules: buildNodeModules,
     },
     module: {
       rules: [

@@ -78,26 +78,26 @@ class VirtualListStore {
 
   windowScrollerRef = createRef<WindowScroller>()
   listRef: List = null
-  frameRef: HTMLDivElement = null
+  frameNode: HTMLDivElement = null
   height = window.innerHeight
   width = 0
   isSorting = false
   observing = false
   cache: CellMeasurerCache = null
 
-  setFrameRef = (ref: HTMLDivElement) => {
-    if (this.frameRef || !ref) return
-    this.frameRef = ref
+  setFrameNode = (ref: HTMLDivElement) => {
+    if (this.frameNode || !ref) return
+    this.frameNode = ref
   }
 
   getFrameHeight() {
-    if (!this.frameRef) {
+    if (!this.frameNode) {
       return window.innerHeight
     }
-    return this.frameRef.clientHeight
+    return this.frameNode.clientHeight
   }
 
-  doMeasureHeight = react(() => always(this.cache, this.frameRef), this.measureHeight)
+  doMeasureHeight = react(() => always(this.cache, this.frameNode), this.measureHeight)
   measureHeight() {
     if (this.props.dynamicHeight) {
       if (!this.cache) return
@@ -112,6 +112,7 @@ class VirtualListStore {
 
       if (height !== this.height) {
         this.height = height
+        this.triggerRecomputeHeights = Date.now()
         if (this.props.onChangeHeight) {
           this.props.onChangeHeight(this.height)
         }
@@ -147,16 +148,16 @@ class VirtualListStore {
   }
 
   runMeasure = react(
-    () => [this.triggerMeasure, this.props.allowMeasure, this.frameRef],
+    () => [this.triggerMeasure, this.props.allowMeasure, this.frameNode],
     async (_, { when, sleep }) => {
       ensure('can measure', this.props.allowMeasure !== false)
-      await when(() => !!this.frameRef)
+      await when(() => !!this.frameNode)
       if (this.cache) {
         await sleep()
       }
 
-      if (this.frameRef.clientWidth !== this.width) {
-        this.setWidth(this.frameRef.clientWidth)
+      if (this.frameNode.clientWidth !== this.width) {
+        this.setWidth(this.frameNode.clientWidth)
       }
 
       if (!this.cache) {
@@ -242,15 +243,22 @@ export const VirtualListDefaultProps = createContext({
 
 const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
   const store = useStore(props.store)
-  const frameRef = useRef<HTMLDivElement>(null)
+  const frameNode = useRef<HTMLDivElement>(null)
 
   useResizeObserver({
-    ref: frameRef,
+    ref: frameNode,
     onChange: () => {
       store.measure()
       store.measureHeight()
     },
   })
+
+  useEffect(
+    () => {
+      store.setFrameNode(frameNode.current)
+    },
+    [frameNode],
+  )
 
   useEffect(
     () => {
@@ -326,10 +334,7 @@ const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualLi
 
   return (
     <div
-      ref={ref => {
-        frameRef.current = ref
-        ref && store.setFrameRef(ref)
-      }}
+      ref={frameNode}
       style={{
         height: props.dynamicHeight ? store.height : 'auto',
         flex: props.dynamicHeight ? 'none' : 1,

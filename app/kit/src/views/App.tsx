@@ -3,11 +3,6 @@ import { AppElements } from '../types/AppDefinition'
 
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 
-export const AppLoadContext = createContext({
-  identifier: '',
-  id: '',
-})
-
 export type AppMainViewProps = {
   children: React.ReactElement<any>
   hasSidebar: boolean
@@ -30,12 +25,6 @@ export function App(props: AppElements) {
     if (!validAppProps.find(x => x === key)) {
       throw new Error(`Invalid prop passed ${key}`)
     }
-  }
-
-  const { id, identifier } = useContext(AppLoadContext)
-
-  if (!identifier || !id) {
-    console.error('Internal bug, we didnt set context id + identifier')
   }
 
   const { Statusbar, Main, Sidebar, Toolbar } = useContext(AppViewsContext)

@@ -1,4 +1,11 @@
-import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
+import {
+  AppDefinition,
+  AppStore,
+  AppViewsContext,
+  getAppDefinition,
+  ProvideStores,
+  AppLoadContext
+} from '@o/kit'
 import { Loading, SelectionStore, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { memo, Suspense, useCallback } from 'react'
@@ -53,14 +60,14 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
 
   return (
     <Suspense fallback={<Loading />}>
-      <AppLoadContext.Provider value={{ id, identifier }}>
+      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
           <App />
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>
     </Suspense>
   )
-})
+}
 
 if (module['hot']) {
   module['hot'].accept()

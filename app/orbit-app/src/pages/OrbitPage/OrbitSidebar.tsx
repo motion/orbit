@@ -1,10 +1,10 @@
 import { View } from '@o/gloss'
 import {
-  AppLoadContext,
   AppMainViewProps,
   ListPropsContext,
   ProvideSelectionContext,
   SubPane,
+  AppLoadContext
 } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'

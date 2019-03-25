@@ -55,7 +55,7 @@ export function Section({
       >
         {children}
       </View>
-      {!!below && <div style={{ margin: bordered ? -20 : 0 }}>{below}</div>}
+      {below}
     </SizedSurface>
   )
 }

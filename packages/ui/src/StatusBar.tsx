@@ -12,11 +12,6 @@ const statusBarProps = {
 export const StatusBar = gloss({
   padding: [0, 7],
   height: 34,
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  zIndex: 10,
   flexFlow: 'row',
   overflow: 'hidden',
   alignItems: 'center',

@@ -6,7 +6,6 @@ import {
   Section,
   Slider,
   SliderPane,
-  Space,
   StatusBar,
   SurfacePassProps,
   Theme,
@@ -84,6 +83,8 @@ function MasterDetail(props: MasterDetailProps) {
     <Row>
       <View flex={1}>
         <List
+          dynamicHeight
+          maxHeight={1000}
           items={props.items}
           onSelect={index => setSelected(props.items[index])}
           itemProps={{ iconBefore: true }}
@@ -99,7 +100,6 @@ function MasterDetail(props: MasterDetailProps) {
 ///
 
 const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => {
-  console.log('layout', steps, index, step)
   return (
     <Section
       bordered
@@ -130,13 +130,6 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
       below={<StatusBar>helloworld</StatusBar>}
     >
       {children}
-      <Space />
-      <Space />
-      <Space />
-      <Space />
-      <Space />
-      <Space />
-      <Space />
     </Section>
   )
 }

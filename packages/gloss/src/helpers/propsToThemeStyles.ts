@@ -72,6 +72,7 @@ export const propsToThemeStyles = (
   for (const key in stateConfig) {
     const { postfix, pseudoKey, forceOnProp, extraStyleProp } = stateConfig[key]
     if (props[forceOnProp] === false) continue // forced off
+    if (props[extraStyleProp] === null) continue // forced empty
 
     let stateStyle = collectStylesForPseudo(theme, postfix)
 

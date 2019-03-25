@@ -1,5 +1,7 @@
 NEXT
 
+---
+
 - mediator make resolvers simpler:
 
 "maybe theres a way to fix up the problems we have on electron side and my complaints too about mediator being too hard to manage

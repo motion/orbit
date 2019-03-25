@@ -1,4 +1,4 @@
-import { Button, useScreenPosition } from '@o/ui'
+import { Button, SegmentedRow, useScreenPosition } from '@o/ui'
 import { react, useStore } from '@o/use-store'
 import * as Mobx from 'mobx'
 import React, { useRef } from 'react'
@@ -8,7 +8,7 @@ window['Mobx'] = Mobx
 class TestStore {
   props: any
 
-  y = Math.random()
+  y = 1
 
   z = react(() => this.y, x => x + 1)
 
@@ -53,13 +53,17 @@ export function TestStores() {
       <Button tooltip="hi mom" onClick={store.onClick}>
         gooo
       </Button>
-      <div style={{ flex: 1 }} />
-      <div ref={ref}>hello</div>
-      <div style={{ flex: 1 }} />
-      <div>hello2</div>
-      <div style={{ flex: 1 }} />
-      <div>hello3</div>
-      <div style={{ flex: 1 }} />
+
+      <br />
+
+      <Button onClick={() => store.y++}>ok</Button>
+
+      <SegmentedRow>
+        <Button>hello</Button>
+        {store.y % 2 === 0 ? <Button>hello2</Button> : null}
+        <Button>hello3</Button>
+        <Button>hello4</Button>
+      </SegmentedRow>
     </div>
   )
 }

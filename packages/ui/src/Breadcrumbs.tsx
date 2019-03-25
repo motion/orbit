@@ -1,5 +1,5 @@
 import { Row, ViewProps } from '@o/gloss'
-import { react, useReaction, useStore } from '@o/use-store'
+import { ensure, react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
@@ -14,6 +14,7 @@ class BreadcrumbStore {
   orderedChildren = react(
     () => [...this.selectors],
     async (selectors, { sleep }) => {
+      ensure('selectors', !!selectors.length)
       await sleep()
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>

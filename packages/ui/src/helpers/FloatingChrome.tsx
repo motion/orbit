@@ -13,14 +13,14 @@ export function FloatingChrome(
     measureKey?: number
   } & HTMLAttributes<HTMLDivElement>,
 ) {
-  const { target, style, measureKey, ...rest } = props
+  const { target, style, measureKey, zIndex, ...rest } = props
   const [pos, setPos] = useState<Rect | null>(null)
   const element = (
     <div
       style={{
         position: 'absolute',
         pointerEvents: 'auto',
-        zIndex: props.zIndex || 1500000,
+        zIndex: zIndex || 1500000,
         ...pos,
         ...style,
       }}

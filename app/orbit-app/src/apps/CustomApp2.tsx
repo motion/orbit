@@ -1,11 +1,15 @@
 import { App, AppProps, createApp } from '@o/kit'
-import { Title } from '@o/ui'
+import { GridItem, GridLayout, Title } from '@o/ui'
 import React from 'react'
 
 function CustomApp2(_props: AppProps) {
   return (
     <App>
-      <Title>hi 2</Title>
+      <Title>hi 2 2</Title>
+
+      <GridLayout>
+        <GridItem>hello 1234</GridItem>
+      </GridLayout>
     </App>
   )
 }

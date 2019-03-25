@@ -1,7 +1,16 @@
 import { FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Row, SegmentedRow, Space, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Row,
+  SegmentedRow,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -79,18 +88,23 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <OrbitHeaderInput />
 
           {isOnTearablePane && (
-            <SegmentedRow
-              sizeHeight={0.9}
-              sizeRadius={2}
-              sizePadding={1.25}
-              fontWeight={500}
-              sizeFont={0.95}
-              alpha={0.5}
-            >
-              <LinkButton />
-              <OrbitEditAppButton />
-              {!isTorn && <LaunchButton />}
-            </SegmentedRow>
+            <>
+              <SurfacePassProps
+                sizeHeight={0.9}
+                sizeRadius={2}
+                sizePadding={1.25}
+                fontWeight={500}
+                sizeFont={0.95}
+                alpha={0.5}
+              >
+                <OrbitEditAppButton />
+                <Space />
+                <SegmentedRow>
+                  <LinkButton />
+                  {!isTorn && <LaunchButton />}
+                </SegmentedRow>
+              </SurfacePassProps>
+            </>
           )}
         </HeaderContain>
 

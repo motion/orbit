@@ -638,7 +638,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
               onMouseDown={listenerProps.onMouseDown}
               hovered={resizingSides && resizingSides[side]}
               side={side as keyof ResizableSides}
-              zIndex={zIndex + 1}
+              zIndex={(zIndex || 1) + 1}
             />
           ))}
         {this.props.children}

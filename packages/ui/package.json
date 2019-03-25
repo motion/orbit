@@ -35,6 +35,7 @@
     "react-tilt": "0.1.4",
     "react-virtualized": "9.21.0",
     "react-virtualized-auto-sizer": "1.0.2",
+    "react-grid-layout": "0.16.6",
     "react-window": "1.5.1",
     "remark-emoji": "2.0.2",
     "scroll": "2.0.3"

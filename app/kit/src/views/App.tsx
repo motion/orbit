@@ -9,7 +9,7 @@ export const AppLoadContext = createContext({
 })
 
 export type AppMainViewProps = {
-  children: React.ReactElement<any>
+  children: React.ReactNode
   hasSidebar: boolean
   hasStatusbar: boolean
   hasToolbar: boolean

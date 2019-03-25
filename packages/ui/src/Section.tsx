@@ -45,7 +45,7 @@ export function Section({
           below={belowTitle}
         />
       )}
-      <View overflowY={scrollable ? 'auto' : 'inherit'} {...props}>
+      <View overflowY={scrollable ? 'auto' : 'inherit'} overflowX="hidden" {...props}>
         {children}
       </View>
       {!!below && <div style={{ margin: bordered ? -20 : 0 }}>{below}</div>}

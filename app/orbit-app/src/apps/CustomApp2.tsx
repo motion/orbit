@@ -1,4 +1,4 @@
-import { App, AppProps, createApp } from '@o/kit'
+import { App, AppProps, createApp, Table } from '@o/kit'
 import {
   Button,
   Row,
@@ -33,7 +33,13 @@ function CustomApp2(_props: AppProps) {
             }
           }}
         >
-          {({ data, setData, done }) => <div>hihi</div>}
+          {({ data, setData, done }) => (
+            <Table
+              searchable
+              showSearchBar
+              rows={[{ title: 'Hello world' }, { title: 'Hello world' }, { title: 'Hello world' }]}
+            />
+          )}
         </FlowStep>
 
         <FlowStep title="Step 2" subTitle="Select other thing">
@@ -92,6 +98,8 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
       below={<StatusBar>helloworld</StatusBar>}
     >
       {children}
+      <Space />
+      <Space />
       <Space />
       <Space />
       <Space />

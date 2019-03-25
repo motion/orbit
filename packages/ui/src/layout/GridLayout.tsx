@@ -31,6 +31,7 @@ class GridStore {
   }
 }
 
+// this is the problem function, type is off
 const GridStoreContext = createStoreContext(GridStore)
 
 export function GridLayout({ children, ...props }: GridLayoutProps) {
@@ -51,16 +52,12 @@ export type GridItemProps = ViewProps & {
 
 export function GridItem(props: GridItemProps) {
   const store = GridStoreContext.useStore()
-
-  // store should be instanceof GridStore...
-
   const id = useRef(Math.random()).current
 
   useEffect(() => {
-    console.log('store', store, id)
-    // store.mountItem(id, props)
+    store.mountItem(id, props)
     return () => {
-      // store.unmountItem(id)
+      store.unmountItem(id)
     }
   }, [])
 

@@ -1,15 +1,11 @@
-import React, { createContext, useContext } from 'react'
-import { GET_STORE } from './mobxProxyWorm'
-import { useStore, UseStoreOptions } from './useStore'
+import React, { createContext, useContext } from 'react';
+import { GET_STORE } from './mobxProxyWorm';
+import { useStore, UseStoreOptions } from './useStore';
 
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context
 
-export function createStoreContext<
-  Instance,
-  Props,
-  Ctor extends { new (): Instance; props?: Props }
->(_store: Ctor) {
+export function createStoreContext<Instance, Props>(_store: { new (): Instance; props?: Props }) {
   const Context = createContext(null as Instance)
   return {
     Provider: ({ value, children }: { value: Instance; children: any }) => {

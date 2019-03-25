@@ -1,18 +1,14 @@
-import { gloss, Row, View, ViewProps } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React from 'react'
-import { Space } from './layout/Space'
-import { SubTitle } from './text/SubTitle'
-import { Title } from './text/Title'
+import { TitleRow, TitleRowProps } from './TitleRow'
 
-export type SectionProps = ViewProps & {
-  sizePadding?: number
-  above?: React.ReactNode
-  title?: React.ReactNode
-  subTitle?: React.ReactNode
-  controls?: React.ReactNode
-  scrollable?: boolean
-}
+export type SectionProps = ViewProps &
+  Partial<TitleRowProps> & {
+    belowTitle?: React.ReactNode
+    sizePadding?: number
+    scrollable?: boolean
+  }
 
 export function Section({
   above,
@@ -22,29 +18,21 @@ export function Section({
   children,
   controls,
   sizePadding,
+  bordered,
+  belowTitle,
   ...props
 }: SectionProps) {
   return (
-    <SectionChrome sizePadding={sizePadding}>
-      {!!title && (
-        <>
-          <Row padding={[10, 0]}>
-            <View flex={1}>
-              <Title marginTop={0} marginBottom={0}>
-                {title}
-              </Title>
-              {!!subTitle && (
-                <>
-                  <Space small />
-                  <SubTitle marginBottom={0}>{subTitle}</SubTitle>
-                </>
-              )}
-            </View>
-
-            {controls || null}
-          </Row>
-          <Space />
-        </>
+    <SectionChrome bordered={bordered} sizePadding={sizePadding}>
+      {!!(title || controls) && (
+        <TitleRow
+          bordered={bordered}
+          title={title}
+          subTitle={subTitle}
+          after={controls}
+          above={above}
+          below={belowTitle}
+        />
       )}
       <View overflowY={scrollable ? 'auto' : 'inherit'} {...props}>
         {children}
@@ -55,7 +43,12 @@ export function Section({
 
 const SectionChrome = gloss<SectionProps>(View, {
   position: 'relative',
-}).theme(({ sizePadding = 1, padding, ...p }) => ({
+  bordered: {
+    margin: 10,
+    borderRadius: 8,
+  },
+}).theme(({ bordered, sizePadding = 1, padding, ...p }, theme) => ({
+  border: bordered ? [1, theme.borderColor] : 'none',
   paddingTop: selectDefined(p.paddingTop, padding, sizePadding * 15),
   paddingLeft: selectDefined(p.paddingLeft, padding, sizePadding * 15),
   paddingRight: selectDefined(p.paddingRight, padding, sizePadding * 15),

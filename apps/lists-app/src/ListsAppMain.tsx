@@ -9,7 +9,7 @@ export function ListsAppMain(props: AppProps) {
   }
   return (
     <>
-      <ListAppTitle>{props.title || 'hi'}</ListAppTitle>
+      <ListAppTitle title={props.title || 'hi'} />
       <AppMainView {...props} />
     </>
   )

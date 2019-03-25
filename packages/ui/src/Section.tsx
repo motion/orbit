@@ -20,6 +20,7 @@ export function Section({
   sizePadding,
   bordered,
   belowTitle,
+  below,
   ...props
 }: SectionProps) {
   return (
@@ -47,6 +48,7 @@ export function Section({
       <View overflowY={scrollable ? 'auto' : 'inherit'} {...props}>
         {children}
       </View>
+      {!!below && <div style={{ margin: bordered ? -20 : 0 }}>{below}</div>}
     </SizedSurface>
   )
 }

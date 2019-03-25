@@ -1,5 +1,17 @@
 import { App, AppProps, createApp } from '@o/kit'
-import { Button, Row, Section, Slider, SliderPane, Theme, Title, View, ViewProps } from '@o/ui'
+import {
+  Button,
+  Row,
+  Section,
+  Slider,
+  SliderPane,
+  Space,
+  StatusBar,
+  Theme,
+  Title,
+  View,
+  ViewProps,
+} from '@o/ui'
 import React, { Children, createContext, useContext, useState } from 'react'
 
 function CustomApp2(_props: AppProps) {
@@ -77,8 +89,14 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
           ))}
         </Row>
       }
+      below={<StatusBar>helloworld</StatusBar>}
     >
       {children}
+      <Space />
+      <Space />
+      <Space />
+      <Space />
+      <Space />
     </Section>
   )
 }

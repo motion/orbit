@@ -1,6 +1,7 @@
-import { App, AppProps, createApp, Table } from '@o/kit'
+import { App, AppProps, createApp, List, OrbitListItemProps, Table } from '@o/kit'
 import {
   Button,
+  Loading,
   Row,
   Section,
   Slider,
@@ -44,7 +45,19 @@ function CustomApp2(_props: AppProps) {
         </FlowStep>
 
         <FlowStep title="Step 2" subTitle="Select other thing">
-          {({ data, setData, done }) => <div>hihi 22222</div>}
+          {({ data, setData, done }) => (
+            <MasterDetail
+              items={[
+                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+              ]}
+            >
+              {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}
+            </MasterDetail>
+          )}
         </FlowStep>
       </Flow>
 
@@ -71,6 +84,29 @@ export default createApp({
   icon: '',
   app: CustomApp2,
 })
+
+///
+
+type MasterDetailProps = {
+  items: OrbitListItemProps[]
+  children: (selected: OrbitListItemProps) => React.ReactNode
+}
+
+function MasterDetail(props: MasterDetailProps) {
+  const [selected, setSelected] = useState(null)
+  return (
+    <Row>
+      <List
+        items={props.items}
+        onSelect={index => setSelected(props.items[index])}
+        itemProps={{ iconBefore: true }}
+      />
+      <View overflow="hidden" flex={1} position="relative">
+        {props.children(selected)}
+      </View>
+    </Row>
+  )
+}
 
 ///
 

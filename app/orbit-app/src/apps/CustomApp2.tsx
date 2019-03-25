@@ -10,6 +10,8 @@ import {
   SurfacePassProps,
   Theme,
   Title,
+  VerticalSplit,
+  VerticalSplitPane,
   View,
 } from '@o/ui'
 import React, { Children, useState } from 'react'
@@ -19,25 +21,42 @@ function CustomApp2(_props: AppProps) {
     <App>
       <Flow
         initialData={{
-          test: 1,
+          selected: [],
         }}
       >
         <FlowStep
           title="Step 1"
           subTitle="Select your thing"
-          validateFinished={data => {
-            return {
-              field1: false,
-            }
-          }}
+          validateFinished={data =>
+            data.rows.length > 0
+              ? true
+              : {
+                  rows: 'Need to select rows.',
+                }
+          }
         >
-          {({ data, setData, done }) => (
-            <Table
-              searchable
-              showSearchBar
-              rows={[{ title: 'Hello world' }, { title: 'Hello world' }, { title: 'Hello world' }]}
-            />
-          )}
+          {({ data, setData }) => {
+            return (
+              <VerticalSplit>
+                <VerticalSplitPane>
+                  <Table
+                    searchable
+                    showSearchBar
+                    multiselect
+                    onHighlighted={rows => setData({ selected: rows })}
+                    rows={[
+                      { title: 'Hello world', date: new Date(Date.now()) },
+                      { title: 'Hello world', date: new Date(Date.now()) },
+                      { title: 'Hello world', date: new Date(Date.now()) },
+                    ]}
+                  />
+                </VerticalSplitPane>
+                <VerticalSplitPane>
+                  <List items={data.selected} />
+                </VerticalSplitPane>
+              </VerticalSplit>
+            )
+          }}
         </FlowStep>
 
         <FlowStep title="Step 2" subTitle="Select other thing">
@@ -136,7 +155,9 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
 
 function Flow({ renderLayout = DefaultFlowLayout, ...props }: any) {
   const [step, setStep] = useState(0)
-  const [data, setData] = useState(props.initialData)
+  const [data, setDataDumb] = useState(props.initialData)
+  // make it  merge by default
+  const setData = x => setDataDumb({ ...data, ...x })
   const total = Children.count(props.children)
   const steps = Children.map(props.children, child => child.props).map((child, index) => ({
     key: `${index}`,
@@ -152,7 +173,12 @@ function Flow({ renderLayout = DefaultFlowLayout, ...props }: any) {
         if (typeof step.children !== 'function') {
           throw new Error(`Must provide a function as the child of FlowStep`)
         }
-        return <SliderPane key={index}>{step.children({ data, setData, next })}</SliderPane>
+        const ChildView = step.children
+        return (
+          <SliderPane key={index}>
+            <ChildView {...{ data, setData, next }} />
+          </SliderPane>
+        )
       })}
     </Slider>
   )

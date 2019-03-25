@@ -1,6 +1,6 @@
-import { gloss, View, ViewProps } from '@o/gloss'
-import { selectDefined } from '@o/utils'
+import { View, ViewProps } from '@o/gloss'
 import React from 'react'
+import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 
 export type SectionProps = ViewProps &
@@ -23,10 +23,20 @@ export function Section({
   ...props
 }: SectionProps) {
   return (
-    <SectionChrome bordered={bordered} sizePadding={sizePadding}>
+    <SizedSurface
+      hoverStyle={null}
+      activeStyle={null}
+      sizeRadius={bordered ? 1 : 0}
+      elevation={bordered ? 1 : 0}
+      borderWidth={bordered ? 1 : 0}
+      padding={bordered ? 20 : 0}
+      margin={bordered ? 10 : 0}
+      noInnerElement
+    >
       {!!(title || controls) && (
         <TitleRow
           bordered={bordered}
+          backgrounded={bordered}
           title={title}
           subTitle={subTitle}
           after={controls}
@@ -37,20 +47,17 @@ export function Section({
       <View overflowY={scrollable ? 'auto' : 'inherit'} {...props}>
         {children}
       </View>
-    </SectionChrome>
+    </SizedSurface>
   )
 }
 
-const SectionChrome = gloss<SectionProps>(View, {
-  position: 'relative',
-  bordered: {
-    margin: 10,
-    borderRadius: 8,
-  },
-}).theme(({ bordered, sizePadding = 1, padding, ...p }, theme) => ({
-  border: bordered ? [1, theme.borderColor] : 'none',
-  paddingTop: selectDefined(p.paddingTop, padding, sizePadding * 15),
-  paddingLeft: selectDefined(p.paddingLeft, padding, sizePadding * 15),
-  paddingRight: selectDefined(p.paddingRight, padding, sizePadding * 15),
-  paddingBottom: selectDefined(p.paddingBottom, padding, sizePadding * 15),
-}))
+// const SectionChrome = gloss<SectionProps>(View, {
+//   position: 'relative',
+//   // bordered: {
+//   //   margin: 10,
+//   //   borderRadius: 8,
+//   // },
+// }).theme(({ bordered, sizePadding = 1, padding, ...p }, theme) => ({
+//   border: bordered ? [1, theme.borderColor] : 'none',
+
+// }))

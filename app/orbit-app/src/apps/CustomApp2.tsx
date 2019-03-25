@@ -12,15 +12,12 @@ import {
   Theme,
   Title,
   View,
-  ViewProps,
 } from '@o/ui'
-import React, { Children, createContext, useContext, useState } from 'react'
+import React, { Children, useState } from 'react'
 
 function CustomApp2(_props: AppProps) {
   return (
     <App>
-      <Title>hi 2 2</Title>
-
       <Flow
         initialData={{
           test: 1,
@@ -60,17 +57,6 @@ function CustomApp2(_props: AppProps) {
           )}
         </FlowStep>
       </Flow>
-
-      <Layout type="multi-step">
-        <Step key="1" title="Step 1">
-          hello world
-        </Step>
-
-        <Step key="2" title="Step 2">
-          hello world
-        </Step>
-      </Layout>
-
       {/* <GridLayout>
         <GridItem>hello 1234</GridItem>
       </GridLayout> */}
@@ -96,12 +82,14 @@ function MasterDetail(props: MasterDetailProps) {
   const [selected, setSelected] = useState(null)
   return (
     <Row>
-      <List
-        items={props.items}
-        onSelect={index => setSelected(props.items[index])}
-        itemProps={{ iconBefore: true }}
-      />
-      <View overflow="hidden" flex={1} position="relative">
+      <View flex={1}>
+        <List
+          items={props.items}
+          onSelect={index => setSelected(props.items[index])}
+          itemProps={{ iconBefore: true }}
+        />
+      </View>
+      <View overflow="hidden" flex={2} position="relative">
         {props.children(selected)}
       </View>
     </Row>
@@ -115,6 +103,7 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
   return (
     <Section
       bordered
+      padding={0}
       title={step.title}
       subTitle={step.subTitle || `${index + 1}/${total}`}
       belowTitle={
@@ -127,14 +116,10 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
           sizeRadius={0}
           sizePadding={1.5}
         >
-          <Row marginBottom={-15}>
+          <Row>
             {steps.map((step, stepIndex) => (
-              <Theme name={steps[index].key === step.key ? 'selected' : null}>
-                <Button
-                  active={steps[index].key === step.key}
-                  key={step.key}
-                  onClick={() => setStep(stepIndex)}
-                >
+              <Theme key={step.key} name={steps[index].key === step.key ? 'selected' : null}>
+                <Button active={steps[index].key === step.key} onClick={() => setStep(stepIndex)}>
                   {step.title}
                 </Button>
               </Theme>
@@ -193,36 +178,4 @@ function Flow({ renderLayout = DefaultFlowLayout, ...props }: any) {
 
 function FlowStep(_props: any) {
   return null
-}
-
-///
-
-type LayoutProps = {
-  type?: string
-  navigation?: boolean
-  children?: React.ReactNode
-}
-
-const LayoutPropsContext = createContext({} as LayoutProps)
-
-function Layout(props: LayoutProps) {
-  return (
-    <LayoutPropsContext.Provider value={props}>
-      <View>{props.children}</View>
-    </LayoutPropsContext.Provider>
-  )
-}
-
-type StepProps = ViewProps & {
-  title?: string
-}
-
-function Step(props: StepProps) {
-  const layoutProps = useContext(LayoutPropsContext)
-
-  if (!layoutProps.navigation) {
-    return <Section {...props} />
-  }
-
-  return <View>{props.children}</View>
 }

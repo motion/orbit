@@ -90,13 +90,13 @@ export const SliderPane = ({
   framePad,
   ...props
 }: SliderPaneProps) => {
-  // height management
   const ref = React.useRef(null)
 
   useResizeObserver({
-    ref: ref,
+    ref,
     onChange: entries => {
       if (onChangeHeight) {
+        console.log('oin chagen height', entries[0].contentRect.height)
         onChangeHeight(entries[0].contentRect.height)
       }
     },

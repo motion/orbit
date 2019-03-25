@@ -21,6 +21,7 @@ export function Section({
   bordered,
   belowTitle,
   below,
+  padding,
   ...props
 }: SectionProps) {
   return (
@@ -30,7 +31,6 @@ export function Section({
       sizeRadius={bordered ? 1 : 0}
       elevation={bordered ? 1 : 0}
       borderWidth={bordered ? 1 : 0}
-      padding={bordered ? 20 : 0}
       margin={bordered ? 10 : 0}
       noInnerElement
       overflow="hidden"
@@ -39,6 +39,7 @@ export function Section({
         <TitleRow
           bordered={bordered}
           backgrounded={bordered}
+          margin={0}
           title={title}
           subTitle={subTitle}
           after={controls}
@@ -46,7 +47,12 @@ export function Section({
           below={belowTitle}
         />
       )}
-      <View overflowY={scrollable ? 'auto' : 'inherit'} overflowX="hidden" {...props}>
+      <View
+        overflowY={scrollable ? 'auto' : 'inherit'}
+        overflowX="hidden"
+        padding={typeof padding !== 'undefined' ? padding : bordered ? 20 : 0}
+        {...props}
+      >
         {children}
       </View>
       {!!below && <div style={{ margin: bordered ? -20 : 0 }}>{below}</div>}

@@ -37,7 +37,7 @@ export function TitleRow({
       position="relative"
       overflow="hidden"
       paddingTop={unpad + 2.5 * sizePadding}
-      paddingBottom={10 * sizePadding + 5}
+      paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
       paddingLeft={unpad}
       paddingRight={unpad}
       margin={typeof margin !== 'undefined' ? margin : [-unpad, -unpad, 10]}

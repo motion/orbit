@@ -43,6 +43,7 @@ function ListsAppMainFolder(props: AppProps) {
   return (
     <>
       <ListAppTitle
+        title={props.title}
         before={
           treeList.userState.depth > 0 && (
             <BarButtonSmall icon="arrows-1_bold-left" onClick={treeList.actions.back}>
@@ -50,9 +51,7 @@ function ListsAppMainFolder(props: AppProps) {
             </BarButtonSmall>
           )
         }
-      >
-        {props.title}
-      </ListAppTitle>
+      />
       <List items={children} />
     </>
   )

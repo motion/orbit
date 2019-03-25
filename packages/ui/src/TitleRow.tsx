@@ -31,15 +31,15 @@ export function TitleRow({
   title,
 }: TitleRowProps) {
   const unpad = 20
-  console.log('title', title)
+  const sidePad = 10 * sizePadding
   return (
     <View
       position="relative"
       overflow="hidden"
       paddingTop={unpad + 2.5 * sizePadding}
       paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
-      paddingLeft={unpad}
-      paddingRight={unpad}
+      paddingLeft={sidePad + unpad}
+      paddingRight={sidePad + unpad}
       margin={typeof margin !== 'undefined' ? margin : [-unpad, -unpad, 10]}
       background={backgrounded ? theme => theme.backgroundAlt : null}
     >

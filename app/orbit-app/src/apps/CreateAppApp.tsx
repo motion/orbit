@@ -87,6 +87,7 @@ function CreateAppMain({ identifier }: AppProps) {
     <Section>
       <TitleRow
         bordered
+        title={<AppsMainNew />}
         after={
           <>
             <Button themeSelect={theme => theme.bordered} icon="lock">
@@ -100,9 +101,7 @@ function CreateAppMain({ identifier }: AppProps) {
             </Theme>
           </>
         }
-      >
-        <AppsMainNew />
-      </TitleRow>
+      />
 
       <SubSection title="App Settings">
         <AppView identifier={identifier} viewType="settings" />

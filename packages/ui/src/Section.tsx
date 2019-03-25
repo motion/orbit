@@ -33,6 +33,7 @@ export function Section({
       padding={bordered ? 20 : 0}
       margin={bordered ? 10 : 0}
       noInnerElement
+      overflow="hidden"
     >
       {!!(title || controls) && (
         <TitleRow

@@ -69,7 +69,7 @@ export function HeadSection() {
               <Row height="80%" flex={1} alignItems="center" justifyContent="center">
                 <View width="90%">
                   <FadeDown disable={!measured}>
-                    <TitleText fontWeight={100}>
+                    <TitleText fontWeight={100} selectable>
                       <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
                         {allTitles[size]}
                       </ViewPortText>
@@ -108,7 +108,7 @@ export function HeadSection() {
                 <img src={glow} />
               </View>
 
-              <Row width="100%" height={340} position="relative">
+              <Row width="100%" height="40%" position="relative">
                 <View
                   background={`url(${screen}) no-repeat top left`}
                   backgroundSize="contain"
@@ -120,11 +120,11 @@ export function HeadSection() {
                   <img src={lineSep} />
                 </FullScreen>
 
-                <Center marginTop={100}>
-                  <img src={macbook} />
-                </Center>
+                <View position="absolute" bottom="10%" left={0} right={0}>
+                  <img style={{ margin: 'auto' }} src={macbook} />
+                </View>
 
-                <Center bottom="auto" top="16%">
+                <Center bottom="auto" top="4%">
                   <Row
                     width={159}
                     height={45}

@@ -46,10 +46,10 @@ function CustomApp2(_props: AppProps) {
             <MasterDetail
               items={[
                 { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
-                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
-                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
-                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
-                { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'smoe', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'hi', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'aos', subtitle: 'hello' },
+                { title: 'Something', group: 'Hello', icon: 'dn', subtitle: 'hello' },
               ]}
             >
               {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}

@@ -88,7 +88,7 @@ export const Icon = memo((rawProps: IconProps) => {
 
   const iconName = findMatch(name)
   // icons here are consistently a bit too big...
-  const size = props.size > 18 ? props.size * 0.65 : props.size || 16
+  const size = props.size > 18 ? props.size * 0.85 : props.size || 16
 
   return (
     <IconInner color={color} {...restProps} size={size}>

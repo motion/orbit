@@ -10,8 +10,6 @@ const statusBarProps = {
 }
 
 export const StatusBar = gloss({
-  margin: 8,
-  borderRadius: 8,
   padding: [0, 7],
   height: 34,
   position: 'absolute',
@@ -25,8 +23,8 @@ export const StatusBar = gloss({
   // backdropFilter: 'blur(10px)',
 }).theme((_, theme) => ({
   background: theme.background.alpha(0.97),
-  border: [1, theme.borderColor.alpha(a => a * 0.75)],
-  boxShadow: [[0, 0, 18, [0, 0, 0, 0.06]]],
+  borderTop: [1, theme.borderColor.alpha(a => a * 0.75)],
+  boxShadow: [[0, 0, 10, [0, 0, 0, 0.06]]],
 }))
 
 export const StatusBarSpace = gloss({

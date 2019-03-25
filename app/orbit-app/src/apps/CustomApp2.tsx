@@ -7,6 +7,7 @@ import {
   SliderPane,
   Space,
   StatusBar,
+  SurfacePassProps,
   Theme,
   Title,
   View,
@@ -81,19 +82,29 @@ const DefaultFlowLayout = ({ children, index, total, step, steps, setStep }) => 
       title={step.title}
       subTitle={step.subTitle || `${index + 1}/${total}`}
       belowTitle={
-        <Row>
-          {steps.map((step, stepIndex) => (
-            <Theme name={steps[index].key === step.key ? 'selected' : null}>
-              <Button
-                active={steps[index].key === step.key}
-                key={step.key}
-                onClick={() => setStep(stepIndex)}
-              >
-                {step.title}
-              </Button>
-            </Theme>
-          ))}
-        </Row>
+        <SurfacePassProps
+          background="transparent"
+          borderWidth={0}
+          glint={false}
+          borderBottom={[3, 'transparent']}
+          borderColor={(theme, props) => (props.active ? theme.borderColor : null)}
+          sizeRadius={0}
+          sizePadding={1.5}
+        >
+          <Row marginBottom={-15}>
+            {steps.map((step, stepIndex) => (
+              <Theme name={steps[index].key === step.key ? 'selected' : null}>
+                <Button
+                  active={steps[index].key === step.key}
+                  key={step.key}
+                  onClick={() => setStep(stepIndex)}
+                >
+                  {step.title}
+                </Button>
+              </Theme>
+            ))}
+          </Row>
+        </SurfacePassProps>
       }
       below={<StatusBar>helloworld</StatusBar>}
     >

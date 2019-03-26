@@ -1,7 +1,13 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { MediatorServer, WebSocketServerTransport } from '@o/mediator'
-import { CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, TearAppCommand } from '@o/models'
+import { MediatorServer, WebSocketServerTransport, resolveCommand } from '@o/mediator'
+import {
+  CloseAppCommand,
+  NewFallbackServerPortCommand,
+  RestartAppCommand,
+  AppDevOpenCommand,
+  TearAppCommand,
+} from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
@@ -17,8 +23,13 @@ import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
+// import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
+
+export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async _params => {
+  console.log('SSS');
+})
 
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
@@ -34,9 +45,9 @@ export async function main() {
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [TearAppCommand, CloseAppCommand, RestartAppCommand],
+    commands: [AppDevOpenCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
-    resolvers: [TearAppResolver, CloseAppResolver, RestartAppResolver],
+    resolvers: [OpenAppDevResolver, TearAppResolver, CloseAppResolver, RestartAppResolver],
   })
   mediatorServer.bootstrap()
 

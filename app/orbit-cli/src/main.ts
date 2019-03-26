@@ -121,16 +121,15 @@ class OrbitCLI {
   }
 
   async dev(_opts: {}) {
-    let bundlerPromise = startBundler({
+    let config = {
       projectRoot: this.options.projectRoot,
       mode: 'development',
-    })
-    // @ts-ignore
-    let orbitDesktop = await getOrbitDesktop()
-    let bundler = await bundlerPromise
+    }
+    let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
     await orbitDesktop.command(AppDevOpenCommand, {
-      bundleUrl: `http://${bundler.host}:${bundler.port}/dist/bundle.js`,
-      path: this.options.projectRoot
+      bundleUrl: `http://${bundler.host}:${bundler.port}/bundle.js`,
+      path: this.options.projectRoot,
+      appId: this.options.projectRoot,
     })
     return
   }

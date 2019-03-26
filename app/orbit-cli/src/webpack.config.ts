@@ -67,7 +67,7 @@ async function makeConfig(params: Params) {
   }
 
   let externals = {
-    'react': 'React',
+    react: 'React',
     'react-dom': 'ReactDOM',
     '@o/kit': 'OrbitKit',
     '@o/ui': 'OrbitUI',
@@ -83,6 +83,11 @@ async function makeConfig(params: Params) {
       path: outputPath,
       pathinfo: mode === 'development',
       filename: 'bundle.js',
+      // TODO(andreypopp): sort this out, we need some custom symbol here which
+      // we will communicate to Orbit
+      library: 'window.OrbitAppToRun',
+      libraryTarget: 'assign',
+      libraryExport: 'default',
       publicPath: '/',
       // fixes react-hmr bug, pending
       // https://github.com/webpack/webpack/issues/6642

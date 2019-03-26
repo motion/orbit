@@ -1,5 +1,5 @@
 import { AppModel, AppProps, save, useActiveSpace, useModel } from '@o/kit'
-import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
+import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
 import { PostgresAppData } from './PostgresModels'
@@ -83,7 +83,6 @@ export function PostgresSettings({ app }: Props) {
       await save(AppModel, appBit)
       setStatus(Statuses.SUCCESS)
       setError(null)
-
     } catch (err) {
       setStatus(Statuses.FAIL)
       setError(err.message)
@@ -103,7 +102,7 @@ export function PostgresSettings({ app }: Props) {
       <Space />
       <Col margin="auto" width={370}>
         <Col>
-          <Table>
+          <Form>
             <InputField
               label="Hostname"
               value={credentials.hostname}
@@ -135,7 +134,7 @@ export function PostgresSettings({ app }: Props) {
               // !TODO
               onChange={handleChange('database') as any}
             />
-          </Table>
+          </Form>
           <Space />
           <Theme
             theme={{

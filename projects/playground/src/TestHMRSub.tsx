@@ -22,7 +22,7 @@ export default observer(function TestHMRInner() {
       {store.x.map((_, index) => (
         <SomeOtherSubView key={`${index}`} id={index} />
       ))}
-      <button onClick={store.onClick}>gooo</button>
+      <button onClick={store.onClick}>go2</button>
     </div>
   )
 })

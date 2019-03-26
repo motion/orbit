@@ -13,6 +13,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
       <TitleRow
         backgrounded
         bordered
+        title={def.name}
         before={<Icon name={props.identifier} size={24} />}
         after={
           <>
@@ -24,9 +25,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
               </Theme>
             )}
             {!def.sync && (
-              <Theme name="selected">
-                <Button icon="add">Install</Button>
-              </Theme>
+              <Button alt="action" icon="add">
+                Install
+              </Button>
             )}
           </>
         }
@@ -38,9 +39,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
             </Row>
           </SubTitle>
         }
-      >
-        {def.name}
-      </TitleRow>
+      />
       {hasSetup && (
         <SubSection title="Setup">
           <AppView identifier={props.identifier} viewType="setup" />

@@ -19,6 +19,5 @@ export function useStores<A extends Object>(options?: UseStoresOptions<A>): Guar
 }
 
 export const useStoresSimple = () => {
-  // resetTracking()
-  return useContext(config.StoreContext)
+  return useContext(config.StoreContext) || {}
 }

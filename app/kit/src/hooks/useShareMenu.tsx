@@ -51,10 +51,13 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
 })
 
 export function useShareMenu() {
-  const { themeStore } = useStores()
+  const { themeStore } = useStores({ optional: ['themeStore'] })
   const getShareMenuItemProps = useCallback(
     (item: OrbitListItemProps, _index?, _items?) => {
-      return getItemShareMenu(item, themeStore)
+      if (themeStore) {
+        return getItemShareMenu(item, themeStore)
+      }
+      return {}
     },
     [themeStore],
   )

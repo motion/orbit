@@ -7,7 +7,7 @@ import {
   ThemeContext,
   ThemeObject,
   View,
-  ViewPropsStrict,
+  ViewProps,
 } from '@o/gloss'
 import { useStore } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
@@ -45,7 +45,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = ViewPropsStrict &
+export type ListItemProps = ViewProps &
   ListItemHide &
   ListItemDisplayProps & {
     subId?: string | number
@@ -215,7 +215,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
   )
 
   return (
-    <Theme select={isSelected ? theme => theme.selected : null}>
+    <Theme alternate={isSelected ? 'selected' : null}>
       <>
         {above}
         {!!separator && (

@@ -7,17 +7,25 @@
 
 import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
 import { throttle } from 'lodash'
-import React, { createRef, RefObject, useCallback, useRef, useState } from 'react'
+import React, { createContext, createRef, RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
+import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { useScreenPosition } from './hooks/useScreenPosition'
 import { Omit } from './types'
 
 const invariant = require('invariant')
-
 const SIZE = 5
+
+const InteractiveContext = createContext({
+  // the deeper we go, the less natural zIndex we want
+  // so that outer panes will have their draggers "cover" inner ones
+  // think of a <Pane> with a <TableHeadCol> inside, Pane should override
+  // this achieves that by automatically tracking Interactive nesting
+  nesting: 0,
+})
 
 type CursorState = {
   top: number
@@ -98,6 +106,8 @@ const InteractiveContainer = gloss(View, {
 
 // controlled
 export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
+  static contextType = InteractiveContext
+
   static defaultProps = {
     minHeight: 0,
     minLeft: 0,
@@ -135,6 +145,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 
   startAction = event => {
+    if (isRightClick(event)) return
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -576,15 +587,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       movable,
       top,
       width,
-      zIndex,
       disableFloatingGrabbers,
       ...props
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
+    const zIndex =
+      typeof props.zIndex === 'undefined' ? 10000000 - this.context.nesting : props.zIndex
     const style = {
       cursor,
-      zIndex: zIndex == null ? 'auto' : zIndex,
       left: null,
       top: null,
       transform: null,
@@ -621,28 +632,30 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const useFloatingGrabbers = resizable && !disableFloatingGrabbers
     return (
-      <InteractiveContainer
-        className={this.props.className}
-        hidden={this.props.hidden}
-        ref={this.ref}
-        style={style}
-        {...listenerProps}
-        {...props}
-      >
-        {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-        {useFloatingGrabbers &&
-          Object.keys(resizable).map(side => (
-            <FakeResize
-              key={side}
-              parent={this.ref}
-              onMouseDown={listenerProps.onMouseDown}
-              hovered={resizingSides && resizingSides[side]}
-              side={side as keyof ResizableSides}
-              zIndex={zIndex + 1}
-            />
-          ))}
-        {this.props.children}
-      </InteractiveContainer>
+      <InteractiveContext.Provider value={{ ...this.context, nesting: this.context.nesting + 1 }}>
+        <InteractiveContainer
+          className={this.props.className}
+          hidden={this.props.hidden}
+          ref={this.ref}
+          style={style}
+          {...listenerProps}
+          {...props}
+        >
+          {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
+          {useFloatingGrabbers &&
+            Object.keys(resizable).map(side => (
+              <FakeResize
+                key={side}
+                parent={this.ref}
+                onMouseDown={listenerProps.onMouseDown}
+                hovered={resizingSides && resizingSides[side]}
+                side={side as keyof ResizableSides}
+                zIndex={zIndex + 1}
+              />
+            ))}
+          {this.props.children}
+        </InteractiveContainer>
+      </InteractiveContext.Provider>
     )
   }
 }
@@ -697,6 +710,7 @@ const FakeResize = ({ side, hovered, parent, ...rest }: FakeResizeProps) => {
           rest.onMouseLeave && rest.onMouseLeave(e)
         }}
         onMouseDown={e => {
+          if (isRightClick(e)) return
           if (shouldCover) {
             console.warn('no more bad click')
             e.preventDefault()

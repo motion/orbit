@@ -78,8 +78,8 @@ export const Icon = React.memo((props: OrbitIconProps) => {
         className={restProps.className}
         fill="inherit"
         svg={customIcon}
-        width={`${size}`}
-        height={`${size}`}
+        width={`${size}px`}
+        height={`${size}px`}
         style={{
           alignItems: 'center',
           justifyContent: 'center',

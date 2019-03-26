@@ -6,6 +6,8 @@ import {
   Fieldsets,
   FloatingCard,
   Form,
+  Layout,
+  Pane,
   Row,
   SearchInput,
   Select,
@@ -14,8 +16,6 @@ import {
   Tabs,
   useFetch,
   useForm,
-  VerticalSplit,
-  VerticalSplitPane,
 } from '@o/ui'
 import React, { useState } from 'react'
 
@@ -34,16 +34,16 @@ export function CustomAppMain(_props: AppProps) {
 
   return (
     <Form use={form}>
-      <VerticalSplit>
-        <VerticalSplitPane>
+      <Layout type="row">
+        <Pane>
           <SpacedRow>
             <SearchInput name="search" />
             <Select name="active" options={active} />
             <Select name="type" isMulti options={type} />
           </SpacedRow>
           <Table
-            multiselect
-            onHighlighted={setHighlighted}
+            multiSelect
+            onSelect={setHighlighted}
             rows={users}
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
@@ -64,8 +64,8 @@ export function CustomAppMain(_props: AppProps) {
               </Card>
             ))}
           </Row>
-        </VerticalSplitPane>
-        <VerticalSplitPane>
+        </Pane>
+        <Pane>
           <Tabs borderRadius={20} margin={2}>
             {highlighted.map(row => (
               <Tab key={row.id} label={row.name}>
@@ -73,8 +73,8 @@ export function CustomAppMain(_props: AppProps) {
               </Tab>
             ))}
           </Tabs>
-        </VerticalSplitPane>
-      </VerticalSplit>
+        </Pane>
+      </Layout>
     </Form>
   )
 }
@@ -85,7 +85,7 @@ function PersonInfo(props: { row: any }) {
     <>
       <Fieldsets rows={[props.row]} />
       <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-        {albums => <Table title="Albums" rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
+        {albums => <Table title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />}
       </Fetch>
       {!!album && (
         <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>

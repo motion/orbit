@@ -1,4 +1,4 @@
-import { Button, Input, Message, Section, SegmentedRow, Space, Theme, Title } from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Space, Title } from '@o/ui'
 import React from 'react'
 
 export default function SettingsAppAccount() {
@@ -18,9 +18,7 @@ export default function SettingsAppAccount() {
       <Section>
         <SegmentedRow size={1.5}>
           <Input type="email" flex={1} placeholder="address@example.com" />
-          <Theme name="selected">
-            <Button>Send Login Link</Button>
-          </Theme>
+          <Button alt="action">Send Login Link</Button>
         </SegmentedRow>
       </Section>
     </Section>

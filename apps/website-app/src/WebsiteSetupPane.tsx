@@ -1,5 +1,5 @@
 import { AppModel, AppProps, save, useModel } from '@o/kit'
-import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
+import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
 import produce from 'immer'
 import React, { useEffect, useState } from 'react'
 import { WebsiteAppData } from './WebsiteModels'
@@ -49,7 +49,7 @@ export default function WebsiteSetupPane(props: Props) {
       <Space />
       <Col margin="auto" width={370}>
         <Col padding={[0, 10]}>
-          <Table>
+          <Form>
             <InputField
               label="Website URL"
               value={values.url}
@@ -57,7 +57,7 @@ export default function WebsiteSetupPane(props: Props) {
                 setValues({ ...values, url: e.target.value })
               }}
             />
-          </Table>
+          </Form>
           <Space />
           <Theme>
             <Button type="submit" onClick={addApp}>

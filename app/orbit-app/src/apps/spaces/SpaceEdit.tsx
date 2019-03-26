@@ -8,7 +8,6 @@ import {
   Row,
   SimpleFormField,
   Space as UISpace,
-  Theme,
   Title,
 } from '@o/ui'
 import { pick } from 'lodash'
@@ -86,9 +85,12 @@ export function SpaceEdit({ space }: { space: Space }) {
         <Paragraph>Choose which source grants access to this space.</Paragraph>
 
         {(apps || []).map((int, index) => (
-          <Theme key={int.id} name={index === 0 ? 'selected' : null}>
-            <ListItem icon={int.identifier} title={int.name} />
-          </Theme>
+          <ListItem
+            key={int.id}
+            alt={index === 0 ? 'selected' : null}
+            icon={int.identifier}
+            title={int.name}
+          />
         ))}
       </SubSection>
     </>

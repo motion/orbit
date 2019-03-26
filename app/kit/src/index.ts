@@ -1,5 +1,9 @@
+import * as TemplatesImport from './templates'
+export const Templates = TemplatesImport
+
 export * from '@o/bridge'
 export * from '@o/config'
+export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 export * from '@o/gloss'
 export * from '@o/logger'
 export * from '@o/mediator'

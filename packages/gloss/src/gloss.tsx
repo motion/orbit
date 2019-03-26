@@ -12,6 +12,7 @@ import {
   useRef,
   ValidationMap,
 } from 'react'
+import { Config } from './config'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
@@ -136,7 +137,7 @@ function glossify(
     }
   }
 
-  const hasDynamicStyles = themeFn || hasConditionalStyles
+  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
   const dynamicStyles = { [id]: {} }
 
   if (hasConditionalStyles) {
@@ -151,7 +152,8 @@ function glossify(
   }
 
   if (themeFn) {
-    addStyles(id, dynamicStyles, themeFn(props, theme))
+    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+    addStyles(id, dynamicStyles, themeFn(props, next))
   }
 
   if (hasDynamicStyles) {
@@ -194,7 +196,10 @@ function glossify(
   return nextClassNames
 }
 
-export function gloss<Props = any>(a?: CSSPropertySet | any, b?: CSSPropertySet): GlossView<Props> {
+export function gloss<Props = any>(
+  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | any,
+  b?: CSSPropertySet,
+): GlossView<Props> {
   let target = a || 'div'
   let rawStyles = b
   let targetConfig

@@ -1,4 +1,5 @@
 import { color } from '@o/color'
+import { CSSPropertySet } from '@o/css'
 
 // mutate styles to have alpha if defined in props
 
@@ -7,7 +8,7 @@ export type AlphaColorProps = {
   alphaHover?: number
 }
 
-export function alphaColor(styles, { alpha, alphaHover }: AlphaColorProps) {
+export function alphaColor(styles, { alpha, alphaHover }: AlphaColorProps): CSSPropertySet {
   if (styles.color) {
     if (styles.color !== 'inherit') {
       const clr = color(styles.color)

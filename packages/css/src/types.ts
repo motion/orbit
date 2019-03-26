@@ -22,6 +22,7 @@ export type Transform = {
 }
 
 export type ThemeObject = {
+  alternates?: { [key: string]: ThemeObject }
   background: Color
   color: Color
   borderColor?: Color
@@ -40,5 +41,5 @@ export type ThemeObject = {
   backgroundActiveHighlight?: Color
   colorActiveHighlight?: Color
   borderColorActiveHighlight?: Color
-  [key: string]: Color
+  [key: string]: any
 }

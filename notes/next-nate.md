@@ -1,15 +1,28 @@
-Plan
-
-- Need to plan full authentication/syncs
-
 Views
 
-- Floating Card
+- Layout/Pane
+  - row / col / grid + resizing generally
 - Multi-step flows + Multi-step forms
+  - Flows need to handle:
+    - Toolbar/actionbar buttons for next/prev easily
+    - Validate next step before going on + show error banner
+    - Disable navigation items based on validation
+- Forms
+  - need easy way to make them "uncontrolled"/editable
+  - forms need improvement for label
+  - forms need validation as well + error messaging
+  - date view in forms
+  - easy way to add your own custom forms
 - Query editor views
-- <Searchable /> and <SearchTable /> both handle filters
 - Moving into its own area useFilters or similar
 - Theme can control fontWeight for themeing texts
+
+---
+
+Apps generally:
+
+- Would be nice if people can have their own ui kit they add on on top
+  - that should work well with the app store generally
 
 ---
 

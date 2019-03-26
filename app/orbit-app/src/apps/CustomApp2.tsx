@@ -27,8 +27,8 @@ function CustomApp2(_props: AppProps) {
                 <Pane>
                   <Table
                     searchable
-                    multiselect
-                    onHighlighted={rows => setData({ selected: rows })}
+                    multiSelect
+                    onSelect={rows => setData({ selected: rows })}
                     rows={[
                       { title: 'Hello world', date: new Date(Date.now()) },
                       { title: 'Hello world', date: new Date(Date.now()) },

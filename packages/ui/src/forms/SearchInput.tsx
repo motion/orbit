@@ -1,6 +1,6 @@
 import { color } from '@o/color'
 import { gloss, Row, ThemeContext, View } from '@o/gloss'
-import * as React from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
@@ -20,69 +20,67 @@ export type SearchInputProps = InputProps & {
   visible?: boolean
 }
 
-export const SearchInput = React.forwardRef<HTMLTextAreaElement, SearchInputProps>(
-  function SearchInput(
-    {
-      width = '100%',
-      before = null,
-      placeholder = null,
-      searchBarProps = null,
-      after = null,
-      actions = null,
-      filters = [],
-      onClickClear = null,
-      focusedToken = null,
-      filterProps = null,
-      value = null,
-      flex = null,
-      padding = 0,
-      visible,
-      ...props
-    },
-    ref,
-  ) {
-    const { activeTheme } = React.useContext(ThemeContext)
-    const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
-    return (
-      <SearchBar
-        position="relative"
-        zIndex="1"
-        key="searchbar"
-        flex={flex}
-        padding={padding}
-        {...searchBarProps}
-      >
-        {before}
-        <SearchBox width={width} tabIndex={-1} background={props.background}>
-          <SearchIcon
-            name="ui-1_zoom"
-            color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
-          />
-          {filters.map((filter, i) => (
-            <FilterToken
-              key={`${filter.key}:${filter.type}${i}`}
-              index={i}
-              filter={filter}
-              focused={i === focusedToken}
-              {...filterProps}
-            />
-          ))}
-          <Input chromeless padding={0} placeholder={placeholder} ref={ref} {...props} />
-          <SearchClearButton
-            onClick={onClickClear}
-            visible={clearVisible}
-            opacity={1}
-            position="relative"
-            zIndex={2}
-            marginLeft={5}
-          />
-        </SearchBox>
-        {after}
-        {actions != null ? <Actions>{actions}</Actions> : null}
-      </SearchBar>
-    )
+export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(function SearchInput(
+  {
+    width = '100%',
+    before = null,
+    placeholder = null,
+    searchBarProps = null,
+    after = null,
+    actions = null,
+    filters = [],
+    onClickClear = null,
+    focusedToken = null,
+    filterProps = null,
+    value = null,
+    flex = null,
+    padding = 0,
+    visible,
+    ...props
   },
-)
+  ref,
+) {
+  const { activeTheme } = useContext(ThemeContext)
+  const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
+  return (
+    <SearchBar
+      position="relative"
+      zIndex="1"
+      key="searchbar"
+      flex={flex}
+      padding={padding}
+      {...searchBarProps}
+    >
+      {before}
+      <SearchBox width={width} tabIndex={-1} background={props.background}>
+        <SearchIcon
+          name="ui-1_zoom"
+          color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
+        />
+        {filters.map((filter, i) => (
+          <FilterToken
+            key={`${filter.key}:${filter.type}${i}`}
+            index={i}
+            filter={filter}
+            focused={i === focusedToken}
+            {...filterProps}
+          />
+        ))}
+        <Input chromeless padding={0} placeholder={placeholder} ref={ref} {...props} />
+        <SearchClearButton
+          onClick={onClickClear}
+          visible={clearVisible}
+          opacity={1}
+          position="relative"
+          zIndex={2}
+          marginLeft={5}
+        />
+      </SearchBox>
+      {after}
+      {actions != null ? <Actions>{actions}</Actions> : null}
+    </SearchBar>
+  )
+})
 
 const SearchClearButton = gloss(ClearButton, {
   position: 'absolute',

@@ -108,7 +108,7 @@ export type ManagedTableProps = {
   /**
    * Callback when the highlighted rows change.
    */
-  onHighlightedIndices?: (keys: TableHighlightedRows) => void
+  onSelectIndices?: (keys: TableHighlightedRows) => void
   /**
    * Disable highlighting rows
    */
@@ -116,7 +116,7 @@ export type ManagedTableProps = {
   /**
    * Whether multiple rows can be highlighted or not.
    */
-  multiselect?: boolean
+  multiSelect?: boolean
   /**
    * Height of each row.
    */
@@ -164,7 +164,7 @@ const Container = gloss(View, {
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps = {
     highlightableRows: true,
-    multiselect: false,
+    multiSelect: false,
     rowLineHeight: 24,
     bodyPlaceholder: (
       <div style={{ margin: 'auto' }}>
@@ -314,7 +314,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         highlightedRows.clear()
       }
       highlightedRows.add(sortedRows[newIndex].key)
-      this.onHighlightedIndices(highlightedRows, () => {
+      this.onSelectIndices(highlightedRows, () => {
         const { current } = this.tableRef
         if (current) {
           current.scrollToItem(newIndex)
@@ -323,12 +323,12 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }
 
-  onHighlightedIndices = (highlightedRows: Set<string>, cb = () => {}) => {
+  onSelectIndices = (highlightedRows: Set<string>, cb = () => {}) => {
     if (this.props.disableHighlight) return
     this.setState({ highlightedRows }, cb)
-    const { onHighlightedIndices } = this.props
-    if (onHighlightedIndices) {
-      onHighlightedIndices(Array.from(highlightedRows))
+    const { onSelectIndices } = this.props
+    if (onSelectIndices) {
+      onSelectIndices(Array.from(highlightedRows))
     }
   }
 
@@ -380,10 +380,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (
       ((e.metaKey && process.platform === 'darwin') ||
         (e.ctrlKey && process.platform !== 'darwin')) &&
-      this.props.multiselect
+      this.props.multiSelect
     ) {
       highlightedRows.add(row.key)
-    } else if (e.shiftKey && this.props.multiselect) {
+    } else if (e.shiftKey && this.props.multiSelect) {
       // range select
       const lastItemKey = Array.from(this.state.highlightedRows).pop()
       highlightedRows = new Set([...highlightedRows, ...this.selectInRange(lastItemKey, row.key)])
@@ -393,7 +393,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       this.state.highlightedRows.add(row.key)
     }
 
-    this.onHighlightedIndices(highlightedRows)
+    this.onSelectIndices(highlightedRows)
 
     this.setState({
       highlightedRows,
@@ -434,14 +434,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   onMouseEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
     const { dragStartIndex } = this
     const { current } = this.tableRef
-    if (this.props.disableHighlight || !this.props.multiselect) {
+    if (this.props.disableHighlight || !this.props.multiSelect) {
       return
     }
     if (typeof dragStartIndex === 'number' && current) {
       current.scrollToItem(index + 1)
       const startKey = this.state.sortedRows[dragStartIndex].key
       const highlightedRows = new Set(this.selectInRange(startKey, row.key))
-      this.onHighlightedIndices(highlightedRows)
+      this.onSelectIndices(highlightedRows)
     }
   }
 

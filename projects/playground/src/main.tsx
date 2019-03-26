@@ -20,3 +20,10 @@ export function render() {
 }
 
 render()
+
+// hot reloading
+if (process.env.NODE_ENV === 'development') {
+  if (typeof module['hot'] !== 'undefined') {
+    module['hot'].accept(render)
+  }
+}

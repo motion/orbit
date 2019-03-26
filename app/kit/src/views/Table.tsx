@@ -17,7 +17,7 @@ export type TableColumns = { [key: string]: DataColumn | string }
 export type TableProps = Omit<SearchableTableProps, 'columns'> & {
   columns?: TableColumns
   searchable?: boolean
-  onHighlighted?: (rows: any[]) => void
+  onSelect?: (rows: any[]) => void
   title?: React.ReactNode
   subTitle?: React.ReactNode
 }
@@ -34,14 +34,14 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ searchable, onHighlighted, title, subTitle, ...props }: TableProps) {
+export function Table({ searchable, onSelect, title, subTitle, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
-  const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
-  const onHighlightedIndices = useCallback(
+  const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
+  const onSelectIndices = useCallback(
     keys => {
-      if (onHighlighted) {
-        onHighlighted(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
+      if (onSelect) {
+        onSelect(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)
@@ -67,7 +67,7 @@ export function Table({ searchable, onHighlighted, title, subTitle, ...props }: 
         {...props}
         columns={columns}
         rows={rows}
-        onHighlightedIndices={onHighlightedIndices}
+        onSelectIndices={onSelectIndices}
       />
     </>
   )

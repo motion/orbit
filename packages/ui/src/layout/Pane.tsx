@@ -9,30 +9,34 @@ export type PaneProps = Partial<InteractiveProps> & {
   total?: number
   index?: number
   parentSize?: number
+  flex?: number
 }
 
 export function Pane({ children, resizable, ...props }: PaneProps) {
-  const context = useContext(LayoutContext)
+  const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(400)
 
   useEffect(
     () => {
-      setSize(props.parentSize / 2)
+      const totalFlex = flexes.reduce((a, b) => a + b, 0)
+      const flex = flexes[props.index]
+      const pct = flex / totalFlex
+      setSize(props.parentSize * pct)
     },
-    [props.parentSize],
+    [props.index, props.parentSize, total, flexes],
   )
 
   let element = null
   let sizeProps = null
   let borderElement = null
 
-  if (context.style === 'row') {
+  if (type === 'row') {
     if (props.index > 0) {
       borderElement = <BorderLeft />
     }
     sizeProps = {
-      minWidth: props.parentSize * 0.25,
       width: size,
+      minWidth: props.parentSize * 0.25,
       maxWidth: props.parentSize * 0.8,
       overflowY: 'auto',
     }
@@ -49,13 +53,9 @@ export function Pane({ children, resizable, ...props }: PaneProps) {
   }
 
   if (resizable) {
+    const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
-      <Interactive
-        resizable={resizable && { [context.style === 'row' ? 'right' : 'bottom']: true }}
-        onResize={x => setSize(x)}
-        {...sizeProps}
-        {...props}
-      >
+      <Interactive resizable={resizableProp} onResize={x => setSize(x)} {...sizeProps} {...props}>
         {borderElement}
         {children}
       </Interactive>

@@ -12,16 +12,20 @@ import React, {
 } from 'react'
 import { useResizeObserver } from '../hooks/useResizeObserver'
 import { GridLayout } from './GridLayout'
+import { Pane } from './Pane'
 
 export type LayoutProps = {
-  style?: 'column' | 'row' | 'grid'
+  type?: 'column' | 'row' | 'grid'
   children?: React.ReactNode
 }
 
-export const LayoutContext = createContext({} as LayoutProps)
+export const LayoutContext = createContext<LayoutProps & { total: number; flexes: number[] }>({
+  total: 0,
+  flexes: [],
+})
 
 function getLayout(props: LayoutProps) {
-  switch (props.style) {
+  switch (props.type) {
     case 'grid':
       // TODO make this legit
       return <GridLayout {...props} />
@@ -33,7 +37,18 @@ function getLayout(props: LayoutProps) {
 }
 
 export function Layout(props: LayoutProps) {
-  return <LayoutContext.Provider value={props}>{getLayout(props)}</LayoutContext.Provider>
+  Children.map(props.children, child => {
+    if (!isValidElement(child) || child.type !== Pane) {
+      throw new Error(`Invalid child: <Layout /> accepts only <Pane /> as children.`)
+    }
+  })
+  const total = Children.count(props.children)
+  const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
+  return (
+    <LayoutContext.Provider value={{ ...props, total, flexes }}>
+      {getLayout(props)}
+    </LayoutContext.Provider>
+  )
 }
 
 function FlexLayout(props: LayoutProps) {
@@ -71,19 +86,17 @@ function FlexLayout(props: LayoutProps) {
   })
 
   const total = Children.count(props.children)
+
   const childElements = Children.map(props.children, (child, index) => {
-    // TODO validate better through .type
-    if (!isValidElement(child)) {
-      throw new Error(`Invalid child passed, must be of type <Pane />`)
-    }
+    const dimension = props.type === 'row' ? 'width' : 'height'
     return cloneElement(child as any, {
       index,
       total,
-      parentSize: size,
+      parentSize: size[dimension],
     })
   })
 
-  if (props.style === 'row') {
+  if (props.type === 'row') {
     return (
       <Row flex={1} overflowY="hidden" overflowX="auto" ref={node}>
         {childElements}

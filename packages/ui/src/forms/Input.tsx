@@ -88,6 +88,7 @@ function SimpleInput(props: SizedSurfaceProps) {
       noInnerElement
       glint={false}
       borderWidth={1}
+      flex={1}
       {...props}
       className={`ui-input ${props.className || ''}`}
       getTheme={inputSurfaceTheme}

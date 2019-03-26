@@ -54,7 +54,7 @@ export function DriveSettings({ subId }: AppProps) {
               value: 'Active',
             },
           }}
-          multiselect
+          multiSelect
           rows={folders.map((file, index) => {
             return {
               key: `${index}`,

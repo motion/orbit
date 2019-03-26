@@ -1,5 +1,5 @@
 import { List, Table, Templates } from '@o/kit'
-import { Flow, FlowStep, Layout, Loading, Pane, Title } from '@o/ui'
+import { Flow, FlowStep, Layout, Pane, Title } from '@o/ui'
 import React from 'react'
 
 export function TestUIKit() {
@@ -13,7 +13,7 @@ export function TestUIKit() {
         title="Step 1"
         subTitle="Select your thing"
         validateFinished={data =>
-          data.rows.length > 0
+          data.selected.length > 0
             ? true
             : {
                 rows: 'Need to select rows.',
@@ -22,12 +22,12 @@ export function TestUIKit() {
       >
         {({ data, setData }) => {
           return (
-            <Layout style="row">
-              <Pane>
+            <Layout type="row">
+              <Pane resizable>
                 <Table
                   searchable
-                  multiselect
-                  onHighlighted={rows => setData({ selected: rows })}
+                  multiSelect
+                  onSelect={rows => setData({ selected: rows })}
                   rows={[
                     { title: 'Hello world', date: new Date(Date.now()) },
                     { title: 'Hello world', date: new Date(Date.now()) },
@@ -54,7 +54,7 @@ export function TestUIKit() {
               { title: 'Something', group: 'Hello', icon: 'dn', subtitle: 'hello' },
             ]}
           >
-            {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}
+            {selected => <Title>{selected.title}</Title>}
           </Templates.MasterDetail>
         )}
       </FlowStep>

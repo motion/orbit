@@ -42,8 +42,8 @@ export function CustomAppMain(_props: AppProps) {
             <Select name="type" isMulti options={type} />
           </SpacedRow>
           <Table
-            multiselect
-            onHighlighted={setHighlighted}
+            multiSelect
+            onSelect={setHighlighted}
             rows={users}
             searchTerm={form.getValue('search')}
             filters={form.getFilters(['active', 'type'])}
@@ -85,7 +85,7 @@ function PersonInfo(props: { row: any }) {
     <>
       <Fieldsets rows={[props.row]} />
       <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-        {albums => <Table title="Albums" rows={albums} onHighlighted={rows => setAlbum(rows[0])} />}
+        {albums => <Table title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />}
       </Fetch>
       {!!album && (
         <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>

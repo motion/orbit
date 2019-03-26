@@ -32,7 +32,6 @@ export function SliderPane({
     ref,
     onChange: entries => {
       if (onChangeHeight) {
-        console.log('oin chagen height', entries[0].contentRect.height)
         onChangeHeight(entries[0].contentRect.height)
       }
     },

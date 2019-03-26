@@ -61,9 +61,6 @@ function CustomApp2(_props: AppProps) {
           )}
         </FlowStep>
       </Flow>
-      {/* <GridLayout>
-        <GridItem>hello 1234</GridItem>
-      </GridLayout> */}
     </App>
   )
 }
@@ -76,6 +73,12 @@ export default createApp({
 })
 
 ///
+
+{
+  /* <GridLayout>
+        <GridItem>hello 1234</GridItem>
+      </GridLayout> */
+}
 
 type MasterDetailProps = {
   items: OrbitListItemProps[]

@@ -102,16 +102,20 @@ export function Flow({ renderLayout = DefaultFlowLayout, ...props }: FlowProps) 
     </Slider>
   )
 
-  return renderLayout({
-    children: contents,
-    index: step,
-    total,
-    step: steps[step],
-    steps,
-    setStep,
-    next,
-    prev,
-  })
+  return (
+    <>
+      {renderLayout({
+        children: contents,
+        index: step,
+        total,
+        step: steps[step],
+        steps,
+        setStep,
+        next,
+        prev,
+      })}
+    </>
+  )
 }
 
 export function FlowStep(_props: FlowStepProps) {

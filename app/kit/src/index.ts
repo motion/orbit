@@ -1,3 +1,6 @@
+import * as TemplatesImport from './templates'
+export const Templates = TemplatesImport
+
 export * from '@o/bridge'
 export * from '@o/config'
 export * from '@o/gloss'

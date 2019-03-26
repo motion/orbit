@@ -112,6 +112,7 @@ export function List(rawProps: ListProps) {
 
   useEffect(
     () => {
+      if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
         const selStore = selectionStoreRef.current
         if (selStore && !selStore.isActive) {

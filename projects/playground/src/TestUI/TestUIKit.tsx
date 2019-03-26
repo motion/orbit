@@ -1,5 +1,5 @@
-import { List, Templates } from '@o/kit'
-import { Flow, FlowStep, Layout, Loading, Pane, Table, Title } from '@o/ui'
+import { List, Table, Templates } from '@o/kit'
+import { Flow, FlowStep, Layout, Loading, Pane, Title } from '@o/ui'
 import React from 'react'
 
 export function TestUIKit() {

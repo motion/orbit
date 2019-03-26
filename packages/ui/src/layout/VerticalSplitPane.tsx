@@ -1,3 +1,4 @@
+import { View } from '@o/gloss'
 import React, { Suspense, useEffect, useState } from 'react'
 import { BorderLeft } from '../Border'
 import { Interactive, InteractiveProps } from '../Interactive'
@@ -17,9 +18,10 @@ export function VerticalSplitPane({
   )
 
   const isResizable = props.index < props.total - 1
+  let element = null
 
-  return (
-    <Suspense fallback={<Loading />}>
+  if (isResizable) {
+    element = (
       <Interactive
         resizable={isResizable && { right: true }}
         onResize={x => setSize(x)}
@@ -32,6 +34,15 @@ export function VerticalSplitPane({
         {props.index > 0 && <BorderLeft />}
         {children}
       </Interactive>
-    </Suspense>
-  )
+    )
+  } else {
+    element = (
+      <View flex={1} position="relative">
+        {props.index > 0 && <BorderLeft />}
+        {children}
+      </View>
+    )
+  }
+
+  return <Suspense fallback={<Loading />}>{element}</Suspense>
 }

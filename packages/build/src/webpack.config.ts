@@ -92,6 +92,7 @@ const alias = {
   // Uncomment lines below if you want to profile in production...
   // 'react-dom': 'react-dom/profiling',
   // 'schedule/tracking': 'schedule/tracking-profiling',
+  'react-dom': mode === 'production' ? 'react-dom' : '@hot-loader/react-dom',
 }
 
 const babelrcOptions = {

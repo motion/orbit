@@ -45,14 +45,26 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
   // handle url changes
   useAppLocationEffect()
 
-  const { app } = getAppDefinition(identifier)
+  const appDef = getAppDefinition(identifier)
 
-  if (!app) {
+  if (appDef.app == null) {
     console.debug('no app', id, identifier)
     return null
   }
 
-  const App = app
+  return <OrbitAppRenderOfDefinition appDef={appDef} id={id} identifier={identifier} />
+})
+
+export const OrbitAppRenderOfDefinition = ({
+  id,
+  identifier,
+  appDef,
+}: {
+  id: string
+  identifier: string
+  appDef: AppDefinition
+}) => {
+  const { app: App } = appDef
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
   const Main = OrbitMain

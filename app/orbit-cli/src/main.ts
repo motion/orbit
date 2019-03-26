@@ -127,7 +127,7 @@ class OrbitCLI {
     }
     let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
     await orbitDesktop.command(AppDevOpenCommand, {
-      bundleUrl: `http://${bundler.host}:${bundler.port}/bundle.js`,
+      bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,
       path: this.options.projectRoot,
       appId: this.options.projectRoot,
     })

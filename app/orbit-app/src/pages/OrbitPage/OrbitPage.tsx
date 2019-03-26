@@ -8,12 +8,13 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
+  AppDefinition,
 } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { Theme } from '@o/ui'
+import { Theme, Loading } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
-import React, { memo, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -31,9 +32,16 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
-import { OrbitApp } from './OrbitApp'
+import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
+import { LoadApp } from './LoadApp'
+
+import * as OrbitKit from '@o/kit'
+;(window as any).OrbitKit = OrbitKit
+
+import * as OrbitUI from '@o/ui'
+;(window as any).OrbitUI = OrbitUI
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
@@ -140,23 +148,36 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     allApps.find(x => x.id === id),
   )
 
+  let contentArea = null
+  console.log(orbitStore.appInDev)
+
+  if (orbitStore.appInDev != null) {
+    contentArea = (
+      <Suspense fallback={<Loading />}>
+        <LoadApp RenderApp={RenderApp} bundleURL={orbitStore.appInDev.bundleURL} />
+      </Suspense>
+    )
+  } else {
+    contentArea = stableSortedApps
+      .filter(x => appsWithViews[x.identifier])
+      .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
+  }
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
         <InnerChrome torn={orbitStore.isTorn}>
-          <OrbitContentArea>
-            {stableSortedApps
-              .filter(x => appsWithViews[x.identifier])
-              .map(app => (
-                <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />
-              ))}
-          </OrbitContentArea>
+          <OrbitContentArea>{contentArea}</OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>
     </ProvideStores>
   )
 })
+
+let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
+  return <OrbitAppRenderOfDefinition appDef={appDef} id="6" identifier={appDef.id} />
+}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',

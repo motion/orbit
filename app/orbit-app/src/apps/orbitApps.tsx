@@ -1,5 +1,4 @@
 import ConfluenceApp from '@o/confluence-app'
-import CustomApp from '@o/custom-app'
 import DriveApp from '@o/drive-app'
 import GithubApp from '@o/github-app'
 import GmailApp from '@o/gmail-app'
@@ -26,7 +25,6 @@ const apps: AppDefinition[] = [
   ListsApp,
   SearchApp,
   PeopleApp,
-  CustomApp,
   ConfluenceApp,
   JiraApp,
   GmailApp,

@@ -10,6 +10,7 @@ export type SectionProps = ViewProps &
     afterTitle?: React.ReactNode
     sizePadding?: number
     scrollable?: boolean
+    below?: React.ReactNode
   }
 
 export function Section({

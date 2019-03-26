@@ -1,21 +1,19 @@
-import { Color, CSSPropertySetStrict, gloss, View } from '@o/gloss'
+import { Color, gloss, View, ViewProps } from '@o/gloss'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'
 import { configure } from './helpers/configure'
 import { iconNames } from './iconNames'
 
-export type IconProps = React.HTMLAttributes<HTMLDivElement> &
-  CSSPropertySetStrict & {
-    size?: number
-    color?: Color
-    type?: 'mini' | 'outline'
-    opacity?: number
-    tooltip?: string
-    tooltipProps?: Object
-    name: string
-    hoverStyle?: any
-  }
+export type IconProps = ViewProps & {
+  size?: number
+  color?: Color
+  type?: 'mini' | 'outline'
+  opacity?: number
+  tooltip?: string
+  tooltipProps?: Object
+  name: string
+}
 
 export const IconPropsContext = createContext(null as Partial<IconProps>)
 

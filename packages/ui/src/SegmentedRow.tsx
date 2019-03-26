@@ -15,7 +15,7 @@ export function SegmentedRow({
   const existing = useContext(SurfacePropsContext)
   return (
     <SurfacePassProps {...existing} {...surfaceProps}>
-      <Breadcrumbs children={children} separator={separator} />
+      <Breadcrumbs separator={separator}>{children}</Breadcrumbs>
     </SurfacePassProps>
   )
 }

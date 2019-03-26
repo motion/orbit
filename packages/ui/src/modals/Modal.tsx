@@ -36,7 +36,7 @@ function SimpleModal({
   sizePadding,
   children,
   shown,
-  controls,
+  afterTitle,
   onClose,
   ...props
 }: SimpleModalProps) {
@@ -58,7 +58,7 @@ function SimpleModal({
         subTitle={subTitle}
         afterTitle={
           <>
-            {controls || null}
+            {afterTitle || null}
             {!!onClose && (
               <Button chromeless icon="simple-remove" size={1.5} onClick={() => onClose()} />
             )}

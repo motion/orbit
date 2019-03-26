@@ -8,8 +8,8 @@ export function styleVal(val: any, theme: ThemeObject, props?: Object) {
 
 // resolves props into styles for valid css
 
-export function propsToStyles(props: any, theme: ThemeObject) {
-  const styles: CSSPropertySet = {
+export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
+  let styles: CSSPropertySet = {
     ...props.style,
   }
   // loop over props turning into styles
@@ -29,5 +29,8 @@ export function propsToStyles(props: any, theme: ThemeObject) {
       styles[key] = styleVal(props[key], theme, props)
     }
   }
-  return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
+
+  styles = alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
+
+  return styles
 }

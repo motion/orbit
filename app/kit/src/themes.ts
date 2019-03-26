@@ -2,10 +2,6 @@ import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
-const tanBg = color('rgb(255,255,245)')
-const tanHoverBg = tanBg.darken(0.02).desaturate(0.3)
-const tanActiveBg = tanHoverBg.darken(0.05).desaturate(0.3)
-
 const orbitColor = color('#1A71E3')
 const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
@@ -15,17 +11,33 @@ const colors = {
   red: '#7B0000',
 }
 
-const macModernTheme = Theme.colorize({
-  // shadowSelected: '0 0 0 2px #90b1e433', // [0, 0, 0, 2, '#90b1e433'],
-  borderSelected: '#90b1e4ee',
-  white: '#fff',
-  highlightColor: '#fff',
-  highlightBackground: '#4080ff', // used for text selection, tokens, etc.
-  highlightBackgroundActive: '#85afee', // active tokens
-  frameBorderColor: '#aaa',
-
-  // sub-themes go into their own objects so they can be narrowed into
-  titleBar: {
+const alternates = {
+  action: Theme.fromStyles({
+    iconFill: '#fff',
+    color: '#fff',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    borderColor: orbitActiveBg,
+  }),
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: orbitColor,
+    backgroundHover: orbitColor,
+    backgroundActive: orbitColor,
+    listItemBackground: orbitColor.alpha(0.5),
+    color: '#fff',
+    borderColor: orbitActiveBg,
+  }),
+  bordered: {
+    borderWidth: 2,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+    }),
+  },
+  titlebar: {
     tabBackgroundActive: '#E8E8E8',
     tabBackground: '#dfdfdf',
     tabBackgroundHover: '#bfbfbf',
@@ -49,13 +61,23 @@ const macModernTheme = Theme.colorize({
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
   },
+}
+
+const base = Theme.colorize({
+  borderSelected: '#90b1e4ee',
+  white: '#fff',
+  highlightColor: '#fff',
+  highlightBackground: '#4080ff', // used for text selection, tokens, etc.
+  highlightBackgroundActive: '#85afee', // active tokens
+  frameBorderColor: '#aaa',
 })
 
 const lightColor = '#444'
 const lightBackground = color('#fff')
 const lightButtonBg = linearGradient('#fcfcfc', '#f4f4f4')
 const light = {
-  ...macModernTheme,
+  alternates,
+  ...base,
   ...Theme.fromStyles({
     backgroundAlt: '#f6f7f9aa',
     backgroundHighlightActive: orbitColor.lighten(0.1),
@@ -64,7 +86,7 @@ const light = {
     mainBackground: lightBackground,
     backgroundActive: '#eee',
     backgroundHover: '#eee',
-    color,
+    color: lightColor,
     colorHighlight: '#fff',
     colorHighlightActive: '#fff',
     buttonBackground: lightButtonBg,
@@ -94,26 +116,6 @@ const light = {
     cardBackgroundActive: [255, 255, 255],
     cardBorderColor: [0, 0, 0, 0.1],
   }),
-  selected: Theme.fromStyles({
-    iconFill: '#fff',
-    background: orbitColor,
-    backgroundHover: orbitColor,
-    backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.5),
-    color: '#fff',
-    borderColor: orbitActiveBg,
-  }),
-  bordered: {
-    borderWidth: 2,
-    ...Theme.colorize({
-      background: 'transparent',
-      backgroundHover: 'transparent',
-      backgroundActive: 'transparent',
-      color: lightColor,
-      borderColor: lightColor,
-      borderColorHover: lightColor,
-    }),
-  },
 }
 
 const darkColor = [250, 250, 250]
@@ -121,7 +123,21 @@ const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
 const dark = {
-  ...macModernTheme,
+  alternates: {
+    ...alternates,
+    bordered: {
+      ...alternates.bordered,
+      ...Theme.colorize({
+        background: 'transparent',
+        backgroundHover: 'transparent',
+        backgroundActive: 'transparent',
+        color: darkColor,
+        borderColor: darkColor,
+        borderColorHover: darkColor,
+      }),
+    },
+  },
+  ...base,
   ...Theme.fromStyles({
     backgroundAlt: darkBackground.lighten(0.1).alpha(0.2),
     backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
@@ -181,49 +197,6 @@ const dark = {
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',
   }),
-  selected: Theme.fromStyles({
-    iconFill: '#fff',
-    background: colors.selected,
-    backgroundHover: colors.selected,
-    backgroundActive: colors.selected,
-    listItemBackground: colors.selected.alpha(0.5),
-    color: '#fff',
-    borderColor: orbitActiveBg,
-  }),
-  bordered: {
-    borderWidth: 2,
-    ...Theme.colorize({
-      background: 'transparent',
-      backgroundHover: 'transparent',
-      backgroundActive: 'transparent',
-      color: darkColor,
-      borderColor: darkColor,
-      borderColorHover: darkColor,
-    }),
-  },
-}
-
-const clearLight = {
-  ...light,
-  ...Theme.fromStyles({
-    color: '#fff',
-    background: 'rgba(255,255,255,0)',
-  }),
-}
-
-const clearDark = {
-  ...dark,
-  ...Theme.colorize({
-    background: [19, 19, 19, 0.05],
-    // cardHoverGlow: [0, 0, 0, 2, [255, 255, 255, 0.15]],
-    // cardBackground: [65, 65, 65, 0.5],
-  }),
-}
-
-const semiDark = {
-  ...dark,
-  background: 'linear-gradient(rgba(45,45,45,0.15), rgba(30,30,30,0.15))',
-  backgroundHover: 'linear-gradient(rgba(45,45,45,0.1), rgba(30,30,30,0.1))',
 }
 
 export const themes = {
@@ -259,16 +232,5 @@ export const themes = {
     color: '#fff',
   },
   dark,
-  clearDark,
   light,
-  clearLight,
-  'semi-dark': semiDark,
-  tan: {
-    ...macModernTheme,
-    ...Theme.fromStyles({
-      background: tanBg,
-      color: '#656141',
-      borderColor: tanActiveBg,
-    }),
-  },
 }

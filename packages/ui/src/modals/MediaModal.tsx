@@ -5,7 +5,7 @@ import { Space } from '../layout/Space'
 import { Text } from '../text/Text'
 import { Modal, ModalProps } from './Modal'
 
-export function MediaModal({ title, subTitle, onClose, controls, ...props }: ModalProps) {
+export function MediaModal({ title, subTitle, onClose, afterTitle, ...props }: ModalProps) {
   return (
     <Theme name="dark">
       <Modal chromeless background={theme => theme.background.darken(0.1).alpha(0.8)}>
@@ -20,9 +20,9 @@ export function MediaModal({ title, subTitle, onClose, controls, ...props }: Mod
             )}
           </View>
 
-          {!!(controls || onClose) && (
+          {!!(afterTitle || onClose) && (
             <Absolute top={10} right={10}>
-              {controls || null}
+              {afterTitle || null}
               {onClose && (
                 <Button chromeless icon="simple-remove" size={1.5} onClick={() => onClose()} />
               )}

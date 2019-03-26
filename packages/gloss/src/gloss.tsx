@@ -12,6 +12,7 @@ import {
   useRef,
   ValidationMap,
 } from 'react'
+import { Config } from './config'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
@@ -151,7 +152,8 @@ function glossify(
   }
 
   if (themeFn) {
-    addStyles(id, dynamicStyles, themeFn(props, theme))
+    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+    addStyles(id, dynamicStyles, themeFn(props, next))
   }
 
   if (hasDynamicStyles) {

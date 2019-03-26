@@ -1,11 +1,13 @@
 import { colorToString } from '.'
+import { getIsPropTheme } from './helpers/getIsPropTheme'
 import { GlossOptions } from './types'
 
 export const Config: GlossOptions = {
-  glossProp: 'css',
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   pseudoAbbreviations: {},
+  preProcessTheme: getIsPropTheme,
+  defaultThemeFn: null,
 }
 
 export function configureGloss(options: Partial<GlossOptions>) {

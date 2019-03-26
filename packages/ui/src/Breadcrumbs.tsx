@@ -8,7 +8,16 @@ import { Omit } from './types'
 
 const Context = createContext<BreadcrumbStore | null>(null)
 
+export type BreadcrumbsProps = Omit<ViewProps, 'children'> & {
+  separator?: ReactNode
+  children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
+}
+
 class BreadcrumbStore {
+  props: {
+    // TODO this isnt passing down
+    separator: BreadcrumbsProps['separator']
+  }
   selectors = new ObservableSet<string>()
 
   orderedChildren = react(
@@ -35,18 +44,13 @@ class BreadcrumbStore {
   }
 }
 
-export function Breadcrumbs(props: ViewProps) {
-  const store = useStore(BreadcrumbStore)
+export function Breadcrumbs({ separator, ...props }: BreadcrumbsProps) {
+  const store = useStore(BreadcrumbStore, { separator })
   return (
     <MergeContext Context={Context} value={store}>
       <Row alignItems="center" {...props} />
     </MergeContext>
   )
-}
-
-export type BreadcrumbsProps = {
-  separator?: ReactNode
-  children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }
 
 export function Breadcrumb({

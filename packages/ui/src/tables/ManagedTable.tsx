@@ -599,10 +599,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 }
 
-export const DebouncedManagedTable = debounceRender(ManagedTableInner, 150, {
-  maxWait: 250,
-})
-
-export function ManagedTable(props: ManagedTableProps) {
-  return <DebouncedManagedTable {...props} rows={props.rows.map(normalizeRow)} />
+export function ManagedTableNormalized(props: ManagedTableProps) {
+  return <ManagedTableInner {...props} rows={props.rows.map(normalizeRow)} />
 }
+
+export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {
+  maxWait: 100,
+})

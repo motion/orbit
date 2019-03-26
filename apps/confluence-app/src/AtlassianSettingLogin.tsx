@@ -1,5 +1,5 @@
 import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
-import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
+import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
 import { ConfluenceLoader } from './ConfluenceLoader'
@@ -72,11 +72,12 @@ export function AtlassianSettingLogin(props: Props) {
     try {
       const loader = new ConfluenceLoader(app as AppBit)
       await loader.test()
-      app.name = extractTeamNameFromDomain((app.data as ConfluenceAppData).values.credentials.domain)
+      app.name = extractTeamNameFromDomain(
+        (app.data as ConfluenceAppData).values.credentials.domain,
+      )
       await save(AppModel, app)
       setStatus(Statuses.SUCCESS)
       setError(null)
-
     } catch (err) {
       setStatus(Statuses.FAIL)
       setError(err.message)
@@ -99,7 +100,7 @@ export function AtlassianSettingLogin(props: Props) {
       <Space />
       <Col margin="auto" width={370}>
         <Col>
-          <Table>
+          <Form>
             <InputField
               label="Domain"
               value={credentials.domain}
@@ -119,7 +120,7 @@ export function AtlassianSettingLogin(props: Props) {
               // !TODO
               onChange={handleChange('password') as any}
             />
-          </Table>
+          </Form>
           <Space />
           <Theme
             theme={{

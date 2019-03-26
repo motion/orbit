@@ -26,7 +26,6 @@ export function TestUIKit() {
               <Pane>
                 <Table
                   searchable
-                  showSearchBar
                   multiselect
                   onHighlighted={rows => setData({ selected: rows })}
                   rows={[

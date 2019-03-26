@@ -27,7 +27,7 @@ function CustomApp2(_props: AppProps) {
                 <Pane>
                   123 123
                   <Table
-                    showSearchBar
+                    searchable
                     multiselect
                     onHighlighted={rows => setData({ selected: rows })}
                     rows={[

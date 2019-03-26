@@ -1,11 +1,22 @@
-import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css';
-import { isEqual } from '@o/fast-compare';
-import { createElement, forwardRef, HTMLAttributes, memo, ReactElement, ReactNode, useContext, useEffect, useRef, ValidationMap } from 'react';
-import { validProp } from './helpers/validProp';
-import { GarbageCollector } from './stylesheet/gc';
-import { hash } from './stylesheet/hash';
-import { StyleSheet } from './stylesheet/sheet';
-import { ThemeContext } from './theme/ThemeContext';
+import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+import { isEqual } from '@o/fast-compare'
+import {
+  createElement,
+  forwardRef,
+  HTMLAttributes,
+  memo,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  ValidationMap,
+} from 'react'
+import { validProp } from './helpers/validProp'
+import { GarbageCollector } from './stylesheet/gc'
+import { hash } from './stylesheet/hash'
+import { StyleSheet } from './stylesheet/sheet'
+import { ThemeContext } from './theme/ThemeContext'
 
 const GLOSS_SIMPLE_COMPONENT_SYMBOL = '__GLOSS_SIMPLE_COMPONENT__'
 

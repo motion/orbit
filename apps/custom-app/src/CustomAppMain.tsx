@@ -6,6 +6,8 @@ import {
   Fieldsets,
   FloatingCard,
   Form,
+  Layout,
+  Pane,
   Row,
   SearchInput,
   Select,
@@ -14,8 +16,6 @@ import {
   Tabs,
   useFetch,
   useForm,
-  VerticalSplit,
-  VerticalSplitPane,
 } from '@o/ui'
 import React, { useState } from 'react'
 
@@ -34,8 +34,8 @@ export function CustomAppMain(_props: AppProps) {
 
   return (
     <Form use={form}>
-      <VerticalSplit>
-        <VerticalSplitPane>
+      <Layout style="row">
+        <Pane>
           <SpacedRow>
             <SearchInput name="search" />
             <Select name="active" options={active} />
@@ -64,8 +64,8 @@ export function CustomAppMain(_props: AppProps) {
               </Card>
             ))}
           </Row>
-        </VerticalSplitPane>
-        <VerticalSplitPane>
+        </Pane>
+        <Pane>
           <Tabs borderRadius={20} margin={2}>
             {highlighted.map(row => (
               <Tab key={row.id} label={row.name}>
@@ -73,8 +73,8 @@ export function CustomAppMain(_props: AppProps) {
               </Tab>
             ))}
           </Tabs>
-        </VerticalSplitPane>
-      </VerticalSplit>
+        </Pane>
+      </Layout>
     </Form>
   )
 }

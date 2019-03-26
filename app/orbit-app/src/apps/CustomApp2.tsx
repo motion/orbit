@@ -1,7 +1,9 @@
 import { App, AppProps, createApp, List, OrbitListItemProps, Table } from '@o/kit'
 import {
   Button,
+  Layout,
   Loading,
+  Pane,
   Row,
   Section,
   Slider,
@@ -10,9 +12,6 @@ import {
   SurfacePassProps,
   Theme,
   Title,
-  VerticalSplit,
-  VerticalSplitPane,
-  View,
 } from '@o/ui'
 import React, { Children, useState } from 'react'
 
@@ -37,8 +36,8 @@ function CustomApp2(_props: AppProps) {
         >
           {({ data, setData }) => {
             return (
-              <VerticalSplit>
-                <VerticalSplitPane>
+              <Layout>
+                <Pane>
                   <Table
                     searchable
                     showSearchBar
@@ -50,11 +49,11 @@ function CustomApp2(_props: AppProps) {
                       { title: 'Hello world', date: new Date(Date.now()) },
                     ]}
                   />
-                </VerticalSplitPane>
-                <VerticalSplitPane>
+                </Pane>
+                <Pane>
                   <List items={data.selected} />
-                </VerticalSplitPane>
-              </VerticalSplit>
+                </Pane>
+              </Layout>
             )
           }}
         </FlowStep>
@@ -99,8 +98,8 @@ type MasterDetailProps = {
 function MasterDetail(props: MasterDetailProps) {
   const [selected, setSelected] = useState(null)
   return (
-    <Row>
-      <View flex={1}>
+    <Layout style="row">
+      <Pane>
         <List
           dynamicHeight
           maxHeight={1000}
@@ -108,11 +107,9 @@ function MasterDetail(props: MasterDetailProps) {
           onSelect={index => setSelected(props.items[index])}
           itemProps={{ iconBefore: true }}
         />
-      </View>
-      <View overflow="hidden" flex={2} position="relative">
-        {props.children(selected)}
-      </View>
-    </Row>
+      </Pane>
+      <Pane flex={1}>{props.children(selected)}</Pane>
+    </Layout>
   )
 }
 

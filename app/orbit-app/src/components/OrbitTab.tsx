@@ -20,6 +20,7 @@ const borderSize = 5
 
 export type TabProps = ViewProps & {
   app?: AppBit
+  tabDisplay?: string
   separator?: boolean
   isActive?: boolean
   label?: string

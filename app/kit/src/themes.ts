@@ -41,6 +41,14 @@ const alternates = {
       backgroundActive: 'transparent',
     }),
   },
+  selected: Theme.fromStyles({
+    iconFill: '#fff',
+    background: colors.selected,
+    backgroundHover: colors.selected,
+    backgroundActive: colors.selected,
+    color: '#fff',
+    borderColor: orbitActiveBg,
+  }),
   titlebar: {
     tabBackgroundActive: '#E8E8E8',
     tabBackground: '#dfdfdf',
@@ -204,16 +212,6 @@ const dark = {
 }
 
 export const themes = {
-  selected: {
-    ...Theme.fromStyles({
-      iconFill: '#fff',
-      background: colors.selected,
-      backgroundHover: colors.selected,
-      backgroundActive: colors.selected,
-      color: '#fff',
-      borderColor: orbitActiveBg,
-    }),
-  },
   tooltip: {
     background: 'rgba(20,20,20,0.94)',
     backgroundHover: 'rgba(28,28,28,0.94)',

@@ -2,17 +2,7 @@ import { command } from '@o/bridge'
 import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import {
-  Button,
-  CheckBoxField,
-  Divider,
-  FormField,
-  Input,
-  Section,
-  Space,
-  Theme,
-  Title,
-} from '@o/ui'
+import { Button, CheckBoxField, Divider, FormField, Input, Section, Space, Title } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { sleep } from '../../helpers'
@@ -146,9 +136,9 @@ export function SettingsAppGeneral(_props: AppProps) {
       <Space />
 
       <FormField label="Reset">
-        <Theme name="selected">
-          <Button onClick={handleClearAllData}>Reset all Orbit data</Button>
-        </Theme>
+        <Button alt="action" onClick={handleClearAllData}>
+          Reset all Orbit data
+        </Button>
       </FormField>
     </Section>
   )

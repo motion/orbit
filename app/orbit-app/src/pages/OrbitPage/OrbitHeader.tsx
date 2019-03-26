@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Theme, useTheme } from '@o/gloss'
+import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
 import {
@@ -113,9 +113,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
               <Space small />
-              <Theme name="selected">
-                <HeaderButton tooltip="Deploy to space">Publish</HeaderButton>
-              </Theme>
+              <HeaderButton alt="action" tooltip="Deploy to space">
+                Publish
+              </HeaderButton>
             </Row>
           )}
 

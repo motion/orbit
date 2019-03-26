@@ -25,9 +25,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
               </Theme>
             )}
             {!def.sync && (
-              <Theme name="selected">
-                <Button icon="add">Install</Button>
-              </Theme>
+              <Button alt="action" icon="add">
+                Install
+              </Button>
             )}
           </>
         }

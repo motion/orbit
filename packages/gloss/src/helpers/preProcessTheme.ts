@@ -7,13 +7,11 @@ import { selectThemeSubset } from './selectThemeSubset'
 const altCache = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 
 export function getAlternateTheme(
-  props: { alt?: string },
+  name: string | undefined,
   theme: ThemeObject,
-  altProp = 'alt',
   shouldFallback?: boolean,
 ): ThemeObject {
-  const altVal = props[altProp]
-  if (!altVal || typeof altVal !== 'string') {
+  if (!name || typeof name !== 'string') {
     return theme
   }
   if (!theme.alternates) {
@@ -22,10 +20,10 @@ export function getAlternateTheme(
   if (!altCache.has(theme)) {
     altCache.set(theme, {})
   }
-  const cached = altCache.get(theme)[altVal]
+  const cached = altCache.get(theme)[name]
   if (cached) return cached
-  const next = selectIsPropStyles(theme, altVal, shouldFallback)
-  altCache.get(theme)[altVal] = next
+  const next = selectIsPropStyles(theme, name, shouldFallback)
+  altCache.get(theme)[name] = next
   return next
 }
 
@@ -41,4 +39,4 @@ function selectIsPropStyles(theme: ThemeObject, alt: string, shouldFallback?: bo
 //   2. if themeSelect="" prop, select that subset of the theme
 
 export const preProcessTheme = (props: any, theme: ThemeObject) =>
-  selectThemeSubset(props.themeSelect, getAlternateTheme(props, theme))
+  selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme))

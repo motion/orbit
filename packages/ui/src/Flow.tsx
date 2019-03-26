@@ -1,4 +1,4 @@
-import { Row, Theme } from '@o/gloss'
+import { Row } from '@o/gloss'
 import React, { Children, useState } from 'react'
 import { Button } from './buttons/Button'
 import { Section } from './Section'
@@ -70,14 +70,14 @@ const DefaultFlowLayout = ({
         >
           <Row>
             {steps.map((step, stepIndex) => (
-              <Theme key={step.key} name={steps[index].key === step.key ? 'selected' : null}>
-                <Button
-                  active={steps[index].key === step.key}
-                  onClick={() => state.setStepIndex(stepIndex)}
-                >
-                  {step.title}
-                </Button>
-              </Theme>
+              <Button
+                key={step.key}
+                alt={steps[index].key === step.key ? 'selected' : null}
+                active={steps[index].key === step.key}
+                onClick={() => state.setStepIndex(stepIndex)}
+              >
+                {step.title}
+              </Button>
             ))}
           </Row>
         </SurfacePassProps>

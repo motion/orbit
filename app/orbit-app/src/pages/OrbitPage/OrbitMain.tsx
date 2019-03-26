@@ -1,5 +1,6 @@
 import { gloss } from '@o/gloss'
 import { AppMainViewProps, AppLoadContext, SubPane } from '@o/kit'
+import { isEditing } from '@o/stores'
 import { BorderLeft } from '@o/ui'
 import React, { memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
@@ -19,7 +20,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   return (
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
       <OrbitMainContainer
-        isTorn={orbitStore.isTorn}
+        isEditing={isEditing}
         transparent={appDef.config && appDef.config.transparentBackground}
       >
         {props.hasSidebar && <BorderLeft opacity={0.5} />}
@@ -31,12 +32,12 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitMainContainer = gloss<{ isTorn: boolean; transparent?: boolean }>({
+const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>({
   flex: 1,
-}).theme(({ isTorn, transparent }, theme) => ({
+}).theme(({ isEditing, transparent }, theme) => ({
   background: transparent
     ? 'transparent'
-    : isTorn
+    : isEditing
     ? theme.mainBackground || theme.background
     : theme.mainBackground || theme.background || 'transparent',
 }))

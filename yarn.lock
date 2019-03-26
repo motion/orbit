@@ -2361,6 +2361,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bonjour@3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@types/bonjour/-/bonjour-3.5.5.tgz#98e11e61c4ddf444fb9d97cb84944457c910b6f0"
+  integrity sha512-4fHAqgL0SYHgDmdBrm201hUl7gIavk8KAtwBuDX9TjVdEZbUENdKmnago4GsmDO8QALMUE651F+nNpaCF+B4+A==
+  dependencies:
+    "@types/node" "*"
+
 "@types/configstore@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/configstore/-/configstore-2.1.1.tgz#cd1e8553633ad3185c3f2f239ecff5d2643e92b6"
@@ -4065,7 +4072,7 @@ body-parser@1.18.3, body-parser@^1.16.1:
     raw-body "2.3.3"
     type-is "~1.6.16"
 
-bonjour@^3.5.0:
+bonjour@*, bonjour@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bonjour/-/bonjour-3.5.0.tgz#8e890a183d8ee9a2393b3844c691a42bcf7bc9f5"
   integrity sha1-jokKGD2O6aI5OzhExpGkK897yfU=

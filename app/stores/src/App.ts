@@ -5,6 +5,37 @@ import { Desktop } from './Desktop'
 
 export let App = null as AppStore
 
+export type AppStartupConfig = {
+  appId: number
+  appInDev: null | AppInDev
+}
+
+export type AppInDev = {
+  bundleURL: string
+  path: string
+}
+
+function getAppStartupConfig(): AppStartupConfig {
+  let initial = {
+    appId: 0,
+    appInDev: null,
+  }
+  if (process.env[ORBIT_APP_STARTUP_CONFIG] != null) {
+    try {
+      return JSON.parse(process.env[ORBIT_APP_STARTUP_CONFIG])
+    } catch (_err) {
+      return initial
+    }
+  } else {
+    return initial
+  }
+}
+
+export let ORBIT_APP_STARTUP_CONFIG = 'ORBIT_APP_STARTUP_CONFIG'
+
+export let appStartupConfig: AppStartupConfig = getAppStartupConfig()
+export let isEditing: boolean = appStartupConfig.appInDev != null
+
 export type AppState = {
   id: number
   appProps: any // TODO

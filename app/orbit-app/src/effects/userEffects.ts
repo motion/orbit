@@ -1,8 +1,7 @@
 import { isEqual } from '@o/fast-compare'
 import { useActiveUser } from '@o/kit'
-import { App } from '@o/stores'
+import { App, isEditing } from '@o/stores'
 import { useEffect, useRef } from 'react'
-import { getIsTorn } from '../helpers/getIsTorn'
 
 export function useUserEffects() {
   useUserSyncSettings()
@@ -20,7 +19,7 @@ function useUserSyncSettings() {
       }
       if (!hasStarted.current) {
         hasStarted.current = true
-        if (!getIsTorn()) {
+        if (!isEditing) {
           App.setOrbitState({ docked: true })
         }
       }

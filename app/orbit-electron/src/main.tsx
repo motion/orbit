@@ -9,7 +9,7 @@ import {
   TearAppCommand,
 } from '@o/models'
 import { render } from '@o/reactron'
-import { Electron } from '@o/stores'
+import { Electron, App } from '@o/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
 import * as React from 'react'
@@ -23,12 +23,27 @@ import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
-// import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
+import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
-export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async _params => {
-  console.log('SSS');
+export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
+  let appInDev = {
+    path: params.path,
+    bundleURL: params.bundleURL,
+  }
+  let appId = App.state.allApps.length
+  App.setState({
+    allApps: [
+      ...App.state.allApps,
+      {
+        type: 'root',
+        id: appId,
+      },
+    ],
+  })
+  console.log('UPDATE', App.state.allApps)
+  forkAndStartOrbitApp({ appId, appInDev })
 })
 
 export async function main() {

@@ -6,6 +6,7 @@ import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
+import { isEditing } from '@o/stores'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
@@ -33,7 +34,7 @@ class OrbitNavStore {
 }
 
 export const OrbitNav = memo(() => {
-  const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
+  const { spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
@@ -54,7 +55,7 @@ export const OrbitNav = memo(() => {
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
-  if (orbitStore.isTorn) {
+  if (isEditing) {
     return null
   }
 

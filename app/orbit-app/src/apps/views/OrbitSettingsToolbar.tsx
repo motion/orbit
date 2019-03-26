@@ -1,9 +1,10 @@
 import { SegmentedRow, Tab, Tabs, View } from '@o/ui'
+import { isEditing } from '@o/stores'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitSettingsToolbar() {
-  const { orbitStore, paneManagerStore } = useStores()
+  const { paneManagerStore } = useStores()
   const activePaneKey = paneManagerStore.activePane.type
 
   const onActive = React.useCallback(key => {
@@ -12,7 +13,7 @@ export function OrbitSettingsToolbar() {
     }
   }, [])
 
-  if (orbitStore.isTorn) {
+  if (isEditing) {
     return null
   }
 

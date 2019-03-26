@@ -10,6 +10,7 @@ import {
   ThemeStore,
   AppDefinition,
 } from '@o/kit'
+import { appStartupConfig, isEditing } from '@o/stores'
 import { CloseAppCommand } from '@o/models'
 import { Theme, Loading } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
@@ -18,12 +19,10 @@ import React, { Suspense, memo, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
-import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useUserEffects } from '../../effects/userEffects'
-import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
@@ -90,11 +89,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
       console.log('unloading!', shouldCloseApp, shouldCloseTab)
 
-      if (orbitStore.isTorn) {
-        // TORN AWAY APP
+      if (isEditing) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          command(CloseAppCommand, { appId: APP_ID })
+          command(CloseAppCommand, { appId: appStartupConfig.appId })
           return
         }
       } else {
@@ -149,12 +147,11 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   )
 
   let contentArea = null
-  console.log(orbitStore.appInDev)
 
-  if (orbitStore.appInDev != null) {
+  if (isEditing) {
     contentArea = (
       <Suspense fallback={<Loading />}>
-        <LoadApp RenderApp={RenderApp} bundleURL={orbitStore.appInDev.bundleURL} />
+        <LoadApp RenderApp={RenderApp} bundleURL={appStartupConfig.appInDev.bundleURL} />
       </Suspense>
     )
   } else {
@@ -167,7 +164,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
-        <InnerChrome torn={orbitStore.isTorn}>
+        <InnerChrome torn={isEditing}>
           <OrbitContentArea>{contentArea}</OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>
@@ -195,7 +192,7 @@ function OrbitPageProvideStores(props: any) {
   const newAppStore = useStoreSimple(NewAppStore)
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
-    defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
+    defaultPanes: isEditing ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
   })
 

@@ -1,6 +1,6 @@
 import { FullScreen, gloss, Theme, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
-import { App } from '@o/stores'
+import { App, isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, SegmentedRow, Space, View } from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
@@ -11,11 +11,9 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore, themeStore } = useStores()
+  const { headerStore, newAppStore, paneManagerStore, themeStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
-  const { isTorn } = orbitStore
-  const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
@@ -23,19 +21,19 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
   return (
     <OrbitHeaderContainer
-      isTorn={isTorn}
+      isEditing={isEditing}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
-      <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
-        <OrbitClose dontDim={isTorn}>
+      <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
+        <OrbitClose dontDim={isEditing}>
           <WindowControls
             itemProps={{ size: 10 }}
             spaceBetween={3}
             showOnHover={{ min: true, max: true }}
             onClose={() => {
-              if (isTorn) {
+              if (isEditing) {
                 console.log('close me...app')
               } else {
                 App.setOrbitState({ docked: !App.orbitState.docked })
@@ -89,7 +87,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             >
               <LinkButton />
               <OrbitEditAppButton />
-              {!isTorn && <LaunchButton />}
+              {!isEditing && <LaunchButton />}
             </SegmentedRow>
           )}
         </HeaderContain>
@@ -105,7 +103,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </Row>
           )}
 
-          {!isTorn && <OrbitSpaceSwitch />}
+          {!isEditing && <OrbitSpaceSwitch />}
 
           <Button
             chromeless
@@ -114,7 +112,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
               opacity: isOnSettings ? 1 : 0.6,
             }}
             icon="gear"
-            iconSize={isTorn ? 10 : 12}
+            iconSize={isEditing ? 10 : 12}
             onClick={() => {
               newAppStore.setShowCreateNew(false)
               if (activePaneType === 'settings') {
@@ -126,10 +124,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
           />
         </HeaderSide>
       </HeaderTop>
-      {!isTorn && <HeaderFade />}
+      {!isEditing && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
-        borderColor={(isTorn && theme.headerBorderBottom) || theme.borderColor}
+        borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
       />
       <OrbitNav />
@@ -155,12 +153,12 @@ function HeaderButton(props: ButtonProps) {
 }
 
 function OrbitEditAppButton() {
-  const { orbitStore, paneManagerStore } = useStores()
+  const { paneManagerStore } = useStores()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.identifier === 'custom' && !orbitStore.isEditing
-  const Actions = useActions()
+  const show = activeApp && activeApp.identifier === 'custom' && !isEditing
+  // const Actions = useActions()
 
   if (!show) {
     return null
@@ -171,8 +169,9 @@ function OrbitEditAppButton() {
       // icon="tool"
       tooltip="Edit app"
       onClick={async () => {
-        Actions.tearApp()
-        orbitStore.setEditing()
+        // TODO(andreypopp): should spawn server `orbit dev` server for this
+        // Actions.tearApp()
+        // orbitStore.setEditing()
       }}
     >
       Edit
@@ -191,10 +190,10 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   overflow: 'hidden',
   zIndex: 400,
-}).theme(({ isTorn }, theme) => ({
+}).theme(({ isEditing }, theme) => ({
   // borderBottom: [1, theme.borderColor],
   background:
-    (isTorn && theme.headerBackgroundOpaque) ||
+    (isEditing && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
     theme.background.alpha(a => a * 0.65),
 }))
@@ -243,11 +242,10 @@ const OrbitClose = gloss({
 
 const LaunchButton = memo(() => {
   const Actions = useActions()
-  const { orbitStore } = useStores()
   // const [_isHovered, setHovered] = useState(false)
   // const tm = useRef(null)
 
-  if (orbitStore.isTorn) {
+  if (isEditing) {
     return null
   }
 

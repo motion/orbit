@@ -27,5 +27,5 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   Electron.setIsTorn()
   getOrbitShortcutsStore().dispose()
 
-  forkAndStartOrbitApp({appId})
+  forkAndStartOrbitApp({ appId })
 })

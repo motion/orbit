@@ -215,7 +215,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
   )
 
   return (
-    <Theme alternate="selected">
+    <Theme alternate={isSelected ? 'selected' : null}>
       <>
         {above}
         {!!separator && (

@@ -23,7 +23,7 @@ function CustomApp2(_props: AppProps) {
         >
           {({ data, setData }) => {
             return (
-              <Layout>
+              <Layout type="row">
                 <Pane>
                   <Table
                     searchable

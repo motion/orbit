@@ -34,7 +34,7 @@ export function CustomAppMain(_props: AppProps) {
 
   return (
     <Form use={form}>
-      <Layout style="row">
+      <Layout type="row">
         <Pane>
           <SpacedRow>
             <SearchInput name="search" />

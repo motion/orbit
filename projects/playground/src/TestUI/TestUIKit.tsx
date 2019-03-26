@@ -22,7 +22,7 @@ export function TestUIKit() {
       >
         {({ data, setData }) => {
           return (
-            <Layout>
+            <Layout style="row">
               <Pane>
                 <Table
                   searchable

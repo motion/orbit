@@ -1,13 +1,12 @@
 import { colorToString } from '.'
-import { getIsPropTheme } from './helpers/getIsPropTheme'
+import { preProcessTheme } from './helpers/preProcessTheme'
 import { GlossOptions } from './types'
 
 export const Config: GlossOptions = {
   isColor: color => color && !!color.rgb,
   toColor: colorToString,
   pseudoAbbreviations: {},
-  preProcessTheme: getIsPropTheme,
-  defaultThemeFn: null,
+  preProcessTheme: preProcessTheme,
 }
 
 export function configureGloss(options: Partial<GlossOptions>) {

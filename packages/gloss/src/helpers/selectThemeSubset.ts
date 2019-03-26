@@ -11,37 +11,35 @@ const cacheVal = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 // because context provides the same theme object each time it can use weakmap for cache
 // right now it does not delete as it seems very rare where you have many many themes
 
-export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): ThemeObject {
-  if (!prefix) {
+const mergeTheme = (parent, child) => ({
+  ...parent,
+  ...child,
+})
+
+export function selectThemeSubset(themeSelect: ThemeSelect, theme: ThemeObject): ThemeObject {
+  if (!themeSelect) {
     return theme
   }
 
-  const proxyParentTheme = child =>
-    new Proxy(child, {
-      get(target, key) {
-        return Reflect.get(target, key) || Reflect.get(theme, key)
-      },
-    }) as ThemeObject
-
-  if (typeof prefix === 'function') {
-    return proxyParentTheme(prefix(theme))
+  if (typeof themeSelect === 'function') {
+    return mergeTheme(theme, themeSelect(theme))
   }
 
   // read from cache
   let key = cacheKey.get(theme)
   if (key) {
-    const isCached = key.has(prefix)
+    const isCached = key.has(themeSelect)
     const cached = cacheVal.get(theme)
     if (isCached && cached) {
-      return cached[prefix]
+      return cached[themeSelect]
     }
   }
 
   // generate new subset theme
-  const len = prefix.length
+  const len = themeSelect.length
   const selectedTheme: PartialTheme = {}
   for (const key in theme) {
-    if (key.indexOf(prefix) === 0) {
+    if (key.indexOf(themeSelect) === 0) {
       const newKey = key.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
       selectedTheme[newKeyCamelCase] = theme[key]
@@ -49,7 +47,7 @@ export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): Them
   }
 
   // proxy back to full theme
-  const fullTheme = proxyParentTheme(selectedTheme)
+  const fullTheme = mergeTheme(theme, selectedTheme)
 
   // write to cache
   if (!cacheKey.get(theme)) {
@@ -57,14 +55,14 @@ export function selectThemeSubset(prefix: ThemeSelect, theme: ThemeObject): Them
   }
 
   key = cacheKey.get(theme)
-  if (key) key.add(prefix)
+  if (key) key.add(themeSelect)
 
   if (!cacheVal.get(theme)) {
     cacheVal.set(theme, {})
   }
 
   const val = cacheVal.get(theme)
-  if (val) val[prefix] = fullTheme
+  if (val) val[themeSelect] = fullTheme
 
   return fullTheme
 }

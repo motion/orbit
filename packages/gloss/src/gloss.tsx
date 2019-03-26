@@ -137,7 +137,7 @@ function glossify(
     }
   }
 
-  const hasDynamicStyles = themeFn || hasConditionalStyles
+  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
   const dynamicStyles = { [id]: {} }
 
   if (hasConditionalStyles) {

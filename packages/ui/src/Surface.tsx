@@ -1,4 +1,3 @@
-import { CSSPropertySetStrict } from '@o/css'
 import {
   alphaColor,
   Color,
@@ -6,13 +5,12 @@ import {
   gloss,
   GlossThemeFn,
   propsToStyles,
-  propsToTextSize,
   propsToThemeStyles,
-  selectThemeSubset,
   ThemeContext,
   ThemeObject,
   ThemeSelect,
   View,
+  ViewProps,
 } from '@o/gloss'
 import { mergeDefined, selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
@@ -29,67 +27,63 @@ import { Tooltip } from './Tooltip'
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-// TODO replace forwardRef prop with React.forwardRef()
-
-export type SurfaceProps = React.HTMLAttributes<any> &
-  CSSPropertySetStrict & {
-    spacing?: 'min-content'
-    hover?: boolean
-    hoverStyle?: any
-    active?: boolean
-    activeStyle?: any
-    ellipse?: boolean
-    borderRadius?: number
-    after?: React.ReactNode
-    background?: Color
-    badge?: React.ReactNode
-    badgeProps?: Object
-    children?: React.ReactNode
-    name?: string
-    chromeless?: boolean
-    circular?: boolean
-    className?: string
-    clickable?: boolean
-    elementProps?: Object
-    elevation?: number
-    forwardRef?: React.Ref<any>
-    glint?: boolean
-    glow?: boolean
-    glowProps?: Object
-    height?: number
-    highlight?: boolean
-    hovered?: boolean
-    icon?: React.ReactNode
-    iconAfter?: boolean
-    iconColor?: Color
-    iconProps?: Partial<IconProps>
-    iconSize?: number
-    inline?: boolean
-    noInnerElement?: boolean
-    onClick?: any
-    size?: number
-    sizeIcon?: number
-    spaced?: boolean
-    stretch?: boolean
-    tagName?: string
-    theme?: ThemeObject | string
-    tooltip?: React.ReactNode
-    tooltipProps?: PopoverProps
-    width?: number | string
-    alpha?: number
-    alphaHover?: number
-    disabled?: boolean
-    placeholderColor?: Color
-    highlightBackground?: Color
-    highlightColor?: Color
-    style?: Object
-    ignoreSegment?: boolean
-    sizeLineHeight?: boolean | number
-    type?: string
-    themeSelect?: ThemeSelect
-    iconPad?: number
-    getTheme?: GetSurfaceTheme
-  }
+export type SurfaceProps = ViewProps & {
+  spacing?: 'min-content'
+  hover?: boolean
+  hoverStyle?: any
+  active?: boolean
+  activeStyle?: any
+  ellipse?: boolean
+  borderRadius?: number
+  after?: React.ReactNode
+  background?: Color
+  badge?: React.ReactNode
+  badgeProps?: Object
+  children?: React.ReactNode
+  name?: string
+  chromeless?: boolean
+  circular?: boolean
+  className?: string
+  clickable?: boolean
+  elementProps?: Object
+  elevation?: number
+  forwardRef?: React.Ref<any>
+  glint?: boolean
+  glow?: boolean
+  glowProps?: Object
+  height?: number
+  highlight?: boolean
+  hovered?: boolean
+  icon?: React.ReactNode
+  iconAfter?: boolean
+  iconColor?: Color
+  iconProps?: Partial<IconProps>
+  iconSize?: number
+  noInnerElement?: boolean
+  onClick?: any
+  size?: number
+  sizeIcon?: number
+  spaced?: boolean
+  stretch?: boolean
+  tagName?: string
+  theme?: ThemeObject | string
+  tooltip?: React.ReactNode
+  tooltipProps?: PopoverProps
+  width?: number | string
+  alpha?: number
+  alphaHover?: number
+  disabled?: boolean
+  placeholderColor?: Color
+  highlightBackground?: Color
+  highlightColor?: Color
+  style?: Object
+  ignoreSegment?: boolean
+  sizeLineHeight?: boolean | number
+  type?: string
+  themeSelect?: ThemeSelect
+  iconPad?: number
+  getTheme?: GetSurfaceTheme
+}
 
 export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
 
@@ -160,7 +154,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     sizeIcon: props.sizeIcon,
     iconSize: props.iconSize,
     iconAfter: props.iconAfter,
-    inline: props.inline,
     icon: props.icon,
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
@@ -296,10 +289,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
 const SurfaceFrame = gloss<SurfaceProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
-}).theme((props, baseTheme) => {
-  // select theme
-  const theme = selectThemeSubset(props.themeSelect, baseTheme)
-
+}).theme((props, theme) => {
   // :hover, :focus, :active
   const themeStyles = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
@@ -319,23 +309,18 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
         ...propStyles['&:hover'],
       }
 
-  return alphaColor(
+  const style = alphaColor(
     {
       color: props.color || theme.color,
-      ...(props.inline && {
-        display: 'inline',
-      }),
       boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
-      ...propStyles,
       // TODO this could be automatically handled in propStyles if we want...
       borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
-      ...propsToTextSize(props),
       ...(props.chromeless && {
         borderColor: 'transparent',
         background: 'transparent',
@@ -346,6 +331,19 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
     },
     { alpha: props.alpha, alphaHover: props.alphaHover },
   )
+
+  if (props.is === 'action') {
+    console.log('theme is', theme.background)
+    console.log('what', props, themeStyles)
+    console.log('ok', style)
+    return {
+      background: 'red',
+      borderRadius: 1000,
+      color: 'green',
+    }
+  }
+
+  return style
 })
 
 const ellipseStyle = {
@@ -393,9 +391,6 @@ const Element = gloss({
     overflow: 'hidden',
     maxWidth: props.spacing,
     ...props,
-    ...(props.inline && {
-      display: 'inline',
-    }),
     ...(props.ellipse && ellipseStyle),
     width: props.width || `calc(100% ${iconNegativePad})`,
     ...elementStyle,

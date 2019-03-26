@@ -1,5 +1,4 @@
 import { ThemeObject } from '@o/css'
-import { GlossThemeFn } from './gloss'
 
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
@@ -9,7 +8,6 @@ export type GlossOptions = {
   isColor?: Function
   pseudoAbbreviations?: { [key: string]: Psuedos }
   preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
-  defaultThemeFn?: GlossThemeFn<any>
 }
 
 type GlossViewConfig = {

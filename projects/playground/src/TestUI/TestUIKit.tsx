@@ -1,5 +1,5 @@
 import { List, Table, Templates } from '@o/kit'
-import { Button, Flow, FlowStep, Layout, Pane, Title } from '@o/ui'
+import { Button, Flow, FlowStep, Layout, Pane, Space, Title } from '@o/ui'
 import React from 'react'
 
 export function TestUIKit() {
@@ -10,7 +10,19 @@ export function TestUIKit() {
       }}
       renderToolbar={state => (
         <>
-          <Button is="action" onClick={state.next}>
+          <Button alt="remove" onClick={state.next}>
+            Next
+          </Button>
+
+          <Space />
+
+          <Button alt="confirm" onClick={state.next}>
+            Next
+          </Button>
+
+          <Space />
+
+          <Button alt="action" onClick={state.next}>
             Next
           </Button>
         </>

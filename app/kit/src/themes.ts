@@ -8,19 +8,23 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const colors = {
   selected: orbitColor,
-  red: '#7B0000',
+  red: '#c80000',
 }
 
 const alternates = {
-  action: Theme.fromStyles({
+  remove: Theme.fromStyles({
     iconFill: '#fff',
     color: '#fff',
-    background: orbitColor,
-    backgroundHover: orbitColor,
-    backgroundActive: orbitColor,
-    borderColor: orbitActiveBg,
+    background: colors.red,
+    backgroundHover: colors.red,
+    backgroundActive: colors.red,
   }),
-  selected: Theme.fromStyles({
+  confirm: Theme.fromStyles({
+    iconFill: '#fff',
+    background: '#449878',
+    color: '#fff',
+  }),
+  action: Theme.fromStyles({
     iconFill: '#fff',
     background: orbitColor,
     backgroundHover: orbitColor,
@@ -208,22 +212,6 @@ export const themes = {
       backgroundActive: colors.selected,
       color: '#fff',
       borderColor: orbitActiveBg,
-    }),
-  },
-  remove: {
-    ...Theme.fromStyles({
-      iconFill: '#fff',
-      color: '#fff',
-      background: colors.red,
-      backgroundHover: colors.red,
-      backgroundActive: colors.red,
-    }),
-  },
-  action: {
-    ...Theme.fromStyles({
-      iconFill: '#fff',
-      background: '#449878',
-      color: '#fff',
     }),
   },
   tooltip: {

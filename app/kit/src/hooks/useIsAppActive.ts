@@ -5,5 +5,5 @@ import { useStoresSimple } from './useStores'
 export function useIsAppActive(appStore?: AppStore) {
   const stores = useStoresSimple()
   const store = appStore || stores.appStore
-  return useReaction(() => (store ? store.isActive : false))
+  return useReaction(() => (store ? store.isActive : true))
 }

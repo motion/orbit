@@ -21,6 +21,7 @@ export function TestUIKit() {
         }
       >
         {({ data, setData }) => {
+          console.log('data', data)
           return (
             <Layout style="row">
               <Pane>

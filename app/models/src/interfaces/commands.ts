@@ -23,7 +23,7 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
 export const SendClientDataCommand = new Command<
   void,
   {
-    name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS'
+    name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS' | 'APP_URL_OPENED'
     value: any
   }
 >('send-client-data')

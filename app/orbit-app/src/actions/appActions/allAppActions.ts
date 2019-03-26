@@ -4,4 +4,5 @@ export * from './open';
 export * from './peekStateActions';
 export * from './setAppState';
 export * from './setContextMessage';
+export * from './finishAuthorization';
 

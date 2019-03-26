@@ -9,6 +9,17 @@ import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
+import * as firebase from 'firebase'
+
+// initialize firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyD0wuHFVnF7W2B5uPunzittKP4IXwbeROo",
+  authDomain: "orbit-motion-dev.firebaseapp.com",
+  databaseURL: "https://orbit-motion-dev.firebaseio.com",
+  projectId: "orbit-motion-dev",
+  storageBucket: "orbit-motion-dev.appspot.com",
+  messagingSenderId: "790826289951"
+})
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly

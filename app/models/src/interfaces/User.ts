@@ -10,6 +10,21 @@ export interface User {
   name?: string
 
   /**
+   * User email.
+   */
+  email?: string
+
+  /**
+   * User id in the cloud.
+   */
+  cloudId?: string
+
+  /**
+   * Time when cloud sync was made last time.
+   */
+  lastTimeSync?: number
+
+  /**
    * active space id
    */
   activeSpace?: number

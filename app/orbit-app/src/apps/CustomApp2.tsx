@@ -1,6 +1,6 @@
-import { App, AppProps, createApp, List, OrbitListItemProps, Table } from '@o/kit'
+import { App, AppProps, createApp, List, Table, Templates } from '@o/kit'
 import { Flow, FlowStep, Layout, Loading, Pane, Title } from '@o/ui'
-import React, { useState } from 'react'
+import React from 'react'
 
 function CustomApp2(_props: AppProps) {
   return (
@@ -25,7 +25,6 @@ function CustomApp2(_props: AppProps) {
             return (
               <Layout>
                 <Pane>
-                  123 123
                   <Table
                     searchable
                     multiselect
@@ -47,7 +46,7 @@ function CustomApp2(_props: AppProps) {
 
         <FlowStep title="Step 2" subTitle="Select other thing">
           {({ data, setData, done }) => (
-            <MasterDetail
+            <Templates.MasterDetail
               items={[
                 { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
                 { title: 'Something', group: 'Hello', icon: 'smoe', subtitle: 'hello' },
@@ -57,7 +56,7 @@ function CustomApp2(_props: AppProps) {
               ]}
             >
               {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}
-            </MasterDetail>
+            </Templates.MasterDetail>
           )}
         </FlowStep>
       </Flow>
@@ -71,34 +70,3 @@ export default createApp({
   icon: '',
   app: CustomApp2,
 })
-
-///
-
-{
-  /* <GridLayout>
-        <GridItem>hello 1234</GridItem>
-      </GridLayout> */
-}
-
-type MasterDetailProps = {
-  items: OrbitListItemProps[]
-  children: (selected: OrbitListItemProps) => React.ReactNode
-}
-
-function MasterDetail(props: MasterDetailProps) {
-  const [selected, setSelected] = useState(null)
-  return (
-    <Layout style="row">
-      <Pane>
-        <List
-          dynamicHeight
-          maxHeight={1000}
-          items={props.items}
-          onSelect={index => setSelected(props.items[index])}
-          itemProps={{ iconBefore: true }}
-        />
-      </Pane>
-      <Pane flex={1}>{props.children(selected)}</Pane>
-    </Layout>
-  )
-}

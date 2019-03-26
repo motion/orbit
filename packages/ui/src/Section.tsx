@@ -2,10 +2,12 @@ import { View, ViewProps } from '@o/gloss'
 import React from 'react'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
+import { Omit } from './types'
 
 export type SectionProps = ViewProps &
-  Partial<TitleRowProps> & {
+  Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
+    afterTitle?: React.ReactNode
     sizePadding?: number
     scrollable?: boolean
   }
@@ -16,7 +18,7 @@ export function Section({
   subTitle,
   scrollable,
   children,
-  controls,
+  afterTitle,
   sizePadding,
   bordered,
   belowTitle,
@@ -35,14 +37,14 @@ export function Section({
       noInnerElement
       overflow="hidden"
     >
-      {!!(title || controls) && (
+      {!!(title || afterTitle) && (
         <TitleRow
           bordered={bordered}
           backgrounded={bordered}
           margin={0}
           title={title}
           subTitle={subTitle}
-          after={controls}
+          after={afterTitle}
           above={above}
           below={belowTitle}
         />

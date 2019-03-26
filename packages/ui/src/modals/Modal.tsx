@@ -56,10 +56,7 @@ function SimpleModal({
       <Section
         title={title}
         subTitle={subTitle}
-        scrollable={scrollable}
-        above={above}
-        sizePadding={sizePadding}
-        controls={
+        afterTitle={
           <>
             {controls || null}
             {!!onClose && (
@@ -67,6 +64,9 @@ function SimpleModal({
             )}
           </>
         }
+        scrollable={scrollable}
+        above={above}
+        sizePadding={sizePadding}
       >
         {children}
       </Section>

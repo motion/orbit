@@ -1,6 +1,7 @@
-import { Icon, PassProps, Space, SubTitle, Title, View } from '@o/ui'
+import { PassProps, Space, SubTitle, Title, View } from '@o/ui'
 import React from 'react'
 import { AppProps } from '../types/AppProps'
+import { Icon } from '../views/Icon'
 
 export function Message({ title, icon, subTitle, subType }: AppProps) {
   return (

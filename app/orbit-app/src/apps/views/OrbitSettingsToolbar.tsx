@@ -6,8 +6,6 @@ export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
   const activePaneKey = paneManagerStore.activePane.type
 
-  console.log('paneManagerStore', paneManagerStore.panes)
-
   const onActive = useCallback(key => {
     paneManagerStore.setActivePane(key)
   }, [])

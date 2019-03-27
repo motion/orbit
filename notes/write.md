@@ -354,3 +354,15 @@ Or monetizing monetizing.
 - We're willing to fragment entire ecosystems because we don't like a couple apis in a library
 - This sets back our industry, big time
 - We should be building more upwards, less sideways
+
+---
+
+# When in doubt, cleanup
+
+- This is a development tip, but I find the same thing works for me irl
+- If you feel flustered, unmotivated, unsure of next steps, braindead
+- Just clean.
+- Clean the last thing you did, clean up an area you don't like that totally unrelated
+- This is a big productivity boost for me, as it lets my subconscious think
+- Often after I "clean up" I find myself moving into my notes to take down a few ideas
+- I've even often done cleaning just because I'm feeling unfocused, and often find myself "miraculously" doing something that seems totally unrelated, but unlocks my next step of work

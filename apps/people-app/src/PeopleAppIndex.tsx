@@ -1,11 +1,12 @@
-import { List, LocationLink, useBits, useLocationLink, View } from '@o/kit';
-import { Button, Paragraph, Space, SubTitle, Title } from '@o/ui';
-import React, { useCallback } from 'react';
+import { List, LocationLink, useBits, useLocationLink, View } from '@o/kit'
+import { Button, Paragraph, Space, SubTitle, Title } from '@o/ui'
+import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {
   return (
     <List
       shareable
+      dynamicHeight
       items={useBits({ type: 'person' })}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}
@@ -15,7 +16,8 @@ export function PeopleAppIndex() {
         <View flex={1} padding={20}>
           <Title>Directory Empty</Title>
           <Paragraph>
-            To see your contacts, add an app that syncs people from your <LocationLink url="apps">workspace settings</LocationLink>.
+            To see your contacts, add an app that syncs people from your{' '}
+            <LocationLink url="apps">workspace settings</LocationLink>.
           </Paragraph>
 
           <View alignItems="center" justifyContent="center" flex={1}>

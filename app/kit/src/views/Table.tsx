@@ -5,8 +5,8 @@ import {
   SearchableTable,
   SearchableTableProps,
   Section,
-  SubTitle,
-  Title,
+  SectionProps,
+  TitleRowProps,
   useRefGetter,
 } from '@o/ui'
 import React, { useCallback } from 'react'
@@ -14,13 +14,13 @@ import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
-export type TableProps = Omit<SearchableTableProps, 'columns'> & {
-  columns?: TableColumns
-  searchable?: boolean
-  onHighlighted?: (rows: any[]) => void
-  title?: React.ReactNode
-  subTitle?: React.ReactNode
-}
+export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
+  Omit<SearchableTableProps, 'columns'> &
+  Pick<SectionProps, 'title' | 'subTitle' | 'bordered'> & {
+    columns?: TableColumns
+    searchable?: boolean
+    onSelect?: (rows: any[]) => void
+  }
 
 const defaultColumns = {
   resizable: true,
@@ -34,14 +34,14 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ searchable, onHighlighted, title, subTitle, ...props }: TableProps) {
+export function Table({ bordered, searchable, onSelect, title, subTitle, ...props }: TableProps) {
   const rows = props.rows.map(normalizeRow)
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
-  const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
-  const onHighlightedIndices = useCallback(
+  const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
+  const onSelectIndices = useCallback(
     keys => {
-      if (onHighlighted) {
-        onHighlighted(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
+      if (onSelect) {
+        onSelect(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)
@@ -50,15 +50,10 @@ export function Table({ searchable, onHighlighted, title, subTitle, ...props }: 
     [props.rows],
   )
 
-  const hasChrome = !!title || !!subTitle
-
   return (
-    <>
-      <Section sizePadding={hasChrome ? 1 : 0} paddingBottom={0}>
-        {!!title && <Title>{title}</Title>}
-        {!!subTitle && <SubTitle>{subTitle}</SubTitle>}
-      </Section>
+    <Section title={title} subTitle={subTitle} bordered={bordered} padding={0}>
       <SearchableTable
+        searchable={searchable}
         height="content-height"
         minWidth={100}
         minHeight={100}
@@ -66,8 +61,8 @@ export function Table({ searchable, onHighlighted, title, subTitle, ...props }: 
         {...props}
         columns={columns}
         rows={rows}
-        onHighlightedIndices={onHighlightedIndices}
+        onSelectIndices={onSelectIndices}
       />
-    </>
+    </Section>
   )
 }

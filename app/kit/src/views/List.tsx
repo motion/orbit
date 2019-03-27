@@ -19,6 +19,7 @@ import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
+import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useShareMenu } from '../hooks/useShareMenu'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -89,6 +90,7 @@ export function List(rawProps: ListProps) {
   const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useRefGetter(getItemProps || nullFn)
+  const isActive = useIsAppActive()
 
   const selectionStore = useSelectionStore(restProps)
   const selectionStoreRef = useRef<SelectionStore | null>(null)
@@ -110,6 +112,7 @@ export function List(rawProps: ListProps) {
 
   useEffect(
     () => {
+      if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
         const selStore = selectionStoreRef.current
         if (selStore && !selStore.isActive) {
@@ -180,7 +183,7 @@ export function List(rawProps: ListProps) {
       <HighlightActiveQuery query={query}>
         {hasItems && (
           <SelectableList
-            allowMeasure={props.isActive}
+            allowMeasure={typeof props.isActive === 'boolean' ? props.isActive : isActive}
             items={filtered.results}
             ItemView={ListItem}
             isRowLoaded={isRowLoaded}

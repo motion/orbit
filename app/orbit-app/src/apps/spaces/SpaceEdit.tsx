@@ -1,16 +1,6 @@
 import { OrbitOrb, useAppDefinitions, useAppsForSpace } from '@o/kit'
 import { Space } from '@o/models'
-import {
-  Col,
-  InputField,
-  ListItem,
-  Paragraph,
-  Row,
-  SimpleFormField,
-  Space as UISpace,
-  Theme,
-  Title,
-} from '@o/ui'
+import { Col, InputField, ListItem, Paragraph, Row, SimpleFormField, Space as UISpace, Title } from '@o/ui'
 import { pick } from 'lodash'
 import randomColor from 'randomcolor'
 import * as React from 'react'
@@ -86,9 +76,12 @@ export function SpaceEdit({ space }: { space: Space }) {
         <Paragraph>Choose which source grants access to this space.</Paragraph>
 
         {(apps || []).map((int, index) => (
-          <Theme key={int.id} name={index === 0 ? 'selected' : null}>
-            <ListItem icon={int.identifier} title={int.name} />
-          </Theme>
+          <ListItem
+            key={int.id}
+            alt={index === 0 ? 'selected' : null}
+            icon={int.identifier}
+            title={int.name}
+          />
         ))}
       </SubSection>
     </>

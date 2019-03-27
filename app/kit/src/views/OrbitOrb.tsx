@@ -1,4 +1,4 @@
-import { linearGradient, View, ViewProps } from '@o/gloss'
+import { linearGradient, View } from '@o/gloss'
 import React, { forwardRef } from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {
@@ -21,7 +21,12 @@ export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', 
   )
 }
 
-export const OrbitOrb = forwardRef<any, ViewProps>(function OrbitOrb(
+type OrbitOrbProps = any & {
+  size?: number
+  colors?: [string, string]
+}
+
+export const OrbitOrb = forwardRef<any, OrbitOrbProps>(function OrbitOrb(
   { size = 32, colors = ['red', 'green'], ...props },
   ref,
 ) {

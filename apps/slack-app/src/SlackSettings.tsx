@@ -69,30 +69,28 @@ export function SlackSettings({ subId }: AppProps) {
 
       // to make sure we always have a fresh channels we load them from API
       const loader = new SlackLoader(app)
-      loader
-        .loadChannels()
-        .then(freshApiChannels => {
-          // console.log(`loaded channels from remote`, freshApiRepositories)
+      loader.loadChannels().then(freshApiChannels => {
+        // console.log(`loaded channels from remote`, freshApiRepositories)
 
-          // we check if api channels are changed
-          const appChannels = app.data.channels
-          if (!freshApiChannels || JSON.stringify(appChannels) === JSON.stringify(freshApiChannels)) {
-            return
-          }
+        // we check if api channels are changed
+        const appChannels = app.data.channels
+        if (!freshApiChannels || JSON.stringify(appChannels) === JSON.stringify(freshApiChannels)) {
+          return
+        }
 
-          // then we update app data in the db
-          const orderedChannels = orderBy(
-            freshApiChannels,
-            ['is_private', 'num_members'],
-            ['asc', 'desc'],
-          )
-          setChannels(orderedChannels)
-          app.data = {
-            ...app.data,
-            channels: freshApiChannels,
-          }
-          updateApp(app)
-        })
+        // then we update app data in the db
+        const orderedChannels = orderBy(
+          freshApiChannels,
+          ['is_private', 'num_members'],
+          ['asc', 'desc'],
+        )
+        setChannels(orderedChannels)
+        app.data = {
+          ...app.data,
+          channels: freshApiChannels,
+        }
+        updateApp(app)
+      })
     },
     [app && app.id],
   )
@@ -131,8 +129,8 @@ export function SlackSettings({ subId }: AppProps) {
               },
             },
           }}
-          multiselect
-          onHighlightedIndices={setHighlightedRows}
+          multiSelect
+          onSelectIndices={setHighlightedRows}
           rows={(channels || []).map((channel, index) => {
             const topic = channel.topic ? channel.topic.value : ''
             return {

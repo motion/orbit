@@ -20,17 +20,6 @@ ensure-dep "python3" -- pyenv install 3.6.6 || brew install python3 &
 wait
 ensure-dep "tsc" -- npm i -g typescript
 
-# this was to build the modules used to build...
-# but we publish them not enough they should work, i think
-# internal tools
-# if [ ! -f "./packages/gloss/_/gloss.js" ]; then
-#   bin/__/build-builder-modules
-# fi
-# # link second
-# if [ ! -L "./node_modules/@o/gloss" ]; then
-#   bin/__/link-root-modules
-# fi
-
 echo "installing dependencies"
 yarn
 

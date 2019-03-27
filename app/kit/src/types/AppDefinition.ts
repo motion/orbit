@@ -5,7 +5,7 @@ import { AppProps } from './AppProps'
 
 export type AppElements = {
   index?: React.ReactElement<any>
-  children?: React.ReactElement<any>
+  children?: React.ReactNode
   statusBar?: React.ReactElement<any>
   toolBar?: React.ReactElement<any>
   context?: any

@@ -2,14 +2,14 @@ import { CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
 import { Config } from '../config'
 import { alphaColor } from './alphaColor'
 
-export function styleVal(val: any, theme: ThemeObject) {
-  return typeof val === 'function' ? val(theme) : val
+export function styleVal(val: any, theme: ThemeObject, props?: Object) {
+  return typeof val === 'function' ? val(theme, props) : val
 }
 
 // resolves props into styles for valid css
 
-export function propsToStyles(props: any, theme: ThemeObject) {
-  const styles: CSSPropertySet = {
+export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
+  let styles: CSSPropertySet = {
     ...props.style,
   }
   // loop over props turning into styles
@@ -22,12 +22,15 @@ export function propsToStyles(props: any, theme: ThemeObject) {
       const val = {}
       // theme functions for sub objects
       for (const subKey in subStyle) {
-        val[subKey] = styleVal(subStyle[subKey], theme)
+        val[subKey] = styleVal(subStyle[subKey], theme, props)
       }
       styles[psuedoKey] = val
     } else if (validCSSAttr[key]) {
-      styles[key] = styleVal(props[key], theme)
+      styles[key] = styleVal(props[key], theme, props)
     }
   }
-  return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
+
+  styles = alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
+
+  return styles
 }

@@ -18,19 +18,20 @@ export function usePropsWithMemoFunctions<A extends Object>(props: A): A {
 
   return useMemo(
     () => {
-      const finalProps = { ...props }
+      const finalProps = {} as A
 
       for (const key in props) {
         const val = props[key]
         if (typeof val === 'function') {
           fnRefs.current[key] = val
-          if (fnMemos.current[key]) {
-            props[key] = fnMemos.current[key]
-          } else {
+          if (!fnMemos.current[key]) {
             fnMemos.current[key] = (...args: any[]) => {
               return fnRefs.current[key](...args)
             }
           }
+          finalProps[key] = fnMemos.current[key]
+        } else {
+          finalProps[key] = val
         }
       }
 

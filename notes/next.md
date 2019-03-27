@@ -19,7 +19,7 @@ Product high level:
 All custom apps take the same form to start:
 
 1. Query data from (CSV, Postgres, Redshift, Google Sheets, S3, GraphQL, Stripe)
-2. Show data in a table with (multiselect, sorting, filtering, searching)
+2. Show data in a table with (multiSelect, sorting, filtering, searching)
 3. Select items in that table and see a form with the values (String, Date, ??)
 4. Have an action button on that table to then send form data to (Email, Salesforce, Github, Slack)
 

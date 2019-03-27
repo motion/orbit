@@ -10,16 +10,16 @@ const ellipseStyle = {
   whiteSpace: 'nowrap',
 }
 
-export const SimpleText = gloss<
-  AlphaColorProps &
-    TextSizeProps &
-    CSSPropertySetStrict & {
-      ellipse?: boolean
-      children?: any
-    }
->({
+export type SimpleTextProps = AlphaColorProps &
+  TextSizeProps &
+  CSSPropertySetStrict & {
+    ellipse?: boolean
+    children?: any
+  }
+
+export const SimpleText = gloss<SimpleTextProps>({
   display: 'block',
-}).theme((props, theme) => {
+}).theme((props: any, theme) => {
   const textProps = propsToTextSize(props)
   const color = props.color || theme.color
   return {

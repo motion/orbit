@@ -59,19 +59,20 @@ export const propsToThemeStyles = (
   if (props.background || props.borderColor || props.color) {
     propOverrides = {}
     if (props.background) {
-      propOverrides.background = styleVal(props.background, theme)
+      propOverrides.background = styleVal(props.background, theme, props)
     }
     if (props.color) {
-      propOverrides.color = styleVal(props.color, theme)
+      propOverrides.color = styleVal(props.color, theme, props)
     }
     if (props.borderColor) {
-      propOverrides.borderColor = styleVal(props.borderColor, theme)
+      propOverrides.borderColor = styleVal(props.borderColor, theme, props)
     }
   }
 
   for (const key in stateConfig) {
     const { postfix, pseudoKey, forceOnProp, extraStyleProp } = stateConfig[key]
     if (props[forceOnProp] === false) continue // forced off
+    if (props[extraStyleProp] === null) continue // forced empty
 
     let stateStyle = collectStylesForPseudo(theme, postfix)
 

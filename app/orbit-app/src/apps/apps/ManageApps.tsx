@@ -100,12 +100,9 @@ export function ManageApps() {
 
   return (
     <Section>
-      <TitleRow size={1.5} bordered>
-        {activeSpace ? activeSpace.name : ''}
-      </TitleRow>
+      <TitleRow bordered title={activeSpace ? activeSpace.name : ''} />
 
       <SelectableGrid
-        autoFitColumns
         minWidth={180}
         items={[
           ...activeApps.map(x => ({

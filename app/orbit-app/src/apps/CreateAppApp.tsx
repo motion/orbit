@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
-import { App, AppDefinition, AppIcon, AppProps, AppView, List, useActiveSpace } from '@o/kit'
+import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { Button, Section, Space, Theme, TitleRow, TopBar } from '@o/ui'
+import { Button, Section, Space, TitleRow, TopBar } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
@@ -35,7 +35,6 @@ function CreateAppIndex() {
         }
       />
       <List
-        minSelected={0}
         items={defaultApps.map(app => ({
           title: app.name,
           identifier: app.identifier,
@@ -87,22 +86,19 @@ function CreateAppMain({ identifier }: AppProps) {
     <Section>
       <TitleRow
         bordered
+        title={<AppsMainNew />}
         after={
           <>
-            <Button themeSelect={theme => theme.bordered} icon="lock">
+            <Button alt="bordered" icon="lock">
               Preview
             </Button>
             <Space />
-            <Theme name="selected">
-              <Button icon="add" onClick={createApp}>
-                Add
-              </Button>
-            </Theme>
+            <Button alt="action" icon="add" onClick={createApp}>
+              Add
+            </Button>
           </>
         }
-      >
-        <AppsMainNew />
-      </TitleRow>
+      />
 
       <SubSection title="App Settings">
         <AppView identifier={identifier} viewType="settings" />
@@ -113,7 +109,7 @@ function CreateAppMain({ identifier }: AppProps) {
   )
 }
 
-export const CreateApp: AppDefinition = {
+export const CreateApp = createApp({
   id: 'createApp',
   name: 'Create App',
   icon: '',
@@ -122,4 +118,4 @@ export const CreateApp: AppDefinition = {
       <CreateAppMain {...props} />
     </App>
   ),
-}
+})

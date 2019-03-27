@@ -24,6 +24,10 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
       }
     }, [])
 
+    if (!stores) {
+      return {} as any
+    }
+
     const state = stateRef.current
 
     if (!storesRef.current) {

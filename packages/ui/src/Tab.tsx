@@ -34,8 +34,9 @@ export function Tab(_: {
   onClose?: () => void
   /**
    * Children shows inside the tab content
+   * Use a function to render the view only when tab is active
    */
-  children?: React.ReactNode
+  children?: React.ReactNode | (() => React.ReactNode)
   /**
    * Icon for tab
    */

@@ -1,5 +1,6 @@
 import { ThemeObject } from '@o/css'
 import * as React from 'react'
+import { getAlternateTheme } from '../helpers/preProcessTheme'
 import { selectThemeSubset } from '../helpers/selectThemeSubset'
 import { ThemeContext } from './ThemeContext'
 import { SimpleStyleObject, ThemeMaker } from './ThemeMaker'
@@ -16,6 +17,7 @@ type ThemeProps = {
   name?: string
   select?: ThemeSelect
   children: any
+  alternate?: string
 }
 
 function proxyParentTheme(parent: ThemeObject, next: ThemeObject) {
@@ -31,11 +33,27 @@ function proxyParentTheme(parent: ThemeObject, next: ThemeObject) {
 // TODO: this just re-mounts everything below it on every render (when used with an object)?....
 // TODO: the uniqeThemeName stuff is super wierd maybe not necessary
 
-export function Theme({ theme, name, select, children }: ThemeProps) {
+export function Theme({ alternate, theme, name, select, children }: ThemeProps) {
   const contextTheme = React.useContext(ThemeContext)
 
   if (typeof name !== 'undefined') {
     return <ChangeThemeByName name={name}>{children}</ChangeThemeByName>
+  }
+
+  if (typeof alternate === 'string') {
+    const next = getAlternateTheme(alternate, contextTheme.activeTheme)
+    const name = `${contextTheme.activeThemeName}.${alternate}`
+    return (
+      <ThemeContext.Provider
+        value={{
+          ...contextTheme,
+          activeThemeName: name,
+          activeTheme: next,
+        }}
+      >
+        {children}
+      </ThemeContext.Provider>
+    )
   }
 
   // pass through if no theme
@@ -67,7 +85,7 @@ export function Theme({ theme, name, select, children }: ThemeProps) {
     if (typeof select === 'string') {
       nextTheme = selectThemeSubset(select, contextTheme.activeTheme)
     } else {
-      nextTheme = select(contextTheme.activeTheme)
+      nextTheme = select(contextTheme.activeTheme) || contextTheme.activeTheme
     }
     uniqThemeName = makeName()
   }

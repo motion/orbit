@@ -19,6 +19,7 @@ export {
   useReaction,
 } from '@o/automagical'
 export { configureUseStore } from './configure'
+export { createStoreContext } from './createStoreContext'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { GET_STORE, resetTracking } from './mobxProxyWorm'
@@ -33,7 +34,7 @@ export const shallow = <X>(x: X) => {
   return (observable.object(x, null, { deep: false }) as unknown) as X
 }
 
-type UseStoreOptions = {
+export type UseStoreOptions = {
   debug?: boolean
   conditionalUse?: boolean
   react?: boolean

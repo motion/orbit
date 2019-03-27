@@ -1,9 +1,8 @@
 import { Button, Input, Message, Section, SegmentedRow, Space as UISpace, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import * as firebase from 'firebase'
-import { loadMany, useModel } from '@o/bridge'
+import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
-import { remove, save } from '@o/bridge/_'
 
 export default function SettingsAppAccount() {
   const [email, setEmail] = useState("")
@@ -147,12 +146,12 @@ export default function SettingsAppAccount() {
 
           <Message>
             You account was synced last time on { new Date(user.lastTimeSync).toString() }.
-            <Button onClick={cloudSync}>Sync now</Button>
+            <Button alt="action" onClick={cloudSync}>Sync now</Button>
           </Message>
 
         </div> }
 
-        <Button onClick={logout}>Logout</Button>
+        <Button alt="action" onClick={logout}>Logout</Button>
 
       </div> }
 
@@ -182,7 +181,7 @@ export default function SettingsAppAccount() {
               onChange={event => setEmail((event.target as any).value)}
             />
             <Theme name="selected">
-              <Button onClick={sendEmail}>Send Login Link</Button>
+              <Button alt="action" onClick={sendEmail}>Send Login Link</Button>
             </Theme>
           </SegmentedRow>
         </Section>

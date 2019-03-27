@@ -30,9 +30,8 @@ export function AppsMain(props: AppProps) {
                 />
               )
             }
-          >
-            {props.title}
-          </TitleRow>
+            title={props.title}
+          />
           <AppMainView {...props} />
         </Section>
       )

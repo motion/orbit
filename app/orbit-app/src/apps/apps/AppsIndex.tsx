@@ -1,9 +1,7 @@
 import {
   AppDefinition,
-  AppWithDefinition,
   Icon,
   List,
-  OrbitListItemProps,
   useActiveApps,
   useActiveAppsWithDefinition,
   useActiveSpace,
@@ -11,7 +9,7 @@ import {
   useAppDefinitions,
 } from '@o/kit'
 import * as React from 'react'
-import { OrbitAppInfo } from '../../components/OrbitAppInfo'
+import { getAppListItem } from './getAppListItem'
 
 function getDescription(def: AppDefinition) {
   const hasSync = !!def.sync
@@ -20,23 +18,7 @@ function getDescription(def: AppDefinition) {
   return titles.join(', ')
 }
 
-function getAppItem(app: AppWithDefinition, extraProps?: OrbitListItemProps) {
-  const title = app.app ? app.app.name : app.definition.name
-  return {
-    title,
-    subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
-    icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
-    iconBefore: true,
-    appProps: {
-      title,
-      viewType: 'settings' as 'settings',
-      subType: app.definition.sync ? 'sync' : 'app',
-      subId: `${app.app.id}`,
-      identifier: app.app.identifier,
-    },
-    ...extraProps,
-  }
-}
+const sourceIcon = <Icon opacity={0.5} size={20} name="database" />
 
 export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
@@ -49,8 +31,6 @@ export function AppsIndex() {
     return null
   }
 
-  const sourceIcon = <Icon opacity={0.5} size={20} name="database" />
-
   return (
     <List
       items={[
@@ -62,8 +42,8 @@ export function AppsIndex() {
           iconBefore: true,
           subType: 'manage',
         },
-        ...clientApps.map(x => getAppItem(x, { group: 'App Settings' })),
-        ...syncApps.map(x => getAppItem(x, { group: 'Source Settings', after: sourceIcon })),
+        ...clientApps.map(x => getAppListItem(x, { group: 'App Settings' })),
+        ...syncApps.map(x => getAppListItem(x, { group: 'Source Settings', after: sourceIcon })),
         ...allSourceDefinitions.map(def => ({
           group: 'Install App',
           title: def.name,

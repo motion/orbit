@@ -4,7 +4,7 @@ import React, { forwardRef, useContext } from 'react'
 import { UIContext } from '../helpers/contexts'
 import { IconProps } from '../Icon'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { SurfacePropsContext } from '../Surface'
+import { useSurfaceProps } from '../Surface'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
@@ -21,9 +21,9 @@ const activeStyle = {
   opacity: 0.8,
 }
 
-function ButtonInner({ children, elementProps, disabled, ...props }: ButtonProps) {
+function ButtonInner({ children, elementProps, disabled, ...rest }: ButtonProps) {
   const theme = useTheme()
-  const extraProps = useContext(SurfacePropsContext)
+  const props = useSurfaceProps(rest)
   return (
     <SizedSurface
       themeSelect="button"
@@ -46,7 +46,6 @@ function ButtonInner({ children, elementProps, disabled, ...props }: ButtonProps
       pointerEvents={disabled ? 'none' : undefined}
       activeStyle={activeStyle}
       glowProps={glowProps}
-      {...extraProps}
       {...props}
     >
       {children}

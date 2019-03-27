@@ -1,14 +1,4 @@
-import {
-  CSSPropertySet,
-  gloss,
-  Row,
-  SimpleText,
-  Theme,
-  ThemeContext,
-  ThemeObject,
-  View,
-  ViewProps,
-} from '@o/gloss'
+import { CSSPropertySet, gloss, Row, SimpleText, Theme, ThemeContext, ThemeObject, View, ViewProps } from '@o/gloss'
 import { useStore } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'

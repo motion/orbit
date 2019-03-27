@@ -9,6 +9,15 @@ export class UserEntity implements User {
   @Column()
   name: string
 
+  @Column({ unique: true, nullable: true })
+  email: string
+
+  @Column({ nullable: true })
+  cloudId: string
+
+  @Column({ nullable: true })
+  lastTimeSync: number
+
   @Column()
   activeSpace: number
 

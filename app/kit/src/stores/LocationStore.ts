@@ -78,8 +78,8 @@ export function useLocationLink(url: string | false, stopPropagation = false) {
   if (!url) {
     return null
   }
-  return (e: React.MouseEvent<any, any> | MouseEvent) => {
-    if (stopPropagation) {
+  return (e?: React.MouseEvent<any, any> | MouseEvent) => {
+    if (e && stopPropagation) {
       e.stopPropagation()
       e.preventDefault()
     }

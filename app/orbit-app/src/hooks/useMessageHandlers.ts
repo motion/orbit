@@ -3,9 +3,11 @@ import { App } from '@o/stores'
 import { useEffect } from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
 import { useStores } from './useStores'
+import { useLocationLink } from '@o/kit'
 
 export function useMessageHandlers() {
   const { paneManagerStore } = useStores()
+  const accountLink = useLocationLink('settings?id=settings&itemId=account')
 
   useEffect(() => {
     const subscription = Mediator.onData().subscribe(async ({ name, value }) => {
@@ -23,6 +25,10 @@ export function useMessageHandlers() {
         case 'TOGGLE_SETTINGS':
           AppActions.setOrbitDocked(true)
           paneManagerStore.setActivePaneByType('settings')
+          return
+        case 'APP_URL_OPENED':
+          await AppActions.finishAuthorization(value)
+          accountLink()
           return
       }
     })

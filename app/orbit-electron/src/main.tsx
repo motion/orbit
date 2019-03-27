@@ -1,7 +1,13 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { MediatorServer, WebSocketServerTransport } from '@o/mediator'
-import { CloseAppCommand, NewFallbackServerPortCommand, RestartAppCommand, TearAppCommand } from '@o/models'
+import {
+  CloseAppCommand,
+  NewFallbackServerPortCommand,
+  RestartAppCommand,
+  SendClientDataCommand,
+  TearAppCommand,
+} from '@o/models'
 import { render } from '@o/reactron'
 import { Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
@@ -55,6 +61,19 @@ export async function main() {
     } else {
       // only in main electron process...
       require('./helpers/monitorResourceUsage')
+
+      // register app schema
+      const { app } = require('electron')
+      if (app.isDefaultProtocolClient('orbit') === false) {
+        app.setAsDefaultProtocolClient('orbit')
+      }
+      app.on('open-url', (_options, path) => {
+        console.log(`open-url emitted`, path)
+        Mediator.command(SendClientDataCommand, {
+          name: 'APP_URL_OPENED',
+          value: path.replace('orbit://', ''),
+        })
+      })
     }
   }
 

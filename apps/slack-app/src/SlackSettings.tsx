@@ -1,4 +1,13 @@
-import { AppModel, AppProps, loadMany, SettingManageRow, Table, useModel, useStore, WhitelistManager } from '@o/kit'
+import {
+  AppModel,
+  AppProps,
+  loadMany,
+  SettingManageRow,
+  Table,
+  useModel,
+  useStore,
+  WhitelistManager,
+} from '@o/kit'
 import postgresApp from '@o/postgres-app'
 import { DataType, View } from '@o/ui'
 import { orderBy } from 'lodash'

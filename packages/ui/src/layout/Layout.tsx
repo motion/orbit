@@ -1,7 +1,5 @@
 import { Col, Row } from '@o/gloss'
-import { pick } from 'lodash'
-import React, { Children, cloneElement, createContext, isValidElement, useEffect, useRef, useState } from 'react'
-import { useResizeObserver } from '../hooks/useResizeObserver'
+import React, { Children, cloneElement, createContext, isValidElement } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { GridLayout } from './GridLayout'
 import { Pane } from './Pane'

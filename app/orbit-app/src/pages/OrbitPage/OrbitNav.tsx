@@ -5,37 +5,35 @@ import { useAppSortHandler } from '@o/kit-internal'
 import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
 import { isRightClick } from '@o/ui'
-import { ensure, react, useHook, useStore } from '@o/use-store'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
 import { OrbitTab, OrbitTabButton, tabHeight, TabProps } from '../../components/OrbitTab'
 import { getAppContextItems } from '../../helpers/getAppContextItems'
 import { preventDefault } from '../../helpers/preventDefault'
 import { useActions } from '../../hooks/useActions'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import { useStores } from '../../hooks/useStores'
 
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
-class OrbitNavStore {
-  stores = useHook(useStoresSimple)
+// class OrbitNavStore {
+//   stores = useHook(useStoresSimple)
 
-  previousTabID = react(
-    () => this.stores.paneManagerStore.activePane,
-    pane => {
-      ensure('not on settings', !isOnSettings(pane))
-      return pane.id
-    },
-    {
-      log: false,
-    },
-  )
-}
+//   previousTabID = react(
+//     () => this.stores.paneManagerStore.activePane,
+//     pane => {
+//       ensure('not on settings', !isOnSettings(pane))
+//       return pane.id
+//     },
+//     {
+//       log: false,
+//     },
+//   )
+// }
 
 export const OrbitNav = memo(() => {
   const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
-  const store = useStore(OrbitNavStore)
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
   const activeAppsSorted: AppBit[] = [
@@ -227,36 +225,21 @@ export const OrbitNav = memo(() => {
         </Row>
 
         <OrbitTab
-          isActive={paneManagerStore.activePane.id === 'apps'}
-          onClick={() => {
-            newAppStore.setShowCreateNew(false)
-            if (paneManagerStore.activePane.id === 'apps') {
-              paneManagerStore.setActivePane(store.previousTabID)
-            } else {
-              paneManagerStore.setActivePaneByType('apps')
-            }
-          }}
+          isActive={paneManagerStore.activePane.id === 'data-explorer'}
+          location="data-explorer"
           iconSize={11}
-          icon="grid48"
-          tooltip="Apps & Settings"
+          icon="database"
+          tooltip="Data explorer"
           thicc
         />
-
-        {/* <OrbitTab
-          isActive={onSettings}
-          onClick={() => {
-            newAppStore.setShowCreateNew(false)
-            if (onSettings) {
-              paneManagerStore.setActivePane(store.previousTabID)
-            } else {
-              paneManagerStore.setActivePaneByType('sources')
-            }
-          }}
-          iconSize={12}
-          icon="gear"
-          tooltip="Settings"
+        <OrbitTab
+          isActive={paneManagerStore.activePane.id === 'apps'}
+          location="apps"
+          iconSize={11}
+          icon="grid48"
+          tooltip="Apps"
           thicc
-        /> */}
+        />
       </OrbitNavChrome>
     </OrbitNavClip>
   )

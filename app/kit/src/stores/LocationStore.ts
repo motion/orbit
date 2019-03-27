@@ -73,8 +73,11 @@ export function useLocationEffect(fn: (url: URLState) => void) {
   useReaction(() => locationStore.url, fn)
 }
 
-export function useLocationLink(url: string, stopPropagation = false) {
+export function useLocationLink(url: string | false, stopPropagation = false) {
   const { locationStore } = useStoresSimple()
+  if (!url) {
+    return null
+  }
   return (e: React.MouseEvent<any, any> | MouseEvent) => {
     if (stopPropagation) {
       e.stopPropagation()

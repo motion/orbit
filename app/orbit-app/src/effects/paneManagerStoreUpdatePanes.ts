@@ -34,6 +34,7 @@ export const defaultPanes: PaneManagerPane[] = [
   { id: 'spaces', name: 'Spaces', type: 'spaces', isHidden: true, keyable: true },
   settingsPane,
   { id: 'apps', name: 'Apps', type: 'apps' },
+  { id: 'data-explorer', name: 'Data Explorer', type: 'data-explorer' },
   { id: 'createApp', name: 'Add app', type: 'createApp' },
   { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]

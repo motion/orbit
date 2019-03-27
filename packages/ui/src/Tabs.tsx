@@ -6,7 +6,7 @@
  */
 
 import { gloss, Row, View, ViewProps } from '@o/gloss'
-import * as React from 'react'
+import React, { Children, cloneElement } from 'react'
 import { Breadcrumbs } from './Breadcrumbs'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
@@ -22,7 +22,7 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
-  children?: Array<any>
+  children?: Array<any> | React.ReactNode
   // Whether the tabs can be reordered by the user.
   orderable?: boolean
   // Callback when the tab order changes.
@@ -55,7 +55,6 @@ function TabsControlled(props: TabsProps) {
     onActive,
     height = 26,
     borderRadius = 0,
-    minHeight = 'min-content',
     ...rest
   } = props
   // array of other components that aren't tabs
@@ -95,7 +94,7 @@ function TabsControlled(props: TabsProps) {
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
           <TabContent key={key} hidden={!isActive}>
-            {children}
+            {typeof children === 'function' && isActive ? children() : children}
           </TabContent>,
         )
       }
@@ -147,7 +146,8 @@ function TabsControlled(props: TabsProps) {
     }
   }
 
-  add(props.children)
+  const childrenArr = Children.map(props.children, child => child)
+  add(childrenArr)
 
   let tabList
   if (props.orderable === true) {
@@ -172,13 +172,13 @@ function TabsControlled(props: TabsProps) {
   }
 
   return (
-    <TabContainer minHeight={minHeight} {...rest}>
-      <Row>
+    <TabContainer>
+      <Row {...rest}>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
           <HideScrollbar className="hide-scrollbars">
             <Breadcrumbs flex={1}>
-              {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
+              {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
             </Breadcrumbs>
           </HideScrollbar>
         </div>
@@ -192,6 +192,7 @@ function TabsControlled(props: TabsProps) {
 
 const TabContainer = gloss(View, {
   flex: 1,
+  overflow: 'hidden',
 })
 
 export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {
@@ -247,9 +248,8 @@ const OrderableContainer = gloss({
 })
 
 const TabContent = gloss({
-  height: 'auto',
   overflow: 'auto',
   width: '100%',
   flex: 1,
-  minHeight: 'min-content',
+  height: 'min-content',
 })

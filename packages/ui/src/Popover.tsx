@@ -968,7 +968,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         data-towards={direction}
         isOpen={showPopover}
         isClosing={closing}
-        noHoverOnChildren={noHoverOnChildren}
+        isTouchable={!noHoverOnChildren}
       >
         {!!overlay && (
           <Overlay
@@ -1069,7 +1069,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 }
 
 const PopoverContainer = gloss({
-  opacity: 0,
   position: 'absolute',
   top: 0,
   left: 0,
@@ -1082,12 +1081,11 @@ const PopoverContainer = gloss({
   },
   isOpen: {
     opacity: 1,
+  },
+  isTouchable: {
     '& > *': {
       pointerEvents: 'all !important',
     },
-  },
-  noHoverOnChildren: {
-    pointerEvents: 'none',
   },
 })
 

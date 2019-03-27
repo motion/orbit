@@ -1,5 +1,5 @@
 import { AppView, getAppDefinition, Icon } from '@o/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme, TitleRow } from '@o/ui'
+import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, TitleRow } from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'
@@ -18,11 +18,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
         after={
           <>
             {!hasSetup && def.sync && (
-              <Theme name="action">
-                <Button icon="lock" onClick={addAppClickHandler(def)}>
-                  Authenticate and add
-                </Button>
-              </Theme>
+              <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>
+                Authenticate and add
+              </Button>
             )}
             {!def.sync && (
               <Button alt="action" icon="add">

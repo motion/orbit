@@ -380,9 +380,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   calculateResize(event: MouseEvent) {
     const { resizingInitialCursor, resizingInitialRect, resizingSides } = this.state
-    invariant(resizingInitialRect, 'TODO')
-    invariant(resizingInitialCursor, 'TODO')
-    invariant(resizingSides, 'TODO')
+    invariant(resizingInitialRect, 'resizingInitialRect')
+    invariant(resizingInitialCursor, 'resizingInitialCursor')
+    invariant(resizingSides, 'resizingSides')
     const deltaLeft = resizingInitialCursor.left - event.clientX
     const deltaTop = resizingInitialCursor.top - event.clientY
     let newLeft = resizingInitialRect.left
@@ -481,6 +481,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   } {
     const canResize = this.getResizable()
     if (!canResize) {
+      return
+    }
+    if (!this.ref.current) {
       return
     }
     const { left: offsetLeft, top: offsetTop } = this.ref.current.getBoundingClientRect()

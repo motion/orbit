@@ -7,7 +7,10 @@ import {
   Section,
   SectionProps,
   TitleRowProps,
+  useParentNodeSize,
   useRefGetter,
+  useSectionProps,
+  View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
 import { Omit } from '../types'
@@ -34,7 +37,11 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
   return obj
 }
 
-export function Table({ bordered, searchable, onSelect, title, subTitle, ...props }: TableProps) {
+export function Table(direct: TableProps) {
+  const { flex, bordered, searchable, onSelect, title, subTitle, ...props } = useSectionProps(
+    direct,
+  )
+  const { height, ref } = useParentNodeSize()
   const rows = props.rows.map(normalizeRow)
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
@@ -51,18 +58,21 @@ export function Table({ bordered, searchable, onSelect, title, subTitle, ...prop
   )
 
   return (
-    <Section title={title} subTitle={subTitle} bordered={bordered} padding={0}>
-      <SearchableTable
-        searchable={searchable}
-        height="content-height"
-        minWidth={100}
-        minHeight={100}
-        maxHeight={800}
-        {...props}
-        columns={columns}
-        rows={rows}
-        onSelectIndices={onSelectIndices}
-      />
+    <Section flex={flex} title={title} subTitle={subTitle} bordered={bordered} padding={0}>
+      <View ref={ref}>
+        <SearchableTable
+          searchable={searchable}
+          height="content-height"
+          minWidth={100}
+          minHeight={100}
+          maxHeight={height > 0 ? height : 500}
+          flex={flex}
+          {...props}
+          columns={columns}
+          rows={rows}
+          onSelectIndices={onSelectIndices}
+        />
+      </View>
     </Section>
   )
 }

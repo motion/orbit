@@ -1,13 +1,11 @@
-import { Button, Input, Message, Section, SegmentedRow, Space, Title } from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Space } from '@o/ui'
 import React from 'react'
 
 export default function SettingsAppAccount() {
   // const [user] = useActiveUser()
 
   return (
-    <Section sizePadding={2}>
-      <Title>My Account</Title>
-
+    <Section bordered title="My Account" sizePadding={2}>
       <Message>
         Orbit syncs your configuration including which spaces you are a member of, and your personal
         perferences, so you can use Orbit on different computers.

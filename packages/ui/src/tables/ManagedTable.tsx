@@ -511,7 +511,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
-    console.log('columnKeys', columnKeys, columnOrder)
     return (
       <TableRow
         key={sortedRows[index].key}

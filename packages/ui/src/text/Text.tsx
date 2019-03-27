@@ -280,7 +280,6 @@ const TextBlock = gloss(View, {
     styles = {
       ...styles,
       display: 'flex',
-      overflow: 'hidden',
       flex: 1,
     }
   }
@@ -300,7 +299,6 @@ const TextBlock = gloss(View, {
 })
 
 const TextEllipse = gloss(Inline, {
-  margin: ['auto', 0],
   maxWidth: '100%',
 }).theme(({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {

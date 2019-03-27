@@ -220,10 +220,8 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
         {above}
         {!!separator && (
           <Theme name={activeThemeName}>
-            <Separator {...separatorProps}>
-              <Text size={0.9} fontWeight={400}>
-                {separator}
-              </Text>
+            <Separator paddingTop={props.index === 0 ? 8 : 16} {...separatorProps}>
+              {separator}
             </Separator>
           </Theme>
         )}

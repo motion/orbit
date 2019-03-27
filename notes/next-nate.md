@@ -1,5 +1,11 @@
 Views
 
+- Layout Grid
+- API => Form automatically
+- ActionBar
+  - size=2
+  - holds buttons
+  - easy to align side/mid/end
 - Nav/Theme
   - See how Flow has a custom nav?
   - Make that an official thing
@@ -9,8 +15,6 @@ Views
     1. Make `alt=""` customizable and have that as a theme
     2. Unify it so we are just able to do
        - <Tabs alt="underlined" /> and <SegmentedRow alt="underlined" /> etc
-- Layout
-  - row / col / grid + resizing generally
 - Pane
   - collapsable / merge with panel
   - title/subtitle (titlerow)

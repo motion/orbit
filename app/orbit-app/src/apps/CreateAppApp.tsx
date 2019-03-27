@@ -93,6 +93,7 @@ function CreateAppMain({ identifier }: AppProps) {
     <Section>
       <TitleRow
         bordered
+        backgrounded
         title="Title"
         after={
           <>
@@ -116,8 +117,10 @@ function CreateAppMain({ identifier }: AppProps) {
             <AppView identifier={identifier} viewType="settings" />
           </FormField>
         </SubSection>
+      </Section>
 
-        <SubSection title="Preview">{showPreviewApp && <PreviewApp app={app} />}</SubSection>
+      <Section bordered title="Preview">
+        {showPreviewApp && <PreviewApp app={app} />}
       </Section>
     </Section>
   )

@@ -48,11 +48,11 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   }
 
   // find our custom streamline icons...
-  const customIcon = icons[name]
+  const svgIcon = icons[name] || (name.trim().indexOf('<svg') === 0 ? name : null)
 
-  if (!customIcon) {
+  if (!svgIcon) {
     return (
-      <UI.Icon
+      <UI.PlainIcon
         name={name}
         color={finalColor}
         size={size}
@@ -77,7 +77,7 @@ export const Icon = React.memo((props: OrbitIconProps) => {
       <SVG
         className={restProps.className}
         fill="inherit"
-        svg={customIcon}
+        svg={svgIcon}
         width={`${size}px`}
         height={`${size}px`}
         style={{

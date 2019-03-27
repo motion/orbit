@@ -33,6 +33,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     below,
     padding,
     flex,
+    icon,
     ...viewProps
   } = props
   return (
@@ -58,6 +59,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           after={afterTitle}
           above={above}
           below={belowTitle}
+          icon={icon}
         />
       )}
       <View

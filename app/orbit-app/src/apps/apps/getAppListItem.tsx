@@ -9,13 +9,10 @@ export function getAppListItem(app: AppWithDefinition, extraProps?: OrbitListIte
     subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
-    appProps: {
-      title,
-      viewType: 'settings' as 'settings',
-      subType: app.definition.sync ? 'sync' : 'app',
-      subId: `${app.app.id}`,
-      identifier: app.app.identifier,
-    },
+    viewType: 'settings' as 'settings',
+    subType: app.definition.sync ? 'sync' : 'app',
+    subId: `${app.app.id}`,
+    identifier: app.app.identifier,
     ...extraProps,
   }
 }

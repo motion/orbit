@@ -15,6 +15,7 @@ export type IconProps = ViewProps & {
   name: string
 }
 
+// TODO use createContextProps
 export const IconPropsContext = createContext(null as Partial<IconProps>)
 
 const widthPadding = x => {
@@ -48,14 +49,14 @@ const findMatch = (name: string) => {
 }
 
 // lets users wrap around icons
-export function ConfiguredIcon(rawProps: IconProps) {
+export function Icon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = configure.useIcon || Icon
+  const ResolvedIcon = configure.useIcon || PlainIcon
   return <ResolvedIcon {...props} />
 }
 
-export const Icon = memo((rawProps: IconProps) => {
+export const PlainIcon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
 

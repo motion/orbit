@@ -1,6 +1,6 @@
 import { gloss, View } from '@o/gloss'
 import * as React from 'react'
-import { ConfiguredIcon } from '../Icon'
+import { Icon } from '../Icon'
 
 const ClearClickableArea = gloss(View, {
   height: '100%',
@@ -35,7 +35,7 @@ export const ClearButton = ({
   onMouseUp = null,
   onMouseEnter = null,
   onMouseLeave = null,
-  children = <ConfiguredIcon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
+  children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
   hover = null,
   hidden = false,
   ...props

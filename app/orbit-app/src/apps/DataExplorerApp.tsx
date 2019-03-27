@@ -1,5 +1,5 @@
-import { App, AppProps, createApp, List, useActiveSyncAppsWithDefinition } from '@o/kit'
-import { Section, TitleRow } from '@o/ui'
+import { App, AppProps, createApp, List, useActiveSyncAppsWithDefinition, useApp } from '@o/kit'
+import { Section } from '@o/ui'
 import React from 'react'
 import { SubSection } from '../views/SubSection'
 import { getAppListItem } from './apps/getAppListItem'
@@ -9,10 +9,12 @@ function DataExplorerIndex() {
   return <List items={syncApps.map(x => getAppListItem(x, { group: 'Data Apps' }))} />
 }
 
-function DataExplorerMain({ identifier }: AppProps) {
+function DataExplorerMain({ identifier, subId }: AppProps) {
+  const [app] = useApp(+subId)
+  // TODO suspense
+  if (!app) return null
   return (
-    <Section>
-      <TitleRow bordered title="Hello world" />
+    <Section title={app.appName} subTitle={app.name} icon={app.icon}>
       <SubSection title="App Settings">test me out {identifier}</SubSection>
     </Section>
   )

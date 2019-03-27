@@ -9,7 +9,7 @@ import { Col, gloss, Row } from '@o/gloss'
 // import { ContextMenu } from './ContextMenu'
 import * as React from 'react'
 import { colors } from './helpers/colors'
-import { ConfiguredIcon } from './Icon'
+import { Icon } from './Icon'
 import { Image } from './Image'
 import { FixedList } from './lists/FixedList'
 import { Text } from './text/Text'
@@ -254,7 +254,7 @@ class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowSt
     if (hasChildren) {
       arrow = (
         <span onClick={this.onDoubleClick} role="button" tabIndex={-1}>
-          <ConfiguredIcon
+          <Icon
             size={8}
             name={element.expanded ? 'mindown' : 'minright'}
             color={selected ? 'white' : colors.light80}

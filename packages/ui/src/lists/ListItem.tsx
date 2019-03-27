@@ -15,7 +15,7 @@ import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
-import { ConfiguredIcon } from '../Icon'
+import { Icon } from '../Icon'
 import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
@@ -116,7 +116,7 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
       element = React.cloneElement(icon, iconPropsFinal)
     }
   } else {
-    element = <ConfiguredIcon name={icon} {...iconPropsFinal} />
+    element = <Icon name={icon} {...iconPropsFinal} />
   }
   return (
     // use a view to ensure consistent width

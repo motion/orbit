@@ -8,10 +8,10 @@ function CustomApp() {
   return (
     <App>
       <Tabs>
-        <Tab label="Demo 1">
+        <Tab id="0" label="Demo 1">
           <CustomApp1 />
         </Tab>
-        <Tab label="Demo 2">
+        <Tab id="1" label="Demo 2">
           <CustomApp2 />
         </Tab>
       </Tabs>

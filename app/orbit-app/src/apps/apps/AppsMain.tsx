@@ -1,5 +1,5 @@
-import { AppMainView, AppProps, Icon, removeApp, useApp } from '@o/kit'
-import { Section, Title, TitleBarButton, TitleRow } from '@o/ui'
+import { AppMainView, AppProps, removeApp, useApp } from '@o/kit'
+import { Section, Title, TitleBarButton } from '@o/ui'
 import React from 'react'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { ManageApps } from './ManageApps'
@@ -16,22 +16,21 @@ export function AppsMain(props: AppProps) {
       return <AppMainView {...props} />
     } else {
       return (
-        <Section>
-          <TitleRow
-            bordered
-            before={<Icon opacity={0.2} name="gear" />}
-            after={
-              app &&
-              app.tabDisplay !== 'permanent' && (
-                <TitleBarButton
-                  icon="boldremove"
-                  tooltip={`Remove ${props.title}`}
-                  onClick={() => removeApp(app)}
-                />
-              )
-            }
-            title={props.title}
-          />
+        <Section
+          bordered
+          icon="gear"
+          title={props.title}
+          afterTitle={
+            app &&
+            app.tabDisplay !== 'permanent' && (
+              <TitleBarButton
+                icon="boldremove"
+                tooltip={`Remove ${props.title}`}
+                onClick={() => removeApp(app)}
+              />
+            )
+          }
+        >
           <AppMainView {...props} />
         </Section>
       )

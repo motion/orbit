@@ -42,6 +42,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
 
 const OrbitMainContainer = gloss<{ isTorn: boolean; transparent?: boolean }>({
   flex: 1,
+  overflowY: 'auto',
 }).theme(({ isTorn, transparent }, theme) => ({
   background: transparent
     ? 'transparent'

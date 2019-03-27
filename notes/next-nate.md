@@ -19,6 +19,9 @@
 
 Views
 
+- move to blueprint icons, free to distribute
+  - https://blueprintjs.com/docs/#core
+  - copy docs from https://sancho-ui.com/components/icon/
 - Banner
   - Message => Banner
   - alt="warn" etc states

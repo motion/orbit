@@ -12,6 +12,7 @@ export type SectionProps = Omit<ViewProps, 'title'> &
     sizePadding?: number
     scrollable?: boolean
     below?: React.ReactNode
+    padded?: boolean
   }
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
@@ -34,6 +35,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padding,
     flex,
     icon,
+    padded,
     ...viewProps
   } = props
   return (
@@ -65,7 +67,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       <View
         overflowY={scrollable ? 'auto' : 'hidden'}
         overflowX="hidden"
-        padding={typeof padding !== 'undefined' ? padding : bordered ? 20 : 0}
+        padding={typeof padding !== 'undefined' ? padding : bordered || padded ? 20 : 0}
         flex={flex}
         {...viewProps}
       >

@@ -182,15 +182,14 @@ function OrbitEditAppButton() {
 
   return (
     <Button
-      // icon="tool"
+      icon="tool"
+      circular
       tooltip="Edit app"
       onClick={async () => {
         Actions.tearApp()
         orbitStore.setEditing()
       }}
-    >
-      Edit
-    </Button>
+    />
   )
 }
 

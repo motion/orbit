@@ -1,15 +1,13 @@
 import { SegmentedRow, Tab, Tabs, View } from '@o/ui'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitSettingsToolbar() {
   const { orbitStore, paneManagerStore } = useStores()
   const activePaneKey = paneManagerStore.activePane.type
 
-  const onActive = React.useCallback(key => {
-    if (typeof key === 'string') {
-      paneManagerStore.setActivePaneByType(key)
-    }
+  const onActive = useCallback(key => {
+    paneManagerStore.setActivePane(key)
   }, [])
 
   if (orbitStore.isTorn) {

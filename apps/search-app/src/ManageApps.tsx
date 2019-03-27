@@ -47,7 +47,9 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
             right={2}
             bottom={2}
             borderRadius={17}
-            boxShadow={theme => (isSelected ? [[0, 0, 10, theme.selected.background]] : null)}
+            boxShadow={theme =>
+              isSelected ? [[0, 0, 10, theme.alternates.selected.background]] : null
+            }
             zIndex={-1}
           />
         )}

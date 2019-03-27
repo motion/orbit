@@ -59,14 +59,14 @@ function FlexLayout(props: LayoutProps) {
 
   if (props.type === 'row') {
     return (
-      <Row overflow="hidden" ref={ref}>
+      <Row height={size.height} overflow="hidden" ref={ref}>
         {childElements}
       </Row>
     )
   }
 
   return (
-    <Col overflow="hidden" ref={ref}>
+    <Col height={size.height} overflow="hidden" ref={ref}>
       {childElements}
     </Col>
   )

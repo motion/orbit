@@ -61,7 +61,15 @@ export function Table(direct: TableProps) {
   )
 
   return (
-    <Section flex={flex} title={title} subTitle={subTitle} bordered={bordered} padding={0}>
+    <Section
+      background="transparent"
+      flex={flex}
+      title={title}
+      subTitle={subTitle}
+      bordered={bordered}
+      padding={0}
+    >
+      {/* ref inside so it captures just below title height */}
       <View ref={ref}>
         <SearchableTable
           searchable={searchable}

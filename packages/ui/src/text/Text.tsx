@@ -264,6 +264,7 @@ const TextBlock = gloss(View, {
   wordBreak: 'break-word',
   position: 'relative',
   maxWidth: '100%',
+  minHeight: 'min-content',
   selectable: {
     userSelect: 'text',
     cursor: 'inherit',
@@ -271,17 +272,9 @@ const TextBlock = gloss(View, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ellipse, ignoreColor, alpha, alphaHover, ...props }, theme) => {
+}).theme(({ ignoreColor, alpha, alphaHover, ...props }, theme) => {
   let styles: CSSPropertySetStrict = {
     display: 'inline-block',
-  }
-
-  if (ellipse) {
-    styles = {
-      ...styles,
-      display: 'flex',
-      flex: 1,
-    }
   }
 
   if (ignoreColor) {

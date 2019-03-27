@@ -75,6 +75,7 @@ export function Card({
       themeSelect="card"
       onClick={store.handleClick}
       sizeRadius={sizeRadius}
+      noInnerElement
     >
       <Padding style={{ padding }}>
         {hasTitle && (
@@ -152,6 +153,7 @@ const orbitIconProps = {
 const Padding = gloss({
   position: 'relative',
   margin: 1,
-  overflow: 'hidden',
+  overflowX: 'hidden',
+  overflowY: 'auto',
   flex: 1,
 })

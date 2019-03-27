@@ -36,6 +36,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     flex,
     icon,
     padded,
+    background,
     ...viewProps
   } = props
   return (
@@ -50,6 +51,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       noInnerElement
       overflow="hidden"
       flex={flex}
+      background={background}
     >
       {!!(title || afterTitle) && (
         <TitleRow

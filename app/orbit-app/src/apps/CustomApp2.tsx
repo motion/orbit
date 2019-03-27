@@ -24,7 +24,7 @@ function CustomApp2(_props: AppProps) {
           {({ data, setData }) => {
             return (
               <Layout type="row">
-                <Pane>
+                <Pane resizable>
                   <Table
                     searchable
                     multiSelect

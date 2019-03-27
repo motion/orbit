@@ -65,6 +65,7 @@ export function CustomAppMain(_props: AppProps) {
             ))}
           </Row>
         </Pane>
+
         <Pane>
           <Tabs borderRadius={20} margin={2}>
             {highlighted.map(row => (

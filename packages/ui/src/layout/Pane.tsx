@@ -10,9 +10,10 @@ export type PaneProps = Partial<InteractiveProps> & {
   index?: number
   parentSize?: number
   flex?: number
+  scrollable?: boolean
 }
 
-export function Pane({ children, resizable, ...props }: PaneProps) {
+export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
   const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(400)
 
@@ -38,7 +39,8 @@ export function Pane({ children, resizable, ...props }: PaneProps) {
       width: size,
       minWidth: props.parentSize * 0.25,
       maxWidth: props.parentSize * 0.8,
-      overflowY: 'auto',
+      overflowX: 'hidden',
+      overflowY: scrollable ? 'auto' : 'hidden',
     }
   } else {
     if (props.index > 0) {
@@ -48,7 +50,8 @@ export function Pane({ children, resizable, ...props }: PaneProps) {
       minHeight: props.parentSize * 0.25,
       height: size,
       maxHeight: props.parentSize * 0.8,
-      overflowX: 'auto',
+      overflowY: 'hidden',
+      overflowX: scrollable ? 'auto' : 'hidden',
     }
   }
 

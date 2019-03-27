@@ -98,14 +98,14 @@ function FlexLayout(props: LayoutProps) {
 
   if (props.type === 'row') {
     return (
-      <Row flex={1} overflowY="hidden" overflowX="auto" ref={node}>
+      <Row flex={1} overflow="hidden" ref={node}>
         {childElements}
       </Row>
     )
   }
 
   return (
-    <Col flex={1} overflowY="auto" overflowX="hidden" ref={node}>
+    <Col flex={1} overflow="hidden" ref={node}>
       {childElements}
     </Col>
   )

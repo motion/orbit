@@ -2,8 +2,8 @@ import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
 import { Button, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
-import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
+import { ScopedAppState, useAppState } from '../hooks/useAppState'
+import { ScopedUserState, useUserState } from '../hooks/useUserState'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { HandleOrbitSelect, List } from './List'
@@ -81,8 +81,8 @@ const defaultUserState = {
 
 // persists to app state
 export function useTreeList(subSelect: string): UseTreeList {
-  const ts = useScopedAppState<TreeState>(subSelect, defaultState)
-  const us = useScopedUserState(`${subSelect}_treeState`, defaultUserState)
+  const ts = useAppState<TreeState>(subSelect, defaultState)
+  const us = useUserState(`${subSelect}_treeState`, defaultUserState)
   const getTs = useRefGetter(ts)
   const getUs = useRefGetter(us)
   const actions = useMemo(() => getActions(getTs, getUs), [])

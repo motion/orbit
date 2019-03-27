@@ -7,6 +7,7 @@ import {
   Templates,
   useActiveSyncAppsWithDefinition,
   useApp,
+  useAppState,
 } from '@o/kit'
 import {
   Button,
@@ -14,7 +15,6 @@ import {
   Form,
   FormField,
   Section,
-  Space,
   SubTitle,
   Tab,
   Tabs,
@@ -22,7 +22,7 @@ import {
   View,
 } from '@o/ui'
 import { remove } from 'lodash'
-import React, { useState } from 'react'
+import React from 'react'
 import { getAppListItem } from './apps/getAppListItem'
 
 function DataExplorerIndex() {
@@ -32,13 +32,25 @@ function DataExplorerIndex() {
 
 function DataExplorerMain({ subId }: AppProps) {
   const [app] = useApp(+subId)
-  const [queries, setQueries] = useState([{ id: 0, name: 'My Query' }])
+  const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   // TODO suspense
   if (!app) return null
 
   return (
-    <Section padded title={app.appName} subTitle={app.name} icon={app.icon}>
+    <Section
+      title={app.appName}
+      subTitle={app.name}
+      icon={app.icon}
+      afterTitle={
+        <Button
+          alt="confirm"
+          onClick={() => setQueries([{ id: Math.random(), name: 'My Query' }, ...queries])}
+        >
+          Add query
+        </Button>
+      }
+    >
       {queries.map(query => (
         <Section
           key={query.id}
@@ -81,17 +93,6 @@ function DataExplorerMain({ subId }: AppProps) {
           </Templates.MasterDetail>
         </Section>
       ))}
-
-      <Space />
-      <Space />
-
-      <Button
-        alt="confirm"
-        size={1.5}
-        onClick={() => setQueries([...queries, { id: Math.random(), name: 'My Query' }])}
-      >
-        Add query
-      </Button>
     </Section>
   )
 }

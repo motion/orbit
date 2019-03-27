@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useAppState } from './useAppState'
+import { useApp } from './useApp'
 
 export function useEnsureDefaultAppState<A>(subSelect: string, ensure: A) {
-  const [state, update] = useAppState()
+  const [state, update] = useApp()
   useEffect(
     () => {
       if (!state) return

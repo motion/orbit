@@ -18,7 +18,7 @@ export function sortPanes(space: Space, apps: AppBit[]) {
       // keep current sort, remove deleted
       ...space.paneSort.filter(id => appDict[id]),
       // add new
-      ...apps.map(x => x.id),
+      ...apps.filter(x => x.tabDisplay !== 'hidden').map(x => x.id),
     ]),
   ]
 

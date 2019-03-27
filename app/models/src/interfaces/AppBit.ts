@@ -24,7 +24,13 @@ export interface AppBit {
 
   name?: string
 
-  tabDisplay?: 'permanent' | 'pinned' | 'plain'
+  /**
+   * permament = fixed to the front of the pinned tabs
+   * pinned = smaller, sorts to the front
+   * plain = shows as normal tab
+   * hidden = not used in main navigation, system/orbit-level tabs
+   */
+  tabDisplay?: 'permanent' | 'pinned' | 'plain' | 'hidden'
 
   colors?: string[]
 

@@ -4,7 +4,7 @@ import { AppView } from './AppView'
 
 export function AppMainView(props: AppProps) {
   if (!props.identifier) {
-    console.debug('no app id given', props)
+    console.warn('no app id given', props)
     return null
   }
   return (

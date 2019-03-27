@@ -1,11 +1,13 @@
 import { Row, View } from '@o/gloss'
 import React, { isValidElement } from 'react'
 import { BorderBottom } from './Border'
+import { Icon } from './Icon'
 import { Space } from './layout/Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
 
 export type TitleRowProps = {
+  icon?: React.ReactNode
   title: React.ReactNode
   before?: React.ReactNode
   bordered?: boolean
@@ -28,6 +30,7 @@ export function TitleRow({
   backgrounded,
   below,
   above,
+  icon,
   title,
 }: TitleRowProps) {
   const unpad = 20
@@ -50,6 +53,11 @@ export function TitleRow({
             {before}
             <Space />
           </>
+        )}
+        {typeof icon === 'string' ? (
+          <Icon alignSelf="center" marginRight={16} name={icon} size={20} />
+        ) : (
+          icon || null
         )}
         <View flex={1}>
           {isValidElement(title) ? (

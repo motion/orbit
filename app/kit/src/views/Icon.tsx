@@ -17,7 +17,8 @@ export type OrbitIconProps = IconProps & {
 export const Icon = React.memo((props: OrbitIconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
   const theme = useTheme()
-  const finalColor = color || theme.color ? theme.color.toString() : '#fff'
+  const finalColor =
+    color === false ? color : color || theme.color ? theme.color.toString() : '#fff'
 
   // image based source icons
   const sourceIcon = useAppIcon(props)
@@ -48,7 +49,8 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   }
 
   // find our custom streamline icons...
-  const svgIcon = icons[name] || (name.trim().indexOf('<svg') === 0 ? name : null)
+  const isSVG = name.trim().indexOf('<svg') === 0
+  const svgIcon = icons[name] || (isSVG ? name : null)
 
   if (!svgIcon) {
     return (
@@ -88,7 +90,9 @@ export const Icon = React.memo((props: OrbitIconProps) => {
           height: size,
           ...style,
         }}
-        cleanup={[finalColor ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(Boolean)}
+        cleanup={[finalColor && !isSVG ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(
+          Boolean,
+        )}
       />
     </View>
   )

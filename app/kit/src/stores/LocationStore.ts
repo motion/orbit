@@ -45,7 +45,7 @@ export class LocationStore {
 }
 
 export function parseUrl(url: string, source: URLSource): URLState {
-  const basenameMatch = url.match(/(app:\/\/)?([a-z]+)[\/\?]?/i)
+  const basenameMatch = url.match(/(app:\/\/)?([a-z-0-9]+)[\/\?]?/i)
   const basename = basenameMatch && basenameMatch.length == 3 ? basenameMatch[2] : ''
   if (!basename) {
     throw new Error(`No match ${url}`)

@@ -2,7 +2,7 @@ import { command } from '@o/bridge'
 import { AppProps, showConfirmDialog, useActiveUser } from '@o/kit'
 import { ResetDataCommand, RestartAppCommand } from '@o/models'
 import { App } from '@o/stores'
-import { Button, CheckBoxField, Divider, FormField, Input, Section, Space, Title } from '@o/ui'
+import { Button, CheckBoxField, Divider, FormField, Input, Section, Space } from '@o/ui'
 import { capitalize } from 'lodash'
 import * as React from 'react'
 import { sleep } from '../../helpers'
@@ -79,9 +79,7 @@ export function SettingsAppGeneral(_props: AppProps) {
   }
 
   return (
-    <Section sizePadding={2}>
-      <Title>General Settings</Title>
-
+    <Section bordered title="General Settings" sizePadding={2}>
       <CheckBoxField
         label="Start on Login"
         checked={settings.autoLaunch}

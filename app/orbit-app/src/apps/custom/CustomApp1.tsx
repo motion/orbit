@@ -8,6 +8,7 @@ import {
   Layout,
   Pane,
   SearchInput,
+  Section,
   Select,
   SpacedRow,
   Tab,
@@ -74,7 +75,7 @@ export function CustomApp1(_props: AppProps) {
         <Pane>
           <Tabs borderRadius={20} padding={10}>
             {highlighted.map(row => (
-              <Tab key={row.id} label={row.name}>
+              <Tab key={row.id} id={row.id} label={row.name}>
                 <PersonInfo row={row} />
               </Tab>
             ))}
@@ -90,7 +91,9 @@ function PersonInfo(props: { row: any }) {
   return (
     <Layout type="column">
       <Pane scrollable>
-        <Fieldsets rows={[props.row]} />
+        <Section scrollable bordered title={props.row.title}>
+          <Fieldsets rows={[props.row]} />
+        </Section>
       </Pane>
       <Pane>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>

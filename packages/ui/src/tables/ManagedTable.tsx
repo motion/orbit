@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, View } from '@o/gloss'
+import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
@@ -68,8 +68,10 @@ const filterRows = (
 }
 
 export type ManagedTableProps = {
-  margin?: number | number[]
-  padding?: number | number[]
+  overflow?: CSSPropertySet['overflow']
+  flex?: CSSPropertySet['flex']
+  margin?: CSSPropertySet['margin']
+  padding?: CSSPropertySet['padding']
   width?: number
   height?: number | 'content-height'
 
@@ -569,6 +571,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         minWidth={minWidth}
         margin={viewProps.margin}
         padding={viewProps.padding}
+        flex={viewProps.flex}
+        overflow={viewProps.overflow}
       >
         <TableHead
           columnOrder={columnOrder}

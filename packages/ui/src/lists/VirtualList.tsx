@@ -228,139 +228,123 @@ export const VirtualListDefaultProps = createContext({
   maxHeight: window.innerHeight,
 } as Partial<VirtualListProps<any>>)
 
-const VirtualListInner = memo(
-  (props: VirtualListProps<any> & { store: VirtualListStore }) => {
-    const store = useStore(props.store)
-    const frameNode = useRef<HTMLDivElement>(null)
+const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
+  const store = useStore(props.store)
+  const frameNode = useRef<HTMLDivElement>(null)
 
-    useResizeObserver({
-      ref: frameNode,
-      onChange: () => {
-        store.measure()
-        store.measureHeight()
-      },
-    })
+  useResizeObserver({
+    ref: frameNode,
+    onChange: () => {
+      store.measure()
+      store.measureHeight()
+    },
+  })
 
-    useEffect(
-      () => {
-        store.setFrameNode(frameNode.current)
-      },
-      [frameNode],
-    )
+  useEffect(
+    () => {
+      store.setFrameNode(frameNode.current)
+    },
+    [frameNode],
+  )
 
-    useEffect(
-      () => {
-        store.triggerRecomputeHeights = Date.now()
-      },
-      [props.items],
-    )
+  useEffect(
+    () => {
+      store.triggerRecomputeHeights = Date.now()
+    },
+    [props.items],
+  )
 
-    if (!props.items.length) {
-      return null
-    }
+  if (!props.items.length) {
+    return null
+  }
 
-    function rowRenderer({ key, index, parent, style }) {
-      const item = props.items[index]
-      return (
-        <CellMeasurer
-          key={key}
-          cache={store.cache}
-          columnIndex={0}
-          parent={parent}
-          rowIndex={index}
-        >
-          <div style={style}>
-            <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-              <VirtualListItem
-                ItemView={props.ItemView}
-                onSelect={props.onSelect}
-                onOpen={props.onOpen}
-                {...itemProps(props, index)}
-                {...props.itemProps}
-                {...props.getItemProps && props.getItemProps(item, index, props.items)}
-                {...item}
-                index={index}
-                realIndex={index}
-              />
-            </ContextMenu>
-          </div>
-        </CellMeasurer>
-      )
-    }
-
-    function getList(infiniteProps?) {
-      let extraProps = {} as any
-      if (infiniteProps && infiniteProps.onRowsRendered) {
-        extraProps.onRowsRendered = infiniteProps.onRowsRendered
-      }
-      return (
-        <SortableListContainer
-          forwardRef={ref => {
-            if (ref) {
-              if (props.forwardRef) {
-                props.forwardRef(ref, store)
-              }
-              store.listRef = ref
-              if (infiniteProps && infiniteProps.registerChild) {
-                infiniteProps.registerChild(ref)
-              }
-            }
-          }}
-          items={props.items}
-          deferredMeasurementCache={store.cache}
-          height={store.height}
-          width={store.width}
-          rowHeight={store.cache.rowHeight}
-          overscanRowCount={5}
-          rowCount={props.items.length}
-          estimatedRowSize={props.estimatedRowHeight}
-          rowRenderer={rowRenderer}
-          distance={10}
-          lockAxis="y"
-          helperClass="sortableHelper"
-          shouldCancelStart={isRightClick}
-          scrollToAlignment={props.scrollToAlignment}
-          scrollToIndex={props.scrollToIndex}
-          {...extraProps}
-        />
-      )
-    }
-
+  function rowRenderer({ key, index, parent, style }) {
+    const item = props.items[index]
     return (
-      <div
-        ref={frameNode}
-        style={{
-          height: props.dynamicHeight ? store.height : 'auto',
-          flex: props.dynamicHeight ? 'none' : 1,
-          width: '100%',
-        }}
-      >
-        {!!store.width && !!store.cache && (
-          <>
-            {props.infinite && (
-              <InfiniteLoader
-                isRowLoaded={props.isRowLoaded}
-                loadMoreRows={props.loadMoreRows}
-                rowCount={props.rowCount}
-              >
-                {getList}
-              </InfiniteLoader>
-            )}
-            {!props.infinite && getList()}
-          </>
-        )}
-      </div>
+      <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
+        <div style={style}>
+          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
+            <VirtualListItem
+              ItemView={props.ItemView}
+              onSelect={props.onSelect}
+              onOpen={props.onOpen}
+              {...itemProps(props, index)}
+              {...props.itemProps}
+              {...props.getItemProps && props.getItemProps(item, index, props.items)}
+              {...item}
+              index={index}
+              realIndex={index}
+            />
+          </ContextMenu>
+        </div>
+      </CellMeasurer>
     )
-  },
-  (a, b) => {
-    Object.keys(a).forEach(k => {
-      if (a[k] !== b[k]) {
-        console.log('diff', k)
-      }
-    })
-    return a === b
-  },
-)
+  }
+
+  function getList(infiniteProps?) {
+    let extraProps = {} as any
+    if (infiniteProps && infiniteProps.onRowsRendered) {
+      extraProps.onRowsRendered = infiniteProps.onRowsRendered
+    }
+    return (
+      <SortableListContainer
+        forwardRef={ref => {
+          if (ref) {
+            if (props.forwardRef) {
+              props.forwardRef(ref, store)
+            }
+            store.listRef = ref
+            if (infiniteProps && infiniteProps.registerChild) {
+              infiniteProps.registerChild(ref)
+            }
+          }
+        }}
+        items={props.items}
+        deferredMeasurementCache={store.cache}
+        height={store.height}
+        width={store.width}
+        rowHeight={store.cache.rowHeight}
+        overscanRowCount={5}
+        rowCount={props.items.length}
+        estimatedRowSize={props.estimatedRowHeight}
+        rowRenderer={rowRenderer}
+        distance={10}
+        lockAxis="y"
+        helperClass="sortableHelper"
+        shouldCancelStart={isRightClick}
+        scrollToAlignment={props.scrollToAlignment}
+        scrollToIndex={props.scrollToIndex}
+        {...extraProps}
+      />
+    )
+  }
+
+  return (
+    <div
+      ref={frameNode}
+      style={{
+        height: props.dynamicHeight ? store.height : 'auto',
+        flex: props.dynamicHeight ? 'none' : 1,
+        width: '100%',
+      }}
+    >
+      {!!store.width && !!store.cache && (
+        <>
+          {props.infinite && (
+            <InfiniteLoader
+              isRowLoaded={props.isRowLoaded}
+              loadMoreRows={props.loadMoreRows}
+              rowCount={props.rowCount}
+            >
+              {getList}
+            </InfiniteLoader>
+          )}
+          {!props.infinite && getList()}
+        </>
+      )}
+    </div>
+  )
+})
 
 // use this outer wrapper because changing allowMeasure otherwise would trigger renders
 // renders are expensive for this component, and especially that because it happens on click

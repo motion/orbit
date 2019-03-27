@@ -1,4 +1,4 @@
-import { Button, Input, Message, Section, SegmentedRow, Space as UISpace, Theme, Title } from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Space as UISpace, Theme } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import * as firebase from 'firebase'
 import { loadMany, remove, save, useModel } from '@o/bridge'
@@ -133,9 +133,7 @@ export default function SettingsAppAccount() {
   }, [user ? user.cloudId : null])
 
   return (
-    <Section sizePadding={2}>
-      <Title>My Account</Title>
-
+    <Section bordered title="My Account" sizePadding={2}>
       <Message>
         { statusMessage }
       </Message>

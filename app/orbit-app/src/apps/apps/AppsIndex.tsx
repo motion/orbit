@@ -34,7 +34,7 @@ export function AppsIndex() {
 
   return (
     <>
-      <TitleRow title="Manage Apps" subTitle="Search to find new apps to install" />
+      <TitleRow bordered title="Manage Apps" subTitle="Search to find new apps to install" />
       <List
         items={[
           // {

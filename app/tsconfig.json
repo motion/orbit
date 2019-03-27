@@ -9,6 +9,7 @@
     { "path": "./bridge" },
     { "path": "./sync-kit" },
     { "path": "./kit" },
+    { "path": "./kit-internal" },
     // todo until we get apps properly split
     { "path": "../apps/lists-app" },
     { "path": "../apps/search-app" },

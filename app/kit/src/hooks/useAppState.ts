@@ -1,5 +1,5 @@
-import { useApp } from './useApp';
-import { useEnsureDefaultAppState } from './useEnsureDefaultAppState';
+import { useApp } from './useApp'
+import { useEnsureDefaultAppState } from './useEnsureDefaultAppState'
 
 export type ScopedAppState<A> = [A, (next: Partial<A>) => void]
 

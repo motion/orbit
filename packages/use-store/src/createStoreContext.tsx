@@ -1,6 +1,6 @@
-import React, { createContext, useContext } from 'react';
-import { GET_STORE } from './mobxProxyWorm';
-import { useStore, UseStoreOptions } from './useStore';
+import React, { createContext, useContext } from 'react'
+import { GET_STORE } from './mobxProxyWorm'
+import { useStore, UseStoreOptions } from './useStore'
 
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context

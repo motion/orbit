@@ -3,6 +3,7 @@ import {
   AppProps,
   createApp,
   List,
+  Table,
   Templates,
   useActiveSyncAppsWithDefinition,
   useApp,
@@ -12,10 +13,11 @@ import {
   Divider,
   Form,
   FormField,
-  Label,
   Section,
   Space,
   SubTitle,
+  Tab,
+  Tabs,
   TextArea,
   View,
 } from '@o/ui'
@@ -51,7 +53,10 @@ function DataExplorerMain({ subId }: AppProps) {
             </>
           }
         >
-          <Templates.MasterDetail items={[{ title: 'getMessages' }, { title: 'getThreads' }]}>
+          <Templates.MasterDetail
+            placeholder=""
+            items={[{ title: 'getMessages' }, { title: 'getThreads' }]}
+          >
             {selected => (
               <>
                 <View padding={20}>
@@ -63,10 +68,14 @@ function DataExplorerMain({ subId }: AppProps) {
                   </Form>
                 </View>
 
-                <Divider />
-
-                <Label>Response</Label>
-                <TextArea minHeight={200} />
+                <Tabs>
+                  <Tab id="0" label="JSON">
+                    <TextArea minHeight={200} />
+                  </Tab>
+                  <Tab id="1" label="Table">
+                    <Table rows={[{ title: 'example', something: 'else' }]} />
+                  </Tab>
+                </Tabs>
               </>
             )}
           </Templates.MasterDetail>

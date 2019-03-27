@@ -68,7 +68,7 @@ export function Card({
   )
   return (
     <SizedSurface
-      ref={store.setCardWrapRef}
+      forwardRef={store.setCardWrapRef}
       borderWidth={1}
       {...props}
       {...isSelected && activeStyle}

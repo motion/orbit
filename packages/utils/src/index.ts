@@ -56,3 +56,21 @@ export function mergeDefined<A>(...args: A[]): A {
   }
   return res as A
 }
+
+// splits an object into two based on the filterFn return value
+// returns two-arity array of objects
+export function partitionObject<A extends Object>(
+  obj: A,
+  filterFn: (key: string) => boolean,
+): [Partial<A>, Partial<A>] {
+  const a: Partial<A> = {}
+  const b: Partial<A> = {}
+  for (const key in obj) {
+    if (filterFn(key)) {
+      a[key] = obj[key]
+    } else {
+      b[key] = obj[key]
+    }
+  }
+  return [a, b]
+}

@@ -483,6 +483,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!canResize) {
       return
     }
+    if (!this.ref.current) {
+      return
+    }
     const { left: offsetLeft, top: offsetTop } = this.ref.current.getBoundingClientRect()
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft

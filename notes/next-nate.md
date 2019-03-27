@@ -1,5 +1,14 @@
 Views
 
+- Nav/Theme
+  - See how Flow has a custom nav?
+  - Make that an official thing
+  - But also!
+    - See how Demo 1 / Demo 2 in custom apps wants the same style nav?
+  - TWO THINGS
+    1. Make `alt=""` customizable and have that as a theme
+    2. Unify it so we are just able to do
+       - <Tabs alt="underlined" /> and <SegmentedRow alt="underlined" /> etc
 - Layout
   - row / col / grid + resizing generally
 - Pane

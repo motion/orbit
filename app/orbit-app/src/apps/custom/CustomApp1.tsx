@@ -75,7 +75,7 @@ export function CustomApp1(_props: AppProps) {
         <Pane>
           <Tabs borderRadius={20} padding={10}>
             {highlighted.map(row => (
-              <Tab key={row.id} label={row.name}>
+              <Tab key={row.id} id={row.id} label={row.name}>
                 <PersonInfo row={row} />
               </Tab>
             ))}

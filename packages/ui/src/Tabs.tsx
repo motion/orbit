@@ -82,18 +82,18 @@ function TabsControlled(props: TabsProps) {
         continue
       }
       const { children, closable, label, icon, onClose, width } = comp.props
-      let key = comp.key
-      if (typeof key !== 'string') {
-        key = `${index}`
+      let id = comp.props.id
+      if (typeof id !== 'string') {
+        id = `${index}`
       }
-      if (!keys.includes(key)) {
-        keys.push(key)
+      if (!keys.includes(id)) {
+        keys.push(id)
       }
-      const isActive: boolean = props.active === key
+      const isActive: boolean = props.active === id
 
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
-          <TabContent key={key} hidden={!isActive}>
+          <TabContent key={id} hidden={!isActive}>
             {typeof children === 'function' && isActive ? children() : children}
           </TabContent>,
         )
@@ -108,14 +108,14 @@ function TabsControlled(props: TabsProps) {
         !isActive && onActive
           ? (event: MouseEvent) => {
               if (event.target !== closeButton) {
-                onActive(key)
+                onActive(id)
               }
             }
           : undefined
 
-      tabs[key] = (
+      tabs[id] = (
         <TabComponent
-          key={key}
+          key={id}
           className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
           borderRadius={borderRadius}
@@ -131,7 +131,7 @@ function TabsControlled(props: TabsProps) {
               ref={ref => (closeButton = ref)}
               onMouseDown={() => {
                 if (isActive && onActive) {
-                  const index = keys.indexOf(key)
+                  const index = keys.indexOf(id)
                   const newActive = keys[index + 1] || keys[index - 1] || null
                   onActive(newActive)
                 }

@@ -85,6 +85,7 @@ export class PaneManagerStore {
   }
 
   private setPaneBy<A extends keyof PaneManagerPane>(attr: A, val: PaneManagerPane[A]) {
+    console.log('finding', this.panes, attr, val)
     const index = this.panes.findIndex(pane => pane[attr] === val)
     if (index === -1) {
       // debugger

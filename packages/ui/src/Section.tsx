@@ -1,5 +1,5 @@
 import { View, ViewProps } from '@o/gloss'
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
@@ -18,7 +18,7 @@ const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
 export const useSectionProps = useProps
 
-export function Section(direct: SectionProps) {
+export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   const props = useProps(direct)
   const {
     above,
@@ -37,6 +37,7 @@ export function Section(direct: SectionProps) {
   } = props
   return (
     <SizedSurface
+      forwardRef={ref}
       hoverStyle={null}
       activeStyle={null}
       sizeRadius={bordered ? 1 : 0}
@@ -60,9 +61,10 @@ export function Section(direct: SectionProps) {
         />
       )}
       <View
-        overflowY={scrollable ? 'auto' : 'inherit'}
+        overflowY={scrollable ? 'auto' : 'hidden'}
         overflowX="hidden"
         padding={typeof padding !== 'undefined' ? padding : bordered ? 20 : 0}
+        flex={flex}
         {...viewProps}
       >
         <Reset>{children}</Reset>
@@ -70,4 +72,4 @@ export function Section(direct: SectionProps) {
       {below}
     </SizedSurface>
   )
-}
+})

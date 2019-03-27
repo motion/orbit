@@ -77,12 +77,7 @@ export function TitleRow({
             </>
           )}
         </View>
-        {after && (
-          <>
-            <div style={{ flex: 1 }} />
-            {after}
-          </>
-        )}
+        {after}
       </Row>
       {below}
       {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}

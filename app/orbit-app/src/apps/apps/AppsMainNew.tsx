@@ -50,7 +50,7 @@ export function AppsMainNew() {
 
         <Input
           ref={inputRef}
-          fontSize={18}
+          size={1.5}
           placeholder="Name..."
           margin={['auto', 0]}
           value={app.name}

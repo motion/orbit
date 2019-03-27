@@ -2,6 +2,18 @@
 
 - an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs
 
+- create new app pane
+
+  - option to create new at top
+  - add existing below
+  - create new shows templates
+
+    - templates
+      - Blank
+      - Master/Detail list/detail
+      - Grid
+      - Vertical Split
+
   - as part of that, some higher level components in kit like `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps
 
 - a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways

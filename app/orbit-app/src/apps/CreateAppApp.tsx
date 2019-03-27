@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { Button, Section, Space, TitleRow, TopBar } from '@o/ui'
+import { Button, Divider, FormField, Section, Space, TitleRow } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
@@ -22,16 +22,23 @@ function CreateAppIndex() {
   const Actions = useActions()
   return (
     <>
-      <TopBar
+      <TitleRow
+        title="Add app"
+        subTitle="Add app to this workspace"
         after={
-          <Button
-            onClick={() => {
-              Actions.createCustomApp()
-            }}
-            icon="add"
-          >
-            Create
-          </Button>
+          <>
+            <Button
+              alt="confirm"
+              onClick={() => {
+                Actions.createCustomApp()
+              }}
+              icon="add"
+              iconAfter
+              tooltip="Create new custom app"
+            >
+              Create
+            </Button>
+          </>
         }
       />
       <List
@@ -41,7 +48,7 @@ function CreateAppIndex() {
           subtitle: descriptions[app.identifier],
           icon: <AppIcon app={app} />,
           iconBefore: true,
-          group: 'Configure app',
+          group: 'Apps',
         }))}
       />
     </>
@@ -86,25 +93,32 @@ function CreateAppMain({ identifier }: AppProps) {
     <Section>
       <TitleRow
         bordered
-        title={<AppsMainNew />}
+        title="Title"
         after={
           <>
-            <Button alt="bordered" icon="lock">
-              Preview
-            </Button>
             <Space />
-            <Button alt="action" icon="add" onClick={createApp}>
+            <Button iconAfter alt="action" icon="add" onClick={createApp}>
               Add
             </Button>
           </>
         }
       />
 
-      <SubSection title="App Settings">
-        <AppView identifier={identifier} viewType="settings" />
-      </SubSection>
+      <Section padded>
+        <SubSection title="Setup">
+          <FormField label="Name and Icon">
+            <AppsMainNew />
+          </FormField>
 
-      <SubSection title="Preview">{showPreviewApp && <PreviewApp app={app} />}</SubSection>
+          <Divider />
+
+          <FormField label="Settings">
+            <AppView identifier={identifier} viewType="settings" />
+          </FormField>
+        </SubSection>
+
+        <SubSection title="Preview">{showPreviewApp && <PreviewApp app={app} />}</SubSection>
+      </Section>
     </Section>
   )
 }

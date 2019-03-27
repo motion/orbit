@@ -1,8 +1,9 @@
-import { Button, Input, Message, Section, SegmentedRow, Space, Theme, Title } from '@o/ui'
+import { Button, Input, Message, Section, SegmentedRow, Space as UISpace, Theme, Title } from '@o/ui'
 import React, { useEffect, useState } from 'react'
 import * as firebase from 'firebase'
 import { loadMany, useModel } from '@o/bridge'
-import { SpaceModel, UserModel } from '@o/models'
+import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
+import { remove, save } from '@o/bridge/_'
 
 export default function SettingsAppAccount() {
   const [email, setEmail] = useState("")
@@ -19,24 +20,65 @@ export default function SettingsAppAccount() {
         .firestore()
         .doc('/user/' + user.cloudId)
 
-      const cloudSpaces = await firestoreSpaces.get()
-      console.log('cloud data', cloudSpaces.data())
-
+      // get local data
+      const localSettings = user.settings
       const localSpaces = await loadMany(SpaceModel, { args: {} })
-      console.log('local data', { settings: user.settings, spaces: localSpaces })
+      console.log('local data', { localSettings, localSpaces })
 
-      await firestoreSpaces.set({
-        settings: user.settings,
-        spaces: localSpaces
+      // get cloud data
+      const cloudSpacesData = await firestoreSpaces.get()
+      let cloudSettings: UserSettings, cloudSpaces: Space[]
+      if (cloudSpacesData.exists) {
+        let cloudData = cloudSpacesData.data()
+        console.log('cloud data', cloudData)
+        if (cloudSpacesData) {
+          cloudSettings = cloudData.settings
+          cloudSpaces = cloudData.spaces
+        }
+      }
+
+      // determine what data should be synced
+      let settings: UserSettings, spaces: Space[]
+
+      // if there is data in the cloud and its a first-time sync
+      // we treat cloud data as "source of truth" and override local settings with cloud settings
+      console.log(JSON.parse(JSON.stringify(user)))
+      if (cloudSettings && cloudSpaces && !user.lastTimeSync) {
+        settings = cloudSettings
+        spaces = cloudSpaces
+      } else {
+        // else it means we already synced data with the cloud and local changes must went into the cloud
+        settings = localSettings
+        spaces = localSpaces
+      }
+
+      // firestore's merge strategy shouldn't be applied because
+      // if space is removed it should also be removed from the cloud
+      console.log('synced settings', { settings, spaces })
+      await firestoreSpaces.set({ settings, spaces })
+
+      // update spaces
+      const removedSpaces = localSpaces.filter(localSpace => {
+        return spaces.some(space => space.id === localSpace.id) === false
       })
+      for (let space of removedSpaces) {
+        remove(SpaceModel, space)
+      }
+      for (let space of spaces) {
+        save(SpaceModel, space)
+      }
+      console.log('changes made', { removedSpaces, savedSpaces: spaces })
 
-      // update email in the database
+      // update settings and last synced date in the database
+      // todo: we probably also need to update active space too
       updateUser({
         ...user,
+        settings,
         lastTimeSync: new Date().getTime()
       })
 
       setIsSyncing(false)
+      setStatusMessage('')
 
     } catch (err) {
       setStatusMessage('Error during cloud syncing')
@@ -51,6 +93,7 @@ export default function SettingsAppAccount() {
       .auth()
       .signOut()
       .then(() => {
+        setStatusMessage('Good bye!')
         updateUser({
           ...user,
           email: null,
@@ -64,13 +107,6 @@ export default function SettingsAppAccount() {
       });
   }
 
-  // for the first-ever time we run sync instantly
-  useEffect(() => {
-    if (user && !user.lastTimeSync) {
-      cloudSync()
-    }
-  }, [user ? user.cloudId : null])
-
   const sendEmail = () => {
     firebase
       .auth()
@@ -83,13 +119,19 @@ export default function SettingsAppAccount() {
         // update email in the database
         updateUser({ ...user, email })
 
-        setStatusMessage(`Email with further instructions has been sent to ${email}.`)
       })
       .catch(error => {
         setStatusMessage('Error: ' + error.message)
         console.log(error)
       })
   }
+
+  // for the first-ever time we run sync instantly
+  useEffect(() => {
+    if (user && user.cloudId && !user.lastTimeSync) {
+      cloudSync()
+    }
+  }, [user ? user.cloudId : null])
 
   return (
     <Section sizePadding={2}>
@@ -99,7 +141,7 @@ export default function SettingsAppAccount() {
         { statusMessage }
       </Message>
 
-      { user && user.email && <div>
+      { user && user.email && user.cloudId && <div>
 
         { isSyncing === false && user && user.lastTimeSync && <div>
 
@@ -114,14 +156,21 @@ export default function SettingsAppAccount() {
 
       </div> }
 
-      { user && !user.email && <div>
+      { user && !user.cloudId && <div>
 
         <Message>
           Orbit syncs your configuration including which spaces you are a member of, and your personal
           preferences, so you can use Orbit on different computers.
         </Message>
 
-        <Space />
+
+        { user.email && <div>
+          <Message>
+            Email with login link has been sent. Please check your email.
+          </Message>
+        </div> }
+
+        <UISpace />
 
         <Section>
           <SegmentedRow size={1.5}>

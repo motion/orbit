@@ -1,8 +1,8 @@
-import { createApi, createApp } from '@o/kit'
-import React from 'react'
-import { postgresIcon } from './postgresIcon'
-import { PostgresSettings } from './PostgresSettings'
-import { PostgresApi } from './api.node'
+import { createApi, createApp } from '@o/kit';
+import React from 'react';
+import { PostgresApi } from './api.node';
+import { postgresIcon } from './postgresIcon';
+import { PostgresSettings } from './PostgresSettings';
 
 export default createApp({
   id: 'postgres',

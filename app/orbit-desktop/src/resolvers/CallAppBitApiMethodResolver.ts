@@ -1,8 +1,8 @@
 import { resolveCommand } from '@o/mediator'
 import { AppBit, AppEntity, CallAppBitApiMethodCommand } from '@o/models'
-import { getRepository } from 'typeorm'
-import { SlackApi } from '@o/slack-app/_/api.node'
 import { PostgresApi } from '@o/postgres-app/_/api.node'
+import { SlackApi } from '@o/slack-app/_/api.node'
+import { getRepository } from 'typeorm'
 
 export const apis: {
   [key: string]: (appBit: AppBit) => any

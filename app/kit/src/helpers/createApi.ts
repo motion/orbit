@@ -1,5 +1,5 @@
-import { AppBit, CallAppBitApiMethodCommand } from '@o/models'
 import { command } from '@o/bridge'
+import { AppBit, CallAppBitApiMethodCommand } from '@o/models'
 
 export function createApi<T>(): T {
   //  extends (app: AppBit) => any

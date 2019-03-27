@@ -1,6 +1,6 @@
 import { AppBit } from '@o/kit'
-import { SlackChannel, SlackMessage } from './SlackModels'
 import { SlackLoader } from './SlackLoader'
+import { SlackChannel, SlackMessage } from './SlackModels'
 
 export const SlackApi = (app: AppBit) => {
   const loader = new SlackLoader(app)

@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { AppProps, HandleOrbitSelect } from '@o/kit'
 import { ensure, react, shallow, useHook } from '@o/use-store'
 import { getIsTorn } from '../../helpers/getIsTorn'
@@ -20,7 +21,10 @@ export class OrbitStore {
   }
 
   setSelectItem: HandleOrbitSelect = (index, appProps) => {
-    this.nextItem = { index, appProps }
+    const next = { index, appProps }
+    if (!isEqual(next, this.nextItem)) {
+      this.nextItem = next
+    }
   }
 
   setActiveConfig(id: string, config: AppProps) {
@@ -30,6 +34,7 @@ export class OrbitStore {
   updateSelectedItem = react(
     () => this.nextItem,
     async ({ appProps }, { sleep }) => {
+      console.log('updating selected ittem', appProps)
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()

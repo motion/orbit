@@ -149,6 +149,10 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
+      const selStore = selectionStoreRef.current
+      if (selStore && !selStore.isActive) {
+        return false
+      }
       const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onSelect) {
         onSelect(index, appProps, eventType)

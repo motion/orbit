@@ -56,7 +56,7 @@ export default createApp({
   name: 'Lists',
   icon: '',
   app: ListApp,
-  API,
+  api: () => API,
   appData: {
     rootItemID: 0,
     items: {},

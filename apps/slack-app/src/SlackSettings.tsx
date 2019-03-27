@@ -1,13 +1,4 @@
-import {
-  AppModel,
-  AppProps,
-  loadMany,
-  SettingManageRow,
-  Table,
-  useModel,
-  useStore,
-  WhitelistManager,
-} from '@o/kit'
+import { AppModel, AppProps, loadMany, SettingManageRow, Table, useModel, useStore, WhitelistManager } from '@o/kit'
 import postgresApp from '@o/postgres-app'
 import { DataType, View } from '@o/ui'
 import { orderBy } from 'lodash'
@@ -35,29 +26,31 @@ export function SlackSettings({ subId }: AppProps) {
 
       // todo: remove it
       // load slack channels (testing api)
-      slackApp.API.loadChannels(app.id).then(channels =>
-        console.log('loaded api channels', channels),
-      )
+      slackApp
+        .api(app)
+        .loadChannels()
+        .then(channels => console.log('loaded api channels', channels))
 
       // todo: remove it
       // execute postgres query (testing api)
       loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
         console.log('postgresApps', postgresApps)
         for (let app of postgresApps) {
-          postgresApp.API.query(
-            app.id,
-            `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`,
-            [],
-          )
+          postgresApp
+            .api(app)
+            .query(
+              `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`,
+              [],
+            )
             .then(results => {
               console.log(`table created`, results)
-              return postgresApp.API.query(app.id, 'INSERT INTO categories(name) VALUES ($1)', [
-                'dummy category',
-              ])
+              return postgresApp
+                .api(app)
+                .query('INSERT INTO categories(name) VALUES ($1)', ['dummy category'])
             })
             .then(results => {
               console.log(`new row inserted`, results)
-              return postgresApp.API.query(app.id, 'SELECT * FROM categories')
+              return postgresApp.api(app).query('SELECT * FROM categories')
             })
             .then(results => {
               console.log(`got results from ${app.name}:`, results)

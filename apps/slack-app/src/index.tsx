@@ -1,7 +1,7 @@
-import { createApp } from '@o/kit'
+import { createApi, createApp } from '@o/kit'
 import { slackIcon } from './slackIcon'
 import { SlackSettings } from './SlackSettings'
-import SlackApi from './api'
+import { SlackApi } from './api.node'
 
 export default createApp({
   id: 'slack',
@@ -10,5 +10,5 @@ export default createApp({
   itemType: 'conversation',
   settings: SlackSettings,
   sync: {},
-  API: SlackApi
+  api: createApi<typeof SlackApi>(),
 })

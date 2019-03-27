@@ -1,4 +1,5 @@
 import * as TemplatesImport from './templates'
+
 export const Templates = TemplatesImport
 
 export * from '@o/bridge'
@@ -22,6 +23,7 @@ export * from './bit/Readability'
 export { configureKit } from './configureKit'
 export * from './helpers/appDefinesClient'
 export * from './helpers/createApp'
+export * from './helpers/createApi'
 export * from './helpers/fuzzyFilter'
 export * from './helpers/getAppDefinition'
 export * from './helpers/getAppDefinitions'

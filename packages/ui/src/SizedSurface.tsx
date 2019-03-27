@@ -1,6 +1,5 @@
-import { mergeDefined } from '@o/utils'
-import React, { useContext } from 'react'
-import { Surface, SurfaceProps, SurfacePropsContext } from './Surface'
+import React from 'react'
+import { Surface, SurfaceProps, useSurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 28
 
@@ -25,9 +24,8 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
   return height % 2 === 1 ? height : height + 1
 }
 
-export function SizedSurface(rawProps: SizedSurfaceProps) {
-  const extraProps = useContext(SurfacePropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+export function SizedSurface(direct: SizedSurfaceProps) {
+  const props = useSurfaceProps(direct)
   const {
     size = 1,
     sizeHeight,
@@ -45,10 +43,6 @@ export function SizedSurface(rawProps: SizedSurfaceProps) {
       ? props.height
       : (typeof sizeHeight !== 'undefined' && getHeight(size, sizeHeight)) || undefined
   let iconPad = Math.round(LINE_HEIGHT * 0.3 * num(sizeHeight || 1))
-  // adjust for border x 2 (just looks good)
-  if (props.inline) {
-    height = height - 4
-  }
   const pass = {} as any
   if (sizeHeight) {
     pass.height = height

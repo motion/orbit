@@ -4,31 +4,20 @@
 
 if [ "$(realpath .)" = "$ROOT" ]; then
   echo "building.... $(pwd)"
+
   if [ "$1" = "--watch" ]; then
-
     # WATCH
-
     ARGS=${@:2}
-    (bin/in ui npm run watch) &
-    (bin/in kit npm run watch) &
-    (bin/in kit-internal npm run watch) &
-    (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
+    (cd app && ../node_modules/.bin/tsc -b -w --preserveWatchOutput $ARGS)
     echo "RAN WATCH"
     wait
   else
-
     # BUILD
-
     ARGS=${@:1}
-    (bin/in ui npm run build) &
-    wait
-    (bin/in kit npm run build) &
-    (bin/in kit-internal npm run build) &
-    wait
-    (cd app && npx tsc -b $ARGS) &
-    wait
+    (cd app && npx tsc -b $ARGS)
     echo "RAN BUILD"
   fi
+
   exit 0
 fi
 

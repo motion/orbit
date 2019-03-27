@@ -4,7 +4,6 @@ import {
   DefinitionList,
   Fetch,
   Fieldsets,
-  FloatingCard,
   Form,
   Layout,
   Pane,
@@ -33,9 +32,9 @@ export function CustomApp1(_props: AppProps) {
 
   return (
     <Form use={form}>
-      <FloatingCard defaultTop={200} defaultLeft={400} title="Hello">
+      {/* <FloatingCard attach="bottomright" title="Hello">
         lorem
-      </FloatingCard>
+      </FloatingCard> */}
 
       <Layout type="row">
         <Pane resizable>
@@ -95,7 +94,9 @@ function PersonInfo(props: { row: any }) {
       </Pane>
       <Pane>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-          {albums => <Table title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />}
+          {albums => (
+            <Table bordered title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />
+          )}
         </Fetch>
       </Pane>
       <Pane>
@@ -103,6 +104,7 @@ function PersonInfo(props: { row: any }) {
           <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
             {photos => (
               <Table
+                bordered
                 multiSelect
                 title={`${album.id} Album ${album.title} Pictures`}
                 rows={photos}

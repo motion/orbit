@@ -55,13 +55,15 @@ export function TitleRow({
           {isValidElement(title) ? (
             title
           ) : (
-            <Title marginTop={0} marginBottom={0}>
+            <Title marginTop={0} marginBottom={0} ellipse>
               {title}
             </Title>
           )}
           {!!subTitle && (
             <>
-              <SubTitle marginBottom={0}>{subTitle}</SubTitle>
+              <SubTitle ellipse marginBottom={0}>
+                {subTitle}
+              </SubTitle>
             </>
           )}
         </View>

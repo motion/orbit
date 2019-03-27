@@ -2,7 +2,7 @@ import { gloss } from '@o/gloss'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
-import { ConfiguredIcon } from './Icon'
+import { Icon } from './Icon'
 import { Space } from './layout/Space'
 import { ListItemProps } from './lists/ListItem'
 import { ListItemStore } from './lists/ListItemStore'
@@ -123,7 +123,7 @@ export function Card({
         )}
         {showChildren && children}
         {!!icon && !props.hideIcon && (
-          <ConfiguredIcon
+          <Icon
             name={icon}
             size={14}
             {...orbitIconProps}

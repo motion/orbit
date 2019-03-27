@@ -39,6 +39,7 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
     shareable?: boolean
   }
 
+// TODO use creaetPropsContext
 export const ListPropsContext = createContext(null as Partial<ListProps>)
 
 export function toListItemProps(props?: any): OrbitListItemProps {
@@ -149,6 +150,10 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
+      const selStore = selectionStoreRef.current
+      if (selStore && !selStore.isActive) {
+        return false
+      }
       const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onSelect) {
         onSelect(index, appProps, eventType)

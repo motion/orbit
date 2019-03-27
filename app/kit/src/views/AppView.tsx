@@ -87,6 +87,10 @@ export const AppView = memoIsEqualDeep(
       console.warn('no view', props, definition)
       return null
     }
+    if (typeof View !== 'function') {
+      console.warn('invalid view', View, props, appProps)
+      return null
+    }
 
     const element = (
       <AppViewContext.Provider value={props}>

@@ -1,8 +1,8 @@
-import { isEqual } from '@o/fast-compare'
 import { Col, Row } from '@o/gloss'
 import { pick } from 'lodash'
 import React, { Children, cloneElement, createContext, isValidElement, useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from '../hooks/useResizeObserver'
+import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { GridLayout } from './GridLayout'
 import { Pane } from './Pane'
 
@@ -44,60 +44,31 @@ export function Layout(props: LayoutProps) {
 }
 
 function FlexLayout(props: LayoutProps) {
-  const [size, setSize] = useState({ width: 0, height: 0 })
-  const node = useRef<HTMLDivElement>(null)
-  const parent = useRef(null)
-
-  useEffect(
-    () => {
-      parent.current = node.current && node.current.parentElement
-    },
-    [node],
-  )
-
-  useEffect(
-    () => {
-      if (node.current) {
-        setSize({
-          width: node.current.parentElement.clientWidth,
-          height: node.current.parentElement.clientHeight,
-        })
-      }
-    },
-    [node],
-  )
-
-  useResizeObserver({
-    ref: parent,
-    onChange: entries => {
-      const next = pick(entries[0].contentRect, 'width', 'height')
-      if (!isEqual(next, size)) {
-        setSize(next)
-      }
-    },
-  })
-
+  const { ref, ...size } = useParentNodeSize()
   const total = Children.count(props.children)
-
+  const dimension = props.type === 'row' ? 'width' : 'height'
+  const parentSize = size[dimension]
   const childElements = Children.map(props.children, (child, index) => {
-    const dimension = props.type === 'row' ? 'width' : 'height'
     return cloneElement(child as any, {
       index,
       total,
-      parentSize: size[dimension],
+      parentSize,
     })
   })
 
+  // only flex once we measure
+  // const flex = parentSize ? 1 : 'inherit'
+
   if (props.type === 'row') {
     return (
-      <Row flex={1} overflow="hidden" ref={node}>
+      <Row overflow="hidden" ref={ref}>
         {childElements}
       </Row>
     )
   }
 
   return (
-    <Col flex={1} overflow="hidden" ref={node}>
+    <Col overflow="hidden" ref={ref}>
       {childElements}
     </Col>
   )

@@ -87,7 +87,7 @@ export type ManagedTableProps = {
   /**
    * Row data
    */
-  rows: GenericDataRow[]
+  rows?: GenericDataRow[]
   /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
@@ -147,7 +147,7 @@ export type ManagedTableProps = {
   sortOrder?: SortOrder
   onSortOrder?: (next: SortOrder) => any
   onCreatePaste?: Function
-  bodyPlaceholder?: React.ReactNode
+  placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
 }
 
 type ManagedTableState = {
@@ -166,22 +166,19 @@ const Container = gloss(View, {
 })
 
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
-  static defaultProps = {
-    highlightableRows: true,
+  static defaultProps: Partial<ManagedTableProps> = {
     multiSelect: false,
     rowLineHeight: 24,
-    bodyPlaceholder: (
-      <div style={{ margin: 'auto' }}>
-        <Text size={1.2}>Loading...</Text>
-      </div>
-    ),
+    placeholder: rows =>
+      !rows ? (
+        <div style={{ margin: 'auto' }}>
+          <Text size={1.2}>Loading...</Text>
+        </div>
+      ) : null,
   }
 
   state: ManagedTableState = {
-    columnOrder:
-      JSON.parse(window.localStorage.getItem(this.getTableKey()) || 'null') ||
-      this.props.columnOrder ||
-      Object.keys(this.props.columns).map(key => ({ key, visible: true })),
+    columnOrder: [],
     columnSizes: this.props.columnSizes || {},
     highlightedRows: new Set(),
     sortOrder: this.props.defaultSortOrder,
@@ -192,11 +189,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   static getDerivedStateFromProps = (props, state) => {
     const { prevProps } = state
-    let nextState = {}
+    let nextState: Partial<ManagedTableState> = {}
 
     // if columnSizes has changed
     if (props.columnSizes !== prevProps.columnSizes) {
-      console.log('new col size')
       nextState = {
         columnSizes: {
           ...state.columnSizes,
@@ -207,17 +203,16 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
     // if columnOrder has changed
     if (props.columnOrder !== prevProps.columnOrder) {
-      nextState = {
-        ...nextState,
-        columnOrder: props.columnOrder,
+      nextState.columnOrder = props.columnOrder
+    } else if (!props.columnOrder) {
+      const columnOrder = Object.keys(props.columns).map(key => ({ key, visible: true }))
+      if (!isEqual(columnOrder, state.columnOrder)) {
+        nextState.columnOrder = columnOrder
       }
     }
 
     if (!prevProps.rows || prevProps.rows.length > props.rows.length) {
-      nextState = {
-        ...nextState,
-        shouldRecalculateHeights: true,
-      }
+      nextState.shouldRecalculateHeight = true
     }
 
     if (
@@ -231,13 +226,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       (props.rows.length && !isEqual(prevProps.rows[0], props.rows[0]))
     ) {
       // need to reorder or refilter the rows
-      nextState = {
-        ...nextState,
-        sortedRows: getSortedRows(
-          props.sortOrder,
-          filterRows(props.rows, props.filterValue, props.filter),
-        ),
-      }
+      nextState.sortedRows = getSortedRows(
+        props.sortOrder,
+        filterRows(props.rows, props.filterValue, props.filter),
+      )
     }
 
     // update if needed
@@ -519,6 +511,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
     const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
+    console.log('columnKeys', columnKeys, columnOrder)
     return (
       <TableRow
         key={sortedRows[index].key}
@@ -562,7 +555,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   render() {
-    const { columns, rowLineHeight, width, minHeight, minWidth, height, ...viewProps } = this.props
+    const {
+      columns,
+      rowLineHeight,
+      width,
+      minHeight,
+      minWidth,
+      height,
+      rows,
+      placeholder,
+      ...viewProps
+    } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
@@ -583,7 +586,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        {(!sortedRows.length && this.props.bodyPlaceholder) || null}
+        {!rows ||
+          (!sortedRows.length &&
+            (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
+          null}
         <ContextMenu buildItems={this.buildContextMenuItems}>
           <VariableSizeList
             itemCount={sortedRows.length}

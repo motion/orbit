@@ -109,6 +109,7 @@ function PersonInfo(props: { row: any }) {
               <Table
                 bordered
                 multiSelect
+                searchable
                 title={`${album.id} Album ${album.title} Pictures`}
                 rows={photos}
               />

@@ -66,7 +66,7 @@ class VirtualListStore {
   windowScrollerRef = createRef<WindowScroller>()
   listRef: List = null
   frameNode: HTMLDivElement = null
-  height = window.innerHeight
+  height = 0
   width = 0
   isSorting = false
   observing = false

@@ -81,6 +81,7 @@ function SimpleInput(props: SizedSurfaceProps) {
       alignItems="center"
       flexFlow="row"
       themeSelect="input"
+      sizeFont
       sizePadding
       sizeHeight
       sizeLineHeight

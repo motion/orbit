@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { AppProps, HandleOrbitSelect } from '@o/kit'
 import { ensure, react, shallow, useHook } from '@o/use-store'
 import { getIsTorn } from '../../helpers/getIsTorn'
@@ -20,7 +21,10 @@ export class OrbitStore {
   }
 
   setSelectItem: HandleOrbitSelect = (index, appProps) => {
-    this.nextItem = { index, appProps }
+    const next = { index, appProps }
+    if (!isEqual(next, this.nextItem)) {
+      this.nextItem = next
+    }
   }
 
   setActiveConfig(id: string, config: AppProps) {

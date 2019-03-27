@@ -9,33 +9,33 @@ import { useEffect } from 'react'
 
 export type ScopedUserState<A> = [A, (next: Partial<A>) => void]
 
-export function useScopedUserState<A>(subSelect: string, defaultState?: A): ScopedUserState<A> {
-  useEnsureDefaultUserState<A>(subSelect, defaultState)
+export function useUserState<A>(uid: string, defaultState?: A): ScopedUserState<A> {
+  useEnsureDefaultUserState<A>(uid, defaultState)
 
   const [user, update] = useModel(UserModel, {})
 
   // scopes user down
   return [
-    user ? user.appState[subSelect] : defaultState,
+    user ? user.appState[uid] : defaultState,
     next => {
       if (!user) throw new Error('State not loaded / not found yet!')
-      user.appState[subSelect] = next
+      user.appState[uid] = next
       update(user)
     },
   ]
 }
 
-export function useEnsureDefaultUserState<A>(subSelect: string, ensure: A) {
+export function useEnsureDefaultUserState<A>(uid: string, ensure: A) {
   const [user, update] = useModel(UserModel, {})
 
   useEffect(
     () => {
       if (!user) return
-      if (user.appState[subSelect]) return
+      if (user.appState[uid]) return
       // ensure default
-      user.appState[subSelect] = ensure
+      user.appState[uid] = ensure
       update(user)
     },
-    [user, subSelect],
+    [user, uid],
   )
 }

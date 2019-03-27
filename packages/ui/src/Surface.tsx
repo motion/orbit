@@ -19,7 +19,7 @@ import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
-import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
+import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
@@ -186,6 +186,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         {glint && !props.chromeless && (
           <Glint
             key={0}
+            size={size}
             borderLeftRadius={Math.min(
               (segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius) - 1,
               height / 2 - 1,
@@ -203,7 +204,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         >
           {icon && !stringIcon && <div>{icon}</div>}
           {icon && stringIcon && (
-            <ConfiguredIcon
+            <Icon
               name={`${icon}`}
               size={getIconSize(props)}
               transform={{
@@ -322,17 +323,6 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
     },
     { alpha: props.alpha, alphaHover: props.alphaHover },
   )
-
-  if (props.is === 'action') {
-    console.log('theme is', theme.background)
-    console.log('what', props, themeStyles)
-    console.log('ok', style)
-    return {
-      background: 'red',
-      borderRadius: 1000,
-      color: 'green',
-    }
-  }
 
   return style
 })

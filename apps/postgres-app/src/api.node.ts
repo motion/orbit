@@ -1,13 +1,10 @@
-import { AppBit } from '@o/sync-kit'
+import { AppBit } from '@o/kit'
 import { createConnection } from 'typeorm'
 import { PostgresAppData } from './PostgresModels'
 
-const pg = require("pg")
-console.log(pg)
-
 const connect = (appData: PostgresAppData) => {
   return createConnection({
-    type: "postgres",
+    type: 'postgres',
     url: appData.credentials.url,
     host: appData.credentials.hostname,
     username: appData.credentials.username,
@@ -17,13 +14,15 @@ const connect = (appData: PostgresAppData) => {
   })
 }
 
-export default {
-  async query(app: AppBit, query: string, parameters: any[] = []): Promise<any[]> {
-    const appData: PostgresAppData = app.data
-    const connection = await connect(appData)
-    const result = await connection.query(query, parameters)
-    console.log('SQL result', result)
-    await connection.close()
-    return result
+export const PostgresApi = (app: AppBit) => {
+  return {
+    async query(query: string, parameters: any[] = []): Promise<any[]> {
+      const appData: PostgresAppData = app.data
+      const connection = await connect(appData)
+      const result = await connection.query(query, parameters)
+      console.log('SQL result', result)
+      await connection.close()
+      return result
+    },
   }
 }

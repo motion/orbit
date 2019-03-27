@@ -53,7 +53,7 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
 
 type FormFieldProps =
   | {
-      type: DataType
+      type?: DataType
       label: React.ReactNode
       value: any
       name?: string

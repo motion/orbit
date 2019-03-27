@@ -129,6 +129,10 @@ export class TableRow extends React.PureComponent<Props> {
       onAddFilter,
     } = this.props
 
+    if (!columnKeys.length) {
+      console.warn('No columns')
+    }
+
     return (
       <TableBodyRowContainer
         {...this.props}

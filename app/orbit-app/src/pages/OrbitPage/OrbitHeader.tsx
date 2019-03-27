@@ -285,7 +285,6 @@ const LinkButton = memo(() => {
 
 const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
-  console.log('location store is', locationStore)
   const opacity = locationStore.history.length ? 0.4 : 0.1
   return (
     <HeaderButtonChromeless

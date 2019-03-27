@@ -1,4 +1,5 @@
 import { Layout, Loading, Pane } from '@o/ui'
+import { selectDefined } from '@o/utils'
 import React, { useState } from 'react'
 import { List } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
@@ -10,7 +11,7 @@ export type MasterDetailProps = {
 }
 
 export function MasterDetail(props: MasterDetailProps) {
-  const placeholder = props.placeholder || <Loading />
+  const placeholder = selectDefined(props.placeholder, <Loading />)
   const [selected, setSelected] = useState(null)
   return (
     <Layout type="row">

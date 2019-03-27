@@ -17,9 +17,10 @@ export function useEnsureApps() {
           if (!app) {
             console.log('ensuring model for static app', appDef)
             save(AppModel, {
+              name: appDef.name,
               target: 'app',
               identifier: appDef.id,
-              space,
+              spaceId: space.id,
               colors: ['black', 'white'],
               tabDisplay: 'hidden',
             })

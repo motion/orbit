@@ -33,6 +33,7 @@ class BreadcrumbStore {
     },
     {
       defaultValue: [],
+      log: false,
     },
   )
 

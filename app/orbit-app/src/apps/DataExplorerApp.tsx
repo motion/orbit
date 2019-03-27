@@ -1,5 +1,24 @@
-import { App, AppProps, createApp, List, useActiveSyncAppsWithDefinition, useApp } from '@o/kit'
-import { Button, Label, Section, Space } from '@o/ui'
+import {
+  App,
+  AppProps,
+  createApp,
+  List,
+  Templates,
+  useActiveSyncAppsWithDefinition,
+  useApp,
+} from '@o/kit'
+import {
+  Button,
+  Divider,
+  Form,
+  FormField,
+  Label,
+  Section,
+  Space,
+  SubTitle,
+  TextArea,
+  View,
+} from '@o/ui'
 import { remove } from 'lodash'
 import React, { useState } from 'react'
 import { getAppListItem } from './apps/getAppListItem'
@@ -32,11 +51,25 @@ function DataExplorerMain({ subId }: AppProps) {
             </>
           }
         >
-          <Label>Query</Label>
-          <textarea />
+          <Templates.MasterDetail items={[{ title: 'getMessages' }, { title: 'getThreads' }]}>
+            {selected => (
+              <>
+                <View padding={20}>
+                  <SubTitle>{selected.title}</SubTitle>
+                  <Divider />
+                  <Form>
+                    <FormField label="inboxId" value="" />
+                    <FormField label="search" value="" />
+                  </Form>
+                </View>
 
-          <Label>Result</Label>
-          <textarea />
+                <Divider />
+
+                <Label>Response</Label>
+                <TextArea minHeight={200} />
+              </>
+            )}
+          </Templates.MasterDetail>
         </Section>
       ))}
 

@@ -60,7 +60,7 @@ type FormFieldProps =
     }
   | {
       label: React.ReactNode
-      children: React.ReactNode
+      children?: React.ReactNode
       type?: undefined
       value?: undefined
       name?: string

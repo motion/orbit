@@ -8,6 +8,7 @@ import {
   Layout,
   Pane,
   SearchInput,
+  Section,
   Select,
   SpacedRow,
   Tab,
@@ -90,7 +91,9 @@ function PersonInfo(props: { row: any }) {
   return (
     <Layout type="column">
       <Pane scrollable>
-        <Fieldsets rows={[props.row]} />
+        <Section scrollable bordered title={props.row.title}>
+          <Fieldsets rows={[props.row]} />
+        </Section>
       </Pane>
       <Pane>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>

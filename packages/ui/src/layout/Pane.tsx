@@ -1,4 +1,4 @@
-import { View } from '@o/gloss'
+import { gloss, View } from '@o/gloss'
 import React, { Suspense, useContext, useEffect, useState } from 'react'
 import { BorderLeft, BorderTop } from '../Border'
 import { Interactive, InteractiveProps } from '../Interactive'
@@ -10,7 +10,7 @@ export type PaneProps = Partial<InteractiveProps> & {
   index?: number
   parentSize?: number
   flex?: number
-  scrollable?: boolean
+  scrollable?: boolean | 'x' | 'y'
 }
 
 export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
@@ -39,8 +39,6 @@ export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
       width: size,
       minWidth: props.parentSize * 0.25,
       maxWidth: props.parentSize * 0.8,
-      overflowX: 'hidden',
-      overflowY: scrollable ? 'auto' : 'hidden',
     }
   } else {
     if (props.index > 0) {
@@ -50,27 +48,50 @@ export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
       minHeight: props.parentSize * 0.25,
       height: size,
       maxHeight: props.parentSize * 0.8,
-      overflowY: 'hidden',
-      overflowX: scrollable ? 'auto' : 'hidden',
     }
+  }
+
+  // easy scrollable
+  if (scrollable === true) {
+    sizeProps.overflow = 'auto'
+  } else if (scrollable === 'x') {
+    sizeProps.overflowX = 'auto'
+    sizeProps.overflowY = 'hidden'
+  } else if (scrollable === 'y') {
+    sizeProps.overflowY = 'auto'
+    sizeProps.overflowX = 'hidden'
+  } else {
+    sizeProps.overflow = 'hidden'
   }
 
   if (resizable) {
     const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
-      <Interactive resizable={resizableProp} onResize={x => setSize(x)} {...sizeProps} {...props}>
+      <Interactive
+        overflow="hidden"
+        resizable={resizableProp}
+        onResize={x => setSize(x)}
+        {...sizeProps}
+        {...props}
+      >
         {borderElement}
         {children}
       </Interactive>
     )
   } else {
     element = (
-      <View flex={1} position="relative">
+      <PaneChrome {...sizeProps} {...props}>
         {borderElement}
         {children}
-      </View>
+      </PaneChrome>
     )
   }
 
   return <Suspense fallback={<Loading />}>{element}</Suspense>
 }
+
+const PaneChrome = gloss(View, {
+  flex: 1,
+  position: 'relative',
+  overflow: 'hidden',
+})

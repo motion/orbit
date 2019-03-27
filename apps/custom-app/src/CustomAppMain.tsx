@@ -8,7 +8,6 @@ import {
   Form,
   Layout,
   Pane,
-  Row,
   SearchInput,
   Select,
   SpacedRow,
@@ -34,40 +33,47 @@ export function CustomAppMain(_props: AppProps) {
 
   return (
     <Form use={form}>
+      <FloatingCard defaultTop={200} defaultLeft={400} title="Hello">
+        lorem
+      </FloatingCard>
+
       <Layout type="row">
-        <Pane>
-          <SpacedRow>
-            <SearchInput name="search" />
-            <Select name="active" options={active} />
-            <Select name="type" isMulti options={type} />
-          </SpacedRow>
-          <Table
-            multiSelect
-            onSelect={setHighlighted}
-            rows={users}
-            searchTerm={form.getValue('search')}
-            filters={form.getFilters(['active', 'type'])}
-          />
-
-          <FloatingCard title="Hello">lorem</FloatingCard>
-
-          <Row overflowX="auto">
-            {highlighted.map(row => (
-              <Card
-                key={row.id}
-                title={row.name}
-                subtitle={row.username}
-                minWidth={200}
-                minHeight={200}
-              >
-                <DefinitionList row={row} />
-              </Card>
-            ))}
-          </Row>
+        <Pane resizable>
+          <Layout type="column">
+            <Pane resizable>
+              <SpacedRow>
+                <SearchInput name="search" />
+                <Select name="active" options={active} />
+                <Select name="type" isMulti options={type} />
+              </SpacedRow>
+              <Table
+                multiSelect
+                onSelect={setHighlighted}
+                rows={users}
+                searchTerm={form.getValue('search')}
+                filters={form.getFilters(['active', 'type'])}
+              />
+            </Pane>
+            <Pane scrollable="x" flexFlow="row" padding={20}>
+              {highlighted.map(row => (
+                <Card
+                  key={row.id}
+                  title={row.name}
+                  subtitle={row.username}
+                  minWidth={200}
+                  minHeight={200}
+                  marginRight={20}
+                  elevation={1}
+                >
+                  <DefinitionList row={row} />
+                </Card>
+              ))}
+            </Pane>
+          </Layout>
         </Pane>
 
         <Pane>
-          <Tabs borderRadius={20} margin={2}>
+          <Tabs borderRadius={20} padding={10}>
             {highlighted.map(row => (
               <Tab key={row.id} label={row.name}>
                 <PersonInfo row={row} />
@@ -83,16 +89,28 @@ export function CustomAppMain(_props: AppProps) {
 function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
   return (
-    <>
-      <Fieldsets rows={[props.row]} />
-      <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
-        {albums => <Table title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />}
-      </Fetch>
-      {!!album && (
-        <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
-          {photos => <Table title={`${album.id} Album ${album.title} Pictures`} rows={photos} />}
+    <Layout type="column">
+      <Pane scrollable>
+        <Fieldsets rows={[props.row]} />
+      </Pane>
+      <Pane>
+        <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
+          {albums => <Table title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />}
         </Fetch>
-      )}
-    </>
+      </Pane>
+      <Pane>
+        {!!album && (
+          <Fetch url={`${endpoint}/photos?albumId=${album.id}`}>
+            {photos => (
+              <Table
+                multiSelect
+                title={`${album.id} Album ${album.title} Pictures`}
+                rows={photos}
+              />
+            )}
+          </Fetch>
+        )}
+      </Pane>
+    </Layout>
   )
 }

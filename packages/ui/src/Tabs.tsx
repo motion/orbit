@@ -55,7 +55,6 @@ function TabsControlled(props: TabsProps) {
     onActive,
     height = 26,
     borderRadius = 0,
-    minHeight = 'min-content',
     ...rest
   } = props
   // array of other components that aren't tabs
@@ -172,8 +171,8 @@ function TabsControlled(props: TabsProps) {
   }
 
   return (
-    <TabContainer minHeight={minHeight} {...rest}>
-      <Row>
+    <TabContainer>
+      <Row {...rest}>
         {before}
         <div style={{ width: '100%', overflow: 'hidden', height }}>
           <HideScrollbar className="hide-scrollbars">
@@ -192,6 +191,7 @@ function TabsControlled(props: TabsProps) {
 
 const TabContainer = gloss(View, {
   flex: 1,
+  overflow: 'hidden',
 })
 
 export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {
@@ -247,9 +247,8 @@ const OrderableContainer = gloss({
 })
 
 const TabContent = gloss({
-  height: 'auto',
   overflow: 'auto',
   width: '100%',
   flex: 1,
-  minHeight: 'min-content',
+  height: 'min-content',
 })

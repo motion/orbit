@@ -87,7 +87,7 @@ export type ManagedTableProps = {
   /**
    * Row data
    */
-  rows: GenericDataRow[]
+  rows?: GenericDataRow[]
   /**
    * Whether a row can span over multiple lines. Otherwise lines cannot wrap and
    * are truncated.
@@ -147,7 +147,7 @@ export type ManagedTableProps = {
   sortOrder?: SortOrder
   onSortOrder?: (next: SortOrder) => any
   onCreatePaste?: Function
-  bodyPlaceholder?: React.ReactNode
+  placeholder?: React.ReactNode | ((rows: ManagedTableProps['rows']) => React.ReactNode)
 }
 
 type ManagedTableState = {
@@ -166,15 +166,15 @@ const Container = gloss(View, {
 })
 
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
-  static defaultProps = {
-    highlightableRows: true,
+  static defaultProps: Partial<ManagedTableProps> = {
     multiSelect: false,
     rowLineHeight: 24,
-    bodyPlaceholder: (
-      <div style={{ margin: 'auto' }}>
-        <Text size={1.2}>Loading...</Text>
-      </div>
-    ),
+    placeholder: rows =>
+      !rows ? (
+        <div style={{ margin: 'auto' }}>
+          <Text size={1.2}>Loading...</Text>
+        </div>
+      ) : null,
   }
 
   state: ManagedTableState = {
@@ -562,7 +562,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   render() {
-    const { columns, rowLineHeight, width, minHeight, minWidth, height, ...viewProps } = this.props
+    const {
+      columns,
+      rowLineHeight,
+      width,
+      minHeight,
+      minWidth,
+      height,
+      rows,
+      placeholder,
+      ...viewProps
+    } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
@@ -583,7 +593,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        {(!sortedRows.length && this.props.bodyPlaceholder) || null}
+        {!rows ||
+          (!sortedRows.length &&
+            (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
+          null}
         <ContextMenu buildItems={this.buildContextMenuItems}>
           <VariableSizeList
             itemCount={sortedRows.length}

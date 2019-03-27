@@ -33,17 +33,17 @@ export function TitleRow({
   icon,
   title,
 }: TitleRowProps) {
-  const unpad = 20
+  const pad = 16
   const sidePad = 10 * sizePadding
   return (
     <View
       position="relative"
       overflow="hidden"
-      paddingTop={unpad + 2.5 * sizePadding}
+      paddingTop={pad + 2.5 * sizePadding}
       paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
-      paddingLeft={sidePad + unpad}
-      paddingRight={sidePad + unpad}
-      margin={typeof margin !== 'undefined' ? margin : [-unpad, -unpad, 10]}
+      paddingLeft={sidePad + pad}
+      paddingRight={sidePad + pad}
+      margin={typeof margin !== 'undefined' ? margin : [-pad, -pad, 10]}
       background={backgrounded ? theme => theme.backgroundAlt : null}
     >
       {above}

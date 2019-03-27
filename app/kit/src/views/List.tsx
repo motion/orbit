@@ -39,6 +39,7 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
     shareable?: boolean
   }
 
+// TODO use creaetPropsContext
 export const ListPropsContext = createContext(null as Partial<ListProps>)
 
 export function toListItemProps(props?: any): OrbitListItemProps {

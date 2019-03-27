@@ -968,7 +968,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         data-towards={direction}
         isOpen={showPopover}
         isClosing={closing}
-        isTouchable={!noHoverOnChildren}
+        isTouchable={!noHoverOnChildren && showPopover}
       >
         {!!overlay && (
           <Overlay

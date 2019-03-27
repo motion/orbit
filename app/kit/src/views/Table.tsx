@@ -42,11 +42,14 @@ export function Table(direct: TableProps) {
     direct,
   )
   const { height, ref } = useParentNodeSize()
-  const rows = props.rows.map(normalizeRow)
+  const rows = props.rows ? props.rows.map(normalizeRow) : null
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
   const onSelectIndices = useCallback(
     keys => {
+      if (!props.rows) {
+        return
+      }
       if (onSelect) {
         onSelect(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
       }

@@ -34,7 +34,6 @@ export class OrbitStore {
   updateSelectedItem = react(
     () => this.nextItem,
     async ({ appProps }, { sleep }) => {
-      console.log('updating selected ittem', appProps)
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt
       this.lastSelectAt = Date.now()

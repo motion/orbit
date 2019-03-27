@@ -14,7 +14,6 @@ import {
   Form,
   FormField,
   Section,
-  Space,
   SubTitle,
   Tab,
   Tabs,
@@ -38,7 +37,19 @@ function DataExplorerMain({ subId }: AppProps) {
   if (!app) return null
 
   return (
-    <Section padded title={app.appName} subTitle={app.name} icon={app.icon}>
+    <Section
+      title={app.appName}
+      subTitle={app.name}
+      icon={app.icon}
+      afterTitle={
+        <Button
+          alt="confirm"
+          onClick={() => setQueries([{ id: Math.random(), name: 'My Query' }, ...queries])}
+        >
+          Add query
+        </Button>
+      }
+    >
       {queries.map(query => (
         <Section
           key={query.id}
@@ -81,17 +92,6 @@ function DataExplorerMain({ subId }: AppProps) {
           </Templates.MasterDetail>
         </Section>
       ))}
-
-      <Space />
-      <Space />
-
-      <Button
-        alt="confirm"
-        size={1.5}
-        onClick={() => setQueries([...queries, { id: Math.random(), name: 'My Query' }])}
-      >
-        Add query
-      </Button>
     </Section>
   )
 }

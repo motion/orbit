@@ -1,3 +1,13 @@
+- an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs
+
+  - as part of that, some higher level components in kit like `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps
+
+- a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways
+
+- using <Grid />, and <QueryApp />, put together a demo that shows a nice way to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
+
+---
+
 Views
 
 - Layout Grid
@@ -117,7 +127,6 @@ components:
 - <Table />
   - column type: `action` to support buttons on each row
     - then you can have an easy effect here, for ex POST somewhere
-- <Select /> (can just be native, but with types)
 - <Toggle /> on/off button
 - <Query />
   - we need a few ways to help people put together CRUD/query interfaces

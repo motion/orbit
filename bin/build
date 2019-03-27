@@ -10,10 +10,9 @@ if [ "$(realpath .)" = "$ROOT" ]; then
 
     ARGS=${@:2}
     (bin/in ui npm run watch) &
-    (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
-    sleep 3
     (bin/in kit npm run watch) &
     (bin/in kit-internal npm run watch) &
+    (cd app && ../node_modules/.bin/tsc --build --watch --preserveWatchOutput $ARGS) &
     echo "RAN WATCH"
     wait
   else

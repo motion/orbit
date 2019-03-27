@@ -22,7 +22,6 @@ export const OrbitCarouselSection = observer(
     return (
       <Section
         title={`${categoryName}`}
-        type="carousel"
         margin={margin || [0, 0, -2]}
         alignItems="center"
         padding={[offset === 0 ? 0 : 2, 0, 0]}

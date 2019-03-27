@@ -13,7 +13,7 @@ export function AppsMain(props: AppProps) {
       return <ManageApps />
     }
     if (props.subType === 'sync') {
-      return <AppMainView {...props} />
+      return <AppMainView {...props} viewType="settings" />
     } else {
       return (
         <Section

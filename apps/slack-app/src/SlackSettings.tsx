@@ -113,6 +113,7 @@ export function SlackSettings({ subId }: AppProps) {
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <Table
+          maxHeight={800}
           columns={{
             name: {
               value: 'Name',
@@ -140,17 +141,14 @@ export function SlackSettings({ subId }: AppProps) {
           }}
           multiSelect
           onSelectIndices={setHighlightedRows}
-          rows={(channels || []).map((channel, index) => {
+          rows={(channels || []).map(channel => {
             const topic = channel.topic ? channel.topic.value : ''
             return {
-              key: `${index}`,
-              values: {
-                name: channel.name,
-                topic: topic,
-                members: channel.num_members,
-                createdAt: new Date(channel.created * 1000),
-                active: whitelist.getWhitelisted(channel.id),
-              },
+              name: channel.name,
+              topic: topic,
+              members: channel.num_members,
+              createdAt: new Date(channel.created * 1000),
+              active: whitelist.getWhitelisted(channel.id),
             }
           })}
         />

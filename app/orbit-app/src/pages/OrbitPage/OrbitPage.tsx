@@ -21,6 +21,7 @@ import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
+import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
@@ -60,6 +61,7 @@ function OrbitEffects() {
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
+  useEnsureApps()
   return null
 }
 

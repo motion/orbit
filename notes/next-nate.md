@@ -1,3 +1,5 @@
+- document for apps + apis
+
 - an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs
 
   - as part of that, some higher level components in kit like `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps

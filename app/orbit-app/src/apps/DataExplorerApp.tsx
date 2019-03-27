@@ -7,6 +7,7 @@ import {
   Templates,
   useActiveSyncAppsWithDefinition,
   useApp,
+  useAppState,
 } from '@o/kit'
 import {
   Button,
@@ -21,7 +22,7 @@ import {
   View,
 } from '@o/ui'
 import { remove } from 'lodash'
-import React, { useState } from 'react'
+import React from 'react'
 import { getAppListItem } from './apps/getAppListItem'
 
 function DataExplorerIndex() {
@@ -31,7 +32,7 @@ function DataExplorerIndex() {
 
 function DataExplorerMain({ subId }: AppProps) {
   const [app] = useApp(+subId)
-  const [queries, setQueries] = useState([{ id: 0, name: 'My Query' }])
+  const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   // TODO suspense
   if (!app) return null

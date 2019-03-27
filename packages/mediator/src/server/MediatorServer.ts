@@ -33,7 +33,15 @@ export class MediatorServer {
         result: result,
       })
     }
-    const onError = (error: any) => log.error(`error in mediator: `, error)
+    const onError = (error: any) => {
+      log.error(`error in mediator: `, error)
+
+      this.options.transport.send({
+        id: data.id,
+        result: undefined,
+        error: error.toString(),
+      })
+    }
 
     if (data.type === 'unsubscribe') {
       const subscriptions = this.subscriptions.filter(subscription => {
@@ -65,7 +73,6 @@ export class MediatorServer {
             .command(data.command, data.args)
             .then(onSuccess)
             .catch(onError)
-
         } else {
           log.verbose(`command ${data.command} was not found, no fallback client, ignoring`, data)
           this.options.transport.send({
@@ -82,82 +89,65 @@ export class MediatorServer {
       })
       // simply ignore if model was not found - maybe some other server has it defined
       if (!model) {
-
         if (this.options.fallbackClient) {
           log.verbose(`model ${data.model} was not found, trying fallback clients`, data)
 
           if (data.type === 'save') {
-            this.options.fallbackClient
-              .save(data.model, data.value)
-              .then(onSuccess, onError)
-
+            this.options.fallbackClient.save(data.model, data.value).then(onSuccess, onError)
           } else if (data.type === 'remove') {
-            this.options.fallbackClient
-              .remove(data.model, data.value)
-              .then(onSuccess, onError)
-
+            this.options.fallbackClient.remove(data.model, data.value).then(onSuccess, onError)
           } else if (data.type === 'loadOne') {
             this.options.fallbackClient
               .loadOne(data.model, { args: data.args })
               .then(onSuccess, onError)
-
           } else if (data.type === 'loadMany') {
             this.options.fallbackClient
               .loadMany(data.model, { args: data.args })
               .then(onSuccess, onError)
-
           } else if (data.type === 'loadManyAndCount') {
             this.options.fallbackClient
               .loadManyAndCount(data.model, { args: data.args })
               .then(onSuccess, onError)
-
           } else if (data.type === 'loadCount') {
             this.options.fallbackClient
               .loadCount(data.model, { args: data.args })
               .then(onSuccess, onError)
-
           } else if (data.type === 'observeOne') {
             this.subscriptions.push({
               id: data.id,
               subscription: this.options.fallbackClient
                 .observeOne(data.model, { args: data.args })
-                .subscribe(onSuccess, onError)
+                .subscribe(onSuccess, onError),
             })
-
           } else if (data.type === 'observeMany') {
             this.subscriptions.push({
               id: data.id,
               subscription: this.options.fallbackClient
                 .observeMany(data.model, { args: data.args })
-                .subscribe(onSuccess, onError)
+                .subscribe(onSuccess, onError),
             })
-
           } else if (data.type === 'observeManyAndCount') {
             this.subscriptions.push({
               id: data.id,
               subscription: this.options.fallbackClient
                 .observeManyAndCount(data.model, { args: data.args })
-                .subscribe(onSuccess, onError)
+                .subscribe(onSuccess, onError),
             })
-
           } else if (data.type === 'observeCount') {
             this.subscriptions.push({
               id: data.id,
               subscription: this.options.fallbackClient
                 .observeCount(data.model, { args: data.args })
-                .subscribe(onSuccess, onError)
+                .subscribe(onSuccess, onError),
             })
           }
-
         } else {
-
           log.verbose(`model ${data.model} was not found`, data)
           this.options.transport.send({
             id: data.id,
             result: undefined,
             notFound: true,
           })
-
         }
         return
       }
@@ -202,7 +192,6 @@ export class MediatorServer {
     })
 
     if (resolver) {
-
       // resolve a value
       let result = null
       try {
@@ -223,12 +212,10 @@ export class MediatorServer {
       ) {
         this.subscriptions.push({
           id: data.id,
-          subscription: result.subscribe(onSuccess, onError)
+          subscription: result.subscribe(onSuccess, onError),
         })
-
       } else if (result instanceof Promise) {
         result.then(onSuccess, onError)
-
       } else {
         onSuccess(result)
       }
@@ -276,6 +263,5 @@ export class MediatorServer {
     //     })
     //   }
     // }
-
   }
 }

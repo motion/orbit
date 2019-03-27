@@ -9,6 +9,7 @@
   "references": [
     { "path": "../models" },
     { "path": "../../packages/config" },
+    { "path": "../../packages/use-store" },
     { "path": "../../packages/constants" },
     { "path": "../../packages/logger" },
     { "path": "../../packages/mobx-bridge" }

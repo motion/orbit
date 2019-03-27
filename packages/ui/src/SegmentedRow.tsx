@@ -28,6 +28,11 @@ export function getSegmentedStyle(
   // support being inside a segmented list
   if (!props.ignoreSegment) {
     if (item) {
+      if (item.isFirst && item.isLast) {
+        return {
+          borderRadius: radius,
+        }
+      }
       if (item.isFirst) {
         return {
           borderRightRadius: 0,

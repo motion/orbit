@@ -8,6 +8,7 @@
     { "path": "./orbit" },
     { "path": "./bridge" },
     { "path": "./sync-kit" },
+    { "path": "./kit" },
     // todo until we get apps properly split
     { "path": "../apps/lists-app" },
     { "path": "../apps/search-app" },
@@ -22,6 +23,7 @@
     { "path": "../apps/postgres-app" },
     // projects necessary for orbit
     // references from orbit-app since we want to have that one empty
+    { "path": "../packages/ui" },
     { "path": "../packages/css" },
     { "path": "../packages/config" },
     { "path": "../packages/color" },

@@ -68,6 +68,8 @@ const filterRows = (
 }
 
 export type ManagedTableProps = {
+  margin?: number | number[]
+  padding?: number | number[]
   width?: number
   height?: number | 'content-height'
 
@@ -558,11 +560,16 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   render() {
-    const { columns, rowLineHeight, width, minHeight, minWidth, height } = this.props
+    const { columns, rowLineHeight, width, minHeight, minWidth, height, ...viewProps } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
 
     return (
-      <Container minHeight={minHeight} minWidth={minWidth}>
+      <Container
+        minHeight={minHeight}
+        minWidth={minWidth}
+        margin={viewProps.margin}
+        padding={viewProps.padding}
+      >
         <TableHead
           columnOrder={columnOrder}
           onColumnOrder={this.onColumnOrder}

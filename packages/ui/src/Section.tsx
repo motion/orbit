@@ -1,10 +1,10 @@
-import { View, ViewProps } from '@o/gloss'
-import React from 'react'
-import { SizedSurface } from './SizedSurface'
-import { TitleRow, TitleRowProps } from './TitleRow'
-import { Omit } from './types'
+import { View, ViewProps } from '@o/gloss';
+import React from 'react';
+import { SizedSurface } from './SizedSurface';
+import { TitleRow, TitleRowProps } from './TitleRow';
+import { Omit } from './types';
 
-export type SectionProps = ViewProps &
+export type SectionProps = Omit<ViewProps, 'title'> &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode

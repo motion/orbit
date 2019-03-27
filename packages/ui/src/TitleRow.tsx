@@ -18,6 +18,7 @@ export type TitleRowProps = {
   backgrounded?: boolean
   subTitle?: React.ReactNode
   margin?: number | number[]
+  unpad?: boolean
 }
 
 export function TitleRow({
@@ -32,6 +33,7 @@ export function TitleRow({
   above,
   icon,
   title,
+  unpad,
 }: TitleRowProps) {
   const pad = 16
   const sidePad = 10 * sizePadding
@@ -43,7 +45,7 @@ export function TitleRow({
       paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
       paddingLeft={sidePad + pad}
       paddingRight={sidePad + pad}
-      margin={typeof margin !== 'undefined' ? margin : [-pad, -pad, 10]}
+      margin={typeof margin !== 'undefined' ? margin : unpad ? [-pad, -pad, 0] : 0}
       background={backgrounded ? theme => theme.backgroundAlt : null}
     >
       {above}
@@ -75,14 +77,8 @@ export function TitleRow({
             </>
           )}
         </View>
-        {after && (
-          <>
-            <div style={{ flex: 1 }} />
-            {after}
-          </>
-        )}
+        {after}
       </Row>
-      <Space />
       {below}
       {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
     </View>

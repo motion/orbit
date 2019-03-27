@@ -1,7 +1,6 @@
 import { Absolute, gloss, ViewProps } from '@o/gloss'
-import { AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
+import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
 import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
-import { AppBit } from '@o/models'
 import {
   Button,
   Section,
@@ -32,7 +31,15 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
       height={98}
       {...restProps}
     >
-      <View alignItems="center" position="relative" width={58} height={58}>
+      {/* marginTop to offset the text height */}
+      <View
+        marginTop={16}
+        marginBottom={6}
+        alignItems="center"
+        position="relative"
+        width={58}
+        height={58}
+      >
         {!hideShadow && (
           <Absolute
             top={2}
@@ -40,7 +47,9 @@ function LargeIcon({ hideShadow, isSelected, icon, title, ...restProps }: LargeI
             right={2}
             bottom={2}
             borderRadius={17}
-            boxShadow={theme => (isSelected ? [[0, 0, 10, theme.selected.background]] : null)}
+            boxShadow={theme =>
+              isSelected ? [[0, 0, 10, theme.alternates.selected.background]] : null
+            }
             zIndex={-1}
           />
         )}
@@ -79,8 +88,8 @@ function OrbitAppIcon({ app, ...props }: LargeIconProps & { app: AppBit; isSelec
 }
 
 const AppIconContainer = gloss({
-  height: 200,
-  padding: [15, 25],
+  height: 180,
+  padding: 10,
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',

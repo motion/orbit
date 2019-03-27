@@ -81,7 +81,6 @@ const base = Theme.colorize({
   highlightColor: '#fff',
   highlightBackground: '#4080ff', // used for text selection, tokens, etc.
   highlightBackgroundActive: '#85afee', // active tokens
-  frameBorderColor: '#aaa',
 })
 
 const lightColor = '#444'
@@ -105,7 +104,7 @@ const light = {
     buttonBackgroundActive: linearGradient('#eee', '#e9e9e9'),
     buttonBackgroundFocus: lightButtonBg,
     buttonBackgroundHover: lightButtonBg,
-    borderColor: [215, 215, 215],
+    borderColor: [225, 225, 225],
     borderColorLight: [215, 215, 215, 0.5],
     cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
     cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],

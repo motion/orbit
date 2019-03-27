@@ -115,14 +115,12 @@ export class SearchStore {
     ]
   }
 
-  getApps(query: string, all = false): OrbitListItemProps[] {
+  get isHome() {
     const { appStore } = this.stores
+    return appStore && appStore.app && appStore.app.tabDisplay !== 'permanent'
+  }
 
-    // non editable apps don't search apps, just the Home app
-    if (appStore && appStore.app && appStore.app.tabDisplay !== 'permanent') {
-      return []
-    }
-
+  getApps(query: string, all = false): OrbitListItemProps[] {
     const apps = [
       ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
       ...this.staticApps(),
@@ -151,10 +149,24 @@ export class SearchStore {
   }
 
   getQuickResults(query: string, all = false) {
+    // non editable apps don't search apps, just the Home app
+    if (this.isHome) {
+      return []
+    }
+
     // TODO recent history
-    return [...this.getApps(query, all)].filter(
-      x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
-    )
+    return [
+      {
+        title: `${this.stores.spaceStore.activeSpace.name} Home`,
+        subtitle: `10 apps`,
+        icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
+        iconBefore: true,
+        subType: 'home',
+      },
+      ...this.getApps(query, all).filter(
+        x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
+      ),
+    ]
   }
 
   get results() {

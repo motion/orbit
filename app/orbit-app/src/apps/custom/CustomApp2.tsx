@@ -44,7 +44,7 @@ export function CustomApp2() {
       </FlowStep>
 
       <FlowStep title="Step 2" subTitle="Select other thing">
-        {({ data, setData, done }) => (
+        {(/* { data, setData, done } */) => (
           <Templates.MasterDetail
             items={[
               { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },

@@ -13,10 +13,13 @@ import { OrbitToolBar } from './OrbitToolBar'
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
   const { orbitStore, paneManagerStore } = useStoresSimple()
   const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
-  const visible = useReaction(getIsActive)
-  const isActive = useCallback(getIsActive, [])
-  const appStore = useStoreSimple(AppStore, { id, identifier, isActive })
-  const selectionStore = useStoreSimple(SelectionStore, { isActive: useReaction(getIsActive) })
+  const isActive = useReaction(getIsActive)
+  const appStore = useStoreSimple(AppStore, {
+    id,
+    identifier,
+    isActive: useCallback(getIsActive, []),
+  })
+  const selectionStore = useStoreSimple(SelectionStore, { isActive })
 
   // set default initial appProps
   useOnMount(function setInitialConfig() {
@@ -27,7 +30,7 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 
   return (
     <ProvideStores stores={{ selectionStore, appStore }}>
-      <Visibility visible={visible}>
+      <Visibility visible={isActive}>
         <OrbitAppRender id={id} identifier={identifier} />
       </Visibility>
     </ProvideStores>

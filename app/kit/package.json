@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc -b || true",
-    "watch": "tsc --emitDeclarationOnly --preserveWatchOutput --watch"
+    "watch": "tsc --preserveWatchOutput --watch"
   },
   "dependencies": {
     "@o/mediator": "^2.4.0",

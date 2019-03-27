@@ -1,7 +1,10 @@
 Views
 
-- Layout/Pane
+- Layout
   - row / col / grid + resizing generally
+- Pane
+  - collapsable / merge with panel
+  - title/subtitle (titlerow)
 - Multi-step flows + Multi-step forms
   - Flows need to handle:
     - Toolbar/actionbar buttons for next/prev easily

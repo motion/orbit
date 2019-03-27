@@ -6,7 +6,7 @@
  */
 
 import { gloss, Row, View, ViewProps } from '@o/gloss'
-import * as React from 'react'
+import React, { Children, cloneElement } from 'react'
 import { Breadcrumbs } from './Breadcrumbs'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
@@ -22,7 +22,7 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
-  children?: Array<any>
+  children?: Array<any> | React.ReactNode
   // Whether the tabs can be reordered by the user.
   orderable?: boolean
   // Callback when the tab order changes.
@@ -94,7 +94,7 @@ function TabsControlled(props: TabsProps) {
       if (isActive || props.persist === true || comp.props.persist === true) {
         tabContents.push(
           <TabContent key={key} hidden={!isActive}>
-            {children}
+            {typeof children === 'function' && isActive ? children() : children}
           </TabContent>,
         )
       }
@@ -146,7 +146,8 @@ function TabsControlled(props: TabsProps) {
     }
   }
 
-  add(props.children)
+  const childrenArr = Children.map(props.children, child => child)
+  add(childrenArr)
 
   let tabList
   if (props.orderable === true) {
@@ -177,7 +178,7 @@ function TabsControlled(props: TabsProps) {
         <div style={{ width: '100%', overflow: 'hidden', height }}>
           <HideScrollbar className="hide-scrollbars">
             <Breadcrumbs flex={1}>
-              {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
+              {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
             </Breadcrumbs>
           </HideScrollbar>
         </div>

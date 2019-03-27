@@ -59,6 +59,10 @@ function CustomApp2(_props: AppProps) {
             </Templates.MasterDetail>
           )}
         </FlowStep>
+
+        <FlowStep title="Step 3" subTitle="Select other thing">
+          <Templates.Message title="All set" icon="check" />
+        </FlowStep>
       </Flow>
     </App>
   )

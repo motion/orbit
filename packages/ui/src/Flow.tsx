@@ -17,7 +17,7 @@ export type FlowProps = {
 type FlowStepProps = {
   title?: string
   subTitle?: string
-  children?: (props: StepState) => React.ReactNode
+  children?: React.ReactNode | ((props: StepState) => React.ReactNode)
   validateFinished?: (a: any) => true | any
 }
 
@@ -122,13 +122,10 @@ export function Flow({ renderToolbar, renderLayout = DefaultFlowLayout, ...props
     <Slider curFrame={index}>
       {Children.map(props.children, (child, index) => {
         const step = child.props
-        if (typeof step.children !== 'function') {
-          throw new Error(`Must provide a function as the child of FlowStep`)
-        }
         const ChildView = step.children
         return (
           <SliderPane key={index}>
-            <ChildView {...actions} />
+            {typeof step.children === 'function' ? <ChildView {...actions} /> : step.children}
           </SliderPane>
         )
       })}

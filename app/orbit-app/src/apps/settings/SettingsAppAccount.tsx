@@ -5,9 +5,9 @@ import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
 
 export default function SettingsAppAccount() {
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState('')
   const [isSyncing, setIsSyncing] = useState(false)
-  const [statusMessage, setStatusMessage] = useState("")
+  const [statusMessage, setStatusMessage] = useState('')
   const [user, updateUser] = useModel(UserModel, {})
 
   const cloudSync = async () => {
@@ -15,9 +15,7 @@ export default function SettingsAppAccount() {
       setIsSyncing(true)
       setStatusMessage('Your account is being syncing...')
 
-      const firestoreSpaces = firebase
-        .firestore()
-        .doc('/user/' + user.cloudId)
+      const firestoreSpaces = firebase.firestore().doc('/user/' + user.cloudId)
 
       // get local data
       const localSettings = user.settings
@@ -73,12 +71,11 @@ export default function SettingsAppAccount() {
       updateUser({
         ...user,
         settings,
-        lastTimeSync: new Date().getTime()
+        lastTimeSync: new Date().getTime(),
       })
 
       setIsSyncing(false)
       setStatusMessage('')
-
     } catch (err) {
       setStatusMessage('Error during cloud syncing')
       console.error(err)
@@ -97,13 +94,13 @@ export default function SettingsAppAccount() {
           ...user,
           email: null,
           cloudId: null,
-          lastTimeSync: null
+          lastTimeSync: null,
         })
       })
       .catch(err => {
         setStatusMessage('Error during logging out')
         console.error(err)
-      });
+      })
   }
 
   const sendEmail = () => {
@@ -114,10 +111,8 @@ export default function SettingsAppAccount() {
         handleCodeInApp: true,
       })
       .then(async () => {
-
         // update email in the database
         updateUser({ ...user, email })
-
       })
       .catch(error => {
         setStatusMessage('Error: ' + error.message)
@@ -126,65 +121,71 @@ export default function SettingsAppAccount() {
   }
 
   // for the first-ever time we run sync instantly
-  useEffect(() => {
-    if (user && user.cloudId && !user.lastTimeSync) {
-      cloudSync()
-    }
-  }, [user ? user.cloudId : null])
+  useEffect(
+    () => {
+      if (user && user.cloudId && !user.lastTimeSync) {
+        cloudSync()
+      }
+    },
+    [user ? user.cloudId : null],
+  )
 
   return (
     <Section bordered title="My Account" sizePadding={2}>
-      <Message>
-        { statusMessage }
-      </Message>
+      <Message>{statusMessage}</Message>
 
-      { user && user.email && user.cloudId && <div>
+      {user && user.email && user.cloudId && (
+        <div>
+          {isSyncing === false && user && user.lastTimeSync && (
+            <div>
+              <Message>
+                You account was synced last time on {new Date(user.lastTimeSync).toString()}.
+                <Button alt="action" onClick={cloudSync}>
+                  Sync now
+                </Button>
+              </Message>
+            </div>
+          )}
 
-        { isSyncing === false && user && user.lastTimeSync && <div>
+          <Button alt="action" onClick={logout}>
+            Logout
+          </Button>
+        </div>
+      )}
 
+      {user && !user.cloudId && (
+        <div>
           <Message>
-            You account was synced last time on { new Date(user.lastTimeSync).toString() }.
-            <Button alt="action" onClick={cloudSync}>Sync now</Button>
+            Orbit syncs your configuration including which spaces you are a member of, and your
+            personal preferences, so you can use Orbit on different computers.
           </Message>
 
-        </div> }
+          {user.email && (
+            <div>
+              <Message>Email with login link has been sent. Please check your email.</Message>
+            </div>
+          )}
 
-        <Button alt="action" onClick={logout}>Logout</Button>
+          <UISpace />
 
-      </div> }
-
-      { user && !user.cloudId && <div>
-
-        <Message>
-          Orbit syncs your configuration including which spaces you are a member of, and your personal
-          preferences, so you can use Orbit on different computers.
-        </Message>
-
-
-        { user.email && <div>
-          <Message>
-            Email with login link has been sent. Please check your email.
-          </Message>
-        </div> }
-
-        <UISpace />
-
-        <Section>
-          <SegmentedRow size={1.5}>
-            <Input
-              type="email"
-              flex={1}
-              placeholder="address@example.com"
-              value={email}
-              onChange={event => setEmail((event.target as any).value)}
-            />
-            <Theme name="selected">
-              <Button alt="action" onClick={sendEmail}>Send Login Link</Button>
-            </Theme>
-          </SegmentedRow>
-        </Section>
-      </div> }
-
+          <Section>
+            <SegmentedRow size={1.5}>
+              <Input
+                type="email"
+                flex={1}
+                placeholder="address@example.com"
+                value={email}
+                onChange={event => setEmail((event.target as any).value)}
+              />
+              <Theme name="selected">
+                <Button alt="action" onClick={sendEmail}>
+                  Send Login Link
+                </Button>
+              </Theme>
+            </SegmentedRow>
+          </Section>
+        </div>
+      )}
     </Section>
   )
 }

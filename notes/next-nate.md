@@ -6,6 +6,15 @@
 
 - using <Grid />, and <QueryApp />, put together a demo that shows a nice way to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
 
+- Search => Home
+  - rename to home, update icon
+  - move manage apps back into home
+  - making the home more clear for launcher, show the grid by default,
+    - make the grid actually search able in the main area instead of apps in search/index
+  - adding app from home
+  - simplify Create App
+    - just give it a name, choose a simple list of types (main only view)
+
 ---
 
 Views
@@ -45,6 +54,10 @@ Views
 - Query editor views
 - Moving into its own area useFilters or similar
 - Theme can control fontWeight for themeing texts
+
+- Making icon customization simpler
+  - Just choose background color
+  - We can manually overlay icon on top instead of custom-per-each
 
 ---
 
@@ -137,7 +150,6 @@ components:
 - <Autocomplete /> with options you can fill in
 - <Table />
   - Allow validators
--
 
 ---
 

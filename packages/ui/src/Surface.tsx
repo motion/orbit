@@ -12,11 +12,12 @@ import {
   View,
   ViewProps,
 } from '@o/gloss'
-import { mergeDefined, selectDefined } from '@o/utils'
+import { selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { createContextualProps } from './helpers/createContextualProps'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
@@ -87,16 +88,13 @@ export type SurfaceProps = ViewProps & {
 
 export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
 
-export const useSurfaceProps = (rawProps: SurfaceProps) => {
-  const extraProps = useContext(SurfacePropsContext)
-  return {
-    props: extraProps ? mergeDefined(extraProps, rawProps) : rawProps,
-    hasExtraProps: !!extraProps,
-  }
-}
+// TODO this is using SizedSurfaceProps, needs some work to separate the two
+const { useProps, Reset, PassProps } = createContextualProps<SizedSurfaceProps>()
+export const SurfacePassProps = PassProps
+export const useSurfaceProps = useProps
 
-export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
-  const { props, hasExtraProps } = useSurfaceProps(rawProps)
+export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
+  const props = useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const themeContext = useContext(ThemeContext)
@@ -275,14 +273,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     </IconPropsContext.Provider>
   )
 
-  element = forwardTheme({ children: element, theme: props.theme })
-
-  // dont nest PassProps, use once and clear context below
-  if (hasExtraProps) {
-    return <SurfacePropsContext.Provider value={null}>{element}</SurfacePropsContext.Provider>
-  }
-
-  return element
+  return <Reset>{forwardTheme({ children: element, theme: props.theme })}</Reset>
 })
 
 // fontFamily: inherit on both fixes elements
@@ -416,10 +407,4 @@ export function getSurfaceShadow(elevation: number) {
     return null
   }
   return [elevatedShadow(elevation) as any]
-}
-
-export const SurfacePropsContext = React.createContext(null as SizedSurfaceProps)
-
-export function SurfacePassProps({ children, ...rest }: SizedSurfaceProps) {
-  return <SurfacePropsContext.Provider value={rest}>{children}</SurfacePropsContext.Provider>
 }

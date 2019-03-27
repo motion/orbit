@@ -1,8 +1,9 @@
-import { View, ViewProps } from '@o/gloss';
-import React from 'react';
-import { SizedSurface } from './SizedSurface';
-import { TitleRow, TitleRowProps } from './TitleRow';
-import { Omit } from './types';
+import { View, ViewProps } from '@o/gloss'
+import React from 'react'
+import { createContextualProps } from './helpers/createContextualProps'
+import { SizedSurface } from './SizedSurface'
+import { TitleRow, TitleRowProps } from './TitleRow'
+import { Omit } from './types'
 
 export type SectionProps = Omit<ViewProps, 'title'> &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
@@ -13,20 +14,27 @@ export type SectionProps = Omit<ViewProps, 'title'> &
     below?: React.ReactNode
   }
 
-export function Section({
-  above,
-  title,
-  subTitle,
-  scrollable,
-  children,
-  afterTitle,
-  sizePadding,
-  bordered,
-  belowTitle,
-  below,
-  padding,
-  ...props
-}: SectionProps) {
+const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
+export const SectionPassProps = PassProps
+export const useSectionProps = useProps
+
+export function Section(direct: SectionProps) {
+  const props = useProps(direct)
+  const {
+    above,
+    title,
+    subTitle,
+    scrollable,
+    children,
+    afterTitle,
+    sizePadding,
+    bordered,
+    belowTitle,
+    below,
+    padding,
+    flex,
+    ...viewProps
+  } = props
   return (
     <SizedSurface
       hoverStyle={null}
@@ -37,6 +45,7 @@ export function Section({
       margin={bordered ? 10 : 0}
       noInnerElement
       overflow="hidden"
+      flex={flex}
     >
       {!!(title || afterTitle) && (
         <TitleRow
@@ -54,22 +63,11 @@ export function Section({
         overflowY={scrollable ? 'auto' : 'inherit'}
         overflowX="hidden"
         padding={typeof padding !== 'undefined' ? padding : bordered ? 20 : 0}
-        {...props}
+        {...viewProps}
       >
-        {children}
+        <Reset>{children}</Reset>
       </View>
       {below}
     </SizedSurface>
   )
 }
-
-// const SectionChrome = gloss<SectionProps>(View, {
-//   position: 'relative',
-//   // bordered: {
-//   //   margin: 10,
-//   //   borderRadius: 8,
-//   // },
-// }).theme(({ bordered, sizePadding = 1, padding, ...p }, theme) => ({
-//   border: bordered ? [1, theme.borderColor] : 'none',
-
-// }))

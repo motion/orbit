@@ -3,6 +3,7 @@ import React, { Suspense, useContext, useEffect, useState } from 'react'
 import { BorderLeft, BorderTop } from '../Border'
 import { Interactive, InteractiveProps } from '../Interactive'
 import { Loading } from '../progress/Loading'
+import { SectionPassProps } from '../Section'
 import { LayoutContext } from './Layout'
 
 export type PaneProps = Partial<InteractiveProps> & {
@@ -64,6 +65,8 @@ export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
     sizeProps.overflow = 'hidden'
   }
 
+  const childElement = <SectionPassProps flex={1}>{children}</SectionPassProps>
+
   if (resizable) {
     const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
@@ -75,14 +78,14 @@ export function Pane({ scrollable, children, resizable, ...props }: PaneProps) {
         {...props}
       >
         {borderElement}
-        {children}
+        {childElement}
       </Interactive>
     )
   } else {
     element = (
       <PaneChrome {...sizeProps} {...props}>
         {borderElement}
-        {children}
+        {childElement}
       </PaneChrome>
     )
   }

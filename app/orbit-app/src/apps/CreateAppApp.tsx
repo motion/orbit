@@ -2,11 +2,10 @@ import { save } from '@o/bridge'
 import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
 import { Button, Divider, FormField, Section, Space, TitleRow } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import { SubSection } from '../views/SubSection'
 import { AppsMainNew } from './apps/AppsMainNew'
 import PreviewApp from './views/PreviewApp'
 
@@ -32,11 +31,11 @@ function CreateAppIndex() {
               onClick={() => {
                 Actions.createCustomApp()
               }}
-              icon="add"
+              icon="simadd"
               iconAfter
               tooltip="Create new custom app"
             >
-              Create
+              New
             </Button>
           </>
         }
@@ -55,15 +54,10 @@ function CreateAppIndex() {
   )
 }
 
-function CreateAppMain({ identifier }: AppProps) {
+function CreateAppMain({ title, identifier }: AppProps) {
   const Actions = useActions()
   const { newAppStore } = useStores()
   const [activeSpace] = useActiveSpace()
-  const [showPreviewApp, setShowPreviewApp] = useState(false)
-
-  useEffect(() => {
-    setShowPreviewApp(true)
-  }, [])
 
   useEffect(
     () => {
@@ -84,7 +78,6 @@ function CreateAppMain({ identifier }: AppProps) {
       ...newAppStore.app,
       spaceId: activeSpace.id,
     }
-    console.log('creating new app', app)
     save(AppModel, app)
     Actions.previousTab()
   }
@@ -94,33 +87,32 @@ function CreateAppMain({ identifier }: AppProps) {
       <TitleRow
         bordered
         backgrounded
-        title="Title"
+        title="Setup app"
+        subTitle={`Create ${title} app`}
         after={
           <>
             <Space />
-            <Button iconAfter alt="action" icon="add" onClick={createApp}>
-              Add
+            <Button iconAfter alt="action" icon="arrowright" onClick={createApp}>
+              Create
             </Button>
           </>
         }
       />
 
       <Section padded>
-        <SubSection title="Setup">
-          <FormField label="Name and Icon">
-            <AppsMainNew />
-          </FormField>
+        <FormField label="Name and Icon">
+          <AppsMainNew />
+        </FormField>
 
-          <Divider />
+        <Divider />
 
-          <FormField label="Settings">
-            <AppView identifier={identifier} viewType="settings" />
-          </FormField>
-        </SubSection>
+        <FormField label="Settings">
+          <AppView identifier={identifier} viewType="settings" />
+        </FormField>
       </Section>
 
-      <Section bordered title="Preview">
-        {showPreviewApp && <PreviewApp app={app} />}
+      <Section bordered title="Preview" minHeight={200}>
+        <PreviewApp app={app} />
       </Section>
     </Section>
   )

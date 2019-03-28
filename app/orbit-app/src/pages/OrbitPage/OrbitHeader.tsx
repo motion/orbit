@@ -1,7 +1,16 @@
 import { FullScreen, gloss, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { App } from '@o/stores'
-import { BorderBottom, Button, ButtonProps, Row, SegmentedRow, Space, SurfacePassProps, View } from '@o/ui'
+import {
+  BorderBottom,
+  Button,
+  ButtonProps,
+  Row,
+  SegmentedRow,
+  Space,
+  SurfacePassProps,
+  View,
+} from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'

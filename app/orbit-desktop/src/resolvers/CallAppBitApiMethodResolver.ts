@@ -2,6 +2,7 @@ import { resolveCommand } from '@o/mediator'
 import { AppBit, AppEntity, CallAppBitApiMethodCommand } from '@o/models'
 import { PostgresApi } from '@o/postgres-app/_/api.node'
 import { SlackApi } from '@o/slack-app/_/api.node'
+import { GmailApi } from '@o/gmail-app/_/api.node'
 import { getRepository } from 'typeorm'
 
 export const apis: {
@@ -12,6 +13,7 @@ export const apis: {
   // github: GithubApi,
   // gmail: GmailApi,
   // jira: JiraApi,
+  gmail: GmailApi,
   slack: SlackApi,
   postgres: PostgresApi,
   // website: WebsiteApi,

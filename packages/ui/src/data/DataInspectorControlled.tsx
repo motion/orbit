@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { gloss, SimpleText } from '@o/gloss'
 import React, { Component } from 'react'
 import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
@@ -22,11 +22,13 @@ const { clipboard } = Electron
 // TODO
 type ElectronMenuItemOptions = any
 
-const BaseContainer = gloss().theme(props => ({
-  filter: props.disabled ? 'grayscale(100%)' : '',
-  margin: props.depth === 0 ? '7.5px 0' : '0',
+const BaseContainer = gloss({
+  lineHeight: '1.2rem',
   paddingLeft: 10,
   userSelect: 'text',
+}).theme(props => ({
+  filter: props.disabled ? 'grayscale(100%)' : '',
+  margin: props.depth === 0 ? [7.5, 0] : '0',
 }))
 
 const Added = gloss({
@@ -40,13 +42,11 @@ const RecursiveBaseWrapper = gloss('span', {
   color: colors.red,
 })
 
-const Wrapper = gloss('span', {
-  color: '#555',
+const Wrapper = gloss(SimpleText, {
+  display: 'inline',
 })
 
-const PropertyContainer = gloss('span', {
-  paddingTop: '2px',
-})
+const PropertyContainer = gloss('span')
 
 const ExpandControl = gloss('span', {
   color: '#6e6e6e',
@@ -58,6 +58,7 @@ const ExpandControl = gloss('span', {
 
 export const InspectorName = gloss('span', {
   color: colors.grapeDark1,
+  fontWeight: 500,
 })
 
 export type DataValueExtractor = (

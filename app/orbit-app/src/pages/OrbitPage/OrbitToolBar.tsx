@@ -5,10 +5,9 @@ import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 
 const toolbarHeight = 30
-const minHeight = 3
 
-export const ToolBarPad = ({ hasToolbar }: { hasToolbar?: boolean }) => (
-  <div style={{ height: hasToolbar ? toolbarHeight : 3 }} />
+export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
+  <div style={{ height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 3 : 0 }} />
 )
 
 export const OrbitToolBar = memo((props: { children: any }) => {
@@ -40,7 +39,6 @@ const ToolbarChrome = gloss(Row, {
 const ToolbarInner = gloss<{ isActive: boolean }>({
   flex: 2,
   flexFlow: 'row',
-  minHeight,
   opacity: 0,
   isActive: {
     opacity: 1,

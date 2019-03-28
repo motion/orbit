@@ -5,7 +5,7 @@ import { Space } from './Space'
 export function SpacedRow(props: ViewProps) {
   const total = React.Children.count(props.children)
   return (
-    <Row alignItems="center" padding={[0, 5]} width="100%">
+    <Row alignItems="center" padding={5} width="100%">
       {React.Children.map(props.children, (child, index) => (
         <Fragment key={index}>
           {child}

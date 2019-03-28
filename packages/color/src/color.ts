@@ -1,6 +1,18 @@
 import { colorConvert } from './colorConvert'
 import { colorString, toHex, toRgbPercent } from './colorString'
 
+// exports
+
+export { colorNames } from './colorNames'
+export * from './invertLightness'
+export { isColorLike, toColorString } from './isColor'
+export * from './linearGradient'
+export { ColorArray, ColorLike } from './types'
+
+export function color(obj) {
+  return new Color(obj)
+}
+
 const slice = [].slice
 const skippedModels = [
   // to be honest, I don't really feel like keyword belongs in color convert, but eh.
@@ -24,8 +36,6 @@ Object.keys(colorConvert).forEach(function(model) {
 const StringCache = new WeakMap()
 
 var limiters = {}
-
-export * from './helpers'
 
 export class Color {
   static rgb: Function
@@ -189,7 +199,7 @@ export class Color {
     if (arguments.length) {
       return new Color(this.color.concat(Math.max(0, Math.min(1, val))), this.model)
     }
-    return this.valpha
+    return this
   }
 
   keyword(val?) {
@@ -460,8 +470,4 @@ function zeroArray(arr, length) {
     }
   }
   return arr
-}
-
-export function color(obj, model?) {
-  return new Color(obj, model)
 }

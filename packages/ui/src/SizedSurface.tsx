@@ -5,15 +5,12 @@ const LINE_HEIGHT = 28
 
 export type SizedSurfaceProps = SurfaceProps & {
   flex?: any
-  circular?: boolean
   sizeHeight?: boolean | number
   sizeFont?: boolean | number
   sizePadding?: boolean | number
   sizeMargin?: boolean | number
   sizeRadius?: boolean | number
   sizeIcon?: boolean | number
-  height?: number
-  inline?: boolean
 }
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)

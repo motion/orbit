@@ -53,7 +53,7 @@ export type ListItemProps = ViewProps &
     preview?: React.ReactNode
     title?: React.ReactNode
     subTextOpacity?: number
-    slim?: boolean
+    small?: boolean
     above?: React.ReactNode
     activeStyle?: Object
     before?: React.ReactNode
@@ -94,21 +94,21 @@ export type ListItemProps = ViewProps &
     titleFlex?: number
     subtitleProps?: Object
     getIndex?: ((id: number) => number)
-    subtitleSpaceBetween?: React.ReactNode
+    subspaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any
     separator?: React.ReactNode
     group?: string
   }
 
-function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
-  let iconSize = iconBefore ? (slim ? 20 : 28) : slim ? 12 : 14
+function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
+  let iconSize = iconBefore ? (small ? 20 : 28) : small ? 12 : 14
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,
   }
   if (!iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
+    iconPropsFinal['style'] = { transform: `translateY(${small ? 4 : 3}px)` }
   }
   let element = icon
   if (React.isValidElement(icon)) {
@@ -120,8 +120,8 @@ function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
   }
   return (
     // use a view to ensure consistent width
-    // and add the titlespace
-    <View width={iconSize + (slim ? 8 : 10)}>{element}</View>
+    // and add the space
+    <View width={iconSize + (small ? 8 : 10)}>{element}</View>
   )
 }
 
@@ -144,7 +144,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     titleProps,
     subtitleProps,
     padding,
-    subtitleSpaceBetween,
+    subspaceBetween,
     searchTerm,
     onClickLocation,
     renderText,
@@ -154,7 +154,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     before,
     separatorProps,
     above,
-    slim,
+    small,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.6,
     after,
@@ -167,12 +167,12 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
   const showTitle = !!title && !props.hideTitle
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  const sizeLineHeight = slim ? 0.8 : 1
-  const defaultPadding = slim ? [7, 9] : [8, 10]
+  const sizeLineHeight = small ? 0.8 : 1
+  const defaultPadding = small ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
 
   // add a little vertical height for full height icons
-  if (slim && iconBefore) {
+  if (small && iconBefore) {
     defaultPadding[0] += 2
   }
 
@@ -210,7 +210,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
       >
         {`${location}`}
       </RoundButtonSmall>
-      <TitleSpace slim={slim} />
+      <Space small={small} />
     </>
   )
 
@@ -244,7 +244,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
                 <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
                   {title}
                 </HighlightText>
-                <TitleSpace slim={slim} />
+                <Space small={small} />
                 {props.afterTitle}
                 {afterHeaderElement}
               </Title>
@@ -254,7 +254,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
                 {showIcon && !showTitle && (
                   <>
                     {iconElement}
-                    <TitleSpace slim={slim} />
+                    <Space small={small} />
                   </>
                 )}
                 {!!location && locationElement}
@@ -402,16 +402,6 @@ const AfterHeader = gloss({
   // why? for some reason this is really hard to align the text with the title,
   // check the visual date in list items to see if this helps align it in the row
   marginBottom: -4,
-})
-
-const TitleSpace = gloss({
-  minWidth: 10,
-  shouldFlex: {
-    flex: 1,
-  },
-  slim: {
-    minWidth: 8,
-  },
 })
 
 const ListItemMainContent = gloss({

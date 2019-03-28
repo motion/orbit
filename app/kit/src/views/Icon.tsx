@@ -1,24 +1,16 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
 
-export type OrbitIconProps = IconProps & {
-  ref?: any
-  name: string
-  size?: number
-  style?: any
-}
-
-export const Icon = React.memo((props: OrbitIconProps) => {
+export const Icon = memo((props: IconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
   const theme = useTheme()
-  const finalColor =
-    color === false ? color : color || theme.color ? theme.color.toString() : '#fff'
+  const finalColor = color || theme.color ? theme.color.toString() : '#fff'
 
   // image based source icons
   const sourceIcon = useAppIcon(props)

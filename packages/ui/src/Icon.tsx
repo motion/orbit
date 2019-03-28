@@ -1,4 +1,4 @@
-import { Color, gloss, View, ViewProps } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'
@@ -7,12 +7,10 @@ import { iconNames } from './iconNames'
 
 export type IconProps = ViewProps & {
   size?: number
-  color?: Color
+  name: string
   type?: 'mini' | 'outline'
-  opacity?: number
   tooltip?: string
   tooltipProps?: Object
-  name: string
 }
 
 // TODO use createContextProps

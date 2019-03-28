@@ -1,6 +1,6 @@
+import { ColorLike } from '@o/css'
 import {
   alphaColor,
-  Color,
   forwardTheme,
   gloss,
   GlossThemeFn,
@@ -35,16 +35,13 @@ export type SurfaceProps = ViewProps & {
   active?: boolean
   activeStyle?: any
   ellipse?: boolean
-  borderRadius?: number
   after?: React.ReactNode
-  background?: Color
   badge?: React.ReactNode
   badgeProps?: Object
   children?: React.ReactNode
   name?: string
   chromeless?: boolean
   circular?: boolean
-  className?: string
   clickable?: boolean
   elementProps?: Object
   elevation?: number
@@ -52,21 +49,18 @@ export type SurfaceProps = ViewProps & {
   glint?: boolean
   glow?: boolean
   glowProps?: Object
-  height?: number
   highlight?: boolean
   hovered?: boolean
   icon?: React.ReactNode
   iconAfter?: boolean
-  iconColor?: Color
+  iconColor?: ColorLike
   iconProps?: Partial<IconProps>
   iconSize?: number
   noInnerElement?: boolean
-  onClick?: any
   size?: number
   sizeIcon?: number
   spaced?: boolean
   stretch?: boolean
-  tagName?: string
   theme?: ThemeObject | string
   tooltip?: React.ReactNode
   tooltipProps?: PopoverProps
@@ -74,10 +68,9 @@ export type SurfaceProps = ViewProps & {
   alpha?: number
   alphaHover?: number
   disabled?: boolean
-  placeholderColor?: Color
-  highlightBackground?: Color
-  highlightColor?: Color
-  style?: Object
+  placeholderColor?: ColorLike
+  highlightBackground?: ColorLike
+  highlightColor?: ColorLike
   ignoreSegment?: boolean
   sizeLineHeight?: boolean | number
   type?: string
@@ -379,7 +372,7 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size = (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1)
+  const size = (props.size || 1) * (props.height ? +props.height / 3 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
 }
 

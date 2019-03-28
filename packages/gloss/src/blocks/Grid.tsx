@@ -1,7 +1,7 @@
 import { gloss } from '../gloss'
 import { View, ViewProps } from './View'
 
-const cssVal = (n: number | string) => (typeof n === 'number' ? n + 'px' : n)
+const cssVal = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
 export type GridProps = ViewProps & {
   colSpan?: number

@@ -1,4 +1,4 @@
-import { View, ViewProps } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
@@ -66,16 +66,19 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <View
+      <SectionInner
         overflowY={scrollable ? 'auto' : 'hidden'}
-        overflowX="hidden"
         padding={typeof padding !== 'undefined' ? padding : padded ? 20 : 0}
         flex={flex}
         {...viewProps}
       >
         <Reset>{children}</Reset>
-      </View>
+      </SectionInner>
       {below}
     </SizedSurface>
   )
+})
+
+const SectionInner = gloss(View, {
+  overflowX: 'hidden',
 })

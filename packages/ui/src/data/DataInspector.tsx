@@ -5,6 +5,7 @@
  * @format
  */
 
+import { isColorLike } from '@o/css'
 import React, { PureComponent } from 'react'
 import {
   DataInspectorControlled,
@@ -67,13 +68,27 @@ export class DataInspector extends PureComponent<DataInspectorProps, DataInspect
     this.setState({ expanded })
   }
 
+  extractValue = value => {
+    if (typeof value === 'string' && isColorLike(value)) {
+      return {
+        type: 'color',
+        value,
+        mutable: true,
+      }
+    }
+  }
+
+  setValue = (a, b) => {
+    console.log(a, b)
+  }
+
   render() {
     return (
       <DataInspectorControlled
         data={this.props.data}
         diff={this.props.diff}
-        extractValue={this.props.extractValue}
-        setValue={this.props.setValue}
+        extractValue={this.props.extractValue || this.extractValue}
+        setValue={this.props.setValue || this.setValue}
         expanded={this.state.expanded}
         onExpanded={this.onExpanded}
         expandRoot={this.props.expandRoot}

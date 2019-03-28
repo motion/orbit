@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { color, gloss, View } from '@o/gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
@@ -37,15 +37,14 @@ const NumberValue = gloss('span', {
   color: colors.tealDark1,
 })
 
-const ColorBox = gloss('span', props => ({
-  backgroundColor: props.color,
+const ColorBox = gloss(View, {
   boxShadow: 'inset 0 0 1px rgba(0, 0, 0, 1)',
   display: 'inline-block',
   height: 12,
+  width: 12,
   marginRight: 5,
   verticalAlign: 'middle',
-  width: 12,
-}))
+})
 
 const FunctionKeyword = gloss('span', {
   color: 'rgb(170, 13, 145)',
@@ -124,6 +123,8 @@ class NumberTextEditor extends PureComponent<{
 
     return (
       <Input
+        display="inline"
+        sizeHeight={0.75}
         key="input"
         {...extraProps}
         onChange={this.onNumberTextInputChange}
@@ -270,11 +271,14 @@ class ColorEditor extends Component<{
   }
 
   render() {
-    const colorInfo = parseColor(this.props.value)
-    if (!colorInfo) {
+    console.log('hi')
+    let colorInfo
+    try {
+      colorInfo = color(this.props.value).rgbaObject()
+    } catch (err) {
+      console.warn('cant parse color', this.props.value, err)
       return <Fragment />
     }
-
     return (
       <ColorPickerDescription>
         <DataDescriptionPreview
@@ -373,62 +377,6 @@ class DataDescriptionPreview extends Component<{
   }
 }
 
-function parseColor(
-  val: string | number,
-): {
-  r: number
-  g: number
-  b: number
-  a: number
-} | null {
-  if (typeof val === 'number') {
-    const a = ((val >> 24) & 0xff) / 255
-    const r = (val >> 16) & 0xff
-    const g = (val >> 8) & 0xff
-    const b = val & 0xff
-    return { a, b, g, r }
-  }
-  if (typeof val !== 'string') {
-    return null
-  }
-  if (val[0] !== '#') {
-    return null
-  }
-
-  // remove leading hash
-  val = val.slice(1)
-
-  // only allow RGB and ARGB hex values
-  if (val.length !== 3 && val.length !== 6 && val.length !== 8) {
-    return null
-  }
-
-  // split every 2 characters
-  const parts = val.match(/.{1,2}/g)
-  if (!parts) {
-    return null
-  }
-
-  // get the alpha value
-  let a = 1
-
-  // extract alpha if passed AARRGGBB
-  if (val.length === 8) {
-    a = parseInt(parts.shift(), 16) / 255
-  }
-
-  const size = val.length
-  const [r, g, b] = parts.map(num => {
-    if (size === 3) {
-      return parseInt(num + num, 16)
-    } else {
-      return parseInt(num, 16)
-    }
-  })
-
-  return { a, b, g, r }
-}
-
 class DataDescriptionContainer extends Component<{
   type: string
   value: any
@@ -447,13 +395,13 @@ class DataDescriptionContainer extends Component<{
         return <NumberValue>{Number(val)}</NumberValue>
 
       case 'color': {
-        const colorInfo = parseColor(val)
+        const colorInfo = color(val).rgbaObject()
         if (colorInfo) {
           const { a, b, g, r } = colorInfo
           return [
-            <ColorBox key="color-box" color={`rgba(${r}, ${g}, ${b}, ${a})`} />,
+            <ColorBox key="color-box" backgroundColor={val} />,
             <ColorValue key="value">
-              rgba({r}, {g}, {b}, {a === 1 ? '1' : a.toFixed(2)})
+              rgba({r.toFixed(2)}, {g.toFixed(2)}, {b.toFixed(2)}, {a === 1 ? '1' : a.toFixed(2)})
             </ColorValue>,
           ]
         } else {

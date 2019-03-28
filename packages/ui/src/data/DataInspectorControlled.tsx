@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { gloss, SimpleText } from '@o/gloss'
 import React, { Component } from 'react'
 import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
@@ -7,67 +7,6 @@ import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
 import { getSortedKeys } from './utils'
-
-// @ts-ignore
-const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
-const { clipboard } = Electron
-
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
-
-// TODO
-type ElectronMenuItemOptions = any
-
-const BaseContainer = gloss().theme(props => ({
-  filter: props.disabled ? 'grayscale(100%)' : '',
-  margin: props.depth === 0 ? '7.5px 0' : '0',
-  paddingLeft: 10,
-  userSelect: 'text',
-}))
-
-const Added = gloss({
-  backgroundColor: colors.tealTint70,
-})
-const Removed = gloss({
-  backgroundColor: colors.cherryTint70,
-})
-
-const RecursiveBaseWrapper = gloss('span', {
-  color: colors.red,
-})
-
-const Wrapper = gloss('span', {
-  color: '#555',
-})
-
-const PropertyContainer = gloss('span', {
-  paddingTop: '2px',
-})
-
-const ExpandControl = gloss('span', {
-  color: '#6e6e6e',
-  fontSize: 10,
-  marginLeft: -11,
-  marginRight: 5,
-  whiteSpace: 'pre',
-})
-
-export const InspectorName = gloss('span', {
-  color: colors.grapeDark1,
-})
-
-export type DataValueExtractor = (
-  value: any,
-  depth: number,
-) => {
-  mutable: boolean
-  type: string
-  value: any
-} | null
 
 export type DataInspectorSetValue = (path: string[], val: any) => void
 
@@ -141,6 +80,71 @@ type DataInspectorControlledProps = {
    */
   tooltips?: Object
 }
+
+// @ts-ignore
+const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
+const { clipboard } = Electron
+
+/**
+ * Copyright 2018-present Facebook.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ * @format
+ */
+
+// TODO
+type ElectronMenuItemOptions = any
+
+const BaseContainer = gloss({
+  lineHeight: '1.2rem',
+  paddingLeft: 10,
+  userSelect: 'text',
+}).theme(props => ({
+  opacity: props.disabled ? 0.5 : 1,
+  margin: props.depth === 0 ? [7.5, 0] : '0',
+}))
+
+const Added = gloss({
+  backgroundColor: colors.tealTint70,
+})
+const Removed = gloss({
+  backgroundColor: colors.cherryTint70,
+})
+
+const RecursiveBaseWrapper = gloss('span', {
+  color: colors.red,
+})
+
+const Wrapper = gloss(SimpleText, {
+  display: 'inline',
+})
+
+const PropertyContainer = gloss('span')
+
+const ExpandControl = gloss('span', {
+  color: '#6e6e6e',
+  fontSize: 10,
+  marginLeft: -11,
+  marginRight: 5,
+  whiteSpace: 'pre',
+})
+
+export const InspectorName = gloss('span', {
+  color: colors.grapeDark1,
+  fontWeight: 500,
+})
+
+export type DataValueExtractor = (
+  value: any,
+  depth: number,
+) =>
+  | {
+      mutable?: boolean
+      type: string
+      value: any
+    }
+  | undefined
+  | null
 
 const defaultValueExtractor: DataValueExtractor = (value: any) => {
   const type = typeof value

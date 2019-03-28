@@ -5,12 +5,26 @@
     "rootDir": "src",
     "outDir": "_",
     "typeRoots": ["./src/globalTypes.d.ts"],
-    "types": ["jest"]
+    "types": ["jest"],
+    "noEmit": true,
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "include": ["src/**/*"],
   "references": [
     { "path": "../bridge" },
     { "path": "../../packages/config" },
-    { "path": "../../packages/mediator" }
+    { "path": "../../packages/mediator" },
+    { "path": "../../packages/react-textfit" },
+    { "path": "../../apps/drive-app" },
+    { "path": "../../apps/github-app" },
+    { "path": "../../apps/confluence-app" },
+    { "path": "../../apps/jira-app" },
+    { "path": "../../apps/slack-app" },
+    { "path": "../../apps/gmail-app" },
+    { "path": "../../apps/postgres-app" },
+    { "path": "../../apps/custom-app" },
+    { "path": "../../apps/people-app" },
+    { "path": "../../apps/search-app" },
+    { "path": "../../apps/lists-app" }
   ]
 }

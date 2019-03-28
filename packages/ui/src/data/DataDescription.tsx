@@ -4,7 +4,6 @@ import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
 import { colors } from '../helpers/colors'
 import { Link } from '../Link'
-import { Popover } from '../Popover'
 import { DataInspectorSetValue } from './DataInspectorControlled'
 
 /**
@@ -284,29 +283,52 @@ class ColorEditor extends Component<{
           editable={false}
           commit={this.props.commit}
         />
-        <Popover onClose={this.onBlur}>
-          <SketchPicker
-            color={colorInfo}
-            presetColors={[
-              colors.blue,
-              colors.green,
-              colors.red,
-              colors.blueGrey,
-              colors.slate,
-              colors.aluminum,
-              colors.seaFoam,
-              colors.teal,
-              colors.lime,
-              colors.lemon,
-              colors.orange,
-              colors.tomato,
-              colors.cherry,
-              colors.pink,
-              colors.grape,
-            ]}
-            onChange={this.onChange}
-          />
-        </Popover>
+        <SketchPicker
+          color={colorInfo}
+          presetColors={[
+            colors.blue,
+            colors.green,
+            colors.red,
+            colors.blueGrey,
+            colors.slate,
+            colors.aluminum,
+            colors.seaFoam,
+            colors.teal,
+            colors.lime,
+            colors.lemon,
+            colors.orange,
+            colors.tomato,
+            colors.cherry,
+            colors.pink,
+            colors.grape,
+          ]}
+          onChange={this.onChange}
+        />
+        {/* <Popover target={<div />} onClose={this.onBlur}>
+          <View>
+            <SketchPicker
+              color={colorInfo}
+              presetColors={[
+                colors.blue,
+                colors.green,
+                colors.red,
+                colors.blueGrey,
+                colors.slate,
+                colors.aluminum,
+                colors.seaFoam,
+                colors.teal,
+                colors.lime,
+                colors.lemon,
+                colors.orange,
+                colors.tomato,
+                colors.cherry,
+                colors.pink,
+                colors.grape,
+              ]}
+              onChange={this.onChange}
+            />
+          </View>
+        </Popover> */}
       </ColorPickerDescription>
     )
   }
@@ -419,6 +441,8 @@ class DataDescriptionContainer extends Component<{
 
   render(): any {
     const { type, editable, value: val } = this.props
+
+    console.log('showing value', type, val)
 
     switch (type) {
       case 'number':

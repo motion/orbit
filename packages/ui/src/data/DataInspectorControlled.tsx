@@ -1,8 +1,8 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import React, { Component } from 'react'
-import { colors } from 'react-select/lib/theme'
 import { ContextMenu } from '../ContextMenu'
+import { colors } from '../helpers/colors'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
@@ -30,14 +30,14 @@ const BaseContainer = gloss().theme(props => ({
 }))
 
 const Added = gloss({
-  backgroundColor: colors.primary,
+  backgroundColor: colors.tealTint70,
 })
 const Removed = gloss({
-  backgroundColor: colors.danger,
+  backgroundColor: colors.cherryTint70,
 })
 
 const RecursiveBaseWrapper = gloss('span', {
-  color: colors.danger,
+  color: colors.red,
 })
 
 const Wrapper = gloss('span', {
@@ -57,7 +57,7 @@ const ExpandControl = gloss('span', {
 })
 
 export const InspectorName = gloss('span', {
-  color: colors.danger, // todo color better
+  color: colors.grapeDark1,
 })
 
 export type DataValueExtractor = (
@@ -144,35 +144,27 @@ type DataInspectorControlledProps = {
 
 const defaultValueExtractor: DataValueExtractor = (value: any) => {
   const type = typeof value
-
   if (type === 'number') {
     return { mutable: true, type: 'number', value }
   }
-
   if (type === 'string') {
     return { mutable: true, type: 'string', value }
   }
-
   if (type === 'boolean') {
     return { mutable: true, type: 'boolean', value }
   }
-
   if (type === 'undefined') {
     return { mutable: true, type: 'undefined', value }
   }
-
   if (value === null) {
     return { mutable: true, type: 'null', value }
   }
-
   if (Array.isArray(value)) {
     return { mutable: true, type: 'array', value }
   }
-
   if (Object.prototype.toString.call(value) === '[object Date]') {
     return { mutable: true, type: 'date', value }
   }
-
   if (type === 'object') {
     return { mutable: true, type: 'object', value }
   }
@@ -288,7 +280,6 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
   }
 
   interaction = null
-  // interaction = reportInteraction('DataInspector', this.props.path.join(':'));
 
   static isExpandable(data: any) {
     return typeof data === 'object' && data !== null && Object.keys(data).length > 0
@@ -365,22 +356,19 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
 
   handleClick = () => {
     const isExpanded = this.isExpanded(this.props.path)
-    this.interaction(isExpanded ? 'collapsed' : 'expanded')
+    // this.interaction(isExpanded ? 'collapsed' : 'expanded')
     this.setExpanded(this.props.path, !isExpanded)
   }
 
   extractValue = (data: any, depth: number) => {
     let res
-
     const { extractValue } = this.props
     if (extractValue) {
       res = extractValue(data, depth)
     }
-
     if (!res) {
       res = defaultValueExtractor(data, depth)
     }
-
     return res
   }
 
@@ -403,7 +391,6 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     // the data inspector makes values read only when setValue isn't set so we just need to set it
     // to null and the readOnly status will be propagated to all children
     let { setValue } = this.props
-
     const res = this.extractValue(data, depth)
     const resDiff = this.extractValue(diff, depth)
 
@@ -413,7 +400,6 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
       if (!res.mutable) {
         setValue = null
       }
-
       ;({ type, value } = res)
     } else {
       return null
@@ -508,12 +494,9 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     const nameElems = []
     if (typeof name !== 'undefined') {
       nameElems.push(
-        <Tooltip
-          label={<InspectorName>{name}</InspectorName>}
-          // title={tooltips != null && tooltips[name]}
-          towards="left"
-          key="name"
-        />,
+        <Tooltip label={tooltips != null && tooltips[name]} key="name">
+          <InspectorName>{name}</InspectorName>
+        </Tooltip>,
       )
       nameElems.push(<span key="sep">: </span>)
     }

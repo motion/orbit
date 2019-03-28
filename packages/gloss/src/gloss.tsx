@@ -1,4 +1,4 @@
-import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import {
   createElement,
@@ -36,7 +36,7 @@ type GlossProps<Props> = Props &
 export type GlossThemeFn<Props> = ((
   props: GlossProps<Props>,
   theme: ThemeObject,
-) => CSSPropertySet | null)
+) => CSSPropertySetResolved | null)
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
@@ -173,6 +173,11 @@ function glossify(
     let style = styles[key]
     if (newStyles[key]) {
       style = { ...style, ...newStyles[key] }
+    }
+    // they may return null for some reason
+    // like conditional style '&:hover': active ? hoverStyle : null
+    if (!style) {
+      continue
     }
     const className = addRules(displayName, style, key, tagName)
     nextClassNames = nextClassNames || []

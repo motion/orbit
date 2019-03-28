@@ -1,10 +1,10 @@
-import { Color } from '@o/css'
+import { ColorLike } from '@o/css'
 import { gloss } from '@o/gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
 type Props = {
-  color?: Color
+  color?: ColorLike
   size?: number
   borderRadius?: number
   borderLeftRadius?: number

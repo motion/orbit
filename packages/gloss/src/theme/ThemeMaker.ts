@@ -1,11 +1,11 @@
-import { color } from '@o/color'
-import { Color, LinearGradient, ThemeObject } from '@o/css'
+import { color, ColorLike } from '@o/color'
+import { LinearGradient, ThemeObject } from '@o/css'
 
-type ColorObject = { [a: string]: Color }
+type ColorObject = { [a: string]: ColorLike }
 
 // TODO: change themes to just use `base:{}` not put stuff in global?
 export type SimpleStyleObject = {
-  [a: string]: Color | ColorObject
+  [a: string]: ColorLike | ColorObject
   hover?: ColorObject
   active?: ColorObject
   focus?: ColorObject

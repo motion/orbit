@@ -1,5 +1,5 @@
 import { Absolute, gloss, ViewProps } from '@o/gloss'
-import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStores } from '@o/kit'
+import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStoresSimple } from '@o/kit'
 import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
 import {
   Button,
@@ -100,7 +100,7 @@ const AppIconContainer = gloss({
 }))
 
 export function ManageApps() {
-  const { paneManagerStore } = useStores()
+  const { paneManagerStore } = useStoresSimple()
   const activeApps = useActiveAppsSorted()
   const getActiveApps = useRefGetter(activeApps)
   const handleSortEnd = useAppSortHandler()
@@ -119,7 +119,6 @@ export function ManageApps() {
             disabled: x.tabDisplay !== 'plain',
             onDoubleClick: () => {
               paneManagerStore.setActivePane(`${x.id}`)
-              console.log('double 2', x)
             },
           })),
         ]}

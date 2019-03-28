@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@o/gloss'
-import { Icon, OrbitIconProps, useLocationLink } from '@o/kit'
+import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
   BorderBottom,
@@ -35,7 +35,7 @@ export type TabProps = ViewProps & {
   iconAdjustOpacity?: number
   getContext?: () => MenuTemplate
   disabled?: boolean
-  iconProps?: OrbitIconProps
+  iconProps?: Partial<IconProps>
   after?: React.ReactNode
   location?: string
 }

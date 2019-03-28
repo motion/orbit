@@ -52,7 +52,7 @@ export function AppsIndex() {
             title: def.name,
             icon: def.id,
             iconBefore: true,
-            slim: true,
+            small: true,
             subtitle: getDescription(def),
             after: sourceIcon,
             appProps: {

@@ -1,4 +1,4 @@
-import { Color } from '@o/css'
+import { ColorLike } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { gloss, Theme } from '@o/gloss'
 import { on } from '@o/utils'
@@ -12,8 +12,9 @@ import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
 import { getSurfaceShadow, SurfaceProps } from './Surface'
+import { Omit } from './types'
 
-export type PopoverProps = SurfaceProps & {
+export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   // custom theme for just the popover content
   themeName?: string
   // if you set a group, it acts as an ID that makes sure only ONE popover
@@ -75,7 +76,7 @@ export type PopoverProps = SurfaceProps & {
   onOpen?: Function
   height?: number
   width?: number
-  background?: true | Color
+  background?: true | ColorLike
   passActive?: boolean
   popoverProps?: Object
   style?: Object

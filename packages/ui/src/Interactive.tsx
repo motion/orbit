@@ -8,7 +8,6 @@
 import { isEqual } from '@o/fast-compare'
 import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
 import { on } from '@o/utils'
-import { throttle } from 'lodash'
 import React, { createContext, createRef, RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { Rect } from './helpers/geometry'
@@ -16,6 +15,7 @@ import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { useScreenPosition } from './hooks/useScreenPosition'
+import { useThrottle } from './hooks/useThrottle'
 import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
 
@@ -719,6 +719,7 @@ const FakeResize = ({ side, hovered, parent, ...rest }: FakeResizeProps) => {
   const [visible, setVisible] = useState(false)
   // fixes bug where clicking makes it go away
   const [intHovered, setIntHovered] = useState(false)
+  const throttle = useThrottle()
 
   const onChange = useCallback(
     throttle(({ visible }) => {

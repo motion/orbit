@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "incremental": true
+  },
+  "references": [
+    // apps
+    { "path": "./app/orbit" },
+    { "path": "./app/orbit-repl" },
+
+    // dev time needs
+    { "path": "./packages/build" }
+  ]
+}

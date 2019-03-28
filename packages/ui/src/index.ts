@@ -1,4 +1,4 @@
-export { color } from '@o/color'
+export * from '@o/color'
 export {
   Absolute,
   Block,
@@ -49,6 +49,8 @@ export * from './content/Thread'
 export * from './content/ThreadMessage'
 export * from './ContextMenu'
 export * from './ContextMenuProvider'
+export * from './data/DataInspector'
+export * from './data/DataInspectorControlled'
 export * from './DataValue'
 export * from './DefinitionList'
 export * from './Divider'
@@ -99,6 +101,7 @@ export * from './hooks/useParentNodeSize'
 export * from './hooks/useRefGetter'
 export * from './hooks/useResizeObserver'
 export * from './hooks/useScreenPosition'
+export * from './hooks/useThrottle'
 export * from './hooks/useToggle'
 export * from './Icon'
 export * from './Image'

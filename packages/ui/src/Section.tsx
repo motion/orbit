@@ -49,7 +49,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       sizeRadius={bordered ? 1 : 0}
       elevation={bordered ? 1 : 0}
       borderWidth={bordered ? 1 : 0}
-      margin={bordered ? 15 : 0}
+      margin={bordered ? 10 : 0}
       noInnerElement
       overflow="hidden"
       flex={flex}

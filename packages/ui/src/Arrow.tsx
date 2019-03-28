@@ -1,12 +1,13 @@
-import { Col, Color, Contents, CSSPropertySet, gloss, ThemeContext } from '@o/gloss'
+import { ColorLike } from '@o/css'
+import { Col, Contents, CSSPropertySet, gloss, ThemeContext } from '@o/gloss'
 import * as React from 'react'
 
 type Props = CSSPropertySet & {
   size: number
-  color?: Color
+  color?: ColorLike
   towards?: 'top' | 'right' | 'bottom' | 'left'
   boxShadow?: any
-  background?: Color
+  background?: ColorLike
   opacity?: number
   border?: Array<any> | string
 }

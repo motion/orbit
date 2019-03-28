@@ -38,7 +38,7 @@ export function CustomApp1(_props: AppProps) {
       </FloatingCard> */}
 
       <Layout type="row">
-        <Pane resizable>
+        <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
               <SpacedRow>
@@ -73,7 +73,7 @@ export function CustomApp1(_props: AppProps) {
         </Pane>
 
         <Pane>
-          <Tabs borderRadius={20} padding={10}>
+          <Tabs padding={10}>
             {highlighted.map(row => (
               <Tab key={row.id} id={row.id} label={row.name}>
                 <PersonInfo row={row} />

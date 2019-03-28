@@ -24,7 +24,6 @@ const setScreenSize = () => {
 
 function showOrbit(shown: boolean) {
   if (shown) {
-    app.show()
     app.focus()
   } else {
     app.hide()

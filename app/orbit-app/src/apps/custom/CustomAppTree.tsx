@@ -52,6 +52,7 @@ export function CustomAppTree() {
             is: 'hi',
             who: 'are',
             you: new Date(),
+            color: 'yellow',
             another: {
               one: 'color',
               two: 'green',

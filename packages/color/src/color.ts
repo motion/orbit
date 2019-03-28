@@ -127,6 +127,13 @@ export class Color {
     return this.toString()
   }
 
+  rgbaObject() {
+    return {
+      ...this.unitObject(),
+      a: this.valpha,
+    }
+  }
+
   toString() {
     return this.string()
   }

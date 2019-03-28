@@ -73,8 +73,13 @@ export class DataInspector extends PureComponent<DataInspectorProps, DataInspect
       return {
         type: 'color',
         value,
+        mutable: true,
       }
     }
+  }
+
+  setValue = (a, b) => {
+    console.log(a, b)
   }
 
   render() {
@@ -83,7 +88,7 @@ export class DataInspector extends PureComponent<DataInspectorProps, DataInspect
         data={this.props.data}
         diff={this.props.diff}
         extractValue={this.props.extractValue || this.extractValue}
-        setValue={this.props.setValue}
+        setValue={this.props.setValue || this.setValue}
         expanded={this.state.expanded}
         onExpanded={this.onExpanded}
         expandRoot={this.props.expandRoot}

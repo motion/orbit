@@ -123,6 +123,8 @@ class NumberTextEditor extends PureComponent<{
 
     return (
       <Input
+        display="inline"
+        sizeHeight={0.75}
         key="input"
         {...extraProps}
         onChange={this.onNumberTextInputChange}

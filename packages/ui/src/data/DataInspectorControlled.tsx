@@ -100,7 +100,7 @@ const BaseContainer = gloss({
   paddingLeft: 10,
   userSelect: 'text',
 }).theme(props => ({
-  filter: props.disabled ? 'grayscale(100%)' : '',
+  opacity: props.disabled ? 0.5 : 1,
   margin: props.depth === 0 ? [7.5, 0] : '0',
 }))
 

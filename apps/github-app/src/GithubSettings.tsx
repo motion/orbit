@@ -3,6 +3,7 @@ import { DataType, View } from '@o/ui'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { GithubLoader } from './GithubLoader'
+import githubApp from './index'
 
 export default function GithubSettings({ subId }: AppProps) {
   const [app, updateApp] = useApp(+subId)
@@ -52,6 +53,20 @@ export default function GithubSettings({ subId }: AppProps) {
       })
     },
     [app && app.id],
+  )
+
+  // todo: remove it
+  // load sample repositories (testing api)
+  useEffect(
+    () => {
+      if (app) {
+        githubApp
+          .api(app)
+          .listRepositoriesForOrg({ org: 'typeorm' })
+          .then(repos => console.log('repos', repos))
+      }
+    },
+    [app],
   )
 
   return (

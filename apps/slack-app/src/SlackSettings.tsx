@@ -37,7 +37,7 @@ export function SlackSettings({ subId }: AppProps) {
       // load slack channels (testing api)
       slackApp
         .api(app)
-        .loadChannels()
+        .channelsList()
         .then(channels => console.log('loaded api channels', channels))
 
       // todo: remove it

@@ -1,6 +1,8 @@
 import { AppBit, AppModel, AppProps, SettingManageRow, Table, useModel, useStore } from '@o/kit'
 import { View } from '@o/ui'
 import * as React from 'react'
+import driveApp from './index'
+import { useEffect } from 'react'
 
 class DriveSettingsStore {
   props: { app?: AppBit }
@@ -40,6 +42,20 @@ export function DriveSettings({ subId }: AppProps) {
   const [app] = useModel<AppBit, any>(AppModel as any, { where: { id: +subId } })
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders
+
+  // todo: remove it
+  // load drive files (testing api)
+  useEffect(
+    () => {
+      if (app) {
+        driveApp
+          .api(app)
+          .listFiles()
+          .then(files => console.log('files', files))
+      }
+    },
+    [app],
+  )
 
   return (
     <>

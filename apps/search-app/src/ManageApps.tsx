@@ -108,7 +108,7 @@ export function ManageApps() {
   const [activeSpace] = useActiveSpace()
 
   return (
-    <Section>
+    <Section background="transparent">
       <TitleRow bordered title={activeSpace ? activeSpace.name : ''} />
 
       <SelectableGrid

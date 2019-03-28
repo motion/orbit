@@ -74,7 +74,7 @@ function TabsControlled({
   const tabContents = []
 
   const tabPropsExtra: any = {
-    minWidth: 60,
+    minWidth: 'min-content',
     height,
     borderRadius,
   }

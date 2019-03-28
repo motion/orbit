@@ -53,7 +53,7 @@ function TabsControlled(props: TabsProps) {
     tabProps,
     tabPropsActive,
     onActive,
-    height = 24,
+    height = 26,
     borderRadius,
     ...rest
   } = props

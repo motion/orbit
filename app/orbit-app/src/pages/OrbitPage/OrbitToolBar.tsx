@@ -4,7 +4,7 @@ import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 
-const toolbarHeight = 30
+const toolbarHeight = 36
 
 export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
   <div style={{ height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0 }} />

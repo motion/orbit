@@ -217,6 +217,7 @@ export default function OrbitWindow() {
         nodeIntegration: true,
         webSecurity: false,
       }}
+      titleBarStyle="hiddenInset"
       onReadyToShow={store.setInitialShow}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}

@@ -1,21 +1,11 @@
-import { FullScreen, gloss, useTheme } from '@o/gloss'
+import { invertLightness } from '@o/color'
+import { FullScreen, gloss, SimpleText, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
-import { App } from '@o/stores'
-import {
-  BorderBottom,
-  Button,
-  ButtonProps,
-  Row,
-  SegmentedRow,
-  Space,
-  SurfacePassProps,
-  View,
-} from '@o/ui'
+import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
-import { WindowControls } from '../../views/WindowControls'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
@@ -38,39 +28,13 @@ export const OrbitHeader = memo(function OrbitHeader() {
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
       <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
-        <OrbitClose dontDim={isTorn}>
-          <WindowControls
-            itemProps={{ size: 10 }}
-            spaceBetween={3}
-            showOnHover={{ min: true, max: true }}
-            onClose={() => {
-              if (isTorn) {
-                console.log('close me...app')
-              } else {
-                App.setOrbitState({ docked: !App.orbitState.docked })
-              }
-            }}
-            onMin={() =>
-              require('electron')
-                .remote.getCurrentWindow()
-                .minimize()
-            }
-            onMax={() =>
-              require('electron')
-                .remote.getCurrentWindow()
-                .maximize()
-            }
-          />
-        </OrbitClose>
-
         <HeaderSide>
+          <View flex={1} />
           <HeaderButtonChromeless
             icon="sidebar"
             onClick={themeStore.setToggleShowSidebar}
             opacity={themeStore.showSidebar ? 0.6 : 0.3}
           />
-
-          <View flex={1} />
 
           <BackButton />
         </HeaderSide>
@@ -78,10 +42,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
         <HeaderContain isActive={false}>
           <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
             <Icon
-              color={theme.color}
+              color={invertLightness(theme.color, 100)}
               name={`orbit-${icon}`}
               size={18}
-              opacity={theme.color.isDark() ? 0.4 : 0.2}
+              opacity={theme.color.isDark() ? 0.8 : 0.7}
             />
           </View>
 
@@ -89,20 +53,14 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {isOnTearablePane && (
             <>
-              <SurfacePassProps
-                sizeHeight={0.9}
-                sizeRadius={2}
-                sizePadding={1.25}
-                fontWeight={500}
-                sizeFont={0.95}
-                alpha={0.5}
-              >
+              <SurfacePassProps chromeless>
                 <OrbitEditAppButton />
                 <Space />
-                <SegmentedRow>
-                  <LinkButton />
-                  {!isTorn && <LaunchButton />}
-                </SegmentedRow>
+                <LinkButton />
+                <Space />
+              </SurfacePassProps>
+              <SurfacePassProps sizeRadius={2} sizePadding={1.25} fontWeight={500} sizeFont={0.95}>
+                {!isTorn && <LaunchButton />}
               </SurfacePassProps>
             </>
           )}
@@ -240,20 +198,6 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const OrbitClose = gloss({
-  position: 'absolute',
-  top: 1,
-  left: 2,
-  padding: 4,
-  opacity: 0.25,
-  '&:hover': {
-    opacity: 1,
-  },
-  dontDim: {
-    opacity: 1,
-  },
-})
-
 const LaunchButton = memo(() => {
   const Actions = useActions()
   const { orbitStore } = useStores()
@@ -265,23 +209,18 @@ const LaunchButton = memo(() => {
   }
 
   return (
-    <Button tooltip="Open app (⌘ + ⏎)" onClick={Actions.tearApp}>
-      Open
+    <Button tooltip="Open app onto desktop" onClick={Actions.tearApp}>
+      Open{' '}
+      <SimpleText alpha={0.5} transform={{ y: 1 }} size={0.7} marginLeft={6} fontWeight={200}>
+        ⌘ + ⏎
+      </SimpleText>
     </Button>
   )
 })
 
 function HeaderButtonChromeless(props: ButtonProps) {
   return (
-    <Button
-      chromeless
-      opacity={0.5}
-      hoverStyle={{ opacity: 0.75 }}
-      sizeHeight={0.95}
-      sizePadding={1.2}
-      iconSize={16}
-      {...props}
-    />
+    <Button chromeless marginTop={-1} hoverStyle={{ opacity: 0.75 }} iconSize={14} {...props} />
   )
 }
 
@@ -294,11 +233,10 @@ const LinkButton = memo(() => {
 
 const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
-  const opacity = locationStore.history.length ? 0.4 : 0.1
   return (
     <HeaderButtonChromeless
       icon="arrowminleft"
-      opacity={opacity}
+      opacity={locationStore.history.length ? 0.5 : 0.4}
       iconSize={20}
       onClick={() => {
         locationStore.back()

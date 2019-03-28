@@ -1,7 +1,7 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { Loading, SelectionStore, useOnMount, Visibility } from '@o/ui'
+import { Button, Loading, Section, SelectionStore, useOnMount, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { memo, Suspense, useCallback } from 'react'
+import React, { Component, memo, Suspense, useCallback } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -58,12 +58,44 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
     <Suspense fallback={<Loading />}>
       <AppLoadContext.Provider value={{ id, identifier }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>
     </Suspense>
   )
 })
+
+class ErrorBoundary extends Component {
+  state = {
+    error: null,
+  }
+
+  componentDidCatch(error) {
+    console.error('erri s', error)
+    this.setState({ error })
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <Section
+          background="red"
+          color="white"
+          title="Error"
+          flex={1}
+          minWidth={200}
+          minHeight={200}
+        >
+          <pre>{JSON.stringify(this.state.error)}</pre>
+          <Button onClick={() => this.setState({ error: null })}>Clear</Button>
+        </Section>
+      )
+    }
+    return this.props.children
+  }
+}
 
 if (module['hot']) {
   module['hot'].accept()

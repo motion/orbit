@@ -33,6 +33,7 @@ function DataExplorerIndex() {
 function DataExplorerMain({ subId }: AppProps) {
   const [app] = useApp(+subId)
   const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
+  console.log('got', queries)
 
   // TODO suspense
   if (!app) return null
@@ -41,6 +42,7 @@ function DataExplorerMain({ subId }: AppProps) {
     <Section
       title={app.appName}
       subTitle={app.name}
+      titleBorder
       icon={app.icon}
       afterTitle={
         <Button

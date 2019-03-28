@@ -12,8 +12,15 @@ type AppWithDefinition = Omit<AppDefinition, 'id' | 'name'> &
 
 export function useApp(appId?: number): [AppWithDefinition, ((next: Partial<AppBit>) => any)] {
   const { appStore } = useStoresSimple()
-  const id = appId || +appStore.props.id
-  const [app, update] = useModel(AppModel, { where: { id } })
+  let conditions = null
+  if (appId || +appStore.id === +appStore.id) {
+    // use id for non-static apps
+    conditions = { where: { id: appId || +appStore.id } }
+  } else {
+    // use identifier for static apps (theres only one)
+    conditions = { where: { identifier: appStore.identifier } }
+  }
+  const [app, update] = useModel(AppModel, conditions)
   if (!app) {
     return [null, update]
   }

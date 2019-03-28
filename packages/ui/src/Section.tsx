@@ -9,6 +9,7 @@ export type SectionProps = Omit<ViewProps, 'title'> &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode
+    titleBorder?: boolean
     sizePadding?: number
     scrollable?: boolean
     below?: React.ReactNode
@@ -37,6 +38,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     icon,
     padded,
     background,
+    titleBorder,
     ...viewProps
   } = props
   return (
@@ -55,7 +57,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     >
       {!!(title || afterTitle) && (
         <TitleRow
-          bordered={bordered}
+          bordered={bordered || titleBorder}
           backgrounded={bordered}
           margin={0}
           title={title}

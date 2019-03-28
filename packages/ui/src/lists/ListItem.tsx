@@ -1,4 +1,14 @@
-import { CSSPropertySet, gloss, Row, SimpleText, Theme, ThemeContext, ThemeObject, View, ViewProps } from '@o/gloss'
+import {
+  CSSPropertySet,
+  gloss,
+  Row,
+  SimpleText,
+  Theme,
+  ThemeContext,
+  ThemeObject,
+  View,
+  ViewProps,
+} from '@o/gloss'
 import { useStore } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
@@ -229,7 +239,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
           {iconBefore && showIcon && iconElement}
           <ListItemMainContent oneLine={oneLine}>
             {showTitle && (
-              <Title>
+              <Title flex={1}>
                 {showIcon && !iconBefore && iconElement}
                 <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
                   {title}

@@ -1,8 +1,8 @@
-import { Button, Input, Message, Section, SegmentedRow, Space as UISpace, Theme } from '@o/ui'
-import React, { useEffect, useState } from 'react'
-import * as firebase from 'firebase'
 import { loadMany, remove, save, useModel } from '@o/bridge'
 import { Space, SpaceModel, UserModel, UserSettings } from '@o/models'
+import { Button, Input, Message, Section, SegmentedRow, Space as UISpace } from '@o/ui'
+import * as firebase from 'firebase'
+import React, { useEffect, useState } from 'react'
 
 export default function SettingsAppAccount() {
   const [email, setEmail] = useState('')
@@ -168,7 +168,7 @@ export default function SettingsAppAccount() {
 
           <UISpace />
 
-          <Section>
+          <Section padded>
             <SegmentedRow size={1.5}>
               <Input
                 type="email"
@@ -177,11 +177,9 @@ export default function SettingsAppAccount() {
                 value={email}
                 onChange={event => setEmail((event.target as any).value)}
               />
-              <Theme name="selected">
-                <Button alt="action" onClick={sendEmail}>
-                  Send Login Link
-                </Button>
-              </Theme>
+              <Button alt="action" onClick={sendEmail}>
+                Send Login Link
+              </Button>
             </SegmentedRow>
           </Section>
         </div>

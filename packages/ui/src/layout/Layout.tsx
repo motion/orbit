@@ -1,4 +1,4 @@
-import { Col, Row } from '@o/gloss'
+import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { GridLayout } from './GridLayout'
@@ -59,15 +59,18 @@ function FlexLayout(props: LayoutProps) {
 
   if (props.type === 'row') {
     return (
-      <Row overflow="hidden" ref={ref}>
+      <LayoutRow minHeight={size.height || 'auto'} overflow="hidden" ref={ref}>
         {childElements}
-      </Row>
+      </LayoutRow>
     )
   }
 
   return (
-    <Col overflow="hidden" ref={ref}>
+    <LayoutCol minHeight={size.height || 'auto'} overflow="hidden" ref={ref}>
       {childElements}
-    </Col>
+    </LayoutCol>
   )
 }
+
+const LayoutRow = gloss(Row)
+const LayoutCol = gloss(Col)

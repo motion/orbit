@@ -5,7 +5,9 @@
  * @format
  */
 
+import { isEqual } from '@o/fast-compare'
 import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
+import { on } from '@o/utils'
 import { throttle } from 'lodash'
 import React, { createContext, createRef, RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
@@ -14,6 +16,7 @@ import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
 import { useScreenPosition } from './hooks/useScreenPosition'
+import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
 
 const invariant = require('invariant')
@@ -270,6 +273,32 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  currentRect = {
+    top: 0,
+    left: 0,
+  }
+
+  componentDidMount() {
+    this.trackNodePos(this.ref.current)
+  }
+
+  trackNodePos(node) {
+    this.useResizeObserver(node, entries => {
+      this.currentRect = entries[0].contentRect
+    })
+    this.currentRect = node.getBoundingClientRect()
+  }
+
+  useResizeObserver = (node, cb: ResizeObserverCallback) => {
+    // watch resizes
+    // @ts-ignore
+    const observer = new ResizeObserver(cb)
+    observer.observe(node)
+    const off = () => observer.disconnect()
+    on(this, { unsubscribe: off })
+    return off
+  }
+
   resetMoving() {
     const { onMoveEnd } = this.props
     if (onMoveEnd) {
@@ -486,7 +515,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!this.ref.current) {
       return
     }
-    const { left: offsetLeft, top: offsetTop } = this.ref.current.getBoundingClientRect()
+    const { left: offsetLeft, top: offsetTop } = this.currentRect
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
@@ -565,15 +594,18 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       right,
       top,
     }
-    const { onCanResize } = this.props
-    if (onCanResize) {
-      onCanResize()
-    }
-    this.setState({
-      couldResize: Boolean(newCursor),
+    const next = {
+      couldResize: !!newCursor,
       cursor: newCursor,
       resizingSides,
-    })
+    }
+    if (!isEqual(next, this.state)) {
+      const { onCanResize } = this.props
+      if (onCanResize) {
+        onCanResize()
+      }
+      this.setState(next)
+    }
   }
 
   onLocalMouseMove = event => {

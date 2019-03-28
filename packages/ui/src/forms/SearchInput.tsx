@@ -1,6 +1,5 @@
-import { color } from '@o/color'
-import { gloss, Row, ThemeContext, View } from '@o/gloss'
-import React, { forwardRef, useContext } from 'react'
+import { gloss, Row, View } from '@o/gloss'
+import React, { forwardRef } from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
@@ -40,7 +39,6 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
   },
   ref,
 ) {
-  const { activeTheme } = useContext(ThemeContext)
   const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
   return (
     <SearchBar
@@ -53,10 +51,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     >
       {before}
       <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <SearchIcon
-          name="ui-1_zoom"
-          color={activeTheme.color ? color(activeTheme.color).alpha(0.5) : '#555'}
-        />
+        <SearchIcon opacity={0.8} name="ui-1_zoom" size={16} />
         {filters.map((filter, i) => (
           <FilterToken
             key={`${filter.key}:${filter.type}${i}`}

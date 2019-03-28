@@ -91,7 +91,7 @@ function PersonInfo(props: { row: any }) {
   return (
     <Layout type="column">
       <Pane scrollable>
-        <Section scrollable bordered title={props.row.title}>
+        <Section scrollable bordered title={props.row.name}>
           <Fieldsets rows={[props.row]} />
         </Section>
       </Pane>

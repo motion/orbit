@@ -1,4 +1,4 @@
-import { Row, View } from '@o/gloss'
+import { gloss, Row, View } from '@o/gloss'
 import React, { isValidElement } from 'react'
 import { BorderBottom } from './Border'
 import { Icon } from './Icon'
@@ -38,9 +38,7 @@ export function TitleRow({
   const pad = 16
   const sidePad = 10 * sizePadding
   return (
-    <View
-      position="relative"
-      overflow="hidden"
+    <TitleRowChrome
       paddingTop={pad + 2.5 * sizePadding}
       paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
       paddingLeft={sidePad + pad}
@@ -81,6 +79,11 @@ export function TitleRow({
       </Row>
       {below}
       {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
-    </View>
+    </TitleRowChrome>
   )
 }
+
+const TitleRowChrome = gloss(View, {
+  position: 'relative',
+  overflow: 'hidden',
+})

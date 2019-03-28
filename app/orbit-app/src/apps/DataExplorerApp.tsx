@@ -19,6 +19,7 @@ import {
   Tab,
   Tabs,
   TextArea,
+  TitleRow,
   View,
 } from '@o/ui'
 import { remove } from 'lodash'
@@ -27,20 +28,28 @@ import { getAppListItem } from './apps/getAppListItem'
 
 function DataExplorerIndex() {
   const syncApps = useActiveSyncAppsWithDefinition()
-  return <List items={syncApps.map(x => getAppListItem(x, { group: 'Data Apps' }))} />
+  return (
+    <>
+      <TitleRow bordered title="Data Explorer" subTitle="Explore installed data apps" />
+      <List items={syncApps.map(x => getAppListItem(x, { group: 'Data Apps' }))} />
+    </>
+  )
 }
 
 function DataExplorerMain({ subId }: AppProps) {
-  const [app] = useApp(+subId)
+  const [app] = useApp((subId && +subId) || false)
   const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   // TODO suspense
-  if (!app) return null
+  if (!app) {
+    return null
+  }
 
   return (
     <Section
       title={app.appName}
       subTitle={app.name}
+      titleBorder
       icon={app.icon}
       afterTitle={
         <Button

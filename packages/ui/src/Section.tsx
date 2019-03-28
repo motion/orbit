@@ -1,4 +1,4 @@
-import { View, ViewProps } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
@@ -9,6 +9,7 @@ export type SectionProps = Omit<ViewProps, 'title'> &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode
+    titleBorder?: boolean
     sizePadding?: number
     scrollable?: boolean
     below?: React.ReactNode
@@ -36,6 +37,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     flex,
     icon,
     padded,
+    background,
+    titleBorder,
     ...viewProps
   } = props
   return (
@@ -50,10 +53,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       noInnerElement
       overflow="hidden"
       flex={flex}
+      background={background}
     >
       {!!(title || afterTitle) && (
         <TitleRow
-          bordered={bordered}
+          bordered={bordered || titleBorder}
           backgrounded={bordered}
           margin={0}
           title={title}
@@ -64,16 +68,19 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <View
+      <SectionInner
         overflowY={scrollable ? 'auto' : 'hidden'}
-        overflowX="hidden"
         padding={typeof padding !== 'undefined' ? padding : padded ? 20 : 0}
         flex={flex}
         {...viewProps}
       >
         <Reset>{children}</Reset>
-      </View>
+      </SectionInner>
       {below}
     </SizedSurface>
   )
+})
+
+const SectionInner = gloss(View, {
+  overflowX: 'hidden',
 })

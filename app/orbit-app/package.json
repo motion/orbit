@@ -88,6 +88,7 @@
     "webpack-runtime-require": "0.3.0"
   },
   "devDependencies": {
+    "scheduler": "0.13.5",
     "@babel/core": "7.2.0",
     "@o/babel-preset-motion": "^2.4.0",
     "@o/build": "^2.4.0",

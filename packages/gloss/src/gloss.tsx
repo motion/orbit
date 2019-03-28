@@ -229,71 +229,75 @@ export function gloss<Props = any>(
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: GlossThemeFn<any> | null = null
 
-  const ThemedView = (memo(
-    forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
-      // compile theme on first run to avoid extra work
-      themeFn = themeFn || compileTheme(ThemedView)
-      const { activeTheme } = useContext(ThemeContext)
-      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-      const lastClassNames = useRef<string[] | null>(null)
-      const classNames = glossify(
-        id,
-        ThemedView.displayName,
-        themeFn,
-        Styles.styles,
-        Styles.propStyles,
-        lastClassNames.current,
-        props,
-        tag,
-        activeTheme,
-      )
-      lastClassNames.current = classNames
+  let ThemedView = null
 
-      // unmount
-      useEffect(() => {
-        return () => {
-          const names = lastClassNames.current
-          if (names) {
-            names.forEach(gc.deregisterClassUse)
-          }
+  const InnerThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(
+    props,
+    ref,
+  ) {
+    // compile theme on first run to avoid extra work
+    themeFn = themeFn || compileTheme(ThemedView)
+    const { activeTheme } = useContext(ThemeContext)
+    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+    const lastClassNames = useRef<string[] | null>(null)
+    const classNames = glossify(
+      id,
+      ThemedView.displayName,
+      themeFn,
+      Styles.styles,
+      Styles.propStyles,
+      lastClassNames.current,
+      props,
+      tag,
+      activeTheme,
+    )
+    lastClassNames.current = classNames
+
+    // unmount
+    useEffect(() => {
+      return () => {
+        const names = lastClassNames.current
+        if (names) {
+          names.forEach(gc.deregisterClassUse)
         }
-      }, [])
-
-      // if this is a plain view we can use tagName, otherwise just pass it down
-      const element =
-        typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
-      const isDOMElement = typeof element === 'string'
-
-      // set up final props with filtering for various attributes
-      const finalProps = {
-        className: props.className || '',
-      } as any
-
-      if (ref) {
-        finalProps.ref = ref
       }
+    }, [])
 
-      for (const key in props) {
-        if (ignoreAttrs && ignoreAttrs[key]) {
-          continue
-        }
-        if (isDOMElement) {
-          if (validProp(key)) {
-            finalProps[key] = props[key]
-          }
-        } else {
+    // if this is a plain view we can use tagName, otherwise just pass it down
+    const element =
+      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+    const isDOMElement = typeof element === 'string'
+
+    // set up final props with filtering for various attributes
+    const finalProps = {
+      className: props.className || '',
+    } as any
+
+    if (ref) {
+      finalProps.ref = ref
+    }
+
+    for (const key in props) {
+      if (ignoreAttrs && ignoreAttrs[key]) {
+        continue
+      }
+      if (isDOMElement) {
+        if (validProp(key)) {
           finalProps[key] = props[key]
         }
+      } else {
+        finalProps[key] = props[key]
       }
+    }
 
-      if (classNames) {
-        finalProps.className += ` ${classNames.join(' ')}`
-      }
+    if (classNames) {
+      finalProps.className += ` ${classNames.join(' ')}`
+    }
 
-      return createElement(element, finalProps, props.children)
-    }),
-    isEqual,
-  ) as unknown) as GlossView<Props>
+    return createElement(element, finalProps, props.children)
+  }) as unknown) as GlossView<Props>
+
+  ThemedView = (memo(InnerThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {
     themeFn: null,
@@ -311,6 +315,7 @@ export function gloss<Props = any>(
   ThemedView.withConfig = config => {
     if (config.displayName) {
       ThemedView.displayName = config.displayName
+      InnerThemedView.displayName = config.displayName
     }
     return ThemedView
   }

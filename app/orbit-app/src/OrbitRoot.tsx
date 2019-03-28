@@ -92,15 +92,4 @@ function OrbitRootInner() {
   )
 }
 
-// class OrbitRootError extends React.Component {
-//   componentDidCatch(error) {
-//     console.log('got error')
-//     console.error(error)
-//   }
-
-//   render() {
-//     return <OrbitRootInner />
-//   }
-// }
-
 export const OrbitRoot = hot(module)(OrbitRootInner)

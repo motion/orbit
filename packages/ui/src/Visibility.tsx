@@ -1,13 +1,17 @@
-import React, { createContext, useContext } from 'react'
+import { createStoreContext, useStore } from '@o/use-store'
+import React from 'react'
 
-const VisibilityContext = createContext<boolean | null>(null)
+class VisibilityStore {
+  props: { visible: boolean }
+}
 
-export function Visibility(props: { visible: boolean; children: any }) {
-  return (
-    <VisibilityContext.Provider value={props.visible}>{props.children}</VisibilityContext.Provider>
-  )
+const { Provider, useStore: useVisiblityStore } = createStoreContext(VisibilityStore)
+
+export function Visibility({ visible, children }: { visible: boolean; children: any }) {
+  const store = useStore(VisibilityStore, { visible })
+  return <Provider value={store}>{children}</Provider>
 }
 
 export function useVisiblity() {
-  return useContext(VisibilityContext)
+  return useVisiblityStore().props.visible
 }

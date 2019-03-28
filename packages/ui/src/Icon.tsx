@@ -7,11 +7,10 @@ import { iconNames } from './iconNames'
 
 export type IconProps = ViewProps & {
   size?: number
+  name: string
   type?: 'mini' | 'outline'
-  opacity?: number
   tooltip?: string
   tooltipProps?: Object
-  name: string
 }
 
 // TODO use createContextProps

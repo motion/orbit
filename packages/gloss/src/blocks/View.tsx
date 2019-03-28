@@ -5,6 +5,7 @@ import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export type ViewProps = React.HTMLAttributes<HTMLDivElement> &
   CSSPropertySetStrict & {
+    tagName?: string
     // our default styling supports is through preProcessTheme
     alt?: string
     // our default styling supports pseudos through propsToStyles

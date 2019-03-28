@@ -7,8 +7,8 @@ type TextStyles = {
 
 export type TextSizeProps = {
   sizeLineHeight?: number
-  lineHeight?: number | string
-  fontSize?: number | string
+  lineHeight?: number | string | any
+  fontSize?: number | string | any
   size?: number
   sizeMethod?: string
 }

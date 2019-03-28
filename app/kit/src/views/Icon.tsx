@@ -1,13 +1,13 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
 
-export const Icon = React.memo((props: IconProps) => {
+export const Icon = memo((props: IconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
   const theme = useTheme()
   const finalColor = color || theme.color ? theme.color.toString() : '#fff'

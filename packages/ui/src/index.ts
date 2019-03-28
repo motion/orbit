@@ -1,4 +1,4 @@
-export { color, Color, ColorLike } from '@o/color'
+export * from '@o/color'
 export {
   Absolute,
   Block,

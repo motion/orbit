@@ -15,10 +15,11 @@ import { processArray, processObject, px } from './helpers'
 export * from '@o/color'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
-export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
+export { CSSPropertySet, CSSPropertySetResolved, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { ThemeObject, Transform } from './types'
+export { ThemeObject } from './ThemeObject'
+export { Transform } from './types'
 
 export type CSSOptions = {
   errorMessage?: string

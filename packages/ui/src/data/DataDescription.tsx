@@ -442,8 +442,6 @@ class DataDescriptionContainer extends Component<{
   render(): any {
     const { type, editable, value: val } = this.props
 
-    console.log('showing value', type, val)
-
     switch (type) {
       case 'number':
         return <NumberValue>{Number(val)}</NumberValue>

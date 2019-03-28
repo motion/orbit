@@ -73,7 +73,7 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    console.error('erri s', error)
+    console.warn('ErrorBoundary catching error', error)
     this.setState({ error })
   }
 

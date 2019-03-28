@@ -118,6 +118,7 @@ function TabsControlled(props: TabsProps) {
           key={id}
           className={isActive ? 'tab-active' : 'tab-inactive'}
           width={width}
+          height={height}
           borderRadius={borderRadius}
           {...tabProps}
           {...isActive && tabPropsActive}

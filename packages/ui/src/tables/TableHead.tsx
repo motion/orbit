@@ -34,6 +34,7 @@ const TableHeadColumnText = gloss({
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   opacity: 0.65,
+  fontSize: 11,
 })
 
 const TableHeaderColumnInteractive = gloss(Interactive, {
@@ -42,7 +43,11 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   width: '100%',
-})
+}).theme((_, theme) => ({
+  '&:hover': {
+    background: theme.backgroundHover,
+  },
+}))
 
 const TableHeaderColumnContainer = gloss({
   flexFlow: 'row',
@@ -84,7 +89,7 @@ const TableHeadColumnContainer = gloss({
     display: 'none',
   },
 }).theme(({ width }, theme) => ({
-  background: theme.background,
+  background: theme.backgroundAlternate,
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
   '&:after': {

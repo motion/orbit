@@ -36,7 +36,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         maxWidth={500}
         noBorder
       >
-        <ToolBarPad hasToolbar={props.hasToolbar} />
+        <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
         <View flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <ListPropsContext.Provider value={{ searchable: true, minSelected: 0 }}>

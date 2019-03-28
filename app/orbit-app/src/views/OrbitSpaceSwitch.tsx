@@ -105,7 +105,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         onChangeVisibility={store.setOpen}
         target={
           <View position="relative" margin={[0, 6, 0, 18]}>
-            <Avatar src={avatar} width={22} height={22} />
+            <Avatar src={avatar} width={20} height={20} />
             <OrbitOrb
               position="absolute"
               top="50%"

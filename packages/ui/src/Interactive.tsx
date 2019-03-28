@@ -500,6 +500,16 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  lastForceUpdate = Date.now()
+  getCurrentRect() {
+    // force update every so often in case things animate
+    if (Date.now() - this.lastForceUpdate > 1000) {
+      this.currentRect = this.ref.current.getBoundingClientRect()
+      this.lastForceUpdate = Date.now()
+    }
+    return this.currentRect
+  }
+
   checkIfResizable(
     event: MouseEvent,
   ): {
@@ -515,7 +525,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!this.ref.current) {
       return
     }
-    const { left: offsetLeft, top: offsetTop } = this.currentRect
+    const { left: offsetLeft, top: offsetTop } = this.getCurrentRect()
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop

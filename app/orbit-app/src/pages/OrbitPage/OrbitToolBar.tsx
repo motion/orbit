@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Row, View } from '@o/gloss'
+import { FullScreen, gloss, Row, View, ViewProps } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
@@ -30,13 +30,13 @@ const ToolbarChrome = gloss(Row, {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: 1000000000,
+  zIndex: 1000000000000000000000000,
   transition: 'none',
 }).theme((_, theme) => ({
   background: theme.background,
 }))
 
-const ToolbarInner = gloss<{ isActive: boolean }>(View, {
+const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
   flex: 2,
   flexFlow: 'row',
   opacity: 0,

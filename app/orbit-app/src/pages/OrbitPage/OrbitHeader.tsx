@@ -33,7 +33,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           <HeaderButtonChromeless
             icon="sidebar"
             onClick={themeStore.setToggleShowSidebar}
-            opacity={themeStore.showSidebar ? 0.6 : 0.3}
+            active={themeStore.showSidebar}
           />
 
           <BackButton />
@@ -41,12 +41,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
         <HeaderContain isActive={false}>
           <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
-            <Icon
-              color={invertLightness(theme.color, 100)}
-              name={`orbit-${icon}`}
-              size={18}
-              opacity={theme.color.isDark() ? 0.8 : 0.7}
-            />
+            <Icon color={invertLightness(theme.color, 100)} name={`orbit-${icon}`} size={18} />
           </View>
 
           <OrbitHeaderInput />
@@ -220,14 +215,24 @@ const LaunchButton = memo(() => {
 
 function HeaderButtonChromeless(props: ButtonProps) {
   return (
-    <Button chromeless marginTop={-1} hoverStyle={{ opacity: 0.75 }} iconSize={14} {...props} />
+    <Button
+      chromeless
+      marginTop={-1}
+      opacity={0.5}
+      hoverStyle={{ opacity: 0.75 }}
+      iconSize={14}
+      {...props}
+    />
   )
 }
 
 const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
-    <Button iconSize={9} tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`} icon="link69" />
+    <HeaderButtonChromeless
+      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
+      icon="link69"
+    />
   )
 })
 

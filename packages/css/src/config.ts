@@ -1,8 +1,8 @@
+import { isColor, toColor } from '@o/color'
 import { CSSOptions } from './types'
-import { isColor, toColor } from './toColor'
 
 export const Config: CSSOptions = {
-  isColor,
+  isColor: isColor,
   toColor,
 }
 

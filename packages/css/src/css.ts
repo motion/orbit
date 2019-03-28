@@ -1,18 +1,24 @@
-import { COLOR_KEYS, FALSE_VALUES, psuedoKeys, SHORTHANDS, UNDEFINED, unitlessNumberProperties } from './constants'
+import { toColor } from '@o/color'
+import {
+  COLOR_KEYS,
+  FALSE_VALUES,
+  psuedoKeys,
+  SHORTHANDS,
+  UNDEFINED,
+  unitlessNumberProperties,
+} from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
-import { toColor } from './toColor'
 
 // exports
 
-export * from './colorHelpers'
+export * from '@o/color'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
 export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { Color, ThemeObject, Transform } from './types'
-export { LinearGradient } from './utils/LinearGradient'
+export { ThemeObject, Transform } from './types'
 
 export type CSSOptions = {
   errorMessage?: string

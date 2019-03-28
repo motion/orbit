@@ -1,12 +1,11 @@
 import { useTheme, View } from '@o/gloss'
 import { AppBit } from '@o/models'
-import { color } from '@o/ui'
+import { color, IconProps } from '@o/ui'
 import React from 'react'
-import { OrbitIconProps } from './Icon'
 import { appIcons } from './icons'
 import { SVG } from './SVG'
 
-export type AppIconProps = Partial<OrbitIconProps> & { app: AppBit; removeStroke?: boolean }
+export type AppIconProps = Partial<IconProps> & { app: AppBit; removeStroke?: boolean }
 
 const idReplace = / id="([a-z0-9-_]+)"/gi
 

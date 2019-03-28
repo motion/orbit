@@ -29,7 +29,6 @@ export function Card({
   titleProps,
   subtitleProps,
   titleFlex,
-  subtitleSpaceBetween,
   searchTerm,
   // ignore so it doesnt add tooltip to div
   title: _ignoreTitle,
@@ -102,7 +101,6 @@ export function Card({
                 {location}
               </RoundButtonSmall>
             )}
-            {subtitleSpaceBetween}
             {hasFourRows && hasDate && (
               <>
                 {!!location && <div style={{ width: 5 }} />}

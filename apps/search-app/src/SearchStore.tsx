@@ -79,7 +79,6 @@ export class SearchStore {
   appToResult = (app: AppBit): OrbitListItemProps => {
     return {
       title: app.name,
-      // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
@@ -134,8 +133,7 @@ export class SearchStore {
       ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
       {
         title: 'Add app...',
-        icon: 'orbit-custom-full',
-        // slim: true,
+
         iconBefore: true,
         identifier: 'message',
         onOpen: async () => {

@@ -1,4 +1,4 @@
-import { Color } from './types'
+import { ColorLike } from '@o/color';
 
 /**
  * Copyright 2018-present Facebook.
@@ -32,16 +32,16 @@ export type backdropFilter = 'none' | string
 export type backfaceVisibility = 'visible' | 'hidden'
 type backgroundSyntax = {
   attachment?: attachment
-  color?: Color
+  color?: ColorLike
   image?: bgImage
   position?: string
   repeat?: repeatStyle
 }
-export type background = string | number[] | finalBgLayer | backgroundSyntax | Color
+export type background = string | number[] | finalBgLayer | backgroundSyntax | ColorLike
 export type backgroundAttachment = attachment
 export type backgroundBlendMode = blendMode
 export type backgroundClip = box
-export type backgroundColor = Color
+export type backgroundColor = ColorLike
 export type backgroundImage = bgImage
 export type backgroundOrigin = box
 export type backgroundPosition = string
@@ -50,14 +50,14 @@ export type backgroundPositionY = string
 export type backgroundRepeat = repeatStyle
 export type backgroundSize = bgSize
 export type blockSize = width
-type borderSyntax = (number | string | Color)[]
-export type border = borderWidth | brStyle | Color | borderSyntax
-export type borderBlockEnd = borderWidth | borderStyle | Color
-export type borderBlockEndColor = Color
+type borderSyntax = (number | string | ColorLike)[]
+export type border = borderWidth | brStyle | ColorLike | borderSyntax
+export type borderBlockEnd = borderWidth | borderStyle | ColorLike
+export type borderBlockEndColor = ColorLike
 export type borderBlockEndStyle = borderStyle
 export type borderBlockEndWidth = borderWidth
-export type borderBlockStart = borderWidth | borderStyle | Color
-export type borderBlockStartColor = Color
+export type borderBlockStart = borderWidth | borderStyle | ColorLike
+export type borderBlockStartColor = ColorLike
 export type borderBlockStartStyle = borderStyle
 export type borderBlockStartWidth = borderWidth
 export type borderBottomLeftRadius = lengthPercentage
@@ -65,25 +65,25 @@ export type borderBottomRightRadius = lengthPercentage
 export type borderBottomStyle = brStyle
 export type borderBottomWidth = borderWidth
 export type borderCollapse = 'collapse' | 'separate'
-export type borderColor = Color | Array<number | string | Color>
+export type borderColor = ColorLike | Array<number | string | ColorLike>
 export type borderImage = borderImageSource | borderImageSlice | string | borderImageRepeat
 export type borderImageOutset = string
 export type borderImageRepeat = string
 export type borderImageSlice = string | number | 'fill'
 export type borderImageSource = 'none' | string
 export type borderImageWidth = string
-export type borderInlineEnd = borderWidth | borderStyle | Color
-export type borderInlineEndColor = Color
+export type borderInlineEnd = borderWidth | borderStyle | ColorLike
+export type borderInlineEndColor = ColorLike
 export type borderInlineEndStyle = borderStyle
 export type borderInlineEndWidth = borderWidth
-export type borderInlineStart = borderWidth | borderStyle | Color
-export type borderInlineStartColor = Color
+export type borderInlineStart = borderWidth | borderStyle | ColorLike
+export type borderInlineStartColor = ColorLike
 export type borderInlineStartStyle = borderStyle
 export type borderInlineStartWidth = borderWidth
-export type borderLeftColor = Color
+export type borderLeftColor = ColorLike
 export type borderLeftStyle = brStyle
 export type borderLeftWidth = borderWidth
-export type borderRightColor = Color
+export type borderRightColor = ColorLike
 export type borderRightStyle = brStyle
 export type borderRightWidth = borderWidth
 export type borderRadius = lengthPercentage
@@ -115,8 +115,8 @@ export type boxShadow =
   | number
   | string
   | boxShadowSyntax
-  | (number | Color)[][]
-  | (number | Color | string)[][]
+  | (number | ColorLike)[][]
+  | (number | ColorLike | string)[][]
 export type boxSizing = 'content-box' | 'border-box'
 export type boxSuppress = 'show' | 'discard' | 'hide'
 export type breakAfter =
@@ -160,7 +160,7 @@ export type columnCount = number | 'auto'
 export type columnFill = 'auto' | 'balance'
 export type columnGap = number | 'normal'
 export type columnRule = columnRuleWidth | columnRuleStyle | columnRuleColor
-export type columnRuleColor = Color
+export type columnRuleColor = ColorLike
 export type columnRuleStyle = brStyle
 export type columnRuleWidth = borderWidth
 export type columnSpan = 'none' | 'all'
@@ -442,10 +442,10 @@ export type orphans = number
 type outlineSyntax = {
   width?: borderWidth
   style?: brStyle
-  color?: Color
+  color?: ColorLike
 }
 export type outline = string | outlineSyntax
-export type outlineColor = Color | 'invert'
+export type outlineColor = ColorLike | 'invert'
 export type outlineOffset = number
 export type outlineStyle = 'auto' | brStyle
 export type outlineWidth = borderWidth
@@ -504,12 +504,12 @@ export type textAlign = 'start' | 'end' | 'left' | 'right' | 'center' | 'justify
 export type textAlignLast = 'auto' | 'start' | 'end' | 'left' | 'right' | 'center' | 'justify'
 export type textCombineUpright = 'none' | 'all' | string
 export type textDecoration = textDecorationLine | textDecorationStyle | textDecorationColor
-export type textDecorationColor = Color
+export type textDecorationColor = ColorLike
 export type textDecorationLine = 'none' | string
 export type textDecorationSkip = 'none' | string
 export type textDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wavy'
 export type textEmphasis = textEmphasisStyle | textEmphasisColor
-export type textEmphasisColor = Color
+export type textEmphasisColor = ColorLike
 export type textEmphasisPosition = string
 export type textEmphasisStyle = 'none' | string
 export type textIndent = string | 'hanging' | 'each-line'
@@ -686,7 +686,6 @@ export type brStyle =
   | 'inset'
   | 'outset'
 export type borderWidth = number | 'thin' | 'medium' | 'thick' | string
-export type Color = string | Color | number[]
 export type compositeStyle =
   | 'clear'
   | 'copy'
@@ -763,7 +762,7 @@ export type blendMode =
   | 'luminosity'
 export type maskImage = maskReference
 export type outlineRadius = borderRadius
-export type paint = 'none' | 'currentColor' | Color | string
+export type paint = 'none' | 'currentColor' | ColorLike | string
 export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
@@ -813,7 +812,7 @@ export type OriginalCSSPropertySetStrict = {
   borderBlockStartStyle?: CSSPropertyVal<borderBlockStartStyle>
   borderBlockStartWidth?: CSSPropertyVal<borderBlockStartWidth>
   borderBottom?: CSSPropertyVal<border>
-  borderBottomColor?: CSSPropertyVal<Color>
+  borderBottomColor?: CSSPropertyVal<ColorLike>
   borderBottomLeftRadius?: CSSPropertyVal<borderBottomLeftRadius>
   borderBottomRightRadius?: CSSPropertyVal<borderBottomRightRadius>
   borderBottomStyle?: CSSPropertyVal<borderBottomStyle>
@@ -846,7 +845,7 @@ export type OriginalCSSPropertySetStrict = {
   borderSpacing?: CSSPropertyVal<borderSpacing>
   borderStyle?: CSSPropertyVal<borderStyle>
   borderTop?: CSSPropertyVal<border>
-  borderTopColor?: CSSPropertyVal<Color>
+  borderTopColor?: CSSPropertyVal<ColorLike>
   borderTopLeftRadius?: CSSPropertyVal<borderTopLeftRadius>
   borderTopRightRadius?: CSSPropertyVal<borderTopRightRadius>
   borderTopStyle?: CSSPropertyVal<borderTopStyle>
@@ -872,7 +871,7 @@ export type OriginalCSSPropertySetStrict = {
   clear?: CSSPropertyVal<clear>
   clip?: CSSPropertyVal<clip>
   clipPath?: CSSPropertyVal<clipPath>
-  color?: CSSPropertyVal<Color>
+  color?: CSSPropertyVal<ColorLike>
   columnCount?: CSSPropertyVal<columnCount>
   columnFill?: CSSPropertyVal<columnFill>
   columnGap?: CSSPropertyVal<columnGap>

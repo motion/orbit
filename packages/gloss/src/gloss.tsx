@@ -174,6 +174,11 @@ function glossify(
     if (newStyles[key]) {
       style = { ...style, ...newStyles[key] }
     }
+    // they may return null for some reason
+    // like conditional style '&:hover': active ? hoverStyle : null
+    if (!style) {
+      continue
+    }
     const className = addRules(displayName, style, key, tagName)
     nextClassNames = nextClassNames || []
     nextClassNames.push(className)

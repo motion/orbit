@@ -1,8 +1,8 @@
 import { colorNames } from './colorNames'
-import { Color, ColorObject } from './types'
+import { ColorLike, ColorObject } from './types'
 
 export const toColor = memoizeOne<string>(
-  (color: Color): string => {
+  (color: ColorLike): string => {
     if (typeof color === 'string') {
       return color
     }

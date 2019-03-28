@@ -1,7 +1,6 @@
+import { ColorArray, isColor, toColor } from '@o/color'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
-import { isColor, toColor } from './toColor'
-import { CSSArray } from './types'
 
 export const px = (x: number | string) =>
   typeof x === 'number' ? `${x}px` : `${+x}` === x ? `${x}px` : x
@@ -18,7 +17,7 @@ const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
-export function expandCSSArray(given: number | Array<number | string>): CSSArray {
+export function expandCSSArray(given: number | Array<number | string>): ColorArray {
   if (typeof given === 'number') {
     return [given, given, given, given]
   }

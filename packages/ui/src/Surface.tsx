@@ -1,6 +1,6 @@
+import { ColorLike } from '@o/css'
 import {
   alphaColor,
-  Color,
   forwardTheme,
   gloss,
   GlossThemeFn,
@@ -37,7 +37,7 @@ export type SurfaceProps = ViewProps & {
   ellipse?: boolean
   borderRadius?: number
   after?: React.ReactNode
-  background?: Color
+  background?: ColorLike
   badge?: React.ReactNode
   badgeProps?: Object
   children?: React.ReactNode
@@ -57,7 +57,7 @@ export type SurfaceProps = ViewProps & {
   hovered?: boolean
   icon?: React.ReactNode
   iconAfter?: boolean
-  iconColor?: Color
+  iconColor?: ColorLike
   iconProps?: Partial<IconProps>
   iconSize?: number
   noInnerElement?: boolean
@@ -74,9 +74,9 @@ export type SurfaceProps = ViewProps & {
   alpha?: number
   alphaHover?: number
   disabled?: boolean
-  placeholderColor?: Color
-  highlightBackground?: Color
-  highlightColor?: Color
+  placeholderColor?: ColorLike
+  highlightBackground?: ColorLike
+  highlightColor?: ColorLike
   style?: Object
   ignoreSegment?: boolean
   sizeLineHeight?: boolean | number

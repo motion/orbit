@@ -38,7 +38,7 @@ export function CustomApp1(_props: AppProps) {
       </FloatingCard> */}
 
       <Layout type="row">
-        <Pane resizable>
+        <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
               <SpacedRow>

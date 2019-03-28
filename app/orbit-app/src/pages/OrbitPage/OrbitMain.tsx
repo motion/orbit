@@ -26,11 +26,11 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   return (
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
       <ListPropsContext.Provider value={{ createNewSelectionStore: true }}>
+        <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
         <OrbitMainContainer
           isTorn={orbitStore.isTorn}
           transparent={definition.config && definition.config.transparentBackground}
         >
-          <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
           <View flex={1} position="relative">
             {props.hasSidebar && <BorderLeft opacity={0.5} />}
             {props.hasToolbar && <BorderTop opacity={0.5} />}

@@ -5,7 +5,7 @@ export const Separator = gloss(Text, {
   paddingTop: 18,
   paddingLeft: 10,
   paddingRight: 10,
-  paddingBottom: 2,
+  paddingBottom: 4,
   opacity: 0.6,
 })
 

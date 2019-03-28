@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
-import { DataType } from '../types'
+import { DataType, Omit } from '../types'
 import { FormContext } from './Form'
 
 export type InputType =
@@ -13,10 +13,12 @@ export type InputType =
   | 'password'
   | 'email'
   | 'select'
+  | 'number'
   | DataType
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
-  SizedSurfaceProps & {
+  Omit<SizedSurfaceProps, 'type'> & {
+    step?: any
     value?: string
     onEnter?: Function
     type?: InputType

@@ -134,9 +134,8 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <Button
+    <HeaderButtonChromeless
       icon="tool"
-      circular
       tooltip="Edit app"
       onClick={async () => {
         Actions.tearApp()

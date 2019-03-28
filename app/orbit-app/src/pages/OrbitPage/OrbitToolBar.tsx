@@ -7,7 +7,9 @@ import { useStoresSimple } from '../../hooks/useStores'
 const toolbarHeight = 36
 
 export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
-  <div style={{ height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0 }} />
+  <div
+    style={{ pointerEvents: 'none', height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0 }}
+  />
 )
 
 export const OrbitToolBar = memo((props: AppMainViewProps) => {
@@ -31,7 +33,7 @@ const ToolbarChrome = gloss(Row, {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: 1000000000000000000000000,
+  zIndex: 100000000,
   transition: 'none',
   transparent: {
     background: 'transparent',

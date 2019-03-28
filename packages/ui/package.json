@@ -38,7 +38,9 @@
     "react-grid-layout": "0.16.6",
     "react-window": "1.5.1",
     "remark-emoji": "2.0.2",
-    "scroll": "2.0.3"
+    "scroll": "2.0.3",
+    "react-color": "2.17.0",
+    "string-natural-compare": "2.0.3"
   },
   "devDependencies": {
     "@types/react-select": "2.0.15",

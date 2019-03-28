@@ -31,7 +31,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
           transparent={definition.config && definition.config.transparentBackground}
         >
           {props.hasSidebar && <BorderLeft opacity={0.5} />}
-          <ToolBarPad hasToolbar={props.hasToolbar} hasIndex={props.hasSidebar} />
+          <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
           {isValidElement(props.children) ? cloneElement(props.children, appProps) : props.children}
           {props.hasStatusbar && statusbarPadElement}
         </OrbitMainContainer>

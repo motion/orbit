@@ -9,7 +9,7 @@ Error.stackTraceLimit = Infinity
 const {
   DISABLE_SYNCERS,
   DEBUG_ELECTRON,
-  DEBUG_ELECTRON_MAIN,
+  DEBUG_ELECTRON_MAIN = 'true',
   DEBUG_ELECTRON_APPS,
   DEBUG_ELECTRON_CHROME,
 } = process.env
@@ -33,7 +33,9 @@ async function start() {
     (debugElectron || debugElectronChrome) && { port: '9006' }, // electron-chrome main
     { port: '9007' }, // electron-menus remote
   ].filter(Boolean)
+
   console.log('starting REPL with sessions...', sessions)
+
   await debugApps({
     sessions,
   })

@@ -29,7 +29,10 @@ export function CustomApp2() {
                   multiSelect
                   onSelect={rows => setData({ selected: rows })}
                   rows={[
-                    { title: 'Hello world', date: new Date(Date.now()) },
+                    {
+                      title: 'Hello world Hello world Hello world Hello world Hello world',
+                      date: new Date(Date.now()),
+                    },
                     { title: 'Hello world', date: new Date(Date.now()) },
                     { title: 'Hello world', date: new Date(Date.now()) },
                   ]}

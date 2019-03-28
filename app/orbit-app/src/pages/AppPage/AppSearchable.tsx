@@ -13,17 +13,7 @@ export const AppSearchable = React.memo(function AppSearchable(props: Searchable
   return (
     <>
       <Row padding={6} paddingBottom={10}>
-        <Input
-          flex={1}
-          // !TODO we have two Inputs, i removed one, need to resolve...
-          // hover={false}
-          // select={false}
-          // focus={false}
-          // active={false}
-          // sizeHeight={0.95}
-          placeholder="Search..."
-          // {...props.inputProps}
-        />
+        <Input flex={1} placeholder="Search..." {...props.inputProps} />
         <ContextButton marginLeft={6} />
       </Row>
       <MergeHighlightsContext

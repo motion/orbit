@@ -25,7 +25,7 @@ export function Fieldsets(props: FieldsetsProps) {
               const value = values[colKey]
               return (
                 <FormField
-                  key={value.key || index}
+                  key={`${value.key}${index}`}
                   type={columns[colKey].type}
                   label={columns[colKey].value}
                   value={value}

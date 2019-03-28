@@ -1,5 +1,5 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColor, CSSPropertySet, gloss, Inline, propsToTextSize, View } from '@o/gloss'
+import { alphaColor, CSSPropertySet, gloss, propsToTextSize, View } from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
@@ -272,26 +272,19 @@ const TextBlock = gloss(View, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ignoreColor, alpha, alphaHover, ...props }, theme) => {
-  let styles: CSSPropertySetStrict = {
-    display: 'inline-block',
-  }
-
+}).theme(({ ignoreColor, alpha, alphaHover, color }, theme) => {
   if (ignoreColor) {
     return {
-      ...styles,
       color: 'inherit',
     }
   }
-
-  const color = props.color || theme.color
   return {
-    ...styles,
-    ...alphaColor({ color }, { alpha, alphaHover }),
+    ...alphaColor({ color: color || theme.color }, { alpha, alphaHover }),
   }
 })
 
-const TextEllipse = gloss(Inline, {
+const TextEllipse = gloss({
+  display: 'inline',
   maxWidth: '100%',
 }).theme(({ ellipse, doClamp, maxHeight }) => ({
   ...(ellipse > 1 && {

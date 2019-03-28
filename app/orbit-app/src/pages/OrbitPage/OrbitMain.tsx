@@ -30,9 +30,9 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
           isTorn={orbitStore.isTorn}
           transparent={definition.config && definition.config.transparentBackground}
         >
-          {props.hasSidebar && <BorderLeft opacity={0.5} />}
           <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
           <View flex={1} position="relative">
+            {props.hasSidebar && <BorderLeft opacity={0.5} />}
             {props.hasToolbar && <BorderTop opacity={0.5} />}
             {isValidElement(props.children)
               ? cloneElement(props.children, appProps)

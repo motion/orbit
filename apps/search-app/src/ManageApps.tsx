@@ -7,7 +7,6 @@ import {
   SegmentedRow,
   SelectableGrid,
   Text,
-  TitleRow,
   useContextMenu,
   useRefGetter,
   View,
@@ -108,9 +107,7 @@ export function ManageApps() {
   const [activeSpace] = useActiveSpace()
 
   return (
-    <Section background="transparent">
-      <TitleRow bordered title={activeSpace ? activeSpace.name : ''} />
-
+    <Section title={activeSpace ? activeSpace.name : ''} background="transparent">
       <SelectableGrid
         minWidth={180}
         items={[

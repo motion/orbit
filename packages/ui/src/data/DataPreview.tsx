@@ -1,6 +1,6 @@
 import { gloss } from '@o/gloss'
 import React, { PureComponent } from 'react'
-import DataDescription from './DataDescription'
+import { DataDescription } from './DataDescription'
 import { DataValueExtractor, InspectorName } from './DataInspectorControlled'
 import { getSortedKeys } from './utils'
 
@@ -22,7 +22,7 @@ function intersperse(arr, sep) {
   return arr.slice(1).reduce((xs, x) => xs.concat([sep, x]), [arr[0]])
 }
 
-export default class DataPreview extends PureComponent<{
+export class DataPreview extends PureComponent<{
   type: string
   value: any
   depth: number

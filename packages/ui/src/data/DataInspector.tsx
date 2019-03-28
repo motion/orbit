@@ -6,7 +6,8 @@
  */
 
 import React, { PureComponent } from 'react'
-import DataInspectorControlled, {
+import {
+  DataInspectorControlled,
   DataInspectorExpanded,
   DataValueExtractor,
 } from './DataInspectorControlled'
@@ -54,7 +55,7 @@ type DataInspectorState = {
  * If you require lower level access to the state then use `DataInspector`
  * directly.
  */
-export default class DataInspector extends PureComponent<DataInspectorProps, DataInspectorState> {
+export class DataInspector extends PureComponent<DataInspectorProps, DataInspectorState> {
   constructor(props: DataInspectorProps, context: Object) {
     super(props, context)
     this.state = {

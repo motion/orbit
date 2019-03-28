@@ -143,10 +143,7 @@ type DataDescriptionState = {
   value: any
 }
 
-export default class DataDescription extends PureComponent<
-  DataDescriptionProps,
-  DataDescriptionState
-> {
+export class DataDescription extends PureComponent<DataDescriptionProps, DataDescriptionState> {
   constructor(props: DataDescriptionProps, context: Object) {
     super(props, context)
 

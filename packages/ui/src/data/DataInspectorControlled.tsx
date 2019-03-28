@@ -1,13 +1,16 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
-import { clipboard } from 'electron'
 import React, { Component } from 'react'
 import { colors } from 'react-select/lib/theme'
 import { ContextMenu } from '../ContextMenu'
 import { Tooltip } from '../Tooltip'
-import DataDescription from './DataDescription'
-import DataPreview from './DataPreview'
+import { DataDescription } from './DataDescription'
+import { DataPreview } from './DataPreview'
 import { getSortedKeys } from './utils'
+
+// @ts-ignore
+const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
+const { clipboard } = Electron
 
 /**
  * Copyright 2018-present Facebook.
@@ -25,6 +28,13 @@ const BaseContainer = gloss().theme(props => ({
   paddingLeft: 10,
   userSelect: 'text',
 }))
+
+const Added = gloss({
+  backgroundColor: colors.primary,
+})
+const Removed = gloss({
+  backgroundColor: colors.danger,
+})
 
 const RecursiveBaseWrapper = gloss('span', {
   color: colors.danger,
@@ -269,7 +279,7 @@ function isComponentExpanded(data: any, diffType: string, diffValue: any, isExpa
  * This component is fairly low level. It's likely you're looking for
  * [`<DataInspector>`]().
  */
-export default class DataInspectorControlled extends Component<DataInspectorControlledProps> {
+export class DataInspectorControlled extends Component<DataInspectorControlledProps> {
   static defaultProps: Partial<DataInspectorControlledProps> = {
     expanded: {},
     depth: 0,
@@ -448,13 +458,6 @@ export default class DataInspectorControlled extends Component<DataInspectorCont
       const diffValue = diff && resDiff ? resDiff.value : null
 
       const keys = getSortedKeys({ ...value, ...diffValue })
-
-      const Added = gloss({
-        backgroundColor: colors.primary,
-      })
-      const Removed = gloss({
-        backgroundColor: colors.danger,
-      })
 
       for (const key of keys) {
         const diffMetadataArr = diffMetadataExtractor(value, diffValue, key)

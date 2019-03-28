@@ -5,7 +5,7 @@ import { colorString, toHex, toRgbPercent } from './colorString'
 
 export { colorNames } from './colorNames'
 export * from './invertLightness'
-export * from './isColor'
+export { isColorLike, toColorString } from './isColor'
 export * from './linearGradient'
 export { ColorArray, ColorLike } from './types'
 

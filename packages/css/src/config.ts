@@ -1,9 +1,9 @@
-import { isColor, toColor } from '@o/color'
+import { isColorLike, toColorString } from '@o/color'
 import { CSSOptions } from './types'
 
 export const Config: CSSOptions = {
-  isColor: isColor,
-  toColor,
+  isColor: isColorLike,
+  toColor: toColorString,
 }
 
 export function configureCSS(options: Partial<CSSOptions>) {

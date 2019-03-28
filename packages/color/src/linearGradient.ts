@@ -1,24 +1,26 @@
-import { color, Color } from './color'
-import { isColor, toColor } from './isColor'
+import { Color } from './color'
+import { isColorLike, toColorString } from './isColor'
 import { ColorLike } from './types'
+
+const convertToColor = item => (isColorLike(item) ? toColorString(item) : item)
 
 export function linearGradient(...args: ColorLike[]) {
   return new LinearGradient(args)
 }
 
 export class LinearGradient {
-  items: Color[]
+  items: ColorLike[]
 
   constructor(items: ColorLike[]) {
-    this.items = items.map(color)
+    this.items = items
   }
 
   getColors() {
-    return this.items.filter(isColor)
+    return this.items.filter(isColorLike)
   }
 
   toString() {
-    const args = this.items.map(item => (isColor(item) ? toColor(item) : item)).join(', ')
+    const args = this.items.map(convertToColor).join(', ')
     return `linear-gradient(${args})`
   }
 
@@ -27,7 +29,7 @@ export class LinearGradient {
   }
 
   adjust(cb: (items: Color) => ColorLike) {
-    const next = this.items.map(cb)
+    const next = this.items.map(color => cb(convertToColor(color)))
     return new LinearGradient(next)
   }
 }

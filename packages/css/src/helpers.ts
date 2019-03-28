@@ -1,4 +1,4 @@
-import { ColorArray, isColor, toColor } from '@o/color'
+import { ColorArray, isColorLike, toColorString } from '@o/color'
 import { BORDER_KEY, COMMA_JOINED, TRANSFORM_KEYS_MAP } from './constants'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
 
@@ -37,24 +37,25 @@ export function expandCSSArray(given: number | Array<number | string>): ColorArr
 }
 
 const objectToCSS = {
-  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
+  textShadow: ({ x, y, blur, color }) => `${px(x)} ${px(y)} ${px(blur)} ${toColorString(color)}`,
   boxShadow: v =>
     v.inset || v.x || v.y || v.blur || v.spread || v.color
-      ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(v.spread)} ${toColor(
-          v.color,
-        )}`
-      : toColor(v),
+      ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
+          v.spread,
+        )} ${toColorString(v.color)}`
+      : toColorString(v),
   background: v =>
-    isColor(v)
-      ? toColor(v)
-      : `${toColor(v.color)} ${v.image || ''} ${(v.position ? v.position.join(' ') : v.position) ||
-          ''} ${v.repeat || ''}`,
+    isColorLike(v)
+      ? toColorString(v)
+      : `${toColorString(v.color)} ${v.image || ''} ${(v.position
+          ? v.position.join(' ')
+          : v.position) || ''} ${v.repeat || ''}`,
 }
 
 function processArrayItem(key: string, val: any, level: number = 0) {
   // recurse
-  if (isColor(val)) {
-    return toColor(val)
+  if (isColorLike(val)) {
+    return toColorString(val)
   }
   if (Array.isArray(val)) {
     return processArray(key, val, level + 1)
@@ -68,8 +69,8 @@ export function processArray(
   level: number = 0,
 ): string {
   if (key === 'background') {
-    if (isColor(value)) {
-      return toColor(value)
+    if (isColorLike(value)) {
+      return toColorString(value)
     }
   }
   // solid default option for borders
@@ -124,8 +125,8 @@ export function processObject(key: string, object: any): string {
     if (object.radialGradient) {
       return gradients.radialGradient(key, object.radialGradient)
     }
-    if (isColor(object)) {
-      return toColor(object)
+    if (isColorLike(object)) {
+      return toColorString(object)
     }
   }
   // if (key === 'border') {

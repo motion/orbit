@@ -1,4 +1,4 @@
-import { toColor } from '@o/color'
+import { toColorString } from '@o/color'
 import {
   COLOR_KEYS,
   FALSE_VALUES,
@@ -59,7 +59,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = value
       respond = true
     } else if (COLOR_KEYS.has(key)) {
-      toReturn[finalKey] = toColor(value)
+      toReturn[finalKey] = toColorString(value)
       respond = true
     } else if (Array.isArray(value)) {
       if (key === 'fontFamily') {

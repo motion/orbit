@@ -2,6 +2,9 @@ NEXT
 
 ---
 
+- debug why right click on an app Tab and hit "Remove" broke
+- debug why sorting apps/app tabs broke
+
 - mediator make resolvers simpler:
 
 "maybe theres a way to fix up the problems we have on electron side and my complaints too about mediator being too hard to manage

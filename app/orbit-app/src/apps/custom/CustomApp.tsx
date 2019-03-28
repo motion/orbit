@@ -7,7 +7,7 @@ import { CustomApp2 } from './CustomApp2'
 function CustomApp() {
   return (
     <App>
-      <Tabs>
+      <Tabs marginTop={5}>
         <Tab id="0" label="Demo 1">
           <CustomApp1 />
         </Tab>

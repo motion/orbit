@@ -184,22 +184,24 @@ function TabsControlled({
   return (
     <TabContainer>
       <Row width="100%" {...rest}>
-        <SegmentedRow sizePadding={2} sizeRadius={2}>
-          {before}
-          <View
-            {...{
-              flex: 1,
-              overflow: 'hidden',
-              height,
-              margin: [0, 'auto'],
-            }}
-          >
-            <HideScrollbar className="hide-scrollbars">
-              {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
-            </HideScrollbar>
-          </View>
-          {after}
-        </SegmentedRow>
+        <div style={{ margin: 'auto', maxWidth: '100%' }}>
+          <SegmentedRow sizePadding={2} sizeRadius={2}>
+            {before}
+            <View
+              {...{
+                flex: 1,
+                overflow: 'hidden',
+                height,
+                margin: [0, 'auto'],
+              }}
+            >
+              <HideScrollbar className="hide-scrollbars">
+                {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
+              </HideScrollbar>
+            </View>
+            {after}
+          </SegmentedRow>
+        </div>
       </Row>
       {tabContents}
       {tabSiblings}
@@ -231,7 +233,6 @@ const HideScrollbar = gloss({
   margin: [0, 1],
   height: '100%',
   boxSizing: 'content-box',
-  justifyContent: 'center',
 })
 
 const CloseButton = gloss({

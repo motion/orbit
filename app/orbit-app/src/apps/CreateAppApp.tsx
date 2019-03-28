@@ -1,7 +1,7 @@
 import { save } from '@o/bridge'
 import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
 import { AppBit, AppModel } from '@o/models'
-import { Button, Divider, FormField, Section, Space, TitleRow } from '@o/ui'
+import { Button, Divider, FormField, Section, Space, StatusBar, TitleRow, View } from '@o/ui'
 import React, { useEffect } from 'react'
 import { useActions } from '../hooks/useActions'
 import { useStores } from '../hooks/useStores'
@@ -22,8 +22,8 @@ function CreateAppIndex() {
   return (
     <>
       <TitleRow
-        title="Add app"
-        subTitle="Add app to this workspace"
+        title="1. Select app"
+        subTitle="Choose app to add"
         after={
           <>
             <Button
@@ -41,6 +41,7 @@ function CreateAppIndex() {
         }
       />
       <List
+        minSelected={-1}
         items={defaultApps.map(app => ({
           title: app.name,
           identifier: app.identifier,
@@ -83,38 +84,34 @@ function CreateAppMain({ title, identifier }: AppProps) {
   }
 
   return (
-    <Section>
-      <TitleRow
-        bordered
-        backgrounded
-        title="Setup app"
-        subTitle={`Create ${title} app`}
-        after={
-          <>
-            <Space />
-            <Button iconAfter alt="action" icon="arrowright" onClick={createApp}>
-              Create
-            </Button>
-          </>
-        }
-      />
+    <>
+      <Section titleBorder flex={1} title="2. Setup app" subTitle={`Create ${title} app`}>
+        <Section padded>
+          <FormField label="Name and Icon">
+            <AppsMainNew />
+          </FormField>
 
-      <Section padded>
-        <FormField label="Name and Icon">
-          <AppsMainNew />
-        </FormField>
+          <Divider />
 
-        <Divider />
+          <FormField label="Settings">
+            <AppView identifier={identifier} viewType="settings" />
+          </FormField>
+        </Section>
 
-        <FormField label="Settings">
-          <AppView identifier={identifier} viewType="settings" />
-        </FormField>
+        <Section bordered title="Preview" minHeight={200}>
+          <PreviewApp app={app} />
+        </Section>
       </Section>
-
-      <Section bordered title="Preview" minHeight={200}>
-        <PreviewApp app={app} />
-      </Section>
-    </Section>
+      <StatusBar padding={30}>
+        <>
+          <View flex={1} />
+          <Space />
+          <Button size={1.2} iconAfter alt="action" icon="arrowright" onClick={createApp}>
+            Create
+          </Button>
+        </>
+      </StatusBar>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import { gloss } from '@o/gloss'
+import { gloss, View } from '@o/gloss'
 import {
   AppLoadContext,
   AppMainViewProps,
@@ -6,7 +6,7 @@ import {
   SubPane,
   useAppDefinitions,
 } from '@o/kit'
-import { BorderLeft } from '@o/ui'
+import { BorderLeft, BorderTop } from '@o/ui'
 import React, { cloneElement, isValidElement, memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
@@ -30,9 +30,14 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
           isTorn={orbitStore.isTorn}
           transparent={definition.config && definition.config.transparentBackground}
         >
-          {props.hasSidebar && <BorderLeft opacity={0.5} />}
-          <ToolBarPad hasToolbar={props.hasToolbar} hasIndex={props.hasSidebar} />
-          {isValidElement(props.children) ? cloneElement(props.children, appProps) : props.children}
+          <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
+          <View flex={1} position="relative">
+            {props.hasSidebar && <BorderLeft opacity={0.5} />}
+            {props.hasToolbar && <BorderTop opacity={0.5} />}
+            {isValidElement(props.children)
+              ? cloneElement(props.children, appProps)
+              : props.children}
+          </View>
           {props.hasStatusbar && statusbarPadElement}
         </OrbitMainContainer>
       </ListPropsContext.Provider>

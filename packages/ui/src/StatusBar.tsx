@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row, View } from '@o/gloss'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Text } from './text/Text'
@@ -9,7 +9,7 @@ const statusBarProps = {
   size: 0.95,
 }
 
-export const StatusBar = gloss({
+export const StatusBar = gloss(View, {
   padding: [0, 7],
   height: 34,
   flexFlow: 'row',

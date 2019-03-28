@@ -33,6 +33,7 @@ export class ElectronShortcutManager {
     for (const name in this.shortcuts) {
       const shortcut = this.shortcuts[name]
       globalShortcut.register(shortcut, () => {
+        console.log('got shortcut', shortcut)
         this.onShortcutCb(name, shortcut)
       })
     }

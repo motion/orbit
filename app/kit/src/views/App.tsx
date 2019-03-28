@@ -53,11 +53,7 @@ export function App(props: AppElements) {
   return (
     <>
       {hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>}
-      {hasMain && (
-        <Main hasSidebar={!!props.index} {...hasProps}>
-          {props.children}
-        </Main>
-      )}
+      {hasMain && <Main {...hasProps}>{props.children}</Main>}
       {hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>}
       {hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>}
     </>

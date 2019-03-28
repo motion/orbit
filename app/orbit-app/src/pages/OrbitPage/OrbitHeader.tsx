@@ -59,7 +59,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <LinkButton />
                 <Space />
               </SurfacePassProps>
-              <SurfacePassProps sizeRadius={2} sizePadding={1.25} fontWeight={500} sizeFont={0.95}>
+              <SurfacePassProps sizeRadius={2} sizePadding={1.25} fontWeight={500} sizeFont={1}>
                 {!isTorn && <LaunchButton />}
               </SurfacePassProps>
             </>

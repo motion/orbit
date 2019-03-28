@@ -7,10 +7,10 @@
 
 import { gloss, Row, View, ViewProps } from '@o/gloss'
 import React, { Children, cloneElement } from 'react'
-import { Breadcrumbs } from './Breadcrumbs'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
+import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
 
@@ -53,8 +53,8 @@ function TabsControlled(props: TabsProps) {
     tabProps,
     tabPropsActive,
     onActive,
-    height = 26,
-    borderRadius = 0,
+    height = 24,
+    borderRadius,
     ...rest
   } = props
   // array of other components that aren't tabs
@@ -176,13 +176,19 @@ function TabsControlled(props: TabsProps) {
     <TabContainer>
       <Row {...rest}>
         {before}
-        <div style={{ width: '100%', overflow: 'hidden', height }}>
+        <View
+          {...{
+            overflow: 'hidden',
+            height,
+            margin: [tabContents.length ? 3 : 0, 'auto'],
+          }}
+        >
           <HideScrollbar className="hide-scrollbars">
-            <Breadcrumbs flex={1}>
+            <SegmentedRow minWidth={110} sizeRadius={2}>
               {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
-            </Breadcrumbs>
+            </SegmentedRow>
           </HideScrollbar>
-        </div>
+        </View>
         {after}
       </Row>
       {tabContents}

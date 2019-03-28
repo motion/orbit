@@ -1,6 +1,9 @@
 import React from 'react'
 import { DateRangePicker } from 'react-date-range'
-import '../Calendar.css'
+
+if (typeof window !== 'undefined') {
+  require('../Calendar.css')
+}
 
 export function Calendar(props) {
   return <DateRangePicker {...props} />

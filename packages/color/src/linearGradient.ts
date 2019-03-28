@@ -1,4 +1,3 @@
-import { Color } from './color'
 import { isColorLike, toColorString } from './isColor'
 import { ColorLike } from './types'
 
@@ -28,8 +27,8 @@ export class LinearGradient {
     return this.toString()
   }
 
-  adjust(cb: (items: Color) => ColorLike) {
-    const next = this.items.map(color => cb(convertToColor(color)))
+  adjust(cb: (items: ColorLike) => ColorLike) {
+    const next = this.items.map(cb)
     return new LinearGradient(next)
   }
 }

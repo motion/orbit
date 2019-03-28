@@ -12,7 +12,7 @@ const colors = {
   red: '#c80000',
 }
 
-const alternates = {
+const alternates: ThemeSet = {
   remove: Theme.fromStyles({
     iconFill: '#fff',
     color: '#fff',
@@ -182,7 +182,7 @@ const dark = {
     ),
     buttonBackground: darkButtonBg,
     buttonBackgroundActive: [45, 45, 45, 0.8],
-    buttonBackgroundHover: darkButtonBg.adjust(c => c.lighten(0.1)),
+    buttonBackgroundHover: darkButtonBg.adjust(c => color(c).lighten(0.1)),
     buttonBorderColor: [35, 35, 35],
     buttonBorderColorActive: [35, 35, 35],
     buttonBorderColorHover: [40, 40, 40],

@@ -4,6 +4,7 @@
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
 import * as firebase from 'firebase'
 import * as React from 'react'
+// @ts-ignore
 import { unstable_Profiler as Profiler } from 'react'
 import { render } from 'react-dom'
 import 'react-hot-loader' // must be imported before react

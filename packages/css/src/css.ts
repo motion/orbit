@@ -18,7 +18,7 @@ export { psuedoKeys, validCSSAttr } from './constants'
 export { CSSPropertySet, CSSPropertySetResolved, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { ThemeObject } from './ThemeObject'
+export { ThemeObject, ThemeSet } from './ThemeObject'
 export { Transform } from './types'
 
 export type CSSOptions = {

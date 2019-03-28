@@ -1,3 +1,4 @@
+import { ThemeSet } from '@o/css'
 import { color, linearGradient, ThemeMaker } from '@o/gloss'
 
 const Theme = new ThemeMaker()
@@ -50,7 +51,7 @@ const alternates = {
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
-  titlebar: {
+  titlebar: Theme.fromStyles({
     tabBackgroundActive: '#E8E8E8',
     tabBackground: '#dfdfdf',
     tabBackgroundHover: '#bfbfbf',
@@ -73,7 +74,7 @@ const alternates = {
     buttonBorderBlur: '#dbdbdb',
     buttonBackgroundBlur: '#f6f6f6',
     buttonBackgroundActiveHighlight: '#ededed',
-  },
+  }),
 }
 
 const base = Theme.colorize({
@@ -134,21 +135,22 @@ const darkColor = [250, 250, 250]
 const darkBackground = color([60, 60, 60])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
-const dark = {
-  alternates: {
-    ...alternates,
-    bordered: {
-      ...alternates.bordered,
-      ...Theme.colorize({
-        background: 'transparent',
-        backgroundHover: 'transparent',
-        backgroundActive: 'transparent',
-        color: darkColor,
-        borderColor: darkColor,
-        borderColorHover: darkColor,
-      }),
-    },
+const darkAlternates: ThemeSet = {
+  ...alternates,
+  bordered: {
+    ...alternates.bordered,
+    ...Theme.colorize({
+      background: 'transparent',
+      backgroundHover: 'transparent',
+      backgroundActive: 'transparent',
+      color: darkColor,
+      borderColor: darkColor,
+      borderColorHover: darkColor,
+    }),
   },
+}
+const dark = {
+  alternates: darkAlternates,
   ...base,
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
@@ -211,12 +213,12 @@ const dark = {
   }),
 }
 
-export const themes = {
-  tooltip: {
+export const themes: ThemeSet = {
+  tooltip: Theme.fromStyles({
     background: 'rgba(20,20,20,0.94)',
     backgroundHover: 'rgba(28,28,28,0.94)',
     color: '#fff',
-  },
+  }),
   dark,
   light,
 }

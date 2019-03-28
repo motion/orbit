@@ -1,9 +1,11 @@
 import { Color } from '@o/color'
 
+export type ThemeSet = {
+  [key: string]: Partial<ThemeObject>
+}
+
 export type ThemeObject = {
-  alternates?: {
-    [key: string]: Partial<ThemeObject>
-  }
+  alternates?: ThemeSet
   background: Color
   color: Color
   borderColor?: Color

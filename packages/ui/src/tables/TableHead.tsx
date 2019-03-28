@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row } from '@o/gloss'
+import { gloss, linearGradient, Row } from '@o/gloss'
 import invariant from 'invariant'
 import * as React from 'react'
 import { ContextMenu } from '../ContextMenu'
@@ -45,6 +45,9 @@ const TableHeaderColumnInteractive = gloss(Interactive, {
   width: '100%',
 }).theme((_, theme) => ({
   '&:hover': {
+    background: theme.backgroundHover.alpha(x => x * 0.5),
+  },
+  '&:active': {
     background: theme.backgroundHover,
   },
 }))
@@ -89,7 +92,7 @@ const TableHeadColumnContainer = gloss({
     display: 'none',
   },
 }).theme(({ width }, theme) => ({
-  background: theme.backgroundAlternate,
+  background: linearGradient(theme.background, theme.background.darken(0.05)),
   flexShrink: width === 'flex' ? 1 : 0,
   width: width === 'flex' ? '100%' : width,
   '&:after': {

@@ -13,7 +13,7 @@ export function AppsMain(props: AppProps) {
     } else {
       return (
         <Section
-          bordered
+          titleBorder
           icon="gear"
           title={props.title}
           afterTitle={

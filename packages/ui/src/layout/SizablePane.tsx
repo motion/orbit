@@ -1,6 +1,7 @@
 import { gloss, View } from '@o/gloss'
 import React, { useContext, useEffect, useState } from 'react'
 import { BorderLeft, BorderTop } from '../Border'
+import { getElevation } from '../helpers/getElevation'
 import { Interactive, InteractiveProps } from '../Interactive'
 import { PaneTitleRowParentProps } from '../PaneTitleRow'
 import { SectionPassProps } from '../Section'
@@ -13,6 +14,7 @@ export type SizablePaneProps = Partial<InteractiveProps> &
     parentSize?: number
     flex?: number
     scrollable?: boolean | 'x' | 'y'
+    elevation?: number
   }
 
 export function SizablePane({ scrollable, children, resizable, ...props }: SizablePaneProps) {
@@ -98,4 +100,4 @@ const PaneChrome = gloss(View, {
   flex: 1,
   position: 'relative',
   overflow: 'hidden',
-})
+}).theme(getElevation)

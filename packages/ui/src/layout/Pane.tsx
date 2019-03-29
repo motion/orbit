@@ -5,7 +5,7 @@ import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
 import { SizablePane, SizablePaneProps } from './SizablePane'
 
-export type PaneProps = SizablePaneProps & CollapsableProps & PaneTitleRowParentProps
+export type PaneProps = SizablePaneProps & Partial<CollapsableProps> & PaneTitleRowParentProps
 
 export function Pane({
   title,

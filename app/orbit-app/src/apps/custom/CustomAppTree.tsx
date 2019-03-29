@@ -1,4 +1,4 @@
-import { DataInspector, Layout, Pane, Panel, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Tree } from '@o/ui'
 import produce from 'immer'
 import React, { useState } from 'react'
 
@@ -44,23 +44,21 @@ export function CustomAppTree() {
           elements={treeState}
         />
       </Pane>
-      <Pane title="hi">
-        <Panel heading="hi" collapsable>
-          <DataInspector
-            data={{
-              test: 'this',
-              thing: 0,
-              is: 'hi',
-              who: 'are',
-              you: new Date(),
-              color: 'yellow',
-              another: {
-                one: 'color',
-                two: 'green',
-              },
-            }}
-          />
-        </Panel>
+      <Pane title="hi" collapsable>
+        <DataInspector
+          data={{
+            test: 'this',
+            thing: 0,
+            is: 'hi',
+            who: 'are',
+            you: new Date(),
+            color: 'yellow',
+            another: {
+              one: 'color',
+              two: 'green',
+            },
+          }}
+        />
       </Pane>
     </Layout>
   )

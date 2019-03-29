@@ -7,7 +7,7 @@ import {
   useReaction,
   useTreeList,
 } from '@o/kit'
-import { Button, Panel, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
+import { Button, Pane, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
 
@@ -68,15 +68,15 @@ export function ListsAppIndex() {
         />
       </View>
 
-      <Panel
+      <Pane
         elevation={1}
         collapsable
         collapsed={showSearch.val}
         onCollapse={showSearch.toggle}
-        heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+        title={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
       >
         <List query={addQuery} items={searchResults || []} />
-      </Panel>
+      </Pane>
     </>
   )
 }

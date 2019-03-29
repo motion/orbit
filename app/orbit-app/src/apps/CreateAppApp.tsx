@@ -1,13 +1,8 @@
-import { save } from '@o/bridge'
-import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
-import { AppBit, AppModel } from '@o/models'
-import { Button, Divider, FormField, Section, Space, StatusBar, TitleRow, View } from '@o/ui'
-import React, { useEffect } from 'react'
+import { App, AppIcon, createApp, List } from '@o/kit'
+import { Button, Section, TitleRow } from '@o/ui'
+import React from 'react'
 import { useActions } from '../hooks/useActions'
-import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import { AppsMainNew } from './apps/AppsMainNew'
-import PreviewApp from './views/PreviewApp'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -17,10 +12,10 @@ const descriptions = {
   custom2: 'Internal development test app',
 }
 
-function CreateAppIndex() {
+function CreateAppMain() {
   const Actions = useActions()
   return (
-    <>
+    <Section padded>
       <TitleRow
         title="1. Select app"
         subTitle="Choose app to add"
@@ -51,67 +46,7 @@ function CreateAppIndex() {
           group: 'Apps',
         }))}
       />
-    </>
-  )
-}
-
-function CreateAppMain({ title, identifier }: AppProps) {
-  const Actions = useActions()
-  const { newAppStore } = useStores()
-  const [activeSpace] = useActiveSpace()
-
-  useEffect(
-    () => {
-      if (identifier) {
-        newAppStore.setApp(identifier)
-      }
-    },
-    [identifier],
-  )
-
-  if (!identifier) {
-    return null
-  }
-
-  const app = { identifier } as AppBit
-  const createApp = async () => {
-    const app = {
-      ...newAppStore.app,
-      spaceId: activeSpace.id,
-    }
-    save(AppModel, app)
-    Actions.previousTab()
-  }
-
-  return (
-    <>
-      <Section titleBorder flex={1} title="2. Setup app" subTitle={`Create ${title} app`}>
-        <Section padded>
-          <FormField label="Name and Icon">
-            <AppsMainNew />
-          </FormField>
-
-          <Divider />
-
-          <FormField label="Settings">
-            <AppView identifier={identifier} viewType="settings" />
-          </FormField>
-        </Section>
-
-        <Section bordered title="Preview" minHeight={200}>
-          <PreviewApp app={app} />
-        </Section>
-      </Section>
-      <StatusBar padding={30}>
-        <>
-          <View flex={1} />
-          <Space />
-          <Button size={1.2} iconAfter alt="action" icon="arrowright" onClick={createApp}>
-            Create
-          </Button>
-        </>
-      </StatusBar>
-    </>
+    </Section>
   )
 }
 
@@ -119,9 +54,9 @@ export const CreateApp = createApp({
   id: 'createApp',
   name: 'Create App',
   icon: '',
-  app: props => (
-    <App index={<CreateAppIndex />}>
-      <CreateAppMain {...props} />
+  app: () => (
+    <App>
+      <CreateAppMain />
     </App>
   ),
 })

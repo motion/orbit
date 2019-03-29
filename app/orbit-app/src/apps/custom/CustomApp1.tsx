@@ -31,6 +31,8 @@ export function CustomApp1(_props: AppProps) {
     active: active[i % 2],
   }))
 
+  console.log('users', users)
+
   return (
     <Form use={form}>
       {/* <FloatingCard attach="bottomright" title="Hello">

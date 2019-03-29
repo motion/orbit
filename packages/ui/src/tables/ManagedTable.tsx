@@ -512,6 +512,13 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     )
   }
 
+  getItemKey = index => {
+    const { highlightedRows, sortedRows } = this.state
+    const row = sortedRows[index]
+    const hld = highlightedRows.has(sortedRows[index].key)
+    return !row ? index : `${row.key}${hld}`
+  }
+
   getContentHeight = () => {
     const maxHeight = this.props.maxHeight || Infinity
     let height = 0
@@ -550,7 +557,11 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         ? this.getContentHeight()
         : Math.min(minHeight, viewProps.height || Infinity)
 
-    console.log('height', height)
+    const placeholderElement =
+      !rows ||
+      (!sortedRows.length &&
+        (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
+      null
 
     return (
       <Container
@@ -572,16 +583,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        {!rows ||
-          (!sortedRows.length &&
-            (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
-          null}
+        {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
           <DynamicList
+            key={Math.random()}
+            keyMapper={this.getItemKey}
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            // whenever this view renders, update list, otherwise highlights break
-            itemData={Math.random()}
+            itemData={sortedRows}
             ref={this.tableRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}

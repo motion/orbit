@@ -13,7 +13,12 @@ export function useParentNodeSize(props?: { disable?: boolean }) {
   useEffect(
     () => {
       if (!ref.current) return
-      setParentNode({ current: ref.current.parentNode as HTMLElement })
+      let parent = ref.current.parentNode as HTMLElement
+      // avoid display contents nodes
+      while (getComputedStyle(parent).display === 'contents') {
+        parent = parent.parentNode as HTMLElement
+      }
+      setParentNode({ current: parent })
     },
     [ref],
   )

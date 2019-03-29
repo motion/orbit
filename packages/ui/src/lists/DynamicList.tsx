@@ -49,6 +49,7 @@ export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicList
   const parentSize = useParentNodeSize({
     disable: disableMeasure,
   })
+
   return (
     <Contents ref={parentSize.ref}>
       <DynamicListControlled
@@ -65,11 +66,12 @@ type DynamicListState = {
   mounted: boolean
   startIndex: number
   endIndex: number
-  containerStyle: Object
+  containerStyle: any
   innerStyle: Object
   scrollHeight: number
   scrollTop: number
   height: number
+  shouldMeasure: boolean
 }
 
 export class DynamicListControlled extends Component<DynamicListProps, DynamicListState> {
@@ -86,6 +88,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     scrollHeight: 0,
     scrollTop: 0,
     height: 0,
+    shouldMeasure: false,
   }
 
   containerRef: HTMLDivElement | null
@@ -105,6 +108,19 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       height: number
     }
   > = new Map()
+
+  static getDerivedStateFromProps(
+    props: DynamicListProps,
+    state: DynamicListState,
+  ): Partial<DynamicListState> {
+    if (props.height !== 'content-height' && props.height !== state.height) {
+      return {
+        height: +props.height,
+        shouldMeasure: true,
+      }
+    }
+    return null
+  }
 
   scrollToIndex = (index: number, additionalOffset: number = 0) => {
     const pos = this.positions.get(index)
@@ -147,7 +163,8 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     ) {
       this.queueMeasurements()
     }
-    if (prevProps.height !== this.props.height) {
+    const shouldMeasure = this.state.shouldMeasure
+    if (shouldMeasure) {
       this.onResize()
     }
   }
@@ -181,7 +198,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     if (this.props.height === 'content-height') {
       this.setState({ height: this.getContentHeight() })
     } else {
-      this.setState({ height: this.props.height })
+      this.setState({ shouldMeasure: false })
     }
     this.recalculateScrollTop()
     this.dimensions.clear()
@@ -208,6 +225,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       }
 
       const precalculated = props.itemSize ? props.itemSize(i) : null
+
       if (precalculated) {
         this.dimensions.set(key, precalculated)
         continue
@@ -253,6 +271,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       // find the end index
       let endIndex = startIndex
       let scrollBottom = state.scrollTop + state.height
+
       while (true) {
         // if the scrollBottom is equal to the height of the scrollable area then
         // we were unable to find the end index because we're at the bottom of the
@@ -272,7 +291,6 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       if (
         startIndex === state.startIndex &&
         endIndex === state.endIndex &&
-        // @ts-ignore
         startTop === state.containerStyle.top
       ) {
         // this is to ensure that we don't create a new containerStyle object and obey reference equality for purity checks

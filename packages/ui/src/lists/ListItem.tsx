@@ -15,7 +15,7 @@ import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
-import { Icon } from '../Icon'
+import { Icon, IconProps } from '../Icon'
 import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
@@ -70,7 +70,7 @@ export type ListItemProps = ViewProps &
     after?: React.ReactNode
     titleProps?: Object
     iconBefore?: boolean
-    iconProps?: Object
+    iconProps?: Partial<IconProps>
     separatorProps?: Object
     className?: string
     inGrid?: boolean
@@ -102,7 +102,7 @@ export type ListItemProps = ViewProps &
   }
 
 function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
-  let iconSize = iconBefore ? (small ? 20 : 28) : small ? 12 : 14
+  let iconSize = (iconProps && iconProps.size) || (iconBefore ? (small ? 20 : 28) : small ? 12 : 14)
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,

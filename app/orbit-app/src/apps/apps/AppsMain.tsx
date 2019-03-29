@@ -9,6 +9,10 @@ import { AppsMainNew } from './AppsMainNew'
 export function AppsMain(props: AppProps) {
   const [app] = useApp(+props.subId)
 
+  if (!app) {
+    return null
+  }
+
   // showing settings
   if (props.identifier !== 'apps') {
     if (props.subType === 'sync') {

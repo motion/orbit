@@ -32,7 +32,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
               key={bit.id}
               messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
             />
-            <Divider />
+            <Divider padded />
           </React.Fragment>
         )
       })}

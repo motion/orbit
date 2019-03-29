@@ -8,11 +8,10 @@ import { Omit } from './types'
 
 export type SectionProps = ViewProps &
   PaddedProps &
-  Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
+  Omit<Partial<TitleRowProps>, 'after' | 'below' | 'margin'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode
     titleBorder?: boolean
-    sizePadding?: number
     below?: React.ReactNode
     scrollable?: boolean
   }
@@ -30,7 +29,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     scrollable,
     children,
     afterTitle,
-    sizePadding,
     bordered,
     belowTitle,
     below,
@@ -40,6 +38,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padded,
     background,
     titleBorder,
+    width,
+    margin,
+    height,
+    maxHeight,
+    maxWidth,
     ...viewProps
   } = props
   return (
@@ -50,11 +53,15 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       sizeRadius={bordered ? 1 : 0}
       elevation={bordered ? 1 : 0}
       borderWidth={bordered ? 1 : 0}
-      margin={bordered ? 10 : 0}
+      margin={typeof margin !== 'undefined' ? margin : bordered ? 10 : 0}
       noInnerElement
       overflow="hidden"
       flex={flex}
       background={background}
+      height={height}
+      width={width}
+      maxHeight={maxHeight}
+      maxWidth={maxWidth}
     >
       {!!(title || afterTitle) && (
         <TitleRow

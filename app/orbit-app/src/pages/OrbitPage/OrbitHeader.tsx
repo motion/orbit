@@ -79,23 +79,25 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {!isTorn && <OrbitSpaceSwitch />}
 
-          <Button
-            chromeless
-            opacity={isOnSettings ? 0.8 : 0.4}
-            hoverStyle={{
-              opacity: isOnSettings ? 1 : 0.6,
-            }}
-            icon="gear"
-            iconSize={isTorn ? 10 : 12}
-            onClick={() => {
-              newAppStore.setShowCreateNew(false)
-              if (activePaneType === 'settings') {
-                paneManagerStore.back()
-              } else {
-                paneManagerStore.setActivePaneByType('settings')
-              }
-            }}
-          />
+          {isTorn && (
+            <Button
+              chromeless
+              opacity={isOnSettings ? 0.8 : 0.4}
+              hoverStyle={{
+                opacity: isOnSettings ? 1 : 0.6,
+              }}
+              icon="gear"
+              iconSize={isTorn ? 10 : 12}
+              onClick={() => {
+                newAppStore.setShowCreateNew(false)
+                if (activePaneType === 'settings') {
+                  paneManagerStore.back()
+                } else {
+                  paneManagerStore.setActivePaneByType('settings')
+                }
+              }}
+            />
+          )}
         </HeaderSide>
       </HeaderTop>
       {!isTorn && <HeaderFade />}

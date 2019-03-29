@@ -1,10 +1,12 @@
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { useNodeSize } from './useNodeSize'
 
-export function useParentNodeSize() {
+export function useParentNodeSize(props?: { disable?: boolean }) {
   const ref = useRef<HTMLElement>(null)
   const [parentNode, setParentNode] = useState<RefObject<HTMLElement>>(null)
+
   const sizer = useNodeSize({
+    disable: props && props.disable,
     ref: parentNode,
   })
 

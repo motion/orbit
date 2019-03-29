@@ -88,7 +88,6 @@ export function List(rawProps: ListProps) {
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
   const { shortcutStore } = useStoresSimple()
-  const isRowLoaded = useCallback(x => x.index < items.length, [items])
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useRefGetter(getItemProps || nullFn)
   const isActive = useIsAppActive()
@@ -182,16 +181,16 @@ export function List(rawProps: ListProps) {
   )
 
   const hasItems = !!filtered.results.length
+  const isInactive = !(typeof props.isActive === 'boolean' ? props.isActive : isActive)
 
   return (
     <ProvideSelectionStore selectionStore={selectionStore}>
       <HighlightActiveQuery query={query}>
         {hasItems && (
           <SelectableList
-            allowMeasure={typeof props.isActive === 'boolean' ? props.isActive : isActive}
+            disableMeasure={isInactive}
             items={filtered.results}
             ItemView={ListItem}
-            isRowLoaded={isRowLoaded}
             {...restProps}
             getItemProps={getItemPropsInner}
             onSelect={onSelectInner}

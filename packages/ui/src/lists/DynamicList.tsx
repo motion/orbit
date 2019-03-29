@@ -12,6 +12,7 @@ import { useOnMount } from '../hooks/useOnMount'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 
 export type DynamicListProps = {
+  disableMeasure?: boolean
   listRef?: RefObject<DynamicListControlled>
   maxHeight?: number
   height?: number | 'content-height'
@@ -44,8 +45,10 @@ export type DynamicListProps = {
   sideScrollable?: boolean
 }
 
-export const DynamicList = forwardRef((props: DynamicListProps, ref) => {
-  const parentSize = useParentNodeSize()
+export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {
+  const parentSize = useParentNodeSize({
+    disable: disableMeasure,
+  })
   return (
     <Contents ref={parentSize.ref}>
       <DynamicListControlled

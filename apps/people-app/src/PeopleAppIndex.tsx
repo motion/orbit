@@ -6,7 +6,6 @@ export function PeopleAppIndex() {
   return (
     <List
       shareable
-      dynamicHeight
       items={useBits({ type: 'person' })}
       removePrefix="@"
       sortBy={useCallback(x => x.title.toLowerCase(), [])}

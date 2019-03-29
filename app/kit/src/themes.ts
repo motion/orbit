@@ -134,7 +134,7 @@ const light = {
 }
 
 const darkColor = [250, 250, 250]
-const darkBackground = color([60, 60, 60])
+const darkBackground = color([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
 const darkAlternates: ThemeSet = {
@@ -209,7 +209,7 @@ const dark = {
     cardBackgroundActive: [110, 110, 110, 0.4],
     cardBorderColor: [255, 255, 255, 0.07],
     cardBorderColorHover: [255, 255, 255, 0.15],
-    panelHeaderBackground: [60, 60, 60, 0.4],
+    panelHeaderBackground: darkBackground.lighten(0.15),
     redTint: '#ff000011',
     yellowTint: '#FFCA0011',
   }),

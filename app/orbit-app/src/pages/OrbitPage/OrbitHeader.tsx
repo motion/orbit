@@ -10,7 +10,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore, themeStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const { isTorn } = orbitStore
@@ -30,11 +30,11 @@ export const OrbitHeader = memo(function OrbitHeader() {
       <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
-          <HeaderButtonChromeless
+          {/* <HeaderButtonChromeless
             icon="sidebar"
             onClick={themeStore.setToggleShowSidebar}
             active={themeStore.showSidebar}
-          />
+          /> */}
 
           <BackButton />
         </HeaderSide>

@@ -1,19 +1,20 @@
 import { gloss, View, ViewProps } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
+import { Padded, PaddedProps } from './layout/Padded'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 
 export type SectionProps = ViewProps &
+  PaddedProps &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode
     titleBorder?: boolean
     sizePadding?: number
-    scrollable?: boolean
     below?: React.ReactNode
-    padded?: boolean
+    scrollable?: boolean
   }
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
@@ -68,13 +69,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <SectionInner
-        overflowY={scrollable ? 'auto' : 'hidden'}
-        padding={typeof padding !== 'undefined' ? padding : padded ? 20 : 0}
-        flex={flex}
-        {...viewProps}
-      >
-        <Reset>{children}</Reset>
+      <SectionInner overflowY={scrollable ? 'auto' : 'hidden'} flex={flex} {...viewProps}>
+        <Padded padded={padded}>
+          <Reset>{children}</Reset>
+        </Padded>
       </SectionInner>
       {below}
     </SizedSurface>

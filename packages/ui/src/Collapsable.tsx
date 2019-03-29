@@ -10,13 +10,13 @@ export type CollapsableProps = {
 }
 
 export function Collapsable(props: CollapsableProps & { children: React.ReactNode }) {
-  const collapsed = useToggle(props.collapsed, props.onCollapse)
+  const collapsed = useToggle(props.collapsed || false, props.onCollapse)
 
   if (!props.collapsable) {
     return <>{props.children}</>
   }
 
-  return <>{(collapsed.val && props.children) || null}</>
+  return <>{collapsed.val ? null : props.children || null}</>
 }
 
 export const CollapseArrow = ({ collapsed }) => (

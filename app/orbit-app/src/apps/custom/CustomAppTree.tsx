@@ -44,7 +44,7 @@ export function CustomAppTree() {
           elements={treeState}
         />
       </Pane>
-      <Pane flex={2} collapsable>
+      <Pane flex={2} collapsable title="Inspect" padded>
         <DataInspector
           data={{
             test: 'this',

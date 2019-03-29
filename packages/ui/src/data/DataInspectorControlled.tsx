@@ -99,7 +99,8 @@ const BaseContainer = gloss({
   lineHeight: '1.2rem',
   paddingLeft: 10,
   userSelect: 'text',
-}).theme(props => ({
+}).theme((props, theme) => ({
+  color: props.color || theme.color,
   opacity: props.disabled ? 0.5 : 1,
   margin: props.depth === 0 ? [7.5, 0] : '0',
 }))
@@ -113,10 +114,6 @@ const Removed = gloss({
 
 const RecursiveBaseWrapper = gloss('span', {
   color: colors.red,
-})
-
-const Wrapper = gloss(SimpleText, {
-  display: 'inline',
 })
 
 const PropertyContainer = gloss('span')
@@ -534,13 +531,12 @@ export class DataInspectorControlled extends Component<DataInspectorControlledPr
     let wrapperEnd
     if (isExpanded) {
       if (type === 'object') {
-        wrapperStart = <Wrapper>{'{'}</Wrapper>
-        wrapperEnd = <Wrapper>{'}'}</Wrapper>
+        wrapperStart = <SimpleText>{'{'}</SimpleText>
+        wrapperEnd = <SimpleText>{'}'}</SimpleText>
       }
-
       if (type === 'array') {
-        wrapperStart = <Wrapper>{'['}</Wrapper>
-        wrapperEnd = <Wrapper>{']'}</Wrapper>
+        wrapperStart = <SimpleText>{'['}</SimpleText>
+        wrapperEnd = <SimpleText>{']'}</SimpleText>
       }
     }
 

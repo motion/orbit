@@ -157,7 +157,7 @@ const dark = {
   cardShadow: [0, 6, 14, [0, 0, 0, 0.08]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.15]],
   ...Theme.fromStyles({
-    backgroundAlt: darkBackground.darken(0.1).alpha(0.4),
+    backgroundAlt: darkBackground.darken(0.1),
     backgroundZebra: darkBackground.lighten(0.3).alpha(0.5),
     background: darkBackground,
     backgroundHover: [20, 20, 20, 0.2],

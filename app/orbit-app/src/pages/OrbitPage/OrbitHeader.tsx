@@ -2,6 +2,7 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, SimpleText, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
+import { clipboard } from 'electron'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -58,7 +59,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <Space />
                 <LinkButton />
                 <Space />
-                <HeaderButtonChromeless icon="gear" />
+                <HeaderButtonChromeless icon="gear" tooltip="App Settings" />
                 <Space />
               </SurfacePassProps>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500} sizeFont={1}>
@@ -243,8 +244,11 @@ const LinkButton = memo(() => {
   const { locationStore } = useStores()
   return (
     <HeaderButtonChromeless
-      tooltip={`Copy link (⌘ + C): ${locationStore.urlString}`}
+      tooltip={`Copy link to app`}
       icon="link69"
+      onClick={() => {
+        clipboard.writeText(locationStore.urlString)
+      }}
     />
   )
 })

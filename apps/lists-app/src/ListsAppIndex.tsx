@@ -14,7 +14,7 @@ import React, { useState } from 'react'
 export function ListsAppIndex() {
   const treeList = useTreeList('list')
   const [addQuery, setAddQuery] = useState('')
-  const showSearch = useToggle(false)
+  const hideSearch = useToggle(true)
 
   const searchResults = useReaction(
     async (_, { sleep }) => {
@@ -46,10 +46,10 @@ export function ListsAppIndex() {
         buttons={
           <>
             <Button
-              active={showSearch.val}
+              active={hideSearch.val}
               tooltip="Search to add"
               icon="zoom"
-              onClick={showSearch.toggle}
+              onClick={hideSearch.toggle}
             />
             <Button
               tooltip="Create folder"
@@ -71,9 +71,11 @@ export function ListsAppIndex() {
       <Pane
         elevation={1}
         collapsable
-        collapsed={showSearch.val}
-        onCollapse={showSearch.toggle}
+        collapsed={hideSearch.val}
+        onCollapse={hideSearch.toggle}
         title={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+        maxHeight={600}
+        // background
       >
         <List query={addQuery} items={searchResults || []} />
       </Pane>

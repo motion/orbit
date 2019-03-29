@@ -1,13 +1,8 @@
-import { save } from '@o/bridge'
-import { App, AppIcon, AppProps, AppView, createApp, List, useActiveSpace } from '@o/kit'
-import { AppBit, AppModel } from '@o/models'
-import { Button, Divider, FormField, Section, Space, StatusBar, TitleRow, View } from '@o/ui'
-import React, { useEffect } from 'react'
+import { App, AppIcon, createApp, List, View } from '@o/kit'
+import { Button, Section, SurfacePassProps, Toolbar } from '@o/ui'
+import React from 'react'
 import { useActions } from '../hooks/useActions'
-import { useStores } from '../hooks/useStores'
 import { defaultApps } from '../stores/NewAppStore'
-import { AppsMainNew } from './apps/AppsMainNew'
-import PreviewApp from './views/PreviewApp'
 
 const descriptions = {
   search: 'Custom search with filters',
@@ -17,100 +12,59 @@ const descriptions = {
   custom2: 'Internal development test app',
 }
 
-function CreateAppIndex() {
+function CreateAppMain() {
   const Actions = useActions()
   return (
     <>
-      <TitleRow
-        title="1. Select app"
+      <Section
+        width="70%"
+        background="transparent"
+        margin="auto"
+        height="70%"
+        padded
+        title="Add app"
         subTitle="Choose app to add"
-        after={
-          <>
-            <Button
-              alt="confirm"
-              onClick={() => {
-                Actions.createCustomApp()
-              }}
-              icon="simadd"
-              iconAfter
-              tooltip="Create new custom app"
-            >
-              New
-            </Button>
-          </>
-        }
-      />
-      <List
-        minSelected={-1}
-        items={defaultApps.map(app => ({
-          title: app.name,
-          identifier: app.identifier,
-          subtitle: descriptions[app.identifier],
-          icon: <AppIcon app={app} />,
-          iconBefore: true,
-          group: 'Apps',
-        }))}
-      />
-    </>
-  )
-}
-
-function CreateAppMain({ title, identifier }: AppProps) {
-  const Actions = useActions()
-  const { newAppStore } = useStores()
-  const [activeSpace] = useActiveSpace()
-
-  useEffect(
-    () => {
-      if (identifier) {
-        newAppStore.setApp(identifier)
-      }
-    },
-    [identifier],
-  )
-
-  if (!identifier) {
-    return null
-  }
-
-  const app = { identifier } as AppBit
-  const createApp = async () => {
-    const app = {
-      ...newAppStore.app,
-      spaceId: activeSpace.id,
-    }
-    save(AppModel, app)
-    Actions.previousTab()
-  }
-
-  return (
-    <>
-      <Section titleBorder flex={1} title="2. Setup app" subTitle={`Create ${title} app`}>
-        <Section padded>
-          <FormField label="Name and Icon">
-            <AppsMainNew />
-          </FormField>
-
-          <Divider />
-
-          <FormField label="Settings">
-            <AppView identifier={identifier} viewType="settings" />
-          </FormField>
-        </Section>
-
-        <Section bordered title="Preview" minHeight={200}>
-          <PreviewApp app={app} />
-        </Section>
+      >
+        <List
+          minSelected={0}
+          items={defaultApps.map(app => ({
+            title: app.name,
+            identifier: app.identifier,
+            subtitle: descriptions[app.identifier],
+            icon: <AppIcon app={app} />,
+            iconBefore: true,
+            iconProps: {
+              size: 44,
+            },
+          }))}
+        />
       </Section>
-      <StatusBar padding={30}>
-        <>
-          <View flex={1} />
-          <Space />
-          <Button size={1.2} iconAfter alt="action" icon="arrowright" onClick={createApp}>
-            Create
+      <Toolbar elevation={2}>
+        <SurfacePassProps>
+          <Button
+            alt="action"
+            onClick={() => {
+              Actions.createCustomApp()
+            }}
+            icon="simadd"
+            tooltip="Create new custom app"
+          >
+            Create Custom App
           </Button>
-        </>
-      </StatusBar>
+          <View flex={1} />
+          <Button
+            size={1.25}
+            alt="confirm"
+            onClick={() => {
+              Actions.createCustomApp()
+            }}
+            icon="simadd"
+            tooltip="Create new custom app"
+          >
+            Add
+          </Button>
+        </SurfacePassProps>
+      </Toolbar>
     </>
   )
 }
@@ -119,9 +73,9 @@ export const CreateApp = createApp({
   id: 'createApp',
   name: 'Create App',
   icon: '',
-  app: props => (
-    <App index={<CreateAppIndex />}>
-      <CreateAppMain {...props} />
+  app: () => (
+    <App>
+      <CreateAppMain />
     </App>
   ),
 })

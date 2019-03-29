@@ -20,11 +20,14 @@ const alternates: ThemeSet = {
     backgroundHover: colors.red,
     backgroundActive: colors.red,
   }),
-  confirm: Theme.fromStyles({
-    iconFill: '#fff',
-    background: '#449878',
-    color: '#fff',
-  }),
+  confirm: {
+    buttonFontWeight: 600,
+    ...Theme.fromStyles({
+      iconFill: '#fff',
+      background: '#449878',
+      color: '#fff',
+    }),
+  },
   action: Theme.fromStyles({
     iconFill: '#fff',
     background: orbitColor,

@@ -13,8 +13,6 @@ export {
   Theme,
   ThemeContext,
   ThemeProvide,
-  View,
-  ViewProps,
 } from '@o/gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
 export * from './Arrow'
@@ -169,4 +167,5 @@ export * from './Tooltip'
 export * from './Tree'
 export * from './types'
 export { UIStores } from './UIStores'
+export { View, ViewProps } from './View/View'
 export * from './Visibility'

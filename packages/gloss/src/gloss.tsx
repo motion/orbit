@@ -36,7 +36,7 @@ type GlossProps<Props> = Props &
 export type GlossThemeFn<Props> = ((
   props: GlossProps<Props>,
   theme: ThemeObject,
-) => CSSPropertySetResolved | null)
+) => CSSPropertySetResolved | null | undefined)
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
@@ -47,7 +47,7 @@ export interface GlossView<Props> {
   displayName?: string
   // extra:
   ignoreAttrs?: Object
-  theme: ((cb: GlossThemeFn<Props>) => GlossView<Props>)
+  theme: ((...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>)
   withConfig: (config: { displayName?: string }) => any
   glossConfig: {
     getConfig: () => {
@@ -58,7 +58,7 @@ export interface GlossView<Props> {
       propStyles: Object
       child: any
     }
-    themeFn: GlossThemeFn<Props> | null
+    themeFns: GlossThemeFn<Props>[] | null
   }
 }
 
@@ -305,7 +305,7 @@ export function gloss<Props = any>(
   ThemedView = (memo(InnerThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {
-    themeFn: null,
+    themeFns: null,
     getConfig: () => ({
       id,
       displayName: ThemedView.displayName || '',
@@ -324,8 +324,8 @@ export function gloss<Props = any>(
     }
     return ThemedView
   }
-  ThemedView.theme = themeFn => {
-    ThemedView.glossConfig.themeFn = themeFn
+  ThemedView.theme = (...themeFns) => {
+    ThemedView.glossConfig.themeFns = themeFns
     return ThemedView
   }
 
@@ -444,8 +444,8 @@ function compileTheme(ogView: GlossView<any>) {
   let themes: GlossThemeFn<any>[] = []
   // collect the themes going up the tree
   while (view) {
-    if (view.glossConfig.themeFn) {
-      themes.push(view.glossConfig.themeFn)
+    if (view.glossConfig.themeFns) {
+      themes = [...themes, ...view.glossConfig.themeFns]
     }
     view = view.glossConfig.getConfig().child
   }

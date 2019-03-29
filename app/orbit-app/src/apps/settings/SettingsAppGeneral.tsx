@@ -130,7 +130,7 @@ export function SettingsAppGeneral(_props: AppProps) {
       </FormField>
 
       <Space />
-      <Divider />
+      <Divider padded />
       <Space />
 
       <FormField label="Reset">

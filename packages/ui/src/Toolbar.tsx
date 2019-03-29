@@ -1,41 +1,18 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
-
-import { Col, gloss, Row } from '@o/gloss'
-import { colors } from './helpers/colors'
+import { Col, gloss } from '@o/gloss'
+import { View, ViewProps } from './View/View'
 
 export const Spacer = gloss(Col, {
   flexGrow: 1,
 })
 
-/**
- * A toolbar.
- */
-// : React.Component<{
-//   /**
-//    * Position of the toolbar. Dictates the location of the border.
-//    */
-//   position?: 'top' | 'bottom'
-//   compact?: boolean
-// }>
+export type ToolbarProps = ViewProps
 
-export const Toolbar = gloss(Row, {
-  flexShrink: 0,
-  lineHeight: '32px',
+export const Toolbar = gloss<ToolbarProps>(View, {
+  flexFlow: 'row',
   alignItems: 'center',
-  padding: 6,
+  justifyContent: 'space-between',
+  padding: 20,
   width: '100%',
-}).theme(({ height, borderTop, borderBottom, background, position, compact }, theme) => ({
-  background: background || theme.backgroundAlt || theme.background,
-  borderBottom:
-    borderBottom ||
-    (position === 'bottom' ? 'none' : [1, theme.borderColor || colors.sectionHeaderBorder]),
-  borderTop:
-    borderTop ||
-    (position === 'bottom' ? [1, theme.borderColor || colors.sectionHeaderBorder] : 'none'),
-  height: height || (compact ? 28 : 42),
+}).theme((props, theme) => ({
+  background: props.background || theme.background,
 }))

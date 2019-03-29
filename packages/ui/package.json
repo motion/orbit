@@ -33,7 +33,6 @@
     "react-debounce-render": "5.0.0",
     "react-markdown": "4.0.6",
     "react-tilt": "0.1.4",
-    "react-virtualized": "9.21.0",
     "react-virtualized-auto-sizer": "1.0.2",
     "memoize-one": "^5.0.2",
     "react-grid-layout": "0.16.6",

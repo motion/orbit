@@ -23,9 +23,12 @@ export function Pane({
     onCollapse: collapseToggle.toggle,
     collapsed: collapseToggle.val,
   }
+  const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
     <SizablePane {...sizablePaneProps}>
-      <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
+      {hasTitle && (
+        <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
+      )}
       <Collapsable {...collapsableProps}>
         <Suspense fallback={<Loading />}>{children}</Suspense>
       </Collapsable>

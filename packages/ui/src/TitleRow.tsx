@@ -1,12 +1,13 @@
 import { gloss, Row, View } from '@o/gloss'
 import React, { isValidElement } from 'react'
 import { BorderBottom } from './Border'
+import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
 import { Space } from './layout/Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
 
-export type TitleRowProps = {
+export type TitleRowProps = Partial<CollapsableProps> & {
   icon?: React.ReactNode
   title: React.ReactNode
   before?: React.ReactNode
@@ -34,6 +35,9 @@ export function TitleRow({
   icon,
   title,
   unpad,
+  collapsable,
+  collapsed,
+  onCollapse,
 }: TitleRowProps) {
   const pad = 16
   const sidePad = 10 * sizePadding
@@ -45,9 +49,11 @@ export function TitleRow({
       paddingRight={sidePad + pad}
       margin={typeof margin !== 'undefined' ? margin : unpad ? [-pad, -pad, 0] : 0}
       background={backgrounded ? theme => theme.backgroundAlt : null}
+      onDoubleClick={onCollapse && (() => onCollapse(!collapsed))}
     >
       {above}
       <Row>
+        {collapsable && <CollapseArrow collapsed={collapsed} />}
         {before && (
           <>
             {before}

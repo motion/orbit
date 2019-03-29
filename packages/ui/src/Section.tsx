@@ -5,7 +5,7 @@ import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 
-export type SectionProps = Omit<ViewProps, 'title'> &
+export type SectionProps = ViewProps &
   Omit<Partial<TitleRowProps>, 'after' | 'below'> & {
     belowTitle?: React.ReactNode
     afterTitle?: React.ReactNode

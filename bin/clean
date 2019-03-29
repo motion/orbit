@@ -2,6 +2,10 @@
 
 set +e
 
+rm -r app/*/tsconfig.tsbuildinfo || true
+rm -r apps/*/tsconfig.tsbuildinfo || true
+rm -r packages/*/tsconfig.tsbuildinfo || true
+
 rm -r app/*/npm-debug.log.* || true
 rm -r app/*/_ || true
 rm -r apps/*/_ || true

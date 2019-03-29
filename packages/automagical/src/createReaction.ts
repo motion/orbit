@@ -271,9 +271,9 @@ export function createReaction(
         curID = -1
         // got a nice cancel!
         if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
-          if (!IS_PROD) {
-            log.verbose(`  ${config.name} [${curID}] cancelled: ${err.message}`)
-          }
+          // if (!IS_PROD) {
+          //   log.verbose(`  ${config.name} [${curID}] cancelled: ${err.message}`)
+          // }
           return
         }
         throw err
@@ -296,9 +296,9 @@ export function createReaction(
           })
           .catch(err => {
             if (err instanceof ReactionRejectionError || err instanceof ReactionTimeoutError) {
-              if (!IS_PROD) {
-                log.verbose(`${config.name} [${curID}] cancelled`)
-              }
+              // if (!IS_PROD) {
+              //   log.verbose(`${config.name} [${curID}] cancelled`)
+              // }
             } else {
               throw err
             }

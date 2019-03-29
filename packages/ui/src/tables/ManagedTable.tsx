@@ -9,16 +9,15 @@ import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
-import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
+import { DynamicList, DynamicListControlled } from '../lists/DynamicList'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
 import {
-  DEFAULT_ROW_HEIGHT,
   SortOrder,
   TableColumnOrder,
   TableColumnSizes,
@@ -249,12 +248,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .toUpperCase()}`
   }
 
-  tableRef: {
-    current: null | VariableSizeList
-  } = React.createRef()
-  scrollRef: {
-    current: null | HTMLDivElement
-  } = React.createRef()
+  tableRef = React.createRef<DynamicListControlled>()
+  scrollRef = React.createRef<HTMLDivElement>()
   dragStartIndex?: number = null
 
   componentDidMount() {
@@ -268,7 +263,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   componentDidUpdate(prevProps: ManagedTableProps) {
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
-      this.tableRef.current.resetAfterIndex(0, true)
+      console.warn('may need to recalc height')
+      // this.tableRef.current.resetAfterIndex(0, true)
       this.setState({
         shouldRecalculateHeight: false,
       })
@@ -313,7 +309,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       this.onSelectIndices(highlightedRows, () => {
         const { current } = this.tableRef
         if (current) {
-          current.scrollToItem(newIndex)
+          current.scrollToIndex(newIndex)
         }
       })
     }
@@ -353,7 +349,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const { current: tableRef } = this.tableRef
     const { sortedRows } = this.state
     if (tableRef && sortedRows.length > 1) {
-      tableRef.scrollToItem(sortedRows.length - 1)
+      tableRef.scrollToIndex(sortedRows.length - 1)
     }
   }
 
@@ -388,9 +384,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       this.state.highlightedRows.clear()
       this.state.highlightedRows.add(row.key)
     }
-
     this.onSelectIndices(highlightedRows)
-
     this.setState({
       highlightedRows,
     })
@@ -417,13 +411,11 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         break
       }
     }
-
     for (let i = Math.min(startIndex, endIndex); i <= Math.max(startIndex, endIndex); i++) {
       try {
         selected.push(rows[i].key)
       } catch (e) {}
     }
-
     return selected
   }
 
@@ -434,7 +426,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       return
     }
     if (typeof dragStartIndex === 'number' && current) {
-      current.scrollToItem(index + 1)
+      current.scrollToIndex(index + 1)
       const startKey = this.state.sortedRows[dragStartIndex].key
       const highlightedRows = new Set(this.selectInRange(startKey, row.key))
       this.onSelectIndices(highlightedRows)
@@ -446,7 +438,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (highlightedRows.size === 0) {
       return []
     }
-
     return [
       {
         label: highlightedRows.size > 1 ? `Copy ${highlightedRows.size} rows` : 'Copy row',
@@ -476,36 +467,26 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .join('\n')
   }
 
-  onScroll = debounce(
-    ({
-      scrollDirection,
-      scrollOffset,
-    }: {
-      scrollDirection: 'forward' | 'backward'
-      scrollOffset: number
-      scrollUpdateWasRequested: boolean
-    }) => {
-      const { current } = this.scrollRef
-      const parent = current ? current.parentElement : null
-      if (
-        this.props.stickyBottom &&
-        scrollDirection === 'forward' &&
-        !this.state.shouldScrollToBottom &&
-        current &&
-        parent instanceof HTMLElement &&
-        current.offsetHeight - (scrollOffset + parent.offsetHeight) < parent.offsetHeight
-      ) {
-        this.setState({ shouldScrollToBottom: true })
-      } else if (
-        this.props.stickyBottom &&
-        scrollDirection === 'backward' &&
-        this.state.shouldScrollToBottom
-      ) {
-        this.setState({ shouldScrollToBottom: false })
-      }
-    },
-    100,
-  )
+  onScroll = debounce(({ scrollDirection, scrollTop }) => {
+    const { current } = this.scrollRef
+    const parent = current ? current.parentElement : null
+    if (
+      this.props.stickyBottom &&
+      scrollDirection === 'forward' &&
+      !this.state.shouldScrollToBottom &&
+      current &&
+      parent instanceof HTMLElement &&
+      current.offsetHeight - (scrollTop + parent.offsetHeight) < parent.offsetHeight
+    ) {
+      this.setState({ shouldScrollToBottom: true })
+    } else if (
+      this.props.stickyBottom &&
+      scrollDirection === 'backward' &&
+      this.state.shouldScrollToBottom
+    ) {
+      this.setState({ shouldScrollToBottom: false })
+    }
+  }, 100)
 
   renderRow = ({ index, style }) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
@@ -535,7 +516,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     const maxHeight = this.props.maxHeight || Infinity
     let height = 0
     for (let i = 0; i < this.state.sortedRows.length; i++) {
-      height += this.getRowHeight(i)
+      height += this.getRowHeight(i).height
       if (height > maxHeight) {
         height = maxHeight
         break
@@ -544,13 +525,12 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     return height
   }
 
-  getRowHeight = index => {
+  getRowHeight = (index: number) => {
     const { sortedRows } = this.state
-    return (
-      (sortedRows[index] && sortedRows[index].height) ||
-      this.props.rowLineHeight ||
-      DEFAULT_ROW_HEIGHT
-    )
+    return {
+      height: (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight,
+      width: '100%',
+    }
   }
 
   render() {
@@ -560,12 +540,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       width,
       minHeight,
       minWidth,
-      height,
       rows,
       placeholder,
       ...viewProps
     } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
+    const height =
+      viewProps.height === 'content-height'
+        ? this.getContentHeight()
+        : Math.min(minHeight, viewProps.height || Infinity)
+
+    console.log('height', height)
 
     return (
       <Container
@@ -575,6 +560,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         padding={viewProps.padding}
         flex={viewProps.flex}
         overflow={viewProps.overflow}
+        width={width}
+        height={height}
       >
         <TableHead
           columnOrder={columnOrder}
@@ -590,25 +577,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
           null}
         <ContextMenu buildItems={this.buildContextMenuItems}>
-          <VariableSizeList
+          <DynamicList
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
             // whenever this view renders, update list, otherwise highlights break
             itemData={Math.random()}
             ref={this.tableRef}
-            width={width}
-            height={
-              height === 'content-height'
-                ? this.getContentHeight()
-                : Math.min(minHeight, height || Infinity)
-            }
-            estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
-            overscanCount={20}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
           >
             {this.renderRow}
-          </VariableSizeList>
+          </DynamicList>
         </ContextMenu>
       </Container>
     )

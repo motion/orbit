@@ -2,6 +2,7 @@ import { ensure, useReaction } from '@o/use-store'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
+import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
 import { SelectEvent, useSelectionStore } from './ProvideSelectionStore'
 import { SelectionStore } from './SelectionStore'
@@ -44,7 +45,7 @@ export function SelectableList({
 }: SelectableListProps) {
   const selectionStore = useSelectionStore(props)
   const selectableProps = useContext(SelectableListContext)
-  const listRef = useRef(null)
+  const listRef = useRef<DynamicListControlled>(null)
 
   useEffect(
     () => {
@@ -75,7 +76,7 @@ export function SelectableList({
       ensure('has list', !!listRef.current)
       ensure('is active', selectionStore.isActive)
       ensure('used key', selectionStore.selectEvent === SelectEvent.key)
-      listRef.current.scrollToRow(activeIndex)
+      listRef.current.scrollToIndex(activeIndex)
     },
   )
 
@@ -98,7 +99,7 @@ export function SelectableList({
     <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
       <VirtualList
         items={items}
-        forwardRef={x => (listRef.current = x)}
+        listRef={listRef}
         onOpen={selectableProps && selectableProps.onSelectItem}
         getItemProps={getItemProps}
         {...props}

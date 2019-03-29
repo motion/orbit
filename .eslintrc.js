@@ -5,7 +5,7 @@ module.exports = {
     'jest/globals': true,
   },
   extends: ['eslint:recommended', 'prettier', 'prettier/react'],
-  plugins: ['jest', 'react', 'prettier'],
+  plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   parser: 'typescript-eslint-parser',
   rules: {
     indent: 'off',

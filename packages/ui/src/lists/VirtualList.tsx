@@ -1,31 +1,22 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
-import { always, ensure, react, useStore } from '@o/use-store'
-import { MenuItem } from 'electron'
-import { throttle } from 'lodash'
-import React, {
-  Component,
-  createContext,
-  createRef,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react'
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  InfiniteLoader,
-  List,
-  WindowScroller,
-} from 'react-virtualized'
-import { ContextMenu } from '../ContextMenu'
+import React, { createContext, RefObject, useContext } from 'react'
 import { useDefaultProps } from '../hooks/useDefaultProps'
-import { usePropsWithMemoFunctions } from '../hooks/usePropsWithMemoFunctions'
-import { useResizeObserver } from '../hooks/useResizeObserver'
-import { GenericComponent } from '../types'
+import { GenericComponent, Omit } from '../types'
+import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
-import VirtualListItem, { VirtualListItemProps } from './VirtualListItem'
+import { VirtualListItem, VirtualListItemProps } from './VirtualListItem'
+
+export type VirtualListProps<A> = SortableContainerProps &
+  Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
+    onSelect?: HandleSelection
+    onOpen?: HandleSelection
+    itemProps?: Partial<VirtualListItemProps<any>>
+    ItemView?: GenericComponent<VirtualListItemProps<any>>
+    sortable?: boolean
+    listRef?: RefObject<DynamicListControlled>
+    items: A[]
+    getItemProps?: GetItemProps<A> | null | false
+  }
 
 export type GetItemProps<A> = (
   item: A,
@@ -33,172 +24,44 @@ export type GetItemProps<A> = (
   items: A[],
 ) => Partial<VirtualListItemProps<A>> | null
 
-type VirtualProps = {
-  onChangeHeight?: (height: number) => any
-  onSelect?: HandleSelection
-  onOpen?: HandleSelection
-  forwardRef?: (a: any, b: VirtualListStore) => any
-  itemProps?: Partial<VirtualListItemProps<any>>
-  getContextMenu?: (index: number) => Partial<MenuItem>[]
-  ItemView?: GenericComponent<VirtualListItemProps<any>>
-  infinite?: boolean
-  loadMoreRows?: Function
-  rowCount?: number
-  isRowLoaded?: Function
-  maxHeight?: number
-  estimatedRowHeight?: number
-  scrollToAlignment?: 'auto' | 'start' | 'end' | 'center'
-  scrollToIndex?: number
-  padTop?: number
-  sortable?: boolean
+const SortableList = SortableContainer(DynamicList, { withRef: true })
 
-  // allows the list to dynamically size height up to a limit (maxHeight)
-  dynamicHeight?: boolean
-  keyMapper?: (index: number) => string | number
-  allowMeasure?: boolean
-}
+export function VirtualList(rawProps: VirtualListProps<any>) {
+  const defaultProps = useContext(VirtualListDefaultProps)
+  const props = useDefaultProps(defaultProps, rawProps)
+  const { ItemView, onSelect, onOpen, sortable, getItemProps, items, ...dynamicListProps } = props
 
-export type VirtualListProps<A> = SortableContainerProps &
-  VirtualProps & {
-    items: A[]
-    getItemProps?: GetItemProps<A> | null | false
-  }
-
-class SortableList extends Component<any> {
-  render() {
-    return <List {...this.props} ref={this.props.forwardRef} />
-  }
-}
-
-const SortableListContainer = SortableContainer(SortableList, { withRef: true })
-
-class VirtualListStore {
-  props: VirtualProps & {
-    getItem: (i: number) => any
-    numItems: number
-  }
-
-  windowScrollerRef = createRef<WindowScroller>()
-  listRef: List = null
-  frameNode: HTMLDivElement = null
-  height = 0
-  width = 0
-  isSorting = false
-  observing = false
-  cache: CellMeasurerCache = null
-
-  setFrameNode = (ref: HTMLDivElement) => {
-    if (this.frameNode || !ref) return
-    this.frameNode = ref
-  }
-
-  getFrameHeight() {
-    if (!this.frameNode) {
-      return window.innerHeight
-    }
-    return this.frameNode.clientHeight
-  }
-
-  doMeasureHeight = react(() => always(this.cache, this.frameNode), this.measureHeight)
-  measureHeight() {
-    if (this.props.dynamicHeight) {
-      if (!this.cache) return
-      // height
-      let height = 0
-      for (let i = 0; i < Math.min(40, this.props.numItems); i++) {
-        height += this.cache.rowHeight(i)
-      }
-      if (height === 0) return
-
-      height = Math.min(this.props.maxHeight, height)
-
-      if (height !== this.height) {
-        this.height = height
-        this.triggerRecomputeHeights = Date.now()
-        if (this.props.onChangeHeight) {
-          this.props.onChangeHeight(this.height)
-        }
-      }
-    } else {
-      if (this.getFrameHeight()) {
-        const height = Math.min(this.props.maxHeight, this.getFrameHeight())
-        this.height = height
-      }
-    }
-  }
-
-  getKey = (rowIndex: number) => {
-    if (this.props.keyMapper) {
-      return this.props.keyMapper(rowIndex)
-    }
-    if (typeof rowIndex === 'undefined') {
-      return 0
-    }
-    if (!this.props.getItem(rowIndex)) {
-      return rowIndex
-    }
-    const id = this.props.getItem(rowIndex).id
-    if (typeof id === 'undefined') {
-      return rowIndex
-    }
-    return id
-  }
-
-  triggerMeasure = 0
-  measure() {
-    this.triggerMeasure = Date.now()
-  }
-
-  runMeasure = react(
-    () => [this.triggerMeasure, this.props.allowMeasure, this.frameNode],
-    async (_, { when, sleep }) => {
-      ensure('can measure', this.props.allowMeasure !== false)
-      await when(() => !!this.frameNode)
-      if (this.cache) {
-        await sleep()
-      }
-
-      if (this.frameNode.clientWidth !== this.width) {
-        this.setWidth(this.frameNode.clientWidth)
-      }
-
-      if (!this.cache) {
-        this.cache = new CellMeasurerCache({
-          defaultHeight: this.props.estimatedRowHeight,
-          defaultWidth: this.width,
-          fixedWidth: true,
-          // keyMapper: this.getKey,
-        })
-      }
-    },
+  return (
+    <SortableList
+      itemCount={items.length}
+      itemData={items}
+      shouldCancelStart={isRightClick}
+      {...dynamicListProps}
+    >
+      {({ index, style }) => {
+        const item = items[index]
+        return (
+          <VirtualListItem
+            key={item.id || item.key || index}
+            ItemView={ItemView}
+            onSelect={onSelect}
+            onOpen={onOpen}
+            disabled={!sortable}
+            {...itemProps(props, index)}
+            {...itemProps}
+            {...getItemProps && getItemProps(item, index, items)}
+            {...item}
+            index={index}
+            realIndex={index}
+            style={style}
+          />
+        )
+      }}
+    </SortableList>
   )
-
-  setWidth = throttle((next: number) => {
-    this.width = next
-  }, 32)
-
-  triggerRecomputeHeights = 0
-  runRecomputeHeights = react(
-    () => [this.triggerRecomputeHeights],
-    async (_, { when, sleep }) => {
-      await sleep()
-      await when(() => this.props.allowMeasure !== false)
-      await when(() => !!this.listRef)
-      this.recomputeHeights()
-    },
-  )
-
-  recomputeHeights = throttle(() => {
-    this.cache.clearAll()
-    this.listRef.recomputeRowHeights()
-  }, 100)
-
-  resizeAll = () => {
-    console.trace('resize all')
-    this.cache.clearAll()
-    this.measureHeight()
-  }
 }
+
+export const VirtualListDefaultProps = createContext<Partial<VirtualListProps<any>>>({})
 
 const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
@@ -206,7 +69,7 @@ const isRightClick = e =>
 
 const getSeparatorProps = ({ items }: VirtualListProps<any>, index: number) => {
   const model = items[index]
-  if (!model.group) {
+  if (!model || !model.group) {
     return null
   }
   if (index === 0 || model.group !== items[index - 1].group) {
@@ -219,163 +82,5 @@ const itemProps = (
   props: VirtualListProps<any>,
   index: number,
 ): Partial<VirtualListItemProps<any>> => {
-  const next = [
-    getSeparatorProps(props, index),
-    index === 0 && props.padTop
-      ? {
-          above: <div style={{ height: props.padTop }} />,
-        }
-      : null,
-    !props.sortable ? { disabled: true } : null,
-  ].filter(Boolean)
-  if (!next.length) {
-    return null
-  }
-  let res = {}
-  for (const item of next) {
-    res = { ...res, ...item }
-  }
-  return res
-}
-
-export const VirtualListDefaultProps = createContext({
-  estimatedRowHeight: 60,
-  maxHeight: window.innerHeight,
-} as Partial<VirtualListProps<any>>)
-
-const VirtualListInner = memo((props: VirtualListProps<any> & { store: VirtualListStore }) => {
-  const store = useStore(props.store)
-  const frameNode = useRef<HTMLDivElement>(null)
-
-  useResizeObserver({
-    ref: frameNode,
-    onChange: () => {
-      store.measure()
-      store.measureHeight()
-    },
-  })
-
-  useEffect(
-    () => {
-      store.setFrameNode(frameNode.current)
-    },
-    [frameNode],
-  )
-
-  useEffect(
-    () => {
-      store.triggerRecomputeHeights = Date.now()
-    },
-    [props.items],
-  )
-
-  if (!props.items.length) {
-    return null
-  }
-
-  function rowRenderer({ key, index, parent, style }) {
-    const item = props.items[index]
-    return (
-      <CellMeasurer key={key} cache={store.cache} columnIndex={0} parent={parent} rowIndex={index}>
-        <div style={style}>
-          <ContextMenu items={props.getContextMenu ? props.getContextMenu(index) : null}>
-            <VirtualListItem
-              ItemView={props.ItemView}
-              onSelect={props.onSelect}
-              onOpen={props.onOpen}
-              {...itemProps(props, index)}
-              {...props.itemProps}
-              {...props.getItemProps && props.getItemProps(item, index, props.items)}
-              {...item}
-              index={index}
-              realIndex={index}
-            />
-          </ContextMenu>
-        </div>
-      </CellMeasurer>
-    )
-  }
-
-  function getList(infiniteProps?) {
-    let extraProps = {} as any
-    if (infiniteProps && infiniteProps.onRowsRendered) {
-      extraProps.onRowsRendered = infiniteProps.onRowsRendered
-    }
-    return (
-      <SortableListContainer
-        forwardRef={ref => {
-          if (ref) {
-            if (props.forwardRef) {
-              props.forwardRef(ref, store)
-            }
-            store.listRef = ref
-            if (infiniteProps && infiniteProps.registerChild) {
-              infiniteProps.registerChild(ref)
-            }
-          }
-        }}
-        items={props.items}
-        deferredMeasurementCache={store.cache}
-        height={store.height}
-        width={store.width}
-        rowHeight={store.cache.rowHeight}
-        overscanRowCount={5}
-        rowCount={props.items.length}
-        estimatedRowSize={props.estimatedRowHeight}
-        rowRenderer={rowRenderer}
-        distance={10}
-        lockAxis="y"
-        helperClass="sortableHelper"
-        shouldCancelStart={isRightClick}
-        scrollToAlignment={props.scrollToAlignment}
-        scrollToIndex={props.scrollToIndex}
-        {...extraProps}
-      />
-    )
-  }
-
-  return (
-    <div
-      ref={frameNode}
-      style={{
-        height: props.dynamicHeight ? store.height : 'auto',
-        flex: props.dynamicHeight ? 'none' : 1,
-        width: '100%',
-      }}
-    >
-      {!!store.width && !!store.cache && (
-        <>
-          {props.infinite && (
-            <InfiniteLoader
-              isRowLoaded={props.isRowLoaded}
-              loadMoreRows={props.loadMoreRows}
-              rowCount={props.rowCount}
-            >
-              {getList}
-            </InfiniteLoader>
-          )}
-          {!props.infinite && getList()}
-        </>
-      )}
-    </div>
-  )
-})
-
-// use this outer wrapper because changing allowMeasure otherwise would trigger renders
-// renders are expensive for this component, and especially that because it happens on click
-// this lets us separate out and have the inner just react to props it should
-
-export function VirtualList({ allowMeasure, items, ...rawProps }: VirtualListProps<any>) {
-  const defaultProps = useContext(VirtualListDefaultProps)
-  const props = usePropsWithMemoFunctions(useDefaultProps(defaultProps, rawProps))
-  const itemsRef = useRef(items)
-  itemsRef.current = items
-  const getItem = useCallback(index => itemsRef.current[index], [])
-  const store = useStore(VirtualListStore, {
-    numItems: items.length,
-    getItem,
-    allowMeasure,
-    ...props,
-  })
-  return <VirtualListInner {...props} items={items} store={store} />
+  return getSeparatorProps(props, index)
 }

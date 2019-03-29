@@ -13,7 +13,7 @@ export type VirtualListItemProps<Item> = ListItemProps & {
   index: number
 }
 
-class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>> {
+export class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>> {
   render() {
     const { realIndex, ItemView, ...rest } = this.props
     const View = ItemView || ListItem
@@ -21,4 +21,4 @@ class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>
   }
 }
 
-export default SortableElement(VirtualListItemInner)
+export const VirtualListItem = SortableElement(VirtualListItemInner)

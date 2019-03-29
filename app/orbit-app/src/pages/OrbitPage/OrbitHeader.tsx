@@ -159,7 +159,7 @@ const OrbitHeaderContainer = gloss(View, {
 }).theme(({ isTorn }, theme) => ({
   // borderBottom: [1, theme.borderColor],
   background:
-    'rgba(0,50, 200, 0.2)' ||
+    // 'rgba(0,50, 200, 0.2)' ||
     (isTorn && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
     theme.background.alpha(a => a * 0.65),

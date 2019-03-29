@@ -268,7 +268,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   componentDidUpdate(prevProps: ManagedTableProps) {
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
-      this.tableRef.current.resetAfterIndex(0)
+      this.tableRef.current.resetAfterIndex(0, true)
       this.setState({
         shouldRecalculateHeight: false,
       })
@@ -604,7 +604,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             }
             estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
             overscanCount={20}
-            forwardRef={this.scrollRef}
+            outerRef={this.scrollRef}
             onScroll={this.onScroll}
           >
             {this.renderRow}

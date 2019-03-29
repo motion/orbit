@@ -5,5 +5,5 @@ import { SearchContext } from './index'
 export function SearchAppIndex() {
   const context = useContext(SearchContext)
   const searchStore = useStore(context.searchStore)
-  return <List listRef={x => console.log('list', x)} shareable items={searchStore.results} />
+  return <List shareable items={searchStore.results} />
 }

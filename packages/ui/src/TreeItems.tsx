@@ -1,173 +1,9 @@
-/**
- * Copyright 2018-present Facebook.
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- * @format
- */
-
-import { Col, gloss, Row } from '@o/gloss'
-// import { ContextMenu } from './ContextMenu'
+import { Col, gloss } from '@o/gloss'
 import * as React from 'react'
-import { colors } from './helpers/colors'
-import { Icon } from './Icon'
-import { Image } from './Image'
-import { FixedList } from './lists/FixedList'
-import { Text } from './text/Text'
-import { TreeItem, TreeItemID, TreeItemSearchResultSet } from './Tree'
-// import { isEqual } from '@o/fast-compare'
-
-const ROW_HEIGHT = 23
-
-const backgroundColor = (props, theme) => {
-  if (props.selected) {
-    return (
-      (theme.selected && theme.selected.background) || theme.backgroundSelected || theme.background
-    )
-  } else if (props.even) {
-    return theme.backgroundAlt
-  } else {
-    return ''
-  }
-}
-
-// .extends(ContextMenu)
-const TreeItemsRowContainer = gloss({
-  flexFlow: 'row',
-  alignItems: 'center',
-  flexShrink: 0,
-  flexWrap: 'nowrap',
-  height: ROW_HEIGHT,
-  minWidth: '100%',
-  paddingRight: 20,
-  position: 'relative',
-}).theme((props, theme) => {
-  return {
-    backgroundColor: backgroundColor(props, theme),
-    color: props.selected ? colors.white : colors.grapeDark3,
-    paddingLeft: (props.level - 1) * 12,
-    '& *': {
-      color: props.selected ? `${colors.white} !important` : '',
-    },
-    '&:hover': {
-      backgroundColor: props.selected ? theme.backgroundActive : theme.backgroundHover,
-    },
-  }
-})
-
-const TreeItemsRowDecoration = gloss(Row, {
-  flexShrink: 0,
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-  marginRight: 4,
-  position: 'relative',
-  width: 16,
-  top: -1,
-})
-
-const TreeItemsLine = gloss({
-  position: 'absolute',
-  right: 3,
-  top: ROW_HEIGHT - 3,
-  zIndex: 2,
-  width: 2,
-  borderRadius: '999em',
-}).theme(({ childrenCount }, theme) => ({
-  height: childrenCount * ROW_HEIGHT - 4,
-  background: theme.borderColor,
-}))
-
-const DecorationImage = gloss(Image, {
-  height: 12,
-  marginRight: 5,
-  width: 12,
-})
-
-const NoShrinkText = gloss(Text, {
-  flexShrink: 0,
-  flexWrap: 'nowrap',
-  overflow: 'hidden',
-  userSelect: 'none',
-  fontWeight: 400,
-})
-
-const TreeItemsRowAttributeContainer = gloss(NoShrinkText, {
-  color: colors.dark80,
-  fontWeight: 300,
-  marginLeft: 5,
-})
-
-const TreeItemsRowAttributeKey = gloss({
-  color: colors.tomato,
-})
-
-const TreeItemsRowAttributeValue = gloss({
-  color: colors.slateDark3,
-})
-
-const HighlightedText = gloss().theme(({ selected }, theme) => ({
-  backgroundColor: theme.backgroundAlt,
-  color: selected ? `${colors.grapeDark3} !important` : 'auto',
-}))
-
-class PartialHighlight extends React.PureComponent<{
-  selected: boolean
-  highlighted?: string
-  content: string
-}> {
-  static HighlightedText = HighlightedText
-
-  render() {
-    const { highlighted, content, selected } = this.props
-    let renderedValue
-    if (
-      content &&
-      highlighted != null &&
-      highlighted != '' &&
-      content.toLowerCase().includes(highlighted.toLowerCase())
-    ) {
-      const highlightStart = content.toLowerCase().indexOf(highlighted.toLowerCase())
-      const highlightEnd = highlightStart + highlighted.length
-      const before = content.substring(0, highlightStart)
-      const match = content.substring(highlightStart, highlightEnd)
-      const after = content.substring(highlightEnd)
-      renderedValue = [
-        <span>
-          {before}
-          <PartialHighlight.HighlightedText selected={selected}>
-            {match}
-          </PartialHighlight.HighlightedText>
-          {after}
-        </span>,
-      ]
-    } else {
-      renderedValue = <span>{content}</span>
-    }
-    return renderedValue
-  }
-}
-
-class TreeItemsRowAttribute extends React.PureComponent<{
-  name: string
-  value: string
-  matchingSearchQuery?: string
-  selected: boolean
-}> {
-  render() {
-    const { name, value, matchingSearchQuery, selected } = this.props
-    return (
-      <TreeItemsRowAttributeContainer code={true}>
-        <TreeItemsRowAttributeKey>{name}</TreeItemsRowAttributeKey>=
-        <TreeItemsRowAttributeValue>
-          <PartialHighlight
-            content={value}
-            highlighted={name === 'id' || name === 'addr' ? matchingSearchQuery : ''}
-            selected={selected}
-          />
-        </TreeItemsRowAttributeValue>
-      </TreeItemsRowAttributeContainer>
-    )
-  }
-}
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
+import { TreeItem, TreeItemID, TreeProps } from './Tree'
+import { TreeItemsRow } from './TreeItemsRow'
 
 type FlatTreeItem = {
   key: TreeItemID
@@ -175,194 +11,20 @@ type FlatTreeItem = {
   level: number
 }
 
-type FlatTreeItems = Array<FlatTreeItem>
+type FlatTreeItems = FlatTreeItem[]
 
-type TreeItemsRowProps = {
-  id: TreeItemID
-  level: number
-  selected: boolean
-  matchingSearchQuery?: string
-  element: TreeItem
-  even: boolean
-  onTreeItemSelected: (key: TreeItemID) => void
-  onTreeItemExpanded: (key: TreeItemID, deep: boolean) => void
-  childrenCount: number
-  onTreeItemHovered?: (key?: TreeItemID) => void
-  style?: Object
-}
-
-type TreeItemsRowState = {
-  hovered: boolean
-}
-
-class TreeItemsRow extends React.PureComponent<TreeItemsRowProps, TreeItemsRowState> {
-  constructor(props: TreeItemsRowProps, context: Object) {
-    super(props, context)
-    this.state = { hovered: false }
+export class TreeItems extends React.PureComponent<
+  TreeProps,
+  {
+    flatKeys: TreeItemID[]
+    flatTreeItems: FlatTreeItems
+    maxDepth: number
   }
-
-  interaction: (name: string, data: any) => void
-
-  getContextMenu = (): Array<any> => {
-    const { props } = this
-    return [
-      {
-        type: 'separator',
-      },
-      {
-        label: 'Copy',
-        click: () => {
-          // clipboard.writeText(props.element.name);
-        },
-      },
-      {
-        label: props.element.expanded ? 'Collapse' : 'Expand',
-        click: () => {
-          this.props.onTreeItemExpanded(this.props.id, false)
-        },
-      },
-    ]
-  }
-
-  onClick = () => {
-    this.props.onTreeItemSelected(this.props.id)
-  }
-
-  onDoubleClick = (event: React.MouseEvent<any>) => {
-    this.props.onTreeItemExpanded(this.props.id, event.altKey)
-  }
-
-  onMouseEnter = () => {
-    this.setState({ hovered: true })
-    if (this.props.onTreeItemHovered) {
-      this.props.onTreeItemHovered(this.props.id)
-    }
-  }
-
-  onMouseLeave = () => {
-    this.setState({ hovered: false })
-    if (this.props.onTreeItemHovered) {
-      this.props.onTreeItemHovered(null)
-    }
-  }
-
-  render() {
-    const { element, id, level, selected, style, even, matchingSearchQuery } = this.props
-    const hasChildren = element.children && element.children.length > 0
-
-    let arrow
-    if (hasChildren) {
-      arrow = (
-        <span onClick={this.onDoubleClick} role="button" tabIndex={-1}>
-          <Icon
-            size={8}
-            name={element.expanded ? 'mindown' : 'minright'}
-            color={selected ? 'white' : colors.light80}
-          />
-        </span>
-      )
-    }
-
-    const attributes = element.attributes
-      ? element.attributes.map(attr => (
-          <TreeItemsRowAttribute
-            key={attr.name}
-            name={attr.name}
-            value={attr.value}
-            matchingSearchQuery={matchingSearchQuery}
-            selected={selected}
-          />
-        ))
-      : []
-
-    // TODO make this our icon
-    const decoration = (() => {
-      switch (element.decoration) {
-        case 'litho':
-          return <DecorationImage src="icons/litho-logo.png" />
-        case 'componentkit':
-          return <DecorationImage src="icons/componentkit-logo.png" />
-        case 'componentscript':
-          return <DecorationImage src="icons/componentscript-logo.png" />
-        default:
-          return null
-      }
-    })()
-
-    // when we hover over or select an expanded element with children, we show a line from the
-    // bottom of the element to the next sibling
-    let line
-    const shouldShowLine = (selected || this.state.hovered) && hasChildren && element.expanded
-    if (shouldShowLine) {
-      line = <TreeItemsLine childrenCount={this.props.childrenCount} />
-    }
-
-    return (
-      <TreeItemsRowContainer
-        buildItems={this.getContextMenu}
-        key={id}
-        level={level}
-        selected={selected}
-        matchingSearchQuery={matchingSearchQuery}
-        even={even}
-        onClick={this.onClick}
-        onDoubleClick={this.onDoubleClick}
-        onMouseEnter={this.onMouseEnter}
-        onMouseLeave={this.onMouseLeave}
-        style={style}
-      >
-        <TreeItemsRowDecoration>
-          {line}
-          {arrow}
-        </TreeItemsRowDecoration>
-        <NoShrinkText code={true}>
-          {decoration}
-          <PartialHighlight
-            content={element.name}
-            highlighted={matchingSearchQuery}
-            selected={selected}
-          />
-        </NoShrinkText>
-        {attributes}
-      </TreeItemsRowContainer>
-    )
-  }
-}
-
-const TreeItemsContainer = gloss(Col, {
-  minHeight: '100%',
-  minWidth: '100%',
-  overflow: 'auto',
-})
-
-const TreeItemsBox = gloss(Col, {
-  alignItems: 'flex-start',
-  flex: 1,
-  overflow: 'auto',
-})
-
-type TreeItemsProps = {
-  itemsKey?: string
-  root?: TreeItemID
-  selected?: TreeItemID
-  searchResults?: TreeItemSearchResultSet
-  elements: { [key: string]: TreeItem }
-  onTreeItemSelected: (key: TreeItemID) => void
-  onTreeItemExpanded: (key: TreeItemID, deep: boolean) => void
-  onTreeItemHovered?: (key: TreeItemID) => void
-}
-
-type TreeItemsState = {
-  flatKeys: Array<TreeItemID>
-  flatTreeItems: FlatTreeItems
-  maxDepth: number
-}
-
-export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsState> {
+> {
   state = {
     flatTreeItems: [],
     flatKeys: [],
-    maxDepth: 0,
+    maxDepth: -1,
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -483,12 +145,13 @@ export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsStat
 
   buildRow = ({ index, style }: { index: number; style: Object }) => {
     const {
-      // elements,
       onTreeItemExpanded,
       onTreeItemHovered,
       onTreeItemSelected,
       selected,
       searchResults,
+      zebra,
+      rowHeight,
     } = this.props
     const { flatTreeItems } = this.state
     const row = flatTreeItems[index]
@@ -511,7 +174,7 @@ export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsStat
         level={row.level}
         id={row.key}
         key={row.key}
-        even={index % 2 === 0}
+        even={zebra && index % 2 === 0}
         onTreeItemExpanded={onTreeItemExpanded}
         onTreeItemHovered={onTreeItemHovered}
         onTreeItemSelected={onTreeItemSelected}
@@ -520,10 +183,9 @@ export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsStat
           searchResults && searchResults.matches.has(row.key) ? searchResults.query : null
         }
         element={row.element}
-        // seems like it was unused by sonar
-        // elements={elements}
         childrenCount={childrenCount}
         style={style}
+        height={rowHeight}
       />
     )
   }
@@ -537,16 +199,32 @@ export class TreeItems extends React.PureComponent<TreeItemsProps, TreeItemsStat
     return (
       <TreeItemsBox>
         <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>
-          <FixedList
-            pureData={items}
-            keyMapper={this.keyMapper}
-            rowCount={items.length}
-            rowHeight={ROW_HEIGHT}
-            rowRenderer={this.buildRow}
-            sideScrollable={true}
-          />
+          <AutoSizer>
+            {({ width, height }) => (
+              <FixedSizeList
+                itemCount={items.length}
+                itemSize={this.props.rowHeight}
+                width={width}
+                height={height}
+              >
+                {this.buildRow}
+              </FixedSizeList>
+            )}
+          </AutoSizer>
         </TreeItemsContainer>
       </TreeItemsBox>
     )
   }
 }
+
+const TreeItemsContainer = gloss(Col, {
+  minHeight: '100%',
+  minWidth: '100%',
+  overflow: 'auto',
+})
+
+const TreeItemsBox = gloss(Col, {
+  alignItems: 'flex-start',
+  flex: 1,
+  overflow: 'auto',
+})

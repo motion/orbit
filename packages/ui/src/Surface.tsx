@@ -18,6 +18,7 @@ import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
+import { getElevation } from './helpers/getElevation'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
@@ -297,7 +298,7 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
   const style = alphaColor(
     {
       color: props.color || theme.color,
-      boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
+      ...getElevation(props, theme),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
@@ -374,20 +375,4 @@ const Element = gloss({
 const getIconSize = (props: SurfaceProps) => {
   const size = (props.size || 1) * (props.height ? +props.height / 3 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
-}
-
-const round = (x: number) => Math.round(x * 10) / 10
-const smoother = (base: number, amt = 1) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
-const elevatedShadow = (x: number) => [
-  0,
-  smoother(x, 2),
-  smoother(x, 14),
-  [0, 0, 0, round(0.05 * smoother(x))],
-]
-
-export function getSurfaceShadow(elevation: number) {
-  if (!elevation) {
-    return null
-  }
-  return [elevatedShadow(elevation) as any]
 }

@@ -1,4 +1,5 @@
 import { AppBit } from '@o/kit'
+import 'slack'
 import {
   api,
   apps,
@@ -26,7 +27,6 @@ import {
   usergroups,
   users,
 } from 'slack'
-import 'slack'
 
 export const SlackApi = (app: AppBit) => {
   return {

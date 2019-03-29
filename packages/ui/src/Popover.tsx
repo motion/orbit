@@ -8,10 +8,11 @@ import { findDOMNode } from 'react-dom'
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
 import { MergeUIContext } from './helpers/contexts'
+import { getElevation } from './helpers/getElevation'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
-import { getSurfaceShadow, SurfaceProps } from './Surface'
+import { SurfaceProps } from './Surface'
 import { Omit } from './types'
 
 export type PopoverProps = Omit<SurfaceProps, 'background'> & {
@@ -1017,7 +1018,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                   }
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  boxShadow={getSurfaceShadow(elevation)}
+                  {...getElevation({ elevation })}
                 />
               </ArrowContain>
             )}

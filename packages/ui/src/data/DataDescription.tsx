@@ -1,4 +1,4 @@
-import { color, gloss, View } from '@o/gloss'
+import { color, gloss, SimpleText, View } from '@o/gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
@@ -437,9 +437,9 @@ class DataDescriptionContainer extends Component<{
 
       case 'date':
         if (Object.prototype.toString.call(val) === '[object Date]') {
-          return <span>{val.toString()}</span>
+          return <SimpleText>{val.toString()}</SimpleText>
         } else {
-          return <span>{val}</span>
+          return <SimpleText>{val}</SimpleText>
         }
 
       case 'null':

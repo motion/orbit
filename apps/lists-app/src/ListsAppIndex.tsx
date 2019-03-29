@@ -7,14 +7,14 @@ import {
   useReaction,
   useTreeList,
 } from '@o/kit'
-import { Button, Panel, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
+import { Button, Pane, preventDefault, SearchableTopBar, useToggle, View } from '@o/ui'
 import { flow } from 'lodash'
 import React, { useState } from 'react'
 
 export function ListsAppIndex() {
   const treeList = useTreeList('list')
   const [addQuery, setAddQuery] = useState('')
-  const [showSearch, toggleShowSearch] = useToggle(false)
+  const showSearch = useToggle(false)
 
   const searchResults = useReaction(
     async (_, { sleep }) => {
@@ -46,10 +46,10 @@ export function ListsAppIndex() {
         buttons={
           <>
             <Button
-              active={showSearch}
+              active={showSearch.val}
               tooltip="Search to add"
               icon="zoom"
-              onClick={toggleShowSearch}
+              onClick={showSearch.toggle}
             />
             <Button
               tooltip="Create folder"
@@ -68,15 +68,15 @@ export function ListsAppIndex() {
         />
       </View>
 
-      <Panel
+      <Pane
         elevation={1}
         collapsable
-        collapsed={showSearch}
-        onCollapse={toggleShowSearch}
-        heading={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
+        collapsed={showSearch.val}
+        onCollapse={showSearch.toggle}
+        title={searchResults ? `Search Results (${searchResults.length})` : 'Search Results'}
       >
         <List query={addQuery} items={searchResults || []} />
-      </Panel>
+      </Pane>
     </>
   )
 }

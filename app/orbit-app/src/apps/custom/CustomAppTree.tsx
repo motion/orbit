@@ -28,7 +28,7 @@ export function CustomAppTree() {
 
   return (
     <Layout type="row">
-      <Pane resizable>
+      <Pane title="Select Items" resizable>
         <Tree
           root={0}
           onTreeItemSelected={id => {
@@ -44,7 +44,7 @@ export function CustomAppTree() {
           elements={treeState}
         />
       </Pane>
-      <Pane>
+      <Pane flex={2} collapsable title="Inspect" padded>
         <DataInspector
           data={{
             test: 'this',

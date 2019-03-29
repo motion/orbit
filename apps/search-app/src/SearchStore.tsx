@@ -162,7 +162,7 @@ export class SearchStore {
         subType: 'home',
       },
       ...this.getApps(query, all).filter(
-        x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
+        x => `${x.title}`.toLowerCase().indexOf(query.toLowerCase()) === 0,
       ),
     ]
   }

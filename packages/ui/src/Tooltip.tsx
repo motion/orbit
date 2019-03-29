@@ -33,7 +33,6 @@ export const Tooltip = React.forwardRef<any, TooltipProps>(
         background
         openOnHover
         noHoverOnChildren
-        animation="bounce 150ms"
         padding={[1, 5]}
         borderRadius={4}
         distance={10}

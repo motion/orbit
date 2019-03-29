@@ -42,7 +42,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         const item = items[index]
         return (
           <VirtualListItem
-            key={item.id || item.key || index}
+            key={(item && (item.id || item.key)) || index}
             ItemView={ItemView}
             onSelect={onSelect}
             onOpen={onOpen}

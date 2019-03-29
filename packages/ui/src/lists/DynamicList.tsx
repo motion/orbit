@@ -133,7 +133,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
   }
 
   componentDidMount() {
-    this.queueMeasurements(this.props)
+    this.queueMeasurements()
     // if onMount we didn't add any measurements then we've successfully calculated all row sizes
     if (this.measureQueue.size === 0) {
       this.onMount()
@@ -145,7 +145,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       prevProps.itemCount !== this.props.itemCount ||
       prevProps.itemData !== this.props.itemData
     ) {
-      this.queueMeasurements(prevProps)
+      this.queueMeasurements()
     }
     if (prevProps.height !== this.props.height) {
       this.onResize()
@@ -185,8 +185,8 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     }
     this.recalculateScrollTop()
     this.dimensions.clear()
-    this.queueMeasurements(this.props)
-    this.recalculateVisibleRows(this.props)
+    this.queueMeasurements()
+    this.recalculateVisibleRows()
   }
 
   recalculateScrollTop() {
@@ -198,7 +198,8 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     }
   }
 
-  queueMeasurements(props: DynamicListProps) {
+  queueMeasurements() {
+    const { props } = this
     // create measurements for new rows
     for (let i = 0; i < props.itemCount; i++) {
       const key = props.keyMapper(i)
@@ -224,11 +225,12 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     }
 
     // recalculate the visibility and positions of all rows
-    this.recalculatePositions(props)
-    this.recalculateVisibleRows(props)
+    this.recalculatePositions()
+    this.recalculateVisibleRows()
   }
 
-  recalculateVisibleRows = (props: DynamicListProps) => {
+  recalculateVisibleRows = () => {
+    const { props } = this
     // @ts-ignore
     this.setState(state => {
       let startTop = 0
@@ -299,20 +301,24 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     })
   }
 
-  onRowMeasured = (key: string, elem: Text | Element) => {
-    if (elem != null && elem instanceof HTMLElement) {
-      const dim = {
-        height: elem.clientHeight,
-        width: elem.clientWidth,
-      }
-      if (isEqual(dim, this.dimensions.get(key))) {
-        return
-      }
-      this.dimensions.set(key, dim)
+  getRowDims: { [key: string]: GetDimensions } = {}
+
+  updateRowHeight(key: string) {
+    const row = this.getRowDims[key]
+    if (!row) return
+    const dim = row()
+    if (isEqual(dim, this.dimensions.get(key))) {
+      return
     }
+    this.dimensions.set(key, dim)
+  }
+
+  onRowMount = (key: string, getDims: GetDimensions) => {
+    this.getRowDims[key] = getDims
+    this.updateRowHeight(key)
     this.measureQueue.delete(key)
     if (this.measureQueue.size === 0) {
-      this.recalculatePositions(this.props)
+      this.recalculatePositions()
       if (this.state.mounted === false) {
         // we triggered measurements on componentDidMount and they're now complete!
         this.onMount()
@@ -333,7 +339,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       this.setState({
         scrollTop: ref.scrollTop,
       })
-      this.recalculateVisibleRows(this.props)
+      this.recalculateVisibleRows()
       this.props.onScroll &&
         this.props.onScroll({
           scrollDirection: prevY < nextY ? 'forward' : 'backward',
@@ -344,7 +350,8 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     }
   }
 
-  recalculatePositions(props: DynamicListProps) {
+  recalculatePositions() {
+    const { props } = this
     this.positions.clear()
     this.topPositionToIndex.clear()
     let top = 0
@@ -384,7 +391,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     const measureChildren: JSX.Element[] = []
     for (const [key, value] of this.measureQueue) {
       measureChildren.push(
-        <NodeMeasure key={key} id={key} onMount={this.onRowMeasured}>
+        <NodeMeasure key={key} id={key} onMount={this.onRowMount}>
           {value}
         </NodeMeasure>,
       )
@@ -417,15 +424,24 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
   }
 }
 
+type GetDimensions = () => {
+  width: number
+  height: number
+}
+
 const NodeMeasure = memo(
-  (props: {
-    id: string
-    onMount: (key: string, ref: Text | Element | null) => void
-    children: any
-  }) => {
+  (props: { id: string; onMount: (key: string, ref: GetDimensions) => void; children: any }) => {
     const contentsRef = useRef<HTMLDivElement>(null)
     useOnMount(() => {
-      props.onMount(props.id, contentsRef.current.childNodes[0] as any)
+      props.onMount(props.id, () => {
+        const children = Array.from(contentsRef.current.childNodes) as HTMLElement[]
+        let res = { width: 0, height: 0 }
+        for (const child of children) {
+          res.height += child.clientHeight
+          res.width += child.clientWidth
+        }
+        return res
+      })
     })
     return <Contents ref={contentsRef}>{props.children}</Contents>
   },

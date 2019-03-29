@@ -15,14 +15,12 @@ export type VirtualListProps<A> = SortableContainerProps &
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
     items: A[]
-    getItemProps?: GetItemProps<A> | null | false
+    getItemProps?: (
+      item: A,
+      index: number,
+      items: A[],
+    ) => (Partial<VirtualListItemProps<A>> | null) | null | false
   }
-
-export type GetItemProps<A> = (
-  item: A,
-  index: number,
-  items: A[],
-) => Partial<VirtualListItemProps<A>> | null
 
 const SortableList = SortableContainer(DynamicList, { withRef: true })
 
@@ -36,13 +34,15 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       itemCount={items.length}
       itemData={items}
       shouldCancelStart={isRightClick}
+      keyMapper={index => getItemKey(items[index], index)}
+      lockAxis="y"
       {...dynamicListProps}
     >
       {({ index, style }) => {
         const item = items[index]
         return (
           <VirtualListItem
-            key={(item && (item.id || item.key)) || index}
+            key={getItemKey(item, index)}
             ItemView={ItemView}
             onSelect={onSelect}
             onOpen={onOpen}
@@ -53,12 +53,16 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
             {...item}
             index={index}
             realIndex={index}
-            style={style}
+            {...style}
           />
         )
       }}
     </SortableList>
   )
+}
+
+const getItemKey = (item: any, index: number) => {
+  return (item && (item.id || item.key || (item.item && item.item.id))) || index
 }
 
 export const VirtualListDefaultProps = createContext<Partial<VirtualListProps<any>>>({})

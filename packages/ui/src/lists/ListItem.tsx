@@ -158,6 +158,8 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.6,
     after,
+    width,
+    height,
     ...restProps
   } = props
   const showChildren = !props.hideBody
@@ -216,7 +218,9 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
 
   return (
     <Theme alternate={isSelected ? 'selected' : null}>
-      <>
+      {/* we keep chrome here because virtualizings wants to set an absolute width/height */}
+      {/* but without a wrapper, we'd have two children nodes, only one receiving dimensions */}
+      <ListItemChrome isMeasured={!!width} width={width} height={height}>
         {above}
         {!!separator && (
           <Theme name={activeThemeName}>
@@ -225,115 +229,131 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
             </Separator>
           </Theme>
         )}
-      </>
-      <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
-        <ListItemChrome
-          isSelected={isSelected}
-          borderRadius={borderRadius}
-          onClick={store.handleClick}
-          disableShadow={disableShadow}
-          padding={padding || defaultPadding}
-          {...cardProps}
-        >
-          {before}
-          {iconBefore && showIcon && iconElement}
-          <ListItemMainContent oneLine={oneLine}>
-            {showTitle && (
-              <ListItemTitleBar flex={1}>
-                {showIcon && !iconBefore && iconElement}
-                <HighlightText
-                  flex={1}
-                  sizeLineHeight={0.85}
-                  ellipse
-                  fontWeight={400}
-                  {...titleProps}
-                >
-                  {title}
-                </HighlightText>
-                <Space small={small} />
-                {props.afterTitle}
-                {afterHeaderElement}
-              </ListItemTitleBar>
-            )}
-            {showSubtitle && (
-              <ListItemSubtitle>
-                {showIcon && !showTitle && (
-                  <>
-                    {iconElement}
-                    <Space small={small} />
-                  </>
-                )}
-                {!!location && locationElement}
-                {showPreviewInSubtitle ? (
-                  <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
-                ) : null}
-                {!!subtitle &&
-                  (typeof subtitle === 'string' ? (
-                    <HighlightText
-                      alpha={subTextOpacity}
-                      size={0.9}
-                      sizeLineHeight={sizeLineHeight}
-                      ellipse
-                      {...subtitleProps}
-                    >
-                      {subtitle}
-                    </HighlightText>
-                  ) : (
-                    subtitle
-                  ))}
-                {!subtitle && (
-                  <>
-                    <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                  </>
-                )}
-                {!showTitle && (
-                  <>
-                    <Space />
-                    {afterHeaderElement}
-                  </>
-                )}
-              </ListItemSubtitle>
-            )}
-            {!showSubtitle && !showTitle && (
-              <View
-                position="absolute"
-                right={Array.isArray(padding) ? padding[0] : padding}
-                top={Array.isArray(padding) ? padding[1] : padding}
-              >
-                {afterHeaderElement}
-              </View>
-            )}
-            {/* vertical space only if needed */}
-            {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
-            {showPreview && (
-              <>
-                {locationElement}
-                <Preview>
-                  {typeof preview !== 'string' && preview}
-                  {typeof preview === 'string' && (
-                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
-                      {preview}
-                    </HighlightText>
+        <ListItemContain isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
+          <ListItemContent
+            isSelected={isSelected}
+            borderRadius={borderRadius}
+            onClick={store.handleClick}
+            disableShadow={disableShadow}
+            padding={padding || defaultPadding}
+            {...cardProps}
+          >
+            {before}
+            {iconBefore && showIcon && iconElement}
+            <ListItemMainContent oneLine={oneLine}>
+              {showTitle && (
+                <ListItemTitleBar flex={1}>
+                  {showIcon && !iconBefore && iconElement}
+                  <HighlightText
+                    flex={1}
+                    sizeLineHeight={0.85}
+                    ellipse
+                    fontWeight={400}
+                    {...titleProps}
+                  >
+                    {title}
+                  </HighlightText>
+                  <Space small={small} />
+                  {props.afterTitle}
+                  {afterHeaderElement}
+                </ListItemTitleBar>
+              )}
+              {showSubtitle && (
+                <ListItemSubtitle>
+                  {showIcon && !showTitle && (
+                    <>
+                      {iconElement}
+                      <Space small={small} />
+                    </>
                   )}
-                </Preview>
-              </>
-            )}
-            {!showPreviewInSubtitle && (
-              <Row>
-                {locationElement}
-                {childrenElement}
-              </Row>
-            )}
-          </ListItemMainContent>
-          {after}
-        </ListItemChrome>
-        <BorderBottom opacity={0.15} />
-      </ListFrame>
+                  {!!location && locationElement}
+                  {showPreviewInSubtitle ? (
+                    <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
+                  ) : null}
+                  {!!subtitle &&
+                    (typeof subtitle === 'string' ? (
+                      <HighlightText
+                        alpha={subTextOpacity}
+                        size={0.9}
+                        sizeLineHeight={sizeLineHeight}
+                        ellipse
+                        {...subtitleProps}
+                      >
+                        {subtitle}
+                      </HighlightText>
+                    ) : (
+                      subtitle
+                    ))}
+                  {!subtitle && (
+                    <>
+                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                    </>
+                  )}
+                  {!showTitle && (
+                    <>
+                      <Space />
+                      {afterHeaderElement}
+                    </>
+                  )}
+                </ListItemSubtitle>
+              )}
+              {!showSubtitle && !showTitle && (
+                <View
+                  position="absolute"
+                  right={Array.isArray(padding) ? padding[0] : padding}
+                  top={Array.isArray(padding) ? padding[1] : padding}
+                >
+                  {afterHeaderElement}
+                </View>
+              )}
+              {/* vertical space only if needed */}
+              {showSubtitle && (!!children || !!preview) && (
+                <div style={{ flex: 1, maxHeight: 4 }} />
+              )}
+              {showPreview && (
+                <>
+                  {locationElement}
+                  <Preview>
+                    {typeof preview !== 'string' && preview}
+                    {typeof preview === 'string' && (
+                      <HighlightText
+                        alpha={subTextOpacity}
+                        size={1}
+                        sizeLineHeight={0.9}
+                        ellipse={3}
+                      >
+                        {preview}
+                      </HighlightText>
+                    )}
+                  </Preview>
+                </>
+              )}
+              {!showPreviewInSubtitle && (
+                <Row>
+                  {locationElement}
+                  {childrenElement}
+                </Row>
+              )}
+            </ListItemMainContent>
+            {after}
+          </ListItemContent>
+          <BorderBottom opacity={0.15} />
+        </ListItemContain>
+      </ListItemChrome>
     </Theme>
   )
 })
 
-const ListFrame = gloss(View, {
+const ListItemChrome = gloss({
+  minHeight: 'min-contents',
+  minWidth: 'min-contents',
+  isMeasured: {
+    minHeight: 'auto',
+    minWidth: 'auto',
+  },
+}).theme(p => p)
+
+const ListItemContain = gloss(View, {
   position: 'relative',
   userSelect: 'none',
   overflow: 'hidden',
@@ -348,7 +368,7 @@ const ListFrame = gloss(View, {
   }
 })
 
-const ListItemChrome = gloss({
+const ListItemContent = gloss({
   flexFlow: 'row',
   position: 'relative',
   flex: 1,

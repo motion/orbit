@@ -24,6 +24,7 @@ export class TreeItems extends React.PureComponent<
   state = {
     flatTreeItems: [],
     flatKeys: [],
+    maxDepth: -1,
   }
 
   static getDerivedStateFromProps(props, state) {

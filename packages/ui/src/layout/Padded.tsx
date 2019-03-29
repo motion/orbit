@@ -5,7 +5,8 @@ export type PaddedProps = {
 }
 
 export const Padded = gloss<PaddedProps>({
-  padding: 0,
+  flex: 1,
+  flexFlow: 'inherit',
   padded: {
     padding: 20,
   },

@@ -239,15 +239,21 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
           {iconBefore && showIcon && iconElement}
           <ListItemMainContent oneLine={oneLine}>
             {showTitle && (
-              <Title flex={1}>
+              <ListItemTitleBar flex={1}>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
+                <HighlightText
+                  flex={1}
+                  sizeLineHeight={0.85}
+                  ellipse
+                  fontWeight={400}
+                  {...titleProps}
+                >
                   {title}
                 </HighlightText>
                 <Space small={small} />
                 {props.afterTitle}
                 {afterHeaderElement}
-              </Title>
+              </ListItemTitleBar>
             )}
             {showSubtitle && (
               <ListItemSubtitle>
@@ -378,10 +384,11 @@ const ListItemChrome = gloss({
   return style
 })
 
-const Title = gloss({
+const ListItemTitleBar = gloss({
   width: '100%',
+  flex: 1,
   flexFlow: 'row',
-  // justifyContent: 'space-between',
+  justifyContent: 'space-between',
   alignItems: 'flex-start',
 })
 

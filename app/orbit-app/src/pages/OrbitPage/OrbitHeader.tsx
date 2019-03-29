@@ -10,7 +10,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore, themeStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const { isTorn } = orbitStore
@@ -30,18 +30,23 @@ export const OrbitHeader = memo(function OrbitHeader() {
       <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
-          <HeaderButtonChromeless
+          {/* <HeaderButtonChromeless
             icon="sidebar"
             onClick={themeStore.setToggleShowSidebar}
             active={themeStore.showSidebar}
-          />
+          /> */}
 
           <BackButton />
         </HeaderSide>
 
         <HeaderContain isActive={false}>
-          <View width={20} marginLeft={6} alignItems="center" justifyContent="center">
-            <Icon color={invertLightness(theme.color, 100)} name={`orbit-${icon}`} size={18} />
+          <View width={20} margin={[0, 6]} alignItems="center" justifyContent="center">
+            <Icon
+              opacity={0.15}
+              color={invertLightness(theme.color, 0.5)}
+              name={`orbit-${icon}`}
+              size={22}
+            />
           </View>
 
           <OrbitHeaderInput />
@@ -54,7 +59,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <LinkButton />
                 <Space />
               </SurfacePassProps>
-              <SurfacePassProps sizeRadius={2} sizePadding={1.25} fontWeight={500} sizeFont={1}>
+              <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500} sizeFont={1}>
                 {!isTorn && <LaunchButton />}
               </SurfacePassProps>
             </>
@@ -206,7 +211,7 @@ const LaunchButton = memo(() => {
   return (
     <Button tooltip="Open app onto desktop" onClick={Actions.tearApp}>
       Open{' '}
-      <SimpleText alpha={0.5} transform={{ y: 1 }} size={0.7} marginLeft={6} fontWeight={200}>
+      <SimpleText alpha={0.5} transform={{ y: 1 }} marginLeft={6} size={0.7} fontWeight={200}>
         ⌘ + ⏎
       </SimpleText>
     </Button>

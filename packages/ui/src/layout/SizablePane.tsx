@@ -1,10 +1,10 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { useContext, useEffect, useState } from 'react'
 import { BorderLeft, BorderTop } from '../Border'
-import { getElevation } from '../helpers/getElevation'
 import { Interactive, InteractiveProps } from '../Interactive'
 import { PaneTitleRowParentProps } from '../PaneTitleRow'
 import { SectionPassProps } from '../Section'
+import { View } from '../View/View'
 import { LayoutContext } from './Layout'
 
 export type SizablePaneProps = Partial<InteractiveProps> &
@@ -13,8 +13,6 @@ export type SizablePaneProps = Partial<InteractiveProps> &
     index?: number
     parentSize?: number
     flex?: number
-    scrollable?: boolean | 'x' | 'y'
-    elevation?: number
   }
 
 export function SizablePane({ scrollable, children, resizable, ...props }: SizablePaneProps) {
@@ -55,19 +53,6 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
     }
   }
 
-  // easy scrollable
-  if (scrollable === true) {
-    sizeProps.overflow = 'auto'
-  } else if (scrollable === 'x') {
-    sizeProps.overflowX = 'auto'
-    sizeProps.overflowY = 'hidden'
-  } else if (scrollable === 'y') {
-    sizeProps.overflowY = 'auto'
-    sizeProps.overflowX = 'hidden'
-  } else {
-    sizeProps.overflow = 'hidden'
-  }
-
   const childElement = <SectionPassProps flex={1}>{children}</SectionPassProps>
 
   if (resizable) {
@@ -97,7 +82,6 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
 }
 
 const PaneChrome = gloss(View, {
-  flex: 1,
   position: 'relative',
   overflow: 'hidden',
-}).theme(getElevation)
+})

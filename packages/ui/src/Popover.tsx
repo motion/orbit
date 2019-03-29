@@ -8,12 +8,12 @@ import { findDOMNode } from 'react-dom'
 import { Arrow } from './Arrow'
 import { BreadcrumbReset } from './Breadcrumbs'
 import { MergeUIContext } from './helpers/contexts'
-import { getElevation } from './helpers/getElevation'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
 import { SurfaceProps } from './Surface'
 import { Omit } from './types'
+import { getElevation } from './View/elevate'
 
 export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   // custom theme for just the popover content

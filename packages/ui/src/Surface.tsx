@@ -9,8 +9,6 @@ import {
   ThemeContext,
   ThemeObject,
   ThemeSelect,
-  View,
-  ViewProps,
 } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
@@ -18,13 +16,13 @@ import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
 import { createContextualProps } from './helpers/createContextualProps'
-import { getElevation } from './helpers/getElevation'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
+import { View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -45,7 +43,6 @@ export type SurfaceProps = ViewProps & {
   circular?: boolean
   clickable?: boolean
   elementProps?: Object
-  elevation?: number
   forwardRef?: React.Ref<any>
   glint?: boolean
   glow?: boolean
@@ -298,7 +295,6 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
   const style = alphaColor(
     {
       color: props.color || theme.color,
-      ...getElevation(props, theme),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,

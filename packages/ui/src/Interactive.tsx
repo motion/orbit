@@ -6,7 +6,7 @@
  */
 
 import { isEqual } from '@o/fast-compare'
-import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
+import { FullScreen, gloss } from '@o/gloss'
 import { on } from '@o/utils'
 import React, { createContext, createRef, RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
@@ -18,6 +18,7 @@ import { useScreenPosition } from './hooks/useScreenPosition'
 import { useThrottle } from './hooks/useThrottle'
 import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
+import { View, ViewProps } from './View/View'
 
 const invariant = require('invariant')
 const SIZE = 5

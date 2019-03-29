@@ -3,7 +3,9 @@ import { BitModel } from '@o/models'
 import { Button, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
+import { useStoresSimple } from '../hooks/useStores'
 import { ScopedUserState, useUserState } from '../hooks/useUserState'
+import { KitStores } from '../stores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { HandleOrbitSelect, List } from './List'
@@ -40,6 +42,7 @@ const defaultState = {
 const getActions = (
   treeState: () => ScopedAppState<TreeState>,
   userState: () => ScopedUserState<TreeUserState>,
+  stores: KitStores,
 ) => {
   const Actions = {
     addFolder(name?: string) {
@@ -48,6 +51,7 @@ const getActions = (
       const id = Math.random()
       state.items[curId].children.push(id)
       state.items[id] = { id, name, type: 'folder', children: [] }
+      stores.queryStore.clearQuery()
       update(state)
     },
     currentFolder() {
@@ -81,11 +85,12 @@ const defaultUserState = {
 
 // persists to app state
 export function useTreeList(subSelect: string): UseTreeList {
+  const stores = useStoresSimple()
   const ts = useAppState<TreeState>(subSelect, defaultState)
   const us = useUserState(`${subSelect}_treeState`, defaultUserState)
   const getTs = useRefGetter(ts)
   const getUs = useRefGetter(us)
-  const actions = useMemo(() => getActions(getTs, getUs), [])
+  const actions = useMemo(() => getActions(getTs, getUs, stores), [])
   return {
     state: ts[0],
     userState: us[0],

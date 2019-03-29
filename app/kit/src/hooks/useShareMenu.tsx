@@ -7,6 +7,10 @@ import { ShareMenu } from '../views/ShareMenu'
 import { useStores } from './useStores'
 
 const getItemShareMenu = memoize((listItem, themeStore) => {
+  if (!listItem) {
+    return null
+  }
+
   const item = listItem.item || listItem
   if (item && (item.target === 'bit' || item.target === 'person-bit')) {
     return {

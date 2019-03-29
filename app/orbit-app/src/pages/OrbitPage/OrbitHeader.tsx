@@ -58,6 +58,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <Space />
                 <LinkButton />
                 <Space />
+                <HeaderButtonChromeless icon="gear" />
+                <Space />
               </SurfacePassProps>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500} sizeFont={1}>
                 {!isTorn && <LaunchButton />}
@@ -141,14 +143,17 @@ function OrbitEditAppButton() {
   }
 
   return (
-    <HeaderButtonChromeless
-      icon="tool"
-      tooltip="Edit app"
-      onClick={async () => {
-        Actions.tearApp()
-        orbitStore.setEditing()
-      }}
-    />
+    <>
+      <Space />
+      <HeaderButtonChromeless
+        icon="tool"
+        tooltip="Edit app"
+        onClick={async () => {
+          Actions.tearApp()
+          orbitStore.setEditing()
+        }}
+      />
+    </>
   )
 }
 
@@ -228,6 +233,7 @@ function HeaderButtonChromeless(props: ButtonProps) {
       opacity={0.5}
       hoverStyle={{ opacity: 0.75 }}
       iconSize={14}
+      circular
       {...props}
     />
   )

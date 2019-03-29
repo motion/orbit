@@ -1018,7 +1018,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                   }
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  boxShadow={getElevation({ elevation }).boxShadow}
+                  {...getElevation({ elevation })}
                 />
               </ArrowContain>
             )}

@@ -298,7 +298,7 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
   const style = alphaColor(
     {
       color: props.color || theme.color,
-      boxShadow: props.boxShadow || getElevation(props, theme).boxShadow,
+      ...getElevation(props, theme),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,

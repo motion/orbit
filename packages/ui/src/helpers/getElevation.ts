@@ -9,9 +9,14 @@ const elevatedShadow = (x: number) => [
   [0, 0, 0, round(0.05 * smoother(x))],
 ]
 
-export function getElevation(props: { elevation?: number }, _theme?: ThemeObject) {
+export function getElevation(props: { elevation?: number; boxShadow?: any }, _theme?: ThemeObject) {
   if (!props.elevation) {
     return null
+  }
+  if (props.boxShadow) {
+    return {
+      boxShadow: props.boxShadow,
+    }
   }
   return {
     boxShadow: [elevatedShadow(props.elevation) as any],

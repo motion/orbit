@@ -399,7 +399,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   getItemKey = index => {
-    console.log('get item', index, this.state.sortedRows)
     const { sortedRows } = this.state
     const { active } = this.multiSelectStore
     const row = sortedRows[index]

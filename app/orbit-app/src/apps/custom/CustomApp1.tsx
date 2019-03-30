@@ -35,10 +35,6 @@ export function CustomApp1(_props: AppProps) {
 
   return (
     <Form use={form}>
-      {/* <FloatingCard attach="bottomright" title="Hello">
-        lorem
-      </FloatingCard> */}
-
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">
@@ -50,6 +46,7 @@ export function CustomApp1(_props: AppProps) {
               </SpacedRow>
               <Table
                 multiSelect
+                shareable
                 onSelect={setHighlighted}
                 rows={users}
                 searchTerm={form.getValue('search')}

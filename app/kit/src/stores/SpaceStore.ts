@@ -9,6 +9,8 @@ export class SpaceStore {
     paneManagerStore: PaneManagerStore
   }
 
+  currentSelection = null
+
   spaces = react(() => observeMany(SpaceModel, { args: {} }), {
     defaultValue: [],
   })

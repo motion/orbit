@@ -1,3 +1,5 @@
+- pattern for simple useRef() getter fn for all props
+
 - document for apps + apis
 
 - an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs

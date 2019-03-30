@@ -13,6 +13,7 @@ import {
   View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
+import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
@@ -23,6 +24,7 @@ export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
     columns?: TableColumns
     searchable?: boolean
     onSelect?: (rows: any[]) => void
+    shareable?: boolean
   }
 
 const defaultColumns = {
@@ -38,26 +40,38 @@ function deepMergeDefined<A>(obj: A, defaults: Object): A {
 }
 
 export function Table(direct: TableProps) {
-  const { flex, bordered, searchable, onSelect, title, subTitle, ...props } = useSectionProps(
-    direct,
-  )
+  const stores = useStoresSimple()
+  const {
+    flex,
+    bordered,
+    searchable,
+    onSelect,
+    title,
+    subTitle,
+    shareable,
+    ...props
+  } = useSectionProps(direct)
   const { height, ref } = useParentNodeSize()
   const rows = props.rows ? props.rows.map(normalizeRow) : null
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
   const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
+
   const onSelectIndices = useCallback(
     keys => {
-      if (!props.rows) {
-        return
+      if (!props.rows) return
+      const selectedRows = keys.map(key => props.rows[rows.findIndex(x => x.key === key)])
+      if (shareable) {
+        console.log('selected', keys, selectedRows)
+        stores.spaceStore.currentSelection = selectedRows.length ? selectedRows : null
       }
       if (onSelect) {
-        onSelect(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
+        onSelect(selectedRows)
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)
       }
     },
-    [props.rows],
+    [props.rows, shareable],
   )
 
   return (

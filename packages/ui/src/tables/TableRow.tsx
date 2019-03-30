@@ -164,7 +164,7 @@ const TableBodyRowContainer = gloss(Row, {
   userSelect: 'none',
 }).theme((props, theme) => ({
   background: backgroundColor(props, theme),
-  boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor}`,
+  boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor.alpha(0.35)}`,
   color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
   '& *': {
     color: props.highlighted ? `${theme.colorHighlight} !important` : null,

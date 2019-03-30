@@ -113,6 +113,7 @@ const Container = gloss(View, {
 
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps: Partial<ManagedTableProps> = {
+    zebra: true,
     multiSelect: false,
     rowLineHeight: 24,
     placeholder: rows =>

@@ -137,7 +137,6 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       if (top < ref.scrollTop) {
         ref.scrollTop = pos.top - additionalOffset
       }
-      console.log('scroll to', index, bot, ref.scrollTop, ref.clientHeight)
       if (bot > ref.scrollTop + ref.clientHeight) {
         ref.scrollTop = ref.clientHeight - h
       }

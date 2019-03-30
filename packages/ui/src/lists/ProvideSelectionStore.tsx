@@ -9,40 +9,15 @@ import { SelectableListProps } from './SelectableList'
 import { SelectionStore } from './SelectionStore'
 
 export type SelectionStoreProps = Omit<SelectableListProps, 'items'> & {
+  // TODO this is hacky can we remove? we have VisibleContext
   isActive?: boolean
-}
-
-export type SelectionGroup = {
-  shouldAutoSelect?: boolean
-  items: { id?: any; index: number }[]
-  type: 'row' | 'column'
-  startIndex?: number
-}
-
-export enum Direction {
-  left = 'left',
-  right = 'right',
-  up = 'up',
-  down = 'down',
-}
-
-export type MovesMap = {
-  index: number
-  id: any
-  shouldAutoSelect?: boolean
-  moves?: Direction[]
-}
-
-export enum SelectEvent {
-  key = 'key',
-  click = 'click',
 }
 
 // either uses one above it or uses a new one
 // for now its dangerous, conditional hooks
 // todo make it less dangerous
 // though, you shouldn't probably be changing this out in context
-export function useSelectionStore(props: SelectionStoreProps) {
+export function useSelectionStore(props: SelectionStoreProps): SelectionStore {
   const stores = useStoresSimple()
   const existingStore = props.selectionStore || stores.selectionStore
   const selectionStore = props.createNewSelectionStore

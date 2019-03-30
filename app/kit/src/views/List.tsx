@@ -154,11 +154,14 @@ export function List(rawProps: ListProps) {
         return false
       }
       const appProps = getAppProps(toListItemProps(getItems()[index]))
+
+      // TODO make this all `else if`, likely
+
       if (onSelect) {
         onSelect(index, appProps, eventType)
       }
       if (selectionStoreRef.current) {
-        selectionStoreRef.current.setSelected(index, eventType)
+        selectionStoreRef.current.setIndex(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, appProps, eventType)

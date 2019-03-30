@@ -14,7 +14,7 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
 
   useEffect(
     () => {
-      selectionStore.setSelectionResults([
+      selectionStore.setItems([
         { type: 'column' as 'column', items: items.map(({ id }, index) => ({ id, index })) },
       ])
     },
@@ -25,7 +25,7 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
     () => {
       return items.map((item, index) => {
         const select = () => {
-          selectionStore.setActiveIndex(index)
+          selectionStore.setIndex(index)
         }
         // this is complex so we can do single updates on selection move
         return function GridItem() {

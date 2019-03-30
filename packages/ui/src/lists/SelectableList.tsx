@@ -4,8 +4,8 @@ import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
 import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
-import { SelectEvent, useSelectionStore } from './ProvideSelectionStore'
-import { SelectionStore } from './SelectionStore'
+import { useSelectionStore } from './ProvideSelectionStore'
+import { SelectEvent, SelectionStore } from './SelectionStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
 export type SelectableListProps = VirtualListProps<any> & {
@@ -49,10 +49,9 @@ export function SelectableList({
 
   useEffect(
     () => {
-      selectionStore.setOriginalItems(items)
-      selectionStore.setSelectionResults([
+      selectionStore.setItems([
         {
-          type: 'column' as 'column',
+          type: 'column',
           items: items.map(({ id }, index) => ({ id, index })),
         },
       ])
@@ -64,7 +63,7 @@ export function SelectableList({
     if (typeof props.defaultSelected === 'number' && selectionStore) {
       // only update if its on -1, to allow them to customize it in other ways
       if (selectionStore.activeIndex === -1) {
-        selectionStore.setActiveIndex(props.defaultSelected)
+        selectionStore.setIndex(props.defaultSelected)
       }
     }
   }, [])
@@ -86,7 +85,7 @@ export function SelectableList({
         return props.onSelect(index, eventType, element)
       }
       if (selectionStore) {
-        selectionStore.setSelected(index, eventType)
+        selectionStore.setIndex(index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, eventType, element)

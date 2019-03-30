@@ -6,14 +6,13 @@
  */
 
 import { CSSPropertySet, gloss, View } from '@o/gloss'
-import { useStore } from '@o/use-store'
 import { debounce, isEqual } from 'lodash'
 import * as React from 'react'
 import debounceRender from 'react-debounce-render'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicList, DynamicListControlled } from '../lists/DynamicList'
-import { Direction, MultiSelectProps, MultiSelectStore } from '../lists/SelectStore'
+import { SelectableProps, SelectableStore, useSelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
@@ -25,8 +24,8 @@ import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnAddFilter, TableR
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 const clipboard = Electron.clipboard
 
-export type ManagedTableProps = MultiSelectProps & {
-  multiSelectStore?: MultiSelectStore
+export type ManagedTableProps = SelectableProps & {
+  selectableStore?: SelectableStore
 
   overflow?: CSSPropertySet['overflow']
   flex?: CSSPropertySet['flex']
@@ -114,7 +113,7 @@ const Container = gloss(View, {
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps: Partial<ManagedTableProps> = {
     zebra: true,
-    multiSelect: false,
+    selectable: false,
     rowLineHeight: 24,
     placeholder: rows =>
       !rows ? (
@@ -176,7 +175,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         props.sortOrder,
         filterRows(props.rows, props.filterValue, props.filter),
       )
-      props.multiSelectStore.rows = nextState.sortedRows
+      props.selectableStore.setRows(nextState.sortedRows)
     }
 
     // update if needed
@@ -196,12 +195,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .toUpperCase()}`
   }
 
-  tableRef = React.createRef<DynamicListControlled>()
+  listRef: DynamicListControlled = null
   scrollRef = React.createRef<HTMLDivElement>()
   dragStartIndex?: number = null
 
-  get multiSelectStore() {
-    return this.props.multiSelectStore
+  onListRef = (ref: DynamicListControlled) => {
+    this.listRef = ref
+    this.selectableStore.setListRef(ref)
+  }
+
+  get selectableStore() {
+    return this.props.selectableStore
   }
 
   componentDidMount() {
@@ -216,7 +220,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
       console.warn('may need to recalc height')
-      // this.tableRef.current.resetAfterIndex(0, true)
+      // this.listRef.current.resetAfterIndex(0, true)
       this.setState({
         shouldRecalculateHeight: false,
       })
@@ -224,7 +228,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (
       this.props.rows.length !== prevProps.rows.length &&
       this.state.shouldScrollToBottom &&
-      this.multiSelectStore.active.size < 2
+      this.selectableStore.active.size < 2
     ) {
       this.scrollToBottom()
     }
@@ -235,8 +239,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   onKeyDown = (e: KeyboardEvent) => {
-    const { active } = this.multiSelectStore
-    if (active.size === 0) {
+    if (this.selectableStore.active.size === 0) {
       return
     }
     const copyKey =
@@ -247,14 +250,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       this.onCopy()
       return
     }
-    const direction = e.keyCode === 38 ? Direction.up : e.keyCode === 40 ? Direction.down : null
-    if (direction && !this.props.disableSelect) {
-      const newIndex = this.multiSelectStore.move(direction, { shift: e.shiftKey })
-      const { current } = this.tableRef
-      if (current) {
-        current.scrollToIndex(newIndex)
-      }
-    }
+    this.selectableStore.onKeyDown(e)
   }
 
   onSort = (sortOrder: SortOrder) => {
@@ -262,6 +258,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       sortOrder,
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
+    if (this.props.selectableStore) {
+      this.props.selectableStore.setRows(sortedRows)
+    }
     this.setState({ sortOrder, sortedRows })
     if (this.props.onSortOrder) {
       this.props.onSortOrder(sortOrder)
@@ -279,46 +278,20 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   scrollToBottom() {
-    const { current: tableRef } = this.tableRef
     const { sortedRows } = this.state
-    if (tableRef && sortedRows.length > 1) {
-      tableRef.scrollToIndex(sortedRows.length - 1)
+    if (this.listRef && sortedRows.length > 1) {
+      this.listRef.scrollToIndex(sortedRows.length - 1)
     }
   }
 
   onPressRow = (e: React.MouseEvent, row: GenericDataRow, index: number) => {
-    if (e.button !== 0 || this.props.disableSelect) {
-      // Only highlight rows when using primary mouse button,
-      // otherwise do nothing, to not interfere context menus.
-      return
-    }
-    if (e.shiftKey) {
-      // prevents text selection
-      e.preventDefault()
-    }
-    this.multiSelectStore.onPressRow(row, index, {
-      option:
-        (e.metaKey && process.platform === 'darwin') ||
-        (e.ctrlKey && process.platform !== 'darwin'),
-      shift: e.shiftKey,
-    })
+    this.selectableStore.setRowActive(row, index, e)
   }
 
   lastIndex = -1
 
-  onEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
-    const { current } = this.tableRef
-    if (this.props.disableSelect || !this.props.multiSelect) {
-      return
-    }
-    const direction = this.multiSelectStore.onEnterRow(row, index)
-    if (direction !== false) {
-      current.scrollToIndex(index)
-    }
-  }
-
   buildContextMenuItems = () => {
-    const { active } = this.multiSelectStore
+    const { active } = this.selectableStore
     if (active.size === 0) {
       return []
     }
@@ -336,7 +309,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   getSelectedText = (): string => {
     const { sortedRows } = this.state
-    const { active } = this.multiSelectStore
+    const { active } = this.selectableStore
     if (active.size === 0) {
       return ''
     }
@@ -393,14 +366,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         style={style}
         onAddFilter={onAddFilter}
         zebra={zebra}
-        multiSelectStore={this.multiSelectStore}
+        selectableStore={this.selectableStore}
       />
     )
   }
 
   getItemKey = index => {
     const { sortedRows } = this.state
-    const { active } = this.multiSelectStore
+    const { active } = this.selectableStore
     const row = sortedRows[index]
     const hld = active.has(sortedRows[index].key)
     return !row ? index : `${row.key}${hld}`
@@ -477,7 +450,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
             itemData={sortedRows}
-            ref={this.tableRef}
+            ref={this.onListRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
           >
@@ -490,15 +463,11 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 }
 
 function ManagedTableNormalized(props: ManagedTableProps) {
-  const multiSelectStore = useStore(MultiSelectStore, {
-    disableSelect: props.disableSelect,
-    onSelectIndices: props.onSelectIndices,
-    multiSelect: props.multiSelect,
-  })
+  const selectableStore = useSelectableStore(props)
   return (
     <ManagedTableInner
       {...props}
-      multiSelectStore={multiSelectStore}
+      selectableStore={selectableStore}
       rows={props.rows.map(normalizeRow)}
     />
   )

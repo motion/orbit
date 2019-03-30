@@ -105,7 +105,7 @@ export default function GithubSettings({ subId }: AppProps) {
             key: 'lastCommit',
             direction: 'up',
           }}
-          multiSelect
+          selectable="multi"
           rows={(repositories || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             return {

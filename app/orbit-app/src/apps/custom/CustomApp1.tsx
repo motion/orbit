@@ -45,7 +45,7 @@ export function CustomApp1(_props: AppProps) {
                 <Select name="type" isMulti options={type} />
               </SpacedRow>
               <Table
-                multiSelect
+                selectable="multi"
                 shareable
                 onSelect={setHighlighted}
                 rows={users}
@@ -107,7 +107,7 @@ function PersonInfo(props: { row: any }) {
             {photos => (
               <Table
                 bordered
-                multiSelect
+                selectable="multi"
                 searchable
                 title={`${album.id} Album ${album.title} Pictures`}
                 rows={photos}

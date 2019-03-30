@@ -12,7 +12,7 @@ import React, { memo } from 'react'
 import { DataValue } from '../DataValue'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { getRowValues } from '../helpers/getRowValues'
-import { MultiSelectStore } from '../lists/SelectStore'
+import { SelectableStore } from '../lists/SelectableStore'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
 import { guesses, guessTheme } from './guessTheme'
@@ -37,7 +37,7 @@ type TableRowProps = {
   style?: Object
   onAddFilter?: TableOnAddFilter
   zebra?: boolean
-  multiSelectStore?: MultiSelectStore
+  selectableStore?: SelectableStore
   rowKey?: any
 }
 
@@ -50,11 +50,11 @@ export const TableRow = memo(function TableRow({
   columnKeys,
   columnSizes,
   onAddFilter,
-  multiSelectStore,
+  selectableStore,
   rowKey,
   ...props
 }: TableRowProps) {
-  const isHighlighted = useReaction(() => multiSelectStore.active.has(rowKey) || false)
+  const isHighlighted = useReaction(() => selectableStore.active.has(rowKey) || false)
 
   if (!columnKeys.length) {
     console.warn('No columns')

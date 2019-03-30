@@ -1,20 +1,12 @@
-import { ensure, useReaction } from '@o/use-store'
+import { useReaction } from '@o/use-store'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
-import { configure } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
 import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
-import { useSelectionStore } from './ProvideSelectionStore'
-import { SelectEvent, SelectionStore } from './SelectionStore'
+import { SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
-export type SelectableListProps = VirtualListProps<any> & {
-  minSelected?: number
-  defaultSelected?: number
-  isSelectable?: boolean
-  selectionStore?: SelectionStore
-  createNewSelectionStore?: boolean
-}
+export type SelectableListProps = VirtualListProps<any> & SelectableProps
 
 type SelectContext = {
   onSelectItem?: HandleSelection
@@ -37,55 +29,37 @@ export function ProvideSelectableHandlers({
   )
 }
 
-export function SelectableList({
-  items,
-  createNewSelectionStore,
-  getItemProps,
-  ...props
-}: SelectableListProps) {
-  const selectionStore = useSelectionStore(props)
+export function SelectableList({ items, getItemProps, ...props }: SelectableListProps) {
+  const selectableStore = useSelectableStore(props)
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
 
   useEffect(
     () => {
-      selectionStore.setItems([
-        {
-          type: 'column',
-          items: items.map(({ id }, index) => ({ id, index })),
-        },
-      ])
+      selectableStore.setRows(items)
     },
     [items],
   )
 
-  useEffect(() => {
-    if (typeof props.defaultSelected === 'number' && selectionStore) {
-      // only update if its on -1, to allow them to customize it in other ways
-      if (selectionStore.activeIndex === -1) {
-        selectionStore.setIndex(props.defaultSelected)
-      }
-    }
-  }, [])
-
   useReaction(
-    () => selectionStore.activeIndex,
-    activeIndex => {
-      ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
-      ensure('has list', !!listRef.current)
-      ensure('is active', selectionStore.isActive)
-      ensure('used key', selectionStore.selectEvent === SelectEvent.key)
-      listRef.current.scrollToIndex(activeIndex)
+    () => selectableStore.active,
+    active => {
+      // ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
+      // ensure('has list', !!listRef.current)
+      // ensure('is active', selectionStore.isActive)
+      // ensure('used key', selectionStore.selectEvent === SelectEvent.key)
+      // listRef.current.scrollToIndex(activeIndex)
+      console.log('should scroll to', active)
     },
   )
 
-  const onSelect = useCallback(
+  const onSelect: VirtualListProps<any>['onSelect'] = useCallback(
     (index, eventType, element) => {
       if (props.onSelect) {
         return props.onSelect(index, eventType, element)
       }
-      if (selectionStore) {
-        selectionStore.setIndex(index, eventType)
+      if (selectableStore) {
+        selectableStore.setRowActive(items[index], index, eventType)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, eventType, element)
@@ -95,16 +69,14 @@ export function SelectableList({
   )
 
   return (
-    <MergeContext Context={configure.StoreContext} value={{ selectionStore }}>
-      <VirtualList
-        items={items}
-        listRef={listRef}
-        onOpen={selectableProps && selectableProps.onSelectItem}
-        getItemProps={getItemProps}
-        {...props}
-        // overwrite props explicitly
-        onSelect={onSelect}
-      />
-    </MergeContext>
+    <VirtualList
+      items={items}
+      listRef={listRef}
+      onOpen={selectableProps && selectableProps.onSelectItem}
+      getItemProps={getItemProps}
+      {...props}
+      // overwrite prop
+      onSelect={onSelect}
+    />
   )
 }

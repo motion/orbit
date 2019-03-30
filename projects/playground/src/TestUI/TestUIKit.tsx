@@ -1,4 +1,4 @@
-import { Table } from '@o/kit'
+import { List, Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -18,7 +18,24 @@ import React, { Suspense, useState } from 'react'
 export function TestUIKit() {
   return (
     <Suspense fallback={<Loading />}>
-      <CustomApp1 />
+      <List
+        selectable="multi"
+        items={[
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+          { title: 'hello', subtitle: 'world', icon: 'hi' },
+        ]}
+      />
+
+      {/* <CustomApp1 /> */}
     </Suspense>
   )
 }
@@ -54,7 +71,7 @@ export function CustomApp1() {
                 <Select name="type" isMulti options={type} />
               </SpacedRow>
               <Table
-                multiSelect
+                selectable="multi"
                 onSelect={setHighlighted}
                 rows={users}
                 searchTerm={form.getValue('search')}

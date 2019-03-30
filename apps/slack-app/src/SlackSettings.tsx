@@ -141,7 +141,7 @@ export function SlackSettings({ subId }: AppProps) {
               },
             },
           }}
-          multiSelect
+          selectable="multi"
           onSelectIndices={setHighlightedRows}
           rows={(channels || []).map(channel => {
             const topic = channel.topic ? channel.topic.value : ''

@@ -26,7 +26,7 @@ export function CustomApp2() {
               <Pane resizable>
                 <Table
                   searchable
-                  multiSelect
+                  selectable="multi"
                   onSelect={rows => setData({ selected: rows })}
                   rows={[
                     {

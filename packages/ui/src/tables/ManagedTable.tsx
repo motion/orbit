@@ -303,13 +303,17 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     })
   }
 
+  lastIndex = -1
+
   onEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
     const { current } = this.tableRef
     if (this.props.disableSelect || !this.props.multiSelect) {
       return
     }
-    this.multiSelectStore.onEnterRow(row)
-    current.scrollToIndex(index + 1)
+    const direction = this.multiSelectStore.onEnterRow(row, index)
+    if (direction !== false) {
+      current.scrollToIndex(index)
+    }
   }
 
   buildContextMenuItems = () => {
@@ -375,6 +379,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     return (
       <TableRow
         key={sortedRows[index].key}
+        rowKey={sortedRows[index].key}
         columnSizes={columnSizes}
         columnKeys={columnKeys}
         columns={columns}
@@ -382,17 +387,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         onMouseEnter={e => this.onEnterRow(e, sortedRows[index], index)}
         multiline={multiline}
         rowLineHeight={rowLineHeight}
-        highlighted={this.multiSelectStore.active.has(sortedRows[index].key)}
         row={sortedRows[index]}
         index={index}
         style={style}
         onAddFilter={onAddFilter}
         zebra={zebra}
+        multiSelectStore={this.multiSelectStore}
       />
     )
   }
 
   getItemKey = index => {
+    console.log('get item', index, this.state.sortedRows)
     const { sortedRows } = this.state
     const { active } = this.multiSelectStore
     const row = sortedRows[index]

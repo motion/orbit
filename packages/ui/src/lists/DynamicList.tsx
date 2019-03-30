@@ -122,11 +122,25 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     return null
   }
 
+  lastHeight = 23
   scrollToIndex = (index: number, additionalOffset: number = 0) => {
     const pos = this.positions.get(index)
     const ref = this.getContainerRef()
+    const dims = this.dimensions.get(this.props.keyMapper(index))
+    const h = dims ? dims.height : this.lastHeight
+    this.lastHeight = h
+    const top = pos.top - additionalOffset
+    const bot = pos.top + h - additionalOffset
+
+    // lazy scroll
     if (pos != null && ref != null) {
-      ref.scrollTop = pos.top - additionalOffset
+      if (top < ref.scrollTop) {
+        ref.scrollTop = pos.top - additionalOffset
+      }
+      console.log('scroll to', index, bot, ref.scrollTop, ref.clientHeight)
+      if (bot > ref.scrollTop + ref.clientHeight) {
+        ref.scrollTop = ref.clientHeight - h
+      }
     }
   }
 

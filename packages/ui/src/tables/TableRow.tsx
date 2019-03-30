@@ -7,17 +7,123 @@
 
 import { Color } from '@o/color'
 import { gloss, Row, ThemeObject } from '@o/gloss'
-import * as React from 'react'
+import { useReaction } from '@o/use-store'
+import React, { memo } from 'react'
 import { DataValue } from '../DataValue'
 import { CheckboxReactive } from '../forms/CheckboxReactive'
 import { getRowValues } from '../helpers/getRowValues'
+import { MultiSelectStore } from '../lists/SelectStore'
 import { DataColumns, GenericDataRow } from '../types'
 import FilterRow from './FilterRow'
 import { guesses, guessTheme } from './guessTheme'
 import { DEFAULT_ROW_HEIGHT, TableColumnKeys, TableColumnSizes, TableOnAddFilter } from './types'
 import { normaliseColumnWidth } from './utils'
 
-const backgroundColor = (props: Props, theme: ThemeObject) => {
+type TableRowProps = {
+  color?: Color
+  even?: boolean
+  background?: Color
+  highlightedBackgroundColor?: Color
+  columnKeys: TableColumnKeys
+  columnSizes: TableColumnSizes
+  columns: DataColumns
+  onMouseDown: (e: React.MouseEvent) => any
+  onMouseEnter?: (e: React.MouseEvent) => void
+  multiline?: boolean
+  rowLineHeight: number
+  highlighted?: boolean
+  row: GenericDataRow
+  index: number
+  style?: Object
+  onAddFilter?: TableOnAddFilter
+  zebra?: boolean
+  multiSelectStore?: MultiSelectStore
+  rowKey?: any
+}
+
+export const TableRow = memo(function TableRow({
+  index,
+  highlighted,
+  row,
+  multiline,
+  columns,
+  columnKeys,
+  columnSizes,
+  onAddFilter,
+  multiSelectStore,
+  rowKey,
+  ...props
+}: TableRowProps) {
+  const isHighlighted = useReaction(() => multiSelectStore.active.has(rowKey) || false)
+
+  if (!columnKeys.length) {
+    console.warn('No columns')
+  }
+
+  return (
+    <TableBodyRowContainer
+      highlighted={highlighted || isHighlighted}
+      even={index % 2 === 0}
+      highlightOnHover={row.highlightOnHover}
+      data-key={row.key}
+      {...row.style}
+      {...props}
+    >
+      {columnKeys.map(key => {
+        const value = getRowValues(row)[key]
+        const col = columns[key]
+
+        // TODO we could let them configure but seems weird, when do you want an "unfilterable" row?
+        const isFilterable = true
+
+        if (col == null) {
+          throw new Error(
+            `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
+          )
+        }
+
+        let element: React.ReactNode = null
+
+        if (col.type === 'boolean') {
+          element = (
+            <CheckboxReactive
+              isActive={() => value}
+              onChange={next => {
+                if (col.onChange) {
+                  col.onChange(index, next)
+                } else {
+                  console.warn(`No onChange event passed to table column ${key}`)
+                }
+              }}
+            />
+          )
+        } else {
+          element = <DataValue type={col.type} value={value} />
+        }
+
+        if (isFilterable && onAddFilter != null) {
+          element = (
+            <FilterRow addFilter={onAddFilter} filterKey={key}>
+              {element}
+            </FilterRow>
+          )
+        }
+
+        return (
+          <TableBodyColumnContainer
+            key={key}
+            multiline={multiline}
+            width={normaliseColumnWidth(columnSizes[key])}
+          >
+            {element}
+          </TableBodyColumnContainer>
+        )
+      })}
+    </TableBodyRowContainer>
+  )
+})
+
+const backgroundColor = (props: TableRowProps, theme: ThemeObject) => {
   if (props.highlighted) {
     if (props.highlightedBackgroundColor) {
       return props.highlightedBackgroundColor
@@ -41,7 +147,7 @@ const backgroundColor = (props: Props, theme: ThemeObject) => {
   }
 }
 
-const getColor = (props: Props, theme: ThemeObject) => {
+const getColor = (props: TableRowProps, theme: ThemeObject) => {
   let color = props.color
   if (props.row) {
     const cat = props.row.category
@@ -58,7 +164,7 @@ const TableBodyRowContainer = gloss(Row, {
   userSelect: 'none',
 }).theme((props, theme) => ({
   background: backgroundColor(props, theme),
-  boxShadow: props.zebra ? 'none' : 'inset 0 -1px #E9EBEE',
+  boxShadow: props.zebra ? 'none' : `inset 0 -1px ${theme.borderColor}`,
   color: props.highlighted ? theme.colorHighlight : getColor(props, theme),
   '& *': {
     color: props.highlighted ? `${theme.colorHighlight} !important` : null,
@@ -86,119 +192,3 @@ const TableBodyColumnContainer = gloss({
   wordWrap: props.multiline ? 'break-word' : 'normal',
   width: props.width === 'flex' ? '100%' : props.width,
 }))
-
-type Props = {
-  color?: Color
-  even?: boolean
-  background?: Color
-  highlightedBackgroundColor?: Color
-  columnKeys: TableColumnKeys
-  columnSizes: TableColumnSizes
-  columns: DataColumns
-  onMouseDown: (e: React.MouseEvent) => any
-  onMouseEnter?: (e: React.MouseEvent) => void
-  multiline?: boolean
-  rowLineHeight: number
-  highlighted: boolean
-  row: GenericDataRow
-  index: number
-  style?: Object
-  onAddFilter?: TableOnAddFilter
-  zebra?: boolean
-}
-
-export class TableRow extends React.PureComponent<Props> {
-  static defaultProps = {
-    zebra: true,
-  }
-
-  render() {
-    const {
-      index,
-      highlighted,
-      rowLineHeight,
-      row,
-      style,
-      multiline,
-      columns,
-      columnKeys,
-      columnSizes,
-      onMouseEnter,
-      onMouseDown,
-      zebra,
-      onAddFilter,
-    } = this.props
-
-    if (!columnKeys.length) {
-      console.warn('No columns')
-    }
-
-    return (
-      <TableBodyRowContainer
-        {...this.props}
-        rowLineHeight={rowLineHeight}
-        highlighted={highlighted}
-        multiline={multiline}
-        even={index % 2 === 0}
-        zebra={zebra}
-        onMouseDown={onMouseDown}
-        onMouseEnter={onMouseEnter}
-        style={style}
-        highlightOnHover={row.highlightOnHover}
-        data-key={row.key}
-        {...row.style}
-      >
-        {columnKeys.map(key => {
-          const value = getRowValues(row)[key]
-          const col = columns[key]
-
-          // TODO we could let them configure but seems weird, when do you want an "unfilterable" row?
-          const isFilterable = true
-
-          if (col == null) {
-            throw new Error(
-              `Trying to access column "${key}" which does not exist on row. Make sure buildRow is returning a valid row.`,
-            )
-          }
-
-          let element: React.ReactNode = null
-
-          if (col.type === 'boolean') {
-            element = (
-              <CheckboxReactive
-                isActive={() => value}
-                onChange={next => {
-                  if (col.onChange) {
-                    col.onChange(index, next)
-                  } else {
-                    console.warn(`No onChange event passed to table column ${key}`)
-                  }
-                }}
-              />
-            )
-          } else {
-            element = <DataValue type={col.type} value={value} />
-          }
-
-          if (isFilterable && onAddFilter != null) {
-            element = (
-              <FilterRow addFilter={onAddFilter} filterKey={key}>
-                {element}
-              </FilterRow>
-            )
-          }
-
-          return (
-            <TableBodyColumnContainer
-              key={key}
-              multiline={multiline}
-              width={normaliseColumnWidth(columnSizes[key])}
-            >
-              {element}
-            </TableBodyColumnContainer>
-          )
-        })}
-      </TableBodyRowContainer>
-    )
-  }
-}

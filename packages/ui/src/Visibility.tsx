@@ -13,5 +13,6 @@ export function Visibility({ visible, children }: { visible: boolean; children: 
 }
 
 export function useVisiblity() {
-  return useVisiblityStore().props.visible
+  const store = useVisiblityStore()
+  return store ? store.props.visible : true
 }

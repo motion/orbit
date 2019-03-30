@@ -29,6 +29,7 @@ export class MultiSelectStore {
   dragStartIndex?: number = null
   rows = []
   active = new Set()
+  lastEnter = -1
 
   move(direction: Direction, modifiers: Modifiers) {
     const { rows, active } = this
@@ -52,33 +53,36 @@ export class MultiSelectStore {
   }
 
   onPressRow(row: GenericDataRow, index: number, modifiers: Modifiers) {
-    let { active } = this
+    let active = this.active
     this.dragStartIndex = index
     document.addEventListener('mouseup', this.onStopDragSelecting)
     if (modifiers.option && this.props.multiSelect) {
       // option select
-      active.add(row.key)
+      active = new Set([...active, row.key])
     } else if (modifiers.shift && this.props.multiSelect) {
       // range select
       const lastItemKey = Array.from(this.active).pop()
       active = new Set([...active, ...this.selectInRange(lastItemKey, row.key)])
     } else {
       // single select
-      this.active.clear()
-      this.active.add(row.key)
+      active = new Set([row.key])
     }
     this.active = active
   }
 
-  onEnterRow(row: GenericDataRow) {
-    const { dragStartIndex } = this
+  onEnterRow(row: GenericDataRow, index: number) {
     if (this.props.disableSelect || !this.props.multiSelect) {
       return
     }
+    const { dragStartIndex } = this
     if (typeof dragStartIndex === 'number') {
       const startKey = this.rows[dragStartIndex].key
       this.active = new Set(this.selectInRange(startKey, row.key))
+      const direction = this.lastEnter > index ? Direction.up : Direction.down
+      this.lastEnter = index
+      return direction
     }
+    return false
   }
 
   private selectInRange = (fromKey: string, toKey: string): Array<string> => {

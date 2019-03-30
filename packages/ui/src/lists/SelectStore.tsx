@@ -58,7 +58,14 @@ export class MultiSelectStore {
     document.addEventListener('mouseup', this.onStopDragSelecting)
     if (modifiers.option && this.props.multiSelect) {
       // option select
-      active = new Set([...active, row.key])
+      if (active.has(row.key)) {
+        // remove
+        active.delete(row.key)
+        active = new Set([...active])
+      } else {
+        // add
+        active = new Set([...active, row.key])
+      }
     } else if (modifiers.shift && this.props.multiSelect) {
       // range select
       const lastItemKey = Array.from(this.active).pop()

@@ -284,10 +284,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     }
   }
 
-  onPressRow = (e: React.MouseEvent, row: GenericDataRow, index: number) => {
-    this.selectableStore.setRowActive(row, index, e)
-  }
-
   lastIndex = -1
 
   buildContextMenuItems = () => {
@@ -357,8 +353,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         columnSizes={columnSizes}
         columnKeys={columnKeys}
         columns={columns}
-        onMouseDown={e => this.onPressRow(e, sortedRows[index], index)}
-        onMouseEnter={() => this.selectableStore.onHoverRow(sortedRows[index], index)}
+        onMouseDown={e => this.selectableStore.setRowActive(index, e)}
+        onMouseEnter={() => this.selectableStore.onHoverRow(index)}
         multiline={multiline}
         rowLineHeight={rowLineHeight}
         row={sortedRows[index]}

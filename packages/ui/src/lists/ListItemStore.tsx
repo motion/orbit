@@ -23,6 +23,7 @@ export class ListItemStore {
   }
 
   handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    console.log('handle click')
     // so we can control the speed of doubleclicks
     if (Date.now() - this.clickAt < 280) {
       // allow double click of location

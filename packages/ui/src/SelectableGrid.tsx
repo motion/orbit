@@ -23,7 +23,7 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
     () => {
       return items.map((item, index) => {
         const select = () => {
-          selectableStore.setRowActive(items[index], index)
+          selectableStore.setRowActive(index)
         }
         // this is complex so we can do single updates on selection move
         return function GridItem() {

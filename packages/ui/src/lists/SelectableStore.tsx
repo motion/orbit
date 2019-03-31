@@ -94,7 +94,8 @@ export class SelectableStore {
     return this.active.has(this.getIndexKey(index))
   }
 
-  setRowActive(row: GenericDataRow, index: number, e?: React.MouseEvent) {
+  setRowActive(index: number, e?: React.MouseEvent) {
+    const row = this.rows[index]
     const rowKey = key(row, index)
     if (e.button !== 0 || this.props.disableSelect) {
       // set active only with primary mouse button, dont interfere w/context menus
@@ -130,7 +131,8 @@ export class SelectableStore {
     this.active = active
   }
 
-  onHoverRow(row: GenericDataRow, index: number) {
+  onHoverRow(index: number) {
+    const row = this.rows[index]
     const rowKey = key(row, index)
     if (this.props.disableSelect || this.props.selectable !== 'multi') {
       return

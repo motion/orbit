@@ -34,6 +34,7 @@ export function ProvideSelectableHandlers({
 
 export function SelectableList({ items, ...props }: SelectableListProps) {
   const selectableStore = props.selectableStore || useSelectableStore(props)
+  window['selectableStore'] = selectableStore
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
 
@@ -62,7 +63,7 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
         return props.onSelect(index, eventType, event)
       }
       if (selectableStore) {
-        selectableStore.setRowActive(items[index], index, event)
+        selectableStore.setRowActive(index, event)
       }
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, eventType, event)
@@ -72,9 +73,11 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
   )
 
   const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
-    (...args) => {
+    (item, index, items) => {
       return {
-        ...(props.getItemProps && props.getItemProps(...args)),
+        ...(props.getItemProps && props.getItemProps(item, index, items)),
+        onMouseDown: e => selectableStore.setRowActive(index, e),
+        onMouseEnter: () => selectableStore.onHoverRow(index),
         selectableStore,
       }
     },

@@ -168,6 +168,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
   const sizeLineHeight = small ? 0.8 : 1
   const defaultPadding = small ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
+  const hasMouseDownEvent = !!restProps.onMouseDown
 
   // add a little vertical height for full height icons
   if (small && iconBefore) {
@@ -229,7 +230,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
           <ListItemContent
             isSelected={isSelected}
             borderRadius={borderRadius}
-            onClick={store.handleClick}
+            onClick={!hasMouseDownEvent ? store.handleClick : onClick}
             disableShadow={disableShadow}
             padding={padding || defaultPadding}
             {...cardProps}

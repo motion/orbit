@@ -97,7 +97,7 @@ export function List(rawProps: ListProps) {
 
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
-    items: props.items || [],
+    items: items || [],
     sortBy: props.sortBy,
     query: props.query,
     filterKey: props.filterKey,

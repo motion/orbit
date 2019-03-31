@@ -55,7 +55,7 @@ export function disposeStore(store: any, component?: CurrentComponent) {
 
 let currentHooks = null
 
-export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<A> {
+export function useHook<A extends (...args: any[]) => any>(cb: A): ReturnType<A> {
   currentHooks = currentHooks || []
   currentHooks.push(cb)
   return cb()

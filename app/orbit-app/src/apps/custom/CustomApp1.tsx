@@ -1,4 +1,4 @@
-import { AppProps, Table } from '@o/kit'
+import { Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -22,7 +22,7 @@ const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
 
-export function CustomApp1(_props: AppProps) {
+export function CustomApp1() {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
   const users = useFetch(`${endpoint}/users`).map((row, i) => ({

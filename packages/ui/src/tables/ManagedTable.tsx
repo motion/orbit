@@ -397,16 +397,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   render() {
-    const {
-      columns,
-      rowLineHeight,
-      width,
-      minHeight,
-      minWidth,
-      rows,
-      placeholder,
-      ...viewProps
-    } = this.props
+    const { columns, width, minHeight, minWidth, rows, placeholder, ...viewProps } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
     const height =
       viewProps.height === 'content-height'

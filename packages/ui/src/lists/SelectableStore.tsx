@@ -1,4 +1,4 @@
-import { ensure, react, useStore } from '@o/use-store'
+import { always, ensure, react, useStore } from '@o/use-store'
 import { pick } from 'lodash'
 import { Config } from '../helpers/configure'
 import { TableHighlightedRows } from '../tables/types'
@@ -36,11 +36,6 @@ export function useSelectableStore(props: SelectableProps) {
 export class SelectableStore {
   props: SelectableProps
 
-  callbackOnSelectProp = react(
-    () => (this.active ? this.props.onSelectIndices : null),
-    cb => (cb ? cb(Array.from(this.active)) : null),
-  )
-
   dragStartIndex?: number = null
   rows = []
   active = new Set()
@@ -50,6 +45,15 @@ export class SelectableStore {
   private setActive(next: string[]) {
     this.active = new Set(next)
   }
+
+  callbackOnSelectProp = react(
+    () => always(this.active),
+    () => {
+      console.log('reacting to new active')
+      ensure('selectIndices', !!this.props.onSelectIndices)
+      this.props.onSelectIndices([...this.active])
+    },
+  )
 
   enforceAlwaysSelected = react(
     () => [this.props.alwaysSelected, this.active.size === 0, this.rows.length > 0],

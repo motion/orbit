@@ -19,6 +19,26 @@ type State = {
   hasFocus: boolean
 }
 
+type Props = {
+  width?: number | string
+  defaultValue?: string
+  placeholder?: string
+  actions?: React.ReactNode
+  tableKey?: string
+  onFilterChange?: (filters: TableFilter[]) => void
+  defaultFilters?: TableFilter[]
+  searchBarTheme?: Object
+  searchBarProps?: Object
+  searchInputProps?: Object
+  children?: (props: SearchableChildProps) => React.ReactNode
+  focusOnMount?: boolean
+  // only called once it changes once at least
+  onChange?: Function
+  onEnter?: Function
+  before?: React.ReactNode
+  after?: React.ReactNode
+}
+
 export type SearchableProps = Props & {
   addFilter: (filter: TableFilter) => void
   searchTerm: string
@@ -32,26 +52,6 @@ export type SearchableChildProps = {
   searchTerm: string
   searchBar: SearchBarType
   filters: TableFilter[]
-}
-
-type Props = {
-  width?: number | string
-  defaultValue?: string
-  placeholder?: string
-  actions?: React.ReactNode
-  tableKey?: string
-  onFilterChange?: (filters: Array<TableFilter>) => void
-  defaultFilters?: Array<TableFilter>
-  searchBarTheme?: Object
-  searchBarProps?: Object
-  searchInputProps?: Object
-  children?: ((props: SearchableChildProps) => React.ReactNode)
-  focusOnMount?: boolean
-  // only called once it changes once at least
-  onChange?: Function
-  onEnter?: Function
-  before?: React.ReactNode
-  after?: React.ReactNode
 }
 
 const SEARCHABLE_STORAGE_KEY = (key: string) => `SEARCHABLE_STORAGE_KEY_${key}`
@@ -110,9 +110,9 @@ export class Searchable extends React.PureComponent<Props, State> {
         defaultFilters.forEach(defaultFilter => {
           const filterIndex = savedStateFilters.findIndex(f => f.key === defaultFilter.key)
           if (filterIndex > -1) {
-            const defaultFilter: TableFilter = defaultFilters[filterIndex]
-            if (defaultFilter.type === 'enum') {
-              savedStateFilters[filterIndex].enum = defaultFilter.enum
+            const next: TableFilter = defaultFilters[filterIndex]
+            if (next.type === 'enum') {
+              savedStateFilters[filterIndex].enum = next.enum
             }
             const filters = new Set(savedStateFilters[filterIndex].enum.map(filter => filter.value))
             savedStateFilters[filterIndex].value = savedStateFilters[filterIndex].value.filter(
@@ -121,7 +121,6 @@ export class Searchable extends React.PureComponent<Props, State> {
           }
         })
       }
-      console.log('setting', savedState.filters)
       this.setState({
         searchTerm: savedState.searchTerm || '',
         filters: savedState.filters || [],

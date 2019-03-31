@@ -18,9 +18,11 @@ import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
+type PartialSectionProps = Pick<SectionProps, 'title' | 'subTitle' | 'bordered'>
+
 export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
   Omit<SearchableTableProps, 'columns'> &
-  Pick<SectionProps, 'title' | 'subTitle' | 'bordered'> & {
+  PartialSectionProps & {
     columns?: TableColumns
     searchable?: boolean
     onSelect?: (rows: any[]) => void
@@ -32,25 +34,20 @@ const defaultColumns = {
   sortable: true,
 }
 
-function deepMergeDefined<A>(obj: A, defaults: Object): A {
+function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
   for (const key in obj) {
     Object.assign(obj[key], defaults)
   }
   return obj
 }
 
-export function Table(direct: TableProps) {
+export function Table(tableProps: TableProps) {
   const stores = useStoresSimple()
-  const {
-    flex,
-    bordered,
-    searchable,
-    onSelect,
-    title,
-    subTitle,
-    shareable,
-    ...props
-  } = useSectionProps(direct)
+  const sectionProps: PartialSectionProps = useSectionProps(tableProps)
+  const { flex, bordered, searchable, onSelect, title, subTitle, shareable, ...props } = {
+    ...sectionProps,
+    ...tableProps,
+  }
   const { height, ref } = useParentNodeSize()
   const rows = props.rows ? props.rows.map(normalizeRow) : null
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
@@ -58,6 +55,7 @@ export function Table(direct: TableProps) {
 
   const onSelectIndices = useCallback(
     keys => {
+      console.log('waht', shareable, tableProps, keys, props.rows)
       if (!props.rows) return
       const selectedRows = keys.map(key => props.rows[rows.findIndex(x => x.key === key)])
       if (shareable) {

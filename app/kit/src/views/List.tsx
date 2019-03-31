@@ -1,6 +1,7 @@
 import { Bit } from '@o/models'
 import {
   Center,
+  Direction,
   MergeContext,
   SelectableList,
   SelectableListProps,
@@ -57,10 +58,12 @@ type SelectionContextType = {
   onSelectItem?: HandleOrbitSelect
   onOpenItem?: HandleOrbitSelect
 }
-const SelectionContext = createContext({
-  onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
-  onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
-} as SelectionContextType)
+
+const SelectionContext = createContext<SelectionContextType>({
+  onSelectItem: () => console.log('no select event for onSelectItem'),
+  onOpenItem: () => console.log('no select event for onOpenItem'),
+})
+
 export function ProvideSelectionContext({
   children,
   ...rest
@@ -72,11 +75,11 @@ export function ProvideSelectionContext({
   )
 }
 
-export type HandleOrbitSelect = ((
+export type HandleOrbitSelect = (
   index: number,
   appProps: AppProps,
   eventType?: 'click' | 'key',
-) => any)
+) => any
 
 const nullFn = () => null
 
@@ -90,7 +93,6 @@ export function List(rawProps: ListProps) {
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
   const selectableStore = useSelectableStore(restProps)
-  console.log('selectableStore, selectableStore', selectableStore)
   const visibility = useVisiblityContext()
 
   const filtered = useActiveQueryFilter({
@@ -107,44 +109,42 @@ export function List(rawProps: ListProps) {
 
   const getItems = useGet(filtered.results)
 
-  useEffect(
-    () => {
-      if (!shortcutStore) return
-      return shortcutStore.onShortcut(shortcut => {
-        if (visibility.visible == false) {
-          return
-        }
-        switch (shortcut) {
-          case 'open':
-            console.log('todo open', selectableStore.active)
-            // const item = getItems()[]
-            // if (item && item.onOpen) {
-            //   console.log('TODO open')
-            //   // item.onOpen(selStore.activeIndex, null)
-            // }
-            // if (onOpen) {
-            //   console.log('TODO open')
-            //   // onOpen(selStore.activeIndex, null)
-            // }
-            break
-          case 'up':
-          case 'down':
-            console.log('TODO move')
-            // selStore.move(Direction[shortcut])
-            break
-        }
-      })
-    },
-    [onOpen],
-  )
+  useEffect(() => {
+    if (!shortcutStore) return
+    return shortcutStore.onShortcut(shortcut => {
+      if (visibility.visible == false) {
+        return
+      }
+      switch (shortcut) {
+        case 'open':
+          console.log('todo open', selectableStore.active)
+          // const item = getItems()[]
+          // if (item && item.onOpen) {
+          //   console.log('TODO open')
+          //   // item.onOpen(selStore.activeIndex, null)
+          // }
+          // if (onOpen) {
+          //   console.log('TODO open')
+          //   // onOpen(selStore.activeIndex, null)
+          // }
+          break
+        case 'up':
+          selectableStore.move(Direction.up)
+          break
+        case 'down':
+          selectableStore.move(Direction.down)
+          break
+      }
+    })
+  }, [onOpen])
 
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
-    const extraProps = getItemPropsGet()(a, b, c)
+    const itemExtraProps = getItemPropsGet()(a, b, c)
     const filterExtraProps = filteredGetItemPropsGet()(a, b, c)
     const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
-    return { ...normalized, ...extraProps, ...filterExtraProps, ...shareProps }
+    return { ...normalized, ...itemExtraProps, ...filterExtraProps, ...shareProps }
   }, [])
 
   const onSelectInner = useCallback(

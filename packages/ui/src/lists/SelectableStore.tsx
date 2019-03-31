@@ -47,21 +47,21 @@ export class SelectableStore {
   lastEnter = -1
   listRef: DynamicListControlled = null
 
+  private setActive(next: string[]) {
+    this.active = new Set(next)
+  }
+
   enforceAlwaysSelected = react(
     () => [this.props.alwaysSelected, this.active.size === 0, this.rows.length > 0],
     ([alwaysSelected, noSelection, hasRows]) => {
       ensure('alwaysSelected', alwaysSelected)
       ensure('noSelection', noSelection)
       ensure('hasRows', hasRows)
-      this.active = new Set([this.getIndexKey(0)])
+      this.setActive([this.getIndexKey(0)])
     },
   )
 
-  getIndexKey(index) {
-    return key(this.rows[index], index)
-  }
-
-  move(direction: Direction, modifiers: Modifiers) {
+  move = (direction: Direction, modifiers: Modifiers = { shift: false }) => {
     const { rows, active } = this
     if (active.size === 0) {
       return
@@ -77,7 +77,7 @@ export class SelectableStore {
     }
     active.add(this.getIndexKey(newIndex))
     if (!this.props.disableSelect) {
-      this.active = active
+      this.setActive([...active])
     }
     return newIndex
   }
@@ -87,7 +87,7 @@ export class SelectableStore {
   }
 
   setActiveIndex = (index: number) => {
-    this.active = new Set([this.getIndexKey(index)])
+    this.setActive([this.getIndexKey(index)])
   }
 
   isActiveIndex = (index: number) => {
@@ -105,7 +105,8 @@ export class SelectableStore {
       // prevent text selection
       e.preventDefault()
     }
-    let active = this.active
+    let next = []
+    const { active } = this
     this.dragStartIndex = index
     document.addEventListener('mouseup', this.onStopDragSelecting)
     const modifiers = this.getModifiers(e)
@@ -115,20 +116,21 @@ export class SelectableStore {
       if (active.has(rowKey)) {
         // remove
         active.delete(rowKey)
-        active = new Set([...active])
+        next = [...active]
       } else {
         // add
-        active = new Set([...active, rowKey])
+        next = [...active, rowKey]
       }
     } else if (modifiers.shift && this.props.selectable === 'multi') {
       // range select
       const lastItemKey = Array.from(this.active).pop()
-      active = new Set([...active, ...this.selectInRange(lastItemKey, rowKey)])
+      next = [...active, ...this.selectInRange(lastItemKey, rowKey)]
     } else {
       // single select
-      active = new Set([rowKey])
+      next = [rowKey]
     }
-    this.active = active
+
+    this.setActive(next)
   }
 
   onHoverRow(index: number) {
@@ -140,7 +142,7 @@ export class SelectableStore {
     const { dragStartIndex } = this
     if (typeof dragStartIndex === 'number') {
       const startKey = this.getIndexKey(dragStartIndex)
-      this.active = new Set(this.selectInRange(startKey, rowKey))
+      this.setActive(this.selectInRange(startKey, rowKey))
       const direction = this.lastEnter > index ? Direction.up : Direction.down
       this.lastEnter = index
       this.scrollToIndex(index)
@@ -156,18 +158,20 @@ export class SelectableStore {
     const direction = e.keyCode === 38 ? Direction.up : e.keyCode === 40 ? Direction.down : null
     if (direction && !this.props.disableSelect) {
       const newIndex = this.move(direction, { shift: e.shiftKey })
-      if (this.listRef) {
-        this.listRef.scrollToIndex(newIndex)
-      }
+      this.scrollToIndex(newIndex)
     }
   }
 
   clearSelected = () => {
-    this.active = new Set()
+    this.setActive([])
   }
 
   setRows(next: GenericDataRow[]) {
     this.rows = next
+  }
+
+  private getIndexKey(index: number) {
+    return key(this.rows[index], index)
   }
 
   private scrollToIndex(index: number) {
@@ -175,7 +179,7 @@ export class SelectableStore {
     this.listRef.scrollToIndex(index)
   }
 
-  private selectInRange = (fromKey: string, toKey: string): Array<string> => {
+  private selectInRange = (fromKey: string, toKey: string): string[] => {
     const { rows } = this
     const selected = []
     let startIndex = -1

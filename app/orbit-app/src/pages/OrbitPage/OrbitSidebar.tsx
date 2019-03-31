@@ -39,7 +39,9 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
         <View flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
-          <ListPropsContext.Provider value={{ searchable: true, minSelected: 0 }}>
+          <ListPropsContext.Provider
+            value={{ selectable: true, searchable: true, alwaysSelected: true }}
+          >
             <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
               {props.children}
             </ProvideSelectionContext>

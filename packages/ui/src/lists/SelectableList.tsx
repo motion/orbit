@@ -11,15 +11,15 @@ export type SelectableListProps = VirtualListProps<any> &
     selectableStore?: SelectableStore
   }
 
-type SelectContext = {
+interface SelectContext {
   onSelectItem?: HandleSelection
   onOpenItem?: HandleSelection
 }
 
-const SelectableListContext = createContext({
-  onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
-  onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
-} as SelectContext)
+const SelectableListContext = createContext<SelectContext>({
+  onSelectItem: () => console.log('no select event for onSelectItem'),
+  onOpenItem: () => console.log('no select event for onOpenItem'),
+})
 
 export function ProvideSelectableHandlers({
   children,
@@ -34,16 +34,16 @@ export function ProvideSelectableHandlers({
 
 export function SelectableList({ items, ...props }: SelectableListProps) {
   const selectableStore = props.selectableStore || useSelectableStore(props)
-  window['selectableStore'] = selectableStore
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
 
-  useEffect(
-    () => {
-      selectableStore.setRows(items)
-    },
-    [items],
-  )
+  useEffect(() => {
+    selectableStore.setListRef(listRef.current)
+  }, [listRef])
+
+  useEffect(() => {
+    selectableStore.setRows(items)
+  }, [items])
 
   useReaction(
     () => selectableStore.active,
@@ -73,9 +73,9 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
   )
 
   const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
-    (item, index, items) => {
+    (item, index, listItems) => {
       return {
-        ...(props.getItemProps && props.getItemProps(item, index, items)),
+        ...(props.getItemProps && props.getItemProps(item, index, listItems)),
         onMouseDown: e => selectableStore.setRowActive(index, e),
         onMouseEnter: () => selectableStore.onHoverRow(index),
         selectableStore,

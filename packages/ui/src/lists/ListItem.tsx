@@ -22,8 +22,8 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
 
-export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = ((index: number, eventType: 'click' | 'key', event?: any) => any)
+export type ItemRenderText = (text: string) => JSX.Element
+export type HandleSelection = (index: number, eventType: 'click' | 'key', event?: any) => any
 
 export type ListItemHide = {
   hideTitle?: boolean
@@ -50,7 +50,7 @@ export type ListItemProps = ViewProps &
     subTextOpacity?: number
     small?: boolean
     above?: React.ReactNode
-    activeStyle?: Object
+    activeStyle?: Record<string, any>
     before?: React.ReactNode
     chromeless?: boolean
     theme?: Partial<ThemeObject>
@@ -63,10 +63,10 @@ export type ListItemProps = ViewProps &
     style?: any
     afterTitle?: React.ReactNode
     after?: React.ReactNode
-    titleProps?: Object
+    titleProps?: Record<string, any>
     iconBefore?: boolean
     iconProps?: Partial<IconProps>
-    separatorProps?: Object
+    separatorProps?: Record<string, any>
     className?: string
     inGrid?: boolean
     pane?: string
@@ -81,14 +81,14 @@ export type ListItemProps = ViewProps &
     // double click / keyboard enter
     onOpen?: HandleSelection
     borderRadius?: number
-    nextUpStyle?: Object
+    nextUpStyle?: Record<string, any>
     isSelected?: boolean | ((index: number) => boolean)
-    cardProps?: Object
+    cardProps?: Record<string, any>
     disableShadow?: boolean
     padding?: number | number[]
     titleFlex?: number
-    subtitleProps?: Object
-    getIndex?: ((id: number) => number)
+    subtitleProps?: Record<string, any>
+    getIndex?: (id: number) => number
     subspaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any
@@ -438,13 +438,10 @@ function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
 }
 
 export function useIsSelected(props: Pick<ListItemProps, 'isSelected' | 'index'>) {
-  return useReaction(
-    () => {
-      if (typeof props.isSelected === 'function') {
-        return props.isSelected(props.index)
-      }
-      return !!props.isSelected
-    },
-    [props.isSelected],
-  )
+  return useReaction(() => {
+    if (typeof props.isSelected === 'function') {
+      return props.isSelected(props.index)
+    }
+    return !!props.isSelected
+  }, [props.isSelected])
 }

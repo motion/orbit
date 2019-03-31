@@ -64,7 +64,6 @@ export const ListItem = memo(
       props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
 
     const getIsSelected = useCallback((index: number) => {
-      console.log('getIsSelected', index)
       if (appStore && appStore.isActive == false) {
         return undefined
       }

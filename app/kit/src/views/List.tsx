@@ -1,20 +1,17 @@
 import { Bit } from '@o/models'
 import {
   Center,
-  Direction,
   MergeContext,
-  ProvideSelectionStore,
   SelectableList,
   SelectableListProps,
-  SelectionStore,
   SubTitle,
   Text,
   useRefGetter,
-  useSelectionStore,
+  useSelectableStore,
   View,
 } from '@o/ui'
 import { mergeDefined } from '@o/utils'
-import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
+import React, { createContext, useCallback, useContext, useEffect } from 'react'
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
@@ -91,10 +88,8 @@ export function List(rawProps: ListProps) {
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useRefGetter(getItemProps || nullFn)
   const isActive = useIsAppActive()
-
-  const selectionStore = useSelectionStore(restProps)
-  const selectionStoreRef = useRef<SelectionStore | null>(null)
-  selectionStoreRef.current = selectionStore
+  const selectableStore = useSelectableStore(restProps)
+  const visibility = useVisiblityContext()
 
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
@@ -114,23 +109,25 @@ export function List(rawProps: ListProps) {
     () => {
       if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
-        const selStore = selectionStoreRef.current
-        if (selStore && !selStore.isActive) {
-          return false
+        if (visibility.visible == false) {
+          return
         }
         switch (shortcut) {
           case 'open':
-            const item = getItems()[selStore.activeIndex]
+            const item = getItems()[selectableStore.active]
             if (item && item.onOpen) {
-              item.onOpen(selStore.activeIndex, null)
+              console.log('TODO open')
+              // item.onOpen(selStore.activeIndex, null)
             }
             if (onOpen) {
-              onOpen(selStore.activeIndex, null)
+              console.log('TODO open')
+              // onOpen(selStore.activeIndex, null)
             }
             break
           case 'up':
           case 'down':
-            selStore.move(Direction[shortcut])
+            console.log('TODO move')
+            // selStore.move(Direction[shortcut])
             break
         }
       })
@@ -149,9 +146,8 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      const selStore = selectionStoreRef.current
-      if (selStore && !selStore.isActive) {
-        return false
+      if (visibility.visible === false) {
+        return
       }
       const appProps = getAppProps(toListItemProps(getItems()[index]))
 
@@ -160,9 +156,7 @@ export function List(rawProps: ListProps) {
       if (onSelect) {
         onSelect(index, appProps, eventType)
       }
-      if (selectionStoreRef.current) {
-        selectionStoreRef.current.setIndex(index, eventType)
-      }
+      selectableStore.setIndex(index, eventType)
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, appProps, eventType)
       }
@@ -187,22 +181,21 @@ export function List(rawProps: ListProps) {
   const isInactive = !(typeof props.isActive === 'boolean' ? props.isActive : isActive)
 
   return (
-    <ProvideSelectionStore selectionStore={selectionStore}>
-      <HighlightActiveQuery query={query}>
-        {hasItems && (
-          <SelectableList
-            disableMeasure={isInactive}
-            items={filtered.results}
-            ItemView={ListItem}
-            {...restProps}
-            getItemProps={getItemPropsInner}
-            onSelect={onSelectInner}
-            onOpen={onOpenInner}
-          />
-        )}
-        {!hasItems && (placeholder || <ListPlaceholder />)}
-      </HighlightActiveQuery>
-    </ProvideSelectionStore>
+    <HighlightActiveQuery query={query}>
+      {hasItems && (
+        <SelectableList
+          disableMeasure={isInactive}
+          items={filtered.results}
+          ItemView={ListItem}
+          {...restProps}
+          getItemProps={getItemPropsInner}
+          onSelect={onSelectInner}
+          onOpen={onOpenInner}
+          selectableStore={selectableStore}
+        />
+      )}
+      {!hasItems && (placeholder || <ListPlaceholder />)}
+    </HighlightActiveQuery>
   )
 }
 

@@ -24,11 +24,7 @@ import { Text } from '../text/Text'
 import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = ((
-  index: number,
-  eventType: 'click' | 'key',
-  element?: HTMLElement,
-) => any)
+export type HandleSelection = ((index: number, eventType: 'click' | 'key', event?: any) => any)
 
 export type ListItemHide = {
   hideTitle?: boolean

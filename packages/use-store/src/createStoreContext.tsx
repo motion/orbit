@@ -8,6 +8,7 @@ import { useStore, UseStoreOptions } from './useStore'
 export function createStoreContext<Instance, Props>(_store: { new (): Instance; props?: Props }) {
   const Context = createContext(null as Instance)
   return {
+    Context,
     Provider: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={value[GET_STORE]}>{children}</Context.Provider>
     },

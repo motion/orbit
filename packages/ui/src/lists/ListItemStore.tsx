@@ -1,6 +1,8 @@
 import { ensure, react } from '@o/use-store'
 import { ListItemProps } from './ListItem'
 
+// TODO this could be SelectableItemStore
+
 // TEMP i dont want to write the three level hoist to make this work quite yet
 export const OrbitItemSingleton = {
   lastClick: Date.now(),
@@ -31,7 +33,7 @@ export class ListItemStore {
         return
       }
       if (this.props.onOpen) {
-        this.props.onOpen(this.index, 'click')
+        this.props.onOpen(this.index, 'click', e)
       } else {
         console.log('no open event for item', this.props)
       }
@@ -44,7 +46,7 @@ export class ListItemStore {
       this.props.onClick(e)
     }
     if (this.props.onSelect) {
-      this.props.onSelect(this.index, 'click')
+      this.props.onSelect(this.index, 'click', e)
     }
   }
 

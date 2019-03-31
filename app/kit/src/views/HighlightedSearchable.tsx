@@ -1,4 +1,4 @@
-import { MergeHighlightsContext, Searchable, SearchBarType, SelectionStore } from '@o/ui'
+import { MergeHighlightsContext, Searchable, SearchBarType } from '@o/ui'
 import * as React from 'react'
 
 type SearchChildProps = {
@@ -7,7 +7,6 @@ type SearchChildProps = {
 }
 
 type Props = {
-  selectionStore?: SelectionStore
   children: (a: SearchChildProps) => React.ReactNode
 }
 
@@ -17,7 +16,6 @@ export const HighlightedSearchable = (props: Props) => {
       placeholder="Filter..."
       // focusOnMount
       // onEnter={peekStore.goToNextHighlight}
-      // onChange={() => selectionStore.setHighlightIndex(0)}
       searchInputProps={{
         background: 'transaprent',
       }}

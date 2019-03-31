@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import { AppView, Icon, QueryStore, SpaceStore } from '@o/kit'
 import * as UI from '@o/ui'
-import { Col, Row, SelectionStore, Sidebar, Space, Text } from '@o/ui'
+import { Col, Row, SelectableStore, Sidebar, Space, Text } from '@o/ui'
 import { useStore } from '@o/use-store'
 import * as React from 'react'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -19,7 +19,7 @@ export default React.memo(() => {
   const spaceStore = useStore(SpaceStore)
   const appPageStore = useStore(AppPageStore)
   const queryStore = useStore(QueryStore)
-  const selectionStore = useStore(SelectionStore)
+  const selectableStore = useStore(SelectableStore)
 
   return (
     <StoreContext.Provider
@@ -27,7 +27,7 @@ export default React.memo(() => {
         spaceStore,
         appPageStore,
         queryStore,
-        selectionStore,
+        selectableStore,
       }}
     >
       <MainShortcutHandler>

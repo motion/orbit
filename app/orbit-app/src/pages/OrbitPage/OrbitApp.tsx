@@ -1,14 +1,12 @@
-import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
 import {
-  Button,
-  Loading,
-  Section,
-  SelectionStore,
-  Space,
-  useOnMount,
-  View,
-  Visibility,
-} from '@o/ui'
+  AppLoadContext,
+  AppStore,
+  AppViewsContext,
+  getAppDefinition,
+  ProvideStores,
+  SelectableStore,
+} from '@o/kit'
+import { Button, Loading, Section, Space, useOnMount, View, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { Component, memo, Suspense, useCallback } from 'react'
 import '../../apps/orbitApps'
@@ -28,7 +26,6 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     identifier,
     isActive: useCallback(getIsActive, []),
   })
-  const selectionStore = useStoreSimple(SelectionStore, { isActive })
 
   // set default initial appProps
   useOnMount(function setInitialConfig() {
@@ -38,7 +35,7 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
   })
 
   return (
-    <ProvideStores stores={{ selectionStore, appStore }}>
+    <ProvideStores stores={{ appStore }}>
       <Visibility visible={isActive}>
         <OrbitAppRender id={id} identifier={identifier} />
       </Visibility>
@@ -47,10 +44,9 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 }
 
 const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
-  // handle url changes
-  useAppLocationEffect()
-
+  useAppLocationEffect() // handle url changes
   const { app } = getAppDefinition(identifier)
+  const selectableStore = useStoreSimple(SelectableStore)
 
   if (!app) {
     console.debug('no app', id, identifier)
@@ -64,15 +60,17 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
   const Statusbar = OrbitStatusBar
 
   return (
-    <Suspense fallback={<Loading />}>
-      <AppLoadContext.Provider value={{ id, identifier }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
-        </AppViewsContext.Provider>
-      </AppLoadContext.Provider>
-    </Suspense>
+    <ProvideStores stores={{ selectableStore }}>
+      <Suspense fallback={<Loading />}>
+        <AppLoadContext.Provider value={{ id, identifier }}>
+          <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
+          </AppViewsContext.Provider>
+        </AppLoadContext.Provider>
+      </Suspense>
+    </ProvideStores>
   )
 })
 

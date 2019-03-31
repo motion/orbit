@@ -1,5 +1,4 @@
 import { react } from '@o/use-store'
-import { SelectionStoreProps } from './ProvideSelectionStore'
 
 const isInRow = item =>
   item.moves.some((move: string) => move === Direction.right || move === Direction.left)

@@ -3,10 +3,13 @@ import React, { createContext, useCallback, useContext, useEffect, useRef } from
 import { MergeContext } from '../helpers/MergeContext'
 import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
-import { SelectableProps, useSelectableStore } from './SelectableStore'
+import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
-export type SelectableListProps = VirtualListProps<any> & SelectableProps
+export type SelectableListProps = VirtualListProps<any> &
+  SelectableProps & {
+    selectableStore?: SelectableStore
+  }
 
 type SelectContext = {
   onSelectItem?: HandleSelection
@@ -30,7 +33,7 @@ export function ProvideSelectableHandlers({
 }
 
 export function SelectableList({ items, getItemProps, ...props }: SelectableListProps) {
-  const selectableStore = useSelectableStore(props)
+  const selectableStore = props.selectableStore || useSelectableStore(props)
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
 
@@ -46,23 +49,23 @@ export function SelectableList({ items, getItemProps, ...props }: SelectableList
     active => {
       // ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
       // ensure('has list', !!listRef.current)
-      // ensure('is active', selectionStore.isActive)
-      // ensure('used key', selectionStore.selectEvent === SelectEvent.key)
+      // ensure('is active', selectableStore.isActive)
+      // ensure('used key', selectableStore.selectEvent === SelectEvent.key)
       // listRef.current.scrollToIndex(activeIndex)
       console.log('should scroll to', active)
     },
   )
 
   const onSelect: VirtualListProps<any>['onSelect'] = useCallback(
-    (index, eventType, element) => {
+    (index, eventType, event) => {
       if (props.onSelect) {
-        return props.onSelect(index, eventType, element)
+        return props.onSelect(index, eventType, event)
       }
       if (selectableStore) {
-        selectableStore.setRowActive(items[index], index, eventType)
+        selectableStore.setRowActive(items[index], index, event)
       }
       if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, eventType, element)
+        selectableProps.onSelectItem(index, eventType, event)
       }
     },
     [selectableProps, props.onSelect],

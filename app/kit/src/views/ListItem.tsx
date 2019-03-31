@@ -30,7 +30,7 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
 
 export const ListItem = memo(
   ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    const { appStore, selectionStore } = useStoresSimple()
+    const { appStore, selectableStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: ListItemComponent = null
@@ -60,7 +60,7 @@ export const ListItem = memo(
       if (appStore && appStore.isActive == false) {
         return undefined
       }
-      return props.isSelected || (selectionStore && selectionStore.activeIndex === index) || false
+      return props.isSelected || (selectableStore && selectableStore.isActiveIndex(index)) || false
     }, []) as any
 
     const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])

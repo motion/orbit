@@ -6,13 +6,16 @@ module.exports = function({ types }) {
       displayName = nameNodeId.name
     }
 
-    let blockLevelStmnt
+    let findStatement
+
     path.find(function(path) {
       if (path.parentPath.isBlock()) {
-        blockLevelStmnt = path
+        findStatement = path
         return true
       }
     })
+
+    let blockLevelStmnt = findStatement
 
     if (blockLevelStmnt) {
       // Put our `displayName` on the right side of trailing comments

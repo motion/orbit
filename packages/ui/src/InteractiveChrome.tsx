@@ -70,7 +70,6 @@ export const InteractiveChrome = ({ side, hovered, parent, ...rest }: Interactiv
           cursor: getResizeCursor({ [side]: true }),
           pointerEvents: (shouldCover ? 'all' : 'none') as any,
           opacity: shouldCover ? 1 : 0,
-          background: 'red',
         }}
       />
     </FullScreen>

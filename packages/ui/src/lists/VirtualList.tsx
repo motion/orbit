@@ -50,8 +50,8 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       <VirtualListItem
         key={key}
         ItemView={ItemView}
-        onSelect={onSelect}
-        onOpen={onOpen}
+        onClick={e => onSelect(index, e)}
+        onDoubleClick={e => onOpen(index, e)}
         disabled={!sortable}
         {...itemProps(props, index)}
         {...itemProps}

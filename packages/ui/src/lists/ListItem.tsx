@@ -23,7 +23,7 @@ import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
 
 export type ItemRenderText = (text: string) => JSX.Element
-export type HandleSelection = (index: number, eventType: 'click' | 'key', event?: any) => any
+export type HandleSelection = (index: number, event?: any) => any
 
 export type ListItemHide = {
   hideTitle?: boolean

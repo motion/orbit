@@ -92,9 +92,8 @@ export function List(rawProps: ListProps) {
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
-  const selectableStore = useSelectableStore(restProps)
+  const selectableStore = props.selectableStore || useSelectableStore(restProps)
   const visibility = useVisiblityContext()
-
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
     items: items || [],
@@ -106,7 +105,6 @@ export function List(rawProps: ListProps) {
     groupMinimum: props.groupMinimum,
   })
   const filteredGetItemPropsGet = useGet(filtered.getItemProps || nullFn)
-
   const getItems = useGet(filtered.results)
 
   useEffect(() => {
@@ -149,8 +147,12 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
+      console.log('selecting', index, selectableProps, visibility.visible)
       if (visibility.visible === false) {
         return
+      }
+      if (!selectableStore.rows) {
+        selectableStore.setRows(getItems())
       }
       const appProps = getAppProps(toListItemProps(getItems()[index]))
 

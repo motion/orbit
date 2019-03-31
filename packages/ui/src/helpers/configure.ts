@@ -11,6 +11,9 @@ type ConfigureOpts = {
 export let Config: ConfigureOpts = {
   StoreContext: createContext(null),
   getItemKey: (x, index) => {
+    if (!x) {
+      debugger
+    }
     const item = x.item || x
     return `${item.id || item.email || item.key || index}`
   },

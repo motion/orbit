@@ -1,5 +1,6 @@
 import { useReaction } from '@o/use-store'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
+import { Config } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
 import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
@@ -46,30 +47,32 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
   }, [items])
 
   useReaction(
-    () => selectableStore.active,
+    () => [...selectableStore.active],
     active => {
-      // ensure('activeIndex', typeof activeIndex === 'number' && activeIndex >= 0)
-      // ensure('has list', !!listRef.current)
-      // ensure('is active', selectableStore.isActive)
-      // ensure('used key', selectableStore.selectEvent === SelectEvent.key)
-      // listRef.current.scrollToIndex(activeIndex)
-      console.log('should scroll to', active)
-    },
-  )
+      if (active.length <= 1) {
+        // TODO this is hacky, we need:
+        //   1. make a better getitemKey without index
+        //   2. make a methond on selectableStore.getItemIndex()
+        //   2. onSelect/onSelectItem should take multiple
+        const key = active[0]
+        const index = items.findIndex(x => x && Config.getItemKey(x, -1) === key)
 
-  const onSelect: VirtualListProps<any>['onSelect'] = useCallback(
-    (index, eventType, event) => {
-      if (props.onSelect) {
-        return props.onSelect(index, eventType, event)
-      }
-      if (selectableStore) {
-        selectableStore.setRowActive(index, event)
-      }
-      if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, eventType, event)
+        // scroll to
+        if (listRef.current) {
+          listRef.current.scrollToIndex(index)
+        }
+
+        // callbacks
+        if (props.onSelect) {
+          props.onSelect(index, event)
+        } else {
+          if (selectableProps && selectableProps.onSelectItem) {
+            selectableProps.onSelectItem(index, event)
+          }
+        }
       }
     },
-    [selectableProps, props.onSelect],
+    [items],
   )
 
   const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
@@ -92,7 +95,6 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
       {...props}
       // overwrite
       getItemProps={getItemProps}
-      onSelect={onSelect}
     />
   )
 }

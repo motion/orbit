@@ -117,7 +117,9 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
 
   lastHeight = 23
   scrollToIndex = (index: number, additionalOffset: number = 0) => {
+    if (index === -1) return
     const pos = this.positions.get(index)
+    if (!pos) return
     const ref = this.getContainerRef()
     const dims = this.dimensions.get(this.props.keyMapper(index))
     const h = dims ? dims.height : this.lastHeight

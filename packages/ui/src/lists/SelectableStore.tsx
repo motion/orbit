@@ -86,7 +86,11 @@ export class SelectableStore {
   }
 
   setActiveIndex = (index: number) => {
-    this.setActive([this.getIndexKey(index)])
+    if (index === -1) {
+      this.setActive([])
+    } else {
+      this.setActive([this.getIndexKey(index)])
+    }
   }
 
   isActiveIndex = (index: number) => {
@@ -180,6 +184,7 @@ export class SelectableStore {
 
   private scrollToIndex(index: number) {
     if (!this.listRef) return
+    if (index === -1) return
     this.listRef.scrollToIndex(index)
   }
 

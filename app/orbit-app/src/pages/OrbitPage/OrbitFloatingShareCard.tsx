@@ -12,10 +12,10 @@ export function OrbitFloatingShareCard() {
   }
   return (
     <FloatingCard
-      width={180}
-      height={200}
-      top={window.innerHeight - 220}
-      left={window.innerWidth - 200}
+      defaultWidth={180}
+      defaultHeight={200}
+      defaultTop={window.innerHeight - 220}
+      defaultLeft={window.innerWidth - 200}
       title="Share"
     >
       <List items={currentSelection} />

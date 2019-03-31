@@ -8,6 +8,7 @@ import {
   Text,
   useRefGetter,
   useSelectableStore,
+  useVisiblityContext,
   View,
 } from '@o/ui'
 import { mergeDefined } from '@o/utils'
@@ -114,15 +115,16 @@ export function List(rawProps: ListProps) {
         }
         switch (shortcut) {
           case 'open':
-            const item = getItems()[selectableStore.active]
-            if (item && item.onOpen) {
-              console.log('TODO open')
-              // item.onOpen(selStore.activeIndex, null)
-            }
-            if (onOpen) {
-              console.log('TODO open')
-              // onOpen(selStore.activeIndex, null)
-            }
+            console.log('todo', selectableStore.active)
+            // const item = getItems()[]
+            // if (item && item.onOpen) {
+            //   console.log('TODO open')
+            //   // item.onOpen(selStore.activeIndex, null)
+            // }
+            // if (onOpen) {
+            //   console.log('TODO open')
+            //   // onOpen(selStore.activeIndex, null)
+            // }
             break
           case 'up':
           case 'down':

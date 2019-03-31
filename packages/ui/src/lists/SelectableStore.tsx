@@ -7,6 +7,8 @@ import { DynamicListControlled } from './DynamicList'
 export enum Direction {
   up = 'up',
   down = 'down',
+  right = 'right',
+  left = 'left',
 }
 
 export type SelectableProps = {

@@ -1,5 +1,4 @@
-import { gloss, SimpleText } from '@o/gloss'
-import { SimpleTextProps } from '@o/gloss/_/blocks/SimpleText'
+import { gloss, SimpleText, SimpleTextProps } from '@o/gloss'
 import { HTMLProps } from 'react'
 
 export const Link = gloss<HTMLProps<HTMLLinkElement> & SimpleTextProps & { tagName?: string }>(

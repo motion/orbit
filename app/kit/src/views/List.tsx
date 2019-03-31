@@ -158,7 +158,7 @@ export function List(rawProps: ListProps) {
       if (onSelect) {
         onSelect(index, appProps, eventType)
       }
-      selectableStore.setIndex(index, eventType)
+      selectableStore.setActiveIndex(index)
       if (selectableProps && selectableProps.onSelectItem) {
         selectableProps.onSelectItem(index, appProps, eventType)
       }

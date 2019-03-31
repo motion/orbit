@@ -17,7 +17,6 @@ export enum Direction {
 export type SelectableProps = {
   onSelectIndices?: (keys: TableHighlightedRows) => void
   alwaysSelected?: boolean
-  disableSelect?: boolean
   selectable?: 'multi' | boolean
 }
 
@@ -27,10 +26,7 @@ type Modifiers = {
 }
 
 export function useSelectableStore(props: SelectableProps) {
-  return useStore(
-    SelectableStore,
-    pick(props, 'onSelectIndices', 'alwaysSelected', 'disableSelect', 'selectable'),
-  )
+  return useStore(SelectableStore, pick(props, 'onSelectIndices', 'alwaysSelected', 'selectable'))
 }
 
 export class SelectableStore {
@@ -49,7 +45,6 @@ export class SelectableStore {
   callbackOnSelectProp = react(
     () => always(this.active),
     () => {
-      console.log('reacting to new active')
       ensure('selectIndices', !!this.props.onSelectIndices)
       this.props.onSelectIndices([...this.active])
     },
@@ -80,7 +75,7 @@ export class SelectableStore {
       active.clear()
     }
     active.add(this.getIndexKey(newIndex))
-    if (!this.props.disableSelect) {
+    if (!!this.props.selectable) {
       this.setActive([...active])
     }
     return newIndex
@@ -101,7 +96,7 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = key(row, index)
-    if (e.button !== 0 || this.props.disableSelect) {
+    if (e.button !== 0 || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
     }
@@ -140,27 +135,32 @@ export class SelectableStore {
   onHoverRow(index: number) {
     const row = this.rows[index]
     const rowKey = key(row, index)
-    if (this.props.disableSelect || this.props.selectable !== 'multi') {
-      return
+    if (!this.props.selectable) {
+      return false
     }
+    const direction = this.lastEnter > index ? Direction.up : Direction.down
+    this.lastEnter = index
     const { dragStartIndex } = this
-    if (typeof dragStartIndex === 'number') {
-      const startKey = this.getIndexKey(dragStartIndex)
-      this.setActive(this.selectInRange(startKey, rowKey))
-      const direction = this.lastEnter > index ? Direction.up : Direction.down
-      this.lastEnter = index
-      this.scrollToIndex(index)
-      return direction
+    const isMouseDown = typeof dragStartIndex === 'number'
+    if (isMouseDown) {
+      if (this.props.selectable === 'multi') {
+        const startKey = this.getIndexKey(dragStartIndex)
+        this.setActive(this.selectInRange(startKey, rowKey))
+        this.scrollToIndex(index)
+        return direction
+      } else {
+        this.setActive([rowKey])
+        return direction
+      }
     }
-    return false
   }
 
   onKeyDown = (e: KeyboardEvent) => {
-    if (this.active.size === 0) {
+    if (this.active.size === 0 || !this.props.selectable) {
       return
     }
     const direction = e.keyCode === 38 ? Direction.up : e.keyCode === 40 ? Direction.down : null
-    if (direction && !this.props.disableSelect) {
+    if (direction) {
       const newIndex = this.move(direction, { shift: e.shiftKey })
       this.scrollToIndex(newIndex)
     }

@@ -4,7 +4,7 @@ import { FloatingChrome } from './helpers/FloatingChrome'
 import { isRightClick } from './helpers/isRightClick'
 import { useScreenPosition } from './hooks/useScreenPosition'
 import { useThrottle } from './hooks/useThrottle'
-import { horizontal, ResizableSides, vertical } from './Interactive'
+import { getResizeCursor, ResizableSides } from './Interactive'
 import { Omit } from './types'
 import { ViewProps } from './View/View'
 
@@ -24,9 +24,9 @@ export const InteractiveChrome = ({ side, hovered, parent, ...rest }: Interactiv
   const [intHovered, setIntHovered] = useState(false)
   const throttle = useThrottle()
   const onChange = useCallback(
-    throttle(({ visible }) => {
+    throttle(next => {
       setMeasureKey(Math.random())
-      setVisible(visible)
+      setVisible(next.visible)
     }, 32),
     [],
   )
@@ -40,7 +40,7 @@ export const InteractiveChrome = ({ side, hovered, parent, ...rest }: Interactiv
   const shouldCover = true || intHovered || (visible && hovered)
 
   return (
-    <FullScreen pointerEvents="none" ref={parentRef}>
+    <FullScreen className="interactive-chrome" pointerEvents="none" ref={parentRef}>
       <InteractiveMeasure
         ref={chromeRef}
         onLeft={side === 'left'}
@@ -67,21 +67,35 @@ export const InteractiveChrome = ({ side, hovered, parent, ...rest }: Interactiv
           rest.onMouseDown && rest.onMouseDown(e)
         }}
         style={{
-          cursor: side === 'left' || side === 'right' ? 'ew-resize' : 'nw-resize',
+          cursor: getResizeCursor({ [side]: true }),
           pointerEvents: (shouldCover ? 'all' : 'none') as any,
           opacity: shouldCover ? 1 : 0,
+          background: 'red',
         }}
       />
     </FullScreen>
   )
 }
 
+const SIZE = 5
 const OFFSET = 0 // SIZE / 2
+
+const vertical = {
+  top: SIZE * 2,
+  bottom: SIZE * 2,
+  width: SIZE,
+}
+
+const horizontal = {
+  left: SIZE * 2,
+  right: SIZE * 2,
+  height: SIZE,
+}
 
 const InteractiveMeasure = gloss({
   position: 'absolute',
   pointerEvents: 'none',
-  background: 'green',
+  zIndex: 100000000000000000,
   onLeft: {
     ...vertical,
     left: -OFFSET,

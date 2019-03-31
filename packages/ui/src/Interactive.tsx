@@ -8,6 +8,7 @@
 import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import { on } from '@o/utils'
+import invariant from 'invariant'
 import React, { createContext, createRef } from 'react'
 import { Rect } from './helpers/geometry'
 import { isRightClick } from './helpers/isRightClick'
@@ -18,7 +19,7 @@ import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
-const invariant = require('invariant')
+// TODO make prop
 const SIZE = 5
 
 const InteractiveContext = createContext({
@@ -85,7 +86,7 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
   ) => void
   resizing?: boolean
   resizable?: boolean | ResizableSides
-  style?: Object
+  style?: Record<string, any>
   className?: string
   children?: any
 }
@@ -397,9 +398,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     onResize(fwidth, fheight, width, height, this.state.resizingSides)
   }
 
-  move(top: number, left: number, event: MouseEvent) {
-    top = Math.max(this.props.minTop, top)
-    left = Math.max(this.props.minLeft, left)
+  move(newTop: number, newLeft: number, event: MouseEvent) {
+    const top = Math.max(this.props.minTop, newTop)
+    const left = Math.max(this.props.minLeft, newLeft)
     if (top === this.props.top && left === this.props.left) {
       // noop
       return
@@ -553,47 +554,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!canResize) {
       return
     }
-    const { bottom, left, right, top } = resizing
-    let newCursor
-    const movingHorizontal = left || right
-    const movingVertical = top || left
-    // left
-    if (left) {
-      newCursor = 'ew-resize'
-    }
-    // right
-    if (right) {
-      newCursor = 'ew-resize'
-    }
+    let newCursor = getResizeCursor(resizing)
+    const movingHorizontal = resizing.left || resizing.right
+    const movingVertical = resizing.top || resizing.left
+
     // if resizing vertically and one side can't be resized then use different cursor
     if (movingHorizontal && (canResize.left !== true || canResize.right !== true)) {
       newCursor = 'col-resize'
     }
-    // top
-    if (top) {
-      newCursor = 'ns-resize'
-      // top left
-      if (left) {
-        newCursor = 'nwse-resize'
-      }
-      // top right
-      if (right) {
-        newCursor = 'nesw-resize'
-      }
-    }
-    // bottom
-    if (bottom) {
-      newCursor = 'ns-resize'
-      // bottom left
-      if (left) {
-        newCursor = 'nesw-resize'
-      }
-      // bottom right
-      if (right) {
-        newCursor = 'nwse-resize'
-      }
-    }
-    // if resizing horziontally and one side can't be resized then use different cursor
+    // if resizing horizontally and one side can't be resized then use different cursor
     if (
       movingVertical &&
       !movingHorizontal &&
@@ -601,16 +570,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     ) {
       newCursor = 'row-resize'
     }
-    const resizingSides = {
-      bottom,
-      left,
-      right,
-      top,
-    }
     const next = {
       couldResize: !!newCursor,
       cursor: newCursor,
-      resizingSides,
+      resizingSides: resizing,
     }
     if (!isEqual(next, this.state)) {
       const { onCanResize } = this.props
@@ -709,14 +672,40 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 }
 
-export const vertical = {
-  top: 0,
-  bottom: 0,
-  width: SIZE,
-}
-
-export const horizontal = {
-  left: 0,
-  right: 0,
-  height: SIZE,
+export function getResizeCursor(sides: ResizableSides) {
+  const { bottom, left, right, top } = sides
+  let newCursor = 'default'
+  // left
+  if (left) {
+    newCursor = 'ew-resize'
+  }
+  // right
+  if (right) {
+    newCursor = 'ew-resize'
+  }
+  // top
+  if (top) {
+    newCursor = 'ns-resize'
+    // top left
+    if (left) {
+      newCursor = 'nwse-resize'
+    }
+    // top right
+    if (right) {
+      newCursor = 'nesw-resize'
+    }
+  }
+  // bottom
+  if (bottom) {
+    newCursor = 'ns-resize'
+    // bottom left
+    if (left) {
+      newCursor = 'nesw-resize'
+    }
+    // bottom right
+    if (right) {
+      newCursor = 'nwse-resize'
+    }
+  }
+  return newCursor
 }

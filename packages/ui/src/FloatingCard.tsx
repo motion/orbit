@@ -41,7 +41,7 @@ export function FloatingCard({
       defaultWidth={defaultWidth}
       defaultHeight={defaultHeight}
     >
-      <Card elevation={2} flex={1} {...cardProps}>
+      <Card elevation={2} flex={1} margin={5} {...cardProps}>
         lorem
       </Card>
     </FloatingView>

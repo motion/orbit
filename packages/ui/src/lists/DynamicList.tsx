@@ -17,12 +17,7 @@ export type DynamicListProps = {
   maxHeight?: number
   height?: number | 'content-height'
   width?: number | string
-  children: (
-    params: {
-      index: number
-      style: Object
-    },
-  ) => any
+  children: (params: { index: number; style: Record<string, any> }) => any
   itemCount: number
   itemData: any
   keyMapper?: (index: number) => string
@@ -34,14 +29,12 @@ export type DynamicListProps = {
     width: number | string
     height: number
   }
-  onScroll?: (
-    props: {
-      scrollDirection: 'forward' | 'backward'
-      scrollHeight: number
-      scrollTop: number
-      clientHeight: number
-    },
-  ) => void
+  onScroll?: (props: {
+    scrollDirection: 'forward' | 'backward'
+    scrollHeight: number
+    scrollTop: number
+    clientHeight: number
+  }) => void
   sideScrollable?: boolean
 }
 
@@ -67,7 +60,7 @@ type DynamicListState = {
   startIndex: number
   endIndex: number
   containerStyle: any
-  innerStyle: Object
+  innerStyle: Record<string, any>
   scrollHeight: number
   scrollTop: number
   height: number
@@ -98,7 +91,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     number,
     {
       top: number
-      style: Object
+      style: Record<string, any>
     }
   > = new Map()
   dimensions: Map<
@@ -395,7 +388,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
       this.positions.set(i, {
         top,
         style: {
-          width: dim.width,
+          // width: dim.width,
           height: dim.height,
         },
       })
@@ -429,7 +422,7 @@ export class DynamicListControlled extends Component<DynamicListProps, DynamicLi
     }
 
     // add visible rows
-    const children: Object[] = []
+    const children: Record<string, any>[] = []
     for (let i = this.state.startIndex; i <= this.state.endIndex; i++) {
       const pos = this.positions.get(i)
       if (pos == null) {

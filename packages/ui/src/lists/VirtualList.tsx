@@ -16,7 +16,7 @@ export type VirtualListProps<A> = SortableContainerProps &
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
     items: A[]
-    getItemProps?: (item: A, index: number, items: A[]) => Object | null | false
+    getItemProps?: (item: A, index: number, items: A[]) => Record<string, any> | null | false
   }
 
 const SortableList = SortableContainer(DynamicList, { withRef: true })
@@ -37,9 +37,10 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
     >
       {({ index, style }) => {
         const item = items[index]
+        const key = Config.getItemKey(item, index)
         return (
           <VirtualListItem
-            key={Config.getItemKey(item, index)}
+            key={key}
             ItemView={ItemView}
             onSelect={onSelect}
             onOpen={onOpen}

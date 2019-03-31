@@ -14,9 +14,9 @@ module.exports = {
   },
   extends: [
     // 'eslint:recommended',
+    // 'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended',
   ],
   plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   rules: {
@@ -27,10 +27,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { varsIgnorePattern: '_[a-zA-Z0-9]+', ignoreRestSiblings: true },
-    ],
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_[a-zA-Z0-9+]' }],
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'linebreak-style': ['error', 'unix'],

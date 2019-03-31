@@ -105,7 +105,6 @@ type InteractiveState = {
 const InteractiveContainer = gloss(View, {
   position: 'relative',
   willChange: 'transform, height, width, z-index',
-  pointerEvents: 'none',
 })
 
 // controlled

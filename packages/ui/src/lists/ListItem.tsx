@@ -9,7 +9,7 @@ import {
   View,
   ViewProps,
 } from '@o/gloss'
-import { useStore } from '@o/use-store'
+import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
 import { BorderBottom } from '../Border'
@@ -21,7 +21,6 @@ import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
-import { ListItemStore } from './ListItemStore'
 
 export type ItemRenderText = ((text: string) => JSX.Element)
 export type HandleSelection = ((index: number, eventType: 'click' | 'key', event?: any) => any)
@@ -97,33 +96,7 @@ export type ListItemProps = ViewProps &
     group?: string
   }
 
-function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
-  let iconSize = (iconProps && iconProps.size) || (iconBefore ? (small ? 20 : 28) : small ? 12 : 14)
-  const iconPropsFinal = {
-    size: iconSize,
-    ...iconProps,
-  }
-  if (!iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${small ? 4 : 3}px)` }
-  }
-  let element = icon
-  if (React.isValidElement(icon)) {
-    if (icon.type['acceptsIconProps']) {
-      element = React.cloneElement(icon, iconPropsFinal)
-    }
-  } else {
-    element = <Icon name={icon} {...iconPropsFinal} />
-  }
-  return (
-    // use a view to ensure consistent width
-    // and add the space
-    <View width={iconSize + (small ? 8 : 10)}>{element}</View>
-  )
-}
-
 export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) {
-  const store = useStore(ListItemStore, props)
-  const { isSelected } = store
   const {
     date,
     location,
@@ -158,6 +131,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     height,
     ...restProps
   } = props
+  const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
   const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!date && !props.hideDate
@@ -204,7 +178,7 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
         fontWeight={400}
         fontSize={13}
         alpha={subTextOpacity}
-        onClick={store.handleClickLocation}
+        onClick={onClickLocation || undefined}
         ellipse
       >
         {`${location}`}
@@ -226,11 +200,11 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
             </Separator>
           </Theme>
         )}
-        <ListItemContain isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
+        <ListItemContain isExpanded={isExpanded} {...restProps}>
           <ListItemContent
             isSelected={isSelected}
             borderRadius={borderRadius}
-            onClick={!hasMouseDownEvent ? store.handleClick : onClick}
+            onClick={(!hasMouseDownEvent && onClick) || undefined}
             disableShadow={disableShadow}
             padding={padding || defaultPadding}
             {...cardProps}
@@ -438,3 +412,39 @@ const ListItemMainContent = gloss({
     alignItems: 'center',
   },
 })
+
+function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
+  let iconSize = (iconProps && iconProps.size) || (iconBefore ? (small ? 20 : 28) : small ? 12 : 14)
+  const iconPropsFinal = {
+    size: iconSize,
+    ...iconProps,
+  }
+  if (!iconBefore) {
+    iconPropsFinal['style'] = { transform: `translateY(${small ? 4 : 3}px)` }
+  }
+  let element = icon
+  if (React.isValidElement(icon)) {
+    if (icon.type['acceptsIconProps']) {
+      element = React.cloneElement(icon, iconPropsFinal)
+    }
+  } else {
+    element = <Icon name={icon} {...iconPropsFinal} />
+  }
+  return (
+    // use a view to ensure consistent width
+    // and add the space
+    <View width={iconSize + (small ? 8 : 10)}>{element}</View>
+  )
+}
+
+export function useIsSelected(props: Pick<ListItemProps, 'isSelected' | 'index'>) {
+  return useReaction(
+    () => {
+      if (typeof props.isSelected === 'function') {
+        return props.isSelected(props.index)
+      }
+      return !!props.isSelected
+    },
+    [props.isSelected],
+  )
+}

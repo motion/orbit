@@ -7,7 +7,7 @@
 
 import { isEqual } from '@o/fast-compare'
 import { Contents, gloss } from '@o/gloss'
-import React, { Component, forwardRef, memo, RefObject, useRef } from 'react'
+import React, { forwardRef, memo, PureComponent, RefObject, useRef } from 'react'
 import { useOnMount } from '../hooks/useOnMount'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 
@@ -67,7 +67,7 @@ type DynamicListState = {
   shouldMeasure: boolean
 }
 
-export class DynamicListControlled extends Component<DynamicListProps, DynamicListState> {
+export class DynamicListControlled extends PureComponent<DynamicListProps, DynamicListState> {
   static defaultProps = {
     keyMapper: (i: any) => i,
   }

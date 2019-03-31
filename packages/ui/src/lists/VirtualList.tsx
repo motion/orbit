@@ -1,7 +1,9 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
-import React, { createContext, RefObject, useContext } from 'react'
+import { omit } from 'lodash'
+import React, { createContext, RefObject, useCallback, useContext } from 'react'
 import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
+import { useGet } from '../hooks/useGet'
 import { GenericComponent, Omit } from '../types'
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
@@ -24,37 +26,54 @@ const SortableList = SortableContainer(DynamicList, { withRef: true })
 export function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(defaultProps, rawProps)
-  const { ItemView, onSelect, onOpen, sortable, getItemProps, items, ...dynamicListProps } = props
+  const getProps = useGet(props)
+  const dynamicListProps = omit(
+    props,
+    'ItemView',
+    'onSelect',
+    'onOpen',
+    'sortable',
+    'getItemProps',
+    'items',
+  )
+
+  const keyMapper = useCallback(index => {
+    const { items } = getProps()
+    return Config.getItemKey(items[index], index)
+  }, [])
+
+  const getRow = useCallback(({ index, style }) => {
+    const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
+    const item = items[index]
+    const key = Config.getItemKey(item, index)
+    return (
+      <VirtualListItem
+        key={key}
+        ItemView={ItemView}
+        onSelect={onSelect}
+        onOpen={onOpen}
+        disabled={!sortable}
+        {...itemProps(props, index)}
+        {...itemProps}
+        {...getItemProps && getItemProps(item, index, items)}
+        {...item}
+        index={index}
+        realIndex={index}
+        {...style}
+      />
+    )
+  }, [])
 
   return (
     <SortableList
-      itemCount={items.length}
-      itemData={items}
+      itemCount={props.items.length}
+      itemData={props.items}
       shouldCancelStart={isRightClick}
-      keyMapper={index => Config.getItemKey(items[index], index)}
+      keyMapper={keyMapper}
       lockAxis="y"
       {...dynamicListProps}
     >
-      {({ index, style }) => {
-        const item = items[index]
-        const key = Config.getItemKey(item, index)
-        return (
-          <VirtualListItem
-            key={key}
-            ItemView={ItemView}
-            onSelect={onSelect}
-            onOpen={onOpen}
-            disabled={!sortable}
-            {...itemProps(props, index)}
-            {...itemProps}
-            {...getItemProps && getItemProps(item, index, items)}
-            {...item}
-            index={index}
-            realIndex={index}
-            {...style}
-          />
-        )
-      }}
+      {getRow}
     </SortableList>
   )
 }

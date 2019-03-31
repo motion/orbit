@@ -103,11 +103,6 @@ type InteractiveState = {
   resizingInitialCursor: CursorState | void
 }
 
-const InteractiveContainer = gloss(View, {
-  position: 'relative',
-  willChange: 'transform, height, width, z-index',
-})
-
 // controlled
 export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
   static contextType = InteractiveContext
@@ -649,7 +644,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
           className={this.props.className}
           hidden={this.props.hidden}
           ref={this.ref}
-          style={style}
+          {...style}
           {...listenerProps}
           {...props}
         >
@@ -671,6 +666,11 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     )
   }
 }
+
+const InteractiveContainer = gloss(View, {
+  position: 'relative',
+  willChange: 'transform, height, width, z-index',
+})
 
 export function getResizeCursor(sides: ResizableSides) {
   const { bottom, left, right, top } = sides

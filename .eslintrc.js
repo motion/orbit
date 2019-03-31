@@ -1,12 +1,23 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
   env: {
     browser: true,
     node: true,
     'jest/globals': true,
   },
-  extends: ['eslint:recommended', 'prettier', 'prettier/react'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+  ],
   plugins: ['jest', 'react', 'prettier', 'react-hooks'],
-  parser: 'typescript-eslint-parser',
   rules: {
     indent: 'off',
     'linebreak-style': ['error', 'unix'],
@@ -22,10 +33,11 @@ module.exports = {
     'no-case-declarations': 'off',
     'no-debugger': 'off',
     'no-shadow': 'error',
-
-    // broke in typescript-eslint-parser
-    // broken for polymorphic types
-    'no-dupe-class-members': 'off',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
   globals: {
     require: true,

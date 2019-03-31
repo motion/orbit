@@ -2,6 +2,12 @@ NEXT
 
 ---
 
+- Documentation / Automatic generation / UI kit documentation
+
+TODO
+
+
+
 - debug why right click on an app Tab and hit "Remove" broke
 - debug why sorting apps/app tabs broke
 

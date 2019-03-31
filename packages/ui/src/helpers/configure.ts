@@ -5,10 +5,10 @@ let hasSet = false
 type ConfigureOpts = {
   useIcon?: any
   StoreContext?: Context<any>
-  getItemKey?: (item: any, index: number) => number | string
+  getItemKey?: (item: any, index: number) => string
 }
 
-export let configure: ConfigureOpts = {
+export let Config: ConfigureOpts = {
   StoreContext: createContext(null),
   getItemKey: (x, index) => {
     const item = x.item || x
@@ -19,5 +19,5 @@ export let configure: ConfigureOpts = {
 export function configureUI(opts: ConfigureOpts) {
   if (hasSet) throw new Error('Only configure once.')
   hasSet = true
-  Object.assign(configure, opts)
+  Object.assign(Config, opts)
 }

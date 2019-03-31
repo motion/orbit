@@ -32,7 +32,7 @@ export function ProvideSelectableHandlers({
   )
 }
 
-export function SelectableList({ items, getItemProps, ...props }: SelectableListProps) {
+export function SelectableList({ items, ...props }: SelectableListProps) {
   const selectableStore = props.selectableStore || useSelectableStore(props)
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
@@ -71,14 +71,24 @@ export function SelectableList({ items, getItemProps, ...props }: SelectableList
     [selectableProps, props.onSelect],
   )
 
+  const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
+    (...args) => {
+      return {
+        ...(props.getItemProps && props.getItemProps(...args)),
+        selectableStore,
+      }
+    },
+    [props.getItemProps],
+  )
+
   return (
     <VirtualList
       items={items}
       listRef={listRef}
       onOpen={selectableProps && selectableProps.onSelectItem}
-      getItemProps={getItemProps}
       {...props}
-      // overwrite prop
+      // overwrite
+      getItemProps={getItemProps}
       onSelect={onSelect}
     />
   )

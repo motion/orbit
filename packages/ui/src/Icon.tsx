@@ -2,7 +2,7 @@ import { gloss, View, ViewProps } from '@o/gloss'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'
-import { configure } from './helpers/configure'
+import { Config } from './helpers/configure'
 import { iconNames } from './iconNames'
 
 export type IconProps = ViewProps & {
@@ -50,7 +50,7 @@ const findMatch = (name: string) => {
 export function Icon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = configure.useIcon || PlainIcon
+  const ResolvedIcon = Config.useIcon || PlainIcon
   return <ResolvedIcon {...props} />
 }
 

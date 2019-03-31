@@ -7,10 +7,6 @@ class VisibilityStore {
   get visible() {
     return this.props.visible
   }
-
-  get() {
-    return this.visible
-  }
 }
 
 const { Context, Provider, useStore: useVisiblityStore } = createStoreContext(VisibilityStore)
@@ -21,7 +17,7 @@ export function Visibility({ visible, children }: { visible: boolean; children: 
 }
 
 export function useVisiblityContext() {
-  return useContext(Context)
+  return useContext(Context) || { visible: true }
 }
 
 export function useVisiblity() {

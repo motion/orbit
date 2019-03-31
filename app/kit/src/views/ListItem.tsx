@@ -1,6 +1,12 @@
 import { gloss } from '@o/gloss'
 import { Bit } from '@o/models'
-import { ListItem as UIListItem, ListItemProps, PersonRow, VirtualListItemProps } from '@o/ui'
+import {
+  ListItem as UIListItem,
+  ListItemProps,
+  PersonRow,
+  SelectableStore,
+  VirtualListItemProps,
+} from '@o/ui'
 import React, { memo, useCallback } from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
@@ -26,11 +32,12 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   hidePeople?: boolean
   itemViewProps?: OrbitItemViewProps
   appProps?: AppProps
+  selectableStore?: SelectableStore
 }
 
 export const ListItem = memo(
-  ({ item, itemViewProps, people, hidePeople, ...props }: OrbitListItemProps) => {
-    const { appStore, selectableStore } = useStoresSimple()
+  ({ item, itemViewProps, people, hidePeople, selectableStore, ...props }: OrbitListItemProps) => {
+    const { appStore } = useStoresSimple()
 
     // this is the view from sources, each bit type can have its own display
     let ItemView: ListItemComponent = null
@@ -60,8 +67,14 @@ export const ListItem = memo(
       if (appStore && appStore.isActive == false) {
         return undefined
       }
-      return props.isSelected || (selectableStore && selectableStore.isActiveIndex(index)) || false
-    }, []) as any
+      if (props.isSelected) {
+        return props.isSelected
+      }
+      if (selectableStore) {
+        return selectableStore.isActiveIndex(index)
+      }
+      return false
+    }, [])
 
     const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
 

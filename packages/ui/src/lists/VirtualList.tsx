@@ -1,5 +1,6 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import React, { createContext, RefObject, useContext } from 'react'
+import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { GenericComponent, Omit } from '../types'
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
@@ -15,11 +16,7 @@ export type VirtualListProps<A> = SortableContainerProps &
     sortable?: boolean
     listRef?: RefObject<DynamicListControlled>
     items: A[]
-    getItemProps?: (
-      item: A,
-      index: number,
-      items: A[],
-    ) => (Partial<VirtualListItemProps<A>> | null) | null | false
+    getItemProps?: (item: A, index: number, items: A[]) => Object | null | false
   }
 
 const SortableList = SortableContainer(DynamicList, { withRef: true })
@@ -34,7 +31,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       itemCount={items.length}
       itemData={items}
       shouldCancelStart={isRightClick}
-      keyMapper={index => getItemKey(items[index], index)}
+      keyMapper={index => Config.getItemKey(items[index], index)}
       lockAxis="y"
       {...dynamicListProps}
     >
@@ -42,7 +39,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         const item = items[index]
         return (
           <VirtualListItem
-            key={getItemKey(item, index)}
+            key={Config.getItemKey(item, index)}
             ItemView={ItemView}
             onSelect={onSelect}
             onOpen={onOpen}
@@ -59,10 +56,6 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       }}
     </SortableList>
   )
-}
-
-const getItemKey = (item: any, index: number) => {
-  return (item && (item.id || item.key || (item.item && item.item.id))) || index
 }
 
 export const VirtualListDefaultProps = createContext<Partial<VirtualListProps<any>>>({})

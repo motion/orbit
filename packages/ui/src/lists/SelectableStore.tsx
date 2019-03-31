@@ -1,8 +1,11 @@
 import { ensure, react, useStore } from '@o/use-store'
 import { pick } from 'lodash'
+import { Config } from '../helpers/configure'
 import { TableHighlightedRows } from '../tables/types'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
+
+const key = (item: any, index: number) => Config.getItemKey(item, index)
 
 export enum Direction {
   up = 'up',
@@ -50,9 +53,13 @@ export class SelectableStore {
       ensure('alwaysSelected', alwaysSelected)
       ensure('noSelection', noSelection)
       ensure('hasRows', hasRows)
-      this.active = new Set([this.rows[0].key])
+      this.active = new Set([this.getIndexKey(0)])
     },
   )
+
+  getIndexKey(index) {
+    return key(this.rows[index], index)
+  }
 
   move(direction: Direction, modifiers: Modifiers) {
     const { rows, active } = this
@@ -60,7 +67,7 @@ export class SelectableStore {
       return
     }
     const lastItemKey = Array.from(active).pop()
-    const lastItemIndex = rows.findIndex(row => row.key === lastItemKey)
+    const lastItemIndex = rows.findIndex((row, i) => key(row, i) === lastItemKey)
     const newIndex = Math.min(
       rows.length - 1,
       Math.max(0, direction === Direction.up ? lastItemIndex - 1 : lastItemIndex + 1),
@@ -68,7 +75,7 @@ export class SelectableStore {
     if (modifiers.shift === false) {
       active.clear()
     }
-    active.add(rows[newIndex].key)
+    active.add(this.getIndexKey(newIndex))
     if (!this.props.disableSelect) {
       this.active = active
     }
@@ -80,14 +87,15 @@ export class SelectableStore {
   }
 
   setActiveIndex = (index: number) => {
-    console.log('todo', index)
+    this.active = new Set([this.getIndexKey(index)])
   }
 
   isActiveIndex = (index: number) => {
-    console.log('todo', index)
+    return this.active.has(this.getIndexKey(index))
   }
 
   setRowActive(row: GenericDataRow, index: number, e?: React.MouseEvent) {
+    const rowKey = key(row, index)
     if (e.button !== 0 || this.props.disableSelect) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
@@ -103,33 +111,34 @@ export class SelectableStore {
 
     if (modifiers.option && this.props.selectable === 'multi') {
       // option select
-      if (active.has(row.key)) {
+      if (active.has(rowKey)) {
         // remove
-        active.delete(row.key)
+        active.delete(rowKey)
         active = new Set([...active])
       } else {
         // add
-        active = new Set([...active, row.key])
+        active = new Set([...active, rowKey])
       }
     } else if (modifiers.shift && this.props.selectable === 'multi') {
       // range select
       const lastItemKey = Array.from(this.active).pop()
-      active = new Set([...active, ...this.selectInRange(lastItemKey, row.key)])
+      active = new Set([...active, ...this.selectInRange(lastItemKey, rowKey)])
     } else {
       // single select
-      active = new Set([row.key])
+      active = new Set([rowKey])
     }
     this.active = active
   }
 
   onHoverRow(row: GenericDataRow, index: number) {
+    const rowKey = key(row, index)
     if (this.props.disableSelect || this.props.selectable !== 'multi') {
       return
     }
     const { dragStartIndex } = this
     if (typeof dragStartIndex === 'number') {
-      const startKey = this.rows[dragStartIndex].key
-      this.active = new Set(this.selectInRange(startKey, row.key))
+      const startKey = this.getIndexKey(dragStartIndex)
+      this.active = new Set(this.selectInRange(startKey, rowKey))
       const direction = this.lastEnter > index ? Direction.up : Direction.down
       this.lastEnter = index
       this.scrollToIndex(index)
@@ -155,7 +164,7 @@ export class SelectableStore {
     this.active = new Set()
   }
 
-  setRows(next: any[]) {
+  setRows(next: GenericDataRow[]) {
     this.rows = next
   }
 
@@ -170,10 +179,11 @@ export class SelectableStore {
     let startIndex = -1
     let endIndex = -1
     for (let i = 0; i < rows.length; i++) {
-      if (rows[i].key === fromKey) {
+      const rowKey = this.getIndexKey(i)
+      if (rowKey === fromKey) {
         startIndex = i
       }
-      if (rows[i].key === toKey) {
+      if (rowKey === toKey) {
         endIndex = i
       }
       if (endIndex > -1 && startIndex > -1) {
@@ -182,7 +192,7 @@ export class SelectableStore {
     }
     for (let i = Math.min(startIndex, endIndex); i <= Math.max(startIndex, endIndex); i++) {
       try {
-        selected.push(rows[i].key)
+        selected.push(this.getIndexKey(i))
       } catch (e) {}
     }
     return selected

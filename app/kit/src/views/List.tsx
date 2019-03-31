@@ -90,6 +90,7 @@ export function List(rawProps: ListProps) {
   const getItemPropsGet = useRefGetter(getItemProps || nullFn)
   const isActive = useIsAppActive()
   const selectableStore = useSelectableStore(restProps)
+  console.log('selectableStore, selectableStore', selectableStore)
   const visibility = useVisiblityContext()
 
   const filtered = useActiveQueryFilter({
@@ -115,7 +116,7 @@ export function List(rawProps: ListProps) {
         }
         switch (shortcut) {
           case 'open':
-            console.log('todo', selectableStore.active)
+            console.log('todo open', selectableStore.active)
             // const item = getItems()[]
             // if (item && item.onOpen) {
             //   console.log('TODO open')

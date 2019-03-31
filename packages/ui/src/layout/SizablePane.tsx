@@ -19,15 +19,12 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
   const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(400)
 
-  useEffect(
-    () => {
-      const totalFlex = flexes.reduce((a, b) => a + b, 0)
-      const flex = flexes[props.index]
-      const pct = flex / totalFlex
-      setSize(props.parentSize * pct)
-    },
-    [props.index, props.parentSize, total, flexes],
-  )
+  useEffect(() => {
+    const totalFlex = flexes.reduce((a, b) => a + b, 0)
+    const flex = flexes[props.index]
+    const pct = flex / totalFlex
+    setSize(props.parentSize * pct)
+  }, [props.index, props.parentSize, total, flexes])
 
   let element = null
   let sizeProps = null
@@ -59,6 +56,7 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
     const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
       <Interactive
+        scrollable={scrollable}
         overflow="hidden"
         resizable={resizableProp}
         onResize={x => setSize(x)}

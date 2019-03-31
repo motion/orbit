@@ -390,6 +390,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (maxHeight != null) {
       fheight = Math.min(maxHeight, fheight)
     }
+    if (isNaN(fwidth) || isNaN(fheight)) {
+      debugger
+    }
     onResize(fwidth, fheight, width, height, this.state.resizingSides)
   }
 

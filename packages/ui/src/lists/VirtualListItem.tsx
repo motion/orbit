@@ -18,7 +18,7 @@ export type VirtualListItemProps<Item> = ListItemProps & {
   index: number
 }
 
-export class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>> {
+export class VirtualListItemInner extends React.Component<VirtualListItemProps<any>> {
   shouldComponentUpdate = shouldComponentUpdate.bind(this)
 
   render() {

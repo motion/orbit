@@ -3,7 +3,7 @@ import { BarButtonSmall, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {
-  return null
+  console.warn('list', props)
   if (props.subType === 'folder') {
     return <ListsAppMainFolder {...props} />
   }
@@ -24,21 +24,18 @@ function ListsAppMainFolder(props: AppProps) {
   const selectedItem = treeList.userState.currentFolder[+props.subId]
   const [children, setChildren] = React.useState<OrbitListItemProps[]>([])
 
-  React.useEffect(
-    () => {
-      if (selectedItem && selectedItem.type === 'folder') {
-        Promise.all(
-          selectedItem.children.map(id => {
-            return { id }
-            // return loadListItem(list.data.items[id])
-          }),
-        ).then(items => {
-          setChildren(items)
-        })
-      }
-    },
-    [selectedItem && selectedItem.id],
-  )
+  React.useEffect(() => {
+    if (selectedItem && selectedItem.type === 'folder') {
+      Promise.all(
+        selectedItem.children.map(id => {
+          return { id }
+          // return loadListItem(list.data.items[id])
+        }),
+      ).then(items => {
+        setChildren(items)
+      })
+    }
+  }, [selectedItem && selectedItem.id])
 
   return (
     <>

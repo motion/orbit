@@ -77,6 +77,14 @@ export class SelectableStore {
     this.listRef = ref
   }
 
+  setActiveIndex = (index: number) => {
+    console.log('todo', index)
+  }
+
+  isActiveIndex = (index: number) => {
+    console.log('todo', index)
+  }
+
   setRowActive(row: GenericDataRow, index: number, e?: React.MouseEvent) {
     if (e.button !== 0 || this.props.disableSelect) {
       // set active only with primary mouse button, dont interfere w/context menus

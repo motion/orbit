@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useRef } from 'react'
-import { useRefGetter } from './useRefGetter'
+import { useGet } from './useGet'
 
 export function useIntersectionObserver(
   props: {
@@ -11,7 +11,7 @@ export function useIntersectionObserver(
   mountArgs?: any[],
 ) {
   const { ref, options, disable } = props
-  const onChange = useRefGetter(props.onChange)
+  const onChange = useGet(props.onChange)
   const dispose = useRef<any>(null)
 
   useEffect(

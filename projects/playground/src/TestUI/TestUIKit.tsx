@@ -2,6 +2,7 @@ import { List, Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
+  FloatingCard,
   Form,
   Layout,
   Loading,
@@ -18,6 +19,9 @@ import React, { Suspense, useState } from 'react'
 export function TestUIKit() {
   return (
     <Suspense fallback={<Loading />}>
+      <FloatingCard title="hi" defaultTop={200} defaultLeft={200}>
+        <Title>hello</Title>
+      </FloatingCard>
       <List
         selectable="multi"
         items={[

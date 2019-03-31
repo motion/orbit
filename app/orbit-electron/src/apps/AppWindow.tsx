@@ -5,7 +5,6 @@ import { Window } from '@o/reactron'
 import { App, Desktop, Electron } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { BrowserWindow } from 'electron'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { WEB_PREFERENCES } from '../constants'
 import { Mediator } from '../mediator'
@@ -103,7 +102,7 @@ class AppWindowStore {
   }
 }
 
-export default observer(function AppWindow(props: Props) {
+export default function AppWindow(props: Props) {
   const store = useStore(AppWindowStore, props)
   const { id, isPeek } = props
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
@@ -132,4 +131,4 @@ export default observer(function AppWindow(props: Props) {
       onClose={store.handleClose}
     />
   )
-})
+}

@@ -2,7 +2,6 @@ import { gloss } from '@o/gloss'
 import { Desktop } from '@o/stores'
 import * as UI from '@o/ui'
 import { react, useStore } from '@o/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import quadtree from 'simple-quadtree'
 import { wordKey } from '../../helpers'
@@ -123,7 +122,7 @@ class HighlightsStore {
   }
 }
 
-export default observer(function HighlightsPage() {
+export default function HighlightsPage() {
   const store = useStore(HighlightsStore)
   return (
     <Frame>
@@ -135,4 +134,4 @@ export default observer(function HighlightsPage() {
       ))}
     </Frame>
   )
-})
+}

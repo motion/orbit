@@ -6,6 +6,7 @@
     "start": "mcro-build --entry ./src/index --port 5001 --target web"
   },
   "dependencies": {
+    "@o/babel-preset-motion": "2.4.0",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
     "@babel/core": "7.2.0",
@@ -16,7 +17,6 @@
     "@o/use-store": "^2.4.0",
     "core-js": "2.6.5",
     "lodash": "^4.17.10",
-    "mobx-react-lite": "1.1.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-hot-loader": "4.7.2"

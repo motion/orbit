@@ -5,7 +5,15 @@ import { FloatingView, FloatingViewProps } from './FloatingView'
 type FloatingCardProps = CardProps &
   Pick<
     FloatingViewProps,
-    'defaultTop' | 'defaultLeft' | 'disableDrag' | 'defaultWidth' | 'defaultHeight'
+    | 'defaultTop'
+    | 'defaultLeft'
+    | 'disableDrag'
+    | 'defaultWidth'
+    | 'defaultHeight'
+    | 'top'
+    | 'left'
+    | 'width'
+    | 'height'
   >
 
 export function FloatingCard({
@@ -14,11 +22,19 @@ export function FloatingCard({
   disableDrag,
   defaultWidth,
   defaultHeight,
+  top,
+  left,
+  width,
+  height,
   ...cardProps
 }: FloatingCardProps) {
   return (
     <FloatingView
       resizable
+      top={top}
+      left={left}
+      width={width}
+      height={height}
       disableDrag={disableDrag}
       defaultTop={defaultTop}
       defaultLeft={defaultLeft}

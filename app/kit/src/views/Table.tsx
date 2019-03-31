@@ -7,8 +7,8 @@ import {
   Section,
   SectionProps,
   TitleRowProps,
+  useGet,
   useParentNodeSize,
-  useRefGetter,
   useSectionProps,
   View,
 } from '@o/ui'
@@ -54,7 +54,7 @@ export function Table(direct: TableProps) {
   const { height, ref } = useParentNodeSize()
   const rows = props.rows ? props.rows.map(normalizeRow) : null
   const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
-  const ogOnHighlightedIndices = useRefGetter(props.onSelectIndices)
+  const ogOnHighlightedIndices = useGet(props.onSelectIndices)
 
   const onSelectIndices = useCallback(
     keys => {

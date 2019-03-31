@@ -4,7 +4,6 @@ import * as UI from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import { on } from '@o/utils'
 import { debounce } from 'lodash'
-import { observer } from 'mobx-react-lite'
 import Resizable, { ResizeCallback } from 're-resizable'
 import * as React from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
@@ -236,7 +235,7 @@ const PeekFrameContainer = gloss(UI.View, {
   zIndex: 2,
 })
 
-export default observer(function AppFrame({ children }: { children: any }) {
+export default function AppFrame({ children }: { children: any }) {
   const { activeTheme } = React.useContext(UI.ThemeContext)
   const { appPageStore } = useStores()
   const appFrameStore = useStore(AppFrameStore)
@@ -292,4 +291,4 @@ export default observer(function AppFrame({ children }: { children: any }) {
       </PeekFrameContainer>
     </Resizable>
   )
-})
+}

@@ -49,6 +49,7 @@ const ALL_RESIZABLE: ResizableSides = {
 }
 
 export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
+  disabled?: boolean
   disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean
   onMoveStart?: () => void
@@ -104,6 +105,7 @@ type InteractiveState = {
 const InteractiveContainer = gloss(View, {
   position: 'relative',
   willChange: 'transform, height, width, z-index',
+  pointerEvents: 'none',
 })
 
 // controlled
@@ -137,6 +139,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   nextEvent?: MouseEvent
 
   onMouseMove = (event: MouseEvent) => {
+    if (this.props.disabled) {
+      return
+    }
     if (this.state.moving) {
       this.calculateMove(event)
     } else if (this.state.resizing) {
@@ -632,6 +637,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       top,
       width,
       disableFloatingGrabbers,
+      disabled,
       ...props
     } = this.props
     const { resizingSides } = this.state
@@ -674,7 +680,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       onMouseMove: this.onLocalMouseMove,
       onMouseLeave: this.onMouseLeave,
     }
-    const useFloatingGrabbers = resizable && !disableFloatingGrabbers
+    const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
     return (
       <InteractiveContext.Provider value={{ ...this.context, nesting: this.context.nesting + 1 }}>
         <InteractiveContainer

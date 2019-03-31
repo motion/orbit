@@ -33,11 +33,11 @@ export const InteractiveChrome = ({ side, hovered, parent, ...rest }: Interactiv
 
   useScreenPosition({
     ref: parent || parentRef,
-    preventMeasure: true,
+    // preventMeasure: true,
     onChange,
   })
 
-  const shouldCover = intHovered || (visible && hovered)
+  const shouldCover = true || intHovered || (visible && hovered)
 
   return (
     <FullScreen pointerEvents="none" ref={parentRef}>
@@ -81,6 +81,7 @@ const OFFSET = 0 // SIZE / 2
 const InteractiveMeasure = gloss({
   position: 'absolute',
   pointerEvents: 'none',
+  background: 'green',
   onLeft: {
     ...vertical,
     left: -OFFSET,

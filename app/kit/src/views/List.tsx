@@ -6,7 +6,7 @@ import {
   SelectableListProps,
   SubTitle,
   Text,
-  useRefGetter,
+  useGet,
   useSelectableStore,
   useVisiblityContext,
   View,
@@ -87,7 +87,7 @@ export function List(rawProps: ListProps) {
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
   const { shortcutStore } = useStoresSimple()
   const selectableProps = useContext(SelectionContext)
-  const getItemPropsGet = useRefGetter(getItemProps || nullFn)
+  const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
   const selectableStore = useSelectableStore(restProps)
   console.log('selectableStore, selectableStore', selectableStore)
@@ -103,9 +103,9 @@ export function List(rawProps: ListProps) {
     groupByLetter: props.groupByLetter,
     groupMinimum: props.groupMinimum,
   })
-  const filteredGetItemPropsGet = useRefGetter(filtered.getItemProps || nullFn)
+  const filteredGetItemPropsGet = useGet(filtered.getItemProps || nullFn)
 
-  const getItems = useRefGetter(filtered.results)
+  const getItems = useGet(filtered.results)
 
   useEffect(
     () => {

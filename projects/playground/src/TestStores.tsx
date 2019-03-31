@@ -35,15 +35,12 @@ export function TestStores() {
   const ref = useRef<HTMLDivElement>()
 
   console.log('render with', ref)
-
   useScreenPosition({
     ref,
     onChange: pos => {
       console.log('pos', pos, 'ref', ref)
     },
   })
-
-  window.store = store
   return (
     <div style={{ height: 2000 }}>
       <h2>y: {store.y}</h2>

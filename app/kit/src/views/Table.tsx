@@ -10,6 +10,7 @@ import {
   useGet,
   useParentNodeSize,
   useSectionProps,
+  useSelectableStore,
   View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
@@ -21,7 +22,7 @@ export type TableColumns = { [key: string]: DataColumn | string }
 type PartialSectionProps = Pick<SectionProps, 'title' | 'subTitle' | 'bordered'>
 
 export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
-  Omit<SearchableTableProps, 'columns'> &
+  Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
   PartialSectionProps & {
     columns?: TableColumns
     searchable?: boolean
@@ -42,6 +43,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 }
 
 export function Table(tableProps: TableProps) {
+  const selectableStore = useSelectableStore(tableProps)
   const stores = useStoresSimple()
   const sectionProps: PartialSectionProps = useSectionProps(tableProps)
   const { flex, bordered, searchable, onSelect, title, subTitle, shareable, ...props } = {
@@ -55,15 +57,13 @@ export function Table(tableProps: TableProps) {
 
   const onSelectIndices = useCallback(
     keys => {
-      console.log('waht', shareable, tableProps, keys, props.rows)
       if (!props.rows) return
-      const selectedRows = keys.map(key => props.rows[rows.findIndex(x => x.key === key)])
+      const activeRows = selectableStore.getActiveRows()
       if (shareable) {
-        console.log('selected', keys, selectedRows)
-        stores.spaceStore.currentSelection = selectedRows.length ? selectedRows : null
+        stores.spaceStore.currentSelection = activeRows
       }
       if (onSelect) {
-        onSelect(selectedRows)
+        onSelect(activeRows)
       }
       if (ogOnHighlightedIndices()) {
         ogOnHighlightedIndices()(keys)
@@ -94,6 +94,7 @@ export function Table(tableProps: TableProps) {
           columns={columns}
           rows={rows}
           onSelectIndices={onSelectIndices}
+          selectableStore={selectableStore}
         />
       </View>
     </Section>

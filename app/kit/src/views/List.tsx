@@ -26,7 +26,10 @@ import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> &
+export type ListProps = Omit<
+  SelectableListProps,
+  'onSelect' | 'onOpen' | 'items' | 'onSelectIndices'
+> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     query?: string
@@ -88,7 +91,7 @@ export function List(rawProps: ListProps) {
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
-  const { shortcutStore } = useStoresSimple()
+  const { shortcutStore, spaceStore } = useStoresSimple()
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
@@ -147,9 +150,6 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      if (visibility.visible === false) {
-        return
-      }
       if (!selectableStore.rows) {
         selectableStore.setRows(getItems())
       }
@@ -182,6 +182,12 @@ export function List(rawProps: ListProps) {
     [onOpen, selectableProps],
   )
 
+  const onSelectIndices = useCallback(() => {
+    if (props.shareable) {
+      spaceStore.currentSelection = selectableStore.getActiveRows()
+    }
+  }, [])
+
   const hasItems = !!filtered.results.length
   const isInactive = !(typeof props.isActive === 'boolean' ? props.isActive : isActive)
 
@@ -194,6 +200,7 @@ export function List(rawProps: ListProps) {
           ItemView={ListItem}
           {...restProps}
           getItemProps={getItemPropsInner}
+          onSelectIndices={onSelectIndices}
           onSelect={onSelectInner}
           onOpen={onOpenInner}
           selectableStore={selectableStore}

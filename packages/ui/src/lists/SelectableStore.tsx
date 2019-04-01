@@ -139,6 +139,15 @@ export class SelectableStore {
     this.setActive(next)
   }
 
+  // TODO could be made a lot faster for large rows
+  getActiveRows() {
+    if (this.active.size === 0) {
+      return null
+    }
+    const activeRows = [...this.active].map(rowKey => this.rows.find(x => x.key === rowKey))
+    return activeRows.length ? activeRows : null
+  }
+
   onHoverRow(index: number) {
     const row = this.rows[index]
     const rowKey = key(row, index)

@@ -450,7 +450,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 }
 
 function ManagedTableNormalized(props: ManagedTableProps) {
-  const selectableStore = useSelectableStore(props)
+  const selectableStore = props.selectableStore || useSelectableStore(props)
   return (
     <ManagedTableInner
       {...props}

@@ -83,12 +83,12 @@ export const ListItem = memo(
         searchTerm={props.query}
         subtitleSpaceBetween={spaceBetween}
         {...itemProps}
-        isSelected={getIsSelected}
         {...props}
         icon={icon}
         date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
         location={normalized ? normalized.location : props.location}
         {...getItemProps && getItemProps(item)}
+        isSelected={getIsSelected}
       >
         {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
         {showPeople && (

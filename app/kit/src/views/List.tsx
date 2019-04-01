@@ -99,9 +99,9 @@ export function List(rawProps: ListProps) {
   useEffect(() => {
     if (!shortcutStore) return
     const selectableStore = selectableStoreRef.current
-    console.log('sel STORE', selectableStore)
     if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
+      console.log('down down', selectableStore)
       if (visibility.visible == false) {
         return
       }

@@ -67,6 +67,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         {...getItemProps && getItemProps(item, index, items)}
         onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
         onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
+        selectableStore={selectableStoreRef.current}
         {...item}
         index={index}
         realIndex={index}

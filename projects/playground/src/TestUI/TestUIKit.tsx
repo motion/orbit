@@ -40,12 +40,7 @@ export function TestUIKit() {
       <FloatingCard title="hi" defaultTop={200} defaultLeft={200}>
         <Title>hello</Title>
       </FloatingCard>
-      <List
-        selectable="multi"
-        onSelectIndices={console.log.bind(console)}
-        onSelect={i => (store.selected['x'] = items[i])}
-        items={items}
-      />
+      <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       <SubView store={store} />
 
       {/* <CustomApp1 /> */}

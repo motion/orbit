@@ -16,7 +16,7 @@
     "react-dom": "16.8.3",
     "react-hot-loader": "4.8.2",
     "react-media": "^1.8.0",
-    "react-spring": "8.0.5",
+    "react-spring": "8.0.18",
     "react-svg-inline": "^2.1.0",
     "remark": "9.0.0",
     "remark-react": "4.0.3",

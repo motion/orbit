@@ -345,7 +345,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 
   onMouseLeave = () => {
-    if (!this.state.resizing && !this.state.moving) {
+    if (!this.state.resizing && !this.state.moving && this.state.cursor) {
       this.setState({
         cursor: undefined,
       })

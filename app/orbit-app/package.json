@@ -78,7 +78,7 @@
     "react-date-range": "1.0.0-beta",
     "react-dom": "16.8.3",
     "react-hot-loader": "4.8.2",
-    "react-spring": "8.0.7",
+    "react-spring": "8.0.18",
     "react-svg-inline": "2.1.1",
     "reconnecting-websocket": "4.1.10",
     "simple-quadtree": "^0.1.3",

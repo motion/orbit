@@ -139,8 +139,7 @@ export function List(rawProps: ListProps) {
   }, [onOpen])
 
   const onSelectIndices = useCallback(() => {
-    console.log('wahts up', selectableStore.getActiveRows())
-    if (props.shareable) {
+    if (props.shareable && selectableStore) {
       spaceStore.currentSelection = selectableStore.getActiveRows()
     }
   }, [])

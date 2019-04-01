@@ -68,13 +68,16 @@ export function FloatingView(props: FloatingViewProps) {
     const at = curPos.current
     if (sides.right) {
       update({ width: w })
-    } else if (sides.bottom) {
+    }
+    if (sides.bottom) {
       update({ height: h })
-    } else if (sides.top) {
+    }
+    if (sides.top) {
       const diff = h - at.height
       const top = at.xy[1] - diff
       update({ xy: [at.xy[0], top], height: at.height + diff })
-    } else if (sides.left) {
+    }
+    if (sides.left) {
       const diff = w - at.width
       const left = at.xy[0] - diff
       update({ xy: [left, at.xy[1]], width: at.width + diff })

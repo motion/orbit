@@ -1,3 +1,4 @@
+import { mergeDefined } from '@o/utils'
 import React from 'react'
 import { Surface, SurfaceProps, useSurfaceProps } from './Surface'
 
@@ -14,6 +15,9 @@ export type SizedSurfaceProps = SurfaceProps & {
 }
 
 const num = (x: number | boolean) => (x === true ? 1 : +x)
+
+export const getSizedRadius = (size: number, sizeRadius: number | true) =>
+  Math.round(num(sizeRadius) * 8 * size)
 
 // always return even so things are always centered
 const getHeight = (size: number, sizeHeight: number | boolean) => {
@@ -60,8 +64,7 @@ export function SizedSurface(direct: SizedSurfaceProps) {
     pass.margin = Math.round(margin)
   }
   if (sizeRadius) {
-    const radius = num(sizeRadius) * 8 * size
-    pass.borderRadius = Math.round(radius)
+    pass.borderRadius = getSizedRadius(size, sizeRadius)
   }
   if (circular) {
     pass.width = height
@@ -75,5 +78,6 @@ export function SizedSurface(direct: SizedSurfaceProps) {
   if (sizeIcon) {
     pass.sizeIcon = num(sizeIcon)
   }
-  return <Surface {...pass} size={size} iconPad={iconPad} {...rest} />
+  const realProps = mergeDefined(pass, rest)
+  return <Surface iconPad={iconPad} {...realProps} size={size} />
 }

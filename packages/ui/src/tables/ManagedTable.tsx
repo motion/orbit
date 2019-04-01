@@ -13,7 +13,7 @@ import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicListControlled } from '../lists/DynamicList'
 import { SelectableDynamicList } from '../lists/SelectableDynamicList'
-import { SelectableProps, SelectableStore } from '../lists/SelectableStore'
+import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
@@ -26,8 +26,6 @@ const Electron = typeof electronRequire !== 'undefined' ? electronRequire('elect
 const clipboard = Electron.clipboard
 
 export type ManagedTableProps = SelectableProps & {
-  selectableStore?: SelectableStore
-
   overflow?: CSSPropertySet['overflow']
   flex?: CSSPropertySet['flex']
   margin?: CSSPropertySet['margin']
@@ -198,15 +196,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   listRef = createRef<DynamicListControlled>()
   scrollRef = createRef<HTMLDivElement>()
   dragStartIndex?: number = null
-  selectableStore: SelectableStore = null
+  selectableStoreRef = createRef<SelectableStore>()
 
-  setSelectableStore(store: SelectableStore) {
-    this.selectableStore = store
+  get selectableStore() {
+    return this.selectableStoreRef.current
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown)
-    this.updateListRef()
   }
 
   componentWillUnmount() {
@@ -214,7 +211,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   componentDidUpdate(prevProps: ManagedTableProps) {
-    this.updateListRef()
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
       console.warn('may need to recalc height')
@@ -230,10 +226,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     ) {
       this.scrollToBottom()
     }
-  }
-
-  updateListRef() {
-    this.selectableStore.setListRef(this.listRef.current)
   }
 
   onCopy = () => {
@@ -444,7 +436,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
             listRef={this.listRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
-            onSelectableStore={this.setSelectableStore}
+            selectableStoreRef={this.selectableStoreRef}
+            {...pickSelectableProps(this.props)}
           >
             {this.renderRow}
           </SelectableDynamicList>

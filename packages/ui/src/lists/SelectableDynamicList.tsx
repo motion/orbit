@@ -1,26 +1,20 @@
-import { useReaction } from '@o/use-store'
+import { GET_STORE, useReaction } from '@o/use-store'
 import { omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { useGet } from '../hooks/useGet'
 import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
-import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
+import { SelectableProps, useSelectableStore } from './SelectableStore'
 
-export type SelectableDynamicListProps = DynamicListProps &
-  SelectableProps & {
-    selectableStore?: SelectableStore
-  }
+export type SelectableDynamicListProps = DynamicListProps & SelectableProps
 
 export function SelectableDynamicList(props: SelectableDynamicListProps) {
-  const dynamicListProps = omit(
-    props,
-    'onSelectIndices',
-    'alwaysSelected',
-    'selectable',
-    'selectableStore',
-    'onSelectableStore',
-  )
+  const dynamicListProps = omit(props)
+
   const selectableStore = props.selectableStore || useSelectableStore(props)
+  if (props.selectableStoreRef) {
+    props.selectableStoreRef.current = selectableStore[GET_STORE]
+  }
   const innerListRef = useRef<DynamicListControlled>(null)
   const listRef = props.listRef || innerListRef
   const getItems = useGet(props.itemData)
@@ -55,6 +49,9 @@ export function SelectableDynamicList(props: SelectableDynamicListProps) {
           props.onSelectIndices(index)
         }
       }
+    },
+    {
+      deferFirstRun: true,
     },
   )
 

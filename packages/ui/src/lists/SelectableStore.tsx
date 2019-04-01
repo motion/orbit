@@ -1,5 +1,6 @@
 import { always, ensure, react, useStore } from '@o/use-store'
-import { pick } from 'lodash'
+import { omit, pick } from 'lodash'
+import { MutableRefObject } from 'react'
 import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
@@ -14,19 +15,36 @@ export enum Direction {
 }
 
 export type SelectableProps = {
-  onSelectableStore?: (store: SelectableStore) => any
+  selectableStore?: SelectableStore
+  selectableStoreRef?: MutableRefObject<SelectableStore>
   onSelectIndices?: (indices: number[], keys?: Set<string>) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
+
+export const selectablePropKeys = [
+  'onSelectIndices',
+  'alwaysSelected',
+  'selectable',
+  'selectableStore',
+  'selectableStoreRef',
+]
 
 type Modifiers = {
   shift?: boolean
   option?: boolean
 }
 
+export function pickSelectableProps(props: any) {
+  return pick(props, ...selectablePropKeys)
+}
+
+export function omitSelectableProps(props: any) {
+  return omit(props, ...selectablePropKeys)
+}
+
 export function useSelectableStore(props: SelectableProps) {
-  return useStore(SelectableStore, pick(props, 'onSelectIndices', 'alwaysSelected', 'selectable'))
+  return useStore(SelectableStore, pickSelectableProps(props))
 }
 
 export class SelectableStore {
@@ -109,6 +127,7 @@ export class SelectableStore {
   }
 
   setRowActive(index: number, e?: React.MouseEvent) {
+    debugger
     const row = this.rows[index]
     const rowKey = key(row, index)
     if (e.button !== 0 || !this.props.selectable) {

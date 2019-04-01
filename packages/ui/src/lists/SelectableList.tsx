@@ -3,13 +3,10 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { useGet } from '../hooks/useGet'
 import { DynamicListControlled } from './DynamicList'
-import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
+import { SelectableProps, useSelectableStore } from './SelectableStore'
 import { VirtualList, VirtualListProps } from './VirtualList'
 
-export type SelectableListProps = VirtualListProps<any> &
-  SelectableProps & {
-    selectableStore?: SelectableStore
-  }
+export type SelectableListProps = VirtualListProps<any> & SelectableProps
 
 export function SelectableList(props: SelectableListProps) {
   const selectableStore = props.selectableStore || useSelectableStore(props)

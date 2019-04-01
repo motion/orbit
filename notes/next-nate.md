@@ -1,4 +1,6 @@
-- pattern for simple useRef() getter fn for all props
+- can make startup faster by not loading all panes:
+  - this.nextItem in OrbitStore can be this.nextItem[paneId]
+  - then the updateItem reaction can await when(() => isVisible)
 
 - document for apps + apis
 

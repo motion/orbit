@@ -94,6 +94,7 @@ export class SelectableStore {
   }
 
   isActiveIndex = (index: number) => {
+    if (index === -1) return
     return this.active.has(this.getIndexKey(index))
   }
 

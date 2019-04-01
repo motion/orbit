@@ -147,7 +147,6 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
-      console.log('selecting', index, selectableProps, visibility.visible)
       if (visibility.visible === false) {
         return
       }

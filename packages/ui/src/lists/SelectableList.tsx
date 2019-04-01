@@ -2,6 +2,7 @@ import { useReaction } from '@o/use-store'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { MergeContext } from '../helpers/MergeContext'
+import { useGet } from '../hooks/useGet'
 import { DynamicListControlled } from './DynamicList'
 import { HandleSelection } from './ListItem'
 import { SelectableProps, SelectableStore, useSelectableStore } from './SelectableStore'
@@ -33,22 +34,27 @@ export function ProvideSelectableHandlers({
   )
 }
 
-export function SelectableList({ items, ...props }: SelectableListProps) {
+export function SelectableList(props: SelectableListProps) {
   const selectableStore = props.selectableStore || useSelectableStore(props)
   const selectableProps = useContext(SelectableListContext)
   const listRef = useRef<DynamicListControlled>(null)
+  const getItems = useGet(props.items)
 
   useEffect(() => {
     selectableStore.setListRef(listRef.current)
   }, [listRef])
 
   useEffect(() => {
-    selectableStore.setRows(items)
-  }, [items])
+    selectableStore.setRows(props.items)
+  }, [props.items])
+
+  let id = useRef(Math.random())
 
   useReaction(
     () => [...selectableStore.active],
     active => {
+      const items = getItems()
+      console.log('ok', id.current, active)
       if (active.length <= 1) {
         // TODO this is hacky, we need:
         //   1. make a better getitemKey without index
@@ -72,7 +78,6 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
         }
       }
     },
-    [items],
   )
 
   const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
@@ -89,7 +94,6 @@ export function SelectableList({ items, ...props }: SelectableListProps) {
 
   return (
     <VirtualList
-      items={items}
       listRef={listRef}
       onOpen={selectableProps && selectableProps.onSelectItem}
       {...props}

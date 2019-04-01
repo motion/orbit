@@ -1,6 +1,5 @@
 import { FullScreen } from '@o/gloss'
 import { selectDefined } from '@o/utils'
-import { clamp } from 'lodash'
 import React, { useCallback, useRef } from 'react'
 // @ts-ignore
 import { animated, useSpring } from 'react-spring'
@@ -60,22 +59,21 @@ export function FloatingView(props: FloatingViewProps) {
     } else if (sides.top) {
       const diff = h - pos.height
       const top = pos.top - diff
-      const height = pos.height + diff
-      set({ xy: [pos.left, top], height })
+      set({ xy: [pos.left, top], height: pos.height + diff })
     } else if (sides.left) {
       const diff = w - pos.width
       const left = pos.left - diff
-      const width = pos.width + diff
-      set({ xy: [left, pos.top], width })
+      set({ xy: [left, pos.top], width: pos.width + diff })
     }
   }, [])
 
   let lastDelta = useRef([props.defaultTop, props.defaultLeft])
-  const bind = useGesture(({ down, delta, velocity }) => {
-    if (controlledPosition) {
+  const bind = useGesture(next => {
+    const { down, delta } = next
+    // const velocity = clamp(next.velocity, 1, 8)
+    if (controlledPosition || disableDrag) {
       return
     }
-    velocity = clamp(velocity, 1, 8)
     if (!down) {
       lastDelta.current = delta
     }

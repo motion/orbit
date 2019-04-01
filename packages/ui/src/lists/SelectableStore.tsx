@@ -219,7 +219,6 @@ export class SelectableStore {
   }
 
   setRows(next: GenericDataRow[]) {
-    this.keyToIndex = {}
     this.rows = next
   }
 

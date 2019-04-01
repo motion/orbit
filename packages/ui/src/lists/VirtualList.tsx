@@ -32,15 +32,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const getProps = useGet(props)
   const fallback = useRef<SelectableStore>(null)
   const selectableStoreRef = props.selectableStoreRef || fallback
-  const dynamicListProps = omit(
-    props,
-    'ItemView',
-    'onSelect',
-    'onOpen',
-    'sortable',
-    'getItemProps',
-    'items',
-  )
+  const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
 
   const keyMapper = useCallback(index => {
     const { items } = getProps()

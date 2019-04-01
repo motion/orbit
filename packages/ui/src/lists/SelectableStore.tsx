@@ -1,4 +1,4 @@
-import { ensure, react, useStore } from '@o/use-store'
+import { always, ensure, react, useStore } from '@o/use-store'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
 import { Config } from '../helpers/configure'
@@ -75,7 +75,7 @@ export class SelectableStore {
   )
 
   callbackOnSelectProp = react(
-    () => JSON.stringify([...this.active]),
+    () => always(this.active),
     () => {
       ensure('onSelect', !!this.props.onSelect)
       const { rows, indices } = this.selectedState

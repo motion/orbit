@@ -45,6 +45,10 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const getRow = useCallback(({ index, style }) => {
     const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
     const item = items[index]
+    if (!item) {
+      console.warn('bad item!, we need to enforce better key/refreshing items in sync')
+      return null
+    }
     const key = Config.getItemKey(item, index)
     return (
       <VirtualListItem

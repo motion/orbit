@@ -148,8 +148,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  startAction = event => {
+  onMouseDown = event => {
     if (isRightClick(event)) return
+    if (!this.state.cursor) return
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -414,9 +415,13 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   calculateResize(event: MouseEvent) {
     const { resizingInitialCursor, resizingInitialRect, resizingSides } = this.state
-    invariant(resizingInitialRect, 'resizingInitialRect')
-    invariant(resizingInitialCursor, 'resizingInitialCursor')
-    invariant(resizingSides, 'resizingSides')
+    try {
+      invariant(resizingInitialRect, 'resizingInitialRect')
+      invariant(resizingInitialCursor, 'resizingInitialCursor')
+      invariant(resizingSides, 'resizingSides')
+    } catch {
+      return
+    }
     const deltaLeft = resizingInitialCursor.left - event.clientX
     const deltaTop = resizingInitialCursor.top - event.clientY
     let newLeft = resizingInitialRect.left
@@ -643,7 +648,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const resizable = this.getResizable()
     const listenerProps = {
-      onMouseDown: this.startAction,
+      onMouseDown: this.onMouseDown,
       onMouseMove: this.onLocalMouseMove,
       onMouseLeave: this.onMouseLeave,
     }
@@ -680,9 +685,9 @@ const InteractiveContainer = gloss(View, {
   willChange: 'transform, height, width, z-index',
 })
 
-export function getResizeCursor(sides: ResizableSides) {
+export function getResizeCursor(sides: ResizableSides): string | undefined {
   const { bottom, left, right, top } = sides
-  let newCursor = 'default'
+  let newCursor
   // left
   if (left) {
     newCursor = 'ew-resize'

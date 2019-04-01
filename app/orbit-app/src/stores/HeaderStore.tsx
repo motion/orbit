@@ -1,7 +1,6 @@
 import { App } from '@o/stores'
 import { ensure, react, useHook } from '@o/use-store'
 import { createRef } from 'react'
-import { sleep } from '../helpers'
 import { useStoresSimple } from '../hooks/useStores'
 
 const moveCursorToEndOfTextarea = el => {
@@ -68,7 +67,6 @@ export class HeaderStore {
   )
 
   handleMouseUp = async () => {
-    await sleep(10)
     window['requestIdleCallback'](() => {
       this.focus()
     })

@@ -28,20 +28,6 @@ Smaller fixes if you get stuck on docs:
   - on home and in the tabs, you should be able to drag to sort, there are some bugs
     - sometimes it doesnt work for me, this is the main bug
 
-
-- mediator make resolvers simpler:
-  - instead of requiring registering all the commands centrally with mediator, make it so you just call resolveCommand() anywhere and it will register it. this will make Mediator work a bit differently, but it will work with context much more easily
-    - also make it error if you register same command twice
-
-- add a couple more data apps
-  - Databases
-    - Firebase
-    - MySQL
-    - Redshift
-  - S3
-  - Stripe
-  - Twilio
-
 - Make App Settings works
   - See how in the little "Manage apps" pane on the right-most tab you can see apps settings, we need to make this actually work with apps
   - We should make this NOT doable with components
@@ -55,4 +41,16 @@ Smaller fixes if you get stuck on docs:
     - (we may do graphql for this, not sure yet)
   - This tab you can start making work
   - It should list data apps already + show fields for them
-  -
+
+- mediator make resolvers simpler:
+  - instead of requiring registering all the commands centrally with mediator, make it so you just call resolveCommand() anywhere and it will register it. this will make Mediator work a bit differently, but it will work with context much more easily
+    - also make it error if you register same command twice
+
+- add a couple more data apps
+  - Databases
+    - Firebase
+    - MySQL
+    - Redshift
+  - S3
+  - Stripe
+  - Twilio

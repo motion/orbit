@@ -7,12 +7,13 @@
 
 import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
-import * as React from 'react'
+import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
-import { DynamicList, DynamicListControlled } from '../lists/DynamicList'
-import { SelectableProps, SelectableStore, useSelectableStore } from '../lists/SelectableStore'
+import { DynamicListControlled } from '../lists/DynamicList'
+import { SelectableDynamicList } from '../lists/SelectableDynamicList'
+import { SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
@@ -175,7 +176,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         props.sortOrder,
         filterRows(props.rows, props.filterValue, props.filter),
       )
-      props.selectableStore.setRows(nextState.sortedRows)
     }
 
     // update if needed
@@ -195,21 +195,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .toUpperCase()}`
   }
 
-  listRef: DynamicListControlled = null
-  scrollRef = React.createRef<HTMLDivElement>()
+  listRef = createRef<DynamicListControlled>()
+  scrollRef = createRef<HTMLDivElement>()
   dragStartIndex?: number = null
+  selectableStore: SelectableStore = null
 
-  onListRef = (ref: DynamicListControlled) => {
-    this.listRef = ref
-    this.selectableStore.setListRef(ref)
-  }
-
-  get selectableStore() {
-    return this.props.selectableStore
+  setSelectableStore(store: SelectableStore) {
+    this.selectableStore = store
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown)
+    this.updateListRef()
   }
 
   componentWillUnmount() {
@@ -217,6 +214,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   componentDidUpdate(prevProps: ManagedTableProps) {
+    this.updateListRef()
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
       console.warn('may need to recalc height')
@@ -232,6 +230,10 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     ) {
       this.scrollToBottom()
     }
+  }
+
+  updateListRef() {
+    this.selectableStore.setListRef(this.listRef.current)
   }
 
   onCopy = () => {
@@ -279,8 +281,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   scrollToBottom() {
     const { sortedRows } = this.state
-    if (this.listRef && sortedRows.length > 1) {
-      this.listRef.scrollToIndex(sortedRows.length - 1)
+    if (this.listRef.current && sortedRows.length > 1) {
+      this.listRef.current.scrollToIndex(sortedRows.length - 1)
     }
   }
 
@@ -434,17 +436,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         />
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
-          <DynamicList
+          <SelectableDynamicList
             keyMapper={this.getItemKey}
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
             itemData={sortedRows}
-            ref={this.onListRef}
+            listRef={this.listRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
+            onSelectableStore={this.setSelectableStore}
           >
             {this.renderRow}
-          </DynamicList>
+          </SelectableDynamicList>
         </ContextMenu>
       </Container>
     )
@@ -452,14 +455,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 }
 
 function ManagedTableNormalized(props: ManagedTableProps) {
-  const selectableStore = props.selectableStore || useSelectableStore(props)
-  return (
-    <ManagedTableInner
-      {...props}
-      selectableStore={selectableStore}
-      rows={props.rows.map(normalizeRow)}
-    />
-  )
+  return <ManagedTableInner {...props} rows={props.rows.map(normalizeRow)} />
 }
 
 export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {

@@ -7,10 +7,8 @@ import {
   Section,
   SectionProps,
   TitleRowProps,
-  useGet,
   useParentNodeSize,
   useSectionProps,
-  useSelectableStore,
   View,
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
@@ -43,7 +41,6 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 }
 
 export function Table(tableProps: TableProps) {
-  const selectableStore = useSelectableStore(tableProps)
   const stores = useStoresSimple()
   const sectionProps: PartialSectionProps = useSectionProps(tableProps)
   const { flex, bordered, searchable, onSelect, title, subTitle, shareable, ...props } = {
@@ -56,23 +53,22 @@ export function Table(tableProps: TableProps) {
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
     [props.columns, rows],
   )
-  const ogOnHighlightedIndices = useGet(props.onSelectIndices)
 
   const onSelectIndices = useCallback(
-    keys => {
+    (indices, keys) => {
       if (!props.rows) return
-      const activeRows = selectableStore.getActiveRows()
+      const selected = indices.map(i => props.rows[i])
       if (shareable) {
-        stores.spaceStore.currentSelection = activeRows
+        stores.spaceStore.currentSelection = selected
       }
       if (onSelect) {
-        onSelect(activeRows)
+        onSelect(selected)
       }
-      if (ogOnHighlightedIndices()) {
-        ogOnHighlightedIndices()(keys)
+      if (props.onSelectIndices) {
+        props.onSelectIndices(indices, keys)
       }
     },
-    [props.rows, shareable],
+    [props.rows, props.onSelectIndices, shareable],
   )
 
   return (
@@ -97,7 +93,6 @@ export function Table(tableProps: TableProps) {
           columns={columns}
           rows={rows}
           onSelectIndices={onSelectIndices}
-          selectableStore={selectableStore}
         />
       </View>
     </Section>

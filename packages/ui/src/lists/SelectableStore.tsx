@@ -1,7 +1,6 @@
 import { always, ensure, react, useStore } from '@o/use-store'
 import { pick } from 'lodash'
 import { Config } from '../helpers/configure'
-import { TableHighlightedRows } from '../tables/types'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
 
@@ -15,7 +14,8 @@ export enum Direction {
 }
 
 export type SelectableProps = {
-  onSelectIndices?: (keys: TableHighlightedRows) => void
+  onSelectableStore?: (store: SelectableStore) => any
+  onSelectIndices?: (indices: number[], keys?: Set<string>) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
@@ -42,11 +42,19 @@ export class SelectableStore {
     this.active = new Set(next)
   }
 
+  callbackOnSelectableStoreProp = react(
+    () => this.props.onSelectableStore,
+    () => {
+      ensure('onSelectableStore', !!this.props.onSelectableStore)
+      this.props.onSelectableStore(this)
+    },
+  )
+
   callbackOnSelectProp = react(
     () => always(this.active),
     () => {
       ensure('selectIndices', !!this.props.onSelectIndices)
-      this.props.onSelectIndices([...this.active])
+      this.props.onSelectIndices(this.getActiveRows(), this.active)
     },
   )
 

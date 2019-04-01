@@ -13,7 +13,7 @@ We need a way to generate documentation based on our components.
 
 ---
 
-Smaller fixes if you get stuck:
+Smaller fixes if you get stuck on docs:
 
 - (not sure if already there) add some "write" operations to the various data apis
   - Slack.sendToThread, etc
@@ -38,6 +38,9 @@ Smaller fixes if you get stuck:
     - Firebase
     - MySQL
     - Redshift
+  - S3
+  - Stripe
+  - Twilio
 
 - Make App Settings works
   - See how in the little "Manage apps" pane on the right-most tab you can see apps settings, we need to make this actually work with apps
@@ -47,20 +50,9 @@ Smaller fixes if you get stuck:
   - There's a compiler somewhere on github to turn types into JSON, we can use that
   - You can then store this on AppBit
 
-Here's a great reference for them:
-
-https://tryretool.com/integrations
-
----
-
-Integrations ordered priority:
-
-1. Postgres
-2. Current Integrations READ/WRITE simple api
-   1. (slack, gmail, github for read/write, the rest just read)
-3. Google Sheets read/write
-4. MySQL, Redshift
-5. S3
-6. Stripe
-7. Twilio
-8. Firebase
+- Data Explorer
+  - Dont do this one yet if you can do above stuff first
+    - (we may do graphql for this, not sure yet)
+  - This tab you can start making work
+  - It should list data apps already + show fields for them
+  -

@@ -152,6 +152,7 @@ export function List(rawProps: ListProps) {
       ...restProps,
       onSelectIndices,
     })
+  selStore.current = selectableStore
 
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }

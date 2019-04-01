@@ -241,7 +241,7 @@ function HeaderButtonChromeless(props: ButtonProps) {
 }
 
 const LinkButton = memo(() => {
-  const { locationStore } = useStores()
+  // const { locationStore } = useStores()
   return (
     <HeaderButtonChromeless
       tooltip={`Copy link to app`}

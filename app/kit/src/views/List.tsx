@@ -154,7 +154,6 @@ export function List(rawProps: ListProps) {
       }
       const item = getItems()[index]
       const appProps = getAppProps(toListItemProps(item))
-      console.log('onselectitem', item, appProps)
       if (onSelect) {
         onSelect(index, appProps, eventType)
       }

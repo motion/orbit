@@ -91,11 +91,11 @@ export function List(rawProps: ListProps) {
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
+  const selectableStore = props.selectableStore || useSelectableStore(restProps)
   const { shortcutStore, spaceStore } = useStoresSimple()
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
-  const selectableStore = props.selectableStore || useSelectableStore(restProps)
   const visibility = useVisiblityContext()
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
@@ -183,6 +183,7 @@ export function List(rawProps: ListProps) {
   )
 
   const onSelectIndices = useCallback(() => {
+    console.log('wahts up', selectableStore.getActiveRows())
     if (props.shareable) {
       spaceStore.currentSelection = selectableStore.getActiveRows()
     }

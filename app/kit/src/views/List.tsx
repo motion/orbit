@@ -116,6 +116,7 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (selectedRows, selectedIndices) => {
+      console.log('selceting an imte')
       if (shareable) {
         spaceStore.currentSelection = selectedRows
       }
@@ -127,7 +128,7 @@ export function List(rawProps: ListProps) {
         props.onSelect(selectedRows)
       }
     },
-    [props.items, props.onSelect, shareable, onSelectItem],
+    [props.onSelect, shareable, onSelectItem],
   )
 
   const getItemPropsInner = useCallback((a, b, c) => {
@@ -140,13 +141,13 @@ export function List(rawProps: ListProps) {
   }, [])
 
   const onOpenInner = useCallback(
-    (index, eventType) => {
+    index => {
       const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onOpen) {
         onOpen(index, appProps)
       }
       if (onOpenItem) {
-        onOpenItem(index, appProps, eventType)
+        onOpenItem(index, appProps)
       }
     },
     [onOpen, onOpenItem],

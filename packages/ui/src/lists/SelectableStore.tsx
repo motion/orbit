@@ -17,7 +17,7 @@ export enum Direction {
 export type SelectableProps = {
   selectableStore?: SelectableStore
   selectableStoreRef?: MutableRefObject<SelectableStore>
-  onSelect?: (rows: any[]) => void
+  onSelect?: (rows: any[], indices?: number[]) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
@@ -88,7 +88,7 @@ export class SelectableStore {
     const indices = []
     for (const rowKey of [...this.active]) {
       const index = this.keyToIndex[rowKey]
-      indices.push(index)
+      indices.push(+index)
       rows.push(rowKey)
     }
     return { rows, indices }

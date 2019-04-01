@@ -101,10 +101,10 @@ export function List(rawProps: ListProps) {
     const selectableStore = selectableStoreRef.current
     if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
-      console.log('down down', selectableStore)
       if (visibility.visible == false) {
         return
       }
+      console.log('down down', selectableStore)
       switch (shortcut) {
         case 'open':
           console.log('todo open', selectableStore.active)
@@ -126,7 +126,7 @@ export function List(rawProps: ListProps) {
           break
       }
     })
-  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
+  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility.visible])
 
   const onSelectRows = useCallback(
     selectedRows => {

@@ -4,7 +4,7 @@ import React, { useContext } from 'react'
 class VisibilityStore {
   props: { visible: boolean }
 
-  get visible() {
+  getVisible() {
     return this.props.visible
   }
 }
@@ -17,10 +17,10 @@ export function Visibility({ visible, children }: { visible: boolean; children: 
 }
 
 export function useVisiblityContext() {
-  return useContext(Context) || { visible: true }
+  return useContext(Context) || { getVisible: () => true }
 }
 
 export function useVisiblity() {
   const store = useVisiblityStore()
-  return store ? store.visible : true
+  return store ? store.getVisible() : true
 }

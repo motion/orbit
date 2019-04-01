@@ -98,12 +98,11 @@ export function List(rawProps: ListProps) {
 
   useEffect(() => {
     if (!shortcutStore) return
-    const selectableStore = selectableStoreRef.current
-    if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
-      if (visibility.visible == false) {
+      if (visibility.getVisible() == false) {
         return
       }
+      const selectableStore = selectableStoreRef.current
       console.log('down down', selectableStore)
       switch (shortcut) {
         case 'open':
@@ -119,14 +118,14 @@ export function List(rawProps: ListProps) {
           // }
           break
         case 'up':
-          selectableStore.move(Direction.up)
+          selectableStore && selectableStore.move(Direction.up)
           break
         case 'down':
-          selectableStore.move(Direction.down)
+          selectableStore && selectableStore.move(Direction.down)
           break
       }
     })
-  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility.visible])
+  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
 
   const onSelectRows = useCallback(
     selectedRows => {
@@ -187,7 +186,7 @@ export function List(rawProps: ListProps) {
     <HighlightActiveQuery query={query}>
       {hasItems && (
         <VirtualList
-          disableMeasure={visibility.visible === false}
+          disableMeasure={visibility.getVisible() === false}
           items={filtered.results}
           ItemView={ListItem}
           {...restProps}

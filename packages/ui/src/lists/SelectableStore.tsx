@@ -89,12 +89,14 @@ export class SelectableStore {
     if (index === -1) {
       this.setActive([])
     } else {
+      if (!this.rows.length) return
       this.setActive([this.getIndexKey(index)])
     }
   }
 
   isActiveIndex = (index: number) => {
-    if (index === -1) return
+    if (!this.rows.length) return false
+    if (index === -1) return false
     return this.active.has(this.getIndexKey(index))
   }
 

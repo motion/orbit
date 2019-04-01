@@ -58,7 +58,7 @@ export function SelectableList(props: SelectableListProps) {
         //   2. make a methond on selectableStore.getItemIndex()
         //   2. onSelect/onSelectItem should take multiple
         const key = active[0]
-        const index = items.findIndex(x => x && Config.getItemKey(x, -1) === key)
+        const index = items.findIndex((x, i) => x && Config.getItemKey(x, i) === key)
 
         // scroll to
         if (listRef.current) {
@@ -77,25 +77,21 @@ export function SelectableList(props: SelectableListProps) {
     },
   )
 
-  const getItemProps: VirtualListProps<any>['getItemProps'] = useCallback(
-    (item, index, listItems) => {
-      return {
-        ...(props.getItemProps && props.getItemProps(item, index, listItems)),
-        onMouseDown: e => selectableStore.setRowActive(index, e),
-        onMouseEnter: () => selectableStore.onHoverRow(index),
-        selectableStore,
-      }
-    },
-    [props.getItemProps],
-  )
-
   return (
     <VirtualList
       listRef={listRef}
       onOpen={selectableProps && selectableProps.onSelectItem}
       {...props}
       // overwrite
-      getItemProps={getItemProps}
+      getItemProps={useCallback(
+        (item, index, listItems) => ({
+          ...(props.getItemProps && props.getItemProps(item, index, listItems)),
+          onMouseDown: e => selectableStore.setRowActive(index, e),
+          onMouseEnter: () => selectableStore.onHoverRow(index),
+          selectableStore,
+        }),
+        [props.getItemProps],
+      )}
     />
   )
 }

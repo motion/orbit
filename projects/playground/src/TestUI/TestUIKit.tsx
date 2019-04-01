@@ -1,4 +1,4 @@
-import { List, Table } from '@o/kit'
+import { List, shallow, Table, useStore } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -16,7 +16,25 @@ import {
 } from '@o/ui'
 import React, { Suspense, useState } from 'react'
 
+class Store {
+  selected = shallow({})
+}
+
 export function TestUIKit() {
+  const store = useStore(Store)
+  const items = [
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello2', subtitle: 'world', icon: 'hi' },
+    { title: 'hello3', subtitle: 'world', icon: 'hi' },
+    { title: 'hello4', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: 'hi' },
+  ]
   return (
     <Suspense fallback={<Loading />}>
       <FloatingCard title="hi" defaultTop={200} defaultLeft={200}>
@@ -24,24 +42,20 @@ export function TestUIKit() {
       </FloatingCard>
       <List
         selectable="multi"
-        items={[
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-          { title: 'hello', subtitle: 'world', icon: 'hi' },
-        ]}
+        onSelectIndices={console.log.bind(console)}
+        onSelect={i => (store.selected['x'] = items[i])}
+        items={items}
       />
+      <SubView store={store} />
 
       {/* <CustomApp1 /> */}
     </Suspense>
   )
+}
+
+function SubView(props: any) {
+  const store = useStore(props.store)
+  return <Title>test: {JSON.stringify(store.selected['x'] || null)}</Title>
 }
 
 const endpoint = 'https://jsonplaceholder.typicode.com'

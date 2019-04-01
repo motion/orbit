@@ -153,7 +153,8 @@ export function List(rawProps: ListProps) {
       if (!selectableStore.rows) {
         selectableStore.setRows(getItems())
       }
-      const appProps = getAppProps(toListItemProps(getItems()[index]))
+      const item = getItems()[index]
+      const appProps = getAppProps(toListItemProps(item))
 
       // TODO make this all `else if`, likely
 

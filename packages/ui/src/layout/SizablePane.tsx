@@ -17,7 +17,7 @@ export type SizablePaneProps = Partial<InteractiveProps> &
 
 export function SizablePane({ scrollable, children, resizable, ...props }: SizablePaneProps) {
   const { total, type, flexes } = useContext(LayoutContext)
-  const [size, setSize] = useState(400)
+  const [size, setSize] = useState(-1)
 
   useEffect(() => {
     if (!props.parentSize || typeof props.index === 'undefined' || flexes.length === 0) {
@@ -30,26 +30,32 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
   }, [props.index, props.parentSize, total, flexes])
 
   let element = null
-  let sizeProps = null
+  let sizeProps: any = {
+    [type === 'row' ? 'width' : 'height']: 'auto',
+  }
   let borderElement = null
 
   if (type === 'row') {
     if (props.index > 0) {
       borderElement = <BorderLeft />
     }
-    sizeProps = {
-      width: size,
-      minWidth: props.parentSize * 0.25,
-      maxWidth: props.parentSize * 0.8,
+    if (size !== -1) {
+      sizeProps = {
+        width: size,
+        minWidth: props.parentSize * 0.25,
+        maxWidth: props.parentSize * 0.8,
+      }
     }
   } else {
     if (props.index > 0) {
       borderElement = <BorderTop />
     }
-    sizeProps = {
-      minHeight: props.parentSize * 0.25,
-      height: size,
-      maxHeight: props.parentSize * 0.8,
+    if (size !== -1) {
+      sizeProps = {
+        minHeight: props.parentSize * 0.25,
+        height: size,
+        maxHeight: props.parentSize * 0.8,
+      }
     }
   }
 

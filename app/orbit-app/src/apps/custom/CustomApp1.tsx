@@ -47,7 +47,7 @@ export function CustomApp1() {
               <Table
                 selectable="multi"
                 shareable
-                onSelectRows={setHighlighted}
+                onSelect={rows => setHighlighted(rows)}
                 rows={users}
                 searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}

@@ -56,11 +56,7 @@ const { PassProps, useProps } = createContextualProps<{
 }>()
 export const PassExtraListProps = PassProps
 
-export type HandleOrbitSelect = (
-  index: number,
-  appProps: AppProps,
-  eventType?: 'click' | 'key',
-) => any
+export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
 
@@ -68,16 +64,7 @@ export function List(rawProps: ListProps) {
   const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const {
-    items,
-    onSelect,
-    onOpen,
-    placeholder,
-    getItemProps,
-    query,
-    shareable,
-    ...restProps
-  } = props
+  const { items, onOpen, placeholder, getItemProps, query, shareable, ...restProps } = props
   const selectableStoreRef = useRef<SelectableStore>(null)
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
@@ -127,16 +114,20 @@ export function List(rawProps: ListProps) {
     })
   }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
 
-  const onSelectRows = useCallback(
-    selectedRows => {
+  const onSelectInner = useCallback(
+    (selectedRows, selectedIndices) => {
       if (shareable) {
         spaceStore.currentSelection = selectedRows
       }
-      if (props.onSelectRows) {
-        props.onSelectRows(selectedRows)
+      if (onSelectItem) {
+        const appProps = getAppProps(toListItemProps(selectedRows[0]))
+        onSelectItem(selectedIndices[0], appProps)
+      }
+      if (props.onSelect) {
+        props.onSelect(selectedRows)
       }
     },
-    [props.items, props.onSelectRows, shareable],
+    [props.items, props.onSelect, shareable, onSelectItem],
   )
 
   const getItemPropsInner = useCallback((a, b, c) => {
@@ -147,25 +138,6 @@ export function List(rawProps: ListProps) {
     const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
     return { ...normalized, ...itemExtraProps, ...filterExtraProps, ...shareProps }
   }, [])
-
-  const onSelectInner = useCallback(
-    (index, eventType) => {
-      const selectableStore = selectableStoreRef.current
-      if (!selectableStore.rows) {
-        selectableStore.setRows(getItems())
-      }
-      const item = getItems()[index]
-      const appProps = getAppProps(toListItemProps(item))
-      if (onSelect) {
-        onSelect(index, appProps, eventType)
-      }
-      selectableStore.setActiveIndex(index)
-      if (onSelectItem) {
-        onSelectItem(index, appProps, eventType)
-      }
-    },
-    [onSelect, onSelectItem],
-  )
 
   const onOpenInner = useCallback(
     (index, eventType) => {
@@ -191,9 +163,8 @@ export function List(rawProps: ListProps) {
           ItemView={ListItem}
           {...restProps}
           getItemProps={getItemPropsInner}
-          onSelect={onSelectInner}
           onOpen={onOpenInner}
-          onSelectRows={onSelectRows}
+          onSelect={onSelectInner}
           selectableStoreRef={selectableStoreRef}
         />
       )}

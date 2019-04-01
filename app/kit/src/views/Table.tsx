@@ -53,16 +53,16 @@ export function Table(tableProps: TableProps) {
     [props.columns, rows],
   )
 
-  const onSelectRows = useCallback(
+  const onSelect = useCallback(
     selectedRows => {
       if (shareable) {
         stores.spaceStore.currentSelection = selectedRows
       }
-      if (props.onSelectRows) {
-        props.onSelectRows(selectedRows)
+      if (props.onSelect) {
+        props.onSelect(selectedRows)
       }
     },
-    [props.rows, props.onSelectRows, shareable],
+    [props.rows, props.onSelect, shareable],
   )
 
   return (
@@ -86,7 +86,7 @@ export function Table(tableProps: TableProps) {
           {...props}
           columns={columns}
           rows={rows}
-          onSelectRows={onSelectRows}
+          onSelect={onSelect}
         />
       </View>
     </Section>

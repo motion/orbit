@@ -17,13 +17,13 @@ export enum Direction {
 export type SelectableProps = {
   selectableStore?: SelectableStore
   selectableStoreRef?: MutableRefObject<SelectableStore>
-  onSelectRows?: (rows: any[]) => void
+  onSelect?: (rows: any[]) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
 
 export const selectablePropKeys = [
-  'onSelectRows',
+  'onSelect',
   'alwaysSelected',
   'selectable',
   'selectableStore',
@@ -77,10 +77,22 @@ export class SelectableStore {
   callbackOnSelectProp = react(
     () => JSON.stringify([...this.active]),
     () => {
-      ensure('onSelectRows', !!this.props.onSelectRows)
-      this.props.onSelectRows(this.activeRows)
+      ensure('onSelect', !!this.props.onSelect)
+      const { rows, indices } = this.selectedState
+      this.props.onSelect(rows, indices)
     },
   )
+
+  get selectedState() {
+    const rows = []
+    const indices = []
+    for (const rowKey of [...this.active]) {
+      const index = this.keyToIndex[rowKey]
+      indices.push(index)
+      rows.push(rowKey)
+    }
+    return { rows, indices }
+  }
 
   enforceAlwaysSelected = react(
     () => [this.props.alwaysSelected, this.active.size === 0, this.rows.length > 0],
@@ -169,15 +181,6 @@ export class SelectableStore {
     }
 
     this.setActive(next)
-  }
-
-  get activeRows() {
-    return [...this.active].map(rowKey => {
-      if (!this.rows[this.keyToIndex[rowKey]]) {
-        debugger
-      }
-      return this.rows[this.keyToIndex[rowKey]]
-    })
   }
 
   onHoverRow(index: number) {

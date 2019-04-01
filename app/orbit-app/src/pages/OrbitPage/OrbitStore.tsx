@@ -21,7 +21,6 @@ export class OrbitStore {
   }
 
   setSelectItem: HandleOrbitSelect = (index, appProps) => {
-    console.log('next', index, appProps)
     const next = { index, appProps }
     if (!isEqual(next, this.nextItem)) {
       this.nextItem = next

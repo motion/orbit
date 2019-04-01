@@ -1,15 +1,16 @@
 import { useStore } from '@o/use-store'
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { SelectableStore } from './lists/SelectableStore'
+import { SelectableProps, SelectableStore } from './lists/SelectableStore'
 import { SortableGrid, SortableGridProps } from './SortableGrid'
 
-type SelectableGridProps<A> = SortableGridProps<A> & {
-  getItem?: (item: A, { isSelected: boolean, select: Function }) => any
-  selectableStore?: SelectableStore
-}
+type SelectableGridProps<A> = SortableGridProps<A> &
+  SelectableProps & {
+    getItem?: (item: A, { isSelected: boolean, select: Function }) => any
+    selectableStore?: SelectableStore
+  }
 
 export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
-  const selectableStore = props.selectableStore || useStore(SelectableStore, props as any)
+  const selectableStore = props.selectableStore || useStore(SelectableStore, props)
   const itemsKey = JSON.stringify(items.map(i => i.id))
 
   useEffect(() => {

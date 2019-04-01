@@ -1,5 +1,5 @@
 import { gloss, View } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, SubPane, useAppDefinitions } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useAppDefinitions, useStoreDebug } from '@o/kit'
 import { BorderLeft, BorderTop } from '@o/ui'
 import React, { cloneElement, isValidElement, memo, useContext } from 'react'
 import { useStores } from '../../hooks/useStores'
@@ -12,6 +12,10 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   const { orbitStore, appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
   const appProps = orbitStore.activeConfig[id] || {}
+
+  useStoreDebug()
+
+  console.log('got', appProps)
 
   if (!props.children) {
     return null

@@ -19,6 +19,7 @@ import {
   Tab,
   Tabs,
   TextArea,
+  Title,
   TitleRow,
   View,
 } from '@o/ui'
@@ -42,7 +43,7 @@ function DataExplorerMain({ subId }: AppProps) {
 
   // TODO suspense
   if (!app) {
-    return null
+    return <Title>no app, subid {typeof subId}</Title>
   }
 
   return (

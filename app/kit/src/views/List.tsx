@@ -140,6 +140,7 @@ export function List(rawProps: ListProps) {
     })
   }, [onOpen, shortcutStore, shortcutStore])
 
+  // TODO this is a mess..
   const selStore = useRef<SelectableStore>(null)
   const onSelectIndices = useCallback(() => {
     if (props.shareable && selStore.current) {
@@ -170,9 +171,7 @@ export function List(rawProps: ListProps) {
       }
       const item = getItems()[index]
       const appProps = getAppProps(toListItemProps(item))
-
-      // TODO make this all `else if`, likely
-
+      console.log('onselectitem', item, appProps)
       if (onSelect) {
         onSelect(index, appProps, eventType)
       }

@@ -54,7 +54,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
           cursor: resizingSides ? getResizeCursor(resizingSides) : 'inherit',
           pointerEvents: (isHoveringResize ? 'all' : 'none') as any,
           opacity: isHoveringResize ? 1 : 0,
-          background: 'green',
+          // background: 'green',
         }}
       />
     </FullScreen>

@@ -1,6 +1,6 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import { Button, SelectableListProps, TreeItem, useGet } from '@o/ui'
+import { Button, TreeItem, useGet, VirtualListProps } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScopedAppState, useAppState } from '../hooks/useAppState'
 import { useStoresSimple } from '../hooks/useStores'
@@ -13,9 +13,9 @@ import { OrbitListItemProps } from './ListItem'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<SelectableListProps, 'items' | 'getItemProps'> & {
+export type TreeListProps = Omit<VirtualListProps<any>, 'items' | 'getItemProps'> & {
+  items: TreeItems
   use?: UseTreeList
-  items?: TreeItems
   rootItemID?: number
   getItemProps?: (item: TreeItem) => Promise<OrbitListItemProps>
   onSelect?: HandleOrbitSelect
@@ -116,34 +116,23 @@ async function loadListItem(item: TreeItem): Promise<OrbitListItemProps> {
   return null
 }
 
-export function TreeList({
-  use,
-  query,
-  onSelect,
-  onOpen,
-  placeholder,
-  getItemProps = loadListItem,
-  ...props
-}: TreeListProps) {
+export function TreeList({ use, query, getItemProps = loadListItem, ...props }: TreeListProps) {
   const items = use ? use.state.items : props.items
   const rootItemID = use ? use.state.rootItemID : props.rootItemID
   const [loadedItems, setLoadedItems] = useState([])
 
   console.warn('render trelist', props, loadedItems)
 
-  useEffect(
-    () => {
-      let cancel = false
-      Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
-        !cancel && setLoadedItems(res)
-      })
+  useEffect(() => {
+    let cancel = false
+    Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
+      !cancel && setLoadedItems(res)
+    })
 
-      return () => {
-        cancel = true
-      }
-    },
-    [items, rootItemID],
-  )
+    return () => {
+      cancel = true
+    }
+  }, [items, rootItemID])
 
   if (!items) {
     return null

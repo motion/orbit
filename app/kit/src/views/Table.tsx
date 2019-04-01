@@ -55,6 +55,7 @@ export function Table(tableProps: TableProps) {
 
   const onSelectRows = useCallback(
     (selectedRows, keys) => {
+      console.log('selected', selectedRows)
       if (shareable) {
         stores.spaceStore.currentSelection = selectedRows
       }

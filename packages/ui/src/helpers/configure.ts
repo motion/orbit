@@ -12,7 +12,8 @@ export let Config: ConfigureOpts = {
   StoreContext: createContext(null),
   getItemKey: (x, index) => {
     if (!x) {
-      debugger
+      console.warn('NO ITEM', x)
+      return `${index}`
     }
     const item = x.item || x
     return `${item.id || item.email || item.key || index}`

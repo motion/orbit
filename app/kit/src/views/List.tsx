@@ -18,7 +18,6 @@ import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
-import { useIsAppActive } from '../hooks/useIsAppActive'
 import { useShareMenu } from '../hooks/useShareMenu'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -26,11 +25,10 @@ import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = Omit<VirtualListProps<any>, 'items'> &
+export type ListProps = Omit<VirtualListProps<Bit | OrbitListItemProps>, 'selectableStoreRef'> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     query?: string
-    items?: (Bit | OrbitListItemProps)[]
     onSelect?: HandleOrbitSelect
     onOpen?: HandleOrbitSelect
     placeholder?: React.ReactNode
@@ -84,7 +82,6 @@ export function List(rawProps: ListProps) {
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
-  const isActive = useIsAppActive()
   const visibility = useVisiblityContext()
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
@@ -102,6 +99,7 @@ export function List(rawProps: ListProps) {
   useEffect(() => {
     if (!shortcutStore) return
     const selectableStore = selectableStoreRef.current
+    console.log('sel STORE', selectableStore)
     if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
       if (visibility.visible == false) {
@@ -128,7 +126,7 @@ export function List(rawProps: ListProps) {
           break
       }
     })
-  }, [onOpen, shortcutStore, shortcutStore])
+  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
 
   const onSelectRows = useCallback(
     (selectedRows, keys) => {
@@ -139,7 +137,7 @@ export function List(rawProps: ListProps) {
         props.onSelectRows(selectedRows, keys)
       }
     },
-    [props.rows, props.onSelectRows, shareable],
+    [props.items, props.onSelectRows, shareable],
   )
 
   const getItemPropsInner = useCallback((a, b, c) => {
@@ -184,19 +182,20 @@ export function List(rawProps: ListProps) {
   )
 
   const hasItems = !!filtered.results.length
-  const isInactive = !(typeof props.isActive === 'boolean' ? props.isActive : isActive)
 
   return (
     <HighlightActiveQuery query={query}>
       {hasItems && (
         <VirtualList
-          disableMeasure={isInactive}
+          disableMeasure={visibility.visible === false}
           items={filtered.results}
           ItemView={ListItem}
           {...restProps}
           getItemProps={getItemPropsInner}
           onSelect={onSelectInner}
           onOpen={onOpenInner}
+          onSelectRows={onSelectRows}
+          selectableStoreRef={selectableStoreRef}
         />
       )}
       {!hasItems && (placeholder || <ListPlaceholder />)}

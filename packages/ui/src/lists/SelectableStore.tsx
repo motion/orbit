@@ -55,6 +55,9 @@ export class SelectableStore {
   active = new Set()
   lastEnter = -1
   listRef: DynamicListControlled = null
+  // this is pretty shit, but simple and works well
+  // just wont release memory
+  private keyToIndex = {}
 
   private setActive(next: string[]) {
     this.active = new Set(next)
@@ -72,7 +75,7 @@ export class SelectableStore {
     () => JSON.stringify([...this.active]),
     () => {
       ensure('onSelectRows', !!this.props.onSelectRows)
-      this.props.onSelectRows(this.getActiveRows(), this.active)
+      this.props.onSelectRows(this.activeRows, this.active)
     },
   )
 
@@ -129,6 +132,7 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = key(row, index)
+    this.keyToIndex[rowKey] = index
     if (e.button !== 0 || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
@@ -165,15 +169,12 @@ export class SelectableStore {
     this.setActive(next)
   }
 
-  // TODO could be made a lot faster for large rows
-  getActiveRows() {
-    if (this.active.size === 0) {
-      return null
-    }
-    const activeRows = [...this.active].map(rowKey =>
-      this.rows.find((x, i) => Config.getItemKey(x, i) === rowKey),
-    )
-    return activeRows.length ? activeRows : null
+  get activeRows() {
+    return [...this.active].map(rowKey => this.rows[this.keyToIndex[rowKey]])
+  }
+
+  getIndex(rowKey: string) {
+    return this.keyToIndex[rowKey]
   }
 
   onHoverRow(index: number) {
@@ -215,6 +216,7 @@ export class SelectableStore {
   }
 
   setRows(next: GenericDataRow[]) {
+    this.keyToIndex = {}
     this.rows = next
   }
 

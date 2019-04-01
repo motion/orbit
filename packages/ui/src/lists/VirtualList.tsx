@@ -30,7 +30,8 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(defaultProps, rawProps)
   const getProps = useGet(props)
-  const selectableStoreRef = useRef<SelectableStore>(null)
+  const fallback = useRef<SelectableStore>(null)
+  const selectableStoreRef = props.selectableStoreRef || fallback
   const dynamicListProps = omit(
     props,
     'ItemView',

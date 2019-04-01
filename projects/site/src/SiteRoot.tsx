@@ -1,7 +1,7 @@
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader/root'
 import { HomePage } from './pages/HomePage'
 
 function getSiteBrowser() {
@@ -29,7 +29,7 @@ function getSiteBrowser() {
   return browser
 }
 
-export const SiteRoot = hot(module)(() => {
+export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
     <div style={{ pointerEvents: 'auto' }}>

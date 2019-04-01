@@ -48,13 +48,10 @@ export function SelectableList(props: SelectableListProps) {
     selectableStore.setRows(props.items)
   }, [props.items])
 
-  let id = useRef(Math.random())
-
   useReaction(
     () => [...selectableStore.active],
     active => {
       const items = getItems()
-      console.log('ok', id.current, active)
       if (active.length <= 1) {
         // TODO this is hacky, we need:
         //   1. make a better getitemKey without index

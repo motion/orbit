@@ -12,31 +12,25 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
   const selectableStore = props.selectableStore || useStore(SelectableStore, props as any)
   const itemsKey = JSON.stringify(items.map(i => i.id))
 
-  useEffect(
-    () => {
-      selectableStore.setRows(items)
-    },
-    [itemsKey],
-  )
+  useEffect(() => {
+    selectableStore.setRows(items)
+  }, [items])
 
-  const itemViews = useMemo(
-    () => {
-      return items.map((item, index) => {
-        const select = () => {
-          selectableStore.setRowActive(index)
-        }
-        // this is complex so we can do single updates on selection move
-        return function GridItem() {
-          const store = useStore(selectableStore)
-          return props.getItem(item, {
-            isSelected: store.isActiveIndex(index),
-            select,
-          })
-        }
-      })
-    },
-    [itemsKey],
-  )
+  const itemViews = useMemo(() => {
+    return items.map((item, index) => {
+      const select = () => {
+        selectableStore.setRowActive(index)
+      }
+      // this is complex so we can do single updates on selection move
+      return function GridItem() {
+        const store = useStore(selectableStore)
+        return props.getItem(item, {
+          isSelected: store.isActiveIndex(index),
+          select,
+        })
+      }
+    })
+  }, [itemsKey])
 
   const getItem = useCallback(
     (_, index) => {

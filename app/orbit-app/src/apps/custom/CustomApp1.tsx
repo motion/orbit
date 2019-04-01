@@ -97,7 +97,13 @@ function PersonInfo(props: { row: any }) {
       <Pane>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
-            <Table bordered title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />
+            <Table
+              selectable
+              bordered
+              title="Albums"
+              rows={albums}
+              onSelect={rows => setAlbum(rows[0])}
+            />
           )}
         </Fetch>
       </Pane>

@@ -1,8 +1,8 @@
 import { Bit } from '@o/models'
 import {
   Center,
+  createContextualProps,
   Direction,
-  MergeContext,
   SelectableList,
   SelectableListProps,
   SelectableStore,
@@ -55,29 +55,12 @@ export function toListItemProps(props?: any): OrbitListItemProps {
   return props
 }
 
-// technically, these are "non overridable", whereas the ListPropsContext is overrideable
-// what we should do is make this a standard pattern with a nice utility for it in UI
-
-type SelectionContextType = {
+// extra props if we need to hook into select events
+const { PassProps, useProps } = createContextualProps<{
   onSelectItem?: HandleOrbitSelect
   onOpenItem?: HandleOrbitSelect
-}
-
-const SelectionContext = createContext<SelectionContextType>({
-  onSelectItem: () => console.log('no select event for onSelectItem'),
-  onOpenItem: () => console.log('no select event for onOpenItem'),
-})
-
-export function ProvideSelectionContext({
-  children,
-  ...rest
-}: SelectionContextType & { children: any }) {
-  return (
-    <MergeContext Context={SelectionContext} value={rest}>
-      {children}
-    </MergeContext>
-  )
-}
+}>()
+export const PassExtraListProps = PassProps
 
 export type HandleOrbitSelect = (
   index: number,
@@ -93,7 +76,7 @@ export function List(rawProps: ListProps) {
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
   const { shortcutStore, spaceStore } = useStoresSimple()
-  const selectableProps = useContext(SelectionContext)
+  const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
   const isActive = useIsAppActive()
   const visibility = useVisiblityContext()
@@ -176,11 +159,11 @@ export function List(rawProps: ListProps) {
         onSelect(index, appProps, eventType)
       }
       selectableStore.setActiveIndex(index)
-      if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, appProps, eventType)
+      if (onSelectItem) {
+        onSelectItem(index, appProps, eventType)
       }
     },
-    [onSelect, selectableProps],
+    [onSelect, onSelectItem],
   )
 
   const onOpenInner = useCallback(
@@ -189,11 +172,11 @@ export function List(rawProps: ListProps) {
       if (onOpen) {
         onOpen(index, appProps)
       }
-      if (selectableProps && selectableProps.onOpenItem) {
-        selectableProps.onOpenItem(index, appProps, eventType)
+      if (onOpenItem) {
+        onOpenItem(index, appProps, eventType)
       }
     },
-    [onOpen, selectableProps],
+    [onOpen, onOpenItem],
   )
 
   const hasItems = !!filtered.results.length

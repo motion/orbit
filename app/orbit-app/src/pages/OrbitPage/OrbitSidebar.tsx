@@ -3,7 +3,7 @@ import {
   AppLoadContext,
   AppMainViewProps,
   ListPropsContext,
-  ProvideSelectionContext,
+  PassExtraListProps,
   SubPane,
 } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
@@ -42,9 +42,11 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
           <ListPropsContext.Provider
             value={{ selectable: true, searchable: true, alwaysSelected: true }}
           >
-            <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
+            <PassExtraListProps
+              onSelectItem={(index, appProps) => orbitStore.setSelectItem(id, index, appProps)}
+            >
               {props.children}
-            </ProvideSelectionContext>
+            </PassExtraListProps>
           </ListPropsContext.Provider>
         </View>
         {props.hasStatusbar && statusbarPadElement}

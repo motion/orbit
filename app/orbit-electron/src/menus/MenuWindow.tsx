@@ -1,13 +1,12 @@
 import { getGlobalConfig } from '@o/config'
 import { Window } from '@o/reactron'
 import { Desktop, Electron } from '@o/stores'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { WEB_PREFERENCES } from '../constants'
 
 const Config = getGlobalConfig()
 
-export default observer(function MenuWindow() {
+export default function MenuWindow() {
   const [show, setShow] = React.useState(false)
   return (
     <Window
@@ -29,4 +28,4 @@ export default observer(function MenuWindow() {
       position={[0, 0]}
     />
   )
-})
+}

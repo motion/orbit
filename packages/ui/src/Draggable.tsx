@@ -1,6 +1,6 @@
 import { FullScreen, ViewProps } from '@o/gloss'
 import React, { useEffect, useRef, useState } from 'react'
-import { useRefGetter } from './hooks/useRefGetter'
+import { useGet } from './hooks/useGet'
 import { Omit } from './types'
 
 export type DraggableProps = Omit<ViewProps, 'onChange'> & {
@@ -25,8 +25,8 @@ export function useDraggable(props: DraggableProps) {
     top: props.defaultY,
     left: props.defaultX,
   })
-  const getOnChange = useRefGetter(props.onChange)
-  const getPosition = useRefGetter(position)
+  const getOnChange = useGet(props.onChange)
+  const getPosition = useGet(position)
 
   useEffect(
     () => {

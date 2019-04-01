@@ -88,6 +88,10 @@ export function decorate<T>(
   },
   props?: Object,
 ): { new (...args: any[]): T & AutomagicStore } {
+  if (!obj) {
+    console.trace('what')
+    throw new Error('No store passed')
+  }
   if (!Getters.get(obj)) {
     Getters.set(obj, decoratePrototype(obj))
   }

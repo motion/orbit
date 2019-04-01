@@ -2,7 +2,6 @@ import { loadMany } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { CosalSaliencyModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 
 type Props = { query?: string }
@@ -30,7 +29,7 @@ class SaliencyStore {
   )
 }
 
-export default observer(function CosalSaliency(props: Props) {
+export default function CosalSaliency(props: Props) {
   const store = useStore(SaliencyStore, props)
   return (
     <div style={{ padding: 10 }}>
@@ -67,7 +66,7 @@ export default observer(function CosalSaliency(props: Props) {
       </div>
     </div>
   )
-})
+}
 
 const Word = gloss({
   flexFlow: 'row',

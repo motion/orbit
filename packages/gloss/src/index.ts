@@ -22,7 +22,7 @@ export { Inline } from './blocks/Inline'
 export { InlineBlock } from './blocks/InlineBlock'
 export { InlineFlex } from './blocks/InlineFlex'
 export { Row } from './blocks/Row'
-export { SimpleText } from './blocks/SimpleText'
+export { SimpleText, SimpleTextProps } from './blocks/SimpleText'
 export { View, ViewProps } from './blocks/View'
 // configureGloss
 export { configureGloss } from './config'

@@ -1,14 +1,5 @@
 import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import {
-  Button,
-  Loading,
-  Section,
-  SelectionStore,
-  Space,
-  useOnMount,
-  View,
-  Visibility,
-} from '@o/ui'
+import { Button, Loading, Section, Space, View, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { Component, memo, Suspense, useCallback } from 'react'
 import '../../apps/orbitApps'
@@ -20,7 +11,7 @@ import { OrbitStatusBar } from './OrbitStatusBar'
 import { OrbitToolBar } from './OrbitToolBar'
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
-  const { orbitStore, paneManagerStore } = useStoresSimple()
+  const { paneManagerStore } = useStoresSimple()
   const getIsActive = () => paneManagerStore.activePane && paneManagerStore.activePane.id === id
   const isActive = useReaction(getIsActive)
   const appStore = useStoreSimple(AppStore, {
@@ -28,17 +19,9 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     identifier,
     isActive: useCallback(getIsActive, []),
   })
-  const selectionStore = useStoreSimple(SelectionStore, { isActive })
-
-  // set default initial appProps
-  useOnMount(function setInitialConfig() {
-    orbitStore.setActiveConfig(id, {
-      identifier,
-    })
-  })
 
   return (
-    <ProvideStores stores={{ selectionStore, appStore }}>
+    <ProvideStores stores={{ appStore }}>
       <Visibility visible={isActive}>
         <OrbitAppRender id={id} identifier={identifier} />
       </Visibility>
@@ -47,9 +30,7 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 }
 
 const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
-  // handle url changes
-  useAppLocationEffect()
-
+  useAppLocationEffect() // handle url changes
   const { app } = getAppDefinition(identifier)
 
   if (!app) {

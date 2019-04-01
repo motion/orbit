@@ -1,4 +1,4 @@
-import { SelectionStore } from '@o/ui'
+import { SelectableStore } from '@o/ui'
 import { AppStore } from './AppStore'
 import { LocationStore } from './LocationStore'
 import { PaneManagerStore } from './PaneManagerStore'
@@ -8,7 +8,7 @@ import { SpaceStore } from './SpaceStore'
 import { SubPaneStore } from './SubPaneStore'
 import { ThemeStore } from './ThemeStore'
 
-export { SelectionStore } from '@o/ui'
+export { SelectableStore } from '@o/ui'
 export { AppStore } from './AppStore'
 export { LocationStore } from './LocationStore'
 export { NLPStore } from './NLPStore/NLPStore'
@@ -25,7 +25,7 @@ export type KitStores = {
   paneManagerStore?: PaneManagerStore
   subPaneStore?: SubPaneStore
   queryStore?: QueryStore
-  selectionStore?: SelectionStore
+  selectableStore?: SelectableStore
   shortcutStore?: ShortcutStore
   themeStore?: ThemeStore
   locationStore?: LocationStore

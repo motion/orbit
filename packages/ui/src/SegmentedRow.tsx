@@ -1,3 +1,4 @@
+import { selectDefined } from '@o/utils'
 import React from 'react'
 import { BreadcrumbInfo, Breadcrumbs, BreadcrumbsProps } from './Breadcrumbs'
 import { SizedSurfaceProps } from './SizedSurface'
@@ -26,7 +27,7 @@ export function getSegmentedStyle(
   props: { ignoreSegment?: boolean; borderRadius?: number },
   item: BreadcrumbInfo,
 ) {
-  const radius = typeof props.borderRadius === 'number' ? props.borderRadius : 0
+  const radius = selectDefined(props.borderRadius, 0)
   // support being inside a segmented list
   if (!props.ignoreSegment) {
     if (item) {

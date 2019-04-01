@@ -23,13 +23,13 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
-  children?: Array<any> | React.ReactNode
+  children?: any[] | React.ReactNode
   // Whether the tabs can be reordered by the user.
   sortable?: boolean
   // Callback when the tab order changes.
-  onSort?: (order: Array<string>) => void
+  onSort?: (order: string[]) => void
   // Order of tabs.
-  order?: Array<string>
+  order?: string[]
   // Whether to include the contents of every tab in the DOM and just toggle
   persist?: boolean
   // Whether to include a button to create additional items.
@@ -37,9 +37,9 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // Callback for when the new button is clicked.
   onNew?: () => void
   // Elements to insert before all tabs in the tab list.
-  before?: Array<any>
+  before?: any[]
   // Elements to insert after all tabs in the tab list.
-  after?: Array<any>
+  after?: any[]
   // extra props to pass to each tab
   tabProps?: ViewProps
   // extra props to pass to active tab
@@ -94,7 +94,8 @@ function TabsControlled({
         tabSiblings.push(comp)
         continue
       }
-      const { children, closable, label, icon, onClose, width } = comp.props
+      const { closable, label, icon, onClose, width } = comp.props
+      const compChildren = comp.props.children
       let id = comp.props.id
       if (typeof id !== 'string') {
         id = `${index}`
@@ -108,7 +109,7 @@ function TabsControlled({
         tabContents.push(
           <TabContent key={id} hidden={!isActive}>
             <Suspense fallback={<Loading />}>
-              {typeof children === 'function' && isActive ? children() : children}
+              {typeof compChildren === 'function' && isActive ? compChildren() : compChildren}
             </Suspense>
           </TabContent>,
         )
@@ -137,6 +138,7 @@ function TabsControlled({
                 }
               : undefined
           }
+          debug={label === 'Tree To Inspector' ? true : false}
           icon={icon}
         >
           {label}
@@ -145,8 +147,8 @@ function TabsControlled({
               ref={ref => (closeButton = ref)}
               onMouseDown={() => {
                 if (isActive && onActive) {
-                  const index = keys.indexOf(id)
-                  const newActive = keys[index + 1] || keys[index - 1] || null
+                  const idx = keys.indexOf(id)
+                  const newActive = keys[idx + 1] || keys[idx - 1] || null
                   onActive(newActive)
                 }
                 onClose()

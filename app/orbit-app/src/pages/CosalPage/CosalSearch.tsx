@@ -2,7 +2,6 @@ import { loadMany } from '@o/bridge'
 import { NLP } from '@o/kit'
 import { getSearchableText, SearchByTopicModel } from '@o/models'
 import { react, useStore } from '@o/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import CosalSaliency from './CosalSaliency'
 
@@ -34,7 +33,7 @@ class SearchStore {
   })
 }
 
-export default observer(function CosalSearch() {
+export default function CosalSearch() {
   const store = useStore(SearchStore)
   return (
     <div style={{ padding: 50 }}>
@@ -104,4 +103,4 @@ export default observer(function CosalSearch() {
       </div>
     </div>
   )
-})
+}

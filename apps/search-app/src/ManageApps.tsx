@@ -8,7 +8,7 @@ import {
   SelectableGrid,
   Text,
   useContextMenu,
-  useRefGetter,
+  useGet,
   View,
 } from '@o/ui'
 import React, { useCallback } from 'react'
@@ -102,7 +102,7 @@ const AppIconContainer = gloss({
 export function ManageApps() {
   const { paneManagerStore } = useStoresSimple()
   const activeApps = useActiveAppsSorted()
-  const getActiveApps = useRefGetter(activeApps)
+  const getActiveApps = useGet(activeApps)
   const handleSortEnd = useAppSortHandler()
   const [activeSpace] = useActiveSpace()
 

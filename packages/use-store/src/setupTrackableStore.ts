@@ -153,20 +153,24 @@ export function useTrackableStore<A>(
     dispose: null,
   })
   const shouldUpdate = opts && opts.shouldUpdate
+  let cur = trackableStore.current
+
   if (shouldUpdate) {
-    trackableStore.current.store.dispose()
+    cur.store.dispose()
   }
-  if (!trackableStore.current.store || shouldUpdate) {
+  if (plainStore && (!cur.store || shouldUpdate)) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
+    cur = trackableStore.current
   }
 
   // dispose on unmount
-  useEffect(() => () => trackableStore.current.dispose(), [])
+  useEffect(() => () => cur.dispose && cur.dispose(), [])
 
   // tracking
-  const { store, track, untrack } = trackableStore.current
-  track()
-  useLayoutEffect(untrack)
+  cur.track && cur.track()
+  useLayoutEffect(cur.untrack || idFn)
 
-  return store
+  return cur.store
 }
+
+const idFn = _ => _

@@ -12,7 +12,7 @@ import { useMemo, useRef } from 'react'
 // memo every function so it doesnt change every render to the component below,
 // but inside the memo'd fn, it references a "useRef" to the latest version of the function
 
-export function usePropsWithMemoFunctions<A extends Object>(props: A): A {
+export function usePropsWithMemoFunctions<A extends any>(props: A): A {
   const fnRefs = useRef<any>({})
   const fnMemos = useRef<any>({})
 

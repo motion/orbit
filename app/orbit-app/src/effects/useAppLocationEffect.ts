@@ -2,7 +2,7 @@ import { ensure, useReaction } from '@o/use-store'
 import { useStoresSimple } from '../hooks/useStores'
 
 export function useAppLocationEffect() {
-  const { appStore, selectionStore, locationStore, paneManagerStore } = useStoresSimple()
+  const { appStore, selectableStore, locationStore, paneManagerStore } = useStoresSimple()
 
   useReaction(
     () => locationStore.url,
@@ -13,7 +13,7 @@ export function useAppLocationEffect() {
 
       if (appStore.id === location.query.id) {
         paneManagerStore.setActivePane(location.basename)
-        selectionStore.moveToId(location.query.itemId)
+        selectableStore.moveToId(location.query.itemId)
       }
 
       if (!location.query.id) {

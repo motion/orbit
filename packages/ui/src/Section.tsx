@@ -6,7 +6,7 @@ import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 
-export type SectionProps = ViewProps &
+export type SectionProps = Omit<ViewProps, 'columns'> &
   PaddedProps &
   Omit<Partial<TitleRowProps>, 'after' | 'below' | 'margin'> & {
     belowTitle?: React.ReactNode
@@ -32,7 +32,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     bordered,
     belowTitle,
     below,
-    padding,
     flex,
     icon,
     padded,
@@ -59,7 +58,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       flex={flex}
       background={background}
       height={height}
-      width={width}
+      // todo weird type issue
+      width={width as any}
       maxHeight={maxHeight}
       maxWidth={maxWidth}
     >

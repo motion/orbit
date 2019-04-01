@@ -55,7 +55,7 @@ export function disposeStore(store: any, component?: CurrentComponent) {
 
 let currentHooks = null
 
-export function useHook<A extends ((...args: any[]) => any)>(cb: A): ReturnType<A> {
+export function useHook<A extends (...args: any[]) => any>(cb: A): ReturnType<A> {
   currentHooks = currentHooks || []
   currentHooks.push(cb)
   return cb()
@@ -101,6 +101,10 @@ function useReactiveStore<A extends any>(
   })
   let store = state.current.store
   const hasChangedSource = store && !isSourceEqual(store, Store)
+
+  if (!Store) {
+    return null
+  }
 
   if (!store || hasChangedSource) {
     // sets up store and does some hmr state preservation logic
@@ -167,12 +171,12 @@ export function useStore<A>(
   } else {
     store = Store as new () => A
     const res = useReactiveStore(store, props)
-    store = res.store
+    store = res && res.store
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, {
         ...options,
         component,
-        shouldUpdate: res.hasChangedSource,
+        shouldUpdate: res && res.hasChangedSource,
       })
     }
   }
@@ -180,15 +184,9 @@ export function useStore<A>(
   // dispose on unmount
   useEffect(() => {
     if (instantiated) {
-      return () => disposeStore(store, component)
+      return () => store && disposeStore(store, component)
     }
   }, [])
-
-  if (!Store) {
-    // this bug was caused by having the app view not wrapped by HMR
-    // like `export default createApp({ app: (props) => <div /> })`
-    console.warn('no store given...', Store, store)
-  }
 
   if (options && options.conditionalUse === false) {
     return null

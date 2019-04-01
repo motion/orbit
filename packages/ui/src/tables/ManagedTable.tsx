@@ -7,67 +7,25 @@
 
 import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
-import * as React from 'react'
+import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
-import { VariableSizeList } from 'react-window'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
+import { DynamicListControlled } from '../lists/DynamicList'
+import { SelectableDynamicList } from '../lists/SelectableDynamicList'
+import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'
-import {
-  DEFAULT_ROW_HEIGHT,
-  SortOrder,
-  TableColumnOrder,
-  TableColumnSizes,
-  TableHighlightedRows,
-  TableOnAddFilter,
-  TableRows,
-} from './types'
+import { SortOrder, TableColumnOrder, TableColumnSizes, TableOnAddFilter, TableRows } from './types'
 
 // @ts-ignore
 const Electron = typeof electronRequire !== 'undefined' ? electronRequire('electron') : {}
 const clipboard = Electron.clipboard
 
-const filterRows = (
-  rows: TableRows,
-  filterValue?: string,
-  filter?: (row: GenericDataRow) => boolean,
-): TableRows => {
-  // check that we don't have a filter
-  const hasFilterValue = filterValue !== '' && filterValue != null
-  const hasFilter = hasFilterValue || typeof filter === 'function'
-  if (!hasFilter) {
-    return rows
-  }
-  let filteredRows = []
-  if (hasFilter) {
-    for (const row of rows) {
-      let keep = false
-
-      // check if this row's filterValue contains the current filter
-      if (filterValue != null && !!row.filterValue) {
-        keep = row.filterValue.includes(filterValue)
-      }
-
-      // call filter() prop
-      if (keep === false && typeof filter === 'function') {
-        keep = filter(row)
-      }
-
-      if (keep) {
-        filteredRows.push(row)
-      }
-    }
-  } else {
-    filteredRows = rows
-  }
-  return filteredRows
-}
-
-export type ManagedTableProps = {
+export type ManagedTableProps = SelectableProps & {
   overflow?: CSSPropertySet['overflow']
   flex?: CSSPropertySet['flex']
   margin?: CSSPropertySet['margin']
@@ -110,18 +68,6 @@ export type ManagedTableProps = {
    */
   filter?: (row: GenericDataRow) => boolean
   /**
-   * Callback when the highlighted rows change.
-   */
-  onSelectIndices?: (keys: TableHighlightedRows) => void
-  /**
-   * Disable highlighting rows
-   */
-  disableHighlight?: false
-  /**
-   * Whether multiple rows can be highlighted or not.
-   */
-  multiSelect?: boolean
-  /**
    * Height of each row.
    */
   rowLineHeight?: number
@@ -142,7 +88,6 @@ export type ManagedTableProps = {
    * Whether to hide the column names at the top of the table.
    */
   hideHeader?: boolean
-
   defaultSortOrder?: SortOrder
   sortOrder?: SortOrder
   onSortOrder?: (next: SortOrder) => any
@@ -151,14 +96,13 @@ export type ManagedTableProps = {
 }
 
 type ManagedTableState = {
-  highlightedRows: Set<string>
   sortOrder?: SortOrder
   sortedRows?: TableRows
   columnOrder: TableColumnOrder
   columnSizes: TableColumnSizes
   shouldScrollToBottom: boolean
   shouldRecalculateHeight?: boolean
-  prevProps: Partial<ManagedTableProps> | {}
+  prevProps: Partial<ManagedTableProps>
 }
 
 const Container = gloss(View, {
@@ -167,7 +111,8 @@ const Container = gloss(View, {
 
 class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableState> {
   static defaultProps: Partial<ManagedTableProps> = {
-    multiSelect: false,
+    zebra: true,
+    selectable: false,
     rowLineHeight: 24,
     placeholder: rows =>
       !rows ? (
@@ -180,14 +125,13 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   state: ManagedTableState = {
     columnOrder: [],
     columnSizes: this.props.columnSizes || {},
-    highlightedRows: new Set(),
     sortOrder: this.props.defaultSortOrder,
     sortedRows: null,
     shouldScrollToBottom: Boolean(this.props.stickyBottom),
     prevProps: {},
   }
 
-  static getDerivedStateFromProps = (props, state) => {
+  static getDerivedStateFromProps = (props: ManagedTableProps, state: ManagedTableState) => {
     const { prevProps } = state
     let nextState: Partial<ManagedTableState> = {}
 
@@ -249,13 +193,14 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .toUpperCase()}`
   }
 
-  tableRef: {
-    current: null | VariableSizeList
-  } = React.createRef()
-  scrollRef: {
-    current: null | HTMLDivElement
-  } = React.createRef()
+  listRef = createRef<DynamicListControlled>()
+  scrollRef = createRef<HTMLDivElement>()
   dragStartIndex?: number = null
+  selectableStoreRef = createRef<SelectableStore>()
+
+  get selectableStore() {
+    return this.selectableStoreRef.current
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown)
@@ -268,7 +213,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   componentDidUpdate(prevProps: ManagedTableProps) {
     if (this.state.shouldRecalculateHeight) {
       // rows were filtered, we need to recalculate heights
-      this.tableRef.current.resetAfterIndex(0, true)
+      console.warn('may need to recalc height')
+      // this.listRef.current.resetAfterIndex(0, true)
       this.setState({
         shouldRecalculateHeight: false,
       })
@@ -276,7 +222,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     if (
       this.props.rows.length !== prevProps.rows.length &&
       this.state.shouldScrollToBottom &&
-      this.state.highlightedRows.size < 2
+      this.selectableStore.active.size < 2
     ) {
       this.scrollToBottom()
     }
@@ -287,45 +233,18 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   onKeyDown = (e: KeyboardEvent) => {
-    const { highlightedRows } = this.state
-    if (highlightedRows.size === 0) {
+    if (this.selectableStore.active.size === 0) {
       return
     }
-    if (
+    const copyKey =
       ((e.metaKey && process.platform === 'darwin') ||
         (e.ctrlKey && process.platform !== 'darwin')) &&
       e.keyCode === 67
-    ) {
+    if (copyKey) {
       this.onCopy()
-    } else if ((e.keyCode === 38 || e.keyCode === 40) && !this.props.disableHighlight) {
-      // arrow navigation
-      const { highlightedRows, sortedRows } = this.state
-      const lastItemKey = Array.from(this.state.highlightedRows).pop()
-      const lastItemIndex = sortedRows.findIndex(row => row.key === lastItemKey)
-      const newIndex = Math.min(
-        sortedRows.length - 1,
-        Math.max(0, e.keyCode === 38 ? lastItemIndex - 1 : lastItemIndex + 1),
-      )
-      if (!e.shiftKey) {
-        highlightedRows.clear()
-      }
-      highlightedRows.add(sortedRows[newIndex].key)
-      this.onSelectIndices(highlightedRows, () => {
-        const { current } = this.tableRef
-        if (current) {
-          current.scrollToItem(newIndex)
-        }
-      })
+      return
     }
-  }
-
-  onSelectIndices = (highlightedRows: Set<string>, cb = () => {}) => {
-    if (this.props.disableHighlight) return
-    this.setState({ highlightedRows }, cb)
-    const { onSelectIndices } = this.props
-    if (onSelectIndices) {
-      onSelectIndices(Array.from(highlightedRows))
-    }
+    this.selectableStore.onKeyDown(e)
   }
 
   onSort = (sortOrder: SortOrder) => {
@@ -333,6 +252,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       sortOrder,
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
+    if (this.props.selectableStore) {
+      this.props.selectableStore.setRows(sortedRows)
+    }
     this.setState({ sortOrder, sortedRows })
     if (this.props.onSortOrder) {
       this.props.onSortOrder(sortOrder)
@@ -350,106 +272,22 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   scrollToBottom() {
-    const { current: tableRef } = this.tableRef
     const { sortedRows } = this.state
-    if (tableRef && sortedRows.length > 1) {
-      tableRef.scrollToItem(sortedRows.length - 1)
+    if (this.listRef.current && sortedRows.length > 1) {
+      this.listRef.current.scrollToIndex(sortedRows.length - 1)
     }
   }
 
-  onHighlight = (e: React.MouseEvent, row: GenericDataRow, index: number) => {
-    if (e.button !== 0 || this.props.disableHighlight) {
-      // Only highlight rows when using primary mouse button,
-      // otherwise do nothing, to not interfere context menus.
-      return
-    }
-    if (e.shiftKey) {
-      // prevents text selection
-      e.preventDefault()
-    }
-
-    let { highlightedRows } = this.state
-
-    this.dragStartIndex = index
-    document.addEventListener('mouseup', this.onStopDragSelecting)
-
-    if (
-      ((e.metaKey && process.platform === 'darwin') ||
-        (e.ctrlKey && process.platform !== 'darwin')) &&
-      this.props.multiSelect
-    ) {
-      highlightedRows.add(row.key)
-    } else if (e.shiftKey && this.props.multiSelect) {
-      // range select
-      const lastItemKey = Array.from(this.state.highlightedRows).pop()
-      highlightedRows = new Set([...highlightedRows, ...this.selectInRange(lastItemKey, row.key)])
-    } else {
-      // single select
-      this.state.highlightedRows.clear()
-      this.state.highlightedRows.add(row.key)
-    }
-
-    this.onSelectIndices(highlightedRows)
-
-    this.setState({
-      highlightedRows,
-    })
-  }
-
-  onStopDragSelecting = () => {
-    this.dragStartIndex = null
-    document.removeEventListener('mouseup', this.onStopDragSelecting)
-  }
-
-  selectInRange = (fromKey: string, toKey: string): Array<string> => {
-    const rows = this.state.sortedRows
-    const selected = []
-    let startIndex = -1
-    let endIndex = -1
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].key === fromKey) {
-        startIndex = i
-      }
-      if (rows[i].key === toKey) {
-        endIndex = i
-      }
-      if (endIndex > -1 && startIndex > -1) {
-        break
-      }
-    }
-
-    for (let i = Math.min(startIndex, endIndex); i <= Math.max(startIndex, endIndex); i++) {
-      try {
-        selected.push(rows[i].key)
-      } catch (e) {}
-    }
-
-    return selected
-  }
-
-  onMouseEnterRow = (_: React.MouseEvent, row: GenericDataRow, index: number) => {
-    const { dragStartIndex } = this
-    const { current } = this.tableRef
-    if (this.props.disableHighlight || !this.props.multiSelect) {
-      return
-    }
-    if (typeof dragStartIndex === 'number' && current) {
-      current.scrollToItem(index + 1)
-      const startKey = this.state.sortedRows[dragStartIndex].key
-      const highlightedRows = new Set(this.selectInRange(startKey, row.key))
-      this.onSelectIndices(highlightedRows)
-    }
-  }
+  lastIndex = -1
 
   buildContextMenuItems = () => {
-    const { highlightedRows } = this.state
-    if (highlightedRows.size === 0) {
+    const { active } = this.selectableStore
+    if (active.size === 0) {
       return []
     }
-
     return [
       {
-        label: highlightedRows.size > 1 ? `Copy ${highlightedRows.size} rows` : 'Copy row',
+        label: active.size > 1 ? `Copy ${active.size} rows` : 'Copy row',
         click: this.onCopy,
       },
       {
@@ -460,12 +298,13 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   getSelectedText = (): string => {
-    const { highlightedRows, sortedRows } = this.state
-    if (highlightedRows.size === 0) {
+    const { sortedRows } = this.state
+    const { active } = this.selectableStore
+    if (active.size === 0) {
       return ''
     }
     return sortedRows
-      .filter(row => highlightedRows.has(row.key))
+      .filter(row => active.has(row.key))
       .map(
         (row: GenericDataRow) =>
           row.copyText ||
@@ -476,66 +315,65 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       .join('\n')
   }
 
-  onScroll = debounce(
-    ({
-      scrollDirection,
-      scrollOffset,
-    }: {
-      scrollDirection: 'forward' | 'backward'
-      scrollOffset: number
-      scrollUpdateWasRequested: boolean
-    }) => {
-      const { current } = this.scrollRef
-      const parent = current ? current.parentElement : null
-      if (
-        this.props.stickyBottom &&
-        scrollDirection === 'forward' &&
-        !this.state.shouldScrollToBottom &&
-        current &&
-        parent instanceof HTMLElement &&
-        current.offsetHeight - (scrollOffset + parent.offsetHeight) < parent.offsetHeight
-      ) {
-        this.setState({ shouldScrollToBottom: true })
-      } else if (
-        this.props.stickyBottom &&
-        scrollDirection === 'backward' &&
-        this.state.shouldScrollToBottom
-      ) {
-        this.setState({ shouldScrollToBottom: false })
-      }
-    },
-    100,
-  )
+  onScroll = debounce(({ scrollDirection, scrollTop }) => {
+    const { current } = this.scrollRef
+    const parent = current ? current.parentElement : null
+    if (
+      this.props.stickyBottom &&
+      scrollDirection === 'forward' &&
+      !this.state.shouldScrollToBottom &&
+      current &&
+      parent instanceof HTMLElement &&
+      current.offsetHeight - (scrollTop + parent.offsetHeight) < parent.offsetHeight
+    ) {
+      this.setState({ shouldScrollToBottom: true })
+    } else if (
+      this.props.stickyBottom &&
+      scrollDirection === 'backward' &&
+      this.state.shouldScrollToBottom
+    ) {
+      this.setState({ shouldScrollToBottom: false })
+    }
+  }, 100)
 
   renderRow = ({ index, style }) => {
     const { columns, onAddFilter, multiline, zebra, rowLineHeight } = this.props
-    const { columnOrder, columnSizes, highlightedRows, sortedRows } = this.state
+    const { columnOrder, columnSizes, sortedRows } = this.state
     const columnKeys = columnOrder.map(k => (k.visible ? k.key : null)).filter(Boolean)
     return (
       <TableRow
         key={sortedRows[index].key}
+        rowKey={sortedRows[index].key}
         columnSizes={columnSizes}
         columnKeys={columnKeys}
         columns={columns}
-        onMouseDown={e => this.onHighlight(e, sortedRows[index], index)}
-        onMouseEnter={e => this.onMouseEnterRow(e, sortedRows[index], index)}
+        onMouseDown={e => this.selectableStore.setRowActive(index, e)}
+        onMouseEnter={() => this.selectableStore.onHoverRow(index)}
         multiline={multiline}
         rowLineHeight={rowLineHeight}
-        highlighted={highlightedRows.has(sortedRows[index].key)}
         row={sortedRows[index]}
         index={index}
         style={style}
         onAddFilter={onAddFilter}
         zebra={zebra}
+        selectableStore={this.selectableStore}
       />
     )
+  }
+
+  getItemKey = index => {
+    const { sortedRows } = this.state
+    const { active } = this.selectableStore
+    const row = sortedRows[index]
+    const hld = active.has(sortedRows[index].key)
+    return !row ? index : `${row.key}${hld}`
   }
 
   getContentHeight = () => {
     const maxHeight = this.props.maxHeight || Infinity
     let height = 0
     for (let i = 0; i < this.state.sortedRows.length; i++) {
-      height += this.getRowHeight(i)
+      height += this.getRowHeight(i).height
       if (height > maxHeight) {
         height = maxHeight
         break
@@ -544,28 +382,29 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     return height
   }
 
-  getRowHeight = index => {
+  getRowHeight = (index: number) => {
     const { sortedRows } = this.state
-    return (
-      (sortedRows[index] && sortedRows[index].height) ||
-      this.props.rowLineHeight ||
-      DEFAULT_ROW_HEIGHT
-    )
+    return {
+      height: (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight,
+      width: '100%',
+    }
   }
 
   render() {
-    const {
-      columns,
-      rowLineHeight,
-      width,
-      minHeight,
-      minWidth,
-      height,
-      rows,
-      placeholder,
-      ...viewProps
-    } = this.props
+    const { columns, width, minHeight, minWidth, rows, placeholder, ...viewProps } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
+
+    // this could easily move into getDerivedState
+    const height =
+      viewProps.height === 'content-height'
+        ? this.getContentHeight()
+        : Math.min(minHeight, viewProps.height || Infinity)
+
+    const placeholderElement =
+      !rows ||
+      (!sortedRows.length &&
+        (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
+      null
 
     return (
       <Container
@@ -575,6 +414,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         padding={viewProps.padding}
         flex={viewProps.flex}
         overflow={viewProps.overflow}
+        width={width}
+        height={height}
       >
         <TableHead
           columnOrder={columnOrder}
@@ -585,40 +426,67 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           columnSizes={columnSizes}
           onSort={this.onSort}
         />
-        {!rows ||
-          (!sortedRows.length &&
-            (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
-          null}
+        {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
-          <VariableSizeList
+          <SelectableDynamicList
+            keyMapper={this.getItemKey}
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            // whenever this view renders, update list, otherwise highlights break
-            itemData={Math.random()}
-            ref={this.tableRef}
-            width={width}
-            height={
-              height === 'content-height'
-                ? this.getContentHeight()
-                : Math.min(minHeight, height || Infinity)
-            }
-            estimatedItemSize={rowLineHeight || DEFAULT_ROW_HEIGHT}
-            overscanCount={20}
+            itemData={sortedRows}
+            listRef={this.listRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}
+            selectableStoreRef={this.selectableStoreRef}
+            {...pickSelectableProps(this.props)}
           >
             {this.renderRow}
-          </VariableSizeList>
+          </SelectableDynamicList>
         </ContextMenu>
       </Container>
     )
   }
 }
 
-export function ManagedTableNormalized(props: ManagedTableProps) {
+function ManagedTableNormalized(props: ManagedTableProps) {
   return <ManagedTableInner {...props} rows={props.rows.map(normalizeRow)} />
 }
 
 export const ManagedTable = debounceRender(ManagedTableNormalized, 50, {
   maxWait: 100,
 })
+
+const filterRows = (
+  rows: TableRows,
+  filterValue?: string,
+  filter?: (row: GenericDataRow) => boolean,
+): TableRows => {
+  // check that we don't have a filter
+  const hasFilterValue = filterValue !== '' && filterValue != null
+  const hasFilter = hasFilterValue || typeof filter === 'function'
+  if (!hasFilter) {
+    return rows
+  }
+  let filteredRows = []
+  if (hasFilter) {
+    for (const row of rows) {
+      let keep = false
+
+      // check if this row's filterValue contains the current filter
+      if (filterValue != null && !!row.filterValue) {
+        keep = row.filterValue.includes(filterValue)
+      }
+
+      // call filter() prop
+      if (keep === false && typeof filter === 'function') {
+        keep = filter(row)
+      }
+
+      if (keep) {
+        filteredRows.push(row)
+      }
+    }
+  } else {
+    filteredRows = rows
+  }
+  return filteredRows
+}

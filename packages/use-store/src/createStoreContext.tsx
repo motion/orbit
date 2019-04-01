@@ -5,9 +5,11 @@ import { useStore, UseStoreOptions } from './useStore'
 // Just unwraps the store so it doesn't keep tracking observables on accident
 // makes it easier to create/pass through context
 
-export function createStoreContext<Instance, Props>(_store: { new (): Instance; props?: Props }) {
+export function createStoreContext<Instance, Props>(_: { new (): Instance; props?: Props }) {
+  _
   const Context = createContext(null as Instance)
   return {
+    Context,
     Provider: ({ value, children }: { value: Instance; children: any }) => {
       return <Context.Provider value={value[GET_STORE]}>{children}</Context.Provider>
     },

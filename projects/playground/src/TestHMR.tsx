@@ -1,5 +1,4 @@
 import { useStore } from '@o/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 
 class MyStore {
@@ -11,8 +10,8 @@ class MyStore {
   }
 }
 
-export const TestHMR = observer(props => {
-  const store = useStore(MyStore, props)
+export const TestHMR = () => {
+  const store = useStore(MyStore)
   if (!store.firstState) {
     setTimeout(() => {
       store.firstState = 2
@@ -29,4 +28,4 @@ export const TestHMR = observer(props => {
       <button onClick={store.onClick} />
     </>
   )
-})
+}

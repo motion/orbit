@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import { AppProps, HandleOrbitSelect } from '@o/kit'
+import { AppProps } from '@o/kit'
 import { ensure, react, shallow, useHook } from '@o/use-store'
 import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -7,8 +7,8 @@ import { useStoresSimple } from '../../hooks/useStores'
 export class OrbitStore {
   stores = useHook(useStoresSimple)
 
-  lastSelectAt = Date.now()
-  nextItem = { index: -1, appProps: null }
+  lastSelectAt = {}
+  nextItem = { index: -1, appProps: null, paneId: '' }
   isEditing = false
   activeConfig: { [key: string]: AppProps } = shallow({})
 
@@ -20,8 +20,13 @@ export class OrbitStore {
     this.isEditing = true
   }
 
-  setSelectItem: HandleOrbitSelect = (index, appProps) => {
-    const next = { index, appProps }
+  setSelectItem(paneId: string, index: number, appProps: AppProps) {
+    // fast if not already set
+    if (!this.activeConfig[paneId]) {
+      this.activeConfig[paneId] = appProps
+      return
+    }
+    const next = { paneId, index, appProps }
     if (!isEqual(next, this.nextItem)) {
       this.nextItem = next
     }
@@ -31,18 +36,22 @@ export class OrbitStore {
     this.activeConfig[id] = config
   }
 
+  get activePaneId() {
+    return this.stores.paneManagerStore.activePane.id
+  }
+
   updateSelectedItem = react(
     () => this.nextItem,
-    async ({ appProps }, { sleep }) => {
+    async ({ paneId, appProps }, { sleep }) => {
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
-      const last = this.lastSelectAt
-      this.lastSelectAt = Date.now()
+      const last = this.lastSelectAt[paneId]
+      this.lastSelectAt[paneId] = Date.now()
       if (Date.now() - last < 50) {
         await sleep(50)
       }
       ensure('app config', !!appProps)
-      const { id } = this.stores.paneManagerStore.activePane
-      this.activeConfig[id] = appProps
+      console.log('setting', paneId, appProps)
+      this.activeConfig[paneId] = appProps
     },
   )
 }

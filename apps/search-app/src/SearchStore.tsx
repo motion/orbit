@@ -78,6 +78,7 @@ export class SearchStore {
 
   appToResult = (app: AppBit): OrbitListItemProps => {
     return {
+      key: `${app.id}`,
       title: app.name,
       iconBefore: true,
       icon: <AppIcon app={app} />,
@@ -86,7 +87,7 @@ export class SearchStore {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,
-        subtitle: 'Command: ⮐',
+        subTitle: 'Command: ⮐',
       },
       onOpen: () => {
         this.stores.queryStore.clearQuery()
@@ -133,7 +134,6 @@ export class SearchStore {
       ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
       {
         title: 'Add app...',
-
         iconBefore: true,
         identifier: 'message',
         onOpen: async () => {
@@ -155,6 +155,7 @@ export class SearchStore {
     // TODO recent history
     return [
       {
+        key: 'app-home',
         title: `${this.stores.spaceStore.activeSpace.name} Home`,
         subtitle: `10 apps`,
         icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,

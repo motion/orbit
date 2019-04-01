@@ -1,4 +1,4 @@
-import { AppProps, Table } from '@o/kit'
+import { Table } from '@o/kit'
 import {
   Card,
   DefinitionList,
@@ -22,7 +22,7 @@ const endpoint = 'https://jsonplaceholder.typicode.com'
 const type = ['paid', 'trial', 'enterprise', 'power']
 const active = ['active', 'inactive']
 
-export function CustomApp1(_props: AppProps) {
+export function CustomApp1() {
   const [highlighted, setHighlighted] = useState([])
   const form = useForm()
   const users = useFetch(`${endpoint}/users`).map((row, i) => ({
@@ -31,12 +31,10 @@ export function CustomApp1(_props: AppProps) {
     active: active[i % 2],
   }))
 
+  console.log('users', users)
+
   return (
     <Form use={form}>
-      {/* <FloatingCard attach="bottomright" title="Hello">
-        lorem
-      </FloatingCard> */}
-
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">
@@ -47,8 +45,9 @@ export function CustomApp1(_props: AppProps) {
                 <Select name="type" isMulti options={type} />
               </SpacedRow>
               <Table
-                multiSelect
-                onSelect={setHighlighted}
+                selectable="multi"
+                shareable
+                onSelect={rows => setHighlighted(rows)}
                 rows={users}
                 searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}
@@ -98,7 +97,13 @@ function PersonInfo(props: { row: any }) {
       <Pane>
         <Fetch url={`${endpoint}/albums?userId=${props.row.id}`}>
           {albums => (
-            <Table bordered title="Albums" rows={albums} onSelect={rows => setAlbum(rows[0])} />
+            <Table
+              selectable
+              bordered
+              title="Albums"
+              rows={albums}
+              onSelect={rows => setAlbum(rows[0])}
+            />
           )}
         </Fetch>
       </Pane>
@@ -108,7 +113,7 @@ function PersonInfo(props: { row: any }) {
             {photos => (
               <Table
                 bordered
-                multiSelect
+                selectable="multi"
                 searchable
                 title={`${album.id} Album ${album.title} Pictures`}
                 rows={photos}

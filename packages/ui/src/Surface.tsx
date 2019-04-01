@@ -105,8 +105,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   const {
     alignItems,
-    badge,
-    badgeProps,
     children,
     className,
     disabled,
@@ -135,7 +133,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
-  const throughProps = {
+  const throughProps: Partial<SurfaceProps> = {
     height,
     iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
     alignItems,
@@ -147,7 +145,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
     overflow: props.overflow,
-  } as Partial<SurfaceProps>
+  }
 
   let lineHeight = props.lineHeight
   if (sizeLineHeight) {
@@ -179,12 +177,12 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             key={0}
             size={size}
             borderLeftRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius) - 1,
-              height / 2 - 1,
+              (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
+              +height / 2 - 1,
             )}
             borderRightRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius) - 1,
-              height / 2 - 1,
+              (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) - 1,
+              +height / 2 - 1,
             )}
           />
         )}
@@ -234,7 +232,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
       value={{
         opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
         pointerEvents: 'none',
-        color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+        color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
         justifyContent: 'center',
         hoverStyle: {
           // todo this is kind of a mess, consistency-wise

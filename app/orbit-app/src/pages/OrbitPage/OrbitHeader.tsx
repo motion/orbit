@@ -2,7 +2,7 @@ import { invertLightness } from '@o/color'
 import { FullScreen, gloss, SimpleText, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
-import { clipboard } from 'electron'
+// import { clipboard } from 'electron'
 import React, { memo } from 'react'
 import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -247,7 +247,7 @@ const LinkButton = memo(() => {
       tooltip={`Copy link to app`}
       icon="link69"
       onClick={() => {
-        clipboard.writeText(locationStore.urlString)
+        // clipboard.writeText(locationStore.urlString)
       }}
     />
   )

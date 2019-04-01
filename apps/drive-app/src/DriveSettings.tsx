@@ -1,8 +1,8 @@
 import { AppBit, AppModel, AppProps, SettingManageRow, Table, useModel, useStore } from '@o/kit'
 import { View } from '@o/ui'
 import * as React from 'react'
-import driveApp from './index'
 import { useEffect } from 'react'
+import driveApp from './index'
 
 class DriveSettingsStore {
   props: { app?: AppBit }
@@ -70,7 +70,7 @@ export function DriveSettings({ subId }: AppProps) {
               value: 'Active',
             },
           }}
-          multiSelect
+          selectable="multi"
           rows={folders.map((file, index) => {
             return {
               key: `${index}`,

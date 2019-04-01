@@ -1,3 +1,7 @@
+- can make startup faster by not loading all panes:
+  - this.nextItem in OrbitStore can be this.nextItem[paneId]
+  - then the updateItem reaction can await when(() => isVisible)
+
 - document for apps + apis
 
 - an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs

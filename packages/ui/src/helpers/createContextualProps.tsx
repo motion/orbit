@@ -1,16 +1,25 @@
-import { mergeDefined } from '@o/utils'
 import React, { createContext, useContext } from 'react'
 import { Omit } from '../types'
 
 export function createContextualProps<A extends any>() {
-  const Context = createContext(null as A)
+  const Context = createContext<Partial<A>>(null)
   return {
     PassProps({ children, ...rest }: Omit<A, 'children'> & { children?: any }) {
       return <Context.Provider value={rest as A}>{children}</Context.Provider>
     },
-    useProps(componentProps: any) {
+    useProps(componentProps: A): A {
       const extra = useContext(Context)
-      return extra ? mergeDefined(extra, componentProps) : componentProps
+      if (!extra) {
+        return componentProps
+      }
+      // merge just undefined componentProps from extra
+      const final = { ...componentProps }
+      for (const key in extra) {
+        if (typeof final[key] === 'undefined') {
+          final[key] = extra[key]
+        }
+      }
+      return final
     },
     Reset({ children }: { children: any }) {
       const extraProps = useContext(Context)

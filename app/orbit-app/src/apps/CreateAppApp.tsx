@@ -26,7 +26,7 @@ function CreateAppMain() {
         subTitle="Choose app to add"
       >
         <List
-          minSelected={0}
+          alwaysSelected
           items={defaultApps.map(app => ({
             title: app.name,
             identifier: app.identifier,

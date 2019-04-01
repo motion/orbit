@@ -17,7 +17,7 @@ export type EnumFilterOption = {
 
 export type TableFilterEnum = {
   key: string
-  value: Array<string>
+  value: string[]
   type: 'enum'
   enum: EnumFilterOption[]
   persistent?: boolean
@@ -41,9 +41,9 @@ type TableColumnOrderVal = {
   visible: boolean
 }
 
-export type TableColumnRawOrder = Array<string | TableColumnOrderVal>
+export type TableColumnRawOrder = (string | TableColumnOrderVal)[]
 
-export type TableColumnOrder = Array<TableColumnOrderVal>
+export type TableColumnOrder = TableColumnOrderVal[]
 
 export type TableColumnSizes = {
   [key: string]: string | number

@@ -45,7 +45,7 @@ export function Tab(_: {
    */
   icon?: React.ReactNode
 }) {
-  console.error("don't render me")
+  console.error("don't render me", _)
   return null
 }
 

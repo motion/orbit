@@ -1,3 +1,4 @@
+import { isEqual } from '@o/fast-compare'
 import { useEffect, useRef, useState } from 'react'
 
 export function useThrottle(value: any, limit = 0, mountArgs?: any[]) {
@@ -7,8 +8,10 @@ export function useThrottle(value: any, limit = 0, mountArgs?: any[]) {
   useEffect(() => {
     const tm = setTimeout(() => {
       if (Date.now() - last.current >= limit) {
-        setNext(value)
-        last.current = Date.now()
+        if (!isEqual(value, next)) {
+          setNext(value)
+          last.current = Date.now()
+        }
       }
     }, limit - (Date.now() - last.current))
 

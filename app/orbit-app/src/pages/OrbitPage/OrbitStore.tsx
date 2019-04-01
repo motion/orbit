@@ -46,11 +46,10 @@ export class OrbitStore {
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
       const last = this.lastSelectAt[paneId]
       this.lastSelectAt[paneId] = Date.now()
-      if (Date.now() - last < 50) {
-        await sleep(50)
+      if (Date.now() - last < 60) {
+        await sleep(60)
       }
       ensure('app config', !!appProps)
-      console.log('setting', paneId, appProps)
       this.activeConfig[paneId] = appProps
     },
   )

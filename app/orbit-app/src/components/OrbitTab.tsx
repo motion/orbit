@@ -28,7 +28,6 @@ export type TabProps = ViewProps & {
   sidePad?: number
   tooltip?: string
   textProps?: any
-  onClickPopout?: Function
   thicc?: boolean
   icon?: string | React.ReactNode
   iconSize?: number
@@ -41,7 +40,6 @@ export type TabProps = ViewProps & {
 }
 
 export const OrbitTab = memoIsEqualDeep(function OrbitTab({
-  app,
   icon,
   iconSize: iconSizeProp,
   iconProps,
@@ -50,7 +48,6 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   label,
   isActive = false,
   separator = false,
-  onClickPopout,
   textProps,
   thicc,
   className = '',
@@ -128,20 +125,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
         </Row>
 
         {separator && <Separator />}
-
         {after}
-
-        {/* {isActive && !!onClickPopout && (
-          <OrbitTabButton
-            className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-            tooltip="Open"
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              onClickPopout()
-            }}
-          />
-        )} */}
       </NavButtonChromeInner>
     </NavButtonChrome>
   )

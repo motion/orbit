@@ -129,12 +129,12 @@ export function List(rawProps: ListProps) {
   }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
 
   const onSelectRows = useCallback(
-    (selectedRows, keys) => {
+    selectedRows => {
       if (shareable) {
         spaceStore.currentSelection = selectedRows
       }
       if (props.onSelectRows) {
-        props.onSelectRows(selectedRows, keys)
+        props.onSelectRows(selectedRows)
       }
     },
     [props.items, props.onSelectRows, shareable],

@@ -17,7 +17,7 @@ export enum Direction {
 export type SelectableProps = {
   selectableStore?: SelectableStore
   selectableStoreRef?: MutableRefObject<SelectableStore>
-  onSelectRows?: (rows: any[], keys?: Set<string>) => void
+  onSelectRows?: (rows: any[]) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
@@ -75,7 +75,7 @@ export class SelectableStore {
     () => JSON.stringify([...this.active]),
     () => {
       ensure('onSelectRows', !!this.props.onSelectRows)
-      this.props.onSelectRows(this.activeRows, this.active)
+      this.props.onSelectRows(this.activeRows)
     },
   )
 
@@ -170,7 +170,12 @@ export class SelectableStore {
   }
 
   get activeRows() {
-    return [...this.active].map(rowKey => this.rows[this.keyToIndex[rowKey]])
+    return [...this.active].map(rowKey => {
+      if (!this.rows[this.keyToIndex[rowKey]]) {
+        debugger
+      }
+      return this.rows[this.keyToIndex[rowKey]]
+    })
   }
 
   getIndex(rowKey: string) {

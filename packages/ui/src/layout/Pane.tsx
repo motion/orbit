@@ -29,6 +29,9 @@ export function Pane({
     collapsed: collapseToggle.val,
   }
   const hasTitle = !!(title || afterTitle || beforeTitle)
+  if (typeof sizablePaneProps.height !== 'undefined' && isNaN(sizablePaneProps.height)) {
+    debugger
+  }
   return (
     <SizablePane {...sizablePaneProps}>
       {hasTitle && (

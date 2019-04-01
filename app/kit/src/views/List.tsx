@@ -5,6 +5,7 @@ import {
   MergeContext,
   SelectableList,
   SelectableListProps,
+  SelectableStore,
   SubTitle,
   Text,
   useGet,
@@ -13,7 +14,7 @@ import {
   View,
 } from '@o/ui'
 import { mergeDefined } from '@o/utils'
-import React, { createContext, useCallback, useContext, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
@@ -139,12 +140,12 @@ export function List(rawProps: ListProps) {
     })
   }, [onOpen, shortcutStore, shortcutStore])
 
+  const selStore = useRef<SelectableStore>(null)
   const onSelectIndices = useCallback(() => {
-    if (props.shareable && selectableStore) {
-      spaceStore.currentSelection = selectableStore.getActiveRows()
+    if (props.shareable && selStore.current) {
+      spaceStore.currentSelection = selStore.current.getActiveRows()
     }
-  }, [])
-
+  }, [props.shareable])
   const selectableStore =
     props.selectableStore ||
     useSelectableStore({

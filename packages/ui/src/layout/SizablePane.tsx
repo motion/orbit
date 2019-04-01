@@ -20,6 +20,9 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
   const [size, setSize] = useState(400)
 
   useEffect(() => {
+    if (!props.parentSize || typeof props.index === 'undefined' || flexes.length === 0) {
+      return
+    }
     const totalFlex = flexes.reduce((a, b) => a + b, 0)
     const flex = flexes[props.index]
     const pct = flex / totalFlex

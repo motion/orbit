@@ -1,14 +1,14 @@
-import { FullScreen } from '@o/gloss';
-import { selectDefined } from '@o/utils';
-import { clamp } from 'lodash';
-import React, { useCallback, useRef, useState } from 'react';
-import { animated, useSpring } from 'react-spring';
-import { useGesture } from 'react-with-gesture';
-import { Portal } from './helpers/portal';
-import { useGet } from './hooks/useGet';
-import { Interactive, InteractiveProps } from './Interactive';
-import { Omit } from './types';
-import { useVisiblity } from './Visibility';
+import { FullScreen } from '@o/gloss'
+import { selectDefined } from '@o/utils'
+import { clamp } from 'lodash'
+import React, { useCallback, useRef, useState } from 'react'
+import { animated, useSpring } from 'react-spring'
+import { useGesture } from 'react-with-gesture'
+import { Portal } from './helpers/portal'
+import { useGet } from './hooks/useGet'
+import { Interactive, InteractiveProps } from './Interactive'
+import { Omit } from './types'
+import { useVisiblity } from './Visibility'
 
 // TODO:
 // 1. new view <Draggable contain={[0, 0, window.innerWidth, window.innerHeight]} />

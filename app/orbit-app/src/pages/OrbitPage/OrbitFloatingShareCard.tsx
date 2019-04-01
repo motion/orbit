@@ -14,7 +14,6 @@ export function OrbitFloatingShareCard({
 }) {
   const { spaceStore } = useStores()
   const { currentSelection } = spaceStore
-  console.log('currentSelection', currentSelection)
   if (!currentSelection) {
     return null
   }

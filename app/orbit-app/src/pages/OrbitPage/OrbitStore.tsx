@@ -50,6 +50,7 @@ export class OrbitStore {
         await sleep(50)
       }
       ensure('app config', !!appProps)
+      console.log('setting', paneId, appProps)
       this.activeConfig[paneId] = appProps
     },
   )

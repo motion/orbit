@@ -1,15 +1,18 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, { createContext, RefObject, useCallback, useContext } from 'react'
+import React, { createContext, RefObject, useCallback, useContext, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useGet } from '../hooks/useGet'
 import { GenericComponent, Omit } from '../types'
-import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicList'
+import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
+import { SelectableDynamicList } from './SelectableDynamicList'
+import { SelectableProps, SelectableStore } from './SelectableStore'
 import { VirtualListItem, VirtualListItemProps } from './VirtualListItem'
 
-export type VirtualListProps<A> = SortableContainerProps &
+export type VirtualListProps<A> = SelectableProps &
+  SortableContainerProps &
   Omit<DynamicListProps, 'children' | 'itemCount' | 'itemData'> & {
     onSelect?: HandleSelection
     onOpen?: HandleSelection
@@ -21,12 +24,13 @@ export type VirtualListProps<A> = SortableContainerProps &
     getItemProps?: (item: A, index: number, items: A[]) => Record<string, any> | null | false
   }
 
-const SortableList = SortableContainer(DynamicList, { withRef: true })
+const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 
 export function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(defaultProps, rawProps)
   const getProps = useGet(props)
+  const selectableStoreRef = useRef<SelectableStore>(null)
   const dynamicListProps = omit(
     props,
     'ItemView',
@@ -60,6 +64,8 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         {...itemProps(props, index)}
         {...itemProps}
         {...getItemProps && getItemProps(item, index, items)}
+        onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
+        onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
         {...item}
         index={index}
         realIndex={index}
@@ -70,6 +76,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
 
   return (
     <SortableList
+      selectableStoreRef={selectableStoreRef}
       itemCount={props.items.length}
       itemData={props.items}
       shouldCancelStart={isRightClick}

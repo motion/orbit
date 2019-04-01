@@ -3,15 +3,14 @@ import {
   Center,
   createContextualProps,
   Direction,
-  SelectableList,
-  SelectableListProps,
   SelectableStore,
   SubTitle,
   Text,
   useGet,
-  useSelectableStore,
   useVisiblityContext,
   View,
+  VirtualList,
+  VirtualListProps,
 } from '@o/ui'
 import { mergeDefined } from '@o/utils'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
@@ -27,10 +26,7 @@ import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = Omit<
-  SelectableListProps,
-  'onSelect' | 'onOpen' | 'items' | 'onSelectRows'
-> &
+export type ListProps = Omit<VirtualListProps<any>, 'items'> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     query?: string
@@ -74,7 +70,17 @@ export function List(rawProps: ListProps) {
   const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
+  const {
+    items,
+    onSelect,
+    onOpen,
+    placeholder,
+    getItemProps,
+    query,
+    shareable,
+    ...restProps
+  } = props
+  const selectableStoreRef = useRef<SelectableStore>(null)
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -95,6 +101,7 @@ export function List(rawProps: ListProps) {
 
   useEffect(() => {
     if (!shortcutStore) return
+    const selectableStore = selectableStoreRef.current
     if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
       if (visibility.visible == false) {
@@ -123,20 +130,17 @@ export function List(rawProps: ListProps) {
     })
   }, [onOpen, shortcutStore, shortcutStore])
 
-  // TODO this is a mess..
-  const selStore = useRef<SelectableStore>(null)
-  const onSelectRows = useCallback(() => {
-    if (props.shareable && selStore.current) {
-      spaceStore.currentSelection = selStore.current.getActiveRows()
-    }
-  }, [props.shareable])
-  const selectableStore =
-    props.selectableStore ||
-    useSelectableStore({
-      ...restProps,
-      onSelectRows,
-    })
-  selStore.current = selectableStore
+  const onSelectRows = useCallback(
+    (selectedRows, keys) => {
+      if (shareable) {
+        spaceStore.currentSelection = selectedRows
+      }
+      if (props.onSelectRows) {
+        props.onSelectRows(selectedRows, keys)
+      }
+    },
+    [props.rows, props.onSelectRows, shareable],
+  )
 
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
@@ -149,6 +153,7 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (index, eventType) => {
+      const selectableStore = selectableStoreRef.current
       if (!selectableStore.rows) {
         selectableStore.setRows(getItems())
       }
@@ -184,7 +189,7 @@ export function List(rawProps: ListProps) {
   return (
     <HighlightActiveQuery query={query}>
       {hasItems && (
-        <SelectableList
+        <VirtualList
           disableMeasure={isInactive}
           items={filtered.results}
           ItemView={ListItem}
@@ -192,7 +197,6 @@ export function List(rawProps: ListProps) {
           getItemProps={getItemPropsInner}
           onSelect={onSelectInner}
           onOpen={onOpenInner}
-          selectableStore={selectableStore}
         />
       )}
       {!hasItems && (placeholder || <ListPlaceholder />)}

@@ -116,7 +116,7 @@ export function List(rawProps: ListProps) {
 
   const onSelectInner = useCallback(
     (selectedRows, selectedIndices) => {
-      console.log('selceting an imte')
+      console.log('selceting an imte', selectedRows, onSelectItem)
       if (shareable) {
         spaceStore.currentSelection = selectedRows
       }

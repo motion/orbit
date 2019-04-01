@@ -89,7 +89,7 @@ export class SelectableStore {
     for (const rowKey of [...this.active]) {
       const index = this.keyToIndex[rowKey]
       indices.push(+index)
-      rows.push(rowKey)
+      rows.push(this.rows[index])
     }
     return { rows, indices }
   }

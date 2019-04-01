@@ -111,6 +111,7 @@ export function List(rawProps: ListProps) {
 
   useEffect(() => {
     if (!shortcutStore) return
+    if (!selectableStore) return
     return shortcutStore.onShortcut(shortcut => {
       if (visibility.visible == false) {
         return
@@ -136,7 +137,7 @@ export function List(rawProps: ListProps) {
           break
       }
     })
-  }, [onOpen])
+  }, [onOpen, shortcutStore, shortcutStore])
 
   const onSelectIndices = useCallback(() => {
     if (props.shareable && selectableStore) {

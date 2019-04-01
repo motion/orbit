@@ -92,6 +92,7 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
 }
 
 type InteractiveState = {
+  chromeKey: number
   moving: boolean
   movingInitialProps: InteractiveProps | void
   movingInitialCursor: CursorState | void
@@ -118,6 +119,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   globalMouse = false
 
   state = {
+    chromeKey: 0,
     couldResize: false,
     cursor: null,
     moving: false,
@@ -348,6 +350,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!this.state.resizing && !this.state.moving && this.state.cursor) {
       this.setState({
         cursor: undefined,
+        resizingSides: null,
       })
     }
   }
@@ -588,6 +591,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  updatePosition() {
+    this.setState({ chromeKey: Math.random() })
+  }
+
   render() {
     const {
       fill,
@@ -652,17 +659,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
           {...props}
         >
           {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-          {useFloatingGrabbers &&
-            Object.keys(resizable).map(side => (
-              <InteractiveChrome
-                key={side}
-                parent={this.ref}
-                onMouseDown={listenerProps.onMouseDown}
-                hovered={resizingSides && resizingSides[side]}
-                side={side as keyof ResizableSides}
-                zIndex={zIndex + 1}
-              />
-            ))}
+          {useFloatingGrabbers && (
+            <InteractiveChrome
+              key={this.state.chromeKey}
+              parent={this.ref}
+              onMouseDown={listenerProps.onMouseDown}
+              resizingSides={resizingSides}
+              zIndex={zIndex + 1}
+            />
+          )}
           {this.props.children}
         </InteractiveContainer>
       </InteractiveContext.Provider>

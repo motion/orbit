@@ -27,7 +27,6 @@ export function FloatingView(props: FloatingViewProps) {
     defaultTop = 0,
     children,
     disableDrag,
-    padding,
     ...restProps
   } = props
   const controlledSize = typeof props.height !== 'undefined'
@@ -39,57 +38,72 @@ export function FloatingView(props: FloatingViewProps) {
     width: selectDefined(props.width, defaultWidth),
     height: selectDefined(props.height, defaultHeight),
   }))
-  const getPos = useGet({
-    left: xy.getValue()[0],
-    top: xy.getValue()[1],
+
+  const pos = {
+    xy: xy.getValue(),
     width: width.getValue(),
     height: height.getValue(),
-  })
+  }
+  const curPos = useRef(pos)
+  const lastDrop = useRef(pos)
+  const interactiveRef = useRef(null)
+
+  const update = useCallback((next: Partial<typeof pos>, config: Object = { duration: 0 }) => {
+    curPos.current = { ...curPos.current, ...next }
+    set({
+      ...next,
+      config,
+    })
+  }, [])
+
+  const commit = useCallback(() => {
+    lastDrop.current = curPos.current
+  }, [])
 
   const onResize = useCallback((w, h, desW, desH, sides) => {
     const cb = getProps().onResize
     if (cb) {
       cb(w, h, desW, desH, sides)
     }
-    const pos = getPos()
+    const at = curPos.current
     if (sides.right) {
-      set({ width: w })
+      update({ width: w })
     } else if (sides.bottom) {
-      set({ height: h })
+      update({ height: h })
     } else if (sides.top) {
-      const diff = h - pos.height
-      const top = pos.top - diff
-      set({ xy: [pos.left, top], height: pos.height + diff })
+      const diff = h - at.height
+      const top = at.xy[1] - diff
+      update({ xy: [at.xy[0], top], height: at.height + diff })
     } else if (sides.left) {
-      const diff = w - pos.width
-      const left = pos.left - diff
-      set({ xy: [left, pos.top], width: pos.width + diff })
+      const diff = w - at.width
+      const left = at.xy[0] - diff
+      update({ xy: [left, at.xy[1]], width: at.width + diff })
     }
   }, [])
 
-  let lastDelta = useRef([props.defaultTop, props.defaultLeft])
-  const bind = useGesture(next => {
+  const bindGesture = useGesture(next => {
     const { down, delta } = next
-    // const velocity = clamp(next.velocity, 1, 8)
     if (controlledPosition || disableDrag) {
       return
     }
-    if (!down) {
-      lastDelta.current = delta
+    const [x, y] = lastDrop.current.xy
+    const nextxy = [delta[0] + x, delta[1] + y]
+    // const velocity = clamp(next.velocity, 1, 8)
+    // { config: { mass: velocity, tension: 500 * velocity, friction: 50 } }
+    if (down) {
+      update({ xy: nextxy })
+    } else {
+      commit()
     }
-    const [x, y] = lastDelta.current
-    set({
-      xy: down ? [delta[0] + x, delta[1] + y] : lastDelta.current,
-      config: { duration: 0 },
-      //{ mass: velocity, tension: 500 * velocity, friction: 50 },
-    })
   })
 
   return (
     <Portal>
-      <FullScreen pointerEvents="none">
+      <FullScreen>
         <animated.div
           style={{
+            pointerEvents: isVisible ? 'auto' : 'none',
+            zIndex: 12000000,
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
@@ -97,18 +111,18 @@ export function FloatingView(props: FloatingViewProps) {
           }}
         >
           <Interactive
-            pointerEvents={isVisible ? 'auto' : 'none'}
+            ref={interactiveRef}
             opacity={isVisible ? 1 : 0}
             position="absolute"
-            zIndex={12000000}
             disabled={controlledSize}
-            padding={padding}
+            zIndex={12000000 + 1}
             {...restProps}
             width="100%"
             height="100%"
             onResize={onResize}
+            onResizeEnd={commit}
           >
-            <FullScreen {...bind()} pointerEvents="inherit">
+            <FullScreen {...bindGesture()} pointerEvents="inherit">
               {children}
             </FullScreen>
           </Interactive>

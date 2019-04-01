@@ -90,7 +90,6 @@ export function List(rawProps: ListProps) {
         return
       }
       const selectableStore = selectableStoreRef.current
-      console.log('down down', selectableStore)
       switch (shortcut) {
         case 'open':
           console.log('todo open', selectableStore.active)

@@ -35,15 +35,14 @@ export function TestUIKit() {
     { title: 'hello', subtitle: 'world', icon: 'hi' },
     { title: 'hello', subtitle: 'world', icon: 'hi' },
   ]
+  console.log('render')
   return (
     <Suspense fallback={<Loading />}>
       <FloatingCard title="hi" defaultTop={200} defaultLeft={200}>
-        <Title>hello</Title>
+        <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       </FloatingCard>
       <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       <SubView store={store} />
-
-      {/* <CustomApp1 /> */}
     </Suspense>
   )
 }

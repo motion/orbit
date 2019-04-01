@@ -1,18 +1,21 @@
-import { throttle } from 'lodash'
-import { useCallback, useRef } from 'react'
-import { useOnUnmount } from './useOnUnmount'
+import { useEffect, useRef, useState } from 'react'
 
-export function useThrottle() {
-  const mounted = useRef(true)
+export function useThrottle(value: any, limit = 0) {
+  const [next, setNext] = useState(value)
+  const last = useRef(Date.now())
 
-  useOnUnmount(() => {
-    mounted.current = false
-  })
+  useEffect(() => {
+    const tm = setTimeout(() => {
+      if (Date.now() - last.current >= limit) {
+        setNext(value)
+        last.current = Date.now()
+      }
+    }, limit - (Date.now() - last.current))
 
-  return useCallback((fn, amount) => {
-    return throttle((...args) => {
-      if (!mounted.current) return
-      return fn(...args)
-    }, amount)
-  }, [])
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [value, limit])
+
+  return next
 }

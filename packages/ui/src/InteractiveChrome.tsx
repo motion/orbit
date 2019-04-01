@@ -17,8 +17,7 @@ type InteractiveChromeProps = Omit<ViewProps, 'zIndex'> & {
 export const InteractiveChrome = ({ resizingSides, parent, ...rest }: InteractiveChromeProps) => {
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
-  const throttle = useThrottle()
-  const measureThrottled = useCallback(throttle(() => setMeasureKey(Math.random()), 32), [])
+  const measureThrottled = useThrottle(() => setMeasureKey(Math.random()), 32)
   const measure = useCallback(() => setMeasureKey(Math.random()), [])
 
   useScreenPosition({
@@ -29,7 +28,6 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
 
   const isHoveringResize =
     !!resizingSides && Object.keys(resizingSides).reduce((a, b) => a || resizingSides[b], false)
-  console.log('resizingSides', resizingSides)
 
   return (
     <FullScreen

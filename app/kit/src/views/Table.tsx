@@ -13,7 +13,7 @@ import {
   useSelectableStore,
   View,
 } from '@o/ui'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 
@@ -52,7 +52,10 @@ export function Table(tableProps: TableProps) {
   }
   const { height, ref } = useParentNodeSize()
   const rows = props.rows ? props.rows.map(normalizeRow) : null
-  const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
+  const columns = useMemo(
+    () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
+    [props.columns, rows],
+  )
   const ogOnHighlightedIndices = useGet(props.onSelectIndices)
 
   const onSelectIndices = useCallback(

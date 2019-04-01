@@ -10,6 +10,7 @@ import { Contents, gloss } from '@o/gloss'
 import React, { forwardRef, memo, PureComponent, RefObject, useRef } from 'react'
 import { useOnMount } from '../hooks/useOnMount'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
+import { useThrottle } from '../hooks/useThrottle'
 
 export type DynamicListProps = {
   disableMeasure?: boolean
@@ -42,13 +43,13 @@ export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicList
   const parentSize = useParentNodeSize({
     disable: disableMeasure,
   })
-
+  const { width, height } = useThrottle(parentSize, 300)
   return (
     <Contents ref={parentSize.ref}>
       <DynamicListControlled
         ref={props.listRef || (ref as any)}
-        width={parentSize.width}
-        height={parentSize.height}
+        width={width}
+        height={height}
         {...props}
       />
     </Contents>
@@ -205,8 +206,6 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
   onResize = () => {
     if (this.props.height === 'content-height') {
       this.setState({ height: this.getContentHeight() })
-    } else {
-      this.setState({ shouldMeasure: false })
     }
     this.recalculateScrollTop()
     this.dimensions.clear()
@@ -402,7 +401,11 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
       debugger
       return
     }
+    if (top === 0) {
+      return
+    }
     this.setState({
+      shouldMeasure: false,
       scrollHeight: top,
       innerStyle: {
         height: top,

@@ -33,6 +33,7 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
   const measure = useCallback(
     _.debounce((nodeRect?) => {
       const callback = onChange()
+      if (!callback) return
       if (nodeRect === false) {
         callback({ visible: false, rect: null })
         return
@@ -79,14 +80,11 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
 
   useEffect(measure, [ref, ...mountArgs])
 
-  useEffect(
-    () => {
-      if (disable) {
-        measure(false)
-      }
-    },
-    [disable],
-  )
+  useEffect(() => {
+    if (disable) {
+      measure(false)
+    }
+  }, [disable])
 }
 
 function isVisible(ele) {

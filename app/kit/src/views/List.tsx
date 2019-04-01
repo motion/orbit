@@ -29,7 +29,7 @@ import { ListItem, OrbitListItemProps } from './ListItem'
 
 export type ListProps = Omit<
   SelectableListProps,
-  'onSelect' | 'onOpen' | 'items' | 'onSelectIndices'
+  'onSelect' | 'onOpen' | 'items' | 'onSelectRows'
 > &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
@@ -125,7 +125,7 @@ export function List(rawProps: ListProps) {
 
   // TODO this is a mess..
   const selStore = useRef<SelectableStore>(null)
-  const onSelectIndices = useCallback(() => {
+  const onSelectRows = useCallback(() => {
     if (props.shareable && selStore.current) {
       spaceStore.currentSelection = selStore.current.getActiveRows()
     }
@@ -134,7 +134,7 @@ export function List(rawProps: ListProps) {
     props.selectableStore ||
     useSelectableStore({
       ...restProps,
-      onSelectIndices,
+      onSelectRows,
     })
   selStore.current = selectableStore
 

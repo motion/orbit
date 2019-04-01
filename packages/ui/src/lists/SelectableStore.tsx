@@ -1,4 +1,4 @@
-import { always, ensure, react, useStore } from '@o/use-store'
+import { ensure, react, useStore } from '@o/use-store'
 import { omit, pick } from 'lodash'
 import { MutableRefObject } from 'react'
 import { Config } from '../helpers/configure'
@@ -17,13 +17,13 @@ export enum Direction {
 export type SelectableProps = {
   selectableStore?: SelectableStore
   selectableStoreRef?: MutableRefObject<SelectableStore>
-  onSelectIndices?: (indices: number[], keys?: Set<string>) => void
+  onSelectRows?: (rows: any[], keys?: Set<string>) => void
   alwaysSelected?: boolean
   selectable?: 'multi' | boolean
 }
 
 export const selectablePropKeys = [
-  'onSelectIndices',
+  'onSelectRows',
   'alwaysSelected',
   'selectable',
   'selectableStore',
@@ -60,19 +60,19 @@ export class SelectableStore {
     this.active = new Set(next)
   }
 
-  callbackOnSelectableStoreProp = react(
-    () => this.props.onSelectableStore,
-    () => {
-      ensure('onSelectableStore', !!this.props.onSelectableStore)
-      this.props.onSelectableStore(this)
+  callbackRefProp = react(
+    () => this.props.selectableStoreRef,
+    ref => {
+      ensure('onSelectableStore', !!ref)
+      ref.current = this
     },
   )
 
   callbackOnSelectProp = react(
-    () => always(this.active),
+    () => JSON.stringify([...this.active]),
     () => {
-      ensure('selectIndices', !!this.props.onSelectIndices)
-      this.props.onSelectIndices(this.getActiveRows(), this.active)
+      ensure('onSelectRows', !!this.props.onSelectRows)
+      this.props.onSelectRows(this.getActiveRows(), this.active)
     },
   )
 
@@ -121,13 +121,12 @@ export class SelectableStore {
   }
 
   isActiveIndex = (index: number) => {
-    if (!this.rows.length) return false
+    if (!this.rows.length || index >= this.rows.length) return false
     if (index === -1) return false
     return this.active.has(this.getIndexKey(index))
   }
 
   setRowActive(index: number, e?: React.MouseEvent) {
-    debugger
     const row = this.rows[index]
     const rowKey = key(row, index)
     if (e.button !== 0 || !this.props.selectable) {

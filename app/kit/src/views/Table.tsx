@@ -24,7 +24,6 @@ export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
   PartialSectionProps & {
     columns?: TableColumns
     searchable?: boolean
-    onSelect?: (rows: any[]) => void
     shareable?: boolean
   }
 
@@ -43,7 +42,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 export function Table(tableProps: TableProps) {
   const stores = useStoresSimple()
   const sectionProps: PartialSectionProps = useSectionProps(tableProps)
-  const { flex, bordered, searchable, onSelect, title, subTitle, shareable, ...props } = {
+  const { flex, bordered, searchable, title, subTitle, shareable, ...props } = {
     ...sectionProps,
     ...tableProps,
   }
@@ -54,21 +53,16 @@ export function Table(tableProps: TableProps) {
     [props.columns, rows],
   )
 
-  const onSelectIndices = useCallback(
-    (indices, keys) => {
-      if (!props.rows) return
-      const selected = indices.map(i => props.rows[i])
+  const onSelectRows = useCallback(
+    (selectedRows, keys) => {
       if (shareable) {
-        stores.spaceStore.currentSelection = selected
+        stores.spaceStore.currentSelection = selectedRows
       }
-      if (onSelect) {
-        onSelect(selected)
-      }
-      if (props.onSelectIndices) {
-        props.onSelectIndices(indices, keys)
+      if (props.onSelectRows) {
+        props.onSelectRows(selectedRows, keys)
       }
     },
-    [props.rows, props.onSelectIndices, shareable],
+    [props.rows, props.onSelectRows, shareable],
   )
 
   return (
@@ -92,7 +86,7 @@ export function Table(tableProps: TableProps) {
           {...props}
           columns={columns}
           rows={rows}
-          onSelectIndices={onSelectIndices}
+          onSelectRows={onSelectRows}
         />
       </View>
     </Section>

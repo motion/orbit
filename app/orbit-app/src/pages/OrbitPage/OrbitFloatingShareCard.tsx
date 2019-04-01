@@ -3,19 +3,27 @@ import { FloatingCard } from '@o/ui'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
 
-export function OrbitFloatingShareCard() {
+export function OrbitFloatingShareCard({
+  width = 200,
+  height = 250,
+  pad = 20,
+}: {
+  width: number
+  height: number
+  pad: number
+}) {
   const { spaceStore } = useStores()
   const { currentSelection } = spaceStore
   console.log('currentSelection', currentSelection)
-  if (currentSelection) {
+  if (!currentSelection) {
     return null
   }
   return (
     <FloatingCard
-      defaultWidth={180}
-      defaultHeight={200}
-      defaultTop={window.innerHeight - 220}
-      defaultLeft={window.innerWidth - 200}
+      defaultWidth={width}
+      defaultHeight={height}
+      defaultTop={window.innerHeight - height - pad}
+      defaultLeft={window.innerWidth - width - pad}
       title="Share"
     >
       <List items={currentSelection} />

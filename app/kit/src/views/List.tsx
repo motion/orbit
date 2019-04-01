@@ -91,7 +91,6 @@ export function List(rawProps: ListProps) {
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
-  const selectableStore = props.selectableStore || useSelectableStore(restProps)
   const { shortcutStore, spaceStore } = useStoresSimple()
   const selectableProps = useContext(SelectionContext)
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -139,6 +138,20 @@ export function List(rawProps: ListProps) {
     })
   }, [onOpen])
 
+  const onSelectIndices = useCallback(() => {
+    console.log('wahts up', selectableStore.getActiveRows())
+    if (props.shareable) {
+      spaceStore.currentSelection = selectableStore.getActiveRows()
+    }
+  }, [])
+
+  const selectableStore =
+    props.selectableStore ||
+    useSelectableStore({
+      ...restProps,
+      onSelectIndices,
+    })
+
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
@@ -182,13 +195,6 @@ export function List(rawProps: ListProps) {
     [onOpen, selectableProps],
   )
 
-  const onSelectIndices = useCallback(() => {
-    console.log('wahts up', selectableStore.getActiveRows())
-    if (props.shareable) {
-      spaceStore.currentSelection = selectableStore.getActiveRows()
-    }
-  }, [])
-
   const hasItems = !!filtered.results.length
   const isInactive = !(typeof props.isActive === 'boolean' ? props.isActive : isActive)
 
@@ -201,7 +207,6 @@ export function List(rawProps: ListProps) {
           ItemView={ListItem}
           {...restProps}
           getItemProps={getItemPropsInner}
-          onSelectIndices={onSelectIndices}
           onSelect={onSelectInner}
           onOpen={onOpenInner}
           selectableStore={selectableStore}

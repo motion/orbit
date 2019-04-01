@@ -144,7 +144,9 @@ export class SelectableStore {
     if (this.active.size === 0) {
       return null
     }
-    const activeRows = [...this.active].map(rowKey => this.rows.find(x => x.key === rowKey))
+    const activeRows = [...this.active].map(rowKey =>
+      this.rows.find((x, i) => Config.getItemKey(x, i) === rowKey),
+    )
     return activeRows.length ? activeRows : null
   }
 

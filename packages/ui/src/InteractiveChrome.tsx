@@ -17,7 +17,7 @@ type InteractiveChromeProps = Omit<ViewProps, 'zIndex'> & {
 export const InteractiveChrome = ({ resizingSides, parent, ...rest }: InteractiveChromeProps) => {
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
-  const measureThrottled = useThrottle(() => setMeasureKey(Math.random()), 32)
+  const measureThrottled = useThrottle(() => setMeasureKey(Math.random()), 32, [])
   const measure = useCallback(() => setMeasureKey(Math.random()), [])
 
   useScreenPosition({
@@ -41,6 +41,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
         target={parentRef}
         {...rest}
         onMouseDown={e => {
+          console.log('mouse down')
           if (isRightClick(e)) return
           if (isHoveringResize) {
             console.warn('no more bad click')
@@ -53,6 +54,7 @@ export const InteractiveChrome = ({ resizingSides, parent, ...rest }: Interactiv
           cursor: resizingSides ? getResizeCursor(resizingSides) : 'inherit',
           pointerEvents: (isHoveringResize ? 'all' : 'none') as any,
           opacity: isHoveringResize ? 1 : 0,
+          background: 'green',
         }}
       />
     </FullScreen>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-export function useThrottle(value: any, limit = 0) {
+export function useThrottle(value: any, limit = 0, mountArgs?: any[]) {
   const [next, setNext] = useState(value)
   const last = useRef(Date.now())
 
@@ -15,7 +15,7 @@ export function useThrottle(value: any, limit = 0) {
     return () => {
       clearTimeout(tm)
     }
-  }, [value, limit])
+  }, [...(mountArgs ? mountArgs : [value]), limit])
 
   return next
 }

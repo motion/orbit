@@ -14,7 +14,8 @@ import { OrbitListItemProps } from './ListItem'
 type TreeItems = { [key: number]: TreeItem }
 
 export type TreeListProps = Omit<VirtualListProps<any>, 'items' | 'getItemProps'> & {
-  items: TreeItems
+  // we should make this either require use or items
+  items?: TreeItems
   use?: UseTreeList
   rootItemID?: number
   getItemProps?: (item: TreeItem) => Promise<OrbitListItemProps>

@@ -55,11 +55,14 @@ export class SelectableStore {
   active = new Set()
   lastEnter = -1
   listRef: DynamicListControlled = null
-  // this is pretty shit, but simple and works well
-  // just wont release memory
   private keyToIndex = {}
 
   private setActive(next: string[]) {
+    // update keyToIndex
+    for (const rowKey of next) {
+      this.keyToIndex[rowKey] =
+        this.keyToIndex[rowKey] || this.rows.findIndex((r, i) => key(r, i) === rowKey)
+    }
     this.active = new Set(next)
   }
 
@@ -132,7 +135,6 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = key(row, index)
-    this.keyToIndex[rowKey] = index
     if (e.button !== 0 || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
@@ -176,10 +178,6 @@ export class SelectableStore {
       }
       return this.rows[this.keyToIndex[rowKey]]
     })
-  }
-
-  getIndex(rowKey: string) {
-    return this.keyToIndex[rowKey]
   }
 
   onHoverRow(index: number) {

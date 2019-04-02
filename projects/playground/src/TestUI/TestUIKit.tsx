@@ -21,6 +21,14 @@ class Store {
 }
 
 export function TestUIKit() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <CustomApp1 />
+    </Suspense>
+  )
+}
+
+export function TestList() {
   const store = useStore(Store)
   const items = [
     { title: 'hello', icon: 'hi' },
@@ -90,7 +98,7 @@ export function CustomApp1() {
               </SpacedRow>
               <Table
                 selectable="multi"
-                onSelect={setHighlighted}
+                onSelect={rows => setHighlighted(rows)}
                 rows={users}
                 searchTerm={form.getValue('search')}
                 filters={form.getFilters(['active', 'type'])}

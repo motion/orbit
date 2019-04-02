@@ -78,10 +78,10 @@ export function Table(tableProps: TableProps) {
       <View ref={ref}>
         <SearchableTable
           searchable={searchable}
-          height="content-height"
           minWidth={100}
           minHeight={100}
-          maxHeight={height > 0 ? height : 500}
+          maxHeight={height > 0 ? height : 200}
+          height={height}
           flex={flex}
           {...props}
           columns={columns}

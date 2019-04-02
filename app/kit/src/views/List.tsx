@@ -62,7 +62,7 @@ export function List(rawProps: ListProps) {
   const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const { items, onOpen, placeholder, getItemProps, query, shareable, ...restProps } = props
+  const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
   const internalRef = useRef<SelectableStore>(null)
   const selectableStoreRef = rawProps.selectableStoreRef || internalRef
   const { shortcutStore, spaceStore } = useStoresSimple()
@@ -73,7 +73,7 @@ export function List(rawProps: ListProps) {
     searchable: props.searchable,
     items: items || [],
     sortBy: props.sortBy,
-    query: props.query,
+    search: props.search,
     filterKey: props.filterKey,
     removePrefix: props.removePrefix,
     groupByLetter: props.groupByLetter,
@@ -150,12 +150,12 @@ export function List(rawProps: ListProps) {
     [onOpen, onOpenItem],
   )
 
-  const noQuery = typeof query === 'undefined' || query.length === 0
+  const noQuery = typeof search === 'undefined' || search.length === 0
   const hasResults = !!filtered.results.length
   const showPlaceholder = noQuery && !hasResults
 
   return (
-    <HighlightActiveQuery query={query}>
+    <HighlightActiveQuery query={search}>
       {hasResults && (
         <VirtualList
           disableMeasure={visibility.getVisible() === false}

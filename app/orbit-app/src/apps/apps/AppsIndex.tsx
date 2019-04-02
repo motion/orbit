@@ -25,6 +25,7 @@ export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
+  console.log('allSourceDefinitions', allSourceDefinitions)
   const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
   const syncApps = useActiveSyncAppsWithDefinition()
 
@@ -37,15 +38,17 @@ export function AppsIndex() {
       <TitleRow bordered title="Manage Apps" subTitle="Search to find new apps to install" />
       <List
         items={[
-          ...clientApps.map(x => getAppListItem(x, { group: 'App Settings' })),
-          ...syncApps.map(x => getAppListItem(x, { group: 'Source Settings', after: sourceIcon })),
+          ...clientApps.map(getAppListItem).map(x => ({ ...x, group: 'App Settings' })),
+          ...syncApps
+            .map(getAppListItem)
+            .map(x => ({ ...x, group: 'Source Settings', after: sourceIcon })),
           ...allSourceDefinitions.map(def => ({
             group: 'Install App',
             title: def.name,
             icon: def.id,
             iconBefore: true,
             small: true,
-            subTitle: getDescription(def),
+            subTitle: getDescription(def) || 'No Description',
             after: sourceIcon,
             appProps: {
               identifier: 'apps',

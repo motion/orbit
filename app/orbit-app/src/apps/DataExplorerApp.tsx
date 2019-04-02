@@ -32,7 +32,7 @@ function DataExplorerIndex() {
   return (
     <>
       <TitleRow bordered title="Data Explorer" subTitle="Explore installed data apps" />
-      <List items={syncApps.map(x => getAppListItem(x, { group: 'Data Apps' }))} />
+      <List items={syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apsp' }))} />
     </>
   )
 }

@@ -61,7 +61,10 @@ export function TitleRow({
           </>
         )}
         {typeof icon === 'string' ? (
-          <Icon alignSelf="center" marginRight={16} name={icon} size={20} />
+          <>
+            <Icon alignSelf="center" name={icon} size={20} />
+            <Space />
+          </>
         ) : (
           icon || null
         )}

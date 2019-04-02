@@ -19,6 +19,7 @@ export type SimpleTextProps = AlphaColorProps &
 
 export const SimpleText = gloss<SimpleTextProps>({
   display: 'inline-block',
+  whiteSpace: 'normal',
 }).theme((props: any, theme) => {
   const textProps = propsToTextSize(props)
   const color = props.color || theme.color

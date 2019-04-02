@@ -59,7 +59,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
           onClick={e => onSelect(index, e)}
           onDoubleClick={e => onOpen(index, e)}
           disabled={!sortable}
-          {...getSeparatorProps(props, index)}
+          {...getSeparatorProps(items, item, index)}
           {...props.itemProps}
           {...getItemProps && getItemProps(item, index, items)}
           onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
@@ -97,13 +97,12 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = (props: VirtualListProps<any>, index: number) => {
-  const model = props.items[index]
-  if (!model || !model.group) {
+const getSeparatorProps = (items: any[], item: any, index: number) => {
+  if (!item || !item.group) {
     return null
   }
-  if (index === 0 || model.group !== props.items[index - 1].group) {
-    return { separator: `${model.group}` }
+  if (index === 0 || item.group !== items[index - 1].group) {
+    return { separator: `${item.group}` }
   }
   return null
 }

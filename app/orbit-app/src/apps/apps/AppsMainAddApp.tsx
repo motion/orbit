@@ -13,6 +13,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
       titleBorder
       title={def.name}
       icon={props.identifier}
+      padded
       afterTitle={
         <>
           {!hasSetup && def.sync && (

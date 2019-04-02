@@ -1,0 +1,13 @@
+{
+  "name": "@o/example-workspace",
+  "version": "2.4.0",
+  "private": true,
+  "dependencies": {
+    "@o/slack-app": "*",
+    "@o/slack-jira": "*",
+    "@o/search-app": "*",
+    "@o/custom-app": "*",
+    "@o/lists-app": "*",
+    "@o/people-app": "*"
+  }
+}

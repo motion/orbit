@@ -5,13 +5,14 @@ import React, { forwardRef } from 'react'
 import SVGInline from 'react-svg-inline'
 
 export const SVG = forwardRef<SVGElement, any>(function SVG(
-  { width, height, style = null, ...props },
+  { width, height, svg, style = null, ...props },
   ref,
 ) {
   const [styles, rest] = partitionObject(props, x => validCSSAttr[x])
   return (
     <SVGInline
       ref={ref}
+      svg={svg}
       style={{ display: 'flex', width, height, ...styles, ...style }}
       {...omit(rest, 'hoverStyle')}
     />

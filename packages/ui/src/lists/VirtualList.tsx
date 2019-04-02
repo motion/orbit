@@ -36,7 +36,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
 
   const keyMapper = useCallback(index => {
     const { items } = getProps()
-    return Config.getItemKey(items[index], index)
+    return Config.getItemKey(items[index])
   }, [])
 
   const getRow = useCallback(({ index, style }) => {
@@ -46,10 +46,9 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       console.warn('bad item!, we need to enforce better key/refreshing items in sync')
       return null
     }
-    const key = Config.getItemKey(item, index)
     return (
       <VirtualListItem
-        key={key}
+        key={Config.getItemKey(item)}
         ItemView={ItemView}
         onClick={e => onSelect(index, e)}
         onDoubleClick={e => onOpen(index, e)}

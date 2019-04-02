@@ -87,5 +87,6 @@ module.exports = {
     Proxy: true,
     Symbol: true,
     electronRequire: true,
+    WeakMap: true,
   },
 }

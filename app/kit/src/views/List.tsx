@@ -28,11 +28,10 @@ import { ListItem, OrbitListItemProps } from './ListItem'
 export type ListProps = Omit<VirtualListProps<Bit | OrbitListItemProps>, 'selectableStoreRef'> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
-    query?: string
+    search?: string
     onSelect?: HandleOrbitSelect
     onOpen?: HandleOrbitSelect
     placeholder?: React.ReactNode
-    searchable?: boolean
     shareable?: boolean
   }
 

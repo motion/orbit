@@ -6,7 +6,7 @@ export function getAppListItem(app: AppWithDefinition, extraProps?: OrbitListIte
   const title = app.app ? app.app.name : app.definition.name
   return {
     title,
-    subtitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
+    subTitle: app.definition.sync ? <OrbitAppInfo {...app} /> : null,
     icon: app.definition.sync ? app.definition.id : `orbit-${app.definition.id}-full`,
     iconBefore: true,
     viewType: 'settings' as 'settings',

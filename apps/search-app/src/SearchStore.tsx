@@ -157,7 +157,7 @@ export class SearchStore {
       {
         key: 'app-home',
         title: `${this.stores.spaceStore.activeSpace.name} Home`,
-        subtitle: `10 apps`,
+        subTitle: `10 apps`,
         icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
         iconBefore: true,
         subType: 'home',

@@ -10,14 +10,14 @@ export function SettingsAppIndex() {
           title: 'General',
           icon: 'gear',
           iconBefore: true,
-          subtitle: 'Shortcuts, startup, theme',
+          subTitle: 'Shortcuts, startup, theme',
         },
         {
           id: 'account',
           title: 'Account',
           icon: 'users_badge',
           iconBefore: true,
-          subtitle: 'Manage your account',
+          subTitle: 'Manage your account',
         },
       ]}
     />

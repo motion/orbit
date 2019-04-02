@@ -1,5 +1,6 @@
 import { List } from '@o/kit'
 import { FloatingCard } from '@o/ui'
+import pluralize from 'pluralize'
 import React from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -17,6 +18,7 @@ export function OrbitFloatingShareCard({
   if (!currentSelection) {
     return null
   }
+  const numItems = currentSelection.length
   return (
     <FloatingCard
       defaultWidth={width}
@@ -24,8 +26,11 @@ export function OrbitFloatingShareCard({
       defaultTop={window.innerHeight - height - pad}
       defaultLeft={window.innerWidth - width - pad}
       title="Share"
+      subTitle={`${numItems} ${pluralize('item', numItems)}`}
+      collapsable
+      padding={0}
     >
-      <List items={currentSelection} />
+      <List selectable itemProps={{ small: true }} items={currentSelection} />
     </FloatingCard>
   )
 }

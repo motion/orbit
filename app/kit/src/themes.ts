@@ -207,6 +207,7 @@ const dark = {
     listItemBackground: 'transparent',
     listItemBackgroundSelected: [60, 60, 60, 0.2],
     listItemBackgroundHover: [20, 20, 20, 0.13],
+    floatingBackground: [70, 70, 70],
     cardBackground: [110, 110, 110, 0.4],
     cardBackgroundHover: [110, 110, 110, 0.4],
     cardBackgroundActive: [110, 110, 110, 0.4],

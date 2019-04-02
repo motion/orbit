@@ -58,9 +58,6 @@ Views
     1. Make `alt=""` customizable and have that as a theme
     2. Unify it so we are just able to do
        - <Tabs alt="underlined" /> and <SegmentedRow alt="underlined" /> etc
-- Pane
-  - collapsable / merge with panel
-  - title/subtitle (titlerow)
 - Multi-step flows + Multi-step forms
   - Flows need to handle:
     - Toolbar/actionbar buttons for next/prev easily

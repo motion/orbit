@@ -151,6 +151,7 @@ export class SelectableStore {
       // set active only with primary mouse button, dont interfere w/context menus
       return
     }
+    e.stopPropagation()
     if (e.shiftKey) {
       // prevent text selection
       e.preventDefault()

@@ -1,6 +1,6 @@
 import { FullScreen } from '@o/gloss'
-import { selectDefined } from '@o/utils'
-import React, { useCallback, useRef } from 'react'
+import { isDefined, selectDefined } from '@o/utils'
+import React, { useCallback, useEffect, useRef } from 'react'
 // @ts-ignore
 import { animated, useSpring } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
@@ -38,6 +38,28 @@ export function FloatingView(props: FloatingViewProps) {
     width: selectDefined(props.width, defaultWidth),
     height: selectDefined(props.height, defaultHeight),
   }))
+  const curDim = useGet({ xy, width, height })
+  const prevDim = useRef({ height: 0, width: 0 })
+
+  // sync props
+
+  const syncDimensionProp = (dim: 'width' | 'height') => {
+    const prev = prevDim.current
+    const cur = curDim()[dim].getValue()
+    if (isDefined(props[dim])) {
+      if (props[dim] !== cur) {
+        prev[dim] = cur
+        set({ [dim]: props[dim] })
+      }
+    } else if (prev[dim]) {
+      set({ [dim]: prev[dim] })
+    }
+  }
+
+  useEffect(() => syncDimensionProp('width'), [props.width])
+  useEffect(() => syncDimensionProp('height'), [props.height])
+
+  // component logic
 
   const pos = {
     xy: xy.getValue(),

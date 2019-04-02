@@ -23,7 +23,7 @@ export const ShareMenu = memo(function ShareMenu() {
               id: `app-${app.id}`,
               title: app.name,
               icon: `orbit-${app.identifier}`,
-              subtitle: `Parent list...`,
+              subTitle: `Parent list...`,
               onClick: () => {
                 console.log('sending to list', app, itemAction)
                 // !TODO
@@ -38,7 +38,7 @@ export const ShareMenu = memo(function ShareMenu() {
                 id: `folder-${folder.id}`,
                 title: folder.name,
                 icon: folder.icon || 'folder',
-                subtitle: null,
+                subTitle: null,
                 marginLeft: 10,
               })
             }

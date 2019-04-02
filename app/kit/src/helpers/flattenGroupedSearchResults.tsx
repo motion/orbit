@@ -29,7 +29,7 @@ export function flattenGroupedSearchResults(
         ? [
             {
               title: result.title,
-              subtitle: result.text,
+              subTitle: result.text,
               before: <CircleCount count={result.bitsTotalCount} />,
               group,
             },

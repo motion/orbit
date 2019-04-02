@@ -50,11 +50,11 @@ export function CustomApp2() {
         {(/* { data, setData, done } */) => (
           <Templates.MasterDetail
             items={[
-              { title: 'Something', group: 'Hello', icon: 'test', subtitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'smoe', subtitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'hi', subtitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'aos', subtitle: 'hello' },
-              { title: 'Something', group: 'Hello', icon: 'dn', subtitle: 'hello' },
+              { title: 'Something', group: 'Hello', icon: 'test', subTitle: 'hello' },
+              { title: 'Something', group: 'Hello', icon: 'smoe', subTitle: 'hello' },
+              { title: 'Something', group: 'Hello', icon: 'hi', subTitle: 'hello' },
+              { title: 'Something', group: 'Hello', icon: 'aos', subTitle: 'hello' },
+              { title: 'Something', group: 'Hello', icon: 'dn', subTitle: 'hello' },
             ]}
           >
             {selected => (!selected ? <Loading /> : <Title>{selected.title}</Title>)}

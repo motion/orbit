@@ -104,7 +104,7 @@ async function loadListItem(item: TreeItem): Promise<OrbitListItemProps> {
     case 'folder':
       return {
         title: item.name,
-        subtitle: `${item.children.length} items`,
+        subTitle: `${item.children.length} items`,
         after: <Button circular chromeless size={0.9} icon="arrowright" />,
         subId: `${item.id}`,
         subType: 'folder',

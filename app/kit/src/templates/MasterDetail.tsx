@@ -17,8 +17,6 @@ export function MasterDetail(props: MasterDetailProps) {
     <Layout type="row">
       <Pane resizable>
         <List
-          height="content-height"
-          maxHeight={1000}
           items={props.items}
           onSelect={index => setSelected(props.items[index])}
           itemProps={{ iconBefore: true }}

@@ -1,13 +1,11 @@
 {
-  "extends": "../../tsconfig.tspackage",
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "../../packages/build"

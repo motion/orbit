@@ -8,7 +8,12 @@ killgroup() {
   kill 0
 }
 
-cd app/$1
+if [ "$1" = "orbit" ]; then
+  echo "Running orbit-main..."
+  cd app/orbit-main
+else
+  cd app/$1
+fi
 
 if [ "$2" = "--prod" ]; then
   npm run start-prod -- ${@:3}

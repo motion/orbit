@@ -4,8 +4,9 @@
     "incremental": true
   },
   "references": [
-    // apps
+    // apps (main entries)
     { "path": "./app/orbit" },
+    { "path": "./app/orbit-main" },
     { "path": "./app/orbit-repl" },
 
     // dev time needs

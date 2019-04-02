@@ -43,7 +43,8 @@ export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicList
   const parentSize = useParentNodeSize({
     disable: disableMeasure,
   })
-  const { width, height } = useThrottle(parentSize, 300)
+  const width = useThrottle(parentSize.width, 300)
+  const height = useThrottle(parentSize.height, 300)
   return (
     <Contents ref={parentSize.ref}>
       <DynamicListControlled

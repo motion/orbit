@@ -16,38 +16,12 @@ import { useStores } from '../../hooks/useStores'
 const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
-// class OrbitNavStore {
-//   stores = useHook(useStoresSimple)
-
-//   previousTabID = react(
-//     () => this.stores.paneManagerStore.activePane,
-//     pane => {
-//       ensure('not on settings', !isOnSettings(pane))
-//       return pane.id
-//     },
-//     {
-//       log: false,
-//     },
-//   )
-// }
-
 export const OrbitNav = memo(() => {
   const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
-  const activeAppsSorted: AppBit[] = [
-    // for testing home
-    // {
-    //   id: -1,
-    //   target: 'app',
-    //   name: 'Home',
-    //   colors: ['black', 'white'],
-    //   tabDisplay: 'permanent',
-    //   identifier: 'home',
-    // },
-    ...useActiveAppsSorted(),
-  ]
+  const activeAppsSorted: AppBit[] = [...useActiveAppsSorted()]
   const { activePaneId } = paneManagerStore
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
@@ -124,7 +98,6 @@ export const OrbitNav = memo(() => {
             newAppStore.setShowCreateNew(false)
             paneManagerStore.setActivePane(`${app.id}`)
           },
-          onClickPopout: !isPinned && Actions.tearApp,
         }
       },
     )

@@ -122,8 +122,6 @@ export function TreeList({ use, query, getItemProps = loadListItem, ...props }: 
   const rootItemID = use ? use.state.rootItemID : props.rootItemID
   const [loadedItems, setLoadedItems] = useState([])
 
-  console.warn('render trelist', props, loadedItems)
-
   useEffect(() => {
     let cancel = false
     Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {

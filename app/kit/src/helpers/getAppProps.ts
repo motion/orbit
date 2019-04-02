@@ -6,7 +6,6 @@ import { getAppDefinitions } from './getAppDefinitions'
 
 export function getAppProps(props: OrbitListItemProps, id?: string): AppProps {
   if (!props) {
-    console.warn('no props', props, id)
     return {}
   }
   const { item } = props

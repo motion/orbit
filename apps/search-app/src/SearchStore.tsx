@@ -133,7 +133,7 @@ export class SearchStore {
     return [
       ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
       {
-        title: 'Add app...',
+        title: 'New app...',
         iconBefore: true,
         identifier: 'message',
         onOpen: async () => {

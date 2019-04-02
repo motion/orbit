@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@o/slack-app": "*",
-    "@o/slack-jira": "*",
+    "@o/jira-app": "*",
     "@o/search-app": "*",
     "@o/custom-app": "*",
     "@o/lists-app": "*",

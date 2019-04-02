@@ -43,8 +43,7 @@ export function TestUIKit() {
         <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       </FloatingCard>
       <List
-        searchable
-        query={search}
+        search={search}
         selectable="multi"
         onSelect={i => (store.selected['x'] = items[i])}
         items={items}

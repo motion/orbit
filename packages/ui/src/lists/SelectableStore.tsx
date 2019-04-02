@@ -5,7 +5,7 @@ import { Config } from '../helpers/configure'
 import { GenericDataRow } from '../types'
 import { DynamicListControlled } from './DynamicList'
 
-const key = (item: any, index: number) => Config.getItemKey(item, index)
+const key = (item: any) => Config.getItemKey(item)
 
 export enum Direction {
   up = 'up',
@@ -61,7 +61,7 @@ export class SelectableStore {
     // update keyToIndex
     for (const rowKey of next) {
       this.keyToIndex[rowKey] =
-        this.keyToIndex[rowKey] || this.rows.findIndex((r, i) => key(r, i) === rowKey)
+        this.keyToIndex[rowKey] || this.rows.findIndex(r => key(r) === rowKey)
     }
     this.active = new Set(next)
   }
@@ -110,7 +110,7 @@ export class SelectableStore {
       return
     }
     const lastItemKey = Array.from(active).pop()
-    const lastItemIndex = rows.findIndex((row, i) => key(row, i) === lastItemKey)
+    const lastItemIndex = rows.findIndex(row => key(row) === lastItemKey)
     const newIndex = Math.min(
       rows.length - 1,
       Math.max(0, direction === Direction.up ? lastItemIndex - 1 : lastItemIndex + 1),
@@ -146,7 +146,7 @@ export class SelectableStore {
 
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = key(row)
     if (e.button !== 0 || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
@@ -185,7 +185,7 @@ export class SelectableStore {
 
   onHoverRow(index: number) {
     const row = this.rows[index]
-    const rowKey = key(row, index)
+    const rowKey = key(row)
     if (!this.props.selectable) {
       return false
     }
@@ -226,7 +226,7 @@ export class SelectableStore {
   }
 
   private getIndexKey(index: number) {
-    return key(this.rows[index], index)
+    return key(this.rows[index])
   }
 
   private scrollToIndex(index: number) {

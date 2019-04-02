@@ -23,25 +23,32 @@ class Store {
 export function TestUIKit() {
   const store = useStore(Store)
   const items = [
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', icon: 'hi' },
     { title: 'hello2', subtitle: 'world', icon: 'hi' },
-    { title: 'hello3', subtitle: 'world', icon: 'hi' },
-    { title: 'hello4', subtitle: 'world', icon: 'hi' },
+    { title: 'hello3', icon: 'hi' },
+    { title: 'hello4', subtitle: 'world', icon: '4' },
+    { title: 'hello', subtitle: 'world', icon: '5' },
     { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'bigbig', subtitle: 'world', icon: '3', iconBefore: true },
+    { title: 'bigbig', icon: 'hi' },
+    { title: 'hello', subtitle: 'world', icon: '2' },
     { title: 'hello', subtitle: 'world', icon: 'hi' },
     { title: 'hello', subtitle: 'world', icon: 'hi' },
   ]
-  console.log('render')
+  const [search, setSearch] = useState('')
   return (
     <Suspense fallback={<Loading />}>
+      <SearchInput onChange={e => setSearch(e.target.value)} />
       <FloatingCard title="hi" defaultTop={200} defaultLeft={200}>
         <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
       </FloatingCard>
-      <List selectable="multi" onSelect={i => (store.selected['x'] = items[i])} items={items} />
+      <List
+        searchable
+        query={search}
+        selectable="multi"
+        onSelect={i => (store.selected['x'] = items[i])}
+        items={items}
+      />
       <SubView store={store} />
     </Suspense>
   )

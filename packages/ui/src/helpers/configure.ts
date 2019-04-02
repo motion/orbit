@@ -1,3 +1,4 @@
+import sum from 'hash-sum'
 import { Context, createContext } from 'react'
 
 let hasSet = false
@@ -5,18 +6,30 @@ let hasSet = false
 type ConfigureOpts = {
   useIcon?: any
   StoreContext?: Context<any>
-  getItemKey?: (item: any, index: number) => string
+  getItemKey?: (item: any) => string
 }
+
+const KeyCache = new WeakMap<Object, string>()
 
 export let Config: ConfigureOpts = {
   StoreContext: createContext(null),
-  getItemKey: (x, index) => {
+  getItemKey: x => {
     if (!x) {
       console.warn('NO ITEM', x)
-      return `${index}`
+      return `${Math.random()}`
     }
     const item = x.item || x
-    return `${item.id || item.email || item.key || index}`
+    const key = item.id || item.email || item.key
+    if (key) {
+      return `${key}`
+    }
+    let backupKey = KeyCache.get(x)
+    if (backupKey) {
+      return backupKey
+    }
+    backupKey = `${sum(x)}${Math.random()}`
+    KeyCache.set(x, backupKey)
+    return backupKey
   },
 }
 

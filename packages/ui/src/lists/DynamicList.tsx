@@ -6,10 +6,10 @@
  */
 
 import { isEqual } from '@o/fast-compare'
-import { Contents, gloss } from '@o/gloss'
+import { Contents, gloss, View } from '@o/gloss'
 import React, { forwardRef, memo, PureComponent, RefObject, useRef } from 'react'
+import { useNodeSize } from '../hooks/useNodeSize'
 import { useOnMount } from '../hooks/useOnMount'
-import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { useThrottle } from '../hooks/useThrottle'
 
 export type DynamicListProps = {
@@ -40,20 +40,20 @@ export type DynamicListProps = {
 }
 
 export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {
-  const parentSize = useParentNodeSize({
+  const parentSize = useNodeSize({
     disable: disableMeasure,
   })
   const width = useThrottle(parentSize.width, 300)
   const height = useThrottle(parentSize.height, 300)
   return (
-    <Contents ref={parentSize.ref}>
+    <View flex={1} ref={parentSize.ref}>
       <DynamicListControlled
         ref={props.listRef || (ref as any)}
         width={width}
         height={height}
         {...props}
       />
-    </Contents>
+    </View>
   )
 })
 
@@ -434,13 +434,11 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
       if (pos == null) {
         continue
       }
-
-      children.push(
-        this.props.children({
-          index: i,
-          style: pos.style,
-        }),
-      )
+      const nextChild = this.props.children({
+        index: i,
+        style: pos.style,
+      })
+      children.push(nextChild)
     }
 
     return (

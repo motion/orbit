@@ -32,7 +32,7 @@ export let Config: ConfigureOpts = {
     if (backupKey) {
       return backupKey
     }
-    backupKey = `${hash(x)}${Math.random()}`
+    backupKey = `${hash(x)}`
     KeyCache.set(x, backupKey)
     return backupKey
   },

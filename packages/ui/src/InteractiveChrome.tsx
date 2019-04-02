@@ -3,7 +3,6 @@ import React, { RefObject, useCallback, useRef, useState } from 'react'
 import { FloatingChrome } from './helpers/FloatingChrome'
 import { isRightClick } from './helpers/isRightClick'
 import { useScreenPosition } from './hooks/useScreenPosition'
-import { useThrottle } from './hooks/useThrottle'
 import { getResizeCursor, ResizableSides } from './Interactive'
 import { Omit } from './types'
 import { ViewProps } from './View/View'
@@ -17,13 +16,12 @@ type InteractiveChromeProps = Omit<ViewProps, 'zIndex'> & {
 export const InteractiveChrome = ({ resizingSides, parent, ...rest }: InteractiveChromeProps) => {
   const parentRef = useRef<HTMLElement>(null)
   const [measureKey, setMeasureKey] = useState(0)
-  const measureThrottled = useThrottle(() => setMeasureKey(Math.random()), 32, [])
   const measure = useCallback(() => setMeasureKey(Math.random()), [])
 
   useScreenPosition({
     ref: parent || parentRef,
     preventMeasure: true,
-    onChange: measureThrottled,
+    onChange: measure,
   })
 
   const isHoveringResize =

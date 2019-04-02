@@ -76,7 +76,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <SectionInner overflowY={scrollable ? 'auto' : 'hidden'} flex={flex} {...viewProps}>
+      <SectionInner overflowY={scrollable ? 'auto' : 'hidden'} flex={1} {...viewProps}>
         <Padded padded={padded}>
           <Reset>{children}</Reset>
         </Padded>

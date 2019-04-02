@@ -9,10 +9,11 @@ import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicListControlled } from '../lists/DynamicList'
-import { SelectableDynamicList } from '../lists/SelectableDynamicList'
+import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
@@ -274,7 +275,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   scrollToBottom() {
     const { sortedRows } = this.state
     if (this.listRef.current && sortedRows.length > 1) {
-      this.listRef.current.scrollToIndex(sortedRows.length - 1)
+      this.listRef.current.scrollTo(sortedRows.length - 1)
     }
   }
 
@@ -384,10 +385,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
   getRowHeight = (index: number) => {
     const { sortedRows } = this.state
-    return {
-      height: (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight,
-      width: '100%',
-    }
+    return (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight
   }
 
   render() {
@@ -428,19 +426,24 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         />
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
-          <SelectableDynamicList
-            keyMapper={this.getItemKey}
-            itemCount={sortedRows.length}
-            itemSize={this.getRowHeight}
-            itemData={sortedRows}
-            listRef={this.listRef}
-            outerRef={this.scrollRef}
-            onScroll={this.onScroll}
-            selectableStoreRef={this.selectableStoreRef}
-            {...pickSelectableProps(this.props)}
-          >
-            {this.renderRow}
-          </SelectableDynamicList>
+          <AutoSizer>
+            {size => (
+              <SelectableVariableList
+                itemCount={sortedRows.length}
+                itemSize={this.getRowHeight}
+                itemData={sortedRows}
+                listRef={this.listRef}
+                outerRef={this.scrollRef}
+                onScroll={this.onScroll}
+                selectableStoreRef={this.selectableStoreRef}
+                {...pickSelectableProps(this.props)}
+                width={size.width}
+                height={size.height}
+              >
+                {this.renderRow}
+              </SelectableVariableList>
+            )}
+          </AutoSizer>
         </ContextMenu>
       </Container>
     )

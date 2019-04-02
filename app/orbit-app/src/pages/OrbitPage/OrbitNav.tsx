@@ -174,7 +174,7 @@ export const OrbitNav = memo(() => {
               stretch
               iconSize={12}
               isActive
-              label={'Add app'}
+              label={'New app'}
               after={
                 <OrbitTabButton
                   icon="remove"

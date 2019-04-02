@@ -20,12 +20,11 @@ import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
 import { useShareMenu } from '../hooks/useShareMenu'
 import { useStoresSimple } from '../hooks/useStores'
-import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = Omit<VirtualListProps<Bit | OrbitListItemProps>, 'selectableStoreRef'> &
+export type ListProps = VirtualListProps<Bit | OrbitListItemProps> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     search?: string
@@ -64,7 +63,8 @@ export function List(rawProps: ListProps) {
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onOpen, placeholder, getItemProps, query, shareable, ...restProps } = props
-  const selectableStoreRef = useRef<SelectableStore>(null)
+  const internalRef = useRef<SelectableStore>(null)
+  const selectableStoreRef = rawProps.selectableStoreRef || internalRef
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -150,11 +150,13 @@ export function List(rawProps: ListProps) {
     [onOpen, onOpenItem],
   )
 
-  const hasItems = !!filtered.results.length
+  const noQuery = typeof query === 'undefined' || query.length === 0
+  const hasResults = !!filtered.results.length
+  const showPlaceholder = noQuery && !hasResults
 
   return (
     <HighlightActiveQuery query={query}>
-      {hasItems && (
+      {hasResults && (
         <VirtualList
           disableMeasure={visibility.getVisible() === false}
           items={filtered.results}
@@ -166,7 +168,7 @@ export function List(rawProps: ListProps) {
           selectableStoreRef={selectableStoreRef}
         />
       )}
-      {!hasItems && (placeholder || <ListPlaceholder />)}
+      {showPlaceholder && (placeholder || <ListPlaceholder />)}
     </HighlightActiveQuery>
   )
 }

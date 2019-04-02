@@ -1,6 +1,6 @@
 import { App, AppIcon, createApp, List, View } from '@o/kit'
-import { Button, Section, SurfacePassProps, Toolbar } from '@o/ui'
-import React from 'react'
+import { Button, Section, SurfacePassProps, Text, Toolbar } from '@o/ui'
+import React, { useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'
 
@@ -14,6 +14,18 @@ const descriptions = {
 
 function CreateAppMain() {
   const Actions = useActions()
+  const items = defaultApps.map(app => ({
+    title: app.name,
+    identifier: app.identifier,
+    subtitle: descriptions[app.identifier],
+    icon: <AppIcon app={app} />,
+    iconBefore: true,
+    iconProps: {
+      size: 44,
+    },
+  }))
+  const [selected, setSelected] = useState<typeof items[0]>(null)
+  console.log('selected', selected)
   return (
     <>
       <Section
@@ -22,29 +34,18 @@ function CreateAppMain() {
         margin="auto"
         height="70%"
         padded
-        title="Add app"
+        title="New app"
         subTitle="Choose app to add"
       >
-        <List
-          alwaysSelected
-          items={defaultApps.map(app => ({
-            title: app.name,
-            identifier: app.identifier,
-            subtitle: descriptions[app.identifier],
-            icon: <AppIcon app={app} />,
-            iconBefore: true,
-            iconProps: {
-              size: 44,
-            },
-          }))}
-        />
+        <List selectable alwaysSelected onSelect={rows => setSelected(rows[0])} items={items} />
       </Section>
       <Toolbar elevation={2}>
         <SurfacePassProps>
           <Button
+            iconAfter
             alt="action"
             onClick={() => {
-              Actions.createCustomApp()
+              Actions.createCustomApp(selected.identifier)
             }}
             icon="simadd"
             tooltip="Create new custom app"
@@ -52,13 +53,24 @@ function CreateAppMain() {
             Create Custom App
           </Button>
           <View flex={1} />
+
+          {selected && (
+            <View minWidth={200} padding={[0, 30]}>
+              <Text fontWeight={600}>Add app to space</Text>
+              <Text ellipse alpha={0.6} size={1.25}>
+                {selected.title}
+              </Text>
+            </View>
+          )}
+
           <Button
             size={1.25}
             alt="confirm"
+            iconAfter
             onClick={() => {
-              Actions.createCustomApp()
+              Actions.createCustomApp(selected.identifier)
             }}
-            icon="simadd"
+            icon="arrowminright"
             tooltip="Create new custom app"
           >
             Add

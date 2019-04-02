@@ -1,9 +1,8 @@
 import { isEqual } from '@o/fast-compare'
 import { PaneManagerPane, PaneManagerStore } from '@o/kit'
 import { AppBit } from '@o/models'
-import { isEditing, appStartupConfig } from '@o/stores'
+import { appStartupConfig, isEditing } from '@o/stores'
 import { ensure, useReaction } from '@o/use-store'
-import { getAppState } from '../helpers/getAppState'
 import { useActions } from '../hooks/useActions'
 import { useStoresSimple } from '../hooks/useStores'
 
@@ -35,7 +34,7 @@ export const defaultPanes: PaneManagerPane[] = [
   settingsPane,
   { id: 'apps', name: 'Apps', type: 'apps' },
   { id: 'data-explorer', name: 'Data Explorer', type: 'data-explorer' },
-  { id: 'createApp', name: 'Add app', type: 'createApp' },
+  { id: 'createApp', name: 'New app', type: 'createApp' },
   { id: 'onboard', name: 'Onboard', type: 'onboard' },
 ]
 
@@ -53,9 +52,9 @@ function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
   if (isEditing) {
     let pane = {
       type: appStartupConfig.appInDev.path,
-      id: String(appStartupConfig.appId)
+      id: String(appStartupConfig.appId),
     }
-    return [pane, settingsPane];
+    return [pane, settingsPane]
   } else {
     const appPanes = apps.map(appToPane)
     return [...defaultPanes, ...appPanes]

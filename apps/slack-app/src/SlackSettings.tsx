@@ -139,7 +139,7 @@ export function SlackSettings({ subId }: AppProps) {
             },
           }}
           selectable="multi"
-          onSelect={setHighlightedRows}
+          onSelect={x => setHighlightedRows(x)}
           rows={(channels || []).map(channel => {
             const topic = channel.topic ? channel.topic.value : ''
             return {

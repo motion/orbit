@@ -1,6 +1,21 @@
 # orbit-cli
 
-## Orbit App Format
+The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps can run in a couple ways:
+
+1. Individually on their own, in their own window.
+2. Together in a workspace.
+
+--
+
+## Developing the orbit-cli
+
+To work on orbit-cli, run orbit in dev mode as usual with `run orbit`, then use `bin/orbit dev /path/to/custom-app` — it should fork a new instance with a running custom app.
+
+---
+
+## Step 1: Developing Individual Apps
+
+### Orbit App Format
 
 Orbit app is a git repository (it's recommended to name it with `-orbit` suffix)
 which adheres to a set of conventions:
@@ -19,8 +34,6 @@ which adheres to a set of conventions:
   - `"orbit"` specifies the version of Orbit runtime required for this app (`1`
     is the only valid option for now)
 
-- `"workers"` specifies a set of processes which are started when the app starts
-
 - …
 
 The example `package.json` for an app could look like:
@@ -33,17 +46,14 @@ The example `package.json` for an app could look like:
     "title": "My App",
     "require": {
       "orbit": 1
-    },
-    "workers": {
-      "sync-discord": {
-        "command": ["node", "./sync-discord.js"]
-      }
     }
   }
 }
 ```
 
-## Installing Orbit Runtime
+### Installing Orbit Runtime
+
+For now, the orbit cli lives in app/orbit-cli as @o/orbit-cli. Eventually it will be bundled together with the app-kit under one name, the npm package `orbit`.
 
 Orbit runtime is distributed through npm:
 
@@ -53,7 +63,7 @@ After it's installed the `orbit` command is available on `$PATH`, try it with:
 
     % orbit --version
 
-## Running an Orbit App
+### Running an Orbit App
 
 You can start an app with the following invocation:
 
@@ -73,7 +83,7 @@ Note that `orbit run` won't install the app - all app's data can be removed any
 time. If you want to continue using the app - you should install it, either
 using `"Install App"` button or using `orbit install` command.
 
-## Installing an Orbit App
+### Installing an Orbit App
 
 You can start an install an app with following invocation:
 
@@ -87,7 +97,7 @@ By default, Orbit creates your apps inside
 in the package.json. You can configure this location in the orbit configuration,
 at `~/.orbit.json`.
 
-## Listing Orbit Apps
+### Listing Orbit Apps
 
 List installed orbit apps:
 
@@ -98,10 +108,17 @@ installed, can be used to install apps which you want to continue to use):
 
     % orbit ls --all
 
+---
+
 ## Workspaces
 
 Workspaces are where Orbit apps live together. They let teams collaborate on
-their apps. To view your workspace use:
+their apps.
+
+Workspaces live in `~/.orbit/[workspace]`. Your apps for each workspace are then
+in `~/.orbit/[workspace]/[app]`. Configuration for your workspace lives in `~/.orbit/[workspace]/workspace.json`.
+
+To view your current workspace use:
 
     % orbit ws
 
@@ -121,7 +138,7 @@ And to create a new workspace:
 
     % orbit ws create [name]
 
-## Editing apps
+### Editing apps
 
 You can edit apps through the GUI by hitting the `Edit` option in the menu of
 any app. You can also just work on it through the command line.
@@ -133,7 +150,7 @@ Publishing is as simple as pushing to your git repo. Other members of your
 workspace will be prompted to update the app with a notification that shows the
 message you include in your commit message.
 
-## Searching for apps
+### Searching for apps
 
 Orbit hosts an app store that helps you find new apps. To search them just use:
 

@@ -20,6 +20,8 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
 }
 
 export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {
+  // TODO we can try restoring parentNodeSize
+
   disableMeasure
   return (
     <View flex={1}>

@@ -1,5 +1,6 @@
+import { fromEntries } from '@o/utils'
 import sum from 'hash-sum'
-import { Context, createContext } from 'react'
+import { Context, createContext, isValidElement } from 'react'
 
 let hasSet = false
 
@@ -8,6 +9,10 @@ type ConfigureOpts = {
   StoreContext?: Context<any>
   getItemKey?: (item: any) => string
 }
+
+// safe for react components
+const hash = x =>
+  sum(fromEntries(Object.entries(x).map(x => (isValidElement(x[1]) ? [x[0], x[1].key] : x))))
 
 const KeyCache = new WeakMap<Object, string>()
 
@@ -27,7 +32,7 @@ export let Config: ConfigureOpts = {
     if (backupKey) {
       return backupKey
     }
-    backupKey = `${sum(x)}${Math.random()}`
+    backupKey = `${hash(x)}${Math.random()}`
     KeyCache.set(x, backupKey)
     return backupKey
   },

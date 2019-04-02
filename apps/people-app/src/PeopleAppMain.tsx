@@ -65,7 +65,7 @@ class PeopleAppStore {
           order: {
             bitUpdatedAt: 'DESC',
           },
-          take: 40,
+          take: 10,
         },
       })
     },

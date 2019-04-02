@@ -167,15 +167,14 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
   }
 
   componentDidUpdate(prevProps: DynamicListProps) {
-    if (
-      prevProps.itemCount !== this.props.itemCount ||
-      prevProps.itemData !== this.props.itemData
-    ) {
-      this.queueMeasurements()
-    }
     const shouldMeasure = this.state.shouldMeasure
+    const shouldQueueMeasure =
+      prevProps.itemCount !== this.props.itemCount || prevProps.itemData !== this.props.itemData
+    console.log('did update', shouldMeasure, shouldQueueMeasure)
     if (shouldMeasure) {
       this.onResize()
+    } else if (shouldQueueMeasure) {
+      this.queueMeasurements()
     }
   }
 
@@ -206,7 +205,7 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
   // called when the window is resized, we recalculate the positions and visibility of rows
   onResize = () => {
     if (this.props.height === 'content-height') {
-      this.setState({ height: this.getContentHeight() })
+      this.setState({ height: this.getContentHeight(), shouldMeasure: false })
     }
     this.recalculateScrollTop()
     this.dimensions.clear()
@@ -231,14 +230,11 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
       if (this.dimensions.has(key)) {
         continue
       }
-
       const precalculated = props.itemSize ? props.itemSize(i) : null
-
       if (precalculated) {
         this.dimensions.set(key, precalculated)
         continue
       }
-
       this.measureQueue.set(
         key,
         props.children({
@@ -249,7 +245,6 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
         }),
       )
     }
-
     // recalculate the visibility and positions of all rows
     this.recalculatePositions()
     this.recalculateVisibleRows()

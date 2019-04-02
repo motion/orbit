@@ -1,7 +1,7 @@
-import { isEqual } from '@o/fast-compare';
-import { AppProps } from '@o/kit';
-import { ensure, react, shallow, useHook } from '@o/use-store';
-import { useStoresSimple } from '../../hooks/useStores';
+import { isEqual } from '@o/fast-compare'
+import { AppProps } from '@o/kit'
+import { ensure, react, shallow, useHook } from '@o/use-store'
+import { useStoresSimple } from '../../hooks/useStores'
 
 export class OrbitStore {
   stores = useHook(useStoresSimple)
@@ -12,7 +12,7 @@ export class OrbitStore {
   activeConfig: { [key: string]: AppProps } = shallow({})
 
   get isTorn() {
-    return getIsTorn()
+    return false
   }
 
   setEditing = () => {

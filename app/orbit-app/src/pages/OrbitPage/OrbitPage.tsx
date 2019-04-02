@@ -1,6 +1,5 @@
 import { command } from '@o/bridge'
 import { gloss, View, ViewProps } from '@o/gloss'
-import * as OrbitKit from '@o/kit'
 import {
   AppDefinition,
   LocationStore,
@@ -13,7 +12,6 @@ import {
 } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
-import * as OrbitUI from '@o/ui'
 import { Loading, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
@@ -41,7 +39,7 @@ import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
 
 // @ts-ignore
-window['OrbitKit'] = OrbitKit(window as any).OrbitUI = OrbitUI
+// window['OrbitKit'] = OrbitKit(window as any).OrbitUI = OrbitUI
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)

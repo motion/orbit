@@ -142,9 +142,9 @@ const OrbitPageInner = memo(function OrbitPageInner() {
   const allApps = [...activeApps, ...staticApps]
   const appsWithViews = keyBy(getApps().filter(x => !!x.app), 'id')
 
-  const stableSortedApps = useStableSort(allApps.map(x => x.id)).map(id =>
-    allApps.find(x => x.id === id),
-  )
+  const stableSortedApps = useStableSort(allApps.map(x => x.id))
+    .map(id => allApps.find(x => x.id === id))
+    .filter(Boolean)
 
   let contentArea = null
 

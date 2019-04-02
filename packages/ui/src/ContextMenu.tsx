@@ -21,14 +21,11 @@ export const ContextMenu = forwardRef<ContextMenuHandler, ContextMenuProps>(func
   const context = useContext(ContextMenuContext)
   const { onContextMenu } = useContextMenu({ items, buildItems })
 
-  useEffect(
-    () => {
-      if (ref) {
-        ref['current'] = context
-      }
-    },
-    [ref, context],
-  )
+  useEffect(() => {
+    if (ref) {
+      ref['current'] = context
+    }
+  }, [ref, context])
 
   return React.createElement(
     component,
@@ -49,18 +46,16 @@ export function useContextMenu({ items, buildItems }: UseContextProps) {
 
   const { setItems } = context
 
-  const onContextMenu = React.useCallback(
-    () => {
-      if (typeof setItems === 'function') {
-        if (items != null) {
-          setItems(items)
-        } else if (buildItems != null) {
-          setItems(buildItems())
-        }
+  const onContextMenu = React.useCallback(() => {
+    if (typeof setItems === 'function') {
+      if (items != null) {
+        setItems(items)
+      } else if (buildItems != null) {
+        setItems(buildItems())
       }
-    },
-    [buildItems, JSON.stringify(items)],
-  )
+    }
+  }, // items might have functions inside and JSON.stringify won't work properly in there
+  [buildItems, items])
 
   return { onContextMenu }
 }

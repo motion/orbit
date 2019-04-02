@@ -4,7 +4,7 @@ import {
   ListPropsContext,
   PassExtraListProps,
   SubPane,
-  AppLoadContext
+  AppLoadContext,
 } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'

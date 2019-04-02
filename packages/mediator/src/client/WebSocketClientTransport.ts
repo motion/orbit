@@ -82,7 +82,7 @@ export class WebSocketClientTransport implements ClientTransport {
         id: data.id,
         type: subscription.type,
         name: subscription.name,
-        values
+        values,
       })
 
       // we need to send request to the server - here we create a function that does it

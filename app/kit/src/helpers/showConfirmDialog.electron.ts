@@ -1,5 +1,6 @@
 export function showConfirmDialog({ type = 'question', title = '', message = '' }): boolean {
-  const response = require('electron').dialog.showMessageBox({
+  const electron = require('electron').remote ? require('electron').remote : require('electron')
+  const response = electron.dialog.showMessageBox({
     type,
     title,
     message,

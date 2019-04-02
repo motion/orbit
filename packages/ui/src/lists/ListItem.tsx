@@ -56,7 +56,7 @@ export type ListItemProps = ViewProps &
     chromeless?: boolean
     theme?: Partial<ThemeObject>
     listItem?: boolean
-    subtitle?: React.ReactNode
+    subTitle?: React.ReactNode
     date?: Date
     icon?: any
     index?: number
@@ -104,7 +104,7 @@ export const ListItem = memoIsEqualDeep(
       location,
       preview,
       icon,
-      subtitle,
+      subTitle: subtitle,
       title,
       borderRadius,
       cardProps,

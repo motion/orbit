@@ -58,7 +58,7 @@ export function CustomApp1() {
                 <Card
                   key={row.id}
                   title={row.name}
-                  subtitle={row.username}
+                  subTitle={row.username}
                   minWidth={200}
                   minHeight={200}
                   marginRight={20}

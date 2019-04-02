@@ -37,7 +37,7 @@ export function FloatingCard({
       top={top}
       left={left}
       width={width}
-      height={collapsed ? 60 : height}
+      height={collapsed ? 75 : height}
       disableDrag={disableDrag}
       defaultTop={defaultTop}
       defaultLeft={defaultLeft}

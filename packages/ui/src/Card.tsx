@@ -3,7 +3,6 @@ import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
-import { Space } from './layout/Space'
 import { ListItemProps, useIsSelected } from './lists/ListItem'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { DateFormat } from './text/DateFormat'
@@ -33,7 +32,7 @@ export function Card(props: CardProps) {
     title: _ignoreTitle,
     onClickLocation,
     activeStyle,
-    subtitle,
+    subTitle,
     date,
     collapsable,
     collapsed,
@@ -45,7 +44,7 @@ export function Card(props: CardProps) {
   const hasTitle = !!title && !props.hideTitle
   const hasMeta = !!location && !props.hideMeta
   const hasPreview = !!preview && !children && !props.hideBody
-  const hasSubtitle = !!subtitle && !props.hideSubtitle
+  const hasSubtitle = !!subTitle && !props.hideSubtitle
   const hasDate = !!date
   const hasFourRows =
     hasSubtitle || hasMeta || (hasSubtitle && titleProps && titleProps['ellipse'] !== true)
@@ -75,50 +74,51 @@ export function Card(props: CardProps) {
       noInnerElement
     >
       <Padding style={{ padding }}>
-        <Row
-          onDoubleClick={collapsable && (() => onCollapse(!collapsed))}
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-        >
-          <Col>
-            {hasTitle && (
-              <>
-                <Title ellipse margin={0} highlight>
-                  {title}
-                </Title>
-                {afterTitle}
-              </>
-            )}
-            {!!titleFlex && <div style={{ flex: titleFlex }} />}
-            {hasSubtitle && (
-              <SubTitle ellipse>
-                <Text alpha={0.55} ellipse {...subtitleProps}>
-                  {subtitle}
-                </Text>
-              </SubTitle>
-            )}
-            {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
-            {hasMeta && (
-              <SubTitle ellipse>
-                {!!location && (
-                  <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
-                    {location}
-                  </RoundButtonSmall>
-                )}
-                {hasFourRows && hasDate && (
-                  <>
-                    {!!location && <div style={{ width: 5 }} />}
-                    {dateContent}
-                  </>
-                )}
-                {hasPreview && <Space small />}
-              </SubTitle>
-            )}
-          </Col>
-          <Col>{collapsable && <CollapseArrow collapsed={collapsed} />}</Col>
-        </Row>
-        <View height={collapsed ? 0 : '100%'}>
+        {(hasTitle || hasSubtitle || hasMeta) && (
+          <Row
+            onDoubleClick={collapsable && (() => onCollapse(!collapsed))}
+            padding={[0, 0, 10]}
+            justifyContent="space-between"
+            width="100%"
+          >
+            <Col>
+              {hasTitle && (
+                <>
+                  <Title ellipse margin={0} highlight>
+                    {title}
+                  </Title>
+                </>
+              )}
+              {!!titleFlex && <div style={{ flex: titleFlex }} />}
+              {hasSubtitle && (
+                <SubTitle ellipse marginTop={0} {...subtitleProps}>
+                  {subTitle}
+                </SubTitle>
+              )}
+              {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
+              {hasMeta && (
+                <SubTitle ellipse>
+                  {!!location && (
+                    <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
+                      {location}
+                    </RoundButtonSmall>
+                  )}
+                  {hasFourRows && hasDate && (
+                    <>
+                      {!!location && <div style={{ width: 5 }} />}
+                      {dateContent}
+                    </>
+                  )}
+                </SubTitle>
+              )}
+            </Col>
+            <Col paddingTop={10}>
+              {afterTitle}
+              {collapsable && <CollapseArrow collapsed={collapsed} />}
+            </Col>
+          </Row>
+        )}
+        <View flex={1} height={collapsed ? 0 : '100%'}>
           {hasPreview && (
             <Preview>
               {typeof preview !== 'string' && preview}

@@ -6,10 +6,19 @@ Big projects for this week:
 
 We need a way to generate documentation based on our components.
 
-1. Check out the new `projects/docs`, get it to run (should run, may need some bugfixes). It's based on react-bootstrap docs website you can find their source on github.
-2. Lets try and get the `@o/ui` to automatically import somehow.
-   1. Script to import `@o/ui` types + comments into mdx files inside a folder in docs
-   2. See how react-bootstrap does component previews with props you can configure and get our `@o/ui` to import into docs site and then render components inline + automatically show the component inline for each component in ui kit.
+1. Check out the new `projects/docs`, get it to run (should run, may need some bugfixes).
+
+It's based on react-bootstrap docs website you can find their source on github.
+
+Perhaps its better to use the gatbsy official docs, but not sure. They don't look as nice, but perhaps are better "set up" or have inspiration.
+
+https://github.com/gatsbyjs/gatsby/tree/master/www
+
+The goal is:
+
+   1. Lets try and get the `@o/ui` to automatically import somehow. Just the types definitions for components.
+   2. Script to import `@o/ui` types + comments into mdx files inside a folder in docs
+   3. See how react-bootstrap does component previews with props you can configure and get our `@o/ui` to import into docs site and then render components inline + automatically show the component inline for each component in ui kit.
 
 ---
 

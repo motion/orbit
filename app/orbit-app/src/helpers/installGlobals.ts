@@ -16,7 +16,7 @@
 
 import { Mediator } from '@o/bridge'
 import { getGlobalConfig } from '@o/config'
-import { color } from '@o/gloss'
+import { toColor } from '@o/gloss'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import r2 from '@o/r2'
@@ -62,7 +62,7 @@ window['Helpers'] = Helpers
 window['App'] = App
 window['Desktop'] = Desktop
 window['Electron'] = Electron
-window['color'] = color
+window['toColor'] = toColor
 window['dateFns'] = dateFns
 window['LoggerSettings'] = LoggerSettings
 window['toJS'] = toJS

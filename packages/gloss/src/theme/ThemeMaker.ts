@@ -1,4 +1,4 @@
-import { color, ColorLike } from '@o/color'
+import { ColorLike, toColor } from '@o/color'
 import { LinearGradient, ThemeObject } from '@o/css'
 
 type ColorObject = { [a: string]: ColorLike }
@@ -69,7 +69,7 @@ export class ThemeMaker {
         res[key] = this.colorize(val)
       } else {
         try {
-          res[key] = color(val)
+          res[key] = toColor(val)
         } catch {
           res[key] = val
         }
@@ -87,7 +87,7 @@ export class ThemeMaker {
     }
     let background
     try {
-      background = color(bgName)
+      background = toColor(bgName)
     } catch (e) {
       if (e.message.indexOf('parse color from string') > -1) {
         return null
@@ -107,7 +107,7 @@ export class ThemeMaker {
     if (this.cache[key]) {
       return this.cache[key]
     }
-    const backgroundColored = s.background ? color(s.background) : opposite(color(s.color))
+    const backgroundColored = s.background ? toColor(s.background) : opposite(toColor(s.color))
     // some handy basic styles
     const base = this.colorize({
       background: backgroundColored,
@@ -117,8 +117,10 @@ export class ThemeMaker {
     // flattened
     const res = {
       ...this.colorize({
-        colorHover: increaseContrast(base.color, smallAmt),
-        backgroundHover: increaseContrast(base.background, smallAmt),
+        // @ts-ignore
+        colorHover: base.color.lighten(0.1),
+        // @ts-ignore
+        backgroundHover: base.background.lighten(0.1),
         borderColorHover: increaseContrast(base.borderColor, smallAmt),
         backgroundActiveHover: increaseContrast(base.background, largeAmt),
         backgroundActive: decreaseContrast(base.background, largeAmt),

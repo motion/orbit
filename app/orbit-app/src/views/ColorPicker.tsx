@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import { color, Row, View, ViewProps } from '@o/ui'
+import { Row, toColor, View, ViewProps } from '@o/ui'
 import React, { memo } from 'react'
 
 const niceColors = [
@@ -149,13 +149,13 @@ export function Squircle({ colors, ...rest }: any) {
       <defs>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
           <stop
-            stopColor={color(colors[0])
+            stopColor={toColor(colors[0])
               .lighten(0.05)
               .hex()}
             offset="0%"
           />
           <stop
-            stopColor={color(colors[0])
+            stopColor={toColor(colors[0])
               .darken(0.05)
               .hex()}
             offset="100%"

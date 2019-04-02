@@ -1,6 +1,6 @@
 import { useTheme, View } from '@o/gloss'
 import { AppBit } from '@o/models'
-import { color, IconProps } from '@o/ui'
+import { IconProps, toColor } from '@o/ui'
 import React from 'react'
 import { appIcons } from './icons'
 import { SVG } from './SVG'
@@ -17,7 +17,7 @@ export function AppIconInner({
   ...props
 }: Partial<AppIconProps>) {
   const theme = useTheme()
-  const fill = color(props.color || theme.iconFill || '#fff').hex()
+  const fill = toColor(props.color || theme.iconFill || '#fff').hex()
 
   if (!appIcons[props.name]) {
     return null
@@ -28,7 +28,7 @@ export function AppIconInner({
   // hacky customize the background color
   // warning: not having a string here literally causes a node level error....
   // async hook stack has become corrupted
-  let bg = color(background)
+  let bg = toColor(background)
 
   const adjust = bg.isDark() ? 0.12 : 0.05
   const bgLight = (bg.lightness() === 100 ? bg : bg.lighten(adjust)).hex()

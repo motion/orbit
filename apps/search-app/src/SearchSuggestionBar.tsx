@@ -1,9 +1,9 @@
-import { color, gloss, useStores } from '@o/kit'
+import { gloss, toColor, useStores } from '@o/kit'
 import { Button, ButtonProps, Row } from '@o/ui'
 import * as React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
-const dateBg = color('#ffb049')
+const dateBg = toColor('#ffb049')
 
 const activeThemes = {
   date: {

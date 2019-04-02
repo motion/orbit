@@ -35,7 +35,7 @@ const ControlButtonChrome = gloss(UI.Col, {
   pointerEvents: 'auto',
 }).theme(({ borderWidth, ...props }, theme) => {
   const background = props.background || theme.background.darken(0.2).desaturate(0.2)
-  const borderColor = props.borderColor || UI.color(background).darken(0.1)
+  const borderColor = props.borderColor || UI.toColor(background).darken(0.1)
   return {
     background,
     boxShadow: [['inset', 0, 0, 0, borderWidth, borderColor]],

@@ -1,4 +1,4 @@
-export { color } from '@o/color'
+export { toColor } from '@o/color'
 export {
   Color,
   configureCSS,

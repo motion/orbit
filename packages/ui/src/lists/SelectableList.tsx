@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { forwardRef, useEffect, useRef } from 'react'
 import {
   FixedSizeList,
   FixedSizeListProps,
@@ -33,16 +33,16 @@ export function useSelectableListProps(props: SelectableListProps) {
 }
 
 export type SelectableDynamicListProps = SelectableListProps & DynamicListProps
-export function SelectableDynamicList(props: SelectableDynamicListProps) {
-  return <DynamicList {...props} {...useSelectableListProps(props)} />
-}
+export const SelectableDynamicList = forwardRef((props: SelectableDynamicListProps, ref) => {
+  return <DynamicList ref={ref} {...props} {...useSelectableListProps(props)} />
+})
 
 export type SelectableVariableListProps = SelectableListProps & VariableSizeListProps
-export function SelectableVariableList(props: SelectableVariableListProps) {
-  return <VariableSizeList {...props} {...useSelectableListProps(props)} />
-}
+export const SelectableVariableList = forwardRef((props: SelectableVariableListProps, ref) => {
+  return <VariableSizeList ref={ref as any} {...props} {...useSelectableListProps(props)} />
+})
 
 export type SelectableFixedListProps = SelectableListProps & FixedSizeListProps
-export function SelectableFixedList(props: SelectableFixedListProps) {
-  return <FixedSizeList {...props} {...useSelectableListProps(props)} />
-}
+export const SelectableFixedList = forwardRef((props: SelectableFixedListProps, ref) => {
+  return <FixedSizeList ref={ref as any} {...props} {...useSelectableListProps(props)} />
+})

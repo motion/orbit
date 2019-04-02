@@ -14,10 +14,10 @@ export type SelectableListProps = SelectableProps &
     listRef?: any
   }
 
-export function useSelectableListProps(props: SelectableListProps) {
+export function useSelectableProps(props: SelectableListProps, ref) {
   const selectableStore = props.selectableStore || useSelectableStore(props)
   const internalRef = useRef<DynamicListControlled>(null)
-  const listRef = props.listRef || internalRef
+  const listRef = props.listRef || ref || internalRef
 
   useEffect(() => {
     selectableStore.setListRef(listRef.current)
@@ -28,21 +28,21 @@ export function useSelectableListProps(props: SelectableListProps) {
   }, [props.itemData])
 
   return {
-    listRef,
+    ref: listRef,
   }
 }
 
 export type SelectableDynamicListProps = SelectableListProps & DynamicListProps
 export const SelectableDynamicList = forwardRef((props: SelectableDynamicListProps, ref) => {
-  return <DynamicList ref={ref} {...props} {...useSelectableListProps(props)} />
+  return <DynamicList {...props} {...useSelectableProps(props, ref)} />
 })
 
 export type SelectableVariableListProps = SelectableListProps & VariableSizeListProps
 export const SelectableVariableList = forwardRef((props: SelectableVariableListProps, ref) => {
-  return <VariableSizeList ref={ref as any} {...props} {...useSelectableListProps(props)} />
+  return <VariableSizeList {...props} {...useSelectableProps(props, ref)} />
 })
 
 export type SelectableFixedListProps = SelectableListProps & FixedSizeListProps
 export const SelectableFixedList = forwardRef((props: SelectableFixedListProps, ref) => {
-  return <FixedSizeList ref={ref as any} {...props} {...useSelectableListProps(props)} />
+  return <FixedSizeList {...props} {...useSelectableProps(props, ref)} />
 })

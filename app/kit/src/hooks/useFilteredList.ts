@@ -6,7 +6,7 @@ import { groupByFirstLetter } from '../helpers/groupByFirstLetter'
 export type UseFilterProps<A> = {
   searchable?: boolean
   items: A[]
-  query?: string
+  search?: string
   sortBy?: (item: A) => string
   filterKey?: string
   removePrefix?: string
@@ -17,11 +17,12 @@ export type UseFilterProps<A> = {
 }
 
 export function useFilteredList({ filterKey = 'name', ...props }: UseFilterProps<any>) {
-  const query = !props.searchable
-    ? ''
-    : props.removePrefix
-    ? removePrefixIfExists(props.query || '', props.removePrefix)
-    : props.query || ''
+  const search =
+    props.searchable === false
+      ? ''
+      : props.removePrefix
+      ? removePrefixIfExists(props.search || '', props.removePrefix)
+      : props.search || ''
 
   // cache the sort before we do the rest
   let sortedItems = useMemo(
@@ -29,8 +30,8 @@ export function useFilteredList({ filterKey = 'name', ...props }: UseFilterProps
     [props.items, props.sortBy],
   )
 
-  const filteredItems = props.query
-    ? fuzzyFilter(query, sortedItems, { key: filterKey })
+  const filteredItems = props.search
+    ? fuzzyFilter(search, sortedItems, { key: filterKey })
     : sortedItems
 
   const shouldGroup = (props.groupByLetter && filteredItems.length > props.groupMinimum) || 0

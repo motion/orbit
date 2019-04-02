@@ -9,7 +9,6 @@ import { CSSPropertySet, gloss, View } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
-import AutoSizer from 'react-virtualized-auto-sizer'
 import { ContextMenu } from '../ContextMenu'
 import { normalizeRow } from '../forms/normalizeRow'
 import { DynamicListControlled } from '../lists/DynamicList'
@@ -32,7 +31,7 @@ export type ManagedTableProps = SelectableProps & {
   margin?: CSSPropertySet['margin']
   padding?: CSSPropertySet['padding']
   width?: number
-  height?: number | 'content-height'
+  height?: number
 
   minWidth?: number
   minHeight?: number
@@ -370,33 +369,23 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     return !row ? index : `${row.key}${hld}`
   }
 
-  getContentHeight = () => {
-    const maxHeight = this.props.maxHeight || Infinity
-    let height = 0
-    for (let i = 0; i < this.state.sortedRows.length; i++) {
-      height += this.getRowHeight(i).height
-      if (height > maxHeight) {
-        height = maxHeight
-        break
-      }
-    }
-    return height
-  }
-
   getRowHeight = (index: number) => {
     const { sortedRows } = this.state
     return (sortedRows[index] && sortedRows[index].height) || this.props.rowLineHeight
   }
 
   render() {
-    const { columns, width, minHeight, minWidth, rows, placeholder, ...viewProps } = this.props
+    const {
+      columns,
+      width,
+      height,
+      minHeight,
+      minWidth,
+      rows,
+      placeholder,
+      ...viewProps
+    } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
-
-    // this could easily move into getDerivedState
-    const height =
-      viewProps.height === 'content-height'
-        ? this.getContentHeight()
-        : Math.min(minHeight, viewProps.height || Infinity)
 
     const placeholderElement =
       !rows ||
@@ -426,24 +415,21 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         />
         {placeholderElement}
         <ContextMenu buildItems={this.buildContextMenuItems}>
-          <AutoSizer>
-            {size => (
-              <SelectableVariableList
-                itemCount={sortedRows.length}
-                itemSize={this.getRowHeight}
-                itemData={sortedRows}
-                listRef={this.listRef}
-                outerRef={this.scrollRef}
-                onScroll={this.onScroll}
-                selectableStoreRef={this.selectableStoreRef}
-                {...pickSelectableProps(this.props)}
-                width={size.width}
-                height={size.height}
-              >
-                {this.renderRow}
-              </SelectableVariableList>
-            )}
-          </AutoSizer>
+          <SelectableVariableList
+            itemCount={sortedRows.length}
+            itemSize={this.getRowHeight}
+            itemData={sortedRows}
+            listRef={this.listRef}
+            outerRef={this.scrollRef}
+            onScroll={this.onScroll}
+            selectableStoreRef={this.selectableStoreRef}
+            {...pickSelectableProps(this.props)}
+            width="100%"
+            // for now just hardcoded TableHead height
+            height={height - 23}
+          >
+            {this.renderRow}
+          </SelectableVariableList>
         </ContextMenu>
       </Container>
     )

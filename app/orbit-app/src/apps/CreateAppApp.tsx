@@ -25,7 +25,6 @@ function CreateAppMain() {
     },
   }))
   const [selected, setSelected] = useState<typeof items[0]>(null)
-  console.log('selected', selected)
   return (
     <>
       <Section
@@ -37,7 +36,13 @@ function CreateAppMain() {
         title="New app"
         subTitle="Choose app to add"
       >
-        <List selectable alwaysSelected onSelect={rows => setSelected(rows[0])} items={items} />
+        <List
+          searchable
+          selectable
+          alwaysSelected
+          onSelect={rows => setSelected(rows[0])}
+          items={items}
+        />
       </Section>
       <Toolbar elevation={2}>
         <SurfacePassProps>

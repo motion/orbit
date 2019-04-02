@@ -77,7 +77,7 @@ export function ListsAppIndex() {
         maxHeight={600}
         // background
       >
-        <List query={addQuery} items={searchResults || []} />
+        <List search={addQuery} items={searchResults || []} />
       </Pane>
     </>
   )

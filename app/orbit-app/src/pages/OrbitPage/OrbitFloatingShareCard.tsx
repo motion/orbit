@@ -5,8 +5,8 @@ import React, { useRef, useState } from 'react'
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitFloatingShareCard({
-  width = 200,
-  height = 250,
+  width = 250,
+  height = 350,
 }: {
   width?: number
   height?: number
@@ -19,14 +19,13 @@ export function OrbitFloatingShareCard({
   const nodePosition = useScreenPosition({ ref: buttonRef })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  console.log('nodePosition', nodePosition)
   return (
     <>
       <Button
         ref={buttonRef}
         alt="orange"
         circular
-        icon="share"
+        icon="notes"
         size={1.5}
         badge={numItems}
         position="fixed"
@@ -42,8 +41,8 @@ export function OrbitFloatingShareCard({
       />
       {nodePosition && nodePosition.rect && (
         <FloatingCard
-          title="Share"
-          subTitle={`${numItems} ${pluralize('item', numItems)}`}
+          title="Selected"
+          subTitle={`Share ${numItems} ${pluralize('item', numItems)}`}
           defaultWidth={width}
           defaultHeight={height}
           defaultTop={nodePosition.rect.top - height + 20}

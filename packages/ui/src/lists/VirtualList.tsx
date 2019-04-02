@@ -59,8 +59,8 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
           onClick={e => onSelect(index, e)}
           onDoubleClick={e => onOpen(index, e)}
           disabled={!sortable}
-          {...itemProps(props, index)}
-          {...itemProps}
+          {...getSeparatorProps(props, index)}
+          {...props.itemProps}
           {...getItemProps && getItemProps(item, index, items)}
           onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
           onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
@@ -97,20 +97,13 @@ const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click
   (e.buttons === 2 && e.button === 2) // Regular mouse or macOS double-finger tap
 
-const getSeparatorProps = ({ items }: VirtualListProps<any>, index: number) => {
-  const model = items[index]
+const getSeparatorProps = (props: VirtualListProps<any>, index: number) => {
+  const model = props.items[index]
   if (!model || !model.group) {
     return null
   }
-  if (index === 0 || model.group !== items[index - 1].group) {
+  if (index === 0 || model.group !== props.items[index - 1].group) {
     return { separator: `${model.group}` }
   }
   return null
-}
-
-const itemProps = (
-  props: VirtualListProps<any>,
-  index: number,
-): Partial<VirtualListItemProps<any>> => {
-  return getSeparatorProps(props, index)
 }

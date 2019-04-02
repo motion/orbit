@@ -90,7 +90,6 @@ export type ListItemProps = ViewProps &
     titleFlex?: number
     subTitleProps?: Record<string, any>
     getIndex?: (id: number) => number
-    subspaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any
     separator?: React.ReactNode

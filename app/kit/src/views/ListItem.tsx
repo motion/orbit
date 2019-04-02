@@ -82,7 +82,6 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
     <UIListItem
       ref={ref}
       searchTerm={props.query}
-      subtitleSpaceBetween={spaceBetween}
       {...itemProps}
       {...rest}
       icon={icon}
@@ -105,8 +104,6 @@ const Bottom = gloss({
   flexFlow: 'row',
   alignItems: 'center',
 })
-
-const spaceBetween = <div style={{ flex: 1 }} />
 
 export const getNormalPropsForListItem = (normalized: NormalItem): OrbitListItemProps => ({
   title: normalized.title,

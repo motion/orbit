@@ -93,16 +93,16 @@ debugUseStore(event => {
     case 'render':
     case 'unmount':
     case 'mount':
+      if (!event.component) return
       if (window['enableLog']) {
         console.log(event.component.renderName, event)
       }
-      if (!event.component) return
       addEvent(event.component, event)
       return
   }
 })
 
-function globalizeStores(stores: Object) {
+function globalizeStores(stores: Record<string, any>) {
   window['Stores'] = stores
   // if we can, put store right on window
   for (const key in stores) {

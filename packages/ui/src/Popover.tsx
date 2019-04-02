@@ -1,4 +1,4 @@
-import { Color } from '@o/css'
+import { ColorLike } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import { gloss, Theme } from '@o/gloss'
 import { on } from '@o/utils'
@@ -11,9 +11,11 @@ import { MergeUIContext } from './helpers/contexts'
 import { getTarget } from './helpers/getTarget'
 import { Portal } from './helpers/portal'
 import { SizedSurface } from './SizedSurface'
-import { getSurfaceShadow, SurfaceProps } from './Surface'
+import { SurfaceProps } from './Surface'
+import { Omit } from './types'
+import { getElevation } from './View/elevate'
 
-export type PopoverProps = SurfaceProps & {
+export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   // custom theme for just the popover content
   themeName?: string
   // if you set a group, it acts as an ID that makes sure only ONE popover
@@ -75,7 +77,7 @@ export type PopoverProps = SurfaceProps & {
   onOpen?: Function
   height?: number
   width?: number
-  background?: true | Color
+  background?: true | ColorLike
   passActive?: boolean
   popoverProps?: Object
   style?: Object
@@ -968,7 +970,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
         data-towards={direction}
         isOpen={showPopover}
         isClosing={closing}
-        noHoverOnChildren={noHoverOnChildren}
+        isTouchable={!noHoverOnChildren && showPopover}
       >
         {!!overlay && (
           <Overlay
@@ -1016,7 +1018,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                   }
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  boxShadow={getSurfaceShadow(elevation)}
+                  {...getElevation({ elevation })}
                 />
               </ArrowContain>
             )}
@@ -1069,7 +1071,6 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
 }
 
 const PopoverContainer = gloss({
-  opacity: 0,
   position: 'absolute',
   top: 0,
   left: 0,
@@ -1082,12 +1083,11 @@ const PopoverContainer = gloss({
   },
   isOpen: {
     opacity: 1,
+  },
+  isTouchable: {
     '& > *': {
       pointerEvents: 'all !important',
     },
-  },
-  noHoverOnChildren: {
-    pointerEvents: 'none',
   },
 })
 

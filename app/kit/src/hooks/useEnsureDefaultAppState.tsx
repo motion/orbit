@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
-import { useAppState } from './useAppState'
+import { useApp } from './useApp'
 
-export function useEnsureDefaultAppState<A>(subSelect: string, ensure: A) {
-  const [state, update] = useAppState()
+export function useEnsureDefaultAppState<A>(uid: string, ensure: A) {
+  const [state, update] = useApp()
   useEffect(
     () => {
       if (!state) return
-      if (state.data[subSelect]) return
+      if (state.data[uid]) return
       // ensure default
-      state.data[subSelect] = ensure
-      console.log('updating app default state', ensure, subSelect, update)
+      state.data[uid] = ensure
+      console.log('updating app default state', ensure, uid, update)
       update(state)
     },
-    [state, subSelect],
+    [state, uid],
   )
 }

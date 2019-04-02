@@ -1,20 +1,13 @@
 import { useTheme } from '@o/gloss'
 import * as UI from '@o/ui'
 import { IconProps, View } from '@o/ui'
-import * as React from 'react'
+import React, { memo } from 'react'
 import { useAppIcon } from '../hooks/useAppIcon'
 import { AppIconInner } from './AppIcon'
 import { appIcons, icons } from './icons'
 import { SVG } from './SVG'
 
-export type OrbitIconProps = IconProps & {
-  ref?: any
-  name: string
-  size?: number
-  style?: any
-}
-
-export const Icon = React.memo((props: OrbitIconProps) => {
+export const Icon = memo((props: IconProps) => {
   const { name, color, size = 32, style, opacity, ...restProps } = props
   const theme = useTheme()
   const finalColor = color || theme.color ? theme.color.toString() : '#fff'
@@ -48,11 +41,12 @@ export const Icon = React.memo((props: OrbitIconProps) => {
   }
 
   // find our custom streamline icons...
-  const customIcon = icons[name]
+  const isSVG = name.trim().indexOf('<svg') === 0
+  const svgIcon = icons[name] || (isSVG ? name : null)
 
-  if (!customIcon) {
+  if (!svgIcon) {
     return (
-      <UI.Icon
+      <UI.PlainIcon
         name={name}
         color={finalColor}
         size={size}
@@ -77,9 +71,9 @@ export const Icon = React.memo((props: OrbitIconProps) => {
       <SVG
         className={restProps.className}
         fill="inherit"
-        svg={customIcon}
-        width={`${size}`}
-        height={`${size}`}
+        svg={svgIcon}
+        width={`${size}px`}
+        height={`${size}px`}
         style={{
           alignItems: 'center',
           justifyContent: 'center',
@@ -88,7 +82,9 @@ export const Icon = React.memo((props: OrbitIconProps) => {
           height: size,
           ...style,
         }}
-        cleanup={[finalColor ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(Boolean)}
+        cleanup={[finalColor && !isSVG ? 'fill' : null, 'title', 'desc', 'width', 'height'].filter(
+          Boolean,
+        )}
       />
     </View>
   )

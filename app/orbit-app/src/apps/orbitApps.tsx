@@ -14,7 +14,8 @@ import { StoreContext } from '../contexts'
 import { AppsApp } from './apps/AppsApp'
 import { BitApp } from './bit/BitApp'
 import { CreateApp } from './CreateAppApp'
-import CustomApp2 from './CustomApp2'
+import CustomApp2 from './custom/CustomApp'
+import DataExplorerApp from './DataExplorerApp'
 import { HomeApp } from './HomeApp'
 import { MessageApp } from './MessageApp'
 import { OnboardApp } from './onboard/OnboardApp'
@@ -37,6 +38,7 @@ const apps: AppDefinition[] = [
 ]
 
 export const orbitStaticApps: AppDefinition[] = [
+  DataExplorerApp,
   SettingsApp,
   SpacesApp,
   AppsApp,

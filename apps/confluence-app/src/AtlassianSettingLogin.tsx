@@ -1,9 +1,12 @@
 import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
-import { Button, Col, InputField, Message, Space, Table, Theme } from '@o/ui'
+import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
+import { useEffect } from 'react'
+import confluenceApp from './index'
+import { loadOne } from '@o/bridge/_'
 
 type Props = {
   identifier: string
@@ -40,7 +43,6 @@ export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  console.log(activeSpace)
   const [app] = React.useState<Partial<AppBit>>({
     target: 'app',
     identifier: props.identifier as 'confluence',
@@ -54,6 +56,21 @@ export function AtlassianSettingLogin(props: Props) {
       domain: '',
     },
   )
+
+  // todo: remove it
+  // load something from confluence (testing api)
+  useEffect(() => {
+    loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
+      app => {
+        if (app) {
+          confluenceApp
+            .api(app)
+            .loadUsers()
+            .then(users => console.log('users', users))
+        }
+      },
+    )
+  }, [])
 
   const addApp = async e => {
     e.preventDefault()
@@ -72,11 +89,12 @@ export function AtlassianSettingLogin(props: Props) {
     try {
       const loader = new ConfluenceLoader(app as AppBit)
       await loader.test()
-      app.name = extractTeamNameFromDomain((app.data as ConfluenceAppData).values.credentials.domain)
+      app.name = extractTeamNameFromDomain(
+        (app.data as ConfluenceAppData).values.credentials.domain,
+      )
       await save(AppModel, app)
       setStatus(Statuses.SUCCESS)
       setError(null)
-
     } catch (err) {
       setStatus(Statuses.FAIL)
       setError(err.message)
@@ -99,7 +117,7 @@ export function AtlassianSettingLogin(props: Props) {
       <Space />
       <Col margin="auto" width={370}>
         <Col>
-          <Table>
+          <Form>
             <InputField
               label="Domain"
               value={credentials.domain}
@@ -119,7 +137,7 @@ export function AtlassianSettingLogin(props: Props) {
               // !TODO
               onChange={handleChange('password') as any}
             />
-          </Table>
+          </Form>
           <Space />
           <Theme
             theme={{

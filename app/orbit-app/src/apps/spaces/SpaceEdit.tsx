@@ -6,10 +6,9 @@ import {
   ListItem,
   Paragraph,
   Row,
+  Section,
   SimpleFormField,
   Space as UISpace,
-  Theme,
-  Title,
 } from '@o/ui'
 import { pick } from 'lodash'
 import randomColor from 'randomcolor'
@@ -40,9 +39,7 @@ export function SpaceEdit({ space }: { space: Space }) {
   const [colors, setColors] = React.useState(space.colors || defaultColors)
 
   return (
-    <>
-      <Title>{space.name}</Title>
-
+    <Section titleBorder padded title={space.name}>
       <SubSection title="General">
         <Paragraph>Customize your space appearance.</Paragraph>
 
@@ -86,11 +83,14 @@ export function SpaceEdit({ space }: { space: Space }) {
         <Paragraph>Choose which source grants access to this space.</Paragraph>
 
         {(apps || []).map((int, index) => (
-          <Theme key={int.id} name={index === 0 ? 'selected' : null}>
-            <ListItem icon={int.identifier} title={int.name} />
-          </Theme>
+          <ListItem
+            key={int.id}
+            alt={index === 0 ? 'selected' : null}
+            icon={int.identifier}
+            title={int.name}
+          />
         ))}
       </SubSection>
-    </>
+    </Section>
   )
 }

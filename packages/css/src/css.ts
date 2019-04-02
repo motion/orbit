@@ -1,18 +1,25 @@
-import { COLOR_KEYS, FALSE_VALUES, psuedoKeys, SHORTHANDS, UNDEFINED, unitlessNumberProperties } from './constants'
+import { toColorString } from '@o/color'
+import {
+  COLOR_KEYS,
+  FALSE_VALUES,
+  psuedoKeys,
+  SHORTHANDS,
+  UNDEFINED,
+  unitlessNumberProperties,
+} from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
 import { processArray, processObject, px } from './helpers'
-import { toColor } from './toColor'
 
 // exports
 
-export * from './colorHelpers'
+export * from '@o/color'
 export { configureCSS } from './config'
 export { psuedoKeys, validCSSAttr } from './constants'
-export { CSSPropertySet, CSSPropertySetStrict } from './cssPropertySet'
+export { CSSPropertySet, CSSPropertySetResolved, CSSPropertySetStrict } from './cssPropertySet'
 export * from './helpers'
 export { camelToSnake, snakeToCamel } from './helpers'
-export { Color, ThemeObject, Transform } from './types'
-export { LinearGradient } from './utils/LinearGradient'
+export { ThemeObject, ThemeSet } from './ThemeObject'
+export { Transform } from './types'
 
 export type CSSOptions = {
   errorMessage?: string
@@ -52,7 +59,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = value
       respond = true
     } else if (COLOR_KEYS.has(key)) {
-      toReturn[finalKey] = toColor(value)
+      toReturn[finalKey] = toColorString(value)
       respond = true
     } else if (Array.isArray(value)) {
       if (key === 'fontFamily') {
@@ -109,7 +116,7 @@ export function css(styles: Object, opts?: CSSOptions): Object {
     if (respond) {
       continue
     }
-    throw new Error(
+    console.warn(
       `${(opts && opts.errorMessage) || 'Error'}: Invalid style value for ${key}: ${JSON.stringify(
         value,
       )}, in styles: ${JSON.stringify(styles)}`,

@@ -5,19 +5,30 @@
  * @format
  */
 
-import { FullScreen, gloss, View, ViewProps } from '@o/gloss'
-import { throttle } from 'lodash'
-import React, { createRef, RefObject, useCallback, useRef, useState } from 'react'
-import { FloatingChrome } from './helpers/FloatingChrome'
+import { isEqual } from '@o/fast-compare'
+import { gloss } from '@o/gloss'
+import { on } from '@o/utils'
+import invariant from 'invariant'
+import React, { createContext, createRef } from 'react'
 import { Rect } from './helpers/geometry'
+import { isRightClick } from './helpers/isRightClick'
 import LowPassFilter from './helpers/LowPassFilter'
 import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
-import { useScreenPosition } from './hooks/useScreenPosition'
+import { InteractiveChrome } from './InteractiveChrome'
+import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
+import { View, ViewProps } from './View/View'
 
-const invariant = require('invariant')
-
+// TODO make prop
 const SIZE = 5
+
+const InteractiveContext = createContext({
+  // the deeper we go, the less natural zIndex we want
+  // so that outer panes will have their draggers "cover" inner ones
+  // think of a <Pane> with a <TableHeadCol> inside, Pane should override
+  // this achieves that by automatically tracking Interactive nesting
+  nesting: 0,
+})
 
 type CursorState = {
   top: number
@@ -39,6 +50,7 @@ const ALL_RESIZABLE: ResizableSides = {
 }
 
 export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
+  disabled?: boolean
   disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean
   onMoveStart?: () => void
@@ -74,12 +86,13 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
   ) => void
   resizing?: boolean
   resizable?: boolean | ResizableSides
-  style?: Object
+  style?: Record<string, any>
   className?: string
   children?: any
 }
 
 type InteractiveState = {
+  chromeKey: number
   moving: boolean
   movingInitialProps: InteractiveProps | void
   movingInitialCursor: CursorState | void
@@ -91,13 +104,10 @@ type InteractiveState = {
   resizingInitialCursor: CursorState | void
 }
 
-const InteractiveContainer = gloss(View, {
-  position: 'relative',
-  willChange: 'transform, height, width, z-index',
-})
-
 // controlled
 export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
+  static contextType = InteractiveContext
+
   static defaultProps = {
     minHeight: 0,
     minLeft: 0,
@@ -109,6 +119,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   globalMouse = false
 
   state = {
+    chromeKey: 0,
     couldResize: false,
     cursor: null,
     moving: false,
@@ -125,6 +136,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   nextEvent?: MouseEvent
 
   onMouseMove = (event: MouseEvent) => {
+    if (this.props.disabled) {
+      return
+    }
     if (this.state.moving) {
       this.calculateMove(event)
     } else if (this.state.resizing) {
@@ -134,7 +148,9 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
-  startAction = event => {
+  onMouseDown = event => {
+    if (isRightClick(event)) return
+    if (!this.state.cursor) return
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -259,6 +275,32 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  currentRect = {
+    top: 0,
+    left: 0,
+  }
+
+  componentDidMount() {
+    this.trackNodePos(this.ref.current)
+  }
+
+  trackNodePos(node) {
+    this.useResizeObserver(node, entries => {
+      this.currentRect = entries[0].contentRect
+    })
+    this.currentRect = node.getBoundingClientRect()
+  }
+
+  useResizeObserver = (node, cb: ResizeObserverCallback) => {
+    // watch resizes
+    // @ts-ignore
+    const observer = new ResizeObserver(cb)
+    observer.observe(node)
+    const off = () => observer.disconnect()
+    on(this, { unsubscribe: off })
+    return off
+  }
+
   resetMoving() {
     const { onMoveEnd } = this.props
     if (onMoveEnd) {
@@ -306,9 +348,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 
   onMouseLeave = () => {
-    if (!this.state.resizing && !this.state.moving) {
+    if (!this.state.resizing && !this.state.moving && this.state.cursor) {
       this.setState({
         cursor: undefined,
+        resizingSides: null,
       })
     }
   }
@@ -351,12 +394,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (maxHeight != null) {
       fheight = Math.min(maxHeight, fheight)
     }
+    if (isNaN(fwidth) || isNaN(fheight)) {
+      debugger
+    }
     onResize(fwidth, fheight, width, height, this.state.resizingSides)
   }
 
-  move(top: number, left: number, event: MouseEvent) {
-    top = Math.max(this.props.minTop, top)
-    left = Math.max(this.props.minLeft, left)
+  move(newTop: number, newLeft: number, event: MouseEvent) {
+    const top = Math.max(this.props.minTop, newTop)
+    const left = Math.max(this.props.minLeft, newLeft)
     if (top === this.props.top && left === this.props.left) {
       // noop
       return
@@ -369,9 +415,13 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
   calculateResize(event: MouseEvent) {
     const { resizingInitialCursor, resizingInitialRect, resizingSides } = this.state
-    invariant(resizingInitialRect, 'TODO')
-    invariant(resizingInitialCursor, 'TODO')
-    invariant(resizingSides, 'TODO')
+    try {
+      invariant(resizingInitialRect, 'resizingInitialRect')
+      invariant(resizingInitialCursor, 'resizingInitialCursor')
+      invariant(resizingSides, 'resizingSides')
+    } catch {
+      return
+    }
     const deltaLeft = resizingInitialCursor.left - event.clientX
     const deltaTop = resizingInitialCursor.top - event.clientY
     let newLeft = resizingInitialRect.left
@@ -460,6 +510,16 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
   }
 
+  lastForceUpdate = Date.now()
+  getCurrentRect() {
+    // force update every so often in case things animate
+    if (Date.now() - this.lastForceUpdate > 1000) {
+      this.currentRect = this.ref.current.getBoundingClientRect()
+      this.lastForceUpdate = Date.now()
+    }
+    return this.currentRect
+  }
+
   checkIfResizable(
     event: MouseEvent,
   ): {
@@ -472,7 +532,10 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!canResize) {
       return
     }
-    const { left: offsetLeft, top: offsetTop } = this.ref.current.getBoundingClientRect()
+    if (!this.ref.current) {
+      return
+    }
+    const { left: offsetLeft, top: offsetTop } = this.getCurrentRect()
     const { height, width } = this.getRect()
     const x = event.clientX - offsetLeft
     const y = event.clientY - offsetTop
@@ -497,47 +560,15 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!canResize) {
       return
     }
-    const { bottom, left, right, top } = resizing
-    let newCursor
-    const movingHorizontal = left || right
-    const movingVertical = top || left
-    // left
-    if (left) {
-      newCursor = 'ew-resize'
-    }
-    // right
-    if (right) {
-      newCursor = 'ew-resize'
-    }
+    let newCursor = getResizeCursor(resizing)
+    const movingHorizontal = resizing.left || resizing.right
+    const movingVertical = resizing.top || resizing.left
+
     // if resizing vertically and one side can't be resized then use different cursor
     if (movingHorizontal && (canResize.left !== true || canResize.right !== true)) {
       newCursor = 'col-resize'
     }
-    // top
-    if (top) {
-      newCursor = 'ns-resize'
-      // top left
-      if (left) {
-        newCursor = 'nwse-resize'
-      }
-      // top right
-      if (right) {
-        newCursor = 'nesw-resize'
-      }
-    }
-    // bottom
-    if (bottom) {
-      newCursor = 'ns-resize'
-      // bottom left
-      if (left) {
-        newCursor = 'nesw-resize'
-      }
-      // bottom right
-      if (right) {
-        newCursor = 'nwse-resize'
-      }
-    }
-    // if resizing horziontally and one side can't be resized then use different cursor
+    // if resizing horizontally and one side can't be resized then use different cursor
     if (
       movingVertical &&
       !movingHorizontal &&
@@ -545,27 +576,28 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     ) {
       newCursor = 'row-resize'
     }
-    const resizingSides = {
-      bottom,
-      left,
-      right,
-      top,
-    }
-    const { onCanResize } = this.props
-    if (onCanResize) {
-      onCanResize()
-    }
-    this.setState({
-      couldResize: Boolean(newCursor),
+    const next = {
+      couldResize: !!newCursor,
       cursor: newCursor,
-      resizingSides,
-    })
+      resizingSides: resizing,
+    }
+    if (!isEqual(next, this.state)) {
+      const { onCanResize } = this.props
+      if (onCanResize) {
+        onCanResize()
+      }
+      this.setState(next)
+    }
   }
 
   onLocalMouseMove = event => {
     if (!this.globalMouse) {
       this.onMouseMove(event)
     }
+  }
+
+  updatePosition() {
+    this.setState({ chromeKey: Math.random() })
   }
 
   render() {
@@ -576,15 +608,16 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       movable,
       top,
       width,
-      zIndex,
       disableFloatingGrabbers,
+      disabled,
       ...props
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
+    const zIndex =
+      typeof props.zIndex === 'undefined' ? 10000000 - this.context.nesting : props.zIndex
     const style = {
       cursor,
-      zIndex: zIndex == null ? 'auto' : zIndex,
       left: null,
       top: null,
       transform: null,
@@ -615,136 +648,77 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     }
     const resizable = this.getResizable()
     const listenerProps = {
-      onMouseDown: this.startAction,
+      onMouseDown: this.onMouseDown,
       onMouseMove: this.onLocalMouseMove,
       onMouseLeave: this.onMouseLeave,
     }
-    const useFloatingGrabbers = resizable && !disableFloatingGrabbers
+    const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
     return (
-      <InteractiveContainer
-        className={this.props.className}
-        hidden={this.props.hidden}
-        ref={this.ref}
-        style={style}
-        {...listenerProps}
-        {...props}
-      >
-        {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-        {useFloatingGrabbers &&
-          Object.keys(resizable).map(side => (
-            <FakeResize
-              key={side}
+      <InteractiveContext.Provider value={{ ...this.context, nesting: this.context.nesting + 1 }}>
+        <InteractiveContainer
+          className={this.props.className}
+          hidden={this.props.hidden}
+          ref={this.ref}
+          {...style}
+          {...listenerProps}
+          {...props}
+        >
+          {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
+          {useFloatingGrabbers && (
+            <InteractiveChrome
+              key={this.state.chromeKey}
               parent={this.ref}
               onMouseDown={listenerProps.onMouseDown}
-              hovered={resizingSides && resizingSides[side]}
-              side={side as keyof ResizableSides}
+              resizingSides={resizingSides}
               zIndex={zIndex + 1}
             />
-          ))}
-        {this.props.children}
-      </InteractiveContainer>
+          )}
+          {this.props.children}
+        </InteractiveContainer>
+      </InteractiveContext.Provider>
     )
   }
 }
 
-type FakeResizeProps = Omit<ViewProps, 'zIndex'> & {
-  zIndex?: number
-  parent?: RefObject<HTMLElement>
-  side: keyof ResizableSides
-  hovered?: boolean
-}
-
-const FakeResize = ({ side, hovered, parent, ...rest }: FakeResizeProps) => {
-  const chromeRef = useRef<HTMLElement>(null)
-  const parentRef = useRef<HTMLElement>(null)
-  const [measureKey, setMeasureKey] = useState(0)
-  const [visible, setVisible] = useState(false)
-  // fixes bug where clicking makes it go away
-  const [intHovered, setIntHovered] = useState(false)
-
-  const onChange = useCallback(
-    throttle(({ visible }) => {
-      setMeasureKey(Math.random())
-      setVisible(visible)
-    }, 32),
-    [],
-  )
-
-  useScreenPosition({
-    ref: parent || parentRef,
-    preventMeasure: true,
-    onChange,
-  })
-
-  const shouldCover = intHovered || (visible && hovered)
-
-  return (
-    <FullScreen pointerEvents="none" ref={parentRef}>
-      <FakeResizeChrome
-        ref={chromeRef}
-        onLeft={side === 'left'}
-        onRight={side === 'right'}
-        onBottom={side === 'bottom'}
-        onTop={side === 'top'}
-      />
-      <FloatingChrome
-        measureKey={measureKey}
-        target={chromeRef}
-        {...rest}
-        onMouseEnter={() => setIntHovered(true)}
-        onMouseLeave={e => {
-          setIntHovered(false)
-          rest.onMouseLeave && rest.onMouseLeave(e)
-        }}
-        onMouseDown={e => {
-          if (shouldCover) {
-            console.warn('no more bad click')
-            e.preventDefault()
-            e.stopPropagation()
-          }
-          rest.onMouseDown && rest.onMouseDown(e)
-        }}
-        style={{
-          cursor: side === 'left' || side === 'right' ? 'ew-resize' : 'nw-resize',
-          pointerEvents: (shouldCover ? 'all' : 'none') as any,
-          opacity: shouldCover ? 1 : 0,
-        }}
-      />
-    </FullScreen>
-  )
-}
-
-const vertical = {
-  top: 0,
-  bottom: 0,
-  width: SIZE,
-}
-
-const horizontal = {
-  left: 0,
-  right: 0,
-  height: SIZE,
-}
-
-const OFFSET = 0 // SIZE / 2
-
-const FakeResizeChrome = gloss({
-  position: 'absolute',
-  pointerEvents: 'none',
-  onLeft: {
-    ...vertical,
-    left: -OFFSET,
-  },
-  onRight: {
-    ...vertical,
-    right: -OFFSET,
-  },
-  onBottom: {
-    ...horizontal,
-    bottom: -OFFSET,
-  },
-  onTop: {
-    ...horizontal,
-    top: -OFFSET,
-  },
+const InteractiveContainer = gloss(View, {
+  position: 'relative',
+  willChange: 'transform, height, width, z-index',
 })
+
+export function getResizeCursor(sides: ResizableSides): string | undefined {
+  const { bottom, left, right, top } = sides
+  let newCursor
+  // left
+  if (left) {
+    newCursor = 'ew-resize'
+  }
+  // right
+  if (right) {
+    newCursor = 'ew-resize'
+  }
+  // top
+  if (top) {
+    newCursor = 'ns-resize'
+    // top left
+    if (left) {
+      newCursor = 'nwse-resize'
+    }
+    // top right
+    if (right) {
+      newCursor = 'nesw-resize'
+    }
+  }
+  // bottom
+  if (bottom) {
+    newCursor = 'ns-resize'
+    // bottom left
+    if (left) {
+      newCursor = 'nesw-resize'
+    }
+    // bottom right
+    if (right) {
+      newCursor = 'nwse-resize'
+    }
+  }
+  return newCursor
+}

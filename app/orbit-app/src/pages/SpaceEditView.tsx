@@ -1,9 +1,8 @@
 import { save } from '@o/bridge'
 import { AppBit, AppModel, Space, SpaceModel } from '@o/models'
 import * as UI from '@o/ui'
-import { InputField, Message, Space as UISpace, Table } from '@o/ui'
+import { Form, InputField, Message, Space as UISpace } from '@o/ui'
 import { react, useStore } from '@o/use-store'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { AppActions } from '../actions/appActions/AppActions'
 
@@ -36,7 +35,7 @@ class SpaceEditViewStore {
   )
 }
 
-export default observer(function SpaceEditView(props: Props) {
+export default function SpaceEditView(props: Props) {
   const store = useStore(SpaceEditViewStore, props)
 
   const handleSave = async e => {
@@ -77,10 +76,9 @@ export default observer(function SpaceEditView(props: Props) {
       <UISpace />
       <UI.Col margin="auto" width={370}>
         <UI.Col padding={[0, 10]}>
-          <Table>
-            {/* !TODO */}
+          <Form>
             <InputField label="Name" value={values.name} onChange={handleChange('name') as any} />
-          </Table>
+          </Form>
           <UISpace />
           <UI.Theme
             theme={{
@@ -95,4 +93,4 @@ export default observer(function SpaceEditView(props: Props) {
       </UI.Col>
     </UI.Col>
   )
-})
+}

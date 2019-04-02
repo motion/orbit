@@ -1,31 +1,75 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
   env: {
     browser: true,
     node: true,
     'jest/globals': true,
   },
-  extends: ['eslint:recommended', 'prettier', 'prettier/react'],
-  plugins: ['jest', 'react', 'prettier'],
-  parser: 'typescript-eslint-parser',
+  extends: [
+    // 'eslint:recommended',
+    // 'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+  ],
+  plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   rules: {
     indent: 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/prefer-interface': 'off',
+    '@typescript-eslint/explicit-member-accessibility': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_' }],
+    '@typescript-eslint/member-delimiter-style': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'react/no-unescaped-entities': 'off',
     'linebreak-style': ['error', 'unix'],
     semi: ['error', 'never'],
     'no-console': 'off',
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     'no-undef': 'error',
     'no-param-reassign': 'error',
     'no-native-reassign': 'error',
     'no-constant-condition': 'off',
+    'react/prop-types': 'off',
+    'react/display-name': 'off',
     'react/jsx-uses-vars': 2,
     'react/jsx-uses-react': 'error',
     'no-case-declarations': 'off',
     'no-debugger': 'off',
     'no-shadow': 'error',
-
-    // broke in typescript-eslint-parser
-    // broken for polymorphic types
-    'no-dupe-class-members': 'off',
+    // '@typescript-eslint/tslint/config': [
+    //   'warn',
+    //   {
+    //     rules: {
+    //       extends: ['tslint:recommended', 'tslint-react'],
+    //       jsRules: {},
+    //       rules: {
+    //         'arrow-parens': [true, 'ban-single-arg-parens'],
+    //         'object-literal-sort-keys': false,
+    //         'ordered-imports': false,
+    //         quotemark: [true, 'single', 'jsx-double'],
+    //         'trailing-comma': false,
+    //         'variable-name': [true, 'allow-leading-underscore', 'allow-pascal-case'],
+    //       },
+    //       rulesDirectory: [],
+    //     },
+    //   },
+    // ],
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
   globals: {
     require: true,

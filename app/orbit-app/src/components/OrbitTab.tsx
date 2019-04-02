@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@o/gloss'
-import { Icon, OrbitIconProps } from '@o/kit'
+import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
   BorderBottom,
@@ -20,6 +20,7 @@ const borderSize = 5
 
 export type TabProps = ViewProps & {
   app?: AppBit
+  tabDisplay?: string
   separator?: boolean
   isActive?: boolean
   label?: string
@@ -27,19 +28,18 @@ export type TabProps = ViewProps & {
   sidePad?: number
   tooltip?: string
   textProps?: any
-  onClickPopout?: Function
   thicc?: boolean
   icon?: string | React.ReactNode
   iconSize?: number
   iconAdjustOpacity?: number
   getContext?: () => MenuTemplate
   disabled?: boolean
-  iconProps?: OrbitIconProps
+  iconProps?: Partial<IconProps>
   after?: React.ReactNode
+  location?: string
 }
 
 export const OrbitTab = memoIsEqualDeep(function OrbitTab({
-  app,
   icon,
   iconSize: iconSizeProp,
   iconProps,
@@ -48,18 +48,19 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
   label,
   isActive = false,
   separator = false,
-  onClickPopout,
   textProps,
   thicc,
   className = '',
   getContext,
   after,
+  location,
   ...props
 }: TabProps) {
   const sidePad = thicc ? 18 : 12
   const contextMenuProps = useContextMenu({ items: getContext ? getContext() : null })
   const iconSize = iconSizeProp || (thicc ? 12 : 11)
   const theme = useTheme()
+  const link = useLocationLink(location)
 
   const button = (
     <NavButtonChrome
@@ -68,6 +69,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
       } undraggable ${className || ''}`}
       isActive={isActive}
       thicc={thicc}
+      onClick={link}
       {...contextMenuProps}
       {...props}
     >
@@ -123,20 +125,7 @@ export const OrbitTab = memoIsEqualDeep(function OrbitTab({
         </Row>
 
         {separator && <Separator />}
-
         {after}
-
-        {/* {isActive && !!onClickPopout && (
-          <OrbitTabButton
-            className={`appDropdown ${app ? `appDropdown-${app.id}` : ''}`}
-            tooltip="Open"
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              onClickPopout()
-            }}
-          />
-        )} */}
       </NavButtonChromeInner>
     </NavButtonChrome>
   )

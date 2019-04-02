@@ -5,7 +5,7 @@ import { Window } from '@o/reactron'
 import { App, Desktop, Electron, appStartupConfig } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { ChildProcess } from 'child_process'
-import { app, BrowserWindow, Menu, screen, systemPreferences } from 'electron'
+import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import root from 'global'
 import { join } from 'path'
 import * as React from 'react'
@@ -19,6 +19,14 @@ const Config = getGlobalConfig()
 
 const setScreenSize = () => {
   Electron.setState({ screenSize: getScreenSize() })
+}
+
+function showOrbit(shown: boolean) {
+  if (shown) {
+    app.focus()
+  } else {
+    app.hide()
+  }
 }
 
 export const appProcesses: { appId: number; process: ChildProcess }[] = []
@@ -126,9 +134,7 @@ class OrbitWindowStore {
     () => App.orbitState.docked,
     docked => {
       ensure('not torn', !Electron.isTorn)
-      if (!docked) {
-        Menu.sendActionToFirstResponder('hide:')
-      }
+      showOrbit(docked)
     },
   )
 
@@ -182,11 +188,8 @@ export default function OrbitWindow() {
   orbitShortcutsStore = useStore(OrbitShortcutsStore, {
     onToggleOpen() {
       const shown = App.orbitState.docked
-      console.log('ok', store.blurred, shown)
-      if (store.blurred && shown) {
-        store.orbitRef.focus()
-        return
-      }
+      console.log('TOGGLE', shown)
+      showOrbit(shown)
       Mediator.command(SendClientDataCommand, {
         name: shown ? 'HIDE' : 'SHOW',
       })
@@ -210,11 +213,12 @@ export default function OrbitWindow() {
 
   return (
     <Window
-      show={store.show}
+      show
       webPreferences={{
         nodeIntegration: true,
         webSecurity: false,
       }}
+      titleBarStyle="customButtonsOnHover"
       onReadyToShow={store.setInitialShow}
       focus
       alwaysOnTop={store.hasMoved ? false : [store.alwaysOnTop, 'floating', 1]}

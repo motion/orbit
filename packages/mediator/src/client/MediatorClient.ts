@@ -5,6 +5,7 @@ import { ObserverCache, ObserverCacheEntry } from './ObserverCache'
 import { Query } from './Query'
 import { QueryOptions } from './QueryOptions'
 import { SaveOptions } from './SaveOptions'
+import { log } from '../common/logger'
 
 export type MediatorClientOptions = {
   transports: ClientTransport[]
@@ -59,7 +60,6 @@ function cachedObservable(
 }
 
 export class MediatorClient {
-
   constructor(public options: MediatorClientOptions) {
     this.options = options
   }
@@ -76,6 +76,10 @@ export class MediatorClient {
         args,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -87,7 +91,7 @@ export class MediatorClient {
     model: Model<ModelType, Args, CountArgs> | string,
     values: SaveOptions<ModelType>,
   ): Promise<ModelType> {
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     ObserverCache.updateModels(modelName, Array.isArray(values) ? values : [values])
 
     for (let transport of this.options.transports) {
@@ -96,6 +100,10 @@ export class MediatorClient {
         args: values,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -107,13 +115,17 @@ export class MediatorClient {
     model: Model<ModelType, Args, CountArgs> | string,
     instance: ModelType,
   ): Promise<boolean> {
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     for (let transport of this.options.transports) {
       const response = await transport.execute('remove', {
         model: modelName,
         args: instance,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -140,7 +152,7 @@ export class MediatorClient {
   ): Promise<ModelType> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     const args = qm instanceof Query ? qm.args : options.args || {}
 
     for (let transport of this.options.transports) {
@@ -150,6 +162,10 @@ export class MediatorClient {
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -174,7 +190,7 @@ export class MediatorClient {
   ): Promise<ModelType[]> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     const args = qm instanceof Query ? qm.args : options.args || {}
 
     for (let transport of this.options.transports) {
@@ -184,6 +200,10 @@ export class MediatorClient {
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -208,7 +228,7 @@ export class MediatorClient {
   ): Promise<[ModelType[], number]> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
 
     for (let transport of this.options.transports) {
       const response = await transport.execute('loadManyAndCount', {
@@ -217,13 +237,15 @@ export class MediatorClient {
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
 
-    throw new Error(
-      `loadManyAndCount resolver for ${modelName} was not found`,
-    )
+    throw new Error(`loadManyAndCount resolver for ${modelName} was not found`)
   }
 
   loadCount<ModelType, Args, CountArgs>(
@@ -245,7 +267,7 @@ export class MediatorClient {
   ): Promise<[ModelType[], number]> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     const args = qm instanceof Query ? qm.args : options.args || {}
 
     for (let transport of this.options.transports) {
@@ -255,6 +277,10 @@ export class MediatorClient {
         resolvers: qm instanceof Query ? qm.args : options.resolvers,
       })
       if (response.notFound !== true) {
+        if (response.error) {
+          log.error(response.error)
+          throw new Error(response.error)
+        }
         return response.result
       }
     }
@@ -281,9 +307,14 @@ export class MediatorClient {
   ): Observable<ModelType> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     const args = qm instanceof Query ? qm.args : options.args || {}
-    const cached = ObserverCache.get({ model: modelName, query: args, type: 'one', defaultValue: null })
+    const cached = ObserverCache.get({
+      model: modelName,
+      query: args,
+      type: 'one',
+      defaultValue: null,
+    })
     return new Observable(
       cachedObservable(
         'observeOne',
@@ -317,9 +348,14 @@ export class MediatorClient {
   ): Observable<ModelType[]> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
     const args = qm instanceof Query ? qm.args : options.args || {}
-    const cached = ObserverCache.get({ model: modelName, query: args, type: 'many', defaultValue: [] })
+    const cached = ObserverCache.get({
+      model: modelName,
+      query: args,
+      type: 'many',
+      defaultValue: [],
+    })
     return new Observable(
       cachedObservable(
         'observeMany',
@@ -353,7 +389,7 @@ export class MediatorClient {
   ): Observable<[ModelType[], number]> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
 
     return new Observable(subscriptionObserver => {
       const subscriptions = this.options.transports.map(transport => {
@@ -366,6 +402,11 @@ export class MediatorClient {
           .subscribe(
             response => {
               if (response.notFound !== true) {
+                if (response.error) {
+                  log.error(response.error)
+                  subscriptionObserver.error(response.error)
+                  return
+                }
                 subscriptionObserver.next(response.result)
               }
             },
@@ -398,7 +439,7 @@ export class MediatorClient {
   ): Observable<number> {
     if (!options) options = {}
     const model = qm instanceof Query ? qm.model : qm
-    const modelName = typeof model === "string" ? model : model.name
+    const modelName = typeof model === 'string' ? model : model.name
 
     return new Observable(subscriptionObserver => {
       const subscriptions = this.options.transports.map(transport => {
@@ -410,6 +451,11 @@ export class MediatorClient {
           .subscribe(
             response => {
               if (response.notFound !== true) {
+                if (response.error) {
+                  log.error(response.error)
+                  subscriptionObserver.error(response.error)
+                  return
+                }
                 subscriptionObserver.next(response.result)
               }
             },
@@ -425,25 +471,27 @@ export class MediatorClient {
     })
   }
 
-  onData(): Observable<{ name: string, value: any }> {
+  onData(): Observable<{ name: string; value: any }> {
     return new Observable(subscriptionObserver => {
       const subscriptions = this.options.transports.map(transport => {
-        return transport
-          .observe('data', {})
-          .subscribe(
-            response => {
-              if (response.notFound !== true) {
-                subscriptionObserver.next(response.result)
+        return transport.observe('data', {}).subscribe(
+          response => {
+            if (response.notFound !== true) {
+              if (response.error) {
+                log.error(response.error)
+                subscriptionObserver.error(response.error)
+                return
               }
-            },
-            error => subscriptionObserver.error(error),
-            () => subscriptionObserver.complete(),
-          )
+              subscriptionObserver.next(response.result)
+            }
+          },
+          error => subscriptionObserver.error(error),
+          () => subscriptionObserver.complete(),
+        )
       })
 
       // remove subscription on cancellation
       return () => subscriptions.forEach(subscription => subscription.unsubscribe())
     })
   }
-
 }

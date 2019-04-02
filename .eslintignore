@@ -1,0 +1,6 @@
+**/node_modules
+**/_
+**/dist
+**/app_data
+**/data
+projects/docs

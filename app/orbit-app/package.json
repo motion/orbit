@@ -13,6 +13,7 @@
     "test-electron": "electron ./scripts/test-electron.js"
   },
   "dependencies": {
+    "@o/babel-preset-motion": "2.4.0",
     "@babel/runtime": "7.2.0",
     "@o/react-hotkeys": "1.1.5",
     "@o/react-sortable-hoc": "1.6.5",
@@ -55,6 +56,7 @@
     "electron-context-menu": "0.11.0",
     "emoji-mart": "2.9.2",
     "event-kit": "^2.5.0",
+    "firebase": "^5.9.1",
     "fuzzysort": "1.1.4",
     "hash-sum": "1.0.2",
     "immer": "1.7.2",
@@ -66,7 +68,6 @@
     "lodash": "^4.17.10",
     "memoize-weak": "1.0.2",
     "mobx-react": "5.4.3",
-    "mobx-react-lite": "1.1.0",
     "mobx-utils": "5.0.2",
     "overmind": "15.1.2",
     "overmind-react": "16.1.2",
@@ -76,10 +77,9 @@
     "react": "16.8.3",
     "react-date-range": "1.0.0-beta",
     "react-dom": "16.8.3",
-    "react-hot-loader": "4.7.2",
-    "react-spring": "8.0.7",
+    "react-hot-loader": "4.8.2",
+    "react-spring": "8.0.18",
     "react-svg-inline": "2.1.1",
-    "react-virtualized": "9.21.0",
     "reconnecting-websocket": "4.1.10",
     "simple-quadtree": "^0.1.3",
     "turndown": "4.0.2",
@@ -87,6 +87,7 @@
     "webpack-runtime-require": "0.3.0"
   },
   "devDependencies": {
+    "scheduler": "0.13.5",
     "@babel/core": "7.2.0",
     "@o/babel-preset-motion": "^2.4.0",
     "@o/build": "^2.4.0",

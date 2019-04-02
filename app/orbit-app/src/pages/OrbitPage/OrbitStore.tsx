@@ -1,34 +1,55 @@
-import { AppProps, HandleOrbitSelect } from '@o/kit'
-import { ensure, react, shallow, useHook } from '@o/use-store'
-import { useStoresSimple } from '../../hooks/useStores'
+import { isEqual } from '@o/fast-compare';
+import { AppProps } from '@o/kit';
+import { ensure, react, shallow, useHook } from '@o/use-store';
+import { useStoresSimple } from '../../hooks/useStores';
 
 export class OrbitStore {
   stores = useHook(useStoresSimple)
 
-  lastSelectAt = Date.now()
-  nextItem = { index: -1, appProps: null }
+  lastSelectAt = {}
+  nextItem = { index: -1, appProps: null, paneId: '' }
+  isEditing = false
   activeConfig: { [key: string]: AppProps } = shallow({})
 
-  setSelectItem: HandleOrbitSelect = (index, appProps) => {
-    this.nextItem = { index, appProps }
+  get isTorn() {
+    return getIsTorn()
+  }
+
+  setEditing = () => {
+    this.isEditing = true
+  }
+
+  setSelectItem(paneId: string, index: number, appProps: AppProps) {
+    // fast if not already set
+    if (!this.activeConfig[paneId]) {
+      this.activeConfig[paneId] = appProps
+      return
+    }
+    const next = { paneId, index, appProps }
+    if (!isEqual(next, this.nextItem)) {
+      this.nextItem = next
+    }
   }
 
   setActiveConfig(id: string, config: AppProps) {
     this.activeConfig[id] = config
   }
 
+  get activePaneId() {
+    return this.stores.paneManagerStore.activePane.id
+  }
+
   updateSelectedItem = react(
     () => this.nextItem,
-    async ({ appProps }, { sleep }) => {
+    async ({ paneId, appProps }, { sleep }) => {
       // if we are quickly selecting (keyboard nav) sleep it so we dont load every item as we go
-      const last = this.lastSelectAt
-      this.lastSelectAt = Date.now()
-      if (Date.now() - last < 50) {
-        await sleep(50)
+      const last = this.lastSelectAt[paneId]
+      this.lastSelectAt[paneId] = Date.now()
+      if (Date.now() - last < 60) {
+        await sleep(60)
       }
       ensure('app config', !!appProps)
-      const { id } = this.stores.paneManagerStore.activePane
-      this.activeConfig[id] = appProps
+      this.activeConfig[paneId] = appProps
     },
   )
 }

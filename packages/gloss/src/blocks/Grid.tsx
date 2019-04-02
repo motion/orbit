@@ -1,19 +1,22 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { View, ViewProps } from './View'
 
-const cssVal = (n: number | string) => (typeof n === 'number' ? n + 'px' : n)
+const cssVal = (n: number | string | any) => (typeof n === 'number' ? n + 'px' : n)
 
-export const Grid = gloss(View, {
+export type GridProps = ViewProps & {
+  colSpan?: number
+  autoFitColumns?: boolean
+  autoFitRows?: boolean
+}
+
+export const Grid = gloss<GridProps>(View, {
   display: 'grid',
 }).theme(p => ({
-  ...(p.span ? { gridColumn: `span ${p.span}` } : null),
-  ...(p.align ? { alignItems: p.align } : null),
-  gridGap: p.gap,
-  gridTemplateColumns: p.autoFitColumns
-    ? `repeat(auto-fit, minmax(${cssVal(p.minWidth || 100)}, ${cssVal(p.maxWidth || '1fr')}))`
-    : p.gridTemplateColumns,
-  gridTemplateRows: p.autoFitRows
-    ? `repeat(100000, ${cssVal(p.minHeight || 100)}, [col-start])`
-    : p.gridTemplateRows,
+  ...(p.colSpan ? { gridColumn: `span ${p.colSpan}` } : null),
+  gridTemplateColumns:
+    p.autoFitColumns &&
+    `repeat(auto-fit, minmax(${cssVal(p.minWidth || 100)}, ${cssVal(p.maxWidth || '1fr')}))`,
+  gridTemplateRows: p.autoFitRows && `repeat(100000, ${cssVal(p.minHeight || 100)}, [col-start])`,
   width: 'auto',
+  ...p,
 }))

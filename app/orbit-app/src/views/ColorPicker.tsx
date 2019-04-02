@@ -98,7 +98,6 @@ const niceColors = [
   ['rgb(46, 204, 64)', 'rgb(133, 20, 75)'],
 ]
 
-// @ts-ignore
 export const ColorPicker = memo(function ColorPicker({
   count = 40,
   luminosity = 'dark',

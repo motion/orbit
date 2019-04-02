@@ -3,6 +3,7 @@ import { DataType, View } from '@o/ui'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { GithubLoader } from './GithubLoader'
+import githubApp from './index'
 
 export default function GithubSettings({ subId }: AppProps) {
   const [app, updateApp] = useApp(+subId)
@@ -29,31 +30,43 @@ export default function GithubSettings({ subId }: AppProps) {
 
       // to make sure we always have a fresh repositories we load them from API
       const loader = new GithubLoader(app)
-      loader
-        .loadUserRepositories()
-        .then(freshApiRepositories => {
-          // console.log(`loaded repositories from remote`, freshApiRepositories)
+      loader.loadUserRepositories().then(freshApiRepositories => {
+        // console.log(`loaded repositories from remote`, freshApiRepositories)
 
-          // we check if api repositories are changed
-          const appRepositories = app.data.repositories
-          if (
-            !freshApiRepositories ||
-            JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
-          )
-            return
+        // we check if api repositories are changed
+        const appRepositories = app.data.repositories
+        if (
+          !freshApiRepositories ||
+          JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
+        )
+          return
 
-          // console.log(`repositories changed, updating`)
+        // console.log(`repositories changed, updating`)
 
-          // then we update app data in the db
-          setRepositories(freshApiRepositories)
-          app.data = {
-            ...app.data,
-            repositories: freshApiRepositories,
-          }
-          updateApp(app)
-        })
+        // then we update app data in the db
+        setRepositories(freshApiRepositories)
+        app.data = {
+          ...app.data,
+          repositories: freshApiRepositories,
+        }
+        updateApp(app)
+      })
     },
     [app && app.id],
+  )
+
+  // todo: remove it
+  // load sample repositories (testing api)
+  useEffect(
+    () => {
+      if (app) {
+        githubApp
+          .api(app)
+          .listRepositoriesForOrg({ org: 'typeorm' })
+          .then(repos => console.log('repos', repos))
+      }
+    },
+    [app],
   )
 
   return (
@@ -92,7 +105,7 @@ export default function GithubSettings({ subId }: AppProps) {
             key: 'lastCommit',
             direction: 'up',
           }}
-          multiselect
+          selectable="multi"
           rows={(repositories || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             return {

@@ -1,5 +1,10 @@
+import * as TemplatesImport from './templates'
+
+export const Templates = TemplatesImport
+
 export * from '@o/bridge'
 export * from '@o/config'
+export { CSSPropertySet, CSSPropertySetStrict } from '@o/css'
 export * from '@o/gloss'
 export * from '@o/logger'
 export * from '@o/mediator'
@@ -14,9 +19,11 @@ export {
 } from '@o/models'
 export * from '@o/use-store'
 export * from '@o/utils'
+export * from './AppLoadContext'
 export * from './bit/Readability'
 export { configureKit } from './configureKit'
 export * from './helpers/appDefinesClient'
+export * from './helpers/createApi'
 export * from './helpers/createApp'
 export * from './helpers/fuzzyFilter'
 export * from './helpers/getAppDefinition'
@@ -88,4 +95,3 @@ export * from './views/SubPane'
 export * from './views/SVG'
 export * from './views/Table'
 export * from './views/TreeList'
-export {default as AppLoadContext} from './AppLoadContext'

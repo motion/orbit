@@ -5,7 +5,7 @@ import { ContextMenuProvider, ThemeProvide } from '@o/ui'
 import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core'
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader/root'
 import { IS_ELECTRON } from './constants'
 import ContextMenu from './helpers/electron/ContextMenu.electron'
 import './helpers/installDevelopmentHelpers'
@@ -92,15 +92,4 @@ function OrbitRootInner() {
   )
 }
 
-// class OrbitRootError extends React.Component {
-//   componentDidCatch(error) {
-//     console.log('got error')
-//     console.error(error)
-//   }
-
-//   render() {
-//     return <OrbitRootInner />
-//   }
-// }
-
-export const OrbitRoot = hot(module)(OrbitRootInner)
+export const OrbitRoot = hot(OrbitRootInner)

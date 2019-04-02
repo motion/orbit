@@ -33,16 +33,22 @@
     "react-debounce-render": "5.0.0",
     "react-markdown": "4.0.6",
     "react-tilt": "0.1.4",
-    "react-virtualized": "9.21.0",
     "react-virtualized-auto-sizer": "1.0.2",
-    "react-window": "1.5.1",
+    "memoize-one": "^5.0.2",
+    "react-grid-layout": "0.16.6",
+    "react-window": "1.7.1",
     "remark-emoji": "2.0.2",
-    "scroll": "2.0.3"
+    "scroll": "2.0.3",
+    "react-color": "2.17.0",
+    "string-natural-compare": "2.0.3",
+    "react-spring": "8.0.18",
+    "react-with-gesture": "4.0.8"
   },
   "devDependencies": {
     "@types/react-select": "2.0.15",
     "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2"
+    "@types/react-dom": "16.8.2",
+    "@types/react-window": "1.7.0"
   },
   "resolutions": {
     "@types/react": "16.8.8",
@@ -50,7 +56,7 @@
   },
   "peerDependencies": {
     "electron": "*",
-    "mobx": "5.9.0",
+    "mobx": "5.9.4",
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
     "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
   },

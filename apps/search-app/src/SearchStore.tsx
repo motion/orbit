@@ -78,8 +78,8 @@ export class SearchStore {
 
   appToResult = (app: AppBit): OrbitListItemProps => {
     return {
+      key: `${app.id}`,
       title: app.name,
-      // slim: true,
       iconBefore: true,
       icon: <AppIcon app={app} />,
       group: 'Apps',
@@ -87,7 +87,7 @@ export class SearchStore {
         icon: `orbit-${app.identifier}-full`,
         identifier: 'message',
         title: `Open ${app.name}`,
-        subtitle: 'Command: ⮐',
+        subTitle: 'Command: ⮐',
       },
       onOpen: () => {
         this.stores.queryStore.clearQuery()
@@ -115,14 +115,12 @@ export class SearchStore {
     ]
   }
 
-  getApps(query: string, all = false): OrbitListItemProps[] {
+  get isHome() {
     const { appStore } = this.stores
+    return appStore && appStore.app && appStore.app.tabDisplay !== 'permanent'
+  }
 
-    // non editable apps don't search apps, just the Home app
-    if (appStore && appStore.app && appStore.app.tabDisplay !== 'permanent') {
-      return []
-    }
-
+  getApps(query: string, all = false): OrbitListItemProps[] {
     const apps = [
       ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
       ...this.staticApps(),
@@ -136,8 +134,6 @@ export class SearchStore {
       ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
       {
         title: 'Add app...',
-        icon: 'orbit-custom-full',
-        // slim: true,
         iconBefore: true,
         identifier: 'message',
         onOpen: async () => {
@@ -151,10 +147,25 @@ export class SearchStore {
   }
 
   getQuickResults(query: string, all = false) {
+    // non editable apps don't search apps, just the Home app
+    if (this.isHome) {
+      return []
+    }
+
     // TODO recent history
-    return [...this.getApps(query, all)].filter(
-      x => x.title.toLowerCase().indexOf(query.toLowerCase()) === 0,
-    )
+    return [
+      {
+        key: 'app-home',
+        title: `${this.stores.spaceStore.activeSpace.name} Home`,
+        subtitle: `10 apps`,
+        icon: <SpaceIcon space={this.stores.spaceStore.activeSpace} />,
+        iconBefore: true,
+        subType: 'home',
+      },
+      ...this.getApps(query, all).filter(
+        x => `${x.title}`.toLowerCase().indexOf(query.toLowerCase()) === 0,
+      ),
+    ]
   }
 
   get results() {

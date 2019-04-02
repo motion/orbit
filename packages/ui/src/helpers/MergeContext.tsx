@@ -1,5 +1,5 @@
 import { isEqual } from '@o/fast-compare'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo, useRef } from 'react'
 
 // memoized to avoid updates...
 
@@ -9,19 +9,23 @@ export type MergeContextProps<A> = {
   children: React.ReactNode
 }
 
-export function MergeContext<A>(props: MergeContextProps<A>): any {
-  const { Context } = props
-  const context = useContext(props.Context)
-
-  if (isEqual(context, props.value)) {
-    return props.children
+export function MergeContext<A>({ Context, value, children }: MergeContextProps<A>): any {
+  const context = useContext(Context)
+  const key = useRef(0)
+  const cur = useRef(value)
+  if (!isEqual(cur.current, value)) {
+    key.current = key.current + 1
+    cur.current = value
   }
-
-  // merge...
-  if (context && typeof context === 'object' && context.constructor.name === 'Object') {
-    const value = Object.assign({}, context, props.value)
-    return <Context.Provider value={value}>{props.children}</Context.Provider>
-  }
-
-  return <Context.Provider value={props.value as A}>{props.children}</Context.Provider>
+  const memoValue = useMemo(
+    () => {
+      if (context && typeof context === 'object' && context.constructor.name === 'Object') {
+        return { ...context, ...value }
+      } else {
+        return value
+      }
+    },
+    [key.current],
+  )
+  return <Context.Provider value={memoValue as A}>{children}</Context.Provider>
 }

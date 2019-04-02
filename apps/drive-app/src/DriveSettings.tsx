@@ -1,6 +1,8 @@
 import { AppBit, AppModel, AppProps, SettingManageRow, Table, useModel, useStore } from '@o/kit'
 import { View } from '@o/ui'
 import * as React from 'react'
+import { useEffect } from 'react'
+import driveApp from './index'
 
 class DriveSettingsStore {
   props: { app?: AppBit }
@@ -41,6 +43,20 @@ export function DriveSettings({ subId }: AppProps) {
   const store = useStore(DriveSettingsStore, { app })
   const folders = store.popularFolders
 
+  // todo: remove it
+  // load drive files (testing api)
+  useEffect(
+    () => {
+      if (app) {
+        driveApp
+          .api(app)
+          .listFiles()
+          .then(files => console.log('files', files))
+      }
+    },
+    [app],
+  )
+
   return (
     <>
       <SettingManageRow app={app} whitelist={null} />
@@ -54,7 +70,7 @@ export function DriveSettings({ subId }: AppProps) {
               value: 'Active',
             },
           }}
-          multiselect
+          selectable="multi"
           rows={folders.map((file, index) => {
             return {
               key: `${index}`,

@@ -1,22 +1,19 @@
-import { Color, CSSPropertySetStrict, gloss, View } from '@o/gloss'
+import { gloss, View, ViewProps } from '@o/gloss'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'
-import { configure } from './helpers/configure'
+import { Config } from './helpers/configure'
 import { iconNames } from './iconNames'
 
-export type IconProps = React.HTMLAttributes<HTMLDivElement> &
-  CSSPropertySetStrict & {
-    size?: number
-    color?: Color
-    type?: 'mini' | 'outline'
-    opacity?: number
-    tooltip?: string
-    tooltipProps?: Object
-    name: string
-    hoverStyle?: any
-  }
+export type IconProps = ViewProps & {
+  size?: number
+  name: string
+  type?: 'mini' | 'outline'
+  tooltip?: string
+  tooltipProps?: Object
+}
 
+// TODO use createContextProps
 export const IconPropsContext = createContext(null as Partial<IconProps>)
 
 const widthPadding = x => {
@@ -50,14 +47,14 @@ const findMatch = (name: string) => {
 }
 
 // lets users wrap around icons
-export function ConfiguredIcon(rawProps: IconProps) {
+export function Icon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = configure.useIcon || Icon
+  const ResolvedIcon = Config.useIcon || PlainIcon
   return <ResolvedIcon {...props} />
 }
 
-export const Icon = memo((rawProps: IconProps) => {
+export const PlainIcon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
 
@@ -88,7 +85,7 @@ export const Icon = memo((rawProps: IconProps) => {
 
   const iconName = findMatch(name)
   // icons here are consistently a bit too big...
-  const size = props.size > 18 ? props.size * 0.65 : props.size || 16
+  const size = props.size > 18 ? props.size * 0.85 : props.size || 16
 
   return (
     <IconInner color={color} {...restProps} size={size}>

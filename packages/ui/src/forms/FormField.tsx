@@ -1,12 +1,34 @@
-import { Row } from '@o/gloss'
+import { gloss, Row, View } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { getDataType } from '../helpers/getDataType'
 import { Space } from '../layout/Space'
-import { FormTableLabel, FormTableRow, FormTableValue, RowProps } from '../tables/Table'
 import { DataType } from '../types'
 import { CheckBoxField } from './CheckboxField'
 import { InputField } from './InputField'
 import { Label } from './Label'
+
+type RowProps = {
+  label?: React.ReactNode
+}
+
+const TableCell = gloss(View, {
+  padding: [4, 0],
+})
+
+const FormTableRow = gloss(Row, {
+  width: '100%',
+  maxWidth: 500,
+  minHeight: 32,
+  alignItems: 'center',
+})
+
+const FormTableLabel = ({ children }) => (
+  <TableCell width="30%" maxWidth={125}>
+    {children}
+  </TableCell>
+)
+
+export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
 export type SimpleFormFieldProps = RowProps & {
   children?: React.ReactNode
@@ -31,7 +53,7 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
 
 type FormFieldProps =
   | {
-      type: DataType
+      type?: DataType
       label: React.ReactNode
       value: any
       name?: string

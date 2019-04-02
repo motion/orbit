@@ -5,69 +5,90 @@ import {
   SearchableTable,
   SearchableTableProps,
   Section,
-  SubTitle,
-  Title,
-  useRefGetter,
+  SectionProps,
+  TitleRowProps,
+  useParentNodeSize,
+  useSectionProps,
+  View,
 } from '@o/ui'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
+import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
-export type TableProps = Omit<SearchableTableProps, 'columns'> & {
-  columns?: TableColumns
-  searchable?: boolean
-  onHighlighted?: (rows: any[]) => void
-  title?: React.ReactNode
-  subTitle?: React.ReactNode
-}
+type PartialSectionProps = Pick<SectionProps, 'title' | 'subTitle' | 'bordered'>
+
+export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
+  Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
+  PartialSectionProps & {
+    columns?: TableColumns
+    searchable?: boolean
+    shareable?: boolean
+  }
 
 const defaultColumns = {
   resizable: true,
   sortable: true,
 }
 
-function deepMergeDefined<A>(obj: A, defaults: Object): A {
+function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
   for (const key in obj) {
     Object.assign(obj[key], defaults)
   }
   return obj
 }
 
-export function Table({ searchable, onHighlighted, title, subTitle, ...props }: TableProps) {
-  const rows = props.rows.map(normalizeRow)
-  const columns = deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns)
-  const ogOnHighlightedIndices = useRefGetter(props.onHighlightedIndices)
-  const onHighlightedIndices = useCallback(
-    keys => {
-      if (onHighlighted) {
-        onHighlighted(keys.map(key => props.rows[rows.findIndex(x => x.key === key)]))
-      }
-      if (ogOnHighlightedIndices()) {
-        ogOnHighlightedIndices()(keys)
-      }
-    },
-    [props.rows],
+export function Table(tableProps: TableProps) {
+  const stores = useStoresSimple()
+  const sectionProps: PartialSectionProps = useSectionProps(tableProps)
+  const { flex, bordered, searchable, title, subTitle, shareable, ...props } = {
+    ...sectionProps,
+    ...tableProps,
+  }
+  const { height, ref } = useParentNodeSize()
+  const rows = props.rows ? props.rows.map(normalizeRow) : null
+  const columns = useMemo(
+    () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
+    [props.columns, rows],
   )
 
-  const hasChrome = !!title || !!subTitle
+  const onSelect = useCallback(
+    (selectedRows, indices) => {
+      if (shareable) {
+        stores.spaceStore.currentSelection = selectedRows
+      }
+      if (props.onSelect) {
+        props.onSelect(selectedRows.map(row => row.values), indices)
+      }
+    },
+    [props.rows, props.onSelect, shareable],
+  )
 
   return (
-    <>
-      <Section sizePadding={hasChrome ? 1 : 0} paddingBottom={0}>
-        {!!title && <Title>{title}</Title>}
-        {!!subTitle && <SubTitle>{subTitle}</SubTitle>}
-      </Section>
-      <SearchableTable
-        height="content-height"
-        minWidth={100}
-        minHeight={100}
-        maxHeight={800}
-        {...props}
-        columns={columns}
-        rows={rows}
-        onHighlightedIndices={onHighlightedIndices}
-      />
-    </>
+    <Section
+      background="transparent"
+      flex={flex}
+      title={title}
+      subTitle={subTitle}
+      bordered={bordered}
+      padding={0}
+    >
+      {/* ref inside so it captures just below title height */}
+      <View ref={ref}>
+        <SearchableTable
+          searchable={searchable}
+          height="content-height"
+          minWidth={100}
+          minHeight={100}
+          maxHeight={height > 0 ? height : 500}
+          flex={flex}
+          {...props}
+          columns={columns}
+          rows={rows}
+          onSelect={onSelect}
+        />
+      </View>
+    </Section>
   )
 }

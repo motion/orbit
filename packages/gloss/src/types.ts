@@ -1,13 +1,13 @@
+import { ThemeObject } from '@o/css'
+
 export type Psuedos = '&:hover' | '&:active' | '&:focus'
 
 export type GlossOptions = {
-  dontTheme?: boolean
-  glossProp?: string
   tagName?: string
   toColor?: Function
   isColor?: Function
-  parentStylesOverride?: boolean
   pseudoAbbreviations?: { [key: string]: Psuedos }
+  preProcessTheme?: (props: any, theme: ThemeObject) => ThemeObject
 }
 
 type GlossViewConfig = {

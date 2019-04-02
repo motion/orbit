@@ -6,11 +6,12 @@
  */
 
 import { gloss, Row, View, ViewProps } from '@o/gloss'
-import * as React from 'react'
-import { Breadcrumbs } from './Breadcrumbs'
+import React, { Children, cloneElement, Suspense } from 'react'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
 import { Orderable } from './Orderable'
+import { Loading } from './progress/Loading'
+import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
 
@@ -22,13 +23,13 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // The key of the currently active tab.
   active?: string | void
   // Tab elements.
-  children?: Array<any>
+  children?: any[] | React.ReactNode
   // Whether the tabs can be reordered by the user.
-  orderable?: boolean
+  sortable?: boolean
   // Callback when the tab order changes.
-  onOrder?: (order: Array<string>) => void
+  onSort?: (order: string[]) => void
   // Order of tabs.
-  order?: Array<string>
+  order?: string[]
   // Whether to include the contents of every tab in the DOM and just toggle
   persist?: boolean
   // Whether to include a button to create additional items.
@@ -36,9 +37,9 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   // Callback for when the new button is clicked.
   onNew?: () => void
   // Elements to insert before all tabs in the tab list.
-  before?: Array<any>
+  before?: any[]
   // Elements to insert after all tabs in the tab list.
-  after?: Array<any>
+  after?: any[]
   // extra props to pass to each tab
   tabProps?: ViewProps
   // extra props to pass to active tab
@@ -47,25 +48,36 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   TabComponent?: any
 }
 
-function TabsControlled(props: TabsProps) {
-  const {
-    TabComponent = TabItem,
-    tabProps,
-    tabPropsActive,
-    onActive,
-    height = 26,
-    borderRadius = 0,
-    minHeight = 'min-content',
-    ...rest
-  } = props
-  // array of other components that aren't tabs
-  const before = props.before || []
-  const after = props.after || []
+function TabsControlled({
+  TabComponent = TabItem,
+  tabProps,
+  tabPropsActive,
+  onActive,
+  height = 26,
+  borderRadius,
+  onSort,
+  onNew,
+  order,
+  before = [],
+  after = [],
+  active,
+  persist,
+  newable,
+  sortable,
+  children,
+  ...rest
+}: TabsProps) {
   const tabs = {}
   // a list of keys
-  const keys = props.order ? props.order.slice() : []
+  const keys = order ? order.slice() : []
   const tabSiblings = []
   const tabContents = []
+
+  const tabPropsExtra: any = {
+    minWidth: 'min-content',
+    height,
+    borderRadius,
+  }
 
   function add(comps) {
     for (const [index, comp] of [].concat(comps || []).entries()) {
@@ -82,20 +94,23 @@ function TabsControlled(props: TabsProps) {
         tabSiblings.push(comp)
         continue
       }
-      const { children, closable, label, icon, onClose, width } = comp.props
-      let key = comp.key
-      if (typeof key !== 'string') {
-        key = `${index}`
+      const { closable, label, icon, onClose, width } = comp.props
+      const compChildren = comp.props.children
+      let id = comp.props.id
+      if (typeof id !== 'string') {
+        id = `${index}`
       }
-      if (!keys.includes(key)) {
-        keys.push(key)
+      if (!keys.includes(id)) {
+        keys.push(id)
       }
-      const isActive: boolean = props.active === key
+      const isActive: boolean = active === id
 
-      if (isActive || props.persist === true || comp.props.persist === true) {
+      if (isActive || persist === true || comp.props.persist === true) {
         tabContents.push(
-          <TabContent key={key} hidden={!isActive}>
-            {children}
+          <TabContent key={id} hidden={!isActive}>
+            <Suspense fallback={<Loading />}>
+              {typeof compChildren === 'function' && isActive ? compChildren() : compChildren}
+            </Suspense>
           </TabContent>,
         )
       }
@@ -105,25 +120,25 @@ function TabsControlled(props: TabsProps) {
         continue
       }
       let closeButton
-      const onMouseDown =
-        !isActive && onActive
-          ? (event: MouseEvent) => {
-              if (event.target !== closeButton) {
-                onActive(key)
-              }
-            }
-          : undefined
-
-      tabs[key] = (
+      tabs[id] = (
         <TabComponent
-          key={key}
+          key={id}
           className={isActive ? 'tab-active' : 'tab-inactive'}
-          width={width}
-          borderRadius={borderRadius}
+          {...tabPropsExtra}
           {...tabProps}
+          width={width}
           {...isActive && tabPropsActive}
           active={isActive}
-          onMouseDown={onMouseDown}
+          onMouseDown={
+            !isActive && onActive
+              ? (event: MouseEvent) => {
+                  if (event.target !== closeButton) {
+                    onActive(id)
+                  }
+                }
+              : undefined
+          }
+          debug={label === 'Tree To Inspector' ? true : false}
           icon={icon}
         >
           {label}
@@ -132,8 +147,8 @@ function TabsControlled(props: TabsProps) {
               ref={ref => (closeButton = ref)}
               onMouseDown={() => {
                 if (isActive && onActive) {
-                  const index = keys.indexOf(key)
-                  const newActive = keys[index + 1] || keys[index - 1] || null
+                  const idx = keys.indexOf(id)
+                  const newActive = keys[idx + 1] || keys[idx - 1] || null
                   onActive(newActive)
                 }
                 onClose()
@@ -147,13 +162,14 @@ function TabsControlled(props: TabsProps) {
     }
   }
 
-  add(props.children)
+  const childrenArr = Children.map(children, child => child)
+  add(childrenArr)
 
   let tabList
-  if (props.orderable === true) {
+  if (sortable === true) {
     tabList = (
       <OrderableContainer key="orderable-list">
-        <Orderable orientation="horizontal" items={tabs} onChange={props.onOrder} order={keys} />
+        <Orderable orientation="horizontal" items={tabs} onChange={onSort} order={keys} />
       </OrderableContainer>
     )
   } else {
@@ -163,26 +179,31 @@ function TabsControlled(props: TabsProps) {
     }
   }
 
-  if (props.newable === true) {
-    after.push(
-      <TabListAddItem key={keys.length} onMouseDown={props.onNew}>
-        +
-      </TabListAddItem>,
-    )
+  if (newable === true) {
+    after.push(<TabItem {...tabPropsExtra} icon="add" key={keys.length} onMouseDown={onNew} />)
   }
 
   return (
-    <TabContainer minHeight={minHeight} {...rest}>
-      <Row>
-        {before}
-        <div style={{ width: '100%', overflow: 'hidden', height }}>
-          <HideScrollbar className="hide-scrollbars">
-            <Breadcrumbs flex={1}>
-              {React.Children.map(tabList, (child, key) => React.cloneElement(child, { key }))}
-            </Breadcrumbs>
-          </HideScrollbar>
+    <TabContainer>
+      <Row width="100%" {...rest}>
+        <div style={{ margin: 'auto', maxWidth: '100%' }}>
+          <SegmentedRow sizePadding={2} sizeRadius={2}>
+            {before}
+            <View
+              {...{
+                flex: 1,
+                overflow: 'hidden',
+                height,
+                margin: [0, 'auto'],
+              }}
+            >
+              <HideScrollbar className="hide-scrollbars">
+                {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
+              </HideScrollbar>
+            </View>
+            {after}
+          </SegmentedRow>
         </div>
-        {after}
       </Row>
       {tabContents}
       {tabSiblings}
@@ -192,6 +213,7 @@ function TabsControlled(props: TabsProps) {
 
 const TabContainer = gloss(View, {
   flex: 1,
+  overflow: 'hidden',
 })
 
 export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultActive?: string }) {
@@ -201,27 +223,18 @@ export function Tabs({ defaultActive = '0', ...props }: TabsProps & { defaultAct
       active: 'onActive',
     },
   )
-  return (
-    // <Theme select={theme => theme.titleBar}>
-    <TabsControlled {...controlledProps} />
-    // </Theme>
-  )
+  return <TabsControlled {...controlledProps} />
 }
 
 const HideScrollbar = gloss({
   flexFlow: 'row',
   overflowX: 'auto',
   overflowY: 'hidden',
-  width: '100%',
+  flex: 1,
+  // because we use box shadows for outlines
+  margin: [0, 1],
   height: '100%',
   boxSizing: 'content-box',
-})
-
-const TabListAddItem = gloss(TabItem, {
-  borderRight: 'none',
-  flex: 0,
-  flexGrow: 0,
-  fontWeight: 'bold',
 })
 
 const CloseButton = gloss({
@@ -247,9 +260,8 @@ const OrderableContainer = gloss({
 })
 
 const TabContent = gloss({
-  height: 'auto',
   overflow: 'auto',
   width: '100%',
   flex: 1,
-  minHeight: 'min-content',
+  height: 'min-content',
 })

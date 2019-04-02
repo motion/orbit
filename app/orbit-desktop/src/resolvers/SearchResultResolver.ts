@@ -38,7 +38,7 @@ export class SearchResultResolver {
    * Resolves search result based on a given search args.
    */
   async resolve() {
-    this.log.timer('search', this.args)
+    this.log.vtimer('search', this.args)
     this.apps = await getRepository(AppEntity).find({ spaces: { id: this.args.spaceId } })
     this.cosalBitIds = await this.searchCosalIds()
     const searchResults: SearchResult[] = []
@@ -124,7 +124,7 @@ export class SearchResultResolver {
       // this.log.timer('loading ' + contentType)
     }
 
-    this.log.timer('search results length', searchResults.length)
+    this.log.vtimer('search', searchResults.length)
     return searchResults
   }
 
@@ -137,7 +137,7 @@ export class SearchResultResolver {
     if (!query) {
       return []
     }
-    this.log.timer('search in cosal', query)
+    this.log.vtimer('search in cosal', query)
     const results = await this.cosal.search(query, Math.max(300, this.args.take))
 
     let ids = []
@@ -146,7 +146,7 @@ export class SearchResultResolver {
     if (lastIndex > 0) {
       ids = results.slice(0, lastIndex).map(x => x.id)
     }
-    this.log.timer('search in cosal', ids)
+    this.log.vtimer('search in cosal', ids)
     return ids
   }
 
@@ -155,7 +155,7 @@ export class SearchResultResolver {
    */
   private async searchBits(contentType: BitContentType): Promise<[Bit[], number]> {
     const appIds = this.apps.map(app => app.id)
-    this.log.info(`search`, this.apps, this.args)
+    this.log.verbose(`search`, this.apps, this.args)
 
     // parallel search both fts and cosal
     const [ftsResults, cosalResults] = await Promise.all([

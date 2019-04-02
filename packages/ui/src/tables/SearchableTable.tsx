@@ -16,7 +16,7 @@ import { TableFilter } from './types'
 
 export type SearchableTableProps = ManagedTableProps &
   Partial<SearchableProps> & {
-    showSearchBar?: boolean
+    searchable?: boolean
     defaultFilters?: TableFilter[]
     filter?: any
     filterValue?: any
@@ -85,7 +85,7 @@ class SearchableManagedTable extends React.PureComponent<SearchableTableProps, S
 }
 
 export const SearchableTable = (props: SearchableTableProps) => {
-  if (!props.showSearchBar) {
+  if (!props.searchable) {
     return <SearchableManagedTable {...props} />
   }
   return (

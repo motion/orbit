@@ -1,17 +1,16 @@
 import { Bit } from '@o/models'
 import {
   Center,
+  createContextualProps,
   Direction,
-  MergeContext,
-  ProvideSelectionStore,
-  SelectableList,
-  SelectableListProps,
-  SelectionStore,
+  SelectableStore,
   SubTitle,
   Text,
-  useRefGetter,
-  useSelectionStore,
+  useGet,
+  useVisiblityContext,
   View,
+  VirtualList,
+  VirtualListProps,
 } from '@o/ui'
 import { mergeDefined } from '@o/utils'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
@@ -26,11 +25,10 @@ import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items'> &
+export type ListProps = Omit<VirtualListProps<Bit | OrbitListItemProps>, 'selectableStoreRef'> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     query?: string
-    items?: (Bit | OrbitListItemProps)[]
     onSelect?: HandleOrbitSelect
     onOpen?: HandleOrbitSelect
     placeholder?: React.ReactNode
@@ -38,6 +36,7 @@ export type ListProps = Omit<SelectableListProps, 'onSelect' | 'onOpen' | 'items
     shareable?: boolean
   }
 
+// TODO use creaetPropsContext
 export const ListPropsContext = createContext(null as Partial<ListProps>)
 
 export function toListItemProps(props?: any): OrbitListItemProps {
@@ -50,33 +49,14 @@ export function toListItemProps(props?: any): OrbitListItemProps {
   return props
 }
 
-// technically, these are "non overridable", whereas the ListPropsContext is overrideable
-// what we should do is make this a standard pattern with a nice utility for it in UI
-
-type SelectionContextType = {
+// extra props if we need to hook into select events
+const { PassProps, useProps } = createContextualProps<{
   onSelectItem?: HandleOrbitSelect
   onOpenItem?: HandleOrbitSelect
-}
-const SelectionContext = createContext({
-  onSelectItem: (_a, _b) => console.log('no select event for onSelectItem'),
-  onOpenItem: (_a, _b) => console.log('no select event for onOpenItem'),
-} as SelectionContextType)
-export function ProvideSelectionContext({
-  children,
-  ...rest
-}: SelectionContextType & { children: any }) {
-  return (
-    <MergeContext Context={SelectionContext} value={rest}>
-      {children}
-    </MergeContext>
-  )
-}
+}>()
+export const PassExtraListProps = PassProps
 
-export type HandleOrbitSelect = ((
-  index: number,
-  appProps: AppProps,
-  eventType?: 'click' | 'key',
-) => any)
+export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
 
@@ -84,19 +64,15 @@ export function List(rawProps: ListProps) {
   const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const { items, onSelect, onOpen, placeholder, getItemProps, query, ...restProps } = props
-  const { shortcutStore } = useStoresSimple()
-  const isRowLoaded = useCallback(x => x.index < items.length, [items])
-  const selectableProps = useContext(SelectionContext)
-  const getItemPropsGet = useRefGetter(getItemProps || nullFn)
-
-  const selectionStore = useSelectionStore(restProps)
-  const selectionStoreRef = useRef<SelectionStore | null>(null)
-  selectionStoreRef.current = selectionStore
-
+  const { items, onOpen, placeholder, getItemProps, query, shareable, ...restProps } = props
+  const selectableStoreRef = useRef<SelectableStore>(null)
+  const { shortcutStore, spaceStore } = useStoresSimple()
+  const { onOpenItem, onSelectItem } = useProps({})
+  const getItemPropsGet = useGet(getItemProps || nullFn)
+  const visibility = useVisiblityContext()
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
-    items: props.items || [],
+    items: items || [],
     sortBy: props.sortBy,
     query: props.query,
     filterKey: props.filterKey,
@@ -104,95 +80,95 @@ export function List(rawProps: ListProps) {
     groupByLetter: props.groupByLetter,
     groupMinimum: props.groupMinimum,
   })
-  const filteredGetItemPropsGet = useRefGetter(filtered.getItemProps || nullFn)
+  const filteredGetItemPropsGet = useGet(filtered.getItemProps || nullFn)
+  const getItems = useGet(filtered.results)
 
-  const getItems = useRefGetter(filtered.results)
+  useEffect(() => {
+    if (!shortcutStore) return
+    return shortcutStore.onShortcut(shortcut => {
+      if (visibility.getVisible() == false) {
+        return
+      }
+      const selectableStore = selectableStoreRef.current
+      switch (shortcut) {
+        case 'open':
+          console.log('todo open', selectableStore.active)
+          // const item = getItems()[]
+          // if (item && item.onOpen) {
+          //   console.log('TODO open')
+          //   // item.onOpen(selStore.activeIndex, null)
+          // }
+          // if (onOpen) {
+          //   console.log('TODO open')
+          //   // onOpen(selStore.activeIndex, null)
+          // }
+          break
+        case 'up':
+          selectableStore && selectableStore.move(Direction.up)
+          break
+        case 'down':
+          selectableStore && selectableStore.move(Direction.down)
+          break
+      }
+    })
+  }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
 
-  useEffect(
-    () => {
-      return shortcutStore.onShortcut(shortcut => {
-        const selStore = selectionStoreRef.current
-        if (selStore && !selStore.isActive) {
-          return false
-        }
-        switch (shortcut) {
-          case 'open':
-            const item = getItems()[selStore.activeIndex]
-            if (item && item.onOpen) {
-              item.onOpen(selStore.activeIndex, null)
-            }
-            if (onOpen) {
-              onOpen(selStore.activeIndex, null)
-            }
-            break
-          case 'up':
-          case 'down':
-            selStore.move(Direction[shortcut])
-            break
-        }
-      })
+  const onSelectInner = useCallback(
+    (selectedRows, selectedIndices) => {
+      if (shareable) {
+        spaceStore.currentSelection = selectedRows
+      }
+      if (onSelectItem) {
+        const appProps = getAppProps(toListItemProps(selectedRows[0]))
+        onSelectItem(selectedIndices[0], appProps)
+      }
+      if (props.onSelect) {
+        props.onSelect(selectedRows)
+      }
     },
-    [onOpen],
+    [props.onSelect, shareable, onSelectItem],
   )
 
   const getItemPropsInner = useCallback((a, b, c) => {
     // this will convert raw PersonBit or Bit into { item: PersonBit | Bit }
     const normalized = toListItemProps(a)
-    const extraProps = getItemPropsGet()(a, b, c)
+    const itemExtraProps = getItemPropsGet()(a, b, c)
     const filterExtraProps = filteredGetItemPropsGet()(a, b, c)
     const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
-    return { ...normalized, ...extraProps, ...filterExtraProps, ...shareProps }
+    return { ...normalized, ...itemExtraProps, ...filterExtraProps, ...shareProps }
   }, [])
 
-  const onSelectInner = useCallback(
-    (index, eventType) => {
-      const appProps = getAppProps(toListItemProps(getItems()[index]))
-      if (onSelect) {
-        onSelect(index, appProps, eventType)
-      }
-      if (selectionStoreRef.current) {
-        selectionStoreRef.current.setSelected(index, eventType)
-      }
-      if (selectableProps && selectableProps.onSelectItem) {
-        selectableProps.onSelectItem(index, appProps, eventType)
-      }
-    },
-    [onSelect, selectableProps],
-  )
-
   const onOpenInner = useCallback(
-    (index, eventType) => {
+    index => {
       const appProps = getAppProps(toListItemProps(getItems()[index]))
       if (onOpen) {
         onOpen(index, appProps)
       }
-      if (selectableProps && selectableProps.onOpenItem) {
-        selectableProps.onOpenItem(index, appProps, eventType)
+      if (onOpenItem) {
+        onOpenItem(index, appProps)
       }
     },
-    [onOpen, selectableProps],
+    [onOpen, onOpenItem],
   )
 
   const hasItems = !!filtered.results.length
 
   return (
-    <ProvideSelectionStore selectionStore={selectionStore}>
-      <HighlightActiveQuery query={query}>
-        {hasItems && (
-          <SelectableList
-            allowMeasure={props.isActive}
-            items={filtered.results}
-            ItemView={ListItem}
-            isRowLoaded={isRowLoaded}
-            {...restProps}
-            getItemProps={getItemPropsInner}
-            onSelect={onSelectInner}
-            onOpen={onOpenInner}
-          />
-        )}
-        {!hasItems && (placeholder || <ListPlaceholder />)}
-      </HighlightActiveQuery>
-    </ProvideSelectionStore>
+    <HighlightActiveQuery query={query}>
+      {hasItems && (
+        <VirtualList
+          disableMeasure={visibility.getVisible() === false}
+          items={filtered.results}
+          ItemView={ListItem}
+          {...restProps}
+          getItemProps={getItemPropsInner}
+          onOpen={onOpenInner}
+          onSelect={onSelectInner}
+          selectableStoreRef={selectableStoreRef}
+        />
+      )}
+      {!hasItems && (placeholder || <ListPlaceholder />)}
+    </HighlightActiveQuery>
   )
 }
 

@@ -1,20 +1,13 @@
 import { useModels } from '@o/bridge'
-import {
-  Icon,
-  OrbitOrb,
-  SpaceIcon,
-  useActiveSpace,
-  useActiveUser,
-  useLocationLink,
-  useStoresSimple,
-} from '@o/kit'
+import { Icon, OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, ListItem, Popover, View } from '@o/ui'
+import { Avatar, Col, Divider, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
 import avatar from '../../public/images/nate.jpg'
+import { useStoresSimple } from '../hooks/useStores'
 import FocusableShortcutHandler from './FocusableShortcutHandler'
 
 class SpaceSwitchStore {
@@ -65,6 +58,7 @@ const shortcuts = {
 }
 
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
+  const stores = useStoresSimple()
   const store = useStore(SpaceSwitchStore)
   const [user] = useActiveUser()
   const activeSpaceId = (user && user.activeSpace) || -1
@@ -105,7 +99,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         onChangeVisibility={store.setOpen}
         target={
           <View position="relative" margin={[0, 6, 0, 18]}>
-            <Avatar src={avatar} width={22} height={22} />
+            <Avatar className="undraggable" src={avatar} width={20} height={20} />
             <OrbitOrb
               position="absolute"
               top="50%"
@@ -130,12 +124,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             ) : (
               <div>No spaces</div>
             )}
-            <View
-              flex={1}
-              margin={[2, 10]}
-              background={theme => theme.color.alpha(0.2)}
-              height={1}
-            />
+            <Divider />
             {spaces.map((space, index) => {
               return (
                 <ListItem
@@ -157,10 +146,23 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             <ListItem
               title="Space Settings"
               subtitle="Manage spaces..."
-              icon="gear"
+              icon="layers"
               iconBefore
               titleProps={{ fontWeight: 300, size: 0.9, alpha: 0.8 }}
               after={<Icon name="addcircle" size={14} fill="#444" />}
+            />
+
+            <Divider />
+
+            <ListItem
+              title="Settings"
+              subtitle="Shortcuts, theme"
+              icon="gear"
+              iconBefore
+              onClick={() => {
+                stores.newAppStore.setShowCreateNew(false)
+                stores.paneManagerStore.setActivePaneByType('settings')
+              }}
             />
           </View>
         </Col>

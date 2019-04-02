@@ -1,5 +1,4 @@
 import { Absolute, Row, View } from '@o/ui'
-import { observer } from 'mobx-react-lite'
 import * as React from 'react'
 import { IS_ELECTRON } from '../../../constants'
 import { useStores } from '../../../hooks/useStores'
@@ -44,7 +43,7 @@ export default function BrowserDebugTray({ children }: any) {
   )
 }
 
-const Target = observer((props: { id: number }) => {
+const Target = (props: { id: number }) => {
   const { menuStore } = useStores()
   return (
     <View
@@ -64,4 +63,4 @@ const Target = observer((props: { id: number }) => {
       background={menuStore.activeMenuIndex === props.id ? '#555' : '#000'}
     />
   )
-})
+}

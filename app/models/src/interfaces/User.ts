@@ -1,3 +1,16 @@
+export interface UserSettings {
+  hasOnboarded?: boolean
+  autoUpdate?: boolean
+  autoLaunch?: boolean
+  theme?: 'dark' | 'light' | 'automatic'
+  vibrancy?: 'some' | 'more' | 'none'
+  openShortcut?: string
+  recentSearches?: string[]
+  cosalIndexUpdatedTo?: number
+  topicsIndexUpdatedTo?: number
+  topTopics?: string[]
+}
+
 export interface User {
   /**
    * User id.
@@ -8,6 +21,21 @@ export interface User {
    * User name.
    */
   name?: string
+
+  /**
+   * User email.
+   */
+  email?: string
+
+  /**
+   * User id in the cloud.
+   */
+  cloudId?: string
+
+  /**
+   * Time when cloud sync was made last time.
+   */
+  lastTimeSync?: number
 
   /**
    * active space id
@@ -26,18 +54,7 @@ export interface User {
     }
   }
 
-  settings?: {
-    hasOnboarded?: boolean
-    autoUpdate?: boolean
-    autoLaunch?: boolean
-    theme?: 'dark' | 'light' | 'automatic'
-    vibrancy?: 'some' | 'more' | 'none'
-    openShortcut?: string
-    recentSearches?: string[]
-    cosalIndexUpdatedTo?: number
-    topicsIndexUpdatedTo?: number
-    topTopics?: string[]
-  }
+  settings?: UserSettings
 
   appState?: { [key: string]: any }
 }

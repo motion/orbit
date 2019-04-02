@@ -7,6 +7,10 @@ import { ShareMenu } from '../views/ShareMenu'
 import { useStores } from './useStores'
 
 const getItemShareMenu = memoize((listItem, themeStore) => {
+  if (!listItem) {
+    return null
+  }
+
   const item = listItem.item || listItem
   if (item && (item.target === 'bit' || item.target === 'person-bit')) {
     return {
@@ -51,10 +55,13 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
 })
 
 export function useShareMenu() {
-  const { themeStore } = useStores()
+  const { themeStore } = useStores({ optional: ['themeStore'] })
   const getShareMenuItemProps = useCallback(
     (item: OrbitListItemProps, _index?, _items?) => {
-      return getItemShareMenu(item, themeStore)
+      if (themeStore) {
+        return getItemShareMenu(item, themeStore)
+      }
+      return {}
     },
     [themeStore],
   )

@@ -1,15 +1,16 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { MediatorServer, WebSocketServerTransport, resolveCommand } from '@o/mediator'
+import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
 import {
+  AppDevOpenCommand,
   CloseAppCommand,
   NewFallbackServerPortCommand,
   RestartAppCommand,
-  AppDevOpenCommand,
+  SendClientDataCommand,
   TearAppCommand,
 } from '@o/models'
 import { render } from '@o/reactron'
-import { Electron, App } from '@o/stores'
+import { App, Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
 import * as React from 'react'
@@ -18,12 +19,12 @@ import waitPort from 'wait-port'
 import AppsWindow from './apps/AppsWindow'
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
+import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
 import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
-import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
 
@@ -81,6 +82,19 @@ export async function main() {
     } else {
       // only in main electron process...
       require('./helpers/monitorResourceUsage')
+
+      // register app schema
+      const { app } = require('electron')
+      if (app.isDefaultProtocolClient('orbit') === false) {
+        app.setAsDefaultProtocolClient('orbit')
+      }
+      app.on('open-url', (_options, path) => {
+        console.log(`open-url emitted`, path)
+        Mediator.command(SendClientDataCommand, {
+          name: 'APP_URL_OPENED',
+          value: path.replace('orbit://', ''),
+        })
+      })
     }
   }
 

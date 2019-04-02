@@ -7,28 +7,23 @@ import {
   ThemeContext,
   ThemeObject,
   View,
-  ViewPropsStrict,
+  ViewProps,
 } from '@o/gloss'
-import { useStore } from '@o/use-store'
+import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
-import { ConfiguredIcon } from '../Icon'
+import { Icon, IconProps } from '../Icon'
 import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
-import { ListItemStore } from './ListItemStore'
 
-export type ItemRenderText = ((text: string) => JSX.Element)
-export type HandleSelection = ((
-  index: number,
-  eventType: 'click' | 'key',
-  element?: HTMLElement,
-) => any)
+export type ItemRenderText = (text: string) => JSX.Element
+export type HandleSelection = (index: number, event?: any) => any
 
 export type ListItemHide = {
   hideTitle?: boolean
@@ -45,7 +40,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = ViewPropsStrict &
+export type ListItemProps = ViewProps &
   ListItemHide &
   ListItemDisplayProps & {
     subId?: string | number
@@ -53,9 +48,9 @@ export type ListItemProps = ViewPropsStrict &
     preview?: React.ReactNode
     title?: React.ReactNode
     subTextOpacity?: number
-    slim?: boolean
+    small?: boolean
     above?: React.ReactNode
-    activeStyle?: Object
+    activeStyle?: Record<string, any>
     before?: React.ReactNode
     chromeless?: boolean
     theme?: Partial<ThemeObject>
@@ -68,10 +63,10 @@ export type ListItemProps = ViewPropsStrict &
     style?: any
     afterTitle?: React.ReactNode
     after?: React.ReactNode
-    titleProps?: Object
+    titleProps?: Record<string, any>
     iconBefore?: boolean
-    iconProps?: Object
-    separatorProps?: Object
+    iconProps?: Partial<IconProps>
+    separatorProps?: Record<string, any>
     className?: string
     inGrid?: boolean
     pane?: string
@@ -86,48 +81,22 @@ export type ListItemProps = ViewPropsStrict &
     // double click / keyboard enter
     onOpen?: HandleSelection
     borderRadius?: number
-    nextUpStyle?: Object
+    nextUpStyle?: Record<string, any>
     isSelected?: boolean | ((index: number) => boolean)
-    cardProps?: Object
+    cardProps?: Record<string, any>
     disableShadow?: boolean
     padding?: number | number[]
     titleFlex?: number
-    subtitleProps?: Object
-    getIndex?: ((id: number) => number)
-    subtitleSpaceBetween?: React.ReactNode
+    subtitleProps?: Record<string, any>
+    getIndex?: (id: number) => number
+    subspaceBetween?: React.ReactNode
     searchTerm?: string
     onClickLocation?: (index: number, e?: Event) => any
     separator?: React.ReactNode
     group?: string
   }
 
-function getIcon({ icon, iconBefore, slim, iconProps }: ListItemProps) {
-  let iconSize = iconBefore ? (slim ? 20 : 28) : slim ? 12 : 14
-  const iconPropsFinal = {
-    size: iconSize,
-    ...iconProps,
-  }
-  if (!iconBefore) {
-    iconPropsFinal['style'] = { transform: `translateY(${slim ? 4 : 3}px)` }
-  }
-  let element = icon
-  if (React.isValidElement(icon)) {
-    if (icon.type['acceptsIconProps']) {
-      element = React.cloneElement(icon, iconPropsFinal)
-    }
-  } else {
-    element = <ConfiguredIcon name={icon} {...iconPropsFinal} />
-  }
-  return (
-    // use a view to ensure consistent width
-    // and add the titlespace
-    <View width={iconSize + (slim ? 8 : 10)}>{element}</View>
-  )
-}
-
 export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) {
-  const store = useStore(ListItemStore, props)
-  const { isSelected } = store
   const {
     date,
     location,
@@ -139,27 +108,26 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
     cardProps,
     children,
     disableShadow,
-    iconProps,
     onClick,
     titleProps,
     subtitleProps,
     padding,
-    subtitleSpaceBetween,
-    searchTerm,
     onClickLocation,
-    renderText,
     separator,
     oneLine,
     isExpanded,
     before,
     separatorProps,
     above,
-    slim,
+    small,
     iconBefore: iconBeforeProp,
     subTextOpacity = 0.6,
     after,
+    width,
+    height,
     ...restProps
   } = props
+  const isSelected = useIsSelected(props)
   const showChildren = !props.hideBody
   const showSubtitle = !!subtitle && !props.hideSubtitle
   const showDate = !!date && !props.hideDate
@@ -167,12 +135,13 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
   const showTitle = !!title && !props.hideTitle
   const showPreview = !!preview && !children && !props.hideBody
   const showPreviewInSubtitle = !showTitle && oneLine
-  const sizeLineHeight = slim ? 0.8 : 1
-  const defaultPadding = slim ? [7, 9] : [8, 10]
+  const sizeLineHeight = small ? 0.8 : 1
+  const defaultPadding = small ? [7, 9] : [8, 10]
   const iconBefore = iconBeforeProp || !showTitle
+  const hasMouseDownEvent = !!restProps.onMouseDown
 
   // add a little vertical height for full height icons
-  if (slim && iconBefore) {
+  if (small && iconBefore) {
     defaultPadding[0] += 2
   }
 
@@ -205,131 +174,153 @@ export const ListItem = memoIsEqualDeep(function ListItem(props: ListItemProps) 
         fontWeight={400}
         fontSize={13}
         alpha={subTextOpacity}
-        onClick={store.handleClickLocation}
+        onClick={onClickLocation || undefined}
         ellipse
       >
         {`${location}`}
       </RoundButtonSmall>
-      <TitleSpace slim={slim} />
+      <Space small={small} />
     </>
   )
 
   return (
-    <Theme select={isSelected ? theme => theme.selected : null}>
-      <>
+    <Theme alternate={isSelected ? 'selected' : null}>
+      {/* we keep chrome here because virtualizings wants to set an absolute width/height */}
+      {/* but without a wrapper, we'd have two children nodes, only one receiving dimensions */}
+      <ListItemChrome isMeasured={!!width} width={width} height={height}>
         {above}
         {!!separator && (
           <Theme name={activeThemeName}>
-            <Separator {...separatorProps}>
-              <Text size={0.9} fontWeight={400}>
-                {separator}
-              </Text>
+            <Separator paddingTop={props.index === 0 ? 8 : 16} {...separatorProps}>
+              {separator}
             </Separator>
           </Theme>
         )}
-      </>
-      <ListFrame isExpanded={isExpanded} ref={store.setCardWrapRef} {...restProps}>
-        <ListItemChrome
-          isSelected={isSelected}
-          borderRadius={borderRadius}
-          onClick={store.handleClick}
-          disableShadow={disableShadow}
-          padding={padding || defaultPadding}
-          {...cardProps}
-        >
-          {before}
-          {iconBefore && showIcon && iconElement}
-          <ListItemMainContent oneLine={oneLine}>
-            {showTitle && (
-              <Title>
-                {showIcon && !iconBefore && iconElement}
-                <HighlightText sizeLineHeight={0.85} ellipse fontWeight={400} {...titleProps}>
-                  {title}
-                </HighlightText>
-                <TitleSpace slim={slim} />
-                {props.afterTitle}
-                {afterHeaderElement}
-              </Title>
-            )}
-            {showSubtitle && (
-              <ListItemSubtitle>
-                {showIcon && !showTitle && (
-                  <>
-                    {iconElement}
-                    <TitleSpace slim={slim} />
-                  </>
-                )}
-                {!!location && locationElement}
-                {showPreviewInSubtitle ? (
-                  <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
-                ) : null}
-                {!!subtitle &&
-                  (typeof subtitle === 'string' ? (
-                    <HighlightText
-                      alpha={subTextOpacity}
-                      size={0.9}
-                      sizeLineHeight={sizeLineHeight}
-                      ellipse
-                      {...subtitleProps}
-                    >
-                      {subtitle}
-                    </HighlightText>
-                  ) : (
-                    subtitle
-                  ))}
-                {!subtitle && (
-                  <>
-                    <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                  </>
-                )}
-                {!showTitle && (
-                  <>
-                    <Space />
-                    {afterHeaderElement}
-                  </>
-                )}
-              </ListItemSubtitle>
-            )}
-            {!showSubtitle && !showTitle && (
-              <View
-                position="absolute"
-                right={Array.isArray(padding) ? padding[0] : padding}
-                top={Array.isArray(padding) ? padding[1] : padding}
-              >
-                {afterHeaderElement}
-              </View>
-            )}
-            {/* vertical space only if needed */}
-            {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
-            {showPreview && (
-              <>
-                {locationElement}
-                <Preview>
-                  {typeof preview !== 'string' && preview}
-                  {typeof preview === 'string' && (
-                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
-                      {preview}
-                    </HighlightText>
+        <ListItemContain isExpanded={isExpanded} {...restProps}>
+          <ListItemContent
+            isSelected={isSelected}
+            borderRadius={borderRadius}
+            onClick={(!hasMouseDownEvent && onClick) || undefined}
+            disableShadow={disableShadow}
+            padding={padding || defaultPadding}
+            {...cardProps}
+          >
+            {before}
+            {iconBefore && showIcon && iconElement}
+            <ListItemMainContent oneLine={oneLine}>
+              {showTitle && (
+                <ListItemTitleBar flex={1}>
+                  {showIcon && !iconBefore && iconElement}
+                  <HighlightText
+                    flex={1}
+                    sizeLineHeight={0.85}
+                    ellipse
+                    fontWeight={400}
+                    {...titleProps}
+                  >
+                    {title}
+                  </HighlightText>
+                  <Space small={small} />
+                  {props.afterTitle}
+                  {afterHeaderElement}
+                </ListItemTitleBar>
+              )}
+              {showSubtitle && (
+                <ListItemSubtitle>
+                  {showIcon && !showTitle && (
+                    <>
+                      {iconElement}
+                      <Space small={small} />
+                    </>
                   )}
-                </Preview>
-              </>
-            )}
-            {!showPreviewInSubtitle && (
-              <Row>
-                {locationElement}
-                {childrenElement}
-              </Row>
-            )}
-          </ListItemMainContent>
-          {after}
-        </ListItemChrome>
-        <BorderBottom opacity={0.15} />
-      </ListFrame>
+                  {!!location && locationElement}
+                  {showPreviewInSubtitle ? (
+                    <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
+                  ) : null}
+                  {!!subtitle &&
+                    (typeof subtitle === 'string' ? (
+                      <HighlightText
+                        alpha={subTextOpacity}
+                        size={0.9}
+                        sizeLineHeight={sizeLineHeight}
+                        ellipse
+                        {...subtitleProps}
+                      >
+                        {subtitle}
+                      </HighlightText>
+                    ) : (
+                      subtitle
+                    ))}
+                  {!subtitle && (
+                    <>
+                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                    </>
+                  )}
+                  {!showTitle && (
+                    <>
+                      <Space />
+                      {afterHeaderElement}
+                    </>
+                  )}
+                </ListItemSubtitle>
+              )}
+              {!showSubtitle && !showTitle && (
+                <View
+                  position="absolute"
+                  right={Array.isArray(padding) ? padding[0] : padding}
+                  top={Array.isArray(padding) ? padding[1] : padding}
+                >
+                  {afterHeaderElement}
+                </View>
+              )}
+              {/* vertical space only if needed */}
+              {showSubtitle && (!!children || !!preview) && (
+                <div style={{ flex: 1, maxHeight: 4 }} />
+              )}
+              {showPreview && (
+                <>
+                  {locationElement}
+                  <Preview>
+                    {typeof preview !== 'string' && preview}
+                    {typeof preview === 'string' && (
+                      <HighlightText
+                        alpha={subTextOpacity}
+                        size={1}
+                        sizeLineHeight={0.9}
+                        ellipse={3}
+                      >
+                        {preview}
+                      </HighlightText>
+                    )}
+                  </Preview>
+                </>
+              )}
+              {!showPreviewInSubtitle && (
+                <Row>
+                  {locationElement}
+                  {childrenElement}
+                </Row>
+              )}
+            </ListItemMainContent>
+            {after}
+          </ListItemContent>
+          <BorderBottom opacity={0.15} />
+        </ListItemContain>
+      </ListItemChrome>
     </Theme>
   )
 })
 
-const ListFrame = gloss(View, {
+const ListItemChrome = gloss({
+  minHeight: 'min-contents',
+  minWidth: 'min-contents',
+  isMeasured: {
+    minHeight: 'auto',
+    minWidth: 'auto',
+  },
+}).theme(p => p)
+
+const ListItemContain = gloss(View, {
   position: 'relative',
   userSelect: 'none',
   overflow: 'hidden',
@@ -344,7 +335,7 @@ const ListFrame = gloss(View, {
   }
 })
 
-const ListItemChrome = gloss({
+const ListItemContent = gloss({
   flexFlow: 'row',
   position: 'relative',
   flex: 1,
@@ -380,10 +371,11 @@ const ListItemChrome = gloss({
   return style
 })
 
-const Title = gloss({
+const ListItemTitleBar = gloss({
   width: '100%',
+  flex: 1,
   flexFlow: 'row',
-  // justifyContent: 'space-between',
+  justifyContent: 'space-between',
   alignItems: 'flex-start',
 })
 
@@ -406,16 +398,6 @@ const AfterHeader = gloss({
   marginBottom: -4,
 })
 
-const TitleSpace = gloss({
-  minWidth: 10,
-  shouldFlex: {
-    flex: 1,
-  },
-  slim: {
-    minWidth: 8,
-  },
-})
-
 const ListItemMainContent = gloss({
   flex: 1,
   maxWidth: '100%',
@@ -426,3 +408,36 @@ const ListItemMainContent = gloss({
     alignItems: 'center',
   },
 })
+
+function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
+  let iconSize = (iconProps && iconProps.size) || (iconBefore ? (small ? 20 : 28) : small ? 12 : 14)
+  const iconPropsFinal = {
+    size: iconSize,
+    ...iconProps,
+  }
+  if (!iconBefore) {
+    iconPropsFinal['style'] = { transform: `translateY(${small ? 4 : 3}px)` }
+  }
+  let element = icon
+  if (React.isValidElement(icon)) {
+    if (icon.type['acceptsIconProps']) {
+      element = React.cloneElement(icon, iconPropsFinal)
+    }
+  } else {
+    element = <Icon name={icon} {...iconPropsFinal} />
+  }
+  return (
+    // use a view to ensure consistent width
+    // and add the space
+    <View width={iconSize + (small ? 8 : 10)}>{element}</View>
+  )
+}
+
+export function useIsSelected(props: Pick<ListItemProps, 'isSelected' | 'index'>) {
+  return useReaction(() => {
+    if (typeof props.isSelected === 'function') {
+      return props.isSelected(props.index)
+    }
+    return !!props.isSelected
+  }, [props.isSelected])
+}

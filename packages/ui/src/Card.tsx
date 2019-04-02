@@ -1,11 +1,9 @@
 import { gloss } from '@o/gloss'
-import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
-import { ConfiguredIcon } from './Icon'
+import { Icon } from './Icon'
 import { Space } from './layout/Space'
-import { ListItemProps } from './lists/ListItem'
-import { ListItemStore } from './lists/ListItemStore'
+import { ListItemProps, useIsSelected } from './lists/ListItem'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { DateFormat } from './text/DateFormat'
 import { SubTitle } from './text/SubTitle'
@@ -14,34 +12,32 @@ import { Title } from './text/Title'
 
 export type CardProps = SizedSurfaceProps & ListItemProps
 
-export function Card({
-  padding = 8,
-  sizeRadius = true,
-  icon,
-  location,
-  preview,
-  title,
-  afterTitle,
-  children,
-  iconProps,
-  inGrid,
-  onClick,
-  titleProps,
-  subtitleProps,
-  titleFlex,
-  subtitleSpaceBetween,
-  searchTerm,
-  // ignore so it doesnt add tooltip to div
-  title: _ignoreTitle,
-  onClickLocation,
-  activeStyle,
-  subtitle,
-  date,
-  ...props
-}: CardProps) {
-  const store = useStore(ListItemStore, props)
-  // allow either custom subtitle or resolved one
-  const { isSelected } = store
+export function Card(props: CardProps) {
+  const {
+    padding = 8,
+    sizeRadius = true,
+    icon,
+    location,
+    preview,
+    title,
+    afterTitle,
+    children,
+    iconProps,
+    inGrid,
+    onClick,
+    titleProps,
+    subtitleProps,
+    titleFlex,
+    searchTerm,
+    // ignore so it doesnt add tooltip to div
+    title: _ignoreTitle,
+    onClickLocation,
+    activeStyle,
+    subtitle,
+    date,
+    ...restProps
+  } = props
+  const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
   const hasTitle = !!title && !props.hideTitle
   const hasMeta = !!location && !props.hideMeta
@@ -68,13 +64,12 @@ export function Card({
   )
   return (
     <SizedSurface
-      ref={store.setCardWrapRef}
       borderWidth={1}
-      {...props}
+      {...restProps}
       {...isSelected && activeStyle}
       themeSelect="card"
-      onClick={store.handleClick}
       sizeRadius={sizeRadius}
+      noInnerElement
     >
       <Padding style={{ padding }}>
         {hasTitle && (
@@ -97,11 +92,10 @@ export function Card({
         {hasMeta && (
           <SubTitle ellipse>
             {!!location && (
-              <RoundButtonSmall marginLeft={-3} onClick={store.handleClickLocation}>
+              <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
                 {location}
               </RoundButtonSmall>
             )}
-            {subtitleSpaceBetween}
             {hasFourRows && hasDate && (
               <>
                 {!!location && <div style={{ width: 5 }} />}
@@ -123,7 +117,7 @@ export function Card({
         )}
         {showChildren && children}
         {!!icon && !props.hideIcon && (
-          <ConfiguredIcon
+          <Icon
             name={icon}
             size={14}
             {...orbitIconProps}
@@ -152,6 +146,7 @@ const orbitIconProps = {
 const Padding = gloss({
   position: 'relative',
   margin: 1,
-  overflow: 'hidden',
+  overflowX: 'hidden',
+  overflowY: 'auto',
   flex: 1,
 })

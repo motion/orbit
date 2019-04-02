@@ -1,17 +1,14 @@
-import { Theme, ThemeProvide } from '@o/gloss'
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
-import { TestStores } from './TestStores'
-import { themes } from './themes'
+import { hot } from 'react-hot-loader/root'
+import { TestUIKit } from './TestUI/TestUIKit'
 
-export default hot(module)(function RootView() {
+export default hot(function RootView() {
   return (
-    <ThemeProvide themes={themes}>
-      <Theme name="light">
-        {/* <TestUI /> */}
-        {/* <TestHMR /> */}
-        <TestStores />
-      </Theme>
-    </ThemeProvide>
+    <>
+      {/* <TestUI /> */}
+      {/* <TestHMR /> */}
+      {/* <TestStores /> */}
+      <TestUIKit />
+    </>
   )
 })

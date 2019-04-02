@@ -31,12 +31,7 @@ export function TestUIPopovers() {
       </Button>
 
       <Row position="absolute" right={0}>
-        <Button
-          tooltip="hi hello"
-          tooltipProps={{ open: true, ref: x => (window.x = x), debug: true }}
-        >
-          1
-        </Button>
+        <Button tooltip="hi hello">1</Button>
       </Row>
     </Row>
   )

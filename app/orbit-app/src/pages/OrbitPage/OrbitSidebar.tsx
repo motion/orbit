@@ -2,7 +2,7 @@ import { View } from '@o/gloss'
 import {
   AppMainViewProps,
   ListPropsContext,
-  ProvideSelectionContext,
+  PassExtraListProps,
   SubPane,
   AppLoadContext
 } from '@o/kit'
@@ -36,13 +36,17 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         maxWidth={500}
         noBorder
       >
-        <ToolBarPad hasToolbar={props.hasToolbar} />
+        <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
         <View flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
-          <ListPropsContext.Provider value={{ searchable: true, minSelected: 0 }}>
-            <ProvideSelectionContext onSelectItem={orbitStore.setSelectItem}>
+          <ListPropsContext.Provider
+            value={{ selectable: true, searchable: true, alwaysSelected: true }}
+          >
+            <PassExtraListProps
+              onSelectItem={(index, appProps) => orbitStore.setSelectItem(id, index, appProps)}
+            >
               {props.children}
-            </ProvideSelectionContext>
+            </PassExtraListProps>
           </ListPropsContext.Provider>
         </View>
         {props.hasStatusbar && statusbarPadElement}

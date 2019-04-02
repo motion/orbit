@@ -1,23 +1,24 @@
-import { AppLoadContext } from '@o/kit'
-import { FullScreen, gloss, Row } from '@o/gloss'
+import { FullScreen, gloss, Row, View, ViewProps } from '@o/gloss'
+import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
 
-const toolbarHeight = 30
-const minHeight = 3
+const toolbarHeight = 36
 
-export const ToolBarPad = ({ hasToolbar }: { hasToolbar?: boolean }) => (
-  <div style={{ height: hasToolbar ? toolbarHeight : 3 }} />
+export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
+  <div
+    style={{ pointerEvents: 'none', height: p.hasToolbar ? toolbarHeight : p.hasSidebar ? 0 : 0 }}
+  />
 )
 
-export const OrbitToolBar = memo((props: { children: any }) => {
-  const { id } = useContext(AppLoadContext)
+export const OrbitToolBar = memo((props: AppMainViewProps) => {
+  const { id, appDef } = useContext(AppLoadContext)
   const { paneManagerStore } = useStoresSimple()
   const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <ToolbarChrome>
-      <ToolbarInner isActive={isActive}>
+    <ToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
+      <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
         <ToolbarContent>{props.children}</ToolbarContent>
       </ToolbarInner>
     </ToolbarChrome>
@@ -31,16 +32,18 @@ const ToolbarChrome = gloss(Row, {
   right: 0,
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: 1000000000,
+  zIndex: 100000000,
   transition: 'none',
+  transparent: {
+    background: 'transparent',
+  },
 }).theme((_, theme) => ({
   background: theme.background,
 }))
 
-const ToolbarInner = gloss<{ isActive: boolean }>({
+const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
   flex: 2,
   flexFlow: 'row',
-  minHeight,
   opacity: 0,
   isActive: {
     opacity: 1,

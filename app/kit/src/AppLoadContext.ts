@@ -1,18 +1,17 @@
 import * as React from 'react'
 import { AppDefinition } from './types/AppDefinition'
 
-type Context = {
+type AppLoadInfo = {
   // AppDefinition ID
   identifier: string
-  // Pane ID
-  // XXX(andreypopp): is this correct?
+  // App Instance ID (can have more than one of same identifier)
   id: string
-
+  // Full AppDefinition
   appDef: null | AppDefinition
 }
 
-export default React.createContext<Context>({
+export const AppLoadContext = React.createContext<AppLoadInfo>({
   identifier: '',
   id: '',
-  appDef: null
+  appDef: null,
 })

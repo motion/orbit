@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
-import { DataType } from '../types'
+import { DataType, Omit } from '../types'
 import { FormContext } from './Form'
 
 export type InputType =
@@ -13,10 +13,12 @@ export type InputType =
   | 'password'
   | 'email'
   | 'select'
+  | 'number'
   | DataType
 
 export type InputProps = React.HTMLAttributes<HTMLInputElement> &
-  SizedSurfaceProps & {
+  Omit<SizedSurfaceProps, 'type'> & {
+    step?: any
     value?: string
     onEnter?: Function
     type?: InputType
@@ -81,6 +83,7 @@ function SimpleInput(props: SizedSurfaceProps) {
       alignItems="center"
       flexFlow="row"
       themeSelect="input"
+      sizeFont
       sizePadding
       sizeHeight
       sizeLineHeight
@@ -88,6 +91,7 @@ function SimpleInput(props: SizedSurfaceProps) {
       noInnerElement
       glint={false}
       borderWidth={1}
+      flex={1}
       {...props}
       className={`ui-input ${props.className || ''}`}
       getTheme={inputSurfaceTheme}

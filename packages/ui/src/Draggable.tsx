@@ -1,8 +1,9 @@
 import { FullScreen, ViewProps } from '@o/gloss'
 import React, { useEffect, useRef, useState } from 'react'
-import { useRefGetter } from './hooks/useRefGetter'
+import { useGet } from './hooks/useGet'
+import { Omit } from './types'
 
-export type DraggableProps = {
+export type DraggableProps = Omit<ViewProps, 'onChange'> & {
   disable?: boolean
   defaultX?: number
   defaultY?: number
@@ -10,25 +11,22 @@ export type DraggableProps = {
   minY?: number
   maxX?: number
   maxY?: number
+  onChange?: (pos: { top: number; left: number }, diffTop: number, diffLeft: number) => any
 }
 
-export function Draggable(props: DraggableProps & ViewProps) {
+export function Draggable(props: DraggableProps) {
   const { ref, top, left } = useDraggable(props)
   return <FullScreen ref={ref} top={top} left={left} {...props} />
 }
 
-export function useDraggable(
-  props: DraggableProps & {
-    onChange?: (pos: { top: number; left: number }, diffTop: number, diffLeft: number) => any
-  },
-) {
+export function useDraggable(props: DraggableProps) {
   const ref = useRef<HTMLElement>(null)
   const [position, setPosition] = useState({
     top: props.defaultY,
     left: props.defaultX,
   })
-  const getOnChange = useRefGetter(props.onChange)
-  const getPosition = useRefGetter(position)
+  const getOnChange = useGet(props.onChange)
+  const getPosition = useGet(position)
 
   useEffect(
     () => {

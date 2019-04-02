@@ -1,8 +1,6 @@
 import { App } from '@o/stores'
 import { ensure, react, useHook } from '@o/use-store'
 import { createRef } from 'react'
-import { AppActions } from '../actions/appActions/AppActions'
-import { sleep } from '../helpers'
 import { useStoresSimple } from '../hooks/useStores'
 
 const moveCursorToEndOfTextarea = el => {
@@ -51,18 +49,9 @@ export class HeaderStore {
       ensure('shown', shown)
       ensure('ref', !!this.inputRef.current)
       // wait for after it shows
-      await sleep(16)
+      await sleep(40)
       this.focus()
       selectTextarea(this.inputRef.current)
-    },
-  )
-
-  focusInputOnClosePeek = react(
-    () => !!App.peekState.target,
-    async (hasTarget, { sleep }) => {
-      ensure('no target', !hasTarget)
-      await sleep(16)
-      this.focus()
     },
   )
 
@@ -77,31 +66,7 @@ export class HeaderStore {
     },
   )
 
-  onHoverIcon = () => {
-    this.iconHovered = true
-  }
-
-  onUnHoverIcon = () => {
-    this.iconHovered = false
-  }
-
-  // this function isn't used
-  onClickOrb = () => {
-    // App.sendMessage(App, App.messages.HIDE)
-    // App.sendMessage(Desktop, Desktop.messages.TOGGLE_OCR)
-  }
-
-  goHome = () => {
-    const activePane = this.stores.paneManagerStore.activePane
-    if (activePane.type === 'home' || activePane.type === 'search') {
-      AppActions.setOrbitDocked(false)
-    } else {
-      this.stores.paneManagerStore.setActivePaneByType('home')
-    }
-  }
-
   handleMouseUp = async () => {
-    await sleep(10)
     window['requestIdleCallback'](() => {
       this.focus()
     })

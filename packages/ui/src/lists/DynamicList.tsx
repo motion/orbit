@@ -5,67 +5,76 @@
  * @format
  */
 
-import { gloss } from '@o/gloss'
-import * as React from 'react'
-import { Component, PureComponent } from 'react'
-import { findDOMNode } from 'react-dom'
-import { ResizeSensor } from '../helpers/ResizeSensor'
-import { KeyMapper, OnScroll, RowRenderer } from '../types'
+import { isEqual } from '@o/fast-compare'
+import { Contents, gloss } from '@o/gloss'
+import React, { forwardRef, memo, PureComponent, RefObject, useRef } from 'react'
+import { useOnMount } from '../hooks/useOnMount'
+import { useParentNodeSize } from '../hooks/useParentNodeSize'
+import { useThrottle } from '../hooks/useThrottle'
 
-type RowMeasureProps = {
-  id: string
-  onMount: (key: string, ref: Text | Element | null) => void
-  children: any
-}
-
-class RowMeasure extends PureComponent<RowMeasureProps> {
-  componentDidMount() {
-    this.props.onMount(this.props.id, findDOMNode(this))
-  }
-
-  render() {
-    return this.props.children
-  }
-}
-
-const DynamicListContainer = gloss({
-  flex: 1,
-  position: 'relative',
-  overflow: 'auto',
-  width: '100%',
-  height: '100%',
-})
-
-type DynamicListProps = {
-  pureData: any
+export type DynamicListProps = {
+  disableMeasure?: boolean
+  listRef?: RefObject<DynamicListControlled>
+  maxHeight?: number
+  height?: number | 'content-height'
+  width?: number | string
+  children: (params: { index: number; style: Record<string, any> }) => any
+  itemCount: number
+  itemData: any
+  keyMapper?: (index: number) => string
+  outerRef?: any
   onMount?: () => void
-  getPrecalculatedDimensions: (
+  itemSize?: (
     index: number,
   ) => {
     width: number | string
     height: number
-  } | null
-  rowCount: number
-  rowRenderer: RowRenderer
-  keyMapper: KeyMapper
-  onScroll?: OnScroll
+  }
+  onScroll?: (props: {
+    scrollDirection: 'forward' | 'backward'
+    scrollHeight: number
+    scrollTop: number
+    clientHeight: number
+  }) => void
   sideScrollable?: boolean
 }
+
+export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {
+  const parentSize = useParentNodeSize({
+    disable: disableMeasure,
+  })
+  const width = useThrottle(parentSize.width, 300)
+  const height = useThrottle(parentSize.height, 300)
+  return (
+    <Contents ref={parentSize.ref}>
+      <DynamicListControlled
+        ref={props.listRef || (ref as any)}
+        width={width}
+        height={height}
+        {...props}
+      />
+    </Contents>
+  )
+})
 
 type DynamicListState = {
   mounted: boolean
   startIndex: number
   endIndex: number
-  containerStyle: Object
-  innerStyle: Object
+  containerStyle: any
+  innerStyle: Record<string, any>
   scrollHeight: number
   scrollTop: number
   height: number
-  width: number
+  shouldMeasure: boolean
 }
 
-export class DynamicList extends Component<DynamicListProps, DynamicListState> {
-  state = {
+export class DynamicListControlled extends PureComponent<DynamicListProps, DynamicListState> {
+  static defaultProps = {
+    keyMapper: (i: any) => i,
+  }
+
+  state: DynamicListState = {
     mounted: false,
     startIndex: -1,
     endIndex: -1,
@@ -74,7 +83,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     scrollHeight: 0,
     scrollTop: 0,
     height: 0,
-    width: 0,
+    shouldMeasure: false,
   }
 
   containerRef: HTMLDivElement | null
@@ -84,7 +93,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     number,
     {
       top: number
-      style: Object
+      style: Record<string, any>
     }
   > = new Map()
   dimensions: Map<
@@ -95,17 +104,53 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
   > = new Map()
 
+  static getDerivedStateFromProps(
+    props: DynamicListProps,
+    state: DynamicListState,
+  ): Partial<DynamicListState> {
+    if (props.height !== 'content-height' && props.height !== state.height) {
+      return {
+        height: +props.height,
+        shouldMeasure: true,
+      }
+    }
+    return null
+  }
+
+  lastHeight = 23
   scrollToIndex = (index: number, additionalOffset: number = 0) => {
+    if (index === -1) return
     const pos = this.positions.get(index)
+    if (!pos) return
     const ref = this.getContainerRef()
+    const dims = this.dimensions.get(this.props.keyMapper(index))
+    const h = dims ? dims.height : this.lastHeight
+    this.lastHeight = h
+    const top = pos.top - additionalOffset
+    const bot = pos.top + h - additionalOffset
+
+    // lazy scroll
     if (pos != null && ref != null) {
-      ref.scrollTop = pos.top - additionalOffset
+      if (top < ref.scrollTop) {
+        ref.scrollTop = pos.top - additionalOffset
+      }
+      if (bot > ref.scrollTop + ref.clientHeight) {
+        ref.scrollTop = ref.clientHeight - h
+      }
     }
   }
 
   setContainerRef = (ref?: HTMLDivElement) => {
     if (ref) {
       this.containerRef = ref
+      const { outerRef } = this.props
+      if (outerRef) {
+        if (typeof outerRef === 'function') {
+          outerRef(ref)
+        } else if (outerRef.hasOwnProperty('current')) {
+          outerRef.current = outerRef
+        }
+      }
     }
   }
 
@@ -114,18 +159,23 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
   }
 
   componentDidMount() {
-    // perform initial measurements and container dimension calculation
-    this.recalculateContainerDimensions()
-    this.queueMeasurements(this.props)
+    this.queueMeasurements()
     // if onMount we didn't add any measurements then we've successfully calculated all row sizes
     if (this.measureQueue.size === 0) {
       this.onMount()
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.rowCount !== this.props.rowCount || prevProps.pureData !== this.props.pureData) {
-      this.queueMeasurements(prevProps)
+  componentDidUpdate(prevProps: DynamicListProps) {
+    if (
+      prevProps.itemCount !== this.props.itemCount ||
+      prevProps.itemData !== this.props.itemData
+    ) {
+      this.queueMeasurements()
+    }
+    const shouldMeasure = this.state.shouldMeasure
+    if (shouldMeasure) {
+      this.onResize()
     }
   }
 
@@ -138,23 +188,52 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     })
   }
 
-  // called when the window is resized, we recalculate the positions and visibility of rows
-  onResize = () => {
-    this.dimensions.clear()
-    this.queueMeasurements(this.props)
-    this.recalculateContainerDimensions()
-    this.recalculateVisibleRows(this.props)
+  getContentHeight() {
+    let height = 0
+    for (let i = 0; i < this.props.itemCount; i++) {
+      const key = this.props.keyMapper(i)
+      if (this.dimensions.has(key)) {
+        height += this.dimensions.get(key).height
+      }
+      if (height > this.props.maxHeight) {
+        height = this.props.maxHeight
+        break
+      }
+    }
+    return height
   }
 
-  queueMeasurements(props: DynamicListProps) {
+  // called when the window is resized, we recalculate the positions and visibility of rows
+  onResize = () => {
+    if (this.props.height === 'content-height') {
+      this.setState({ height: this.getContentHeight() })
+    }
+    this.recalculateScrollTop()
+    this.dimensions.clear()
+    this.queueMeasurements()
+    this.recalculateVisibleRows()
+  }
+
+  recalculateScrollTop() {
+    const container = this.getContainerRef()
+    if (container) {
+      this.setState({
+        scrollTop: container.scrollTop,
+      })
+    }
+  }
+
+  queueMeasurements() {
+    const { props } = this
     // create measurements for new rows
-    for (let i = 0; i < props.rowCount; i++) {
+    for (let i = 0; i < props.itemCount; i++) {
       const key = props.keyMapper(i)
       if (this.dimensions.has(key)) {
         continue
       }
 
-      const precalculated = props.getPrecalculatedDimensions(i)
+      const precalculated = props.itemSize ? props.itemSize(i) : null
+
       if (precalculated) {
         this.dimensions.set(key, precalculated)
         continue
@@ -162,7 +241,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
 
       this.measureQueue.set(
         key,
-        props.rowRenderer({
+        props.children({
           index: i,
           style: {
             visibility: 'hidden',
@@ -172,22 +251,12 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
 
     // recalculate the visibility and positions of all rows
-    this.recalculatePositions(props)
-    this.recalculateVisibleRows(props)
+    this.recalculatePositions()
+    this.recalculateVisibleRows()
   }
 
-  recalculateContainerDimensions = () => {
-    const container = this.getContainerRef()
-    if (container) {
-      this.setState({
-        scrollTop: container.scrollTop,
-        height: container.clientHeight,
-        width: container.clientWidth,
-      })
-    }
-  }
-
-  recalculateVisibleRows = (props: DynamicListProps) => {
+  recalculateVisibleRows = () => {
+    const { props } = this
     // @ts-ignore
     this.setState(state => {
       let startTop = 0
@@ -210,12 +279,13 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
       // find the end index
       let endIndex = startIndex
       let scrollBottom = state.scrollTop + state.height
+
       while (true) {
         // if the scrollBottom is equal to the height of the scrollable area then
         // we were unable to find the end index because we're at the bottom of the
         // list
         if (scrollBottom >= state.scrollHeight) {
-          endIndex = props.rowCount - 1
+          endIndex = props.itemCount - 1
           break
         }
         const index = this.topPositionToIndex.get(scrollBottom)
@@ -229,7 +299,6 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
       if (
         startIndex === state.startIndex &&
         endIndex === state.endIndex &&
-        // @ts-ignore
         startTop === state.containerStyle.top
       ) {
         // this is to ensure that we don't create a new containerStyle object and obey reference equality for purity checks
@@ -258,17 +327,24 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     })
   }
 
-  onRowMeasured = (key: string, elem: Text | Element) => {
-    if (elem != null && elem instanceof HTMLElement) {
-      const dim = {
-        height: elem.clientHeight,
-        width: elem.clientWidth,
-      }
-      this.dimensions.set(key, dim)
+  getRowDims: { [key: string]: GetDimensions } = {}
+
+  updateRowHeight(key: string) {
+    const row = this.getRowDims[key]
+    if (!row) return
+    const dim = row()
+    if (isEqual(dim, this.dimensions.get(key))) {
+      return
     }
+    this.dimensions.set(key, dim)
+  }
+
+  onRowMount = (key: string, getDims: GetDimensions) => {
+    this.getRowDims[key] = getDims
+    this.updateRowHeight(key)
     this.measureQueue.delete(key)
     if (this.measureQueue.size === 0) {
-      this.recalculatePositions(this.props)
+      this.recalculatePositions()
       if (this.state.mounted === false) {
         // we triggered measurements on componentDidMount and they're now complete!
         this.onMount()
@@ -276,16 +352,23 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
   }
 
-  handleScroll = () => {
+  curY = 0
+
+  handleScroll = e => {
+    const prevY = this.curY
+    const nextY = e.scrollTop
+    this.curY = nextY
+
     // recalcualte visible rows
     const ref = this.getContainerRef()
     if (ref != null) {
       this.setState({
         scrollTop: ref.scrollTop,
       })
-      this.recalculateVisibleRows(this.props)
+      this.recalculateVisibleRows()
       this.props.onScroll &&
         this.props.onScroll({
+          scrollDirection: prevY < nextY ? 'forward' : 'backward',
           clientHeight: ref.clientHeight,
           scrollHeight: ref.scrollHeight,
           scrollTop: ref.scrollTop,
@@ -293,11 +376,12 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     }
   }
 
-  recalculatePositions(props: DynamicListProps) {
+  recalculatePositions() {
+    const { props } = this
     this.positions.clear()
     this.topPositionToIndex.clear()
     let top = 0
-    for (let i = 0; i < props.rowCount; i++) {
+    for (let i = 0; i < props.itemCount; i++) {
       const key = props.keyMapper(i)
       const dim = this.dimensions.get(key)
       if (dim == null) {
@@ -306,14 +390,23 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
       this.positions.set(i, {
         top,
         style: {
-          width: dim.width,
+          // width: dim.width,
           height: dim.height,
         },
       })
       this.topPositionToIndex.set(top, i)
       top += dim.height
     }
+    if (isNaN(top)) {
+      console.warn('bad top')
+      debugger
+      return
+    }
+    if (top === 0) {
+      return
+    }
     this.setState({
+      shouldMeasure: false,
       scrollHeight: top,
       innerStyle: {
         height: top,
@@ -328,14 +421,14 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     const measureChildren: JSX.Element[] = []
     for (const [key, value] of this.measureQueue) {
       measureChildren.push(
-        <RowMeasure key={key} id={key} onMount={this.onRowMeasured}>
+        <NodeMeasure key={key} id={key} onMount={this.onRowMount}>
           {value}
-        </RowMeasure>,
+        </NodeMeasure>,
       )
     }
 
     // add visible rows
-    const children: Object[] = []
+    const children: Record<string, any>[] = []
     for (let i = this.state.startIndex; i <= this.state.endIndex; i++) {
       const pos = this.positions.get(i)
       if (pos == null) {
@@ -343,7 +436,7 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
       }
 
       children.push(
-        this.props.rowRenderer({
+        this.props.children({
           index: i,
           style: pos.style,
         }),
@@ -352,7 +445,6 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
 
     return (
       <DynamicListContainer ref={this.setContainerRef} onScroll={this.handleScroll}>
-        <ResizeSensor onResize={this.onResize} />
         <div style={this.state.innerStyle}>
           <div style={this.state.containerStyle}>{children}</div>
         </div>
@@ -361,3 +453,34 @@ export class DynamicList extends Component<DynamicListProps, DynamicListState> {
     )
   }
 }
+
+type GetDimensions = () => {
+  width: number
+  height: number
+}
+
+const NodeMeasure = memo(
+  (props: { id: string; onMount: (key: string, ref: GetDimensions) => void; children: any }) => {
+    const contentsRef = useRef<HTMLDivElement>(null)
+    useOnMount(() => {
+      props.onMount(props.id, () => {
+        const children = Array.from(contentsRef.current.childNodes) as HTMLElement[]
+        let res = { width: 0, height: 0 }
+        for (const child of children) {
+          res.height += child.clientHeight
+          res.width += child.clientWidth
+        }
+        return res
+      })
+    })
+    return <Contents ref={contentsRef}>{props.children}</Contents>
+  },
+)
+
+const DynamicListContainer = gloss({
+  flex: 1,
+  position: 'relative',
+  overflow: 'auto',
+  width: '100%',
+  height: '100%',
+})

@@ -33,7 +33,7 @@ export const AppDevOpenCommand = new Command<
 export const SendClientDataCommand = new Command<
   void,
   {
-    name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS'
+    name: 'CLOSE_APP' | 'SHOW' | 'HIDE' | 'TOGGLE_SETTINGS' | 'APP_URL_OPENED'
     value: any
   }
 >('send-client-data')

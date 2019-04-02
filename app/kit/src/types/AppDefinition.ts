@@ -5,7 +5,7 @@ import { AppProps } from './AppProps'
 
 export type AppElements = {
   index?: React.ReactElement<any>
-  children?: React.ReactElement<any>
+  children?: React.ReactNode
   statusBar?: React.ReactElement<any>
   toolBar?: React.ReactElement<any>
   context?: any
@@ -36,9 +36,7 @@ export type AppDefinition = {
   appData?: Object
   // TODO @umed this is where we can put syncer stuff
   sync?: {} // todo: it can be boolean at max
-  API?: any // {
-  //   receive(app: AppBit, parentID: number, child: any): any
-  // }
+  api?: (app: AppBit) => any
 }
 
 export type AppBitMainProps = { item: Bit }

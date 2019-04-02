@@ -1,6 +1,6 @@
-import { createApp } from '@o/kit'
+import { createApi, createApp } from '@o/kit'
 import React from 'react'
-import PostgresApi from './api'
+import { PostgresApi } from './api.node'
 import { postgresIcon } from './postgresIcon'
 import { PostgresSettings } from './PostgresSettings'
 
@@ -12,5 +12,5 @@ export default createApp({
   settings: app => <PostgresSettings identifier="postgres" app={app} />,
   setup: PostgresSettings,
   sync: {},
-  API: PostgresApi,
+  api: createApi<typeof PostgresApi>(),
 })

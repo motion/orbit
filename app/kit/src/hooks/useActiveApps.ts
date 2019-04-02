@@ -15,5 +15,5 @@ export function useActiveApps(type?: string): AppBit[] {
     },
   )
 
-  return apps
+  return apps.filter(x => x.tabDisplay !== 'hidden')
 }

@@ -74,6 +74,13 @@ export class AuthServer {
     this.app.use(bodyParser.json({ limit: '2048mb' }))
     this.app.use(bodyParser.urlencoded({ limit: '2048mb', extended: true }))
     this.app.get('/hello', (_, res) => res.send('hello world'))
+    this.app.get('/authorize', (req, res) => {
+      res.send(
+        `<html><body>Authorized. Please click <a href="orbit://https://orbitauth.com${
+          req.originalUrl
+        }">this link</a></body></html>`,
+      )
+    })
 
     // // redirect latest app version to simple download link
     // this.app.get('/download', async (_, res) => {

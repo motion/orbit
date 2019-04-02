@@ -19,7 +19,7 @@ export function useReaction<A extends ReactVal, B>(
 // derive first, then react "reaction" style
 // react(() => now(), t => t - 1000, { ...opts })
 export function useReaction<A extends ReactVal, B>(
-  a: (() => A),
+  a: () => A,
   b?: ReactionFn<A, B>,
   c?: ReactionOptions | MountArgs,
   d?: MountArgs,
@@ -137,6 +137,7 @@ export function setupReact(
 
       // remove old reaction
       subscriptions.current.dispose()
+      subscriptions.current = new CompositeDisposable()
 
       // create new one
       createReaction(

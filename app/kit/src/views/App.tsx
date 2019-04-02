@@ -4,7 +4,7 @@ import { AppElements } from '../types/AppDefinition'
 const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
 
 export type AppMainViewProps = {
-  children: React.ReactElement<any>
+  children: React.ReactNode
   hasSidebar: boolean
   hasStatusbar: boolean
   hasToolbar: boolean
@@ -42,11 +42,7 @@ export function App(props: AppElements) {
   return (
     <>
       {hasStatusbar && <Statusbar {...hasProps}>{props.statusBar}</Statusbar>}
-      {hasMain && (
-        <Main hasSidebar={!!props.index} {...hasProps}>
-          {props.children}
-        </Main>
-      )}
+      {hasMain && <Main {...hasProps}>{props.children}</Main>}
       {hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>}
       {hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>}
     </>

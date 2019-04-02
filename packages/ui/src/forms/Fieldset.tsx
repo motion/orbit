@@ -1,11 +1,13 @@
 import React from 'react'
 import { BorderBottom } from '../Border'
-import { Section } from '../Section'
+import { Section, SectionProps } from '../Section'
 
-export function Fieldset(props: { children: React.ReactNode }) {
+export type FieldsetProps = SectionProps & { children: React.ReactNode }
+
+export function Fieldset({ children, ...props }: FieldsetProps) {
   return (
-    <Section>
-      {props.children}
+    <Section padding={10} background="transparent" {...props}>
+      {children}
       <BorderBottom light />
     </Section>
   )

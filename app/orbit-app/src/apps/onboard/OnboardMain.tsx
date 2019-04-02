@@ -226,17 +226,16 @@ export function OnboardMain() {
             Back
           </Button>
         )}
-        <Theme name="selected">
-          <Button
-            disabled={store.pendingMove}
-            opacity={store.pendingMove ? 0.5 : 1}
-            size={1.1}
-            fontWeight={600}
-            onClick={store.nextFrame}
-          >
-            {buttonText[store.curFrame]}
-          </Button>
-        </Theme>
+        <Button
+          alt="action"
+          disabled={store.pendingMove}
+          opacity={store.pendingMove ? 0.5 : 1}
+          size={1.1}
+          fontWeight={600}
+          onClick={store.nextFrame}
+        >
+          {buttonText[store.curFrame]}
+        </Button>
       </BottomControls>
     </>
   )

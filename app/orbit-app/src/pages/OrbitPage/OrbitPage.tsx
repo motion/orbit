@@ -1,6 +1,8 @@
 import { command } from '@o/bridge'
 import { gloss, View, ViewProps } from '@o/gloss'
+import * as OrbitKit from '@o/kit'
 import {
+  AppDefinition,
   LocationStore,
   PaneManagerStore,
   ProvideStores,
@@ -8,20 +10,21 @@ import {
   showConfirmDialog,
   SpaceStore,
   ThemeStore,
-  AppDefinition,
 } from '@o/kit'
-import { appStartupConfig, isEditing } from '@o/stores'
 import { CloseAppCommand } from '@o/models'
-import { Theme, Loading } from '@o/ui'
+import { appStartupConfig, isEditing } from '@o/stores'
+import * as OrbitUI from '@o/ui'
+import { Loading, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
+import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useActions } from '../../hooks/useActions'
@@ -31,16 +34,14 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
+import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
+import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
-import { LoadApp } from './LoadApp'
 
-import * as OrbitKit from '@o/kit'
-;(window as any).OrbitKit = OrbitKit
-
-import * as OrbitUI from '@o/ui'
-;(window as any).OrbitUI = OrbitUI
+// @ts-ignore
+window['OrbitKit'] = OrbitKit(window as any).OrbitUI = OrbitUI
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
@@ -67,6 +68,7 @@ function OrbitEffects() {
   useUserEffects()
   querySourcesEffect()
   useMessageHandlers()
+  useEnsureApps()
   return null
 }
 
@@ -164,7 +166,8 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
-        <InnerChrome torn={isEditing}>
+        <OrbitFloatingShareCard />
+        <InnerChrome torn={orbitStore.isTorn}>
           <OrbitContentArea>{contentArea}</OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>

@@ -1,14 +1,20 @@
-import { CSSPropertySet, CSSPropertySetStrict, validCSSAttr } from '@o/css'
+import { CSSPropertySetStrict, validCSSAttr } from '@o/css'
 import { gloss } from '../gloss'
 import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
-// TODO: We should get rid of using CSSPropertySet (move from ViewProps => ViewPropsStrict)
-// it causes loose types which make many views wortheless for sanity checks
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-export type ViewProps = React.HTMLAttributes<HTMLDivElement> & CSSPropertySet
-
-export type ViewPropsStrict = React.HTMLAttributes<HTMLDivElement> & CSSPropertySetStrict
+export type ViewProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
+  CSSPropertySetStrict & {
+    tagName?: string
+    // our default styling supports is through preProcessTheme
+    alt?: string
+    // our default styling supports pseudos through propsToStyles
+    hoverStyle?: CSSPropertySetStrict
+    activeStyle?: CSSPropertySetStrict
+    focusStyle?: CSSPropertySetStrict
+  }
 
 export const View = gloss<ViewProps>().theme((props, theme) => ({
   ...propsToStyles(props, theme),

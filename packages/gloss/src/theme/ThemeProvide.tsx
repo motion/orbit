@@ -1,12 +1,10 @@
-import { ThemeObject } from '@o/css'
+import { ThemeSet } from '@o/css'
 import * as React from 'react'
 import { ThemeContext } from './ThemeContext'
 
 type ThemeProvideProps = {
   activeTheme?: string
-  themes: {
-    [key: string]: Partial<ThemeObject>
-  }
+  themes: ThemeSet
   children: React.ReactNode
 }
 

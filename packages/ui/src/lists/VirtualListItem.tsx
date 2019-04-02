@@ -1,9 +1,14 @@
 import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
+import { shouldComponentUpdate } from 'react-window'
 import { GenericComponent } from '../types'
 import { ListItem, ListItemProps } from './ListItem'
 
 export type VirtualListItemProps<Item> = ListItemProps & {
+  //  for keymapper
+  id?: string
+  //  for keymapper
+  key?: any
   ItemView?: GenericComponent<any>
   item?: Item
   query?: string
@@ -13,7 +18,9 @@ export type VirtualListItemProps<Item> = ListItemProps & {
   index: number
 }
 
-class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>> {
+export class VirtualListItemInner extends React.Component<VirtualListItemProps<any>> {
+  shouldComponentUpdate = shouldComponentUpdate.bind(this)
+
   render() {
     const { realIndex, ItemView, ...rest } = this.props
     const View = ItemView || ListItem
@@ -21,4 +28,4 @@ class VirtualListItemInner extends React.PureComponent<VirtualListItemProps<any>
   }
 }
 
-export default SortableElement(VirtualListItemInner)
+export const VirtualListItem = SortableElement(VirtualListItemInner)

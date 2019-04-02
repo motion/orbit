@@ -1,9 +1,11 @@
 import { loadOne } from '@o/bridge'
 import { BitModel } from '@o/models'
-import { Button, SelectableListProps, TreeItem, useRefGetter } from '@o/ui'
+import { Button, TreeItem, useGet, VirtualListProps } from '@o/ui'
 import React, { useEffect, useMemo, useState } from 'react'
-import { ScopedAppState, useScopedAppState } from '../hooks/useScopedAppState'
-import { ScopedUserState, useScopedUserState } from '../hooks/useScopedUserState'
+import { ScopedAppState, useAppState } from '../hooks/useAppState'
+import { useStoresSimple } from '../hooks/useStores'
+import { ScopedUserState, useUserState } from '../hooks/useUserState'
+import { KitStores } from '../stores'
 import { Omit } from '../types'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { HandleOrbitSelect, List } from './List'
@@ -11,9 +13,10 @@ import { OrbitListItemProps } from './ListItem'
 
 type TreeItems = { [key: number]: TreeItem }
 
-export type TreeListProps = Omit<SelectableListProps, 'items' | 'getItemProps'> & {
-  use?: UseTreeList
+export type TreeListProps = Omit<VirtualListProps<any>, 'items' | 'getItemProps'> & {
+  // we should make this either require use or items
   items?: TreeItems
+  use?: UseTreeList
   rootItemID?: number
   getItemProps?: (item: TreeItem) => Promise<OrbitListItemProps>
   onSelect?: HandleOrbitSelect
@@ -40,6 +43,7 @@ const defaultState = {
 const getActions = (
   treeState: () => ScopedAppState<TreeState>,
   userState: () => ScopedUserState<TreeUserState>,
+  stores: KitStores,
 ) => {
   const Actions = {
     addFolder(name?: string) {
@@ -48,6 +52,7 @@ const getActions = (
       const id = Math.random()
       state.items[curId].children.push(id)
       state.items[id] = { id, name, type: 'folder', children: [] }
+      stores.queryStore.clearQuery()
       update(state)
     },
     currentFolder() {
@@ -81,11 +86,12 @@ const defaultUserState = {
 
 // persists to app state
 export function useTreeList(subSelect: string): UseTreeList {
-  const ts = useScopedAppState<TreeState>(subSelect, defaultState)
-  const us = useScopedUserState(`${subSelect}_treeState`, defaultUserState)
-  const getTs = useRefGetter(ts)
-  const getUs = useRefGetter(us)
-  const actions = useMemo(() => getActions(getTs, getUs), [])
+  const stores = useStoresSimple()
+  const ts = useAppState<TreeState>(subSelect, defaultState)
+  const us = useUserState(`${subSelect}_treeState`, defaultUserState)
+  const getTs = useGet(ts)
+  const getUs = useGet(us)
+  const actions = useMemo(() => getActions(getTs, getUs, stores), [])
   return {
     state: ts[0],
     userState: us[0],
@@ -111,34 +117,23 @@ async function loadListItem(item: TreeItem): Promise<OrbitListItemProps> {
   return null
 }
 
-export function TreeList({
-  use,
-  query,
-  onSelect,
-  onOpen,
-  placeholder,
-  getItemProps = loadListItem,
-  ...props
-}: TreeListProps) {
+export function TreeList({ use, query, getItemProps = loadListItem, ...props }: TreeListProps) {
   const items = use ? use.state.items : props.items
   const rootItemID = use ? use.state.rootItemID : props.rootItemID
   const [loadedItems, setLoadedItems] = useState([])
 
   console.warn('render trelist', props, loadedItems)
 
-  useEffect(
-    () => {
-      let cancel = false
-      Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
-        !cancel && setLoadedItems(res)
-      })
+  useEffect(() => {
+    let cancel = false
+    Promise.all(items[rootItemID].children.map(id => getItemProps(items[id]))).then(res => {
+      !cancel && setLoadedItems(res)
+    })
 
-      return () => {
-        cancel = true
-      }
-    },
-    [items, rootItemID],
-  )
+    return () => {
+      cancel = true
+    }
+  }, [items, rootItemID])
 
   if (!items) {
     return null

@@ -3,7 +3,6 @@ import { useStore } from '@o/use-store'
 import * as React from 'react'
 import { devTools } from '../helpers/devTools'
 import { ElectronStore } from '../stores/ElectronStore'
-// import { observer } from 'mobx-react-lite'
 import { MenuItems } from './MenuItems'
 import OrbitWindow from './OrbitWindow'
 

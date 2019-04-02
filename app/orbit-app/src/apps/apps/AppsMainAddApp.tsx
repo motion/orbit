@@ -1,5 +1,5 @@
-import { AppView, getAppDefinition, Icon } from '@o/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, SubTitle, Theme, TitleRow } from '@o/ui'
+import { AppView, getAppDefinition } from '@o/kit'
+import { Button, ButtonProps, Paragraph, Row, Section, SubTitle } from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'
@@ -9,38 +9,33 @@ export function AppsMainAddApp(props: { identifier: string }) {
   const hasSetup = !!def.setup
 
   return (
-    <Section>
-      <TitleRow
-        backgrounded
-        bordered
-        before={<Icon name={props.identifier} size={24} />}
-        after={
-          <>
-            {!hasSetup && def.sync && (
-              <Theme name="action">
-                <Button icon="lock" onClick={addAppClickHandler(def)}>
-                  Authenticate and add
-                </Button>
-              </Theme>
-            )}
-            {!def.sync && (
-              <Theme name="selected">
-                <Button icon="add">Install</Button>
-              </Theme>
-            )}
-          </>
-        }
-        below={
+    <Section
+      titleBorder
+      title={def.name}
+      icon={props.identifier}
+      afterTitle={
+        <>
+          {!hasSetup && def.sync && (
+            <Button alt="confirm" icon="lock" onClick={addAppClickHandler(def)}>
+              Authenticate and add
+            </Button>
+          )}
+          {!def.sync && (
+            <Button alt="action" icon="add">
+              Install
+            </Button>
+          )}
+        </>
+      }
+      belowTitle={
+        <Row padding={[10, 0]}>
           <SubTitle margin={0}>
-            <Row>
-              <SubItem>{def['author'] || 'anonymous'}</SubItem>
-              <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
-            </Row>
+            <SubItem>{def['author'] || 'anonymous'}</SubItem>
+            <SubItem icon="download">{def['downloads'] || '11,129'}</SubItem>
           </SubTitle>
-        }
-      >
-        {def.name}
-      </TitleRow>
+        </Row>
+      }
+    >
       {hasSetup && (
         <SubSection title="Setup">
           <AppView identifier={props.identifier} viewType="setup" />

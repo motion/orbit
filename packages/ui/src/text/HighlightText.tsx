@@ -1,5 +1,5 @@
 import { HighlightOptions } from '@o/utils'
-import * as React from 'react'
+import React, { createContext, useContext } from 'react'
 import { MergeContext } from '../helpers/MergeContext'
 import { Text, TextProps } from '../text/Text'
 
@@ -18,7 +18,7 @@ export type MergeHighlightsContextProps = {
   value: Partial<HighlightsContextValue>
   children: any
 }
-export const HighlightsContext = React.createContext(defaultValue)
+export const HighlightsContext = createContext(defaultValue)
 
 export const MergeHighlightsContext = ({ value, children }: MergeHighlightsContextProps) => (
   <MergeContext
@@ -34,7 +34,8 @@ export const MergeHighlightsContext = ({ value, children }: MergeHighlightsConte
   </MergeContext>
 )
 
-export const HighlightText = ({ options, children, ...props }: Props) => {
+export const HighlightText = ({ children, ...props }: Props) => {
+  const options = useContext(HighlightsContext)
   let extraProps
   if (typeof props.alpha === 'undefined') {
     extraProps = {
@@ -42,29 +43,23 @@ export const HighlightText = ({ options, children, ...props }: Props) => {
       color: 'inherit',
     }
   }
+  const highlight =
+    options.words &&
+    (options.words.length > 1 ||
+      // avoid too short of words
+      (options.words[0] && options.words[0].length > 1))
+      ? options
+      : null
   return (
-    <HighlightsContext.Consumer>
-      {options => {
-        const highlight =
-          options.words &&
-          (options.words.length > 1 ||
-            // avoid too short of words
-            (options.words[0] && options.words[0].length > 1))
-            ? options
-            : null
-        return (
-          <Text
-            tagName="div"
-            className="paragraph"
-            display="block"
-            {...extraProps}
-            highlight={highlight}
-            {...props}
-          >
-            {children}
-          </Text>
-        )
-      }}
-    </HighlightsContext.Consumer>
+    <Text
+      tagName="div"
+      className="paragraph"
+      display="block"
+      {...extraProps}
+      highlight={highlight}
+      {...props}
+    >
+      {children}
+    </Text>
   )
 }

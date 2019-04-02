@@ -1,108 +1,91 @@
-import { CSSPropertySetStrict } from '@o/css'
+import { ColorLike } from '@o/css'
 import {
   alphaColor,
-  Color,
   forwardTheme,
   gloss,
   GlossThemeFn,
   propsToStyles,
-  propsToTextSize,
   propsToThemeStyles,
-  selectThemeSubset,
   ThemeContext,
   ThemeObject,
   ThemeSelect,
-  View,
 } from '@o/gloss'
-import { mergeDefined, selectDefined } from '@o/utils'
+import { selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
+import { createContextualProps } from './helpers/createContextualProps'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
-import { ConfiguredIcon, IconProps, IconPropsContext } from './Icon'
+import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
+import { View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-// TODO replace forwardRef prop with React.forwardRef()
-
-export type SurfaceProps = React.HTMLAttributes<any> &
-  CSSPropertySetStrict & {
-    spacing?: 'min-content'
-    hover?: boolean
-    hoverStyle?: any
-    active?: boolean
-    activeStyle?: any
-    ellipse?: boolean
-    borderRadius?: number
-    after?: React.ReactNode
-    background?: Color
-    badge?: React.ReactNode
-    badgeProps?: Object
-    children?: React.ReactNode
-    name?: string
-    chromeless?: boolean
-    circular?: boolean
-    className?: string
-    clickable?: boolean
-    elementProps?: Object
-    elevation?: number
-    forwardRef?: React.Ref<any>
-    glint?: boolean
-    glow?: boolean
-    glowProps?: Object
-    height?: number
-    highlight?: boolean
-    hovered?: boolean
-    icon?: React.ReactNode
-    iconAfter?: boolean
-    iconColor?: Color
-    iconProps?: Partial<IconProps>
-    iconSize?: number
-    inline?: boolean
-    noInnerElement?: boolean
-    onClick?: any
-    size?: number
-    sizeIcon?: number
-    spaced?: boolean
-    stretch?: boolean
-    tagName?: string
-    theme?: ThemeObject | string
-    tooltip?: React.ReactNode
-    tooltipProps?: PopoverProps
-    width?: number | string
-    alpha?: number
-    alphaHover?: number
-    disabled?: boolean
-    placeholderColor?: Color
-    highlightBackground?: Color
-    highlightColor?: Color
-    style?: Object
-    ignoreSegment?: boolean
-    sizeLineHeight?: boolean | number
-    type?: string
-    themeSelect?: ThemeSelect
-    iconPad?: number
-    getTheme?: GetSurfaceTheme
-  }
+export type SurfaceProps = ViewProps & {
+  spacing?: 'min-content'
+  hover?: boolean
+  hoverStyle?: any
+  active?: boolean
+  activeStyle?: any
+  ellipse?: boolean
+  after?: React.ReactNode
+  badge?: React.ReactNode
+  badgeProps?: Object
+  children?: React.ReactNode
+  name?: string
+  chromeless?: boolean
+  circular?: boolean
+  clickable?: boolean
+  elementProps?: Object
+  forwardRef?: React.Ref<any>
+  glint?: boolean
+  glow?: boolean
+  glowProps?: Object
+  highlight?: boolean
+  hovered?: boolean
+  icon?: React.ReactNode
+  iconAfter?: boolean
+  iconColor?: ColorLike
+  iconProps?: Partial<IconProps>
+  iconSize?: number
+  noInnerElement?: boolean
+  size?: number
+  sizeIcon?: number
+  spaced?: boolean
+  stretch?: boolean
+  theme?: ThemeObject | string
+  tooltip?: React.ReactNode
+  tooltipProps?: PopoverProps
+  width?: number | string
+  alpha?: number
+  alphaHover?: number
+  disabled?: boolean
+  placeholderColor?: ColorLike
+  highlightBackground?: ColorLike
+  highlightColor?: ColorLike
+  ignoreSegment?: boolean
+  sizeLineHeight?: boolean | number
+  type?: string
+  themeSelect?: ThemeSelect
+  iconPad?: number
+  getTheme?: GetSurfaceTheme
+}
 
 export type GetSurfaceTheme = GlossThemeFn<SurfaceProps>
 
-export const useSurfaceProps = (rawProps: SurfaceProps) => {
-  const extraProps = useContext(SurfacePropsContext)
-  return {
-    props: extraProps ? mergeDefined(extraProps, rawProps) : rawProps,
-    hasExtraProps: !!extraProps,
-  }
-}
+// TODO this is using SizedSurfaceProps, needs some work to separate the two
+const { useProps, Reset, PassProps } = createContextualProps<SizedSurfaceProps>()
+export const SurfacePassProps = PassProps
+export const useSurfaceProps = useProps
 
-export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) {
-  const { props, hasExtraProps } = useSurfaceProps(rawProps)
+export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
+  const props = useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
   const themeContext = useContext(ThemeContext)
@@ -122,8 +105,6 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
 
   const {
     alignItems,
-    badge,
-    badgeProps,
     children,
     className,
     disabled,
@@ -152,7 +133,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
-  const throughProps = {
+  const throughProps: Partial<SurfaceProps> = {
     height,
     iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
     alignItems,
@@ -160,12 +141,11 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     sizeIcon: props.sizeIcon,
     iconSize: props.iconSize,
     iconAfter: props.iconAfter,
-    inline: props.inline,
     icon: props.icon,
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
     overflow: props.overflow,
-  } as Partial<SurfaceProps>
+  }
 
   let lineHeight = props.lineHeight
   if (sizeLineHeight) {
@@ -195,13 +175,14 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
         {glint && !props.chromeless && (
           <Glint
             key={0}
+            size={size}
             borderLeftRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderLeftRadius : props.borderRadius) - 1,
-              height / 2 - 1,
+              (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
+              +height / 2 - 1,
             )}
             borderRightRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderRightRadius : props.borderRadius) - 1,
-              height / 2 - 1,
+              (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) - 1,
+              +height / 2 - 1,
             )}
           />
         )}
@@ -212,7 +193,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
         >
           {icon && !stringIcon && <div>{icon}</div>}
           {icon && stringIcon && (
-            <ConfiguredIcon
+            <Icon
               name={`${icon}`}
               size={getIconSize(props)}
               transform={{
@@ -251,7 +232,7 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
       value={{
         opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
         pointerEvents: 'none',
-        color: (props.iconProps && props.iconProps.color) || props.color || theme.color,
+        color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
         justifyContent: 'center',
         hoverStyle: {
           // todo this is kind of a mess, consistency-wise
@@ -282,24 +263,14 @@ export const Surface = memoIsEqualDeep(function Surface(rawProps: SurfaceProps) 
     </IconPropsContext.Provider>
   )
 
-  element = forwardTheme({ children: element, theme: props.theme })
-
-  // dont nest PassProps, use once and clear context below
-  if (hasExtraProps) {
-    return <SurfacePropsContext.Provider value={null}>{element}</SurfacePropsContext.Provider>
-  }
-
-  return element
+  return <Reset>{forwardTheme({ children: element, theme: props.theme })}</Reset>
 })
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<SurfaceProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
-}).theme((props, baseTheme) => {
-  // select theme
-  const theme = selectThemeSubset(props.themeSelect, baseTheme)
-
+}).theme((props, theme) => {
   // :hover, :focus, :active
   const themeStyles = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
@@ -319,23 +290,18 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
         ...propStyles['&:hover'],
       }
 
-  return alphaColor(
+  const style = alphaColor(
     {
+      fontWeight: props.fontWeight || theme.fontWeight,
       color: props.color || theme.color,
-      ...(props.inline && {
-        display: 'inline',
-      }),
-      boxShadow: props.boxShadow || getSurfaceShadow(props.elevation),
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
       borderStyle:
         props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
-      ...propStyles,
       // TODO this could be automatically handled in propStyles if we want...
       borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
-      ...propsToTextSize(props),
       ...(props.chromeless && {
         borderColor: 'transparent',
         background: 'transparent',
@@ -346,6 +312,8 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
     },
     { alpha: props.alpha, alphaHover: props.alphaHover },
   )
+
+  return style
 })
 
 const ellipseStyle = {
@@ -393,9 +361,6 @@ const Element = gloss({
     overflow: 'hidden',
     maxWidth: props.spacing,
     ...props,
-    ...(props.inline && {
-      display: 'inline',
-    }),
     ...(props.ellipse && ellipseStyle),
     width: props.width || `calc(100% ${iconNegativePad})`,
     ...elementStyle,
@@ -403,28 +368,6 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size = (props.size || 1) * (props.height ? props.height / 3 : 12) * (props.sizeIcon || 1)
+  const size = (props.size || 1) * (props.height ? +props.height / 3 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
-}
-
-const round = (x: number) => Math.round(x * 10) / 10
-const smoother = (base: number, amt = 1) => round((Math.log(Math.max(1, base + 0.2)) + 1) * amt)
-const elevatedShadow = (x: number) => [
-  0,
-  smoother(x, 2),
-  smoother(x, 14),
-  [0, 0, 0, round(0.05 * smoother(x))],
-]
-
-export function getSurfaceShadow(elevation: number) {
-  if (!elevation) {
-    return null
-  }
-  return [elevatedShadow(elevation) as any]
-}
-
-export const SurfacePropsContext = React.createContext(null as SizedSurfaceProps)
-
-export function SurfacePassProps({ children, ...rest }: SizedSurfaceProps) {
-  return <SurfacePropsContext.Provider value={rest}>{children}</SurfacePropsContext.Provider>
 }

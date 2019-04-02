@@ -1,8 +1,8 @@
-import { useActiveSpace, useStores } from '@o/kit'
+import { useActiveSpace, useStoresSimple } from '@o/kit'
 import { arrayMove } from '@o/react-sortable-hoc'
 
 export function useAppSortHandler() {
-  const { paneManagerStore } = useStores()
+  const { paneManagerStore } = useStoresSimple()
   const { paneIndex } = paneManagerStore
   const [space, updateSpace] = useActiveSpace()
 

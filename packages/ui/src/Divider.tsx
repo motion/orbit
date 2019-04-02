@@ -1,10 +1,12 @@
 import { gloss, View } from '@o/gloss'
 import * as React from 'react'
 
-export const DividerContainer = gloss(View, {
+export const DividerContainer = gloss<{ padded?: boolean }>(View, {
   pointerEvents: 'inherit',
-  padding: [10, 6],
   zIndex: 10,
+  padded: {
+    padding: [10, 6],
+  },
 })
 
 export const BarInner = gloss(View, {

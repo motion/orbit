@@ -45,7 +45,7 @@ export class LocationStore {
 }
 
 export function parseUrl(url: string, source: URLSource): URLState {
-  const basenameMatch = url.match(/(app:\/\/)?([a-z]+)[\/\?]?/i)
+  const basenameMatch = url.match(/(app:\/\/)?([a-z-0-9]+)[\/\?]?/i)
   const basename = basenameMatch && basenameMatch.length == 3 ? basenameMatch[2] : ''
   if (!basename) {
     throw new Error(`No match ${url}`)
@@ -73,10 +73,13 @@ export function useLocationEffect(fn: (url: URLState) => void) {
   useReaction(() => locationStore.url, fn)
 }
 
-export function useLocationLink(url: string, stopPropagation = false) {
+export function useLocationLink(url: string | false, stopPropagation = false) {
   const { locationStore } = useStoresSimple()
-  return (e: React.MouseEvent<any, any> | MouseEvent) => {
-    if (stopPropagation) {
+  if (!url) {
+    return null
+  }
+  return (e?: React.MouseEvent<any, any> | MouseEvent) => {
+    if (e && stopPropagation) {
       e.stopPropagation()
       e.preventDefault()
     }

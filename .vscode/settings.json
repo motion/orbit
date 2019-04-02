@@ -4,5 +4,26 @@
   "workbench.settings.openDefaultKeybindings": true,
   "python.linting.pylintEnabled": false,
   "C_Cpp.dimInactiveRegions": false,
-  "python.pythonPath": "/usr/bin/python"
+  "python.pythonPath": "/usr/bin/python",
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
+  // see https://dev.to/robertcoopercode/using-eslint-and-prettier-in-a-typescript-project-53jb
+  // "editor.formatOnSave": true,
+  // "[javascript]": {
+  //   "editor.formatOnSave": false
+  // },
+  // "[javascriptreact]": {
+  //   "editor.formatOnSave": false
+  // },
+  // "[typescript]": {
+  //   "editor.formatOnSave": false
+  // },
+  // "[typescriptreact]": {
+  //   "editor.formatOnSave": false
+  // }
 }

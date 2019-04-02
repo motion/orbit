@@ -2,13 +2,28 @@
 // we set it up once with setGlobalConfig() and then import the rest of the app
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import * as firebase from 'firebase'
 import * as React from 'react'
-import ReactDOM from 'react-dom'
+// @ts-ignore
+import { unstable_Profiler as Profiler } from 'react'
+import { render } from 'react-dom'
 import 'react-hot-loader' // must be imported before react
 import '../public/styles/base.css'
 import '../public/styles/nucleo.css'
 import { IS_ELECTRON } from './constants'
 import { sleep } from './helpers'
+
+// initialize firebase
+if (firebase && firebase.initializeApp) {
+  firebase.initializeApp({
+    apiKey: 'AIzaSyD0wuHFVnF7W2B5uPunzittKP4IXwbeROo',
+    authDomain: 'orbit-motion-dev.firebaseapp.com',
+    databaseURL: 'https://orbit-motion-dev.firebaseio.com',
+    projectId: 'orbit-motion-dev',
+    storageBucket: 'orbit-motion-dev.appspot.com',
+    messagingSenderId: '790826289951',
+  })
+}
 
 // because for some reason we are picking up electron process.env stuff...
 // we want this for web-app because stack traces dont have filenames properly
@@ -78,13 +93,23 @@ async function main() {
 }
 
 // render app
-async function startApp(force = false) {
-  if (force) {
-    ReactDOM.render(<div />, document.querySelector('#app'))
+async function startApp(forceRefresh = false) {
+  if (forceRefresh) {
+    render(<div />, document.querySelector('#app'))
   }
   // re-require for hmr to capture new value
   const { OrbitRoot } = require('./OrbitRoot')
-  ReactDOM.render(<OrbitRoot />, document.querySelector('#app'))
+
+  if (location.search === '?profile') {
+    render(
+      <Profiler id="Application" onRender={console.log.bind(console)}>
+        <OrbitRoot />
+      </Profiler>,
+      document.querySelector('#app'),
+    )
+  } else {
+    render(<OrbitRoot />, document.querySelector('#app'))
+  }
 }
 
 // hot reloading

@@ -44,7 +44,6 @@ export function useContextMenu({ items, buildItems }: UseContextProps) {
   const context = useContext(ContextMenuContext)
 
   if (!context) {
-    console.warn('no context')
     return {}
   }
 

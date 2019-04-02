@@ -1,4 +1,4 @@
-import { css, CSSPropertySet, ThemeObject, validCSSAttr } from '@o/css'
+import { css, CSSPropertySet, CSSPropertySetResolved, ThemeObject, validCSSAttr } from '@o/css'
 import { isEqual } from '@o/fast-compare'
 import {
   createElement,
@@ -12,6 +12,7 @@ import {
   useRef,
   ValidationMap,
 } from 'react'
+import { Config } from './config'
 import { validProp } from './helpers/validProp'
 import { GarbageCollector } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
@@ -35,7 +36,7 @@ type GlossProps<Props> = Props &
 export type GlossThemeFn<Props> = ((
   props: GlossProps<Props>,
   theme: ThemeObject,
-) => CSSPropertySet | null)
+) => CSSPropertySetResolved | null | undefined)
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
@@ -46,7 +47,7 @@ export interface GlossView<Props> {
   displayName?: string
   // extra:
   ignoreAttrs?: Object
-  theme: ((cb: GlossThemeFn<Props>) => GlossView<Props>)
+  theme: ((...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>)
   withConfig: (config: { displayName?: string }) => any
   glossConfig: {
     getConfig: () => {
@@ -57,7 +58,7 @@ export interface GlossView<Props> {
       propStyles: Object
       child: any
     }
-    themeFn: GlossThemeFn<Props> | null
+    themeFns: GlossThemeFn<Props>[] | null
   }
 }
 
@@ -136,7 +137,7 @@ function glossify(
     }
   }
 
-  const hasDynamicStyles = themeFn || hasConditionalStyles
+  const hasDynamicStyles = !!(themeFn || hasConditionalStyles)
   const dynamicStyles = { [id]: {} }
 
   if (hasConditionalStyles) {
@@ -151,7 +152,8 @@ function glossify(
   }
 
   if (themeFn) {
-    addStyles(id, dynamicStyles, themeFn(props, theme))
+    const next = Config.preProcessTheme ? Config.preProcessTheme(props, theme) : theme
+    addStyles(id, dynamicStyles, themeFn(props, next))
   }
 
   if (hasDynamicStyles) {
@@ -171,6 +173,11 @@ function glossify(
     let style = styles[key]
     if (newStyles[key]) {
       style = { ...style, ...newStyles[key] }
+    }
+    // they may return null for some reason
+    // like conditional style '&:hover': active ? hoverStyle : null
+    if (!style) {
+      continue
     }
     const className = addRules(displayName, style, key, tagName)
     nextClassNames = nextClassNames || []
@@ -194,7 +201,10 @@ function glossify(
   return nextClassNames
 }
 
-export function gloss<Props = any>(a?: CSSPropertySet | any, b?: CSSPropertySet): GlossView<Props> {
+export function gloss<Props = any>(
+  a?: CSSPropertySet | GlossView<Props> | ((props: Props) => any) | any,
+  b?: CSSPropertySet,
+): GlossView<Props> {
   let target = a || 'div'
   let rawStyles = b
   let targetConfig
@@ -224,74 +234,78 @@ export function gloss<Props = any>(a?: CSSPropertySet | any, b?: CSSPropertySet)
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: GlossThemeFn<any> | null = null
 
-  const ThemedView = (memo(
-    forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
-      // compile theme on first run to avoid extra work
-      themeFn = themeFn || compileTheme(ThemedView)
-      const { activeTheme } = useContext(ThemeContext)
-      const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-      const lastClassNames = useRef<string[] | null>(null)
-      const classNames = glossify(
-        id,
-        ThemedView.displayName,
-        themeFn,
-        Styles.styles,
-        Styles.propStyles,
-        lastClassNames.current,
-        props,
-        tag,
-        activeTheme,
-      )
-      lastClassNames.current = classNames
+  let ThemedView = null
 
-      // unmount
-      useEffect(() => {
-        return () => {
-          const names = lastClassNames.current
-          if (names) {
-            names.forEach(gc.deregisterClassUse)
-          }
+  const InnerThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(
+    props,
+    ref,
+  ) {
+    // compile theme on first run to avoid extra work
+    themeFn = themeFn || compileTheme(ThemedView)
+    const { activeTheme } = useContext(ThemeContext)
+    const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
+    const lastClassNames = useRef<string[] | null>(null)
+    const classNames = glossify(
+      id,
+      ThemedView.displayName,
+      themeFn,
+      Styles.styles,
+      Styles.propStyles,
+      lastClassNames.current,
+      props,
+      tag,
+      activeTheme,
+    )
+    lastClassNames.current = classNames
+
+    // unmount
+    useEffect(() => {
+      return () => {
+        const names = lastClassNames.current
+        if (names) {
+          names.forEach(gc.deregisterClassUse)
         }
-      }, [])
-
-      // if this is a plain view we can use tagName, otherwise just pass it down
-      const element =
-        typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
-      const isDOMElement = typeof element === 'string'
-
-      // set up final props with filtering for various attributes
-      const finalProps = {
-        className: props.className || '',
-      } as any
-
-      if (ref) {
-        finalProps.ref = ref
       }
+    }, [])
 
-      for (const key in props) {
-        if (ignoreAttrs && ignoreAttrs[key]) {
-          continue
-        }
-        if (isDOMElement) {
-          if (validProp(key)) {
-            finalProps[key] = props[key]
-          }
-        } else {
+    // if this is a plain view we can use tagName, otherwise just pass it down
+    const element =
+      typeof targetElement === 'string' ? props.tagName || targetElement : targetElement
+    const isDOMElement = typeof element === 'string'
+
+    // set up final props with filtering for various attributes
+    const finalProps = {
+      className: props.className || '',
+    } as any
+
+    if (ref) {
+      finalProps.ref = ref
+    }
+
+    for (const key in props) {
+      if (ignoreAttrs && ignoreAttrs[key]) {
+        continue
+      }
+      if (isDOMElement) {
+        if (validProp(key)) {
           finalProps[key] = props[key]
         }
+      } else {
+        finalProps[key] = props[key]
       }
+    }
 
-      if (classNames) {
-        finalProps.className += ` ${classNames.join(' ')}`
-      }
+    if (classNames) {
+      finalProps.className += ` ${classNames.join(' ')}`
+    }
 
-      return createElement(element, finalProps, props.children)
-    }),
-    isEqual,
-  ) as unknown) as GlossView<Props>
+    return createElement(element, finalProps, props.children)
+  }) as unknown) as GlossView<Props>
+
+  ThemedView = (memo(InnerThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {
-    themeFn: null,
+    themeFns: null,
     getConfig: () => ({
       id,
       displayName: ThemedView.displayName || '',
@@ -306,11 +320,12 @@ export function gloss<Props = any>(a?: CSSPropertySet | any, b?: CSSPropertySet)
   ThemedView.withConfig = config => {
     if (config.displayName) {
       ThemedView.displayName = config.displayName
+      InnerThemedView.displayName = config.displayName
     }
     return ThemedView
   }
-  ThemedView.theme = themeFn => {
-    ThemedView.glossConfig.themeFn = themeFn
+  ThemedView.theme = (...themeFns) => {
+    ThemedView.glossConfig.themeFns = themeFns
     return ThemedView
   }
 
@@ -429,8 +444,8 @@ function compileTheme(ogView: GlossView<any>) {
   let themes: GlossThemeFn<any>[] = []
   // collect the themes going up the tree
   while (view) {
-    if (view.glossConfig.themeFn) {
-      themes.push(view.glossConfig.themeFn)
+    if (view.glossConfig.themeFns) {
+      themes = [...themes, ...view.glossConfig.themeFns]
     }
     view = view.glossConfig.getConfig().child
   }

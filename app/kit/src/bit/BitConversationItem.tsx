@@ -54,8 +54,3 @@ export function ConversationItem(rawProps: OrbitItemViewProps) {
     )
   })
 }
-
-ConversationItem.itemProps = {
-  // hideTitle: true,
-  // slim: true,
-}

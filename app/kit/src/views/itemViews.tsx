@@ -13,6 +13,8 @@ export const itemViewsApp = {
   task: ({ item }) => <Task body={item.body} comments={item.data.comments} />,
   thread: ({ item }) => <Thread body={item.body} messages={item.data.messages} />,
   person: ({ item }) => <AppMainView identifier="people" id={item.id} />,
+  // TODO html type/render
+  website: ({ item }) => <Document title={item.title} body={item.body} />,
 }
 
 // we could allow custom ones...

@@ -10,7 +10,7 @@ import { DynamicList, DynamicListControlled, DynamicListProps } from './DynamicL
 import { SelectableProps, useSelectableStore } from './SelectableStore'
 
 export type SelectableListProps = SelectableProps &
-  ListProps & {
+  Partial<ListProps> & {
     listRef?: any
   }
 

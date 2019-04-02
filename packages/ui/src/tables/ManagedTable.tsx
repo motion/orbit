@@ -393,8 +393,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         (typeof placeholder === 'function' ? placeholder(rows) : placeholder)) ||
       null
 
-    console.log('sortedRows', sortedRows)
-
     return (
       <Container
         minHeight={minHeight}

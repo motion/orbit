@@ -8,34 +8,13 @@
 import React, { forwardRef, RefObject } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 // @ts-ignore
-import { DynamicSizeList, VariableSizeList } from 'react-window'
+import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-window'
+import { Omit } from '../types'
 import { View } from '../View/View'
 
-export type DynamicListProps = {
+export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize'> & {
   disableMeasure?: boolean
   listRef?: RefObject<DynamicListControlled>
-  maxHeight?: number
-  height?: number | 'content-height'
-  width?: number | string
-  children: (params: { index: number; style: Record<string, any> }) => any
-  itemCount: number
-  itemData: any
-  keyMapper?: (index: number) => string
-  outerRef?: any
-  onMount?: () => void
-  itemSize?: (
-    index: number,
-  ) => {
-    width: number | string
-    height: number
-  }
-  onScroll?: (props: {
-    scrollDirection: 'forward' | 'backward'
-    scrollHeight: number
-    scrollTop: number
-    clientHeight: number
-  }) => void
-  sideScrollable?: boolean
 }
 
 export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {

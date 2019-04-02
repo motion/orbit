@@ -1,13 +1,22 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, { createContext, forwardRef, RefObject, useCallback, useContext, useRef } from 'react'
+import React, {
+  createContext,
+  forwardRef,
+  memo,
+  RefObject,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react'
+import { areEqual } from 'react-window'
 import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useGet } from '../hooks/useGet'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
-import { SelectableDynamicList } from './SelectableDynamicList'
+import { SelectableDynamicList } from './SelectableList'
 import { SelectableProps, SelectableStore } from './SelectableStore'
 import { VirtualListItem, VirtualListItemProps } from './VirtualListItem'
 
@@ -34,12 +43,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const selectableStoreRef = props.selectableStoreRef || fallback
   const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
 
-  const keyMapper = useCallback(index => {
-    const { items } = getProps()
-    return Config.getItemKey(items[index])
-  }, [])
-
-  const getRow = useCallback(
+  const Row = memo(
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
       const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
       const item = items[index]
@@ -68,8 +72,10 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         />
       )
     }),
-    [],
+    areEqual,
   )
+
+  const getRow = useCallback(Row, [])
 
   return (
     <SortableList
@@ -77,11 +83,10 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       itemCount={props.items.length}
       itemData={props.items}
       shouldCancelStart={isRightClick}
-      keyMapper={keyMapper}
       lockAxis="y"
       {...dynamicListProps}
     >
-      {getRow}
+      {getRow as any}
     </SortableList>
   )
 }

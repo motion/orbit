@@ -32,16 +32,16 @@ export function TestList() {
   const store = useStore(Store)
   const items = [
     { title: 'hello', icon: 'hi' },
-    { title: 'hello2', subtitle: 'world', icon: 'hi' },
+    { title: 'hello2', subTitle: 'world', icon: 'hi' },
     { title: 'hello3', icon: 'hi' },
-    { title: 'hello4', subtitle: 'world', icon: '4' },
-    { title: 'hello', subtitle: 'world', icon: '5' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'bigbig', subtitle: 'world', icon: '3', iconBefore: true },
+    { title: 'hello4', subTitle: 'world', icon: '4' },
+    { title: 'hello', subTitle: 'world', icon: '5' },
+    { title: 'hello', subTitle: 'world', icon: 'hi' },
+    { title: 'bigbig', subTitle: 'world', icon: '3', iconBefore: true },
     { title: 'bigbig', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: '2' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
-    { title: 'hello', subtitle: 'world', icon: 'hi' },
+    { title: 'hello', subTitle: 'world', icon: '2' },
+    { title: 'hello', subTitle: 'world', icon: 'hi' },
+    { title: 'hello', subTitle: 'world', icon: 'hi' },
   ]
   const [search, setSearch] = useState('')
   return (
@@ -109,7 +109,7 @@ export function CustomApp1() {
                 <Card
                   key={row.id}
                   title={row.name}
-                  subtitle={row.username}
+                  subTitle={row.username}
                   minWidth={200}
                   minHeight={200}
                   marginRight={20}

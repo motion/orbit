@@ -26,7 +26,7 @@ export function Card(props: CardProps) {
     iconProps,
     inGrid,
     titleProps,
-    subtitleProps,
+    subTitleProps,
     titleFlex,
     // ignore so it doesnt add tooltip to div
     title: _ignoreTitle,
@@ -91,7 +91,7 @@ export function Card(props: CardProps) {
               )}
               {!!titleFlex && <div style={{ flex: titleFlex }} />}
               {hasSubtitle && (
-                <SubTitle ellipse marginTop={0} {...subtitleProps}>
+                <SubTitle ellipse marginTop={0} {...subTitleProps}>
                   {subTitle}
                 </SubTitle>
               )}

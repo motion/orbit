@@ -29,7 +29,7 @@ export default function SpacesAppIndex() {
           // group: 'Manage',
           id: 'new-space',
           title: 'New',
-          subtitle: 'Create new space...',
+          subTitle: 'Create new space...',
           icon: 'add',
           iconBefore: true,
           iconProps: {

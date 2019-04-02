@@ -18,7 +18,7 @@ export type NormalItem = {
   comments?: React.ReactNode[]
   people?: Bit[]
   searchTerm?: string
-  subtitle?: React.ReactNode
+  subTitle?: React.ReactNode
   image?: string
   afterTitle?: React.ReactNode
   after?: React.ReactNode

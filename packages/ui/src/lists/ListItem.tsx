@@ -88,7 +88,7 @@ export type ListItemProps = ViewProps &
     disableShadow?: boolean
     padding?: number | number[]
     titleFlex?: number
-    subtitleProps?: Record<string, any>
+    subTitleProps?: Record<string, any>
     getIndex?: (id: number) => number
     subspaceBetween?: React.ReactNode
     searchTerm?: string
@@ -104,7 +104,7 @@ export const ListItem = memoIsEqualDeep(
       location,
       preview,
       icon,
-      subTitle: subtitle,
+      subTitle,
       title,
       borderRadius,
       cardProps,
@@ -112,7 +112,7 @@ export const ListItem = memoIsEqualDeep(
       disableShadow,
       onClick,
       titleProps,
-      subtitleProps,
+      subTitleProps,
       padding,
       onClickLocation,
       separator,
@@ -131,7 +131,7 @@ export const ListItem = memoIsEqualDeep(
     } = props
     const isSelected = useIsSelected(props)
     const showChildren = !props.hideBody
-    const showSubtitle = !!subtitle && !props.hideSubtitle
+    const showSubtitle = !!subTitle && !props.hideSubtitle
     const showDate = !!date && !props.hideDate
     const showIcon = !!icon && !props.hideIcon
     const showTitle = !!title && !props.hideTitle
@@ -239,21 +239,21 @@ export const ListItem = memoIsEqualDeep(
                     {showPreviewInSubtitle ? (
                       <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
                     ) : null}
-                    {!!subtitle &&
-                      (typeof subtitle === 'string' ? (
+                    {!!subTitle &&
+                      (typeof subTitle === 'string' ? (
                         <HighlightText
                           alpha={subTextOpacity}
                           size={0.9}
                           sizeLineHeight={sizeLineHeight}
                           ellipse
-                          {...subtitleProps}
+                          {...subTitleProps}
                         >
-                          {subtitle}
+                          {subTitle}
                         </HighlightText>
                       ) : (
-                        subtitle
+                        subTitle
                       ))}
-                    {!subtitle && (
+                    {!subTitle && (
                       <>
                         <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
                       </>

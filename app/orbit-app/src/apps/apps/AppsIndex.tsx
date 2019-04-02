@@ -45,7 +45,7 @@ export function AppsIndex() {
             icon: def.id,
             iconBefore: true,
             small: true,
-            subtitle: getDescription(def),
+            subTitle: getDescription(def),
             after: sourceIcon,
             appProps: {
               identifier: 'apps',

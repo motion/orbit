@@ -17,7 +17,7 @@ function CreateAppMain() {
   const items = defaultApps.map(app => ({
     title: app.name,
     identifier: app.identifier,
-    subtitle: descriptions[app.identifier],
+    subTitle: descriptions[app.identifier],
     icon: <AppIcon app={app} />,
     iconBefore: true,
     iconProps: {

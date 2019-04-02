@@ -118,7 +118,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
                 icon={<Avatar src={avatar} width={30} height={30} margin={[0, 6, 0, 0]} />}
                 iconBefore
                 title={user.name}
-                subtitle="Active"
+                subTitle="Active"
                 onClick={accountLink}
               />
             ) : (
@@ -145,7 +145,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
             })}
             <ListItem
               title="Space Settings"
-              subtitle="Manage spaces..."
+              subTitle="Manage spaces..."
               icon="layers"
               iconBefore
               titleProps={{ fontWeight: 300, size: 0.9, alpha: 0.8 }}
@@ -156,7 +156,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
 
             <ListItem
               title="Settings"
-              subtitle="Shortcuts, theme"
+              subTitle="Shortcuts, theme"
               icon="gear"
               iconBefore
               onClick={() => {

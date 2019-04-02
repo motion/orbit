@@ -28,6 +28,7 @@ export function OrbitFloatingShareCard({
       title="Share"
       subTitle={`${numItems} ${pluralize('item', numItems)}`}
       collapsable
+      padding={0}
     >
       <List selectable itemProps={{ small: true }} items={currentSelection} />
     </FloatingCard>

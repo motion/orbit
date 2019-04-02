@@ -48,7 +48,7 @@ export function Card(props: CardProps) {
   const hasDate = !!date
   const hasFourRows =
     hasSubtitle || hasMeta || (hasSubtitle && titleProps && titleProps['ellipse'] !== true)
-  let topPad = 10 as any
+  let topPad = 8 as any
   let sidePad = 10 as any
   if (padding) {
     if (Array.isArray(padding)) {
@@ -73,51 +73,51 @@ export function Card(props: CardProps) {
       sizeRadius={sizeRadius}
       noInnerElement
     >
-      <Padding style={{ padding }}>
-        {(hasTitle || hasSubtitle || hasMeta) && (
-          <Row
-            onDoubleClick={collapsable && (() => onCollapse(!collapsed))}
-            padding={[0, 0, 10]}
-            justifyContent="space-between"
-            width="100%"
-          >
-            <Col>
-              {hasTitle && (
-                <>
-                  <Title ellipse margin={0} highlight>
-                    {title}
-                  </Title>
-                </>
-              )}
-              {!!titleFlex && <div style={{ flex: titleFlex }} />}
-              {hasSubtitle && (
-                <SubTitle ellipse marginTop={0} {...subTitleProps}>
-                  {subTitle}
-                </SubTitle>
-              )}
-              {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
-              {hasMeta && (
-                <SubTitle ellipse>
-                  {!!location && (
-                    <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
-                      {location}
-                    </RoundButtonSmall>
-                  )}
-                  {hasFourRows && hasDate && (
-                    <>
-                      {!!location && <div style={{ width: 5 }} />}
-                      {dateContent}
-                    </>
-                  )}
-                </SubTitle>
-              )}
-            </Col>
-            <Col paddingTop={10}>
-              {afterTitle}
-              {collapsable && <CollapseArrow collapsed={collapsed} />}
-            </Col>
-          </Row>
-        )}
+      {(hasTitle || hasSubtitle || hasMeta) && (
+        <Row
+          onDoubleClick={collapsable && (() => onCollapse(!collapsed))}
+          padding={[sidePad || 8, sidePad || 8]}
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Col>
+            {hasTitle && (
+              <>
+                <Title ellipse margin={0} highlight>
+                  {title}
+                </Title>
+              </>
+            )}
+            {!!titleFlex && <div style={{ flex: titleFlex }} />}
+            {hasSubtitle && (
+              <SubTitle ellipse marginTop={0} {...subTitleProps}>
+                {subTitle}
+              </SubTitle>
+            )}
+            {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
+            {hasMeta && (
+              <SubTitle ellipse>
+                {!!location && (
+                  <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
+                    {location}
+                  </RoundButtonSmall>
+                )}
+                {hasFourRows && hasDate && (
+                  <>
+                    {!!location && <div style={{ width: 5 }} />}
+                    {dateContent}
+                  </>
+                )}
+              </SubTitle>
+            )}
+          </Col>
+          <Col paddingTop={10}>
+            {afterTitle}
+            {collapsable && <CollapseArrow collapsed={collapsed} />}
+          </Col>
+        </Row>
+      )}
+      <div style={{ flex: 1, padding }}>
         <View flex={1} height={collapsed ? 0 : '100%'}>
           {hasPreview && (
             <Preview>
@@ -142,7 +142,7 @@ export function Card(props: CardProps) {
             />
           )}
         </View>
-      </Padding>
+      </div>
     </SizedSurface>
   )
 }

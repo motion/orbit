@@ -33,6 +33,7 @@ export function FloatingCard({
   const [collapsed, setCollapsed] = useState(false)
   return (
     <FloatingView
+      disabled={collapsed}
       resizable
       top={top}
       left={left}

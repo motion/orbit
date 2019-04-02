@@ -7,7 +7,7 @@ import {
   SelectableStore,
   VirtualListItemProps,
 } from '@o/ui'
-import React, { memo, useCallback } from 'react'
+import React, { forwardRef, useCallback } from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
 import { Omit } from '../types'
@@ -35,71 +35,71 @@ export type OrbitListItemProps = Omit<VirtualListItemProps<Bit>, 'index'> & {
   selectableStore?: SelectableStore
 }
 
-export const ListItem = memo(
-  ({ item, itemViewProps, people, hidePeople, selectableStore, ...props }: OrbitListItemProps) => {
-    const { appStore } = useStoresSimple()
+export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
+  const { item, itemViewProps, people, hidePeople, selectableStore, ...rest } = props
+  const { appStore } = useStoresSimple()
 
-    // this is the view from sources, each bit type can have its own display
-    let ItemView: ListItemComponent = null
-    let itemProps: Partial<ListItemProps> = null
-    let normalized: NormalItem = null
-    let getItemProps = null
+  // this is the view from sources, each bit type can have its own display
+  let ItemView: ListItemComponent = null
+  let itemProps: Partial<ListItemProps> = null
+  let normalized: NormalItem = null
+  let getItemProps = null
 
-    if (item && item.target) {
-      normalized = normalizeItem(item)
-      itemProps = getNormalPropsForListItem(normalized)
+  if (item && item.target) {
+    normalized = normalizeItem(item)
+    itemProps = getNormalPropsForListItem(normalized)
 
-      // TODO this could be better
-      const decorator = listItemDecorators[item.type]
-      if (decorator) {
-        if (typeof decorator === 'function') {
-          ItemView = decorator.View
-        } else {
-          getItemProps = decorator.getItemProps
-        }
+    // TODO this could be better
+    const decorator = listItemDecorators[item.type]
+    if (decorator) {
+      if (typeof decorator === 'function') {
+        ItemView = decorator.View
+      } else {
+        getItemProps = decorator.getItemProps
       }
     }
+  }
 
-    const icon =
-      props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
+  const icon =
+    props.icon || (item ? item.appIdentifier : null) || (normalized ? normalized.icon : null)
 
-    const getIsSelected = useCallback((index: number) => {
-      if (appStore && appStore.isActive == false) {
-        return undefined
-      }
-      if (props.isSelected) {
-        return props.isSelected
-      }
-      if (selectableStore) {
-        return selectableStore.isActiveIndex(index)
-      }
-      return false
-    }, [])
+  const getIsSelected = useCallback((index: number) => {
+    if (appStore && appStore.isActive == false) {
+      return undefined
+    }
+    if (props.isSelected) {
+      return props.isSelected
+    }
+    if (selectableStore) {
+      return selectableStore.isActiveIndex(index)
+    }
+    return false
+  }, [])
 
-    const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
+  const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
 
-    return (
-      <UIListItem
-        searchTerm={props.query}
-        subtitleSpaceBetween={spaceBetween}
-        {...itemProps}
-        {...props}
-        icon={icon}
-        date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
-        location={normalized ? normalized.location : props.location}
-        {...getItemProps && getItemProps(item)}
-        isSelected={getIsSelected}
-      >
-        {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
-        {showPeople && (
-          <Bottom>
-            <PersonRow people={people} />
-          </Bottom>
-        )}
-      </UIListItem>
-    )
-  },
-)
+  return (
+    <UIListItem
+      ref={ref}
+      searchTerm={props.query}
+      subtitleSpaceBetween={spaceBetween}
+      {...itemProps}
+      {...rest}
+      icon={icon}
+      date={normalized ? normalized.updatedAt || normalized.createdAt : props.date}
+      location={normalized ? normalized.location : props.location}
+      {...getItemProps && getItemProps(item)}
+      isSelected={getIsSelected}
+    >
+      {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
+      {showPeople && (
+        <Bottom>
+          <PersonRow people={people} />
+        </Bottom>
+      )}
+    </UIListItem>
+  )
+})
 
 const Bottom = gloss({
   flexFlow: 'row',

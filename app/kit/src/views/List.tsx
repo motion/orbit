@@ -150,11 +150,13 @@ export function List(rawProps: ListProps) {
     [onOpen, onOpenItem],
   )
 
-  const hasItems = !!filtered.results.length
+  const noQuery = typeof query === 'undefined' || query.length === 0
+  const hasResults = !!filtered.results.length
+  const showPlaceholder = noQuery && !hasResults
 
   return (
     <HighlightActiveQuery query={query}>
-      {hasItems && (
+      {hasResults && (
         <VirtualList
           disableMeasure={visibility.getVisible() === false}
           items={filtered.results}
@@ -166,7 +168,7 @@ export function List(rawProps: ListProps) {
           selectableStoreRef={selectableStoreRef}
         />
       )}
-      {!hasItems && (placeholder || <ListPlaceholder />)}
+      {showPlaceholder && (placeholder || <ListPlaceholder />)}
     </HighlightActiveQuery>
   )
 }

@@ -37,14 +37,6 @@ export function AppsIndex() {
       <TitleRow bordered title="Manage Apps" subTitle="Search to find new apps to install" />
       <List
         items={[
-          // {
-          //   group: 'Settings',
-          //   title: 'Manage Apps',
-          //   subtitle: 'Manage space apps',
-          //   icon: 'orbit-apps-full',
-          //   iconBefore: true,
-          //   subType: 'manage',
-          // },
           ...clientApps.map(x => getAppListItem(x, { group: 'App Settings' })),
           ...syncApps.map(x => getAppListItem(x, { group: 'Source Settings', after: sourceIcon })),
           ...allSourceDefinitions.map(def => ({

@@ -1,6 +1,6 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, { createContext, RefObject, useCallback, useContext, useRef } from 'react'
+import React, { createContext, forwardRef, RefObject, useCallback, useContext, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { useGet } from '../hooks/useGet'
@@ -39,33 +39,37 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
     return Config.getItemKey(items[index])
   }, [])
 
-  const getRow = useCallback(({ index, style }) => {
-    const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
-    const item = items[index]
-    if (!item) {
-      console.warn('bad item!, we need to enforce better key/refreshing items in sync')
-      return null
-    }
-    return (
-      <VirtualListItem
-        key={Config.getItemKey(item)}
-        ItemView={ItemView}
-        onClick={e => onSelect(index, e)}
-        onDoubleClick={e => onOpen(index, e)}
-        disabled={!sortable}
-        {...itemProps(props, index)}
-        {...itemProps}
-        {...getItemProps && getItemProps(item, index, items)}
-        onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
-        onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
-        selectableStore={selectableStoreRef.current}
-        {...item}
-        index={index}
-        realIndex={index}
-        {...style}
-      />
-    )
-  }, [])
+  const getRow = useCallback(
+    forwardRef<any, any>(function GetItem({ index, style }, ref) {
+      const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
+      const item = items[index]
+      if (!item) {
+        console.warn('bad item!, we need to enforce better key/refreshing items in sync')
+        return null
+      }
+      return (
+        <VirtualListItem
+          forwardRef={ref}
+          key={Config.getItemKey(item)}
+          ItemView={ItemView}
+          onClick={e => onSelect(index, e)}
+          onDoubleClick={e => onOpen(index, e)}
+          disabled={!sortable}
+          {...itemProps(props, index)}
+          {...itemProps}
+          {...getItemProps && getItemProps(item, index, items)}
+          onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
+          onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
+          selectableStore={selectableStoreRef.current}
+          {...item}
+          index={index}
+          realIndex={index}
+          style={style}
+        />
+      )
+    }),
+    [],
+  )
 
   return (
     <SortableList

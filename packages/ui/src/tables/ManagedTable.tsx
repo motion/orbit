@@ -274,7 +274,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   scrollToBottom() {
     const { sortedRows } = this.state
     if (this.listRef.current && sortedRows.length > 1) {
-      this.listRef.current.scrollToIndex(sortedRows.length - 1)
+      this.listRef.current.scrollTo(sortedRows.length - 1)
     }
   }
 

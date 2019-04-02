@@ -232,7 +232,7 @@ export class SelectableStore {
   private scrollToIndex(index: number) {
     if (!this.listRef) return
     if (index === -1) return
-    this.listRef.scrollToIndex(index)
+    this.listRef.scrollTo(index)
   }
 
   private selectInRange = (fromKey: string, toKey: string): string[] => {

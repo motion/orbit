@@ -42,12 +42,12 @@ export function Theme({ alternate, theme, name, select, children }: ThemeProps) 
 
   if (typeof alternate === 'string') {
     const next = getAlternateTheme(alternate, contextTheme.activeTheme)
-    const name = `${contextTheme.activeThemeName}.${alternate}`
+    const nextName = `${contextTheme.activeThemeName}.${alternate}`
     return (
       <ThemeContext.Provider
         value={{
           ...contextTheme,
-          activeThemeName: name,
+          activeThemeName: nextName,
           activeTheme: next,
         }}
       >

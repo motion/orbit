@@ -13562,7 +13562,12 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-"memoize-one@>=3.1.1 <6", memoize-one@^5.0.0, memoize-one@^5.0.2:
+memoize-one@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-3.1.1.tgz#ef609811e3bc28970eac2884eece64d167830d17"
+  integrity sha512-YqVh744GsMlZu6xkhGslPSqSurOv6P+kLN2J3ysBZfagLcL5FdRK/0UpgLoL8hwjjEvvAVkjJZyFP+1T6p1vgA==
+
+memoize-one@^5.0.0, memoize-one@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.0.2.tgz#6aba5276856d72fb44ead3efab86432f94ba203d"
   integrity sha512-o7lldN4fs/axqctc03NF+PMhd2veRrWeJ2n2GjEzUPBD4F9rmNg4A+bQCACIzwjHJEXuYv4aFFMaH35KZfHUrw==
@@ -17614,13 +17619,13 @@ react-virtualized-auto-sizer@1.0.2:
   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.2.tgz#a61dd4f756458bbf63bd895a92379f9b70f803bd"
   integrity sha512-MYXhTY1BZpdJFjUovvYHVBmkq79szK/k7V3MO+36gJkWGkrXKtyr4vCPtpphaTLRAdDNoYEYFZWE8LjN+PIHNg==
 
-react-window@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.7.1.tgz#c1db640415b97b85bc0a1c66eb82dadabca39b86"
-  integrity sha512-y4/Qc98agCtHulpeI5b6K2Hh8J7TeZIfvccBVesfqOFx4CS+TSUpnJl1/ipeXzhfvzPwvVEmaU/VosQ6O5VhTg==
+react-window@1.6.0-alpha.1:
+  version "1.6.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.6.0-alpha.1.tgz#6ffbf8168a1325512fe0127582ee2672ecadb67a"
+  integrity sha512-Q4Yg/rnVHTSjHdqVuTnZFTD3cwEzXFxFMyEZ5ihK3qu/NLiiFA67M1WM/Q558VmGUQumtJAW5oxKoo5JcdqoOQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
-    memoize-one ">=3.1.1 <6"
+    memoize-one "^3.1.1"
 
 react-with-gesture@4.0.8:
   version "4.0.8"

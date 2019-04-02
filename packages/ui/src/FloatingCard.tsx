@@ -27,6 +27,7 @@ export function FloatingCard({
   left,
   width,
   height,
+  zIndex,
   ...cardProps
 }: FloatingCardProps) {
   const theme = useTheme()
@@ -44,6 +45,7 @@ export function FloatingCard({
       defaultLeft={defaultLeft}
       defaultWidth={defaultWidth}
       defaultHeight={defaultHeight}
+      zIndex={+zIndex}
     >
       <Card
         background={theme.floatingBackground || theme.cardBackground || theme.background}

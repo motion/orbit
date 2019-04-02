@@ -17,6 +17,7 @@ export type FloatingViewProps = Omit<InteractiveProps, 'padding'> & {
   defaultLeft?: number
   defaultWidth?: number
   defaultHeight?: number
+  zIndex?: number
 }
 
 export function FloatingView(props: FloatingViewProps) {
@@ -27,6 +28,7 @@ export function FloatingView(props: FloatingViewProps) {
     defaultTop = 0,
     children,
     disableDrag,
+    zIndex = 1200000,
     ...restProps
   } = props
   const controlledSize = typeof props.height !== 'undefined'
@@ -128,7 +130,7 @@ export function FloatingView(props: FloatingViewProps) {
         <animated.div
           style={{
             pointerEvents: isVisible ? 'auto' : 'none',
-            zIndex: 12000000,
+            zIndex: zIndex,
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
@@ -140,7 +142,7 @@ export function FloatingView(props: FloatingViewProps) {
             opacity={isVisible ? 1 : 0}
             position="absolute"
             disabled={controlledSize}
-            zIndex={12000000 + 1}
+            zIndex={zIndex + 1}
             {...restProps}
             width="100%"
             height="100%"

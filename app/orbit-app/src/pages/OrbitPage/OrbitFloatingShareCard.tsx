@@ -8,9 +8,9 @@ export function OrbitFloatingShareCard({
   height = 250,
   pad = 20,
 }: {
-  width: number
-  height: number
-  pad: number
+  width?: number
+  height?: number
+  pad?: number
 }) {
   const { spaceStore } = useStores()
   const { currentSelection } = spaceStore

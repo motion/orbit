@@ -1,6 +1,6 @@
 import { gloss, Row } from '@o/gloss'
-import { AppLoadContext } from '@o/kit'
 import { BorderTop } from '@o/ui'
+import { AppLoadContext } from '@o/kit'
 import { useReaction } from '@o/use-store'
 import React, { useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'

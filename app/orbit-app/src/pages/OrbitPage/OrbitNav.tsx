@@ -4,6 +4,7 @@ import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
 import { useAppSortHandler } from '@o/kit-internal'
 import { AppBit, AppModel } from '@o/models'
 import { SortableContainer, SortableElement } from '@o/react-sortable-hoc'
+import { isEditing } from '@o/stores'
 import { isRightClick } from '@o/ui'
 import { flow } from 'lodash'
 import React, { memo } from 'react'
@@ -17,7 +18,7 @@ const isOnSettings = (pane?: PaneManagerPane) =>
   (pane && pane.type === 'sources') || pane.type === 'spaces' || pane.type === 'settings'
 
 export const OrbitNav = memo(() => {
-  const { orbitStore, spaceStore, paneManagerStore, newAppStore } = useStores()
+  const { spaceStore, paneManagerStore, newAppStore } = useStores()
   const Actions = useActions()
   const { showCreateNew } = newAppStore
   const activeSpaceName = spaceStore.activeSpace.name
@@ -26,7 +27,7 @@ export const OrbitNav = memo(() => {
   const [space] = useActiveSpace()
   const handleSortEnd = useAppSortHandler()
 
-  if (orbitStore.isTorn) {
+  if (isEditing) {
     return null
   }
 

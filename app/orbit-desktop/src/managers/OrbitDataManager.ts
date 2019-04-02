@@ -83,7 +83,7 @@ export class OrbitDataManager {
   }
 
   observeSpace(space: Space) {
-    console.log('observing space', space)
+    // console.log('observing space', space)
     const subscribers = new Set<ZenObservable.Subscription>()
 
     const state = {

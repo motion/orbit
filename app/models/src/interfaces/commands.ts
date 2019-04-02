@@ -20,6 +20,16 @@ export const ChangeDesktopThemeCommand = new Command<void, { theme: 'dark' | 'li
   'change-desktop-theme',
 )
 
+export const AppDevOpenCommand = new Command<
+  void,
+  {
+    // URL of the bundle
+    bundleURL: string
+    // Path to the app project in dev
+    path: string
+  }
+>('app-dev-open')
+
 export const SendClientDataCommand = new Command<
   void,
   {

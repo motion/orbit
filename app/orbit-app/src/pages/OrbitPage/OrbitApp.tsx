@@ -1,14 +1,14 @@
-import { AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit'
-import { Button, Loading, Section, Space, View, Visibility } from '@o/ui'
-import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { Component, memo, Suspense, useCallback } from 'react'
-import '../../apps/orbitApps'
-import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
-import { useStoresSimple } from '../../hooks/useStores'
-import { OrbitMain } from './OrbitMain'
-import { OrbitSidebar } from './OrbitSidebar'
-import { OrbitStatusBar } from './OrbitStatusBar'
-import { OrbitToolBar } from './OrbitToolBar'
+import { AppDefinition, AppLoadContext, AppStore, AppViewsContext, getAppDefinition, ProvideStores } from '@o/kit';
+import { Button, Loading, Section, Space, View, Visibility } from '@o/ui';
+import { useReaction, useStoreSimple } from '@o/use-store';
+import React, { Component, memo, Suspense, useCallback } from 'react';
+import '../../apps/orbitApps';
+import { useAppLocationEffect } from '../../effects/useAppLocationEffect';
+import { useStoresSimple } from '../../hooks/useStores';
+import { OrbitMain } from './OrbitMain';
+import { OrbitSidebar } from './OrbitSidebar';
+import { OrbitStatusBar } from './OrbitStatusBar';
+import { OrbitToolBar } from './OrbitToolBar';
 
 export const OrbitApp = ({ id, identifier }: { id: string; identifier: string }) => {
   const { paneManagerStore } = useStoresSimple()
@@ -30,15 +30,28 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
 }
 
 const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: string }) => {
-  useAppLocationEffect() // handle url changes
-  const { app } = getAppDefinition(identifier)
+  // handle url changes
+  useAppLocationEffect()
+  const appDef = getAppDefinition(identifier)
 
-  if (!app) {
+  if (appDef.app == null) {
     console.debug('no app', id, identifier)
     return null
   }
 
-  const App = app
+  return <OrbitAppRenderOfDefinition appDef={appDef} id={id} identifier={identifier} />
+})
+
+export const OrbitAppRenderOfDefinition = ({
+  id,
+  identifier,
+  appDef,
+}: {
+  id: string
+  identifier: string
+  appDef: AppDefinition
+}) => {
+  const { app: App } = appDef
   const Toolbar = OrbitToolBar
   const Sidebar = OrbitSidebar
   const Main = OrbitMain
@@ -46,7 +59,7 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
 
   return (
     <Suspense fallback={<Loading />}>
-      <AppLoadContext.Provider value={{ id, identifier }}>
+      <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
           <ErrorBoundary>
             <App />
@@ -55,7 +68,7 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
       </AppLoadContext.Provider>
     </Suspense>
   )
-})
+}
 
 class ErrorBoundary extends Component {
   state = {

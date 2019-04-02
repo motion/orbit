@@ -1,7 +1,8 @@
 import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
-import { MediatorServer, WebSocketServerTransport } from '@o/mediator'
+import { MediatorServer, resolveCommand, WebSocketServerTransport } from '@o/mediator'
 import {
+  AppDevOpenCommand,
   CloseAppCommand,
   NewFallbackServerPortCommand,
   RestartAppCommand,
@@ -9,7 +10,7 @@ import {
   TearAppCommand,
 } from '@o/models'
 import { render } from '@o/reactron'
-import { Electron } from '@o/stores'
+import { App, Electron } from '@o/stores'
 import electronDebug from 'electron-debug'
 import 'raf/polyfill'
 import * as React from 'react'
@@ -18,6 +19,7 @@ import waitPort from 'wait-port'
 import AppsWindow from './apps/AppsWindow'
 import { IS_SUB_ORBIT } from './constants'
 import ElectronRoot from './ElectronRoot'
+import forkAndStartOrbitApp from './helpers/forkAndStartOrbitApp'
 import MenuWindow from './menus/MenuWindow'
 import { OrbitRoot } from './orbit/OrbitRoot'
 import { CloseAppResolver } from './resolver/CloseAppResolver'
@@ -25,6 +27,25 @@ import { RestartAppResolver } from './resolver/RestartAppResolver'
 import { TearAppResolver } from './resolver/TearAppResolver'
 
 const log = new Logger(process.env.SUB_PROCESS || 'electron')
+
+export const OpenAppDevResolver: any = resolveCommand(AppDevOpenCommand, async params => {
+  let appInDev = {
+    path: params.path,
+    bundleURL: params.bundleURL,
+  }
+  let appId = App.state.allApps.length
+  App.setState({
+    allApps: [
+      ...App.state.allApps,
+      {
+        type: 'root',
+        id: appId,
+      },
+    ],
+  })
+  console.log('UPDATE', App.state.allApps)
+  forkAndStartOrbitApp({ appId, appInDev })
+})
 
 export async function main() {
   log.info(`Starting electron in env ${process.env.NODE_ENV}`)
@@ -40,9 +61,9 @@ export async function main() {
 
   const mediatorServer = new MediatorServer({
     models: [],
-    commands: [TearAppCommand, CloseAppCommand, RestartAppCommand],
+    commands: [AppDevOpenCommand, TearAppCommand, CloseAppCommand, RestartAppCommand],
     transport: new WebSocketServerTransport({ port }),
-    resolvers: [TearAppResolver, CloseAppResolver, RestartAppResolver],
+    resolvers: [OpenAppDevResolver, TearAppResolver, CloseAppResolver, RestartAppResolver],
   })
   mediatorServer.bootstrap()
 

@@ -2,15 +2,46 @@
   "name": "@o/orbit-cli",
   "version": "2.4.0",
   "main": "./_/main.js",
+  "private": true,
+  "bin": "./_/main.js",
   "scripts": {
     "build": "tsc || true",
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "bonjour": "*",
+    "@o/kit": "*",
+    "@o/ui": "*",
+    "fs-extra": "^7.0.0",
     "chalk": "2.4.2",
     "cool-trim": "1.1.1",
     "lodash": "4.17.11",
     "minimist": "1.2.0",
-    "strip-ansi": "5.0.0"
+    "strip-ansi": "5.0.0",
+    "yargs": "^13.2.2",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-server": "*",
+    "@hot-loader/react-dom": "*",
+    "babel-loader": "*",
+    "cache-loader": "*",
+    "css-loader": "*",
+    "file-loader": "*",
+    "ignore-loader": "*",
+    "image-webpack-loader": "*",
+    "null-loader": "*",
+    "raw-loader": "*",
+    "react-hot-loader": "*",
+    "style-loader": "*",
+    "svg-inline-loader": "*",
+    "thread-loader": "*",
+    "ts-loader": "*",
+    "url-loader": "*",
+    "workerize-loader": "*"
+  },
+  "devDependencies": {
+    "typescript": "*",
+    "@types/yargs": "^12.0.10",
+    "@types/fs-extra": "*"
   }
 }

@@ -1,8 +1,8 @@
 import { gloss } from '@o/gloss'
 import { useActiveSpace } from '@o/kit'
 import { ClearButton, ThemeContext, View } from '@o/ui'
+import { isEditing } from '@o/stores'
 import React, { memo } from 'react'
-import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStores } from '../../hooks/useStores'
 import { HighlightedTextArea } from '../../views/HighlightedTextArea'
 
@@ -29,7 +29,7 @@ export const OrbitHeaderInput = memo(function OrbitHeaderInput() {
       activeSpace &&
       (activePane.type === 'sources' ? `Manage ${activeSpace.name}` : activePane.name)) ||
     ''
-  const fontSize = getIsTorn() ? 16 : 17
+  const fontSize = isEditing ? 16 : 17
   return (
     <FakeInput>
       <View height="100%" flex={1} position="relative" flexFlow="row" alignItems="center">

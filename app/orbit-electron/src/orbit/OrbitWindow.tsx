@@ -2,12 +2,11 @@ import { getGlobalConfig } from '@o/config'
 import { Logger } from '@o/logger'
 import { ChangeDesktopThemeCommand, SendClientDataCommand } from '@o/models'
 import { Window } from '@o/reactron'
-import { App, Desktop, Electron } from '@o/stores'
+import { App, Desktop, Electron, appStartupConfig } from '@o/stores'
 import { ensure, react, useStore } from '@o/use-store'
 import { ChildProcess } from 'child_process'
 import { app, BrowserWindow, screen, systemPreferences } from 'electron'
 import root from 'global'
-import { last } from 'lodash'
 import { join } from 'path'
 import * as React from 'react'
 import { ROOT } from '../constants'
@@ -48,7 +47,6 @@ class OrbitWindowStore {
   initialShow = false
   size = [0, 0]
   position = [0, 0]
-  windowID = last(App.state.allApps).id
   vibrancy = 'light'
 
   start() {
@@ -178,8 +176,8 @@ export default function OrbitWindow() {
   const store = useStore(OrbitWindowStore, null)
   root['OrbitWindowStore'] = store // helper for dev
 
-  const appQuery = `/?id=${store.windowID}`
-  const url = `${Config.urls.server}${store.windowID > 0 ? appQuery : ''}`
+  const appQuery = `/?id=${appStartupConfig.appId}`
+  const url = `${Config.urls.server}${appStartupConfig.appId > 0 ? appQuery : ''}`
 
   log.info(
     `--- OrbitWindow ${process.env.SUB_PROCESS} ${store.show} ${url} ${store.size} ${

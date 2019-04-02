@@ -1,7 +1,7 @@
-import { App } from '@o/stores'
-import { APP_ID } from '../constants'
+import { App, appStartupConfig } from '@o/stores'
 
 export function getAppState() {
   const { allApps } = App.state
-  return allApps.find(x => x.id === APP_ID)
+  console.log('ALL APPS', JSON.stringify(allApps))
+  return allApps.find(x => x.id === appStartupConfig.appId)
 }

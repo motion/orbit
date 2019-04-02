@@ -1,117 +1,176 @@
 #!/usr/bin/env node
-// @flow
 
-import chalk from 'chalk'
-import coolTrim from 'cool-trim'
-import { get, mapValues, omit, pick } from 'lodash'
-import minimist from 'minimist'
-import stripAnsi from 'strip-ansi'
-import manifest from '../package.json'
-import { getOrbit } from './getOrbit.js'
-import { OrbitCLI } from './OrbitCLI.js'
+// XXX(andreypopp): using require here because it's outside of ts's rootDir and
+// ts complains otherwise
+const packageJson = require('../package.json')
 
-const ORBIT_ARGS = ['directory', 'configFilePath', 'configLoadFile']
-const OMIT_ARGS = ORBIT_ARGS.concat(['_', 'dev', 'watch', 'debug'])
+import bonjour from 'bonjour'
+import * as Path from 'path'
+import getPort from 'get-port'
+import Yargs from 'yargs'
+import Webpack from 'webpack'
+import WebpackDevServer from 'webpack-dev-server'
+import WebSocket from 'ws'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const argv = mapValues(
-  minimist(process.argv.slice(2), {
-    string: ['configFilePath', 'directory'],
-    boolean: ['configLoadFile'],
-    default: {
-      dev: {},
-      watch: {},
-      configLoadFile: true,
-    },
-  }),
-  value => {
-    if (value === 'true') return true
-    if (value === 'false') return false
-    return value
-  },
-)
+import { AppDevOpenCommand } from '@o/models'
+import { MediatorClient, WebSocketClientTransport } from '@o/mediator'
+import { randomString } from '@o/utils'
 
-const orbitArgs = pick(argv, ORBIT_ARGS)
-const orbitConfig = omit(argv, OMIT_ARGS)
+import makeWebpackConfig from './webpack.config'
 
-function log(contents: string): void {
-  console.log(chalk.supportsColor ? contents : stripAnsi(contents))
+let cwd = process.cwd()
+let version = packageJson.version
+let description = `Orbit v${version} - Build Amazing Apps Together`
+
+type Options = {
+  projectRoot: string
 }
 
-let orbit: OrbitCLI
-
-async function main() {
-  if (argv.v || argv.version) {
-    console.log(`Orbit v${manifest.version} - Build Amazing Apps Together`)
-    process.exit(0)
-  }
-  if (argv.help || argv.h) {
-    log(coolTrim`
-    Usage: orbit [...options]
-
-    These are the common top level options:
-      < no parameter >            Compile the contents of a project and write to output directory
-      --watch                     Just like compile but watches and recompiles on changes
-      --dev                       Compile the contents and start an http server on a port (3000 by default)
-                                  but do not write to output directory
-      --directory <path>          Start Orbit in a specific directory (supports other options)
-      --debug                     Shows detailed error information
-      --version                   Print the version of the program
-      --help                      Show this help text
-
-    Here are some of Orbit's config parameters (but others/all supported by Orbit can be used in dot notation):
-      --directory                 Start orbit in a specific directory (is process.cwd() by default)
-      --dev.port                  TCP port to listen for dev server connections on (3000 by default)
-      --dev.host                  Hostname/IP to listen for dev server connections on (localhost by default)
-
-    Environment variables Orbit responds to:
-      NODE_ENV                    Tells Orbit to use debug/production behavior
-      ORBIT_DEBUG=1              Prints detailed stack traces to console (set by --debug opt)
-    `)
-    process.exit(1)
-  }
-
-  if (argv.debug) {
-    process.env.ORBIT_DEBUG = '1'
-  }
-
-  orbit = await getOrbit({
-    ...orbitArgs,
-    config: orbitConfig,
+function orTimeout<T>(promise: Promise<T>, timeout): Promise<T | null> {
+  let waitForTimeout = new Promise<null>(resolve => {
+    setTimeout(() => resolve(null), timeout)
   })
+  return Promise.race([promise, waitForTimeout])
+}
 
-  const isDev = argv.dev === true || Object.keys(argv.dev).length > 0
-  const isWatch = argv.watch === true || Object.keys(argv.watch).length > 0
-
+async function findBonjourService(type: string, timeout: number) {
+  let bonjourInstance = bonjour()
+  let waitForService = new Promise(resolve => {
+    bonjourInstance.findOne({ type: type }, service => {
+      resolve(service.port)
+    })
+  })
+  let service
   try {
-    await orbit.initialize()
+    service = await orTimeout(waitForService, timeout)
+  } finally {
+    bonjourInstance.destroy()
+  }
+  return service
+}
 
-    if (!isWatch) {
-      const result = await orbit.build({
-        isDev,
+type Bundler = {
+  dispose(): void
+  host: string
+  port: number
+}
+
+async function startBundler(options): Promise<Bundler> {
+  let config = await makeWebpackConfig(options)
+  let compiler = Webpack(config)
+
+  let server = new WebpackDevServer(compiler, config.devServer)
+  let serverDispose = () =>
+    new Promise((resolve, reject) => {
+      server.close(err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve()
+        }
       })
-      orbit.dispose()
-      console.log('done', result)
-      return
-    } else {
-      if (isWatch) {
-        const devPort = parseInt(get(argv, 'dev.port', 0), 10) || 3000
-        const devHost = get(argv, 'dev.host', '127.0.0.1')
-        console.log('Starting orbit on', devHost, devPort)
-        await orbit.watch({
-          devPort,
-          devHost,
+    })
+
+  let port = await getPort()
+  let host = 'localhost'
+
+  return new Promise((resolve, reject) => {
+    server.listen(port, host, err => {
+      if (err) {
+        reject()
+      } else {
+        resolve({
+          host,
+          port,
+          dispose: serverDispose,
         })
       }
+    })
+  })
+}
+
+async function getOrbitDesktop() {
+  let port = await findBonjourService('orbitDesktop', 5000)
+
+  if (port == null) {
+    // TODO(andreypopp): start orbit instead
+    throw new Error('orbit-desktop is not running')
+  }
+
+  console.log(`orbit-desktop found at ${port} connecting...`)
+  let Mediator = new MediatorClient({
+    transports: [
+      new WebSocketClientTransport(
+        'cli-client-' + randomString(5),
+        new ReconnectingWebSocket(`ws://localhost:${port}`, [], {
+          WebSocket,
+          minReconnectionDelay: 1,
+        }),
+      ),
+    ],
+  })
+  return Mediator
+}
+
+class OrbitCLI {
+  options: Options
+
+  constructor(options: Options) {
+    this.options = options
+  }
+
+  async dev(_opts: {}) {
+    let config = {
+      projectRoot: this.options.projectRoot,
+      mode: 'development',
     }
-  } catch (error) {
-    console.error(error)
-    orbit.dispose()
+    let [bundler, orbitDesktop] = await Promise.all([startBundler(config), getOrbitDesktop()])
+    await orbitDesktop.command(AppDevOpenCommand, {
+      bundleURL: `http://${bundler.host}:${bundler.port}/bundle.js`,
+      path: this.options.projectRoot,
+      appId: this.options.projectRoot,
+    })
+    return
   }
 }
 
-main().catch(error => {
-  if (orbit) {
-    orbit.dispose()
+function main() {
+  async function withOrbitCLI(options: Options, f: (OrbitCLI) => Promise<void>) {
+    let orbit: OrbitCLI
+    try {
+      orbit = await new OrbitCLI(options)
+      await f(orbit)
+    } catch (error) {
+      console.error(error)
+      process.exit(2)
+    }
   }
-  console.error(error)
-})
+
+  const app = (p: Yargs.Argv) =>
+    p.positional('app', {
+      type: 'string',
+      default: '.',
+      describe: 'The application to run',
+    })
+
+  Yargs.scriptName('orbit')
+    .usage('$0 <cmd> [args]')
+    .command(
+      'dev [app]',
+      'Run an Orbit app in development mode',
+      p => app(p),
+      async argv => {
+        let projectRoot = Path.resolve(cwd, argv.app)
+        let options = { projectRoot }
+        // @ts-ignore
+        await withOrbitCLI(options, app => {
+          return app.dev(argv)
+        })
+      },
+    )
+    .version('version', 'Show version', description)
+    .help().argv
+}
+
+main()

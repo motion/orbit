@@ -1,13 +1,13 @@
 import { Logger } from '@o/logger'
 import { resolveCommand } from '@o/mediator'
 import { TearAppCommand } from '@o/models'
-import { forkProcess } from '@o/orbit-fork-process'
 import { Electron } from '@o/stores'
 import { app, dialog } from 'electron'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { ROOT } from '../constants'
-import { appProcesses, getOrbitShortcutsStore } from '../orbit/OrbitWindow'
+import { getOrbitShortcutsStore } from '../orbit/OrbitWindow'
+import forkAndStartOrbitApp from '../helpers/forkAndStartOrbitApp'
 
 const log = new Logger('TearAppResolver')
 
@@ -27,12 +27,5 @@ export const TearAppResolver: any = resolveCommand(TearAppCommand, async ({ appT
   Electron.setIsTorn()
   getOrbitShortcutsStore().dispose()
 
-  const proc = forkProcess({
-    name: 'orbit',
-    // TODO we can increment for each new orbit sub-process, need a counter here
-    // inspectPort: 9006,
-    // inspectPortRemote: 9007,
-  })
-
-  appProcesses.push({ appId, process: proc })
+  forkAndStartOrbitApp({ appId })
 })

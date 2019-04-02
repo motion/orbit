@@ -1,11 +1,11 @@
 import { once } from 'lodash'
+import { isEditing } from '@o/stores'
 import { AllStores } from '../contexts/StoreContext'
 import { defaultPanes } from '../effects/paneManagerStoreUpdatePanes'
-import { getIsTorn } from '../helpers/getIsTorn'
 
 export function setInitialPaneIndex({ paneManagerStore }: AllStores) {
   return once(() => {
-    if (getIsTorn()) {
+    if (isEditing) {
       return
     }
     paneManagerStore.setPaneIndex(defaultPanes.length)

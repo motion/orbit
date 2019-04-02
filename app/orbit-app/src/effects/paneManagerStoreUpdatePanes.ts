@@ -1,9 +1,9 @@
 import { isEqual } from '@o/fast-compare'
 import { PaneManagerPane, PaneManagerStore } from '@o/kit'
 import { AppBit } from '@o/models'
+import { isEditing, appStartupConfig } from '@o/stores'
 import { ensure, useReaction } from '@o/use-store'
 import { getAppState } from '../helpers/getAppState'
-import { getIsTorn } from '../helpers/getIsTorn'
 import { useActions } from '../hooks/useActions'
 import { useStoresSimple } from '../hooks/useStores'
 
@@ -49,21 +49,13 @@ function appToPane(app: AppBit): PaneManagerPane {
   }
 }
 
-function getTornPanes(apps: AppBit[]): PaneManagerPane[] {
-  // torn window panes, remove the others besides active app + settings
-  const appState = getAppState()
-  const app = apps.find(app => +app.id === +appState.appId)
-  console.log('setting panes by torn')
-  if (!app) {
-    console.warn(`No app found! ${JSON.stringify(appState)} ${JSON.stringify(apps)}`)
-    return [settingsPane]
-  }
-  return [appToPane(app), settingsPane]
-}
-
 function getAppsPanes(apps: AppBit[]): PaneManagerPane[] {
-  if (getIsTorn()) {
-    return getTornPanes(apps)
+  if (isEditing) {
+    let pane = {
+      type: appStartupConfig.appInDev.path,
+      id: String(appStartupConfig.appId)
+    }
+    return [pane, settingsPane];
   } else {
     const appPanes = apps.map(appToPane)
     return [...defaultPanes, ...appPanes]

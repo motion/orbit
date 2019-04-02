@@ -27,7 +27,6 @@ const apps: AppDefinition[] = [
   ListsApp,
   SearchApp,
   PeopleApp,
-  CustomApp,
   ConfluenceApp,
   JiraApp,
   GmailApp,
@@ -37,6 +36,7 @@ const apps: AppDefinition[] = [
   WebsiteApp,
   PostgresApp,
   CustomApp2,
+  CustomApp,
 ]
 
 export const orbitStaticApps: AppDefinition[] = [

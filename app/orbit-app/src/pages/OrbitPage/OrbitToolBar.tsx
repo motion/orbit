@@ -1,5 +1,5 @@
 import { FullScreen, gloss, Row, View, ViewProps } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, useAppDefinitions } from '@o/kit'
+import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -13,12 +13,11 @@ export const ToolBarPad = (p: { hasToolbar: boolean; hasSidebar: boolean }) => (
 )
 
 export const OrbitToolBar = memo((props: AppMainViewProps) => {
-  const { id, identifier } = useContext(AppLoadContext)
-  const definition = useAppDefinitions().find(x => x.id === identifier)
+  const { id, appDef } = useContext(AppLoadContext)
   const { paneManagerStore } = useStoresSimple()
   const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <ToolbarChrome transparent={definition.config && definition.config.transparentBackground}>
+    <ToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
         <ToolbarContent>{props.children}</ToolbarContent>
       </ToolbarInner>

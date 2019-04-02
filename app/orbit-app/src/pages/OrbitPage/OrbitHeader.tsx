@@ -1,6 +1,7 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, SimpleText, useTheme } from '@o/gloss'
 import { Icon, useActiveApps } from '@o/kit'
+import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 // import { clipboard } from 'electron'
 import React, { memo } from 'react'
@@ -11,11 +12,9 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
+  const { headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
-  const { isTorn } = orbitStore
-  const { isEditing } = orbitStore
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
@@ -23,12 +22,12 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
   return (
     <OrbitHeaderContainer
-      isTorn={isTorn}
+      isEditing={isEditing}
       className="draggable"
       onMouseUp={headerStore.handleMouseUp}
     >
       <OrbitHeaderEditingBg isActive={isEditing} />
-      <HeaderTop padding={isTorn ? [3, 10] : [5, 10]}>
+      <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
           {/* <HeaderButtonChromeless
@@ -63,7 +62,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <Space />
               </SurfacePassProps>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500} sizeFont={1}>
-                {!isTorn && <LaunchButton />}
+                {!isEditing && <LaunchButton />}
               </SurfacePassProps>
             </>
           )}
@@ -80,9 +79,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
             </Row>
           )}
 
-          {!isTorn && <OrbitSpaceSwitch />}
+          {!isEditing && <OrbitSpaceSwitch />}
 
-          {isTorn && (
+          {isEditing && (
             <Button
               chromeless
               opacity={isOnSettings ? 0.8 : 0.4}
@@ -90,7 +89,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 opacity: isOnSettings ? 1 : 0.6,
               }}
               icon="gear"
-              iconSize={isTorn ? 10 : 12}
+              iconSize={isEditing ? 10 : 12}
               onClick={() => {
                 newAppStore.setShowCreateNew(false)
                 if (activePaneType === 'settings') {
@@ -103,10 +102,10 @@ export const OrbitHeader = memo(function OrbitHeader() {
           )}
         </HeaderSide>
       </HeaderTop>
-      {!isTorn && <HeaderFade />}
+      {!isEditing && <HeaderFade />}
       {/* this stays slightly below the active tab and looks nice */}
       <BorderBottom
-        borderColor={(isTorn && theme.headerBorderBottom) || theme.borderColor}
+        borderColor={(isEditing && theme.headerBorderBottom) || theme.borderColor}
         zIndex={0}
       />
       <OrbitNav />
@@ -132,11 +131,11 @@ function HeaderButton(props: ButtonProps) {
 }
 
 function OrbitEditAppButton() {
-  const { orbitStore, paneManagerStore } = useStores()
+  const { paneManagerStore, orbitStore } = useStores()
   const activePaneId = paneManagerStore.activePane.id
   const activeApps = useActiveApps()
   const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.identifier === 'custom' && !orbitStore.isEditing
+  const show = activeApp && activeApp.identifier === 'custom' && !isEditing
   const Actions = useActions()
 
   if (!show) {
@@ -169,11 +168,11 @@ const OrbitHeaderContainer = gloss(View, {
   position: 'relative',
   overflow: 'hidden',
   zIndex: 400,
-}).theme(({ isTorn }, theme) => ({
+}).theme((props, theme) => ({
   // borderBottom: [1, theme.borderColor],
   background:
     // 'rgba(0,50, 200, 0.2)' ||
-    (isTorn && theme.headerBackgroundOpaque) ||
+    (props.isEditing && theme.headerBackgroundOpaque) ||
     theme.headerBackground ||
     theme.background.alpha(a => a * 0.65),
 }))
@@ -208,11 +207,10 @@ const HeaderTop = gloss(View, {
 
 const LaunchButton = memo(() => {
   const Actions = useActions()
-  const { orbitStore } = useStores()
   // const [_isHovered, setHovered] = useState(false)
   // const tm = useRef(null)
 
-  if (orbitStore.isTorn) {
+  if (isEditing) {
     return null
   }
 

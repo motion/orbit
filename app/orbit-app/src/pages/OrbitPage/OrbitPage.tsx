@@ -1,6 +1,7 @@
 import { command } from '@o/bridge'
 import { gloss, View, ViewProps } from '@o/gloss'
 import {
+  AppDefinition,
   LocationStore,
   PaneManagerStore,
   ProvideStores,
@@ -10,20 +11,19 @@ import {
   ThemeStore,
 } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
-import { Theme } from '@o/ui'
+import { appStartupConfig, isEditing } from '@o/stores'
+import { Loading, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
-import React, { memo, useEffect, useMemo, useRef } from 'react'
+import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitStaticApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
-import { APP_ID } from '../../constants'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
 import { querySourcesEffect } from '../../effects/querySourcesEffect'
 import { useEnsureApps } from '../../effects/useEnsureApps'
 import { useUserEffects } from '../../effects/userEffects'
-import { getIsTorn } from '../../helpers/getIsTorn'
 import { useStableSort } from '../../hooks/pureHooks/useStableSort'
 import { useActions } from '../../hooks/useActions'
 import { useMessageHandlers } from '../../hooks/useMessageHandlers'
@@ -32,10 +32,14 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
-import { OrbitApp } from './OrbitApp'
+import { LoadApp } from './LoadApp'
+import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
+
+// @ts-ignore
+// window['OrbitKit'] = OrbitKit(window as any).OrbitUI = OrbitUI
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)
@@ -85,11 +89,10 @@ const OrbitPageInner = memo(function OrbitPageInner() {
 
       console.log('unloading!', shouldCloseApp, shouldCloseTab)
 
-      if (orbitStore.isTorn) {
-        // TORN AWAY APP
+      if (isEditing) {
         if (shouldCloseApp || shouldCloseTab) {
           e.returnValue = false
-          command(CloseAppCommand, { appId: APP_ID })
+          command(CloseAppCommand, { appId: appStartupConfig.appId })
           return
         }
       } else {
@@ -143,24 +146,36 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     allApps.find(x => x.id === id),
   )
 
+  let contentArea = null
+
+  if (isEditing) {
+    contentArea = (
+      <Suspense fallback={<Loading />}>
+        <LoadApp RenderApp={RenderApp} bundleURL={appStartupConfig.appInDev.bundleURL} />
+      </Suspense>
+    )
+  } else {
+    contentArea = stableSortedApps
+      .filter(x => appsWithViews[x.identifier])
+      .map(app => <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />)
+  }
+
   return (
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
         <OrbitFloatingShareCard />
         <InnerChrome torn={orbitStore.isTorn}>
-          <OrbitContentArea>
-            {stableSortedApps
-              .filter(x => appsWithViews[x.identifier])
-              .map(app => (
-                <OrbitApp key={app.id} id={app.id} identifier={app.identifier} />
-              ))}
-          </OrbitContentArea>
+          <OrbitContentArea>{contentArea}</OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>
     </ProvideStores>
   )
 })
+
+let RenderApp = ({ appDef }: { appDef: AppDefinition }) => {
+  return <OrbitAppRenderOfDefinition appDef={appDef} id="6" identifier={appDef.id} />
+}
 
 const OrbitContentArea = gloss({
   flexFlow: 'row',
@@ -178,7 +193,7 @@ function OrbitPageProvideStores(props: any) {
   const newAppStore = useStoreSimple(NewAppStore)
 
   const paneManagerStore = useStoreSimple(PaneManagerStore, {
-    defaultPanes: getIsTorn() ? [settingsPane] : defaultPanes,
+    defaultPanes: isEditing ? [settingsPane] : defaultPanes,
     defaultIndex: 0,
   })
 

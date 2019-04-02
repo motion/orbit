@@ -1,5 +1,6 @@
 import { gloss, View } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, SubPane, useAppDefinitions, useReaction } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane, useReaction } from '@o/kit'
+import { isEditing } from '@o/stores'
 import { BorderLeft, BorderTop } from '@o/ui'
 import React, { cloneElement, isValidElement, memo, useContext } from 'react'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
@@ -7,8 +8,7 @@ import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppMainViewProps) => {
-  const { id, identifier } = useContext(AppLoadContext)
-  const definition = useAppDefinitions().find(x => x.id === identifier)
+  const { id, appDef, identifier } = useContext(AppLoadContext)
   const { orbitStore } = useStoresSimple()
   const { appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
@@ -22,8 +22,8 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
     <SubPane left={sidebarWidth} id={id} fullHeight zIndex={10}>
       <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar={props.hasSidebar} />
       <OrbitMainContainer
-        isTorn={orbitStore.isTorn}
-        transparent={definition.config && definition.config.transparentBackground}
+        isEditing={isEditing}
+        transparent={appDef.config && appDef.config.transparentBackground}
       >
         <View flex={1} position="relative">
           {props.hasSidebar && <BorderLeft opacity={0.5} />}
@@ -36,13 +36,13 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
   )
 })
 
-const OrbitMainContainer = gloss<{ isTorn: boolean; transparent?: boolean }>({
+const OrbitMainContainer = gloss<{ isEditing: boolean; transparent?: boolean }>({
   flex: 1,
   overflowY: 'auto',
-}).theme(({ isTorn, transparent }, theme) => ({
-  background: transparent
+}).theme((props, theme) => ({
+  background: props.transparent
     ? 'transparent'
-    : isTorn
+    : props.isEditing
     ? theme.mainBackground || theme.background
     : theme.mainBackground || theme.background || 'transparent',
 }))

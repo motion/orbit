@@ -8,7 +8,7 @@ import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppMainViewProps) => {
-  const { id, appDef, identifier } = useContext(AppLoadContext)
+  const { id, appDef } = useContext(AppLoadContext)
   const { orbitStore } = useStoresSimple()
   const { appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0

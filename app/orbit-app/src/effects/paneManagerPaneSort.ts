@@ -38,17 +38,13 @@ export function usePaneManagerPaneSort() {
   const activeApps = useActiveClientApps()
   const [space, updateSpace] = useActiveSpace()
 
-  useEffect(
-    () => {
-      if (!space || !activeApps.length) {
-        return
-      }
-      const paneSort = sortPanes(space, activeApps)
-      if (!isEqual(paneSort, space.paneSort)) {
-        console.log('setting pane sort', paneSort)
-        updateSpace({ paneSort })
-      }
-    },
-    [space, activeApps],
-  )
+  useEffect(() => {
+    if (!space || !activeApps.length) {
+      return
+    }
+    const paneSort = sortPanes(space, activeApps)
+    if (!isEqual(paneSort, space.paneSort)) {
+      updateSpace({ paneSort })
+    }
+  }, [space, activeApps])
 }

@@ -12,7 +12,9 @@ import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-
 import { Omit } from '../types'
 import { View } from '../View/View'
 
-export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize'> & {
+export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height' | 'width'> & {
+  height?: number
+  width?: number
   disableMeasure?: boolean
   listRef?: RefObject<DynamicListControlled>
 }

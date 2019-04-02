@@ -14,7 +14,17 @@ const descriptions = {
 
 function CreateAppMain() {
   const Actions = useActions()
-  const [selected, setSelected] = useState(null)
+  const items = defaultApps.map(app => ({
+    title: app.name,
+    identifier: app.identifier,
+    subtitle: descriptions[app.identifier],
+    icon: <AppIcon app={app} />,
+    iconBefore: true,
+    iconProps: {
+      size: 44,
+    },
+  }))
+  const [selected, setSelected] = useState<typeof items[0]>(null)
   console.log('selected', selected)
   return (
     <>
@@ -27,21 +37,7 @@ function CreateAppMain() {
         title="New app"
         subTitle="Choose app to add"
       >
-        <List
-          selectable
-          alwaysSelected
-          onSelect={rows => setSelected(rows[0])}
-          items={defaultApps.map(app => ({
-            title: app.name,
-            identifier: app.identifier,
-            subtitle: descriptions[app.identifier],
-            icon: <AppIcon app={app} />,
-            iconBefore: true,
-            iconProps: {
-              size: 44,
-            },
-          }))}
-        />
+        <List selectable alwaysSelected onSelect={rows => setSelected(rows[0])} items={items} />
       </Section>
       <Toolbar elevation={2}>
         <SurfacePassProps>
@@ -49,7 +45,7 @@ function CreateAppMain() {
             iconAfter
             alt="action"
             onClick={() => {
-              Actions.createCustomApp()
+              Actions.createCustomApp(selected.identifier)
             }}
             icon="simadd"
             tooltip="Create new custom app"
@@ -72,7 +68,7 @@ function CreateAppMain() {
             alt="confirm"
             iconAfter
             onClick={() => {
-              Actions.createCustomApp()
+              Actions.createCustomApp(selected.identifier)
             }}
             icon="arrowminright"
             tooltip="Create new custom app"

@@ -3,11 +3,11 @@ import { AppModel } from '@o/models'
 import { AllStores } from '../contexts/StoreContext'
 
 export function createCustomApp(stores: AllStores) {
-  return () => {
+  return (identifier: string) => {
     save(AppModel, {
       name: 'My Custom App',
       spaceId: stores.spaceStore.activeSpace.id,
-      identifier: `custom`,
+      identifier: identifier || `custom`,
       colors: ['green', 'darkgreen'],
     })
   }

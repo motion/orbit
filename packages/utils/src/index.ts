@@ -3,6 +3,10 @@ import stringHash from 'string-hash'
 export * from './highlightText'
 export * from './on'
 
+export function isDefined(x: any) {
+  return typeof x !== 'undefined'
+}
+
 /**
  * Creates a promise that resolves in a given number of milliseconds.
  */

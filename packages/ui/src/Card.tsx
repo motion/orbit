@@ -1,6 +1,7 @@
-import { gloss } from '@o/gloss'
+import { Col, gloss, Row } from '@o/gloss'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
+import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
 import { Space } from './layout/Space'
 import { ListItemProps, useIsSelected } from './lists/ListItem'
@@ -9,8 +10,9 @@ import { DateFormat } from './text/DateFormat'
 import { SubTitle } from './text/SubTitle'
 import { Text } from './text/Text'
 import { Title } from './text/Title'
+import { View } from './View/View'
 
-export type CardProps = SizedSurfaceProps & ListItemProps
+export type CardProps = SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
 
 export function Card(props: CardProps) {
   const {
@@ -24,17 +26,18 @@ export function Card(props: CardProps) {
     children,
     iconProps,
     inGrid,
-    onClick,
     titleProps,
     subtitleProps,
     titleFlex,
-    searchTerm,
     // ignore so it doesnt add tooltip to div
     title: _ignoreTitle,
     onClickLocation,
     activeStyle,
     subtitle,
     date,
+    collapsable,
+    collapsed,
+    onCollapse,
     ...restProps
   } = props
   const isSelected = useIsSelected(props)
@@ -72,61 +75,73 @@ export function Card(props: CardProps) {
       noInnerElement
     >
       <Padding style={{ padding }}>
-        {hasTitle && (
-          <>
-            <Title ellipse margin={0} highlight>
-              {title}
-            </Title>
-            {afterTitle}
-          </>
-        )}
-        {!!titleFlex && <div style={{ flex: titleFlex }} />}
-        {hasSubtitle && (
-          <SubTitle ellipse>
-            <Text alpha={0.55} ellipse {...subtitleProps}>
-              {subtitle}
-            </Text>
-          </SubTitle>
-        )}
-        {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
-        {hasMeta && (
-          <SubTitle ellipse>
-            {!!location && (
-              <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
-                {location}
-              </RoundButtonSmall>
-            )}
-            {hasFourRows && hasDate && (
+        <Row
+          onDoubleClick={collapsable && (() => onCollapse(!collapsed))}
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Col>
+            {hasTitle && (
               <>
-                {!!location && <div style={{ width: 5 }} />}
-                {dateContent}
+                <Title ellipse margin={0} highlight>
+                  {title}
+                </Title>
+                {afterTitle}
               </>
             )}
-            {hasPreview && <Space small />}
-          </SubTitle>
-        )}
-        {hasPreview && (
-          <Preview>
-            {typeof preview !== 'string' && preview}
-            {typeof preview === 'string' && (
-              <Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
-                {preview}
-              </Text>
+            {!!titleFlex && <div style={{ flex: titleFlex }} />}
+            {hasSubtitle && (
+              <SubTitle ellipse>
+                <Text alpha={0.55} ellipse {...subtitleProps}>
+                  {subtitle}
+                </Text>
+              </SubTitle>
             )}
-          </Preview>
-        )}
-        {showChildren && children}
-        {!!icon && !props.hideIcon && (
-          <Icon
-            name={icon}
-            size={14}
-            {...orbitIconProps}
-            position="absolute"
-            top={topPad}
-            right={sidePad}
-            {...iconProps}
-          />
-        )}
+            {!hasFourRows && hasDate && <SubTitle>{dateContent}</SubTitle>}
+            {hasMeta && (
+              <SubTitle ellipse>
+                {!!location && (
+                  <RoundButtonSmall marginLeft={-3} onClick={onClickLocation}>
+                    {location}
+                  </RoundButtonSmall>
+                )}
+                {hasFourRows && hasDate && (
+                  <>
+                    {!!location && <div style={{ width: 5 }} />}
+                    {dateContent}
+                  </>
+                )}
+                {hasPreview && <Space small />}
+              </SubTitle>
+            )}
+          </Col>
+          <Col>{collapsable && <CollapseArrow collapsed={collapsed} />}</Col>
+        </Row>
+        <View height={collapsed ? 0 : '100%'}>
+          {hasPreview && (
+            <Preview>
+              {typeof preview !== 'string' && preview}
+              {typeof preview === 'string' && (
+                <Text size={1.3} sizeLineHeight={0.9} margin={inGrid ? ['auto', 0] : 0}>
+                  {preview}
+                </Text>
+              )}
+            </Preview>
+          )}
+          {showChildren && children}
+          {!!icon && !props.hideIcon && (
+            <Icon
+              name={icon}
+              size={14}
+              {...orbitIconProps}
+              position="absolute"
+              top={topPad}
+              right={sidePad}
+              {...iconProps}
+            />
+          )}
+        </View>
       </Padding>
     </SizedSurface>
   )

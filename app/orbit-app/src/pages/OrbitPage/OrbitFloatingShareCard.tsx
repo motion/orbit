@@ -24,6 +24,7 @@ export function OrbitFloatingShareCard({
       defaultTop={window.innerHeight - height - pad}
       defaultLeft={window.innerWidth - width - pad}
       title="Share"
+      collapsable
     >
       <List items={currentSelection} />
     </FloatingCard>

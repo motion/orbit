@@ -2,7 +2,6 @@ import { AppMainView, AppProps, removeApp, useApp } from '@o/kit'
 import { FormField, Section, Title, TitleBarButton } from '@o/ui'
 import React from 'react'
 import { SubSection } from '../../views/SubSection'
-import PreviewApp from '../views/PreviewApp'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 
@@ -47,7 +46,8 @@ export function AppsMain(props: AppProps) {
           </Section>
 
           <Section bordered title="Preview" minHeight={200}>
-            <PreviewApp app={app} />
+            preview
+            {/* <PreviewApp app={app} /> */}
           </Section>
         </Section>
       )

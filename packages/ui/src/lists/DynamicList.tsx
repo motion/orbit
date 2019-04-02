@@ -170,7 +170,6 @@ export class DynamicListControlled extends PureComponent<DynamicListProps, Dynam
     const shouldMeasure = this.state.shouldMeasure
     const shouldQueueMeasure =
       prevProps.itemCount !== this.props.itemCount || prevProps.itemData !== this.props.itemData
-    console.log('did update', shouldMeasure, shouldQueueMeasure)
     if (shouldMeasure) {
       this.onResize()
     } else if (shouldQueueMeasure) {

@@ -14,7 +14,7 @@ export function AppsMain(props: AppProps) {
   }
 
   // showing settings
-  if (props.identifier !== 'apps') {
+  if (props.identifier && props.identifier !== 'apps') {
     if (props.subType === 'sync') {
       return <AppMainView {...props} viewType="settings" />
     } else {

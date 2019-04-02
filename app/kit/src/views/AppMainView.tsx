@@ -1,11 +1,11 @@
+import { Loading } from '@o/ui'
 import React from 'react'
 import { AppProps } from '../types/AppProps'
 import { AppView } from './AppView'
 
 export function AppMainView(props: AppProps) {
   if (!props.identifier) {
-    console.warn('no app id given', props)
-    return null
+    return <Loading />
   }
   return (
     <AppView

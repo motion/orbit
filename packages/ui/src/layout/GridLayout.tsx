@@ -1,43 +1,69 @@
 import { gloss, View, ViewProps } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
-import _ from 'lodash'
-import React, { Children, cloneElement, isValidElement, useEffect } from 'react'
+import React, { cloneElement, isValidElement, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import './GridLayout.css'
+import 'react-grid-layout/css/styles.css'
+import { useDefaultProps } from '../hooks/useDefaultProps'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 export type GridLayoutProps = {
   children?: React.ReactNode[]
-  cols?: number
+  cols?: Object
   rowHeight?: 100
+}
+
+const defaultProps: Partial<GridLayoutProps> = {
+  cols: {
+    xxs: 1,
+    xs: 2,
+    sm: 2,
+    md: 4,
+    lg: 6,
+  },
 }
 
 class GridStore {
   props: GridLayoutProps
 
   items: { [key: string]: GridItemProps } = shallow({})
+  layout = 'lg'
   layouts = {
     lg: null,
+  }
+
+  setLayout = (layout: string) => {
+    console.log('layout', layout)
+    // this.layout = layout
   }
 
   updateLayout = react(
     () => this.items,
     async (items, { sleep }) => {
       await sleep(100)
+      const cols = this.props.cols[this.layout]
+      if (!cols) {
+        console.warn('no cols defined for layout', this.layout, this.props.cols)
+        return
+      }
+      const layout = []
+      let lastX = 0
+      for (const [idx, key] of Object.keys(items).entries()) {
+        const item = items[key]
+        const next = {
+          x: lastX + item.w,
+          y: idx * item.h,
+          w: item.w || 2,
+          h: item.h || 1,
+          i: key,
+          // static: Math.random() < 0.05,
+        }
+        lastX = next.x
+        console.log(JSON.stringify(next))
+        layout.push(next)
+      }
       this.layouts = {
-        lg: Object.keys(items).map((key, i) => {
-          const item = items[key]
-          var y = Math.ceil(Math.random() * 4) + 1
-          return {
-            x: (_.random(0, 5) * 2) % 12,
-            y: Math.floor(i / 6) * y,
-            w: item.w || 2,
-            h: item.h || 1,
-            i: key,
-            // static: Math.random() < 0.05,
-          }
-        }),
+        lg: layout,
       }
     },
   )
@@ -54,35 +80,35 @@ class GridStore {
 // this is the problem function, type is off
 const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
-export function GridLayout(props: GridLayoutProps) {
+export function GridLayout(directProps: GridLayoutProps) {
+  const props = useDefaultProps(directProps, defaultProps)
   const gridStore = useStore(GridStore, props)
-
+  if (!Array.isArray(props.children)) {
+    throw new Error('Need an array of items...')
+  }
+  const childArr = [...props.children]
+  const gridItems = childArr.map(
+    child =>
+      isValidElement(child) && (
+        <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
+      ),
+  )
   let children = null
 
+  console.log('gridStore.layouts.lg', gridStore.layouts.lg, gridItems)
+
   if (!gridStore.layouts.lg) {
-    children = props.children
+    children = <div style={{ display: 'none' }}>{gridItems}</div>
   } else {
     children = (
       <ResponsiveReactGridLayout
-        onLayoutChange={x => console.log(x)}
+        onLayoutChange={gridStore.setLayout}
         compactType="vertical"
         layouts={gridStore.layouts}
         measureBeforeMount={false}
-        cols={{
-          xxs: 1,
-          xs: 2,
-          sm: 2,
-          md: 4,
-          lg: 6,
-        }}
+        cols={props.cols}
       >
-        {Children.map(
-          props.children,
-          child =>
-            isValidElement(child) && (
-              <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
-            ),
-        )}
+        {gridItems}
       </ResponsiveReactGridLayout>
     )
   }
@@ -98,13 +124,13 @@ export type GridItemProps = ViewProps & {
 
 export function GridItem({ h = 1, w = 1, id, ...viewProps }: GridItemProps) {
   const store = useGridStore()
-  const props = { h, w }
   useEffect(() => {
+    const props = { h, w }
     store.mountItem(id, props)
     return () => {
       store.unmountItem(id)
     }
-  }, [])
+  }, [h, w])
 
   return <GridItemChrome flex={1} {...viewProps} />
 }

@@ -34,8 +34,8 @@ export function TestGrid() {
   const items = useFetch('https://jsonplaceholder.typicode.com/photos')
   return (
     <GridLayout>
-      {items.slice(0, 10).map(item => (
-        <GridItem key={item.id}>
+      {items.slice(0, 10).map((item, index) => (
+        <GridItem key={item.id} w={index === 0 ? 4 : 2} h={index === 0 ? 4 : 2}>
           <Card flex={1} overflow="hidden" title={item.title}>
             <img src={item.url} />
           </Card>

@@ -45,5 +45,5 @@ export type TreeItem = {
 }
 
 export function Tree(props: TreeProps) {
-  return <TreeItems rowHeight={23} {...props} />
+  return <TreeItems rowHeight={23} zebra {...props} />
 }

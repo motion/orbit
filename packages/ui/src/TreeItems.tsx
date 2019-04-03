@@ -202,6 +202,7 @@ export class TreeItems extends React.PureComponent<
           <AutoSizer>
             {({ width, height }) => (
               <FixedSizeList
+                itemData={`${this.props.selected}`}
                 itemCount={items.length}
                 itemSize={this.props.rowHeight}
                 width={width}

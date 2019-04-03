@@ -1,4 +1,6 @@
+import { Table } from '@o/kit'
 import { DataInspector, Layout, Pane, Tree } from '@o/ui'
+import faker from 'faker'
 import produce from 'immer'
 import React, { useState } from 'react'
 
@@ -35,6 +37,19 @@ const treeData = {
   },
 }
 
+const rowTypes = ['error', 'debug', 'warn', 'fatal', 'verbose', 'info']
+const rows = [...new Array(10000)].map((_, index) => ({
+  key: `${index}`,
+  category: rowTypes[index % 20],
+  values: {
+    name: faker.name.firstName(),
+    topic: faker.lorem.sentence(),
+    members: faker.random.number(),
+    createdAt: new Date(faker.date.past() * 1000),
+    active: false,
+  },
+}))
+
 export function CustomAppTree() {
   const [treeState, setTreeState] = useState(treeData)
   const [selected, setSelected] = useState(0)
@@ -46,7 +61,7 @@ export function CustomAppTree() {
           root={0}
           selected={selected}
           onTreeItemSelected={id => {
-            console.log('select', id)
+            console.log('select2', id)
             setSelected(id)
           }}
           onTreeItemExpanded={id => {
@@ -59,21 +74,28 @@ export function CustomAppTree() {
           elements={treeState}
         />
       </Pane>
-      <Pane flex={2} collapsable title="Inspect" padded>
-        <DataInspector
-          data={{
-            test: 'this',
-            thing: 0,
-            is: 'hi',
-            who: 'are',
-            you: new Date(),
-            color: 'yellow',
-            another: {
-              one: 'color',
-              two: 'green',
-            },
-          }}
-        />
+      <Pane flex={3} collapsable title="Inspect">
+        <Table selectable rows={rows} />
+      </Pane>
+      <Pane title="Sidebar">
+        <Layout type="column">
+          <Pane title="Elements" padded collapsable>
+            <DataInspector
+              data={{
+                test: 'this',
+                thing: 0,
+                is: 'hi',
+                who: 'are',
+                you: new Date(),
+                color: 'yellow',
+                another: {
+                  one: 'color',
+                  two: 'green',
+                },
+              }}
+            />
+          </Pane>
+        </Layout>
       </Pane>
     </Layout>
   )

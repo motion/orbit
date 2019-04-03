@@ -17,14 +17,14 @@ import slackApp from '.'
 import { SlackLoader } from './SlackLoader'
 
 export function SlackSettings({ subId }: AppProps) {
+  // setup state
+  const [channels, setChannels] = useState(null)
+  const [, setHighlightedRows] = useState([])
   const [app, updateApp] = useModel(AppModel, { where: { id: +subId } })
   const whitelist = useStore(WhitelistManager, {
     app,
     getAll: () => (channels || []).map(channel => channel.id),
   })
-  // setup state
-  const [channels, setChannels] = useState(null)
-  const [, setHighlightedRows] = useState([])
 
   // load and set channels when app changes
   useEffect(() => {

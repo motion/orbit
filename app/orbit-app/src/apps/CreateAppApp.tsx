@@ -1,5 +1,5 @@
 import { App, AppIcon, createApp, List, View } from '@o/kit'
-import { Button, Section, SurfacePassProps, Text, Toolbar } from '@o/ui'
+import { Button, Section, Text, Toolbar } from '@o/ui'
 import React, { useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'
@@ -44,43 +44,39 @@ function CreateAppMain() {
           items={items}
         />
       </Section>
-      <Toolbar elevation={2}>
-        <SurfacePassProps>
-          <Button
-            iconAfter
-            alt="action"
-            onClick={() => {
-              Actions.createCustomApp(selected.identifier)
-            }}
-            icon="simadd"
-            tooltip="Create new custom app"
-          >
-            Create Custom App
-          </Button>
-          <View flex={1} />
+      <Toolbar>
+        <Button
+          alt="action"
+          onClick={() => {
+            Actions.createCustomApp(selected.identifier)
+          }}
+          icon="simadd"
+          tooltip="Create new custom app"
+        >
+          Create Custom App
+        </Button>
+        <View flex={1} />
 
-          {selected && (
-            <View minWidth={200} padding={[0, 30]}>
-              <Text fontWeight={600}>Add app to space</Text>
-              <Text ellipse alpha={0.6} size={1.25}>
-                {selected.title}
-              </Text>
-            </View>
-          )}
+        {selected && (
+          <View minWidth={200} padding={[0, 30]}>
+            <Text fontWeight={600}>Add app to space</Text>
+            <Text ellipse alpha={0.6} size={1.25}>
+              {selected.title}
+            </Text>
+          </View>
+        )}
 
-          <Button
-            size={1.25}
-            alt="confirm"
-            iconAfter
-            onClick={() => {
-              Actions.createCustomApp(selected.identifier)
-            }}
-            icon="arrowminright"
-            tooltip="Create new custom app"
-          >
-            Add
-          </Button>
-        </SurfacePassProps>
+        <Button
+          size={1.4}
+          alt="confirm"
+          onClick={() => {
+            Actions.createCustomApp(selected.identifier)
+          }}
+          icon="arrowminright"
+          tooltip="Create new custom app"
+        >
+          Add
+        </Button>
       </Toolbar>
     </>
   )

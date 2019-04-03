@@ -102,9 +102,9 @@ const light = {
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
     background: lightBackground,
-    backgroundStrong: lightBackground.darken(0.1),
-    backgroundStronger: lightBackground.darken(0.2),
-    backgroundStrongest: lightBackground.darken(0.3),
+    backgroundStrong: lightBackground.darken(0.05),
+    backgroundStronger: lightBackground.darken(0.075),
+    backgroundStrongest: lightBackground.darken(0.1),
     backgroundZebra: '#f6f7f9aa',
     backgroundHighlightActive: orbitColor.lighten(0.1),
     backgroundHighlight: orbitColor,

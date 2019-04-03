@@ -39,7 +39,7 @@ export function SliderPane({
   return (
     <SliderPaneChrome
       width={width}
-      height={fixHeightToTallest && currentHeight ? currentHeight : 'auto'}
+      height={fixHeightToTallest && currentHeight ? currentHeight : '100%'}
       ref={ref}
       padding={[verticalPad, framePad, verticalPad]}
       isActive={isActive}

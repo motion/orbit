@@ -1,5 +1,5 @@
 import { App, AppIcon, createApp, List, View } from '@o/kit'
-import { Button, Section, Text, Toolbar } from '@o/ui'
+import { Button, Section, Slider, SliderPane, Text, Title, Toolbar } from '@o/ui'
 import React, { useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'
@@ -25,59 +25,111 @@ function CreateAppMain() {
     },
   }))
   const [selected, setSelected] = useState<typeof items[0]>(null)
+  const [pane, setPane] = useState(0)
+
+  const toolbars = [
+    <>
+      <Button
+        alt="action"
+        onClick={() => {
+          setPane(1)
+        }}
+        icon="simadd"
+        tooltip="Create new custom app"
+      >
+        Create Custom App
+      </Button>
+
+      <View flex={1} />
+
+      {selected && (
+        <View minWidth={200} padding={[0, 30]} margin={[-10, 0]}>
+          <Text fontWeight={600}>Add app to space</Text>
+          <Text ellipse alpha={0.6} size={1.25}>
+            {selected.title}
+          </Text>
+        </View>
+      )}
+
+      <Button
+        size={1.4}
+        alt="confirm"
+        onClick={() => {
+          Actions.createCustomApp(selected.identifier)
+        }}
+        icon="arrowminright"
+        tooltip="Create new custom app"
+      >
+        Add
+      </Button>
+    </>,
+
+    <>
+      <Button
+        alt="action"
+        iconAfter={false}
+        icon="arrowminleft"
+        onClick={() => {
+          setPane(0)
+        }}
+      >
+        Back
+      </Button>
+
+      <View flex={1} />
+
+      <Button
+        size={1.4}
+        alt="confirm"
+        onClick={() => {
+          Actions.createCustomApp(selected.identifier)
+        }}
+        icon="arrowminright"
+      >
+        Start
+      </Button>
+    </>,
+  ]
+
   return (
     <>
-      <Section
-        width="70%"
-        background="transparent"
-        margin="auto"
-        height="70%"
-        title="New app"
-        bordered
-        subTitle="Choose app to add"
-      >
-        <List
-          searchable
-          selectable
-          alwaysSelected
-          onSelect={rows => setSelected(rows[0])}
-          items={items}
-        />
-      </Section>
-      <Toolbar>
-        <Button
-          alt="action"
-          onClick={() => {
-            Actions.createCustomApp(selected.identifier)
-          }}
-          icon="simadd"
-          tooltip="Create new custom app"
-        >
-          Create Custom App
-        </Button>
-        <View flex={1} />
+      <Slider curFrame={pane}>
+        <SliderPane>
+          <Section
+            width="70%"
+            background="transparent"
+            margin="auto"
+            height="70%"
+            title="New app"
+            bordered
+            subTitle="Choose app to add"
+          >
+            <List
+              searchable
+              selectable
+              alwaysSelected
+              onSelect={rows => setSelected(rows[0])}
+              items={items}
+            />
+          </Section>
+        </SliderPane>
 
-        {selected && (
-          <View minWidth={200} padding={[0, 30]}>
-            <Text fontWeight={600}>Add app to space</Text>
-            <Text ellipse alpha={0.6} size={1.25}>
-              {selected.title}
-            </Text>
-          </View>
-        )}
+        <SliderPane>
+          <Section
+            width="70%"
+            background="transparent"
+            margin="auto"
+            height="70%"
+            title="Create Custom App"
+            bordered
+            subTitle="Choose template"
+          >
+            <Title>hi</Title>
+          </Section>
+        </SliderPane>
+      </Slider>
 
-        <Button
-          size={1.4}
-          alt="confirm"
-          onClick={() => {
-            Actions.createCustomApp(selected.identifier)
-          }}
-          icon="arrowminright"
-          tooltip="Create new custom app"
-        >
-          Add
-        </Button>
-      </Toolbar>
+      <Toolbar>{toolbars[pane]}</Toolbar>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { color } from '@o/color'
+import { toColor } from '@o/color'
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
@@ -12,10 +12,10 @@ export const smallMin = smallSize
 export const PAGE_WIDTH = smallSize
 export const SECTION_HEIGHT = 1100 //Math.max(980, Math.min(1300, window.innerHeight))
 
-export const colorMain = color('#F5F7F9')
-export const colorSecondary = color('rgb(94.5%, 80.1%, 12.3%)')
-export const colorTeal = color('#49ceac')
-export const colorBlue = color('#133cca')
+export const colorMain = toColor('#F5F7F9')
+export const colorSecondary = toColor('rgb(94.5%, 80.1%, 12.3%)')
+export const colorTeal = toColor('#49ceac')
+export const colorBlue = toColor('#133cca')
 
 const largeSize = smallSize - 1
 export const screen = {

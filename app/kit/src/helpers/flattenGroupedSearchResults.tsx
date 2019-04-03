@@ -54,7 +54,7 @@ const Circle = gloss({
   fontWeight: 300,
   borderRadius: 100,
 }).theme((_, theme) => ({
-  background: theme.backgroundAlt,
+  background: theme.backgroundZebra,
   color: theme.color,
 }))
 

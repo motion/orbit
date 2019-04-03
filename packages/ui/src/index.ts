@@ -1,3 +1,5 @@
+import AutoSizerDefault from 'react-virtualized-auto-sizer'
+export const AutoSizer = AutoSizerDefault
 export * from '@o/color'
 export {
   Absolute,
@@ -76,6 +78,7 @@ export * from './forms/normalizeRow'
 export * from './forms/SearchInput'
 export * from './forms/Select'
 export * from './forms/TextArea'
+export * from './forms/Toggle'
 export { configureUI } from './helpers/configure'
 export { createContextualProps } from './helpers/createContextualProps'
 export * from './helpers/Fetch'

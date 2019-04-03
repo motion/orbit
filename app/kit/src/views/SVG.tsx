@@ -9,6 +9,9 @@ export const SVG = forwardRef<SVGElement, any>(function SVG(
   ref,
 ) {
   const [styles, rest] = partitionObject(props, x => validCSSAttr[x])
+  if (typeof svg !== 'string') {
+    debugger
+  }
   return (
     <SVGInline
       ref={ref}

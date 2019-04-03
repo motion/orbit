@@ -47,7 +47,7 @@ const PanelHeader = gloss(Row, {
   padding: [3, 10],
 }).theme((_, theme) => ({
   borderBottom: [1, theme.borderColor],
-  backgroundColor: theme.panelHeaderBackground || theme.backgroundAlt,
+  backgroundColor: theme.panelHeaderBackground || theme.backgroundZebra,
   '&:not(:first-child)': {
     borderTop: [1, theme.sidebarBorderColor || theme.borderColor],
   },

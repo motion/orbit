@@ -117,7 +117,7 @@ export function Card(props: CardProps) {
           </Col>
         </Row>
       )}
-      <div style={{ flex: 1, padding }}>
+      <Padding padding={padding}>
         <View flex={1} height={collapsed ? 0 : '100%'}>
           {hasPreview && (
             <Preview>
@@ -142,7 +142,7 @@ export function Card(props: CardProps) {
             />
           )}
         </View>
-      </div>
+      </Padding>
     </SizedSurface>
   )
 }
@@ -158,7 +158,7 @@ const orbitIconProps = {
   },
 }
 
-const Padding = gloss({
+const Padding = gloss(View, {
   position: 'relative',
   margin: 1,
   overflowX: 'hidden',

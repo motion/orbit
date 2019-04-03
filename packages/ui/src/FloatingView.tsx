@@ -10,13 +10,16 @@ import { Interactive, InteractiveProps } from './Interactive'
 import { Omit } from './types'
 import { useVisiblity } from './Visibility'
 
-export type FloatingViewProps = Omit<InteractiveProps, 'padding'> & {
+export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
+  width?: number
+  height?: number
   padding?: number
   disableDrag?: boolean
   defaultTop?: number
   defaultLeft?: number
   defaultWidth?: number
   defaultHeight?: number
+  zIndex?: number
 }
 
 export function FloatingView(props: FloatingViewProps) {
@@ -27,6 +30,7 @@ export function FloatingView(props: FloatingViewProps) {
     defaultTop = 0,
     children,
     disableDrag,
+    zIndex = 1200000,
     ...restProps
   } = props
   const controlledSize = typeof props.height !== 'undefined'
@@ -43,21 +47,28 @@ export function FloatingView(props: FloatingViewProps) {
 
   // sync props
 
-  const syncDimensionProp = (dim: 'width' | 'height') => {
+  const syncDimensionProp = (dim: 'width' | 'height' | 'xy', val: any) => {
     const prev = prevDim.current
     const cur = curDim()[dim].getValue()
-    if (isDefined(props[dim])) {
-      if (props[dim] !== cur) {
+    if (Array.isArray(val) ? val.every(x => isDefined(x)) : isDefined(val)) {
+      if (val !== cur) {
         prev[dim] = cur
-        set({ [dim]: props[dim] })
+        set({ [dim]: val })
       }
     } else if (prev[dim]) {
       set({ [dim]: prev[dim] })
     }
   }
 
-  useEffect(() => syncDimensionProp('width'), [props.width])
-  useEffect(() => syncDimensionProp('height'), [props.height])
+  useEffect(() => syncDimensionProp('xy', [props.left, props.top]), [props.top, props.left])
+  useEffect(() => syncDimensionProp('xy', [props.defaultLeft, props.defaultTop]), [
+    props.defaultTop,
+    props.defaultLeft,
+  ])
+  useEffect(() => syncDimensionProp('width', props.width), [props.width])
+  useEffect(() => syncDimensionProp('height', props.height), [props.height])
+  useEffect(() => syncDimensionProp('width', props.defaultWidth), [props.defaultWidth])
+  useEffect(() => syncDimensionProp('height', props.defaultHeight), [props.defaultHeight])
 
   // component logic
 
@@ -128,7 +139,7 @@ export function FloatingView(props: FloatingViewProps) {
         <animated.div
           style={{
             pointerEvents: isVisible ? 'auto' : 'none',
-            zIndex: 12000000,
+            zIndex: zIndex,
             width,
             height,
             transform: xy.interpolate((x, y) => `translate3d(${x}px,${y}px,0)`),
@@ -140,7 +151,7 @@ export function FloatingView(props: FloatingViewProps) {
             opacity={isVisible ? 1 : 0}
             position="absolute"
             disabled={controlledSize}
-            zIndex={12000000 + 1}
+            zIndex={zIndex + 1}
             {...restProps}
             width="100%"
             height="100%"

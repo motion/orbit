@@ -33,7 +33,7 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
 
   interaction: (name: string, data: any) => void
 
-  getContextMenu = (): Array<any> => {
+  getContextMenu = (): any[] => {
     const { props } = this
     return [
       {
@@ -166,7 +166,7 @@ const backgroundColor = (props, theme) => {
       (theme.selected && theme.selected.background) || theme.backgroundSelected || theme.background
     )
   } else if (props.even) {
-    return theme.backgroundAlt
+    return theme.backgroundZebra
   } else {
     return ''
   }
@@ -303,6 +303,6 @@ const TreeItemsRowAttributeValue = gloss({
 })
 
 const HighlightedText = gloss().theme(({ selected }, theme) => ({
-  backgroundColor: theme.backgroundAlt,
+  backgroundColor: theme.backgroundZebra,
   color: selected ? `${colors.grapeDark3} !important` : 'auto',
 }))

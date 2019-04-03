@@ -42,7 +42,8 @@
     "react-color": "2.17.0",
     "string-natural-compare": "2.0.3",
     "react-spring": "8.0.18",
-    "react-with-gesture": "4.0.8"
+    "react-with-gesture": "4.0.8",
+    "react-switch": "4.1.0"
   },
   "devDependencies": {
     "@types/react-select": "2.0.15",

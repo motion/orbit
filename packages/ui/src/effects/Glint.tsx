@@ -46,13 +46,14 @@ export const Glint = gloss<Props>({
     }),
   }
   const autoHalf = (bottom ? 0.5 : -0.5) * size
+  const glintColor = color || theme.glintColor || theme.background.alpha(0.5)
   return {
     opacity,
     top: 0,
     height: '100%',
     transform: { y: typeof y === 'number' ? y : autoHalf },
-    borderTop: isUndef(bottom) && [size, color || theme.glintColor || theme.background],
-    borderBottom: !isUndef(bottom) && [size, color || theme.glintColor || theme.background],
+    borderTop: isUndef(bottom) && [size, glintColor],
+    borderBottom: !isUndef(bottom) && [size, glintColor],
     ...radiusStyle,
   }
 })

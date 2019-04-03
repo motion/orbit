@@ -67,6 +67,8 @@ export function getApps() {
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {
+    document.querySelector('iframe').remove()
+
     if (status === 'apply') {
       configureKit({
         StoreContext,

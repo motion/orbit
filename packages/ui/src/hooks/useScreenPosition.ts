@@ -1,9 +1,8 @@
 import _ from 'lodash'
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useVisiblity } from '../Visibility'
 import { useGet } from './useGet'
 import { useIntersectionObserver } from './useIntersectionObserver'
-import { useMutationObserver } from './useMutationObserver'
 import { useResizeObserver } from './useResizeObserver'
 
 export type Rect = {
@@ -19,19 +18,23 @@ export function getRect(o: any) {
 
 type UseScreenPositionProps = {
   ref: RefObject<HTMLElement>
-  onChange: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
+  onChange?: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
   preventMeasure?: true
   debounce?: number
 }
 
 export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[] = []) {
+  const [pos, setPos] = useState(null)
   const { ref, preventMeasure, debounce = 100 } = props
-  const onChange = useGet(props.onChange)
+  const onChange = useGet(props.onChange || setPos)
   const disable = useVisiblity() === false
   const intersected = useRef(false)
+  const getState = useGet({ disable, preventMeasure })
 
   const measure = useCallback(
     _.debounce((nodeRect?) => {
+      const state = getState()
+      if (state.preventMeasure) return
       const callback = onChange()
       if (!callback) return
       if (nodeRect === false) {
@@ -41,12 +44,14 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
       const node = ref.current
       if (!node) return
       if (!intersected.current) return
-      const visible = disable === false || !isVisible(node)
-      const rect =
-        !visible || preventMeasure ? undefined : getRect(nodeRect || node.getBoundingClientRect())
+      const visible = state.disable === false || !isVisible(node)
+      if (!visible) {
+        return
+      }
+      const rect = getRect(nodeRect || node.getBoundingClientRect())
       callback({ visible, rect })
     }, debounce),
-    [ref, props.preventMeasure, disable],
+    [ref],
   )
 
   useResizeObserver({
@@ -55,12 +60,19 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
     disable,
   })
 
-  useMutationObserver({
-    disable,
-    ref,
-    options: { attributes: true },
-    onChange: measure,
+  useEffect(() => {
+    window.addEventListener('resize', () => measure())
+    return () => {
+      window.removeEventListener('resize', () => measure())
+    }
   })
+
+  // useMutationObserver({
+  //   disable,
+  //   ref,
+  //   options: { attributes: true },
+  //   onChange: measure,
+  // })
 
   useIntersectionObserver({
     disable,
@@ -85,6 +97,8 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
       measure(false)
     }
   }, [disable])
+
+  return pos
 }
 
 function isVisible(ele) {

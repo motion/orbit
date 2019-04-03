@@ -9,7 +9,7 @@ export { isColorLike, toColorString } from './isColor'
 export * from './linearGradient'
 export { ColorArray, ColorLike } from './types'
 
-export function color(obj) {
+export function toColor(obj) {
   return new Color(obj)
 }
 

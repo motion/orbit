@@ -1,4 +1,4 @@
-import { color, gloss, SimpleText, View } from '@o/gloss'
+import { gloss, SimpleText, toColor, View } from '@o/gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
@@ -274,7 +274,7 @@ class ColorEditor extends Component<{
     console.log('hi')
     let colorInfo
     try {
-      colorInfo = color(this.props.value).rgbaObject()
+      colorInfo = toColor(this.props.value).rgbaObject()
     } catch (err) {
       console.warn('cant parse color', this.props.value, err)
       return <Fragment />
@@ -395,7 +395,7 @@ class DataDescriptionContainer extends Component<{
         return <NumberValue>{Number(val)}</NumberValue>
 
       case 'color': {
-        const colorInfo = color(val).rgbaObject()
+        const colorInfo = toColor(val).rgbaObject()
         if (colorInfo) {
           const { a, b, g, r } = colorInfo
           return [

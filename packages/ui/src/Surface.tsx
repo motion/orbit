@@ -12,6 +12,7 @@ import {
 } from '@o/gloss'
 import { selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
+import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
 import { HoverGlow } from './effects/HoverGlow'
@@ -127,6 +128,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     tooltip,
     tooltipProps,
     spacing,
+    badgeProps,
+    badge,
     ...rest
   } = props
   const segmentedStyle = getSegmentedStyle(props, crumb)
@@ -167,6 +170,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   } else {
     surfaceProps.children = (
       <>
+        {!!badge && (
+          <Badge
+            zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
+            position="absolute"
+            top="-25%"
+            left="-25%"
+            {...badgeProps}
+          >
+            {badge}
+          </Badge>
+        )}
         {!!tooltip && tooltipState.show && (
           <Tooltip label={tooltip} {...tooltipProps}>
             {`.${tooltipState.id}`}

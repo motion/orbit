@@ -23,31 +23,28 @@ export type AppViewRef = {
 
 // !TODO make this nice
 function useHandleAppViewRef(ref: any, rootRef: any) {
-  useEffect(
-    () => {
-      if (!ref) return
-      if (!rootRef.current) return
-      const domNode = findDOMNode(rootRef.current)
-      const hasView = !!domNode.firstChild
-      const current = { hasView }
-      if (typeof ref === 'function') {
-        ref(current)
-      } else {
+  useEffect(() => {
+    if (!ref) return
+    if (!rootRef.current) return
+    const domNode = findDOMNode(rootRef.current)
+    const hasView = !!domNode.firstChild
+    const current = { hasView }
+    if (typeof ref === 'function') {
+      ref(current)
+    } else {
+      // @ts-ignore
+      ref.current = current
+      return () => {
         // @ts-ignore
-        ref.current = current
-        return () => {
-          // @ts-ignore
-          ref.current = null
-        }
+        ref.current = null
       }
-    },
-    [ref, rootRef.current],
-  )
+    }
+  }, [ref, rootRef.current])
 }
 
 const ChildrenOnly = props => props.children
 
-const AppViewContext = createContext({} as AppViewProps)
+const AppViewContext = createContext<Partial<AppViewProps>>({})
 
 export const AppView = memoIsEqualDeep(
   forwardRef<AppViewRef, AppViewProps>(function AppView({ appProps, ...props }, ref) {
@@ -70,12 +67,13 @@ export const AppView = memoIsEqualDeep(
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {
       View = definition[props.viewType]
+      console.log('View', View)
     } else {
       const RenderApp = definition.app
       const context = { [capitalize(props.viewType)]: ChildrenOnly } as any
-      View = props => (
+      View = next => (
         <AppViewsContext.Provider value={context}>
-          <RenderApp {...props} />
+          <RenderApp {...next} />
         </AppViewsContext.Provider>
       )
     }

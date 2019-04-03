@@ -1,6 +1,6 @@
 import { gloss, View } from '@o/gloss'
 import React, { useRef } from 'react'
-import { useResizeObserver } from './hooks/useResizeObserver'
+import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
 
 type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
@@ -15,7 +15,6 @@ type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
 
 export function SliderPane({
   children,
-  index,
   onChangeHeight,
   width,
   fixHeightToTallest,
@@ -28,11 +27,11 @@ export function SliderPane({
 }: SliderPaneProps) {
   const ref = useRef(null)
 
-  useResizeObserver({
+  useNodeSize({
     ref,
-    onChange: entries => {
+    onChange({ height }) {
       if (onChangeHeight) {
-        onChangeHeight(entries[0].contentRect.height)
+        onChangeHeight(height)
       }
     },
   })

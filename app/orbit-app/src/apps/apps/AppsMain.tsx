@@ -41,7 +41,7 @@ export function AppsMain(props: AppProps) {
 
           <Section padded>
             <SubSection title="App Settings">
-              <AppMainView {...props} />
+              <AppMainView {...props} viewType="settings" />
             </SubSection>
           </Section>
 

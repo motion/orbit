@@ -1,109 +1,84 @@
+Apps:
 
-- document for apps + apis
+- Forms
+  - <FilePicker /> (=> Table easy integration)
+  - <Toggle /> on/off button
+  - Need Calendar, Number, Slider, Range
+  - Need to build out some demo forms like in retool
+  - need easy way to make them "uncontrolled"/editable
+  - forms need validation as well + error messaging
+- Improve Share
+  - "Persist" share button to clone it to a new one for multiple clipboards
+- Editable titles that persist
+- Editable grid that persists (with add/remove)
+- Drag/drop for tables/lists
+  - Draggable
+  - Droppable
+- Banner
+  - alt="warn" etc states
+- Demo apps
+  - `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps
+  - using <Grid />, and <QueryApp />, put together a demo that shows a nice way to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
+  - A full grid app that with:
+    - Customer service + Postgres
+  - A full grid app that with:
+    - JSONPlaceholder + Albums, etc
+  - A full multi-pane app with:
+    - FBFlipper type inspector that hooks into system calls
+- Bonus demo apps:
+  - People app (shows custom content type app)
+    - automatically show multiple Main views with multi-select
+  - Lists app (shows CRUD app with persisted data)
+    - make history/drilling work
+  - Search app (shows Search API features)
+    - Simplify and improve content views
+    - Remove the grouping and use virtual lists
+    - Fix cosal search
+    - Bonus Home
+       - making the home more clear for launcher, show the grid by default,
+       - make the grid actually search able in the main area instead of apps in search/index
+       - adding app from home
 
-- an API explorer interface that uses our forms + an object describing typed arguments, and then shows results in a table. shows your current apps in a sidebar, lets you test them all easily and see their APIs
+Data Explorer:
 
-- create new app pane
+- Needs to allow for basic REPL + persisting user state
 
-  - option to create new at top
-  - add existing below
-  - create new shows templates
+Apps:
 
-    - templates
-      - Blank
-      - Master/Detail list/detail
-      - Grid
-      - Vertical Split
+- Needs some UX improvement
+- Working App Settings
+- Working rename/colors
+- Working preview or remove
 
-  - as part of that, some higher level components in kit like `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps
 
-- a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways
+Spaces:
 
-- using <Grid />, and <QueryApp />, put together a demo that shows a nice way to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
+- Needs to be simplified and then made to work
+- Enforce a "slug" so we can store it on disk somewhere
 
-- Search => Home
-  - rename to home, update icon
-  - move manage apps back into home
-  - making the home more clear for launcher, show the grid by default,
-    - make the grid actually search able in the main area instead of apps in search/index
-  - adding app from home
-  - simplify Create App
-    - just give it a name, choose a simple list of types (main only view)
+Create App:
 
----
+- Simple just one color pick
+- Templates option for new app
+  - Blank, Master/Detail list/detail, Grid, Vertical Split
 
-Views
+
+(if all that is done, bonus stuff)
 
 - move to blueprint icons, free to distribute
   - https://blueprintjs.com/docs/#core
   - copy docs from https://sancho-ui.com/components/icon/
-- Banner
-  - Message => Banner
-  - alt="warn" etc states
-- Layout Grid
-- API => Form automatically
-- ActionBar
-  - size=2
-  - holds buttons
-  - easy to align side/mid/end
-- Nav/Theme
-  - See how Flow has a custom nav?
-  - Make that an official thing
-  - But also!
-    - See how Demo 1 / Demo 2 in custom apps wants the same style nav?
-  - TWO THINGS
-    1. Make `alt=""` customizable and have that as a theme
-    2. Unify it so we are just able to do
-       - <Tabs alt="underlined" /> and <SegmentedRow alt="underlined" /> etc
-- Multi-step flows + Multi-step forms
-  - Flows need to handle:
-    - Toolbar/actionbar buttons for next/prev easily
-    - Validate next step before going on + show error banner
-    - Disable navigation items based on validation
-- Forms
-  - need easy way to make them "uncontrolled"/editable
-  - forms need improvement for label
-  - forms need validation as well + error messaging
-  - date view in forms
-  - easy way to add your own custom forms
-- Query editor views
-- Moving into its own area useFilters or similar
-- Theme can control fontWeight for themeing texts
-
-- Making icon customization simpler
-  - Just choose background color
-  - We can manually overlay icon on top instead of custom-per-each
-
----
-
-Apps generally:
-
-- Would be nice if people can have their own ui kit they add on on top
-  - that should work well with the app store generally
-
----
-
-High level
-
-- Make search hook into the table
-
-- App Actions
-
-  - <ActionBar /> would be nice alongside simpler <FloatingBar bottom />
-  - API => <ActionButton />
-  - Demo app with action to send to slack
 
 - Unification app <=> searchbar <=> table
-
   - EnumFilter support in searchbar
   - App settings can define JSON-style EnumFilter
   - useSearch has filter state from OrbitSearchBar
 
 ---
 
-March:
+- document for apps + apis
 
-- Working app demo with code
+- a nice <Grid />, to easily just 'throw in' panes and have them look nice on any layout size, one that lets users edit it to flex in different ways
 
 ---
 
@@ -137,34 +112,6 @@ Week 1: Working on various apps to make them work better
 Week 2: Putting together a app demos and documentation
 Week 3: Get a rough first pass at website stood up by end of week
 Week 4: Get a nice website with mobile + start on docs
-
----
-
-small things:
-
-Make most really dynamic and bigger views in @o/kit the main name: Table, Form, etc
-
-Make the lowest level ones prefixed with `Simple`, so SimpleTable, SimpleForm.
-
-The in between ones can be descriptive like SearchableTable.
-
----
-
-components:
-
-(Be sure to cross reference Expo, Flipper, Retool)
-
-- <FilePicker /> (=> Table easy integration)
-- <Table />
-  - column type: `action` to support buttons on each row
-    - then you can have an easy effect here, for ex POST somewhere
-- <Toggle /> on/off button
-- <Query />
-  - we need a few ways to help people put together CRUD/query interfaces
-  - <QuerySQL />, <QueryGraphQL />, <QueryREST />
-- <Autocomplete /> with options you can fill in
-- <Table />
-  - Allow validators
 
 ---
 

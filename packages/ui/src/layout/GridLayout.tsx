@@ -1,65 +1,38 @@
-import { View, ViewProps } from '@o/gloss'
-import { createStoreContext, deep, useStore } from '@o/use-store'
-import React, { useEffect, useRef } from 'react'
-import ReactGridLayout from 'react-grid-layout'
+import { View } from '@o/gloss'
+import AutoResponsive from 'autoresponsive-react'
+import React from 'react'
+import { useNodeSize } from '../hooks/useNodeSize'
 
 export type GridLayoutProps = {
   children?: React.ReactNode
-  cols?: number
-  rowHeight?: 100
 }
-
-class GridStore {
-  props: GridLayoutProps
-
-  items = deep({})
-
-  get layout() {
-    return [
-      { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
-      { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
-      { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-    ]
-  }
-
-  mountItem(id: number, props: GridItemProps) {
-    this.items[id] = props
-  }
-
-  unmountItem(id: number) {
-    delete this.items[id]
-  }
-}
-
-// this is the problem function, type is off
-const GridStoreContext = createStoreContext(GridStore)
 
 export function GridLayout({ children, ...props }: GridLayoutProps) {
-  const gridStore = useStore(GridStore, props)
+  const size = useNodeSize({
+    throttle: 1000,
+  })
+  console.log('re-render')
   return (
-    <GridStoreContext.Provider value={gridStore}>
-      <ReactGridLayout layout={gridStore.layout} width={window.innerWidth}>
-        <div key="a">{children}</div>
-      </ReactGridLayout>
-    </GridStoreContext.Provider>
+    <View ref={size.ref} flex={1}>
+      <AutoResponsive
+        transitionDuration=".5"
+        itemMargin={10}
+        gridWidth={100}
+        containerWidth={size.width}
+        {...props}
+      >
+        {children}
+      </AutoResponsive>
+    </View>
   )
 }
 
-export type GridItemProps = ViewProps & {
-  rows?: number
-  cols?: number
+export type GridLayoutItemProps = {
+  width: number
+  height: number
+  children: React.ReactNode
 }
 
-export function GridItem(props: GridItemProps) {
-  const store = GridStoreContext.useStore()
-  const id = useRef(Math.random()).current
-
-  useEffect(() => {
-    store.mountItem(id, props)
-    return () => {
-      store.unmountItem(id)
-    }
-  }, [])
-
-  return <View {...props} />
+GridLayout.Item = function({ width, height, children }: GridLayoutItemProps) {
+  return <div style={{ width, height }}>{children}</div>
 }

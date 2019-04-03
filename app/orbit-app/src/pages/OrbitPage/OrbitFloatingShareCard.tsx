@@ -19,7 +19,7 @@ export function OrbitFloatingShareCard({
   const nodePosition = useScreenPosition({ ref: buttonRef })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  console.log('nodePosition', nodePosition && nodePosition.rect)
+  console.log('currentSelection', currentSelection)
   return (
     <>
       <Button
@@ -59,12 +59,39 @@ export function OrbitFloatingShareCard({
           onMouseEnter={() => setHoveredMenu(true)}
           onMouseLeave={() => setHoveredMenu(false)}
         >
-          <List selectable itemProps={{ small: true }} items={currentSelection} />
+          <List
+            selectable
+            itemProps={{ small: true }}
+            items={currentSelection ? listItemNiceNormalize(currentSelection) : null}
+          />
         </FloatingCard>
       )}
     </>
   )
-  // return (
+}
 
-  // )
+const subTitleAttrs = ['subTitle', 'subtitle', 'email', 'address', 'phone', 'type', 'account']
+const titleAttrs = ['title', 'name', 'email', ...subTitleAttrs]
+const findAttr = (attrs, row, avoid = '') => {
+  for (const attr of attrs) {
+    if (typeof row[attr] === 'string' && row[attr] !== avoid) {
+      return row[attr]
+    }
+  }
+}
+
+function listItemNiceNormalize(rows: any[]) {
+  if (!rows.length) return rows
+  if (rows[0].title) return rows
+  return rows.map(rawRow => {
+    const row = rawRow.values || rawRow
+    const id = row.id || row.key || row.uid
+    const title = findAttr(titleAttrs, row) || 'No Title'
+    const subTitle = findAttr(titleAttrs, row, title)
+    return {
+      id,
+      title,
+      subTitle: subTitle && id ? `${id} ${subTitle}` : subTitle,
+    }
+  })
 }

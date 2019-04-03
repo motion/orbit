@@ -1,14 +1,14 @@
-import { View, ViewProps } from '@o/gloss'
-import { createStoreContext, deep, useStore } from '@o/use-store'
+import { gloss, View, ViewProps } from '@o/gloss'
+import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import _ from 'lodash'
-import React, { useEffect, useRef } from 'react'
+import React, { Children, cloneElement, isValidElement, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import './GridLayout.css'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 export type GridLayoutProps = {
-  children?: React.ReactNode
+  children?: React.ReactNode[]
   cols?: number
   rowHeight?: 100
 }
@@ -16,68 +16,89 @@ export type GridLayoutProps = {
 class GridStore {
   props: GridLayoutProps
 
-  items: { [key: string]: GridItemProps } = deep({})
-
+  items: { [key: string]: GridItemProps } = shallow({})
   layouts = {
-    lg: generateLayout(),
+    lg: null,
   }
 
-  mountItem(id: number, props: GridItemProps) {
+  updateLayout = react(
+    () => this.items,
+    async (items, { sleep }) => {
+      await sleep(100)
+      this.layouts = {
+        lg: Object.keys(items).map((key, i) => {
+          const item = items[key]
+          var y = Math.ceil(Math.random() * 4) + 1
+          return {
+            x: (_.random(0, 5) * 2) % 12,
+            y: Math.floor(i / 6) * y,
+            w: item.w || 2,
+            h: item.h || 1,
+            i: key,
+            // static: Math.random() < 0.05,
+          }
+        }),
+      }
+    },
+  )
+
+  mountItem(id: string, props: GridItemProps) {
     this.items[id] = props
   }
 
-  unmountItem(id: number) {
+  unmountItem(id: string) {
     delete this.items[id]
   }
 }
 
 // this is the problem function, type is off
-const GridStoreContext = createStoreContext(GridStore)
+const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
-export function GridLayout({ children, ...props }: GridLayoutProps) {
+export function GridLayout(props: GridLayoutProps) {
   const gridStore = useStore(GridStore, props)
-  console.log('gridStore', gridStore.layouts.lg)
 
-  function generateDOM() {
-    return _.map(gridStore.layouts.lg, function(l, i) {
-      return (
-        <div key={i}>
-          {l.static ? (
-            <span className="text" title="This item is static and cannot be removed or resized.">
-              Static - {i}
-            </span>
-          ) : (
-            <span className="text">{i}</span>
-          )}
-        </div>
-      )
-    })
-  }
+  let children = null
 
-  return (
-    <GridStoreContext.Provider value={gridStore}>
+  if (!gridStore.layouts.lg) {
+    children = props.children
+  } else {
+    children = (
       <ResponsiveReactGridLayout
         onLayoutChange={x => console.log(x)}
         compactType="vertical"
         layouts={gridStore.layouts}
         measureBeforeMount={false}
+        cols={{
+          xxs: 1,
+          xs: 2,
+          sm: 2,
+          md: 4,
+          lg: 6,
+        }}
       >
-        {generateDOM()}
+        {Children.map(
+          props.children,
+          child =>
+            isValidElement(child) && (
+              <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
+            ),
+        )}
       </ResponsiveReactGridLayout>
-    </GridStoreContext.Provider>
-  )
+    )
+  }
+
+  return <Provider value={gridStore}>{children}</Provider>
 }
 
 export type GridItemProps = ViewProps & {
-  rowSpan?: number
-  colSpan?: number
+  id?: string
+  w?: number
+  h?: number
 }
 
-export function GridItem({ colSpan = 1, rowSpan = 1, ...viewProps }: GridItemProps) {
-  const store = GridStoreContext.useStore()
-  const id = useRef(Math.random()).current
-  const props = { colSpan, rowSpan }
-
+export function GridItem({ h = 1, w = 1, id, ...viewProps }: GridItemProps) {
+  const store = useGridStore()
+  const props = { h, w }
   useEffect(() => {
     store.mountItem(id, props)
     return () => {
@@ -85,19 +106,25 @@ export function GridItem({ colSpan = 1, rowSpan = 1, ...viewProps }: GridItemPro
     }
   }, [])
 
-  return <View flex={1} {...viewProps} />
+  return <GridItemChrome flex={1} {...viewProps} />
 }
 
-function generateLayout() {
-  return _.map(_.range(0, 25), function(_item, i) {
-    var y = Math.ceil(Math.random() * 4) + 1
-    return {
-      x: (_.random(0, 5) * 2) % 12,
-      y: Math.floor(i / 6) * y,
-      w: 2,
-      h: y,
-      i: i.toString(),
-      static: Math.random() < 0.05,
-    }
-  })
-}
+const GridItemChrome = gloss(View, {
+  '& img': {
+    userSelect: 'none',
+  },
+})
+
+// function generateLayout() {
+//   return _.map(_.range(0, 25), function(_item, i) {
+//     var y = Math.ceil(Math.random() * 4) + 1
+//     return {
+//       x: (_.random(0, 5) * 2) % 12,
+//       y: Math.floor(i / 6) * y,
+//       w: 2,
+//       h: y,
+//       i: i.toString(),
+//       // static: Math.random() < 0.05,
+//     }
+//   })
+// }

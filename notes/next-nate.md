@@ -1,35 +1,56 @@
-Apps:
+Good enough demo to Ken Wheeler / et al:
 
-- Forms
-  - <FilePicker /> (=> Table easy integration)
-  - <Toggle /> on/off button
-  - Need Calendar, Number, Slider, Range
-  - Need to build out some demo forms like in retool
-  - need easy way to make them "uncontrolled"/editable
-  - forms need validation as well + error messaging
-- Improve Share
-  - "Persist" share button to clone it to a new one for multiple clipboards
-- Editable titles that persist
 - Editable grid that persists (with add/remove)
 - Drag/drop for tables/lists
   - Draggable
   - Droppable
+- A full grid app that with:
+  - Customer service + Postgres
+- A full grid app that with:
+  - JSONPlaceholder + Albums, etc
+- A full multi-pane app with:
+  - FBFlipper type inspector that hooks into system calls
+- `<QueryApp app={app} />` that we can let users use in apps to generically explore any apps interface
+- Slack/Gmail demo app: <Grid />, and <QueryApp />, put together a demo that shows a nice way - to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
+
+Better demo:
+
+- Improve Share
+  - "Persist" share button to clone it to a new one for multiple clipboards
+- automatically show multiple Main views with multi-select
+- Lists app (shows CRUD app with persisted data)
+  - accepts dropped in users/search
+  - make history/drilling work
+- Forms
+  - need easy way to make them "uncontrolled"/editable
+  - <Toggle /> on/off button
+  - Need Calendar, Number, Slider, Range
+- Search app (shows Search API features)
+  - Simplify and improve content views
+  - Remove the grouping and use virtual lists
+  - Fix cosal search
+
+Get it in hands:
+
+- Spaces
+  - Needs to be simplified and then made to work
+  - Enforce a "slug" so we can store it on disk somewhere
+- Create App
+  - Simple just one color pick
+  - Templates option for new app
+    - Blank, Master/Detail list/detail, Grid, Vertical Split
+
+Beta:
+
+- Forms
+  - <FilePicker /> (=> Table easy integration)
+  - Need to build out some demo forms like in retool
+  - forms need validation as well + error messaging
+- Editable titles that persist
 - Banner
   - alt="warn" etc states
-- Demo apps
-  - `<QueryApp app={app} />` that we can let users use in apps to generically grab stuff from various apps
-  - using <Grid />, and <QueryApp />, put together a demo that shows a nice way to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
-  - A full grid app that with:
-    - Customer service + Postgres
-  - A full grid app that with:
-    - JSONPlaceholder + Albums, etc
-  - A full multi-pane app with:
-    - FBFlipper type inspector that hooks into system calls
 - Bonus demo apps:
   - People app (shows custom content type app)
-    - automatically show multiple Main views with multi-select
-  - Lists app (shows CRUD app with persisted data)
-    - make history/drilling work
   - Search app (shows Search API features)
     - Simplify and improve content views
     - Remove the grouping and use virtual lists
@@ -39,29 +60,17 @@ Apps:
        - make the grid actually search able in the main area instead of apps in search/index
        - adding app from home
 
-Data Explorer:
+- DataExplorerApp
+  - Needs to allow for basic REPL + persisting user state
 
-- Needs to allow for basic REPL + persisting user state
-
-Apps:
-
-- Needs some UX improvement
-- Working App Settings
-- Working rename/colors
-- Working preview or remove
+- AppsApp
+  - Needs some UX improvement
+  - Working App Settings
+  - Working rename/colors
+  - Working preview or remove
 
 
-Spaces:
-
-- Needs to be simplified and then made to work
-- Enforce a "slug" so we can store it on disk somewhere
-
-Create App:
-
-- Simple just one color pick
-- Templates option for new app
-  - Blank, Master/Detail list/detail, Grid, Vertical Split
-
+---
 
 (if all that is done, bonus stuff)
 

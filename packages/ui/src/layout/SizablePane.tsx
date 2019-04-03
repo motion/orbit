@@ -77,7 +77,10 @@ export function SizablePane({ scrollable, children, resizable, flex, ...props }:
         scrollable={scrollable}
         overflow="hidden"
         resizable={resizableProp}
-        onResize={x => setSize(x)}
+        onResize={x => {
+          console.log('set size', x)
+          setSize(x)
+        }}
         {...sizeProps}
         {...props}
       >
@@ -87,7 +90,7 @@ export function SizablePane({ scrollable, children, resizable, flex, ...props }:
     )
   } else {
     element = (
-      <PaneChrome flex={flex || 1} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
+      <PaneChrome flex={flex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
         {childElement}
       </PaneChrome>

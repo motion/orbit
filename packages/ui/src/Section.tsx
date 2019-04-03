@@ -15,6 +15,7 @@ export type SectionProps = Omit<ViewProps, 'columns'> &
     below?: React.ReactNode
     scrollable?: boolean
     innerRef?: any
+    maxInnerHeight?: number
   }
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
@@ -43,6 +44,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     height,
     // to prevent accidental massive sizing, maybe weird
     maxHeight = window.innerHeight * 2,
+    maxInnerHeight = window.innerHeight * 2,
     maxWidth,
     minHeight = 'min-content',
     innerRef,
@@ -81,8 +83,14 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <SectionInner overflowY={scrollable ? 'auto' : 'hidden'} flex={1} {...viewProps}>
-        <Padded ref={innerRef} padded={padded}>
+      <SectionInner
+        maxHeight={maxInnerHeight}
+        overflowY={scrollable ? 'auto' : 'hidden'}
+        flex={1}
+        ref={innerRef}
+        {...viewProps}
+      >
+        <Padded padded={padded}>
           <Reset>{children}</Reset>
         </Padded>
       </SectionInner>

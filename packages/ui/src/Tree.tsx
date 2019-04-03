@@ -1,4 +1,6 @@
+import { gloss, View } from '@o/gloss'
 import React from 'react'
+import { useNodeSize } from './hooks/useNodeSize'
 import { TreeItems } from './TreeItems'
 
 export type TreeProps = {
@@ -45,5 +47,17 @@ export type TreeItem = {
 }
 
 export function Tree(props: TreeProps) {
-  return <TreeItems rowHeight={23} zebra {...props} />
+  const { ref, width, height } = useNodeSize()
+  return (
+    <TreeChrome ref={ref}>
+      <TreeItems width={width} height={height} rowHeight={23} zebra {...props} />
+    </TreeChrome>
+  )
 }
+
+const TreeChrome = gloss(View, {
+  alignItems: 'flex-start',
+  flex: 1,
+  maxHeight: '100%',
+  maxWidth: '100%',
+})

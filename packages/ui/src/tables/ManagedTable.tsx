@@ -26,6 +26,7 @@ const Electron = typeof electronRequire !== 'undefined' ? electronRequire('elect
 const clipboard = Electron.clipboard
 
 export type ManagedTableProps = SelectableProps & {
+  containerRef?: any
   overflow?: CSSPropertySet['overflow']
   flex?: CSSPropertySet['flex']
   margin?: CSSPropertySet['margin']
@@ -383,6 +384,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       minWidth,
       rows,
       placeholder,
+      containerRef,
       ...viewProps
     } = this.props
     const { columnOrder, columnSizes, sortedRows } = this.state
@@ -403,6 +405,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         overflow={viewProps.overflow}
         width={width}
         height={height}
+        ref={containerRef}
       >
         <TableHead
           columnOrder={columnOrder}

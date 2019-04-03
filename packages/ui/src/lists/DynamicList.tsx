@@ -6,9 +6,9 @@
  */
 
 import React, { forwardRef, RefObject } from 'react'
-import AutoSizer from 'react-virtualized-auto-sizer'
 // @ts-ignore
 import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-window'
+import { useNodeSize } from '../hooks/useNodeSize'
 import { Omit } from '../types'
 import { View } from '../View/View'
 
@@ -19,24 +19,13 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
   listRef?: RefObject<DynamicListControlled>
 }
 
-export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, ref) => {
-  // TODO we can try restoring parentNodeSize
-
-  disableMeasure
+export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, fwRef) => {
+  const { ref, width, height } = useNodeSize({
+    disable: disableMeasure,
+  })
   return (
-    <View flex={1}>
-      <AutoSizer>
-        {({ width, height }) => {
-          return (
-            <DynamicSizeList
-              ref={props.listRef || (ref as any)}
-              width={width}
-              height={height}
-              {...props}
-            />
-          )
-        }}
-      </AutoSizer>
+    <View flex={1} ref={ref}>
+      <DynamicSizeList ref={props.listRef || fwRef} width={width} height={height} {...props} />
     </View>
   )
 })

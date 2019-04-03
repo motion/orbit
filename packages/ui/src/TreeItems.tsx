@@ -1,6 +1,5 @@
 import { Col, gloss } from '@o/gloss'
 import * as React from 'react'
-import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { TreeItem, TreeItemID, TreeProps } from './Tree'
 import { TreeItemsRow } from './TreeItemsRow'
@@ -14,7 +13,10 @@ type FlatTreeItem = {
 type FlatTreeItems = FlatTreeItem[]
 
 export class TreeItems extends React.PureComponent<
-  TreeProps,
+  TreeProps & {
+    width: number
+    height: number
+  },
   {
     flatKeys: TreeItemID[]
     flatTreeItems: FlatTreeItems
@@ -197,23 +199,17 @@ export class TreeItems extends React.PureComponent<
   render() {
     const items = this.state.flatTreeItems
     return (
-      <TreeItemsBox>
-        <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>
-          <AutoSizer>
-            {({ width, height }) => (
-              <FixedSizeList
-                itemData={`${this.props.selected}`}
-                itemCount={items.length}
-                itemSize={this.props.rowHeight}
-                width={width}
-                height={height}
-              >
-                {this.buildRow}
-              </FixedSizeList>
-            )}
-          </AutoSizer>
-        </TreeItemsContainer>
-      </TreeItemsBox>
+      <TreeItemsContainer tabIndex="0" onKeyDown={this.onKeyDown}>
+        <FixedSizeList
+          itemData={`${this.props.selected}`}
+          itemCount={items.length}
+          itemSize={this.props.rowHeight}
+          width={this.props.width}
+          height={this.props.height}
+        >
+          {this.buildRow}
+        </FixedSizeList>
+      </TreeItemsContainer>
     )
   }
 }
@@ -221,11 +217,5 @@ export class TreeItems extends React.PureComponent<
 const TreeItemsContainer = gloss(Col, {
   minHeight: '100%',
   minWidth: '100%',
-  overflow: 'auto',
-})
-
-const TreeItemsBox = gloss(Col, {
-  alignItems: 'flex-start',
-  flex: 1,
   overflow: 'auto',
 })

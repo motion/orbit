@@ -19,6 +19,7 @@ export function OrbitFloatingShareCard({
   const nodePosition = useScreenPosition({ ref: buttonRef })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
+  console.log('nodePosition', nodePosition && nodePosition.rect)
   return (
     <>
       <Button

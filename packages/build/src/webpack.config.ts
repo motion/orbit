@@ -11,7 +11,7 @@ import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const TerserPlugin = require('terser-webpack-plugin')
-const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
+// const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
 // TODO: this doesn't seem to be the correct way to get the monorepo root.
@@ -230,7 +230,7 @@ async function makeConfig() {
       ].filter(Boolean),
     },
     plugins: [
-      new ErrorOverlayPlugin(),
+      // new ErrorOverlayPlugin(),
 
       new webpack.DefinePlugin(defines),
 

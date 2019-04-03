@@ -1,7 +1,7 @@
-import { gloss } from '@o/gloss';
-import { SearchResult } from '@o/models';
-import { flatten } from 'lodash';
-import React from 'react';
+import { gloss } from '@o/gloss'
+import { SearchResult } from '@o/models'
+import { flatten } from 'lodash'
+import React from 'react'
 
 const groupToName = {
   'last-day': 'Recently',

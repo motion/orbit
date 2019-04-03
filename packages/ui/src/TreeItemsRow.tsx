@@ -127,6 +127,10 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
       line = <TreeItemsLine height={height} childrenCount={this.props.childrenCount} />
     }
 
+    if (selected) {
+      console.warn('is selcte', id)
+    }
+
     return (
       <TreeItemsRowContainer
         buildItems={this.getContextMenu}
@@ -162,9 +166,7 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
 
 const backgroundColor = (props, theme) => {
   if (props.selected) {
-    return (
-      (theme.selected && theme.selected.background) || theme.backgroundSelected || theme.background
-    )
+    return theme.backgroundHighlight || theme.backgroundActive || theme.background
   } else if (props.even) {
     return theme.backgroundZebra
   } else {
@@ -181,16 +183,17 @@ const TreeItemsRowContainer = gloss({
   paddingRight: 20,
   position: 'relative',
 }).theme((props, theme) => {
+  console.log('got props', props)
   return {
     height: props.height,
-    backgroundColor: backgroundColor(props, theme),
+    background: backgroundColor(props, theme),
     color: props.selected ? colors.white : colors.grapeDark3,
     paddingLeft: (props.level - 1) * 12,
     '& *': {
       color: props.selected ? `${colors.white} !important` : '',
     },
     '&:hover': {
-      backgroundColor: props.selected ? theme.backgroundActive : theme.backgroundHover,
+      background: props.selected ? theme.backgroundHighlightHover : theme.backgroundHover,
     },
   }
 })

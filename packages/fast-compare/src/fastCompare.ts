@@ -45,7 +45,13 @@ function isEqualInner(a, b) {
     if (arrA && arrB) {
       length = a.length
       if (length != b.length) return false
-      for (i = length; i-- !== 0; ) if (!isEqualInner(a[i], b[i])) return false
+      if (length > 500 || b.length > 500) {
+        console.warn('comparing large props! ignoring this')
+        return false
+      }
+      for (i = length; i-- !== 0; ) {
+        if (!isEqualInner(a[i], b[i])) return false
+      }
       return true
     }
 

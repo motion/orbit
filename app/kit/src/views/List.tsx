@@ -7,7 +7,7 @@ import {
   SubTitle,
   Text,
   useGet,
-  useVisiblityContext,
+  useVisiblity,
   View,
   VirtualList,
   VirtualListProps,
@@ -68,7 +68,8 @@ export function List(rawProps: ListProps) {
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
-  const visibility = useVisiblityContext()
+  const visibility = useVisiblity()
+  const getVisibility = useGet(visibility)
   const filtered = useActiveQueryFilter({
     searchable: props.searchable,
     items: items || [],
@@ -85,7 +86,7 @@ export function List(rawProps: ListProps) {
   useEffect(() => {
     if (!shortcutStore) return
     return shortcutStore.onShortcut(shortcut => {
-      if (visibility.getVisible() == false) {
+      if (getVisibility() == false) {
         return
       }
       const selectableStore = selectableStoreRef.current
@@ -158,7 +159,7 @@ export function List(rawProps: ListProps) {
     <HighlightActiveQuery query={search}>
       {hasResults && (
         <VirtualList
-          disableMeasure={visibility.getVisible() === false}
+          disableMeasure={visibility === false}
           items={filtered.results}
           ItemView={ListItem}
           {...restProps}

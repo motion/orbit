@@ -125,7 +125,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         maxHeight = maxHeight == null ? 600 : maxHeight
       }
 
-      return { width, height, minWidth, maxWidth, resizable, horizontal }
+      return { width, height, minWidth, maxWidth, minHeight, maxHeight, resizable, horizontal }
     }
     return null
   }

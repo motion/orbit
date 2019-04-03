@@ -46,7 +46,11 @@ export function Table(tableProps: TableProps) {
     ...tableProps,
   }
   const { height, ref } = useNodeSize()
-  const rows = props.rows ? props.rows.map(normalizeRow) : null
+  console.log(
+    'table update',
+    ref.current && [ref.current.clientHeight, ref.current.style.maxHeight],
+  )
+  const rows = useMemo(() => (props.rows ? props.rows.map(normalizeRow) : null), [props.rows])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),
     [props.columns, rows],
@@ -72,9 +76,9 @@ export function Table(tableProps: TableProps) {
       subTitle={subTitle}
       bordered={bordered}
       padding={0}
-      innerRef={ref}
     >
       <SearchableTable
+        containerRef={ref}
         searchable={searchable}
         minWidth={100}
         minHeight={100}

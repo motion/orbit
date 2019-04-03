@@ -14,6 +14,10 @@ export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
   }
   // loop over props turning into styles
   for (let key in props) {
+    if (validCSSAttr[key]) {
+      styles[key] = styleVal(props[key], theme, props)
+      continue
+    }
     // &:hover, etc
     const abbrev = Config.pseudoAbbreviations ? Config.pseudoAbbreviations[key] : null
     if (key[0] === '&' || abbrev) {
@@ -25,8 +29,6 @@ export function propsToStyles(props: any, theme: ThemeObject): CSSPropertySet {
         val[subKey] = styleVal(subStyle[subKey], theme, props)
       }
       styles[psuedoKey] = val
-    } else if (validCSSAttr[key]) {
-      styles[key] = styleVal(props[key], theme, props)
     }
   }
 

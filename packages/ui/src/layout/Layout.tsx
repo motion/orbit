@@ -1,4 +1,4 @@
-import { Col, gloss, Row } from '@o/gloss'
+import { Col, gloss, Row, View } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { GridLayout } from './GridLayout'
@@ -35,9 +35,11 @@ export function Layout(props: LayoutProps) {
   const total = Children.count(props.children)
   const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
   return (
-    <LayoutContext.Provider value={{ ...props, total, flexes }}>
-      {getLayout(props)}
-    </LayoutContext.Provider>
+    <View flex={1} overflow="hidden" maxHeight={window.innerHeight} maxWidth={window.innerWidth}>
+      <LayoutContext.Provider value={{ ...props, total, flexes }}>
+        {getLayout(props)}
+      </LayoutContext.Provider>
+    </View>
   )
 }
 
@@ -59,14 +61,24 @@ function FlexLayout(props: LayoutProps) {
 
   if (props.type === 'row') {
     return (
-      <LayoutRow minHeight={size.height || 'auto'} overflow="hidden" ref={ref}>
+      <LayoutRow
+        minHeight={size.height || 'auto'}
+        maxHeight={window.innerHeight}
+        overflow="hidden"
+        ref={ref}
+      >
         {childElements}
       </LayoutRow>
     )
   }
 
   return (
-    <LayoutCol minHeight={size.height || 'auto'} overflow="hidden" ref={ref}>
+    <LayoutCol
+      minHeight={size.height || 'auto'}
+      maxHeight={window.innerHeight}
+      overflow="hidden"
+      ref={ref}
+    >
       {childElements}
     </LayoutCol>
   )

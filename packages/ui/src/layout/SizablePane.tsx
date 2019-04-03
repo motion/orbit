@@ -15,19 +15,28 @@ export type SizablePaneProps = Partial<InteractiveProps> &
     flex?: number
   }
 
-export function SizablePane({ scrollable, children, resizable, ...props }: SizablePaneProps) {
+export function SizablePane({ scrollable, children, resizable, flex, ...props }: SizablePaneProps) {
   const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(-1)
+  const [flexSize, setFlexSize] = useState(-1)
 
   useEffect(() => {
     if (!props.parentSize || typeof props.index === 'undefined' || flexes.length === 0) {
       return
     }
     const totalFlex = flexes.reduce((a, b) => a + b, 0)
-    const flex = flexes[props.index]
-    const pct = flex / totalFlex
+    const flx = flexes[props.index]
+    const pct = flx / totalFlex
+    setFlexSize(props.parentSize * pct)
     setSize(props.parentSize * pct)
-  }, [props.index, props.parentSize, total, flexes])
+  }, [
+    props.index,
+    // only change first time parentSize changes, testing to see if it feels better
+    // what may be better is preserving the current ratio rather than never updating
+    props.parentSize,
+    total,
+    flexes,
+  ])
 
   let element = null
   let sizeProps: any = {
@@ -42,8 +51,8 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
     if (size !== -1) {
       sizeProps = {
         width: size,
-        minWidth: props.parentSize * 0.25,
-        maxWidth: props.parentSize * 0.8,
+        minWidth: flexSize * 0.5,
+        maxWidth: flexSize * 1.5,
       }
     }
   } else {
@@ -52,9 +61,9 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
     }
     if (size !== -1) {
       sizeProps = {
-        minHeight: props.parentSize * 0.25,
+        minHeight: flexSize * 0.5,
         height: size,
-        maxHeight: props.parentSize * 0.8,
+        maxHeight: flexSize * 1.5,
       }
     }
   }
@@ -68,7 +77,10 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
         scrollable={scrollable}
         overflow="hidden"
         resizable={resizableProp}
-        onResize={x => setSize(x)}
+        onResize={x => {
+          console.log('set size', x)
+          setSize(x)
+        }}
         {...sizeProps}
         {...props}
       >
@@ -78,7 +90,7 @@ export function SizablePane({ scrollable, children, resizable, ...props }: Sizab
     )
   } else {
     element = (
-      <PaneChrome {...sizeProps} {...props}>
+      <PaneChrome flex={flex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
         {childElement}
       </PaneChrome>

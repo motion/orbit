@@ -7,7 +7,7 @@ import {
   Section,
   SectionProps,
   TitleRowProps,
-  useParentNodeSize,
+  useNodeSize,
   useSectionProps,
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
@@ -45,7 +45,7 @@ export function Table(tableProps: TableProps) {
     ...sectionProps,
     ...tableProps,
   }
-  const { height, ref } = useParentNodeSize()
+  const { height, ref } = useNodeSize()
   const rows = props.rows ? props.rows.map(normalizeRow) : null
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),

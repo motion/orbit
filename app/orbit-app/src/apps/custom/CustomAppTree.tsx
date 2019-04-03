@@ -1,5 +1,5 @@
 import { Table } from '@o/kit'
-import { DataInspector, Layout, Pane, Tree } from '@o/ui'
+import { DataInspector, Layout, Pane, Paragraph, SubTitle, Title, Tree } from '@o/ui'
 import faker from 'faker'
 import produce from 'immer'
 import React, { useState } from 'react'
@@ -74,7 +74,7 @@ export function CustomAppTree() {
           elements={treeState}
         />
       </Pane>
-      <Pane flex={3} collapsable title="Inspect">
+      <Pane flex={3} collapsable title="Inspect" resizable>
         <Table selectable rows={rows} />
       </Pane>
       <Pane title="Sidebar">
@@ -94,6 +94,11 @@ export function CustomAppTree() {
                 },
               }}
             />
+          </Pane>
+          <Pane title="Elements" flex={2} padded collapsable>
+            <Title>Description</Title>
+            <SubTitle>Sub title</SubTitle>
+            <Paragraph>lorem ipsum dolor sit amet.</Paragraph>
           </Pane>
         </Layout>
       </Pane>

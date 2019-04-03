@@ -2,6 +2,7 @@ import { List } from '@o/kit'
 import { Button, FloatingCard, useScreenPosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
+import { orbitStaticApps } from '../../apps/orbitApps'
 import { useStores } from '../../hooks/useStores'
 
 export function OrbitFloatingShareCard({
@@ -12,14 +13,17 @@ export function OrbitFloatingShareCard({
   height?: number
   pad?: number
 }) {
-  const { spaceStore } = useStores()
+  const { spaceStore, paneManagerStore } = useStores()
   const { currentSelection } = spaceStore
   const numItems = (currentSelection && currentSelection.length) || 0
   const buttonRef = useRef(null)
   const nodePosition = useScreenPosition({ ref: buttonRef })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  console.log('currentSelection', currentSelection)
+  console.log('orbti', orbitStaticApps, paneManagerStore.activePane.type)
+  const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
+  const showMenu = hovered || hoveredMenu
+  const showButton = !isStaticApp && !!numItems
   return (
     <>
       <Button
@@ -36,8 +40,9 @@ export function OrbitFloatingShareCard({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         transition="all ease 150ms"
+        opacity={showButton ? 1 : 0}
         transform={{
-          y: numItems ? 0 : 150,
+          y: showButton ? 0 : 150,
         }}
       />
       {nodePosition && nodePosition.rect && (
@@ -50,10 +55,10 @@ export function OrbitFloatingShareCard({
           defaultLeft={nodePosition.rect.left - width + 20}
           padding={0}
           zIndex={10000000}
-          pointerEvents={hovered || hoveredMenu ? 'auto' : 'none'}
-          opacity={hovered || hoveredMenu ? 1 : 0}
+          pointerEvents={showMenu ? 'auto' : 'none'}
+          opacity={showMenu ? 1 : 0}
           transform={{
-            y: hovered || hoveredMenu ? 0 : 10,
+            y: showMenu ? 0 : 10,
           }}
           transition="all ease 200ms"
           onMouseEnter={() => setHoveredMenu(true)}

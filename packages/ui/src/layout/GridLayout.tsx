@@ -9,9 +9,9 @@ export type GridLayoutProps = {
 
 export function GridLayout({ children, ...props }: GridLayoutProps) {
   const size = useNodeSize({
-    throttle: 1000,
+    throttle: 500,
+    ignoreFirst: true,
   })
-  console.log('re-render')
   return (
     <View ref={size.ref} flex={1}>
       <AutoResponsive

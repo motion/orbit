@@ -87,7 +87,7 @@ export function SizablePane({ scrollable, children, resizable, flex, ...props }:
     )
   } else {
     element = (
-      <PaneChrome flex={flex || 1} {...sizeProps} maxWidth="auto" maxHeight="auto" {...props}>
+      <PaneChrome flex={flex || 1} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
         {childElement}
       </PaneChrome>

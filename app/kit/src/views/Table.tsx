@@ -9,6 +9,7 @@ import {
   TitleRowProps,
   useNodeSize,
   useSectionProps,
+  useVisiblity,
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
@@ -45,11 +46,8 @@ export function Table(tableProps: TableProps) {
     ...sectionProps,
     ...tableProps,
   }
-  const { height, ref } = useNodeSize()
-  console.log(
-    'table update',
-    ref.current && [ref.current.clientHeight, ref.current.style.maxHeight],
-  )
+  const isVisible = useVisiblity()
+  const { height, ref } = useNodeSize({ throttle: 200, disable: !isVisible })
   const rows = useMemo(() => (props.rows ? props.rows.map(normalizeRow) : null), [props.rows])
   const columns = useMemo(
     () => deepMergeDefined(guessColumns(props.columns, rows && rows[0]), defaultColumns),

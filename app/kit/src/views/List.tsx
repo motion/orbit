@@ -18,7 +18,6 @@ import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
 import { useActiveQueryFilter } from '../hooks/useActiveQueryFilter'
 import { UseFilterProps } from '../hooks/useFilteredList'
-import { useShareMenu } from '../hooks/useShareMenu'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
@@ -59,7 +58,7 @@ export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 const nullFn = () => null
 
 export function List(rawProps: ListProps) {
-  const { getShareMenuItemProps } = useShareMenu()
+  // const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
@@ -134,8 +133,8 @@ export function List(rawProps: ListProps) {
     const normalized = toListItemProps(a)
     const itemExtraProps = getItemPropsGet()(a, b, c)
     const filterExtraProps = filteredGetItemPropsGet()(a, b, c)
-    const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
-    return { ...normalized, ...itemExtraProps, ...filterExtraProps, ...shareProps }
+    // const shareProps = props.shareable && getShareMenuItemProps(a, b, c)
+    return { ...normalized, ...itemExtraProps, ...filterExtraProps }
   }, [])
 
   const onOpenInner = useCallback(

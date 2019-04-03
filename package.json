@@ -1,15 +1,14 @@
 {
   "name": "orbit-monorepo",
   "private": true,
-  "workspaces": [
-    "app/*",
-    "packages/*",
-    "apps/*",
-    "projects/*"
-  ],
-  "nohoist": [
-    "apps/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "app/*",
+      "packages/*",
+      "apps/*",
+      "projects/*"
+    ]
+  },
   "dependencies": {
     "global": "^4.3.2",
     "react": "16.8.3",

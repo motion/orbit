@@ -1,5 +1,8 @@
 {
   "name": "@o/slack-app",
+  "workspaces": {
+    "nohoist": ["**"]
+  },
   "version": "2.4.0",
   "main": "_/index.js",
   "ts:main": "src/index.tsx",

@@ -65,7 +65,7 @@ export function OrbitFloatingShareCard({
           onMouseLeave={() => setHoveredMenu(false)}
         >
           <List
-            selectable
+            selectable="multi"
             itemProps={{ small: true }}
             items={currentSelection ? listItemNiceNormalize(currentSelection) : null}
           />

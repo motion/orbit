@@ -37,15 +37,15 @@ export function SlackSettings({ subId }: AppProps) {
     slackApp
       .api(app)
       .channelsList()
-      .then(channels => console.log('loaded api channels', channels))
+      .then(next => console.log('loaded api channels', next))
 
     // todo: remove it
     // execute postgres query (testing api)
     loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
       console.log('postgresApps', postgresApps)
-      for (let app of postgresApps) {
+      for (let postApp of postgresApps) {
         postgresApp
-          .api(app)
+          .api(postApp)
           .query(
             `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`,
             [],
@@ -53,15 +53,15 @@ export function SlackSettings({ subId }: AppProps) {
           .then(results => {
             console.log(`table created`, results)
             return postgresApp
-              .api(app)
+              .api(postApp)
               .query('INSERT INTO categories(name) VALUES ($1)', ['dummy category'])
           })
           .then(results => {
             console.log(`new row inserted`, results)
-            return postgresApp.api(app).query('SELECT * FROM categories')
+            return postgresApp.api(postApp).query('SELECT * FROM categories')
           })
           .then(results => {
-            console.log(`got results from ${app.name}:`, results)
+            console.log(`got results from ${postApp.name}:`, results)
           })
       }
     })

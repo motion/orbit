@@ -100,7 +100,7 @@ const babelrcOptions = {
   babelrc: false,
   // this caused some errors with HMR where gloss-displaynames wouldnt pick up changed view names
   // im presuming because it cached the output and gloss-displaynames needs a redo somehow
-  // cacheDirectory: false,
+  cacheDirectory: false,
 }
 
 console.log('babelrcOptions', babelrcOptions)
@@ -123,7 +123,7 @@ async function makeConfig() {
       : optimization[isProd ? 'prod' : 'dev'],
     output: {
       path: outputPath,
-      pathinfo: !isProd,
+      pathinfo: isProd,
       filename: 'bundle.js',
       publicPath: '/',
       // fixes react-hmr bug, pending https://github.com/webpack/webpack/issues/6642
@@ -182,6 +182,7 @@ async function makeConfig() {
               options: {
                 happyPackMode: true,
                 transpileOnly: true, // disable - we use it in fork plugin
+                experimentalWatchApi: true,
               },
             },
             {

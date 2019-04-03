@@ -48,7 +48,7 @@ export function TitleRow({
       paddingLeft={sidePad + pad}
       paddingRight={sidePad + pad}
       margin={typeof margin !== 'undefined' ? margin : unpad ? [-pad, -pad, 0] : 0}
-      background={backgrounded ? theme => theme.backgroundAlt : null}
+      background={backgrounded ? theme => theme.backgroundZebra : null}
       onDoubleClick={onCollapse && (() => onCollapse(!collapsed))}
     >
       {above}

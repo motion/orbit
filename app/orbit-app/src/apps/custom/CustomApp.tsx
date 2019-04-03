@@ -8,7 +8,7 @@ import { CustomAppTree } from './CustomAppTree'
 function CustomApp() {
   return (
     <App>
-      <Tabs marginTop={5}>
+      <Tabs margin={[5, 0]}>
         <Tab id="0" label="Tree To Inspector">
           <CustomAppTree />
         </Tab>

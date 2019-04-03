@@ -1,5 +1,4 @@
 import * as Path from 'path'
-
 import webpack from 'webpack'
 
 const TerserPlugin = require('terser-webpack-plugin')

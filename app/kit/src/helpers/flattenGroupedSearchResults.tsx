@@ -1,7 +1,7 @@
-import { gloss } from '@o/gloss'
-import { SearchResult } from '@o/models'
-import { flatten } from 'lodash'
-import React from 'react'
+import { gloss } from '@o/gloss';
+import { SearchResult } from '@o/models';
+import { flatten } from 'lodash';
+import React from 'react';
 
 const groupToName = {
   'last-day': 'Recently',
@@ -54,7 +54,7 @@ const Circle = gloss({
   fontWeight: 300,
   borderRadius: 100,
 }).theme((_, theme) => ({
-  background: theme.backgroundAlt,
+  background: theme.backgroundZebra,
   color: theme.color,
 }))
 

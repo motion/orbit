@@ -9,7 +9,6 @@ import {
   TitleRowProps,
   useParentNodeSize,
   useSectionProps,
-  View,
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
@@ -42,7 +41,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 export function Table(tableProps: TableProps) {
   const stores = useStoresSimple()
   const sectionProps: PartialSectionProps = useSectionProps(tableProps)
-  const { flex, bordered, searchable, title, subTitle, shareable, ...props } = {
+  const { flex = 1, bordered, searchable, title, subTitle, shareable, ...props } = {
     ...sectionProps,
     ...tableProps,
   }
@@ -73,22 +72,20 @@ export function Table(tableProps: TableProps) {
       subTitle={subTitle}
       bordered={bordered}
       padding={0}
+      innerRef={ref}
     >
-      {/* ref inside so it captures just below title height */}
-      <View ref={ref}>
-        <SearchableTable
-          searchable={searchable}
-          minWidth={100}
-          minHeight={100}
-          maxHeight={height > 0 ? height : 200}
-          height={height}
-          flex={flex}
-          {...props}
-          columns={columns}
-          rows={rows}
-          onSelect={onSelect}
-        />
-      </View>
+      <SearchableTable
+        searchable={searchable}
+        minWidth={100}
+        minHeight={100}
+        maxHeight={height > 0 ? height : 200}
+        height={height}
+        flex={flex}
+        {...props}
+        columns={columns}
+        rows={rows}
+        onSelect={onSelect}
+      />
     </Section>
   )
 }

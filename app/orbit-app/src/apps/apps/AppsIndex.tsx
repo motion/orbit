@@ -25,7 +25,6 @@ export function AppsIndex() {
   const [activeSpace] = useActiveSpace()
   const activeApps = useActiveApps()
   const allSourceDefinitions = useAppDefinitions().filter(x => !!x.sync)
-  console.log('allSourceDefinitions', allSourceDefinitions)
   const clientApps = useActiveAppsWithDefinition().filter(x => !x.definition.sync)
   const syncApps = useActiveSyncAppsWithDefinition()
 

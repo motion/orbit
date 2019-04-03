@@ -43,23 +43,20 @@ export function PostgresSettings({ app }: Props) {
   )
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
-  const [credentials, setCredentials] = React.useState({
+  const [credentials, setCredentials] = React.useState<PostgresAppData['credentials']>({
     hostname: '',
     username: '',
     password: '',
     port: '',
     database: '',
-  } as PostgresAppData['credentials'])
+  })
 
-  React.useEffect(
-    () => {
-      const appData: PostgresAppData = appBit.data
-      if (appData.credentials) {
-        setCredentials(appData.credentials)
-      }
-    },
-    [appBit],
-  )
+  React.useEffect(() => {
+    const appData: PostgresAppData = appBit.data
+    if (appData.credentials) {
+      setCredentials(appData.credentials)
+    }
+  }, [appBit])
 
   console.log('credentials', credentials)
 

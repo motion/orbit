@@ -31,7 +31,7 @@ function toggleTheme(theme: ThemeObject) {
     boxShadow: undefined,
     offColor: theme.backgroundDarker.hex(),
     onColor: theme.backgroundDarker.hex(),
-    offHandleColor: theme.backgroundLightest.hex(),
-    onHandleColor: theme.backgroundLightest.hex(),
+    offHandleColor: theme.backgroundStrongest.hex(),
+    onHandleColor: theme.backgroundStrongest.hex(),
   }
 }

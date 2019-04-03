@@ -3587,6 +3587,19 @@ autoprefixer@^9.0.0, autoprefixer@^9.4.3:
     postcss "^7.0.14"
     postcss-value-parser "^3.3.1"
 
+autoresponsive-core@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/autoresponsive-core/-/autoresponsive-core-1.0.1.tgz#cbb77dffb5ee625fe3dae867671050632ba04916"
+  integrity sha512-sNmRjQWslRJFOHRF7tEtqHU4MH4FDHN46vYdScfYRctSkCc4Ksqs5jKiDRXkFIdSJ4XWWcboq92567S74IKFSQ==
+
+autoresponsive-react@1.1.31:
+  version "1.1.31"
+  resolved "https://registry.yarnpkg.com/autoresponsive-react/-/autoresponsive-react-1.1.31.tgz#dede25f8ff7f7d4d0066159aa1636025df7f0637"
+  integrity sha512-aHzbT8Zr5Aaj0uQ6Zbf5552ojwTrfc3smOr8QW2ng9iAB6UxGRyYBg3jAvsezICzvLlmFk0g+n3i0px8SUS3Vw==
+  dependencies:
+    autoresponsive-core "^1.0.1"
+    exenv "^1.2.0"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
@@ -8018,7 +8031,7 @@ executable@^4.1.0:
   dependencies:
     pify "^2.2.0"
 
-exenv@^1.2.1:
+exenv@^1.2.0, exenv@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
   integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=

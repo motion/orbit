@@ -4,6 +4,7 @@ import {
   DefinitionList,
   FloatingCard,
   Form,
+  GridLayout,
   Layout,
   Loading,
   Pane,
@@ -23,8 +24,23 @@ class Store {
 export function TestUIKit() {
   return (
     <Suspense fallback={<Loading />}>
-      <CustomApp1 />
+      <TestGrid />
     </Suspense>
+  )
+}
+
+export function TestGrid() {
+  const items = useFetch('https://jsonplaceholder.typicode.com/photos')
+  return (
+    <GridLayout>
+      {items.slice(0, 10).map(item => (
+        <div key={item.id} style={{ width: 200, height: 300 }}>
+          <Card flex={1} overflow="hidden" title={item.title}>
+            <img src={item.url} />
+          </Card>
+        </div>
+      ))}
+    </GridLayout>
   )
 }
 

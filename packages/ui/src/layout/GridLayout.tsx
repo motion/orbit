@@ -16,7 +16,7 @@ export type GridLayoutProps = {
 const defaultProps: Partial<GridLayoutProps> = {
   cols: {
     xxs: 1,
-    xs: 2,
+    xs: 1,
     sm: 2,
     md: 4,
     lg: 6,

@@ -32,8 +32,8 @@ function CreateAppMain() {
         background="transparent"
         margin="auto"
         height="70%"
-        padded
         title="New app"
+        bordered
         subTitle="Choose app to add"
       >
         <List

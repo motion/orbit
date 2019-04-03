@@ -14,5 +14,5 @@ export const Toolbar = gloss<ToolbarProps>(View, {
   padding: 20,
   width: '100%',
 }).theme((props, theme) => ({
-  background: props.background || theme.background,
+  background: props.background || theme.backgroundStronger,
 }))

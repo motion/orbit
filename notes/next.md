@@ -25,17 +25,11 @@ All custom apps take the same form to start:
 
 ---
 
-Goal by end of March
-
-- initial working app editing
-- initial syncing of config p2p
-- example app in just code
-
----
-
 Goal by end of April
 
 - example apps
+- website
+- start on cli (workspace management)
 
 ---
 

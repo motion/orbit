@@ -17,7 +17,7 @@ export function OrbitFloatingShareCard({
   const { currentSelection } = spaceStore
   const numItems = (currentSelection && currentSelection.length) || 0
   const buttonRef = useRef(null)
-  const nodePosition = useScreenPosition({ ref: buttonRef })
+  const nodePosition = useScreenPosition({ ref: buttonRef, debounce: 500 })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
   console.log('orbti', orbitStaticApps, paneManagerStore.activePane.type)

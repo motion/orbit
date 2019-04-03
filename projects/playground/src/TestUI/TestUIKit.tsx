@@ -4,6 +4,7 @@ import {
   DefinitionList,
   FloatingCard,
   Form,
+  GridItem,
   GridLayout,
   Layout,
   Loading,
@@ -33,12 +34,12 @@ export function TestGrid() {
   const items = useFetch('https://jsonplaceholder.typicode.com/photos')
   return (
     <GridLayout>
-      {items.slice(0, 10).map(item => (
-        <div key={item.id} style={{ width: 200, height: 300 }}>
+      {items.slice(0, 10).map((item, index) => (
+        <GridItem key={item.id} w={index === 0 ? 4 : 2} h={index === 0 ? 4 : 2}>
           <Card flex={1} overflow="hidden" title={item.title}>
             <img src={item.url} />
           </Card>
-        </div>
+        </GridItem>
       ))}
     </GridLayout>
   )

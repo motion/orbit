@@ -1,7 +1,8 @@
 import { Col, gloss, Row, View } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
-import { GridLayout } from './GridLayout'
+import { useVisiblity } from '../Visibility'
+import { MasonryLayout } from './MasonryLayout'
 import { Pane } from './Pane'
 
 export type LayoutProps = {
@@ -18,7 +19,7 @@ function getLayout(props: LayoutProps) {
   switch (props.type) {
     case 'grid':
       // TODO make this legit
-      return <GridLayout {...props} />
+      return <MasonryLayout {...props} />
     case 'row':
     case 'column':
     default:
@@ -44,7 +45,11 @@ export function Layout(props: LayoutProps) {
 }
 
 function FlexLayout(props: LayoutProps) {
-  const { ref, ...size } = useParentNodeSize()
+  const visibility = useVisiblity()
+  const { ref, ...size } = useParentNodeSize({
+    disable: !visibility,
+    throttle: 200,
+  })
   const total = Children.count(props.children)
   const dimension = props.type === 'row' ? 'width' : 'height'
   const parentSize = size[dimension]

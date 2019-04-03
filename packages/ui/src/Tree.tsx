@@ -2,6 +2,7 @@ import { gloss, View } from '@o/gloss'
 import React from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { TreeItems } from './TreeItems'
+import { useVisiblity } from './Visibility'
 
 export type TreeProps = {
   root?: TreeItemID
@@ -47,7 +48,11 @@ export type TreeItem = {
 }
 
 export function Tree(props: TreeProps) {
-  const { ref, width, height } = useNodeSize()
+  const visibility = useVisiblity()
+  const { ref, width, height } = useNodeSize({
+    disable: !visibility,
+    throttle: 200,
+  })
   return (
     <TreeChrome ref={ref}>
       <TreeItems width={width} height={height} rowHeight={23} zebra {...props} />

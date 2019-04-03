@@ -17,7 +17,7 @@ import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
-import { getApps, orbitStaticApps } from '../../apps/orbitApps'
+import { getApps, orbitApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
 import { usePaneManagerEffects } from '../../effects/paneManagerEffects'
 import { defaultPanes, settingsPane } from '../../effects/paneManagerStoreUpdatePanes'
@@ -134,7 +134,7 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     id: pane.id,
     identifier: pane.type,
   }))
-  const staticApps = orbitStaticApps.map(app => ({
+  const staticApps = orbitApps.map(app => ({
     id: app.id,
     identifier: app.id,
   }))

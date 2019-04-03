@@ -23,6 +23,9 @@ import { OnboardApp } from './onboard/OnboardApp'
 import { SettingsApp } from './settings/SettingsApp'
 import { SpacesApp } from './spaces/SpacesApp'
 
+// "available" apps to install/use
+// eventually can be in a dynamic app store service
+
 const apps: AppDefinition[] = [
   ListsApp,
   SearchApp,
@@ -39,6 +42,8 @@ const apps: AppDefinition[] = [
   CustomApp,
 ]
 
+// apps we use internally in orbit
+
 export const orbitStaticApps: AppDefinition[] = [
   DataExplorerApp,
   SettingsApp,
@@ -49,17 +54,9 @@ export const orbitStaticApps: AppDefinition[] = [
   CreateApp,
   MessageApp,
   HomeApp,
-  // get our "bit/source" apps for now...
-  ...apps.filter(x => !x.app),
 ]
 
-export const orbitApps: AppDefinition[] = [
-  ...orbitStaticApps,
-  // TODO figure this out
-  ...apps.filter(x => !!x.app),
-]
-
-console.debug('orbitApps', orbitApps)
+export const orbitApps: AppDefinition[] = [...orbitStaticApps, ...apps]
 
 export function getApps() {
   return orbitApps
@@ -67,7 +64,9 @@ export function getApps() {
 
 if (module['hot']) {
   module['hot'].addStatusHandler(status => {
-    document.querySelector('iframe').remove()
+    // remove webpack bad compile message after hmr
+    const iframe = document.querySelector('body > iframe')
+    iframe && iframe.remove()
 
     if (status === 'apply') {
       configureKit({

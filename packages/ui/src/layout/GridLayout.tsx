@@ -32,9 +32,12 @@ class GridStore {
     lg: null,
   }
 
-  setLayout = (layout: string) => {
+  setLayout = (layout: any[]) => {
     console.log('layout', layout)
     // this.layout = layout
+    this.layouts = {
+      lg: layout,
+    }
   }
 
   updateLayout = react(
@@ -59,12 +62,9 @@ class GridStore {
           // static: Math.random() < 0.05,
         }
         lastX = next.x
-        console.log(JSON.stringify(next))
         layout.push(next)
       }
-      this.layouts = {
-        lg: layout,
-      }
+      this.setLayout(layout)
     },
   )
 

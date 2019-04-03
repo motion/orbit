@@ -4,6 +4,7 @@ import {
   DefinitionList,
   FloatingCard,
   Form,
+  GridItem,
   GridLayout,
   Layout,
   Loading,
@@ -34,11 +35,11 @@ export function TestGrid() {
   return (
     <GridLayout>
       {items.slice(0, 10).map(item => (
-        <div key={item.id} style={{ width: 200, height: 300 }}>
+        <GridItem key={item.id}>
           <Card flex={1} overflow="hidden" title={item.title}>
             <img src={item.url} />
           </Card>
-        </div>
+        </GridItem>
       ))}
     </GridLayout>
   )

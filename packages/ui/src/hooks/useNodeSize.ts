@@ -3,7 +3,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from './useResizeObserver'
 import { useThrottleFn } from './useThrottleFn'
 
-type Props = {
+export type UseNodeSizeProps = {
   ref?: RefObject<HTMLElement>
   disable?: boolean
   onChange?: (size: { width: number; height: number }) => any
@@ -11,7 +11,7 @@ type Props = {
   ignoreFirst?: boolean
 }
 
-export function useNodeSize(props: Props = {}) {
+export function useNodeSize(props: UseNodeSizeProps = {}) {
   const [state, setState] = useState({ width: 0, height: 0 })
   const updateFn = props.onChange || setState
   const updateFnThrottled = useThrottleFn(updateFn, {

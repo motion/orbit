@@ -2,6 +2,7 @@ import { gloss, View } from '@o/gloss'
 import React, { useRef } from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
+import { useVisiblity } from './Visibility'
 
 type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
   Partial<SliderProps> & {
@@ -26,8 +27,11 @@ export function SliderPane({
   ...props
 }: SliderPaneProps) {
   const ref = useRef(null)
+  const visiblity = useVisiblity()
 
   useNodeSize({
+    disable: !visiblity,
+    throttle: 200,
     ref,
     onChange({ height }) {
       if (onChangeHeight) {

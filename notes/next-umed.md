@@ -1,5 +1,42 @@
 NEXT
 
+- Postgres fake data:
+
+1. Signup for retool, add this template https://tryretool.com/templates/customer-support-tool
+2. See how it has a good example ecommerce data structure? We need to insert something like this into postgres... I'm not sure where they got their data, but if you look at the data explorer its got a lot of tables/columns, so we likely need to find a place where this exists already.
+
+I did some initial googling, all I found is:
+
+https://github.com/drehimself/laravel-ecommerce-example
+
+It has fixtures that inserts example data....
+
+I've been searching google with
+
+"site:github.com ecommerce example seed sql"
+"site:github.com ecommerce dummy sql"
+
+This one only has a couple
+
+https://github.com/SqlHareketi/dummy-product-data/blob/master/data.sql
+
+but looks too small
+
+this one looks big:
+
+https://github.com/devrimgunduz/pagila
+
+That may be the best one 👆
+
+Now, we need to make this "auto-set up in the app". I think we really need to get workspaces working, which I'll switch onto shortly, but until then, can you make a script and make sure it inserts?
+
+Also the files here too big so have the script download into a tmp dir and insert. You can put it all in ./scripts. Ideally with one command you run and it sets up everything, from creating docker db to inserting info, to adding the app information to the sqlite db in our app automatically, so i can tomorrow take that and build out a whole postgres demo!
+
+
+---
+
+- Can you please fix the type errors caused by slack in typescript?
+
 ---
 
 Big projects for this week:

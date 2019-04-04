@@ -1,6 +1,6 @@
 import { gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
-import React, { cloneElement, isValidElement, useEffect } from 'react'
+import React, { cloneElement, isValidElement, memo, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
 import { useDefaultProps } from '../hooks/useDefaultProps'
@@ -14,14 +14,16 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 type Base = { cols?: Object }
 
-export type GridLayoutProps =
-  | Base & {
-      children?: React.ReactNode[]
-    }
-  | Base & {
-      items: any[]
-      renderItem: (a: any, index: number) => React.ReactNode
-    }
+type GridLayoutPropsUncontrolled = Base & {
+  items: any[]
+  renderItem: (a: any, index: number) => React.ReactNode
+}
+
+type GridLayoutPropsControlled = Base & {
+  children?: React.ReactNode[]
+}
+
+export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsUncontrolled
 
 const defaultProps: Partial<GridLayoutProps> = {
   cols: {
@@ -40,6 +42,12 @@ class GridStore {
   layout = 'lg'
   layouts = {
     lg: null,
+  }
+
+  setItems = (items: { [key: string]: GridItemProps }) => {
+    for (const key in items) {
+      this.items[key] = items[key]
+    }
   }
 
   setLayout = (layout: any[]) => {
@@ -79,6 +87,7 @@ class GridStore {
   )
 
   mountItem(id: string, props: GridItemProps) {
+    console.log('mounting item')
     this.items[id] = props
   }
 
@@ -90,23 +99,25 @@ class GridStore {
 // this is the problem function, type is off
 const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
-export function GridLayout(directProps: GridLayoutProps) {
+export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
+  if ('items' in props) {
+    return <GridLayoutUncontrolled {...props} />
+  }
+  return <GridLayoutControlled {...props} />
+})
+
+export function GridLayoutControlled(props: GridLayoutPropsControlled) {
   const gridStore = useStore(GridStore, props)
-  const items =
-    'items' in props
-      ? props.items.map((item, idx) => props.renderItem(item, idx))
-      : [...props.children]
-  const gridItems = items.map(
+  const items = [...props.children].map(
     child =>
       isValidElement(child) && (
         <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
       ),
   )
   let children = null
-
   if (!gridStore.layouts.lg) {
-    children = <div style={{ display: 'none' }}>{gridItems}</div>
+    children = <div style={{ display: 'none' }}>{items}</div>
   } else {
     children = (
       <ResponsiveReactGridLayout
@@ -116,12 +127,48 @@ export function GridLayout(directProps: GridLayoutProps) {
         measureBeforeMount={false}
         cols={props.cols}
       >
-        {gridItems}
+        {items}
       </ResponsiveReactGridLayout>
     )
   }
-
   return <Provider value={gridStore}>{children}</Provider>
+}
+
+const getSizes = items => {
+  const sizes = {}
+  for (const [index] of items.entries()) {
+    sizes[index] = { w: 1, h: 1 }
+  }
+  return sizes
+}
+
+function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
+  const gridStore = useStore(GridStore, props)
+  const items = props.items.map((item, idx) => <div key={idx}>{props.renderItem(item, idx)}</div>)
+  const sizes = getSizes(props.items)
+
+  useEffect(() => {
+    console.log('set sizes')
+    gridStore.setItems(sizes)
+  }, [JSON.stringify(sizes)])
+
+  console.log('items', items, gridStore.layouts.lg)
+
+  if (!gridStore.layouts.lg) {
+    return null
+  }
+
+  return (
+    <ResponsiveReactGridLayout
+      onLayoutChange={gridStore.setLayout}
+      compactType="vertical"
+      layouts={gridStore.layouts}
+      measureBeforeMount={false}
+      cols={props.cols}
+    >
+      {items}
+    </ResponsiveReactGridLayout>
+  )
 }
 
 export type GridItemProps = ViewProps & {

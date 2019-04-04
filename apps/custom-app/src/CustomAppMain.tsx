@@ -7,7 +7,7 @@ export function CustomAppMain(_props: AppProps) {
   _props
   return (
     <GridLayout
-      items={items}
+      items={items.slice(0, 20)}
       renderItem={item => (
         <Card flex={1} overflow="hidden" title={item.title}>
           <img src={item.url} />

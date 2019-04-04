@@ -34,7 +34,7 @@ export const MergeHighlightsContext = ({ value, children }: MergeHighlightsConte
   </MergeContext>
 )
 
-export const HighlightText = ({ children, ...props }: Props) => {
+export function HighlightText({ children, ...props }: Props) {
   const options = useContext(HighlightsContext)
   let extraProps
   if (typeof props.alpha === 'undefined') {

@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { Absolute, gloss, linearGradient, Row, SimpleText, useTheme, ViewProps } from '@o/gloss'
+import { Absolute, gloss, linearGradient, Row, useTheme, ViewProps } from '@o/gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
@@ -9,6 +9,7 @@ import {
   IconProps,
   memoIsEqualDeep,
   MenuTemplate,
+  SimpleText,
   Tooltip,
   useContextMenu,
 } from '@o/ui'

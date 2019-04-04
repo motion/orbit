@@ -3,8 +3,9 @@ import { alphaColor, CSSPropertySet, gloss, propsToTextSize, View } from '@o/glo
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
+import { ScaleContext } from '../Scale'
 
-type ChildrenHlFn = ((Highlights) => JSX.Element | null)
+type ChildrenHlFn = (Highlights) => JSX.Element | null
 
 export type TextProps = CSSPropertySetStrict &
   React.HTMLAttributes<HTMLParagraphElement> & {
@@ -45,6 +46,8 @@ export class Text extends React.PureComponent<TextProps> {
   selected = false
   editable = false
   node = null
+
+  static contextType = ScaleContext
 
   static defaultProps = {
     // not a p because its nice to nest it
@@ -167,11 +170,19 @@ export class Text extends React.PureComponent<TextProps> {
       ...props
     } = this.props
     const { doClamp, textHeight } = this.state
-    const text = propsToTextSize(this.props)
-    const numLinesToShow = doClamp && Math.floor(textHeight / text.lineHeightNum)
+    const scale = this.context ? this.context.size : 1
+    const size = scale * (this.props.size || 1)
+    const textProps = propsToTextSize({
+      sizeLineHeight: this.props.sizeLineHeight,
+      lineHeight: this.props.lineHeight,
+      fontSize: this.props.fontSize,
+      size,
+      sizeMethod: this.props.sizeMethod,
+    })
+    const numLinesToShow = doClamp && Math.floor(textHeight / textProps.lineHeightNum)
     const maxHeight =
-      typeof ellipse === 'number' && text.lineHeightNum
-        ? `${ellipse * text.lineHeightNum}px`
+      typeof ellipse === 'number' && textProps.lineHeightNum
+        ? `${ellipse * textProps.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
 
@@ -250,6 +261,8 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
+        fontSize={textProps.fontSize}
+        lineHeight={textProps.lineHeight}
         {...props}
         {...finalProps}
       />

@@ -5,6 +5,7 @@
  * @format
  */
 
+import { gloss } from '@o/gloss'
 import React, { forwardRef, RefObject } from 'react'
 // @ts-ignore
 import { DynamicSizeList, VariableSizeList, VariableSizeListProps } from 'react-window'
@@ -24,10 +25,12 @@ export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicList
     disable: false || disableMeasure,
   })
   return (
-    <View flex={1} ref={ref}>
+    <DynamicListChrome flex={1} ref={ref}>
       <DynamicSizeList ref={props.listRef || fwRef} width={width} height={height} {...props} />
-    </View>
+    </DynamicListChrome>
   )
 })
+
+const DynamicListChrome = gloss(View)
 
 export type DynamicListControlled = VariableSizeList

@@ -11,7 +11,6 @@ export {
   InlineBlock,
   InlineFlex,
   Row,
-  SimpleText,
   Theme,
   ThemeContext,
   ThemeProvide,
@@ -130,6 +129,7 @@ export * from './PersonRow'
 export * from './Popover'
 export * from './progress/Loading'
 export * from './progress/Progress'
+export * from './Scale'
 export * from './ScrollableContent'
 export * from './Section'
 export * from './SegmentedRow'
@@ -160,6 +160,7 @@ export * from './text/DateFormat'
 export * from './text/HighlightText'
 export * from './text/Message'
 export * from './text/Paragraph'
+export * from './text/SimpleText'
 export * from './text/SubTitle'
 export * from './text/Text'
 export * from './text/TimeAgo'

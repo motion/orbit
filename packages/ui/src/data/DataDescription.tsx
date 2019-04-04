@@ -1,9 +1,10 @@
-import { gloss, SimpleText, toColor, View } from '@o/gloss'
+import { gloss, toColor, View } from '@o/gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
 import { colors } from '../helpers/colors'
 import { Link } from '../Link'
+import { SimpleText } from '../text/SimpleText'
 import { DataInspectorSetValue } from './DataInspectorControlled'
 
 /**
@@ -61,7 +62,7 @@ const ColorPickerDescription = gloss({
 })
 
 type DataDescriptionProps = {
-  path?: Array<string>
+  path?: string[]
   type: string
   value: any
   setValue?: DataInspectorSetValue

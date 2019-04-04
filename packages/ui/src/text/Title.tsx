@@ -1,10 +1,10 @@
 import React from 'react'
 import { Text } from './Text'
 
-export function Title({ verticalSpacing = 1, children, ...props }) {
+export function Title({ size = 1.5, verticalSpacing = 1, children, ...props }) {
   return (
     <Text
-      size={1.5}
+      size={size}
       fontWeight={700}
       margin={[5 * verticalSpacing, 0, 10 * verticalSpacing]}
       {...props}

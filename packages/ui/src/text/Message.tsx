@@ -1,4 +1,5 @@
-import { gloss, SimpleText } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import { SimpleText } from './SimpleText'
 
 export const Message = gloss(SimpleText, {
   userSelect: 'auto',

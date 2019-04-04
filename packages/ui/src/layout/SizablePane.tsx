@@ -13,9 +13,17 @@ export type SizablePaneProps = Partial<InteractiveProps> &
     index?: number
     parentSize?: number
     flex?: number
+    collapsed?: boolean
   }
 
-export function SizablePane({ scrollable, children, resizable, flex, ...props }: SizablePaneProps) {
+export function SizablePane({
+  scrollable,
+  children,
+  resizable,
+  flex,
+  collapsed,
+  ...props
+}: SizablePaneProps) {
   const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(-1)
   const [flexSize, setFlexSize] = useState(-1)
@@ -55,6 +63,14 @@ export function SizablePane({ scrollable, children, resizable, flex, ...props }:
         maxWidth: flexSize * 1.5,
       }
     }
+    if (collapsed) {
+      sizeProps = {
+        ...sizeProps,
+        // "rows" collapsing would be odd
+        // minWidth: 'auto',
+        // width: 'auto',
+      }
+    }
   } else {
     if (props.index > 0) {
       borderElement = <BorderTop />
@@ -64,6 +80,13 @@ export function SizablePane({ scrollable, children, resizable, flex, ...props }:
         minHeight: flexSize * 0.5,
         height: size,
         maxHeight: flexSize * 1.5,
+      }
+    }
+    if (collapsed) {
+      sizeProps = {
+        ...sizeProps,
+        minHeight: 'auto',
+        height: 'auto',
       }
     }
   }

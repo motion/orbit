@@ -124,6 +124,7 @@ export function Form({
 
   return (
     <form
+      style={{ display: 'contents' }}
       onSubmit={async e => {
         e.preventDefault()
         if (onSubmit) {
@@ -158,7 +159,7 @@ export function Form({
       }}
     >
       <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
-        <Section {...sectionProps}>
+        <Section flex={1} {...sectionProps}>
           {state.globalError && <Message alt="error">{state.globalError}</Message>}
           {state.errors && <Message alt="warn">Form has a few errors, please check.</Message>}
 

@@ -25,7 +25,7 @@ export type BaseRules = {
   [key: string]: string | number
 }
 
-type GlossProps<Props> = Props &
+export type GlossProps<Props> = Props &
   HTMLAttributes<HTMLElement> & {
     tagName?: string
     children?: ReactNode

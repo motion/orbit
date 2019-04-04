@@ -12,6 +12,7 @@ export type FlowProps = {
   children: any
   renderLayout?: (props: FlowLayoutProps) => React.ReactNode
   renderToolbar?: (props: StepState) => React.ReactNode
+  height?: number
 }
 
 type FlowStepProps = {
@@ -33,6 +34,7 @@ export type FlowLayoutProps = {
   step: FlowStep
   steps: FlowStep[]
   state: StepState
+  height?: number
 }
 
 type StepState = {
@@ -51,6 +53,7 @@ const DefaultFlowLayout = ({
   step,
   steps,
   state,
+  height,
 }: FlowLayoutProps) => {
   return (
     <Section
@@ -58,6 +61,8 @@ const DefaultFlowLayout = ({
       padding={0}
       title={step.title}
       subTitle={step.subTitle || `${index + 1}/${total}`}
+      minHeight={300}
+      height={height}
       belowTitle={
         <SurfacePassProps
           background="transparent"
@@ -69,14 +74,14 @@ const DefaultFlowLayout = ({
           sizePadding={1.5}
         >
           <Row>
-            {steps.map((step, stepIndex) => (
+            {steps.map((stp, stepIndex) => (
               <Button
-                key={step.key}
-                alt={steps[index].key === step.key ? 'selected' : null}
-                active={steps[index].key === step.key}
+                key={stp.key}
+                alt={steps[index].key === stp.key ? 'selected' : null}
+                active={steps[index].key === stp.key}
                 onClick={() => state.setStepIndex(stepIndex)}
               >
-                {step.title}
+                {stp.title}
               </Button>
             ))}
           </Row>
@@ -96,15 +101,20 @@ const DefaultFlowLayout = ({
   )
 }
 
-export function Flow({ renderToolbar, renderLayout = DefaultFlowLayout, ...props }: FlowProps) {
+export function Flow({
+  height,
+  renderToolbar,
+  renderLayout = DefaultFlowLayout,
+  ...props
+}: FlowProps) {
   const [index, setIndex] = useState(0)
   const [data, setDataDumb] = useState(props.initialData)
   // make it  merge by default
   const setData = x => setDataDumb({ ...data, ...x })
   const total = Children.count(props.children)
   const steps: FlowStep[] = Children.map(props.children, child => child.props).map(
-    (child, index) => ({
-      key: `${index}`,
+    (child, idx) => ({
+      key: `${idx}`,
       ...child,
     }),
   )
@@ -119,12 +129,12 @@ export function Flow({ renderToolbar, renderLayout = DefaultFlowLayout, ...props
   }
 
   const contents = (
-    <Slider curFrame={index}>
-      {Children.map(props.children, (child, index) => {
+    <Slider fixHeightToParent curFrame={index}>
+      {Children.map(props.children, (child, idx) => {
         const step = child.props
         const ChildView = step.children
         return (
-          <SliderPane key={index}>
+          <SliderPane key={idx}>
             {typeof step.children === 'function' ? <ChildView {...actions} /> : step.children}
           </SliderPane>
         )
@@ -142,11 +152,12 @@ export function Flow({ renderToolbar, renderLayout = DefaultFlowLayout, ...props
         step: steps[index],
         steps,
         state: actions,
+        height,
       })}
     </>
   )
 }
 
-export function FlowStep(_props: FlowStepProps) {
+export function FlowStep(_: FlowStepProps) {
   return null
 }

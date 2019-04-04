@@ -12,7 +12,7 @@ import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { headerStore, newAppStore, paneManagerStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
@@ -54,6 +54,8 @@ export const OrbitHeader = memo(function OrbitHeader() {
           {isOnTearablePane && (
             <>
               <SurfacePassProps chromeless>
+                {orbitStore.activeActions || null}
+                <Space />
                 <OrbitEditAppButton />
                 <Space />
                 <LinkButton />

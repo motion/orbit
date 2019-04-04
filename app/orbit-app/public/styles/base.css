@@ -226,6 +226,10 @@ a.anchor {
   background: #eee;
 }
 
+.chat-markdown .paragraph {
+  margin: 0;
+}
+
 /* more reset */
 
 button,

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react'
 import { AppElements } from '../types/AppDefinition'
 
-const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context']
+const validAppProps = ['index', 'children', 'statusBar', 'toolBar', 'context', 'actions']
 
 export type AppMainViewProps = {
   children: React.ReactNode
@@ -18,6 +18,7 @@ export const AppViewsContext = createContext({
   Statusbar: null as AppMainView,
   Main: null as AppMainView,
   Sidebar: null as AppMainView,
+  Actions: null as React.FunctionComponent,
 })
 
 export function App(props: AppElements) {
@@ -27,11 +28,12 @@ export function App(props: AppElements) {
     }
   }
 
-  const { Statusbar, Main, Sidebar, Toolbar } = useContext(AppViewsContext)
+  const { Statusbar, Main, Sidebar, Toolbar, Actions } = useContext(AppViewsContext)
   const hasStatusbar = !!props.statusBar && !!Statusbar
   const hasMain = !!props.children && !!Main
   const hasSidebar = !!props.index && !!Sidebar
   const hasToolbar = !!props.toolBar && !!Toolbar
+  const hasActions = !!props.actions && !!Actions
   const hasProps = {
     hasStatusbar,
     hasMain,
@@ -45,6 +47,7 @@ export function App(props: AppElements) {
       {hasMain && <Main {...hasProps}>{props.children}</Main>}
       {hasSidebar && <Sidebar {...hasProps}>{props.index}</Sidebar>}
       {hasToolbar && <Toolbar {...hasProps}>{props.toolBar}</Toolbar>}
+      {hasActions && <Actions {...hasProps}>{props.actions}</Actions>}
     </>
   )
 }

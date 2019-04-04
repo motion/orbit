@@ -1,6 +1,7 @@
 import { gloss, Row, View } from '@o/gloss'
 import React, { useContext } from 'react'
 import { ButtonPerson } from '../buttons/ButtonPerson'
+import { SizedSurface } from '../SizedSurface'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
@@ -84,7 +85,9 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           )}
         </Row>
       )}
-      <ChatMessageInner>{content}</ChatMessageInner>
+      <SizedSurface padding={[6, 10]} noInnerElement alt="action" sizeRadius={3}>
+        {content}
+      </SizedSurface>
     </ChatMessageFrame>
   )
 }
@@ -92,14 +95,9 @@ export function ChatMessage(rawProps: ChatMessageProps) {
 const ChatMessageFrame = gloss(View, {
   padding: [0, 0],
   overflow: 'hidden',
+  alignItems: 'flex-start',
   condensed: {
     flexFlow: 'row',
     alignItems: 'center',
   },
-})
-
-const ChatMessageInner = gloss({
-  padding: [0, 16],
-  flex: 1,
-  overflow: 'hidden',
 })

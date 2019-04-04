@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { gloss, View } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
-import { Button, ChatMessages, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@o/ui'
+import { ChatMessages, Divider, Row, ScrollableContent, Tab, Tabs, Title } from '@o/ui'
 import * as React from 'react'
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
@@ -84,12 +84,12 @@ export function BitConversation(props: AppBitMainProps) {
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
-        <SegmentedRow chromeless fontWeight={600} size={0.9}>
-          <Button onClick={() => setActivePane(0)}>Conversation</Button>
-          <Button onClick={() => setActivePane(1)}>Previously</Button>
-          <Button onClick={() => setActivePane(2)}>Afterwards</Button>
-          <Button onClick={() => setActivePane(3)}>Related</Button>
-        </SegmentedRow>
+        <Tabs onActive={i => setActivePane(+i)} active={`${activePane}`}>
+          <Tab id="0" label="Conversation" />
+          <Tab id="1" label="Previously" />
+          <Tab id="2" label="Afterwards" />
+          <Tab id="3" label="Related" />
+        </Tabs>
       </Row>
 
       <Pane isShown={activePane === 0}>

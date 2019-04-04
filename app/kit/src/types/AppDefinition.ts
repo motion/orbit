@@ -9,6 +9,7 @@ export type AppElements = {
   statusBar?: React.ReactElement<any>
   toolBar?: React.ReactElement<any>
   context?: any
+  actions?: React.ReactElement<any>
 }
 
 export type AppViews = {

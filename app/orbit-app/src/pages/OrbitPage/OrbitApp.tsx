@@ -8,7 +8,7 @@ import {
 } from '@o/kit'
 import { Button, Loading, Section, Space, View, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
-import React, { Component, memo, Suspense, useCallback } from 'react'
+import React, { Component, memo, Suspense, useCallback, useEffect } from 'react'
 import '../../apps/orbitApps'
 import { useAppLocationEffect } from '../../effects/useAppLocationEffect'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -49,6 +49,14 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
   return <OrbitAppRenderOfDefinition appDef={appDef} id={id} identifier={identifier} />
 })
 
+function OrbitActions(props: { children: any }) {
+  const stores = useStoresSimple()
+  useEffect(() => {
+    stores.orbitStore.activeActions = props.children
+  }, [props.children])
+  return null
+}
+
 export const OrbitAppRenderOfDefinition = ({
   id,
   identifier,
@@ -63,11 +71,12 @@ export const OrbitAppRenderOfDefinition = ({
   const Sidebar = OrbitSidebar
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
+  const Actions = OrbitActions
 
   return (
     <Suspense fallback={<Loading />}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
-        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar }}>
+        <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary>
             <App />
           </ErrorBoundary>

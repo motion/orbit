@@ -21,7 +21,7 @@ export class SearchResultResolver {
   constructor(cosal: Cosal, args: SearchQuery) {
     this.args = args
     this.cosal = cosal
-    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + args.group + ')')
+    this.log = new Logger('search (' + (args.query ? args.query + ', ' : '') + ')')
     this.queryExecutor = new SearchQueryExecutor(this.log)
   }
 

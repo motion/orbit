@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
-import { FullScreen, gloss, SimpleText, useTheme } from '@o/gloss'
-import { Icon, useActiveApps } from '@o/kit'
+import { FullScreen, gloss, useTheme } from '@o/gloss'
+import { Icon, useActiveApps, useLocationLink } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 // import { clipboard } from 'electron'
@@ -30,6 +30,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
+  const appSettingsLink = useLocationLink(`apps?itemId=${activePane.id}`)
 
   return (
     <OrbitHeaderContainer
@@ -64,7 +65,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 {orbitStore.activeActions || null}
                 <OrbitEditAppButton />
                 <LinkButton />
-                <Button icon="gear" tooltip="App Settings" />
               </HeaderButtonTheme>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
                 {!isEditing && (
@@ -79,6 +79,12 @@ export const OrbitHeader = memo(function OrbitHeader() {
         </HeaderContain>
 
         <HeaderSide rightSide>
+          <HeaderButtonTheme iconSize={11}>
+            <Button icon="gear" tooltip="App Settings" onClick={appSettingsLink} />
+          </HeaderButtonTheme>
+
+          <View flex={1} />
+
           {isEditing && (
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
@@ -225,11 +231,15 @@ const OpenButton = memo(() => {
   }
 
   return (
-    <Button tooltip="Open app onto desktop" onClick={Actions.tearApp}>
-      Open{' '}
-      <SimpleText alpha={0.5} transform={{ y: 1 }} marginLeft={6} size={0.7} fontWeight={200}>
+    <Button
+      icon="arrowminright"
+      iconAfter
+      tooltip="Open to desktop (⌘ + ⏎)"
+      onClick={Actions.tearApp}
+    >
+      {/* <SimpleText alpha={0.5} transform={{ y: 1 }} marginLeft={6} size={0.7} fontWeight={200}>
         ⌘ + ⏎
-      </SimpleText>
+      </SimpleText> */}
     </Button>
   )
 })

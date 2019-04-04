@@ -125,6 +125,10 @@ export class SelectableStore {
     return newIndex
   }
 
+  moveToId = (rowKey: string) => {
+    this.setActive([rowKey])
+  }
+
   setListRef(ref: DynamicListControlled) {
     this.listRef = ref
   }

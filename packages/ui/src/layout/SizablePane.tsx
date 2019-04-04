@@ -6,6 +6,7 @@ import { PaneTitleRowParentProps } from '../PaneTitleRow'
 import { SectionPassProps } from '../Section'
 import { View } from '../View/View'
 import { LayoutContext } from './Layout'
+import { Scrollable } from './Scrollable'
 
 export type SizablePaneProps = Partial<InteractiveProps> &
   PaneTitleRowParentProps & {

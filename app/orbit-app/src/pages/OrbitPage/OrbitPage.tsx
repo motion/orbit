@@ -37,9 +37,14 @@ import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
+import * as ReactDOM from 'react-dom'
+import * as UI from '@o/ui'
+import * as KIT from '@o/kit'
 
-// @ts-ignore
-// window['OrbitKit'] = OrbitKit(window as any).OrbitUI = OrbitUI
+window['React'] = (window as any).React = React
+window['ReactDOM'] = (window as any).ReactDOM = ReactDOM
+window['OrbitKit'] = (window as any).OrbitUI = KIT
+window['OrbitUI'] = (window as any).OrbitUI = UI
 
 export const OrbitPage = memo(() => {
   const themeStore = useStore(ThemeStore)

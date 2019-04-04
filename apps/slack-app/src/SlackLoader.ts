@@ -1,4 +1,5 @@
 import { AppBit, Logger, sleep } from '@o/kit'
+import 'slack'
 import { channels, team, users } from 'slack'
 import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
 
@@ -7,7 +8,6 @@ import { SlackChannel, SlackMessage, SlackTeam, SlackUser } from './SlackModels'
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before users load.
    */
@@ -21,8 +21,7 @@ const THROTTLING = {
   /**
    * Delay before messages load.
    */
-  messages: 100
-
+  messages: 100,
 }
 
 /**
@@ -102,8 +101,7 @@ export class SlackLoader {
       const options: any = {
         token: this.app.token,
       }
-      if (cursor)
-        options.cursor = cursor
+      if (cursor) options.cursor = cursor
 
       this.log.verbose('request to channels.list', options)
       const response = await channels.list(options)
@@ -138,11 +136,8 @@ export class SlackLoader {
   async loadMessages(
     channelId: string,
     oldestMessageId?: string,
-  ): Promise<{ messages: SlackMessage[], lastMessageTz: string }> {
-    const loadRecursively = async (
-      oldestMessageId?: string,
-      latestMessageId?: string
-    ) => {
+  ): Promise<{ messages: SlackMessage[]; lastMessageTz: string }> {
+    const loadRecursively = async (oldestMessageId?: string, latestMessageId?: string) => {
       await sleep(THROTTLING.messages)
 
       const options = {
@@ -184,7 +179,7 @@ export class SlackLoader {
 
     return {
       messages: filteredMessages,
-      lastMessageTz: messages.length ? messages[0].ts : undefined // note: we must use loaded messages, not filtered
+      lastMessageTz: messages.length ? messages[0].ts : undefined, // note: we must use loaded messages, not filtered
     }
   }
 }

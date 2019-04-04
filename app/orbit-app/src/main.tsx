@@ -2,6 +2,7 @@
 // we set it up once with setGlobalConfig() and then import the rest of the app
 
 import { getGlobalConfig, GlobalConfig, setGlobalConfig } from '@o/config'
+import 'electron'
 import * as firebase from 'firebase'
 import * as React from 'react'
 // @ts-ignore

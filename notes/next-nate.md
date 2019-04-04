@@ -1,5 +1,7 @@
 Good enough demo to Ken Wheeler / et al:
 
+- Easy way to pull in any app "data explorer" and have it visually show light config to let you set up a query.
+  - Perhaps as a generic cardview that "flips around" for config.
 - Editable grid that persists (with add/remove)
 - Drag/drop for tables/lists
   - Draggable

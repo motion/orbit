@@ -10,20 +10,16 @@ if (isBrowser) {
   require('react-grid-layout/css/styles.css')
 }
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive)
+export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsUncontrolled
 
 type Base = { cols?: Object }
-
 type GridLayoutPropsUncontrolled = Base & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
 }
-
 type GridLayoutPropsControlled = Base & {
-  children?: React.ReactNode[]
+  children?: React.ReactNode
 }
-
-export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsUncontrolled
 
 const defaultProps: Partial<GridLayoutProps> = {
   cols: {
@@ -34,6 +30,8 @@ const defaultProps: Partial<GridLayoutProps> = {
     lg: 6,
   },
 }
+
+const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 class GridStore {
   props: GridLayoutProps
@@ -109,7 +107,8 @@ export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps)
 
 export function GridLayoutControlled(props: GridLayoutPropsControlled) {
   const gridStore = useStore(GridStore, props)
-  const items = [...props.children].map(
+  const childArr = Array.isArray(props.children) ? props.children : [props.children]
+  const items = childArr.map(
     child =>
       isValidElement(child) && (
         <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>

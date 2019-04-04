@@ -2,7 +2,9 @@ import { ThemeContext } from '@o/gloss'
 import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
+import { ActionMeta } from 'react-select/lib/types'
 import { SimpleText } from '../text/SimpleText'
+import { Omit } from '../types'
 import { View } from '../View/View'
 import { FormContext } from './Form'
 
@@ -10,9 +12,13 @@ const selectStyles = {
   option: provided => ({
     ...provided,
   }),
+  menuPortal: provided => ({
+    ...provided,
+    zIndex: 10000000000000,
+    pointerEvents: 'auto',
+  }),
   menu: provided => ({
     ...provided,
-    zIndex: 1000,
     margin: '1px 0 0',
     borderRadius: 0,
   }),
@@ -58,18 +64,35 @@ const themes = {
   }),
 }
 
-export type SelectProps = Props<{ value: string; label: string } | string>
+type SelectOption = { label: string; value: any }
 
-export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number }) {
+type BaseProps = Omit<Props<SelectOption>, 'onChange' | 'isMulti'> & {
+  minWidth?: number
+}
+
+// split out multi vs regular so onChange isn't a pain
+export type SelectProps =
+  | BaseProps & {
+      isMulti?: false
+      onChange?: (value: SelectOption | null, action: ActionMeta) => any
+    }
+  | BaseProps & {
+      isMulti: true
+      onChange?: (value: SelectOption[] | null, action: ActionMeta) => any
+    }
+
+export function Select({ minWidth, ...props }: SelectProps) {
   const { activeThemeName } = useContext(ThemeContext)
   const options = normalizeOptions(props.options)
   const context = useContext(FormContext)
 
   const onChange = useCallback(
     (items, action) => {
+      if (props.onChange) {
+        props.onChange(items, action)
+      }
       if (!props.name) return
       if (!context) return
-      console.log('got event', items, action)
       context.dispatch({
         type: 'changeField',
         value: {
@@ -78,9 +101,6 @@ export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number
           type: 'select',
         },
       })
-      if (props.onChange) {
-        props.onChange(items, action)
-      }
       return () => {
         context.dispatch({ type: 'removeField', value: props.name })
       }
@@ -95,6 +115,7 @@ export function Select({ minWidth, ...props }: SelectProps & { minWidth?: number
           styles={selectStyles}
           theme={themes[activeThemeName]}
           minMenuHeight={20}
+          menuPortalTarget={document.body}
           {...props}
           options={options}
           onChange={onChange}

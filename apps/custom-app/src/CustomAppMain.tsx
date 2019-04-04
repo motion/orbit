@@ -1,18 +1,37 @@
-import { AppProps } from '@o/kit'
-import { Card, GridLayout, useFetch } from '@o/ui'
-import React from 'react'
+import { AppBit, AppProps, SelectApp, Table } from '@o/kit'
+import Slack from '@o/slack-app'
+import { Card, GridItem, GridLayout } from '@o/ui'
+import React, { useEffect, useState } from 'react'
 
-export function CustomAppMain(_props: AppProps) {
-  const items = useFetch('https://jsonplaceholder.typicode.com/photos')
-  _props
+export function CustomAppMain(_: AppProps) {
+  const [app, setApp] = useState<AppBit>(null)
+  const [res, setRes] = useState([])
+
+  useEffect(() => {
+    if (app) {
+      Slack.api(app)
+        .channelsList()
+        .then(({ channels }) => {
+          console.log('channels', channels)
+          setRes(channels)
+        })
+    }
+  }, [app])
+
   return (
-    <GridLayout
-      items={items.slice(0, 10)}
-      renderItem={item => (
-        <Card flex={1} overflow="hidden" title={item.title}>
-          <img src={item.url} />
-        </Card>
-      )}
-    />
+    <>
+      <GridLayout>
+        <GridItem w={4} h={4}>
+          <Card
+            afterTitle={<SelectApp onSelect={setApp} />}
+            flex={1}
+            overflow="hidden"
+            title="Slack Messages"
+          >
+            <Table rows={res} />
+          </Card>
+        </GridItem>
+      </GridLayout>
+    </>
   )
 }

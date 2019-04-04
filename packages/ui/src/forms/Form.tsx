@@ -1,12 +1,15 @@
 import { flatten } from 'lodash'
 import React, { createContext, Dispatch, useContext, useReducer } from 'react'
 import { MergeContext } from '../helpers/MergeContext'
+import { Section, SectionProps } from '../Section'
+import { SurfacePassProps } from '../Surface'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { InputType } from './Input'
 
-export type FormProps = {
+export type FormProps = SectionProps & {
   children?: React.ReactNode
   use?: UseForm
+  size?: number
 }
 
 export type FieldState =
@@ -47,14 +50,13 @@ function fieldsReducer(state: FormState, action: FormActions) {
   }
 }
 
-export function Form(props: FormProps) {
+export function Form({ children, use, size = 1.2, ...sectionProps }: FormProps) {
   const [state, dispatch] = useReducer(fieldsReducer, { fields: {} })
   return (
-    <MergeContext
-      Context={FormContext}
-      value={props.use ? props.use.context : { dispatch, ...state }}
-    >
-      {props.children}
+    <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
+      <Section {...sectionProps}>
+        <SurfacePassProps size={size}>{children}</SurfacePassProps>
+      </Section>
     </MergeContext>
   )
 }

@@ -60,7 +60,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       borderWidth={bordered ? 1 : 0}
       margin={typeof margin !== 'undefined' ? margin : bordered ? 10 : 0}
       noInnerElement
-      overflow="hidden"
       flex={flex}
       background={background}
       height={height}
@@ -85,7 +84,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       )}
       <SectionInner
         maxHeight={maxInnerHeight}
-        overflowY={scrollable ? 'auto' : 'hidden'}
+        overflowY={scrollable ? 'auto' : 'inherit'}
         flex={1}
         ref={innerRef}
         {...viewProps}
@@ -99,6 +98,4 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   )
 })
 
-const SectionInner = gloss(View, {
-  overflowX: 'hidden',
-})
+const SectionInner = gloss(View)

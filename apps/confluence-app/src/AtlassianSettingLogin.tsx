@@ -1,12 +1,11 @@
+import { loadOne } from '@o/bridge/_'
 import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
-import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
+import { Button, Col, Form, FormField, InputField, Message, Space } from '@o/ui'
 import * as React from 'react'
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useEffect } from 'react'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
-import { useEffect } from 'react'
 import confluenceApp from './index'
-import { loadOne } from '@o/bridge/_'
 
 type Props = {
   identifier: string
@@ -17,12 +16,6 @@ const Statuses = {
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
   FAIL: 'FAIL',
-}
-
-const buttonThemes = {
-  [Statuses.LOADING]: '#999',
-  [Statuses.SUCCESS]: 'darkgreen',
-  [Statuses.FAIL]: 'darkred',
 }
 
 interface AtlassianAppValuesCredentials {
@@ -114,48 +107,41 @@ export function AtlassianSettingLogin(props: Props) {
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
+
       <Space />
-      <Col margin="auto" width={370}>
-        <Col>
-          <Form>
-            <InputField
-              label="Domain"
-              value={credentials.domain}
-              // !TODO
-              onChange={handleChange('domain') as any}
-            />
-            <InputField
-              label="Username"
-              value={credentials.username}
-              // !TODO
-              onChange={handleChange('username') as any}
-            />
-            <InputField
-              label="Password"
-              type="password"
-              value={credentials.password}
-              // !TODO
-              onChange={handleChange('password') as any}
-            />
-          </Form>
-          <Space />
-          <Theme
-            theme={{
-              color: '#fff',
-              background: buttonThemes[status] || '#4C36C4',
-            }}
-          >
-            {status === Statuses.LOADING && <Button>Saving...</Button>}
-            {status !== Statuses.LOADING && (
-              <Button type="submit" onClick={addApp}>
-                Save
-              </Button>
-            )}
-          </Theme>
-          <Space />
-          {error && <Message>{error}</Message>}
-        </Col>
-      </Col>
+
+      <Form margin="auto" width={370}>
+        <InputField
+          label="Domain"
+          value={credentials.domain}
+          // !TODO
+          onChange={handleChange('domain') as any}
+        />
+        <InputField
+          label="Username"
+          value={credentials.username}
+          // !TODO
+          onChange={handleChange('username') as any}
+        />
+        <InputField
+          label="Password"
+          type="password"
+          value={credentials.password}
+          // !TODO
+          onChange={handleChange('password') as any}
+        />
+        <Space />
+        <FormField label="">
+          {status === Statuses.LOADING && <Button>Saving...</Button>}
+          {status !== Statuses.LOADING && (
+            <Button alt="action" onClick={addApp}>
+              Add
+            </Button>
+          )}
+        </FormField>
+        <Space />
+        {error && <Message>{error}</Message>}
+      </Form>
     </Col>
   )
 }

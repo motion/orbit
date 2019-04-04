@@ -2,7 +2,7 @@ import { mergeDefined } from '@o/utils'
 import React from 'react'
 import { Surface, SurfaceProps, useSurfaceProps } from './Surface'
 
-const LINE_HEIGHT = 28
+const LINE_HEIGHT = 29
 
 export type SizedSurfaceProps = SurfaceProps & {
   flex?: any

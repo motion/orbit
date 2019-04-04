@@ -130,15 +130,15 @@ export function Form({
           // first do any field validation
           let fieldErrors = {}
           for (const key in state.values) {
-            const { required, validate, value } = state.values[key]
+            const { name, required, validate, value } = state.values[key]
             if (required && !value) {
-              fieldErrors[key] = 'is required.'
+              fieldErrors[name] = 'is required.'
               continue
             }
             if (typeof validate === 'function') {
               const err = validate(value)
               if (err) {
-                fieldErrors[key] = err
+                fieldErrors[name] = err
               }
               continue
             }
@@ -195,10 +195,10 @@ function getFormValue(context: FormContext, name: string) {
   }
 }
 
-export function useFormValue(name: string) {
+export function useFormError(name: string) {
   const context = useContext(FormContext)
   if (!context) return null
-  return getFormValue(context, name)
+  return context.errors && context.errors[name]
 }
 
 function createIncludeFilter(label: string, value: any): TableFilterIncludeExclude {

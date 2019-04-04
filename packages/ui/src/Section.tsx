@@ -68,6 +68,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxHeight={maxHeight}
       maxWidth={maxWidth}
       minHeight={minHeight}
+      overflow={bordered ? 'hidden' : 'inherit'}
     >
       {!!(title || afterTitle) && (
         <TitleRow

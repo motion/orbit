@@ -132,6 +132,7 @@ async function makeConfig() {
     devServer: {
       stats: {
         warnings: false,
+        colors: true,
       },
       historyApiFallback: true,
       hot: !isProd,
@@ -238,7 +239,9 @@ async function makeConfig() {
 
       target === 'web' && new webpack.IgnorePlugin(/^electron$/),
 
-      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        useTypescriptIncrementalApi: true,
+      }),
 
       isProd &&
         new TerserPlugin({

@@ -1,7 +1,6 @@
-import { Center, FullScreen, Image, Row, Theme, useDebounce, View } from '@o/ui'
+import { Center, FullScreen, Image, Row, Theme, Title, useDebounce, View } from '@o/ui'
 import { useWaitForFonts } from '@o/wait-for-fonts'
 import React, { Fragment, useState } from 'react'
-import { Parallax, ParallaxLayer } from 'react-spring/renderprops-addons'
 import download from '../../../public/images/download.svg'
 import glow from '../../../public/images/glow.svg'
 import lineSep from '../../../public/images/line-sep.svg'
@@ -57,100 +56,95 @@ export function HeadSection() {
   let longest = texts.reduce((a, c) => (a.length > c.length ? a : c), '')
 
   return (
-    <Parallax pages={3}>
-      <ParallaxLayer offset={0} speed={0.5}>
-        <Theme name="dark">
-          <FullScreen background={theme => theme.background} />
+    <Theme name="dark">
+      <Page offset={0}>
+        <Page.Content background={theme => theme.background}>
           <TopBlur />
           <FullScreen>
-            <Page>
-              <Header />
+            <Header />
 
-              <Row height="80%" flex={1} alignItems="center" justifyContent="center">
-                <View width="90%">
-                  <FadeDown disable={!measured}>
-                    <TitleText fontWeight={100} selectable>
-                      <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
-                        {allTitles[size]}
-                      </ViewPortText>
-                    </TitleText>
-
-                    <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
-                      {longest}
+            <Row height="80%" flex={1} alignItems="center" justifyContent="center">
+              <View width="90%">
+                <FadeDown disable={!measured}>
+                  <TitleText fontWeight={100} selectable>
+                    <ViewPortText onReady={() => !measured && setMeasuredDelayed(true)}>
+                      {allTitles[size]}
                     </ViewPortText>
+                  </TitleText>
 
-                    <Paragraph
-                      fontSize={parSize * 0.94}
-                      sizeLineHeight={1.5}
-                      textAlign="center"
-                      fontWeight={300}
-                      alpha={0.5}
-                    >
-                      {texts.map((t, i) => (
-                        <Fragment key={t}>
-                          {i > 0 && <br />}
-                          {t}
-                        </Fragment>
-                      ))}
-                    </Paragraph>
-                  </FadeDown>
-                </View>
-              </Row>
+                  <ViewPortText style={{ opacity: 0 }} min={pSize} onReady={setParSize}>
+                    {longest}
+                  </ViewPortText>
 
+                  <Paragraph
+                    fontSize={parSize * 0.94}
+                    sizeLineHeight={1.5}
+                    textAlign="center"
+                    fontWeight={300}
+                    alpha={0.5}
+                  >
+                    {texts.map((t, i) => (
+                      <Fragment key={t}>
+                        {i > 0 && <br />}
+                        {t}
+                      </Fragment>
+                    ))}
+                  </Paragraph>
+                </FadeDown>
+              </View>
+            </Row>
+
+            <View pointerEvents="none" position="absolute" top="30%" left={0} right={0} zIndex={1}>
+              <img src={glow} />
+            </View>
+
+            <Row width="100%" height="40%" position="relative">
               <View
-                pointerEvents="none"
-                position="absolute"
-                top="30%"
-                left={0}
-                right={0}
-                zIndex={1}
-              >
-                <img src={glow} />
+                background={`url(${screen}) no-repeat top left`}
+                backgroundSize="contain"
+                flex={1}
+                margin={[0, -120]}
+              />
+
+              <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
+                <img src={lineSep} />
+              </FullScreen>
+
+              <View position="absolute" bottom="10%" left={0} right={0}>
+                <img style={{ margin: 'auto' }} src={macbook} />
               </View>
 
-              <Row width="100%" height="40%" position="relative">
-                <View
-                  background={`url(${screen}) no-repeat top left`}
-                  backgroundSize="contain"
-                  flex={1}
-                  margin={[0, -120]}
-                />
-
-                <FullScreen minWidth={1512} margin={[0, -220]} top="auto">
-                  <img src={lineSep} />
-                </FullScreen>
-
-                <View position="absolute" bottom="10%" left={0} right={0}>
-                  <img style={{ margin: 'auto' }} src={macbook} />
-                </View>
-
-                <Center bottom="auto" top="4%">
-                  <Row
-                    width={159}
-                    height={45}
-                    position="relative"
-                    alignItems="center"
-                    justifyContent="center"
+              <Center bottom="auto" top="4%">
+                <Row
+                  width={159}
+                  height={45}
+                  position="relative"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Image position="absolute" src={download} />
+                  <Text
+                    transform={{ y: 2 }}
+                    zIndex={1}
+                    size={1.1}
+                    fontWeight={500}
+                    letterSpacing={1}
+                    pointerEvents="none"
                   >
-                    <Image position="absolute" src={download} />
-                    <Text
-                      transform={{ y: 2 }}
-                      zIndex={1}
-                      size={1.1}
-                      fontWeight={500}
-                      letterSpacing={1}
-                      pointerEvents="none"
-                    >
-                      Download
-                    </Text>
-                    <div style={{ width: 25 }} />
-                  </Row>
-                </Center>
-              </Row>
-            </Page>
+                    Download
+                  </Text>
+                  <div style={{ width: 25 }} />
+                </Row>
+              </Center>
+            </Row>
           </FullScreen>
-        </Theme>
-      </ParallaxLayer>
-    </Parallax>
+        </Page.Content>
+
+        <Page.Parallax speed={-1}>
+          <div style={{ width: 100, height: 100, background: 'red' }} />
+          <Title>Test me out</Title>
+        </Page.Parallax>
+      </Page>
+    </Theme>
   )
 }

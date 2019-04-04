@@ -8,9 +8,8 @@ import {
   useSearchState,
   useStore,
   useStores,
-  View,
 } from '@o/kit'
-import { Button, Calendar, Popover, Row } from '@o/ui'
+import { Button, Calendar, Popover, Row, View } from '@o/ui'
 import React from 'react'
 import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'

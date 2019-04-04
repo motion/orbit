@@ -1,5 +1,5 @@
-import { List, LocationLink, useBits, useLocationLink, View } from '@o/kit'
-import { Button, Paragraph, Space, SubTitle, Title } from '@o/ui'
+import { List, LocationLink, useBits, useLocationLink } from '@o/kit'
+import { Button, Paragraph, Space, SubTitle, Title, View } from '@o/ui'
 import React, { useCallback } from 'react'
 
 export function PeopleAppIndex() {

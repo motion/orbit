@@ -1,24 +1,35 @@
+import { View, ViewProps } from '@o/gloss'
+import { createContextualProps } from '@o/ui'
 import * as React from 'react'
-import { ParallaxLayer } from 'react-spring/renderprops-addons'
+import { ParallaxLayer, ParallaxLayerProps } from 'react-spring/renderprops-addons'
 import { SectionContent } from './SectionContent'
 
-function NormalLayer({ homeStore, ...props }) {
-  return <SectionContent height={homeStore.sectionHeight} {...props} />
+const { PassProps, useProps } = createContextualProps({
+  offset: 0,
+  zIndex: 0,
+})
+
+type PageProps = {
+  offset: number
+  zIndex?: number
+  children: any
 }
 
-export function Page(props: { offset: number; zIndex?: number; children: any }) {
-  const { offset, children, zIndex = 0 } = props
-  const Parallax = rest => <ParallaxLayer offset={offset} speed={0.2} {...rest} />
-  const Content = rest => (
-    <NormalLayer style={{ position: 'relative', zIndex: 1 + zIndex }} {...rest} />
-  )
+export function Page(props: PageProps) {
+  return <PassProps zIndex={0} {...props} />
+}
+
+Page.Parallax = (props: ParallaxLayerProps & { children: any }) => {
+  const { zIndex } = useProps()
+  // @ts-ignore
+  return <ParallaxLayer speed={0.2} style={{ zIndex: zIndex + 1 }} {...props} />
+}
+
+Page.Content = (props: ViewProps) => {
+  const parallax = useProps()
   return (
-    <>
-      {typeof children === 'function' ? (
-        children({ Parallax, Content })
-      ) : (
-        <Content>{children}</Content>
-      )}
-    </>
+    <View background={props.background} height={window.innerHeight}>
+      <SectionContent height="100%" position="relative" {...props} zIndex={parallax.zIndex} />
+    </View>
   )
 }

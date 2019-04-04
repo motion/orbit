@@ -8,7 +8,7 @@ import {
   useStores,
   View,
 } from '@o/kit'
-import { Button, Calendar, Popover, SegmentedRow, Space } from '@o/ui'
+import { Button, Calendar, Popover } from '@o/ui'
 import React, { createContext } from 'react'
 import { SearchAppIndex } from './SearchAppIndex'
 import { SearchAppMain } from './SearchAppMain'
@@ -57,30 +57,25 @@ function SearchActions() {
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
         icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
+      />
+      <Popover
+        openOnClick
+        closeOnClickAway
+        group="filters"
+        target={<Button icon="ui-1_calendar-57" />}
+        background
+        borderRadius={10}
+        elevation={4}
+        themeName="light"
+        width={420}
+        height={310}
       >
-        {queryFilters.sortBy}
-      </Button>
-      <Space />
-      <SegmentedRow justifyContent="center">
-        <Popover
-          openOnClick
-          closeOnClickAway
-          group="filters"
-          target={<Button icon="ui-1_calendar-57" />}
-          background
-          borderRadius={10}
-          elevation={4}
-          themeName="light"
-          width={420}
-          height={310}
-        >
-          <View flex={1} className="calendar-dom theme-light" padding={10}>
-            <Calendar onChange={queryFilters.onChangeDate} ranges={[queryFilters.dateState]} />
-          </View>
-        </Popover>
+        <View flex={1} className="calendar-dom theme-light" padding={10}>
+          <Calendar onChange={queryFilters.onChangeDate} ranges={[queryFilters.dateState]} />
+        </View>
+      </Popover>
 
-        <AppFilterButton />
-      </SegmentedRow>
+      <AppFilterButton />
     </>
   )
 }

@@ -3,6 +3,7 @@ import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
 import { ActionMeta } from 'react-select/lib/types'
+import { ListItem } from '../lists/ListItem'
 import { SimpleText } from '../text/SimpleText'
 import { Omit } from '../types'
 import { View } from '../View/View'
@@ -109,7 +110,15 @@ export function Select({ minWidth, ...props }: SelectProps) {
   )
 
   return (
-    <View minWidth={minWidth || 100} flex={1} margin={1} className="reset">
+    <View
+      // this is a very crude way to stop dragging in grids
+      // we could do this better, but it would require some verbose context style solution
+      onMouseDown={e => e.stopPropagation()}
+      minWidth={minWidth || 100}
+      flex={1}
+      margin={1}
+      className="reset"
+    >
       <SimpleText tagName="div">
         <ReactSelect
           styles={selectStyles}
@@ -117,6 +126,10 @@ export function Select({ minWidth, ...props }: SelectProps) {
           minMenuHeight={20}
           menuPortalTarget={document.body}
           {...props}
+          components={{
+            components,
+            ...props.components,
+          }}
           options={options}
           onChange={onChange}
         />
@@ -125,11 +138,14 @@ export function Select({ minWidth, ...props }: SelectProps) {
   )
 }
 
+const components = {
+  Option: ({ data, ...rest }) => <ListItem title={data.label} {...rest} />,
+  SingleValue: ({ data, ...rest }) => <ListItem title={data.label} {...rest} />,
+}
+
 function normalizeOptions(options: SelectProps['options']): { value: string; label: string }[] {
   if (options.some(x => typeof x === 'string')) {
-    // @ts-ignore
     return options.map(x => (typeof x === 'string' ? { value: x, label: x } : x))
   }
-  // @ts-ignore
   return options
 }

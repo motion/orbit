@@ -47,6 +47,8 @@ export function Card(props: CardProps) {
       >
         <Scale size={1.1}>
           <ListItem
+            className="grid-draggable"
+            backgroundHover="transparent"
             onClickLocation={onClickLocation}
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}

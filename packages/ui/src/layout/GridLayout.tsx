@@ -124,6 +124,7 @@ export function GridLayoutControlled(props: GridLayoutPropsControlled) {
         compactType="vertical"
         layouts={gridStore.layouts}
         measureBeforeMount={false}
+        draggableHandle=".grid-draggable"
         cols={props.cols}
       >
         {items}

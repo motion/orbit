@@ -35,6 +35,7 @@ export type ListItemDisplayProps = {
 export type ListItemProps = ViewProps &
   ListItemHide &
   ListItemDisplayProps & {
+    backgroundHover?: any
     forwardRef?: any
     subId?: string | number
     location?: React.ReactNode
@@ -117,6 +118,7 @@ export const ListItem = memoIsEqualDeep(
       after,
       style,
       forwardRef,
+      backgroundHover,
       ...restProps
     } = props
     const isSelected = useIsSelected(props)
@@ -195,6 +197,7 @@ export const ListItem = memoIsEqualDeep(
               onClick={(!hasMouseDownEvent && onClick) || undefined}
               disableShadow={disableShadow}
               padding={padding || defaultPadding}
+              backgroundHover={backgroundHover}
               {...cardProps}
             >
               {before}
@@ -311,11 +314,11 @@ const ListItemContain = gloss(View, {
   isExpanded: {
     userSelect: 'auto',
   },
-}).theme(({ borderRadius }, theme) => {
+}).theme((props, theme) => {
   return {
     color: theme.color,
-    background: theme.listItemBackground || theme.background,
-    borderRadius: borderRadius || 0,
+    background: props.background || theme.listItemBackground || theme.background,
+    borderRadius: props.borderRadius || 0,
   }
 })
 
@@ -328,29 +331,29 @@ const ListItemContent = gloss({
     background: 'transparent',
     padding: 8,
   },
-}).theme(({ isSelected, padding, chromeless }, theme) => {
+}).theme((props, theme) => {
   let style: CSSPropertySet = {}
-  if (chromeless) {
+  if (props.chromeless) {
     return style
   }
   // LIST ITEM
   let listStyle
   // selected...
-  if (isSelected) {
+  if (props.isSelected) {
     listStyle = {
       background: theme.listItemBackground || theme.background.alpha(0.15),
     }
   } else {
     listStyle = {
       '&:hover': {
-        background: theme.listItemBackgroundHover || theme.backgroundHover,
+        background: props.backgroundHover || theme.listItemBackgroundHover || theme.backgroundHover,
       },
     }
   }
   style = {
     ...style,
     ...listStyle,
-    padding,
+    padding: props.padding,
   }
   return style
 })

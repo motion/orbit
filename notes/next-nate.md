@@ -1,3 +1,5 @@
+- Grid persistance, Slack import app
+
 Good enough demo to Ken Wheeler / et al:
 
 - Easy way to pull in any app "data explorer" and have it visually show light config to let you set up a query.

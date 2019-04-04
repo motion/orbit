@@ -12,8 +12,8 @@ export type AppWithDefinition = {
   app: AppBit
 }
 
-export function useActiveAppsWithDefinition(): AppWithDefinition[] {
-  return useActiveApps().map(app => ({
+export function useActiveAppsWithDefinition(type?: string): AppWithDefinition[] {
+  return useActiveApps(type).map(app => ({
     definition: getAppDefinitions().find(def => def.id === app.identifier),
     app,
   }))

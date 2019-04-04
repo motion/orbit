@@ -38,10 +38,13 @@ export function AppsIndex() {
       <List
         items={[
           ...clientApps.map(getAppListItem).map(x => ({ ...x, group: 'App Settings' })),
-          ...syncApps
-            .map(getAppListItem)
-            .map(x => ({ ...x, group: 'Source Settings', after: sourceIcon })),
+          ...syncApps.map(getAppListItem).map(x => ({
+            ...x,
+            group: 'Source Settings',
+            after: sourceIcon,
+          })),
           ...allSourceDefinitions.map(def => ({
+            key: `install-${def.id}`,
             group: 'Install App',
             title: def.name,
             icon: def.id,

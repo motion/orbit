@@ -1,5 +1,5 @@
-import { App, AppIcon, createApp, List, View } from '@o/kit'
-import { Button, Section, Slider, SliderPane, Text, Title, Toolbar } from '@o/ui'
+import { App, AppIcon, createApp, List } from '@o/kit'
+import { Button, Section, Slider, SliderPane, Text, Title, Toolbar, View } from '@o/ui'
 import React, { useState } from 'react'
 import { useActions } from '../hooks/useActions'
 import { defaultApps } from '../stores/NewAppStore'

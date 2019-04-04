@@ -28,7 +28,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_' }],
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '_*' }],
     '@typescript-eslint/member-delimiter-style': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'react/no-unescaped-entities': 'off',

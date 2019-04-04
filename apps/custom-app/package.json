@@ -11,6 +11,9 @@
   "dependencies": {
     "@o/kit": "^2.4.0",
     "@o/ui": "^2.4.0",
+    "@o/slack-app": "*",
+    "@o/gmail-app": "*",
+    "@o/postgres-app": "*",
     "faker": "4.1.0",
     "lodash": "^4.17.10"
   }

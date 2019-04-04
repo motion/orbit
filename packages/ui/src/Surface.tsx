@@ -177,8 +177,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           <Badge
             zIndex={typeof props.zIndex === 'number' ? props.zIndex + 1 : 100}
             position="absolute"
-            top="-25%"
-            left="-25%"
+            top="-20%"
+            left="-20%"
             {...badgeProps}
           >
             {badge}

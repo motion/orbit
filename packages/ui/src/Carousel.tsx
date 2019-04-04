@@ -81,8 +81,6 @@ export class Carousel extends React.PureComponent<CarouselProps> {
             key={`${index}${item.id}`}
             index={index + offset}
             className={`carousel-result-item ${className || ''}`}
-            // {item}
-            inGrid
             {...cardProps}
             style={{
               width: cardWidth,

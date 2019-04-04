@@ -1,34 +1,12 @@
 import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
-import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
-import * as React from 'react'
-import { SyntheticEvent } from 'react'
+import { Form, Message, Space } from '@o/ui'
+import React, { useState } from 'react'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
-import { useEffect } from 'react'
-import confluenceApp from './index'
-import { loadOne } from '@o/bridge/_'
 
 type Props = {
   identifier: string
   app?: AppBit
-}
-
-const Statuses = {
-  LOADING: 'LOADING',
-  SUCCESS: 'SUCCESS',
-  FAIL: 'FAIL',
-}
-
-const buttonThemes = {
-  [Statuses.LOADING]: '#999',
-  [Statuses.SUCCESS]: 'darkgreen',
-  [Statuses.FAIL]: 'darkred',
-}
-
-interface AtlassianAppValuesCredentials {
-  domain: string
-  username: string
-  password: string
 }
 
 const extractTeamNameFromDomain = (domain: string) => {
@@ -41,40 +19,30 @@ const extractTeamNameFromDomain = (domain: string) => {
 
 export function AtlassianSettingLogin(props: Props) {
   const [activeSpace] = useActiveSpace()
-  const [status, setStatus] = React.useState('')
-  const [error, setError] = React.useState('')
-  const [app] = React.useState<Partial<AppBit>>({
+  const [app] = useState<Partial<AppBit>>({
     target: 'app',
     identifier: props.identifier as 'confluence',
     token: '',
     data: (props.app && props.app.data) || {},
   })
-  const [credentials, setCredentials] = React.useState(
-    (app.data.values && app.data.values.credentials) || {
-      username: '',
-      password: '',
-      domain: '',
-    },
-  )
 
   // todo: remove it
   // load something from confluence (testing api)
-  useEffect(() => {
-    loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
-      app => {
-        if (app) {
-          confluenceApp
-            .api(app)
-            .loadUsers()
-            .then(users => console.log('users', users))
-        }
-      },
-    )
-  }, [])
+  // useEffect(() => {
+  //   loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
+  //     app => {
+  //       if (app) {
+  //         confluenceApp
+  //           .api(app)
+  //           .loadUsers()
+  //           .then(users => console.log('users', users))
+  //       }
+  //     },
+  //   )
+  // }, [])
 
-  const addApp = async e => {
-    e.preventDefault()
-    app.data.values = { ...app.data.values, credentials }
+  const addApp = async values => {
+    Object.assign(app.data.values, values)
     if (!app.spaces) {
       app.spaces = []
     }
@@ -82,9 +50,6 @@ export function AtlassianSettingLogin(props: Props) {
       app.spaces.push(activeSpace)
     }
     app.spaceId = activeSpace.id
-    // send command to the desktop
-    setStatus(Statuses.LOADING)
-
     // save app
     try {
       const loader = new ConfluenceLoader(app as AppBit)
@@ -93,69 +58,42 @@ export function AtlassianSettingLogin(props: Props) {
         (app.data as ConfluenceAppData).values.credentials.domain,
       )
       await save(AppModel, app)
-      setStatus(Statuses.SUCCESS)
-      setError(null)
+      return true
     } catch (err) {
-      setStatus(Statuses.FAIL)
-      setError(err.message)
+      return err.message
     }
   }
 
-  const handleChange = (prop: keyof AtlassianAppValuesCredentials) => (val: SyntheticEvent) => {
-    setCredentials({
-      ...credentials,
-      [prop]: ((val as SyntheticEvent).target as any).value,
-    })
-  }
-
   return (
-    <Col tagName="form" onSubmit={addApp}>
+    <>
       <Message>
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
+
       <Space />
-      <Col margin="auto" width={370}>
-        <Col>
-          <Form>
-            <InputField
-              label="Domain"
-              value={credentials.domain}
-              // !TODO
-              onChange={handleChange('domain') as any}
-            />
-            <InputField
-              label="Username"
-              value={credentials.username}
-              // !TODO
-              onChange={handleChange('username') as any}
-            />
-            <InputField
-              label="Password"
-              type="password"
-              value={credentials.password}
-              // !TODO
-              onChange={handleChange('password') as any}
-            />
-          </Form>
-          <Space />
-          <Theme
-            theme={{
-              color: '#fff',
-              background: buttonThemes[status] || '#4C36C4',
-            }}
-          >
-            {status === Statuses.LOADING && <Button>Saving...</Button>}
-            {status !== Statuses.LOADING && (
-              <Button type="submit" onClick={addApp}>
-                Save
-              </Button>
-            )}
-          </Theme>
-          <Space />
-          {error && <Message>{error}</Message>}
-        </Col>
-      </Col>
-    </Col>
+
+      <Form
+        submitButton
+        onSubmit={addApp}
+        fields={[
+          {
+            name: 'Domain',
+            type: 'string',
+            required: true,
+          },
+          {
+            name: 'Username',
+            type: 'string',
+            required: true,
+          },
+          {
+            name: 'Password',
+            type: 'string',
+            required: true,
+          },
+        ]}
+      />
+    </>
   )
 }

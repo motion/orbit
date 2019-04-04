@@ -61,7 +61,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 <HeaderButtonChromeless icon="gear" tooltip="App Settings" />
                 <Space />
               </SurfacePassProps>
-              <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500} sizeFont={1}>
+              <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
                 {!isEditing && <LaunchButton />}
               </SurfacePassProps>
             </>

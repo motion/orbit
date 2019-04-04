@@ -69,7 +69,6 @@ export type ListItemProps = ViewProps &
     iconProps?: Partial<IconProps>
     separatorProps?: Record<string, any>
     className?: string
-    inGrid?: boolean
     pane?: string
     subPane?: string
     renderText?: ItemRenderText

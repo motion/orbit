@@ -1,9 +1,10 @@
-import { gloss, Row, View } from '@o/gloss'
+import { Col, gloss, Row, SimpleText, View } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { getDataType } from '../helpers/getDataType'
 import { Space } from '../layout/Space'
 import { DataType } from '../types'
 import { CheckBoxField } from './CheckboxField'
+import { useFormError } from './Form'
 import { InputField } from './InputField'
 import { Label } from './Label'
 
@@ -36,6 +37,7 @@ export type SimpleFormFieldProps = RowProps & {
 }
 
 export function SimpleFormField({ name, label, children }: SimpleFormFieldProps) {
+  const error = useFormError(`${label}`)
   return (
     <FormTableRow>
       <FormTableLabel>
@@ -46,7 +48,17 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
           <Space />
         </Row>
       </FormTableLabel>
-      <FormTableValue>{children}</FormTableValue>
+      <FormTableValue>
+        <Col>
+          {children}
+          {error && (
+            <>
+              <Space />
+              <SimpleText alt="error">{error}</SimpleText>
+            </>
+          )}
+        </Col>
+      </FormTableValue>
     </FormTableRow>
   )
 }
@@ -59,23 +71,31 @@ type FormFieldProps =
       name?: string
     }
   | {
+      type?: DataType
+      label: React.ReactNode
+      defaultValue: any
+      name?: string
+    }
+  | {
       label: React.ReactNode
       children: React.ReactNode
       type?: undefined
-      value?: undefined
       name?: string
     }
 
 export function FormField(props: FormFieldProps) {
-  const type = props.type || getDataType(props.value)
+  let val = null
+  if ('defaultValue' in props) {
+    val = props.defaultValue
+  } else if ('value' in props) {
+    val = props.value
+  }
+  const type = props.type || getDataType(val)
   const [name, setName] = useState(props.name || `field-${type}-${Math.random()}`)
 
-  useEffect(
-    () => {
-      props.name && setName(props.name)
-    },
-    [props.name],
-  )
+  useEffect(() => {
+    props.name && setName(props.name)
+  }, [props.name])
 
   switch (type) {
     case DataType.boolean:

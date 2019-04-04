@@ -6,7 +6,6 @@ export type PaddedProps = {
 }
 
 export const Padded = gloss<PaddedProps & ViewProps>(View, {
-  overflow: 'hidden',
   flex: 1,
   flexFlow: 'inherit',
   padded: {

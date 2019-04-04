@@ -1,5 +1,5 @@
 import { AppView, getAppDefinition } from '@o/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, SubTitle } from '@o/ui'
+import { Button, ButtonProps, Paragraph, Row, Section, Space, SubTitle } from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 import { SubSection } from '../../views/SubSection'
@@ -38,9 +38,12 @@ export function AppsMainAddApp(props: { identifier: string }) {
       }
     >
       {hasSetup && (
-        <SubSection title="Setup">
-          <AppView identifier={props.identifier} viewType="setup" />
-        </SubSection>
+        <>
+          <SubSection title="Setup">
+            <AppView identifier={props.identifier} viewType="setup" />
+          </SubSection>
+          <Space />
+        </>
       )}
       <SubSection title="Description">
         <Paragraph>

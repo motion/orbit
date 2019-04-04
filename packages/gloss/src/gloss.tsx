@@ -31,12 +31,13 @@ type GlossProps<Props> = Props &
     children?: ReactNode
     ref?: any
     style?: any
+    alt?: string
   }
 
-export type GlossThemeFn<Props> = ((
+export type GlossThemeFn<Props> = (
   props: GlossProps<Props>,
   theme: ThemeObject,
-) => CSSPropertySetResolved | null | undefined)
+) => CSSPropertySetResolved | null | undefined
 
 export interface GlossView<Props> {
   // copied from FunctionComponent
@@ -47,7 +48,7 @@ export interface GlossView<Props> {
   displayName?: string
   // extra:
   ignoreAttrs?: Object
-  theme: ((...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>)
+  theme: (...themeFns: GlossThemeFn<Props>[]) => GlossView<Props>
   withConfig: (config: { displayName?: string }) => any
   glossConfig: {
     getConfig: () => {

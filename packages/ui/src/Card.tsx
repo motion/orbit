@@ -50,7 +50,10 @@ export function Card(props: CardProps) {
             onClickLocation={onClickLocation}
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
-            titleProps={titleProps}
+            titleProps={{
+              fontWeight: 500,
+              ...titleProps,
+            }}
             afterTitle={afterTitle}
             title={title}
             subTitle={subTitle}

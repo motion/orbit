@@ -1,4 +1,4 @@
-import { Contents, ViewProps } from '@o/gloss'
+import { Contents, ContentsProps } from '@o/gloss'
 import React, { forwardRef, useContext, useEffect } from 'react'
 import { ContextMenuContext, ContextMenuHandler, MenuTemplate } from './ContextMenuProvider'
 
@@ -7,7 +7,7 @@ type UseContextProps = {
   buildItems?: () => MenuTemplate
 }
 
-type ContextMenuProps = ViewProps &
+type ContextMenuProps = ContentsProps &
   UseContextProps & {
     children: React.ReactNode
     component?: React.ComponentType<any> | string
@@ -54,8 +54,7 @@ export function useContextMenu({ items, buildItems }: UseContextProps) {
         setItems(buildItems())
       }
     }
-  }, // items might have functions inside and JSON.stringify won't work properly in there
-  [buildItems, items])
+  }, [buildItems, items]) // items might have functions inside and JSON.stringify won't work properly in there
 
   return { onContextMenu }
 }

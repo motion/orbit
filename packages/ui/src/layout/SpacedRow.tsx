@@ -1,8 +1,8 @@
-import { gloss, Row, ViewProps } from '@o/gloss'
+import { gloss, Row, RowProps } from '@o/gloss'
 import React, { Fragment } from 'react'
 import { Space } from './Space'
 
-export function SpacedRow({ children, ...props }: ViewProps) {
+export function SpacedRow({ children, ...props }: RowProps) {
   const total = React.Children.count(children)
   return (
     <SpacedRowChrome {...props}>

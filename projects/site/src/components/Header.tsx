@@ -1,5 +1,5 @@
-import { gloss, View } from '@o/gloss'
-import { Button, Popover, Row } from '@o/ui'
+import { gloss } from '@o/gloss'
+import { Button, Popover, Row, View } from '@o/ui'
 import React from 'react'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { LogoVertical } from '../views/LogoVertical'

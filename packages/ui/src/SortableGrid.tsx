@@ -1,4 +1,4 @@
-import { Grid, View, ViewProps } from '@o/gloss'
+import { Grid } from '@o/gloss'
 import {
   SortableContainer,
   SortableContainerProps,
@@ -7,6 +7,7 @@ import {
 } from '@o/react-sortable-hoc'
 import React from 'react'
 import { isRightClick } from './helpers/isRightClick'
+import { View, ViewProps } from './View/View'
 
 export type GetGridItem<A> = (item: A, index: number) => any
 export type GetSortableItem<A> = (item: A, index: number) => Partial<SortableElementProps>

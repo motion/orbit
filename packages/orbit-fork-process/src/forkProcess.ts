@@ -7,9 +7,10 @@ export { ChildProcessProps, startChildProcess } from './startChildProcess'
 
 export function forkProcess(props: ChildProcessProps): ChildProcess {
   const proc = startChildProcess(props)
-  process.on('exit', () => forceKillProcess(proc))
-  process.on('SIGINT', () => forceKillProcess(proc))
-  process.on('SIGKILL', () => forceKillProcess(proc))
+  // commented for now since ./bin/orbit dev fails because of them
+  // process.on('exit', () => forceKillProcess(proc))
+  // process.on('SIGINT', () => forceKillProcess(proc))
+  // process.on('SIGKILL', () => forceKillProcess(proc))
   return proc
 }
 

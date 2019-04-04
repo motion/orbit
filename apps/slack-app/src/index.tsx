@@ -1,3 +1,4 @@
+import 'slack'
 import { createApi, createApp } from '@o/kit'
 import { slackIcon } from './slackIcon'
 import { SlackSettings } from './SlackSettings'

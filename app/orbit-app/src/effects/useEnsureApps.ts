@@ -2,6 +2,7 @@ import { AppModel, loadOne, save, useActiveSpace } from '@o/kit'
 import { useEffect } from 'react'
 import { orbitStaticApps } from '../apps/orbitApps'
 import { PostgresAppData } from '@o/postgres-app/_/PostgresModels'
+import { SaveOptions } from '@o/mediator'
 
 // ensure every static app has a corresponding AppBit
 
@@ -37,7 +38,6 @@ export function useEnsureApps() {
       save(AppModel, {
         colors: [],
         createdAt: new Date(),
-        editable: true,
         identifier: 'postgres',
         name: 'Postgres on docker',
         sourceIdentifier: '',
@@ -52,7 +52,7 @@ export function useEnsureApps() {
             username: 'test',
             password: 'test',
           },
-        } as PostgresAppData,
+        } as SaveOptions<PostgresAppData>,
       })
     })
 

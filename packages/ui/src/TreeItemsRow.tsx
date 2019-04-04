@@ -183,7 +183,6 @@ const TreeItemsRowContainer = gloss({
   paddingRight: 20,
   position: 'relative',
 }).theme((props, theme) => {
-  console.log('got props', props)
   return {
     height: props.height,
     background: backgroundColor(props, theme),

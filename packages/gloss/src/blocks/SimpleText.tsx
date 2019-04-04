@@ -18,7 +18,6 @@ export type SimpleTextProps = AlphaColorProps &
   }
 
 export const SimpleText = gloss<SimpleTextProps>({
-  cursor: 'text',
   display: 'inline-block',
   whiteSpace: 'normal',
 }).theme((props: any, theme) => {

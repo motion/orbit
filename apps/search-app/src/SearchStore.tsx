@@ -10,7 +10,6 @@ import {
   searchBits,
   SearchQuery,
   SearchState,
-  sleep,
   SpaceIcon,
   useHook,
   useStoresSimple,
@@ -42,9 +41,9 @@ export class SearchStore {
 
   updateSearchHistoryOnSearch = react(
     () => this.activeQuery,
-    async (query, { sleep }) => {
+    async (query, _) => {
       ensure('has query', !!query)
-      await sleep(2000)
+      await _.sleep(2000)
       const user = await getUser()
       saveUser({
         settings: {
@@ -139,7 +138,6 @@ export class SearchStore {
         onOpen: async () => {
           // @ts-ignore
           this.stores.newAppStore.setShowCreateNew(true)
-          await sleep(10)
           this.stores.paneManagerStore.setActivePane('createApp')
         },
       },
@@ -186,6 +184,16 @@ export class SearchStore {
         await when(() => this.stores.paneManagerStore.activePane.type === 'search')
       }
 
+      // quick goto
+      if (query[0] === '/') {
+        const newQuery = query.slice(1)
+        return {
+          query: newQuery,
+          results: this.getQuickResults(newQuery, true),
+          finished: true,
+        }
+      }
+
       // RESULTS
       let results: OrbitListItemProps[] = []
 
@@ -226,8 +234,9 @@ export class SearchStore {
         .map(x => x.text)
 
       const { startDate, endDate } = dateState
+      let total = 0
 
-      const updateNextResults = async ({ maxBitsCount, group, startIndex, endIndex }) => {
+      const loadMore = async props => {
         const args: SearchQuery = {
           spaceId,
           query: activeQuery,
@@ -237,11 +246,10 @@ export class SearchStore {
           appFilters,
           peopleFilters,
           locationFilters,
-          group,
-          maxBitsCount,
-          skip: startIndex,
-          take: Math.max(0, endIndex - startIndex),
+          skip: total + props.take,
+          take: take,
         }
+        total += take
         const nextResults = await searchBits(args)
         if (!nextResults.length) {
           return false
@@ -255,43 +263,25 @@ export class SearchStore {
         return true
       }
 
-      if (activeQuery[0] === '/') {
-        const query = activeQuery.slice(1)
-        return {
-          query,
-          results: this.getQuickResults(query, true),
-          finished: true,
-        }
-      }
-
       // app search
       results = this.getQuickResults(activeQuery)
       setValue({ results, query, finished: false })
 
-      await updateNextResults({
-        maxBitsCount: 2,
-        group: 'last-day',
-        startIndex: 0,
-        endIndex: take,
-      })
-      await updateNextResults({
-        maxBitsCount: 2,
-        group: 'last-week',
-        startIndex: 0,
-        endIndex: take,
-      })
-      await updateNextResults({
-        maxBitsCount: 2,
-        group: 'last-month',
-        startIndex: 0,
-        endIndex: take,
-      })
-      await updateNextResults({
-        maxBitsCount: 100,
-        group: 'overall',
-        startIndex: 0,
-        endIndex: take,
-      })
+      try {
+        await loadMore({
+          take: 10,
+        })
+        await loadMore({
+          take: 10,
+        })
+        await loadMore({
+          take: 100,
+        })
+      } catch (err) {
+        if (err !== false) {
+          console.error(err)
+        }
+      }
 
       // finished
       return {

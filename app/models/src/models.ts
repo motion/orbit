@@ -4,7 +4,6 @@ import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
-import { SearchResult } from './interfaces/Search'
 import { Space } from './interfaces/Space'
 import { User } from './interfaces/User'
 
@@ -33,13 +32,11 @@ export type SearchQuery = {
   skip?: number
   appId?: number
   appIds?: number[]
-  group?: string
-  maxBitsCount?: number
   spaceId?: number
   ids?: number[]
 }
 
-export const SearchResultModel = new Model<SearchResult, SearchQuery>('SearchResult')
+export const SearchResultModel = new Model<Bit, SearchQuery>('SearchResult')
 
 export type GroupResult = {
   title: string

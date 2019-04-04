@@ -4,6 +4,7 @@ import { PostgresAppData } from './PostgresModels'
 
 const connect = (appData: PostgresAppData) => {
   return createConnection({
+    name: 'postgres',
     type: 'postgres',
     url: appData.credentials.url,
     host: appData.credentials.hostname,

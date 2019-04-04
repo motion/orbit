@@ -110,7 +110,7 @@ export function AtlassianSettingLogin(props: Props) {
 
       <Space />
 
-      <Form margin="auto" width={370}>
+      <Form>
         <InputField
           label="Domain"
           value={credentials.domain}

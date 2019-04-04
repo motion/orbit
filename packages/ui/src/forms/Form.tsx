@@ -1,3 +1,4 @@
+import produce from 'immer'
 import { flatten } from 'lodash'
 import React, { createContext, Dispatch, useContext, useReducer } from 'react'
 import { MergeContext } from '../helpers/MergeContext'
@@ -39,14 +40,13 @@ export const FormContext = createContext<FormContextType>(null)
 function fieldsReducer(state: FormState, action: FormActions) {
   switch (action.type) {
     case 'changeField':
-      state.fields = {
-        ...state.fields,
-        [action.value.name]: action.value,
-      }
-      return { ...state }
+      return produce(state, next => {
+        next.fields[action.value.name] = action.value
+      })
     case 'removeField':
-      delete state.fields[action.value]
-      return { ...state }
+      return produce(state, next => {
+        delete next.fields[action.value]
+      })
   }
 }
 

@@ -32,6 +32,13 @@ Now, we need to make this "auto-set up in the app". I think we really need to ge
 
 Also the files here too big so have the script download into a tmp dir and insert. You can put it all in ./scripts. Ideally with one command you run and it sets up everything, from creating docker db to inserting info, to adding the app information to the sqlite db in our app automatically, so i can tomorrow take that and build out a whole postgres demo!
 
+---
+
+Make Setup/Settings run off of JSON
+
+We should basically be able to replace all of AtlassianSettingLogin with just a JSON description of it in the AppDefinition.
+
+It should then take that JSON and render the setup/settings panes automatically without us needing to do anything.
 
 ---
 

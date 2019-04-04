@@ -1,18 +1,16 @@
 import { gloss, View } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps, SubPane, useReaction } from '@o/kit'
+import { AppLoadContext, AppMainViewProps, SubPane } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderLeft, BorderTop } from '@o/ui'
-import React, { cloneElement, isValidElement, memo, useContext } from 'react'
-import { useStores, useStoresSimple } from '../../hooks/useStores'
+import React, { memo, useContext } from 'react'
+import { useStores } from '../../hooks/useStores'
 import { statusbarPadElement } from './OrbitStatusBar'
 import { ToolBarPad } from './OrbitToolBar'
 
 export const OrbitMain = memo((props: AppMainViewProps) => {
   const { id, appDef } = useContext(AppLoadContext)
-  const { orbitStore } = useStoresSimple()
   const { appStore } = useStores()
   const sidebarWidth = props.hasSidebar ? appStore.sidebarWidth : 0
-  const appProps = useReaction(() => orbitStore.activeConfig[id] || {})
 
   if (!props.children) {
     return null
@@ -28,7 +26,7 @@ export const OrbitMain = memo((props: AppMainViewProps) => {
         <View flex={1} position="relative">
           {props.hasSidebar && <BorderLeft opacity={0.5} />}
           {props.hasToolbar && <BorderTop opacity={0.5} />}
-          {isValidElement(props.children) ? cloneElement(props.children, appProps) : props.children}
+          {props.children}
         </View>
         {props.hasStatusbar && statusbarPadElement}
       </OrbitMainContainer>

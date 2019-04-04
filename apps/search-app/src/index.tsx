@@ -1,40 +1,21 @@
 import {
   App,
   AppFilterButton,
+  AppMainView,
   AppProps,
   createApp,
+  List,
   useSearchState,
   useStore,
   useStores,
   View,
 } from '@o/kit'
-import { Button, Calendar, Popover } from '@o/ui'
-import React, { createContext } from 'react'
-import { SearchAppIndex } from './SearchAppIndex'
-import { SearchAppMain } from './SearchAppMain'
+import { Button, Calendar, Popover, Row } from '@o/ui'
+import React from 'react'
+import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'
 import { SearchStore } from './SearchStore'
-import { SearchToolBar } from './SearchToolBar'
-
-export const SearchContext = createContext({
-  searchStore: null as SearchStore,
-})
-
-function SearchApp(props: AppProps) {
-  const searchStore = useStore(SearchStore)
-
-  useSearchState(state => {
-    searchStore.setSearchState(state)
-  })
-
-  return (
-    <SearchContext.Provider value={{ searchStore }}>
-      <App index={<SearchAppIndex />} toolBar={<SearchToolBar />} actions={<SearchActions />}>
-        <SearchAppMain {...props} />
-      </App>
-    </SearchContext.Provider>
-  )
-}
+import { SearchSuggestionBar } from './SearchSuggestionBar'
 
 export default createApp({
   id: 'search',
@@ -46,6 +27,28 @@ export default createApp({
     transparentBackground: true,
   },
 })
+
+function SearchApp(props: AppProps) {
+  const searchStore = useStore(SearchStore)
+
+  useSearchState(state => {
+    searchStore.setSearchState(state)
+  })
+
+  return (
+    <App
+      index={<List shareable items={searchStore.results} />}
+      toolBar={
+        <Row flex={1} alignItems="center" justifyContent="center">
+          <SearchSuggestionBar />
+        </Row>
+      }
+      actions={<SearchActions />}
+    >
+      {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}
+    </App>
+  )
+}
 
 function SearchActions() {
   const { queryStore } = useStores()

@@ -75,13 +75,15 @@ export const OrbitAppRenderOfDefinition = ({
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
+  const { orbitStore } = useStoresSimple()
+  const appProps = useReaction(() => orbitStore.activeConfig[id] || {})
 
   return (
     <Suspense fallback={<Loading />}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary>
-            <App />
+            <App {...appProps} />
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>

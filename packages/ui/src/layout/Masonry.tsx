@@ -63,7 +63,6 @@ export class Masonry extends React.PureComponent<MasonryProps> {
     const gridChildren = Children.map(this.props.children, (child, index) => {
       if (isValidElement(child)) {
         return cloneElement(child as any, {
-          inGrid: true,
           style: {
             ...styles[index],
             ...child.props['style'],

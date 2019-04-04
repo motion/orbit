@@ -53,6 +53,9 @@ function OrbitActions(props: { children: any }) {
   const stores = useStoresSimple()
   useEffect(() => {
     stores.orbitStore.activeActions = props.children
+    return () => {
+      stores.orbitStore.activeActions = null
+    }
   }, [props.children])
   return null
 }

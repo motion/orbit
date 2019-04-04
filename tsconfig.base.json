@@ -17,6 +17,7 @@
     "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "preserveSymlinks": true,
     "jsx": "react",
     "allowJs": false,
     "sourceMap": true,

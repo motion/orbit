@@ -1,6 +1,6 @@
 import { CSSPropertySet } from '@o/css'
 
-export type Elevatable = {
+export type ElevatableProps = {
   elevation?: number
   boxShadow?: CSSPropertySet['boxShadow']
 }
@@ -14,7 +14,7 @@ const elevatedShadow = (x: number) => [
   [0, 0, 0, round(0.05 * smoother(x))],
 ]
 
-export function getElevation(props: Elevatable) {
+export function getElevation(props: ElevatableProps) {
   if (!props.elevation) {
     return null
   }

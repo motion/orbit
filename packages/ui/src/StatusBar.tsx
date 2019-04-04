@@ -1,7 +1,8 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import * as React from 'react'
 import { RoundButtonSmall } from './buttons/RoundButtonSmall'
 import { Text } from './text/Text'
+import { View } from './View/View'
 
 const statusBarProps = {
   alignItems: 'center',

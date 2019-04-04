@@ -1,10 +1,11 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { Icon } from '../Icon'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
 import { TableFilter } from '../tables/types'
+import { View } from '../View/View'
 import { Input, InputProps } from './Input'
 
 export type SearchInputProps = InputProps & {

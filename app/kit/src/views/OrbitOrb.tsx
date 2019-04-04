@@ -1,4 +1,5 @@
-import { linearGradient, View } from '@o/gloss'
+import { linearGradient } from '@o/gloss'
+import { View } from '@o/ui'
 import React, { forwardRef } from 'react'
 
 export const GradientOutlineCircle = ({ startColor = 'red', stopColor = 'blue', ...props }) => {

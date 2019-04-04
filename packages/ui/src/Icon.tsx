@@ -1,9 +1,10 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'
 import { Config } from './helpers/configure'
 import { iconNames } from './iconNames'
+import { View, ViewProps } from './View/View'
 
 export type IconProps = ViewProps & {
   size?: number

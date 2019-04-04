@@ -1,8 +1,9 @@
-import { Absolute, Row, Theme, View } from '@o/gloss'
+import { Absolute, Row, Theme } from '@o/gloss'
 import React from 'react'
 import { Button } from '../buttons/Button'
 import { Space } from '../layout/Space'
 import { Text } from '../text/Text'
+import { View } from '../View/View'
 import { Modal, ModalProps } from './Modal'
 
 export function MediaModal({ title, subTitle, onClose, afterTitle, ...props }: ModalProps) {

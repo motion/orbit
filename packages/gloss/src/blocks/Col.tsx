@@ -1,7 +1,9 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { Base, BaseProps } from './Base'
 
-export const Col = gloss(View, {
+export type ColProps = BaseProps
+
+export const Col = gloss(Base, {
   display: 'flex',
   flexFlow: 'column',
 })

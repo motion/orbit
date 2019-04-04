@@ -1,5 +1,6 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import * as React from 'react'
+import { View } from './View/View'
 
 export const DividerContainer = gloss<{ padded?: boolean }>(View, {
   pointerEvents: 'inherit',

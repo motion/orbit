@@ -1,7 +1,8 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { TreeItems } from './TreeItems'
+import { View } from './View/View'
 import { useVisiblity } from './Visibility'
 
 export type TreeProps = {

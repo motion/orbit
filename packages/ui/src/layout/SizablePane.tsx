@@ -6,6 +6,7 @@ import { PaneTitleRowParentProps } from '../PaneTitleRow'
 import { SectionPassProps } from '../Section'
 import { View } from '../View/View'
 import { LayoutContext } from './Layout'
+import { Scrollable } from './Scrollable'
 
 export type SizablePaneProps = Partial<InteractiveProps> &
   PaneTitleRowParentProps & {
@@ -97,7 +98,6 @@ export function SizablePane({
     const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
       <Interactive
-        scrollable={scrollable}
         overflow="hidden"
         resizable={resizableProp}
         onResize={x => {
@@ -108,14 +108,14 @@ export function SizablePane({
         {...props}
       >
         {borderElement}
-        {childElement}
+        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
       </Interactive>
     )
   } else {
     element = (
       <PaneChrome flex={flex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
-        {childElement}
+        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
       </PaneChrome>
     )
   }

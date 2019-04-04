@@ -1,13 +1,4 @@
-import {
-  CSSPropertySet,
-  gloss,
-  Row,
-  Theme,
-  ThemeContext,
-  ThemeObject,
-  View,
-  ViewProps,
-} from '@o/gloss'
+import { CSSPropertySet, gloss, Row, Theme, ThemeContext, ThemeObject } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
@@ -21,6 +12,7 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
+import { View, ViewProps } from '../View/View'
 
 export type ItemRenderText = (text: string) => JSX.Element
 export type HandleSelection = (index: number, event?: any) => any

@@ -1,6 +1,7 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
 import { useParentNodeSize } from './hooks/useParentNodeSize'
+import { View } from './View/View'
 import { useVisiblity } from './Visibility'
 
 export type SliderProps = {

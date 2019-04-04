@@ -1,8 +1,9 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React from 'react'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
+import { View } from './View/View'
 
 export type PaneTitleRowProps = CollapsableProps &
   Omit<TextProps, 'children'> & {

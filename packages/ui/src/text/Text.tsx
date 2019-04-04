@@ -1,9 +1,10 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColor, CSSPropertySet, gloss, propsToTextSize, View } from '@o/gloss'
+import { alphaColor, CSSPropertySet, gloss, propsToTextSize } from '@o/gloss'
 import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
 import { ScaleContext } from '../Scale'
+import { View } from '../View/View'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 

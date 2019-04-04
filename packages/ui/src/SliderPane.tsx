@@ -1,7 +1,8 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { useRef } from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
+import { View } from './View/View'
 import { useVisiblity } from './Visibility'
 
 type SliderPaneProps = React.HTMLProps<HTMLDivElement> &

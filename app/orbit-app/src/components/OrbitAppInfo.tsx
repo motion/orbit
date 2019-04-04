@@ -1,6 +1,6 @@
-import { Row, View } from '@o/gloss'
+import { Row } from '@o/gloss'
 import { AppWithDefinition, getItemName, useAppSyncState, useJobs } from '@o/kit'
-import { Space, Text } from '@o/ui'
+import { Space, Text, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 

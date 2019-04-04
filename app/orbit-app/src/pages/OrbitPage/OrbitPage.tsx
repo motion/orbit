@@ -1,5 +1,6 @@
 import { command } from '@o/bridge'
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import * as KIT from '@o/kit'
 import {
   AppDefinition,
   LocationStore,
@@ -12,10 +13,12 @@ import {
 } from '@o/kit'
 import { CloseAppCommand } from '@o/models'
 import { appStartupConfig, isEditing } from '@o/stores'
+import * as UI from '@o/ui'
 import { Loading, Theme } from '@o/ui'
 import { useStore, useStoreSimple } from '@o/use-store'
 import { keyBy } from 'lodash'
 import React, { memo, Suspense, useEffect, useMemo, useRef } from 'react'
+import * as ReactDOM from 'react-dom'
 import { ActionsContext, defaultActions } from '../../actions/Actions'
 import { getApps, orbitApps } from '../../apps/orbitApps'
 import MainShortcutHandler from '../../components/shortcutHandlers/MainShortcutHandler'
@@ -37,9 +40,6 @@ import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
-import * as ReactDOM from 'react-dom'
-import * as UI from '@o/ui'
-import * as KIT from '@o/kit'
 
 window['React'] = (window as any).React = React
 window['ReactDOM'] = (window as any).ReactDOM = ReactDOM
@@ -215,7 +215,7 @@ function OrbitPageProvideStores(props: any) {
   return <ProvideStores stores={stores}>{props.children}</ProvideStores>
 }
 
-const InnerChrome = gloss<{ torn?: boolean } & ViewProps>(View, {
+const InnerChrome = gloss<{ torn?: boolean } & UI.ViewProps>(UI.View, {
   flex: 1,
   overflow: 'hidden',
   position: 'relative',

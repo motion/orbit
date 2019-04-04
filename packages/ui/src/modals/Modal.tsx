@@ -1,9 +1,10 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React from 'react'
 import { Button } from '../buttons/Button'
 import { Portal } from '../helpers/portal'
 import { Section, SectionProps } from '../Section'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
+import { View, ViewProps } from '../View/View'
 
 export type ModalProps = SimpleModalProps & {
   backgroundProps?: ViewProps

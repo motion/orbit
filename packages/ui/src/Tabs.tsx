@@ -5,7 +5,7 @@
  * @format
  */
 
-import { gloss, Row, View, ViewProps } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, Suspense } from 'react'
 import { colors } from './helpers/colors'
 import { useUncontrolled } from './helpers/useUncontrolled'
@@ -14,6 +14,7 @@ import { Loading } from './progress/Loading'
 import { SegmentedRow } from './SegmentedRow'
 import { Tab, TabItem } from './Tab'
 import { Omit } from './types'
+import { View, ViewProps } from './View/View'
 
 export type TabsProps = Omit<ViewProps, 'order'> & {
   // height

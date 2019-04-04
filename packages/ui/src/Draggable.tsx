@@ -1,9 +1,9 @@
-import { FullScreen, ViewProps } from '@o/gloss'
+import { FullScreen, FullScreenProps } from '@o/gloss'
 import React, { useEffect, useRef, useState } from 'react'
 import { useGet } from './hooks/useGet'
 import { Omit } from './types'
 
-export type DraggableProps = Omit<ViewProps, 'onChange'> & {
+export type DraggableProps = Omit<FullScreenProps, 'onChange'> & {
   disable?: boolean
   defaultX?: number
   defaultY?: number
@@ -28,56 +28,53 @@ export function useDraggable(props: DraggableProps) {
   const getOnChange = useGet(props.onChange)
   const getPosition = useGet(position)
 
-  useEffect(
-    () => {
-      if (props.disable) return
-      let startPos = {
-        top: 0,
-        left: 0,
+  useEffect(() => {
+    if (props.disable) return
+    let startPos = {
+      top: 0,
+      left: 0,
+    }
+    let endPos = null
+
+    const curPos = (e: MouseEvent) => ({
+      top: e.pageY,
+      left: e.pageX,
+    })
+
+    const onMouseMove = (e: MouseEvent) => {
+      const diffTop = startPos.top - e.pageY
+      const diffLeft = startPos.left - e.pageX
+      const next = {
+        top: getPosition().top - diffTop,
+        left: getPosition().left - diffLeft,
       }
-      let endPos = null
-
-      const curPos = (e: MouseEvent) => ({
-        top: e.pageY,
-        left: e.pageX,
-      })
-
-      const onMouseMove = (e: MouseEvent) => {
-        const diffTop = startPos.top - e.pageY
-        const diffLeft = startPos.left - e.pageX
-        const next = {
-          top: getPosition().top - diffTop,
-          left: getPosition().left - diffLeft,
-        }
-        endPos = next
-        if (getOnChange()) {
-          getOnChange()(next, diffTop, diffLeft)
-        } else {
-          setPosition(next)
-        }
+      endPos = next
+      if (getOnChange()) {
+        getOnChange()(next, diffTop, diffLeft)
+      } else {
+        setPosition(next)
       }
+    }
 
-      const onMouseUp = () => {
-        setPosition(endPos)
-        document.removeEventListener('mousemove', onMouseMove)
-      }
+    const onMouseUp = () => {
+      setPosition(endPos)
+      document.removeEventListener('mousemove', onMouseMove)
+    }
 
-      const onMouseDown = (e: MouseEvent) => {
-        startPos = curPos(e)
-        document.addEventListener('mousemove', onMouseMove)
-        document.addEventListener('mouseup', onMouseUp)
-      }
+    const onMouseDown = (e: MouseEvent) => {
+      startPos = curPos(e)
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
+    }
 
-      ref.current.addEventListener('mousedown', onMouseDown)
+    ref.current.addEventListener('mousedown', onMouseDown)
 
-      return () => {
-        ref.current.removeEventListener('mousedown', onMouseDown)
-        document.removeEventListener('mouseup', onMouseUp)
-        document.removeEventListener('mousemove', onMouseMove)
-      }
-    },
-    [props.disable, ref],
-  )
+    return () => {
+      ref.current.removeEventListener('mousedown', onMouseDown)
+      document.removeEventListener('mouseup', onMouseUp)
+      document.removeEventListener('mousemove', onMouseMove)
+    }
+  }, [props.disable, ref])
 
   return { ref, ...position }
 }

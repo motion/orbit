@@ -1,4 +1,4 @@
-import { Col, gloss, ViewProps } from '@o/gloss'
+import { Col, ColProps, gloss } from '@o/gloss'
 import * as React from 'react'
 
 // TODO not a great view
@@ -18,7 +18,7 @@ const ContentInner = gloss(Col, {
   wordBreak: 'break-word',
 })
 
-export function ScrollableContent({ scrollTo, ...props }: ViewProps & { scrollTo?: string }) {
+export function ScrollableContent({ scrollTo, ...props }: ColProps & { scrollTo?: string }) {
   return (
     <PeekContentChrome>
       <ContentInner {...props} />

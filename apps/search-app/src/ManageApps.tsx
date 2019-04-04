@@ -1,4 +1,4 @@
-import { Absolute, gloss, ViewProps } from '@o/gloss'
+import { Absolute, gloss } from '@o/gloss'
 import { AppBit, AppIcon, useActiveAppsSorted, useActiveSpace, useStoresSimple } from '@o/kit'
 import { getAppContextItems, useAppSortHandler } from '@o/kit-internal'
 import {
@@ -10,6 +10,7 @@ import {
   useContextMenu,
   useGet,
   View,
+  ViewProps,
 } from '@o/ui'
 import React, { useCallback } from 'react'
 

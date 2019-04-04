@@ -17,15 +17,15 @@ export function Fieldsets(props: FieldsetsProps) {
 
   return (
     <SurfacePassProps size={1.1}>
-      {props.rows.map(row => {
+      {props.rows.map((row, rowIndex) => {
         const values = getRowValues(row)
         return (
-          <Fieldset key={row.key}>
-            {Object.keys(columns).map((colKey, index) => {
+          <Fieldset key={`${row.key}${rowIndex}`}>
+            {Object.keys(columns).map((colKey, colIndex) => {
               const value = values[colKey]
               return (
                 <FormField
-                  key={`${value.key}${index}`}
+                  key={`${value.key}${colIndex}`}
                   type={columns[colKey].type}
                   label={columns[colKey].value}
                   value={value}

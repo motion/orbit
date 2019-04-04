@@ -1,5 +1,5 @@
 import { save } from '@o/bridge'
-import { gloss, Row, ViewProps } from '@o/gloss'
+import { gloss, Row, RowProps } from '@o/gloss'
 import { PaneManagerPane, useActiveAppsSorted, useActiveSpace } from '@o/kit'
 import { useAppSortHandler } from '@o/kit-internal'
 import { AppBit, AppModel } from '@o/models'
@@ -246,7 +246,7 @@ const SortableTab = SortableElement((props: TabProps) => {
   return <OrbitTab {...props} />
 })
 
-type SortableTabsProps = ViewProps & { items: TabProps[] }
+type SortableTabsProps = RowProps & { items: TabProps[] }
 
 const SortableTabs = SortableContainer(({ items, ...restProps }: SortableTabsProps) => {
   return (

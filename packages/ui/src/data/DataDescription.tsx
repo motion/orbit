@@ -1,10 +1,11 @@
-import { gloss, toColor, View } from '@o/gloss'
+import { gloss, toColor } from '@o/gloss'
 import React, { ChangeEvent, Component, Fragment, PureComponent } from 'react'
 import { SketchPicker } from 'react-color'
 import { Input, InputProps } from '../forms/Input'
 import { colors } from '../helpers/colors'
 import { Link } from '../Link'
 import { SimpleText } from '../text/SimpleText'
+import { View } from '../View/View'
 import { DataInspectorSetValue } from './DataInspectorControlled'
 
 /**

@@ -1,6 +1,6 @@
-import { ViewProps } from '@o/gloss'
 import { createContext } from 'react'
 import { TextProps } from '../text/Text'
+import { ViewProps } from '../View/View'
 
 export const ItemPropsContext = createContext({
   oneLine: false,

@@ -1,6 +1,8 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { Base, BaseProps } from './Base'
 
-export const Block = gloss(View, {
+export type BlockProps = BaseProps
+
+export const Block = gloss(Base, {
   display: 'block',
 })

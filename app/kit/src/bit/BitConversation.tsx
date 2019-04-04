@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { gloss, View } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
-import { Button, ChatMessages, Divider, Row, ScrollableContent, SegmentedRow, Title } from '@o/ui'
+import { ChatMessages, Divider, Row, ScrollableContent, Tab, Tabs } from '@o/ui'
 import * as React from 'react'
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
@@ -84,31 +84,22 @@ export function BitConversation(props: AppBitMainProps) {
   return (
     <>
       <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
-        <SegmentedRow chromeless fontWeight={600} size={0.9}>
-          <Button onClick={() => setActivePane(0)}>Conversation</Button>
-          <Button onClick={() => setActivePane(1)}>Previously</Button>
-          <Button onClick={() => setActivePane(2)}>Afterwards</Button>
-          <Button onClick={() => setActivePane(3)}>Related</Button>
-        </SegmentedRow>
+        <Tabs onActive={i => setActivePane(+i)} active={`${activePane}`}>
+          <Tab id="0" label="Conversation" />
+          <Tab id="2" label="Afterwards" />
+        </Tabs>
       </Row>
 
       <Pane isShown={activePane === 0}>
         <ScrollableContent paddingBottom={50} key={prevConvos.length} scrollTo="#start">
           <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
+            <ConvoGroup bits={prevConvos.reverse()} />
             {!!props.item && <ChatMessages messages={props.item.data.messages} />}
           </div>
         </ScrollableContent>
       </Pane>
 
-      <Pane isShown={activePane === 1}>
-        <Title>Previously</Title>
-        <ScrollableContent paddingBottom={50}>
-          <ConvoGroup bits={prevConvos.reverse()} />
-        </ScrollableContent>
-      </Pane>
-
       <Pane isShown={activePane === 2}>
-        <Title>Afterwards</Title>
         <ScrollableContent paddingBottom={50}>
           <ConvoGroup bits={nextConvos} />
         </ScrollableContent>

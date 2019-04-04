@@ -10,6 +10,7 @@ export class OrbitStore {
   nextItem = { index: -1, appProps: null, paneId: '' }
   isEditing = false
   activeConfig: { [key: string]: AppProps } = shallow({})
+  activeActions = null
 
   get isTorn() {
     return false
@@ -17,6 +18,10 @@ export class OrbitStore {
 
   setEditing = () => {
     this.isEditing = true
+  }
+
+  setActiveActions = next => {
+    this.activeActions = next
   }
 
   setSelectItem(paneId: string, index: number, appProps: AppProps) {

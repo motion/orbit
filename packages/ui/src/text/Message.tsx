@@ -1,7 +1,7 @@
-import { gloss } from '@o/gloss'
-import { Text } from './Text'
+import { gloss, SimpleText } from '@o/gloss'
 
-export const Message = gloss(Text, {
+export const Message = gloss(SimpleText, {
+  userSelect: 'auto',
   lineHeight: '1.4rem',
   cursor: 'text',
   whiteSpace: 'normal',

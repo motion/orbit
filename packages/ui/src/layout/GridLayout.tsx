@@ -2,9 +2,12 @@ import { gloss, View, ViewProps } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import React, { cloneElement, isValidElement, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-// import 'react-grid-layout/css/styles.css'
-// todo(nate) we can't have css imports in code because they break node when they are imported on the desktop side
+import { isBrowser } from '../constants'
 import { useDefaultProps } from '../hooks/useDefaultProps'
+
+if (isBrowser) {
+  require('react-grid-layout/css/styles.css')
+}
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 

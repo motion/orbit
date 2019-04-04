@@ -39,9 +39,9 @@ export function AppsMainAddApp(props: { identifier: string }) {
     >
       {hasSetup && (
         <>
-          <SubSection title="Setup">
+          <Section bordered padded title="Setup">
             <AppView identifier={props.identifier} viewType="setup" />
-          </SubSection>
+          </Section>
           <Space />
         </>
       )}

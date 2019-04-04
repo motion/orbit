@@ -1,10 +1,9 @@
 import React from 'react'
 import { DateRangePicker } from 'react-date-range'
+import { isBrowser } from './constants'
 import { memoIsEqualDeep } from './helpers/memoHelpers'
 
-const isNode = typeof process !== 'undefined' && process.release && process.release.name === 'node'
-
-if (isNode === false) {
+if (isBrowser) {
   require('../Calendar.css')
 }
 

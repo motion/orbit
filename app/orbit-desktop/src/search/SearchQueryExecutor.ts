@@ -1,5 +1,5 @@
 import { Logger } from '@o/logger'
-import { Bit, SearchQuery } from '@o/models'
+import { Bit, BitContentTypes, SearchQuery } from '@o/models'
 import { getConnection } from 'typeorm'
 import { SqliteDriver } from 'typeorm/driver/sqlite/SqliteDriver'
 
@@ -81,7 +81,6 @@ export class SearchQueryExecutor {
       conditionParameters.push(new Date(args.endDate).getTime())
     }
     if (args.appFilters && args.appFilters.length) {
-      conditions.push(`"bit"."appType" IN (${args.appFilters.map(() => '?')}`)
       conditionParameters.push(...args.appFilters)
     }
     if (args.appId) {
@@ -176,7 +175,6 @@ export class SearchQueryExecutor {
       data: string
       desktopLink: string
       id: number
-      appType: string
       locationDesktoplink: string
       locationId: string
       locationName: string
@@ -189,7 +187,7 @@ export class SearchQueryExecutor {
     }[],
   ): Bit[] {
     return rawBits.map(rawBit => {
-      return {
+      const bit: Bit = {
         target: 'bit',
         appIdentifier: rawBit.appIdentifier,
         authorId: rawBit.authorId,
@@ -201,7 +199,6 @@ export class SearchQueryExecutor {
         data: rawBit.data ? JSON.parse(rawBit.data) : undefined,
         desktopLink: rawBit.desktopLink,
         id: rawBit.id,
-        appType: rawBit.appType,
         location: {
           id: rawBit.locationId,
           name: rawBit.locationName,
@@ -210,10 +207,11 @@ export class SearchQueryExecutor {
         },
         appId: rawBit.appId,
         title: rawBit.title,
-        type: rawBit.type,
+        type: BitContentTypes[rawBit.type],
         updatedAt: new Date(rawBit.updatedAt),
         webLink: rawBit.webLink,
-      } as Bit
+      }
+      return bit
     })
   }
 }

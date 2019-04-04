@@ -1,5 +1,10 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { SearchIndex } from '../interfaces/SearchIndex'
+
+interface SearchIndex {
+  id?: number
+  title?: string
+  body?: string
+}
 
 @Entity()
 export class SearchIndexEntity extends BaseEntity implements SearchIndex {

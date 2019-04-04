@@ -11,8 +11,19 @@ import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
 import { OrbitNav } from './OrbitNav'
 
+const HeaderButtonTheme = (props: any) => (
+  <SurfacePassProps
+    chromeless
+    margin={[-1, 4]}
+    opacity={0.5}
+    hoverStyle={{ opacity: 0.75 }}
+    iconSize={14}
+    {...props}
+  />
+)
+
 export const OrbitHeader = memo(function OrbitHeader() {
-  const { headerStore, newAppStore, paneManagerStore } = useStores()
+  const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
   const { activePane } = paneManagerStore
   const activePaneType = activePane.type
   const icon = activePaneType === 'createApp' ? newAppStore.app.identifier : activePaneType
@@ -30,13 +41,9 @@ export const OrbitHeader = memo(function OrbitHeader() {
       <HeaderTop padding={isEditing ? [3, 10] : [5, 10]}>
         <HeaderSide>
           <View flex={1} />
-          {/* <HeaderButtonChromeless
-            icon="sidebar"
-            onClick={themeStore.setToggleShowSidebar}
-            active={themeStore.showSidebar}
-          /> */}
-
-          <BackButton />
+          <HeaderButtonTheme>
+            <BackButton />
+          </HeaderButtonTheme>
         </HeaderSide>
 
         <HeaderContain isActive={false}>
@@ -53,16 +60,19 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {isOnTearablePane && (
             <>
-              <SurfacePassProps chromeless>
+              <HeaderButtonTheme>
+                {orbitStore.activeActions || null}
                 <OrbitEditAppButton />
-                <Space />
                 <LinkButton />
-                <Space />
-                <HeaderButtonChromeless icon="gear" tooltip="App Settings" />
-                <Space />
-              </SurfacePassProps>
+                <Button icon="gear" tooltip="App Settings" />
+              </HeaderButtonTheme>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                {!isEditing && <LaunchButton />}
+                {!isEditing && (
+                  <>
+                    <Space />
+                    <OpenButton />
+                  </>
+                )}
               </SurfacePassProps>
             </>
           )}
@@ -144,8 +154,8 @@ function OrbitEditAppButton() {
 
   return (
     <>
-      <Space />
-      <HeaderButtonChromeless
+      <Button
+        circular
         icon="tool"
         tooltip="Edit app"
         onClick={async () => {
@@ -205,7 +215,7 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
-const LaunchButton = memo(() => {
+const OpenButton = memo(() => {
   const Actions = useActions()
   // const [_isHovered, setHovered] = useState(false)
   // const tm = useRef(null)
@@ -224,24 +234,11 @@ const LaunchButton = memo(() => {
   )
 })
 
-function HeaderButtonChromeless(props: ButtonProps) {
-  return (
-    <Button
-      chromeless
-      marginTop={-1}
-      opacity={0.5}
-      hoverStyle={{ opacity: 0.75 }}
-      iconSize={14}
-      circular
-      {...props}
-    />
-  )
-}
-
 const LinkButton = memo(() => {
   // const { locationStore } = useStores()
   return (
-    <HeaderButtonChromeless
+    <Button
+      circular
       tooltip={`Copy link to app`}
       icon="link69"
       onClick={() => {
@@ -254,7 +251,8 @@ const LinkButton = memo(() => {
 const BackButton = memo(() => {
   const { locationStore } = useStoresSimple()
   return (
-    <HeaderButtonChromeless
+    <Button
+      circular
       icon="arrowminleft"
       opacity={locationStore.history.length ? 0.5 : 0.4}
       iconSize={20}

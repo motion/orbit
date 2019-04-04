@@ -6,7 +6,7 @@ services:
     image: "postgres:11.2"
     container_name: "orbit-postgres"
     volumes:
-      - ./scripts/postgres:/docker-entrypoint-initdb.d
+      - ./data/postgres:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     environment:

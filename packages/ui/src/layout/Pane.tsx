@@ -30,7 +30,7 @@ export function Pane({
   }
   const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
-    <SizablePane {...sizablePaneProps}>
+    <SizablePane {...sizablePaneProps} collapsed={collapsableProps.collapsed}>
       {hasTitle && (
         <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
       )}

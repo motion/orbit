@@ -321,7 +321,7 @@ export class Searchable extends React.PureComponent<Props, State> {
           before={before}
           after={after}
           width={width}
-          visible={!!this.state.searchTerm}
+          clearable={!!this.state.searchTerm}
           onClickClear={this.clear}
           focusedToken={this.state.focusedToken}
           filters={this.state.filters}

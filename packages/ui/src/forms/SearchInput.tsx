@@ -16,7 +16,7 @@ export type SearchInputProps = InputProps & {
   onClickClear?: Function
   focusedToken?: number
   filterProps?: Object
-  visible?: boolean
+  clearable?: boolean
 }
 
 export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(function SearchInput(
@@ -34,12 +34,12 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     value = null,
     flex = null,
     padding = 0,
-    visible,
+    clearable,
     ...props
   },
   ref,
 ) {
-  const clearVisible = typeof visible === 'boolean' ? visible : value && !!value.length
+  const clearVisible = typeof clearable === 'boolean' ? clearable : value && !!value.length
   return (
     <SearchBar
       position="relative"
@@ -51,7 +51,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     >
       {before}
       <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <SearchIcon opacity={0.8} name="ui-1_zoom" size={16} />
+        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="ui-1_zoom" size={16} />
         {filters.map((filter, i) => (
           <FilterToken
             key={`${filter.key}:${filter.type}${i}`}
@@ -78,10 +78,6 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
 })
 
 const SearchClearButton = gloss(ClearButton, {
-  position: 'absolute',
-  right: 6,
-  top: '50%',
-  marginTop: -9,
   opacity: 0,
   pointerEvents: 'none',
   visible: {
@@ -132,6 +128,7 @@ const SearchBox = gloss(View, {
   flex: 1,
   alignItems: 'center',
   paddingLeft: 4,
+  paddingRight: 30, // for clear button
   minHeight: 32,
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(0,0,0,0.05)`,

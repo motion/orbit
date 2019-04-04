@@ -12,11 +12,16 @@ if (isBrowser) {
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
-export type GridLayoutProps = {
-  children?: React.ReactNode[]
-  cols?: Object
-  rowHeight?: 100
-}
+type Base = { cols?: Object }
+
+export type GridLayoutProps =
+  | Base & {
+      children?: React.ReactNode[]
+    }
+  | Base & {
+      items: any[]
+      renderItem: (a: any, index: number) => React.ReactNode
+    }
 
 const defaultProps: Partial<GridLayoutProps> = {
   cols: {
@@ -88,19 +93,17 @@ const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 export function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
   const gridStore = useStore(GridStore, props)
-  if (!Array.isArray(props.children)) {
-    throw new Error('Need an array of items...')
-  }
-  const childArr = [...props.children]
-  const gridItems = childArr.map(
+  const items =
+    'items' in props
+      ? props.items.map((item, idx) => props.renderItem(item, idx))
+      : [...props.children]
+  const gridItems = items.map(
     child =>
       isValidElement(child) && (
         <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
       ),
   )
   let children = null
-
-  console.log('gridStore.layouts.lg', gridStore.layouts.lg, gridItems)
 
   if (!gridStore.layouts.lg) {
     children = <div style={{ display: 'none' }}>{gridItems}</div>
@@ -145,17 +148,3 @@ const GridItemChrome = gloss(View, {
     userSelect: 'none',
   },
 })
-
-// function generateLayout() {
-//   return _.map(_.range(0, 25), function(_item, i) {
-//     var y = Math.ceil(Math.random() * 4) + 1
-//     return {
-//       x: (_.random(0, 5) * 2) % 12,
-//       y: Math.floor(i / 6) * y,
-//       w: 2,
-//       h: y,
-//       i: i.toString(),
-//       // static: Math.random() < 0.05,
-//     }
-//   })
-// }

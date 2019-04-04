@@ -46,22 +46,9 @@ export function SlackSettings({ subId }: AppProps) {
       for (let postApp of postgresApps) {
         postgresApp
           .api(postApp)
-          .query(
-            `CREATE TABLE IF NOT EXISTS categories (id SERIAL PRIMARY KEY, name varchar(255))`,
-            [],
-          )
+          .query(`SELECT * FROM country`, [])
           .then(results => {
-            console.log(`table created`, results)
-            return postgresApp
-              .api(postApp)
-              .query('INSERT INTO categories(name) VALUES ($1)', ['dummy category'])
-          })
-          .then(results => {
-            console.log(`new row inserted`, results)
-            return postgresApp.api(postApp).query('SELECT * FROM categories')
-          })
-          .then(results => {
-            console.log(`got results from ${postApp.name}:`, results)
+            console.log(`countries loaded`, results)
           })
       }
     })

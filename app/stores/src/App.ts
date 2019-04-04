@@ -7,7 +7,7 @@ export let App = null as AppStore
 
 export type AppStartupConfig = {
   appId: number
-  appInDev: null | AppInDev
+  appInDev?: null | AppInDev
 }
 
 export type AppInDev = {

@@ -61,6 +61,7 @@ app/apps-website/site/build
 
 
 packages/screendump/build
+data/*
 
 coverage/*
 

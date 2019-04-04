@@ -22,8 +22,7 @@ export type SimpleTextProps = GlossProps<
 
 export function SimpleText({ size = 1, ...props }: SimpleTextProps) {
   const scale = useScale()
-  const sizeProp = typeof props.fontSize === 'undefined' && { size: scale * size }
-  return <SimpleTextElement {...sizeProp} {...props} />
+  return <SimpleTextElement size={size * scale} {...props} />
 }
 
 export const SimpleTextElement = gloss({

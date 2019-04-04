@@ -172,17 +172,17 @@ export class Text extends React.PureComponent<TextProps> {
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
     const size = scale * (this.props.size || 1)
-    const text = propsToTextSize({
+    const textProps = propsToTextSize({
       sizeLineHeight: this.props.sizeLineHeight,
       lineHeight: this.props.lineHeight,
       fontSize: this.props.fontSize,
       size,
       sizeMethod: this.props.sizeMethod,
     })
-    const numLinesToShow = doClamp && Math.floor(textHeight / text.lineHeightNum)
+    const numLinesToShow = doClamp && Math.floor(textHeight / textProps.lineHeightNum)
     const maxHeight =
-      typeof ellipse === 'number' && text.lineHeightNum
-        ? `${ellipse * text.lineHeightNum}px`
+      typeof ellipse === 'number' && textProps.lineHeightNum
+        ? `${ellipse * textProps.lineHeightNum}px`
         : 'auto'
     const oneLineEllipse = ellipse === 1
 
@@ -261,6 +261,8 @@ export class Text extends React.PureComponent<TextProps> {
         ignoreColor={ignoreColor}
         color={color}
         ellipse={ellipse}
+        fontSize={textProps.fontSize}
+        lineHeight={textProps.lineHeight}
         {...props}
         {...finalProps}
       />

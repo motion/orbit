@@ -45,7 +45,7 @@ export function Card(props: CardProps) {
         noInnerElement
         padding={padding}
       >
-        <Scale size={20}>
+        <Scale size={1.1}>
           <ListItem
             onClickLocation={onClickLocation}
             titleFlex={titleFlex}

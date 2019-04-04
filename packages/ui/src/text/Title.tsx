@@ -8,7 +8,6 @@ export function Title({ size = 1.5, verticalSpacing = 1, children, ...props }) {
       fontWeight={700}
       margin={[5 * verticalSpacing, 0, 10 * verticalSpacing]}
       {...props}
-      fontSize={100}
     >
       {children}
     </Text>

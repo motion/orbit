@@ -10,9 +10,29 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 const colors = {
   selected: orbitColor,
   red: '#c80000',
+  lightRed: '#FFB0B0',
+  darkRed: '#A12727',
+  green: '#37D55A',
+  lightGreen: '#B7EFC3',
+  darkGreen: '#1C8F3D',
+  yellow: '#E2EB53',
+  lightYellow: '#EFE5B7',
+  darkYellow: '#8F7B1C',
 }
 
 const colorThemes: ThemeSet = {
+  lightRed: Theme.fromStyles({
+    color: colors.darkRed,
+    background: colors.lightRed,
+  }),
+  lightGreen: Theme.fromStyles({
+    color: colors.darkGreen,
+    background: colors.lightGreen,
+  }),
+  lightYellow: Theme.fromStyles({
+    color: colors.darkYellow,
+    background: colors.lightYellow,
+  }),
   red: Theme.fromStyles({
     iconFill: '#fff',
     color: '#fff',
@@ -47,7 +67,16 @@ const colorThemes: ThemeSet = {
 
 const alternates: ThemeSet = {
   orange: colorThemes.orange,
+  red: colorThemes.red,
+  lightRed: colorThemes.lightRed,
+  lightYellow: colorThemes.lightYellow,
+  yellow: colorThemes.yellow,
+  green: colorThemes.green,
   remove: colorThemes.red,
+  error: colorThemes.lightRed,
+  warn: colorThemes.lightYellow,
+  approve: colorThemes.lightGreen,
+  lightGreen: colorThemes.lightGreen,
   confirm: {
     buttonFontWeight: 600,
     ...colorThemes.green,

@@ -81,7 +81,7 @@ class GridStore {
 const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
 export function GridLayout(directProps: GridLayoutProps) {
-  const props = useDefaultProps(directProps, defaultProps)
+  const props = useDefaultProps(defaultProps, directProps)
   const gridStore = useStore(GridStore, props)
   if (!Array.isArray(props.children)) {
     throw new Error('Need an array of items...')

@@ -1,69 +1,197 @@
 import produce from 'immer'
 import { flatten } from 'lodash'
-import React, { createContext, Dispatch, useContext, useReducer } from 'react'
+import React, { createContext, Dispatch, useContext, useEffect, useReducer } from 'react'
+import { Button } from '../buttons/Button'
 import { MergeContext } from '../helpers/MergeContext'
 import { Section, SectionProps } from '../Section'
 import { SurfacePassProps } from '../Surface'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
+import { Message } from '../text/Message'
+import { FormField } from './FormField'
 import { InputType } from './Input'
 
-export type FormProps = SectionProps & {
+export type FormProps<A extends FormFields> = SectionProps & {
+  submitButton?: string | boolean
+  fields?: A
+  errors?: FormErrors<any>
+  onSubmit?: (values: FormValues) => FormErrors<A> | Promise<FormErrors<A>>
   children?: React.ReactNode
   use?: UseForm
   size?: number
 }
 
-export type FieldState =
+type FormValues = { [key in keyof FormFields]: any }
+export type FormFields = { [key: string]: FormField }
+export type FormErrors<A> = { [key in keyof A]: string } | string | null | true
+
+type FormField =
   | {
       name: string
       type: InputType
       value: any
+      required?: boolean
+      validate?: (val: any) => string
     }
   | {
       name: string
       type: 'select'
       value: { label: string; value: string }[]
+      required?: boolean
+      validate?: (val: any) => string
     }
 
 type FormActions =
-  | { type: 'changeField'; value: FieldState }
+  | { type: 'changeField'; value: FormField }
   | { type: 'removeField'; value: string }
+  | { type: 'setErrors'; value: FormErrors<any> }
+  | { type: 'setFields'; value: FormFields }
 
 type FormState = {
-  fields: { [key: string]: FieldState }
+  errors: FormErrors<any>
+  values: FormFields
+  globalError?: string
 }
 
-type FormContextType = FormState & { dispatch: Dispatch<FormActions> } | null
+type FormContext = FormState & { dispatch: Dispatch<FormActions> } | null
 
-export const FormContext = createContext<FormContextType>(null)
+export const FormContext = createContext<FormContext>(null)
 
 function fieldsReducer(state: FormState, action: FormActions) {
   switch (action.type) {
+    case 'setErrors':
+      return produce(state, next => {
+        next.globalError = null
+        if (action.value === true) {
+          next.errors = null
+        } else if (typeof action.value === 'string') {
+          next.globalError = action.value
+        } else if (action.value && Object.keys(action.value).length) {
+          next.errors = action.value
+        } else {
+          next.errors = null
+        }
+      })
+    case 'setFields':
+      return produce(state, next => {
+        next.values = action.value
+      })
     case 'changeField':
       return produce(state, next => {
-        next.fields[action.value.name] = action.value
+        next.values[action.value.name] = action.value
       })
     case 'removeField':
       return produce(state, next => {
-        delete next.fields[action.value]
+        delete next.values[action.value]
       })
   }
 }
 
-export function Form({ children, use, size = 1.2, ...sectionProps }: FormProps) {
-  const [state, dispatch] = useReducer(fieldsReducer, { fields: {} })
+export function Form({
+  children,
+  use,
+  size = 1.2,
+  onSubmit,
+  errors,
+  fields,
+  submitButton,
+  ...sectionProps
+}: FormProps<any>) {
+  const [state, dispatch] = useReducer(fieldsReducer, { values: fields, errors: errors || null })
+
+  if (fields && children) {
+    throw new Error(
+      `Can't pass both fields and children, Form accepts one or the other. See docs: `,
+    )
+  }
+
+  useEffect(() => {
+    if (typeof errors !== 'undefined') {
+      dispatch({ type: 'setErrors', value: errors })
+    }
+  }, [errors])
+
+  useEffect(() => {
+    if (typeof fields !== 'undefined') {
+      dispatch({ type: 'setFields', value: fields })
+    }
+  }, [fields])
+
+  let elements = children
+
+  if (fields) {
+    elements = generateFields(fields)
+  }
+
   return (
-    <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
-      <Section {...sectionProps}>
-        <SurfacePassProps size={size}>{children}</SurfacePassProps>
-      </Section>
-    </MergeContext>
+    <form
+      onSubmit={async e => {
+        e.preventDefault()
+        if (onSubmit) {
+          // first do any field validation
+          let fieldErrors = {}
+          for (const key in state.values) {
+            const { required, validate, value } = state.values[key]
+            if (required && !value) {
+              fieldErrors[key] = 'is required.'
+              continue
+            }
+            if (typeof validate === 'function') {
+              const err = validate(value)
+              if (err) {
+                fieldErrors[key] = err
+              }
+              continue
+            }
+          }
+          if (Object.keys(fieldErrors).length) {
+            dispatch({ type: 'setErrors', value: fieldErrors })
+            return
+          }
+
+          // then submit and check validation
+          let nextErrors = onSubmit(state.values)
+          if (nextErrors instanceof Promise) {
+            nextErrors = await nextErrors
+          }
+          dispatch({ type: 'setErrors', value: nextErrors })
+        }
+      }}
+    >
+      <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
+        <Section {...sectionProps}>
+          {state.globalError && <Message alt="error">{state.globalError}</Message>}
+          {state.errors && <Message alt="warn">Form has a few errors, please check.</Message>}
+
+          <SurfacePassProps size={size}>
+            {elements}
+
+            {!!submitButton && (
+              <FormField label="">
+                <Button type="submit" alt="action">
+                  {submitButton === true ? 'Submit' : submitButton}
+                </Button>
+              </FormField>
+            )}
+          </SurfacePassProps>
+        </Section>
+      </MergeContext>
+    </form>
   )
 }
 
-function getFormValue(context: FormContextType, name: string) {
-  if (context.fields[name]) {
-    return context.fields[name].value
+function generateFields(fields: FormFields): React.ReactNode {
+  return Object.keys(fields).map(key => {
+    const field = fields[key]
+    // TODO type
+    return (
+      <FormField key={key} label={field.name} type={field.type as any} defaultValue={field.value} />
+    )
+  })
+}
+
+function getFormValue(context: FormContext, name: string) {
+  if (context.values[name]) {
+    return context.values[name].value
   }
 }
 
@@ -81,10 +209,10 @@ function createIncludeFilter(label: string, value: any): TableFilterIncludeExclu
   }
 }
 
-function getFormFilters(context: FormContextType, names: string[]): TableFilter[] {
-  const fields = Object.keys(context.fields)
+function getFormFilters(context: FormContext, names: string[]): TableFilter[] {
+  const fields = Object.keys(context.values)
     .filter(x => names.some(y => y === x))
-    .map(key => context.fields[key])
+    .map(key => context.values[key])
   const selectFields = flatten(
     fields
       .filter(x => x.type === 'select')
@@ -105,13 +233,13 @@ export function useFormFilters(names: string[]): TableFilter[] {
 }
 
 export type UseForm = {
-  context: FormContextType
+  context: FormContext
   getValue: (name: string) => any
   getFilters: (names: string[]) => TableFilter[]
 }
 
 export function useForm(): UseForm {
-  const [state, dispatch] = useReducer(fieldsReducer, { fields: {} })
+  const [state, dispatch] = useReducer(fieldsReducer, { values: {}, errors: null })
   const context = { ...state, dispatch }
   return {
     context,

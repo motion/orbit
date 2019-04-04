@@ -59,23 +59,31 @@ type FormFieldProps =
       name?: string
     }
   | {
+      type?: DataType
+      label: React.ReactNode
+      defaultValue: any
+      name?: string
+    }
+  | {
       label: React.ReactNode
       children: React.ReactNode
       type?: undefined
-      value?: undefined
       name?: string
     }
 
 export function FormField(props: FormFieldProps) {
-  const type = props.type || getDataType(props.value)
+  let val = null
+  if ('defaultValue' in props) {
+    val = props.defaultValue
+  } else if ('value' in props) {
+    val = props.value
+  }
+  const type = props.type || getDataType(val)
   const [name, setName] = useState(props.name || `field-${type}-${Math.random()}`)
 
-  useEffect(
-    () => {
-      props.name && setName(props.name)
-    },
-    [props.name],
-  )
+  useEffect(() => {
+    props.name && setName(props.name)
+  }, [props.name])
 
   switch (type) {
     case DataType.boolean:

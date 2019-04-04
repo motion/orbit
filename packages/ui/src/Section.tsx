@@ -6,7 +6,7 @@ import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 
-export type SectionProps = Omit<ViewProps, 'columns'> &
+export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
   PaddedProps &
   Omit<Partial<TitleRowProps>, 'after' | 'below' | 'margin'> & {
     belowTitle?: React.ReactNode

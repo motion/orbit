@@ -1,11 +1,37 @@
-import { App, AppProps, createApp } from '@o/kit'
-import React from 'react'
-import { CustomAppMain } from './CustomAppMain'
+import { App, AppBit, createApp, SelectApp, Table } from '@o/kit'
+import Slack from '@o/slack-app'
+import { Card, GridItem, GridLayout } from '@o/ui'
+import React, { useEffect, useState } from 'react'
 
-function CustomApp(props: AppProps) {
+function CustomApp() {
+  const [app, setApp] = useState<AppBit>(null)
+  const [res, setRes] = useState([])
+
+  useEffect(() => {
+    if (app) {
+      Slack.api(app)
+        .channelsList()
+        .then(({ channels }) => {
+          console.log('channels', channels)
+          setRes(channels)
+        })
+    }
+  }, [app])
+
   return (
     <App>
-      <CustomAppMain {...props} />
+      <GridLayout>
+        <GridItem w={4} h={4}>
+          <Card
+            afterTitle={<SelectApp onSelect={setApp} />}
+            flex={1}
+            overflow="hidden"
+            title="Slack Messages"
+          >
+            <Table rows={res} />
+          </Card>
+        </GridItem>
+      </GridLayout>
     </App>
   )
 }

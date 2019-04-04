@@ -20,7 +20,6 @@ export function OrbitFloatingShareCard({
   const nodePosition = useScreenPosition({ ref: buttonRef, debounce: 500 })
   const [hovered, setHovered] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState(false)
-  console.log('orbti', orbitStaticApps, paneManagerStore.activePane.type)
   const isStaticApp = !!orbitStaticApps.find(x => x.id === paneManagerStore.activePane.type)
   const showMenu = hovered || hoveredMenu
   const showButton = !isStaticApp && !!numItems

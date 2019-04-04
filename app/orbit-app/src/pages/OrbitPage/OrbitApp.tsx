@@ -5,6 +5,7 @@ import {
   AppViewsContext,
   getAppDefinition,
   ProvideStores,
+  useIsAppActive,
 } from '@o/kit'
 import { Button, Loading, Section, Space, View, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
@@ -51,12 +52,16 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
 
 function OrbitActions(props: { children: any }) {
   const stores = useStoresSimple()
+  const isActive = useIsAppActive()
+
   useEffect(() => {
-    stores.orbitStore.activeActions = props.children
-    return () => {
-      stores.orbitStore.activeActions = null
+    if (isActive) {
+      stores.orbitStore.setActiveActions(props.children)
+    } else {
+      stores.orbitStore.setActiveActions(null)
     }
-  }, [props.children])
+  }, [isActive])
+
   return null
 }
 
@@ -75,13 +80,15 @@ export const OrbitAppRenderOfDefinition = ({
   const Main = OrbitMain
   const Statusbar = OrbitStatusBar
   const Actions = OrbitActions
+  const { orbitStore } = useStoresSimple()
+  const appProps = useReaction(() => orbitStore.activeConfig[id] || {})
 
   return (
     <Suspense fallback={<Loading />}>
       <AppLoadContext.Provider value={{ id, identifier, appDef }}>
         <AppViewsContext.Provider value={{ Toolbar, Sidebar, Main, Statusbar, Actions }}>
           <ErrorBoundary>
-            <App />
+            <App {...appProps} />
           </ErrorBoundary>
         </AppViewsContext.Provider>
       </AppLoadContext.Provider>

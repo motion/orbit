@@ -130,19 +130,7 @@ export class SearchStore {
       return apps.map(this.appToResult)
     }
 
-    return [
-      ...apps.slice(0, all ? Infinity : 8).map(this.appToResult),
-      {
-        title: 'New app...',
-        iconBefore: true,
-        identifier: 'message',
-        onOpen: async () => {
-          // @ts-ignore
-          this.stores.newAppStore.setShowCreateNew(true)
-          this.stores.paneManagerStore.setActivePane('createApp')
-        },
-      },
-    ]
+    return [...apps.slice(0, all ? Infinity : 8)].map(this.appToResult)
   }
 
   getQuickResults(query: string, all = false) {
@@ -254,8 +242,7 @@ export class SearchStore {
           return false
         }
         // todo fix type
-        // @ts-ignore
-        results = [...results, ...nextResults]
+        results = [...results, ...nextResults.map(item => ({ item, group: 'Search Results' }))]
         setValue({
           results,
           query,

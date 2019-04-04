@@ -2,7 +2,6 @@ import {
   CSSPropertySet,
   gloss,
   Row,
-  SimpleText,
   Theme,
   ThemeContext,
   ThemeObject,
@@ -20,6 +19,7 @@ import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
+import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
 
 export type ItemRenderText = (text: string) => JSX.Element

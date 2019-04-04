@@ -4,6 +4,7 @@ import { Omit } from '../types'
 export function createContextualProps<A extends any>(defaults?: A) {
   const Context = createContext<Partial<A>>(null)
   return {
+    Context,
     PassProps({ children, ...rest }: Omit<A, 'children'> & { children?: any }) {
       return <Context.Provider value={{ ...defaults, ...rest }}>{children}</Context.Provider>
     },

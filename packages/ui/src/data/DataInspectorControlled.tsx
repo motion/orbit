@@ -1,8 +1,9 @@
 import { isEqual } from '@o/fast-compare'
-import { gloss, SimpleText } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { Component } from 'react'
 import { ContextMenu } from '../ContextMenu'
 import { colors } from '../helpers/colors'
+import { SimpleText } from '../text/SimpleText'
 import { Tooltip } from '../Tooltip'
 import { DataDescription } from './DataDescription'
 import { DataPreview } from './DataPreview'
@@ -74,7 +75,7 @@ type DataInspectorControlledProps = {
   /**
    * Ancestry of parent objects, used to avoid recursive objects.
    */
-  ancestry: Array<Object>
+  ancestry: Object[]
   /**
    * Object of properties that will have tooltips
    */

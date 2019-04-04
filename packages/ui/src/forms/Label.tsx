@@ -1,4 +1,5 @@
-import { gloss, SimpleText } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import { SimpleText } from '../text/SimpleText'
 
 export const Label = gloss(SimpleText, {
   padding: 5,

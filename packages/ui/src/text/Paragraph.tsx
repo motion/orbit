@@ -1,4 +1,5 @@
-import { gloss, SimpleText } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import { SimpleText } from './SimpleText'
 
 export const Paragraph = gloss(SimpleText, {
   margin: [0, 0, '1rem'],

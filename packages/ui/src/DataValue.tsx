@@ -1,6 +1,6 @@
-import { SimpleText } from '@o/gloss'
 import React from 'react'
 import { DateFormat } from './text/DateFormat'
+import { SimpleText } from './text/SimpleText'
 
 export function DataValue(props: { type?: string; value: any }) {
   const { type, value } = props

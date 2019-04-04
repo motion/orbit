@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Collapsable, CollapsableProps } from './Collapsable'
 import { Padded, PaddedProps } from './layout/Padded'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
+import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { View } from './View/View'
 
@@ -44,21 +45,23 @@ export function Card(props: CardProps) {
         noInnerElement
         padding={padding}
       >
-        <ListItem
-          onClickLocation={onClickLocation}
-          titleFlex={titleFlex}
-          subTitleProps={subTitleProps}
-          titleProps={titleProps}
-          afterTitle={afterTitle}
-          title={title}
-          subTitle={subTitle}
-          date={date}
-          icon={icon}
-          location={location}
-          hideSubtitle={hideSubtitle}
-          iconProps={iconProps}
-          preview={preview}
-        />
+        <Scale size={20}>
+          <ListItem
+            onClickLocation={onClickLocation}
+            titleFlex={titleFlex}
+            subTitleProps={subTitleProps}
+            titleProps={titleProps}
+            afterTitle={afterTitle}
+            title={title}
+            subTitle={subTitle}
+            date={date}
+            icon={icon}
+            location={location}
+            hideSubtitle={hideSubtitle}
+            iconProps={iconProps}
+            preview={preview}
+          />
+        </Scale>
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
           <Padded padded={padded}>
             <View flex={1} height={collapsed ? 0 : '100%'}>

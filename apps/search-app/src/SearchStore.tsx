@@ -2,6 +2,7 @@ import {
   AppBit,
   AppIcon,
   ensure,
+  fuzzyFilter,
   getUser,
   MarkType,
   OrbitListItemProps,
@@ -116,7 +117,7 @@ export class SearchStore {
 
   get isHome() {
     const { appStore } = this.stores
-    return appStore && appStore.app && appStore.app.tabDisplay !== 'permanent'
+    return appStore && appStore.app && appStore.app.tabDisplay === 'permanent'
   }
 
   getApps(query: string, all = false): OrbitListItemProps[] {
@@ -146,12 +147,12 @@ export class SearchStore {
 
   getQuickResults(query: string, all = false) {
     // non editable apps don't search apps, just the Home app
-    if (this.isHome) {
+    if (this.isHome === false) {
       return []
     }
 
     // TODO recent history
-    return [
+    return fuzzyFilter(query, [
       {
         key: 'app-home',
         title: `${this.stores.spaceStore.activeSpace.name} Home`,
@@ -160,10 +161,8 @@ export class SearchStore {
         iconBefore: true,
         subType: 'home',
       },
-      ...this.getApps(query, all).filter(
-        x => `${x.title}`.toLowerCase().indexOf(query.toLowerCase()) === 0,
-      ),
-    ]
+      ...this.getApps(query, all),
+    ])
   }
 
   get results() {

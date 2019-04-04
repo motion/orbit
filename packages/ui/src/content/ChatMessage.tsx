@@ -85,7 +85,7 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           )}
         </Row>
       )}
-      <SizedSurface padding={[6, 10]} noInnerElement alt="action" sizeRadius={3}>
+      <SizedSurface padding={[6, 10]} noInnerElement alt="action" sizeRadius={1}>
         {content}
       </SizedSurface>
     </ChatMessageFrame>

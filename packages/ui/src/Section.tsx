@@ -1,10 +1,12 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { Padded, PaddedProps } from './layout/Padded'
+import { Scrollable } from './layout/Scrollable'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
+import { View, ViewProps } from './View/View'
 
 export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
   PaddedProps &
@@ -13,7 +15,6 @@ export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
     afterTitle?: React.ReactNode
     titleBorder?: boolean
     below?: React.ReactNode
-    scrollable?: boolean
     innerRef?: any
     maxInnerHeight?: number
   }
@@ -83,16 +84,12 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           icon={icon}
         />
       )}
-      <SectionInner
-        maxHeight={maxInnerHeight}
-        overflowY={scrollable ? 'auto' : 'inherit'}
-        flex={1}
-        ref={innerRef}
-        {...viewProps}
-      >
-        <Padded padded={padded}>
-          <Reset>{children}</Reset>
-        </Padded>
+      <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
+        <Scrollable scrollable={scrollable}>
+          <Padded padded={padded}>
+            <Reset>{children}</Reset>
+          </Padded>
+        </Scrollable>
       </SectionInner>
       {below}
     </SizedSurface>

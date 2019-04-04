@@ -1,4 +1,5 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
+import { View } from '@o/ui'
 import React from 'react'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Text, TextProps } from './text/Text'

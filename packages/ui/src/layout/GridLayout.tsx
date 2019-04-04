@@ -1,9 +1,10 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import React, { cloneElement, isValidElement, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
 import { useDefaultProps } from '../hooks/useDefaultProps'
+import { View, ViewProps } from '../View/View'
 
 if (isBrowser) {
   require('react-grid-layout/css/styles.css')

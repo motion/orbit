@@ -1,4 +1,4 @@
-import { Row, ViewProps } from '@o/gloss'
+import { Row, RowProps } from '@o/gloss'
 import { ensure, react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
@@ -8,7 +8,7 @@ import { Omit } from './types'
 
 const Context = createContext<BreadcrumbStore | null>(null)
 
-export type BreadcrumbsProps = Omit<ViewProps, 'children'> & {
+export type BreadcrumbsProps = Omit<RowProps, 'children'> & {
   separator?: ReactNode
   children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }

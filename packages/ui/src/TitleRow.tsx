@@ -1,4 +1,4 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React, { isValidElement } from 'react'
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
@@ -6,6 +6,7 @@ import { Icon } from './Icon'
 import { Space } from './layout/Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
+import { View } from './View/View'
 
 export type TitleRowProps = Partial<CollapsableProps> & {
   icon?: React.ReactNode

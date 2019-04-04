@@ -1,15 +1,15 @@
-import { CSSPropertySet, gloss, View as GlossView, ViewProps as GlossViewProps } from '@o/gloss'
-import { Elevatable, getElevation } from './elevate'
+import { Col, ColProps, CSSPropertySet, gloss } from '@o/gloss'
+import { ElevatableProps, getElevation } from './elevate'
 
-export type ViewProps = GlossViewProps & Elevatable & Scrollable
+export type ViewProps = ColProps & ElevatableProps & ScrollableProps
 
 // Scrollable
 
-export type Scrollable = {
+export type ScrollableProps = {
   scrollable?: boolean | 'x' | 'y'
 }
 
-const getScrollable = ({ scrollable }: Scrollable): CSSPropertySet => {
+const getScrollable = ({ scrollable }: ScrollableProps): CSSPropertySet => {
   // easy scrollable
   if (scrollable === true) {
     return { overflowX: 'auto', overflowY: 'auto' }
@@ -20,4 +20,4 @@ const getScrollable = ({ scrollable }: Scrollable): CSSPropertySet => {
   }
 }
 
-export const View = gloss<ViewProps>(GlossView).theme(getElevation, getScrollable)
+export const View = gloss<ViewProps>(Col).theme(getElevation, getScrollable)

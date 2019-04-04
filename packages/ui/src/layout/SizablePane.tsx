@@ -97,7 +97,6 @@ export function SizablePane({
     const resizableProp = resizable && { [type === 'row' ? 'right' : 'bottom']: true }
     element = (
       <Interactive
-        scrollable={scrollable}
         overflow="hidden"
         resizable={resizableProp}
         onResize={x => {
@@ -108,14 +107,14 @@ export function SizablePane({
         {...props}
       >
         {borderElement}
-        {childElement}
+        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
       </Interactive>
     )
   } else {
     element = (
       <PaneChrome flex={flex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
-        {childElement}
+        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
       </PaneChrome>
     )
   }

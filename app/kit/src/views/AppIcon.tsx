@@ -1,6 +1,6 @@
-import { useTheme, View } from '@o/gloss'
+import { useTheme } from '@o/gloss'
 import { AppBit } from '@o/models'
-import { IconProps, toColor } from '@o/ui'
+import { IconProps, toColor, View } from '@o/ui'
 import React from 'react'
 import { appIcons } from './icons'
 import { SVG } from './SVG'

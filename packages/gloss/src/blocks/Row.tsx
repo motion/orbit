@@ -1,7 +1,9 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { Base, BaseProps } from './Base'
 
-export const Row = gloss(View, {
+export type RowProps = BaseProps
+
+export const Row = gloss(Base, {
   display: 'flex',
   flexFlow: 'row',
 })

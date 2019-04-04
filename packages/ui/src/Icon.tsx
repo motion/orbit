@@ -1,4 +1,5 @@
-import { gloss, View, ViewProps } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import { View, ViewProps } from '@o/ui'
 import { mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, memo, useContext } from 'react'

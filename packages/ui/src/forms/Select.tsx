@@ -1,8 +1,9 @@
-import { ThemeContext, View } from '@o/gloss'
+import { ThemeContext } from '@o/gloss'
 import React, { useCallback, useContext } from 'react'
 import ReactSelect from 'react-select'
 import { Props } from 'react-select/lib/Select'
 import { SimpleText } from '../text/SimpleText'
+import { View } from '../View/View'
 import { FormContext } from './Form'
 
 const selectStyles = {

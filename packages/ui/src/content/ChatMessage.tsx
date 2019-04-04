@@ -1,10 +1,11 @@
-import { gloss, Row, View } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import React, { useContext } from 'react'
 import { ButtonPerson } from '../buttons/ButtonPerson'
 import { SizedSurface } from '../SizedSurface'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
+import { View } from '../View/View'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 import { Markdown } from './Markdown'
 

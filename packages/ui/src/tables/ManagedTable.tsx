@@ -5,7 +5,7 @@
  * @format
  */
 
-import { CSSPropertySet, gloss, View } from '@o/gloss'
+import { CSSPropertySet, gloss } from '@o/gloss'
 import { debounce, isEqual } from 'lodash'
 import React, { createRef } from 'react'
 import debounceRender from 'react-debounce-render'
@@ -16,6 +16,7 @@ import { SelectableVariableList } from '../lists/SelectableList'
 import { pickSelectableProps, SelectableProps, SelectableStore } from '../lists/SelectableStore'
 import { Text } from '../text/Text'
 import { DataColumns, GenericDataRow } from '../types'
+import { View } from '../View/View'
 import { getSortedRows } from './getSortedRows'
 import { TableHead } from './TableHead'
 import { TableRow } from './TableRow'

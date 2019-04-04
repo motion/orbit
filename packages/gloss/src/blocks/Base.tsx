@@ -5,7 +5,7 @@ import { propsToTextSize } from '../helpers/propsToTextSize'
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-export type ViewProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
+export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
   CSSPropertySetStrict & {
     tagName?: string
     // our default styling supports is through preProcessTheme
@@ -16,13 +16,13 @@ export type ViewProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &
     focusStyle?: CSSPropertySetStrict
   }
 
-export const View = gloss<ViewProps>().theme((props, theme) => ({
+export const Base = gloss<BaseProps>().theme((props, theme) => ({
   ...propsToStyles(props, theme),
   ...propsToTextSize(props),
 }))
 
 // ignore all valid css props, except src for images
-View.ignoreAttrs = {
+Base.ignoreAttrs = {
   ...validCSSAttr,
   size: true,
   src: false,

@@ -1,10 +1,10 @@
-import { View } from '@o/gloss'
+import { Col } from '@o/gloss'
 import {
+  AppLoadContext,
   AppMainViewProps,
   ListPropsContext,
   PassExtraListProps,
   SubPane,
-  AppLoadContext,
 } from '@o/kit'
 import { BorderTop, Sidebar } from '@o/ui'
 import React, { memo, useContext, useEffect } from 'react'
@@ -37,7 +37,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
         noBorder
       >
         <ToolBarPad hasToolbar={props.hasToolbar} hasSidebar />
-        <View flex={1} position="relative" overflow="hidden">
+        <Col flex={1} position="relative" overflow="hidden">
           {props.hasToolbar && <BorderTop opacity={0.5} />}
           <ListPropsContext.Provider
             value={{ selectable: true, searchable: true, alwaysSelected: true }}
@@ -48,7 +48,7 @@ export const OrbitSidebar = memo((props: AppMainViewProps) => {
               {props.children}
             </PassExtraListProps>
           </ListPropsContext.Provider>
-        </View>
+        </Col>
         {props.hasStatusbar && statusbarPadElement}
       </Sidebar>
     </SubPane>

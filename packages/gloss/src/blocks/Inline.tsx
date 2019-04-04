@@ -1,6 +1,8 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { Base, BaseProps } from './Base'
 
-export const Inline = gloss(View, {
+export type InlineProps = BaseProps
+
+export const Inline = gloss(Base, {
   display: 'inline',
 })

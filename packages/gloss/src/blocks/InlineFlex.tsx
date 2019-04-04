@@ -1,6 +1,8 @@
 import { gloss } from '../gloss'
-import { View } from './View'
+import { Base, BaseProps } from './Base'
 
-export const InlineFlex = gloss(View, {
+export type InlineFlexProps = BaseProps
+
+export const InlineFlex = gloss(Base, {
   display: 'inline-flex',
 })

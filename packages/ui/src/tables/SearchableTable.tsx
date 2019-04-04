@@ -6,10 +6,10 @@
  */
 
 import { isEqual } from '@o/fast-compare'
-import { View } from '@o/gloss'
 import * as React from 'react'
 import textContent from '../helpers/textContent'
 import { GenericDataRow } from '../types'
+import { View } from '../View/View'
 import { ManagedTable, ManagedTableProps } from './ManagedTable'
 import { Searchable, SearchableProps } from './Searchable'
 import { TableFilter } from './types'

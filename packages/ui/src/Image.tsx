@@ -1,4 +1,5 @@
-import { gloss, View } from '@o/gloss'
+import { gloss } from '@o/gloss'
+import { View } from '@o/ui'
 
 export const Image = gloss(View, {
   display: 'block',

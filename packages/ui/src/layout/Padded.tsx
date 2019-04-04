@@ -1,4 +1,5 @@
-import { CSSPropertySet, gloss, View, ViewProps } from '@o/gloss'
+import { CSSPropertySet, gloss } from '@o/gloss'
+import { View, ViewProps } from '../View/View'
 
 export type PaddedProps = {
   padded?: boolean

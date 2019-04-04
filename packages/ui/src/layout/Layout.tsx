@@ -1,6 +1,7 @@
-import { Col, gloss, Row, View } from '@o/gloss'
+import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
+import { View } from '../View/View'
 import { useVisiblity } from '../Visibility'
 import { MasonryLayout } from './MasonryLayout'
 import { Pane } from './Pane'

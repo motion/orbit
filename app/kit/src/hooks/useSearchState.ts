@@ -2,20 +2,29 @@ import { isEqual } from '@o/fast-compare'
 import { useReaction } from '@o/use-store'
 import { useRef } from 'react'
 import { QueryFilterStore } from '../stores/QueryFilterStore'
-import { useStores } from './useStores'
+import { useStoresSimple } from './useStores'
 
 export type SearchState = {
   query: string
-  queryFilters: QueryFilterStore
+  filters: QueryFilterStore
+  dateState: QueryFilterStore['dateState']
+  toggleFilterActive: QueryFilterStore['toggleFilterActive']
+  activeFilters: QueryFilterStore['activeFilters']
+  activeDateFilters: QueryFilterStore['activeDateFilters']
 }
 
 export function useSearchState(cb?: (state: SearchState) => any) {
-  const { appStore, queryStore } = useStores()
+  const { appStore, queryStore } = useStoresSimple()
+  const { queryFilters } = queryStore
   const last = useRef(null)
   return useReaction(() => {
     const next = {
-      query: queryStore.queryFilters.activeQuery,
-      queryFilters: queryStore.queryFilters,
+      filters: queryFilters,
+      query: queryFilters.activeQuery,
+      dateState: queryFilters.dateState,
+      toggleFilterActive: queryFilters.toggleFilterActive,
+      activeFilters: queryFilters.activeFilters,
+      activeDateFilters: queryFilters.activeDateFilters,
     }
     if (!last.current || (appStore.isActive && !isEqual(last.current, next))) {
       last.current = next

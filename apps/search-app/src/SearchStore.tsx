@@ -204,7 +204,7 @@ export class SearchStore {
         activeQuery,
         dateState,
         sortBy,
-      } = this.searchState.queryFilters
+      } = this.searchState.filters
 
       // filters
       const peopleFilters = activeFilters.filter(x => x.type === MarkType.Person).map(x => x.text)

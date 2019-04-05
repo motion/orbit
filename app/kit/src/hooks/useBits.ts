@@ -20,12 +20,12 @@ export function useBits({ type, ...args }: UseBitsProps = {}) {
   const activeQuery = useReaction(() => appStore.activeQuery, { delay: 100, defaultValue: '' })
   const query = searchable ? activeQuery : args.query
 
-  const { queryFilters } = useSearchState()
+  const state = useSearchState()
   let where = []
   let take = typeof args.take === 'undefined' ? 5000 : args.take
 
   if (type) {
-    const { appFilters } = queryFilters
+    const { appFilters } = state.filters
     if (appFilters.length) {
       for (const filter of appFilters) {
         if (filter.active) {

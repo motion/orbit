@@ -1,6 +1,6 @@
-import { toColor, useStores } from '@o/kit'
+import { toColor, useSearchState } from '@o/kit'
 import { Button, ButtonProps, gloss, Row } from '@o/ui'
-import * as React from 'react'
+import React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const dateBg = toColor('#ffb049')
@@ -76,25 +76,24 @@ const getBorderColor = filter =>
   (filter.active && activeThemes[filter.type].borderColor) || 'transparent'
 
 export function SearchSuggestionBar() {
-  const { queryStore } = useStores()
-  const filterStore = queryStore.queryFilters
-  const dateFilter = getDateAbbreviated(queryStore.queryFilters.dateState)
-  const hasTextualDateFilter = !!filterStore.activeDateFilters.length
+  const state = useSearchState()
+  const dateText = getDateAbbreviated(state.queryFilters.dateState)
+  const hasTextualDateFilter = !!state.activeDateFilters.length
   return (
     <SuggestionBar visible>
-      {!!dateFilter && !hasTextualDateFilter && (
+      {!!dateText && !hasTextualDateFilter && (
         <SuggestionButton
-          onClick={filterStore.clearDate}
+          onClick={state.filters.clearDate}
           opacity={1}
           borderBottom={[2, activeThemes.date.borderColor]}
         >
-          {dateFilter}
+          {dateText}
         </SuggestionButton>
       )}
-      {filterStore.allFilters.map(filter => (
+      {state.filters.allFilters.map(filter => (
         <SuggestionButton
           key={`${filter.text}${filter.active}`}
-          onClick={() => filterStore.toggleFilterActive(filter.text)}
+          onClick={() => state.filters.toggleFilterActive(filter.text)}
           borderBottom={[2, getBorderColor(filter)]}
         >
           {filter.text}

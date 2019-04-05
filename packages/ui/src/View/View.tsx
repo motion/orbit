@@ -23,6 +23,9 @@ export type PaddedProps = {
 
 const getPadding = (props: PaddedProps) => {
   if (typeof props.pad !== 'undefined') {
+    if (!props.pad) {
+      return
+    }
     if (Array.isArray(props.pad)) {
       return {
         padding: props.pad.map(x => getSpaceSize(x)),
@@ -51,7 +54,7 @@ export function getBetweenPad(pad: PaddedProps['pad']) {
   if (Array.isArray(pad)) {
     return pad[0] || 0
   }
-  if (typeof pad === 'object') {
+  if (pad && typeof pad === 'object') {
     return pad.top || pad.y || 0
   }
   return pad

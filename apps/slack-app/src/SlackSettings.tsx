@@ -20,6 +20,7 @@ export function SlackSettings() {
     // to make sure we always have a fresh channels we load them from API
     const loader = new SlackLoader(app)
     loader.loadChannels().then(freshApiChannels => {
+      console.log('loaded channels')
       setChannels(orderBy(freshApiChannels, ['is_private', 'num_members'], ['asc', 'desc']))
     })
   }, [app && app.token])

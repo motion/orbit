@@ -10,7 +10,7 @@ import { gloss, Row, ThemeObject } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import React, { memo } from 'react'
 import { DataValue } from '../DataValue'
-import { CheckboxReactive } from '../forms/CheckboxReactive'
+import { CheckBox } from '../forms/CheckBox'
 import { getRowValues } from '../helpers/getRowValues'
 import { SelectableStore } from '../lists/SelectableStore'
 import { DataColumns, GenericDataRow } from '../types'
@@ -86,8 +86,8 @@ export const TableRow = memo(function TableRow({
 
         if (col.type === 'boolean') {
           element = (
-            <CheckboxReactive
-              isActive={() => value}
+            <CheckBox
+              checked={value}
               onChange={next => {
                 if (col.onChange) {
                   col.onChange(index, next)

@@ -1,9 +1,10 @@
-import { Col, ColProps, gloss } from '@o/gloss'
+import { Col, gloss } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import { getSpaceSize, Sizes } from '../Space'
+import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps, getElevation } from './elevate'
 
-export type ViewProps = ColProps & ElevatableProps & PaddedProps
+export type ViewProps = CommonViewProps & ElevatableProps & PaddedProps
 
 // Padded
 

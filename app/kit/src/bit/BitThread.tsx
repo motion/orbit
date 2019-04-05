@@ -1,15 +1,15 @@
-import { ScrollableContent, Thread, Title, View } from '@o/ui'
+import { Col, Thread, Title } from '@o/ui'
 import * as React from 'react'
 import { BitStatusBar } from '../views/BitStatusBar'
 
 export function BitThread({ item }) {
   return (
-    <View flex={1}>
-      <ScrollableContent>
+    <Col flex={1}>
+      <Col padY scrollable>
         <Title>{item.title}</Title>
         <Thread {...item} />
-      </ScrollableContent>
+      </Col>
       <BitStatusBar {...this.props} />
-    </View>
+    </Col>
   )
 }

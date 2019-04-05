@@ -4,8 +4,8 @@ import { BitStatusBar } from '../views/BitStatusBar'
 
 export function BitMarkdown({ item }) {
   return (
-    <Col pad flex={1}>
-      <Col padY="y">
+    <Col flex={1}>
+      <Col padY scrollable>
         <Markdown {...this.props}>{item.body}</Markdown>
       </Col>
       <BitStatusBar {...this.props} />

@@ -19,7 +19,7 @@ export class AboutPage extends React.Component {
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
-            <SectionContent padded>
+            <SectionContent pad>
               <Bauhaus
                 showCircle
                 opacity={0.1}

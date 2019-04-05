@@ -79,7 +79,7 @@ export function CustomAppTree() {
       </Pane>
       <Pane title="Sidebar">
         <Layout type="column">
-          <Pane title="Elements" padded collapsable>
+          <Pane title="Elements" pad collapsable>
             <DataInspector
               data={{
                 test: 'this',
@@ -95,7 +95,7 @@ export function CustomAppTree() {
               }}
             />
           </Pane>
-          <Pane title="Elements" flex={2} padded collapsable>
+          <Pane title="Elements" flex={2} pad collapsable>
             <Title>Description</Title>
             <SubTitle>Sub title</SubTitle>
             <Paragraph>lorem ipsum dolor sit amet.</Paragraph>

@@ -9,13 +9,13 @@ export type ScrollableViewProps = ViewProps & {
 
 export function ScrollableView({
   children,
-  padded,
+  pad,
   padding,
   scrollable,
   ...props
 }: ScrollableViewProps) {
   const contents = (
-    <View padded={padded} padding={padding}>
+    <View pad={pad} padding={padding}>
       {children}
     </View>
   )

@@ -121,14 +121,11 @@ export default function SettingsAppAccount() {
   }
 
   // for the first-ever time we run sync instantly
-  useEffect(
-    () => {
-      if (user && user.cloudId && !user.lastTimeSync) {
-        cloudSync()
-      }
-    },
-    [user ? user.cloudId : null],
-  )
+  useEffect(() => {
+    if (user && user.cloudId && !user.lastTimeSync) {
+      cloudSync()
+    }
+  }, [user ? user.cloudId : null])
 
   return (
     <Section bordered title="My Account" sizePadding={2}>
@@ -168,7 +165,7 @@ export default function SettingsAppAccount() {
 
           <UISpace />
 
-          <Section padded>
+          <Section pad>
             <SegmentedRow size={1.5}>
               <Input
                 type="email"

@@ -127,7 +127,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     tooltip,
     tooltipProps,
     spacing,
-    padded,
+    pad,
     padding,
     badgeProps,
     badge,
@@ -271,7 +271,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           themeSelect={themeSelect}
           lineHeight={lineHeight}
           whiteSpace="pre"
-          padded={padded}
+          pad={pad}
           padding={padding}
           {...throughProps}
           {...rest}

@@ -32,7 +32,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
               key={bit.id}
               messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
             />
-            <Divider padded />
+            <Divider pad />
           </React.Fragment>
         )
       })}
@@ -91,14 +91,14 @@ export function BitConversation(props: AppBitMainProps) {
       </Row>
 
       <Pane isShown={activePane === 0}>
-        <Section flex={1} padded scrollable="y">
+        <Section flex={1} pad scrollable="y">
           <ConvoGroup bits={prevConvos.reverse()} />
           {!!props.item && <ChatMessages messages={props.item.data.messages} />}
         </Section>
       </Pane>
 
       <Pane isShown={activePane === 2}>
-        <Section flex={1} padded scrollable="y">
+        <Section flex={1} pad scrollable="y">
           <ConvoGroup bits={nextConvos} />
         </Section>
       </Pane>

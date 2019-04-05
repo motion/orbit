@@ -45,7 +45,7 @@ export class PrivacyPage extends React.Component {
         <UI.Theme theme={Constants.blueTheme}>
           <Header />
           <Section>
-            <SectionContent padded>
+            <SectionContent pad>
               <PostTemplate title="Privacy Policy" body={text} />
             </SectionContent>
           </Section>

@@ -25,7 +25,7 @@ export function Card(props: CardProps) {
     titleFlex,
     onClickLocation,
     subTitle,
-    padded,
+    pad,
     date,
     collapsable,
     collapsed,
@@ -45,7 +45,7 @@ export function Card(props: CardProps) {
         themeSelect="card"
         sizeRadius={sizeRadius}
         noInnerElement
-        padded={padded}
+        pad={pad}
       >
         <Scale size={1.1}>
           <ListItem
@@ -71,12 +71,12 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
-        <Space spacing={padded} />
+        <Space spacing={pad} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
           <Col
             flexDirection={flexDirection}
             spacing={spacing}
-            padded={padded}
+            pad={pad}
             flex={1}
             height={collapsed ? 0 : '100%'}
           >

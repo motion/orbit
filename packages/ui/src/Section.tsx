@@ -44,7 +44,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     below,
     flex,
     icon,
-    padded,
+    pad,
     background,
     titleBorder,
     width,
@@ -103,7 +103,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           spaceAround={spaceAround}
           flexDirection={flexDirection}
           scrollable={scrollable}
-          padded={padded}
+          pad={pad}
           padding={padding}
         >
           <Reset>{children}</Reset>

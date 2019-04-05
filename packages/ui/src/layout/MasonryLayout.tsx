@@ -9,7 +9,7 @@ export type MasonryLayoutProps = ViewProps & {
   children?: React.ReactNode
 }
 
-export function MasonryLayout({ children, padded, padding, ...props }: MasonryLayoutProps) {
+export function MasonryLayout({ children, pad, padding, ...props }: MasonryLayoutProps) {
   const visible = useVisiblity()
   const size = useNodeSize({
     throttle: 500,
@@ -17,7 +17,7 @@ export function MasonryLayout({ children, padded, padding, ...props }: MasonryLa
     disable: !visible,
   })
   return (
-    <View ref={size.ref} padded={padded} padding={padding} flex={1}>
+    <View ref={size.ref} pad={pad} padding={padding} flex={1}>
       <SortableResponsive
         sortable
         transitionDuration={0.5}

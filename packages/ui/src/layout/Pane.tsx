@@ -19,7 +19,7 @@ export function Pane({
   onCollapse,
   collapsed,
   children,
-  padded,
+  pad,
   padding,
   scrollable,
   spacing,
@@ -46,7 +46,7 @@ export function Pane({
             spaceAround={spaceAround}
             flexDirection={flexDirection}
             scrollable={scrollable}
-            padded={padded}
+            pad={pad}
             padding={padding}
           >
             {children}

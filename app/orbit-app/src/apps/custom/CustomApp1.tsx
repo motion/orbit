@@ -54,7 +54,7 @@ export function CustomApp1() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane padded scrollable="x" flexFlow="row">
+            <Pane pad scrollable="x" flexFlow="row">
               {highlighted.map(row => (
                 <>
                   <Card
@@ -64,7 +64,7 @@ export function CustomApp1() {
                     minWidth={200}
                     minHeight={200}
                     elevation={1}
-                    padded
+                    pad
                   >
                     <DefinitionList row={row} />
                   </Card>

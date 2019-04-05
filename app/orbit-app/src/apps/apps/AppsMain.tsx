@@ -33,13 +33,13 @@ export function AppsMain(props: AppProps) {
             )
           }
         >
-          <Section padded>
+          <Section pad>
             <FormField label="Name and Icon">
               <AppsMainNew />
             </FormField>
           </Section>
 
-          <Section padded>
+          <Section pad>
             <SubSection title="App Settings">
               <AppMainView {...props} viewType="settings" />
             </SubSection>

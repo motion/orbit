@@ -1,8 +1,11 @@
+import { CSSPropertySet } from '@o/css'
 import { Bit } from '@o/models'
 import {
   Center,
   createContextualProps,
   Direction,
+  Section,
+  SectionSpecificProps,
   SelectableStore,
   SubTitle,
   Text,
@@ -23,7 +26,8 @@ import { AppProps } from '../types/AppProps'
 import { HighlightActiveQuery } from './HighlightActiveQuery'
 import { ListItem, OrbitListItemProps } from './ListItem'
 
-export type ListProps = VirtualListProps<Bit | OrbitListItemProps> &
+export type ListProps = SectionSpecificProps &
+  VirtualListProps<Bit | OrbitListItemProps> &
   Partial<UseFilterProps<any>> & {
     isActive?: boolean
     search?: string
@@ -31,6 +35,7 @@ export type ListProps = VirtualListProps<Bit | OrbitListItemProps> &
     onOpen?: HandleOrbitSelect
     placeholder?: React.ReactNode
     shareable?: boolean
+    flex?: CSSPropertySet['flex']
   }
 
 // TODO use creaetPropsContext
@@ -57,13 +62,22 @@ export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
 
-export function List(rawProps: ListProps) {
+export function List({
+  flex = 1,
+  bordered,
+  title,
+  subTitle,
+  icon,
+  beforeTitle,
+  afterTitle,
+  ...listProps
+}: ListProps) {
   // const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
+  const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
   const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
   const internalRef = useRef<SelectableStore>(null)
-  const selectableStoreRef = rawProps.selectableStoreRef || internalRef
+  const selectableStoreRef = listProps.selectableStoreRef || internalRef
   const { shortcutStore, spaceStore } = useStoresSimple()
   const { onOpenItem, onSelectItem } = useProps({})
   const getItemPropsGet = useGet(getItemProps || nullFn)
@@ -155,21 +169,33 @@ export function List(rawProps: ListProps) {
   const showPlaceholder = noQuery && !hasResults
 
   return (
-    <HighlightActiveQuery query={search}>
-      {hasResults && (
-        <VirtualList
-          disableMeasure={visibility === false}
-          items={filtered.results}
-          ItemView={ListItem}
-          {...restProps}
-          getItemProps={getItemPropsInner}
-          onOpen={onOpenInner}
-          onSelect={onSelectInner}
-          selectableStoreRef={selectableStoreRef}
-        />
-      )}
-      {showPlaceholder && (placeholder || <ListPlaceholder />)}
-    </HighlightActiveQuery>
+    <Section
+      background="transparent"
+      flex={flex}
+      title={title}
+      subTitle={subTitle}
+      bordered={bordered}
+      icon={icon}
+      beforeTitle={beforeTitle}
+      afterTitle={afterTitle}
+      padding={0}
+    >
+      <HighlightActiveQuery query={search}>
+        {hasResults && (
+          <VirtualList
+            disableMeasure={visibility === false}
+            items={filtered.results}
+            ItemView={ListItem}
+            {...restProps}
+            getItemProps={getItemPropsInner}
+            onOpen={onOpenInner}
+            onSelect={onSelectInner}
+            selectableStoreRef={selectableStoreRef}
+          />
+        )}
+        {showPlaceholder && (placeholder || <ListPlaceholder />)}
+      </HighlightActiveQuery>
+    </Section>
   )
 }
 
@@ -189,4 +215,8 @@ function ListPlaceholder() {
       </Center>
     </View>
   )
+}
+
+List.accepts = {
+  surfaceProps: true,
 }

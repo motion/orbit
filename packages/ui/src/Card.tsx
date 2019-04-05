@@ -50,6 +50,7 @@ export function Card(props: CardProps) {
             className="grid-draggable"
             backgroundHover="transparent"
             onClickLocation={onClickLocation}
+            alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
             titleProps={{
@@ -77,4 +78,8 @@ export function Card(props: CardProps) {
       </SizedSurface>
     </Theme>
   )
+}
+
+Card.accepts = {
+  surfaceProps: true,
 }

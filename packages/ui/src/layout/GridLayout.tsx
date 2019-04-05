@@ -3,7 +3,9 @@ import { createStoreContext, react, shallow, useStore } from '@o/use-store'
 import React, { cloneElement, isValidElement, memo, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
+import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
+import { SizedSurfaceProps } from '../SizedSurface'
 import { View, ViewProps } from '../View/View'
 
 if (isBrowser) {
@@ -177,7 +179,7 @@ export type GridItemProps = ViewProps & {
   h?: number
 }
 
-export function GridItem({ h = 1, w = 1, id, ...viewProps }: GridItemProps) {
+export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemProps) {
   const store = useGridStore()
   useEffect(() => {
     const props = { h, w }
@@ -187,7 +189,11 @@ export function GridItem({ h = 1, w = 1, id, ...viewProps }: GridItemProps) {
     }
   }, [h, w])
 
-  return <GridItemChrome flex={1} {...viewProps} />
+  return (
+    <GridItemChrome flex={1} onMouseDown={e => isRightClick(e) && e.stopProgation()} {...viewProps}>
+      {forwardSurfaceProps(children, { flex: 1 })}
+    </GridItemChrome>
+  )
 }
 
 const GridItemChrome = gloss(View, {
@@ -195,3 +201,12 @@ const GridItemChrome = gloss(View, {
     userSelect: 'none',
   },
 })
+
+// TODO this could be a pattern
+
+function forwardSurfaceProps(children: any, props: SizedSurfaceProps) {
+  if (children && children.type && children.type.accepts && children.type.accepts.surfaceProps) {
+    return cloneElement(children, props)
+  }
+  return children
+}

@@ -119,6 +119,7 @@ export const ListItem = memoIsEqualDeep(
       style,
       forwardRef,
       backgroundHover,
+      alignItems,
       ...restProps
     } = props
     const isSelected = useIsSelected(props)
@@ -204,7 +205,7 @@ export const ListItem = memoIsEqualDeep(
               {iconBefore && showIcon && iconElement}
               <ListItemMainContent oneLine={oneLine}>
                 {showTitle && (
-                  <ListItemTitleBar flex={1}>
+                  <ListItemTitleBar alignItems={alignItems}>
                     {showIcon && !iconBefore && iconElement}
                     <HighlightText
                       flex={1}
@@ -358,7 +359,7 @@ const ListItemContent = gloss({
   return style
 })
 
-const ListItemTitleBar = gloss({
+const ListItemTitleBar = gloss(View, {
   width: '100%',
   flex: 1,
   flexFlow: 'row',

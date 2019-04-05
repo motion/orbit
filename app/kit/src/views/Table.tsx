@@ -5,7 +5,8 @@ import {
   SearchableTable,
   SearchableTableProps,
   Section,
-  SectionProps,
+  SectionParentProps,
+  SectionSpecificProps,
   TitleRowProps,
   useNodeSize,
   useSectionProps,
@@ -17,11 +18,9 @@ import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
-type PartialSectionProps = Pick<SectionProps, 'title' | 'subTitle' | 'bordered'>
-
 export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
-  PartialSectionProps & {
+  SectionParentProps & {
     columns?: TableColumns
     searchable?: boolean
     shareable?: boolean
@@ -41,8 +40,19 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 
 export function Table(tableProps: TableProps) {
   const stores = useStoresSimple()
-  const sectionProps: PartialSectionProps = useSectionProps(tableProps)
-  const { flex = 1, bordered, searchable, title, subTitle, shareable, ...props } = {
+  const sectionProps: SectionSpecificProps = useSectionProps(tableProps)
+  const {
+    flex = 1,
+    bordered,
+    title,
+    subTitle,
+    icon,
+    beforeTitle,
+    afterTitle,
+    searchable,
+    shareable,
+    ...props
+  } = {
     ...sectionProps,
     ...tableProps,
   }
@@ -73,6 +83,9 @@ export function Table(tableProps: TableProps) {
       title={title}
       subTitle={subTitle}
       bordered={bordered}
+      icon={icon}
+      beforeTitle={beforeTitle}
+      afterTitle={afterTitle}
       padding={0}
     >
       <SearchableTable
@@ -90,4 +103,8 @@ export function Table(tableProps: TableProps) {
       />
     </Section>
   )
+}
+
+Table.accepts = {
+  surfaceProps: true,
 }

@@ -8,16 +8,26 @@ import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
+// useful for making a higher order component that uses Section internally
+// & you dont want to pass *everything* done, this is a good subset
+export type SectionSpecificProps = Omit<
+  Partial<TitleRowProps>,
+  'after' | 'below' | 'margin' | 'unpad'
+> & {
+  beforeTitle?: React.ReactNode
+  belowTitle?: React.ReactNode
+  afterTitle?: React.ReactNode
+  titleBorder?: boolean
+  below?: React.ReactNode
+  innerRef?: any
+  maxInnerHeight?: number
+}
+
+export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
+
 export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
   PaddedProps &
-  Omit<Partial<TitleRowProps>, 'after' | 'below' | 'margin'> & {
-    belowTitle?: React.ReactNode
-    afterTitle?: React.ReactNode
-    titleBorder?: boolean
-    below?: React.ReactNode
-    innerRef?: any
-    maxInnerHeight?: number
-  }
+  SectionSpecificProps
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
@@ -48,6 +58,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     maxInnerHeight = window.innerHeight * 2,
     maxWidth,
     minHeight,
+    beforeTitle,
     innerRef,
     ...viewProps
   } = props
@@ -80,6 +91,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           subTitle={subTitle}
           after={afterTitle}
           above={above}
+          before={beforeTitle}
           below={belowTitle}
           icon={icon}
         />

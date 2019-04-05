@@ -24,7 +24,6 @@ function CustomApp() {
         <GridItem w={4} h={4}>
           <Card
             afterTitle={<SelectApp onSelect={setApp} />}
-            flex={1}
             overflow="hidden"
             title="Slack Messages"
           >

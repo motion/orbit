@@ -50,11 +50,14 @@ const getPadding = (props: PaddedProps) => {
   }
 }
 
-export function getBetweenPad(pad: PaddedProps['pad']) {
+export function getBetweenPad(pad: PaddedProps['pad']): Sizes {
   if (Array.isArray(pad)) {
     return pad[0] || 0
   }
-  if (pad && typeof pad === 'object') {
+  if (!pad) {
+    return 0
+  }
+  if (typeof pad === 'object') {
     return pad.top || pad.y || 0
   }
   return pad

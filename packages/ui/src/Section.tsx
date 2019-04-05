@@ -1,14 +1,14 @@
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
-import { TitleRow, TitleRowProps } from './TitleRow'
+import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
 
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
 export type SectionSpecificProps = Omit<
-  Partial<TitleRowProps>,
+  Partial<TitleRowSpecificProps>,
   'after' | 'below' | 'margin' | 'unpad'
 > & {
   beforeTitle?: React.ReactNode

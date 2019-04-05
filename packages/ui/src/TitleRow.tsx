@@ -10,21 +10,22 @@ import { Col } from './View/Col'
 import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
-export type TitleRowProps = RowProps &
-  Partial<CollapsableProps> & {
-    icon?: React.ReactNode
-    title: React.ReactNode
-    before?: React.ReactNode
-    bordered?: boolean
-    after?: React.ReactNode
-    above?: React.ReactNode
-    below?: React.ReactNode
-    sizePadding?: number
-    backgrounded?: boolean
-    subTitle?: React.ReactNode
-    margin?: number | number[]
-    unpad?: boolean
-  }
+export type TitleRowSpecificProps = Partial<CollapsableProps> & {
+  icon?: React.ReactNode
+  title: React.ReactNode
+  before?: React.ReactNode
+  bordered?: boolean
+  after?: React.ReactNode
+  above?: React.ReactNode
+  below?: React.ReactNode
+  sizePadding?: number
+  backgrounded?: boolean
+  subTitle?: React.ReactNode
+  margin?: number | number[]
+  unpad?: boolean
+}
+
+export type TitleRowProps = RowProps & TitleRowSpecificProps
 
 export const TitleRow = forwardRef(function TitleRow(
   {

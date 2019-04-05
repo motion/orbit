@@ -92,10 +92,7 @@ export function SizablePane({ children, resizable, flex, collapsed, ...props }: 
       <Interactive
         overflow="hidden"
         resizable={resizableProp}
-        onResize={x => {
-          console.log('set size', x)
-          setSize(x)
-        }}
+        onResize={x => setSize(x)}
         {...sizeProps}
         {...props}
       >

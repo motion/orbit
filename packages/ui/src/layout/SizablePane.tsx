@@ -112,8 +112,10 @@ export function SizablePane({
       </Interactive>
     )
   } else {
+    const isLast = props.index === total - 1
+    const fflex = typeof flex === 'undefined' && isLast ? 1 : flex
     element = (
-      <PaneChrome flex={flex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
+      <PaneChrome flex={fflex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
         <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
       </PaneChrome>

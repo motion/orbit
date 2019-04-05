@@ -10,6 +10,7 @@ import {
   SearchInput,
   Section,
   Select,
+  Space,
   SpacedRow,
   Tab,
   Tabs,
@@ -53,19 +54,22 @@ export function CustomApp1() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane scrollable="x" flexFlow="row" padding={20}>
+            <Pane padded scrollable="x" flexFlow="row">
               {highlighted.map(row => (
-                <Card
-                  key={row.id}
-                  title={row.name}
-                  subTitle={row.username}
-                  minWidth={200}
-                  minHeight={200}
-                  marginRight={20}
-                  elevation={1}
-                >
-                  <DefinitionList row={row} />
-                </Card>
+                <>
+                  <Card
+                    key={row.id}
+                    title={row.name}
+                    subTitle={row.username}
+                    minWidth={200}
+                    minHeight={200}
+                    elevation={1}
+                    padded
+                  >
+                    <DefinitionList row={row} />
+                  </Card>
+                  <Space size={20} />
+                </>
               ))}
             </Pane>
           </Layout>

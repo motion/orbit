@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
-import { Padded, PaddedProps } from './layout/Padded'
+import { PaddedProps } from './layout/Padded'
 import { Scrollable } from './layout/Scrollable'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
@@ -85,10 +85,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         />
       )}
       <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
-        <Scrollable scrollable={scrollable}>
-          <Padded padded={padded}>
-            <Reset>{children}</Reset>
-          </Padded>
+        <Scrollable scrollable={scrollable} padded={padded}>
+          <Reset>{children}</Reset>
         </Scrollable>
       </SectionInner>
       {below}

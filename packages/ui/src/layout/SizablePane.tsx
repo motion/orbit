@@ -6,7 +6,6 @@ import { PaneTitleRowParentProps } from '../PaneTitleRow'
 import { SectionPassProps } from '../Section'
 import { View } from '../View/View'
 import { LayoutContext } from './Layout'
-import { Scrollable } from './Scrollable'
 
 export type SizablePaneProps = Partial<InteractiveProps> &
   PaneTitleRowParentProps & {
@@ -17,14 +16,7 @@ export type SizablePaneProps = Partial<InteractiveProps> &
     collapsed?: boolean
   }
 
-export function SizablePane({
-  scrollable,
-  children,
-  resizable,
-  flex,
-  collapsed,
-  ...props
-}: SizablePaneProps) {
+export function SizablePane({ children, resizable, flex, collapsed, ...props }: SizablePaneProps) {
   const { total, type, flexes } = useContext(LayoutContext)
   const [size, setSize] = useState(-1)
   const [flexSize, setFlexSize] = useState(-1)
@@ -108,7 +100,7 @@ export function SizablePane({
         {...props}
       >
         {borderElement}
-        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
+        {childElement}
       </Interactive>
     )
   } else {
@@ -117,7 +109,7 @@ export function SizablePane({
     element = (
       <PaneChrome flex={fflex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
         {borderElement}
-        <Scrollable scrollable={scrollable}>{childElement}</Scrollable>
+        {childElement}
       </PaneChrome>
     )
   }

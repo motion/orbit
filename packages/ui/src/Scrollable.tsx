@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import React from 'react'
-import { View, ViewProps } from '../View/View'
 import { Padded } from './Padded'
+import { View, ViewProps } from './View/View'
 
 export type ScrollableProps = ViewProps & {
   scrollable?: boolean | 'x' | 'y'

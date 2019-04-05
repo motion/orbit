@@ -42,7 +42,7 @@ function CustomApp() {
             overflow="hidden"
             title="Slack Messages"
           >
-            <Table rows={channels} />
+            <Table rows={channels as any} />
           </Card>
         </GridItem>
       </GridLayout>

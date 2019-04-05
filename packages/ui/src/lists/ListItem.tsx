@@ -6,8 +6,8 @@ import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
-import { Space } from '../layout/Space'
 import { Separator } from '../Separator'
+import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
@@ -174,7 +174,7 @@ export const ListItem = memoIsEqualDeep(
         >
           {`${location}`}
         </RoundButtonSmall>
-        <Space small={small} />
+        <Space />
       </>
     )
 
@@ -216,7 +216,7 @@ export const ListItem = memoIsEqualDeep(
                     >
                       {title}
                     </HighlightText>
-                    <Space small={small} />
+                    <Space />
                     {props.afterTitle}
                     {afterHeaderElement}
                   </ListItemTitleBar>
@@ -226,7 +226,7 @@ export const ListItem = memoIsEqualDeep(
                     {showIcon && !showTitle && (
                       <>
                         {iconElement}
-                        <Space small={small} />
+                        <Space />
                       </>
                     )}
                     {!!location && locationElement}

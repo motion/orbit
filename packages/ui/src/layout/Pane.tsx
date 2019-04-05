@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
 import { Collapsable, CollapsableProps } from '../Collapsable'
 import { useToggle } from '../hooks/useToggle'
+import { PaddedProps } from '../Padded'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
-import { PaddedProps } from './Padded'
-import { Scrollable } from './Scrollable'
+import { Scrollable } from '../Scrollable'
 import { SizablePane, SizablePaneProps } from './SizablePane'
 
 export type PaneProps = PaddedProps &

@@ -3,7 +3,7 @@ import * as React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButton } from '../buttons/RoundButton'
 import { Icon } from '../Icon'
-import { Space } from '../layout/Space'
+import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { Text } from '../text/Text'
 import { View, ViewProps } from '../View/View'
@@ -45,7 +45,7 @@ export function TaskComment({ author, createdAt, body, onClickPerson }: TaskComm
           </Text>
         )}
       </Row>
-      <Space small />
+      <Space />
       <Markdown source={body} />
     </HighlightSection>
   )

@@ -218,9 +218,11 @@ function getFormFilters(context: FormContext, names: string[]): TableFilter[] {
       .map(x =>
         Array.isArray(x.value)
           ? x.value.map(y => createIncludeFilter(x.name, y.value))
-          : createIncludeFilter(x.name, x.value.value),
+          : x.value
+          ? createIncludeFilter(x.name, x.value.value)
+          : null,
       ),
-  )
+  ).filter(Boolean)
   return selectFields
 }
 

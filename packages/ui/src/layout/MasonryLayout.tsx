@@ -2,8 +2,8 @@ import { SortableContainer } from '@o/react-sortable-hoc'
 import AutoResponsive from 'autoresponsive-react'
 import React from 'react'
 import { useNodeSize } from '../hooks/useNodeSize'
+import { Padded, PaddedProps } from '../Padded'
 import { useVisiblity } from '../Visibility'
-import { Padded, PaddedProps } from './Padded'
 
 export type MasonryLayoutProps = PaddedProps & {
   children?: React.ReactNode

@@ -88,7 +88,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
           {isEditing && (
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
-              <Space small />
+              <Space />
               <HeaderButton alt="action" tooltip="Deploy to space">
                 Publish
               </HeaderButton>

@@ -1,7 +1,7 @@
 import { Col, gloss, Row } from '@o/gloss'
 import React, { useEffect, useState } from 'react'
 import { getDataType } from '../helpers/getDataType'
-import { Space } from '../layout/Space'
+import { Space } from '../Space'
 import { SimpleText } from '../text/SimpleText'
 import { DataType } from '../types'
 import { View } from '../View/View'

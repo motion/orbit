@@ -125,6 +125,8 @@ export function Select({ minWidth, ...props }: SelectProps) {
           theme={themes[activeThemeName]}
           minMenuHeight={20}
           menuPortalTarget={document.body}
+          escapeClearsValue
+          isClearable
           {...props}
           components={{
             components,

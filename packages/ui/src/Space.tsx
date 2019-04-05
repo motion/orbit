@@ -7,7 +7,10 @@ const presetSizes = {
   xl: 32,
 }
 
-export const Space = gloss<{ size?: 'sm' | 'md' | 'lg' | 'xl' | number }>().theme(({ size }) => {
+export type Spacing = 'sm' | 'md' | 'lg' | 'xl' | number
+type SpaceProps = { size?: Spacing }
+
+export const Space = gloss<SpaceProps>().theme(({ size }) => {
   if (typeof size === 'undefined') {
     size = 'sm'
   }

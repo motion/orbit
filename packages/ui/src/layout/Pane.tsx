@@ -22,7 +22,7 @@ export function Pane({
   pad,
   padding,
   scrollable,
-  spacing,
+  space,
   spaceAround,
   flexDirection,
   ...sizablePaneProps
@@ -42,7 +42,7 @@ export function Pane({
       <Collapsable {...collapsableProps}>
         <Suspense fallback={<Loading />}>
           <Col
-            spacing={spacing}
+            space={space}
             spaceAround={spaceAround}
             flexDirection={flexDirection}
             scrollable={scrollable}

@@ -1,8 +1,10 @@
 import { gloss } from '@o/gloss'
 import { View } from './View/View'
 
-export type SpacingProps = {
-  spacing?: 'sm' | 'md' | 'lg' | 'xl' | number | true
+export type Sizes = 'sm' | 'md' | 'lg' | 'xl' | number | true
+
+export type SpaceProps = {
+  space?: Sizes
 }
 
 const spaceSizes = {
@@ -12,22 +14,22 @@ const spaceSizes = {
   xl: 32,
 }
 
-export function getSpacing(spacing: SpacingProps['spacing']) {
-  if (typeof spacing === 'number') {
-    return spacing
+export function getSpaceSize(space: SpaceProps['space']) {
+  if (typeof space === 'number') {
+    return space
   }
-  if (typeof spacing === 'undefined' || spacing === true) {
-    spacing = 'md'
+  if (typeof space === 'undefined' || space === true) {
+    space = 'md'
   }
-  return spaceSizes[spacing]
+  return spaceSizes[space]
 }
 
-function getSpacingSize(props) {
-  const spacing = getSpacing(props)
+function spaceTheme(props) {
+  const spacing = getSpaceSize(props)
   return {
     width: spacing,
     height: spacing,
   }
 }
 
-export const Space = gloss<SpacingProps>(View).theme(getSpacingSize)
+export const Space = gloss<SpaceProps>(View).theme(spaceTheme)

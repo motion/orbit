@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
-import { TestUIKit } from './TestUI/TestUIKit'
+import { TestUIKitchenSink } from './TestUI/TestUIKitchenSink'
 
 export default hot(function RootView() {
   return (
@@ -8,7 +8,8 @@ export default hot(function RootView() {
       {/* <TestUI /> */}
       {/* <TestHMR /> */}
       {/* <TestStores /> */}
-      <TestUIKit />
+      {/* <TestMiniApps /> */}
+      <TestUIKitchenSink />
     </>
   )
 })

@@ -4,10 +4,10 @@ import { SpaceGroup, SpaceGroupProps } from './SpaceGroup'
 
 export type ColProps = ScrollableViewProps & SpaceGroupProps
 
-export function Col({ spacing, spaceAround, children, ...props }: ColProps) {
+export function Col({ space, spaceAround, children, ...props }: ColProps) {
   return (
     <ScrollableView flexDirection="column" {...props}>
-      <SpaceGroup spaceAround={spaceAround} spacing={spacing}>
+      <SpaceGroup spaceAround={spaceAround} space={space}>
         {children}
       </SpaceGroup>
     </ScrollableView>

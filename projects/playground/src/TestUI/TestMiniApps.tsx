@@ -11,9 +11,9 @@ import {
   Layout,
   Loading,
   Pane,
+  Row,
   SearchInput,
   Select,
-  SpacedRow,
   Title,
   useFetch,
   useForm,
@@ -24,7 +24,7 @@ class Store {
   selected = shallow({})
 }
 
-export function TestUIKit() {
+export function TestMiniApps() {
   return (
     <Suspense fallback={<Loading />}>
       <CustomApp2 />
@@ -177,11 +177,11 @@ export function CustomApp1() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <SpacedRow>
+              <Row spacing>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </SpacedRow>
+              </Row>
               <Table
                 selectable="multi"
                 onSelect={rows => setHighlighted(rows)}

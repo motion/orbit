@@ -1,5 +1,5 @@
 import { Col, ColProps, gloss } from '@o/gloss'
-import { SpacingProps } from '../Space'
+import { getSpaceSize, Sizes } from '../Space'
 import { ElevatableProps, getElevation } from './elevate'
 
 export type ViewProps = ColProps & ElevatableProps & PaddedProps
@@ -7,13 +7,13 @@ export type ViewProps = ColProps & ElevatableProps & PaddedProps
 // Padded
 
 export type PaddedProps = {
-  pad?: SpacingProps['spacing']
-  padX?: SpacingProps['spacing']
-  padY?: SpacingProps['spacing']
-  padTop?: SpacingProps['spacing']
-  padBottom?: SpacingProps['spacing']
-  padLeft?: SpacingProps['spacing']
-  padRight?: SpacingProps['spacing']
+  pad?: Sizes
+  padX?: Sizes
+  padY?: Sizes
+  padTop?: Sizes
+  padBottom?: Sizes
+  padLeft?: Sizes
+  padRight?: Sizes
 }
 
 const padStyle = {
@@ -26,14 +26,24 @@ const padStyle = {
   padRight: x => [0, x, 0, 0],
 }
 
+const getPaddingValue = (props: PaddedProps) => {
+  if (props.pad) return padStyle.pad(getSpaceSize(props.pad))
+  if (props.padX) return padStyle.padX(getSpaceSize(props.padX))
+  if (props.padY) return padStyle.padY(getSpaceSize(props.padY))
+  if (props.padTop) return padStyle.padTop(getSpaceSize(props.padTop))
+  if (props.padBottom) return padStyle.padBottom(getSpaceSize(props.padBottom))
+  if (props.padLeft) return padStyle.padLeft(getSpaceSize(props.padLeft))
+  if (props.padRight) return padStyle.padRight(getSpaceSize(props.padRight))
+}
+
 const getPadding = (props: PaddedProps) => {
-  if (props.pad) return padStyle.pad(props.pad)
-  if (props.padX) return padStyle.padX(props.padX)
-  if (props.padY) return padStyle.padY(props.padY)
-  if (props.padTop) return padStyle.padTop(props.padTop)
-  if (props.padBottom) return padStyle.padBottom(props.padBottom)
-  if (props.padLeft) return padStyle.padLeft(props.padLeft)
-  if (props.padRight) return padStyle.padRight(props.padRight)
+  const padding = getPaddingValue(props)
+  console.log('got pad val', padding, props)
+  if (typeof padding !== 'undefined') {
+    return {
+      padding,
+    }
+  }
 }
 
 export const View = gloss<ViewProps>(Col).theme(getPadding, getElevation)

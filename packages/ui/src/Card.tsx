@@ -31,7 +31,7 @@ export function Card(props: CardProps) {
     collapsed,
     onCollapse,
     hideSubtitle,
-    spacing,
+    space,
     flexDirection,
     ...restProps
   } = props
@@ -71,11 +71,11 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
-        <Space spacing={pad} />
+        <Space space={pad} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
           <Col
             flexDirection={flexDirection}
-            spacing={spacing}
+            space={space}
             pad={pad}
             flex={1}
             height={collapsed ? 0 : '100%'}

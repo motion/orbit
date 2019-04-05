@@ -126,7 +126,6 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     themeSelect,
     tooltip,
     tooltipProps,
-    spacing,
     pad,
     padding,
     badgeProps,
@@ -231,13 +230,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           />
         )}
         {!!children && (
-          <Element
-            spacing={spacing}
-            {...throughProps}
-            {...elementProps}
-            disabled={disabled}
-            tagName={tagName}
-          >
+          <Element {...throughProps} {...elementProps} disabled={disabled} tagName={tagName}>
             {children}
           </Element>
         )}
@@ -379,7 +372,6 @@ const Element = gloss({
   }
   return {
     overflow: 'hidden',
-    maxWidth: props.spacing,
     ...props,
     ...(props.ellipse && ellipseStyle),
     width: props.width || `calc(100% ${iconNegativePad})`,

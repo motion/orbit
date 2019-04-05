@@ -59,7 +59,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     innerRef,
     padding,
     flexDirection,
-    spacing,
+    space,
     spaceAround,
     ...viewProps
   } = props
@@ -99,7 +99,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       )}
       <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
         <Col
-          spacing={spacing}
+          space={space}
           spaceAround={spaceAround}
           flexDirection={flexDirection}
           scrollable={scrollable}

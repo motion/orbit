@@ -47,7 +47,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     maxHeight = window.innerHeight * 2,
     maxInnerHeight = window.innerHeight * 2,
     maxWidth,
-    minHeight = 'min-content',
+    minHeight,
     innerRef,
     ...viewProps
   } = props

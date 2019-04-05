@@ -1,4 +1,5 @@
 import { Col, ColProps, gloss } from '@o/gloss'
+import { isDefined } from '@o/utils'
 import { getSpaceSize, Sizes } from '../Space'
 import { ElevatableProps, getElevation } from './elevate'
 
@@ -7,41 +8,41 @@ export type ViewProps = ColProps & ElevatableProps & PaddedProps
 // Padded
 
 export type PaddedProps = {
-  pad?: Sizes
-  padX?: Sizes
-  padY?: Sizes
-  padTop?: Sizes
-  padBottom?: Sizes
-  padLeft?: Sizes
-  padRight?: Sizes
-}
-
-const padStyle = {
-  pad: x => x,
-  padX: x => [0, x],
-  padY: x => [x, 0],
-  padTop: x => [x, 0, 0],
-  padBottom: x => [0, 0, x],
-  padLeft: x => [0, 0, 0, x],
-  padRight: x => [0, x, 0, 0],
-}
-
-const getPaddingValue = (props: PaddedProps) => {
-  if (props.pad) return padStyle.pad(getSpaceSize(props.pad))
-  if (props.padX) return padStyle.padX(getSpaceSize(props.padX))
-  if (props.padY) return padStyle.padY(getSpaceSize(props.padY))
-  if (props.padTop) return padStyle.padTop(getSpaceSize(props.padTop))
-  if (props.padBottom) return padStyle.padBottom(getSpaceSize(props.padBottom))
-  if (props.padLeft) return padStyle.padLeft(getSpaceSize(props.padLeft))
-  if (props.padRight) return padStyle.padRight(getSpaceSize(props.padRight))
+  pad?:
+    | Sizes
+    | Sizes[]
+    | {
+        top?: Sizes
+        left?: Sizes
+        bottom?: Sizes
+        right?: Sizes
+        x?: Sizes
+        y?: Sizes
+      }
 }
 
 const getPadding = (props: PaddedProps) => {
-  const padding = getPaddingValue(props)
-  console.log('got pad val', padding, props)
-  if (typeof padding !== 'undefined') {
-    return {
-      padding,
+  if (typeof props.pad !== 'undefined') {
+    if (Array.isArray(props.pad)) {
+      return {
+        padding: props.pad.map(x => getSpaceSize(x)),
+      }
+    }
+    if (typeof props.pad === 'object') {
+      const { top, left, right, bottom, x, y } = props.pad
+      if (isDefined(x) || isDefined(y)) {
+        return {
+          padding: [x, y, x, y].map(x => getSpaceSize(x)),
+        }
+      }
+      return {
+        padding: [top, right, bottom, left].map(x => getSpaceSize(x)),
+      }
+    }
+    if (typeof props.pad === 'number' || props.pad === true) {
+      return {
+        padding: getSpaceSize(props.pad),
+      }
     }
   }
 }

@@ -1,13 +1,16 @@
 import React, { Fragment } from 'react'
-import { Space, SpaceProps } from '../Space'
+import { Sizes, Space } from '../Space'
 
 export type SpaceGroupProps = {
   children?: React.ReactNode
-  space?: SpaceProps['space']
+  space?: Sizes
   spaceAround?: boolean
 }
 
 export function SpaceGroup({ children, space, spaceAround }: SpaceGroupProps) {
+  if (!space) {
+    return <>{children}</>
+  }
   const total = React.Children.count(children)
   const spaceElement = <Space space={space} />
   return (

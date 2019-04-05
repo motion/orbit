@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { View, ViewProps } from './View'
 
 export type ScrollableViewProps = ViewProps & {
@@ -7,29 +7,26 @@ export type ScrollableViewProps = ViewProps & {
   scrollable?: boolean | 'x' | 'y'
 }
 
-export function ScrollableView({
-  children,
-  pad,
-  padding,
-  scrollable,
-  ...props
-}: ScrollableViewProps) {
-  const contents = (
-    <View pad={pad} padding={padding}>
-      {children}
-    </View>
-  )
-
+export const ScrollableView = forwardRef(function ScrollableView(
+  { children, pad, padding, scrollable, ...props }: ScrollableViewProps,
+  ref,
+) {
   if (!scrollable) {
-    return contents
+    return (
+      <View ref={!scrollable ? ref : null} pad={pad} padding={padding} {...props}>
+        {children}
+      </View>
+    )
   }
 
   return (
-    <ScrollableChrome scrollable={scrollable} {...props}>
-      {contents}
+    <ScrollableChrome ref={scrollable ? ref : null} scrollable={scrollable} {...props}>
+      <View pad={pad} padding={padding}>
+        {children}
+      </View>
     </ScrollableChrome>
   )
-}
+})
 
 const hideScrollbarsStyle = {
   '&::-webkit-scrollbar': {

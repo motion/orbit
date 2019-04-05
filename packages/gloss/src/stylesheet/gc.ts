@@ -12,7 +12,7 @@ type BaseRules = {
   [key: string]: string | number
 }
 
-type Tracker = Map<
+export type StyleTracker = Map<
   string,
   {
     displayName?: string
@@ -34,13 +34,13 @@ export class GarbageCollector {
   // uid registered queue
   activeUids = new Set<string>()
 
-  constructor(sheet: StyleSheet, tracker: Tracker, rulesToClass: RulesToClass) {
+  constructor(sheet: StyleSheet, tracker: StyleTracker, rulesToClass: RulesToClass) {
     this.sheet = sheet
     this.tracker = tracker
     this.rulesToClass = rulesToClass
   }
 
-  tracker: Tracker
+  tracker: StyleTracker
   sheet: StyleSheet
   garbageTimer?: NodeJS.Timeout
   rulesToClass: RulesToClass
@@ -95,7 +95,7 @@ export class GarbageCollector {
     }
   }
 
-  getCollectionQueue(): Array<string> {
+  getCollectionQueue(): string[] {
     return Array.from(this.classRemovalQueue)
   }
 

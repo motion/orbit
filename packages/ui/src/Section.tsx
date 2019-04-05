@@ -1,11 +1,9 @@
-import { gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
-import { View } from './View/View'
 
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
@@ -44,7 +42,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     below,
     flex,
     icon,
-    pad,
     background,
     titleBorder,
     width,
@@ -61,8 +58,13 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     flexDirection,
     space,
     spaceAround,
+    pad: ogPad,
     ...viewProps
   } = props
+  const hasTitle = !!(title || afterTitle)
+  const pad = typeof ogPad !== 'undefined' ? ogPad : hasTitle ? true : undefined
+  const outerPad = !bordered ? pad : null
+  const innerPad = bordered ? pad : null
   return (
     <SizedSurface
       forwardRef={ref}
@@ -82,8 +84,9 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxWidth={maxWidth}
       minHeight={minHeight}
       overflow={bordered ? 'hidden' : 'inherit'}
+      pad={outerPad}
     >
-      {!!(title || afterTitle) && (
+      {hasTitle && (
         <TitleRow
           bordered={bordered || titleBorder}
           backgrounded={bordered}
@@ -95,23 +98,23 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
+          pad={innerPad}
         />
       )}
-      <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
-        <Col
-          space={space}
-          spaceAround={spaceAround}
-          flexDirection={flexDirection}
-          scrollable={scrollable}
-          pad={pad}
-          padding={padding}
-        >
-          <Reset>{children}</Reset>
-        </Col>
-      </SectionInner>
+      <Col
+        maxHeight={maxInnerHeight}
+        flex={1}
+        ref={innerRef}
+        space={space}
+        spaceAround={spaceAround}
+        flexDirection={flexDirection}
+        scrollable={scrollable}
+        pad={innerPad}
+        {...viewProps}
+      >
+        <Reset>{children}</Reset>
+      </Col>
       {below}
     </SizedSurface>
   )
 })
-
-const SectionInner = gloss(View)

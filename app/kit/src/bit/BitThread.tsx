@@ -5,7 +5,7 @@ import { BitStatusBar } from '../views/BitStatusBar'
 export function BitThread({ item }) {
   return (
     <Col flex={1}>
-      <Col padY scrollable>
+      <Col pad={{ y: true }} scrollable>
         <Title>{item.title}</Title>
         <Thread {...item} />
       </Col>

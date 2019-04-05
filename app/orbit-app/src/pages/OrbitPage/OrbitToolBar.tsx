@@ -1,5 +1,6 @@
-import { FullScreen, gloss, Row, View, ViewProps } from '@o/gloss'
+import { FullScreen, gloss, Row } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
+import { View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'

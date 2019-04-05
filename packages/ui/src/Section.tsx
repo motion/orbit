@@ -1,12 +1,11 @@
 import { gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
-import { PaddedProps } from './Padded'
-import { Scrollable } from './Scrollable'
 import { SizedSurface } from './SizedSurface'
 import { TitleRow, TitleRowProps } from './TitleRow'
 import { Omit } from './types'
-import { View, ViewProps } from './View/View'
+import { Col, ColProps } from './View/Col'
+import { View } from './View/View'
 
 // useful for making a higher order component that uses Section internally
 // & you dont want to pass *everything* done, this is a good subset
@@ -25,9 +24,7 @@ export type SectionSpecificProps = Omit<
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
 
-export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
-  PaddedProps &
-  SectionSpecificProps
+export type SectionProps = Omit<ColProps, 'columns' | 'onSubmit'> & SectionSpecificProps
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
@@ -60,6 +57,10 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     minHeight,
     beforeTitle,
     innerRef,
+    padding,
+    flexDirection,
+    spacing,
+    spaceAround,
     ...viewProps
   } = props
   return (
@@ -97,9 +98,16 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         />
       )}
       <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
-        <Scrollable scrollable={scrollable} padded={padded}>
+        <Col
+          spacing={spacing}
+          spaceAround={spaceAround}
+          flexDirection={flexDirection}
+          scrollable={scrollable}
+          padded={padded}
+          padding={padding}
+        >
           <Reset>{children}</Reset>
-        </Scrollable>
+        </Col>
       </SectionInner>
       {below}
     </SizedSurface>

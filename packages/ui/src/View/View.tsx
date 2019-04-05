@@ -1,23 +1,20 @@
-import { Col, ColProps, CSSPropertySet, gloss } from '@o/gloss'
+import { Col, ColProps, gloss } from '@o/gloss'
+import { getSpacing, SpacingProps } from '../Space'
 import { ElevatableProps, getElevation } from './elevate'
 
-export type ViewProps = ColProps & ElevatableProps & ScrollableProps
+export type ViewProps = ColProps & ElevatableProps & PaddedProps
 
-// Scrollable
+// Padded
 
-export type ScrollableProps = {
-  scrollable?: boolean | 'x' | 'y'
+export type PaddedProps = {
+  padded?: SpacingProps['spacing']
 }
 
-const getScrollable = ({ scrollable }: ScrollableProps): CSSPropertySet => {
-  // easy scrollable
-  if (scrollable === true) {
-    return { overflowX: 'auto', overflowY: 'auto' }
-  } else if (scrollable === 'x') {
-    return { overflowX: 'auto', overflowY: 'hidden' }
-  } else if (scrollable === 'y') {
-    return { overflowY: 'auto', overflowX: 'hidden' }
+const getPadding = (props: PaddedProps) => {
+  if (typeof props.padded === 'undefined') return
+  return {
+    padding: getSpacing(props.padded),
   }
 }
 
-export const View = gloss<ViewProps>(Col).theme(getElevation, getScrollable)
+export const View = gloss<ViewProps>(Col).theme(getPadding, getElevation)

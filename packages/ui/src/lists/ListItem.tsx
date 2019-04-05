@@ -1,4 +1,4 @@
-import { CSSPropertySet, gloss, Row, Theme, ThemeContext, ThemeObject } from '@o/gloss'
+import { CSSPropertySet, gloss, Theme, ThemeContext, ThemeObject } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
@@ -12,7 +12,8 @@ import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { View, ViewProps } from '../View/View'
+import { Row, RowProps } from '../View/Row'
+import { View } from '../View/View'
 
 export type ItemRenderText = (text: string) => JSX.Element
 export type HandleSelection = (index: number, event?: any) => any
@@ -32,7 +33,7 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = ViewProps &
+export type ListItemProps = RowProps &
   ListItemHide &
   ListItemDisplayProps & {
     backgroundHover?: any
@@ -76,7 +77,6 @@ export type ListItemProps = ViewProps &
     borderRadius?: number
     nextUpStyle?: Record<string, any>
     isSelected?: boolean | ((index: number) => boolean)
-    cardProps?: Record<string, any>
     disableShadow?: boolean
     padding?: number | number[]
     titleFlex?: number
@@ -98,7 +98,6 @@ export const ListItem = memoIsEqualDeep(
       subTitle,
       title,
       borderRadius,
-      cardProps,
       children,
       disableShadow,
       onClick,
@@ -120,7 +119,7 @@ export const ListItem = memoIsEqualDeep(
       forwardRef,
       backgroundHover,
       alignItems,
-      ...restProps
+      ...rowProps
     } = props
     const isSelected = useIsSelected(props)
     const showChildren = !props.hideBody
@@ -133,7 +132,7 @@ export const ListItem = memoIsEqualDeep(
     const sizeLineHeight = small ? 0.8 : 1
     const defaultPadding = small ? [7, 9] : [8, 10]
     const iconBefore = iconBeforeProp || !showTitle
-    const hasMouseDownEvent = !!restProps.onMouseDown
+    const hasMouseDownEvent = !!rowProps.onMouseDown
 
     // add a little vertical height for full height icons
     if (small && iconBefore) {
@@ -182,7 +181,10 @@ export const ListItem = memoIsEqualDeep(
       <Theme alternate={isSelected ? 'selected' : null}>
         {/* we keep chrome here because virtualizings wants to set an absolute width/height */}
         {/* but without a wrapper, we'd have two children nodes, only one receiving dimensions */}
-        <div ref={forwardRef || ref} style={{ ...style, minHeight: 'min-content' }}>
+        <div
+          ref={forwardRef || ref}
+          style={{ ...style, minHeight: 'min-content', position: 'relative' }}
+        >
           {above}
           {!!separator && (
             <Theme name={activeThemeName}>
@@ -191,7 +193,7 @@ export const ListItem = memoIsEqualDeep(
               </Separator>
             </Theme>
           )}
-          <ListItemContain isExpanded={isExpanded} {...restProps}>
+          <ListItemContain isExpanded={isExpanded}>
             <ListItemContent
               isSelected={isSelected}
               borderRadius={borderRadius}
@@ -199,7 +201,7 @@ export const ListItem = memoIsEqualDeep(
               disableShadow={disableShadow}
               padding={padding || defaultPadding}
               backgroundHover={backgroundHover}
-              {...cardProps}
+              {...rowProps}
             >
               {before}
               {iconBefore && showIcon && iconElement}
@@ -308,7 +310,7 @@ export const ListItem = memoIsEqualDeep(
   }),
 )
 
-const ListItemContain = gloss(View, {
+const ListItemContain = gloss(Row, {
   position: 'relative',
   userSelect: 'none',
   overflow: 'hidden',
@@ -330,7 +332,6 @@ const ListItemContent = gloss({
   alignItems: 'center',
   chromeless: {
     background: 'transparent',
-    padding: 8,
   },
 }).theme((props, theme) => {
   let style: CSSPropertySet = {}

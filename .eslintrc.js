@@ -39,7 +39,6 @@ module.exports = {
     'no-console': 'off',
     'no-unused-vars': 'off',
     'no-undef': 'error',
-    'no-param-reassign': 'error',
     'no-native-reassign': 'error',
     'no-constant-condition': 'off',
     'react/prop-types': 'off',

@@ -5,7 +5,6 @@ export function SearchAppSettings() {
   return (
     <>
       <SubTitle>Filters</SubTitle>
-
       <FormField
         label={
           <select style={{ width: '100%' }}>

@@ -23,13 +23,12 @@ import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
-import { View, ViewProps } from './View/View'
+import { Col, ColProps } from './View/Col'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceProps = ViewProps & {
-  spacing?: 'min-content'
+export type SurfaceProps = ColProps & {
   hover?: boolean
   hoverStyle?: any
   active?: boolean
@@ -128,6 +127,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     tooltip,
     tooltipProps,
     spacing,
+    padded,
+    padding,
     badgeProps,
     badge,
     ...rest
@@ -270,6 +271,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           themeSelect={themeSelect}
           lineHeight={lineHeight}
           whiteSpace="pre"
+          padded={padded}
+          padding={padding}
           {...throughProps}
           {...rest}
           {...segmentedStyle}
@@ -284,7 +287,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 })
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<SurfaceProps>(View, {
+const SurfaceFrame = gloss<SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
 }).theme((props, theme) => {
@@ -344,7 +347,7 @@ const Element = gloss({
   // needed to reset for <button /> at least
   fontSize: 'inherit',
   padding: 0,
-  flexFlow: 'row',
+  flexDirection: 'row',
   fontFamily: 'inherit',
   border: 'none',
   background: 'transparent',

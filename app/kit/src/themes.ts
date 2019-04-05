@@ -45,6 +45,14 @@ const colorThemes: ThemeSet = {
     background: '#449878',
     color: '#fff',
   }),
+  orange: Theme.fromStyles({
+    color: '#fff',
+    background: '#DC6104',
+  }),
+  yellow: Theme.fromStyles({
+    color: '#fff',
+    background: '#C9C825',
+  }),
   blue: Theme.fromStyles({
     iconFill: '#fff',
     background: orbitColor,
@@ -59,24 +67,13 @@ const colorThemes: ThemeSet = {
     backgroundHover: 'transparent',
     backgroundActive: 'transparent',
   }),
-  orange: Theme.fromStyles({
-    color: '#fff',
-    background: '#DC6104',
-  }),
 }
 
 const alternates: ThemeSet = {
-  orange: colorThemes.orange,
-  red: colorThemes.red,
-  lightRed: colorThemes.lightRed,
-  lightYellow: colorThemes.lightYellow,
-  yellow: colorThemes.yellow,
-  green: colorThemes.green,
-  remove: colorThemes.red,
+  ...colorThemes,
   error: colorThemes.lightRed,
   warn: colorThemes.lightYellow,
   approve: colorThemes.lightGreen,
-  lightGreen: colorThemes.lightGreen,
   confirm: {
     buttonFontWeight: 600,
     ...colorThemes.green,

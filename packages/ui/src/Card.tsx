@@ -2,12 +2,12 @@ import { Theme } from '@o/gloss'
 import * as React from 'react'
 import { Collapsable, CollapsableProps } from './Collapsable'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
-import { Padded, PaddedProps } from './Padded'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { View } from './View/View'
+import { Space } from './Space'
+import { Col } from './View/Col'
 
-export type CardProps = PaddedProps & SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
+export type CardProps = SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
 
 export function Card(props: CardProps) {
   const {
@@ -31,6 +31,8 @@ export function Card(props: CardProps) {
     collapsed,
     onCollapse,
     hideSubtitle,
+    spacing,
+    flexDirection,
     ...restProps
   } = props
   const isSelected = useIsSelected(props)
@@ -43,7 +45,7 @@ export function Card(props: CardProps) {
         themeSelect="card"
         sizeRadius={sizeRadius}
         noInnerElement
-        padding={padding}
+        padded={padded}
       >
         <Scale size={1.1}>
           <ListItem
@@ -53,6 +55,7 @@ export function Card(props: CardProps) {
             alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
+            padding={0}
             titleProps={{
               fontWeight: 500,
               ...titleProps,
@@ -68,12 +71,17 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
+        <Space spacing={padded} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
-          <Padded padded={padded}>
-            <View flex={1} height={collapsed ? 0 : '100%'}>
-              {showChildren && children}
-            </View>
-          </Padded>
+          <Col
+            flexDirection={flexDirection}
+            spacing={spacing}
+            padded={padded}
+            flex={1}
+            height={collapsed ? 0 : '100%'}
+          >
+            {showChildren && children}
+          </Col>
         </Collapsable>
       </SizedSurface>
     </Theme>

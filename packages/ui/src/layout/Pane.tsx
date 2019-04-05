@@ -1,13 +1,12 @@
 import React, { Suspense } from 'react'
 import { Collapsable, CollapsableProps } from '../Collapsable'
 import { useToggle } from '../hooks/useToggle'
-import { PaddedProps } from '../Padded'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
-import { Scrollable } from '../Scrollable'
+import { Col, ColProps } from '../View/Col'
 import { SizablePane, SizablePaneProps } from './SizablePane'
 
-export type PaneProps = PaddedProps &
+export type PaneProps = ColProps &
   SizablePaneProps &
   Partial<CollapsableProps> &
   PaneTitleRowParentProps
@@ -23,6 +22,9 @@ export function Pane({
   padded,
   padding,
   scrollable,
+  spacing,
+  spaceAround,
+  flexDirection,
   ...sizablePaneProps
 }: PaneProps) {
   const collapseToggle = useToggle(collapsed, onCollapse)
@@ -39,9 +41,16 @@ export function Pane({
       )}
       <Collapsable {...collapsableProps}>
         <Suspense fallback={<Loading />}>
-          <Scrollable scrollable={scrollable} padded={padded} padding={padding}>
+          <Col
+            spacing={spacing}
+            spaceAround={spaceAround}
+            flexDirection={flexDirection}
+            scrollable={scrollable}
+            padded={padded}
+            padding={padding}
+          >
             {children}
-          </Scrollable>
+          </Col>
         </Suspense>
       </Collapsable>
     </SizablePane>

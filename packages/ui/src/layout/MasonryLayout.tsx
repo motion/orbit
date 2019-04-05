@@ -2,10 +2,10 @@ import { SortableContainer } from '@o/react-sortable-hoc'
 import AutoResponsive from 'autoresponsive-react'
 import React from 'react'
 import { useNodeSize } from '../hooks/useNodeSize'
-import { Padded, PaddedProps } from '../Padded'
+import { View, ViewProps } from '../View/View'
 import { useVisiblity } from '../Visibility'
 
-export type MasonryLayoutProps = PaddedProps & {
+export type MasonryLayoutProps = ViewProps & {
   children?: React.ReactNode
 }
 
@@ -17,7 +17,7 @@ export function MasonryLayout({ children, padded, padding, ...props }: MasonryLa
     disable: !visible,
   })
   return (
-    <Padded ref={size.ref} padded={padded} padding={padding} flex={1}>
+    <View ref={size.ref} padded={padded} padding={padding} flex={1}>
       <SortableResponsive
         sortable
         transitionDuration={0.5}
@@ -28,7 +28,7 @@ export function MasonryLayout({ children, padded, padding, ...props }: MasonryLa
       >
         {children}
       </SortableResponsive>
-    </Padded>
+    </View>
   )
 }
 

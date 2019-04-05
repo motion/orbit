@@ -29,7 +29,7 @@ function ButtonInner({ children, elementProps, disabled, ...rest }: ButtonProps)
       themeSelect="button"
       tagName="button"
       alignItems="center"
-      flexFlow="row"
+      flexDirection="row"
       WebkitAppRegion="no-drag"
       outline="0"
       cursor="default"

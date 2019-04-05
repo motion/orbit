@@ -21,6 +21,7 @@ module.exports = {
   plugins: ['jest', 'react', 'prettier', 'react-hooks'],
   rules: {
     indent: 'off',
+    '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/prefer-interface': 'off',

@@ -79,6 +79,19 @@ const optimizeSplit = {
 const optimization = {
   prod: {
     ...optimizeSplit,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          ecma: 8,
+          compress: true,
+          output: {
+            comments: false,
+            beautify: false,
+          },
+        },
+      }),
+    ],
   },
   dev: {
     noEmitOnErrors: true,
@@ -242,14 +255,6 @@ async function makeConfig() {
       new ForkTsCheckerWebpackPlugin({
         useTypescriptIncrementalApi: true,
       }),
-
-      isProd &&
-        new TerserPlugin({
-          parallel: true,
-          terserOptions: {
-            ecma: 6,
-          },
-        }),
 
       new HtmlWebpackPlugin({
         favicon: 'public/favicon.png',

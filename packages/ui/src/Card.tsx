@@ -6,6 +6,7 @@ import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
 import { Space } from './Space'
 import { Col } from './View/Col'
+import { getBetweenPad } from './View/View'
 
 export type CardProps = SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
 
@@ -71,7 +72,7 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
-        <Space space={pad} />
+        <Space space={getBetweenPad(pad)} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
           <Col
             flexDirection={flexDirection}

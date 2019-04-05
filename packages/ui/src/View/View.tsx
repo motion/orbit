@@ -47,4 +47,14 @@ const getPadding = (props: PaddedProps) => {
   }
 }
 
+export function getBetweenPad(pad: PaddedProps['pad']) {
+  if (Array.isArray(pad)) {
+    return pad[0] || 0
+  }
+  if (typeof pad === 'object') {
+    return pad.top || pad.y || 0
+  }
+  return pad
+}
+
 export const View = gloss<ViewProps>(Col).theme(getPadding, getElevation)

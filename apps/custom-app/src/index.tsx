@@ -1,22 +1,37 @@
-import { App, AppBit, createApp, SelectApp, Table } from '@o/kit'
+import { App, AppBit, createApp, SelectApp, Table, useApp } from '@o/kit'
 import Slack from '@o/slack-app'
 import { Card, GridItem, GridLayout } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+
+// todo: remove it
+// execute postgres query (testing api)
+// loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
+//   console.log('postgresApps', postgresApps)
+//   for (let postApp of postgresApps) {
+//     postgresApp
+//       .api(postApp)
+//       .query(`SELECT * FROM country`, [])
+//       .then(results => {
+//         console.log(`countries loaded`, results)
+//       })
+//   }
+// })
+
+// todo: remove it
+// load gmail profile (testing api)
+// useEffect(() => {
+//   if (app) {
+//     gmailApp
+//       .api(app)
+//       .getProfile({ userId: 'me' })
+//       .then(profile => console.log('user profile', profile))
+//   }
+// }, [app])
 
 function CustomApp() {
   const [app, setApp] = useState<AppBit>(null)
-  const [res, setRes] = useState([])
-
-  useEffect(() => {
-    if (app) {
-      Slack.api(app)
-        .channelsList()
-        .then(({ channels }) => {
-          console.log('channels', channels)
-          setRes(channels)
-        })
-    }
-  }, [app])
+  const channels = useApp(Slack, app).channelsList() || []
+  console.log('channels', channels)
 
   return (
     <App>
@@ -27,7 +42,7 @@ function CustomApp() {
             overflow="hidden"
             title="Slack Messages"
           >
-            <Table rows={res} />
+            <Table rows={channels} />
           </Card>
         </GridItem>
       </GridLayout>

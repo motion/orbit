@@ -1,73 +1,25 @@
-import { AppProps, SettingManageRow, Table, useApp, useStore, WhitelistManager } from '@o/kit'
+import { SettingManageRow, Table, useApp, useAppState, useWhiteList } from '@o/kit'
 import { DataType, View } from '@o/ui'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { GithubLoader } from './GithubLoader'
-import githubApp from './index'
 
-export default function GithubSettings({ subId }: AppProps) {
-  const [app, updateApp] = useApp(+subId)
-  const whitelist = useStore(WhitelistManager, {
-    app,
-    getAll: () => (repositories || []).map(repository => repository.nameWithOwner),
+export function GithubSettings() {
+  const app = useApp()
+  const [repos, setRepos] = useAppState('repositories')
+  const whitelist = useWhiteList(useAppState('whitelist'), {
+    getAll() {
+      return (repos || []).map(repo => repo.nameWithOwner)
+    },
   })
-  // setup state
-  const [repositories, setRepositories] = useState(null)
 
   // load and set repositories when app changes
-  useEffect(
-    () => {
-      if (!app) return
-      // for some reason we can get any app here, so filter out everything except github
-      if (app.identifier !== 'github') return
-      // console.log(app)
-
-      // if we have repositories stored in the app - use them at first
-      if (app.data.repositories) {
-        // console.log(`set repositories from app`, app.data.repositories)
-        setRepositories(app.data.repositories)
-      }
-
-      // to make sure we always have a fresh repositories we load them from API
-      const loader = new GithubLoader(app)
-      loader.loadUserRepositories().then(freshApiRepositories => {
-        // console.log(`loaded repositories from remote`, freshApiRepositories)
-
-        // we check if api repositories are changed
-        const appRepositories = app.data.repositories
-        if (
-          !freshApiRepositories ||
-          JSON.stringify(appRepositories) === JSON.stringify(freshApiRepositories)
-        )
-          return
-
-        // console.log(`repositories changed, updating`)
-
-        // then we update app data in the db
-        setRepositories(freshApiRepositories)
-        app.data = {
-          ...app.data,
-          repositories: freshApiRepositories,
-        }
-        updateApp(app)
-      })
-    },
-    [app && app.id],
-  )
-
-  // todo: remove it
-  // load sample repositories (testing api)
-  useEffect(
-    () => {
-      if (app) {
-        githubApp
-          .api(app)
-          .listRepositoriesForOrg({ org: 'typeorm' })
-          .then(repos => console.log('repos', repos))
-      }
-    },
-    [app],
-  )
+  useEffect(() => {
+    const loader = new GithubLoader(app)
+    loader.loadUserRepositories().then(next => {
+      setRepos(next)
+    })
+  }, [app && app.token])
 
   return (
     <>
@@ -78,26 +30,17 @@ export default function GithubSettings({ subId }: AppProps) {
         pointerEvents={whitelist.isWhitelisting ? 'none' : 'inherit'}
       >
         <Table
+          selectable="multi"
           columns={{
-            repo: {
-              value: 'Repository',
-            },
-            org: {
-              value: 'Organization',
-            },
-            lastCommit: {
-              value: 'Last Commit',
-              type: DataType.date,
-            },
-            numIssues: {
-              value: 'Open Issues',
-              type: DataType.number,
-            },
+            repo: 'Repository',
+            org: 'Organization',
+            lastCommit: 'Last Commit',
+            numIssues: 'Open Issues',
             active: {
               value: 'Active',
               type: DataType.boolean,
               onChange(index) {
-                whitelist.toggleWhitelisted(repositories[index].nameWithOwner)
+                whitelist.toggleWhitelisted(repos[index].nameWithOwner)
               },
             },
           }}
@@ -105,18 +48,14 @@ export default function GithubSettings({ subId }: AppProps) {
             key: 'lastCommit',
             direction: 'up',
           }}
-          selectable="multi"
-          rows={(repositories || []).map(repository => {
+          rows={(repos || []).map(repository => {
             const [orgName] = repository.nameWithOwner.split('/')
             return {
-              key: `${repository.id}`,
-              values: {
-                org: orgName,
-                repo: repository.name,
-                lastCommit: new Date(repository.pushedAt),
-                numIssues: repository.issues.totalCount,
-                active: whitelist.getWhitelisted(repository.nameWithOwner),
-              },
+              org: orgName,
+              repo: repository.name,
+              lastCommit: new Date(repository.pushedAt),
+              numIssues: repository.issues.totalCount,
+              active: whitelist.getWhitelisted(repository.nameWithOwner),
             }
           })}
         />
@@ -124,3 +63,17 @@ export default function GithubSettings({ subId }: AppProps) {
     </>
   )
 }
+
+// todo: remove it
+// load sample repositories (testing api)
+// useEffect(
+//   () => {
+//     if (app) {
+//       githubApp
+//         .api(app)
+//         .listRepositoriesForOrg({ org: 'typeorm' })
+//         .then(repos => console.log('repos', repos))
+//     }
+//   },
+//   [app],
+// )

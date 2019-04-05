@@ -1,11 +1,11 @@
-import { useApp } from './useApp'
+import { useAppBit } from './useAppBit'
 import { useEnsureDefaultAppState } from './useEnsureDefaultAppState'
 
 export type ScopedAppState<A> = [A, (next: Partial<A>) => void]
 
 export function useAppState<A>(uid: string, defaultState?: A): ScopedAppState<A> {
   useEnsureDefaultAppState<A>(uid, defaultState)
-  const [state, update] = useApp()
+  const [state, update] = useAppBit()
   // scopes state down
   return [
     (state && state.data[uid]) || defaultState,

@@ -6,8 +6,8 @@ import {
   Table,
   Templates,
   useActiveSyncAppsWithDefinition,
-  useApp,
   useAppState,
+  useAppWithDefinition,
 } from '@o/kit'
 import {
   Button,
@@ -38,7 +38,7 @@ function DataExplorerIndex() {
 }
 
 function DataExplorerMain({ subId }: AppProps) {
-  const [app] = useApp((subId && +subId) || false)
+  const [app] = useAppWithDefinition((subId && +subId) || false)
   const [queries, setQueries] = useAppState(`queries-${subId}`, [{ id: 0, name: 'My Query' }])
 
   // TODO suspense

@@ -1,40 +1,49 @@
-import { useModel } from '@o/bridge'
-import { AppBit, AppModel } from '@o/models'
-import { getAppDefinition } from '../helpers/getAppDefinition'
-import { Omit } from '../types'
+import { AppBit } from '@o/models'
+import { unstable_createResource } from 'react-cache'
 import { AppDefinition } from '../types/AppDefinition'
-import { useStoresSimple } from './useStores'
+import { AppWithDefinition } from './useActiveAppsWithDefinition'
+import { useAppBit } from './useAppBit'
 
-type AppWithDefinition = Omit<AppDefinition, 'id' | 'name'> &
-  AppBit & {
-    appName: AppDefinition['name']
+type ApiCall = AppWithDefinition & {
+  args: any[]
+  method: string
+}
+
+type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> }
+type UnPromisify<T> = T extends Promise<infer U> ? U : T
+
+const AppApiResource = unstable_createResource(({ definition, app, method, args }: ApiCall) => {
+  return definition.api(app)[method](...args)
+})
+
+export function useApp(): AppBit
+export function useApp<A extends AppDefinition>(
+  definition: A,
+  app: AppBit,
+): UnPromisifiedObject<ReturnType<A['api']>>
+export function useApp(definition?: AppDefinition, app?: AppBit) {
+  if (!definition) {
+    return useAppBit()[0]
   }
 
-export function useApp(
-  appId?: number | false,
-): [AppWithDefinition, ((next: Partial<AppBit>) => any)] {
-  const { appStore } = useStoresSimple()
-  let conditions = null
+  return new Proxy(
+    {},
+    {
+      get(_, method) {
+        return (...args: any[]) => {
+          if (!app) {
+            return null
+          }
+          AppApiResource.read({
+            app,
+            definition,
+            method,
+            args,
+          })
+        }
+      },
+    },
+  )
 
-  if (appId || +appStore.id === +appStore.id) {
-    // use id for non-static apps
-    conditions = { where: { id: appId || +appStore.id } }
-  } else {
-    // use identifier for static apps (theres only one)
-    conditions = { where: { identifier: appStore.identifier } }
-  }
-  const [app, update] = useModel(AppModel, conditions)
-
-  if (!app || appId === false) {
-    return [null, update]
-  }
-
-  const definition = getAppDefinition(app.identifier)
-  const appWithDefinition: AppWithDefinition = {
-    ...definition,
-    ...app,
-    appName: definition ? definition.name : '',
-    id: app.id,
-  }
-  return [appWithDefinition, update]
+  return definition.api(app)
 }

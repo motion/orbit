@@ -1,11 +1,11 @@
 import { AppBit } from '@o/models'
 import { Row, Text, View } from '@o/ui'
 import * as React from 'react'
-import { WhitelistManager } from '../helpers/WhitelistManager'
+import { WhiteList } from '../hooks/useWhiteList'
 import { ManageSmartSync } from './ManageSmartSync'
 import { ManageSyncStatus } from './ManageSyncStatus'
 
-export const SettingManageRow = (props: { app: AppBit; whitelist: WhitelistManager<any> }) => {
+export function SettingManageRow(props: { app: AppBit; whitelist: WhiteList }) {
   const appId = props.app && props.app.id
 
   if (!appId) {

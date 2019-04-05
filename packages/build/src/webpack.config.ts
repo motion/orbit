@@ -85,6 +85,7 @@ const optimization = {
         terserOptions: {
           ecma: 8,
           compress: true,
+          keep_classnames: true,
           output: {
             comments: false,
             beautify: false,

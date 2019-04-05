@@ -1,8 +1,8 @@
 import { CheckboxReactive, Space, Surface, Text } from '@o/ui'
 import * as React from 'react'
-import { WhitelistManager } from '../helpers/WhitelistManager'
+import { WhiteList } from '../hooks/useWhiteList'
 
-export const ManageSmartSync = ({ whitelist }: { whitelist: WhitelistManager<any> }) => {
+export function ManageSmartSync({ whitelist }: { whitelist: WhiteList }) {
   return (
     <Surface
       alt={whitelist.isWhitelisting ? 'selected' : null}

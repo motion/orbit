@@ -4,7 +4,6 @@ import React, { createContext, Dispatch, useContext, useEffect, useReducer } fro
 import { Button } from '../buttons/Button'
 import { MergeContext } from '../helpers/MergeContext'
 import { Section, SectionProps } from '../Section'
-import { SurfacePassProps } from '../Surface'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
 import { FormField } from './FormField'
@@ -163,17 +162,15 @@ export function Form({
           {state.globalError && <Message alt="error">{state.globalError}</Message>}
           {state.errors && <Message alt="warn">Form has a few errors, please check.</Message>}
 
-          <SurfacePassProps size={size}>
-            {elements}
+          {elements}
 
-            {!!submitButton && (
-              <FormField label="">
-                <Button type="submit" alt="action">
-                  {submitButton === true ? 'Submit' : submitButton}
-                </Button>
-              </FormField>
-            )}
-          </SurfacePassProps>
+          {!!submitButton && (
+            <FormField label="">
+              <Button type="submit" alt="action">
+                {submitButton === true ? 'Submit' : submitButton}
+              </Button>
+            </FormField>
+          )}
         </Section>
       </MergeContext>
     </form>

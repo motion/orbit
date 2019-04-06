@@ -4,6 +4,7 @@ const Border = gloss<{
   light?: boolean
   borderColor: CSSPropertySet['borderColor']
 }>(Absolute).theme((p, theme) => ({
+  ...p,
   background: p.borderColor || (p.light ? theme.borderColorLight : theme.borderColor),
 }))
 

@@ -1,4 +1,4 @@
-import { gloss, Theme, ThemeContext, ThemeObject } from '@o/gloss'
+import { gloss, Theme, ThemeContext } from '@o/gloss'
 import { useReaction } from '@o/use-store'
 import { differenceInCalendarDays } from 'date-fns'
 import React from 'react'
@@ -7,13 +7,13 @@ import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
 import { Separator } from '../Separator'
-import { SizedSurface } from '../SizedSurface'
+import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
 import { Text } from '../text/Text'
-import { Row, RowProps } from '../View/Row'
+import { Row } from '../View/Row'
 import { View } from '../View/View'
 
 export type ItemRenderText = (text: string) => JSX.Element
@@ -34,10 +34,9 @@ export type ListItemDisplayProps = {
   condensed?: boolean
 }
 
-export type ListItemProps = RowProps &
+export type ListItemProps = SizedSurfaceProps &
   ListItemHide &
   ListItemDisplayProps & {
-    backgroundHover?: any
     forwardRef?: any
     subId?: string | number
     location?: React.ReactNode
@@ -49,7 +48,6 @@ export type ListItemProps = RowProps &
     activeStyle?: Record<string, any>
     before?: React.ReactNode
     chromeless?: boolean
-    theme?: Partial<ThemeObject>
     listItem?: boolean
     subTitle?: React.ReactNode
     date?: Date
@@ -116,7 +114,6 @@ export const ListItem = memoIsEqualDeep(
       after,
       style,
       forwardRef,
-      backgroundHover,
       alignItems,
       ...rowProps
     } = props
@@ -197,7 +194,6 @@ export const ListItem = memoIsEqualDeep(
             borderRadius={borderRadius}
             onClick={(!hasMouseDownEvent && onClick) || undefined}
             padding={padding || defaultPadding}
-            backgroundHover={backgroundHover}
             {...rowProps}
           >
             {before}
@@ -298,7 +294,7 @@ export const ListItem = memoIsEqualDeep(
               )}
             </ListItemMainContent>
             {after}
-            <BorderBottom right={5} left={5} opacity={0.2} />
+            <BorderBottom transform={{ y: 8.5 }} right={5} left={5} opacity={0.2} />
           </SizedSurface>
         </div>
       </Theme>

@@ -7,7 +7,7 @@ import {
   Section,
   SectionParentProps,
   SectionSpecificProps,
-  TitleRowProps,
+  TitleRowSpecificProps,
   useNodeSize,
   useSectionProps,
   useVisiblity,
@@ -18,7 +18,7 @@ import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
-export type TableProps = Partial<Omit<TitleRowProps, 'title'>> &
+export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
   SectionParentProps & {
     columns?: TableColumns

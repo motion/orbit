@@ -10,8 +10,9 @@ export {
   ThemeObject,
   validCSSAttr,
 } from '@o/css'
-// blocks
 export * from './blocks/Absolute'
+// blocks
+export { GlossBaseProps } from './blocks/Base'
 export * from './blocks/Block'
 export * from './blocks/Col'
 export * from './blocks/Contents'

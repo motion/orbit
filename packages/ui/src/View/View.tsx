@@ -1,10 +1,48 @@
-import { Col, gloss } from '@o/gloss'
+import { Col, gloss, GlossBaseProps } from '@o/gloss'
 import { isDefined } from '@o/utils'
 import { getSpaceSize, Sizes } from '../Space'
+import { Omit } from '../types'
 import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps, getElevation } from './elevate'
 
-export type ViewProps = CommonViewProps & ElevatableProps & PaddedProps
+// TODO this gets messy, and is incomplete
+type CommonHTMLProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  | 'title'
+  | 'about'
+  | 'accessKey'
+  | 'autoCapitalize'
+  | 'autoCorrect'
+  | 'autoSave'
+  | 'vocab'
+  | 'typeof'
+  | 'suppressHydrationWarning'
+  | 'suppressContentEditableWarning'
+  | 'spellCheck'
+  | 'security'
+  | 'slot'
+  | 'results'
+  | 'resource'
+  | 'prefix'
+  | 'property'
+  | 'radioGroup'
+  | 'dangerouslySetInnerHTML'
+  | 'contextMenu'
+  | 'dir'
+  | 'datatype'
+  | 'inlist'
+  | 'itemID'
+  | 'lang'
+  | 'is'
+  | 'itemScope'
+  | 'inputMode'
+>
+
+export type ViewProps = CommonHTMLProps &
+  GlossBaseProps &
+  CommonViewProps &
+  ElevatableProps &
+  PaddedProps
 
 // Padded
 

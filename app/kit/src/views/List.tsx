@@ -172,7 +172,7 @@ export function List({
   return (
     <Section
       background="transparent"
-      flex={flex}
+      flex={flex || 1}
       title={title}
       subTitle={subTitle}
       bordered={bordered}

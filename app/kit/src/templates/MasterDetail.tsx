@@ -18,11 +18,16 @@ export function MasterDetail(props: MasterDetailProps) {
       <Pane resizable>
         <List
           items={props.items}
-          onSelect={index => setSelected(props.items[index])}
+          onSelect={rows => {
+            console.log('rows', rows)
+            if (rows.length) {
+              setSelected(rows[0])
+            }
+          }}
           itemProps={{ iconBefore: true }}
         />
       </Pane>
-      <Pane flex={2}>{!selected ? placeholder : props.children(selected)}</Pane>
+      <Pane flex={2}>{selected === null ? placeholder : props.children(selected)}</Pane>
     </Layout>
   )
 }

@@ -48,6 +48,8 @@ export function Pane({
             scrollable={scrollable}
             pad={pad}
             padding={padding}
+            width="100%"
+            height="100%"
           >
             {children}
           </Col>

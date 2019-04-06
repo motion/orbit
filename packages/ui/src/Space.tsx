@@ -6,11 +6,17 @@ export type SpaceProps = {
   space?: Sizes
 }
 
-const spaceSizes = {
+export const spaceSizes = {
   sm: 8,
   md: 16,
   lg: 24,
   xl: 32,
+}
+
+// indent 1-4 maps to sm-xl
+export function getIndentSize(size: number) {
+  const key = Object.keys(spaceSizes)[size]
+  return key ? spaceSizes[key] : 0
 }
 
 export function getSpaceSize(space: Sizes) {

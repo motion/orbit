@@ -8,7 +8,7 @@ import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
 import { Separator } from '../Separator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { Space } from '../Space'
+import { getIndentSize, Sizes, Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
@@ -37,6 +37,7 @@ export type ListItemDisplayProps = {
 export type ListItemProps = SizedSurfaceProps &
   ListItemHide &
   ListItemDisplayProps & {
+    indent?: Sizes
     forwardRef?: any
     subId?: string | number
     location?: React.ReactNode
@@ -114,6 +115,7 @@ export const ListItem = memoIsEqualDeep(
       after,
       style,
       forwardRef,
+      indent = 0,
       alignItems,
       ...rowProps
     } = props
@@ -184,6 +186,7 @@ export const ListItem = memoIsEqualDeep(
           </Theme>
         )}
         <SizedSurface
+          noInnerElement
           forwardRef={forwardRef || ref}
           themeSelect="listItem"
           borderRadius={borderRadius}
@@ -193,7 +196,10 @@ export const ListItem = memoIsEqualDeep(
         >
           {before}
           {iconBefore && showIcon && iconElement}
-          <ListItemMainContent oneLine={oneLine}>
+          <ListItemMainContent
+            oneLine={oneLine}
+            style={{ paddingLeft: indent && getIndentSize(indent) }}
+          >
             {showTitle && (
               <ListItemTitleBar alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
@@ -282,7 +288,7 @@ export const ListItem = memoIsEqualDeep(
             )}
           </ListItemMainContent>
           {after}
-          <BorderBottom transform={{ y: 8.5 }} right={5} left={5} opacity={0.2} />
+          <BorderBottom right={5} left={5} opacity={0.2} />
         </SizedSurface>
       </Theme>
     )

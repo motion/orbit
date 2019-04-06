@@ -4,11 +4,15 @@ import { Collapsable, CollapsableProps } from './Collapsable'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { Space } from './Space'
+import { Sizes, Space } from './Space'
 import { Col } from './View/Col'
 import { getBetweenPad } from './View/View'
 
-export type CardProps = SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
+export type CardProps = SizedSurfaceProps &
+  ListItemProps &
+  Partial<CollapsableProps> & {
+    space?: Sizes
+  }
 
 export function Card(props: CardProps) {
   const {
@@ -51,7 +55,6 @@ export function Card(props: CardProps) {
         <Scale size={1.1}>
           <ListItem
             className="grid-draggable"
-            backgroundHover="transparent"
             onClickLocation={onClickLocation}
             alignItems="center"
             titleFlex={titleFlex}
@@ -61,6 +64,7 @@ export function Card(props: CardProps) {
               fontWeight: 500,
               ...titleProps,
             }}
+            hoverStyle={null}
             afterTitle={afterTitle}
             title={title}
             subTitle={subTitle}

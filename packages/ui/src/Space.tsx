@@ -13,12 +13,6 @@ export const spaceSizes = {
   xl: 32,
 }
 
-// indent 1-4 maps to sm-xl
-export function getIndentSize(size: number) {
-  const key = Object.keys(spaceSizes)[size]
-  return key ? spaceSizes[key] : 0
-}
-
 export function getSpaceSize(space: Sizes) {
   if (!space) {
     return 0

@@ -8,7 +8,7 @@ import { memoIsEqualDeep } from '../helpers/memoHelpers'
 import { Icon, IconProps } from '../Icon'
 import { Separator } from '../Separator'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
-import { getIndentSize, Sizes, Space } from '../Space'
+import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { SimpleText } from '../text/SimpleText'
@@ -37,7 +37,7 @@ export type ListItemDisplayProps = {
 export type ListItemProps = SizedSurfaceProps &
   ListItemHide &
   ListItemDisplayProps & {
-    indent?: Sizes
+    indent?: number
     forwardRef?: any
     subId?: string | number
     location?: React.ReactNode
@@ -196,10 +196,7 @@ export const ListItem = memoIsEqualDeep(
         >
           {before}
           {iconBefore && showIcon && iconElement}
-          <ListItemMainContent
-            oneLine={oneLine}
-            style={{ paddingLeft: indent && getIndentSize(indent) }}
-          >
+          <ListItemMainContent oneLine={oneLine} style={{ paddingLeft: indent && indent * 8 }}>
             {showTitle && (
               <ListItemTitleBar alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}

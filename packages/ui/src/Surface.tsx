@@ -23,12 +23,12 @@ import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
 import { SizedSurfaceProps } from './SizedSurface'
 import { Tooltip } from './Tooltip'
-import { Col, ColProps } from './View/Col'
+import { View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
 
-export type SurfaceProps = ColProps & {
+export type SurfaceProps = ViewProps & {
   hover?: boolean
   hoverStyle?: any
   active?: boolean
@@ -280,7 +280,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 })
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<SurfaceProps>(Col, {
+const SurfaceFrame = gloss<SurfaceProps>(View, {
   fontFamily: 'inherit',
   position: 'relative',
 }).theme((props, theme) => {

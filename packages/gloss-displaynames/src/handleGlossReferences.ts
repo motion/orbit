@@ -5,7 +5,7 @@ import { looksLike } from './looksLike'
 export function handleGlossReferences(parentNode, name, references, file, babel) {
   const { types: t, template } = babel
   const buildBuiltInWithConfig = template(`
-  IDENTIFIER && IDENTIFIER.withConfig && IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
+  typeof IDENTIFIER !== 'undefined' && IDENTIFIER.withConfig({displayName: "DISPLAY_NAME"})
   `)
 
   references.forEach(reference => {

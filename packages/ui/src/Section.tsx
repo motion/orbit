@@ -90,7 +90,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         <TitleRow
           bordered={bordered || titleBorder}
           backgrounded={bordered}
-          margin={0}
           title={title}
           subTitle={subTitle}
           after={afterTitle}
@@ -98,7 +97,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
-          pad={innerPad}
+          pad={(titleBorder && !outerPad) || innerPad}
         />
       )}
       <Col

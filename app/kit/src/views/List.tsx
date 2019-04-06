@@ -65,6 +65,7 @@ const nullFn = () => null
 export function List({
   flex = 1,
   bordered,
+  titleBorder,
   title,
   subTitle,
   icon,
@@ -178,7 +179,8 @@ export function List({
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
-      padding={0}
+      titleBorder={titleBorder}
+      pad={false}
     >
       <HighlightActiveQuery query={search}>
         {hasResults && (

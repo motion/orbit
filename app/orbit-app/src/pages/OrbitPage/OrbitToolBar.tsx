@@ -1,6 +1,6 @@
 import { FullScreen, gloss, Row } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
-import { View, ViewProps } from '@o/ui'
+import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
 import React, { memo, useContext } from 'react'
 import { useStoresSimple } from '../../hooks/useStores'
@@ -20,7 +20,7 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   return (
     <ToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
-        <ToolbarContent>{props.children}</ToolbarContent>
+        <Toolbar>{props.children}</Toolbar>
       </ToolbarInner>
     </ToolbarChrome>
   )
@@ -46,6 +46,7 @@ const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
   flex: 2,
   flexFlow: 'row',
   opacity: 0,
+  height: 0,
   isActive: {
     opacity: 1,
     height: toolbarHeight,

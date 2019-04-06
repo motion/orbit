@@ -9,7 +9,7 @@ import {
   useStore,
   useStores,
 } from '@o/kit'
-import { Button, Calendar, Popover, Row, View } from '@o/ui'
+import { Button, Calendar, Popover, View } from '@o/ui'
 import React from 'react'
 import { ManageApps } from './ManageApps'
 import { SearchAppSettings } from './SearchAppSettings'
@@ -37,11 +37,7 @@ function SearchApp(props: AppProps) {
   return (
     <App
       index={<List shareable items={searchStore.results} />}
-      toolBar={
-        <Row flex={1} alignItems="center" justifyContent="center">
-          <SearchSuggestionBar />
-        </Row>
-      }
+      toolBar={<SearchSuggestionBar />}
       actions={<SearchActions />}
     >
       {props.subType === 'home' ? <ManageApps /> : <AppMainView {...props} />}

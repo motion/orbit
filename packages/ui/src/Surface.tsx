@@ -21,7 +21,8 @@ import { memoIsEqualDeep } from './helpers/memoHelpers'
 import { Icon, IconProps, IconPropsContext } from './Icon'
 import { PopoverProps } from './Popover'
 import { getSegmentedStyle } from './SegmentedRow'
-import { SizedSurfaceProps } from './SizedSurface'
+import { getSize, SizedSurfaceProps } from './SizedSurface'
+import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
 import { View, ViewProps } from './View/View'
 
@@ -55,7 +56,7 @@ export type SurfaceProps = ViewProps & {
   iconProps?: Partial<IconProps>
   iconSize?: number
   noInnerElement?: boolean
-  size?: number
+  size?: Sizes
   sizeIcon?: number
   spaced?: boolean
   stretch?: boolean
@@ -141,7 +142,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // goes to BOTH the outer element and inner element
   const throughProps: Partial<SurfaceProps> = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
+    iconPad: typeof iconPad === 'number' ? iconPad : getSize(size) * 10,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -192,7 +193,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         {glint && !props.chromeless && (
           <Glint
             key={0}
-            size={size}
+            size={getSize(size)}
             borderLeftRadius={Math.min(
               (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
               +height / 2 - 1,
@@ -380,6 +381,6 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size = (props.size || 1) * (props.height ? +props.height / 3 : 12) * (props.sizeIcon || 1)
+  const size = getSize(props.size) * (props.height ? +props.height / 3 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
 }

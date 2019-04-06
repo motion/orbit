@@ -20,7 +20,6 @@ import {
   Tabs,
   TextArea,
   Title,
-  TitleRow,
   View,
 } from '@o/ui'
 import { remove } from 'lodash'
@@ -31,8 +30,12 @@ function DataExplorerIndex() {
   const syncApps = useActiveSyncAppsWithDefinition()
   return (
     <>
-      <TitleRow bordered title="Data Explorer" subTitle="Explore installed data apps" />
-      <List items={syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apsp' }))} />
+      <List
+        titleBorder
+        title="Data Explorer"
+        subTitle="Explore installed data apps"
+        items={syncApps.map(x => ({ ...getAppListItem(x), group: 'Data Apsp' }))}
+      />
     </>
   )
 }

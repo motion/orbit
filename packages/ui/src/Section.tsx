@@ -22,7 +22,7 @@ export type SectionSpecificProps = Omit<
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
 
-export type SectionProps = Omit<ColProps, 'columns' | 'onSubmit'> & SectionSpecificProps
+export type SectionProps = Omit<ColProps, 'onSubmit'> & SectionSpecificProps
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps

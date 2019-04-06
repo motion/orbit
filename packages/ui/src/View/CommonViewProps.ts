@@ -159,4 +159,5 @@ export type CommonViewProps = Pick<
   | 'fillOpacity'
   | 'fillRule'
   | 'shapeRendering'
+  | 'WebkitAppRegion'
 >

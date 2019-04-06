@@ -175,8 +175,6 @@ export const ListItem = memoIsEqualDeep(
 
     return (
       <Theme alternate={isSelected ? 'selected' : null}>
-        {/* we keep chrome here because virtualizings wants to set an absolute width/height */}
-        {/* but without a wrapper, we'd have two children nodes, only one receiving dimensions */}
         {above}
         {!!separator && (
           <Theme name={activeThemeName}>

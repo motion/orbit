@@ -77,6 +77,19 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
   }, [])
 
   const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
+  const showChildren = !!ItemView || showPeople
+  const childrenProps = showChildren && {
+    children: (
+      <>
+        {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
+        {showPeople && (
+          <Bottom>
+            <PersonRow people={people} />
+          </Bottom>
+        )}
+      </>
+    ),
+  }
 
   return (
     <UIListItem
@@ -89,14 +102,10 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
       location={normalized ? normalized.location : props.location}
       {...getItemProps && getItemProps(item)}
       isSelected={getIsSelected}
-    >
-      {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
-      {showPeople && (
-        <Bottom>
-          <PersonRow people={people} />
-        </Bottom>
-      )}
-    </UIListItem>
+      // dont put children unless you actually have children,
+      // otherwise you trip up some spacing stuff in ListItem
+      {...childrenProps}
+    />
   )
 })
 

@@ -200,13 +200,7 @@ export const ListItem = memoIsEqualDeep(
             {showTitle && (
               <ListItemTitleBar alignItems={alignItems}>
                 {showIcon && !iconBefore && iconElement}
-                <HighlightText
-                  flex={1}
-                  sizeLineHeight={0.85}
-                  ellipse
-                  fontWeight={400}
-                  {...titleProps}
-                >
+                <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
                   {title}
                 </HighlightText>
                 <Space />
@@ -263,7 +257,9 @@ export const ListItem = memoIsEqualDeep(
               </View>
             )}
             {/* vertical space only if needed */}
-            {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+            {showSubtitle && !!(children || showPreview) && (
+              <div style={{ flex: 1, maxHeight: 4 }} />
+            )}
             {showPreview && (
               <>
                 {locationElement}

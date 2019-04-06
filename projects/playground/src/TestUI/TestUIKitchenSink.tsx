@@ -6,7 +6,7 @@ export function TestUIKitchenSink() {
   return (
     <Templates.MasterDetail
       items={[
-        { title: 'Surfaces', group: 'Views' },
+        { title: 'Surfaces', subTitle: 'Building block of many views', group: 'Views' },
         { title: 'Buttons', indent: 1 },
         { title: 'Card', indent: 1 },
         { title: 'Sections' },

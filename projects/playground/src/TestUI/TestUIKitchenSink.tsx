@@ -5,6 +5,7 @@ import React, { createElement } from 'react'
 export function TestUIKitchenSink() {
   return (
     <Templates.MasterDetail
+      searchable
       items={[
         { title: 'Surfaces', subTitle: 'Building block of many views', group: 'Views' },
         { title: 'Buttons', indent: 1 },

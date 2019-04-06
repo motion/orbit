@@ -4,6 +4,7 @@ import {
   Center,
   createContextualProps,
   Direction,
+  Searchable,
   Section,
   SectionSpecificProps,
   SelectableStore,
@@ -61,6 +62,19 @@ export const PassExtraListProps = PassProps
 export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
+
+export function SearchableList(props: ListProps) {
+  return (
+    <Searchable>
+      {({ searchBar, searchTerm }) => (
+        <>
+          <View padding={5}>{searchBar}</View>
+          <List {...props} search={searchTerm} />
+        </>
+      )}
+    </Searchable>
+  )
+}
 
 export function List({
   flex = 1,

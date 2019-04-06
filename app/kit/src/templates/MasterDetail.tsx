@@ -1,6 +1,6 @@
 import { Layout, Pane } from '@o/ui'
 import React, { useState } from 'react'
-import { List, ListProps } from '../views/List'
+import { ListProps, SearchableList } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
 export type MasterDetailProps = ListProps & {
@@ -13,7 +13,7 @@ export function MasterDetail({ children, placeholder, ...listProps }: MasterDeta
   return (
     <Layout type="row">
       <Pane resizable>
-        <List
+        <SearchableList
           selectable
           onSelect={rows => {
             if (rows.length) {

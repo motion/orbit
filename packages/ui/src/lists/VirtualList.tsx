@@ -75,8 +75,6 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
     areEqual,
   )
 
-  const getRow = useCallback(Row, [])
-
   return (
     <SortableList
       selectableStoreRef={selectableStoreRef}
@@ -86,7 +84,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       lockAxis="y"
       {...dynamicListProps}
     >
-      {getRow as any}
+      {useCallback(Row, [])}
     </SortableList>
   )
 }

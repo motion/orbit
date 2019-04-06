@@ -37,7 +37,7 @@ export function Layout(props: LayoutProps) {
   const total = Children.count(props.children)
   const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
   return (
-    <View flex={1} overflow="hidden" maxHeight={window.innerHeight} maxWidth={window.innerWidth}>
+    <View flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
       <LayoutContext.Provider value={{ ...props, total, flexes }}>
         {getLayout(props)}
       </LayoutContext.Provider>

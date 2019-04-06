@@ -177,126 +177,115 @@ export const ListItem = memoIsEqualDeep(
       <Theme alternate={isSelected ? 'selected' : null}>
         {/* we keep chrome here because virtualizings wants to set an absolute width/height */}
         {/* but without a wrapper, we'd have two children nodes, only one receiving dimensions */}
-        <div
-          ref={forwardRef || ref}
-          style={{ ...style, minHeight: 'min-content', position: 'relative' }}
+        {above}
+        {!!separator && (
+          <Theme name={activeThemeName}>
+            <Separator paddingTop={props.index === 0 ? 8 : 16} {...separatorProps}>
+              {separator}
+            </Separator>
+          </Theme>
+        )}
+        <SizedSurface
+          forwardRef={forwardRef || ref}
+          themeSelect="listItem"
+          borderRadius={borderRadius}
+          onClick={(!hasMouseDownEvent && onClick) || undefined}
+          padding={padding || defaultPadding}
+          {...rowProps}
         >
-          {above}
-          {!!separator && (
-            <Theme name={activeThemeName}>
-              <Separator paddingTop={props.index === 0 ? 8 : 16} {...separatorProps}>
-                {separator}
-              </Separator>
-            </Theme>
-          )}
-          <SizedSurface
-            themeSelect="listItem"
-            borderRadius={borderRadius}
-            onClick={(!hasMouseDownEvent && onClick) || undefined}
-            padding={padding || defaultPadding}
-            {...rowProps}
-          >
-            {before}
-            {iconBefore && showIcon && iconElement}
-            <ListItemMainContent oneLine={oneLine}>
-              {showTitle && (
-                <ListItemTitleBar alignItems={alignItems}>
-                  {showIcon && !iconBefore && iconElement}
-                  <HighlightText
-                    flex={1}
-                    sizeLineHeight={0.85}
-                    ellipse
-                    fontWeight={400}
-                    {...titleProps}
-                  >
-                    {title}
-                  </HighlightText>
-                  <Space />
-                  {props.afterTitle}
-                  {afterHeaderElement}
-                </ListItemTitleBar>
-              )}
-              {showSubtitle && (
-                <ListItemSubtitle>
-                  {showIcon && !showTitle && (
-                    <>
-                      {iconElement}
-                      <Space />
-                    </>
-                  )}
-                  {!!location && locationElement}
-                  {showPreviewInSubtitle ? (
-                    <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
-                  ) : null}
-                  {!!subTitle &&
-                    (typeof subTitle === 'string' ? (
-                      <HighlightText
-                        alpha={subTextOpacity}
-                        size={0.9}
-                        sizeLineHeight={sizeLineHeight}
-                        ellipse
-                        {...subTitleProps}
-                      >
-                        {subTitle}
-                      </HighlightText>
-                    ) : (
-                      subTitle
-                    ))}
-                  {!subTitle && (
-                    <>
-                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    </>
-                  )}
-                  {!showTitle && (
-                    <>
-                      <Space />
-                      {afterHeaderElement}
-                    </>
-                  )}
-                </ListItemSubtitle>
-              )}
-              {!showSubtitle && !showTitle && (
-                <View
-                  position="absolute"
-                  right={Array.isArray(padding) ? padding[0] : padding}
-                  top={Array.isArray(padding) ? padding[1] : padding}
+          {before}
+          {iconBefore && showIcon && iconElement}
+          <ListItemMainContent oneLine={oneLine}>
+            {showTitle && (
+              <ListItemTitleBar alignItems={alignItems}>
+                {showIcon && !iconBefore && iconElement}
+                <HighlightText
+                  flex={1}
+                  sizeLineHeight={0.85}
+                  ellipse
+                  fontWeight={400}
+                  {...titleProps}
                 >
-                  {afterHeaderElement}
-                </View>
-              )}
-              {/* vertical space only if needed */}
-              {showSubtitle && (!!children || !!preview) && (
-                <div style={{ flex: 1, maxHeight: 4 }} />
-              )}
-              {showPreview && (
-                <>
-                  {locationElement}
-                  <Preview>
-                    {typeof preview !== 'string' && preview}
-                    {typeof preview === 'string' && (
-                      <HighlightText
-                        alpha={subTextOpacity}
-                        size={1}
-                        sizeLineHeight={0.9}
-                        ellipse={3}
-                      >
-                        {preview}
-                      </HighlightText>
-                    )}
-                  </Preview>
-                </>
-              )}
-              {!showPreviewInSubtitle && (
-                <Row>
-                  {locationElement}
-                  {childrenElement}
-                </Row>
-              )}
-            </ListItemMainContent>
-            {after}
-            <BorderBottom transform={{ y: 8.5 }} right={5} left={5} opacity={0.2} />
-          </SizedSurface>
-        </div>
+                  {title}
+                </HighlightText>
+                <Space />
+                {props.afterTitle}
+                {afterHeaderElement}
+              </ListItemTitleBar>
+            )}
+            {showSubtitle && (
+              <ListItemSubtitle>
+                {showIcon && !showTitle && (
+                  <>
+                    {iconElement}
+                    <Space />
+                  </>
+                )}
+                {!!location && locationElement}
+                {showPreviewInSubtitle ? (
+                  <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
+                ) : null}
+                {!!subTitle &&
+                  (typeof subTitle === 'string' ? (
+                    <HighlightText
+                      alpha={subTextOpacity}
+                      size={0.9}
+                      sizeLineHeight={sizeLineHeight}
+                      ellipse
+                      {...subTitleProps}
+                    >
+                      {subTitle}
+                    </HighlightText>
+                  ) : (
+                    subTitle
+                  ))}
+                {!subTitle && (
+                  <>
+                    <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                  </>
+                )}
+                {!showTitle && (
+                  <>
+                    <Space />
+                    {afterHeaderElement}
+                  </>
+                )}
+              </ListItemSubtitle>
+            )}
+            {!showSubtitle && !showTitle && (
+              <View
+                position="absolute"
+                right={Array.isArray(padding) ? padding[0] : padding}
+                top={Array.isArray(padding) ? padding[1] : padding}
+              >
+                {afterHeaderElement}
+              </View>
+            )}
+            {/* vertical space only if needed */}
+            {showSubtitle && (!!children || !!preview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+            {showPreview && (
+              <>
+                {locationElement}
+                <Preview>
+                  {typeof preview !== 'string' && preview}
+                  {typeof preview === 'string' && (
+                    <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
+                      {preview}
+                    </HighlightText>
+                  )}
+                </Preview>
+              </>
+            )}
+            {!showPreviewInSubtitle && (
+              <Row>
+                {locationElement}
+                {childrenElement}
+              </Row>
+            )}
+          </ListItemMainContent>
+          {after}
+          <BorderBottom transform={{ y: 8.5 }} right={5} left={5} opacity={0.2} />
+        </SizedSurface>
       </Theme>
     )
   }),

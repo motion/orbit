@@ -96,17 +96,15 @@ export class SearchStore {
     }
   }
 
-  staticApps() {
+  staticApps(): AppBit[] {
     return [
       {
-        id: 'settings',
         identifier: 'settings',
         name: 'Settings',
         colors: ['black', 'white'],
         target: 'app',
       },
       {
-        id: 'apps',
         identifier: 'apps',
         name: 'Manage Apps',
         colors: ['black', 'white'],
@@ -125,12 +123,10 @@ export class SearchStore {
       ...this.stores.spaceStore.apps.filter(x => x.tabDisplay !== 'permanent'),
       ...this.staticApps(),
     ]
-
     if (query) {
-      return apps.map(this.appToResult)
+      return apps.map(x => this.appToResult(x))
     }
-
-    return [...apps.slice(0, all ? Infinity : 8)].map(this.appToResult)
+    return [...apps.slice(0, all ? Infinity : 8)].map(x => this.appToResult(x))
   }
 
   getQuickResults(query: string, all = false) {

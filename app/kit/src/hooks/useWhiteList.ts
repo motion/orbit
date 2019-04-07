@@ -21,7 +21,7 @@ export function useWhiteList(
       return state[id]
     },
     toggleWhitelisted(id: string) {
-      const next = state || this.props.getAll()
+      const next = state || opts.getAll()
       const index = next.indexOf(id)
       if (index === -1) {
         next.push(id)

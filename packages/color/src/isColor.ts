@@ -59,7 +59,7 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
         return res
       }
     }
-    const newVal: Result = cb.call(this, key)
+    const newVal: Result = cb(key)
     if (mappable) {
       Cache.set(key, newVal)
     }

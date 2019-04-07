@@ -15,7 +15,7 @@ const noop = _ => _
 
 export default function whilst(test, iterator, callback = noop) {
   if (test()) {
-    iterator(function next(err, ...args) {
+    iterator(function next(this: any, err, ...args) {
       if (err) {
         callback(err)
       } else if (test.apply(this, args)) {

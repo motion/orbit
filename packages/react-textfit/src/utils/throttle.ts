@@ -22,7 +22,7 @@ export default function throttle(func, wait) {
     args = null
   }
 
-  return function throttled(...rest) {
+  return function throttled(this: any, ...rest) {
     ctx = this
     args = rest
     const delta = Date.now() - last

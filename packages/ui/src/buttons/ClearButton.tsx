@@ -8,6 +8,7 @@ const ClearClickableArea = gloss(View, {
   padding: 5,
   transition: 'all ease 450ms 100ms',
   opacity: 1,
+  alignItems: 'center',
   hidden: {
     pointerEvents: 'none',
     opacity: 0,
@@ -25,8 +26,14 @@ const ClearFrame = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'default',
+  transform: {
+    y: 1,
+  },
 }).theme((_, theme) => ({
   background: theme.buttonBackground || theme.background.alpha(0.25),
+  '&:hover': {
+    background: theme.buttonBackgroundHover || theme.backgroundHover,
+  },
 }))
 
 export const ClearButton = ({
@@ -37,19 +44,21 @@ export const ClearButton = ({
   onMouseEnter = null,
   onMouseLeave = null,
   children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
-  hover = null,
   hidden = false,
+  hoverStyle,
+  activeStyle,
   ...props
 }) => (
   <ClearClickableArea
     {...{
-      '&:hover': hover,
       onClick,
       onHover,
       onMouseDown,
       onMouseUp,
       onMouseEnter,
       onMouseLeave,
+      hoverStyle,
+      activeStyle,
     }}
     hidden={hidden}
   >

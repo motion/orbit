@@ -90,5 +90,10 @@ function FlexLayout(props: LayoutProps) {
   )
 }
 
-const LayoutRow = gloss(Row)
-const LayoutCol = gloss(Col)
+const LayoutRow = gloss(Row, {
+  flex: 1,
+})
+
+const LayoutCol = gloss(Col, {
+  flex: 1,
+})

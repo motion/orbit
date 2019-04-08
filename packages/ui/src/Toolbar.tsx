@@ -31,6 +31,7 @@ export function Toolbar({
   // todo can make elevation scale with size...
   elevation,
   attach = 'bottom',
+  border,
   ...props
 }: ToolbarProps) {
   return (
@@ -41,7 +42,7 @@ export function Toolbar({
       tooltipProps={{ towards: opposite[attach] as any }}
     >
       <ToolbarChrome elevation={elevation} {...props}>
-        {borderElement[attach]}
+        {border !== false && borderElement[attach]}
         <SpaceGroup space={size}>{children}</SpaceGroup>
       </ToolbarChrome>
     </SurfacePassProps>

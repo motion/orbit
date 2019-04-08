@@ -1,9 +1,9 @@
-import { gloss, Row } from '@o/gloss'
-import { AppLoadContext, AppMainViewProps } from '@o/kit'
-import { Toolbar, View, ViewProps } from '@o/ui'
-import { useReaction } from '@o/use-store'
-import React, { memo, useContext } from 'react'
-import { useStoresSimple } from '../../hooks/useStores'
+import { gloss, Row } from '@o/gloss';
+import { AppLoadContext, AppMainViewProps } from '@o/kit';
+import { Toolbar, View, ViewProps } from '@o/ui';
+import { useReaction } from '@o/use-store';
+import React, { memo, useContext } from 'react';
+import { useStoresSimple } from '../../hooks/useStores';
 
 const toolbarHeight = 36
 
@@ -20,7 +20,13 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   return (
     <OrbitToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
-        <Toolbar padding={0} background="transparent" alignItems="center" justifyContent="center">
+        <Toolbar
+          border={false}
+          padding={0}
+          background="transparent"
+          alignItems="center"
+          justifyContent="center"
+        >
           {props.children}
         </Toolbar>
       </ToolbarInner>

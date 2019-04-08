@@ -119,13 +119,14 @@ const base = Theme.colorize({
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
-const lightButtonBg = linearGradient('#fcfcfc', '#f4f4f4')
+const lightButtonBg = linearGradient('#FAFAFA', '#F2F2F2')
 const light = {
   alternates,
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.75],
     background: lightBackground,
     backgroundStrong: lightBackground.darken(0.025),
     backgroundStronger: lightBackground.darken(0.05),

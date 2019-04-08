@@ -38,11 +38,11 @@ export function selectThemeSubset(themeSelect: ThemeSelect, theme: ThemeObject):
   // generate new subset theme
   const len = themeSelect.length
   const selectedTheme: PartialTheme = {}
-  for (const key in theme) {
-    if (key.indexOf(themeSelect) === 0) {
-      const newKey = key.slice(len)
+  for (const subKey in theme) {
+    if (subKey.indexOf(themeSelect) === 0) {
+      const newKey = subKey.slice(len)
       const newKeyCamelCase = `${newKey[0].toLowerCase()}${newKey.slice(1)}`
-      selectedTheme[newKeyCamelCase] = theme[key]
+      selectedTheme[newKeyCamelCase] = theme[subKey]
     }
   }
 

@@ -29,7 +29,7 @@ export const Glint = gloss<Props>({
     borderLeftRadius,
     borderRadius = 0,
     borderRightRadius,
-    opacity = 0.35,
+    opacity,
     color,
     size = 1,
     y,
@@ -48,7 +48,7 @@ export const Glint = gloss<Props>({
   const autoHalf = (bottom ? 0.5 : -0.5) * size
   const glintColor = color || theme.glintColor || theme.background.alpha(0.5)
   return {
-    opacity,
+    opacity: typeof theme.glintColor !== 'undefined' ? 1 : opacity,
     top: 0,
     height: '100%',
     transform: { y: typeof y === 'number' ? y : autoHalf },

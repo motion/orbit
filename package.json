@@ -63,7 +63,9 @@
     "verdaccio": "3.10.1",
     "microbundle": "0.10.1",
     "jest": "24.5.0",
-    "ts-jest": "24.0.0"
+    "ts-jest": "24.0.0",
+    "memoize-one": "^5.0.4",
+    "react-window": "https://github.com/bvaughn/react-window#ccde38c7d374999e06614915f6abe2681dd08a20"
   },
   "scripts": {
     "watch": "source .env && build --watch",

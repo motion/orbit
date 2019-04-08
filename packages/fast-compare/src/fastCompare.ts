@@ -5,12 +5,14 @@ const hasElementType = typeof Element !== 'undefined'
 
 export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 
-export function isEqual(a, b) {
+type IgnoreKeys = { [key: string]: boolean }
+
+export function isEqual(a, b, ignoreKeys?: IgnoreKeys) {
   if (process.env.NODE_ENV !== 'development') {
-    return isEqualInner(a, b)
+    return isEqualInner(a, b, ignoreKeys)
   }
   try {
-    return isEqualInner(a, b)
+    return isEqualInner(a, b, ignoreKeys)
   } catch (err) {
     if ((err.message && err.message.match(/stack|recursion/i)) || err.number === -2146828260) {
       // warn on circular references, don't crash
@@ -29,7 +31,7 @@ export function isEqual(a, b) {
   }
 }
 
-function isEqualInner(a, b) {
+function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
   // fast-deep-equal index.js 2.0.1
   if (a === b) return true
 
@@ -82,6 +84,9 @@ function isEqualInner(a, b) {
     // custom handling for React
     for (i = length; i-- !== 0; ) {
       key = keys[i]
+      if (ignoreKeys && ignoreKeys[key]) {
+        continue
+      }
       if (key === '_owner' && a.$$typeof) {
         // React-specific: avoid traversing React elements' _owner.
         //  _owner contains circular references

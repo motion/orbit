@@ -1,5 +1,5 @@
 import { Layout, Pane } from '@o/ui'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ListProps, SearchableList } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
@@ -15,11 +15,11 @@ export function MasterDetail({ children, placeholder, ...listProps }: MasterDeta
       <Pane resizable>
         <SearchableList
           selectable
-          onSelect={rows => {
+          onSelect={useCallback(rows => {
             if (rows.length) {
               setSelected(rows[0])
             }
-          }}
+          }, [])}
           {...listProps}
           itemProps={{ iconBefore: true, ...listProps.itemProps }}
         />

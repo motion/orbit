@@ -29,7 +29,7 @@ debugUseStore(event => {
   if (event.type === 'state') {
     globalizeStores(event.value)
   } else {
-    console.debug('event', event)
+    console.warn('event', event)
   }
 })
 

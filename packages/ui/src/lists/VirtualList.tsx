@@ -1,18 +1,8 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, {
-  createContext,
-  forwardRef,
-  memo,
-  RefObject,
-  useCallback,
-  useContext,
-  useRef,
-} from 'react'
-import { areEqual } from 'react-window'
+import React, { createContext, forwardRef, RefObject, useCallback, useContext, useRef } from 'react'
 import { Config } from '../helpers/configure'
 import { useDefaultProps } from '../hooks/useDefaultProps'
-import { useGet } from '../hooks/useGet'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
@@ -38,33 +28,29 @@ const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 export function VirtualList(rawProps: VirtualListProps<any>) {
   const defaultProps = useContext(VirtualListDefaultProps)
   const props = useDefaultProps(defaultProps, rawProps)
-  const getProps = useGet(props)
   const fallback = useRef<SelectableStore>(null)
   const selectableStoreRef = props.selectableStoreRef || fallback
   const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
+  const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = props
 
-  const Row = memo(
+  console.log('render virtual list')
+
+  const Row = useCallback(
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
-      console.log('render', index, style)
-      const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
       const item = items[index]
-      if (!item) {
-        console.warn('bad item!, we need to enforce better key/refreshing items in sync')
-        return null
-      }
       return (
         <VirtualListItem
           forwardRef={ref}
           key={Config.getItemKey(item)}
           ItemView={ItemView}
-          onClick={e => onSelect(index, e)}
-          onDoubleClick={e => onOpen(index, e)}
+          onClick={useCallback(e => onSelect(index, e), [])}
+          onDoubleClick={useCallback(e => onOpen(index, e), [])}
           disabled={!sortable}
           {...getSeparatorProps(items, item, index)}
           {...props.itemProps}
           {...getItemProps && getItemProps(item, index, items)}
-          onMouseDown={e => selectableStoreRef.current.setRowActive(index, e)}
-          onMouseEnter={() => selectableStoreRef.current.onHoverRow(index)}
+          onMouseDown={useCallback(e => selectableStoreRef.current.setRowActive(index, e), [])}
+          onMouseEnter={useCallback(() => selectableStoreRef.current.onHoverRow(index), [])}
           selectableStore={selectableStoreRef.current}
           {...item}
           index={index}
@@ -73,7 +59,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         />
       )
     }),
-    areEqual,
+    [onSelect, onOpen, getItemProps, items, selectableStoreRef.current],
   )
 
   return (
@@ -85,7 +71,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       lockAxis="y"
       {...dynamicListProps}
     >
-      {useCallback(Row, [])}
+      {Row as any}
     </SortableList>
   )
 }

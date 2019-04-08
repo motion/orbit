@@ -90,6 +90,7 @@ export function List({
   // const { getShareMenuItemProps } = useShareMenu()
   const extraProps = useContext(ListPropsContext)
   const props = extraProps ? mergeDefined(extraProps, listProps) : listProps
+  const getProps = useGet(props)
   const { items, onOpen, placeholder, getItemProps, search, shareable, ...restProps } = props
   const internalRef = useRef<SelectableStore>(null)
   const selectableStoreRef = listProps.selectableStoreRef || internalRef
@@ -150,11 +151,12 @@ export function List({
         const appProps = getAppProps(toListItemProps(selectedRows[0]))
         onSelectItem(selectedIndices[0], appProps)
       }
-      if (props.onSelect) {
-        props.onSelect(selectedRows)
+      const onSelect = getProps().onSelect
+      if (onSelect) {
+        onSelect(selectedRows)
       }
     },
-    [props.onSelect, shareable, onSelectItem],
+    [shareable, onSelectItem],
   )
 
   const getItemPropsInner = useCallback((a, b, c) => {

@@ -44,7 +44,7 @@ export function omitSelectableProps(props: any) {
 }
 
 export function useSelectableStore(props: SelectableProps) {
-  return useStore(SelectableStore, pickSelectableProps(props))
+  return useStore(SelectableStore, pickSelectableProps(props), { react: false })
 }
 
 export class SelectableStore {

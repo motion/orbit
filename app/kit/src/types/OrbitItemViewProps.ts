@@ -5,7 +5,6 @@ import { NormalItem } from './NormalItem'
 export type OrbitItemViewProps = {
   item?: Bit
   normalizedItem?: Partial<NormalItem>
-  isExpanded?: boolean
   shownLimit?: number
   searchTerm?: string
   renderText?: ItemRenderText

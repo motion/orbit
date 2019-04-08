@@ -170,7 +170,7 @@ export const ListItem = memoIsEqualDeep(
 
     return (
       <Theme alternate={isSelected ? 'selected' : null}>
-        <div style={style} ref={forwardRef || ref}>
+        <div style={style} ref={(forwardRef || ref) as any}>
           {above}
           {!!separator && (
             <Theme name={activeThemeName}>

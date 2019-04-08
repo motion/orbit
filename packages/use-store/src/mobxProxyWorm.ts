@@ -5,7 +5,7 @@ import { isAction, isObservableObject } from 'mobx'
 const IS_PROXY = Symbol('IS_PROXY')
 export const GET_STORE = Symbol('GET_STORE')
 
-type ProxyWorm<A extends Function> = {
+export type ProxyWorm<A extends Function> = {
   state: ProxyWormState
   store: A
   track(component: any, debug?: boolean): () => Set<string>
@@ -41,10 +41,10 @@ export function resetTracking() {
 }
 
 // short ids for debug mode
-let id = 0
-const nextId = () => {
-  id = (id + 1) % Number.MAX_SAFE_INTEGER
-  return id
+let uid = 0
+const getUID = () => {
+  uid = (uid + 1) % Number.MAX_SAFE_INTEGER
+  return uid
 }
 
 export function mobxProxyWorm<A extends Function>(
@@ -61,7 +61,10 @@ export function mobxProxyWorm<A extends Function>(
     add: (next: string) => {
       if (state.current !== -1) {
         if (state.debug) console.log('add key', next, state.current)
-        state.keys.get(state.current).add(next)
+        const curState = state.keys.get(state.current)
+        if (curState) {
+          curState.add(next)
+        }
       }
     },
   }
@@ -119,7 +122,7 @@ export function mobxProxyWorm<A extends Function>(
     state,
     store,
     track(dbg?: boolean) {
-      const id = nextId()
+      const id = getUID()
       state.current = id
       state.debug = dbg || false
       state.ids.add(id)
@@ -131,8 +134,10 @@ export function mobxProxyWorm<A extends Function>(
           state.ids.delete(id)
           const res = state.keys.get(id)
           state.keys.delete(id)
-          filterShallowKeys(res)
-          return res
+          if (res) {
+            filterShallowKeys(res)
+            return res
+          }
         }
         return emptySet
       }

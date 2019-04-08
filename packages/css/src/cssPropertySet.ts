@@ -768,14 +768,15 @@ export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
 // allows functional or non-functional
-type CSSPropertyVal<A, B> = B extends false
-  ? A | 'inherit' | 'initial'
+type CSSPropertyVal<IsFunctional, Val> = Val extends false
+  ? IsFunctional | 'inherit' | 'initial' | false
   :
-      | A
+      | IsFunctional
       | 'inherit'
       | 'initial'
-      | ((theme: ThemeObject) => A)
-      | ((theme: ThemeObject, props: any) => A)
+      | ((theme: ThemeObject) => IsFunctional)
+      | ((theme: ThemeObject, props: any) => IsFunctional)
+      | false
 
 export type GenerateCSSPropertySet<A extends true | false> = {
   alignContent?: CSSPropertyVal<alignContent, A>

@@ -150,7 +150,7 @@ export class Logger {
     // for syncer process with no-logging mode we do not log objects in messages
     if (loggingEnabled === false && process.env.PROCESS_NAME === 'syncers') {
       messages = messages.filter(message => {
-        return typeof message !== "object"
+        return typeof message !== 'object'
       })
     }
 
@@ -158,7 +158,7 @@ export class Logger {
     // only do this in development it adds a decent amount of overhead
     let traceLog
     if (isTrace) {
-      let where = new Error().stack
+      let where = `${new Error().stack}`
       const { STACK_FILTER } = process.env
       if (STACK_FILTER) {
         // replace stack so it looks less stack-y

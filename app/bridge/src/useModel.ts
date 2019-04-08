@@ -25,8 +25,8 @@ function use<ModelType, Args>(
   const forceUpdate = useState(0)[1]
   const valueRef = useRef(options.defaultValue || defaultValues[type])
   const value = valueRef.current
-  const subscription = useRef(null)
-  const curQuery = useRef(null)
+  const subscription = useRef<any>(null)
+  const curQuery = useRef({})
   // const id = useRef(Math.random())
 
   const dispose = () => {

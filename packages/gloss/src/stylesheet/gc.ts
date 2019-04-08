@@ -91,7 +91,7 @@ export class GarbageCollector {
   haltGarbage() {
     if (this.garbageTimer) {
       clearTimeout(this.garbageTimer)
-      this.garbageTimer = null
+      this.garbageTimer = undefined
     }
   }
 
@@ -103,12 +103,14 @@ export class GarbageCollector {
     this.haltGarbage()
     for (const name of this.classRemovalQueue) {
       const trackerInfo = this.tracker.get(name)
-      invariant(trackerInfo != null, 'trying to remove unknown class')
-      const { rules } = trackerInfo
-      this.rulesToClass.delete(rules)
-      this.sheet.delete(name)
-      this.tracker.delete(name)
-      this.usedClasses.delete(name)
+      invariant(!!trackerInfo, 'trying to remove unknown class')
+      if (trackerInfo) {
+        const { rules } = trackerInfo
+        this.rulesToClass.delete(rules)
+        this.sheet.delete(name)
+        this.tracker.delete(name)
+        this.usedClasses.delete(name)
+      }
     }
     this.classRemovalQueue.clear()
   }

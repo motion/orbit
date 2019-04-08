@@ -1,15 +1,21 @@
 // import * as path from 'path'
-import { AppBit, getGlobalConfig, Logger, ServiceLoader, ServiceLoaderAppSaveCallback, sleep } from '@o/kit'
+import {
+  AppBit,
+  getGlobalConfig,
+  Logger,
+  ServiceLoader,
+  ServiceLoaderAppSaveCallback,
+  sleep,
+} from '@o/kit'
 import { uniqBy } from 'lodash'
-import { DriveQueries } from './DriveQueries'
 import { DriveAbout, DriveComment, DriveFile, DriveLoadedFile, DriveRevision } from './DriveModels'
+import { DriveQueries } from './DriveQueries'
 
 /**
  * Defines a loading throttling.
  * This is required to not overload user network with service queries.
  */
 const THROTTLING = {
-
   /**
    * Delay before files load.
    */
@@ -33,8 +39,7 @@ const THROTTLING = {
   /**
    * Delay before file thumbnail download.
    */
-  thumbnailDownload: 100
-
+  thumbnailDownload: 100,
 }
 
 /**
@@ -55,7 +60,7 @@ export class DriveLoader {
         Authorization: `Bearer ${this.app.token}`,
         'Access-Control-Allow-Origin': getGlobalConfig().urls.server,
         'Access-Control-Allow-Methods': 'GET',
-      }
+      },
     })
   }
 
@@ -83,9 +88,11 @@ export class DriveLoader {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         // try to find a file folder to create a Bit.location later on
-        let parent: DriveFile
-        if (file.parents && file.parents.length)
+        let parent: DriveFile | null = null
+
+        if (file.parents && file.parents.length) {
           parent = files.find(otherFile => otherFile.id === file.parents[0])
+        }
 
         // const thumbnailFilePath = await this.downloadThumbnail(file)
         const content = await this.loadFileContent(file)
@@ -109,6 +116,7 @@ export class DriveLoader {
           comments,
           revisions,
           users: uniqBy(users, user => user.emailAddress),
+          // @ts-ignore
           parent,
         }
         try {

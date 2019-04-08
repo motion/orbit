@@ -20,11 +20,15 @@ export function getAlternateTheme(
   if (!altCache.has(theme)) {
     altCache.set(theme, {})
   }
-  const cached = altCache.get(theme)[name]
-  if (cached) return cached
-  const next = selectIsPropStyles(theme, name, shouldFallback)
-  altCache.get(theme)[name] = next
-  return next
+  const cachedThemes = altCache.get(theme)
+  if (cachedThemes) {
+    const cached = cachedThemes[name]
+    if (cached) return cached
+    const next = selectIsPropStyles(theme, name, shouldFallback)
+    cachedThemes[name] = next
+    return next
+  }
+  return null
 }
 
 function selectIsPropStyles(theme: ThemeObject, alt: string, shouldFallback?: boolean) {

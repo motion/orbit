@@ -2,7 +2,7 @@ import { unstable_batchedUpdates } from 'react-dom'
 
 const Updates = new Set()
 
-let tm = null
+let tm = setImmediate(() => {})
 
 export function queueUpdate(fn: Function) {
   clearImmediate(tm)
@@ -12,7 +12,7 @@ export function queueUpdate(fn: Function) {
     let next = [...Updates]
     Updates.clear()
     unstable_batchedUpdates(() => {
-      next.forEach(fn => fn())
+      next.forEach(cb => cb())
     })
   })
 }

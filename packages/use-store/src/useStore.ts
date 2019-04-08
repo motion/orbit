@@ -36,7 +36,6 @@ export const shallow = <X>(x: X) => {
 
 export type UseStoreOptions = {
   debug?: boolean
-  conditionalUse?: boolean
   react?: boolean
 }
 
@@ -53,10 +52,9 @@ export function disposeStore(store: any, component?: CurrentComponent) {
   store.dispose()
 }
 
-let currentHooks = null
+let currentHooks: any[] = []
 
 export function useHook<A extends (...args: any[]) => any>(cb: A): ReturnType<A> {
-  currentHooks = currentHooks || []
   currentHooks.push(cb)
   return cb()
 }
@@ -66,7 +64,7 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   const AutomagicStore = decorate(Store, props)
 
   // capture hooks for this store, must be before new AutomagicStore()
-  currentHooks = null
+  currentHooks = []
   const store = new AutomagicStore()
 
   if (config.onMount) {
@@ -88,14 +86,21 @@ function setupReactiveStore<A>(Store: new () => A, props?: Object) {
   }
 }
 
+type ReactiveStoreState = {
+  store: any
+  initialState: HydrationState | null
+  hooks: any[] | null
+  hasProps: boolean | null
+}
+
 function useReactiveStore<A extends any>(
   Store: new () => A,
   props?: any,
-): { store: A; hasChangedSource: boolean } {
+): { store: A; hasChangedSource: boolean } | null {
   const forceUpdate = useForceUpdate()
-  const state = useRef({
+  const state = useRef<ReactiveStoreState>({
     store: null,
-    initialState: null as HydrationState, // for hmr hydration
+    initialState: null,
     hooks: null,
     hasProps: null,
   })
@@ -108,10 +113,12 @@ function useReactiveStore<A extends any>(
 
   if (!store || hasChangedSource) {
     // sets up store and does some hmr state preservation logic
-    let previousState: HydrationState
-    let previousInitialState: HydrationState
+    let previousState: HydrationState | null = null
+    let previousInitialState: HydrationState | null = null
     if (hasChangedSource) {
-      previousInitialState = state.current.initialState
+      if (state.current.initialState) {
+        previousInitialState = state.current.initialState
+      }
       previousState = dehydrate(state.current.store)
       disposeStore(state.current.store)
     }
@@ -157,7 +164,7 @@ export function useStore<A>(
   const rerender = useForceUpdate()
   const lastStore = useRef(Store)
   const instantiated = useRef(Store && Store['constructor'].name !== 'Function').current
-  let store = null
+  let store: A | null = null
 
   if (instantiated) {
     if (options && options.react === false) {
@@ -169,14 +176,13 @@ export function useStore<A>(
     store = (Store as unknown) as A
     store = useTrackableStore(store, rerender, { ...options, component, shouldUpdate })
   } else {
-    store = Store as new () => A
-    const res = useReactiveStore(store, props)
+    const res = useReactiveStore(Store as new () => A, props)
     store = res && res.store
     if (!options || options.react !== false) {
       store = useTrackableStore(store, rerender, {
         ...options,
         component,
-        shouldUpdate: res && res.hasChangedSource,
+        shouldUpdate: res ? res.hasChangedSource : undefined,
       })
     }
   }
@@ -184,15 +190,13 @@ export function useStore<A>(
   // dispose on unmount
   useEffect(() => {
     if (instantiated) {
-      return () => store && disposeStore(store, component)
+      return () => {
+        store && disposeStore(store, component)
+      }
     }
   }, [])
 
-  if (options && options.conditionalUse === false) {
-    return null
-  }
-
-  return store
+  return store as A
 }
 
 // no tracking

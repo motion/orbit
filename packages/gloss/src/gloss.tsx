@@ -234,12 +234,8 @@ export function gloss<Props = any>(
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: GlossThemeFn<any> | null = null
-  let ThemedView = null
 
-  const InnerThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(
-    props,
-    ref,
-  ) {
+  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
@@ -303,7 +299,7 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }) as unknown) as GlossView<Props>
 
-  ThemedView = (memo(InnerThemedView, isEqual) as unknown) as GlossView<Props>
+  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {
     themeFns: null,
@@ -321,7 +317,6 @@ export function gloss<Props = any>(
   ThemedView.withConfig = config => {
     if (config.displayName) {
       ThemedView.displayName = config.displayName
-      InnerThemedView.displayName = config.displayName
     }
     return ThemedView
   }
@@ -352,7 +347,7 @@ const arrToDict = (obj: Object) => {
   return obj
 }
 
-const addStyles = (id: string, baseStyles: Object, nextStyles: CSSPropertySet | null) => {
+const addStyles = (id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) => {
   const propStyles = {}
   for (const key in nextStyles) {
     // dont overwrite as we go down

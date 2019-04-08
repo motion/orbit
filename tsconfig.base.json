@@ -12,7 +12,7 @@
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "strictFunctionTypes": true,
     "removeComments": true,
     "preserveConstEnums": true,

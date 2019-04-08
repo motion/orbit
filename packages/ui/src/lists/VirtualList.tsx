@@ -33,8 +33,6 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
   const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = props
 
-  console.log('render virtual list')
-
   const Row = useCallback(
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
       const item = items[index]

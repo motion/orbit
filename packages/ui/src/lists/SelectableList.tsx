@@ -19,8 +19,6 @@ export function useSelectableProps(props: SelectableListProps, ref) {
   const internalRef = useRef<DynamicListControlled>(null)
   const listRef = props.listRef || ref || internalRef
 
-  console.log('rendering this')
-
   useEffect(() => {
     selectableStore.setListRef(listRef.current)
   }, [listRef])

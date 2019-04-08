@@ -32,7 +32,19 @@ for (const key in CAMEL_TO_SNAKE) {
 // various helpful constants
 
 export const UNDEFINED = 'undefined'
-export const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
+
+// TODO this could be dynamic
+// not the best tradeoff here for understanding where you can pass in colors
+export const COLOR_KEYS = new Set([
+  'color',
+  'background-color',
+  'border-color',
+  'border-bottom-color',
+  'border-top-color',
+  'border-left-color',
+  'border-right-color',
+])
+
 export const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',

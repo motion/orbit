@@ -144,6 +144,7 @@ const light = {
     buttonBackgroundActive: linearGradient('#eee', '#e9e9e9'),
     buttonBackgroundFocus: lightButtonBg,
     buttonBackgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
+    buttonBorderColorBottom: 'red',
     borderColor: [220, 220, 220],
     borderColorActive: [220, 220, 220],
     borderColorHover: [220, 220, 220],

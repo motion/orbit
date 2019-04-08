@@ -42,10 +42,10 @@ const themeKeys: KeyMap = [
   ['color', 'color'],
   ['background', 'background'],
   ['borderColor', 'borderColor'],
-  ['borderColorBottom', 'borderColorBottom'],
-  ['borderColorTop', 'borderColorTop'],
-  ['borderColorLeft', 'borderColorLeft'],
-  ['borderColorRight', 'borderColorRight'],
+  ['borderColorBottom', 'borderBottomColor'],
+  ['borderColorTop', 'borderTopColor'],
+  ['borderColorLeft', 'borderLeftColor'],
+  ['borderColorRight', 'borderRightColor'],
 ]
 
 function assignThemeStyles(styles: Object, props: Object, theme: ThemeObject, keyMap: KeyMap) {
@@ -119,6 +119,8 @@ export const propsToThemeStyles = (
       Object.assign(styles, stateStyle)
     }
   }
+
+  console.log('styles', styles)
 
   return styles
 }

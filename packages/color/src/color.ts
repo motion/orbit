@@ -123,6 +123,11 @@ export class Color {
     }
   }
 
+  toCSS() {
+    const { r, g, b, a } = this.rgbaObject()
+    return `rgba(${r},${g},${b},${a})`
+  }
+
   get _equalityKey() {
     return this.toString()
   }

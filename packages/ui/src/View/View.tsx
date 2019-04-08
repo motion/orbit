@@ -74,7 +74,7 @@ const getPadding = (props: PaddedProps) => {
       const { top, left, right, bottom, x, y } = props.pad
       if (isDefined(x) || isDefined(y)) {
         return {
-          padding: [x, y, x, y].map(x => getSpaceSize(x)),
+          padding: [x, y, x, y].map(val => getSpaceSize(val)),
         }
       }
       return {

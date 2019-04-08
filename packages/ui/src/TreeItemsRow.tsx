@@ -22,16 +22,14 @@ type TreeItemsRowProps = {
   even: boolean
   onTreeItemSelected: (key: TreeItemID) => void
   onTreeItemExpanded: (key: TreeItemID, deep: boolean) => void
+  onTreeItemHovered?: (key: TreeItemID | null) => void
   childrenCount: number
-  onTreeItemHovered?: (key?: TreeItemID) => void
   style?: Object
   height: number
 }
 
 export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
   state = { hovered: false }
-
-  interaction: (name: string, data: any) => void
 
   getContextMenu = (): any[] => {
     const { props } = this
@@ -216,13 +214,13 @@ class PartialHighlight extends React.PureComponent<{
       const before = content.substring(0, highlightStart)
       const match = content.substring(highlightStart, highlightEnd)
       const after = content.substring(highlightEnd)
-      renderedValue = [
+      renderedValue = (
         <span>
           {before}
           <HighlightedText selected={selected}>{match}</HighlightedText>
           {after}
-        </span>,
-      ]
+        </span>
+      )
     } else {
       renderedValue = <span>{content}</span>
     }

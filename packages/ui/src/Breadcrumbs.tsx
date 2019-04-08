@@ -1,5 +1,5 @@
 import { Row, RowProps } from '@o/gloss'
-import { ensure, react, useReaction, useStore } from '@o/use-store'
+import { ensure, react, Store, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
@@ -13,18 +13,16 @@ export type BreadcrumbsProps = Omit<RowProps, 'children'> & {
   children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }
 
-class BreadcrumbStore {
-  props: {
-    // TODO this isnt passing down
-    separator: BreadcrumbsProps['separator']
-  }
+class BreadcrumbStore extends Store<{
+  separator: BreadcrumbsProps['separator']
+}> {
   selectors = new ObservableSet<string>()
 
   orderedChildren = react(
     () => [...this.selectors],
     async (selectors, { sleep }) => {
       ensure('selectors', !!selectors.length)
-      await sleep()
+      await sleep(0)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>
         selectors.find(sel => node.classList.contains(sel)),
@@ -46,7 +44,7 @@ class BreadcrumbStore {
 }
 
 export function Breadcrumbs({ separator, ...props }: BreadcrumbsProps) {
-  const store = useStore(BreadcrumbStore, { separator })
+  const store = useStore(BreadcrumbStore as any, { separator })
   return (
     <MergeContext Context={Context} value={store}>
       <Row alignItems="center" {...props} />

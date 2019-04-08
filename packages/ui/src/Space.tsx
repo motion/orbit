@@ -1,6 +1,6 @@
 import { gloss } from '@o/gloss'
 
-export type Sizes = 'sm' | 'md' | 'lg' | 'xl' | number | boolean
+export type Sizes = 'sm' | 'md' | 'lg' | 'xl' | number | boolean | undefined
 
 export type SpaceProps = {
   space?: Sizes

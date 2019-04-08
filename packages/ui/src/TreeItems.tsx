@@ -14,16 +14,16 @@ type FlatTreeItems = FlatTreeItem[]
 
 export class TreeItems extends React.PureComponent<
   TreeProps & {
+    rowHeight: number
     width: number
     height: number
-  },
-  {
+  }
+> {
+  state: {
     flatKeys: TreeItemID[]
     flatTreeItems: FlatTreeItems
     maxDepth: number
-  }
-> {
-  state = {
+  } = {
     flatTreeItems: [],
     flatKeys: [],
     maxDepth: -1,
@@ -34,7 +34,7 @@ export class TreeItems extends React.PureComponent<
       return null
     }
     const flatTreeItems: FlatTreeItems = []
-    const flatKeys = []
+    const flatKeys: number[] = []
     let maxDepth = 0
     function seed(key: TreeItemID, level: number) {
       const element = props.elements[key]
@@ -49,8 +49,8 @@ export class TreeItems extends React.PureComponent<
       })
       flatKeys.push(key)
       if (element.children != null && element.children.length > 0 && element.expanded) {
-        for (const key of element.children) {
-          seed(key, level + 1)
+        for (const child of element.children) {
+          seed(child, level + 1)
         }
       }
     }
@@ -176,13 +176,13 @@ export class TreeItems extends React.PureComponent<
         level={row.level}
         id={row.key}
         key={row.key}
-        even={zebra && index % 2 === 0}
+        even={!!zebra && index % 2 === 0}
         onTreeItemExpanded={onTreeItemExpanded}
         onTreeItemHovered={onTreeItemHovered}
         onTreeItemSelected={onTreeItemSelected}
         selected={selected === row.key}
         matchingSearchQuery={
-          searchResults && searchResults.matches.has(row.key) ? searchResults.query : null
+          searchResults && searchResults.matches.has(row.key) ? searchResults.query : ''
         }
         element={row.element}
         childrenCount={childrenCount}
@@ -192,7 +192,7 @@ export class TreeItems extends React.PureComponent<
     )
   }
 
-  keyMapper = (index: number): string => {
+  keyMapper = (index: number): number => {
     return this.state.flatTreeItems[index].key
   }
 

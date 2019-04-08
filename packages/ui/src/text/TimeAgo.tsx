@@ -21,7 +21,7 @@ export class TimeAgo extends React.Component<TimeAgoProps> {
     timeInterval: 60 * 1000,
   }
 
-  interval = null
+  interval: any = null
 
   componentDidMount() {
     if (this.props.isLive) {
@@ -62,6 +62,9 @@ export class TimeAgo extends React.Component<TimeAgoProps> {
 
   getParsedDate() {
     const diff = this.getDifference()
+    if (!this.date) {
+      return null
+    }
     if (diff < 30) {
       return 'now'
     } else {

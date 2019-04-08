@@ -46,7 +46,7 @@ export type Highlights = {
 export class Text extends React.PureComponent<TextProps> {
   selected = false
   editable = false
-  node = null
+  node: any = null
 
   static contextType = ScaleContext
 
@@ -76,7 +76,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   measure() {
-    if (this.props.ellipse > 1) {
+    if (this.props.ellipse && this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,

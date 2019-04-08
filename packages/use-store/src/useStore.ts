@@ -5,6 +5,7 @@ import { config } from './configure'
 import { debugEmit } from './debugUseStore'
 import { dehydrate, hydrate, HydrationState } from './hydration'
 import { useTrackableStore } from './setupTrackableStore'
+import { ReactiveStore } from './Store'
 
 export {
   always,
@@ -23,6 +24,7 @@ export { createStoreContext } from './createStoreContext'
 export { createUseStores, UseStoresOptions } from './createUseStores'
 export { debugUseStore } from './debugUseStore'
 export { GET_STORE, resetTracking } from './mobxProxyWorm'
+export { Store } from './Store'
 
 // helpers for deep/shallow objects, which dont mess up types
 
@@ -155,7 +157,7 @@ function useReactiveStore<A extends any>(
 
 // allows us to use instantiated or non-instantiated stores
 // sets up tracking so the component auto re-renders
-export function useStore<A>(
+export function useStore<A extends ReactiveStore<any> | any>(
   Store: { new (): A } | A,
   props?: A extends { props: infer R } ? R : undefined,
   options?: UseStoreOptions,

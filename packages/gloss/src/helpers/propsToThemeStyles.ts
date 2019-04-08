@@ -120,7 +120,5 @@ export const propsToThemeStyles = (
     }
   }
 
-  console.log('styles', styles)
-
   return styles
 }

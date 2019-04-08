@@ -66,7 +66,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
   } = props
   const hasTitle = !!(title || afterTitle)
   const outerPad = hasTitle ? false : pad
-  const innerPad = selectDefined(padInner, hasTitle ? pad : null)
+  const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   return (
     <SizedSurface
       forwardRef={ref}
@@ -99,7 +99,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
-          pad={titleBorder ? true : innerPad}
+          pad={titleBorder || bordered ? true : innerPad}
         />
       )}
       <Col

@@ -7,11 +7,11 @@ import {
   Form,
   Layout,
   Pane,
+  Row,
   SearchInput,
   Section,
   Select,
   Space,
-  SpaceGroup,
   Tab,
   Tabs,
   useFetch,
@@ -32,19 +32,17 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
-  console.log('users', users)
-
   return (
     <Form use={form}>
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <SpaceGroup>
+              <Row space spaceAround>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </SpaceGroup>
+              </Row>
               <Table
                 selectable="multi"
                 shareable
@@ -68,7 +66,7 @@ export function CustomApp1() {
                   >
                     <DefinitionList row={row} />
                   </Card>
-                  <Space size={20} />
+                  <Space />
                 </>
               ))}
             </Pane>

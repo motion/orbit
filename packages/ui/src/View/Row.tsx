@@ -5,12 +5,12 @@ import { ScrollableView, ScrollableViewProps } from './ScrollableView'
 export type RowProps = ScrollableViewProps & SpaceGroupProps
 
 export const Row = forwardRef(function Row(
-  { space, spaceAround, children, ...props }: RowProps,
+  { space, spaceAround, separator, children, ...props }: RowProps,
   ref,
 ) {
   return (
     <ScrollableView ref={ref} flexDirection="row" {...props}>
-      <SpaceGroup spaceAround={spaceAround} space={space}>
+      <SpaceGroup spaceAround={spaceAround} space={space} separator={separator}>
         {children}
       </SpaceGroup>
     </ScrollableView>

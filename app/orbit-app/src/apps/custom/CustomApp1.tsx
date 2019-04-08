@@ -11,7 +11,7 @@ import {
   Section,
   Select,
   Space,
-  SpacedRow,
+  SpaceGroup,
   Tab,
   Tabs,
   useFetch,
@@ -40,11 +40,11 @@ export function CustomApp1() {
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <SpacedRow>
+              <SpaceGroup>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </SpacedRow>
+              </SpaceGroup>
               <Table
                 selectable="multi"
                 shareable

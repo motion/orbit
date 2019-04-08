@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
+import { SpaceGroup, SpaceGroupProps } from '../SpaceGroup'
 import { ScrollableView, ScrollableViewProps } from './ScrollableView'
-import { SpaceGroup, SpaceGroupProps } from './SpaceGroup'
 
 export type RowProps = ScrollableViewProps & SpaceGroupProps
 

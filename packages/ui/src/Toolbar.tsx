@@ -2,9 +2,9 @@ import { gloss } from '@o/gloss'
 import React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Sizes } from './Space'
+import { SpaceGroup } from './SpaceGroup'
 import { SurfacePassProps } from './Surface'
 import { Row, RowProps } from './View/Row'
-import { SpaceGroup } from './View/SpaceGroup'
 
 export type ToolbarProps = RowProps & {
   attach?: 'bottom' | 'left' | 'right' | 'top'

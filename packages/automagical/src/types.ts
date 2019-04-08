@@ -7,7 +7,7 @@ export type EffectCallback = (resolve: any, reject: any) => Function | void
 export type ReactionHelpers = {
   setValue: (a: any) => void
   getValue: () => any
-  sleep: (ms: number) => Promise<void>
+  sleep: (ms?: number) => Promise<void>
   when: (condition: () => boolean, ms?: number) => Promise<void>
   whenChanged: <A>(condition: () => A, dontCompare?: boolean) => Promise<A>
   useEffect: (cb: EffectCallback) => void

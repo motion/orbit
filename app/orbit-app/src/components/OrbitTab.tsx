@@ -1,5 +1,5 @@
 import { invertLightness } from '@o/color'
-import { Absolute, gloss, linearGradient, Row, useTheme, ViewProps } from '@o/gloss'
+import { Absolute, gloss, linearGradient, Row, useTheme } from '@o/gloss'
 import { Icon, useLocationLink } from '@o/kit'
 import { AppBit } from '@o/models'
 import {
@@ -12,6 +12,8 @@ import {
   SimpleText,
   Tooltip,
   useContextMenu,
+  View,
+  ViewProps,
 } from '@o/ui'
 import * as React from 'react'
 
@@ -188,7 +190,7 @@ const NavButtonChromeInner = gloss({
   padding: [0, sidePad],
 }))
 
-const NavButtonChrome = gloss<TabProps>({
+const NavButtonChrome = gloss<TabProps>(View, {
   position: 'relative',
   flexFlow: 'row',
   justifyContent: 'center',
@@ -201,14 +203,12 @@ const NavButtonChrome = gloss<TabProps>({
   },
 }).theme(({ width, isActive, stretch }, theme) => {
   const background = linearGradient(theme.tabBackgroundTop, theme.tabBackgroundBottom)
-
   const glowStyle = {
     background: isActive
       ? background
       : linearGradient(theme.tabInactiveHover, 'transparent' || [0, 0, 0, 0.05]),
     transition: isActive ? 'none' : tabTransition,
   }
-
   return {
     zIndex: isActive ? 1000000000 : 0,
     width: stretch ? width || 150 : 'auto',

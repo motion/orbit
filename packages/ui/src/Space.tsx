@@ -3,7 +3,7 @@ import { gloss } from '@o/gloss'
 export type Sizes = 'sm' | 'md' | 'lg' | 'xl' | number | boolean | undefined
 
 export type SpaceProps = {
-  space?: Sizes
+  size?: Sizes
 }
 
 export const spaceSizes = {
@@ -26,12 +26,10 @@ export function getSpaceSize(space: Sizes) {
   return spaceSizes[space] || 0
 }
 
-function spaceTheme(props: SpaceProps) {
-  const spacing = getSpaceSize(props.space)
+export const Space = gloss<SpaceProps>().theme((props: SpaceProps) => {
+  const spacing = getSpaceSize(props.size)
   return {
     width: spacing,
     height: spacing,
   }
-}
-
-export const Space = gloss<SpaceProps>().theme(spaceTheme)
+})

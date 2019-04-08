@@ -1,5 +1,5 @@
 import { ItemType } from './ItemType'
-import { Space } from './Space'
+import { Space } from './SpaceInterface'
 
 export interface AppBit {
   target: 'app'

@@ -11,7 +11,7 @@ import {
 } from 'typeorm'
 import { AppBit } from '../interfaces/AppBit'
 import { ItemType } from '../interfaces/ItemType'
-import { Space } from '../interfaces/Space'
+import { Space } from '../interfaces/SpaceInterface'
 import { SpaceEntity } from './SpaceEntity.node'
 
 @Entity()

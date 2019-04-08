@@ -11,7 +11,7 @@ export * from './interfaces/Job'
 export * from './interfaces/JobStatus'
 export * from './interfaces/JobType'
 export * from './interfaces/Location'
-export * from './interfaces/Space'
+export * from './interfaces/SpaceInterface'
 export * from './interfaces/User'
 export * from './models'
 

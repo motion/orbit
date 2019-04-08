@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { AppBit } from '../interfaces/AppBit'
-import { Space } from '../interfaces/Space'
+import { Space } from '../interfaces/SpaceInterface'
 import { AppEntity } from './AppEntity.node'
 
 @Entity()

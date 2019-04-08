@@ -4,7 +4,7 @@ import { AppBit } from './interfaces/AppBit'
 import { Bit } from './interfaces/Bit'
 import { BitContentType } from './interfaces/BitContentType'
 import { Job } from './interfaces/Job'
-import { Space } from './interfaces/Space'
+import { Space } from './interfaces/SpaceInterface'
 import { User } from './interfaces/User'
 
 export const BitModel = new Model<Bit, FindOptions<Bit>, FindOptionsWhere<Bit>>('Bit')

@@ -51,6 +51,7 @@ export function Card(props: CardProps) {
         sizeRadius={sizeRadius}
         noInnerElement
         pad={pad}
+        padding={padding}
       >
         <Scale size={1.1}>
           <ListItem
@@ -76,12 +77,13 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
-        <Space space={getBetweenPad(pad)} />
+        <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
           <Col
             flexDirection={flexDirection}
             space={space}
             pad={pad}
+            padding={padding}
             flex={1}
             height={collapsed ? 0 : '100%'}
           >

@@ -145,7 +145,7 @@ export class MenuStore {
     () => this.isOpenOutsideAnimation,
     async (open, { sleep }) => {
       ensure('not open', !open)
-      await sleep()
+      await sleep(0)
       this.setActiveMenuIndex(-1)
     },
     {

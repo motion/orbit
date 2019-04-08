@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useActiveApps } from '@o/kit'
+import { Icon } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 // import { clipboard } from 'electron'
@@ -60,10 +60,11 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {isOnTearablePane && (
             <>
-              <HeaderButtonTheme>
-                {orbitStore.activeActions || null}
-                <OrbitEditAppButton />
-              </HeaderButtonTheme>
+              {!!orbitStore.activeActions && (
+                <ExtraButtonsChrome>
+                  <HeaderButtonTheme>{orbitStore.activeActions || null}</HeaderButtonTheme>
+                </ExtraButtonsChrome>
+              )}
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
                 {!isEditing && (
                   <>
@@ -142,33 +143,6 @@ function HeaderButton(props: ButtonProps) {
   return <Button size={0.9} sizeHeight={0.9} {...props} />
 }
 
-function OrbitEditAppButton() {
-  const { paneManagerStore, orbitStore } = useStores()
-  const activePaneId = paneManagerStore.activePane.id
-  const activeApps = useActiveApps()
-  const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.identifier === 'custom' && !isEditing
-  const Actions = useActions()
-
-  if (!show) {
-    return null
-  }
-
-  return (
-    <>
-      <Button
-        circular
-        icon="tool"
-        tooltip="Edit app"
-        onClick={async () => {
-          Actions.tearApp()
-          orbitStore.setEditing()
-        }}
-      />
-    </>
-  )
-}
-
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 500ms',
@@ -216,6 +190,15 @@ const HeaderTop = gloss(View, {
   flexFlow: 'row',
   position: 'relative',
 })
+
+const ExtraButtonsChrome = gloss({
+  flexFlow: 'row',
+  paddingRight: 10,
+  marginRight: -10,
+  borderRadiusLeft: 10,
+}).theme((_, theme) => ({
+  border: [1, theme.borderColor.alpha(0.5)],
+}))
 
 const OpenButton = memo(() => {
   const Actions = useActions()

@@ -139,7 +139,7 @@ export const ListItem = memoIsEqualDeep(
 
     const iconElement = showIcon && getIcon(props)
 
-    const childrenElement = showChildren && (
+    const childrenElement = showChildren && !!children && (
       <SimpleText size={0.9} alpha={subTextOpacity}>
         {children}
       </SimpleText>
@@ -275,7 +275,7 @@ export const ListItem = memoIsEqualDeep(
                 </Preview>
               </>
             )}
-            {!showPreviewInSubtitle && (
+            {!showPreviewInSubtitle && !!(locationElement || childrenElement) && (
               <Row>
                 {locationElement}
                 {childrenElement}

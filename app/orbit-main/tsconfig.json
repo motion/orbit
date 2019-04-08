@@ -11,7 +11,10 @@
     { "path": "../../packages/config" },
     { "path": "../../packages/orbit-fork-process" },
 
-    // sub-apps
+    // apps
+    { "path": "../../apps" },
+
+    // processes
     { "path": "../orbit-desktop" },
     { "path": "../orbit-syncers" },
     { "path": "../orbit-electron" },
@@ -21,18 +24,6 @@
 
     { "path": "../../packages/config" },
     { "path": "../../packages/mediator" },
-    { "path": "../../packages/react-textfit" },
-    { "path": "../../apps/drive-app" },
-    { "path": "../../apps/github-app" },
-    { "path": "../../apps/website-app" },
-    { "path": "../../apps/confluence-app" },
-    { "path": "../../apps/jira-app" },
-    { "path": "../../apps/slack-app" },
-    { "path": "../../apps/gmail-app" },
-    { "path": "../../apps/postgres-app" },
-    { "path": "../../apps/custom-app" },
-    { "path": "../../apps/people-app" },
-    { "path": "../../apps/search-app" },
-    { "path": "../../apps/lists-app" }
+    { "path": "../../packages/react-textfit" }
   ]
 }

@@ -6,5 +6,9 @@
     "rootDir": "src"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../../app/kit" }, { "path": "../../packages/ui" }]
+  "references": [
+    { "path": "../slack-app" },
+    { "path": "../../app/kit" },
+    { "path": "../../packages/ui" }
+  ]
 }

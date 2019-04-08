@@ -14,7 +14,7 @@ import { OrbitNav } from './OrbitNav'
 
 export const headerButtonProps = {
   chromeless: true,
-  margin: [-1, 4],
+  margin: [-1, 1],
   opacity: 0.5,
   hoverStyle: { opacity: 0.75 },
   iconSize: 14,
@@ -66,12 +66,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
                 </ExtraButtonsChrome>
               )}
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                {!isEditing && (
-                  <>
-                    <Space />
-                    <OpenButton />
-                  </>
-                )}
+                {!isEditing && <OpenButton />}
               </SurfacePassProps>
             </>
           )}
@@ -193,9 +188,10 @@ const HeaderTop = gloss(View, {
 
 const ExtraButtonsChrome = gloss({
   flexFlow: 'row',
-  paddingRight: 10,
+  paddingRight: 12,
+  paddingLeft: 2,
   marginRight: -10,
-  borderLeftRadius: 10,
+  borderLeftRadius: 12,
 }).theme((_, theme) => ({
   border: [1, theme.borderColor.alpha(0.5)],
 }))

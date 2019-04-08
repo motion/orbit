@@ -78,8 +78,8 @@ export function SearchableList(props: ListProps) {
 
 export function List({
   flex = 1,
+  titleBorder = true,
   bordered,
-  titleBorder,
   title,
   subTitle,
   icon,
@@ -195,7 +195,7 @@ export function List({
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
-      titleBorder
+      titleBorder={titleBorder}
     >
       <HighlightActiveQuery query={search}>
         {hasResults && (

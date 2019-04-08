@@ -18,7 +18,7 @@ function getDescription(def: AppDefinition) {
   return titles.join(', ')
 }
 
-const sourceIcon = <Icon opacity={0.5} size={20} name="database" />
+const sourceIcon = <Icon opacity={0.5} size={12} name="database" />
 
 export function AppsIndex() {
   const [activeSpace] = useActiveSpace()

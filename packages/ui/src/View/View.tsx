@@ -42,11 +42,11 @@ export type ViewProps = CommonHTMLProps &
   GlossBaseProps &
   CommonViewProps &
   ElevatableProps &
-  PaddedProps
+  PadProps
 
 // Padded
 
-export type PaddedProps = {
+export type PadProps = {
   pad?:
     | Sizes
     | Sizes[]
@@ -60,7 +60,12 @@ export type PaddedProps = {
       }
 }
 
-const getPadding = (props: PaddedProps) => {
+const getPadding = (props: PadProps & { padding?: any }) => {
+  if (typeof props.padding !== 'undefined') {
+    return {
+      padding: props.padding,
+    }
+  }
   if (typeof props.pad !== 'undefined') {
     if (!props.pad) {
       return
@@ -89,7 +94,10 @@ const getPadding = (props: PaddedProps) => {
   }
 }
 
-export function getBetweenPad(pad: PaddedProps['pad']): Sizes {
+// plain padded view
+export const PaddedView = gloss(Col).theme(getPadding)
+
+export function getBetweenPad(pad: PadProps['pad']): Sizes {
   if (Array.isArray(pad)) {
     return pad[0] || 0
   }

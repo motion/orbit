@@ -21,7 +21,6 @@ export type SectionSpecificProps = Omit<
   innerRef?: any
   maxInnerHeight?: number
   padInner?: Sizes
-  padOuter?: Sizes
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
@@ -63,12 +62,11 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     spaceAround,
     pad,
     padInner,
-    padOuter,
     ...viewProps
   } = props
   const hasTitle = !!(title || afterTitle)
-  const outerPad = selectDefined(padOuter, pad)
-  const innerPad = selectDefined(padInner, bordered ? pad : null)
+  const outerPad = hasTitle ? false : pad
+  const innerPad = selectDefined(padInner, hasTitle ? pad : null)
   return (
     <SizedSurface
       forwardRef={ref}

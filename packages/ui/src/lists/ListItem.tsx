@@ -181,7 +181,6 @@ export const ListItem = memoIsEqualDeep(
             </Theme>
           )}
           <SizedSurface
-            noInnerElement
             flexFlow="row"
             alignItems="center"
             themeSelect="listItem"
@@ -189,10 +188,10 @@ export const ListItem = memoIsEqualDeep(
             onClick={(!hasMouseDownEvent && onClick) || undefined}
             padding={padding || defaultPadding}
             width="100%"
+            icon={iconBefore && showIcon && iconElement}
             {...surfaceProps}
           >
             {before}
-            {iconBefore && showIcon && iconElement}
             <ListItemMainContent oneLine={oneLine} style={{ paddingLeft: indent && indent * 8 }}>
               {showTitle && (
                 <ListItemTitleBar alignItems={alignItems}>
@@ -346,11 +345,7 @@ function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
   } else {
     element = <Icon name={icon} {...iconPropsFinal} />
   }
-  return (
-    // use a view to ensure consistent width
-    // and add the space
-    <View width={iconSize + (small ? 8 : 10)}>{element}</View>
-  )
+  return element
 }
 
 export function useIsSelected(props: Pick<ListItemProps, 'isSelected' | 'index'>) {

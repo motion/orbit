@@ -2,7 +2,7 @@ import { useModels } from '@o/bridge'
 import { Icon, OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, Divider, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
+import { Avatar, Col, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
@@ -111,60 +111,62 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           </View>
         }
       >
-        <Col ref={store.popoverContentRef} borderRadius={borderRadius} overflow="hidden" flex={1}>
-          <View overflowY="auto" maxHeight={300}>
-            {user ? (
+        <Col
+          scrollable="y"
+          ref={store.popoverContentRef}
+          borderRadius={borderRadius}
+          flex={1}
+          maxHeight={300}
+        >
+          {user ? (
+            <ListItem
+              icon={<Avatar src={avatar} width={26} height={26} />}
+              iconBefore
+              title={user.name}
+              subTitle="Active"
+              onClick={accountLink}
+            />
+          ) : (
+            <div>No spaces</div>
+          )}
+
+          {spaces.map((space, index) => {
+            return (
               <ListItem
-                icon={<Avatar src={avatar} width={30} height={30} margin={[0, 6, 0, 0]} />}
+                key={space.id}
+                icon={<SpaceIcon space={space} />}
                 iconBefore
-                title={user.name}
-                subTitle="Active"
-                onClick={accountLink}
+                after={
+                  activeSpaceId === space.id && <Icon name="check" color="#449878" size={12} />
+                }
+                onClick={() => {
+                  console.warn('ok')
+                }}
+                isSelected={selectedIndex === index + 1}
+                title={space.name}
+                titleProps={{ fontWeight: 400, size: 0.95, alpha: 0.8 }}
               />
-            ) : (
-              <div>No spaces</div>
-            )}
-            <Divider />
-            {spaces.map((space, index) => {
-              return (
-                <ListItem
-                  key={space.id}
-                  icon={<SpaceIcon space={space} />}
-                  iconBefore
-                  after={
-                    activeSpaceId === space.id && <Icon name="check" color="#449878" size={12} />
-                  }
-                  onClick={() => {
-                    console.warn('ok')
-                  }}
-                  isSelected={selectedIndex === index + 1}
-                  title={space.name}
-                  titleProps={{ fontWeight: 400, size: 0.95, alpha: 0.8 }}
-                />
-              )
-            })}
-            <ListItem
-              title="Space Settings"
-              subTitle="Manage spaces..."
-              icon="layers"
-              iconBefore
-              titleProps={{ fontWeight: 300, size: 0.9, alpha: 0.8 }}
-              after={<Icon name="addcircle" size={14} fill="#444" />}
-            />
+            )
+          })}
 
-            <Divider />
+          <ListItem
+            title="Space Settings"
+            subTitle="Manage spaces..."
+            icon="layers"
+            iconBefore
+            after={<Icon name="addcircle" size={14} fill="#444" />}
+          />
 
-            <ListItem
-              title="Settings"
-              subTitle="Shortcuts, theme"
-              icon="gear"
-              iconBefore
-              onClick={() => {
-                stores.newAppStore.setShowCreateNew(false)
-                stores.paneManagerStore.setActivePaneByType('settings')
-              }}
-            />
-          </View>
+          <ListItem
+            title="Settings"
+            subTitle="Shortcuts, theme"
+            icon="gear"
+            iconBefore
+            onClick={() => {
+              stores.newAppStore.setShowCreateNew(false)
+              stores.paneManagerStore.setActivePaneByType('settings')
+            }}
+          />
         </Col>
       </Popover>
     </>

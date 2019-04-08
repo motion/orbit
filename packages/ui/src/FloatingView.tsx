@@ -31,6 +31,7 @@ export function FloatingView(props: FloatingViewProps) {
     children,
     disableDrag,
     zIndex = 1200000,
+    pointerEvents = 'auto',
     ...restProps
   } = props
   const controlledSize = typeof props.height !== 'undefined'
@@ -138,7 +139,7 @@ export function FloatingView(props: FloatingViewProps) {
       <FullScreen>
         <animated.div
           style={{
-            pointerEvents: isVisible ? 'auto' : 'none',
+            pointerEvents: isVisible ? pointerEvents : 'none',
             zIndex: zIndex,
             width,
             height,

@@ -1,6 +1,7 @@
 import { gloss } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
-import { View, ViewProps } from './View'
+import { PaddedView, View, ViewProps } from './View'
 
 export type ScrollableViewProps = ViewProps & {
   hideScrollbars?: boolean
@@ -11,19 +12,34 @@ export const ScrollableView = forwardRef(function ScrollableView(
   { children, pad, padding, scrollable, ...props }: ScrollableViewProps,
   ref,
 ) {
+  let content = children
+
+  // wrap inner with padding view only if necessary (this is super low level view)
+  // this is necessary so CSS scrollable has proper "end margin"
+  if (selectDefined(pad, padding, 'NONE') !== 'NONE') {
+    content = (
+      <PaddedView
+        ref={!scrollable ? ref : null}
+        pad={pad}
+        padding={padding}
+        {...!scrollable && props}
+      >
+        {children}
+      </PaddedView>
+    )
+  }
+
   if (!scrollable) {
     return (
-      <View ref={!scrollable ? ref : null} pad={pad} padding={padding} {...props}>
-        {children}
+      <View ref={ref} {...props}>
+        {content}
       </View>
     )
   }
 
   return (
-    <ScrollableChrome ref={scrollable ? ref : null} scrollable={scrollable} {...props}>
-      <View pad={pad} padding={padding}>
-        {children}
-      </View>
+    <ScrollableChrome ref={ref} scrollable={scrollable} {...props}>
+      {content}
     </ScrollableChrome>
   )
 })
@@ -44,7 +60,8 @@ export const ScrollableChrome = gloss<ScrollableViewProps>(View, {
   margin: 1,
 }).theme(({ scrollable, hideScrollbars }) => ({
   ...(hideScrollbars && hideScrollbarsStyle),
+  overflow: 'hidden',
   ...(scrollable === 'x' && { overflowX: 'auto', overflowY: 'hidden' }),
-  ...(scrollable === 'y' && { overflowX: 'auto', overflowY: 'hidden' }),
+  ...(scrollable === 'y' && { overflowY: 'auto', overflowX: 'hidden' }),
   ...(scrollable === true && { overflow: 'auto' }),
 }))

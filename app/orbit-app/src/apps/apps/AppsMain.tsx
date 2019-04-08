@@ -20,6 +20,7 @@ export function AppsMain(props: AppProps) {
       return (
         <Section
           titleBorder
+          padInner
           icon="gear"
           title={props.title}
           afterTitle={
@@ -33,13 +34,13 @@ export function AppsMain(props: AppProps) {
             )
           }
         >
-          <Section pad>
+          <Section pad={{ bottom: true }}>
             <FormField label="Name and Icon">
               <AppsMainNew />
             </FormField>
           </Section>
 
-          <Section pad>
+          <Section pad={{ bottom: true }}>
             <SubSection title="App Settings">
               <AppMainView {...props} viewType="settings" />
             </SubSection>

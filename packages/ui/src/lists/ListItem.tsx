@@ -175,7 +175,7 @@ export const ListItem = memoIsEqualDeep(
           {above}
           {!!separator && (
             <Theme name={activeThemeName}>
-              <Separator paddingTop={props.index === 0 ? 8 : 16} {...separatorProps}>
+              <Separator paddingTop={16} {...separatorProps}>
                 {separator}
               </Separator>
             </Theme>

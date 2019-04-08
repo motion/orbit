@@ -9,15 +9,12 @@ export function AppsMainNew() {
   const { app } = newAppStore
   const inputRef = useRef(null)
 
-  useEffect(
-    () => {
-      if (inputRef.current) {
-        inputRef.current.focus()
-        inputRef.current.select()
-      }
-    },
-    [inputRef.current],
-  )
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+      inputRef.current.select()
+    }
+  }, [inputRef.current])
 
   return (
     <>

@@ -63,17 +63,3 @@ export function GithubSettings() {
     </>
   )
 }
-
-// todo: remove it
-// load sample repositories (testing api)
-// useEffect(
-//   () => {
-//     if (app) {
-//       githubApp
-//         .api(app)
-//         .listRepositoriesForOrg({ org: 'typeorm' })
-//         .then(repos => console.log('repos', repos))
-//     }
-//   },
-//   [app],
-// )

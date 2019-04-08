@@ -30,13 +30,12 @@ export function PostgresSettings(_: AppProps) {
   })
 
   React.useEffect(() => {
+    if (!app) return
     const appData: PostgresAppData = app.data
     if (appData.credentials) {
       setCredentials(appData.credentials)
     }
   }, [app])
-
-  console.log('credentials', credentials)
 
   const addApp = async e => {
     e.preventDefault()

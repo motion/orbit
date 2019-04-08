@@ -1,18 +1,15 @@
-import { createApp } from '@o/kit'
-import React from 'react'
-import { confluenceIcon } from './confluenceIcon'
-import { ConfluenceSetup } from './ConfluenceSetup'
-import { AtlassianSettingLogin } from './AtlassianSettingLogin'
-import { createApi } from '@o/kit'
+import { createApi, createApp } from '@o/kit'
 import { ConfluenceApi } from './api.node'
+import { AtlassianSettingLogin } from './AtlassianSettingLogin'
+import { confluenceIcon } from './confluenceIcon'
 
 export default createApp({
   id: 'confluence',
   name: 'Confluence',
   icon: confluenceIcon,
   itemType: 'markdown',
-  settings: props => <AtlassianSettingLogin identifier="confluence" {...props} />,
-  setup: ConfluenceSetup,
+  settings: AtlassianSettingLogin,
+  setup: AtlassianSettingLogin,
   sync: {},
   api: createApi<typeof ConfluenceApi>(),
 })

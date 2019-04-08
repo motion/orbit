@@ -4,6 +4,20 @@ import { Card, GridItem, GridLayout } from '@o/ui'
 import React, { useState } from 'react'
 
 // todo: remove it
+// load sample repositories (testing api)
+// useEffect(
+//   () => {
+//     if (app) {
+//       githubApp
+//         .api(app)
+//         .listRepositoriesForOrg({ org: 'typeorm' })
+//         .then(repos => console.log('repos', repos))
+//     }
+//   },
+//   [app],
+// )
+
+// todo: remove it
 // execute postgres query (testing api)
 // loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
 //   console.log('postgresApps', postgresApps)
@@ -28,6 +42,34 @@ import React, { useState } from 'react'
 //   }
 // }, [app])
 
+// todo: remove it
+// load something from confluence (testing api)
+// useEffect(() => {
+//   loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
+//     app => {
+//       if (app) {
+//         confluenceApp
+//           .api(app)
+//           .loadUsers()
+//           .then(users => console.log('users', users))
+//       }
+//     },
+//   )
+// }, [])
+
+// // todo: remove it
+//   // load drive files (testing api)
+//   useEffect(
+//     () => {
+//       if (app) {
+//         driveApp
+//           .api(app)
+//           .listFiles()
+//           .then(files => console.log('files', files))
+//       }
+//     },
+//     [app],
+//   )
 function CustomApp() {
   const [app, setApp] = useState<AppBit>(null)
   const slack = useApp(Slack, app)

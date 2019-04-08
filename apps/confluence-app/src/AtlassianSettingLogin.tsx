@@ -1,13 +1,8 @@
-import { AppBit, AppModel, save, useActiveSpace } from '@o/kit'
+import { AppBit, AppModel, AppProps, save, useActiveSpace, useAppBit } from '@o/kit'
 import { Form, Message, Space } from '@o/ui'
-import React, { useState } from 'react'
+import React from 'react'
 import { ConfluenceLoader } from './ConfluenceLoader'
 import { ConfluenceAppData } from './ConfluenceModels'
-
-type Props = {
-  identifier: string
-  app?: AppBit
-}
 
 const extractTeamNameFromDomain = (domain: string) => {
   return domain
@@ -17,35 +12,16 @@ const extractTeamNameFromDomain = (domain: string) => {
     .replace('.atlassian.net', '')
 }
 
-export function AtlassianSettingLogin(props: Props) {
+export function AtlassianSettingLogin(props: AppProps) {
   const [activeSpace] = useActiveSpace()
-  const [app] = useState<Partial<AppBit>>({
-    target: 'app',
-    identifier: props.identifier as 'confluence',
-    token: '',
-    data: (props.app && props.app.data) || {},
-  })
-
-  // todo: remove it
-  // load something from confluence (testing api)
-  // useEffect(() => {
-  //   loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
-  //     app => {
-  //       if (app) {
-  //         confluenceApp
-  //           .api(app)
-  //           .loadUsers()
-  //           .then(users => console.log('users', users))
-  //       }
-  //     },
-  //   )
-  // }, [])
+  const [app] = useAppBit(+props.id)
 
   const addApp = async values => {
-    Object.assign(app.data.values, values)
-    if (!app.spaces) {
-      app.spaces = []
+    app.data.values = {
+      ...app.data.values,
+      ...values,
     }
+    app.spaces = app.spaces || []
     if (!app.spaces.find(space => space.id === activeSpace.id)) {
       app.spaces.push(activeSpace)
     }
@@ -70,9 +46,7 @@ export function AtlassianSettingLogin(props: Props) {
         Atlassian requires username and password as their OAuth requires administrator permissions.
         As always with Orbit, this information is <strong>completely private</strong> to you.
       </Message>
-
       <Space />
-
       <Form
         submitButton
         onSubmit={addApp}

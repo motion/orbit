@@ -1,4 +1,3 @@
-import { useTheme } from '@o/gloss'
 import { AppBit } from '@o/models'
 import { IconProps, toColor, View } from '@o/ui'
 import React from 'react'
@@ -16,8 +15,8 @@ export function AppIconInner({
   removeStroke = true,
   ...props
 }: Partial<AppIconProps>) {
-  const theme = useTheme()
-  const fill = toColor(props.color || theme.iconFill || '#fff').hex()
+  // const theme = useTheme() props.color || theme.iconFill ||
+  const fill = toColor('#fff').hex()
 
   if (!appIcons[props.name]) {
     return null

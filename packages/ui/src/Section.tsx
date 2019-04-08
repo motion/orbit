@@ -1,6 +1,8 @@
+import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
+import { Sizes } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -18,6 +20,8 @@ export type SectionSpecificProps = Omit<
   below?: React.ReactNode
   innerRef?: any
   maxInnerHeight?: number
+  padInner?: Sizes
+  padOuter?: Sizes
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
@@ -57,13 +61,14 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     flexDirection,
     space,
     spaceAround,
-    pad: ogPad,
+    pad,
+    padInner,
+    padOuter,
     ...viewProps
   } = props
   const hasTitle = !!(title || afterTitle)
-  const pad = typeof ogPad !== 'undefined' ? ogPad : hasTitle ? true : undefined
-  const outerPad = !bordered ? pad : null
-  const innerPad = bordered ? pad : null
+  const outerPad = selectDefined(padOuter, pad)
+  const innerPad = selectDefined(padInner, bordered ? pad : null)
   return (
     <SizedSurface
       forwardRef={ref}
@@ -96,7 +101,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           before={beforeTitle}
           below={belowTitle}
           icon={icon}
-          pad={(titleBorder && !outerPad) || innerPad}
+          pad={titleBorder ? true : innerPad}
         />
       )}
       <Col
@@ -107,7 +112,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         spaceAround={spaceAround}
         flexDirection={flexDirection}
         scrollable={scrollable}
-        pad={ogPad}
+        pad={innerPad}
         {...viewProps}
       >
         <Reset>{children}</Reset>

@@ -14,13 +14,13 @@ export const spaceSizes = {
 }
 
 export function getSpaceSize(space: Sizes) {
-  if (!space) {
+  if (space === 0) {
     return 0
   }
   if (typeof space === 'number') {
     return space
   }
-  if (typeof space === 'undefined' || space === true) {
+  if (!space || space === true) {
     space = 'md'
   }
   return spaceSizes[space] || 0

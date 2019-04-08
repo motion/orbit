@@ -195,8 +195,7 @@ export function List({
       icon={icon}
       beforeTitle={beforeTitle}
       afterTitle={afterTitle}
-      titleBorder={titleBorder}
-      pad={false}
+      titleBorder
     >
       <HighlightActiveQuery query={search}>
         {hasResults && (

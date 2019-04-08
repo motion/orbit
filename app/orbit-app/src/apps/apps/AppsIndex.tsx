@@ -8,7 +8,6 @@ import {
   useActiveSyncAppsWithDefinition,
   useAppDefinitions,
 } from '@o/kit'
-import { TitleRow } from '@o/ui'
 import * as React from 'react'
 import { getAppListItem } from './getAppListItem'
 
@@ -33,33 +32,32 @@ export function AppsIndex() {
   }
 
   return (
-    <>
-      <TitleRow bordered title="Manage Apps" subTitle="Search to find new apps to install" />
-      <List
-        items={[
-          ...clientApps.map(getAppListItem).map(x => ({ ...x, group: 'App Settings' })),
-          ...syncApps.map(getAppListItem).map(x => ({
-            ...x,
-            group: 'Source Settings',
-            after: sourceIcon,
-          })),
-          ...allSourceDefinitions.map(def => ({
-            key: `install-${def.id}`,
-            group: 'Install App',
-            title: def.name,
-            icon: def.id,
-            iconBefore: true,
-            small: true,
-            subTitle: getDescription(def) || 'No Description',
-            after: sourceIcon,
-            appProps: {
-              identifier: 'apps',
-              subType: 'add-app',
-              subId: def.id,
-            },
-          })),
-        ]}
-      />
-    </>
+    <List
+      title="Manage Apps"
+      subTitle="Use search to find new apps."
+      items={[
+        ...clientApps.map(getAppListItem).map(x => ({ ...x, group: 'App Settings' })),
+        ...syncApps.map(getAppListItem).map(x => ({
+          ...x,
+          group: 'Source Settings',
+          after: sourceIcon,
+        })),
+        ...allSourceDefinitions.map(def => ({
+          key: `install-${def.id}`,
+          group: 'Install App',
+          title: def.name,
+          icon: def.id,
+          iconBefore: true,
+          small: true,
+          subTitle: getDescription(def) || 'No Description',
+          after: sourceIcon,
+          appProps: {
+            identifier: 'apps',
+            subType: 'add-app',
+            subId: def.id,
+          },
+        })),
+      ]}
+    />
   )
 }

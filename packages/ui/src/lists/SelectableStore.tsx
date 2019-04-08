@@ -81,6 +81,9 @@ export class SelectableStore {
       const { rows, indices } = this.selectedState
       this.props.onSelect(rows, indices)
     },
+    {
+      deferFirstRun: true,
+    },
   )
 
   get selectedState() {

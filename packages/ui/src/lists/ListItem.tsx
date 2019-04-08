@@ -170,6 +170,7 @@ export const ListItem = memoIsEqualDeep(
 
     return (
       <Theme alternate={isSelected ? 'selected' : null}>
+        {/* this wrapper required for virtualization to measure/style */}
         <div style={style} ref={(forwardRef || ref) as any}>
           {above}
           {!!separator && (

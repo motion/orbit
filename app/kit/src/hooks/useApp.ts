@@ -41,6 +41,7 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
       get(_, method) {
         return (...args: any[]) => {
           const key = sum({ app, method, args })
+
           if (!ApiCache[key]) {
             const rawRead = definition.api(app)[method](...args)
             const read = rawRead
@@ -59,6 +60,10 @@ export function useApp(definition?: AppDefinition, app?: AppBit) {
               response: null,
             }
 
+            throw ApiCache[key].read
+          }
+
+          if (!ApiCache[key].response) {
             throw ApiCache[key].read
           }
 

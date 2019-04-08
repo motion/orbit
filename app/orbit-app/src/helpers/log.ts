@@ -1,5 +1,12 @@
-// helper that logs functions, works as decorator or plain
-// passes through the first argument
+//
+// a nice helper for logging:
+//
+//  1. passes through first argument
+//  2. colorizes with a stable unqiue color based on arguments
+//  3. formats JSON automatically
+//  4. can be used as a temporary decorator for a class:
+//     4.1. automatically wraps and logs all functions args/returns
+//     4.2. logs state before/after function call
 
 let doCutoff = true
 
@@ -141,7 +148,7 @@ function wrapLogger(wrapFn, parent, name) {
   const methodName = wrapFn.name || name || ''
   const color = Color.getColor(`${parentName}${methodName}`)
 
-  return function(...args) {
+  return function(this: any, ...args: any[]) {
     const result = wrapFn.call(this, ...args)
     const state =
       this &&

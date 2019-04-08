@@ -511,7 +511,14 @@ export function Menu() {
   // }, [])
 
   return (
-    <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
+    <MergeContext
+      Context={VirtualListDefaultProps}
+      value={
+        {
+          /* dynamicHeight: true */
+        }
+      }
+    >
       <MergeContext
         Context={StoreContext}
         value={{

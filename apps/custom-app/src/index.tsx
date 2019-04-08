@@ -33,8 +33,6 @@ function CustomApp() {
   const slack = useApp(Slack, app)
   const res = slack && slack.channelsList()
 
-  console.log('waht', slack, res, app)
-
   return (
     <App>
       <GridLayout>

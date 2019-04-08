@@ -1,4 +1,4 @@
-import { FullScreen, gloss, Row } from '@o/gloss'
+import { gloss, Row } from '@o/gloss'
 import { AppLoadContext, AppMainViewProps } from '@o/kit'
 import { Toolbar, View, ViewProps } from '@o/ui'
 import { useReaction } from '@o/use-store'
@@ -51,11 +51,4 @@ const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
     opacity: 1,
     height: toolbarHeight,
   },
-})
-
-const ToolbarContent = gloss(FullScreen, {
-  flexFlow: 'row',
-  alignItems: 'center',
-  padding: [0, 12],
-  overflow: 'hidden',
 })

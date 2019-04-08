@@ -1,40 +1,37 @@
 import { ShortcutStore } from '@o/kit'
 import { App } from '@o/stores'
-import { Direction, MergeContext, PopoverState } from '@o/ui'
+import { Direction, HotKeys, MergeContext, PopoverState } from '@o/ui'
 import { useStore } from '@o/use-store'
 import React, { memo } from 'react'
 import { AppActions } from '../../actions/appActions/AppActions'
 import { StoreContext } from '../../contexts'
 import { useActions } from '../../hooks/useActions'
 import { useStores } from '../../hooks/useStores'
-import FocusableShortcutHandler from '../../views/FocusableShortcutHandler'
 
 // TODO these would be easier to search if they all prefixed with something
 
 const rootShortcuts = {
-  closeApp: 'command+q',
-  closeTab: 'command+w',
-  commandNew: 'command+n',
-  commandOpen: 'command+enter',
-  open: ['tab', 'enter'],
-  switchSpaces: 'command+k',
-  copyLink: 'command+shift+c',
-  escape: 'esc',
-  down: 'down',
-  up: 'up',
-  leftTab: 'command+shift+[',
-  rightTab: 'command+shift+]',
-  left: 'left',
-  right: 'right',
-  1: 'command+1',
-  2: 'command+2',
-  3: 'command+3',
-  4: 'command+4',
-  5: 'command+5',
-  6: 'command+6',
-  7: 'command+7',
-  8: 'command+8',
-  9: 'command+9',
+  COMMAND_NEW: 'command+n',
+  COMMAND_OPEN: 'command+enter',
+  OPEN: ['tab', 'enter'],
+  SWITCH_SPACE: 'command+k',
+  COPY_LINK: 'command+shift+c',
+  ESCAPE: 'esc',
+  DOWN: 'down',
+  UP: 'up',
+  LEFT_TAB: 'command+shift+[',
+  RIGHT_TAB: 'command+shift+]',
+  LEFT: 'left',
+  RIGHT: 'right',
+  COMMAND_1: 'command+1',
+  COMMAND_2: 'command+2',
+  COMMAND_3: 'command+3',
+  COMMAND_4: 'command+4',
+  COMMAND_5: 'command+5',
+  COMMAND_6: 'command+6',
+  COMMAND_7: 'command+7',
+  COMMAND_8: 'command+8',
+  COMMAND_9: 'command+9',
 }
 
 export default memo(function MainShortcutHandler(props: {
@@ -46,15 +43,15 @@ export default memo(function MainShortcutHandler(props: {
   const Actions = useActions()
 
   let handlers: any = {
-    commandNew: Actions.setupNewApp,
-    commandOpen: () => {
+    COMMAND_NEW: Actions.setupNewApp,
+    COMMAND_OPEN: () => {
       console.log('tear app', Actions.tearApp)
       Actions.tearApp()
     },
-    switchSpaces: () => {
+    SWITCH_SPACE: () => {
       paneManagerStore.setActivePaneByType('spaces')
     },
-    open: () => {
+    OPEN: () => {
       if (document.activeElement && document.activeElement.classList.contains('ui-input')) {
         // TODO this could be done in a more standard, nice way
         console.log('avoid shortcuts on sub-inputs')
@@ -62,18 +59,18 @@ export default memo(function MainShortcutHandler(props: {
       }
       shortcutStore.emit('open')
     },
-    copyLink: async () => {
-      console.log('copyLink')
+    COPY_LINK: async () => {
+      console.log('COPY_LINK')
       require('electron').remote.clipboard.writeText('http://example.com')
       // let link
       // if (item.target === 'bit') {
       //   link = item.webLink
       // }
       // Actions.copySelectedItemLink()
-      // Actions.copyLink(searchStore.selectedItem)
+      // Actions.COPY_LINK(searchStore.selectedItem)
     },
-    escape: () => {
-      console.log('escape')
+    ESCAPE: () => {
+      console.log('ESCAPE')
       if (PopoverState.openPopovers.size > 0) {
         PopoverState.closeLast()
         return
@@ -91,41 +88,40 @@ export default memo(function MainShortcutHandler(props: {
         return AppActions.setOrbitDocked(false)
       }
     },
-    up: () => shortcutStore.emit(Direction.up),
-    down: () => shortcutStore.emit(Direction.down),
-    left: () => shortcutStore.emit(Direction.left),
-    right: () => shortcutStore.emit(Direction.right),
+    UP: () => shortcutStore.emit(Direction.up),
+    DOWN: () => shortcutStore.emit(Direction.down),
+    LEFT: () => shortcutStore.emit(Direction.left),
+    RIGHT: () => shortcutStore.emit(Direction.right),
   }
 
   if (paneManagerStore) {
     handlers = {
       ...handlers,
-      rightTab: () => paneManagerStore.move(Direction.right),
-      leftTab: () => paneManagerStore.move(Direction.left),
-      1: () => paneManagerStore.setPaneByKeyableIndex(0),
-      2: () => paneManagerStore.setPaneByKeyableIndex(1),
-      3: () => paneManagerStore.setPaneByKeyableIndex(2),
-      4: () => paneManagerStore.setPaneByKeyableIndex(3),
-      5: () => paneManagerStore.setPaneByKeyableIndex(4),
-      6: () => paneManagerStore.setPaneByKeyableIndex(5),
-      7: () => paneManagerStore.setPaneByKeyableIndex(6),
-      8: () => paneManagerStore.setPaneByKeyableIndex(7),
-      9: () => paneManagerStore.setPaneByKeyableIndex(8),
+      RIGHT_TAB: () => paneManagerStore.move(Direction.right),
+      LEFT_TAB: () => paneManagerStore.move(Direction.left),
+      COMMAND_1: () => paneManagerStore.setPaneByKeyableIndex(0),
+      COMMAND_2: () => paneManagerStore.setPaneByKeyableIndex(1),
+      COMMAND_3: () => paneManagerStore.setPaneByKeyableIndex(2),
+      COMMAND_4: () => paneManagerStore.setPaneByKeyableIndex(3),
+      COMMAND_5: () => paneManagerStore.setPaneByKeyableIndex(4),
+      COMMAND_6: () => paneManagerStore.setPaneByKeyableIndex(5),
+      COMMAND_7: () => paneManagerStore.setPaneByKeyableIndex(6),
+      COMMAND_8: () => paneManagerStore.setPaneByKeyableIndex(7),
+      COMMAND_9: () => paneManagerStore.setPaneByKeyableIndex(8),
     }
   }
 
   return (
     <MergeContext Context={StoreContext} value={{ shortcutStore }}>
-      <FocusableShortcutHandler
-        shortcuts={rootShortcuts}
+      <HotKeys
+        keyMap={rootShortcuts}
         handlers={{
           ...handlers,
           ...props.handlers,
         }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
       >
         {props.children}
-      </FocusableShortcutHandler>
+      </HotKeys>
     </MergeContext>
   )
 })

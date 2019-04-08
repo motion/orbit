@@ -18,6 +18,7 @@
     "@o/gloss": "^2.4.0",
     "@o/use-store": "^2.4.0",
     "@o/utils": "^2.4.0",
+    "react-hotkeys": "2.0.0-pre4",
     "react-select": "2.4.2",
     "batch-processor": "^1.0.0",
     "date-fns": "2.0.0-alpha.16",

@@ -14,17 +14,12 @@ export {
   GlossProps,
   Grid,
   GridProps,
-  Inline,
-  InlineBlock,
-  InlineBlockProps,
-  InlineFlex,
-  InlineFlexProps,
-  InlineProps,
   Theme,
   ThemeContext,
   ThemeProvide,
 } from '@o/gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
+export * from 'react-hotkeys'
 export * from './Arrow'
 export * from './Avatar'
 export * from './Border'

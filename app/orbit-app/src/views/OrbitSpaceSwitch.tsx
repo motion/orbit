@@ -2,13 +2,12 @@ import { useModels } from '@o/bridge'
 import { Icon, OrbitOrb, SpaceIcon, useActiveSpace, useActiveUser, useLocationLink } from '@o/kit'
 import { SpaceModel } from '@o/models'
 import { App } from '@o/stores'
-import { Avatar, Col, Divider, ListItem, Popover, View } from '@o/ui'
+import { Avatar, Col, Divider, GlobalHotKeys, ListItem, Popover, View } from '@o/ui'
 import { ensure, react, useHook, useStore } from '@o/use-store'
 import React, { memo } from 'react'
 // @ts-ignore
 import avatar from '../../public/images/nate.jpg'
 import { useStoresSimple } from '../hooks/useStores'
-import FocusableShortcutHandler from './FocusableShortcutHandler'
 
 class SpaceSwitchStore {
   stores = useHook(useStoresSimple)
@@ -51,12 +50,6 @@ class SpaceSwitchStore {
   )
 }
 
-const shortcuts = {
-  select: 'enter',
-  up: 'up',
-  down: 'down',
-}
-
 export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   const stores = useStoresSimple()
   const store = useStore(SpaceSwitchStore)
@@ -71,19 +64,28 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
   }
 
   const handlers = {
-    select: () => {
+    SELECT: () => {
       console.log('should switch space')
-      // switch active space
     },
-    down: store.down,
-    up: store.up,
+    DOWN: store.down,
+    UP: store.up,
   }
 
   const { selectedIndex } = store
   const borderRadius = 8
 
   return (
-    <FocusableShortcutHandler focused={store.open} shortcuts={shortcuts} handlers={handlers}>
+    <>
+      {store.open && (
+        <GlobalHotKeys
+          keyMap={{
+            SELECT: 'enter',
+            UP: 'up',
+            DOWN: 'down',
+          }}
+          handlers={handlers}
+        />
+      )}
       <Popover
         ref={store.spaceSwitcherRef}
         delay={100}
@@ -167,6 +169,6 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           </View>
         </Col>
       </Popover>
-    </FocusableShortcutHandler>
+    </>
   )
 })

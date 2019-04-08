@@ -125,10 +125,6 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
       line = <TreeItemsLine height={height} childrenCount={this.props.childrenCount} />
     }
 
-    if (selected) {
-      console.warn('is selcte', id)
-    }
-
     return (
       <TreeItemsRowContainer
         buildItems={this.getContextMenu}

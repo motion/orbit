@@ -51,8 +51,6 @@ class GridStore {
   }
 
   setLayout = (layout: any[]) => {
-    console.log('layout', layout)
-    // this.layout = layout
     this.layouts = {
       lg: layout,
     }

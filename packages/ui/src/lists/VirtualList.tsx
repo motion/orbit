@@ -45,6 +45,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
 
   const Row = memo(
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
+      console.log('render', index, style)
       const { ItemView, onSelect, sortable, items, getItemProps, onOpen } = getProps()
       const item = items[index]
       if (!item) {

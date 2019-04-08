@@ -1,5 +1,3 @@
-import AutoSizerDefault from 'react-virtualized-auto-sizer'
-export const AutoSizer = AutoSizerDefault
 export * from '@o/color'
 export {
   Absolute,

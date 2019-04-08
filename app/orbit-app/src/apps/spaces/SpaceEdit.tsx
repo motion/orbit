@@ -64,7 +64,7 @@ export function SpaceEdit({ space }: { space: Space }) {
                   onChangeColor={x => setColors([x, colors[1]])}
                 />
               </HorizontalScroll>
-              <UISpace small />
+              <UISpace size="sm" />
               <HorizontalScroll height={30}>
                 <ColorPicker
                   count={50}

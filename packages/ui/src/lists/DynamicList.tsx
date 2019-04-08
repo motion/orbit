@@ -22,8 +22,9 @@ export type DynamicListProps = Omit<VariableSizeListProps, 'itemSize' | 'height'
 
 export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicListProps, fwRef) => {
   const { ref, width, height } = useNodeSize({
-    disable: false || disableMeasure,
+    disable: disableMeasure,
   })
+  console.log('render dyn list..........')
   return (
     <DynamicListChrome flex={1} ref={ref}>
       <DynamicSizeList ref={props.listRef || fwRef} width={width} height={height} {...props} />

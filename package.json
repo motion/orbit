@@ -2,6 +2,10 @@
   "name": "orbit-monorepo",
   "private": true,
   "workspaces": {
+    "nohoist": [
+      "**/memoize-one",
+      "**/react-window"
+    ],
     "packages": [
       "app/*",
       "packages/*",

@@ -115,6 +115,9 @@ export default memo(function MainShortcutHandler(props: {
     <MergeContext Context={StoreContext} value={{ shortcutStore }}>
       <HotKeys
         keyMap={rootShortcuts}
+        style={{
+          flex: 1,
+        }}
         handlers={{
           ...handlers,
           ...props.handlers,

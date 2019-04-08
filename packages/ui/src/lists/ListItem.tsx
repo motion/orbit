@@ -187,6 +187,7 @@ export const ListItem = memoIsEqualDeep(
         )}
         <SizedSurface
           noInnerElement
+          flexFlow="row"
           forwardRef={forwardRef || ref}
           themeSelect="listItem"
           borderRadius={borderRadius}

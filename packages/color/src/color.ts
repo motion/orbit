@@ -13,6 +13,8 @@ export function toColor(obj) {
   return new Color(obj)
 }
 
+const round = x => Math.round(x * 2) / 2
+
 const slice = [].slice
 const skippedModels = [
   // to be honest, I don't really feel like keyword belongs in color convert, but eh.
@@ -125,7 +127,7 @@ export class Color {
 
   toCSS() {
     const { r, g, b, a } = this.rgbaObject()
-    return `rgba(${r},${g},${b},${a})`
+    return `rgba(${round(r * 255)},${round(g * 255)},${round(b * 255)},${a})`
   }
 
   get _equalityKey() {

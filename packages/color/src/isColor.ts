@@ -80,7 +80,7 @@ function isColorLikeString(str: string) {
   return false
 }
 
-function isColorLikeArray(array: Array<number | string>) {
+function isColorLikeArray(array: (number | string)[]) {
   return (
     typeof array[0] === 'number' &&
     typeof array[1] === 'number' &&

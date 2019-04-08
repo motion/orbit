@@ -108,7 +108,11 @@ export function ManageApps() {
   const [activeSpace] = useActiveSpace()
 
   return (
-    <Section title={activeSpace ? activeSpace.name : ''} background="transparent">
+    <Section
+      title={activeSpace ? `${activeSpace.name} Apps` : ''}
+      background="transparent"
+      titleBorder
+    >
       <SelectableGrid
         minWidth={180}
         items={[

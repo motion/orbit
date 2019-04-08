@@ -88,7 +88,6 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
       )}
       <Popover
         ref={store.spaceSwitcherRef}
-        delay={100}
         openOnClick
         closeOnClickAway
         closeOnClick
@@ -97,7 +96,6 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         background
         borderRadius={borderRadius}
         elevation={7}
-        group="filters"
         onChangeVisibility={store.setOpen}
         target={
           <View position="relative" margin={[0, 6, 0, 18]}>

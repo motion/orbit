@@ -129,6 +129,12 @@ async function makeConfig() {
     target,
     mode,
     entry,
+    externals:
+      target === 'web'
+        ? {
+            electron: '{}',
+          }
+        : null,
     optimization: process.env.NO_OPTIMIZE
       ? {
           ...optimizeSplit,
@@ -250,8 +256,6 @@ async function makeConfig() {
       new webpack.DefinePlugin(defines),
 
       new webpack.IgnorePlugin(/electron-log/),
-
-      target === 'web' && new webpack.IgnorePlugin(/^electron$/),
 
       new ForkTsCheckerWebpackPlugin({
         useTypescriptIncrementalApi: true,

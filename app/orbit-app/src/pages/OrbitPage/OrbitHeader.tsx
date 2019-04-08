@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useActiveApps, useLocationLink } from '@o/kit'
+import { Icon, useActiveApps } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 // import { clipboard } from 'electron'
@@ -9,18 +9,18 @@ import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
+import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
-const HeaderButtonTheme = (props: any) => (
-  <SurfacePassProps
-    chromeless
-    margin={[-1, 4]}
-    opacity={0.5}
-    hoverStyle={{ opacity: 0.75 }}
-    iconSize={14}
-    {...props}
-  />
-)
+export const headerButtonProps = {
+  chromeless: true,
+  margin: [-1, 4],
+  opacity: 0.5,
+  hoverStyle: { opacity: 0.75 },
+  iconSize: 14,
+}
+
+const HeaderButtonTheme = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
 export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
@@ -30,7 +30,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
-  const appSettingsLink = useLocationLink(`apps?itemId=${activePane.id}`)
 
   return (
     <OrbitHeaderContainer
@@ -64,7 +63,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
               <HeaderButtonTheme>
                 {orbitStore.activeActions || null}
                 <OrbitEditAppButton />
-                <LinkButton />
               </HeaderButtonTheme>
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
                 {!isEditing && (
@@ -79,9 +77,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
         </HeaderContain>
 
         <HeaderSide rightSide>
-          <HeaderButtonTheme iconSize={11}>
-            <Button icon="gear" tooltip="App Settings" onClick={appSettingsLink} />
-          </HeaderButtonTheme>
+          <OrbitHeaderMenu />
 
           <View flex={1} />
 
@@ -241,20 +237,6 @@ const OpenButton = memo(() => {
         ⌘ + ⏎
       </SimpleText> */}
     </Button>
-  )
-})
-
-const LinkButton = memo(() => {
-  // const { locationStore } = useStores()
-  return (
-    <Button
-      circular
-      tooltip={`Copy link to app`}
-      icon="link69"
-      onClick={() => {
-        // clipboard.writeText(locationStore.urlString)
-      }}
-    />
   )
 })
 

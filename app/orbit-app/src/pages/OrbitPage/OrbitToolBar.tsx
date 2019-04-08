@@ -18,15 +18,17 @@ export const OrbitToolBar = memo((props: AppMainViewProps) => {
   const { paneManagerStore } = useStoresSimple()
   const isActive = useReaction(() => paneManagerStore.activePane.id === id)
   return (
-    <ToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
+    <OrbitToolbarChrome transparent={appDef.config && appDef.config.transparentBackground}>
       <ToolbarInner minHeight={props.hasSidebar ? 0 : 0} isActive={isActive}>
-        <Toolbar>{props.children}</Toolbar>
+        <Toolbar padding={0} background="transparent" alignItems="center" justifyContent="center">
+          {props.children}
+        </Toolbar>
       </ToolbarInner>
-    </ToolbarChrome>
+    </OrbitToolbarChrome>
   )
 })
 
-const ToolbarChrome = gloss(Row, {
+const OrbitToolbarChrome = gloss(Row, {
   position: 'absolute',
   top: 0,
   left: 0,
@@ -47,8 +49,10 @@ const ToolbarInner = gloss<{ isActive: boolean } & ViewProps>(View, {
   flexFlow: 'row',
   opacity: 0,
   height: 0,
+  pointerEvents: 'none',
   isActive: {
     opacity: 1,
     height: toolbarHeight,
+    pointerEvents: 'auto',
   },
 })

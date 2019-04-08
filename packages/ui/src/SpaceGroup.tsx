@@ -8,11 +8,11 @@ export type SpaceGroupProps = {
   separator?: React.ReactNode
 }
 
-export function SpaceGroup({ children, space, spaceAround, separator }: SpaceGroupProps) {
-  if (!space) {
-    return <>{children}</>
-  }
+export function SpaceGroup({ children, space = 'sm', spaceAround, separator }: SpaceGroupProps) {
   const total = React.Children.count(children)
+  if (!space || total <= 1) {
+    return children as any
+  }
   const spaceElement = separator || <Space size={space} />
   return (
     <>

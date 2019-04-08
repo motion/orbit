@@ -51,7 +51,6 @@ export function Toolbar({
 const ToolbarChrome = gloss<ToolbarProps>(Row, {
   flexFlow: 'row',
   alignItems: 'center',
-  justifyContent: 'space-between',
   width: '100%',
   position: 'relative',
 }).theme((props, theme) => ({

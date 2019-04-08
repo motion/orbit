@@ -135,14 +135,10 @@ export function createReaction(
     })
   }
 
-  const sleep = (ms: number): Promise<void> => {
+  const sleep = (ms = 0): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!reactionID) {
         reject(SHARED_REJECTION_ERROR)
-        return
-      }
-      if (typeof ms === 'undefined') {
-        resolve()
         return
       }
       const sleepTimeout = setTimeout(() => resolve(), ms)

@@ -16,7 +16,7 @@ export function SearchSuggestionBar() {
   const dateText = getDateAbbreviated(state.filters.dateState)
   const hasTextualDateFilter = !!state.activeDateFilters.length
   return (
-    <SpaceGroup>
+    <SpaceGroup space="sm">
       {!!dateText && !hasTextualDateFilter && (
         <Button onClick={state.filters.clearDate} opacity={1} alt={filterAlt.date}>
           {dateText}

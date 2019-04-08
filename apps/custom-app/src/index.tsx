@@ -30,8 +30,10 @@ import React, { useState } from 'react'
 
 function CustomApp() {
   const [app, setApp] = useState<AppBit>(null)
-  const channels = useApp(Slack, app).channelsList() || []
-  console.log('channels', channels)
+  const slack = useApp(Slack, app)
+  const res = slack && slack.channelsList()
+
+  console.log('waht', slack, res, app)
 
   return (
     <App>
@@ -42,7 +44,7 @@ function CustomApp() {
             overflow="hidden"
             title="Slack Messages"
           >
-            <Table rows={channels as any} />
+            {res && <Table rows={res.channels} />}
           </Card>
         </GridItem>
       </GridLayout>

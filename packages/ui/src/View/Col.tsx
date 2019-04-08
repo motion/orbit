@@ -5,7 +5,7 @@ import { ScrollableView, ScrollableViewProps } from './ScrollableView'
 export type ColProps = ScrollableViewProps & SpaceGroupProps
 
 export const Col = forwardRef(function Col(
-  { space, spaceAround, children, ...props }: ColProps,
+  { space = false, spaceAround, children, ...props }: ColProps,
   ref,
 ) {
   return (

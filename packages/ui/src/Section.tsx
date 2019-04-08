@@ -54,7 +54,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     minHeight,
     beforeTitle,
     innerRef,
-    padding,
     flexDirection,
     space,
     spaceAround,
@@ -108,7 +107,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         spaceAround={spaceAround}
         flexDirection={flexDirection}
         scrollable={scrollable}
-        pad={innerPad}
+        pad={ogPad}
         {...viewProps}
       >
         <Reset>{children}</Reset>

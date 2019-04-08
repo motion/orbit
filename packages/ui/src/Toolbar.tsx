@@ -54,7 +54,7 @@ const ToolbarChrome = gloss<ToolbarProps>(Row, {
   width: '100%',
   position: 'relative',
 }).theme((props, theme) => ({
-  background: props.background || theme.backgroundStronger,
+  background: props.background || theme.backgroundStrong,
 }))
 
 ToolbarChrome.defaultProps = {

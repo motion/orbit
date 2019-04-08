@@ -5,7 +5,7 @@ import { ScrollableView, ScrollableViewProps } from './ScrollableView'
 export type RowProps = ScrollableViewProps & SpaceGroupProps
 
 export const Row = forwardRef(function Row(
-  { space, spaceAround, separator, children, ...props }: RowProps,
+  { space = false, spaceAround, separator, children, ...props }: RowProps,
   ref,
 ) {
   return (

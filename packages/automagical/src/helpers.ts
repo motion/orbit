@@ -51,7 +51,8 @@ export const logGroup = ({ name, result, changed, timings = '', reactionArgs }) 
     const shortName = name.slice(0, 8)
     seenNames.add(shortName)
     const color = COLOR_WHEEL[[...seenNames].indexOf(shortName) % COLOR_WHEEL.length]
-    let [storeName, args, methodName] = [].concat(...name.split('(').map(x => x.split('.')))
+    const logArgs: string[] = [].concat(...name.split('(').map(x => x.split('.')))
+    let [storeName, args, methodName] = logArgs
     if (!methodName) {
       methodName = args
       args = ''

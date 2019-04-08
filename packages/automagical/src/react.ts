@@ -21,22 +21,19 @@ export type ReactVal =
   | [any, any, any, any, any, any]
   | [any, any, any, any, any, any, any]
 
-export type ReactionFn<A, B> = ((a: A, helpers: ReactionHelpers) => B | Promise<B>)
+export type ReactionFn<A, B> = (a: A, helpers: ReactionHelpers) => B | Promise<B>
 
 // derive first, then react "reaction" style
 // react(() => now(), t => t - 1000, { ...opts })
 export function react<A extends ReactVal, B>(
-  a: (() => A),
+  a: () => A,
   b: ReactionFn<A, B>,
   c?: ReactionOptions,
 ): UnwrapObservable<B>
 
 // single reaction "autorun" style
 // react(() => 1, { ...opts })
-export function react<A extends ReactVal>(
-  a: (() => A),
-  b?: ReactionOptions,
-): UnwrapObservable<A>
+export function react<A extends ReactVal>(a: () => A, b?: ReactionOptions): UnwrapObservable<A>
 
 export function react(a: any, b?: any, c?: any) {
   const startReaction = (obj: any, method: string) => {
@@ -61,7 +58,8 @@ export function setupReact(
   derive: Function | null,
   opts: ReactionOptions,
 ) {
-  const delayName = opts && opts.delay >= 0 ? ` ..${opts.delay}ms ` : ''
+  const delayName =
+    opts && typeof opts.delay === 'number' && opts.delay >= 0 ? ` ..${opts.delay}ms ` : ''
   const storeName = obj.constructor.name
   return createReaction(reaction, derive, opts, {
     name: `${storeName}.${methodName}${delayName}`,

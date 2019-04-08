@@ -24,18 +24,24 @@ export function getAlternateTheme(
   if (cachedThemes) {
     const cached = cachedThemes[name]
     if (cached) return cached
-    const next = selectIsPropStyles(theme, name, shouldFallback)
+    const next = selectIsPropStyles(theme, name, shouldFallback) as ThemeObject
     cachedThemes[name] = next
     return next
   }
-  return null
+  throw new Error('unreachable')
 }
 
 function selectIsPropStyles(theme: ThemeObject, alt: string, shouldFallback?: boolean) {
+  if (!theme.alternates) {
+    throw new Error('No alternates in themes')
+  }
+  if (!theme.alternates[alt]) {
+    throw new Error(`No alternate theme found: ${alt}`)
+  }
   return {
     ...(shouldFallback ? theme : null),
     ...theme.alternates[alt],
-  }
+  } as unknown
 }
 
 // Default pre process theme is:

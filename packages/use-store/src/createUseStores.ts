@@ -14,7 +14,7 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
     const stateRef = useRef(new Map<any, ReturnType<typeof setupTrackableStore>>())
     const render = useForceUpdate()
     const component = useCurrentComponent()
-    const storesRef = useRef(null)
+    const storesRef = useRef<A>()
 
     useEffect(() => {
       return () => {
@@ -39,8 +39,10 @@ export function createUseStores<A extends Object>(StoreContext: React.Context<A>
           // found a store, wrap it for tracking
           if (typeof store !== 'undefined') {
             // wrap each store with trackable
-            if (state.has(store)) {
-              return state.get(store).store
+
+            const existing = state.get(store)
+            if (existing) {
+              return existing.store
             }
 
             const next = setupTrackableStore(store, render, {

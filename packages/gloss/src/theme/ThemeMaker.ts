@@ -3,13 +3,8 @@ import { LinearGradient, ThemeObject } from '@o/css'
 
 type ColorObject = { [a: string]: ColorLike }
 
-// TODO: change themes to just use `base:{}` not put stuff in global?
 export type SimpleStyleObject = {
   [a: string]: ColorLike | ColorObject
-  hover?: ColorObject
-  active?: ColorObject
-  focus?: ColorObject
-  blur?: ColorObject
 }
 
 const darken = (color, amt) => {

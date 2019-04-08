@@ -37,7 +37,7 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
   // 1 argument
   // autorun
   if (!b) {
-    return setupReact(a, null, null, null)
+    return setupReact(a, null, {}, null)
   }
 
   // 4 arguments
@@ -60,11 +60,11 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
     }
     // reaction
     if (bIsReaction) {
-      return setupReact(a, b, null, null)
+      return setupReact(a, b, {}, null)
     }
     // autorun + mountArgs
     if (Array.isArray(b)) {
-      return setupReact(a, null, null, b)
+      return setupReact(a, null, {}, b)
     }
   }
 
@@ -74,7 +74,7 @@ export function useReaction(a: any, b?: any, c?: any, d?: any) {
   if (!!c) {
     if (Array.isArray(c)) {
       if (bIsReaction) {
-        return setupReact(a, b, null, c)
+        return setupReact(a, b, {}, c)
       }
       // autorun + options + mountArgs
       if (bIsOptions) {
@@ -115,7 +115,9 @@ export function setupReact(
         name: component.renderName,
         nameFull: component.renderName,
         addSubscription(dispose) {
-          subscriptions.current.add({ dispose })
+          if (subscriptions.current) {
+            subscriptions.current.add({ dispose })
+          }
         },
         setValue(next: any) {
           if (next === undefined || next === state.current) {
@@ -136,7 +138,9 @@ export function setupReact(
       // we have new mountArgs after first run, update
 
       // remove old reaction
-      subscriptions.current.dispose()
+      if (subscriptions.current) {
+        subscriptions.current.dispose()
+      }
       subscriptions.current = new CompositeDisposable()
 
       // create new one
@@ -148,7 +152,9 @@ export function setupReact(
           name: component.renderName,
           nameFull: component.renderName,
           addSubscription(dispose) {
-            subscriptions.current.add({ dispose })
+            if (subscriptions.current) {
+              subscriptions.current.add({ dispose })
+            }
           },
           setValue(next: any) {
             if (next === undefined || isEqual(next, state.current)) {

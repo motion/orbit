@@ -31,7 +31,7 @@ export const deep = <X>(x: X) => {
 }
 
 export const shallow = <X>(x: X) => {
-  return (observable.object(x, null, { deep: false }) as unknown) as X
+  return (observable.object(x, undefined, { deep: false }) as unknown) as X
 }
 
 export type UseStoreOptions = {
@@ -42,7 +42,7 @@ export type UseStoreOptions = {
 export function disposeStore(store: any, component?: CurrentComponent) {
   store.unmounted = true
   store.willUnmount && store.willUnmount()
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && component) {
     debugEmit({
       type: 'unmount',
       store,

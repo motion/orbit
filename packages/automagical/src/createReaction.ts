@@ -37,9 +37,7 @@ export function createReaction(
     }
   }
 
-  const { delayValue, defaultValue, deferFirstRun, trace, ...options } = getReactionOptions(
-    userOptions,
-  )
+  const { delayValue, deferFirstRun, ...options } = getReactionOptions(userOptions)
   let mobxOptions = options as Mobx.IReactionOptions
   // we run immediately by default
   // its the 95% use case and causes less bugs
@@ -52,7 +50,7 @@ export function createReaction(
   let previousValue: any
   let stopReaction: Function | null = null
   let disposed = false
-  let subscriber: Subscription
+  let subscriber: Subscription | null = null
   // state allows end-users to track certain things in complex reactions
   // for now its just `hasResolvedOnce` which lets them do things on first run
   const state = {
@@ -112,8 +110,8 @@ export function createReaction(
   })
 
   // state used outside each watch/reaction
-  let reactionID = null
-  let rejections = []
+  let reactionID: number | null = null
+  let rejections: Function[] = []
 
   const reset = () => {
     rejections.map(rej => rej())
@@ -226,7 +224,7 @@ export function createReaction(
   }
 
   function setupReactionFn(reactionFn: Function) {
-    return function reaction(reactValArg: any) {
+    return function magicReaction(reactValArg: any) {
       reset()
       const start = Date.now()
       id = id + 1
@@ -325,7 +323,9 @@ export function createReaction(
   }
 
   if (isReaction) {
-    stopReaction = Mobx.reaction(reaction, setupReactionFn(derive), mobxOptions)
+    if (derive) {
+      stopReaction = Mobx.reaction(reaction, setupReactionFn(derive), mobxOptions)
+    }
   } else {
     stopReaction = Mobx.autorun(setupReactionFn(reaction), mobxOptions)
   }

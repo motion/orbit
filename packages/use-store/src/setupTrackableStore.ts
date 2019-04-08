@@ -13,7 +13,7 @@ type TrackableStoreOptions = {
   shouldUpdate?: boolean
 }
 
-const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
+const DedupedWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
 
 type StoreLike = Function & {
   dispose: Function

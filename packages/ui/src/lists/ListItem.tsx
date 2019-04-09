@@ -336,7 +336,7 @@ const ListItemMainContent = gloss({
 
 function getIcon({ icon, iconBefore, small, subTitle, iconProps }: ListItemProps) {
   let iconSize =
-    (iconProps && iconProps.size) || (iconBefore ? (small || !subTitle ? 20 : 28) : small ? 12 : 14)
+    (iconProps && iconProps.size) || (iconBefore ? (small || !subTitle ? 16 : 26) : small ? 12 : 14)
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,

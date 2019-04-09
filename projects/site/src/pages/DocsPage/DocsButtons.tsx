@@ -31,7 +31,7 @@ export function DocsButtons() {
       {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
         <>
           <SubTitle>Elevation {elevation}</SubTitle>
-          <Button key={elevation} elevation={elevation} size={2} icon="gear" iconAfter>
+          <Button key={elevation} elevation={elevation} size={2} icon="cog" iconAfter>
             Hello World
           </Button>
         </>

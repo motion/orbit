@@ -35,7 +35,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
         <ListItem
           {...{
             title: 'App Settings',
-            icon: 'gear',
+            icon: 'cog',
             onClick: appSettingsLink,
           }}
         />

@@ -18,7 +18,7 @@ export function OrbitSettingsToolbar() {
   return (
     <Tabs tabWidth={180} centered sizeRadius={3} active={activePaneKey} onActive={onActive}>
       <Tab id="spaces" icon="layer" label="Spaces" />
-      <Tab id="settings" icon="gear" label="Settings" />
+      <Tab id="settings" icon="cog" label="Settings" />
     </Tabs>
   )
 }

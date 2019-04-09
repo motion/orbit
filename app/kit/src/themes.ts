@@ -127,7 +127,7 @@ const base = Theme.colorize({
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
-const lightButtonBg = linearGradient('#FAFAFA', '#F2F2F2')
+const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 const light = {
   alternates,
   ...base,

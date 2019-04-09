@@ -27,6 +27,7 @@ function ButtonInner(buttonProps: ButtonProps) {
   return (
     <SizedSurface
       themeSelect="button"
+      borderPosition="inside"
       tagName="button"
       alignItems="center"
       flexDirection="row"

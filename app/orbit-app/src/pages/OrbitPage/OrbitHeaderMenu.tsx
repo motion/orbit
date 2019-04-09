@@ -22,8 +22,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
       elevation={5}
       target={<Button {...headerButtonProps} circular iconSize={16} icon="verticalDots" />}
     >
-      <OrbitEditAppItem />
-      <PassProps iconBefore={true}>
+      <PassProps>
         <ListItem
           {...{
             title: 'Permalink',
@@ -32,6 +31,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
             onClick: Actions.copyAppLink,
           }}
         />
+        <OrbitEditAppItem />
         <ListItem
           {...{
             title: 'App Settings',

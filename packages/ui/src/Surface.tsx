@@ -1,4 +1,4 @@
-import { ColorLike } from '@o/css'
+import { ColorLike, CSSPropertySet } from '@o/css'
 import {
   alphaColor,
   Col,
@@ -32,6 +32,7 @@ import { ViewProps } from './View/View'
 // they basically can control a prefix/postfix icon, and a few other bells
 
 export type SurfaceProps = ViewProps & {
+  borderPosition?: 'inside' | 'outside'
   hover?: boolean
   hoverStyle?: any
   active?: boolean
@@ -136,6 +137,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     badgeProps,
     badge,
     after,
+    borderPosition = 'outside',
     borderWidth,
     alt,
     ...surfaceProps
@@ -297,6 +299,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           pad={pad}
           padding={padding}
           borderWidth={borderWidth}
+          borderPosition={borderPosition}
           alt={alt}
           {...throughProps}
           {...surfaceProps}
@@ -321,57 +324,64 @@ const SurfaceFrame = gloss<SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
-}).theme((props, theme) => {
-  // :hover, :focus, :active
-  const { borderColor, ...themeStyles } = propsToThemeStyles(props, theme, true)
-  const propStyles = propsToStyles(props, theme)
-
-  // circular
-  const circularStyles = props.circular && {
+  circular: {
     alignItems: 'center',
     justifyContent: 'center',
     padding: 0,
-    width: props.height,
-  }
+  },
+}).theme((props, theme) => {
+  // :hover, :focus, :active
+  const themeStyle = propsToThemeStyles(props, theme, true)
+  const propStyles = propsToStyles(props, theme)
 
-  const hoverStyle = props.active
-    ? null
-    : {
-        ...(!props.chromeless && themeStyles['&:hover']),
-        ...propStyles['&:hover'],
-      }
-
+  let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || []
+
+  const borderColor = themeStyle.borderColor.toCSS
+    ? themeStyle.borderColor.toCSS()
+    : themeStyle.borderColor
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
+  // borderPosition controls putting borders inside vs outside
+  // useful for having nice looking buttons (inside) vs container-like views (outside)
   if (borderColor && borderWidth && !props.chromeless) {
-    boxShadow = [
-      ...boxShadow,
-      ['inset', 0, 0, 0, borderWidth, borderColor.toCSS ? borderColor.toCSS() : borderColor],
-    ]
+    if (props.borderPosition === 'inside') {
+      // inside
+      boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor]]
+    } else {
+      // outside
+      styles.border = [borderWidth, props.borderStyle || 'solid', borderColor]
+    }
   }
 
   if (props.elevation) {
     boxShadow = [...boxShadow, getElevation(props).boxShadow]
   }
 
-  return alphaColor(
-    {
-      boxShadow,
-      fontWeight: props.fontWeight || theme.fontWeight,
-      color: props.color || theme.color,
-      overflow: props.overflow || theme.overflow,
-      // note: base theme styles go *above* propsToStyles...
-      ...(!props.chromeless && themeStyles),
-      // TODO this could be automatically handled in propStyles if we want...
-      ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
-      ...(props.chromeless && chromelessStyle),
-      ...circularStyles,
-      '&:hover': hoverStyle,
-      ...(props.getTheme && props.getTheme(props, theme)),
-    },
-    { alpha: props.alpha, alphaHover: props.alphaHover },
-  )
+  styles = {
+    boxShadow,
+    fontWeight: props.fontWeight || theme.fontWeight,
+    color: props.color || theme.color,
+    overflow: props.overflow || theme.overflow,
+    // note: base theme styles go *above* propsToStyles...
+    ...(!props.chromeless && themeStyle),
+    // TODO this could be automatically handled in propStyles if we want...
+    ...(!props.chromeless && props.active && { '&:hover': themeStyle['&:active'] }),
+    ...(props.chromeless && chromelessStyle),
+    ...(props.circular && {
+      width: props.height,
+    }),
+    '&:hover': props.active
+      ? null
+      : {
+          ...(!props.chromeless && themeStyle['&:hover']),
+          ...propStyles['&:hover'],
+        },
+    ...(props.getTheme && props.getTheme(props, theme)),
+    ...styles,
+  }
+
+  return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })
 })
 
 const ellipseStyle = {

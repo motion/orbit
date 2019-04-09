@@ -40,6 +40,7 @@ export function Toolbar({
       size={size}
       iconAfter
       tooltipProps={{ towards: opposite[attach] as any }}
+      glint={false}
     >
       <ToolbarChrome elevation={elevation} {...props}>
         {border !== false && borderElement[attach]}

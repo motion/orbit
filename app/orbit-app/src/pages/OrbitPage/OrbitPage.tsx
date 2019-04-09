@@ -35,6 +35,7 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
+import { Dock, DockButton } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
@@ -169,7 +170,12 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
-        <OrbitFloatingShareCard />
+
+        <Dock>
+          <DockButton icon="cog" index={0} />
+          <OrbitFloatingShareCard index={1} />
+        </Dock>
+
         <InnerChrome torn={orbitStore.isTorn}>
           <OrbitContentArea>{contentArea}</OrbitContentArea>
         </InnerChrome>

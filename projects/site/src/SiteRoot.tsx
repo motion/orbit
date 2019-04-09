@@ -4,6 +4,7 @@ import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
 import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
+import { MDX } from './views/MDX'
 
 function getSiteBrowser() {
   if (window['SiteBrowser']) {
@@ -34,8 +35,10 @@ function getSiteBrowser() {
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
-    <div style={{ pointerEvents: 'auto', height: '100vh' }}>
-      <SiteBrowser />
-    </div>
+    <MDX>
+      <div style={{ pointerEvents: 'auto', height: '100vh' }}>
+        <SiteBrowser />
+      </div>
+    </MDX>
   )
 })

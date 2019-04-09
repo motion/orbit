@@ -1,11 +1,40 @@
 import { MDXProvider } from '@mdx-js/tag'
+import { Space, Text, Title } from '@o/ui'
 import React from 'react'
 import { CodeBlock } from './CodeBlock'
 
-const components = {
-  h1: props => <h1 style={{ color: 'tomato' }} {...props} />,
+export const components = {
+  h1: props => (
+    <>
+      <Title size="xl" {...props} />
+      <Space />
+    </>
+  ),
+  h2: props => (
+    <>
+      <Title size="lg" {...props} />
+      <Space />
+    </>
+  ),
+  h3: props => (
+    <>
+      <Title size="md" {...props} />
+      <Space />
+    </>
+  ),
   pre: props => <div {...props} />,
-  code: CodeBlock,
+  code: props => (
+    <>
+      <CodeBlock {...props} />
+      <Space />
+    </>
+  ),
+  p: props => (
+    <>
+      <Text {...props} />
+      <Space />
+    </>
+  ),
 }
 
 export function MDX({ children }: any) {

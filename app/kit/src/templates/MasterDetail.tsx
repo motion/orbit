@@ -4,30 +4,41 @@ import { ListProps, SearchableList } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
 export type MasterDetailProps = ListProps & {
-  children: (selected: OrbitListItemProps) => React.ReactNode
+  children: React.ReactNode | ((selected: OrbitListItemProps) => React.ReactNode)
   placeholder?: React.ReactNode
 }
 
-export function MasterDetail({ children, placeholder, ...listProps }: MasterDetailProps) {
+export function MasterDetail({ children, placeholder, onSelect, ...listProps }: MasterDetailProps) {
   const [selected, setSelected] = useState(null)
+  const contents =
+    typeof children === 'function'
+      ? selected === null
+        ? placeholder || null
+        : children(selected)
+      : children
+
   return (
     <Layout type="row">
       <Pane resizable>
         <SearchableList
           selectable
-          onSelect={useCallback(rows => {
-            if (rows.length) {
-              setSelected(rows[0])
-            }
-          }, [])}
+          onSelect={useCallback(
+            rows => {
+              if (onSelect) {
+                onSelect(rows[0])
+                return
+              }
+              if (rows.length) {
+                setSelected(rows[0])
+              }
+            },
+            [onSelect],
+          )}
           {...listProps}
           itemProps={{ iconBefore: true, ...listProps.itemProps }}
         />
       </Pane>
-      <Pane flex={2}>
-        {/* contents */}
-        {selected === null ? placeholder || null : children(selected)}
-      </Pane>
+      <Pane flex={2}>{contents}</Pane>
     </Layout>
   )
 }

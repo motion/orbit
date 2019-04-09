@@ -1,5 +1,5 @@
 import { isEditing } from '@o/stores'
-import { SegmentedRow, Tab, Tabs, View } from '@o/ui'
+import { Tab, Tabs } from '@o/ui'
 import React, { useCallback } from 'react'
 import { useStores } from '../../hooks/useStores'
 
@@ -16,13 +16,9 @@ export function OrbitSettingsToolbar() {
   }
 
   return (
-    <View margin="auto">
-      <SegmentedRow width={180}>
-        <Tabs borderRadius={100} active={activePaneKey} onActive={onActive}>
-          <Tab id="spaces" icon="layer" label="Spaces" />
-          <Tab id="settings" icon="gear" label="Settings" />
-        </Tabs>
-      </SegmentedRow>
-    </View>
+    <Tabs tabWidth={180} centered sizeRadius={3} active={activePaneKey} onActive={onActive}>
+      <Tab id="spaces" icon="layer" label="Spaces" />
+      <Tab id="settings" icon="gear" label="Settings" />
+    </Tabs>
   )
 }

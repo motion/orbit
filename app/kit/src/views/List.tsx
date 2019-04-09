@@ -184,7 +184,6 @@ export function List({
   const noQuery = typeof search === 'undefined' || search.length === 0
   const hasResults = !!filtered.results.length
   const showPlaceholder = noQuery && !hasResults
-
   const hasSectionProps = isAnyDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
   const children = (

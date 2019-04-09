@@ -1,25 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import { User } from '../interfaces/User'
 
 @Entity()
-export class UserEntity implements User {
+export class UserEntity extends BaseEntity implements User {
   @PrimaryGeneratedColumn()
-  id: number
+  id?: number
 
   @Column()
-  name: string
+  name?: string
 
   @Column({ unique: true, nullable: true })
-  email: string
+  email?: string
 
   @Column({ nullable: true })
-  cloudId: string
+  cloudId?: string
 
   @Column({ nullable: true })
-  lastTimeSync: number
+  lastTimeSync?: number
 
   @Column()
-  activeSpace: number
+  activeSpace?: number
 
   @Column({ type: 'simple-json' })
   spaceConfig: User['spaceConfig']

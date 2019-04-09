@@ -5,9 +5,6 @@ export interface WebsiteAppData {
   }
 }
 
-/**
- * Website additional bit information.
- */
 export interface WebsiteBitData {
   /**
    * Website page url.

@@ -14,7 +14,7 @@ import {
 } from 'react'
 import { Config } from './config'
 import { validProp } from './helpers/validProp'
-import { GarbageCollector } from './stylesheet/gc'
+import { GarbageCollector, StyleTracker } from './stylesheet/gc'
 import { hash } from './stylesheet/hash'
 import { StyleSheet } from './stylesheet/sheet'
 import { ThemeContext } from './theme/ThemeContext'
@@ -63,7 +63,7 @@ export interface GlossView<Props> {
   }
 }
 
-const tracker = new Map()
+const tracker: StyleTracker = new Map()
 const rulesToClass = new WeakMap()
 const sheet = new StyleSheet(true)
 const gc = new GarbageCollector(sheet, tracker, rulesToClass)
@@ -219,33 +219,39 @@ export function gloss<Props = any>(
     ignoreAttrs = arrToDict(attrArr)
   }, 0)
 
-  const isSimpleView = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
-  if (isSimpleView) {
+  const isGlossParent = target[GLOSS_SIMPLE_COMPONENT_SYMBOL]
+  if (isGlossParent) {
     targetConfig = target.glossConfig.getConfig()
   }
 
   // shorthand: view({ ... })
-  if (typeof target === 'object' && !b && !isSimpleView) {
+  if (typeof target === 'object' && !b && !isGlossParent) {
     target = 'div'
     rawStyles = a
   }
 
-  const targetElement = isSimpleView ? targetConfig.targetElement : target
+  const targetElement = isGlossParent ? targetConfig.targetElement : target
   const id = `${viewId()}`
   const Styles = getAllStyles(id, target, rawStyles || null)
   let themeFn: GlossThemeFn<any> | null = null
 
-  let ThemedView = null
-
-  const InnerThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(
-    props,
-    ref,
-  ) {
+  let ThemedView = (forwardRef<HTMLDivElement, GlossProps<Props>>(function Gloss(props, ref) {
     // compile theme on first run to avoid extra work
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
     const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
     const lastClassNames = useRef<string[] | null>(null)
+
+    // unmount
+    useEffect(() => {
+      return () => {
+        const names = lastClassNames.current
+        if (names) {
+          names.forEach(gc.deregisterClassUse)
+        }
+      }
+    }, [])
+
     const classNames = glossify(
       id,
       ThemedView.displayName,
@@ -258,16 +264,6 @@ export function gloss<Props = any>(
       activeTheme,
     )
     lastClassNames.current = classNames
-
-    // unmount
-    useEffect(() => {
-      return () => {
-        const names = lastClassNames.current
-        if (names) {
-          names.forEach(gc.deregisterClassUse)
-        }
-      }
-    }, [])
 
     // if this is a plain view we can use tagName, otherwise just pass it down
     const element =
@@ -303,7 +299,7 @@ export function gloss<Props = any>(
     return createElement(element, finalProps, props.children)
   }) as unknown) as GlossView<Props>
 
-  ThemedView = (memo(InnerThemedView, isEqual) as unknown) as GlossView<Props>
+  ThemedView = (memo(ThemedView, isEqual) as unknown) as GlossView<Props>
 
   ThemedView.glossConfig = {
     themeFns: null,
@@ -314,14 +310,13 @@ export function gloss<Props = any>(
       ignoreAttrs,
       styles: { ...Styles.styles },
       propStyles: { ...Styles.propStyles },
-      child: isSimpleView ? target : null,
+      child: isGlossParent ? target : null,
     }),
   }
   ThemedView[GLOSS_SIMPLE_COMPONENT_SYMBOL] = true
   ThemedView.withConfig = config => {
     if (config.displayName) {
       ThemedView.displayName = config.displayName
-      InnerThemedView.displayName = config.displayName
     }
     return ThemedView
   }
@@ -352,7 +347,7 @@ const arrToDict = (obj: Object) => {
   return obj
 }
 
-const addStyles = (id: string, baseStyles: Object, nextStyles: CSSPropertySet | null) => {
+const addStyles = (id: string, baseStyles: Object, nextStyles?: CSSPropertySet | null) => {
   const propStyles = {}
   for (const key in nextStyles) {
     // dont overwrite as we go down

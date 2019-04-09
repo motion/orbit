@@ -4,21 +4,15 @@ import { styleVal } from './propsToStyles'
 // resolves props into styles for valid css
 // backs up to theme colors if not found
 
-const collectStylesForPseudo = (theme, postfix) => {
-  return {
-    background: theme[`background${postfix}`],
-    color: theme[`color${postfix}`],
-    borderColor: theme[`borderColor${postfix}`],
-  }
-}
+const isDefined = (x: any) => typeof x !== 'undefined'
 
-type ThemeObjectWithPseudo = ThemeObject & {
+type ThemeObjectWithPseudo = Partial<ThemeObject> & {
   '&:hover'?: ThemeObject
   '&:focus'?: ThemeObject
   '&:active'?: ThemeObject
 }
 
-const stateConfig = {
+const pseudos = {
   hover: {
     pseudoKey: '&:hover',
     postfix: 'Hover',
@@ -39,6 +33,40 @@ const stateConfig = {
   },
 }
 
+// [fromKey, toKey][]
+type KeyMap = [string, string][]
+
+// these are sort of the "base" theme keys
+// we can check them and set them for all the psuedo states as well
+const themeKeys: KeyMap = [
+  ['color', 'color'],
+  ['background', 'background'],
+  ['borderColor', 'borderColor'],
+  ['borderColorBottom', 'borderBottomColor'],
+  ['borderColorTop', 'borderTopColor'],
+  ['borderColorLeft', 'borderLeftColor'],
+  ['borderColorRight', 'borderRightColor'],
+]
+
+function assignThemeStyles(styles: Object, props: Object, theme: ThemeObject, keyMap: KeyMap) {
+  let overrides: Object | null = null
+  for (const [name, mapName] of keyMap) {
+    if (isDefined(props[name])) {
+      const val = styleVal(props[name], theme, props)
+      styles[mapName] = val
+      overrides = overrides || {}
+      overrides[mapName] = val
+      continue
+    }
+    if (isDefined(theme[name])) {
+      styles[mapName] = theme[name]
+    }
+  }
+  return overrides
+}
+
+const SubThemeKeys: { [key: string]: KeyMap } = {}
+
 export const propsToThemeStyles = (
   props: any,
   theme: ThemeObject,
@@ -47,48 +75,45 @@ export const propsToThemeStyles = (
   if (!theme) {
     throw new Error('No theme passed to propsToThemeStyles')
   }
-  let styles: ThemeObjectWithPseudo = {
-    color: props.color || theme.color,
-    background: props.background || theme.background,
-    borderColor: props.borderColor || theme.borderColor,
-  }
+  let styles: ThemeObjectWithPseudo = {}
 
-  // if we set styles from props we should propogate those styles
-  // down to be sure we don't "undo" them inside pseudo styles
-  let propOverrides
-  if (props.background || props.borderColor || props.color) {
-    propOverrides = {}
-    if (props.background) {
-      propOverrides.background = styleVal(props.background, theme, props)
-    }
-    if (props.color) {
-      propOverrides.color = styleVal(props.color, theme, props)
-    }
-    if (props.borderColor) {
-      propOverrides.borderColor = styleVal(props.borderColor, theme, props)
-    }
-  }
+  // assigns base theme styles
+  // warning! mutative function
+  const overrides = assignThemeStyles(styles, props, theme, themeKeys)
 
-  for (const key in stateConfig) {
-    const { postfix, pseudoKey, forceOnProp, extraStyleProp } = stateConfig[key]
+  for (const key in pseudos) {
+    const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
     if (props[forceOnProp] === false) continue // forced off
     if (props[extraStyleProp] === null) continue // forced empty
 
-    let stateStyle = collectStylesForPseudo(theme, postfix)
+    // cache sub-keys like backgroundHover colorHover
+    if (!SubThemeKeys[postfix]) {
+      SubThemeKeys[postfix] = themeKeys.map(([k]) => [`${k}${postfix}`, k])
+    }
+    const subThemeKeys = SubThemeKeys[postfix]
 
-    // add in any overrideStyles
+    // now process and get styles, but dont assign them yet
+    let stateStyle = {}
+    assignThemeStyles(stateStyle, props, theme, subThemeKeys)
+
+    // for any prop overrides from base, override them on psuedo too
+    // (this could be an optional parameter)
+    if (overrides) {
+      Object.assign(stateStyle, overrides)
+    }
+
+    // merge any user-defined psuedo style
     if (typeof props[extraStyleProp] === 'object') {
       Object.assign(stateStyle, props[extraStyleProp])
     }
 
-    if (propOverrides) {
-      Object.assign(stateStyle, propOverrides)
-    }
-
+    // we conditionally apply it here...
     if (stylePseudos) {
       styles[pseudoKey] = stateStyle
     }
 
+    // ... but either way, we allow users to "force" it on
+    // (this could also be an optional parameter)
     const booleanOn = forceOnProp && props[forceOnProp] === true
     if (booleanOn) {
       Object.assign(styles, stateStyle)

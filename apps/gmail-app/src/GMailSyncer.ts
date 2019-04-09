@@ -1,15 +1,14 @@
 import { createSyncer, sleep } from '@o/sync-kit'
 import { chunk } from 'lodash'
+import { GMailBitFactory } from './GMailBitFactory'
+import { GMailLoader } from './GMailLoader'
 import { GMailMessageParser } from './GMailMessageParser'
 import { GmailAppData, GmailBitDataParticipant, GMailThread } from './GMailModels'
-import { GMailLoader } from './GMailLoader'
-import { GMailBitFactory } from './GMailBitFactory'
 
 /**
  * Syncs GMail.
  */
 export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
-
   const data: GmailAppData = app.data
   const loader = new GMailLoader(app, log, () => utils.updateAppData())
   const factory = new GMailBitFactory(utils)
@@ -75,6 +74,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
 
     await utils.saveBits(bit.people)
     await utils.saveBit(bit)
+    return true
   }
 
   /**
@@ -137,8 +137,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
   if (!data.values.daysLimit) data.values.daysLimit = 330
 
   // setup some local variables we are gonna work with
-  const queryFilter =
-    data.values.filter || `newer_than:${data.values.daysLimit}d`
+  const queryFilter = data.values.filter || `newer_than:${data.values.daysLimit}d`
   let lastSync = data.values.lastSync
 
   // update last sync configuration
@@ -153,8 +152,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
   if (
     (lastSync.usedMax !== undefined && data.values.max !== lastSync.usedMax) ||
     (lastSync.usedQueryFilter !== undefined && queryFilter !== lastSync.usedQueryFilter) ||
-    (lastSync.usedDaysLimit !== undefined &&
-      data.values.daysLimit !== lastSync.usedDaysLimit)
+    (lastSync.usedDaysLimit !== undefined && data.values.daysLimit !== lastSync.usedDaysLimit)
   ) {
     log.info(
       'last syncronization configuration mismatch, dropping bits and start sync from scratch',
@@ -175,12 +173,15 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
 
       // convert added thread ids into thread objects and load their messages
       const addedThreads = await Promise.all(
-        history.addedThreadIds.map(async threadId => {
-          return {
-            id: threadId,
-            historyId: history.historyId,
-          } as GMailThread
-        }),
+        history.addedThreadIds.map(
+          async (threadId): Promise<GMailThread> => {
+            return {
+              id: threadId,
+              historyId: history.historyId,
+              messages: null,
+            }
+          },
+        ),
       )
       await loader.loadMessages(addedThreads)
 
@@ -200,7 +201,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
     if (history.removedThreadIds.length) {
       log.info('found actions in history for thread removals', history.removedThreadIds)
       const removedBits = await utils.loadBits({
-        ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId))
+        ids: history.removedThreadIds.map(threadId => utils.generateBitId(threadId)),
       })
       await utils.removeBits(removedBits)
     } else {
@@ -209,7 +210,6 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
 
     lastSync.historyId = history.historyId
     await utils.updateAppData()
-
   } else {
     // else this is a first time sync, load all threads
 
@@ -218,7 +218,7 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
       queryFilter: queryFilter,
       pageToken: lastSync.lastCursor,
       loadedCount: lastSync.lastCursorLoadedCount || 0,
-      handler: handleThread.bind(this),
+      handler: handleThread,
     })
   }
 
@@ -235,13 +235,13 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
       log.timer('load threads from whitelisted people', whitelistEmails)
       // we split emails into chunks because gmail api can't handle huge queries
       const emailChunks = chunk(whitelistEmails, 100)
-      for (let emails of emailChunks) {
-        const whitelistFilter = emails.map(email => 'from:' + email).join(' OR ')
+      for (let emls of emailChunks) {
+        const whitelistFilter = emls.map(email => 'from:' + email).join(' OR ')
         await loader.loadThreads({
           count: data.values.max,
           queryFilter: whitelistFilter,
           loadedCount: 0,
-          handler: syncThread.bind(this),
+          handler: syncThread,
         })
       }
       log.timer('load threads from whitelisted people')
@@ -249,5 +249,4 @@ export const GMailSyncer = createSyncer(async ({ app, log, utils }) => {
       log.info('no enabled people in whitelist were found')
     }
   }
-  
 })

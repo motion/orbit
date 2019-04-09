@@ -1,6 +1,6 @@
 import { ColorLike } from '@o/css'
 import { Col, Contents, CSSPropertySet, gloss, ThemeContext } from '@o/gloss'
-import * as React from 'react'
+import React, { useContext } from 'react'
 
 type Props = CSSPropertySet & {
   size: number
@@ -9,7 +9,7 @@ type Props = CSSPropertySet & {
   boxShadow?: any
   background?: ColorLike
   opacity?: number
-  border?: Array<any> | string
+  border?: any[] | string
 }
 
 export function Arrow({
@@ -21,7 +21,7 @@ export function Arrow({
   background,
   ...props
 }: Props) {
-  const theme = React.useContext(ThemeContext).activeTheme
+  const theme = useContext(ThemeContext).activeTheme
   const onBottom = towards === 'bottom'
   const innerTop = size * (onBottom ? -1 : 1)
   const transformOuter = {

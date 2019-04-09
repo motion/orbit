@@ -20,6 +20,7 @@
     "@o/ui": "^2.4.0",
     "@o/use-store": "^2.4.0",
     "@o/utils": "^2.4.0",
+    "react-cache": "2.0.0-alpha.1",
     "compromise": "11.11.0",
     "date-fns": "2.0.0-alpha.16",
     "fuzzysort": "1.1.4",
@@ -27,7 +28,8 @@
     "lodash": "*",
     "react-svg-inline": "2.1.1",
     "sherlockjs": "1.4.0",
-    "typeorm": "^0.3.0-alpha.22"
+    "typeorm": "^0.3.0-alpha.22",
+    "hash-sum": "1.0.2"
   },
   "peerDependencies": {
     "electron": "*",

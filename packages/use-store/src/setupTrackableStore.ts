@@ -1,10 +1,10 @@
 import { useCurrentComponent } from '@o/automagical'
 import { isEqual } from '@o/fast-compare'
 import { get } from 'lodash'
-import { observe, Reaction, transaction } from 'mobx'
+import { Lambda, observe, Reaction, transaction } from 'mobx'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { debugEmit } from './debugUseStore'
-import { GET_STORE, mobxProxyWorm } from './mobxProxyWorm'
+import { GET_STORE, mobxProxyWorm, ProxyWorm } from './mobxProxyWorm'
 import { queueUpdate, removeUpdate } from './queueUpdate'
 
 type TrackableStoreOptions = {
@@ -13,7 +13,11 @@ type TrackableStoreOptions = {
   shouldUpdate?: boolean
 }
 
-const DedupedWorms = new WeakMap<any, ReturnType<typeof mobxProxyWorm>>()
+const DedupedWorms = new WeakMap<any, ProxyWorm<StoreLike>>()
+
+type StoreLike = Function & {
+  dispose: Function
+}
 
 export function setupTrackableStore(
   store: any,
@@ -32,7 +36,7 @@ export function setupTrackableStore(
   const storeName = store.constructor.name
   let paused = true
   let reactiveKeys = new Set()
-  let deepKeys = []
+  let deepKeys: string[] = []
 
   const update = () => {
     if (paused) return
@@ -50,7 +54,7 @@ export function setupTrackableStore(
   }
 
   const { getters, decorations } = store.__automagic
-  const observers = []
+  const observers: Lambda[] = []
 
   // this lets us handle deep objects
   const reaction = new Reaction(`track(${name})`, () => {
@@ -96,15 +100,20 @@ export function setupTrackableStore(
   // we want to dedupe on the original store object
   const unwrapped = store[GET_STORE] || store
 
-  // dedupe stores so we properly track/untrack as we go down to children
-  let config = DedupedWorms.get(unwrapped)
-  if (!config) {
-    config = mobxProxyWorm(store)
-    DedupedWorms.set(store, config)
+  function getOrCreateProxyWorm(): ProxyWorm<StoreLike> {
+    // dedupe stores so we properly track/untrack as we go down to children
+    let config = DedupedWorms.get(unwrapped)
+    if (!config) {
+      config = mobxProxyWorm(store)
+      DedupedWorms.set(store, config)
+    }
+    return config
   }
 
+  const config = getOrCreateProxyWorm()
+
   // done gives us back the keys it tracked
-  let done: ReturnType<typeof config['track']> = null
+  let done: ReturnType<typeof config['track']>
   let disposed = false
 
   return {
@@ -146,19 +155,14 @@ export function useTrackableStore<A>(
   opts?: TrackableStoreOptions,
 ): A {
   const component = useCurrentComponent()
-  const trackableStore = useRef({
-    store: null,
-    track: null,
-    untrack: null,
-    dispose: null,
-  })
+  const trackableStore = useRef<ReturnType<typeof setupTrackableStore>>({} as any)
   const shouldUpdate = opts && opts.shouldUpdate
   let cur = trackableStore.current
 
-  if (shouldUpdate) {
+  if (cur && cur.store && shouldUpdate) {
     cur.store.dispose()
   }
-  if (plainStore && (!cur.store || shouldUpdate)) {
+  if (plainStore && (!(cur && cur.store) || shouldUpdate)) {
     trackableStore.current = setupTrackableStore(plainStore, rerenderCb, { component, ...opts })
     cur = trackableStore.current
   }
@@ -170,7 +174,7 @@ export function useTrackableStore<A>(
   cur.track && cur.track()
   useLayoutEffect(cur.untrack || idFn)
 
-  return cur.store
+  return cur.store as any
 }
 
 const idFn = _ => _

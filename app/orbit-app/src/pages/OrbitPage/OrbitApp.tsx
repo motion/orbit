@@ -50,17 +50,17 @@ const OrbitAppRender = memo(({ id, identifier }: { id: string; identifier: strin
   return <OrbitAppRenderOfDefinition appDef={appDef} id={id} identifier={identifier} />
 })
 
-function OrbitActions(props: { children: any }) {
+function OrbitActions(props: { children?: any }) {
   const stores = useStoresSimple()
   const isActive = useIsAppActive()
 
   useEffect(() => {
     if (isActive) {
-      stores.orbitStore.setActiveActions(props.children)
+      stores.orbitStore.setActiveActions(props.children || null)
     } else {
       stores.orbitStore.setActiveActions(null)
     }
-  }, [isActive])
+  }, [isActive, props.children])
 
   return null
 }

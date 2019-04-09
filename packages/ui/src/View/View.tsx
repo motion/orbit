@@ -1,23 +1,113 @@
-import { Col, ColProps, CSSPropertySet, gloss } from '@o/gloss'
+import { Col, gloss, GlossBaseProps } from '@o/gloss'
+import { isDefined } from '@o/utils'
+import { getSpaceSize, Sizes } from '../Space'
+import { Omit } from '../types'
+import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps, getElevation } from './elevate'
 
-export type ViewProps = ColProps & ElevatableProps & ScrollableProps
+// TODO this gets messy, and is incomplete
+type CommonHTMLProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  | 'title'
+  | 'about'
+  | 'accessKey'
+  | 'autoCapitalize'
+  | 'autoCorrect'
+  | 'autoSave'
+  | 'vocab'
+  | 'typeof'
+  | 'suppressHydrationWarning'
+  | 'suppressContentEditableWarning'
+  | 'spellCheck'
+  | 'security'
+  | 'slot'
+  | 'results'
+  | 'resource'
+  | 'prefix'
+  | 'property'
+  | 'radioGroup'
+  | 'dangerouslySetInnerHTML'
+  | 'contextMenu'
+  | 'dir'
+  | 'datatype'
+  | 'inlist'
+  | 'itemID'
+  | 'lang'
+  | 'is'
+  | 'itemScope'
+  | 'inputMode'
+>
 
-// Scrollable
+export type ViewProps = CommonHTMLProps &
+  GlossBaseProps &
+  CommonViewProps &
+  ElevatableProps &
+  PadProps
 
-export type ScrollableProps = {
-  scrollable?: boolean | 'x' | 'y'
+// Padded
+
+export type PadProps = {
+  pad?:
+    | Sizes
+    | Sizes[]
+    | {
+        top?: Sizes
+        left?: Sizes
+        bottom?: Sizes
+        right?: Sizes
+        x?: Sizes
+        y?: Sizes
+      }
 }
 
-const getScrollable = ({ scrollable }: ScrollableProps): CSSPropertySet => {
-  // easy scrollable
-  if (scrollable === true) {
-    return { overflowX: 'auto', overflowY: 'auto' }
-  } else if (scrollable === 'x') {
-    return { overflowX: 'auto', overflowY: 'hidden' }
-  } else if (scrollable === 'y') {
-    return { overflowY: 'auto', overflowX: 'hidden' }
+const getPadding = (props: PadProps & { padding?: any }) => {
+  if (typeof props.padding !== 'undefined') {
+    return {
+      padding: props.padding,
+    }
+  }
+  if (typeof props.pad !== 'undefined') {
+    if (!props.pad) {
+      return
+    }
+    if (Array.isArray(props.pad)) {
+      return {
+        padding: props.pad.map(x => getSpaceSize(x)),
+      }
+    }
+    if (typeof props.pad === 'object') {
+      const { top, left, right, bottom, x, y } = props.pad
+      if (isDefined(x) || isDefined(y)) {
+        return {
+          padding: [x, y, x, y].map(val => getSpaceSize(val)),
+        }
+      }
+      return {
+        padding: [top, right, bottom, left].map(side => getSpaceSize(side || 0)),
+      }
+    }
+    if (typeof props.pad === 'number' || props.pad === true) {
+      return {
+        padding: getSpaceSize(props.pad),
+      }
+    }
   }
 }
 
-export const View = gloss<ViewProps>(Col).theme(getElevation, getScrollable)
+// plain padded view
+export const PaddedView = gloss(Col).theme(getPadding)
+
+export function getBetweenPad(pad: PadProps['pad']): Sizes {
+  if (Array.isArray(pad)) {
+    return pad[0] || 0
+  }
+  if (!pad) {
+    return 0
+  }
+  if (typeof pad === 'object') {
+    return pad.top || pad.y || 0
+  }
+  return pad
+}
+
+export const View = gloss<ViewProps>(Col).theme(getPadding, getElevation)

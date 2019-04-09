@@ -17,7 +17,7 @@ export function SelectApp({ type, onSelect, ...selectProps }: SelectAppProps) {
         label: app.name,
         value: app,
       }))}
-      onChange={next => onSelect(next.value)}
+      onChange={next => onSelect(next ? next.value : null)}
       {...selectProps}
     />
   )

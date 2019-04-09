@@ -1,3 +1,5 @@
+- make gloss not wrap props with GlossProps, i think, so you can export them, see Space
+
 - Grid persistance, Slack import app
 
 Good enough demo to Ken Wheeler / et al:

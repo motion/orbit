@@ -106,7 +106,7 @@ export default function AppWindow(props: Props) {
   const store = useStore(AppWindowStore, props)
   const { id, isPeek } = props
   const ignoreMouseEvents = !Desktop.hoverState.appHovered[id]
-  const url = `${Config.urls.server}/app?peekId=${this.props.id}`
+  const url = `${Config.urls.server}/app?peekId=${props.id}`
 
   log.info(`Rendering app window ${id} at url ${url} ignore mouse? ${ignoreMouseEvents}`)
 

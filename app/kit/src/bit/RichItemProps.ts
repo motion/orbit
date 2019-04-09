@@ -4,7 +4,6 @@ import { NormalItem } from '../types/NormalItem'
 export type RichItemProps = {
   item?: any
   normalizedItem?: Partial<NormalItem>
-  isExpanded?: boolean
   shownLimit?: number
   searchTerm?: string
   renderText?: ItemRenderText

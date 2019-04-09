@@ -14,14 +14,14 @@ export default class LowPassFilter {
 
   bufferMaxSize: number
   smoothing: number
-  buffer: Array<number>
+  buffer: number[]
 
   hasFullBuffer(): boolean {
     return this.buffer.length === this.bufferMaxSize
   }
 
   push(value: number): number {
-    let removed: number = 0
+    let removed = 0
 
     if (this.hasFullBuffer()) {
       removed = this.buffer.shift()

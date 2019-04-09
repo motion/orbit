@@ -1,13 +1,14 @@
 import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { Icon } from '../Icon'
-import { View } from '../View/View'
+import { View, ViewProps } from '../View/View'
 
 const ClearClickableArea = gloss(View, {
   height: '100%',
   padding: 5,
   transition: 'all ease 450ms 100ms',
   opacity: 1,
+  alignItems: 'center',
   hidden: {
     pointerEvents: 'none',
     opacity: 0,
@@ -25,31 +26,37 @@ const ClearFrame = gloss(View, {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'default',
+  transform: {
+    y: 1,
+  },
 }).theme((_, theme) => ({
   background: theme.buttonBackground || theme.background.alpha(0.25),
+  '&:hover': {
+    background: theme.buttonBackgroundHover || theme.backgroundHover,
+  },
 }))
 
 export const ClearButton = ({
-  onClick = null,
-  onHover = null,
-  onMouseDown = null,
-  onMouseUp = null,
-  onMouseEnter = null,
-  onMouseLeave = null,
+  onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseEnter,
+  onMouseLeave,
   children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
-  hover = null,
   hidden = false,
+  hoverStyle,
+  activeStyle,
   ...props
-}) => (
+}: ViewProps) => (
   <ClearClickableArea
     {...{
-      '&:hover': hover,
       onClick,
-      onHover,
       onMouseDown,
       onMouseUp,
       onMouseEnter,
       onMouseLeave,
+      hoverStyle,
+      activeStyle,
     }}
     hidden={hidden}
   >

@@ -17,7 +17,7 @@ export function Message({ title, icon, subTitle, subType }: AppProps) {
           <SubTitle>{subType}</SubTitle>
         </>
       )}
-      <Space small />
+      <Space />
       <PassProps size={88}>
         {typeof icon === 'string' ? <Icon name={icon} /> : icon || null}
       </PassProps>

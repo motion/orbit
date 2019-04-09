@@ -1,6 +1,7 @@
 import { mergeDefined } from '@o/utils'
 import React from 'react'
 import { useScale } from './Scale'
+import { Sizes } from './Space'
 import { Surface, SurfaceProps, useSurfaceProps } from './Surface'
 
 const LINE_HEIGHT = 29
@@ -20,10 +21,25 @@ const num = (x: number | boolean) => (x === true ? 1 : +x)
 export const getSizedRadius = (size: number, sizeRadius: number | true) =>
   Math.round(num(sizeRadius) * 8 * size)
 
-// always return even so things are always centered
+// always return even so things center
 const getHeight = (size: number, sizeHeight: number | boolean) => {
   const height = Math.round(LINE_HEIGHT * num(sizeHeight) * size)
   return height % 2 === 1 ? height : height + 1
+}
+
+const sizes = {
+  xs: 0.8,
+  sm: 0.9,
+  md: 1,
+  lg: 1.2,
+  xl: 1.4,
+  xxl: 1.6,
+}
+
+export const getSize = (size: Sizes) => {
+  if (!size || size === false || size === true) return 1
+  if (typeof size === 'string') return sizes[size]
+  return size
 }
 
 export function SizedSurface(direct: SizedSurfaceProps) {
@@ -40,7 +56,7 @@ export function SizedSurface(direct: SizedSurfaceProps) {
     circular,
     ...rest
   } = props
-  const size = scale * (ogSize || 1)
+  const size = scale * getSize(ogSize)
   // sizes
   let height =
     typeof props.height === 'number'

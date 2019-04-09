@@ -17,7 +17,7 @@ const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
-export function expandCSSArray(given: number | Array<number | string>): ColorArray {
+export function expandCSSArray(given: number | (number | string)[]): ColorArray {
   if (typeof given === 'number') {
     return [given, given, given, given]
   }
@@ -63,11 +63,7 @@ function processArrayItem(key: string, val: any, level: number = 0) {
   return typeof val === 'number' ? `${val}px` : val
 }
 
-export function processArray(
-  key: string,
-  value: Array<number | string>,
-  level: number = 0,
-): string {
+export function processArray(key: string, value: (number | string)[], level: number = 0): string {
   if (key === 'background') {
     if (isColorLike(value)) {
       return toColorString(value)
@@ -129,10 +125,7 @@ export function processObject(key: string, object: any): string {
       return toColorString(object)
     }
   }
-  // if (key === 'border') {
-  //   return ``
-  // }
-  const toReturn = []
+  const toReturn: string[] = []
   for (const subKey in object) {
     if (!object.hasOwnProperty(subKey)) {
       continue

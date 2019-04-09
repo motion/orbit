@@ -1,23 +1,33 @@
-import { gloss } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
-import { PaddedProps } from './layout/Padded'
-import { Scrollable } from './layout/Scrollable'
 import { SizedSurface } from './SizedSurface'
-import { TitleRow, TitleRowProps } from './TitleRow'
+import { Sizes, Space } from './Space'
+import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
-import { View, ViewProps } from './View/View'
+import { Col, ColProps } from './View/Col'
 
-export type SectionProps = Omit<ViewProps, 'columns' | 'onSubmit'> &
-  PaddedProps &
-  Omit<Partial<TitleRowProps>, 'after' | 'below' | 'margin'> & {
-    belowTitle?: React.ReactNode
-    afterTitle?: React.ReactNode
-    titleBorder?: boolean
-    below?: React.ReactNode
-    innerRef?: any
-    maxInnerHeight?: number
-  }
+// useful for making a higher order component that uses Section internally
+// & you dont want to pass *everything* done, this is a good subset
+export type SectionSpecificProps = Omit<
+  Partial<TitleRowSpecificProps>,
+  'after' | 'below' | 'margin' | 'unpad'
+> & {
+  size?: Sizes
+  titleSize?: Sizes
+  beforeTitle?: React.ReactNode
+  belowTitle?: React.ReactNode
+  afterTitle?: React.ReactNode
+  titleBorder?: boolean
+  below?: React.ReactNode
+  innerRef?: any
+  maxInnerHeight?: number
+  padInner?: Sizes
+}
+
+export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
+
+export type SectionProps = Omit<ColProps, 'onSubmit'> & SectionSpecificProps
 
 const { useProps, Reset, PassProps } = createContextualProps<SectionProps>()
 export const SectionPassProps = PassProps
@@ -37,7 +47,6 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     below,
     flex,
     icon,
-    padded,
     background,
     titleBorder,
     width,
@@ -48,9 +57,21 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     maxInnerHeight = window.innerHeight * 2,
     maxWidth,
     minHeight,
+    beforeTitle,
     innerRef,
+    flexDirection,
+    space,
+    spaceAround,
+    pad,
+    padInner,
+    titleSize,
+    size,
     ...viewProps
   } = props
+  const hasTitle = !!(title || afterTitle)
+  const outerPad = hasTitle ? false : pad
+  const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
+  const spaceSize = space === true ? selectDefined(size, space) : space
   return (
     <SizedSurface
       forwardRef={ref}
@@ -70,28 +91,41 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxWidth={maxWidth}
       minHeight={minHeight}
       overflow={bordered ? 'hidden' : 'inherit'}
+      pad={outerPad}
+      size={size}
     >
-      {!!(title || afterTitle) && (
+      {hasTitle && (
         <TitleRow
           bordered={bordered || titleBorder}
           backgrounded={bordered}
-          margin={0}
           title={title}
           subTitle={subTitle}
           after={afterTitle}
           above={above}
+          before={beforeTitle}
           below={belowTitle}
           icon={icon}
+          pad={titleBorder || bordered ? true : innerPad}
+          size={selectDefined(titleSize, size)}
         />
       )}
-      <SectionInner maxHeight={maxInnerHeight} flex={1} ref={innerRef} {...viewProps}>
-        <Scrollable scrollable={scrollable} padded={padded}>
-          <Reset>{children}</Reset>
-        </Scrollable>
-      </SectionInner>
+      <Space size={spaceSize} />
+      <Reset>
+        <Col
+          maxHeight={maxInnerHeight}
+          flex={1}
+          ref={innerRef}
+          space={spaceSize}
+          spaceAround={spaceAround}
+          flexDirection={flexDirection}
+          scrollable={scrollable}
+          pad={innerPad}
+          {...viewProps}
+        >
+          {children}
+        </Col>
+      </Reset>
       {below}
     </SizedSurface>
   )
 })
-
-const SectionInner = gloss(View)

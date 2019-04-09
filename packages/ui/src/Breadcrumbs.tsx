@@ -15,16 +15,16 @@ export type BreadcrumbsProps = Omit<RowProps, 'children'> & {
 
 class BreadcrumbStore {
   props: {
-    // TODO this isnt passing down
     separator: BreadcrumbsProps['separator']
   }
+
   selectors = new ObservableSet<string>()
 
   orderedChildren = react(
     () => [...this.selectors],
     async (selectors, { sleep }) => {
       ensure('selectors', !!selectors.length)
-      await sleep()
+      await sleep(0)
       const nodes = Array.from(document.querySelectorAll(selectors.map(x => `.${x}`).join(', ')))
       const orderedSelectors = nodes.map(node =>
         selectors.find(sel => node.classList.contains(sel)),

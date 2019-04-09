@@ -48,13 +48,17 @@ export function selectDefined(...args: any[]) {
   }
 }
 
-export function mergeDefined<A>(...args: A[]): A {
+export function mergeDefined<A extends Object>(...args: A[]): A {
   const res = {}
-  const keys = [...new Set([].concat(...args.map(a => Object.keys(a))))]
+  const keysSets = args.map(a => Object.keys(a))
+  const keysFlat = [].concat(...(keysSets as any))
+  const keys = [...new Set(keysFlat)]
   for (const key of keys) {
     for (const obj of args) {
-      if (typeof obj[key] !== 'undefined') {
-        res[key] = obj[key]
+      if (typeof key === 'string') {
+        if (typeof obj[key] !== 'undefined') {
+          res[key] = obj[key]
+        }
       }
     }
   }

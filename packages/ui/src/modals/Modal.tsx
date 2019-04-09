@@ -34,7 +34,7 @@ function SimpleModal({
   subTitle,
   scrollable,
   above,
-  padded,
+  pad,
   children,
   shown,
   afterTitle,
@@ -67,7 +67,7 @@ function SimpleModal({
         }
         scrollable={scrollable}
         above={above}
-        padded={padded}
+        pad={pad}
       >
         {children}
       </Section>

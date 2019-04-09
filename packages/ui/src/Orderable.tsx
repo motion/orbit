@@ -10,7 +10,7 @@ import { isEqual } from 'lodash'
 import * as React from 'react'
 import { Rect } from './helpers/geometry'
 
-export type OrderableOrder = Array<string>
+export type OrderableOrder = string[]
 
 type OrderableOrientation = 'horizontal' | 'vertical'
 

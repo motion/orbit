@@ -52,7 +52,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     >
       {before}
       <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="ui-1_zoom" size={16} />
+        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="ui-1_zoom" size={14} />
         {filters.map((filter, i) => (
           <FilterToken
             key={`${filter.key}:${filter.type}${i}`}
@@ -112,6 +112,9 @@ export const SearchInnerInput = gloss(TableInput, {
 export const SearchIcon = gloss(Icon, {
   margin: [0, 6, 0],
   minWidth: 16,
+  // transform: {
+  //   y: 0.5,
+  // },
 })
 
 const SearchBar = gloss(Row, {
@@ -128,8 +131,7 @@ const SearchBox = gloss(View, {
   height: '100%',
   flex: 1,
   alignItems: 'center',
-  paddingLeft: 4,
-  paddingRight: 30, // for clear button
+  padding: [0, 4],
   minHeight: 32,
   '&:focus-within': {
     boxShadow: `0 0 0 2px rgba(0,0,0,0.05)`,

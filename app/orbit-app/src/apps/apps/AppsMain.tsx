@@ -1,4 +1,4 @@
-import { AppMainView, AppProps, removeApp, useApp } from '@o/kit'
+import { AppMainView, AppProps, removeApp, useAppBit } from '@o/kit'
 import { FormField, Section, Title, TitleBarButton } from '@o/ui'
 import React from 'react'
 import { SubSection } from '../../views/SubSection'
@@ -6,7 +6,7 @@ import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 
 export function AppsMain(props: AppProps) {
-  const [app] = useApp(+props.subId)
+  const [app] = useAppBit(+props.subId)
 
   if (!app) {
     return null
@@ -20,6 +20,7 @@ export function AppsMain(props: AppProps) {
       return (
         <Section
           titleBorder
+          padInner
           icon="gear"
           title={props.title}
           afterTitle={
@@ -33,13 +34,13 @@ export function AppsMain(props: AppProps) {
             )
           }
         >
-          <Section padded>
+          <Section pad={{ bottom: true }}>
             <FormField label="Name and Icon">
               <AppsMainNew />
             </FormField>
           </Section>
 
-          <Section padded>
+          <Section pad={{ bottom: true }}>
             <SubSection title="App Settings">
               <AppMainView {...props} viewType="settings" />
             </SubSection>

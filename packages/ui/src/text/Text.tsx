@@ -4,6 +4,8 @@ import { HighlightOptions, highlightText, on } from '@o/utils'
 import keycode from 'keycode'
 import * as React from 'react'
 import { ScaleContext } from '../Scale'
+import { getSize } from '../SizedSurface'
+import { Sizes } from '../Space'
 import { View } from '../View/View'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
@@ -23,7 +25,7 @@ export type TextProps = CSSPropertySetStrict &
     alpha?: number
     onKeyDown?: Function
     opacity?: number
-    size?: number
+    size?: Sizes
     style?: Object
     placeholder?: string
     lineHeight?: number
@@ -46,7 +48,7 @@ export type Highlights = {
 export class Text extends React.PureComponent<TextProps> {
   selected = false
   editable = false
-  node = null
+  node: any = null
 
   static contextType = ScaleContext
 
@@ -76,7 +78,7 @@ export class Text extends React.PureComponent<TextProps> {
   }
 
   measure() {
-    if (this.props.ellipse > 1) {
+    if (this.props.ellipse && this.props.ellipse > 1) {
       this.setState(
         {
           doClamp: true,
@@ -156,15 +158,11 @@ export class Text extends React.PureComponent<TextProps> {
   render() {
     const {
       editable,
-      autoselect,
       selectable,
       ellipse,
       children,
       tagName,
-      getRef,
-      onKeyDown,
       color,
-      measure,
       highlight,
       renderAsHtml,
       ignoreColor,
@@ -172,7 +170,7 @@ export class Text extends React.PureComponent<TextProps> {
     } = this.props
     const { doClamp, textHeight } = this.state
     const scale = this.context ? this.context.size : 1
-    const size = scale * (this.props.size || 1)
+    const size = scale * getSize(this.props.size)
     const textProps = propsToTextSize({
       sizeLineHeight: this.props.sizeLineHeight,
       lineHeight: this.props.lineHeight,
@@ -257,7 +255,6 @@ export class Text extends React.PureComponent<TextProps> {
         selectable={selectable}
         oneLineEllipse={oneLineEllipse}
         suppressContentEditableWarning={editable}
-        onKeyDown={this.handleKeydown}
         ref={this.getRef}
         ignoreColor={ignoreColor}
         color={color}
@@ -266,6 +263,8 @@ export class Text extends React.PureComponent<TextProps> {
         lineHeight={textProps.lineHeight}
         {...props}
         {...finalProps}
+        // override props
+        onKeyDown={this.handleKeydown}
       />
     )
   }

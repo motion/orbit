@@ -1,5 +1,5 @@
 import { AppMainView, AppProps, List, OrbitListItemProps, useTreeList } from '@o/kit'
-import { BarButtonSmall, TitleRow, TitleRowProps } from '@o/ui'
+import { Button, TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {
@@ -42,9 +42,9 @@ function ListsAppMainFolder(props: AppProps) {
         title={props.title}
         before={
           treeList.userState.depth > 0 && (
-            <BarButtonSmall icon="arrows-1_bold-left" onClick={treeList.actions.back}>
+            <Button icon="arrows-1_bold-left" onClick={treeList.actions.back}>
               Back
-            </BarButtonSmall>
+            </Button>
           )
         }
       />

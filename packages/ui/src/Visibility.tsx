@@ -21,6 +21,10 @@ export function useVisiblityContext() {
 }
 
 export function useVisiblity() {
-  const store = useVisiblityStore()
-  return store ? store.getVisible() : true
+  try {
+    const store = useVisiblityStore()
+    return store.getVisible() || true
+  } catch {
+    return true
+  }
 }

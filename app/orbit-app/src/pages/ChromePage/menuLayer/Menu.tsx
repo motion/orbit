@@ -145,7 +145,7 @@ export class MenuStore {
     () => this.isOpenOutsideAnimation,
     async (open, { sleep }) => {
       ensure('not open', !open)
-      await sleep()
+      await sleep(0)
       this.setActiveMenuIndex(-1)
     },
     {
@@ -511,7 +511,14 @@ export function Menu() {
   // }, [])
 
   return (
-    <MergeContext Context={VirtualListDefaultProps} value={{ dynamicHeight: true }}>
+    <MergeContext
+      Context={VirtualListDefaultProps}
+      value={
+        {
+          /* dynamicHeight: true */
+        }
+      }
+    >
       <MergeContext
         Context={StoreContext}
         value={{

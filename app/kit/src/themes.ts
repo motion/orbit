@@ -45,12 +45,19 @@ const colorThemes: ThemeSet = {
     background: '#449878',
     color: '#fff',
   }),
+  orange: Theme.fromStyles({
+    color: '#fff',
+    background: '#DC6104',
+  }),
+  yellow: Theme.fromStyles({
+    color: '#fff',
+    background: '#C9C825',
+  }),
   blue: Theme.fromStyles({
     iconFill: '#fff',
     background: orbitColor,
     backgroundHover: orbitColor,
     backgroundActive: orbitColor,
-    listItemBackground: orbitColor.alpha(0.5),
     color: '#fff',
     borderColor: orbitActiveBg,
   }),
@@ -59,24 +66,13 @@ const colorThemes: ThemeSet = {
     backgroundHover: 'transparent',
     backgroundActive: 'transparent',
   }),
-  orange: Theme.fromStyles({
-    color: '#fff',
-    background: '#DC6104',
-  }),
 }
 
 const alternates: ThemeSet = {
-  orange: colorThemes.orange,
-  red: colorThemes.red,
-  lightRed: colorThemes.lightRed,
-  lightYellow: colorThemes.lightYellow,
-  yellow: colorThemes.yellow,
-  green: colorThemes.green,
-  remove: colorThemes.red,
+  ...colorThemes,
   error: colorThemes.lightRed,
   warn: colorThemes.lightYellow,
   approve: colorThemes.lightGreen,
-  lightGreen: colorThemes.lightGreen,
   confirm: {
     buttonFontWeight: 600,
     ...colorThemes.green,
@@ -123,17 +119,18 @@ const base = Theme.colorize({
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
-const lightButtonBg = linearGradient('#fcfcfc', '#f4f4f4')
+const lightButtonBg = linearGradient('#FAFAFA', '#F2F2F2')
 const light = {
   alternates,
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.75],
     background: lightBackground,
-    backgroundStrong: lightBackground.darken(0.05),
-    backgroundStronger: lightBackground.darken(0.075),
-    backgroundStrongest: lightBackground.darken(0.1),
+    backgroundStrong: lightBackground.darken(0.025),
+    backgroundStronger: lightBackground.darken(0.05),
+    backgroundStrongest: lightBackground.darken(0.075),
     backgroundZebra: '#f6f7f9aa',
     backgroundHighlightActive: orbitColor.lighten(0.1),
     backgroundHighlight: orbitColor,
@@ -160,6 +157,7 @@ const light = {
     listItemBackground: [255, 255, 255, 0],
     listItemBorderColor: 'eee',
     listItemBackgroundHover: [100, 100, 100, 0.024],
+    listItemBackgroundActive: [100, 100, 100, 0.05],
     inputBackground: '#fff',
     inputBackgroundHover: '#fff',
     inputBackgroundActive: '#fff',

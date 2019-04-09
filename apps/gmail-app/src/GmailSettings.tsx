@@ -1,26 +1,9 @@
-import { AppMainView, AppProps, ManageSyncStatus, useApp } from '@o/kit'
+import { AppMainView, ManageSyncStatus, useApp } from '@o/kit'
 import { Row, Section } from '@o/ui'
 import * as React from 'react'
-import { useEffect } from 'react'
-import gmailApp from './index'
 
-export function GmailSettings(props: AppProps) {
-  const [app] = useApp(+props.subId)
-
-  // todo: remove it
-  // load gmail profile (testing api)
-  useEffect(
-    () => {
-      if (app) {
-        gmailApp
-          .api(app)
-          .getProfile({ userId: 'me' })
-          .then(profile => console.log('user profile', profile))
-      }
-    },
-    [app],
-  )
-
+export function GmailSettings() {
+  const app = useApp()
   return (
     <Section flex={1}>
       <Row width="100%" alignItems="center">

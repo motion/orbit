@@ -102,7 +102,7 @@ function CreateAppMain() {
             height="70%"
             title="New app"
             bordered
-            subTitle="Choose app to add"
+            subTitle="Choose an app from your library to add to space."
           >
             <List
               searchable
@@ -129,7 +129,7 @@ function CreateAppMain() {
         </SliderPane>
       </Slider>
 
-      <Toolbar>{toolbars[pane]}</Toolbar>
+      <Toolbar size="md">{toolbars[pane]}</Toolbar>
     </>
   )
 }

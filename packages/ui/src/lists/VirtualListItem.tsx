@@ -1,6 +1,6 @@
+import { isEqual } from '@o/fast-compare'
 import { SortableElement } from '@o/react-sortable-hoc'
 import * as React from 'react'
-import { shouldComponentUpdate } from 'react-window'
 import { GenericComponent } from '../types'
 import { ListItem, ListItemProps } from './ListItem'
 
@@ -19,7 +19,9 @@ export type VirtualListItemProps<Item> = ListItemProps & {
 }
 
 export class VirtualListItemInner extends React.Component<VirtualListItemProps<any>> {
-  shouldComponentUpdate = shouldComponentUpdate.bind(this)
+  shouldComponentUpdate(prev) {
+    return isEqual(prev, this.props) === false
+  }
 
   render() {
     const { realIndex, ItemView, ...rest } = this.props

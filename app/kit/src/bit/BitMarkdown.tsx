@@ -1,16 +1,15 @@
-import { Markdown, ScrollableContent, Surface, View } from '@o/ui'
+import { Col, Markdown } from '@o/ui'
 import * as React from 'react'
+import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
 
-export function BitMarkdown({ item }) {
+export function BitMarkdown(props: AppBitMainProps) {
   return (
-    <Surface flexFlow="column" hover={false} noInnerElement padding={16} flex={1}>
-      <ScrollableContent>
-        <View padding={[16, 0]}>
-          <Markdown {...this.props}>{item.body}</Markdown>
-        </View>
-      </ScrollableContent>
-      <BitStatusBar {...this.props} />
-    </Surface>
+    <Col flex={1}>
+      <Col pad={{ y: true }} scrollable>
+        <Markdown source={props.item.body} />
+      </Col>
+      <BitStatusBar {...props} />
+    </Col>
   )
 }

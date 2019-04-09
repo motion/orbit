@@ -1,22 +1,79 @@
-import { App, AppBit, createApp, SelectApp, Table } from '@o/kit'
+import { App, AppBit, createApp, SelectApp, Table, useApp } from '@o/kit'
 import Slack from '@o/slack-app'
 import { Card, GridItem, GridLayout } from '@o/ui'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
+// todo: remove it
+// load sample repositories (testing api)
+// useEffect(
+//   () => {
+//     if (app) {
+//       githubApp
+//         .api(app)
+//         .listRepositoriesForOrg({ org: 'typeorm' })
+//         .then(repos => console.log('repos', repos))
+//     }
+//   },
+//   [app],
+// )
+
+// todo: remove it
+// execute postgres query (testing api)
+// loadMany(AppModel, { args: { where: { identifier: 'postgres' } } }).then(postgresApps => {
+//   console.log('postgresApps', postgresApps)
+//   for (let postApp of postgresApps) {
+//     postgresApp
+//       .api(postApp)
+//       .query(`SELECT * FROM country`, [])
+//       .then(results => {
+//         console.log(`countries loaded`, results)
+//       })
+//   }
+// })
+
+// todo: remove it
+// load gmail profile (testing api)
+// useEffect(() => {
+//   if (app) {
+//     gmailApp
+//       .api(app)
+//       .getProfile({ userId: 'me' })
+//       .then(profile => console.log('user profile', profile))
+//   }
+// }, [app])
+
+// todo: remove it
+// load something from confluence (testing api)
+// useEffect(() => {
+//   loadOne(AppModel, { args: { where: { identifier: 'confluence', tabDisplay: 'plain' } } }).then(
+//     app => {
+//       if (app) {
+//         confluenceApp
+//           .api(app)
+//           .loadUsers()
+//           .then(users => console.log('users', users))
+//       }
+//     },
+//   )
+// }, [])
+
+// // todo: remove it
+//   // load drive files (testing api)
+//   useEffect(
+//     () => {
+//       if (app) {
+//         driveApp
+//           .api(app)
+//           .listFiles()
+//           .then(files => console.log('files', files))
+//       }
+//     },
+//     [app],
+//   )
 function CustomApp() {
   const [app, setApp] = useState<AppBit>(null)
-  const [res, setRes] = useState([])
-
-  useEffect(() => {
-    if (app) {
-      Slack.api(app)
-        .channelsList()
-        .then(({ channels }) => {
-          console.log('channels', channels)
-          setRes(channels)
-        })
-    }
-  }, [app])
+  const slack = useApp(Slack, app)
+  const res = slack && slack.channelsList()
 
   return (
     <App>
@@ -24,11 +81,10 @@ function CustomApp() {
         <GridItem w={4} h={4}>
           <Card
             afterTitle={<SelectApp onSelect={setApp} />}
-            flex={1}
             overflow="hidden"
             title="Slack Messages"
           >
-            <Table rows={res} />
+            {res && <Table rows={res.channels} />}
           </Card>
         </GridItem>
       </GridLayout>

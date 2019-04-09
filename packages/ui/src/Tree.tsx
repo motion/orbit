@@ -10,7 +10,7 @@ export type TreeProps = {
   elements: { [key: string]: TreeItem }
   onTreeItemSelected: (key: TreeItemID) => void
   onTreeItemExpanded: (key: TreeItemID, deep: boolean) => void
-  onTreeItemHovered?: (key: TreeItemID) => void
+  onTreeItemHovered?: (key: TreeItemID | null) => void
   itemsKey?: string
   selected?: TreeItemID
   searchResults?: {

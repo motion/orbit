@@ -1,7 +1,7 @@
 import { gloss } from '@o/gloss'
 import * as React from 'react'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
-import { Space } from '../layout/Space'
+import { Space } from '../Space'
 import { DateFormat } from '../text/DateFormat'
 import { HighlightText } from '../text/HighlightText'
 import { Text } from '../text/Text'
@@ -18,7 +18,7 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
       <Text fontWeight={500} size={0.9} alpha={0.8}>
         <DateFormat date={new Date(date)} />
       </Text>
-      <Space small />
+      <Space />
       <MessageHeader>
         {participants
           .filter(x => x.type === 'from')
@@ -38,7 +38,7 @@ export function ThreadMessage({ date, participants, body }: ThreadMessageLike) {
             </React.Fragment>
           ))}
       </MessageHeader>
-      <Space small />
+      <Space />
       <MailBody>{body}</MailBody>
     </Message>
   )

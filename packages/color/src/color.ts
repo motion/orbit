@@ -13,6 +13,8 @@ export function toColor(obj) {
   return new Color(obj)
 }
 
+const round = x => Math.round(x * 2) / 2
+
 const slice = [].slice
 const skippedModels = [
   // to be honest, I don't really feel like keyword belongs in color convert, but eh.
@@ -121,6 +123,11 @@ export class Color {
     if (Object.freeze) {
       Object.freeze(this)
     }
+  }
+
+  toCSS() {
+    const { r, g, b, a } = this.rgbaObject()
+    return `rgba(${round(r * 255)},${round(g * 255)},${round(b * 255)},${a})`
   }
 
   get _equalityKey() {
@@ -355,45 +362,45 @@ export class Color {
   }
 
   get red() {
-    return getset('rgb', 0, maxfn(255))
+    return getset(this, 'rgb', 0, maxfn(255))
   }
 
   get green() {
-    return getset('rgb', 1, maxfn(255))
+    return getset(this, 'rgb', 1, maxfn(255))
   }
 
   get blue() {
-    return getset('rgb', 2, maxfn(255))
+    return getset(this, 'rgb', 2, maxfn(255))
   }
 
   get hue() {
-    return getset(['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
+    return getset(this, ['hsl', 'hsv', 'hsl', 'hwb'], 0, function(val) {
       return ((val % 360) + 360) % 360
     })
   }
 
   get saturationl() {
-    return getset('hsl', 1, maxfn(100))
+    return getset(this, 'hsl', 1, maxfn(100))
   }
 
   get lightness() {
-    return getset('hsl', 2, maxfn(100))
+    return getset(this, 'hsl', 2, maxfn(100))
   }
 
   get saturationv() {
-    return getset('hsv', 1, maxfn(100))
+    return getset(this, 'hsv', 1, maxfn(100))
   }
 
   get value() {
-    return getset('hsv', 2, maxfn(100))
+    return getset(this, 'hsv', 2, maxfn(100))
   }
 
   get white() {
-    return getset('hwb', 1, maxfn(100))
+    return getset(this, 'hwb', 1, maxfn(100))
   }
 
   get wblack() {
-    return getset('hwb', 2, maxfn(100))
+    return getset(this, 'hwb', 2, maxfn(100))
   }
 }
 
@@ -436,7 +443,7 @@ function roundToPlace(places) {
   }
 }
 
-function getset(model, channel, modifier?) {
+function getset(color: Color, model, channel, modifier?) {
   model = Array.isArray(model) ? model : [model]
   model.forEach(function(m) {
     ;(limiters[m] || (limiters[m] = []))[channel] = modifier
@@ -448,11 +455,11 @@ function getset(model, channel, modifier?) {
       if (modifier) {
         val = modifier(val)
       }
-      result = this[model]()
+      result = color[model]()
       result.color[channel] = val
       return result
     }
-    result = this[model]().color[channel]
+    result = color[model]().color[channel]
     if (modifier) {
       result = modifier(result)
     }

@@ -1,4 +1,4 @@
-import { Inline, Row, ThemeContext } from '@o/gloss'
+import { Block, Row, ThemeContext } from '@o/gloss'
 import { flow } from 'lodash'
 import * as React from 'react'
 import { preventDefault } from './helpers/preventDefault'
@@ -12,10 +12,10 @@ const shortName = name => {
 }
 
 const Person = props => (
-  <Inline marginRight={4} onClick={props.onClick}>
+  <Block display="inline" marginRight={4} onClick={props.onClick}>
     {shortName(props.person.name)}
     {props.after}
-  </Inline>
+  </Block>
 )
 
 export function PersonRow({ people, onClickPerson = null }) {

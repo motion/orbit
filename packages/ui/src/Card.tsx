@@ -1,13 +1,18 @@
 import { Theme } from '@o/gloss'
 import * as React from 'react'
 import { Collapsable, CollapsableProps } from './Collapsable'
-import { Padded, PaddedProps } from './layout/Padded'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
-import { View } from './View/View'
+import { Sizes, Space } from './Space'
+import { Col } from './View/Col'
+import { getBetweenPad } from './View/View'
 
-export type CardProps = PaddedProps & SizedSurfaceProps & ListItemProps & Partial<CollapsableProps>
+export type CardProps = SizedSurfaceProps &
+  ListItemProps &
+  Partial<CollapsableProps> & {
+    space?: Sizes
+  }
 
 export function Card(props: CardProps) {
   const {
@@ -25,12 +30,14 @@ export function Card(props: CardProps) {
     titleFlex,
     onClickLocation,
     subTitle,
-    padded,
+    pad,
     date,
     collapsable,
     collapsed,
     onCollapse,
     hideSubtitle,
+    space,
+    flexDirection,
     ...restProps
   } = props
   const isSelected = useIsSelected(props)
@@ -43,19 +50,22 @@ export function Card(props: CardProps) {
         themeSelect="card"
         sizeRadius={sizeRadius}
         noInnerElement
+        pad={pad}
         padding={padding}
       >
         <Scale size={1.1}>
           <ListItem
             className="grid-draggable"
-            backgroundHover="transparent"
             onClickLocation={onClickLocation}
+            alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
+            padding={0}
             titleProps={{
               fontWeight: 500,
               ...titleProps,
             }}
+            hoverStyle={null}
             afterTitle={afterTitle}
             title={title}
             subTitle={subTitle}
@@ -67,14 +77,24 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
+        <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
         <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
-          <Padded padded={padded}>
-            <View flex={1} height={collapsed ? 0 : '100%'}>
-              {showChildren && children}
-            </View>
-          </Padded>
+          <Col
+            flexDirection={flexDirection}
+            space={space}
+            pad={pad}
+            padding={padding}
+            flex={1}
+            height={collapsed ? 0 : '100%'}
+          >
+            {showChildren && children}
+          </Col>
         </Collapsable>
       </SizedSurface>
     </Theme>
   )
+}
+
+Card.accepts = {
+  surfaceProps: true,
 }

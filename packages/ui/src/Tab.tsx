@@ -53,7 +53,6 @@ export function TabItem(props: ButtonProps) {
   return (
     <Button
       ellipse
-      spacing="min-content"
       minWidth="min-content"
       maxWidth={200}
       sizeHeight={0.8}

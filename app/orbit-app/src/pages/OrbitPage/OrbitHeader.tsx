@@ -1,6 +1,6 @@
 import { invertLightness } from '@o/color'
 import { FullScreen, gloss, useTheme } from '@o/gloss'
-import { Icon, useActiveApps, useLocationLink } from '@o/kit'
+import { Icon } from '@o/kit'
 import { isEditing } from '@o/stores'
 import { BorderBottom, Button, ButtonProps, Row, Space, SurfacePassProps, View } from '@o/ui'
 // import { clipboard } from 'electron'
@@ -9,18 +9,18 @@ import { useActions } from '../../hooks/useActions'
 import { useStores, useStoresSimple } from '../../hooks/useStores'
 import { OrbitSpaceSwitch } from '../../views/OrbitSpaceSwitch'
 import { OrbitHeaderInput } from './OrbitHeaderInput'
+import { OrbitHeaderMenu } from './OrbitHeaderMenu'
 import { OrbitNav } from './OrbitNav'
 
-const HeaderButtonTheme = (props: any) => (
-  <SurfacePassProps
-    chromeless
-    margin={[-1, 4]}
-    opacity={0.5}
-    hoverStyle={{ opacity: 0.75 }}
-    iconSize={14}
-    {...props}
-  />
-)
+export const headerButtonProps = {
+  chromeless: true,
+  margin: [-1, 1],
+  opacity: 0.5,
+  hoverStyle: { opacity: 0.75 },
+  iconSize: 14,
+}
+
+const HeaderButtonTheme = (props: any) => <SurfacePassProps {...headerButtonProps} {...props} />
 
 export const OrbitHeader = memo(function OrbitHeader() {
   const { orbitStore, headerStore, newAppStore, paneManagerStore } = useStores()
@@ -30,7 +30,6 @@ export const OrbitHeader = memo(function OrbitHeader() {
   const theme = useTheme()
   const isOnSettings = activePaneType === 'settings' || activePaneType === 'spaces'
   const isOnTearablePane = activePaneType !== activePane.id
-  const appSettingsLink = useLocationLink(`apps?itemId=${activePane.id}`)
 
   return (
     <OrbitHeaderContainer
@@ -61,34 +60,27 @@ export const OrbitHeader = memo(function OrbitHeader() {
 
           {isOnTearablePane && (
             <>
-              <HeaderButtonTheme>
-                {orbitStore.activeActions || null}
-                <OrbitEditAppButton />
-                <LinkButton />
-              </HeaderButtonTheme>
+              {!!orbitStore.activeActions && (
+                <ExtraButtonsChrome>
+                  <HeaderButtonTheme>{orbitStore.activeActions || null}</HeaderButtonTheme>
+                </ExtraButtonsChrome>
+              )}
               <SurfacePassProps sizeRadius={1.2} sizePadding={1.2} fontWeight={500}>
-                {!isEditing && (
-                  <>
-                    <Space />
-                    <OpenButton />
-                  </>
-                )}
+                {!isEditing && <OpenButton />}
               </SurfacePassProps>
             </>
           )}
         </HeaderContain>
 
         <HeaderSide rightSide>
-          <HeaderButtonTheme iconSize={11}>
-            <Button icon="gear" tooltip="App Settings" onClick={appSettingsLink} />
-          </HeaderButtonTheme>
+          <OrbitHeaderMenu />
 
           <View flex={1} />
 
           {isEditing && (
             <Row>
               <HeaderButton icon="edit" tooltip="Open in VSCode" />
-              <Space small />
+              <Space />
               <HeaderButton alt="action" tooltip="Deploy to space">
                 Publish
               </HeaderButton>
@@ -146,33 +138,6 @@ function HeaderButton(props: ButtonProps) {
   return <Button size={0.9} sizeHeight={0.9} {...props} />
 }
 
-function OrbitEditAppButton() {
-  const { paneManagerStore, orbitStore } = useStores()
-  const activePaneId = paneManagerStore.activePane.id
-  const activeApps = useActiveApps()
-  const activeApp = activeApps.find(app => activePaneId === `${app.id}`)
-  const show = activeApp && activeApp.identifier === 'custom' && !isEditing
-  const Actions = useActions()
-
-  if (!show) {
-    return null
-  }
-
-  return (
-    <>
-      <Button
-        circular
-        icon="tool"
-        tooltip="Edit app"
-        onClick={async () => {
-          Actions.tearApp()
-          orbitStore.setEditing()
-        }}
-      />
-    </>
-  )
-}
-
 const OrbitHeaderEditingBg = gloss<{ isActive?: boolean }>(FullScreen, {
   zIndex: -1,
   transition: 'all ease-in 500ms',
@@ -221,6 +186,16 @@ const HeaderTop = gloss(View, {
   position: 'relative',
 })
 
+const ExtraButtonsChrome = gloss({
+  flexFlow: 'row',
+  paddingRight: 12,
+  paddingLeft: 2,
+  marginRight: -10,
+  borderLeftRadius: 12,
+}).theme((_, theme) => ({
+  border: [1, theme.borderColor.alpha(0.5)],
+}))
+
 const OpenButton = memo(() => {
   const Actions = useActions()
   // const [_isHovered, setHovered] = useState(false)
@@ -241,20 +216,6 @@ const OpenButton = memo(() => {
         ⌘ + ⏎
       </SimpleText> */}
     </Button>
-  )
-})
-
-const LinkButton = memo(() => {
-  // const { locationStore } = useStores()
-  return (
-    <Button
-      circular
-      tooltip={`Copy link to app`}
-      icon="link69"
-      onClick={() => {
-        // clipboard.writeText(locationStore.urlString)
-      }}
-    />
   )
 })
 

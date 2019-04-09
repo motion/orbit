@@ -3,7 +3,7 @@ export class ReactionTimeoutError extends Error {}
 
 export class Reaction {
   options = null
-  reaction = null
+  reaction: [any, any] | null = null
   constructor(a, b, c) {
     if (!b || typeof b === 'object') {
       // watch

@@ -7,11 +7,11 @@ import {
   Form,
   Layout,
   Pane,
+  Row,
   SearchInput,
   Section,
   Select,
   Space,
-  SpacedRow,
   Tab,
   Tabs,
   useFetch,
@@ -32,19 +32,17 @@ export function CustomApp1() {
     active: active[i % 2],
   }))
 
-  console.log('users', users)
-
   return (
     <Form use={form}>
       <Layout type="row">
         <Pane resizable flex={1.5}>
           <Layout type="column">
             <Pane resizable>
-              <SpacedRow>
+              <Row space spaceAround>
                 <SearchInput name="search" />
                 <Select name="active" options={active} />
                 <Select name="type" isMulti options={type} />
-              </SpacedRow>
+              </Row>
               <Table
                 selectable="multi"
                 shareable
@@ -54,7 +52,7 @@ export function CustomApp1() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane padded scrollable="x" flexFlow="row">
+            <Pane pad scrollable="x" flexFlow="row">
               {highlighted.map(row => (
                 <>
                   <Card
@@ -64,11 +62,11 @@ export function CustomApp1() {
                     minWidth={200}
                     minHeight={200}
                     elevation={1}
-                    padded
+                    pad
                   >
                     <DefinitionList row={row} />
                   </Card>
-                  <Space size={20} />
+                  <Space />
                 </>
               ))}
             </Pane>

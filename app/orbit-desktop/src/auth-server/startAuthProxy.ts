@@ -42,10 +42,11 @@ export function startAuthProxy() {
         },
       })
       .then(proc => {
-        proc.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
+        let p = proc as any
+        p.stdout.on('data', x => console.log(`OrbitProxy: ${x}`))
         // DONT resolve or fail here, for some reason sometimes stdout comes as stderr
         // but thats fine, we have a fail timeout anyways...
-        proc.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
+        p.stderr.on('data', x => console.log(`OrbitProxyErr: ${x}`))
       })
       .catch(err => {
         log.error('error spawning', err)

@@ -72,7 +72,7 @@ export function highlightText(options: HighlightOptions): string {
   const surroundMax = Math.min(maxSurroundChars, restLen / numSurrounds / 2)
 
   // trim it down
-  const filtered = []
+  const filtered: string[] = []
   let prev
   for (const [index, part] of parts.entries()) {
     const highlighted = isHighlightWord(part, words)
@@ -112,7 +112,7 @@ export function highlightText(options: HighlightOptions): string {
       }
     }
   }
-  let final = []
+  let final: string[] = []
   let len = 0
   for (const part of filtered) {
     // this does our maxChars filtering, but wont chop last line...

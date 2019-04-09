@@ -59,7 +59,7 @@ function memoizeOne<Result>(cb: Function): (a: any) => Result {
         return res
       }
     }
-    const newVal: Result = cb.call(this, key)
+    const newVal: Result = cb(key)
     if (mappable) {
       Cache.set(key, newVal)
     }
@@ -80,7 +80,7 @@ function isColorLikeString(str: string) {
   return false
 }
 
-function isColorLikeArray(array: Array<number | string>) {
+function isColorLikeArray(array: (number | string)[]) {
   return (
     typeof array[0] === 'number' &&
     typeof array[1] === 'number' &&

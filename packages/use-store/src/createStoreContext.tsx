@@ -7,7 +7,7 @@ import { useStore, UseStoreOptions } from './useStore'
 
 export function createStoreContext<Instance, Props>(_: { new (): Instance; props?: Props }) {
   _
-  const Context = createContext(null as Instance)
+  const Context = createContext<Instance | null>(null)
   return {
     Context,
     Provider: ({ value, children }: { value: Instance; children: any }) => {
@@ -15,7 +15,11 @@ export function createStoreContext<Instance, Props>(_: { new (): Instance; props
     },
     useStore(props?: Props, options?: UseStoreOptions): Instance {
       const value = useContext(Context)
-      return useStore(value, props as any, options)
+      const store = useStore(value, props as any, options)
+      if (!store) {
+        throw new Error(`No store provided, use createStoreContext().Provider to provide.`)
+      }
+      return store
     },
   }
 }

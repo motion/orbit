@@ -16,7 +16,7 @@
 
 import { Mediator } from '@o/bridge'
 import { getGlobalConfig } from '@o/config'
-import { toColor } from '@o/gloss'
+import { css, toColor } from '@o/gloss'
 import { LoggerSettings } from '@o/logger'
 import * as Models from '@o/models'
 import r2 from '@o/r2'
@@ -49,6 +49,7 @@ const toJS = obj => {
 }
 
 // the heavy hitters
+window['css'] = css
 window['ReconnectingWebSocket'] = ReconnectingWebSocket
 window['Mediator'] = Mediator
 window['PopoverState'] = PopoverState

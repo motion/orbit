@@ -1,14 +1,13 @@
 import { Logger } from '@o/kit'
 import * as fs from 'fs'
-import * as path from 'path'
-import { WebsiteCrawledData } from './WebsiteModels'
 import { WebsiteCrawlerUtils } from './WebsiteCrawlerUtils'
+import { WebsiteCrawledData } from './WebsiteModels'
 
 const puppeteer = require('puppeteer')
 const getUrls = require('get-urls')
 
 // todo(nate): make sure such paths works in prod mode
-const filename = path.resolve(__dirname + '/Readability.js')
+const filename = require.resolve('node-readability')
 const readabilityLibrary = fs.readFileSync(filename, { encoding: 'utf-8' })
 const readabilityCode = `(function(){
   try {

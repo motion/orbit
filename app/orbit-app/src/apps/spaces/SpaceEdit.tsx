@@ -39,7 +39,7 @@ export function SpaceEdit({ space }: { space: Space }) {
   const [colors, setColors] = React.useState(space.colors || defaultColors)
 
   return (
-    <Section titleBorder padded title={space.name}>
+    <Section titleBorder pad title={space.name}>
       <SubSection title="General">
         <Paragraph>Customize your space appearance.</Paragraph>
 
@@ -64,7 +64,7 @@ export function SpaceEdit({ space }: { space: Space }) {
                   onChangeColor={x => setColors([x, colors[1]])}
                 />
               </HorizontalScroll>
-              <UISpace small />
+              <UISpace size="sm" />
               <HorizontalScroll height={30}>
                 <ColorPicker
                   count={50}

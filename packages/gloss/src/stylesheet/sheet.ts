@@ -7,7 +7,7 @@
 
 const invariant = require('invariant')
 
-function makeStyleTag(): HTMLStyleElement {
+function makeStyleTag(): HTMLStyleElement | null {
   if (typeof document === 'undefined') {
     return null
   }
@@ -24,15 +24,13 @@ export class StyleSheet {
   disabled = false
   injected = false
 
-  constructor(isSpeedy?: boolean) {
-    this.isSpeedy = Boolean(isSpeedy)
+  constructor(private isSpeedy: boolean = true) {
     this.flush()
     this.inject()
   }
 
-  ruleIndexes: string[]
-  isSpeedy: boolean
-  tag: HTMLStyleElement
+  ruleIndexes: string[] = []
+  tag: HTMLStyleElement | null = null
 
   getRuleCount(): number {
     return this.ruleIndexes.length
@@ -61,6 +59,9 @@ export class StyleSheet {
     }
     this.ruleIndexes.splice(index, 1)
     const tag = this.tag
+    if (!tag) {
+      return
+    }
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
       invariant(sheet, 'expected sheet')
@@ -72,6 +73,9 @@ export class StyleSheet {
 
   insert(key: string, rule: string) {
     const tag = this.tag
+    if (!tag) {
+      return
+    }
     if (this.isSpeedy) {
       const sheet = tag.sheet as CSSStyleSheet
       invariant(sheet, 'expected sheet')

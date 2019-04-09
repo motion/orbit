@@ -8,11 +8,17 @@ ARGS=${@:2}
 echo "in $NAME: $ARGS"
 
 APP="$ROOT/app/$NAME"
+APPS="$ROOT/apps/$NAME"
 PKG="$ROOT/packages/$NAME"
 PRJ="$ROOT/projects/$NAME"
 
 if [ -d "$APP" ]; then
   cd $APP
+  eval $ARGS
+fi
+
+if [ -d "$APPS" ]; then
+  cd $APPS
   eval $ARGS
 fi
 

@@ -49,7 +49,7 @@ const ALL_RESIZABLE: ResizableSides = {
   top: true,
 }
 
-export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth'> & {
+export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth' | 'visibility'> & {
   disabled?: boolean
   disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean

@@ -1,28 +1,30 @@
-import { Layout, Loading, Pane } from '@o/ui'
-import { selectDefined } from '@o/utils'
-import React, { useState } from 'react'
-import { List } from '../views/List'
+import { Layout, Pane } from '@o/ui'
+import React, { useCallback, useState } from 'react'
+import { ListProps, SearchableList } from '../views/List'
 import { OrbitListItemProps } from '../views/ListItem'
 
-export type MasterDetailProps = {
-  items: OrbitListItemProps[]
+export type MasterDetailProps = ListProps & {
   children: (selected: OrbitListItemProps) => React.ReactNode
   placeholder?: React.ReactNode
 }
 
-export function MasterDetail(props: MasterDetailProps) {
-  const placeholder = selectDefined(props.placeholder, <Loading />)
+export function MasterDetail({ children, placeholder, ...listProps }: MasterDetailProps) {
   const [selected, setSelected] = useState(null)
   return (
     <Layout type="row">
       <Pane resizable>
-        <List
-          items={props.items}
-          onSelect={index => setSelected(props.items[index])}
-          itemProps={{ iconBefore: true }}
+        <SearchableList
+          selectable
+          onSelect={useCallback(rows => {
+            if (rows.length) {
+              setSelected(rows[0])
+            }
+          }, [])}
+          {...listProps}
+          itemProps={{ iconBefore: true, ...listProps.itemProps }}
         />
       </Pane>
-      <Pane flex={2}>{!selected ? placeholder : props.children(selected)}</Pane>
+      <Pane flex={2}>{selected === null ? placeholder || null : children(selected)}</Pane>
     </Layout>
   )
 }

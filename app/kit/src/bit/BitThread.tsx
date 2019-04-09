@@ -1,15 +1,16 @@
-import { ScrollableContent, Thread, Title, View } from '@o/ui'
+import { Col, Thread, Title } from '@o/ui'
 import * as React from 'react'
+import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
 
-export function BitThread({ item }) {
+export function BitThread(props: AppBitMainProps) {
   return (
-    <View flex={1}>
-      <ScrollableContent>
-        <Title>{item.title}</Title>
-        <Thread {...item} />
-      </ScrollableContent>
-      <BitStatusBar {...this.props} />
-    </View>
+    <Col flex={1}>
+      <Col pad={{ y: true }} scrollable>
+        <Title>{props.item.title}</Title>
+        <Thread body={props.item.body} messages={props.item.data.messages} />
+      </Col>
+      <BitStatusBar {...props} />
+    </Col>
   )
 }

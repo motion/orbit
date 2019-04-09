@@ -22,8 +22,11 @@ export function dehydrate(store: AutomagicStore): HydrationState {
 export function hydrate(
   store: AutomagicStore,
   previousInitialState: HydrationState,
-  previousState: HydrationState,
+  previousState: HydrationState | null,
 ) {
+  if (!previousState) {
+    return
+  }
   const { decorations } = store.__automagic
   for (const key of Object.keys(decorations)) {
     const val = decorations[key]

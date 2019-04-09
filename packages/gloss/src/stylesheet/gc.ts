@@ -12,7 +12,7 @@ type BaseRules = {
   [key: string]: string | number
 }
 
-type Tracker = Map<
+export type StyleTracker = Map<
   string,
   {
     displayName?: string
@@ -34,13 +34,13 @@ export class GarbageCollector {
   // uid registered queue
   activeUids = new Set<string>()
 
-  constructor(sheet: StyleSheet, tracker: Tracker, rulesToClass: RulesToClass) {
+  constructor(sheet: StyleSheet, tracker: StyleTracker, rulesToClass: RulesToClass) {
     this.sheet = sheet
     this.tracker = tracker
     this.rulesToClass = rulesToClass
   }
 
-  tracker: Tracker
+  tracker: StyleTracker
   sheet: StyleSheet
   garbageTimer?: NodeJS.Timeout
   rulesToClass: RulesToClass
@@ -91,11 +91,11 @@ export class GarbageCollector {
   haltGarbage() {
     if (this.garbageTimer) {
       clearTimeout(this.garbageTimer)
-      this.garbageTimer = null
+      this.garbageTimer = undefined
     }
   }
 
-  getCollectionQueue(): Array<string> {
+  getCollectionQueue(): string[] {
     return Array.from(this.classRemovalQueue)
   }
 
@@ -103,12 +103,14 @@ export class GarbageCollector {
     this.haltGarbage()
     for (const name of this.classRemovalQueue) {
       const trackerInfo = this.tracker.get(name)
-      invariant(trackerInfo != null, 'trying to remove unknown class')
-      const { rules } = trackerInfo
-      this.rulesToClass.delete(rules)
-      this.sheet.delete(name)
-      this.tracker.delete(name)
-      this.usedClasses.delete(name)
+      invariant(!!trackerInfo, 'trying to remove unknown class')
+      if (trackerInfo) {
+        const { rules } = trackerInfo
+        this.rulesToClass.delete(rules)
+        this.sheet.delete(name)
+        this.tracker.delete(name)
+        this.usedClasses.delete(name)
+      }
     }
     this.classRemovalQueue.clear()
   }

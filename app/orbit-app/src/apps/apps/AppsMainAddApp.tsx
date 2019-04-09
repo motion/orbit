@@ -13,7 +13,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
       titleBorder
       title={def.name}
       icon={props.identifier}
-      padded
+      pad
       afterTitle={
         <>
           {!hasSetup && def.sync && (
@@ -39,7 +39,7 @@ export function AppsMainAddApp(props: { identifier: string }) {
     >
       {hasSetup && (
         <>
-          <Section bordered padded title="Setup">
+          <Section bordered pad title="Setup">
             <AppView identifier={props.identifier} viewType="setup" />
           </Section>
           <Space />

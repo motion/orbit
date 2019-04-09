@@ -1,7 +1,7 @@
 import { useModels } from '@o/bridge'
 import { gloss } from '@o/gloss'
 import { Bit, BitModel } from '@o/models'
-import { ChatMessages, Divider, Row, ScrollableContent, Tab, Tabs, View } from '@o/ui'
+import { ChatMessages, Divider, Row, Section, Tab, Tabs, View } from '@o/ui'
 import * as React from 'react'
 import { AppBitMainProps } from '../types/AppDefinition'
 import { BitStatusBar } from '../views/BitStatusBar'
@@ -32,7 +32,7 @@ const ConvoGroup = ({ bits }: { bits: Bit[] }) => {
               key={bit.id}
               messages={(bit.data as any).messages} // todo(nate) looks like hardcoded to specific data property
             />
-            <Divider padded />
+            <Divider pad />
           </React.Fragment>
         )
       })}
@@ -91,18 +91,16 @@ export function BitConversation(props: AppBitMainProps) {
       </Row>
 
       <Pane isShown={activePane === 0}>
-        <ScrollableContent paddingBottom={50} key={prevConvos.length} scrollTo="#start">
-          <div id="start" style={{ paddingTop: 16, marginTop: -16 }}>
-            <ConvoGroup bits={prevConvos.reverse()} />
-            {!!props.item && <ChatMessages messages={props.item.data.messages} />}
-          </div>
-        </ScrollableContent>
+        <Section flex={1} pad scrollable="y">
+          <ConvoGroup bits={prevConvos.reverse()} />
+          {!!props.item && <ChatMessages messages={props.item.data.messages} />}
+        </Section>
       </Pane>
 
       <Pane isShown={activePane === 2}>
-        <ScrollableContent paddingBottom={50}>
+        <Section flex={1} pad scrollable="y">
           <ConvoGroup bits={nextConvos} />
-        </ScrollableContent>
+        </Section>
       </Pane>
 
       <BitStatusBar {...props} />

@@ -66,7 +66,7 @@ export type borderBottomRightRadius = lengthPercentage
 export type borderBottomStyle = brStyle
 export type borderBottomWidth = borderWidth
 export type borderCollapse = 'collapse' | 'separate'
-export type borderColor = ColorLike | Array<number | string | ColorLike>
+export type borderColor = ColorLike | (number | string | ColorLike)[]
 export type borderImage = borderImageSource | borderImageSlice | string | borderImageRepeat
 export type borderImageOutset = string
 export type borderImageRepeat = string
@@ -370,7 +370,7 @@ export type listStyle = listStyleType | listStylePosition | listStyleImage
 export type listStyleImage = string | 'none'
 export type listStylePosition = 'inside' | 'outside'
 export type listStyleType = string | 'none'
-type marginSyntax = Array<number | string>
+type marginSyntax = (number | string)[]
 export type margin = number | string | marginSyntax
 export type marginBlockEnd = marginLeft
 export type marginBlockStart = marginLeft
@@ -455,7 +455,7 @@ export type overflowClipBox = 'padding-box' | 'content-box'
 export type overflowWrap = 'normal' | 'break-word'
 export type overflowX = 'visible' | 'hidden' | 'scroll' | 'auto'
 export type overflowY = 'visible' | 'hidden' | 'scroll' | 'auto'
-type paddingSyntax = Array<number | string>
+type paddingSyntax = (number | string)[]
 export type padding = number | string | paddingSyntax
 export type paddingBlockEnd = paddingLeft
 export type paddingBlockStart = paddingLeft
@@ -551,7 +551,7 @@ type transitionSyntax = {
 export type transition =
   | singleTransition
   | transitionSyntax
-  | Array<singleTransition | transitionSyntax>
+  | (singleTransition | transitionSyntax)[]
 export type transitionDelay = number
 export type transitionDuration = number
 export type transitionProperty = 'none' | singleTransitionProperty
@@ -768,14 +768,15 @@ export type svgLength = string | number
 export type svgWritingMode = 'lr-tb' | 'rl-tb' | 'tb-rl' | 'lr' | 'rl' | 'tb'
 
 // allows functional or non-functional
-type CSSPropertyVal<A, B> = B extends false
-  ? A | 'inherit' | 'initial'
+type CSSPropertyVal<IsFunctional, Val> = Val extends false
+  ? IsFunctional | 'inherit' | 'initial' | false
   :
-      | A
+      | IsFunctional
       | 'inherit'
       | 'initial'
-      | ((theme: ThemeObject) => A)
-      | ((theme: ThemeObject, props: any) => A)
+      | ((theme: ThemeObject) => IsFunctional)
+      | ((theme: ThemeObject, props: any) => IsFunctional)
+      | false
 
 export type GenerateCSSPropertySet<A extends true | false> = {
   alignContent?: CSSPropertyVal<alignContent, A>

@@ -2,7 +2,7 @@ import { CompositeDisposable } from 'event-kit'
 
 // how to have a more flexible Function?
 // this often complains when used as callbacks from eventListener or mutationobserver
-export type EffectCallback = ((resolve: any, reject: any) => Function | void)
+export type EffectCallback = (resolve: any, reject: any) => Function | void
 
 export type ReactionHelpers = {
   setValue: (a: any) => void

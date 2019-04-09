@@ -1,8 +1,8 @@
 import { createContext } from 'react'
 
 type UseStoreConfiguration = {
-  onMount?: (store: any) => void
-  onUnmount?: (store: any) => void
+  onMount?: ((store: any) => void) | null
+  onUnmount?: ((store: any) => void) | null
   context?: React.Context<any>
   debugStoreState?: boolean
 }

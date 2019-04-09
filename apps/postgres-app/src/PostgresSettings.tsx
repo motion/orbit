@@ -1,13 +1,8 @@
-import { AppModel, AppProps, save, useActiveSpace, useModel } from '@o/kit'
+import { AppModel, AppProps, save, useActiveSpace, useApp } from '@o/kit'
 import { Button, Col, Form, InputField, Message, Space, Theme } from '@o/ui'
 import * as React from 'react'
 import { SyntheticEvent } from 'react'
 import { PostgresAppData } from './PostgresModels'
-
-type Props = {
-  identifier: string
-  app?: AppProps
-}
 
 const Statuses = {
   LOADING: 'LOADING',
@@ -21,26 +16,9 @@ const buttonThemes = {
   [Statuses.FAIL]: 'darkred',
 }
 
-export function PostgresSettings({ app }: Props) {
+export function PostgresSettings(_: AppProps) {
+  const app = useApp()
   const [activeSpace] = useActiveSpace()
-  let [appBit] = useModel(
-    AppModel,
-    app && app.subId
-      ? {
-          where: {
-            id: +app.subId,
-          },
-        }
-      : false,
-    {
-      defaultValue: {
-        target: 'app',
-        identifier: 'postgres',
-        token: '',
-        data: {},
-      },
-    },
-  )
   const [status, setStatus] = React.useState('')
   const [error, setError] = React.useState('')
   const [credentials, setCredentials] = React.useState<PostgresAppData['credentials']>({
@@ -52,32 +30,31 @@ export function PostgresSettings({ app }: Props) {
   })
 
   React.useEffect(() => {
-    const appData: PostgresAppData = appBit.data
+    if (!app) return
+    const appData: PostgresAppData = app.data
     if (appData.credentials) {
       setCredentials(appData.credentials)
     }
-  }, [appBit])
-
-  console.log('credentials', credentials)
+  }, [app])
 
   const addApp = async e => {
     e.preventDefault()
-    appBit.data = { credentials }
-    if (!appBit.spaces) {
-      appBit.spaces = []
+    app.data = { credentials }
+    if (!app.spaces) {
+      app.spaces = []
     }
-    if (!appBit.spaces.find(space => space.id === activeSpace.id)) {
-      appBit.spaces.push(activeSpace)
+    if (!app.spaces.find(space => space.id === activeSpace.id)) {
+      app.spaces.push(activeSpace)
     }
-    appBit.spaceId = activeSpace.id
-    appBit.name = `Postgres on ${credentials.database}@${credentials.hostname}`
+    app.spaceId = activeSpace.id
+    app.name = `Postgres on ${credentials.database}@${credentials.hostname}`
 
     // send command to the desktop
     setStatus(Statuses.LOADING)
 
     // save app
     try {
-      await save(AppModel, appBit)
+      await save(AppModel, app)
       setStatus(Statuses.SUCCESS)
       setError(null)
     } catch (err) {

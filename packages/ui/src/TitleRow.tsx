@@ -1,14 +1,17 @@
-import { gloss, Row } from '@o/gloss'
-import React, { isValidElement } from 'react'
+import { gloss } from '@o/gloss'
+import React, { forwardRef, isValidElement } from 'react'
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
-import { Space } from './layout/Space'
+import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
+import { Col } from './View/Col'
+import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
-export type TitleRowProps = Partial<CollapsableProps> & {
+export type TitleRowSpecificProps = Partial<CollapsableProps> & {
+  size?: Sizes
   icon?: React.ReactNode
   title: React.ReactNode
   before?: React.ReactNode
@@ -23,34 +26,34 @@ export type TitleRowProps = Partial<CollapsableProps> & {
   unpad?: boolean
 }
 
-export function TitleRow({
-  before,
-  bordered,
-  after,
-  margin,
-  sizePadding = 1,
-  subTitle,
-  backgrounded,
-  below,
-  above,
-  icon,
-  title,
-  unpad,
-  collapsable,
-  collapsed,
-  onCollapse,
-}: TitleRowProps) {
-  const pad = 16
-  const sidePad = 10 * sizePadding
+export type TitleRowProps = RowProps & TitleRowSpecificProps
+
+export const TitleRow = forwardRef(function TitleRow(
+  {
+    before,
+    bordered,
+    after,
+    size,
+    sizePadding = 1,
+    subTitle,
+    backgrounded,
+    below,
+    above,
+    icon,
+    title,
+    collapsable,
+    collapsed,
+    onCollapse,
+    ...rowProps
+  }: TitleRowProps,
+  ref,
+) {
   return (
     <TitleRowChrome
-      paddingTop={pad + 2.5 * sizePadding}
-      paddingBottom={!!below ? 0 : 10 * sizePadding + 5}
-      paddingLeft={sidePad + pad}
-      paddingRight={sidePad + pad}
-      margin={typeof margin !== 'undefined' ? margin : unpad ? [-pad, -pad, 0] : 0}
       background={backgrounded ? theme => theme.backgroundZebra : null}
       onDoubleClick={onCollapse && (() => onCollapse(!collapsed))}
+      ref={ref}
+      {...rowProps}
     >
       {above}
       <Row>
@@ -73,7 +76,7 @@ export function TitleRow({
           {isValidElement(title) ? (
             title
           ) : (
-            <Title marginTop={0} marginBottom={0} ellipse>
+            <Title size={size} marginTop={0} marginBottom={0} ellipse>
               {title}
             </Title>
           )}
@@ -91,9 +94,9 @@ export function TitleRow({
       {bordered && <BorderBottom left={10 * sizePadding} right={10 * sizePadding} opacity={0.5} />}
     </TitleRowChrome>
   )
-}
+})
 
-const TitleRowChrome = gloss(View, {
+const TitleRowChrome = gloss(Col, {
   position: 'relative',
   overflow: 'hidden',
 })

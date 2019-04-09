@@ -1,5 +1,5 @@
 import { Icon } from '@o/kit'
-import { BarButtonSmall, Breadcrumbs, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@o/ui'
+import { Breadcrumbs, Button, ButtonProps, StatusBarText, Text, useBreadcrumb, View } from '@o/ui'
 import pluralize from 'pluralize'
 import React from 'react'
 
@@ -34,7 +34,7 @@ function ListCrumb(props: ButtonProps) {
 
   return (
     <>
-      <BarButtonSmall chromeless {...props} />
+      <Button {...props} />
       {!isLast ? (
         <Text size={1.5} fontWeight={900} alpha={0.5} margin={[0, 5]} height={4} lineHeight={0}>
           {' · '}

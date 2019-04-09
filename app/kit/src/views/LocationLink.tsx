@@ -1,5 +1,5 @@
-import { gloss } from '@o/gloss'
-import { Inline, ViewProps } from '@o/ui'
+import { Block, gloss } from '@o/gloss'
+import { ViewProps } from '@o/ui'
 import React from 'react'
 import { useLocationLink } from '../stores/LocationStore'
 
@@ -8,6 +8,8 @@ export function LocationLink({ url, ...rest }: { url: string } & ViewProps) {
   return <LinkChrome onClick={link} {...rest} />
 }
 
-const LinkChrome = gloss(Inline).theme((_, theme) => ({
+const LinkChrome = gloss(Block, {
+  display: 'inline',
+}).theme((_, theme) => ({
   borderBottom: [1, theme.borderColorActive],
 }))

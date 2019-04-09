@@ -16,7 +16,7 @@ import {
   VirtualList,
   VirtualListProps,
 } from '@o/ui'
-import { mergeDefined } from '@o/utils'
+import { isAnyDefined, mergeDefined } from '@o/utils'
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 import { getAppProps } from '../helpers/getAppProps'
 import { useActiveQuery } from '../hooks/useActiveQuery'
@@ -68,7 +68,7 @@ export function SearchableList(props: ListProps) {
     <Searchable>
       {({ searchBar, searchTerm }) => (
         <>
-          <View padding={5}>{searchBar}</View>
+          <View pad={props.padInner || 'sm'}>{searchBar}</View>
           <List {...props} search={searchTerm} />
         </>
       )}
@@ -185,6 +185,39 @@ export function List({
   const hasResults = !!filtered.results.length
   const showPlaceholder = noQuery && !hasResults
 
+  const hasSectionProps = isAnyDefined(
+    flex,
+    title,
+    subTitle,
+    bordered,
+    icon,
+    beforeTitle,
+    afterTitle,
+    titleBorder,
+  )
+
+  const children = (
+    <HighlightActiveQuery query={search}>
+      {hasResults && (
+        <VirtualList
+          disableMeasure={visibility === false}
+          items={filtered.results}
+          ItemView={ListItem}
+          {...restProps}
+          getItemProps={getItemPropsInner}
+          onOpen={onOpenInner}
+          onSelect={onSelectInner}
+          selectableStoreRef={selectableStoreRef}
+        />
+      )}
+      {showPlaceholder && (placeholder || <ListPlaceholder />)}
+    </HighlightActiveQuery>
+  )
+
+  if (!hasSectionProps) {
+    return children
+  }
+
   return (
     <Section
       background="transparent"
@@ -197,21 +230,7 @@ export function List({
       afterTitle={afterTitle}
       titleBorder={titleBorder}
     >
-      <HighlightActiveQuery query={search}>
-        {hasResults && (
-          <VirtualList
-            disableMeasure={visibility === false}
-            items={filtered.results}
-            ItemView={ListItem}
-            {...restProps}
-            getItemProps={getItemPropsInner}
-            onOpen={onOpenInner}
-            onSelect={onSelectInner}
-            selectableStoreRef={selectableStoreRef}
-          />
-        )}
-        {showPlaceholder && (placeholder || <ListPlaceholder />)}
-      </HighlightActiveQuery>
+      {children}
     </Section>
   )
 }

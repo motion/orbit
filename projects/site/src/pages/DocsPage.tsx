@@ -1,6 +1,7 @@
 import { Templates } from '@o/kit'
 import { Theme } from '@o/ui'
 import React, { createElement } from 'react'
+import '../../public/nucleo/nucleo.css'
 import { HeaderSlim } from '../components/HeaderSlim'
 import { DocsButtons } from './DocsPage/DocsButtons'
 import { DocsSections } from './DocsPage/DocsSections'

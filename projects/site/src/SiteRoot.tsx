@@ -34,7 +34,7 @@ function getSiteBrowser() {
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
-    <div style={{ pointerEvents: 'auto', minHeight: window.innerHeight }}>
+    <div style={{ pointerEvents: 'auto', minHeight: '100vh' }}>
       <SiteBrowser />
     </div>
   )

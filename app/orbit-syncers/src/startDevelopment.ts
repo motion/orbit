@@ -25,7 +25,7 @@ export function startDevelopment(appRoot: OrbitSyncersRoot) {
     console.warn('uncaughtException!!!!!!!')
     console.log(err)
   })
-  process.on('unhandledRejection', function(reason, promise) {
+  process.on('unhandledRejection', function(reason: any, promise) {
     if (reason) {
       if (reason.code === 'SQLITE_BUSY') {
         console.log('sqlite busy!')

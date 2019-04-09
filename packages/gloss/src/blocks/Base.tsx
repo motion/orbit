@@ -27,6 +27,8 @@ export const Base = gloss<BaseProps>().theme((props, theme) => ({
 // ignore all valid css props, except src for images
 Base.ignoreAttrs = {
   ...validCSSAttr,
+  width: true,
+  height: true,
   size: true,
   src: false,
 }

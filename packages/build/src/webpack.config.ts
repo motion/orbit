@@ -10,6 +10,7 @@ import PrepackPlugin from 'prepack-webpack-plugin'
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
+const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
@@ -256,6 +257,8 @@ async function makeConfig() {
     },
     plugins: [
       // new ErrorOverlayPlugin(),
+
+      new WebpackNotifierPlugin(),
 
       new webpack.DefinePlugin(defines),
 

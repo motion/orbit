@@ -7,6 +7,10 @@ export function isDefined(x: any) {
   return typeof x !== 'undefined'
 }
 
+export function isAnyDefined(...args: any[]) {
+  return args.some(x => isDefined(x))
+}
+
 /**
  * Creates a promise that resolves in a given number of milliseconds.
  */

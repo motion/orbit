@@ -86,7 +86,7 @@ const getPadding = (props: PadProps & { padding?: any }) => {
         padding: [top, right, bottom, left].map(side => getSpaceSize(side || 0)),
       }
     }
-    if (typeof props.pad === 'number' || props.pad === true) {
+    if (typeof props.pad === 'number' || typeof props.pad === 'string' || props.pad === true) {
       return {
         padding: getSpaceSize(props.pad),
       }

@@ -116,15 +116,15 @@ function glossify(
   id: string,
   displayName: string = 'g',
   themeFn: GlossThemeFn<any> | null,
-  styles: any,
+  staticStyles: any,
   conditionalStyles: any,
-  previousClassNames: string[] | null,
+  prevClassNames: string[] | null,
   props: CSSPropertySet,
   tagName: string,
   theme: ThemeObject,
 ) {
   const hasConditionalStyles = !!Object.keys(conditionalStyles).length
-  const newStyles = {}
+  const dynStyles = {}
 
   // if passed any classes from another styled component
   // ignore that class and merge in their resolved styles
@@ -133,7 +133,7 @@ function glossify(
     for (const className of propClassNames) {
       const classInfo = tracker.get(className)
       if (classInfo) {
-        newStyles[classInfo.namespace] = classInfo.style
+        dynStyles[classInfo.namespace] = classInfo.style
       }
     }
   }
@@ -159,47 +159,63 @@ function glossify(
 
   if (hasDynamicStyles) {
     for (const key in dynamicStyles) {
-      newStyles[key] = dynamicStyles[key]
+      dynStyles[key] = dynamicStyles[key]
     }
   }
 
-  let nextClassNames: string[] | null = null
+  let classNames: string[] | null = null
 
   // sort so we properly order pseudo keys
-  const keys = [...new Set([...Object.keys(styles), ...Object.keys(newStyles)])]
+  const keys = [...new Set([...Object.keys(staticStyles), ...Object.keys(dynStyles)])]
   const sortedKeys = keys.length > 1 ? keys.sort(pseudoSort) : keys
+
+  // we'll return the final (non-psuedo/child) styles
+  let styles: CSSPropertySet | null = null
 
   // add rules
   for (const key of sortedKeys) {
-    let style = styles[key]
-    if (newStyles[key]) {
-      style = { ...style, ...newStyles[key] }
+    // take base styles
+    let cur = staticStyles[key]
+
+    // add on the dynamic overrides
+    if (dynStyles[key]) {
+      cur = { ...cur, ...dynStyles[key] }
     }
-    // they may return null for some reason
-    // like conditional style '&:hover': active ? hoverStyle : null
-    if (!style) {
+
+    // return the final result of the style object
+    if (key === id) {
+      styles = cur
+    }
+
+    // they may return falsy, conditional '&:hover': active ? hoverStyle : null
+    if (!cur) {
       continue
     }
-    const className = addRules(displayName, style, key, tagName)
-    nextClassNames = nextClassNames || []
-    nextClassNames.push(className)
+
+    // add the stylesheets and classNames
+    // TODO this could do a simple "diff" so that fast-changing styles only change the "changing" props
+    // it would likely help things like when you animate based on mousemove, may be slower in default case
+    const className = addRules(displayName, cur, key, tagName)
+    classNames = classNames || []
+    classNames.push(className)
+
     // if this is the first mount render or we didn't previously have this class then add it as new
-    if (previousClassNames == null || !previousClassNames.includes(className)) {
+    if (prevClassNames == null || !prevClassNames.includes(className)) {
       gc.registerClassUse(className)
     }
   }
 
   // check what classNames have been removed if this is a secondary render
-  if (previousClassNames !== null) {
-    for (const className of previousClassNames) {
+  if (prevClassNames !== null) {
+    for (const className of prevClassNames) {
       // if this previous class isn't in the current classes then deregister it
-      if (!nextClassNames || !nextClassNames.includes(className)) {
+      if (!classNames || !classNames.includes(className)) {
         gc.deregisterClassUse(className)
       }
     }
   }
 
-  return nextClassNames
+  return { classNames, styles }
 }
 
 export function gloss<Props = any>(
@@ -240,30 +256,30 @@ export function gloss<Props = any>(
     themeFn = themeFn || compileTheme(ThemedView)
     const { activeTheme } = useContext(ThemeContext)
     const tag = props.tagName || typeof targetElement === 'string' ? targetElement : ''
-    const lastClassNames = useRef<string[] | null>(null)
+    const curClassNames = useRef<string[] | null>(null)
 
     // unmount
     useEffect(() => {
       return () => {
-        const names = lastClassNames.current
+        const names = curClassNames.current
         if (names) {
           names.forEach(gc.deregisterClassUse)
         }
       }
     }, [])
 
-    const classNames = glossify(
+    const { classNames, styles } = glossify(
       id,
       ThemedView.displayName,
       themeFn,
       Styles.styles,
       Styles.propStyles,
-      lastClassNames.current,
+      curClassNames.current,
       props,
       tag,
       activeTheme,
     )
-    lastClassNames.current = classNames
+    curClassNames.current = classNames
 
     // if this is a plain view we can use tagName, otherwise just pass it down
     const element =
@@ -281,6 +297,11 @@ export function gloss<Props = any>(
 
     for (const key in props) {
       if (ignoreAttrs && ignoreAttrs[key]) {
+        continue
+      }
+      // dont pass down things we used for styles
+      // this could be confusing / configurable
+      if (styles && styles[key]) {
         continue
       }
       if (isDOMElement) {

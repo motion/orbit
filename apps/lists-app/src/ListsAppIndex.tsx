@@ -23,7 +23,7 @@ export function ListsAppIndex() {
       const results = await searchBits({ query: addQuery, take: 20 })
       return results.map(item => ({
         ...item,
-        after: <Button margin={['auto', 0, 'auto', 10]} icon="chevron-right" />,
+        // after: <Button margin={['auto', 0, 'auto', 10]} icon="chevron-right" />,
       }))
     },
     {

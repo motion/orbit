@@ -54,7 +54,7 @@ function SearchActions() {
       <Button
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
-        icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
+        icon={queryFilters.sortBy === 'Relevant' ? 'flame' : 'time'}
       />
       <Popover
         openOnClick

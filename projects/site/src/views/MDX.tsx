@@ -22,6 +22,12 @@ export const components = {
       <Space />
     </>
   ),
+  h4: props => (
+    <>
+      <Title size="sm" {...props} />
+      <Space />
+    </>
+  ),
   pre: props => <div {...props} />,
   code: props => (
     <>

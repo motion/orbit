@@ -43,6 +43,7 @@ function ButtonInner(buttonProps: ButtonProps) {
       borderWidth={selectDefined(theme.borderWidth, 1)}
       elevation={selectDefined(props.elevation, props.chromeless ? 0 : 1)}
       glint
+      glintBottom
       pointerEvents={props.disabled ? 'none' : undefined}
       activeStyle={activeStyle}
       glowProps={glowProps}

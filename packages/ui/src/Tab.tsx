@@ -59,6 +59,7 @@ export function TabItem(props: ButtonProps) {
       sizeFont={0.9}
       sizeIcon={1.2}
       fontWeight={500}
+      elevation={0}
       flex={typeof props.width === 'number' ? 'none' : 'inherit'}
       {...props}
     />

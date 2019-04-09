@@ -19,7 +19,7 @@ export type SizedSurfaceProps = SurfaceProps & {
 const num = (x: number | boolean) => (x === true ? 1 : +x)
 
 export const getSizedRadius = (size: number, sizeRadius: number | true) =>
-  Math.round(num(sizeRadius) * 8 * size)
+  Math.round(num(sizeRadius) * 7 * size)
 
 // always return even so things center
 const getHeight = (size: number, sizeHeight: number | boolean) => {

@@ -1,5 +1,5 @@
 import { ColorLike } from '@o/css'
-import { gloss } from '@o/gloss'
+import { gloss, ThemeSelect } from '@o/gloss'
 
 const isUndef = x => typeof x === 'undefined'
 
@@ -14,6 +14,7 @@ type Props = {
   bottom?: number
   y?: number
   opacity?: number
+  themeSelect?: ThemeSelect
 }
 
 export const Glint = gloss<Props>({
@@ -30,30 +31,31 @@ export const Glint = gloss<Props>({
     borderRadius = 0,
     borderRightRadius,
     opacity,
-    color,
     size = 1,
     y,
   } = props
+  const isTop = isUndef(bottom)
+  const themeProp = isTop ? 'glintColor' : 'glintColorBottom'
+  const glintColor = props.color || theme[themeProp] || theme.glintColor || theme.color
   const radiusStyle = {
     ...(borderRadius && {
       borderRadius,
     }),
     ...(borderRightRadius && {
-      [isUndef(bottom) ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
+      [isTop ? 'borderTopRightRadius' : 'borderBottomRightRadius']: borderRightRadius,
     }),
     ...(borderLeftRadius && {
-      [isUndef(bottom) ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
+      [isTop ? 'borderTopLeftRadius' : 'borderBottomLeftRadius']: borderLeftRadius,
     }),
   }
-  const autoHalf = (bottom ? 0.5 : -0.5) * size
-  const glintColor = color || theme.glintColor || theme.background.alpha(0.5)
+  const autoHalf = (isTop ? -0.5 : 0.5) * size
   return {
     opacity: typeof theme.glintColor !== 'undefined' ? 1 : opacity,
-    top: 0,
+    [isTop ? 'top' : 'bottom']: 0,
     height: '100%',
     transform: { y: typeof y === 'number' ? y : autoHalf },
-    borderTop: isUndef(bottom) && [size, glintColor],
-    borderBottom: !isUndef(bottom) && [size, glintColor],
+    borderTop: isTop && [size, glintColor],
+    borderBottom: !isTop && [size, glintColor],
     ...radiusStyle,
   }
 })

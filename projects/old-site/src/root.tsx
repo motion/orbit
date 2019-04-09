@@ -1,6 +1,6 @@
 import * as UI from '@o/ui'
 import * as React from 'react'
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader/root'
 import * as Constants from './constants'
 import { scrollTo } from './helpers'
 import { NotFoundPage } from './pages/NotFoundPage'

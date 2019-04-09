@@ -1,5 +1,4 @@
-import { View, ViewProps } from '@o/gloss'
-import { createContextualProps } from '@o/ui'
+import { createContextualProps, View, ViewProps } from '@o/ui'
 import * as React from 'react'
 import { ParallaxLayer, ParallaxLayerProps } from 'react-spring/renderprops-addons'
 import { SectionContent } from './SectionContent'
@@ -21,8 +20,10 @@ export function Page(props: PageProps) {
 
 Page.Parallax = (props: ParallaxLayerProps & { children: any }) => {
   const { zIndex } = useProps()
-  // @ts-ignore
-  return <ParallaxLayer speed={0.2} style={{ zIndex: zIndex + 1 }} {...props} />
+  return (
+    // @ts-ignore
+    <ParallaxLayer speed={0.2} style={{ pointerEvents: 'none', zIndex: zIndex + 1 }} {...props} />
+  )
 }
 
 Page.Content = (props: ViewProps) => {

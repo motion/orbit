@@ -2,6 +2,7 @@ import { createNavigator, SceneView, SwitchRouter } from '@react-navigation/core
 import { createBrowserApp } from '@react-navigation/web'
 import * as React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { DocsPage } from './pages/DocsPage'
 import { HomePage } from './pages/HomePage'
 
 function getSiteBrowser() {
@@ -19,6 +20,7 @@ function getSiteBrowser() {
     Site,
     SwitchRouter({
       Home: HomePage,
+      Docs: DocsPage,
     }),
     {},
   )
@@ -32,7 +34,7 @@ function getSiteBrowser() {
 export const SiteRoot = hot(() => {
   const SiteBrowser = getSiteBrowser()
   return (
-    <div style={{ pointerEvents: 'auto' }}>
+    <div style={{ pointerEvents: 'auto', minHeight: window.innerHeight }}>
       <SiteBrowser />
     </div>
   )

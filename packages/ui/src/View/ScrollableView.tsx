@@ -1,5 +1,4 @@
 import { gloss } from '@o/gloss'
-import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { PaddedView, View, ViewProps } from './View'
 
@@ -13,10 +12,11 @@ export const ScrollableView = forwardRef(function ScrollableView(
   ref,
 ) {
   let content = children
+  const controlPad = typeof pad !== 'undefined'
 
   // wrap inner with padding view only if necessary (this is super low level view)
   // this is necessary so CSS scrollable has proper "end margin"
-  if (selectDefined(pad, padding, 'NONE') !== 'NONE') {
+  if (controlPad) {
     content = (
       <PaddedView
         ref={!scrollable ? ref : null}
@@ -29,16 +29,20 @@ export const ScrollableView = forwardRef(function ScrollableView(
     )
   }
 
+  const viewProps = !controlPad && {
+    padding,
+  }
+
   if (!scrollable) {
     return (
-      <View ref={ref} {...props}>
+      <View ref={ref} {...viewProps} {...props}>
         {content}
       </View>
     )
   }
 
   return (
-    <ScrollableChrome ref={ref} scrollable={scrollable} {...props}>
+    <ScrollableChrome ref={ref} scrollable={scrollable} {...viewProps} {...props}>
       {content}
     </ScrollableChrome>
   )

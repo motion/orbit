@@ -245,6 +245,10 @@ async function makeConfig() {
           use: ['file-loader'],
         },
         {
+          test: /\.mdx$/,
+          use: ['babel-loader', '@mdx-js/loader'],
+        },
+        {
           test: /\.(md)$/,
           use: 'raw-loader',
         },

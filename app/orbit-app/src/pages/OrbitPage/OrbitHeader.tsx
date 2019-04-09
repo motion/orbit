@@ -192,6 +192,7 @@ const ExtraButtonsChrome = gloss({
   paddingLeft: 2,
   marginRight: -10,
   borderLeftRadius: 12,
+  borderRight: 'none',
 }).theme((_, theme) => ({
   border: [1, theme.borderColor.alpha(0.5)],
 }))

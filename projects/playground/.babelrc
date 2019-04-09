@@ -4,7 +4,12 @@
       "presets": [
         [
           "@o/babel-preset-motion",
-          { "disable": ["@babel/plugin-transform-react-inline-elements"] }
+          {
+            "env": {
+              "modules": false
+            },
+            "disableTypescript": true
+          }
         ]
       ]
     },
@@ -13,7 +18,11 @@
         [
           "@o/babel-preset-motion",
           {
-            "disable": ["react-hot-loader/babel"]
+            "disable": ["react-hot-loader/babel"],
+            "env": {
+              "modules": false
+            },
+            "disableTypescript": true
           }
         ]
       ]

@@ -45,6 +45,7 @@ export type SurfaceProps = ViewProps & {
   clickable?: boolean
   elementProps?: Object
   forwardRef?: React.Ref<any>
+  glintBottom?: boolean
   glint?: boolean
   glow?: boolean
   glowProps?: Object
@@ -111,6 +112,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     disabled,
     elementProps,
     forwardRef,
+    glintBottom,
     glint,
     glow,
     glowProps,
@@ -121,7 +123,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     iconProps,
     justifyContent,
     noInnerElement,
-    size = 1,
+    size: ogSize,
     sizeLineHeight,
     tagName,
     themeSelect,
@@ -134,6 +136,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     after,
     ...rest
   } = props
+  const size = getSize(selectDefined(ogSize, 1))
   const segmentedStyle = getSegmentedStyle(
     { borderRadius: +props.borderRadius, ignoreSegment: props.ignoreSegment },
     crumb,
@@ -143,7 +146,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // goes to BOTH the outer element and inner element
   const throughProps: Partial<SurfaceProps> = {
     height,
-    iconPad: typeof iconPad === 'number' ? iconPad : getSize(size) * 10,
+    iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
     alignItems,
     justifyContent,
     sizeIcon: props.sizeIcon,
@@ -167,6 +170,15 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const surfaceProps = {
     children: null,
   }
+
+  const borderLeftRadius = Math.min(
+    (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
+    +height / 2 - 1,
+  )
+  const borderRightRadius = Math.min(
+    (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) - 1,
+    +height / 2 - 1,
+  )
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
@@ -193,16 +205,19 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         )}
         {glint && !props.chromeless && (
           <Glint
-            key={0}
-            size={getSize(size)}
-            borderLeftRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
-              +height / 2 - 1,
-            )}
-            borderRightRadius={Math.min(
-              (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) - 1,
-              +height / 2 - 1,
-            )}
+            size={size}
+            borderLeftRadius={borderLeftRadius}
+            borderRightRadius={borderRightRadius}
+            themeSelect={themeSelect}
+          />
+        )}
+        {glintBottom && !props.chromeless && (
+          <Glint
+            size={size}
+            bottom={0}
+            borderLeftRadius={borderLeftRadius}
+            borderRightRadius={borderRightRadius}
+            themeSelect={themeSelect}
           />
         )}
         <div

@@ -2029,6 +2029,15 @@
   dependencies:
     unist-util-visit "^1.3.0"
 
+"@mdx-js/loader@0.20.3":
+  version "0.20.3"
+  resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-0.20.3.tgz#73c056ec3eef9f993cac28e9102898c8862f9def"
+  integrity sha512-rjJZ5bBTmRfrV6Wo4dAV7wBv5ChmpLJ+s/lziZ58F1NfijSSYq795qXrW+NMJAhBVr07lYp6FQrUJ3PsX2fHyw==
+  dependencies:
+    "@mdx-js/mdx" "^0.20.3"
+    "@mdx-js/tag" "^0.20.3"
+    loader-utils "^1.1.0"
+
 "@mdx-js/mdx@^0.20.3":
   version "0.20.3"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-0.20.3.tgz#1f32b4a4a0cc176a3192ef51a0a3502cdfdca3f0"
@@ -2047,7 +2056,12 @@
     unist-builder "^1.0.1"
     unist-util-visit "^1.3.0"
 
-"@mdx-js/tag@^0.20.3":
+"@mdx-js/react@1.0.0-alpha.12":
+  version "1.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@mdx-js/react/-/react-1.0.0-alpha.12.tgz#5074aaa13a034a8e1fa39d08d2a0ea785213959c"
+  integrity sha512-xVCUfR0Z78Kjm3109pfylea9cFm4NkAG9NX8j3+6BPvyQNk0Hrd78dN0JUoF3MFS4rsgvM/IykErE3mHsDaWuQ==
+
+"@mdx-js/tag@0.20.3", "@mdx-js/tag@^0.20.3":
   version "0.20.3"
   resolved "https://registry.yarnpkg.com/@mdx-js/tag/-/tag-0.20.3.tgz#9e2306040b6469248c45a5f5baf44d0014db0493"
   integrity sha512-Co3gUFmNDv9z2LjuvLTpTj2NaOSHFxuoZjohcG0YK/KfECO+Ns9idzThMYjfEDe1vAf4c824rqlBYseedJdFNw==
@@ -2166,7 +2180,7 @@
     string-width "^2.0.0"
     strip-ansi "^3"
 
-"@reach/router@^1.1.1", "@reach/router@^1.2.1":
+"@reach/router@^1.1.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.2.1.tgz#34ae3541a5ac44fa7796e5506a5d7274a162be4e"
   integrity sha512-kTaX08X4g27tzIFQGRukaHmNbtMYDS3LEWIS8+l6OayGIw6Oyo1HIF/JzeuR2FoF9z6oV+x/wJSVSq4v8tcUGQ==
@@ -2406,10 +2420,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@11.9.6", "@types/node@^10.12.18", "@types/node@^10.5.1", "@types/node@^7.0.11":
-  version "11.9.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.9.6.tgz#c632bbcc780a1349673a6e2e9b9dfa8c369d3c74"
-  integrity sha512-4hS2K4gwo9/aXIcoYxCtHpdgd8XUeDmo1siRCAH3RziXB65JlPqUFMtfy9VPj+og7dp3w1TFjGwYga4e0m9GwA==
+"@types/node@*", "@types/node@11.13.2", "@types/node@^10.12.18", "@types/node@^10.5.1", "@types/node@^7.0.11":
+  version "11.13.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.2.tgz#dc85dde46aa8740bb4aed54b8104250f8f849503"
+  integrity sha512-HOtU5KqROKT7qX/itKHuTtt5fV0iXbheQvrgbLNXFJQBY/eh+VS5vmmTAVlo3qIGMsypm0G4N1t2AXjy1ZicaQ==
 
 "@types/prop-types@*":
   version "15.7.0"
@@ -2429,10 +2443,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-dom@*", "@types/react-dom@16.8.2":
-  version "16.8.2"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.2.tgz#9bd7d33f908b243ff0692846ef36c81d4941ad12"
-  integrity sha512-MX7n1wq3G/De15RGAAqnmidzhr2Y9O/ClxPxyqaNg96pGyeXUYPSvujgzEVpLo9oIP4Wn1UETl+rxTN02KEpBw==
+"@types/react-dom@*", "@types/react-dom@16.8.2", "@types/react-dom@16.8.3":
+  version "16.8.3"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.3.tgz#6131b7b6158bc7ed1925a3374b88b7c00481f0cb"
+  integrity sha512-HF5hD5YR3z9Mn6kXcW1VKe4AQ04ZlZj1EdLBae61hzQ3eEWWxMgNLUbIxeZp40BnSxqY1eAYLsH9QopQcxzScA==
   dependencies:
     "@types/react" "*"
 
@@ -2459,10 +2473,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.8.8":
-  version "16.8.8"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.8.tgz#4b60a469fd2469f7aa6eaa0f8cfbc51f6d76e662"
-  integrity sha512-xwEvyet96u7WnB96kqY0yY7qxx/pEpU51QeACkKFtrgjjXITQn0oO1iwPEraXVgh10ZFPix7gs1R4OJXF7P5sg==
+"@types/react@*", "@types/react@16.8.13", "@types/react@16.8.8":
+  version "16.8.13"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.13.tgz#a82b15aad9ab91c40edca0d6889b7745ae24f053"
+  integrity sha512-otJ4ntMuHGrvm67CdDJMAls4WqotmAmW0g3HmWi9LCjSWXrxoXY/nHXrtmMfvPEEmGFNm6NdgMsJmnfH820Qaw==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -17106,6 +17120,11 @@ pretty-format@^24.6.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
+prism-react-renderer@0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-0.1.6.tgz#c9216baa234fab1c234209fcdaf0cd23a01c50a9"
+  integrity sha512-uZJn5wrygCH0ZMue+2JRd0qJharrmpxa6/uK7deKgvCtJFFE+VsyvJ49LS8/ATt0mlAJS6vFQTDvhXBEXsda+A==
+
 prismjs@1.6:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.6.0.tgz#118d95fb7a66dba2272e343b345f5236659db365"
@@ -17931,6 +17950,11 @@ react-media@1.9.2, react-media@^1.8.0:
     invariant "^2.2.2"
     json2mq "^0.2.0"
     prop-types "^15.5.10"
+
+react-navigation-hooks@1.0.0-alpha.2:
+  version "1.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-hooks/-/react-navigation-hooks-1.0.0-alpha.2.tgz#e44de3790d1f0ba6ff33dc11caa0e55d2a4fc8f7"
+  integrity sha512-G/JlquD3Xs8fYSLywKz6TV+APev8IwHDThU7X9gK2fZnLyk5tX9OeuO4pTpv4jv/tTRcjk7wkKQ+pHI+rFXa/g==
 
 react-overlays@^1.2.0:
   version "1.2.0"

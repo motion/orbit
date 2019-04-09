@@ -16,6 +16,8 @@ export const SVG = forwardRef<SVGElement, any>(function SVG(
     <SVGInline
       ref={ref}
       svg={svg}
+      width={width}
+      height={height}
       style={{ display: 'flex', width, height, ...styles, ...style }}
       {...omit(rest, 'hoverStyle')}
     />

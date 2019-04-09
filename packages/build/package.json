@@ -43,7 +43,8 @@
 		"webpack-bundle-analyzer": "3.1.0",
 		"webpack-cli": "3.3.0",
 		"webpack-dev-server": "3.2.1",
-		"workerize-loader": "1.0.4"
+		"workerize-loader": "1.0.4",
+		"@mdx-js/loader": "0.20.3"
 	},
 	"gitHead": "f6e6ad2c363fab67367c55c4a96ba83d68b05ef1"
 }

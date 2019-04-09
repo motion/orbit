@@ -1,6 +1,0 @@
-module.exports = {
-  presets: [
-    ['@o/babel-preset-motion', { disable: ['react-hot-loader/babel'] }],
-    ['@babel/preset-env', { targets: { node: '7.0' } }],
-  ],
-}

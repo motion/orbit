@@ -1,9 +1,9 @@
+import { themes } from '@o/kit'
 import { Theme, ThemeProvide } from '@o/ui'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-hot-loader' // must be imported before react
 import './../public/styles/siteBase.css'
-import { themes } from './etc/themes'
 
 export function render() {
   const RootNode = document.querySelector('#app')

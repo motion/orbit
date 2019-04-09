@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import Browser from './debugBrowser'
 import killPort from 'kill-port'
+import Browser from './debugBrowser'
 
 // quiet exit handling
 let browser
@@ -17,7 +17,7 @@ const setExiting = async () => {
   }
   process.exit(0)
 }
-process.on('unhandledRejection', function(reason) {
+process.on('unhandledRejection', function(reason: any) {
   if (reason.message.indexOf('Execution context was destroyed.')) {
     return
   }

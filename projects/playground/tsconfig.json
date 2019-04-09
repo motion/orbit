@@ -1,8 +1,12 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": "src",
     "outDir": "_",
-    "baseUrl": "./src"
+    "noEmit": true,
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "exclude": ["_", "node_modules", "tmp", "dist"]
+  "include": ["src/**/*"],
+  "references": [{ "path": "../../packages/kit" }, { "path": "../../packages/ui" }]
 }

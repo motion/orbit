@@ -13,10 +13,12 @@
     "@o/gloss": "^2.4.0",
     "@o/react-textfit": "^2.4.0",
     "@o/ui": "^2.4.0",
+    "@o/kit": "^2.4.0",
     "@o/use-store": "^2.4.0",
     "@o/wait-for-fonts": "^2.4.0",
     "@react-navigation/core": "3.0.2",
     "@react-navigation/web": "1.0.0-alpha.7",
+    "react-navigation-hooks": "1.0.0-alpha.2",
     "react-three-fiber": "2.0.0",
     "jsonp": "^0.2.1",
     "lodash": "^4.17.10",
@@ -33,6 +35,9 @@
     "remark-react": "4.0.3",
     "sanitize-html": "^1.18.2",
     "warpjs": "1.0.8",
-    "zenscroll": "^4.0.2"
+    "zenscroll": "^4.0.2",
+    "@mdx-js/react": "1.0.0-alpha.12",
+    "@mdx-js/tag": "0.20.3",
+    "prism-react-renderer": "0.1.6"
   }
 }

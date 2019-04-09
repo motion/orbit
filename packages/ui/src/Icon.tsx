@@ -36,7 +36,7 @@ export function Icon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
   const ResolvedIcon = Config.useIcon || PlainIcon
-  return <ResolvedIcon {...props} />
+  return <ResolvedIcon themeSelect="icon" {...props} />
 }
 
 const SIZE_STANDARD = 16
@@ -44,9 +44,9 @@ const SIZE_LARGE = 20
 
 export function PlainIcon(props: IconProps) {
   const name = findName(props.name)
-  const theme = useTheme()
+  const theme = useTheme(props)
   const size = snapToSizes(props.size)
-  let color = props.color || theme.iconColor || theme.color
+  let color = props.color || theme.color
   if (isDefined(props.opacity)) {
     try {
       color = toColor(color)
@@ -63,7 +63,13 @@ export function PlainIcon(props: IconProps) {
   const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
-    <svg fill={color} data-icon={name} width={`${size}px`} height={`${size}px`} viewBox={viewBox}>
+    <svg
+      style={{ color: `${color}` }}
+      data-icon={name}
+      width={`${size}px`}
+      height={`${size}px`}
+      viewBox={viewBox}
+    >
       {paths}
     </svg>
   )
@@ -75,7 +81,7 @@ function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | 
   if (pathStrings == null) {
     return null
   }
-  return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" />)
+  return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" fill="currentColor" />)
 }
 
 function snapToSizes(size: number) {

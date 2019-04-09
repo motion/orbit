@@ -1,21 +1,32 @@
-import { ColorLike } from '@o/css';
-import { alphaColor, Col, forwardTheme, gloss, GlossThemeFn, propsToStyles, propsToThemeStyles, ThemeContext, ThemeObject, ThemeSelect } from '@o/gloss';
-import { isAnyDefined, selectDefined } from '@o/utils';
-import React, { useContext, useEffect, useState } from 'react';
-import { Badge } from './Badge';
-import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs';
-import { Glint } from './effects/Glint';
-import { HoverGlow } from './effects/HoverGlow';
-import { createContextualProps } from './helpers/createContextualProps';
-import { memoIsEqualDeep } from './helpers/memoHelpers';
-import { Icon, IconProps, IconPropsContext } from './Icon';
-import { PopoverProps } from './Popover';
-import { getSegmentedStyle } from './SegmentedRow';
-import { getSize, SizedSurfaceProps } from './SizedSurface';
-import { Sizes } from './Space';
-import { Tooltip } from './Tooltip';
-import { getElevation } from './View/elevate';
-import { ViewProps } from './View/View';
+import { ColorLike } from '@o/css'
+import {
+  alphaColor,
+  Col,
+  forwardTheme,
+  gloss,
+  GlossThemeFn,
+  propsToStyles,
+  propsToThemeStyles,
+  ThemeContext,
+  ThemeObject,
+  ThemeSelect,
+} from '@o/gloss'
+import { isAnyDefined, selectDefined } from '@o/utils'
+import React, { useContext, useEffect, useState } from 'react'
+import { Badge } from './Badge'
+import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
+import { Glint } from './effects/Glint'
+import { HoverGlow } from './effects/HoverGlow'
+import { createContextualProps } from './helpers/createContextualProps'
+import { memoIsEqualDeep } from './helpers/memoHelpers'
+import { Icon, IconProps, IconPropsContext } from './Icon'
+import { PopoverProps } from './Popover'
+import { getSegmentedStyle } from './SegmentedRow'
+import { getSize, SizedSurfaceProps } from './SizedSurface'
+import { Sizes } from './Space'
+import { Tooltip } from './Tooltip'
+import { getElevation } from './View/elevate'
+import { ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -266,7 +277,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
         // color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
         justifyContent: 'center',
         hoverStyle: {
-          // todo this is kind of a mess, consistency-wise
+          // todo this is a mess, consistency-wise
           opacity:
             typeof props.alphaHover !== 'undefined'
               ? +props.alphaHover

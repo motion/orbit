@@ -60,9 +60,7 @@ function SimpleModal({
         afterTitle={
           <>
             {afterTitle || null}
-            {!!onClose && (
-              <Button chromeless icon="simple-remove" size={1.5} onClick={() => onClose()} />
-            )}
+            {!!onClose && <Button chromeless icon="cross" size={1.5} onClick={() => onClose()} />}
           </>
         }
         scrollable={scrollable}

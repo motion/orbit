@@ -72,7 +72,7 @@ function DataExplorerMain({ subId }: AppProps) {
           afterTitle={
             <>
               <Button
-                icon="simremove"
+                icon="cross"
                 onClick={() => setQueries(remove(queries, x => x.id !== query.id))}
               />
             </>

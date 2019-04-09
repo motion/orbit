@@ -160,7 +160,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
           <ListItem
             title="Settings"
             subTitle="Shortcuts, theme"
-            icon="gear"
+            icon="cog"
             iconBefore
             onClick={() => {
               stores.newAppStore.setShowCreateNew(false)

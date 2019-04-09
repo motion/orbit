@@ -1,10 +1,12 @@
-import { gloss } from '@o/gloss'
-import { mergeDefined } from '@o/utils'
+import { IconName, IconSvgPaths16, IconSvgPaths20 } from '@blueprintjs/icons'
+import { toColor, useTheme } from '@o/gloss'
+import { isDefined, mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
-import React, { createContext, memo, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { Config } from './helpers/configure'
-import { iconNames } from './iconNames'
-import { View, ViewProps } from './View/View'
+import { ViewProps } from './View/View'
+
+export { IconName }
 
 export type IconProps = ViewProps & {
   size?: number
@@ -17,31 +19,13 @@ export type IconProps = ViewProps & {
 // TODO use createContextProps
 export const IconPropsContext = createContext(null as Partial<IconProps>)
 
-const widthPadding = x => {
-  if (typeof x === 'number') {
-    return x * 2
-  }
-  if (Array.isArray(x)) {
-    return x[1] + (typeof x[3] === 'number' ? x[3] : x[1])
-  }
-  return 0
-}
-
-const heightPadding = x => {
-  if (typeof x === 'number') {
-    return x * 2
-  }
-  if (Array.isArray(x)) {
-    return x[0] + (typeof x[2] === 'number' ? x[2] : x[0])
-  }
-  return 0
-}
+const names = Object.keys(IconSvgPaths16)
 
 const cache = {}
-const findMatch = (name: string) => {
+const findName = (name: string) => {
   if (cache[name]) return cache[name]
-  if (iconNames[name]) return iconNames[name]
-  const matches = fuzzy.filter(name, iconNames)
+  if (IconSvgPaths16[name]) return name
+  const matches = fuzzy.filter(name, names)
   const match = matches.length ? matches[0].original : 'none'
   cache[name] = match
   return match
@@ -55,57 +39,51 @@ export function Icon(rawProps: IconProps) {
   return <ResolvedIcon {...props} />
 }
 
-export const PlainIcon = memo((rawProps: IconProps) => {
-  const extraProps = useContext(IconPropsContext)
-  const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const { name, type = 'mini', children, color, ...restProps } = props
+const SIZE_STANDARD = 16
+const SIZE_LARGE = 20
 
-  if (!name) {
-    return null
+export function PlainIcon(props: IconProps) {
+  const name = findName(props.name)
+  const theme = useTheme()
+  const size = snapToSizes(props.size)
+  let color = props.color || theme.iconColor || theme.color
+  if (isDefined(props.opacity)) {
+    try {
+      color = toColor(color)
+        .alpha(props.opacity)
+        .toCSS()
+    } catch {
+      console.debug('bad color')
+    }
   }
-  let content: any
-  if (name[0] === '/') {
-    // @ts-ignore
-    return <img src={name} {...props} />
-  }
-  if (!name) {
-    console.warn('no name given for icon')
-    return null
-  }
-  content = content || children
-
-  const iconName = findMatch(name)
-  // icons here are consistently a bit too big...
-  const size =
-    props.size > 18 ? Math.log(Math.max(1, 20 * props.size)) + props.size * 0.25 : props.size || 16
+  // choose which pixel grid is most appropriate for given icon size
+  const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
+  // render path elements, or nothing if icon name is unknown.
+  const paths = renderSvgPaths(pixelGridSize, name)
+  const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
-    <IconInner color={color} {...restProps} size={size}>
-      <div
-        className={`icon nc-icon-${type} ${iconName}`}
-        style={{
-          margin: 'auto',
-          textRendering: 'geometricPrecision',
-        }}
-      >
-        {content}
-      </div>
-    </IconInner>
+    <svg fill={color} data-icon={name} width={`${size}px`} height={`${size}px`} viewBox={viewBox}>
+      {paths}
+    </svg>
   )
-})
+}
 
-const IconInner = gloss(View, {
-  userSelect: 'none',
-  alignItems: 'center',
-  justifyContent: 'center',
-}).theme(({ padding, width: pWidth, height: pHeight, size, color }, theme) => {
-  const width = (pWidth || size) + widthPadding(padding)
-  const height = (pHeight || size) + heightPadding(padding)
-  return {
-    color: color || theme.iconColor || theme.color,
-    width,
-    height,
-    fontSize: size, // * 4,
-    lineHeight: `${size / 12}rem`, // scale where 1 when 14
+function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | null {
+  const svgPathsRecord = pathsSize === SIZE_STANDARD ? IconSvgPaths16 : IconSvgPaths20
+  const pathStrings = svgPathsRecord[iconName]
+  if (pathStrings == null) {
+    return null
   }
-})
+  return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" />)
+}
+
+function snapToSizes(size: number) {
+  if (size <= 17 && size >= 15) {
+    return 16
+  }
+  if (size <= 21 && size >= 19) {
+    return 20
+  }
+  return size
+}

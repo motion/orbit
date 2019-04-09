@@ -15,7 +15,7 @@ export function AppIconInner({
   removeStroke = true,
   ...props
 }: Partial<AppIconProps>) {
-  // const theme = useTheme() props.color || theme.iconFill ||
+  // const theme = useTheme() props.color || theme.iconColor ||
   const fill = toColor('#fff').hex()
 
   if (!appIcons[props.name]) {

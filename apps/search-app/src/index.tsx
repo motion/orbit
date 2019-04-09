@@ -54,13 +54,13 @@ function SearchActions() {
       <Button
         onClick={queryFilters.toggleSortBy}
         tooltip={`Sort by: ${queryFilters.sortBy}`}
-        icon={queryFilters.sortBy === 'Relevant' ? 'shape-circle' : 'arrowup'}
+        icon={queryFilters.sortBy === 'Relevant' ? 'flame' : 'time'}
       />
       <Popover
         openOnClick
         closeOnClickAway
         group="filters"
-        target={<Button icon="ui-1_calendar-57" />}
+        target={<Button icon="calendar" />}
         background
         borderRadius={10}
         elevation={4}

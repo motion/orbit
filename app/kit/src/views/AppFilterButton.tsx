@@ -18,7 +18,7 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
       elevation={4}
       themeName="tooltip"
       target={
-        <Button icon="funnel">
+        <Button icon="filter">
           {/* {hasAppFilters ? appFilters.filter(x => x.active).length : 'All'} */}
         </Button>
       }

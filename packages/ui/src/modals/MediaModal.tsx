@@ -24,9 +24,7 @@ export function MediaModal({ title, subTitle, onClose, afterTitle, ...props }: M
           {!!(afterTitle || onClose) && (
             <Absolute top={10} right={10}>
               {afterTitle || null}
-              {onClose && (
-                <Button chromeless icon="simple-remove" size={1.5} onClick={() => onClose()} />
-              )}
+              {onClose && <Button chromeless icon="cross" size={1.5} onClick={() => onClose()} />}
             </Absolute>
           )}
         </Row>

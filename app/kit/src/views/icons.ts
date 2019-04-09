@@ -47,19 +47,11 @@ export const icons = isNode
       bookOpenBookmark: require('!raw-loader!../../public/streamline/book-open-bookmark.svg')
         .default,
       bookOpenText: require('!raw-loader!../../public/streamline/book-open-text.svg').default,
-      calendar: require('!raw-loader!../../public/streamline/calendar.svg').default,
-      calendar1: require('!raw-loader!../../public/streamline/calendar-1.svg').default,
-      calendar3: require('!raw-loader!../../public/streamline/calendar-3.svg').default,
-      calendarDate: require('!raw-loader!../../public/streamline/calendar-date.svg').default,
       checkCircle1: require('!raw-loader!../../public/streamline/check-circle-1.svg').default,
       checklist: require('!raw-loader!../../public/streamline/checklist.svg').default,
-      cog: require('!raw-loader!../../public/streamline/cog.svg').default,
       delete: require('!raw-loader!../../public/streamline/delete.svg').default,
       expand3: require('!raw-loader!../../public/streamline/expand-3.svg').default,
       expand6: require('!raw-loader!../../public/streamline/expand-6.svg').default,
-      filter: require('!raw-loader!../../public/streamline/filter.svg').default,
-      filter1: require('!raw-loader!../../public/streamline/filter-1.svg').default,
-      filter2: require('!raw-loader!../../public/streamline/filter-2.svg').default,
       flash: require('!raw-loader!../../public/streamline/flash.svg').default,
       folder: require('!raw-loader!../../public/streamline/folder.svg').default,
       folderEmpty: require('!raw-loader!../../public/streamline/folder-empty.svg').default,
@@ -134,20 +126,9 @@ export const icons = isNode
       multipleUsers1: require('!raw-loader!../../public/streamline/multiple-users-1.svg').default,
       multipleUsers3: require('!raw-loader!../../public/streamline/multiple-users-3.svg').default,
       multipleWoman2: require('!raw-loader!../../public/streamline/multiple-woman-2.svg').default,
-      navigationDownCircle: require('!raw-loader!../../public/streamline/navigation-down-circle.svg')
-        .default,
-      navigationLeftCircle: require('!raw-loader!../../public/streamline/navigation-left-circle.svg')
-        .default,
-      navigationLeftCircle2: require('!raw-loader!../../public/streamline/navigation-left-circle-2.svg')
-        .default,
-      navigationUpCircle: require('!raw-loader!../../public/streamline/navigation-up-circle.svg')
-        .default,
-      newspaperReadMan: require('!raw-loader!../../public/streamline/newspaper-read-man.svg')
-        .default,
       notesPaperText: require('!raw-loader!../../public/streamline/notes-paper-text.svg').default,
       passwordLock2: require('!raw-loader!../../public/streamline/password-lock-2.svg').default,
       pencil: require('!raw-loader!../../public/streamline/pencil.svg').default,
-      pin: require('!raw-loader!../../public/streamline/pin.svg').default,
       powerButton: require('!raw-loader!../../public/streamline/power-button.svg').default,
       questionCircle: require('!raw-loader!../../public/streamline/question-circle.svg').default,
       questionHelpMessage: require('!raw-loader!../../public/streamline/question-help-message.svg')
@@ -158,39 +139,6 @@ export const icons = isNode
       ratingStar1: require('!raw-loader!../../public/streamline/rating-star-1.svg').default,
       remove: require('!raw-loader!../../public/streamline/remove.svg').default,
       removeCircle: require('!raw-loader!../../public/streamline/remove-circle.svg').default,
-      share: require('!raw-loader!../../public/streamline/share.svg').default,
-      share1: require('!raw-loader!../../public/streamline/share-1.svg').default,
-      share2: require('!raw-loader!../../public/streamline/share-2.svg').default,
-      share3: require('!raw-loader!../../public/streamline/share-3.svg').default,
-      singleNeutral: require('!raw-loader!../../public/streamline/single-neutral.svg').default,
-      singleNeutralActionsAdd: require('!raw-loader!../../public/streamline/single-neutral-actions-add.svg')
-        .default,
-      singleNeutralActionsCheck1: require('!raw-loader!../../public/streamline/single-neutral-actions-check-1.svg')
-        .default,
-      singleNeutralActionsEdit1: require('!raw-loader!../../public/streamline/single-neutral-actions-edit-1.svg')
-        .default,
-      singleNeutralActionsStar: require('!raw-loader!../../public/streamline/single-neutral-actions-star.svg')
-        .default,
-      singleNeutralActionsView: require('!raw-loader!../../public/streamline/single-neutral-actions-view.svg')
-        .default,
-      singleNeutralBook: require('!raw-loader!../../public/streamline/single-neutral-book.svg')
-        .default,
-      singleNeutralChat: require('!raw-loader!../../public/streamline/single-neutral-chat.svg')
-        .default,
-      singleNeutralCircle: require('!raw-loader!../../public/streamline/single-neutral-circle.svg')
-        .default,
-      singleNeutralFind: require('!raw-loader!../../public/streamline/single-neutral-find.svg')
-        .default,
-      singleNeutralFocus: require('!raw-loader!../../public/streamline/single-neutral-focus.svg')
-        .default,
-      singleNeutralHierachy: require('!raw-loader!../../public/streamline/single-neutral-hierachy.svg')
-        .default,
-      singleNeutralHome: require('!raw-loader!../../public/streamline/single-neutral-home.svg')
-        .default,
-      singleNeutralProfilePicture: require('!raw-loader!../../public/streamline/single-neutral-profile-picture.svg')
-        .default,
-      singleNeutralSearch: require('!raw-loader!../../public/streamline/single-neutral-search.svg')
-        .default,
       subtractCircle: require('!raw-loader!../../public/streamline/subtract-circle.svg').default,
       tags: require('!raw-loader!../../public/streamline/tags.svg').default,
       timeClockCircle: require('!raw-loader!../../public/streamline/time-clock-circle.svg').default,

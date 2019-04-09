@@ -51,7 +51,7 @@ export class BitTitleBar extends React.Component<{
             distance={5}
             width={250}
             height={300}
-            target={<TitleBarButton tooltip="Open" icon="dots" />}
+            target={<TitleBarButton tooltip="Open" icon="more" />}
             background
             borderRadius={10}
             elevation={1}

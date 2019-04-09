@@ -42,7 +42,8 @@
     "react-spring": "8.0.18",
     "react-with-gesture": "4.0.8",
     "react-switch": "4.1.0",
-    "autoresponsive-react": "1.1.31"
+    "autoresponsive-react": "1.1.31",
+    "@blueprintjs/icons": "3.7.0"
   },
   "devDependencies": {
     "@types/react-select": "2.0.15",

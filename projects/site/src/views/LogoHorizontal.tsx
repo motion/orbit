@@ -24,7 +24,7 @@ export function LogoHorizontal() {
         navigate('Home')
       }}
     >
-      <SVG width={345 * scaleDown} height={114 * scaleDown} svg={orbit} />
+      <SVG width={`${345 * scaleDown}px`} height={`${114 * scaleDown}px`} svg={orbit} />
     </View>
   )
 }

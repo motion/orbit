@@ -117,14 +117,14 @@ export function PeopleAppMain(props: AppProps) {
             Slack
           </SourceButton> */}
               <SourceButton
-                icon="zoom"
+                icon="search"
                 onClick={() => queryStore.setQuery(`${person.title} documents`)}
               >
                 Documents
               </SourceButton>
               <Space />
               <SourceButton
-                icon="zoom"
+                icon="search"
                 onClick={() => queryStore.setQuery(`${person.title} tasks`)}
               >
                 Tasks

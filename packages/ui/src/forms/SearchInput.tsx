@@ -2,6 +2,7 @@ import { gloss, Row } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { ClearButton } from '../buttons/ClearButton'
 import { Icon } from '../Icon'
+import { Space } from '../Space'
 import { FilterToken } from '../tables/FilterToken'
 import { TableInput } from '../tables/TableInput'
 import { TableFilter } from '../tables/types'
@@ -52,7 +53,8 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     >
       {before}
       <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="ui-1_zoom" size={14} />
+        <Space size="sm" />
+        <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="search" size={14} />
         {filters.map((filter, i) => (
           <FilterToken
             key={`${filter.key}:${filter.type}${i}`}
@@ -62,14 +64,22 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
             {...filterProps}
           />
         ))}
-        <Input chromeless padding={0} placeholder={placeholder} ref={ref} {...props} />
+        <Space size="sm" />
+        <Input
+          height="100%"
+          chromeless
+          padding={0}
+          placeholder={placeholder}
+          ref={ref}
+          {...props}
+        />
         <SearchClearButton
           onClick={onClickClear}
           visible={clearVisible}
           opacity={1}
           position="relative"
           zIndex={2}
-          marginLeft={5}
+          margin={[-2, 0, -2, 5]}
         />
       </SearchBox>
       {after}

@@ -22,7 +22,7 @@ export function TopBar({ bordered, before, after }: TopBarProps) {
 
       {!!after && (
         <Row padding={[0, 6, 0, 12]}>
-          <SurfacePassProps chromeless alpha={0.3} alphaHover={1} height={33}>
+          <SurfacePassProps chromeless alpha={0.3} alphaHover={1} height={33} iconSize={14}>
             {after}
           </SurfacePassProps>
         </Row>

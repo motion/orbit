@@ -38,7 +38,7 @@ const colorThemes: ThemeSet = {
   }),
   red: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    iconFill: '#fff',
+    iconColor: '#fff',
     color: '#fff',
     background: colors.red,
     backgroundHover: colors.red,
@@ -46,7 +46,7 @@ const colorThemes: ThemeSet = {
   }),
   green: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    iconFill: '#fff',
+    iconColor: '#fff',
     background: '#449878',
     color: '#fff',
   }),
@@ -62,7 +62,7 @@ const colorThemes: ThemeSet = {
   }),
   blue: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    iconFill: '#fff',
+    iconColor: '#fff',
     background: orbitColor,
     backgroundHover: orbitColor,
     backgroundActive: orbitColor,

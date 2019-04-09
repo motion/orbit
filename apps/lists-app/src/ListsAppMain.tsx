@@ -42,7 +42,7 @@ function ListsAppMainFolder(props: AppProps) {
         title={props.title}
         before={
           treeList.userState.depth > 0 && (
-            <Button icon="arrows-1_bold-left" onClick={treeList.actions.back}>
+            <Button icon="checkron-left" onClick={treeList.actions.back}>
               Back
             </Button>
           )

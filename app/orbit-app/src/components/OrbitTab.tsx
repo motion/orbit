@@ -166,7 +166,7 @@ export function OrbitTabButton(props: ButtonProps) {
       borderWidth={0}
       width={18}
       height={18}
-      icon="downArrow"
+      icon="arrow-down"
       iconSize={10}
       opacity={0.4}
       position="absolute"

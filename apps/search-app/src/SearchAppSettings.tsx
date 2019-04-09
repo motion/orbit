@@ -15,7 +15,7 @@ export function SearchAppSettings() {
         <Row alignItems="center">
           <Input />
           <Space />
-          <Button circular icon="add" />
+          <Button circular icon="plus" />
         </Row>
       </FormField>
     </>

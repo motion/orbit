@@ -17,7 +17,7 @@ import { Omit } from './types'
 import { View, ViewProps } from './View/View'
 
 export type TabsProps = Omit<ViewProps, 'order'> & {
-  // height
+  // tab height
   height?: number
   // Callback for when the active tab has changed.
   onActive?: (key: string | void) => void
@@ -47,6 +47,14 @@ export type TabsProps = Omit<ViewProps, 'order'> & {
   tabPropsActive?: ViewProps
   // component to render each tab with
   TabComponent?: any
+  // center the tabs
+  centered?: boolean
+  // tab radius sizing
+  sizeRadius?: number
+  // tab padding sizing
+  sizePadding?: number
+  // tab width
+  tabWidth?: number | string
 }
 
 function TabsControlled({
@@ -66,6 +74,10 @@ function TabsControlled({
   newable,
   sortable,
   children,
+  centered,
+  sizeRadius = 0,
+  sizePadding = 1,
+  tabWidth,
   ...rest
 }: TabsProps) {
   const tabs = {}
@@ -127,7 +139,7 @@ function TabsControlled({
           className={isActive ? 'tab-active' : 'tab-inactive'}
           {...tabPropsExtra}
           {...tabProps}
-          width={width}
+          width={width || tabWidth}
           {...isActive && tabPropsActive}
           active={isActive}
           onMouseDown={
@@ -186,25 +198,28 @@ function TabsControlled({
 
   return (
     <TabContainer>
-      <Row width="100%" {...rest}>
-        <div style={{ margin: 'auto', maxWidth: '100%' }}>
-          <SegmentedRow sizePadding={2} sizeRadius={2}>
-            {before}
-            <View
-              {...{
-                flex: 1,
-                overflow: 'hidden',
-                height,
-                margin: [0, 'auto'],
-              }}
-            >
-              <HideScrollbar className="hide-scrollbars">
-                {Children.map(tabList, (child, key) => cloneElement(child, { key }))}
-              </HideScrollbar>
-            </View>
-            {after}
-          </SegmentedRow>
-        </div>
+      <Row
+        margin={centered ? 'auto' : 'inherit'}
+        justifyContent={centered ? 'center' : 'inherit'}
+        {...rest}
+      >
+        <SegmentedRow sizePadding={sizePadding} sizeRadius={sizeRadius}>
+          {before}
+          <View
+            {...{
+              flex: 1,
+              overflow: 'hidden',
+              height,
+            }}
+          >
+            <HideScrollbar className="hide-scrollbars">
+              {Children.map(tabList, (child, key) =>
+                cloneElement(child, { key, flex: centered ? 'auto' : 1 }),
+              )}
+            </HideScrollbar>
+          </View>
+          {after}
+        </SegmentedRow>
       </Row>
       {tabContents}
       {tabSiblings}
@@ -233,7 +248,7 @@ const HideScrollbar = gloss({
   overflowY: 'hidden',
   flex: 1,
   // because we use box shadows for outlines
-  margin: [0, 1],
+  // margin: [0, 1],
   height: '100%',
   boxSizing: 'content-box',
 })

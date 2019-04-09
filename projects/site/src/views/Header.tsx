@@ -3,9 +3,9 @@ import { Button, Popover, Row, View } from '@o/ui'
 import * as ReactNavigation from '@react-navigation/web'
 import React from 'react'
 import { useScreenSize } from '../hooks/useScreenSize'
-import { LogoHorizontal } from '../views/LogoHorizontal'
-import { LogoVertical } from '../views/LogoVertical'
-import { Text } from '../views/Text'
+import { LogoHorizontal } from './LogoHorizontal'
+import { LogoVertical } from './LogoVertical'
+import { Text } from './Text'
 
 const LinkText = gloss(Text, {
   width: 100,

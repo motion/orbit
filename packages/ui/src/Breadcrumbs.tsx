@@ -1,4 +1,3 @@
-import { Row, RowProps } from '@o/gloss'
 import { ensure, react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
@@ -8,7 +7,7 @@ import { Omit } from './types'
 
 const Context = createContext<BreadcrumbStore | null>(null)
 
-export type BreadcrumbsProps = Omit<RowProps, 'children'> & {
+export type BreadcrumbsProps = {
   separator?: ReactNode
   children?: ReactNode | ((crumb?: ReturnType<typeof useBreadcrumb>) => ReactNode)
 }
@@ -45,11 +44,11 @@ class BreadcrumbStore {
   }
 }
 
-export function Breadcrumbs({ separator, ...props }: BreadcrumbsProps) {
+export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
   const store = useStore(BreadcrumbStore, { separator })
   return (
     <MergeContext Context={Context} value={store}>
-      <Row alignItems="center" {...props} />
+      {children}
     </MergeContext>
   )
 }

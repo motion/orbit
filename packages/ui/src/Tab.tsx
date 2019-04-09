@@ -54,12 +54,13 @@ export function TabItem(props: ButtonProps) {
     <Button
       ellipse
       minWidth="min-content"
-      maxWidth={200}
       sizeHeight={0.8}
       sizeFont={0.9}
       sizeIcon={1.2}
       fontWeight={500}
       elevation={0}
+      iconAfter={false}
+      borderWidth={1}
       flex={typeof props.width === 'number' ? 'none' : 'inherit'}
       {...props}
     />

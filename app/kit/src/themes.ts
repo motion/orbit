@@ -22,18 +22,22 @@ const colors = {
 
 const colorThemes: ThemeSet = {
   lightRed: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     color: colors.darkRed,
     background: colors.lightRed,
   }),
   lightGreen: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     color: colors.darkGreen,
     background: colors.lightGreen,
   }),
   lightYellow: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     color: colors.darkYellow,
     background: colors.lightYellow,
   }),
   red: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     iconFill: '#fff',
     color: '#fff',
     background: colors.red,
@@ -41,19 +45,23 @@ const colorThemes: ThemeSet = {
     backgroundActive: colors.red,
   }),
   green: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     iconFill: '#fff',
     background: '#449878',
     color: '#fff',
   }),
   orange: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     color: '#fff',
     background: '#DC6104',
   }),
   yellow: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     color: '#fff',
     background: '#C9C825',
   }),
   blue: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
     iconFill: '#fff',
     background: orbitColor,
     backgroundHover: orbitColor,
@@ -126,7 +134,7 @@ const light = {
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
   ...Theme.fromStyles({
-    glintColor: [255, 255, 255, 0.75],
+    glintColor: [255, 255, 255, 0.85],
     background: lightBackground,
     backgroundStrong: lightBackground.darken(0.025),
     backgroundStronger: lightBackground.darken(0.05),
@@ -144,10 +152,10 @@ const light = {
     buttonBackgroundActive: linearGradient('#eee', '#e9e9e9'),
     buttonBackgroundFocus: lightButtonBg,
     buttonBackgroundHover: lightButtonBg.adjust(x => toColor(x).lighten(0.025)),
-    buttonGlintColorBottom: [0, 0, 0, 0.06],
-    borderColor: [220, 220, 220],
-    borderColorActive: [220, 220, 220],
-    borderColorHover: [220, 220, 220],
+    buttonGlintColorBottom: [0, 0, 0, 0.08],
+    borderColor: [230, 230, 230],
+    borderColorActive: [230, 230, 230],
+    borderColorHover: [230, 230, 230],
     borderColorLight: [215, 215, 215, 0.5],
     headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.95]),
     sidebarBackground: [255, 255, 255, 0.85],

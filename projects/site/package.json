@@ -9,6 +9,7 @@
     "@o/babel-preset-motion": "2.4.0",
     "@babel/runtime": "7.2.0",
     "@kennethormandy/react-fittext": "0.5.1",
+    "@o/nucleo": "^2.4.0",
     "@o/color": "^2.4.0",
     "@o/gloss": "^2.4.0",
     "@o/react-textfit": "^2.4.0",

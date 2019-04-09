@@ -2,7 +2,7 @@
 import { once } from 'lodash'
 import { syncersRoot } from './OrbitSyncersRoot'
 
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error: any) => {
   console.log('unhandledRejection', error.stack)
   throw error
 })

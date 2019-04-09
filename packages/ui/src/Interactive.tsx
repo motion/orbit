@@ -6,7 +6,7 @@
  */
 
 import { isEqual } from '@o/fast-compare'
-import { gloss } from '@o/gloss'
+import { Col, gloss } from '@o/gloss'
 import { on } from '@o/utils'
 import invariant from 'invariant'
 import React, { createContext, createRef } from 'react'
@@ -17,7 +17,7 @@ import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers
 import { InteractiveChrome } from './InteractiveChrome'
 import { ResizeObserverCallback } from './ResizeObserver'
 import { Omit } from './types'
-import { View, ViewProps } from './View/View'
+import { ViewProps } from './View/View'
 
 // TODO make prop
 const SIZE = 5
@@ -670,7 +670,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   }
 }
 
-const InteractiveContainer = gloss(View, {
+const InteractiveContainer = gloss(Col, {
   position: 'relative',
   willChange: 'transform, height, width, z-index',
 })

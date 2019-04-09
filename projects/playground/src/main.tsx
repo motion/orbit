@@ -1,7 +1,7 @@
 import { configureUseStore, debugUseStore, IS_STORE, themes } from '@o/kit'
+import '@o/nucleo'
 import { Theme, ThemeProvide } from '@o/ui'
 import ReactDOM from 'react-dom'
-import '../public/styles/nucleo.css'
 import '../public/testBase.css'
 
 const React = require('react')

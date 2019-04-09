@@ -11,6 +11,7 @@ export {
   validCSSAttr,
 } from '@o/css'
 export * from './blocks/Absolute'
+export * from './blocks/Base'
 // blocks
 export { GlossBaseProps } from './blocks/Base'
 export * from './blocks/Block'

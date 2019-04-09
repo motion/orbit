@@ -15,6 +15,7 @@ export function GithubSettings() {
 
   // load and set repositories when app changes
   useEffect(() => {
+    if (!app) return
     const loader = new GithubLoader(app)
     loader.loadUserRepositories().then(next => {
       setRepos(next)

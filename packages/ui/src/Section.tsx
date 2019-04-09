@@ -1,4 +1,4 @@
-import { selectDefined } from '@o/utils'
+import { isAnyDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
@@ -23,6 +23,7 @@ export type SectionSpecificProps = Omit<
   innerRef?: any
   maxInnerHeight?: number
   padInner?: Sizes
+  fixedTitle?: boolean
 }
 
 export type SectionParentProps = Omit<SectionSpecificProps, 'below' | 'innerRef'>
@@ -66,12 +67,33 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     padInner,
     titleSize,
     size,
+    fixedTitle,
     ...viewProps
   } = props
-  const hasTitle = !!(title || afterTitle)
+  const hasTitle = isAnyDefined(title, afterTitle)
   const outerPad = hasTitle ? false : pad
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   const spaceSize = space === true ? selectDefined(size, space) : space
+  const showTitleAbove = scrollable !== 'y' || fixedTitle
+  const titleElement = hasTitle && (
+    <>
+      <TitleRow
+        bordered={bordered || titleBorder}
+        backgrounded={bordered}
+        title={title}
+        subTitle={subTitle}
+        after={afterTitle}
+        above={above}
+        before={beforeTitle}
+        below={belowTitle}
+        icon={icon}
+        pad={titleBorder || bordered ? true : innerPad}
+        size={selectDefined(titleSize, size)}
+      />
+      {!!innerPad && <Space size={spaceSize} />}
+    </>
+  )
+
   return (
     <SizedSurface
       forwardRef={ref}
@@ -94,22 +116,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       pad={outerPad}
       size={size}
     >
-      {hasTitle && (
-        <TitleRow
-          bordered={bordered || titleBorder}
-          backgrounded={bordered}
-          title={title}
-          subTitle={subTitle}
-          after={afterTitle}
-          above={above}
-          before={beforeTitle}
-          below={belowTitle}
-          icon={icon}
-          pad={titleBorder || bordered ? true : innerPad}
-          size={selectDefined(titleSize, size)}
-        />
-      )}
-      <Space size={spaceSize} />
+      {showTitleAbove && titleElement}
       <Reset>
         <Col
           maxHeight={maxInnerHeight}
@@ -120,6 +127,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           flexDirection={flexDirection}
           scrollable={scrollable}
           pad={innerPad}
+          beforeSpace={!showTitleAbove && titleElement}
           {...viewProps}
         >
           {children}

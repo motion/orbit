@@ -227,7 +227,7 @@ const BackButton = memo(() => {
       circular
       icon="arrowminleft"
       opacity={locationStore.history.length ? 0.5 : 0.4}
-      iconSize={20}
+      iconSize={32}
       onClick={() => {
         locationStore.back()
       }}

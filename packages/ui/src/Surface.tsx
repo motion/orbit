@@ -24,6 +24,7 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { getSize, SizedSurfaceProps } from './SizedSurface'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
+import { getElevation } from './View/elevate'
 import { View, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
@@ -135,7 +136,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     badge,
     after,
     borderWidth,
-    ...rest
+    ...surfaceProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
   const segmentedStyle = getSegmentedStyle(
@@ -168,7 +169,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
   }
 
-  const surfaceProps = {
+  const childrenProps = {
     children: null,
   }
 
@@ -186,9 +187,9 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
   if (noInnerElement) {
-    surfaceProps.children = children || null
+    childrenProps.children = children || null
   } else {
-    surfaceProps.children = (
+    childrenProps.children = (
       <>
         {!!badge && (
           <Badge
@@ -293,9 +294,9 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           padding={padding}
           borderWidth={borderWidth}
           {...throughProps}
-          {...rest}
-          {...segmentedStyle}
           {...surfaceProps}
+          {...segmentedStyle}
+          {...childrenProps}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>
@@ -339,8 +340,11 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
   if (borderWidth && !props.chromeless) {
-    console.log('borderColor', borderColor, themeStyles)
     boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor.toCSS()]]
+  }
+
+  if (props.elevation) {
+    boxShadow = [...boxShadow, getElevation(props).boxShadow]
   }
 
   return alphaColor(

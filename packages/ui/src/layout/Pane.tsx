@@ -40,20 +40,18 @@ export function Pane({
         <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
       )}
       <Collapsable {...collapsableProps}>
-        <Suspense fallback={<Loading />}>
-          <Col
-            space={space}
-            spaceAround={spaceAround}
-            flexDirection={flexDirection}
-            scrollable={scrollable}
-            pad={pad}
-            padding={padding}
-            width="100%"
-            height="100%"
-          >
-            {children}
-          </Col>
-        </Suspense>
+        <Col
+          space={space}
+          spaceAround={spaceAround}
+          flexDirection={flexDirection}
+          scrollable={scrollable}
+          pad={pad}
+          padding={padding}
+          width="100%"
+          height="100%"
+        >
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </Col>
       </Collapsable>
     </SizablePane>
   )

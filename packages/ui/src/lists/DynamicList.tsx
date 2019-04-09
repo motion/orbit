@@ -25,12 +25,15 @@ export const DynamicList = forwardRef(({ disableMeasure, ...props }: DynamicList
     disable: disableMeasure,
   })
   return (
-    <DynamicListChrome flex={1} ref={ref}>
+    <DynamicListChrome ref={ref}>
       <DynamicSizeList ref={props.listRef || fwRef} width={width} height={height} {...props} />
     </DynamicListChrome>
   )
 })
 
-const DynamicListChrome = gloss(View)
+const DynamicListChrome = gloss(View, {
+  overflow: 'hidden',
+  flex: 1,
+})
 
 export type DynamicListControlled = VariableSizeList

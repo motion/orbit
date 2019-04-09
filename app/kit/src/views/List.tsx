@@ -185,15 +185,7 @@ export function List({
   const hasResults = !!filtered.results.length
   const showPlaceholder = noQuery && !hasResults
 
-  const hasSectionProps = isAnyDefined(
-    title,
-    subTitle,
-    bordered,
-    icon,
-    beforeTitle,
-    afterTitle,
-    titleBorder,
-  )
+  const hasSectionProps = isAnyDefined(title, subTitle, bordered, icon, beforeTitle, afterTitle)
 
   const children = (
     <HighlightActiveQuery query={search}>

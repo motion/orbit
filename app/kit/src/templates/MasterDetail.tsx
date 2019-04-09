@@ -24,7 +24,10 @@ export function MasterDetail({ children, placeholder, ...listProps }: MasterDeta
           itemProps={{ iconBefore: true, ...listProps.itemProps }}
         />
       </Pane>
-      <Pane flex={2}>{selected === null ? placeholder || null : children(selected)}</Pane>
+      <Pane flex={2}>
+        {/* contents */}
+        {selected === null ? placeholder || null : children(selected)}
+      </Pane>
     </Layout>
   )
 }

@@ -42,10 +42,11 @@ export const ClearButton = ({
   onMouseUp,
   onMouseEnter,
   onMouseLeave,
-  children = <Icon name="simple-remove" size={8} opacity={0.8} margin="auto" />,
+  children = <Icon name="cross" size={8} opacity={0.8} margin="auto" />,
   hidden = false,
   hoverStyle,
   activeStyle,
+  margin,
   ...props
 }: ViewProps) => (
   <ClearClickableArea
@@ -57,6 +58,7 @@ export const ClearButton = ({
       onMouseLeave,
       hoverStyle,
       activeStyle,
+      margin,
     }}
     hidden={hidden}
   >

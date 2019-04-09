@@ -177,7 +177,7 @@ export const OrbitNav = memo(() => {
               label={'New app'}
               after={
                 <OrbitTabButton
-                  icon="remove"
+                  icon="cross"
                   onClick={flow(
                     preventDefault,
                     Actions.previousTab,
@@ -202,7 +202,7 @@ export const OrbitNav = memo(() => {
           isActive={paneManagerStore.activePane.id === 'data-explorer'}
           location="data-explorer"
           iconSize={11}
-          icon="database"
+          icon="layers"
           tooltip="Data explorer"
           thicc
         />
@@ -210,7 +210,7 @@ export const OrbitNav = memo(() => {
           isActive={paneManagerStore.activePane.id === 'apps'}
           location="apps"
           iconSize={11}
-          icon="grid48"
+          icon="layout-grid"
           tooltip="Apps"
           thicc
         />

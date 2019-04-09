@@ -21,13 +21,13 @@ export function AppsMain(props: AppProps) {
         <Section
           titleBorder
           padInner
-          icon="gear"
+          icon="cog"
           title={props.title}
           afterTitle={
             app &&
             app.tabDisplay !== 'permanent' && (
               <TitleBarButton
-                icon="boldremove"
+                icon="cross"
                 tooltip={`Remove ${props.title}`}
                 onClick={() => removeApp(app)}
               />

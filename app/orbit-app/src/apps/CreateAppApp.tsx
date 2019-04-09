@@ -34,7 +34,7 @@ function CreateAppMain() {
         onClick={() => {
           setPane(1)
         }}
-        icon="simadd"
+        icon="plus"
         tooltip="Create new custom app"
       >
         Create Custom App
@@ -57,7 +57,7 @@ function CreateAppMain() {
         onClick={() => {
           Actions.createCustomApp(selected.identifier)
         }}
-        icon="arrowminright"
+        icon="chevron-right"
         tooltip="Create new custom app"
       >
         Add
@@ -68,7 +68,7 @@ function CreateAppMain() {
       <Button
         alt="action"
         iconAfter={false}
-        icon="arrowminleft"
+        icon="chevron-left"
         onClick={() => {
           setPane(0)
         }}
@@ -84,7 +84,7 @@ function CreateAppMain() {
         onClick={() => {
           Actions.createCustomApp(selected.identifier)
         }}
-        icon="arrowminright"
+        icon="chevron-right"
       >
         Start
       </Button>

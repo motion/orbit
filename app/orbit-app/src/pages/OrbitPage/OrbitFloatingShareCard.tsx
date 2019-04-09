@@ -29,8 +29,9 @@ export function OrbitFloatingShareCard({
         ref={buttonRef}
         theme="light"
         circular
-        icon="notes"
+        icon="list"
         size={1.5}
+        iconSize={16}
         badge={numItems}
         badgeProps={{
           background: '#333',

@@ -96,7 +96,7 @@ export const OrbitHeader = memo(function OrbitHeader() {
               hoverStyle={{
                 opacity: isOnSettings ? 1 : 0.6,
               }}
-              icon="gear"
+              icon="cog"
               iconSize={isEditing ? 10 : 12}
               onClick={() => {
                 newAppStore.setShowCreateNew(false)
@@ -208,7 +208,7 @@ const OpenButton = memo(() => {
 
   return (
     <Button
-      icon="arrowminright"
+      icon="chevron-right"
       iconAfter
       tooltip="Open to desktop (⌘ + ⏎)"
       onClick={Actions.tearApp}
@@ -225,9 +225,9 @@ const BackButton = memo(() => {
   return (
     <Button
       circular
-      icon="arrowminleft"
+      icon="chevron-left"
       opacity={locationStore.history.length ? 0.5 : 0.4}
-      iconSize={32}
+      iconSize={22}
       onClick={() => {
         locationStore.back()
       }}

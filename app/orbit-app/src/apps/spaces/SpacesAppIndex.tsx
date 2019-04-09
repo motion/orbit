@@ -19,7 +19,7 @@ export default function SpacesAppIndex() {
           before: <OrbitOrb size={16} colors={space.colors} marginRight={12} />,
           height: 50,
           after: activeSpaceId === space.id && (
-            <Button chromeless circular icon="check" iconSize={12} />
+            <Button chromeless circular icon="tick" iconSize={12} />
           ),
           onOpen: () => {
             setUser({ activeSpace: space.id })

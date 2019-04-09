@@ -59,7 +59,7 @@ function OrbitEditAppItem() {
   return (
     <ListItem
       title="Edit app"
-      icon="tool"
+      icon="code"
       onClick={async () => {
         Actions.tearApp()
         orbitStore.setEditing()

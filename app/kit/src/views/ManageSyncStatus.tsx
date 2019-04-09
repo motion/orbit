@@ -1,8 +1,8 @@
 import { command } from '@o/bridge'
-import { useAppSyncState, useJobs } from '../'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
 import { SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@o/ui'
 import * as React from 'react'
+import { useAppSyncState, useJobs } from '../'
 import { removeApp } from '../helpers/removeApp'
 
 const handleRefresh = async (appId: number) => {
@@ -52,7 +52,7 @@ export function ManageSyncStatus(props: { app: AppBit }) {
           onClick={() => handleRefresh(appId)}
         />
         <TitleBarButton
-          icon="boldremove"
+          icon="criss"
           tooltip={`Remove ${props.app.name}`}
           onClick={() => removeApp(props.app)}
         />

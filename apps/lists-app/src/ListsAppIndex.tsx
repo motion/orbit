@@ -23,7 +23,7 @@ export function ListsAppIndex() {
       const results = await searchBits({ query: addQuery, take: 20 })
       return results.map(item => ({
         ...item,
-        after: <Button margin={['auto', 0, 'auto', 10]} icon="add" />,
+        after: <Button margin={['auto', 0, 'auto', 10]} icon="chevron-right" />,
       }))
     },
     {
@@ -48,12 +48,12 @@ export function ListsAppIndex() {
             <Button
               active={hideSearch.val}
               tooltip="Search to add"
-              icon="zoom"
+              icon="plus"
               onClick={hideSearch.toggle}
             />
             <Button
               tooltip="Create folder"
-              icon="folder-15"
+              icon="folder-new"
               onClick={() => treeList.actions.addFolder(addQuery)}
             />
           </>

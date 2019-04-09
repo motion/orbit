@@ -23,7 +23,6 @@ const names = Object.keys(IconSvgPaths16)
 
 const cache = {}
 const findName = (name: string) => {
-  console.log('finding', name, names)
   if (cache[name]) return cache[name]
   if (IconSvgPaths16[name]) return name
   const matches = fuzzy.filter(name, names)
@@ -36,25 +35,26 @@ const findName = (name: string) => {
 export function Icon(rawProps: IconProps) {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-  const ResolvedIcon = Config.useIcon || UIIcon
+  const ResolvedIcon = Config.useIcon || PlainIcon
   return <ResolvedIcon {...props} />
 }
 
 const SIZE_STANDARD = 16
 const SIZE_LARGE = 20
 
-function UIIcon(props: IconProps) {
+export function PlainIcon(props: IconProps) {
   const name = findName(props.name)
   const theme = useTheme()
+  const size = snapToSizes(props.size)
   const color = props.color || theme.iconColor || theme.color
   // choose which pixel grid is most appropriate for given icon size
-  const pixelGridSize = props.size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
+  const pixelGridSize = size >= SIZE_LARGE ? SIZE_LARGE : SIZE_STANDARD
   // render path elements, or nothing if icon name is unknown.
   const paths = renderSvgPaths(pixelGridSize, name)
   const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
-    <svg fill={color} data-icon={name} width={props.size} height={props.size} viewBox={viewBox}>
+    <svg fill={color} data-icon={name} width={`${size}px`} height={`${size}px`} viewBox={viewBox}>
       {paths}
     </svg>
   )
@@ -67,4 +67,14 @@ function renderSvgPaths(pathsSize: number, iconName: IconName): JSX.Element[] | 
     return null
   }
   return pathStrings.map((d, i) => <path key={i} d={d} fillRule="evenodd" />)
+}
+
+function snapToSizes(size: number) {
+  if (size <= 17 && size >= 15) {
+    return 16
+  }
+  if (size <= 21 && size >= 19) {
+    return 20
+  }
+  return size
 }

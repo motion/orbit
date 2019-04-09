@@ -93,7 +93,7 @@ export function CustomApp2() {
       </FlowStep>
 
       <FlowStep title="Step 3" subTitle="Select other thing">
-        <Templates.Message title="All set" icon="check" />
+        <Templates.Message title="All set" icon="tick" />
       </FlowStep>
     </Flow>
   )

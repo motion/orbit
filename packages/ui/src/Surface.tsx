@@ -134,6 +134,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     badgeProps,
     badge,
     after,
+    borderWidth,
     ...rest
   } = props
   const size = getSize(selectDefined(ogSize, 1))
@@ -284,6 +285,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           whiteSpace="pre"
           pad={pad}
           padding={padding}
+          borderWidth={borderWidth}
           {...throughProps}
           {...rest}
           {...segmentedStyle}
@@ -296,6 +298,11 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
 
   return <Reset>{forwardTheme({ children: element, theme: props.theme })}</Reset>
 })
+
+const chromelessStyle = {
+  borderColor: 'transparent',
+  background: 'transparent',
+}
 
 // fontFamily: inherit on both fixes elements
 const SurfaceFrame = gloss<SurfaceProps>(View, {
@@ -321,30 +328,24 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
         ...propStyles['&:hover'],
       }
 
-  const style = alphaColor(
+  return alphaColor(
     {
       fontWeight: props.fontWeight || theme.fontWeight,
       color: props.color || theme.color,
       overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
-      borderStyle:
-        props.borderStyle || props.borderWidth ? props.borderStyle || 'solid' : undefined,
+      borderStyle: props.borderStyle || 'solid',
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       // TODO this could be automatically handled in propStyles if we want...
       borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
-      ...(props.chromeless && {
-        borderColor: 'transparent',
-        background: 'transparent',
-      }),
+      ...(props.chromeless && chromelessStyle),
       ...circularStyles,
       '&:hover': hoverStyle,
       ...(props.getTheme && props.getTheme(props, theme)),
     },
     { alpha: props.alpha, alphaHover: props.alphaHover },
   )
-
-  return style
 })
 
 const ellipseStyle = {
@@ -355,6 +356,8 @@ const ellipseStyle = {
 }
 
 const Element = gloss({
+  flex: 1,
+  overflow: 'hidden',
   // needed to reset for <button /> at least
   fontSize: 'inherit',
   padding: 0,
@@ -386,10 +389,9 @@ const Element = gloss({
     elementStyle.marginRight = props.iconPad
   }
   return {
-    overflow: 'hidden',
     ...props,
     ...(props.ellipse && ellipseStyle),
-    width: props.width || `calc(100% ${iconNegativePad})`,
+    maxWidth: props.maxWidth || `calc(100% ${iconNegativePad})`,
     ...elementStyle,
   }
 })

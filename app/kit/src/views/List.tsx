@@ -186,7 +186,6 @@ export function List({
   const showPlaceholder = noQuery && !hasResults
 
   const hasSectionProps = isAnyDefined(
-    flex,
     title,
     subTitle,
     bordered,

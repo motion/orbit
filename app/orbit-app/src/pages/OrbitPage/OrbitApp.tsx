@@ -7,7 +7,7 @@ import {
   ProvideStores,
   useIsAppActive,
 } from '@o/kit'
-import { Button, Loading, Section, Space, Visibility } from '@o/ui'
+import { Button, Loading, Section, Visibility } from '@o/ui'
 import { useReaction, useStoreSimple } from '@o/use-store'
 import React, { Component, memo, Suspense, useCallback, useEffect } from 'react'
 import '../../apps/orbitApps'
@@ -116,23 +116,20 @@ class ErrorBoundary extends Component {
     if (error) {
       return (
         <Section
-          background="red"
+          background="darkorange"
           color="white"
-          title={error.message}
+          title={error.message || 'Error'}
           flex={1}
           minWidth={200}
           minHeight={200}
           scrollable="y"
           whiteSpace="pre-line"
           pad
-          afterTitle={
-            <Button alt="confirm" onClick={() => this.setState({ error: null })}>
-              Clear
-            </Button>
-          }
         >
+          <Button alt="confirm" onClick={() => this.setState({ error: null })}>
+            Clear
+          </Button>
           <pre>{error.stack}</pre>
-          <Space />
         </Section>
       )
     }

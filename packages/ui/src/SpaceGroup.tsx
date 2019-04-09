@@ -20,7 +20,13 @@ export function SpaceGroup({
 }: SpaceGroupProps) {
   const total = React.Children.count(children)
   if (!space || total <= 1) {
-    return children as any
+    return (
+      <>
+        {beforeSpace}
+        {children}
+        {afterSpace}
+      </>
+    )
   }
   const spaceElement = separator || <Space size={space} />
   return (

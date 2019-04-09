@@ -1,4 +1,4 @@
-import { selectDefined } from '@o/utils'
+import { isAnyDefined, selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
@@ -70,7 +70,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     fixedTitle,
     ...viewProps
   } = props
-  const hasTitle = !!(title || afterTitle)
+  const hasTitle = isAnyDefined(title, afterTitle)
   const outerPad = hasTitle ? false : pad
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   const spaceSize = space === true ? selectDefined(size, space) : space
@@ -90,7 +90,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         pad={titleBorder || bordered ? true : innerPad}
         size={selectDefined(titleSize, size)}
       />
-      <Space size={spaceSize} />
+      {!!innerPad && <Space size={spaceSize} />}
     </>
   )
 

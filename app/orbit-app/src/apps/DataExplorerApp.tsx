@@ -77,6 +77,7 @@ function DataExplorerMain({ subId }: AppProps) {
               />
             </>
           }
+          minHeight={200}
         >
           <Templates.MasterDetail
             placeholder=""

@@ -24,7 +24,12 @@ const cssSpecialAttr = {
 export const validCSSAttr: Partial<ValidCSSPropertyMap> = {
   ...allCSSAttr,
   ...cssSpecialAttr,
+  // lets ignore the obviously-html props
+  // this is tied into the logic in gloss.tsx#glossify/render
+  // where we dont pass down the css props. if we did, we dont want this
+  src: false,
 }
+
 for (const key in CAMEL_TO_SNAKE) {
   validCSSAttr[key] = true
 }

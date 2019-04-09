@@ -11,7 +11,7 @@ import { Col, ColProps } from './View/Col'
 // & you dont want to pass *everything* done, this is a good subset
 export type SectionSpecificProps = Omit<
   Partial<TitleRowSpecificProps>,
-  'after' | 'below' | 'margin' | 'unpad'
+  'after' | 'below' | 'margin' | 'unpad' | 'size'
 > & {
   size?: Sizes
   titleSize?: Sizes

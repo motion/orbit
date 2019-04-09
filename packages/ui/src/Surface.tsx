@@ -234,6 +234,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               transform={{
                 y: 0.5,
               }}
+              opacity={selectDefined(props.alpha, props.opacity)}
               {...iconProps}
             />
           )}

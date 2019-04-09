@@ -1,7 +1,7 @@
 import { Templates } from '@o/kit'
 import '@o/nucleo'
 import { Button, gloss, Section, SubTitle, Theme, View } from '@o/ui'
-import React, { createElement, useEffect, useState } from 'react'
+import React, { createElement, memo, useEffect, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -19,13 +19,19 @@ export function DocsPage() {
   useEffect(() => {
     if (!selected) return
     if (!views[selected.id]) return
+    let cancelled = false
     const resolved = views[selected.id]()
     if (resolved instanceof Promise) {
       views[selected.id]().then(view => {
-        setView(createElement(view.default))
+        if (!cancelled) {
+          setView(createElement(view.default))
+        }
       })
     } else {
       setView(createElement(resolved))
+    }
+    return () => {
+      cancelled = true
     }
   }, [selected])
 
@@ -35,26 +41,13 @@ export function DocsPage() {
         <Background>
           <HeaderSlim />
           <Templates.MasterDetail searchable onSelect={setSelected} items={items}>
-            {!!selected && (
-              <Section
-                flex={1}
-                scrollable="y"
+            {viewElement && (
+              <SelectedSection
+                setTheme={setTheme}
+                theme={theme}
                 title={selected.title}
-                afterTitle={
-                  <>
-                    <Button
-                      icon="moon"
-                      tooltip="Toggle dark mode"
-                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                    />
-                  </>
-                }
-                pad={[0, true]}
-                titleBorder
-                space
-              >
-                {viewElement}
-              </Section>
+                viewElement={viewElement}
+              />
             )}
           </Templates.MasterDetail>
         </Background>
@@ -69,6 +62,30 @@ DocsPage.navigationOptions = {
   linkName: 'Orbit Docs',
 }
 
+const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
+  return (
+    <Section
+      flex={1}
+      scrollable="y"
+      title={title}
+      afterTitle={
+        <>
+          <Button
+            icon="moon"
+            tooltip="Toggle dark mode"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          />
+        </>
+      }
+      pad={[0, true]}
+      titleBorder
+      space
+    >
+      {viewElement}
+    </Section>
+  )
+})
+
 const Background = gloss({
   flex: 1,
 }).theme((_, theme) => ({
@@ -77,7 +94,7 @@ const Background = gloss({
 
 const items = [
   {
-    title: (
+    children: (
       <SubTitle>
         User Interface &nbsp;&nbsp;<small>@o/ui</small>
       </SubTitle>

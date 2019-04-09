@@ -8,14 +8,14 @@ export function SettingsAppIndex() {
         {
           id: 'general',
           title: 'General',
-          icon: 'gear',
+          icon: 'cog',
           iconBefore: true,
           subTitle: 'Shortcuts, startup, theme',
         },
         {
           id: 'account',
           title: 'Account',
-          icon: 'users_badge',
+          icon: 'user',
           iconBefore: true,
           subTitle: 'Manage your account',
         },

@@ -1,7 +1,6 @@
 import { AppMainView, AppProps, removeApp, useAppBit } from '@o/kit'
-import { FormField, Section, Title, TitleBarButton } from '@o/ui'
+import { FormField, Section, SubSection, Title, TitleBarButton } from '@o/ui'
 import React from 'react'
-import { SubSection } from '../../views/SubSection'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
 

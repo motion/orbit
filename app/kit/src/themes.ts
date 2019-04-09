@@ -25,21 +25,24 @@ const colorThemes: ThemeSet = {
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkRed,
     background: colors.lightRed,
+    iconColor: colors.darkRed,
   }),
   lightGreen: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkGreen,
+    iconColor: colors.darkGreen,
     background: colors.lightGreen,
   }),
   lightYellow: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
     color: colors.darkYellow,
+    iconColor: colors.darkYellow,
     background: colors.lightYellow,
   }),
   red: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],
-    iconColor: '#fff',
     color: '#fff',
+    iconColor: '#fff',
     background: colors.red,
     backgroundHover: colors.red,
     backgroundActive: colors.red,
@@ -127,7 +130,7 @@ const base = Theme.colorize({
 
 const lightColor = '#444'
 const lightBackground = toColor('#fff')
-const lightButtonBg = linearGradient('#FAFAFA', '#F2F2F2')
+const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 const light = {
   alternates,
   ...base,

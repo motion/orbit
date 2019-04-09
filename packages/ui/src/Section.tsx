@@ -90,7 +90,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
         pad={titleBorder || bordered ? true : innerPad}
         size={selectDefined(titleSize, size)}
       />
-      {!!innerPad && <Space size={spaceSize} />}
+      {!!spaceSize && <Space size={spaceSize} />}
     </>
   )
 

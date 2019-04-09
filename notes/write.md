@@ -366,3 +366,54 @@ Or monetizing monetizing.
 - This is a big productivity boost for me, as it lets my subconscious think
 - Often after I "clean up" I find myself moving into my notes to take down a few ideas
 - I've even often done cleaning just because I'm feeling unfocused, and often find myself "miraculously" doing something that seems totally unrelated, but unlocks my next step of work
+
+---
+
+# Why Orbit took so long to build
+
+- There's a fundamental tension when building a startup:
+
+On one hand, you need to have a "demo":
+   1.  To pitch to potential co-founders and employees
+   2.  To show to investors
+   3.  To make sales
+
+On the other hand, you want to build the product efficiently and risk-free:
+   1.  Validate hardest techinical ideas first to see how long they will take
+   2.  Sketch high level, but then build lowest level stuff before highest level, so you aren't constantly re-doing things.
+   3.  One great example is a UI kit:
+       1.  If you are building your app, and using custom views, putting together a Storybook-like playground first will save you innumerable  time:
+           1.  You can HMR and iterate much quicker than inside a big app
+           2.  You can isolate views and ensure they are well test
+   4.  Plus, efficiency demands that you build certain things "together":
+       1.  As you change certain structures in your app, you should update the other areas rather than let them "rot".
+       2.  As you run into problems in lower levels, you should fix them when you are there, rather than adding more and more layers of hacks.
+
+So there's this huge tension here. Which do you do?
+
+I took a contrarian take, but I could only do it because we were post-money, and because we have incredible investors who are completely hands-off (FF).
+
+I think this is actually one of my most contrarian takes, as at every step in a startup you will hear the following: "did you make a sale yet?", "wheres the MVP?", "why haven't you shipped something small?".
+
+For some ideas this makes sense. For big ideas, this almost never makes any sense. If you are building the next Docker, or the next Dropbox, you will fail if you launch your product and it barely works. If you are building the next iPhone, you will fail if your touchscreen isn't smooth, and your apps don't look great. Other phones had these features, what made the iPhone stand out? It got the "big picture" and the "small details" right. It stood out.
+
+Standing out is crucial for big ideas. A poorly done big idea is worth almost nothing, while a cohesive and well-built big idea is equally hard to ignore.
+
+Traditionally, startups would do the following:
+
+1. Hack together a pitch/demo/sale
+2. Raise money
+3. Deliver MVP
+4. Attempt sales
+5. Iterate 3-4 continuously
+
+
+In my mind, not enough startups are doing this:
+
+1. Hack together a pitch/demo/sale
+2. Raise money
+3. Build out your product until it's great
+4. Keep hot leads alive, get feedback as you can
+5. Attempt sales and iterate
+
+It may not seem much different, but what happens is it gives you time to most efficiently build. It's easy to say: this is just what developers want, another reason to architect astronaut. But it's also easy to say: ship early. The truth is, if you have the right intuitions about the market, I'd bet the latter strategy will allow you launch with a 2-3x better product: and not in terms of just features or design, but in terms of market-fit. Because most products "fit" is a result of a really clear, compelling demo. And you'll know when you have it. It's far easier to build a compelling demo when you can plan to have 6-12 months of continous development, without having to put out fires for clients every week, and without having to rush to the next "demo" you want to send out. They are antithetical to each other, and while each startup is unique and you'll need *some* amount of balance between the two, I have a strong belief that in our MVP-infested culture, today, the latter is being almost wholly ignored, which means theres less competition at the "top" of the quality market for whatever product you are building.

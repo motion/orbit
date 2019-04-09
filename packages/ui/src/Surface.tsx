@@ -1,6 +1,7 @@
 import { ColorLike } from '@o/css'
 import {
   alphaColor,
+  Col,
   forwardTheme,
   gloss,
   GlossThemeFn,
@@ -10,7 +11,7 @@ import {
   ThemeObject,
   ThemeSelect,
 } from '@o/gloss'
-import { selectDefined } from '@o/utils'
+import { isAnyDefined, selectDefined } from '@o/utils'
 import React, { useContext, useEffect, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
@@ -24,7 +25,8 @@ import { getSegmentedStyle } from './SegmentedRow'
 import { getSize, SizedSurfaceProps } from './SizedSurface'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
-import { View, ViewProps } from './View/View'
+import { getElevation } from './View/elevate'
+import { ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -135,7 +137,8 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     badge,
     after,
     borderWidth,
-    ...rest
+    alt,
+    ...surfaceProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
   const segmentedStyle = getSegmentedStyle(
@@ -168,25 +171,27 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     throughProps.tagName = tagName
   }
 
-  const surfaceProps = {
+  const childrenProps = {
     children: null,
   }
 
   const borderLeftRadius = Math.min(
-    (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) - 1,
-    +height / 2 - 1,
+    (segmentedStyle ? segmentedStyle.borderLeftRadius : +props.borderRadius) + 1,
+    +height / 2 + 1,
   )
   const borderRightRadius = Math.min(
-    (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) - 1,
-    +height / 2 - 1,
+    (segmentedStyle ? segmentedStyle.borderRightRadius : +props.borderRadius) + 1,
+    +height / 2 + 1,
   )
+
+  const hasAnyGlint = !props.chromeless && isAnyDefined(glint, glintBottom)
 
   // because we can't define children at all on tags like input
   // we conditionally set children here to avoid having children: undefined
   if (noInnerElement) {
-    surfaceProps.children = children || null
+    childrenProps.children = children || null
   } else {
-    surfaceProps.children = (
+    childrenProps.children = (
       <>
         {!!badge && (
           <Badge
@@ -204,31 +209,36 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {`.${tooltipState.id}`}
           </Tooltip>
         )}
-        {glint && !props.chromeless && (
-          <Glint
-            size={size}
-            borderLeftRadius={borderLeftRadius}
-            borderRightRadius={borderRightRadius}
-            themeSelect={themeSelect}
-          />
-        )}
-        {glintBottom && !props.chromeless && (
-          <Glint
-            size={size}
-            bottom={0}
-            borderLeftRadius={borderLeftRadius}
-            borderRightRadius={borderRightRadius}
-            themeSelect={themeSelect}
-          />
+        {hasAnyGlint && (
+          <GlintContain>
+            {glint && !props.chromeless && (
+              <Glint
+                size={size}
+                borderLeftRadius={borderLeftRadius}
+                borderRightRadius={borderRightRadius}
+                themeSelect={themeSelect}
+              />
+            )}
+            {glintBottom && !props.chromeless && (
+              <Glint
+                size={size}
+                bottom={0}
+                borderLeftRadius={borderLeftRadius}
+                borderRightRadius={borderRightRadius}
+                themeSelect={themeSelect}
+              />
+            )}
+          </GlintContain>
         )}
         <div
           style={{
             order: icon && iconAfter ? 3 : 'inherit',
           }}
         >
-          {icon && !stringIcon && <div>{icon}</div>}
+          {icon && !stringIcon && icon}
           {icon && stringIcon && (
             <Icon
+              alt={alt}
               name={`${icon}`}
               size={getIconSize(props)}
               transform={{
@@ -261,12 +271,13 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   let element = (
     <IconPropsContext.Provider
       value={{
+        alt,
         opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
         pointerEvents: 'none',
-        color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
+        // color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
         justifyContent: 'center',
         hoverStyle: {
-          // todo this is kind of a mess, consistency-wise
+          // todo this is a mess, consistency-wise
           opacity:
             typeof props.alphaHover !== 'undefined'
               ? +props.alphaHover
@@ -283,14 +294,14 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           ref={forwardRef}
           themeSelect={themeSelect}
           lineHeight={lineHeight}
-          whiteSpace="pre"
           pad={pad}
           padding={padding}
           borderWidth={borderWidth}
+          alt={alt}
           {...throughProps}
-          {...rest}
-          {...segmentedStyle}
           {...surfaceProps}
+          {...segmentedStyle}
+          {...childrenProps}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
         />
       </BreadcrumbReset>
@@ -306,12 +317,13 @@ const chromelessStyle = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<SurfaceProps>(View, {
+const SurfaceFrame = gloss<SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
+  whiteSpace: 'pre',
 }).theme((props, theme) => {
   // :hover, :focus, :active
-  const themeStyles = propsToThemeStyles(props, theme, true)
+  const { borderColor, ...themeStyles } = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
 
   // circular
@@ -329,16 +341,29 @@ const SurfaceFrame = gloss<SurfaceProps>(View, {
         ...propStyles['&:hover'],
       }
 
+  let boxShadow = props.boxShadow || theme.boxShadow || []
+  const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
+
+  if (borderColor && borderWidth && !props.chromeless) {
+    boxShadow = [
+      ...boxShadow,
+      ['inset', 0, 0, 0, borderWidth, borderColor.toCSS ? borderColor.toCSS() : borderColor],
+    ]
+  }
+
+  if (props.elevation) {
+    boxShadow = [...boxShadow, getElevation(props).boxShadow]
+  }
+
   return alphaColor(
     {
+      boxShadow,
       fontWeight: props.fontWeight || theme.fontWeight,
       color: props.color || theme.color,
-      overflow: props.overflow || props.glow ? props.overflow || 'hidden' : props.overflow,
-      borderStyle: props.borderStyle || 'solid',
+      overflow: props.overflow || theme.overflow || 'hidden',
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       // TODO this could be automatically handled in propStyles if we want...
-      borderWidth: selectDefined(props.borderWidth, theme.borderWidth, 0),
       ...(!props.chromeless && props.active && { '&:hover': themeStyles['&:active'] }),
       ...(props.chromeless && chromelessStyle),
       ...circularStyles,
@@ -398,6 +423,21 @@ const Element = gloss({
 })
 
 const getIconSize = (props: SurfaceProps) => {
-  const size = getSize(props.size) * (props.height ? +props.height / 2 : 12) * (props.sizeIcon || 1)
+  const size =
+    getSize(props.size) * (props.height ? +props.height * 0.05 + 10 : 12) * (props.sizeIcon || 1)
   return props.iconSize || Math.round(size * 100) / 100
 }
+
+const GlintContain = gloss({
+  position: 'absolute',
+  height: 'calc(100% - 1px)',
+  top: 0,
+  left: 0,
+  right: 0,
+  pointerEvents: 'none',
+  zIndex: 10,
+  overflow: 'hidden',
+  transform: {
+    y: 0.5,
+  },
+})

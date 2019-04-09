@@ -12,6 +12,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 
 const WebpackNotifierPlugin = require('webpack-notifier')
 const TerserPlugin = require('terser-webpack-plugin')
+const RehypePrism = require('@mapbox/rehype-prism')
 // const ErrorOverlayPlugin = require('error-overlay-webpack-plugin')
 
 const cwd = process.cwd()
@@ -247,7 +248,15 @@ async function makeConfig() {
         },
         {
           test: /\.mdx$/,
-          use: ['babel-loader', '@mdx-js/loader'],
+          use: [
+            'babel-loader',
+            {
+              loader: '@mdx-js/loader',
+              options: {
+                rehypePlugins: [RehypePrism],
+              },
+            },
+          ],
         },
         {
           test: /\.(md)$/,

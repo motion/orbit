@@ -15,16 +15,16 @@ export function LogoHorizontal() {
       alignItems="center"
       justifyContent="center"
       flex={1}
-      padding={[0, 20]}
+      padding={[2, 20]}
       transform={{
-        y: -1,
+        y: -2,
         x: -4,
       }}
       onClick={() => {
         navigate('Home')
       }}
     >
-      <SVG width={`${345 * scaleDown}px`} height={`${114 * scaleDown}px`} svg={orbit} />
+      <SVG width={`${313 * scaleDown}px`} height={`${96 * scaleDown}px`} svg={orbit} />
     </View>
   )
 }

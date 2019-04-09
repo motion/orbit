@@ -1,9 +1,8 @@
 import { useModel } from '@o/bridge'
 import { AppProps } from '@o/kit'
 import { SpaceModel } from '@o/models'
-import { Section, Space, Text } from '@o/ui'
+import { Section, Space, SubSection, Text } from '@o/ui'
 import * as React from 'react'
-import { SubSection } from '../../views/SubSection'
 import { SpaceEdit } from './SpaceEdit'
 
 export default function SpacesAppEdit(props: AppProps) {

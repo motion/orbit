@@ -190,10 +190,11 @@ export const ListItem = memoIsEqualDeep(
             width="100%"
             icon={iconBefore && showIcon && iconElement}
             after={<BorderBottom right={5} left={5} opacity={0.2} />}
+            paddingLeft={indent ? indent * 16 : undefined}
             {...surfaceProps}
           >
             {before}
-            <ListItemMainContent oneLine={oneLine} style={{ paddingLeft: indent && indent * 8 }}>
+            <ListItemMainContent oneLine={oneLine}>
               {showTitle && (
                 <ListItemTitleBar alignItems={alignItems}>
                   {showIcon && !iconBefore && (
@@ -333,8 +334,9 @@ const ListItemMainContent = gloss({
   },
 })
 
-function getIcon({ icon, iconBefore, small, iconProps }: ListItemProps) {
-  let iconSize = (iconProps && iconProps.size) || (iconBefore ? (small ? 20 : 28) : small ? 12 : 14)
+function getIcon({ icon, iconBefore, small, subTitle, iconProps }: ListItemProps) {
+  let iconSize =
+    (iconProps && iconProps.size) || (iconBefore ? (small || !subTitle ? 16 : 26) : small ? 12 : 14)
   const iconPropsFinal = {
     size: iconSize,
     ...iconProps,

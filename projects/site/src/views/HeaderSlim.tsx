@@ -1,9 +1,9 @@
 import { useTheme } from '@o/gloss'
 import { BorderBottom, Row } from '@o/ui'
 import React from 'react'
-import { LogoHorizontal } from '../views/LogoHorizontal'
-import { SectionContent } from '../views/SectionContent'
 import { LinkSection, LinksLeft, LinksRight } from './Header'
+import { LogoHorizontal } from './LogoHorizontal'
+import { SectionContent } from './SectionContent'
 
 export function HeaderSlim() {
   const theme = useTheme()

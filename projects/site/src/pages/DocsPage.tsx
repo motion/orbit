@@ -1,7 +1,7 @@
 import { Templates } from '@o/kit'
 import '@o/nucleo'
-import { Section, Theme } from '@o/ui'
-import React, { createElement, useEffect, useState } from 'react'
+import { Button, gloss, Section, SubTitle, Theme, View } from '@o/ui'
+import React, { createElement, memo, useEffect, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
 // can remove this and just use import(), but hmr fails
@@ -14,30 +14,44 @@ const views = {
 export function DocsPage() {
   const [selected, setSelected] = useState(null)
   const [viewElement, setView] = useState(null)
+  const [theme, setTheme] = useState('light')
 
   useEffect(() => {
     if (!selected) return
     if (!views[selected.id]) return
+    let cancelled = false
     const resolved = views[selected.id]()
     if (resolved instanceof Promise) {
       views[selected.id]().then(view => {
-        setView(createElement(view.default))
+        if (!cancelled) {
+          setView(createElement(view.default))
+        }
       })
     } else {
       setView(createElement(resolved))
     }
+    return () => {
+      cancelled = true
+    }
   }, [selected])
 
   return (
-    <Theme name="light">
-      <HeaderSlim />
-      <Templates.MasterDetail searchable onSelect={setSelected} items={items}>
-        {!!selected && (
-          <Section flex={1} scrollable="y" title={selected.title} pad={[0, true]} titleBorder space>
-            {viewElement}
-          </Section>
-        )}
-      </Templates.MasterDetail>
+    <Theme name={theme}>
+      <View flex={1} background={x => x.background}>
+        <Background>
+          <HeaderSlim />
+          <Templates.MasterDetail searchable onSelect={setSelected} items={items}>
+            {viewElement && (
+              <SelectedSection
+                setTheme={setTheme}
+                theme={theme}
+                title={selected.title}
+                viewElement={viewElement}
+              />
+            )}
+          </Templates.MasterDetail>
+        </Background>
+      </View>
     </Theme>
   )
 }
@@ -48,13 +62,49 @@ DocsPage.navigationOptions = {
   linkName: 'Orbit Docs',
 }
 
+const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
+  return (
+    <Section
+      flex={1}
+      scrollable="y"
+      title={title}
+      afterTitle={
+        <>
+          <Button
+            icon="moon"
+            tooltip="Toggle dark mode"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          />
+        </>
+      }
+      pad={[0, true]}
+      titleBorder
+      space
+    >
+      {viewElement}
+    </Section>
+  )
+})
+
+const Background = gloss({
+  flex: 1,
+}).theme((_, theme) => ({
+  background: theme.sidebarBackground || theme.background,
+}))
+
 const items = [
+  {
+    children: (
+      <SubTitle>
+        User Interface &nbsp;&nbsp;<small>@o/ui</small>
+      </SubTitle>
+    ),
+  },
   {
     id: 'surfaces',
     icon: 'layer',
     title: 'Surfaces',
     subTitle: 'Building block of many views',
-    group: 'Base Views',
   },
   { id: 'icons', icon: 'star', title: 'Icons', indent: 1 },
   { id: 'buttons', icon: 'button', title: 'Buttons', indent: 1 },
@@ -63,7 +113,7 @@ const items = [
   { title: 'Popovers', icon: 'direction-right' },
   { title: 'Decorations', icon: 'clean' },
   { title: 'Progress', icon: 'circle' },
-  { title: 'Floating Views', icon: 'applications' },
+  { title: 'Floating Views', icon: 'square' },
 
   { title: 'Lists', icon: 'list', group: 'Collections' },
   { title: 'Tables', icon: 'table' },
@@ -93,17 +143,16 @@ const items = [
   { title: 'MasonryLayout', icon: 'skew-grid', indent: 1 },
   { title: 'FlowLayout', icon: 'layout-hierarchy', indent: 1 },
 
-  { title: 'StatusBar', group: 'Toolbars' },
-  { title: 'Toolbar' },
+  { title: 'StatusBar', icon: 'bar', group: 'Toolbars' },
+  { title: 'Toolbar', icon: 'bottom' },
 
-  { title: 'Forms', group: 'Forms' },
-  { title: 'Flow', indent: 1 },
-  { title: 'Flow', indent: 1 },
-  { title: 'Flow', indent: 1 },
-  { title: 'Flow', indent: 1 },
-  { title: 'Flow', indent: 1 },
+  { title: 'Form', icon: 'form', group: 'Forms' },
+  { title: 'Flow + Form', icon: 'dot', indent: 1 },
+  { title: 'Form Elements', icon: 'widget' },
+  { title: 'Select', icon: 'dot', indent: 1 },
+  { title: 'Input', icon: 'dot', indent: 1 },
 
-  { title: 'Basics', group: 'Text' },
+  { title: 'Basics', icon: '', group: 'Text' },
   { title: 'Titles' },
   { title: 'Message' },
   { title: 'Banner' },

@@ -360,7 +360,7 @@ const SurfaceFrame = gloss<SurfaceProps>(Col, {
       boxShadow,
       fontWeight: props.fontWeight || theme.fontWeight,
       color: props.color || theme.color,
-      overflow: props.overflow || theme.overflow || 'hidden',
+      overflow: props.overflow || theme.overflow,
       // note: base theme styles go *above* propsToStyles...
       ...(!props.chromeless && themeStyles),
       // TODO this could be automatically handled in propStyles if we want...

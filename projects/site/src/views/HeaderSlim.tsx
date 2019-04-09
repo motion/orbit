@@ -1,11 +1,11 @@
 import { useTheme } from '@o/gloss'
 import { BorderBottom, Row } from '@o/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { LinkSection, LinksLeft, LinksRight } from './Header'
 import { LogoHorizontal } from './LogoHorizontal'
 import { SectionContent } from './SectionContent'
 
-export function HeaderSlim() {
+export const HeaderSlim = memo(() => {
   const theme = useTheme()
   return (
     <Row background={theme.background} position="relative">
@@ -21,4 +21,4 @@ export function HeaderSlim() {
       <BorderBottom />
     </Row>
   )
-}
+})

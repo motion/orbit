@@ -1,6 +1,7 @@
 import { ColorLike } from '@o/css'
 import {
   alphaColor,
+  Col,
   forwardTheme,
   gloss,
   GlossThemeFn,
@@ -25,7 +26,7 @@ import { getSize, SizedSurfaceProps } from './SizedSurface'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
-import { View, ViewProps } from './View/View'
+import { ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -312,7 +313,7 @@ const chromelessStyle = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<SurfaceProps>(View, {
+const SurfaceFrame = gloss<SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',

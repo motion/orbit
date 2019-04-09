@@ -16,9 +16,7 @@ export function SegmentedRow({
   const props = useSurfaceProps(rest)
   return (
     <SurfacePassProps {...props}>
-      <Breadcrumbs maxWidth="100%" separator={separator}>
-        {children}
-      </Breadcrumbs>
+      <Breadcrumbs separator={separator}>{children}</Breadcrumbs>
     </SurfacePassProps>
   )
 }

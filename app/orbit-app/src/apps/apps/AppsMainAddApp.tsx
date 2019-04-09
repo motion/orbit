@@ -1,8 +1,7 @@
 import { AppView, getAppDefinition } from '@o/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, Space, SubTitle } from '@o/ui'
+import { Button, ButtonProps, Paragraph, Row, Section, Space, SubSection, SubTitle } from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
-import { SubSection } from '../../views/SubSection'
 
 export function AppsMainAddApp(props: { identifier: string }) {
   const def = getAppDefinition(props.identifier)

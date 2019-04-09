@@ -9,13 +9,13 @@ import {
   Section,
   SimpleFormField,
   Space as UISpace,
+  SubSection,
 } from '@o/ui'
 import { pick } from 'lodash'
 import randomColor from 'randomcolor'
 import * as React from 'react'
 import { HorizontalScroll } from '../../views'
 import { ColorPicker } from '../../views/ColorPicker'
-import { SubSection } from '../../views/SubSection'
 import { getApps } from '../orbitApps'
 
 const defaultColors = randomColor({ count: 2, luminosity: 'dark' })

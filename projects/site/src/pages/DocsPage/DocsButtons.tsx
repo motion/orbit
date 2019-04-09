@@ -1,4 +1,4 @@
-import { Button, Section, SubTitle } from '@o/ui'
+import { Button, Section, SubSection } from '@o/ui'
 import React from 'react'
 
 export function DocsButtons() {
@@ -10,6 +10,14 @@ export function DocsButtons() {
         <Button icon="cog" iconAfter>
           Hello World
         </Button>
+      </Section>
+
+      <Section space size="md" title="Alternates">
+        {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
+          <Button key={alt} alt={alt} icon="cog" iconAfter>
+            Alt {alt}
+          </Button>
+        ))}
       </Section>
 
       <Section space size="md" title="Sizing (preset)">
@@ -29,12 +37,11 @@ export function DocsButtons() {
       </Section>
 
       {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
-        <>
-          <SubTitle>Elevation {elevation}</SubTitle>
+        <SubSection title={`Elevation ${elevation}`} key={elevation}>
           <Button key={elevation} elevation={elevation} size={2} icon="cog" iconAfter>
             Hello World
           </Button>
-        </>
+        </SubSection>
       ))}
     </Section>
   )

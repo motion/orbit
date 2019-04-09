@@ -340,8 +340,11 @@ const SurfaceFrame = gloss<SurfaceProps>(Col, {
   let boxShadow = props.boxShadow || theme.boxShadow || []
   const borderWidth = selectDefined(props.borderWidth, theme.borderWidth, 0)
 
-  if (borderWidth && !props.chromeless) {
-    boxShadow = [...boxShadow, ['inset', 0, 0, 0, borderWidth, borderColor.toCSS()]]
+  if (borderColor && borderWidth && !props.chromeless) {
+    boxShadow = [
+      ...boxShadow,
+      ['inset', 0, 0, 0, borderWidth, borderColor.toCSS ? borderColor.toCSS() : borderColor],
+    ]
   }
 
   if (props.elevation) {

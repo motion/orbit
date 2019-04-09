@@ -162,6 +162,7 @@ const light = {
     borderColorLight: [215, 215, 215, 0.5],
     headerBackground: linearGradient([245, 245, 245, 0.85], [245, 245, 245, 0.95]),
     sidebarBackground: '#f5f7f9',
+    sidebarBackgroundTransparent: [255, 255, 255, 0.5],
     tabBackgroundTop: lightBackground.alpha(0.65),
     tabBackgroundBottom: lightBackground,
     tabBorderColor: [205, 205, 205],

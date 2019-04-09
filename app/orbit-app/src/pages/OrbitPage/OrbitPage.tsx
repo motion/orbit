@@ -189,7 +189,8 @@ const OrbitContentArea = gloss({
     z: 0,
   },
 }).theme((_, theme) => ({
-  background: theme.sidebarBackground,
+  // TODO test transparent
+  background: theme.sidebarBackgroundTransparent || theme.sidebarBackground,
 }))
 
 function OrbitPageProvideStores(props: any) {

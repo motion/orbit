@@ -1,5 +1,5 @@
 import { Templates } from '@o/kit'
-import { Section, Title } from '@o/ui'
+import { Button, Section, SpaceGroup, SubTitle, Title } from '@o/ui'
 import React, { createElement } from 'react'
 
 export function TestUIKitchenSink() {
@@ -7,8 +7,13 @@ export function TestUIKitchenSink() {
     <Templates.MasterDetail
       searchable
       items={[
-        { title: 'Surfaces', subTitle: 'Building block of many views', group: 'Views' },
-        { title: 'Buttons', indent: 1 },
+        {
+          id: 'surfaces',
+          title: 'Surfaces',
+          subTitle: 'Building block of many views',
+          group: 'Views',
+        },
+        { id: 'buttons', title: 'Buttons', indent: 1 },
         { title: 'Card', indent: 1 },
         { title: 'Sections' },
         { title: 'Popovers' },
@@ -88,12 +93,39 @@ export function TestUIKitchenSink() {
 
 const views = {
   sections: UISections,
+  buttons: UIButtons,
 }
 
 function UISections() {
   return (
     <Section pad bordered title="hi" subTitle="hello">
       <Title>hello</Title>
+    </Section>
+  )
+}
+
+function UIButtons() {
+  return (
+    <Section title="Buttons" pad titleBorder>
+      <SpaceGroup>
+        <Button>Hello World</Button>
+        <Button icon="gear">Hello World</Button>
+        <Button icon="gear" iconAfter>
+          Hello World
+        </Button>
+        <Button size={4} icon="gear" iconAfter>
+          Hello World
+        </Button>
+
+        {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
+          <>
+            <SubTitle>Elevation {elevation}</SubTitle>
+            <Button key={elevation} elevation={elevation} size={2} icon="gear" iconAfter>
+              Hello World
+            </Button>
+          </>
+        ))}
+      </SpaceGroup>
     </Section>
   )
 }

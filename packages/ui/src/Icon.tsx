@@ -58,17 +58,7 @@ export function Icon(rawProps: IconProps) {
 export const PlainIcon = memo((rawProps: IconProps) => {
   const extraProps = useContext(IconPropsContext)
   const props = extraProps ? mergeDefined(extraProps, rawProps) : rawProps
-
-  const {
-    tooltip,
-    tooltipProps,
-    name,
-    type = 'mini',
-    children,
-    color,
-    margin = 0,
-    ...restProps
-  } = props
+  const { name, type = 'mini', children, color, ...restProps } = props
 
   if (!name) {
     return null
@@ -86,7 +76,8 @@ export const PlainIcon = memo((rawProps: IconProps) => {
 
   const iconName = findMatch(name)
   // icons here are consistently a bit too big...
-  const size = props.size > 18 ? props.size * 0.85 : props.size || 16
+  const size =
+    props.size > 18 ? Math.log(Math.max(1, 20 * props.size)) + props.size * 0.25 : props.size || 16
 
   return (
     <IconInner color={color} {...restProps} size={size}>

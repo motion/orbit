@@ -189,13 +189,19 @@ export const ListItem = memoIsEqualDeep(
             padding={padding || defaultPadding}
             width="100%"
             icon={iconBefore && showIcon && iconElement}
+            after={<BorderBottom right={5} left={5} opacity={0.2} />}
             {...surfaceProps}
           >
             {before}
             <ListItemMainContent oneLine={oneLine} style={{ paddingLeft: indent && indent * 8 }}>
               {showTitle && (
                 <ListItemTitleBar alignItems={alignItems}>
-                  {showIcon && !iconBefore && iconElement}
+                  {showIcon && !iconBefore && (
+                    <>
+                      {iconElement}
+                      <Space size="sm" />
+                    </>
+                  )}
                   <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
                     {title}
                   </HighlightText>
@@ -282,7 +288,6 @@ export const ListItem = memoIsEqualDeep(
               )}
             </ListItemMainContent>
             {after}
-            <BorderBottom right={5} left={5} opacity={0.2} />
           </SizedSurface>
         </div>
       </Theme>

@@ -20,16 +20,7 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
       width={260}
       background
       elevation={5}
-      target={
-        <Button
-          {...headerButtonProps}
-          circular
-          iconSize={16}
-          icon="verticalDots"
-          tooltip="App Settings"
-          onClick={appSettingsLink}
-        />
-      }
+      target={<Button {...headerButtonProps} circular iconSize={16} icon="verticalDots" />}
     >
       <OrbitEditAppItem />
       <ListItem
@@ -37,6 +28,13 @@ export const OrbitHeaderMenu = memo(function OrbitHeaderMenu() {
           title: 'Permalink',
           icon: 'link',
           onClick: Actions.copyAppLink,
+        }}
+      />
+      <ListItem
+        {...{
+          title: 'App Settings',
+          icon: 'gear',
+          onClick: appSettingsLink,
         }}
       />
     </Popover>

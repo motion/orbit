@@ -131,6 +131,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     padding,
     badgeProps,
     badge,
+    after,
     ...rest
   } = props
   const segmentedStyle = getSegmentedStyle(
@@ -235,6 +236,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
             {children}
           </Element>
         )}
+        {after}
       </>
     )
   }
@@ -350,9 +352,6 @@ const Element = gloss({
   color: 'inherit',
   transform: {
     y: 0.5,
-  },
-  noInnerElement: {
-    display: 'none',
   },
 }).theme(props => {
   const iconSize = getIconSize(props)

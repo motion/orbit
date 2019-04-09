@@ -21,9 +21,9 @@ const activeStyle = {
   opacity: 0.8,
 }
 
-function ButtonInner({ children, elementProps, disabled, ...rest }: ButtonProps) {
+function ButtonInner(buttonProps: ButtonProps) {
   const theme = useTheme()
-  const props = useSurfaceProps(rest)
+  const props = useSurfaceProps(buttonProps)
   return (
     <SizedSurface
       themeSelect="button"
@@ -33,7 +33,6 @@ function ButtonInner({ children, elementProps, disabled, ...rest }: ButtonProps)
       WebkitAppRegion="no-drag"
       outline="0"
       cursor="default"
-      elementProps={elementProps}
       clickable
       sizeFont
       sizePadding
@@ -42,14 +41,13 @@ function ButtonInner({ children, elementProps, disabled, ...rest }: ButtonProps)
       sizeLineHeight
       justifyContent="center"
       borderWidth={selectDefined(theme.borderWidth, 1)}
+      elevation={selectDefined(props.elevation, props.chromeless ? 0 : 1)}
       glint
-      pointerEvents={disabled ? 'none' : undefined}
+      pointerEvents={props.disabled ? 'none' : undefined}
       activeStyle={activeStyle}
       glowProps={glowProps}
       {...props}
-    >
-      {children}
-    </SizedSurface>
+    />
   )
 }
 

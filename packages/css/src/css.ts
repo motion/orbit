@@ -59,7 +59,6 @@ export function css(styles: Object, opts?: CSSOptions): Object {
       toReturn[finalKey] = value
       respond = true
     } else if (COLOR_KEYS.has(key)) {
-      console.log('doing it.')
       toReturn[finalKey] = toColorString(value)
       respond = true
     } else if (Array.isArray(value)) {

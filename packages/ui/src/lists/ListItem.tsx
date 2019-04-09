@@ -38,6 +38,7 @@ export type ListItemProps = SizedSurfaceProps &
   ListItemHide &
   ListItemDisplayProps & {
     padding?: number | number[]
+    // TODO make it a Sizes
     indent?: number
     subId?: string | number
     location?: React.ReactNode
@@ -190,7 +191,7 @@ export const ListItem = memoIsEqualDeep(
             width="100%"
             icon={iconBefore && showIcon && iconElement}
             after={<BorderBottom right={5} left={5} opacity={0.2} />}
-            paddingLeft={indent ? indent * 16 : undefined}
+            paddingLeft={indent ? indent * 22 : undefined}
             {...surfaceProps}
           >
             {before}

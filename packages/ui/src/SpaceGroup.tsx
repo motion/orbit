@@ -10,6 +10,7 @@ export type SpaceGroupProps = {
 
 export function SpaceGroup({ children, space = true, spaceAround, separator }: SpaceGroupProps) {
   const total = React.Children.count(children)
+  console.log('ok', space, total, children)
   if (!space || total <= 1) {
     return children as any
   }

@@ -1,5 +1,5 @@
 import { Templates } from '@o/kit'
-import { Button, Section, SpaceGroup, SubTitle, Title } from '@o/ui'
+import { Button, Section, SubTitle, Title } from '@o/ui'
 import React, { createElement } from 'react'
 
 export function TestUIKitchenSink() {
@@ -106,26 +106,39 @@ function UISections() {
 
 function UIButtons() {
   return (
-    <Section title="Buttons" pad titleBorder>
-      <SpaceGroup>
+    <Section flex={1} scrollable="y" title="Buttons" pad={[0, true]} titleBorder space="xl">
+      <Section space size="md" title="Buttons">
         <Button>Hello World</Button>
         <Button icon="gear">Hello World</Button>
         <Button icon="gear" iconAfter>
           Hello World
         </Button>
-        <Button size={4} icon="gear" iconAfter>
-          Hello World
-        </Button>
+      </Section>
 
-        {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
-          <>
-            <SubTitle>Elevation {elevation}</SubTitle>
-            <Button key={elevation} elevation={elevation} size={2} icon="gear" iconAfter>
-              Hello World
-            </Button>
-          </>
+      <Section space size="md" title="Sizing (preset)">
+        {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
+          <Button key={size} size={size as any} icon="gear" iconAfter>
+            Size {size}
+          </Button>
         ))}
-      </SpaceGroup>
+      </Section>
+
+      <Section space size="md" title="Sizing (absolute)">
+        {[1, 2, 3, 4, 5].map(size => (
+          <Button key={size} size={size as any} icon="gear" iconAfter>
+            Size {size}
+          </Button>
+        ))}
+      </Section>
+
+      {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
+        <>
+          <SubTitle>Elevation {elevation}</SubTitle>
+          <Button key={elevation} elevation={elevation} size={2} icon="gear" iconAfter>
+            Hello World
+          </Button>
+        </>
+      ))}
     </Section>
   )
 }

@@ -28,10 +28,12 @@ const getHeight = (size: number, sizeHeight: number | boolean) => {
 }
 
 const sizes = {
+  xs: 0.8,
   sm: 0.9,
   md: 1,
-  lg: 1.15,
-  xl: 1.3,
+  lg: 1.2,
+  xl: 1.4,
+  xxl: 1.6,
 }
 
 export const getSize = (size: Sizes) => {

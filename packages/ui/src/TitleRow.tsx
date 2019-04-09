@@ -3,7 +3,7 @@ import React, { forwardRef, isValidElement } from 'react'
 import { BorderBottom } from './Border'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
 import { Icon } from './Icon'
-import { Space } from './Space'
+import { Sizes, Space } from './Space'
 import { SubTitle } from './text/SubTitle'
 import { Title } from './text/Title'
 import { Col } from './View/Col'
@@ -11,6 +11,7 @@ import { Row, RowProps } from './View/Row'
 import { View } from './View/View'
 
 export type TitleRowSpecificProps = Partial<CollapsableProps> & {
+  size?: Sizes
   icon?: React.ReactNode
   title: React.ReactNode
   before?: React.ReactNode
@@ -32,6 +33,7 @@ export const TitleRow = forwardRef(function TitleRow(
     before,
     bordered,
     after,
+    size,
     sizePadding = 1,
     subTitle,
     backgrounded,
@@ -74,7 +76,7 @@ export const TitleRow = forwardRef(function TitleRow(
           {isValidElement(title) ? (
             title
           ) : (
-            <Title marginTop={0} marginBottom={0} ellipse>
+            <Title size={size} marginTop={0} marginBottom={0} ellipse>
               {title}
             </Title>
           )}

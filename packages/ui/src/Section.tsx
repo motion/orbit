@@ -2,7 +2,7 @@ import { selectDefined } from '@o/utils'
 import React, { forwardRef } from 'react'
 import { createContextualProps } from './helpers/createContextualProps'
 import { SizedSurface } from './SizedSurface'
-import { Sizes } from './Space'
+import { Sizes, Space } from './Space'
 import { TitleRow, TitleRowSpecificProps } from './TitleRow'
 import { Omit } from './types'
 import { Col, ColProps } from './View/Col'
@@ -13,6 +13,8 @@ export type SectionSpecificProps = Omit<
   Partial<TitleRowSpecificProps>,
   'after' | 'below' | 'margin' | 'unpad'
 > & {
+  size?: Sizes
+  titleSize?: Sizes
   beforeTitle?: React.ReactNode
   belowTitle?: React.ReactNode
   afterTitle?: React.ReactNode
@@ -62,11 +64,14 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     spaceAround,
     pad,
     padInner,
+    titleSize,
+    size,
     ...viewProps
   } = props
   const hasTitle = !!(title || afterTitle)
   const outerPad = hasTitle ? false : pad
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
+  const spaceSize = space === true ? selectDefined(size, space) : space
   return (
     <SizedSurface
       forwardRef={ref}
@@ -87,6 +92,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       minHeight={minHeight}
       overflow={bordered ? 'hidden' : 'inherit'}
       pad={outerPad}
+      size={size}
     >
       {hasTitle && (
         <TitleRow
@@ -100,21 +106,25 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
           below={belowTitle}
           icon={icon}
           pad={titleBorder || bordered ? true : innerPad}
+          size={selectDefined(titleSize, size)}
         />
       )}
-      <Col
-        maxHeight={maxInnerHeight}
-        flex={1}
-        ref={innerRef}
-        space={space}
-        spaceAround={spaceAround}
-        flexDirection={flexDirection}
-        scrollable={scrollable}
-        pad={innerPad}
-        {...viewProps}
-      >
-        <Reset>{children}</Reset>
-      </Col>
+      <Space size={spaceSize} />
+      <Reset>
+        <Col
+          maxHeight={maxInnerHeight}
+          flex={1}
+          ref={innerRef}
+          space={spaceSize}
+          spaceAround={spaceAround}
+          flexDirection={flexDirection}
+          scrollable={scrollable}
+          pad={innerPad}
+          {...viewProps}
+        >
+          {children}
+        </Col>
+      </Reset>
       {below}
     </SizedSurface>
   )

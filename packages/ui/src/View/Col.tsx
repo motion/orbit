@@ -8,6 +8,7 @@ export const Col = forwardRef(function Col(
   { space = false, spaceAround, children, ...props }: ColProps,
   ref,
 ) {
+  console.log('col col', space)
   return (
     <ScrollableView ref={ref} flexDirection="column" {...props}>
       <SpaceGroup spaceAround={spaceAround} space={space}>

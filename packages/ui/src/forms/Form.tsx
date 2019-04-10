@@ -178,7 +178,7 @@ export function Form({
             <>
               <Space />
               <FormField label="">
-                <Button type="submit" alt="action">
+                <Button alignSelf="flex-end" size="lg" type="submit" alt="action">
                   {submitButton === true ? 'Submit' : submitButton}
                 </Button>
               </FormField>

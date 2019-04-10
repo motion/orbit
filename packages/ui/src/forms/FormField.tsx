@@ -21,16 +21,11 @@ const TableCell = gloss(View, {
 
 const FormTableRow = gloss(Row, {
   width: '100%',
-  maxWidth: 500,
   minHeight: 32,
   alignItems: 'center',
 })
 
-const FormTableLabel = ({ children }) => (
-  <TableCell width="30%" maxWidth={125}>
-    {children}
-  </TableCell>
-)
+const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 

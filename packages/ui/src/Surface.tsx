@@ -12,7 +12,7 @@ import {
   ThemeSelect,
 } from '@o/gloss'
 import { isAnyDefined, selectDefined } from '@o/utils'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -26,7 +26,7 @@ import { getSize, SizedSurfaceProps } from './SizedSurface'
 import { Sizes } from './Space'
 import { Tooltip } from './Tooltip'
 import { getElevation } from './View/elevate'
-import { ViewProps } from './View/View'
+import { getPadding, ViewProps } from './View/View'
 
 // an element for creating surfaces that look like buttons
 // they basically can control a prefix/postfix icon, and a few other bells
@@ -157,7 +157,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     borderPosition = 'outside',
     borderWidth,
     alt,
-    ...surfaceProps
+    ...viewProps
   } = props
   const size = getSize(selectDefined(ogSize, 1))
   const segmentedStyle = getSegmentedStyle(
@@ -287,26 +287,19 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     )
   }
 
+  const iconContext = useMemo<Partial<IconProps>>(() => {
+    return {
+      alt,
+      opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
+      pointerEvents: 'none',
+      // color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
+      justifyContent: 'center',
+      hoverStyle: props.hoverStyle,
+    }
+  }, [props.alpha, props.opacity, JSON.stringify(props.hoverStyle || '')])
+
   let element = (
-    <IconPropsContext.Provider
-      value={{
-        alt,
-        opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
-        pointerEvents: 'none',
-        // color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
-        justifyContent: 'center',
-        hoverStyle: {
-          // todo this is a mess, consistency-wise
-          opacity:
-            typeof props.alphaHover !== 'undefined'
-              ? +props.alphaHover
-              : props.hoverStyle
-              ? props.hoverStyle.opacity
-              : 'inherit',
-          color: 'green' || (props.hoverStyle && props.hoverStyle.color) || theme.colorHover,
-        },
-      }}
-    >
+    <IconPropsContext.Provider value={iconContext}>
       <BreadcrumbReset>
         <SurfaceFrame
           className={`${tooltipState.id} ${(crumb && crumb.selector) || ''} ${className || ''}`}
@@ -319,7 +312,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
           borderPosition={borderPosition}
           alt={alt}
           {...throughProps}
-          {...surfaceProps}
+          {...viewProps}
           {...segmentedStyle}
           {...childrenProps}
           opacity={crumb && crumb.total === 0 ? 0 : props.opacity}
@@ -350,6 +343,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   // :hover, :focus, :active
   const themeStyle = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
+  const padStyle = getPadding(props)
 
   let styles: CSSPropertySet = {}
   let boxShadow = props.boxShadow || theme.boxShadow || []
@@ -397,6 +391,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
         },
     ...(props.getTheme && props.getTheme(props, theme)),
     ...styles,
+    ...padStyle,
   }
 
   return alphaColor(styles, { alpha: props.alpha, alphaHover: props.alphaHover })

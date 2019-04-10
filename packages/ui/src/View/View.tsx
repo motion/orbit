@@ -60,7 +60,7 @@ export type PadProps = {
       }
 }
 
-const getPadding = (props: PadProps & { padding?: any }) => {
+export const getPadding = (props: PadProps & { padding?: any }) => {
   if (typeof props.padding !== 'undefined') {
     return {
       padding: props.padding,

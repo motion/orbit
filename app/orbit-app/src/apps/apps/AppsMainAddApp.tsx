@@ -1,5 +1,15 @@
 import { AppView, getAppDefinition } from '@o/kit'
-import { Button, ButtonProps, Paragraph, Row, Section, Space, SubSection, SubTitle } from '@o/ui'
+import {
+  Button,
+  ButtonProps,
+  Message,
+  Paragraph,
+  Row,
+  Section,
+  Space,
+  SubSection,
+  SubTitle,
+} from '@o/ui'
 import React from 'react'
 import { addAppClickHandler } from '../../helpers/addAppClickHandler'
 
@@ -38,6 +48,11 @@ export function AppsMainAddApp(props: { identifier: string }) {
     >
       {hasSetup && (
         <>
+          <Message alt="warn">
+            This app stores data. This data will be stored privately, only on your device. If your
+            team enables decentralized key-sharing, it will sync only to other memebers authorized
+            to this space.
+          </Message>
           <Section bordered pad title="Setup">
             <AppView identifier={props.identifier} viewType="setup" />
           </Section>

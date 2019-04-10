@@ -17,7 +17,7 @@ export type IconProps = ViewProps & {
 }
 
 // TODO use createContextProps
-export const IconPropsContext = createContext(null as Partial<IconProps>)
+export const IconPropsContext = createContext<Partial<IconProps>>(null)
 
 const names = Object.keys(IconSvgPaths16)
 

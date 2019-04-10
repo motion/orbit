@@ -84,7 +84,7 @@ export const propsToThemeStyles = (
   for (const key in pseudos) {
     const { postfix, pseudoKey, forceOnProp, extraStyleProp } = pseudos[key]
     if (props[forceOnProp] === false) continue // forced off
-    if (props[extraStyleProp] === null) continue // forced empty
+    if (props[extraStyleProp] === null || props[extraStyleProp] === false) continue // forced empty
 
     // cache sub-keys like backgroundHover colorHover
     if (!SubThemeKeys[postfix]) {

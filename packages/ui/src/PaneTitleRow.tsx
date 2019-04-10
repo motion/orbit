@@ -33,7 +33,7 @@ export function PaneTitleRow({
       {collapsable && (
         <>
           <CollapseArrow collapsed={collapsed} />
-          <Space size="sm" />
+          <Space size="xs" />
         </>
       )}
       <View flex={1}>

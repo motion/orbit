@@ -1,11 +1,11 @@
 import * as React from 'react'
 
 export type UIContextType = {
-  hovered?: boolean
+  hovered?: boolean | undefined
 }
 
 export const UIContext = React.createContext<UIContextType>({
-  hovered: false,
+  hovered: undefined,
 })
 
 export function MergeUIContext({ value, children }) {

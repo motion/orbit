@@ -9,6 +9,7 @@ import {
   propsToThemeStyles,
   ThemeObject,
   ThemeSelect,
+  useTheme,
 } from '@o/gloss'
 import { isAnyDefined, selectDefined } from '@o/utils'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -98,9 +99,9 @@ type ThroughProps = Pick<
   | 'fontWeight'
   | 'ellipse'
   | 'overflow'
-  | 'tagName'
 > & {
   hasIcon: boolean
+  tagName?: string
 }
 
 const iconTransform = {
@@ -111,6 +112,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
+  const theme = useTheme(props)
 
   useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -281,16 +283,23 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     )
   }
 
+  const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
+  const iconColor = `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`
+  const iconColorHover = (props.hoverStyle && props.hoverStyle.color) || theme.colorHover
+
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
       alt,
-      opacity: typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any),
+      opacity: iconOpacity,
       pointerEvents: 'none',
-      // color: `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`,
+      color: iconColor,
       justifyContent: 'center',
-      hoverStyle: props.hoverStyle,
+      hoverStyle: {
+        ...props.hoverStyle,
+        color: iconColorHover,
+      },
     }
-  }, [props.alpha, props.opacity, JSON.stringify(props.hoverStyle || '')])
+  }, [alt, iconOpacity, iconColor, iconColorHover, JSON.stringify(props.hoverStyle || '')])
 
   let element = (
     <IconPropsContext.Provider value={iconContext}>
@@ -335,6 +344,9 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   },
 }).theme((props, theme) => {
   // :hover, :focus, :active
+  if (props.alt === 'lightOrange') {
+    debugger
+  }
   const themeStyle = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
   const padStyle = getPadding(props)

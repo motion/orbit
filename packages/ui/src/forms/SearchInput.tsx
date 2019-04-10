@@ -53,7 +53,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
     >
       {before}
       <SearchBox width={width} tabIndex={-1} background={props.background}>
-        <Space size="sm" />
+        <Space size="xs" />
         <SearchIcon opacity={0.8} transform={{ y: -0.5 }} name="search" size={14} />
         {filters.map((filter, i) => (
           <FilterToken
@@ -64,7 +64,7 @@ export const SearchInput = forwardRef<HTMLTextAreaElement, SearchInputProps>(fun
             {...filterProps}
           />
         ))}
-        <Space size="sm" />
+        <Space size="xs" />
         <Input
           height="100%"
           chromeless

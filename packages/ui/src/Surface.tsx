@@ -89,6 +89,23 @@ const { useProps, Reset, PassProps } = createContextualProps<SizedSurfaceProps>(
 export const SurfacePassProps = PassProps
 export const useSurfaceProps = useProps
 
+type ThroughProps = Pick<
+  SurfaceProps,
+  | 'height'
+  | 'iconPad'
+  | 'alignItems'
+  | 'justifyContent'
+  | 'sizeIcon'
+  | 'iconSize'
+  | 'iconAfter'
+  | 'fontWeight'
+  | 'ellipse'
+  | 'overflow'
+  | 'tagName'
+> & {
+  hasIcon: boolean
+}
+
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = useProps(direct)
   const crumb = useBreadcrumb()
@@ -150,7 +167,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const stringIcon = typeof icon === 'string'
 
   // goes to BOTH the outer element and inner element
-  const throughProps: Partial<SurfaceProps> = {
+  const throughProps: ThroughProps = {
     height,
     iconPad: typeof iconPad === 'number' ? iconPad : size * 10,
     alignItems,
@@ -158,7 +175,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
     sizeIcon: props.sizeIcon,
     iconSize: props.iconSize,
     iconAfter: props.iconAfter,
-    icon: props.icon,
+    hasIcon: !!props.icon,
     fontWeight: props.fontWeight,
     ellipse: props.ellipse,
     overflow: props.overflow,
@@ -320,7 +337,7 @@ const chromelessStyle = {
 }
 
 // fontFamily: inherit on both fixes elements
-const SurfaceFrame = gloss<SurfaceProps>(Col, {
+const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   fontFamily: 'inherit',
   position: 'relative',
   whiteSpace: 'pre',
@@ -410,15 +427,15 @@ const Element = gloss({
   },
 }).theme(props => {
   const iconSize = getIconSize(props)
-  const iconNegativePad = props.icon ? `- ${iconSize + props.iconPad}px` : ''
+  const iconNegativePad = props.hasIcon ? `- ${iconSize + props.iconPad}px` : ''
   // element styles
   const elementStyle = {
     marginLeft: 0,
     marginRight: 0,
   }
   // spacing between icon
-  const hasIconBefore = !!props.icon && !props.iconAfter
-  const hasIconAfter = !!props.icon && props.iconAfter
+  const hasIconBefore = props.hasIcon && !props.iconAfter
+  const hasIconAfter = props.hasIcon && props.iconAfter
   if (hasIconBefore) {
     elementStyle.marginLeft = props.iconPad
   }

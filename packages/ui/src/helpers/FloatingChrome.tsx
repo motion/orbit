@@ -1,4 +1,3 @@
-import { FullScreen } from '@o/gloss'
 import React, { HTMLAttributes, RefObject, useEffect, useState } from 'react'
 import { getRect, Rect, useScreenPosition } from '../hooks/useScreenPosition'
 import { Portal } from './portal'
@@ -33,17 +32,22 @@ export function FloatingChrome(
     onChange: x => x.visible && setPos(x.rect),
   })
 
-  useEffect(
-    () => {
-      const rect = getRect(target.current.getBoundingClientRect())
-      setPos(rect)
-    },
-    [target, measureKey],
-  )
+  useEffect(() => {
+    const rect = getRect(target.current.getBoundingClientRect())
+    setPos(rect)
+  }, [target, measureKey])
 
   return (
     <Portal>
-      <FullScreen>{element}</FullScreen>
+      <div style={fullScreen as any}>{element}</div>
     </Portal>
   )
+}
+
+const fullScreen = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
 }

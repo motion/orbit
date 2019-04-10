@@ -117,8 +117,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     minLeft: 0,
     minTop: 0,
     minWidth: 0,
-    maxWidth: Infinity,
-    maxHeight: Infinity,
+    maxWidth: 10000,
+    maxHeight: 10000,
   }
 
   ref = createRef<HTMLElement>()
@@ -157,6 +157,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   onMouseDown = event => {
     if (isRightClick(event)) return
     if (!this.state.cursor) return
+    event.stopPropagation()
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -569,7 +570,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       resizingSides: resizing,
     }
     if (!isEqual(next, pick(this.state, 'couldResize', 'cursor', 'resizingSides'))) {
-      console.log('new interactive state', next, this.state)
       const { onCanResize } = this.props
       if (onCanResize) {
         onCanResize()
@@ -624,7 +624,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       maxWidth,
       minHeight,
     }
-    console.log(style)
     if (movable === true || top != null || left != null) {
       if (fill === true) {
         style.left = left || 0

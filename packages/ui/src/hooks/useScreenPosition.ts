@@ -19,7 +19,7 @@ export function getRect(o: any) {
 type UseScreenPositionProps = {
   ref: RefObject<HTMLElement>
   onChange?: ((change: { rect: Rect | undefined; visible: boolean }) => any) | null
-  preventMeasure?: true
+  preventMeasure?: boolean
   debounce?: number
 }
 

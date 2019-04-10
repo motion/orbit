@@ -235,7 +235,8 @@ export class SelectableStore {
 
   setRows(next: GenericDataRow[]) {
     if (!Array.isArray(next)) {
-      debugger
+      console.warn('rows not valid array!', next)
+      return
     }
     this.rows = next
   }

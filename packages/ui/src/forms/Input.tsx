@@ -39,7 +39,6 @@ export const Input = forwardRef(function Input(
   const updateFormContext = useThrottleFn(
     (value: string) => {
       if (context) {
-        debugger
         context.dispatch({
           type: 'changeField',
           value: {

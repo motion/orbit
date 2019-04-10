@@ -61,15 +61,8 @@ export const ObserverCache = {
             if (!next) return
             entry.rawValue = next
             entry.denormalizedValues = {}
-            try {
-              for (const val of next) {
-                entry.denormalizedValues[val.id] = val
-              }
-            } catch (err) {
-              // TODO debug why "next is not iterable happening" even when it seems fine
-              console.log(next)
-              console.error(err)
-              debugger
+            for (const val of next) {
+              entry.denormalizedValues[val.id] = val
             }
           }
         },

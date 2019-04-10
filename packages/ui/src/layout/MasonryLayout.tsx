@@ -3,14 +3,14 @@ import AutoResponsive from 'autoresponsive-react'
 import React from 'react'
 import { useNodeSize } from '../hooks/useNodeSize'
 import { View, ViewProps } from '../View/View'
-import { useVisiblity } from '../Visibility'
+import { useVisibility } from '../Visibility'
 
 export type MasonryLayoutProps = ViewProps & {
   children?: React.ReactNode
 }
 
 export function MasonryLayout({ children, pad, padding, ...props }: MasonryLayoutProps) {
-  const visible = useVisiblity()
+  const visible = useVisibility()
   const size = useNodeSize({
     throttle: 500,
     ignoreFirst: true,

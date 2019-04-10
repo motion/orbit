@@ -1,19 +1,6 @@
-import {
-  DataColumn,
-  guessColumns,
-  normalizeRow,
-  SearchableTable,
-  SearchableTableProps,
-  Section,
-  SectionParentProps,
-  SectionSpecificProps,
-  TitleRowSpecificProps,
-  useNodeSize,
-  useSectionProps,
-  useVisiblity,
-} from '@o/ui'
-import React, { useCallback, useMemo } from 'react'
-import { useStoresSimple } from '../hooks/useStores'
+import { DataColumn, guessColumns, normalizeRow, SearchableTable, SearchableTableProps, Section, SectionParentProps, SectionSpecificProps, TitleRowSpecificProps, useNodeSize, useSectionProps, useVisibility } from '@o/ui';
+import React, { useCallback, useMemo } from 'react';
+import { useStoresSimple } from '../hooks/useStores';
 
 export type TableColumns = { [key: string]: DataColumn | string }
 
@@ -55,7 +42,7 @@ export function Table(tableProps: TableProps) {
     ...sectionProps,
     ...tableProps,
   }
-  const isVisible = useVisiblity()
+  const isVisible = useVisibility()
   const { height, ref } = useNodeSize({ throttle: 200, disable: !isVisible })
   const rows = useMemo(() => (props.rows ? props.rows.map(normalizeRow) : null), [props.rows])
   const columns = useMemo(

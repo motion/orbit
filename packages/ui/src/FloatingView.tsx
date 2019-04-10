@@ -8,7 +8,7 @@ import { Portal } from './helpers/portal'
 import { useGet } from './hooks/useGet'
 import { Interactive, InteractiveProps } from './Interactive'
 import { Omit } from './types'
-import { useVisiblity } from './Visibility'
+import { useVisibility } from './Visibility'
 
 export type FloatingViewProps = Omit<InteractiveProps, 'padding' | 'width' | 'height'> & {
   width?: number
@@ -36,7 +36,7 @@ export function FloatingView(props: FloatingViewProps) {
   } = props
   const controlledSize = typeof props.height !== 'undefined'
   const controlledPosition = typeof props.top !== 'undefined'
-  const isVisible = useVisiblity()
+  const isVisible = useVisibility()
   const getProps = useGet(props)
   const [{ xy, width, height }, set] = useSpring(() => ({
     xy: [selectDefined(props.left, defaultLeft), selectDefined(props.top, defaultTop)],

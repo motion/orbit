@@ -11,7 +11,7 @@ import {
   SubTitle,
   Text,
   useGet,
-  useVisiblity,
+  useVisibility,
   View,
   VirtualList,
   VirtualListProps,
@@ -98,7 +98,7 @@ export const List = memo(
     const { shortcutStore, spaceStore } = useStoresSimple()
     const { onOpenItem, onSelectItem } = useProps({})
     const getItemPropsGet = useGet(getItemProps || nullFn)
-    const visibility = useVisiblity()
+    const visibility = useVisibility()
     const getVisibility = useGet(visibility)
     const filtered = useActiveQueryFilter({
       searchable: props.searchable,
@@ -116,10 +116,9 @@ export const List = memo(
     useEffect(() => {
       if (!shortcutStore) return
       return shortcutStore.onShortcut(shortcut => {
-        if (getVisibility() == false) {
+        if (getVisibility() !== true) {
           return
         }
-        console.log('list shortcut', shortcut)
         const selectableStore = selectableStoreRef.current
         switch (shortcut) {
           case 'open':
@@ -142,7 +141,7 @@ export const List = memo(
             break
         }
       })
-    }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef, visibility])
+    }, [onOpen, shortcutStore, shortcutStore, selectableStoreRef])
 
     const onSelectInner = useCallback(
       (selectedRows, selectedIndices) => {

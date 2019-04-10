@@ -3,7 +3,7 @@ import React from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { TreeItems } from './TreeItems'
 import { View } from './View/View'
-import { useVisiblity } from './Visibility'
+import { useVisibility } from './Visibility'
 
 export type TreeProps = {
   root?: TreeItemID
@@ -49,7 +49,7 @@ export type TreeItem = {
 }
 
 export function Tree(props: TreeProps) {
-  const visibility = useVisiblity()
+  const visibility = useVisibility()
   const { ref, width, height } = useNodeSize({
     disable: !visibility,
     throttle: 200,

@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { useNodeSize } from './hooks/useNodeSize'
 import { SliderProps } from './Slider'
 import { View } from './View/View'
-import { useVisiblity } from './Visibility'
+import { useVisibility } from './Visibility'
 
 type SliderPaneProps = React.HTMLProps<HTMLDivElement> &
   Partial<SliderProps> & {
@@ -28,7 +28,7 @@ export function SliderPane({
   ...props
 }: SliderPaneProps) {
   const ref = useRef(null)
-  const visiblity = useVisiblity()
+  const visiblity = useVisibility()
 
   useNodeSize({
     disable: !visiblity,

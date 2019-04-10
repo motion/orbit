@@ -2,7 +2,7 @@ import { gloss } from '@o/gloss'
 import React, { cloneElement, isValidElement, memo, useRef, useState } from 'react'
 import { useParentNodeSize } from './hooks/useParentNodeSize'
 import { View } from './View/View'
-import { useVisiblity } from './Visibility'
+import { useVisibility } from './Visibility'
 
 export type SliderProps = {
   curFrame: number
@@ -31,7 +31,7 @@ export const Slider = memo(function Slider(props: SliderProps) {
   const [size, setSize] = useState({ width: 0, height: 0 })
   const [heights, setHeights] = useState([])
   let currentHeight = 0
-  const visible = useVisiblity()
+  const visible = useVisibility()
 
   useParentNodeSize({
     ref: frameRef,

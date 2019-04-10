@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { useVisiblity } from '../Visibility'
+import { useVisibility } from '../Visibility'
 import { useGet } from './useGet'
 import { useIntersectionObserver } from './useIntersectionObserver'
 import { useResizeObserver } from './useResizeObserver'
@@ -27,7 +27,7 @@ export function useScreenPosition(props: UseScreenPositionProps, mountArgs: any[
   const [pos, setPos] = useState(null)
   const { ref, preventMeasure, debounce = 100 } = props
   const onChange = useGet(props.onChange || setPos)
-  const disable = useVisiblity() === false
+  const disable = useVisibility() === false
   const intersected = useRef(false)
   const getState = useGet({ disable, preventMeasure })
 

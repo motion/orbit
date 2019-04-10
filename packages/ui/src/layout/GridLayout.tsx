@@ -12,10 +12,10 @@ if (isBrowser) {
   require('react-grid-layout/css/styles.css')
 }
 
-export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsUncontrolled
+export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
 
 type Base = { cols?: Object }
-type GridLayoutPropsUncontrolled = Base & {
+type GridLayoutPropsObject = Base & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
 }
@@ -99,21 +99,42 @@ const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
 export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
+
+  // TODO not great pattern here... maybe remove first option
+
   if ('items' in props) {
-    return <GridLayoutUncontrolled {...props} />
+    return <GridLayoutObject {...props} />
   }
-  return <GridLayoutControlled {...props} />
+  return <GridLayoutChildren {...props} />
 })
 
-export function GridLayoutControlled(props: GridLayoutPropsControlled) {
+export function GridLayoutChildren(props: GridLayoutPropsControlled) {
   const gridStore = useStore(GridStore, props)
   const childArr = Array.isArray(props.children) ? props.children : [props.children]
-  const items = childArr.map(
-    child =>
-      isValidElement(child) && (
-        <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
-      ),
-  )
+  const items = childArr
+    .map((child, index) => {
+      if (!isValidElement(child)) {
+        throw new Error(`Invalid child: ${child}, must be a React Element`)
+      }
+      if (!child.key) {
+        console.error(
+          `Child without a key given to <GridLayout /> at index ${index}, must set a key.`,
+        )
+        return null
+      }
+      // you can pass in a <GridItem />...
+      const isGridItem = child.type instanceof GridItem
+      if (isGridItem) {
+        return <div key={child.key}>{cloneElement(child, { id: `${child.key}` })}</div>
+      }
+      // ... or a regular item like <Card />
+      return (
+        <GridItem key={child.key} id={`${child.key}`}>
+          {child}
+        </GridItem>
+      )
+    })
+    .filter(Boolean)
   let children = null
   if (!gridStore.layouts.lg) {
     children = <div style={{ display: 'none' }}>{items}</div>
@@ -142,7 +163,7 @@ const getSizes = items => {
   return sizes
 }
 
-function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
+function GridLayoutObject(props: GridLayoutPropsObject) {
   const gridStore = useStore(GridStore, props)
   const items = props.items.map((item, idx) => <div key={idx}>{props.renderItem(item, idx)}</div>)
   const sizes = getSizes(props.items)
@@ -151,8 +172,6 @@ function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
     console.log('set sizes')
     gridStore.setItems(sizes)
   }, [JSON.stringify(sizes)])
-
-  console.log('items', items, gridStore.layouts.lg)
 
   if (!gridStore.layouts.lg) {
     return null
@@ -193,6 +212,8 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
     </GridItemChrome>
   )
 }
+
+GridItem.isGridItem = true
 
 const GridItemChrome = gloss(View, {
   '& img': {

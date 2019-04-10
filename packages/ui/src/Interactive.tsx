@@ -117,6 +117,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     minLeft: 0,
     minTop: 0,
     minWidth: 0,
+    maxWidth: Infinity,
+    maxHeight: Infinity,
   }
 
   ref = createRef<HTMLElement>()

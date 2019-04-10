@@ -150,7 +150,9 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       if (!isEqual(columnOrder, state.columnOrder)) {
         nextState.columnOrder = columnOrder
         // force refresh the virtual list on columns change
-        nextState.sortedRows = [...state.sortedRows]
+        if (state.sortedRows) {
+          nextState.sortedRows = [...state.sortedRows]
+        }
       }
     }
 
@@ -357,7 +359,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
     )
   }
 
-  getItemKey = index => {
+  getItemKey = (index: number) => {
     const { sortedRows } = this.state
     const { active } = this.selectableStore
     const row = sortedRows[index]
@@ -416,7 +418,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           <SelectableVariableList
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            itemKey={this.getItemKey}
+            // itemKey={this.getItemKey}
             itemData={this.state.sortedRows}
             listRef={this.listRef}
             outerRef={this.scrollRef}

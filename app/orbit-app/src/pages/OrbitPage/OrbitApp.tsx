@@ -28,8 +28,6 @@ export const OrbitApp = ({ id, identifier }: { id: string; identifier: string })
     isActive: useCallback(getIsActive, []),
   })
 
-  console.log('app active', identifier, id, isActive)
-
   return (
     <ProvideStores stores={{ appStore }}>
       <Visibility visible={isActive}>

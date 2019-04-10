@@ -234,6 +234,9 @@ export class SelectableStore {
   }
 
   setRows(next: GenericDataRow[]) {
+    if (!Array.isArray(next)) {
+      debugger
+    }
     this.rows = next
   }
 

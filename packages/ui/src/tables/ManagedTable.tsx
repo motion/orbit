@@ -139,12 +139,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
 
     // if columnSizes has changed
     if (props.columnSizes !== prevProps.columnSizes) {
-      nextState = {
-        columnSizes: {
-          ...state.columnSizes,
-          ...props.columnSizes,
-        },
-      }
+      nextState.columnSizes = props.columnSizes
     }
 
     // if columnOrder has changed
@@ -154,6 +149,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       const columnOrder = Object.keys(props.columns).map(key => ({ key, visible: true }))
       if (!isEqual(columnOrder, state.columnOrder)) {
         nextState.columnOrder = columnOrder
+        // force refresh the virtual list on columns change
+        nextState.sortedRows = [...state.sortedRows]
       }
     }
 
@@ -254,9 +251,6 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
       sortOrder,
       filterRows(this.props.rows, this.props.filterValue, this.props.filter),
     )
-    if (this.props.selectableStore) {
-      this.props.selectableStore.setRows(sortedRows)
-    }
     this.setState({ sortOrder, sortedRows })
     if (this.props.onSortOrder) {
       this.props.onSortOrder(sortOrder)
@@ -422,7 +416,8 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
           <SelectableVariableList
             itemCount={sortedRows.length}
             itemSize={this.getRowHeight}
-            itemData={sortedRows}
+            itemKey={this.getItemKey}
+            itemData={this.state.sortedRows}
             listRef={this.listRef}
             outerRef={this.scrollRef}
             onScroll={this.onScroll}

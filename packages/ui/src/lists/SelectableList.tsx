@@ -24,7 +24,9 @@ export function useSelectableProps(props: SelectableListProps, ref) {
   }, [listRef])
 
   useEffect(() => {
-    selectableStore.setRows(props.itemData)
+    if (Array.isArray(props.itemData)) {
+      selectableStore.setRows(props.itemData)
+    }
   }, [props.itemData])
 
   return {

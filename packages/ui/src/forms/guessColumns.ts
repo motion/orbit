@@ -7,7 +7,14 @@ export function guessColumns(
   userCols: DataColumnsShort | undefined,
   firstRow: GenericDataRow | false,
 ): DataColumns {
-  let cols = userCols
+  // array to object
+  let cols = Array.isArray(userCols)
+    ? userCols.reduce((acc, cur) => {
+        acc[cur] = cur
+        return acc
+      }, {})
+    : userCols
+
   if (!firstRow) return {}
 
   const hasCols = cols && !!Object.keys(cols)

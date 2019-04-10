@@ -26,7 +26,7 @@ export function useVisibility() {
     const store = useVisibilityStore()
     return selectDefined(store.getVisible(), true)
   } catch {
-    console.warn('catching error with visibility')
+    // no visibility store
     return true
   }
 }

@@ -9,6 +9,7 @@ import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import { on } from '@o/utils'
 import invariant from 'invariant'
+import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
 import { Rect } from './helpers/geometry'
 import { isRightClick } from './helpers/isRightClick'
@@ -565,7 +566,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       cursor: newCursor,
       resizingSides: resizing,
     }
-    if (!isEqual(next, this.state)) {
+    if (!isEqual(next, pick(this.state, 'couldResize', 'cursor', 'resizingSides'))) {
+      console.log('new interactive state', next, this.state)
       const { onCanResize } = this.props
       if (onCanResize) {
         onCanResize()
@@ -620,6 +622,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       maxWidth,
       minHeight,
     }
+    console.log(style)
     if (movable === true || top != null || left != null) {
       if (fill === true) {
         style.left = left || 0

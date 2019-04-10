@@ -33,9 +33,7 @@ import { getPadding, ViewProps } from './View/View'
 export type SurfaceProps = ViewProps & {
   borderPosition?: 'inside' | 'outside'
   hover?: boolean
-  hoverStyle?: any
   active?: boolean
-  activeStyle?: any
   ellipse?: boolean
   after?: React.ReactNode
   badge?: React.ReactNode

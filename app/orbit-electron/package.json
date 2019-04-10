@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
+    "@o/react-devtools": "^2.4.0",
     "@o/config": "^2.4.0",
     "@o/constants": "^2.4.0",
     "@o/logger": "^2.4.0",

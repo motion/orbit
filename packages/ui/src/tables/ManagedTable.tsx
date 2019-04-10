@@ -266,7 +266,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
   }
 
   onColumnResize = (columnSizes: TableColumnSizes) => {
-    this.setState({ columnSizes })
+    this.setState({ columnSizes, sortedRows: [...this.state.sortedRows] })
   }
 
   scrollToBottom() {

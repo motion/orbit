@@ -301,7 +301,7 @@ export function gloss<Props = any>(
       }
       // dont pass down things we used for styles
       // this could be confusing / configurable
-      if (styles && styles[key]) {
+      if (styles && styles.hasOwnProperty(key)) {
         continue
       }
       if (isDOMElement) {

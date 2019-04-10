@@ -32,8 +32,8 @@ export class Window extends BaseComponent {
   window = null
   propHandlers = null
 
-  updateSize = () => configureSize(this, this.props)
-  updatePosition = () => configurePosition(this, this.props)
+  updateSize = () => configureSize.call(this, this.props)
+  updatePosition = () => configurePosition.call(this, this.props)
 
   mount() {
     const { props } = this
@@ -99,7 +99,7 @@ export class Window extends BaseComponent {
       onMoved: this.updatePosition,
       animatePosition: this.updatePosition,
       animateSize: this.updateSize,
-      file: () => configureFile(this, this.props),
+      file: () => configureFile.call(this, this.props),
       acceptFirstMouse: () => {
         if (process.env.NODE_ENV !== 'production') {
           console.warn(
@@ -154,16 +154,16 @@ export class Window extends BaseComponent {
   }
 }
 
-function configureFile(window, { file }) {
+function configureFile(this: Window, { file }) {
   if (file) {
-    window.loadURL(`${file}`)
+    this.window.loadURL(`${file}`)
   } else {
     console.warn('No file given to electron window')
   }
 }
 
-function configureSize(window, { size: oSize, onResize, defaultSize, animateSize }) {
-  if (window.unmounted) {
+function configureSize(this: Window, { size: oSize, onResize, defaultSize, animateSize }) {
+  if (this.unmounted) {
     return
   }
   let size = oSize
@@ -175,26 +175,26 @@ function configureSize(window, { size: oSize, onResize, defaultSize, animateSize
     size[2] = animateSize
   }
   try {
-    window.handleEvent(window.window, 'resize', onResize, rawHandler => {
-      rawHandler(window.window.getSize())
+    this.handleEvent(this.window, 'resize', onResize, rawHandler => {
+      rawHandler(this.window.getSize())
     })
     if (!size && defaultSize) {
-      window.window.setSize(...defaultSize)
-      window.window.setResizable(true)
+      this.window.setSize(...defaultSize)
+      this.window.setResizable(true)
       return
     }
     if (!size && !defaultSize) {
-      window.window.setResizable(true)
+      this.window.setResizable(true)
       return
     }
     if (size && onResize) {
-      window.window.setSize(...size)
-      window.window.setResizable(true)
+      this.window.setSize(...size)
+      this.window.setResizable(true)
       return
     }
     if (size && !onResize) {
-      window.window.setSize(...size)
-      window.window.setResizable(false)
+      this.window.setSize(...size)
+      this.window.setResizable(false)
       return
     }
   } catch (e) {
@@ -203,11 +203,11 @@ function configureSize(window, { size: oSize, onResize, defaultSize, animateSize
 }
 
 function configurePosition(
-  window,
+  this: Window,
   { position, onMove, onMoved, defaultPosition, animatePosition },
 ) {
-  if (window.unmounted) return
-  if (!window.window) return
+  if (this.unmounted) return
+  if (!this.window) return
   try {
     // window.setPosition(x, y[, animate])
     if (typeof animatePosition === 'boolean') {
@@ -216,34 +216,34 @@ function configurePosition(
     const end = m => {
       throw new Error(`position ${position} ended with error of: ${m}`)
     }
-    window.handleEvent(window.window, 'move', onMove, rawHandler => {
-      const nextPosition = window.window.getPosition()
+    this.handleEvent(this.window, 'move', onMove, rawHandler => {
+      const nextPosition = this.window.getPosition()
       rawHandler(nextPosition)
     })
-    window.handleEvent(window.window, 'moved', onMoved, rawHandler => {
-      const nextPosition = window.window.getPosition()
+    this.handleEvent(this.window, 'moved', onMoved, rawHandler => {
+      const nextPosition = this.window.getPosition()
       rawHandler(nextPosition)
     })
     if (!position && defaultPosition) {
-      window.window.setPosition(...defaultPosition)
-      window.window.setMovable(true)
+      this.window.setPosition(...defaultPosition)
+      this.window.setMovable(true)
       return
     }
     if (!position && !defaultPosition) {
-      window.window.setMovable(true)
+      this.window.setMovable(true)
       return
     }
     if (position) {
       if (!Array.isArray(position)) end('not array')
       if (typeof position[0] !== 'number' || typeof position[1] !== 'number') end('not number')
       if (onMove || onMoved) {
-        window.window.setPosition(...position)
-        window.window.setMovable(true)
+        this.window.setPosition(...position)
+        this.window.setMovable(true)
         return
       }
       if (!onMove && !onMoved) {
-        window.window.setPosition(...position)
-        window.window.setMovable(false)
+        this.window.setPosition(...position)
+        this.window.setMovable(false)
         return
       }
     }

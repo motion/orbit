@@ -14,7 +14,12 @@ export function Badge({ children, ...props }: BadgeProps) {
       color="white"
       circular
       size={0.7}
-      sizeFont={1.3}
+      sizeFont={1.2}
+      elementProps={{
+        transform: {
+          y: -0.5,
+        },
+      }}
       {...props}
     >
       {typeof children === 'number' && children > 99 ? 99 : children}

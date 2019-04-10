@@ -1,0 +1,7 @@
+{
+  "name": "@o/react-devtools",
+  "version": "2.4.0",
+  "description": "React component to fit headlines and paragraphs into any element",
+  "main": "extension/index.js",
+  "sideEffects": false
+}

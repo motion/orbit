@@ -35,8 +35,10 @@ import { HeaderStore } from '../../stores/HeaderStore'
 import { NewAppStore } from '../../stores/NewAppStore'
 import { OrbitWindowStore } from '../../stores/OrbitWindowStore'
 import { AppWrapper } from '../../views'
+import { Dock, DockButton } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
+import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
@@ -169,9 +171,17 @@ const OrbitPageInner = memo(function OrbitPageInner() {
     <ProvideStores stores={{ orbitStore, headerStore }}>
       <MainShortcutHandler handlers={handlers}>
         <OrbitHeader />
-        <OrbitFloatingShareCard />
+
+        <Dock>
+          <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} />
+          <OrbitFloatingShareCard index={1} />
+        </Dock>
+
         <InnerChrome torn={orbitStore.isTorn}>
-          <OrbitContentArea>{contentArea}</OrbitContentArea>
+          <OrbitContentArea>
+            {contentArea}
+            <OrbitAppSettingsSidebar />
+          </OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>
     </ProvideStores>
@@ -189,7 +199,8 @@ const OrbitContentArea = gloss({
     z: 0,
   },
 }).theme((_, theme) => ({
-  background: theme.sidebarBackground,
+  // TODO test transparent
+  background: theme.sidebarBackgroundTransparent || theme.sidebarBackground,
 }))
 
 function OrbitPageProvideStores(props: any) {

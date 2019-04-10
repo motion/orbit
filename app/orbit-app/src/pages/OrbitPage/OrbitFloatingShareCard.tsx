@@ -1,17 +1,20 @@
 import { List } from '@o/kit'
-import { Button, FloatingCard, useScreenPosition } from '@o/ui'
+import { FloatingCard, useScreenPosition } from '@o/ui'
 import pluralize from 'pluralize'
 import React, { useRef, useState } from 'react'
 import { orbitStaticApps } from '../../apps/orbitApps'
 import { useStores } from '../../hooks/useStores'
+import { DockButton } from './Dock'
 
 export function OrbitFloatingShareCard({
   width = 250,
   height = 350,
+  index,
 }: {
   width?: number
   height?: number
   pad?: number
+  index: number
 }) {
   const { spaceStore, paneManagerStore } = useStores()
   const { currentSelection } = spaceStore
@@ -25,24 +28,12 @@ export function OrbitFloatingShareCard({
   const showButton = !isStaticApp && !!numItems
   return (
     <>
-      <Button
-        ref={buttonRef}
-        theme="light"
-        circular
-        icon="list"
-        size={1.5}
-        iconSize={16}
+      <DockButton
+        index={index}
+        forwardRef={buttonRef}
         badge={numItems}
-        badgeProps={{
-          background: '#333',
-        }}
-        position="fixed"
-        bottom={20}
-        right={20}
-        zIndex={100000000}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        transition="all ease 150ms"
         opacity={showButton ? 1 : 0}
         transform={{
           y: showButton ? 0 : 150,

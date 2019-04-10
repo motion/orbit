@@ -6,19 +6,31 @@
  */
 
 import { gloss } from '@o/gloss'
+import { selectDefined } from '@o/utils'
 import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
-import { Interactive, ResizableSides } from './Interactive'
+import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 
-type SidebarPosition = 'left' | 'top' | 'right' | 'bottom'
+type SidebarProps = InteractiveProps & {
+  /**
+   * Toggle sidebar visibility.
+   */
+  hidden?: boolean
 
-type SidebarProps = {
+  /**
+   * Position sidebar absolutely.
+   */
+  floating?: boolean
+
+  /**
+   * Don't render border element.
+   */
   noBorder?: boolean
 
   /**
    * Position of the sidebar.
    */
-  position: SidebarPosition
+  position: 'left' | 'top' | 'right' | 'bottom'
 
   /**
    * Default width of the sidebar.  Only used for left/right sidebars.
@@ -140,7 +152,17 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 
   render() {
-    const { background, onResize, position, children, noBorder } = this.props
+    const {
+      background,
+      onResize,
+      position,
+      children,
+      noBorder,
+      hidden,
+      floating,
+      width: ignoreWidth,
+      ...interactiveProps
+    } = this.props
     const {
       minWidth,
       maxWidth,
@@ -151,6 +173,18 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
       resizable,
       horizontal,
     } = this.state
+
+    // ignore
+    ignoreWidth
+
+    let positionProps = null
+
+    if (floating) {
+      positionProps = {
+        position: 'absolute',
+        ...(position === 'right' && { right: 0 }),
+      }
+    }
 
     return (
       <Interactive
@@ -164,6 +198,16 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         height={!horizontal ? (onResize ? height : this.state.height) : '100%'}
         resizable={resizable}
         onResize={this.onResize}
+        transition="all ease-in 100ms"
+        opacity={hidden ? 0 : 1}
+        {...getTransform(
+          hidden,
+          horizontal,
+          position === 'top' || position === 'left',
+          selectDefined(width, height),
+        )}
+        {...interactiveProps}
+        {...positionProps}
       >
         <SidebarContainer position={position} background={background}>
           {!noBorder && borderByPosition[position]}
@@ -171,6 +215,17 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         </SidebarContainer>
       </Interactive>
     )
+  }
+}
+
+const getTransform = (hidden: boolean, horizontal: boolean, invert: boolean, size: number) => {
+  if (!hidden) return null
+  const dir = invert ? -1 : 1
+  return {
+    transform: {
+      ...(horizontal && { x: size * dir }),
+      ...(!horizontal && { y: size * dir }),
+    },
   }
 }
 
@@ -191,7 +246,6 @@ const SidebarContainer = gloss({
 }).theme((props, theme) => {
   return {
     background: props.background || theme.sidebarBackground || theme.background.alpha(0.5),
-    textOverflow: props.overflow ? 'ellipsis' : 'auto',
     whiteSpace: props.overflow ? 'nowrap' : 'normal',
   }
 })

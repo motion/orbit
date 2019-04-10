@@ -3,6 +3,39 @@ import Slack from '@o/slack-app'
 import { Card, GridItem, GridLayout } from '@o/ui'
 import React, { useState } from 'react'
 
+function CustomApp() {
+  const [app, setApp] = useState<AppBit>(null)
+  const slack = useApp(Slack, app)
+  const res = slack && slack.channelsList()
+  return (
+    <App>
+      <GridLayout>
+        <GridItem w={4} h={4}>
+          <Card
+            afterTitle={
+              <>
+                <SelectApp onSelect={setApp} />
+              </>
+            }
+            overflow="hidden"
+            title="Slack Messages"
+            elevation={4}
+          >
+            {res && <Table shareable selectable="multi" rows={res.channels} />}
+          </Card>
+        </GridItem>
+      </GridLayout>
+    </App>
+  )
+}
+
+export default createApp({
+  id: 'custom',
+  name: 'Custom',
+  icon: '',
+  app: CustomApp,
+})
+
 // todo: remove it
 // load sample repositories (testing api)
 // useEffect(
@@ -70,31 +103,3 @@ import React, { useState } from 'react'
 //     },
 //     [app],
 //   )
-function CustomApp() {
-  const [app, setApp] = useState<AppBit>(null)
-  const slack = useApp(Slack, app)
-  const res = slack && slack.channelsList()
-
-  return (
-    <App>
-      <GridLayout>
-        <GridItem w={4} h={4}>
-          <Card
-            afterTitle={<SelectApp onSelect={setApp} />}
-            overflow="hidden"
-            title="Slack Messages"
-          >
-            {res && <Table rows={res.channels} />}
-          </Card>
-        </GridItem>
-      </GridLayout>
-    </App>
-  )
-}
-
-export default createApp({
-  id: 'custom',
-  name: 'Custom',
-  icon: '',
-  app: CustomApp,
-})

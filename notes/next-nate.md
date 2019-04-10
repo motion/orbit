@@ -1,8 +1,13 @@
-- make gloss not wrap props with GlossProps, i think, so you can export them, see Space
+## Docs
+
+- mdx plugins https://github.com/rehypejs/rehype/blob/master/doc/plugins.md#list-of-plugins
+- live preview https://react-live.kitten.sh/
+
+## Next
 
 - Grid persistance, Slack import app
 
-Good enough demo to Ken Wheeler / et al:
+## Good enough demo to Ken Wheeler / et al:
 
 - Easy way to pull in any app "data explorer" and have it visually show light config to let you set up a query.
   - Perhaps as a generic cardview that "flips around" for config.
@@ -19,7 +24,7 @@ Good enough demo to Ken Wheeler / et al:
 - `<QueryApp app={app} />` that we can let users use in apps to generically explore any apps interface
 - Slack/Gmail demo app: <Grid />, and <QueryApp />, put together a demo that shows a nice way - to take slack messages, query them, then select a vew, see those in a different grid item as a stack, edit a few of them, then send them over to Gmail in a third grid item that has some configuration options for where to send them in gmail
 
-Better demo:
+## Better demo:
 
 - Improve Share
   - "Persist" share button to clone it to a new one for multiple clipboards
@@ -36,7 +41,7 @@ Better demo:
   - Remove the grouping and use virtual lists
   - Fix cosal search
 
-Get it in hands:
+## Get it in hands:
 
 - Spaces
   - Needs to be simplified and then made to work
@@ -133,3 +138,7 @@ Week 4: Get a nice website with mobile + start on docs
 website:
 
 https://codesandbox.io/embed/ly0oxkp899
+
+---
+
+large rows filter/search in browser (https://github.com/nextapps-de/flexsearch)

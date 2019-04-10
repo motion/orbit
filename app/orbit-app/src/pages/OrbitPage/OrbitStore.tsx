@@ -11,6 +11,11 @@ export class OrbitStore {
   isEditing = false
   activeConfig: { [key: string]: AppProps } = shallow({})
   activeActions = null
+  showAppSettings = false
+
+  toggleShowAppSettings = () => {
+    this.showAppSettings = !this.showAppSettings
+  }
 
   get isTorn() {
     return false

@@ -48,10 +48,10 @@ export function AppsMainAddApp(props: { identifier: string }) {
     >
       {hasSetup && (
         <>
-          <Message alt="warn">
+          <Message alt="warn" icon="warn" iconBefore>
             This app stores data. This data will be stored privately, only on your device. If your
-            team enables decentralized key-sharing, it will sync only to other memebers authorized
-            to this space.
+            team enables decentralized key-sharing, it will sync <strong>directly</strong> to
+            authorized users in this space.
           </Message>
           <Section bordered pad title="Setup">
             <AppView identifier={props.identifier} viewType="setup" />

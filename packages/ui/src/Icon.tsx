@@ -4,7 +4,7 @@ import { isDefined, mergeDefined } from '@o/utils'
 import fuzzy from 'fuzzy'
 import React, { createContext, useContext } from 'react'
 import { Config } from './helpers/configure'
-import { ViewProps } from './View/View'
+import { View, ViewProps } from './View/View'
 
 export { IconName }
 
@@ -63,15 +63,17 @@ export function PlainIcon(props: IconProps) {
   const viewBox = `0 0 ${pixelGridSize} ${pixelGridSize}`
 
   return (
-    <svg
-      style={{ color: `${color}` }}
-      data-icon={name}
-      width={`${size}px`}
-      height={`${size}px`}
-      viewBox={viewBox}
-    >
-      {paths}
-    </svg>
+    <View width={size} height={size} {...props}>
+      <svg
+        style={{ color: `${color}` }}
+        data-icon={name}
+        width={`${size}px`}
+        height={`${size}px`}
+        viewBox={viewBox}
+      >
+        {paths}
+      </svg>
+    </View>
   )
 }
 

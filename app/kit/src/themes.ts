@@ -3,16 +3,15 @@ import { linearGradient, ThemeMaker, toColor } from '@o/gloss'
 
 const Theme = new ThemeMaker()
 
-const orbitColor = toColor('#1A71E3')
+const orbitColor = toColor('#3E7FD5')
 const orbitHoverBg = orbitColor.darken(0.02).desaturate(0.3)
 const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const colors = {
-  selected: orbitColor,
   orange: '#DC6104',
   lightOrange: '#F6B585',
   darkOrange: '#9F4604',
-  blue: '#1A71E3',
+  blue: '#3E7FD5',
   darkBlue: '#0E3D7B',
   lightBlue: '#B0C6E3',
   red: '#c80000',

@@ -7,12 +7,11 @@ import {
   GlossThemeFn,
   propsToStyles,
   propsToThemeStyles,
-  ThemeContext,
   ThemeObject,
   ThemeSelect,
 } from '@o/gloss'
 import { isAnyDefined, selectDefined } from '@o/utils'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Badge } from './Badge'
 import { BreadcrumbReset, useBreadcrumb } from './Breadcrumbs'
 import { Glint } from './effects/Glint'
@@ -106,15 +105,14 @@ type ThroughProps = Pick<
   hasIcon: boolean
 }
 
+const iconTransform = {
+  y: 0.5,
+}
+
 export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   const props = useProps(direct)
   const crumb = useBreadcrumb()
   const [tooltipState, setTooltipState] = useState({ id: null, show: false })
-  const themeContext = useContext(ThemeContext)
-  const theme =
-    (props.theme && typeof props.theme === 'string' && themeContext.allThemes[props.theme]) ||
-    (typeof props.theme === 'object' && props.theme) ||
-    themeContext.activeTheme
 
   useEffect(() => {
     const id = `Surface-${Math.round(Math.random() * 100000000)}`
@@ -260,9 +258,7 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
               alt={alt}
               name={`${icon}`}
               size={getIconSize(props)}
-              transform={{
-                y: 0.5,
-              }}
+              transform={iconTransform}
               opacity={selectDefined(props.alpha, props.opacity)}
               {...iconProps}
             />

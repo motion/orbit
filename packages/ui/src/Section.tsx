@@ -112,7 +112,7 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxWidth={maxWidth}
       minHeight={minHeight}
       overflow="hidden"
-      pad={pad}
+      pad={!showTitleAbove ? pad : false}
       size={size}
     >
       {showTitleAbove && titleElement}

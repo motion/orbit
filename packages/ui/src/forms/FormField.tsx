@@ -16,6 +16,7 @@ type RowProps = {
 
 const TableCell = gloss(View, {
   padding: [4, 0],
+  marginBottom: 'auto',
 })
 
 const FormTableRow = gloss(Row, {
@@ -55,7 +56,6 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
           {children}
           {error && (
             <>
-              <Space />
               <SimpleText alt="error">{error}</SimpleText>
             </>
           )}

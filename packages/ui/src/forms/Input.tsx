@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from 'react'
 import { UIContext, UIContextType } from '../helpers/contexts'
+import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
 import { DataType, Omit } from '../types'
@@ -35,6 +36,25 @@ type InputDecoratedProps = InputProps & {
 
 export function InputPlain({ onEnter, type = 'input', ...props }: InputDecoratedProps) {
   const context = useContext(FormContext)
+
+  // update form context every so often, avoid too many re-renders
+  const updateFormContext = useThrottleFn(
+    (value: string) => {
+      if (context) {
+        context.dispatch({
+          type: 'changeField',
+          value: {
+            name: props.name,
+            value,
+            type,
+          },
+        })
+      }
+    },
+    { amount: 200 },
+    [context, type, props.name],
+  )
+
   const onKeyDown = useCallback(
     e => {
       if (e.keyCode === 13) {
@@ -51,16 +71,8 @@ export function InputPlain({ onEnter, type = 'input', ...props }: InputDecorated
 
   const onChange = useCallback(
     e => {
-      if (context) {
-        context.dispatch({
-          type: 'changeField',
-          value: {
-            name: props.name,
-            value: e.target.value,
-            type: type,
-          },
-        })
-      }
+      updateFormContext(e.target.value)
+
       if (props.onChange) {
         props.onChange(e)
       }

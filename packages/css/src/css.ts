@@ -4,7 +4,6 @@ import {
   FALSE_VALUES,
   psuedoKeys,
   SHORTHANDS,
-  UNDEFINED,
   unitlessNumberProperties,
 } from './constants'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
@@ -36,19 +35,19 @@ export function css(styles: Object, opts?: CSSOptions): Object {
   for (let key in styles) {
     let value = styles[key]
     let valueType = typeof value
-    let finalKey = key
-    // convert camel to snake
-    if (shouldSnake) {
-      finalKey = CAMEL_TO_SNAKE[key] || key
-    }
     // get real values
     if (value === false) {
       value === FALSE_VALUES[key]
       valueType = typeof value
     }
     // simple syles
-    if (valueType === UNDEFINED || value === null || value === false) {
+    if (value === undefined || value === null || value === false) {
       continue
+    }
+    let finalKey = key
+    // convert camel to snake
+    if (shouldSnake) {
+      finalKey = CAMEL_TO_SNAKE[key] || key
     }
     let respond
     const firstChar = key[0]

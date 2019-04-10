@@ -119,6 +119,7 @@ export const List = memo(
         if (getVisibility() == false) {
           return
         }
+        console.log('list shortcut', shortcut)
         const selectableStore = selectableStoreRef.current
         switch (shortcut) {
           case 'open':

@@ -1,5 +1,4 @@
 import React, { useCallback, useContext } from 'react'
-import { UIContext, UIContextType } from '../helpers/contexts'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
@@ -30,17 +29,14 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     forwardRef?: any
   }
 
-type InputDecoratedProps = InputProps & {
-  uiContext: UIContextType
-}
-
-export function InputPlain({ onEnter, type = 'input', ...props }: InputDecoratedProps) {
+export function Input({ onEnter, type = 'input', ...props }: InputProps) {
   const context = useContext(FormContext)
 
   // update form context every so often, avoid too many re-renders
   const updateFormContext = useThrottleFn(
     (value: string) => {
       if (context) {
+        debugger
         context.dispatch({
           type: 'changeField',
           value: {
@@ -122,9 +118,4 @@ const inputSurfaceTheme: GetSurfaceTheme = (props, theme) => ({
     color: theme.color.lighten(0.1),
     background: theme.backgroundSelection || theme.background.darken(0.2),
   },
-})
-
-export const Input = React.forwardRef(function Input(props: InputProps, ref) {
-  const uiContext = React.useContext(UIContext)
-  return <InputPlain uiContext={uiContext} forwardRef={ref} {...props} />
 })

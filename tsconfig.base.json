@@ -14,7 +14,6 @@
     "noUnusedParameters": true,
     "strictNullChecks": false,
     "strictFunctionTypes": true,
-    "removeComments": true,
     "preserveConstEnums": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

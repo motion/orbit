@@ -197,6 +197,7 @@ function generateFields(fields: FormFieldsObj): React.ReactNode {
       <FormField
         key={key}
         label={field.name}
+        name={key}
         // TODO type
         type={(field.type || 'string') as any}
         defaultValue={field.value}

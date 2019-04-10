@@ -8,7 +8,7 @@ import { useSurfaceProps } from '../Surface'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
-    acceptsHovered?: boolean
+    ignoreHover?: boolean
     iconProps?: Partial<IconProps>
   }
 
@@ -57,7 +57,7 @@ export const Button = forwardRef(function Button(props: ButtonProps, ref) {
   const uiContext = useContext(UIContext)
 
   let element = null
-  if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
+  if (props.ignoreHover !== false && typeof uiContext.hovered === 'boolean') {
     element = <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
   } else {
     element = <ButtonInner forwardRef={ref} {...props} />

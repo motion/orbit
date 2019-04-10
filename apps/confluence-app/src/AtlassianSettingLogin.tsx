@@ -16,30 +16,6 @@ export function AtlassianSettingLogin(props: AppProps) {
   const [activeSpace] = useActiveSpace()
   const [app] = useAppBit(+props.id)
 
-  const addApp = async values => {
-    app.data.values = {
-      ...app.data.values,
-      ...values,
-    }
-    app.spaces = app.spaces || []
-    if (!app.spaces.find(space => space.id === activeSpace.id)) {
-      app.spaces.push(activeSpace)
-    }
-    app.spaceId = activeSpace.id
-    // save app
-    try {
-      const loader = new ConfluenceLoader(app as AppBit)
-      await loader.test()
-      app.name = extractTeamNameFromDomain(
-        (app.data as ConfluenceAppData).values.credentials.domain,
-      )
-      await save(AppModel, app)
-      return true
-    } catch (err) {
-      return err.message
-    }
-  }
-
   return (
     <>
       <Message>
@@ -49,7 +25,29 @@ export function AtlassianSettingLogin(props: AppProps) {
       <Space />
       <Form
         submitButton
-        onSubmit={addApp}
+        onSubmit={async values => {
+          app.data.values = {
+            ...app.data.values,
+            ...values,
+          }
+          app.spaces = app.spaces || []
+          if (!app.spaces.find(space => space.id === activeSpace.id)) {
+            app.spaces.push(activeSpace)
+          }
+          app.spaceId = activeSpace.id
+          // save app
+          try {
+            const loader = new ConfluenceLoader(app as AppBit)
+            await loader.test()
+            app.name = extractTeamNameFromDomain(
+              (app.data as ConfluenceAppData).values.credentials.domain,
+            )
+            await save(AppModel, app)
+            return true
+          } catch (err) {
+            return err.message
+          }
+        }}
         fields={{
           Domain: {
             name: 'Domain',

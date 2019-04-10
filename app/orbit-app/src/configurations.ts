@@ -1,6 +1,6 @@
 import { configureGloss } from '@o/gloss'
 import { configureKit, Icon } from '@o/kit'
-import { configureUI } from '@o/ui'
+import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
 import { StoreContext } from './contexts'
@@ -42,6 +42,10 @@ function configure() {
 
   configureUseStore({
     debugStoreState: true,
+  })
+
+  configureHotKeys({
+    ignoreTags: [],
   })
 }
 

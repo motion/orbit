@@ -4,6 +4,7 @@ import React, { createContext, Dispatch, useContext, useEffect, useReducer } fro
 import { Button } from '../buttons/Button'
 import { MergeContext } from '../helpers/MergeContext'
 import { Section, SectionProps } from '../Section'
+import { Space } from '../Space'
 import { TableFilter, TableFilterIncludeExclude } from '../tables/types'
 import { Message } from '../text/Message'
 import { FormField } from './FormField'
@@ -158,17 +159,30 @@ export function Form({
     >
       <MergeContext Context={FormContext} value={use ? use.context : { dispatch, ...state }}>
         <Section flex={1} {...sectionProps}>
-          {state.globalError && <Message alt="error">{state.globalError}</Message>}
-          {state.errors && <Message alt="warn">Form has a few errors, please check.</Message>}
+          {state.globalError && (
+            <>
+              <Message alt="error">{state.globalError}</Message>
+              <Space />
+            </>
+          )}
+          {state.errors && (
+            <>
+              <Message alt="warn">Form has errors, please check.</Message>
+              <Space />
+            </>
+          )}
 
           {elements}
 
           {!!submitButton && (
-            <FormField label="">
-              <Button type="submit" alt="action">
-                {submitButton === true ? 'Submit' : submitButton}
-              </Button>
-            </FormField>
+            <>
+              <Space />
+              <FormField label="">
+                <Button type="submit" alt="action">
+                  {submitButton === true ? 'Submit' : submitButton}
+                </Button>
+              </FormField>
+            </>
           )}
         </Section>
       </MergeContext>

@@ -123,6 +123,7 @@ class TableHeadColumn extends React.PureComponent<{
   ref: HTMLElement
 
   onClick = () => {
+    console.log('got a sort!')
     const { id, onSort, sortOrder } = this.props
 
     const direction =

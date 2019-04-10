@@ -3,7 +3,6 @@ import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
 import { Text, TextProps } from './text/Text'
-import { Omit } from './types'
 
 const Context = createContext<BreadcrumbStore | null>(null)
 

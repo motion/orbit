@@ -19,15 +19,14 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
 
   const itemViews = useMemo(() => {
     return items.map((item, index) => {
-      const select = () => {
-        selectableStore.setRowActive(index)
-      }
       // this is complex so we can do single updates on selection move
       return function GridItem() {
         const store = useStore(selectableStore)
         return props.getItem(item, {
           isSelected: store.isActiveIndex(index),
-          select,
+          select: () => {
+            selectableStore.setRowActive(index)
+          },
         })
       }
     })

@@ -63,26 +63,18 @@ export type HandleOrbitSelect = (index: number, appProps: AppProps) => any
 
 const nullFn = () => null
 
-export const SearchableList = memo(
-  (props: ListProps) => {
-    return (
-      <Searchable>
-        {({ searchBar, searchTerm }) => (
-          <>
-            <View pad={props.padInner || 'sm'}>{searchBar}</View>
-            <List {...props} search={searchTerm} />
-          </>
-        )}
-      </Searchable>
-    )
-  },
-  (a, b) => {
-    Object.keys(b).forEach(k => {
-      a[k] !== b[k] && console.log(k, a[k], b[k])
-    })
-    return false
-  },
-)
+export const SearchableList = (props: ListProps) => {
+  return (
+    <Searchable>
+      {({ searchBar, searchTerm }) => (
+        <>
+          <View pad={props.padInner || 'sm'}>{searchBar}</View>
+          <List {...props} search={searchTerm} />
+        </>
+      )}
+    </Searchable>
+  )
+}
 
 export const List = memo(
   ({

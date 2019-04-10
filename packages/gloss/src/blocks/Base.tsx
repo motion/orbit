@@ -3,8 +3,6 @@ import { gloss } from '../gloss'
 import { propsToStyles } from '../helpers/propsToStyles'
 import { propsToTextSize } from '../helpers/propsToTextSize'
 
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 export type GlossBaseProps = {
   tagName?: string
   // our default styling supports is through preProcessTheme

@@ -1,12 +1,17 @@
-import { gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
-import React, { cloneElement, isValidElement, memo, useEffect } from 'react'
+import React, {
+  cloneElement,
+  HTMLAttributes,
+  isValidElement,
+  memo,
+  useCallback,
+  useEffect,
+} from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { SizedSurfaceProps } from '../SizedSurface'
-import { View, ViewProps } from '../View/View'
 
 if (isBrowser) {
   require('react-grid-layout/css/styles.css')
@@ -190,11 +195,12 @@ function GridLayoutObject(props: GridLayoutPropsObject) {
   )
 }
 
-export type GridItemProps = ViewProps & {
-  id?: string
+export type GridItemProps = HTMLAttributes<HTMLDivElement> & {
   w?: number
   h?: number
 }
+
+// warning: performance is sensitive here
 
 export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemProps) {
   const store = useGridStore()
@@ -206,20 +212,16 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
     }
   }, [h, w])
 
+  const onMouseDown = useCallback(e => isRightClick(e) && e.stopProgation(), [])
+
   return (
-    <GridItemChrome flex={1} onMouseDown={e => isRightClick(e) && e.stopProgation()} {...viewProps}>
+    <div onMouseDown={onMouseDown} {...viewProps}>
       {forwardSurfaceProps(children, { flex: 1 })}
-    </GridItemChrome>
+    </div>
   )
 }
 
 GridItem.isGridItem = true
-
-const GridItemChrome = gloss(View, {
-  '& img': {
-    userSelect: 'none',
-  },
-})
 
 // TODO this could be a pattern
 

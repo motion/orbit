@@ -20,7 +20,7 @@ export function AppCard<A extends AppDefinition>({
   return (
     <Card
       key="slack"
-      afterTitle={<SelectApp onSelect={setApp} />}
+      afterTitle={<SelectApp appType={appType} onSelect={setApp} />}
       title="Slack Messages"
       flex={1}
       elevation={2}

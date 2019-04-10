@@ -10,7 +10,6 @@ import {
 import React, { forwardRef, useCallback } from 'react'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
-import { Omit } from '../types'
 import { AppProps } from '../types/AppProps'
 import { NormalItem } from '../types/NormalItem'
 import { OrbitItemViewProps } from '../types/OrbitItemViewProps'

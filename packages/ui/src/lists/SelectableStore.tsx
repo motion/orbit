@@ -154,14 +154,16 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = key(row)
-    if (e.button !== 0 || !this.props.selectable) {
+    if ((e && e.button !== 0) || !this.props.selectable) {
       // set active only with primary mouse button, dont interfere w/context menus
       return
     }
-    e.stopPropagation()
-    if (e.shiftKey) {
-      // prevent text selection
-      e.preventDefault()
+    if (e) {
+      e.stopPropagation()
+      if (e.shiftKey) {
+        // prevent text selection
+        e.preventDefault()
+      }
     }
     let next = []
     const { active } = this

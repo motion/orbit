@@ -90,7 +90,6 @@ class GridStore {
   )
 
   mountItem(id: string, props: GridItemProps) {
-    console.log('mounting item')
     this.items[id] = props
   }
 

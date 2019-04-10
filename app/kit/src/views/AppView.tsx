@@ -70,7 +70,6 @@ export const AppView = memoIsEqualDeep(
 
     if (props.viewType === 'setup' || props.viewType === 'settings') {
       View = definition[props.viewType]
-      console.log('View', View)
     } else {
       const RenderApp = definition.app
       View = next => (

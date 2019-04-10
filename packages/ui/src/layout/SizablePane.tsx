@@ -102,9 +102,14 @@ export function SizablePane({ children, resizable, flex, collapsed, ...props }: 
     )
   } else {
     const isLast = props.index === total - 1
-    const fflex = typeof flex === 'undefined' && isLast ? 1 : flex
     element = (
-      <PaneChrome flex={fflex} {...sizeProps} maxWidth="100%" maxHeight="100%" {...props}>
+      <PaneChrome
+        flex={typeof flex === 'undefined' && isLast ? 1 : flex}
+        {...sizeProps}
+        maxWidth="100%"
+        maxHeight="100%"
+        {...props}
+      >
         {borderElement}
         {childElement}
       </PaneChrome>

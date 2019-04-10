@@ -61,6 +61,7 @@ export function TabItem(props: ButtonProps) {
       elevation={0}
       iconAfter={false}
       borderWidth={1}
+      borderPosition="outside"
       flex={typeof props.width === 'number' ? 'none' : 'inherit'}
       {...props}
     />

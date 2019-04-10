@@ -1,7 +1,7 @@
 import { gloss, Theme, ThemeContext } from '@o/gloss'
 import { useReaction } from '@o/use-store'
-import { differenceInCalendarDays, isEqual } from 'date-fns'
-import React, { useMemo, useRef } from 'react'
+import { differenceInCalendarDays } from 'date-fns'
+import React from 'react'
 import { BorderBottom } from '../Border'
 import { RoundButtonSmall } from '../buttons/RoundButtonSmall'
 import { memoIsEqualDeep } from '../helpers/memoHelpers'
@@ -86,39 +86,15 @@ export type ListItemProps = SizedSurfaceProps &
 // prevents hard re-renders on resize by taking out the style prop
 export const ListItem = React.forwardRef(
   ({ style, forwardRef, ...listProps }: ListItemProps, ref) => {
-    const lastProps = useRef(null)
-    const propId = useRef(0)
-
-    if (!lastProps.current) {
-      // ignore first time, just set value
-      lastProps.current = listProps
-    } else {
-      for (const key of Object.keys(listProps)) {
-        if (!isEqual(listProps[key], lastProps.current[key])) {
-          console.log('changed', key)
-          propId.current += 1
-          lastProps.current = listProps
-        }
-      }
-    }
-
-    // we have to do memo in here because for some reason it still re-renders
-    // even with memo on ListItemInner...
-    const children = useMemo(() => {
-      console.log('new props', propId.current)
-      return <ListItemInner {...listProps} />
-    }, [])
-
     return (
       <div style={style} ref={(forwardRef || ref) as any}>
-        {children}
+        <ListItemInner {...listProps} />
       </div>
     )
   },
 )
 
 const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
-  console.log('re render list item inner')
   const {
     date,
     location,

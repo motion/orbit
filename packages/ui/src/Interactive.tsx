@@ -5,19 +5,19 @@
  * @format
  */
 
-import { isEqual } from '@o/fast-compare';
-import { gloss } from '@o/gloss';
-import { on } from '@o/utils';
-import invariant from 'invariant';
-import React, { createContext, createRef } from 'react';
-import { Rect } from './helpers/geometry';
-import { isRightClick } from './helpers/isRightClick';
-import LowPassFilter from './helpers/LowPassFilter';
-import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap';
-import { InteractiveChrome } from './InteractiveChrome';
-import { ResizeObserverCallback } from './ResizeObserver';
-import { Omit } from './types';
-import { View, ViewProps } from './View/View';
+import { isEqual } from '@o/fast-compare'
+import { gloss } from '@o/gloss'
+import { on } from '@o/utils'
+import invariant from 'invariant'
+import React, { createContext, createRef } from 'react'
+import { Rect } from './helpers/geometry'
+import { isRightClick } from './helpers/isRightClick'
+import LowPassFilter from './helpers/LowPassFilter'
+import { getDistanceTo, maybeSnapLeft, maybeSnapTop, SNAP_SIZE } from './helpers/snap'
+import { InteractiveChrome } from './InteractiveChrome'
+import { ResizeObserverCallback } from './ResizeObserver'
+import { Omit } from './types'
+import { View, ViewProps } from './View/View'
 
 // TODO make prop
 const SIZE = 5

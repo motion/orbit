@@ -59,7 +59,7 @@ function SearchActions() {
       <Popover
         openOnClick
         closeOnClickAway
-        target={<Button icon="calendar" />}
+        target={<Button tooltip="Filter by date" icon="calendar" />}
         background
         borderRadius={10}
         elevation={4}

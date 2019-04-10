@@ -83,8 +83,8 @@ export class TreeItemsRow extends React.PureComponent<TreeItemsRowProps> {
       arrow = (
         <span onClick={this.onDoubleClick} role="button" tabIndex={-1}>
           <Icon
-            size={8}
-            name={element.expanded ? 'mindown' : 'minright'}
+            size={10}
+            name={element.expanded ? 'chevron-down' : 'chevron-right'}
             color={selected ? 'white' : colors.light80}
           />
         </span>

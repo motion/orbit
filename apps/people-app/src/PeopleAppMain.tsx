@@ -148,7 +148,7 @@ export function PeopleAppMain(props: AppProps) {
         <ContentInner>
           <Section>
             <StrongSubTitle>Topics</StrongSubTitle>
-            <Row flexFlow="row" flexWrap="wrap" padding={[5, 0, 0]}>
+            <Row flexDirection="row" flexWrap="wrap" padding={[5, 0, 0]}>
               {topics.map((item, index) => (
                 <RoundButton size={1.2} margin={[0, 6, 6, 0]} key={index}>
                   {item}

@@ -7,7 +7,7 @@ import { Icon } from './Icon'
 export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFilterStore }) {
   const stores = useStores()
   const queryFilterStore = props.queryFilterStore || stores.queryStore.queryFilters
-  const { /* hasAppFilters,  */ appFilters, sourceFilterToggler } = queryFilterStore
+  const { appFilters, sourceFilterToggler } = queryFilterStore
   return (
     <Popover
       openOnClick
@@ -16,11 +16,7 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
       borderRadius={10}
       elevation={4}
       popoverTheme="tooltip"
-      target={
-        <Button icon="filter">
-          {/* {hasAppFilters ? appFilters.filter(x => x.active).length : 'All'} */}
-        </Button>
-      }
+      target={<Button tooltip="Filter by app" icon="filter" />}
     >
       <Col {...props}>
         {!appFilters.length && (

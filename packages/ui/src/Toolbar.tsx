@@ -12,10 +12,10 @@ export type ToolbarProps = RowProps & {
 }
 
 const borderElement = {
-  top: <BorderBottom opacity={0.5} />,
-  bottom: <BorderTop opacity={0.5} />,
-  left: <BorderRight opacity={0.5} />,
-  right: <BorderLeft opacity={0.5} />,
+  top: <BorderBottom />,
+  bottom: <BorderTop />,
+  left: <BorderRight />,
+  right: <BorderLeft />,
 }
 
 const opposite = {

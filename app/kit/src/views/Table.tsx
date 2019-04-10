@@ -14,7 +14,6 @@ import {
 } from '@o/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useStoresSimple } from '../hooks/useStores'
-import { Omit } from '../types'
 
 export type TableColumns = { [key: string]: DataColumn | string }
 

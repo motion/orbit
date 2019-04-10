@@ -1,5 +1,5 @@
 import { Col, gloss, Row } from '@o/gloss'
-import React, { Children, cloneElement, createContext, isValidElement } from 'react'
+import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { View } from '../View/View'
 import { useVisiblity } from '../Visibility'
@@ -11,9 +11,14 @@ export type LayoutProps = {
   children?: React.ReactNode
 }
 
-export const LayoutContext = createContext<LayoutProps & { total: number; flexes: number[] }>({
+export const LayoutContext = createContext<{
+  total: number
+  flexes: number[]
+  type: LayoutProps['type']
+}>({
   total: 0,
   flexes: [],
+  type: 'row',
 })
 
 function getLayout(props: LayoutProps) {
@@ -36,11 +41,15 @@ export function Layout(props: LayoutProps) {
   })
   const total = Children.count(props.children)
   const flexes = Children.map(props.children, child => (child as any).props.flex || 1)
+  const memoValue = useMemo(() => ({ type: props.type, total, flexes }), [
+    props.type,
+    total,
+    JSON.stringify(flexes),
+  ])
+
   return (
     <View flex={1} overflow="hidden" maxHeight="100%" maxWidth="100%">
-      <LayoutContext.Provider value={{ ...props, total, flexes }}>
-        {getLayout(props)}
-      </LayoutContext.Provider>
+      <LayoutContext.Provider value={memoValue}>{getLayout(props)}</LayoutContext.Provider>
     </View>
   )
 }

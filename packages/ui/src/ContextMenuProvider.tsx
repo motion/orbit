@@ -1,5 +1,5 @@
 import { gloss } from '@o/gloss'
-import React, { createContext, useRef } from 'react'
+import React, { createContext, useCallback, useMemo, useRef } from 'react'
 
 export type ContextMenuHandler = {
   show: Function
@@ -26,28 +26,33 @@ export function ContextMenuProvider(props: {
 }) {
   const template = useRef([])
 
-  const showContextMenu = (options: any = { direct: false }) => {
-    const currentMenu = template.current
-    template.current = []
-    if (!options.direct) {
-      if (props.onContextMenu) {
-        props.onContextMenu(currentMenu)
-        return
+  const showContextMenu = useCallback(
+    (options: any = { direct: false }) => {
+      const currentMenu = template.current
+      template.current = []
+      if (!options.direct) {
+        if (props.onContextMenu) {
+          props.onContextMenu(currentMenu)
+          return
+        }
       }
+      const menu = require('electron').remote.Menu.buildFromTemplate(currentMenu)
+      menu.popup({ window: require('electron').remote.getCurrentWindow(), ...options })
+    },
+    [props.onContextMenu],
+  )
+
+  const memoValue = useMemo(() => {
+    return {
+      setItems: (items: MenuTemplate) => {
+        template.current = items
+      },
+      show: showContextMenu,
     }
-    const menu = require('electron').remote.Menu.buildFromTemplate(currentMenu)
-    menu.popup({ window: require('electron').remote.getCurrentWindow(), ...options })
-  }
+  }, [showContextMenu])
 
   return (
-    <ContextMenuContext.Provider
-      value={{
-        setItems: (items: MenuTemplate) => {
-          template.current = items
-        },
-        show: showContextMenu,
-      }}
-    >
+    <ContextMenuContext.Provider value={memoValue}>
       <Container onContextMenu={showContextMenu}>{props.children}</Container>
     </ContextMenuContext.Provider>
   )

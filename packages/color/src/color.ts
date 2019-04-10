@@ -193,14 +193,13 @@ export class Color {
   }
 
   unitObject() {
-    var rgb = this.rgb().object()
-    rgb.r /= 255
-    rgb.g /= 255
-    rgb.b /= 255
-    if (this.valpha !== 1) {
-      rgb.alpha = this.valpha
+    const { color, valpha } = this.rgb()
+    return {
+      r: color[0] / 255,
+      g: color[1] / 255,
+      b: color[2] / 255,
+      alpha: valpha,
     }
-    return rgb
   }
 
   round(places) {
@@ -413,7 +412,7 @@ Object.keys(colorConvert).forEach(function(model) {
   // conversion methods
   Color.prototype[model] = function() {
     if (this.model === model) {
-      return new Color(this)
+      return this
     }
     if (arguments.length) {
       return new Color(arguments, model)

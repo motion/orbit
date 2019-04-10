@@ -188,7 +188,6 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
     return (
       <Interactive
-        flex="none"
         className={this.props.className}
         minWidth={minWidth}
         maxWidth={maxWidth}

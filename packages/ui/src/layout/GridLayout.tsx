@@ -1,21 +1,26 @@
-import { gloss } from '@o/gloss'
 import { createStoreContext, react, shallow, useStore } from '@o/use-store'
-import React, { cloneElement, isValidElement, memo, useEffect } from 'react'
+import React, {
+  cloneElement,
+  HTMLAttributes,
+  isValidElement,
+  memo,
+  useCallback,
+  useEffect,
+} from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { isBrowser } from '../constants'
 import { isRightClick } from '../helpers/isRightClick'
 import { useDefaultProps } from '../hooks/useDefaultProps'
 import { SizedSurfaceProps } from '../SizedSurface'
-import { View, ViewProps } from '../View/View'
 
 if (isBrowser) {
   require('react-grid-layout/css/styles.css')
 }
 
-export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsUncontrolled
+export type GridLayoutProps = GridLayoutPropsControlled | GridLayoutPropsObject
 
 type Base = { cols?: Object }
-type GridLayoutPropsUncontrolled = Base & {
+type GridLayoutPropsObject = Base & {
   items: any[]
   renderItem: (a: any, index: number) => React.ReactNode
 }
@@ -85,7 +90,6 @@ class GridStore {
   )
 
   mountItem(id: string, props: GridItemProps) {
-    console.log('mounting item')
     this.items[id] = props
   }
 
@@ -99,21 +103,42 @@ const { useStore: useGridStore, Provider } = createStoreContext(GridStore)
 
 export const GridLayout = memo(function GridLayout(directProps: GridLayoutProps) {
   const props = useDefaultProps(defaultProps, directProps)
+
+  // TODO not great pattern here... maybe remove first option
+
   if ('items' in props) {
-    return <GridLayoutUncontrolled {...props} />
+    return <GridLayoutObject {...props} />
   }
-  return <GridLayoutControlled {...props} />
+  return <GridLayoutChildren {...props} />
 })
 
-export function GridLayoutControlled(props: GridLayoutPropsControlled) {
+export function GridLayoutChildren(props: GridLayoutPropsControlled) {
   const gridStore = useStore(GridStore, props)
   const childArr = Array.isArray(props.children) ? props.children : [props.children]
-  const items = childArr.map(
-    child =>
-      isValidElement(child) && (
-        <div key={child.key}>{cloneElement(child as any, { id: `${child.key}` })}</div>
-      ),
-  )
+  const items = childArr
+    .map((child, index) => {
+      if (!isValidElement(child)) {
+        throw new Error(`Invalid child: ${child}, must be a React Element`)
+      }
+      if (!child.key) {
+        console.error(
+          `Child without a key given to <GridLayout /> at index ${index}, must set a key.`,
+        )
+        return null
+      }
+      // you can pass in a <GridItem />...
+      const isGridItem = child.type instanceof GridItem
+      if (isGridItem) {
+        return <div key={child.key}>{cloneElement(child, { id: `${child.key}` })}</div>
+      }
+      // ... or a regular item like <Card />
+      return (
+        <GridItem key={child.key} id={`${child.key}`}>
+          {child}
+        </GridItem>
+      )
+    })
+    .filter(Boolean)
   let children = null
   if (!gridStore.layouts.lg) {
     children = <div style={{ display: 'none' }}>{items}</div>
@@ -142,7 +167,7 @@ const getSizes = items => {
   return sizes
 }
 
-function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
+function GridLayoutObject(props: GridLayoutPropsObject) {
   const gridStore = useStore(GridStore, props)
   const items = props.items.map((item, idx) => <div key={idx}>{props.renderItem(item, idx)}</div>)
   const sizes = getSizes(props.items)
@@ -151,8 +176,6 @@ function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
     console.log('set sizes')
     gridStore.setItems(sizes)
   }, [JSON.stringify(sizes)])
-
-  console.log('items', items, gridStore.layouts.lg)
 
   if (!gridStore.layouts.lg) {
     return null
@@ -171,11 +194,12 @@ function GridLayoutUncontrolled(props: GridLayoutPropsUncontrolled) {
   )
 }
 
-export type GridItemProps = ViewProps & {
-  id?: string
+export type GridItemProps = HTMLAttributes<HTMLDivElement> & {
   w?: number
   h?: number
 }
+
+// warning: performance is sensitive here
 
 export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemProps) {
   const store = useGridStore()
@@ -187,18 +211,16 @@ export function GridItem({ h = 1, w = 1, id, children, ...viewProps }: GridItemP
     }
   }, [h, w])
 
+  const onMouseDown = useCallback(e => isRightClick(e) && e.stopProgation(), [])
+
   return (
-    <GridItemChrome flex={1} onMouseDown={e => isRightClick(e) && e.stopProgation()} {...viewProps}>
+    <div onMouseDown={onMouseDown} {...viewProps}>
       {forwardSurfaceProps(children, { flex: 1 })}
-    </GridItemChrome>
+    </div>
   )
 }
 
-const GridItemChrome = gloss(View, {
-  '& img': {
-    userSelect: 'none',
-  },
-})
+GridItem.isGridItem = true
 
 // TODO this could be a pattern
 

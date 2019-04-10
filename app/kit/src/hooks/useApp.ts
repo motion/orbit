@@ -8,8 +8,8 @@ import { useAppBit } from './useAppBit'
 //   method: string
 // }
 
-type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> }
-type UnPromisify<T> = T extends (...args: any[]) => Promise<infer U>
+export type UnPromisifiedObject<T> = { [k in keyof T]: UnPromisify<T[k]> }
+export type UnPromisify<T> = T extends (...args: any[]) => Promise<infer U>
   ? (...args: any[]) => U
   : (...args: any[]) => T
 

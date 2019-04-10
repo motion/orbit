@@ -82,220 +82,218 @@ export type ListItemProps = SizedSurfaceProps &
     group?: string
   }
 
-export const ListItem = memoIsEqualDeep(
-  React.forwardRef(function ListItem(props: ListItemProps, ref) {
-    const {
-      date,
-      location,
-      preview,
-      icon,
-      subTitle,
-      title,
-      borderRadius,
-      children,
-      onClick,
-      titleProps,
-      subTitleProps,
-      padding,
-      onClickLocation,
-      separator,
-      oneLine,
-      before,
-      separatorProps,
-      above,
-      small,
-      iconBefore: iconBeforeProp,
-      subTextOpacity = 0.6,
-      after,
-      forwardRef,
-      indent = 0,
-      alignItems,
-      style,
-      ...surfaceProps
-    } = props
-    const isSelected = useIsSelected(props)
-    const showChildren = !props.hideBody
-    const showSubtitle = !!subTitle && !props.hideSubtitle
-    const showDate = !!date && !props.hideDate
-    const showIcon = !!icon && !props.hideIcon
-    const showTitle = !!title && !props.hideTitle
-    const showPreview = !!preview && !children && !props.hideBody
-    const showPreviewInSubtitle = !showTitle && oneLine
-    const sizeLineHeight = small ? 0.8 : 1
-    const defaultPadding = small ? [7, 9] : [8, 10]
-    const iconBefore = iconBeforeProp || !showTitle
-    const hasMouseDownEvent = !!surfaceProps.onMouseDown
-
-    // add a little vertical height for full height icons
-    if (small && iconBefore) {
-      defaultPadding[0] += 2
-    }
-
-    const iconElement = showIcon && getIcon(props)
-
-    const childrenElement = showChildren && !!children && (
-      <SimpleText size={0.9} alpha={subTextOpacity}>
-        {children}
-      </SimpleText>
-    )
-    const { activeThemeName } = React.useContext(ThemeContext)
-
-    const afterHeaderElement = (
-      <AfterHeader>
-        <Row>
-          {showDate && (
-            <Text alpha={0.6} size={0.9} fontWeight={400}>
-              <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
-            </Text>
-          )}
-        </Row>
-      </AfterHeader>
-    )
-
-    const locationElement = !!location && (
-      <>
-        <RoundButtonSmall
-          margin={[2, -1]}
-          maxWidth={120}
-          fontWeight={400}
-          fontSize={13}
-          alpha={subTextOpacity}
-          onClick={onClickLocation || undefined}
-          ellipse
-        >
-          {`${location}`}
-        </RoundButtonSmall>
-        <Space />
-      </>
-    )
-
+// this wrapper required for virtualization to measure/style */}
+// prevents hard re-renders on resize by taking out the style prop
+export const ListItem = React.forwardRef(
+  ({ style, forwardRef, ...listProps }: ListItemProps, ref) => {
     return (
-      <Theme alternate={isSelected ? 'selected' : null}>
-        {/* this wrapper required for virtualization to measure/style */}
-        <div style={style} ref={(forwardRef || ref) as any}>
-          {above}
-          {!!separator && (
-            <Theme name={activeThemeName}>
-              <Separator paddingTop={16} {...separatorProps}>
-                {separator}
-              </Separator>
-            </Theme>
-          )}
-          <SizedSurface
-            flexFlow="row"
-            alignItems="center"
-            themeSelect="listItem"
-            borderRadius={borderRadius}
-            onClick={(!hasMouseDownEvent && onClick) || undefined}
-            padding={padding || defaultPadding}
-            width="100%"
-            icon={iconBefore && showIcon && iconElement}
-            after={<BorderBottom right={5} left={5} opacity={0.2} />}
-            paddingLeft={indent ? indent * 22 : undefined}
-            {...surfaceProps}
-          >
-            {before}
-            <ListItemMainContent oneLine={oneLine}>
-              {showTitle && (
-                <ListItemTitleBar alignItems={alignItems}>
-                  {showIcon && !iconBefore && (
-                    <>
-                      {iconElement}
-                      <Space size="sm" />
-                    </>
-                  )}
-                  <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
-                    {title}
-                  </HighlightText>
-                  <Space />
-                  {props.afterTitle}
-                  {afterHeaderElement}
-                </ListItemTitleBar>
-              )}
-              {showSubtitle && (
-                <ListItemSubtitle>
-                  {showIcon && !showTitle && (
-                    <>
-                      {iconElement}
-                      <Space />
-                    </>
-                  )}
-                  {!!location && locationElement}
-                  {showPreviewInSubtitle ? (
-                    <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
-                  ) : null}
-                  {!!subTitle &&
-                    (typeof subTitle === 'string' ? (
-                      <HighlightText
-                        alpha={subTextOpacity}
-                        size={0.9}
-                        sizeLineHeight={sizeLineHeight}
-                        ellipse
-                        {...subTitleProps}
-                      >
-                        {subTitle}
-                      </HighlightText>
-                    ) : (
-                      subTitle
-                    ))}
-                  {!subTitle && (
-                    <>
-                      <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
-                    </>
-                  )}
-                  {!showTitle && (
-                    <>
-                      <Space />
-                      {afterHeaderElement}
-                    </>
-                  )}
-                </ListItemSubtitle>
-              )}
-              {!showSubtitle && !showTitle && (
-                <View
-                  position="absolute"
-                  right={Array.isArray(padding) ? padding[0] : padding}
-                  top={Array.isArray(padding) ? padding[1] : padding}
-                >
-                  {afterHeaderElement}
-                </View>
-              )}
-              {/* vertical space only if needed */}
-              {showSubtitle && !!(children || showPreview) && (
-                <div style={{ flex: 1, maxHeight: 4 }} />
-              )}
-              {showPreview && (
+      <div style={style} ref={(forwardRef || ref) as any}>
+        <ListItemInner {...listProps} />
+      </div>
+    )
+  },
+)
+
+const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
+  const {
+    date,
+    location,
+    preview,
+    icon,
+    subTitle,
+    title,
+    borderRadius,
+    children,
+    onClick,
+    titleProps,
+    subTitleProps,
+    padding,
+    onClickLocation,
+    separator,
+    oneLine,
+    before,
+    separatorProps,
+    above,
+    small,
+    iconBefore: iconBeforeProp,
+    subTextOpacity = 0.6,
+    after,
+    indent = 0,
+    alignItems,
+    ...surfaceProps
+  } = props
+  const isSelected = useIsSelected(props)
+  const showChildren = !props.hideBody
+  const showSubtitle = !!subTitle && !props.hideSubtitle
+  const showDate = !!date && !props.hideDate
+  const showIcon = !!icon && !props.hideIcon
+  const showTitle = !!title && !props.hideTitle
+  const showPreview = !!preview && !children && !props.hideBody
+  const showPreviewInSubtitle = !showTitle && oneLine
+  const sizeLineHeight = small ? 0.8 : 1
+  const defaultPadding = small ? [7, 9] : [8, 10]
+  const iconBefore = iconBeforeProp || !showTitle
+  const hasMouseDownEvent = !!surfaceProps.onMouseDown
+
+  // add a little vertical height for full height icons
+  if (small && iconBefore) {
+    defaultPadding[0] += 2
+  }
+
+  const iconElement = showIcon && getIcon(props)
+
+  const childrenElement = showChildren && !!children && (
+    <SimpleText size={0.9} alpha={subTextOpacity}>
+      {children}
+    </SimpleText>
+  )
+  const { activeThemeName } = React.useContext(ThemeContext)
+
+  const afterHeaderElement = (
+    <AfterHeader>
+      <Row>
+        {showDate && (
+          <Text alpha={0.6} size={0.9} fontWeight={400}>
+            <DateFormat date={date} nice={differenceInCalendarDays(Date.now(), date) < 7} />
+          </Text>
+        )}
+      </Row>
+    </AfterHeader>
+  )
+
+  const locationElement = !!location && (
+    <>
+      <RoundButtonSmall
+        margin={[2, -1]}
+        maxWidth={120}
+        fontWeight={400}
+        fontSize={13}
+        alpha={subTextOpacity}
+        onClick={onClickLocation || undefined}
+        ellipse
+      >
+        {`${location}`}
+      </RoundButtonSmall>
+      <Space />
+    </>
+  )
+
+  return (
+    <Theme alternate={isSelected ? 'selected' : null}>
+      {above}
+      {!!separator && (
+        <Theme name={activeThemeName}>
+          <Separator paddingTop={16} {...separatorProps}>
+            {separator}
+          </Separator>
+        </Theme>
+      )}
+      <SizedSurface
+        flexFlow="row"
+        alignItems="center"
+        themeSelect="listItem"
+        borderRadius={borderRadius}
+        onClick={(!hasMouseDownEvent && onClick) || undefined}
+        padding={padding || defaultPadding}
+        width="100%"
+        icon={iconBefore && showIcon && iconElement}
+        after={<BorderBottom right={5} left={5} opacity={0.2} />}
+        paddingLeft={indent ? indent * 22 : undefined}
+        {...surfaceProps}
+      >
+        {before}
+        <ListItemMainContent oneLine={oneLine}>
+          {showTitle && (
+            <ListItemTitleBar alignItems={alignItems}>
+              {showIcon && !iconBefore && (
                 <>
-                  {locationElement}
-                  <Preview>
-                    {typeof preview !== 'string' && preview}
-                    {typeof preview === 'string' && (
-                      <HighlightText
-                        alpha={subTextOpacity}
-                        size={1}
-                        sizeLineHeight={0.9}
-                        ellipse={3}
-                      >
-                        {preview}
-                      </HighlightText>
-                    )}
-                  </Preview>
+                  {iconElement}
+                  <Space size="sm" />
                 </>
               )}
-              {!showPreviewInSubtitle && !!(locationElement || childrenElement) && (
-                <Row>
-                  {locationElement}
-                  {childrenElement}
-                </Row>
+              <HighlightText flex={1} ellipse fontWeight={400} {...titleProps}>
+                {title}
+              </HighlightText>
+              <Space />
+              {props.afterTitle}
+              {afterHeaderElement}
+            </ListItemTitleBar>
+          )}
+          {showSubtitle && (
+            <ListItemSubtitle>
+              {showIcon && !showTitle && (
+                <>
+                  {iconElement}
+                  <Space />
+                </>
               )}
-            </ListItemMainContent>
-            {after}
-          </SizedSurface>
-        </div>
-      </Theme>
-    )
-  }),
-)
+              {!!location && locationElement}
+              {showPreviewInSubtitle ? (
+                <div style={{ flex: 1, overflow: 'hidden' }}>{childrenElement}</div>
+              ) : null}
+              {!!subTitle &&
+                (typeof subTitle === 'string' ? (
+                  <HighlightText
+                    alpha={subTextOpacity}
+                    size={0.9}
+                    sizeLineHeight={sizeLineHeight}
+                    ellipse
+                    {...subTitleProps}
+                  >
+                    {subTitle}
+                  </HighlightText>
+                ) : (
+                  subTitle
+                ))}
+              {!subTitle && (
+                <>
+                  <div style={{ flex: showPreviewInSubtitle ? 0 : 1 }} />
+                </>
+              )}
+              {!showTitle && (
+                <>
+                  <Space />
+                  {afterHeaderElement}
+                </>
+              )}
+            </ListItemSubtitle>
+          )}
+          {!showSubtitle && !showTitle && (
+            <View
+              position="absolute"
+              right={Array.isArray(padding) ? padding[0] : padding}
+              top={Array.isArray(padding) ? padding[1] : padding}
+            >
+              {afterHeaderElement}
+            </View>
+          )}
+          {/* vertical space only if needed */}
+          {showSubtitle && !!(children || showPreview) && <div style={{ flex: 1, maxHeight: 4 }} />}
+          {showPreview && (
+            <>
+              {locationElement}
+              <Preview>
+                {typeof preview !== 'string' && preview}
+                {typeof preview === 'string' && (
+                  <HighlightText alpha={subTextOpacity} size={1} sizeLineHeight={0.9} ellipse={3}>
+                    {preview}
+                  </HighlightText>
+                )}
+              </Preview>
+            </>
+          )}
+          {!showPreviewInSubtitle && !!(locationElement || childrenElement) && (
+            <Row>
+              {locationElement}
+              {childrenElement}
+            </Row>
+          )}
+        </ListItemMainContent>
+        {after}
+      </SizedSurface>
+    </Theme>
+  )
+})
 
 const ListItemTitleBar = gloss(View, {
   width: '100%',

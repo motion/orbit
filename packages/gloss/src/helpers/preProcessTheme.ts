@@ -30,17 +30,21 @@ export function getAlternateTheme(
   if (!altCache.has(theme)) {
     altCache.set(theme, {})
   }
-  const cachedThemes = altCache.get(theme)
-  if (cachedThemes) {
-    const cached = cachedThemes[name]
-    if (cached) {
-      return cached
-    }
-    const next = createAlternateTheme(theme, name, shouldFallback)
-    cachedThemes[name] = next
-    return next
+
+  const alts = altCache.get(theme)
+
+  if (!alts) {
+    throw new Error('unreachable')
   }
-  throw new Error('unreachable')
+
+  const cached = alts[name]
+  if (cached) {
+    return cached
+  }
+
+  const next = createAlternateTheme(theme, name, shouldFallback)
+  alts[name] = next
+  return next
 }
 
 function createAlternateTheme(theme: ThemeObject, alt: string, shouldFallback?: boolean) {

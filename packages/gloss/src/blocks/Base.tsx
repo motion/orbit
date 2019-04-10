@@ -8,9 +8,9 @@ export type GlossBaseProps = {
   // our default styling supports is through preProcessTheme
   alt?: string
   // our default styling supports pseudos through propsToStyles
-  hoverStyle?: CSSPropertySetStrict | boolean | null
-  activeStyle?: CSSPropertySetStrict | boolean | null
-  focusStyle?: CSSPropertySetStrict | boolean | null
+  hoverStyle?: CSSPropertySetStrict | false | null
+  activeStyle?: CSSPropertySetStrict | false | null
+  focusStyle?: CSSPropertySetStrict | false | null
 }
 
 export type BaseProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> &

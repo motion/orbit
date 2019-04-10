@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { forwardRef, useCallback, useContext } from 'react'
 import { useThrottleFn } from '../hooks/useThrottleFn'
 import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 import { GetSurfaceTheme } from '../Surface'
@@ -29,7 +29,10 @@ export type InputProps = React.HTMLAttributes<HTMLInputElement> &
     forwardRef?: any
   }
 
-export function Input({ onEnter, type = 'input', ...props }: InputProps) {
+export const Input = forwardRef(function Input(
+  { onEnter, type = 'input', ...props }: InputProps,
+  ref,
+) {
   const context = useContext(FormContext)
 
   // update form context every so often, avoid too many re-renders
@@ -79,8 +82,16 @@ export function Input({ onEnter, type = 'input', ...props }: InputProps) {
     [props.name, props.onChange, context],
   )
 
-  return <SimpleInput {...props} type={type} onKeyDown={onKeyDown} onChange={onChange} />
-}
+  return (
+    <SimpleInput
+      forwardRef={ref}
+      {...props}
+      type={type}
+      onKeyDown={onKeyDown}
+      onChange={onChange}
+    />
+  )
+})
 
 function SimpleInput(props: SizedSurfaceProps) {
   return (

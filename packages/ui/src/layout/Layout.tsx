@@ -2,7 +2,7 @@ import { Col, gloss, Row } from '@o/gloss'
 import React, { Children, cloneElement, createContext, isValidElement, useMemo } from 'react'
 import { useParentNodeSize } from '../hooks/useParentNodeSize'
 import { View } from '../View/View'
-import { useVisiblity } from '../Visibility'
+import { useVisibility } from '../Visibility'
 import { MasonryLayout } from './MasonryLayout'
 import { Pane } from './Pane'
 
@@ -55,7 +55,7 @@ export function Layout(props: LayoutProps) {
 }
 
 function FlexLayout(props: LayoutProps) {
-  const visibility = useVisiblity()
+  const visibility = useVisibility()
   const { ref, ...size } = useParentNodeSize({
     disable: !visibility,
     throttle: 200,

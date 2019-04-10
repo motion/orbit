@@ -20,7 +20,7 @@ export function AppsMainNew() {
     <>
       <Row alignItems="center">
         <Popover
-          themeName="tooltip"
+          popoverTheme="tooltip"
           borderRadius={10}
           elevation={1}
           openOnClick

@@ -7,7 +7,7 @@ import { BitTitleBar } from './BitTitlebar'
 
 const defaultItemProps = {
   itemProps: {
-    padding: [1, 6],
+    padding: [1, 8],
     '&:hover': {
       background: [0, 0, 0, 0.02],
     },

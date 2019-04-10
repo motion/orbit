@@ -16,7 +16,6 @@ export function AppCard<A extends AppDefinition>({
   ...cardProps
 }: AppCardProps<A>) {
   const [app, setApp] = useState<AppBit>(null)
-  const api = useApp(appType, app)
   return (
     <Card
       key="slack"
@@ -26,7 +25,16 @@ export function AppCard<A extends AppDefinition>({
       elevation={2}
       {...cardProps}
     >
-      <Suspense fallback={<Loading />}>{app && children({ api })}</Suspense>
+      <Suspense fallback={<Loading />}>
+        <AppCardInner appType={appType} app={app}>
+          {children}
+        </AppCardInner>
+      </Suspense>
     </Card>
   )
+}
+
+function AppCardInner(props: { appType: AppDefinition; app: AppBit; children: any }) {
+  const api = useApp(props.appType, props.app)
+  return props.app && props.children({ api })
 }

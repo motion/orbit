@@ -142,7 +142,7 @@ function TabsControlled({
           width={width || tabWidth}
           {...isActive && tabPropsActive}
           active={isActive}
-          onMouseDown={
+          onClick={
             !isActive && onActive
               ? (event: MouseEvent) => {
                   if (event.target !== closeButton) {
@@ -158,7 +158,7 @@ function TabsControlled({
           {closable && (
             <CloseButton
               ref={ref => (closeButton = ref)}
-              onMouseDown={() => {
+              onClick={() => {
                 if (isActive && onActive) {
                   const idx = keys.indexOf(id)
                   const newActive = keys[idx + 1] || keys[idx - 1] || null
@@ -199,6 +199,7 @@ function TabsControlled({
   return (
     <TabContainer>
       <Row
+        maxWidth="100%"
         margin={centered ? 'auto' : 'inherit'}
         justifyContent={centered ? 'center' : 'inherit'}
         {...rest}

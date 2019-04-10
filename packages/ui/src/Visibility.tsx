@@ -1,4 +1,5 @@
 import { createStoreContext, useStore } from '@o/use-store'
+import { selectDefined } from '@o/utils'
 import React, { useContext } from 'react'
 
 class VisibilityStore {
@@ -9,22 +10,23 @@ class VisibilityStore {
   }
 }
 
-const { Context, Provider, useStore: useVisiblityStore } = createStoreContext(VisibilityStore)
+const { Context, Provider, useStore: useVisibilityStore } = createStoreContext(VisibilityStore)
 
 export function Visibility({ visible, children }: { visible: boolean; children: any }) {
   const store = useStore(VisibilityStore, { visible })
   return <Provider value={store}>{children}</Provider>
 }
 
-export function useVisiblityContext() {
+export function useVisibilityContext() {
   return useContext(Context) || { getVisible: () => true }
 }
 
-export function useVisiblity() {
+export function useVisibility() {
   try {
-    const store = useVisiblityStore()
-    return store.getVisible() || true
+    const store = useVisibilityStore()
+    return selectDefined(store.getVisible(), true)
   } catch {
+    console.warn('catching error with visibility')
     return true
   }
 }

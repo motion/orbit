@@ -20,7 +20,7 @@ export function Collapsable(props: CollapsableProps & { children: React.ReactNod
 }
 
 export const CollapseArrow = ({ collapsed }) => (
-  <Chevron name={collapsed ? 'triangle-right' : 'triangle-down'} size={12} />
+  <Chevron name={collapsed ? 'chevron-right' : 'chevron-down'} size={12} />
 )
 
 const Chevron = gloss(Icon, {

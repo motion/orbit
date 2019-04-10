@@ -11,7 +11,6 @@ import {
   SearchInput,
   Section,
   Select,
-  Space,
   Tab,
   Tabs,
   useFetch,
@@ -52,29 +51,18 @@ export function CustomApp1() {
                 filters={form.getFilters(['active', 'type'])}
               />
             </Pane>
-            <Pane pad scrollable="x" flexFlow="row">
+            <Pane space pad scrollable="x" flexDirection="row">
               {highlighted.map(row => (
-                <>
-                  <Card
-                    key={row.id}
-                    title={row.name}
-                    subTitle={row.username}
-                    minWidth={200}
-                    minHeight={200}
-                    elevation={1}
-                    pad
-                  >
-                    <DefinitionList row={row} />
-                  </Card>
-                  <Space />
-                </>
+                <Card key={row.id} title={row.name} subTitle={row.username} elevation={2} pad>
+                  <DefinitionList row={row} />
+                </Card>
               ))}
             </Pane>
           </Layout>
         </Pane>
 
         <Pane>
-          <Tabs padding={10}>
+          <Tabs padding={10} centered sizeRadius={2}>
             {highlighted.map(row => (
               <Tab key={row.id} id={row.id} label={row.name}>
                 <PersonInfo row={row} />
@@ -91,8 +79,8 @@ function PersonInfo(props: { row: any }) {
   const [album, setAlbum] = useState(null)
   return (
     <Layout type="column">
-      <Pane scrollable>
-        <Section scrollable bordered title={props.row.name}>
+      <Pane>
+        <Section scrollable="y" bordered title={props.row.name}>
           <Fieldsets rows={[props.row]} />
         </Section>
       </Pane>

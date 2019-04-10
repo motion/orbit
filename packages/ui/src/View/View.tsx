@@ -60,7 +60,7 @@ export type PadProps = {
       }
 }
 
-const getPadding = (props: PadProps & { padding?: any }) => {
+export const getPadding = (props: PadProps & { padding?: any }) => {
   if (typeof props.padding !== 'undefined') {
     return {
       padding: props.padding,
@@ -95,7 +95,9 @@ const getPadding = (props: PadProps & { padding?: any }) => {
 }
 
 // plain padded view
-export const PaddedView = gloss(Col).theme(getPadding)
+export const PaddedView = gloss({
+  flexDirection: 'inherit',
+}).theme(getPadding, props => props)
 
 export function getBetweenPad(pad: PadProps['pad']): Sizes {
   if (Array.isArray(pad)) {

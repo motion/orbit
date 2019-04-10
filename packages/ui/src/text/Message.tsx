@@ -1,20 +1,31 @@
 import { gloss } from '@o/gloss'
-import { SimpleText } from './SimpleText'
+import React from 'react'
+import { SizedSurface, SizedSurfaceProps } from '../SizedSurface'
 
-export const Message = gloss(SimpleText, {
-  userSelect: 'auto',
-  lineHeight: '1.4rem',
-  cursor: 'text',
-  whiteSpace: 'normal',
-  display: 'block',
-  width: '100%',
-  borderRadius: 8,
-  padding: [10, 10],
-}).theme((_, theme) => ({
-  background: theme.backgroundZebra || theme.background,
-  color: theme.color,
-}))
+export const Message = gloss<SizedSurfaceProps>(
+  props => <SizedSurface {...defaultProps} {...props} />,
+  {
+    userSelect: 'text',
+    lineHeight: '1.4rem',
+    cursor: 'text',
+    whiteSpace: 'normal',
+    width: '100%',
+  },
+)
 
-Message.defaultProps = {
+const defaultProps: Partial<SizedSurfaceProps> = {
   className: 'text',
+  hoverStyle: false,
+  activeStyle: false,
+  flexDirection: 'row',
+  pad: 'sm',
+  sizeRadius: true,
+  iconSize: 22,
+  iconAfter: true,
+  iconProps: {
+    margin: 4,
+  },
+  elementProps: {
+    display: 'block',
+  },
 }

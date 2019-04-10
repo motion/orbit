@@ -143,7 +143,7 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
   const iconElement = showIcon && getIcon(props)
 
   const childrenElement = showChildren && !!children && (
-    <SimpleText size={0.9} alpha={subTextOpacity}>
+    <SimpleText margin={['auto', 0]} flex={1} size={0.9} alpha={subTextOpacity}>
       {children}
     </SimpleText>
   )
@@ -166,15 +166,13 @@ const ListItemInner = memoIsEqualDeep((props: ListItemProps) => {
       <RoundButtonSmall
         margin={[2, -1]}
         maxWidth={120}
-        fontWeight={400}
-        fontSize={13}
         alpha={subTextOpacity}
         onClick={onClickLocation || undefined}
         ellipse
       >
         {`${location}`}
       </RoundButtonSmall>
-      <Space />
+      <Space size="sm" />
     </>
   )
 

@@ -103,21 +103,6 @@
   flex-flow: row;
 }
 
-#app code,
-#app pre code {
-  background: #fff;
-  border: 1px solid #eee;
-  font-weight: 400;
-}
-
-#app .theme-dark code,
-#app .theme-dark pre code {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 700;
-}
-
 #app code {
   line-height: 16px;
   border-radius: 5px;

@@ -71,10 +71,9 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
     ...viewProps
   } = props
   const hasTitle = isAnyDefined(title, afterTitle)
-  const outerPad = hasTitle ? false : pad
   const innerPad = selectDefined(padInner, !!(hasTitle || bordered) ? pad : null)
   const spaceSize = space === true ? selectDefined(size, space) : space
-  const showTitleAbove = scrollable !== 'y' || fixedTitle
+  const showTitleAbove = selectDefined(fixedTitle, !!pad, !!scrollable)
   const titleElement = hasTitle && (
     <>
       <TitleRow
@@ -112,8 +111,8 @@ export const Section = forwardRef(function Section(direct: SectionProps, ref) {
       maxHeight={maxHeight}
       maxWidth={maxWidth}
       minHeight={minHeight}
-      overflow={bordered ? 'hidden' : 'inherit'}
-      pad={outerPad}
+      overflow={scrollable ? 'hidden' : 'visible'}
+      pad={!showTitleAbove ? pad : false}
       size={size}
     >
       {showTitleAbove && titleElement}

@@ -1,3 +1,7 @@
+// until next hotkeys patches types
+import * as HotKeys from 'react-hotkeys'
+export const configureHotKeys = HotKeys['configure']
+
 export * from '@o/color'
 export {
   Absolute,
@@ -17,7 +21,7 @@ export {
   ThemeProvide,
 } from '@o/gloss'
 export { arrayMove } from '@o/react-sortable-hoc'
-export * from 'react-hotkeys'
+export { GlobalHotKeys, HotKeys, KeySequence } from 'react-hotkeys'
 export * from './Arrow'
 export * from './Avatar'
 export * from './Border'
@@ -161,7 +165,6 @@ export * from './text/SubTitle'
 export * from './text/Text'
 export * from './text/TimeAgo'
 export * from './text/Title'
-export * from './TitleBar'
 export * from './TitleRow'
 export * from './Toolbar'
 export * from './Tooltip'

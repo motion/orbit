@@ -1,6 +1,6 @@
 import { command } from '@o/bridge'
 import { AppBit, AppForceCancelCommand, AppForceSyncCommand } from '@o/models'
-import { SegmentedRow, Text, TitleBarButton, TitleBarSpace, View } from '@o/ui'
+import { Button, Space, SpaceGroup, Text, View } from '@o/ui'
 import * as React from 'react'
 import { useAppSyncState, useJobs } from '../'
 import { removeApp } from '../helpers/removeApp'
@@ -29,12 +29,12 @@ export function ManageSyncStatus(props: { app: AppBit }) {
           </Text>
           {!removeJobs.length && (
             <>
-              <TitleBarSpace />
-              <TitleBarButton onClick={() => command(AppForceCancelCommand, { appId })} size={0.8}>
+              <Space />
+              <Button onClick={() => command(AppForceCancelCommand, { appId })} size={0.8}>
                 Cancel
-              </TitleBarButton>
-              <TitleBarSpace />
-              <TitleBarSpace />
+              </Button>
+              <Space />
+              <Space />
             </>
           )}
         </>
@@ -43,20 +43,20 @@ export function ManageSyncStatus(props: { app: AppBit }) {
       <Text size={0.9} fontWeight={400} alpha={0.6}>
         {(bitsCount || 0).toLocaleString()} total
       </Text>
-      <TitleBarSpace />
-      <SegmentedRow spaced>
-        <TitleBarButton
+      <Space />
+      <SpaceGroup space="sm">
+        <Button
           disabled={removeJobs.length > 0 || activeJobs.length > 0}
           tooltip="Sync"
           icon="refresh"
           onClick={() => handleRefresh(appId)}
         />
-        <TitleBarButton
+        <Button
           icon="criss"
           tooltip={`Remove ${props.app.name}`}
           onClick={() => removeApp(props.app)}
         />
-      </SegmentedRow>
+      </SpaceGroup>
     </>
   )
 }

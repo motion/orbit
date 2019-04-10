@@ -17,7 +17,7 @@ import { getElevation } from './View/elevate'
 
 export type PopoverProps = Omit<SurfaceProps, 'background'> & {
   // custom theme for just the popover content
-  themeName?: string
+  popoverTheme?: string
   // if you set a group, it acts as an ID that makes sure only ONE popover
   // within that ID is ever open
   group?: string
@@ -101,6 +101,7 @@ const defaultProps = {
   closeAnimation: 'bounce 300ms',
   adjust: [0, 0],
   delay: 16,
+  group: 'global',
 }
 
 type PopoverPropsWithDefaults = PopoverProps & typeof defaultProps
@@ -297,7 +298,7 @@ const positionStateX = (
   return { arrowLeft: Math.round(arrowLeft), left: Math.round(left) }
 }
 
-export type PopoverChildrenFn = ((showPopover: boolean) => React.ReactNode)
+export type PopoverChildrenFn = (showPopover: boolean) => React.ReactNode
 
 const INVERSE = {
   top: 'bottom',
@@ -947,7 +948,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       width,
       transition,
       noPortal,
-      themeName,
+      popoverTheme,
       ...restProps
     } = this.props
     const {
@@ -961,11 +962,10 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       direction,
     } = this.state
     const { isMeasuring, showPopover } = this
-    const backgroundProp =
-      !background || background === true ? null : { background: `${background}` }
+    const backgroundProp = !background || background === true ? null : { background }
     const hasMeasuredOnce = !!this.state.popoverBounds
 
-    const popoverContent = (
+    let popoverContent = (
       <PopoverContainer
         data-towards={direction}
         isOpen={showPopover}
@@ -1032,6 +1032,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
                 overflow="hidden"
                 elevation={elevation}
                 noInnerElement
+                opacity={1}
                 {...restProps}
                 {...backgroundProp}
               >
@@ -1045,10 +1046,17 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
       </PopoverContainer>
     )
 
-    const popoverChildren = <Theme name={themeName}>{popoverContent}</Theme>
+    if (popoverTheme) {
+      popoverContent = <Theme name={popoverTheme}>{popoverContent}</Theme>
+    }
 
     if (noPortal) {
-      return popoverChildren
+      return (
+        <>
+          {target}
+          {popoverContent}
+        </>
+      )
     }
 
     return (
@@ -1062,7 +1070,7 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
               display: hasMeasuredOnce ? 'inherit' : 'none',
             }}
           >
-            {popoverChildren}
+            {popoverContent}
           </span>
         </Portal>
       </>

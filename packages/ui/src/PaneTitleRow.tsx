@@ -1,6 +1,7 @@
 import { gloss, Row } from '@o/gloss'
 import React from 'react'
 import { CollapsableProps, CollapseArrow } from './Collapsable'
+import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
 import { View } from './View/View'
@@ -29,7 +30,12 @@ export function PaneTitleRow({
   return (
     <PanelHeader onClick={onCollapse}>
       {before}
-      {collapsable && <CollapseArrow collapsed={collapsed} />}
+      {collapsable && (
+        <>
+          <CollapseArrow collapsed={collapsed} />
+          <Space size="xs" />
+        </>
+      )}
       <View flex={1}>
         <Text size={0.9} alpha={0.65} {...textProps}>
           {title}

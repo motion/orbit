@@ -37,6 +37,7 @@ export function Toolbar({
   return (
     <SurfacePassProps
       borderWidth={0}
+      sizeRadius={1.2}
       size={size}
       iconAfter
       tooltipProps={{ towards: opposite[attach] as any }}

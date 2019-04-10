@@ -374,8 +374,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     if (!onResize) {
       return
     }
-    let fwidth = Math.max(this.props.minWidth, width)
-    let fheight = Math.max(this.props.minHeight, height)
+    let fwidth = Math.min(this.props.maxWidth, Math.max(this.props.minWidth, width))
+    let fheight = Math.min(this.props.maxHeight, Math.max(this.props.minHeight, height))
     onResize(fwidth, fheight, width, height, this.state.resizingSides)
   }
 

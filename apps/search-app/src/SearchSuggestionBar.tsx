@@ -4,11 +4,11 @@ import React from 'react'
 import { getDateAbbreviated } from './getDateAbbreviated'
 
 const filterAlt = {
-  date: 'blue',
-  source: 'yellow',
-  person: 'orange',
-  type: 'green',
-  location: 'red',
+  date: 'lightBlue',
+  source: 'lightYellow',
+  person: 'lightOrange',
+  type: 'lightGreen',
+  location: 'lightRed',
 }
 
 export function SearchSuggestionBar() {

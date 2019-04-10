@@ -8,7 +8,7 @@ import { useSurfaceProps } from '../Surface'
 
 export type ButtonProps = React.HTMLAttributes<HTMLButtonElement> &
   SizedSurfaceProps & {
-    acceptsHovered?: boolean
+    ignoreHover?: boolean
     iconProps?: Partial<IconProps>
   }
 
@@ -42,7 +42,6 @@ function ButtonInner(buttonProps: ButtonProps) {
       sizeLineHeight
       justifyContent="center"
       borderWidth={selectDefined(theme.borderWidth, 1)}
-      // elevation={selectDefined(props.elevation, props.chromeless ? 0 : 1)}
       glint
       glintBottom
       pointerEvents={props.disabled ? 'none' : undefined}
@@ -57,7 +56,7 @@ export const Button = forwardRef(function Button(props: ButtonProps, ref) {
   const uiContext = useContext(UIContext)
 
   let element = null
-  if (props.acceptsHovered && typeof uiContext.hovered === 'boolean') {
+  if (props.ignoreHover !== false && typeof uiContext.hovered === 'boolean') {
     element = <ButtonInner hover={uiContext.hovered} forwardRef={ref} {...props} />
   } else {
     element = <ButtonInner forwardRef={ref} {...props} />

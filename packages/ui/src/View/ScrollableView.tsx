@@ -2,7 +2,9 @@ import { gloss } from '@o/gloss'
 import React, { forwardRef } from 'react'
 import { PaddedView, View, ViewProps } from './View'
 
-export type ScrollableViewProps = ViewProps & {
+// dont allow flexFlow so we force props down through flexDirection
+
+export type ScrollableViewProps = Omit<ViewProps, 'flexFlow'> & {
   hideScrollbars?: boolean
   scrollable?: boolean | 'x' | 'y'
 }

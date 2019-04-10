@@ -70,7 +70,7 @@ export function MenuChrome(props: { children: any }) {
           forgiveness={pad}
           edgePadding={0}
           elevation={20}
-          themeName="dark"
+          popoverTheme="dark"
         />
       </animated.div>
     </>

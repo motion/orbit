@@ -16,20 +16,16 @@ type RowProps = {
 
 const TableCell = gloss(View, {
   padding: [4, 0],
+  marginBottom: 'auto',
 })
 
 const FormTableRow = gloss(Row, {
   width: '100%',
-  maxWidth: 500,
   minHeight: 32,
   alignItems: 'center',
 })
 
-const FormTableLabel = ({ children }) => (
-  <TableCell width="30%" maxWidth={125}>
-    {children}
-  </TableCell>
-)
+const FormTableLabel = ({ children }) => <TableCell width="30%">{children}</TableCell>
 
 export const FormTableValue = ({ children }) => <TableCell width="70%">{children}</TableCell>
 
@@ -55,7 +51,6 @@ export function SimpleFormField({ name, label, children }: SimpleFormFieldProps)
           {children}
           {error && (
             <>
-              <Space />
               <SimpleText alt="error">{error}</SimpleText>
             </>
           )}

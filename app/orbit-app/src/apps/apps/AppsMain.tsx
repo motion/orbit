@@ -1,5 +1,5 @@
 import { AppMainView, AppProps, removeApp, useAppBit } from '@o/kit'
-import { FormField, Section, SubSection, Title, TitleBarButton } from '@o/ui'
+import { Button, FormField, Section, SubSection, Title } from '@o/ui'
 import React from 'react'
 import { AppsMainAddApp } from './AppsMainAddApp'
 import { AppsMainNew } from './AppsMainNew'
@@ -25,7 +25,7 @@ export function AppsMain(props: AppProps) {
           afterTitle={
             app &&
             app.tabDisplay !== 'permanent' && (
-              <TitleBarButton
+              <Button
                 icon="cross"
                 tooltip={`Remove ${props.title}`}
                 onClick={() => removeApp(app)}

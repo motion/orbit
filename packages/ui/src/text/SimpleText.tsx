@@ -32,8 +32,8 @@ export const SimpleTextElement = gloss({
   const textProps = propsToTextSize(props)
   const color = props.color || theme.color
   return {
-    ...props,
     ...(props.ellipse && ellipseStyle),
+    ...props,
     ...textProps,
     ...alphaColor({ color }, props),
   }

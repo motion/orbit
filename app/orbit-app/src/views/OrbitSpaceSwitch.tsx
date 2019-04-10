@@ -91,7 +91,7 @@ export const OrbitSpaceSwitch = memo(function OrbitSpaceSwitch() {
         openOnClick
         closeOnClickAway
         closeOnClick
-        themeName="light"
+        popoverTheme="light"
         width={300}
         background
         borderRadius={borderRadius}

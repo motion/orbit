@@ -83,8 +83,8 @@ export function BitConversation(props: AppBitMainProps) {
 
   return (
     <>
-      <Row alignItems="center" justifyContent="center" width="100%" margin={[20, 0]}>
-        <Tabs onActive={i => setActivePane(+i)} active={`${activePane}`}>
+      <Row alignItems="center" justifyContent="center" width="100%" margin={[-40, 0, 20]}>
+        <Tabs centered sizeRadius={2} onActive={i => setActivePane(+i)} active={`${activePane}`}>
           <Tab id="0" label="Conversation" />
           <Tab id="2" label="Afterwards" />
         </Tabs>

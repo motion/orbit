@@ -12,11 +12,10 @@ export function AppFilterButton(props: ViewProps & { queryFilterStore?: QueryFil
     <Popover
       openOnClick
       closeOnClickAway
-      group="filters"
       background
       borderRadius={10}
       elevation={4}
-      themeName="tooltip"
+      popoverTheme="tooltip"
       target={
         <Button icon="filter">
           {/* {hasAppFilters ? appFilters.filter(x => x.active).length : 'All'} */}

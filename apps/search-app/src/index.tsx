@@ -59,16 +59,20 @@ function SearchActions() {
       <Popover
         openOnClick
         closeOnClickAway
-        group="filters"
         target={<Button icon="calendar" />}
         background
         borderRadius={10}
         elevation={4}
-        themeName="light"
+        popoverTheme="light"
         width={420}
         height={310}
       >
-        <View flex={1} className="calendar-dom theme-light" padding={10}>
+        <View
+          background={theme => theme.background}
+          flex={1}
+          className="calendar-dom theme-light"
+          padding={10}
+        >
           <Calendar onChange={queryFilters.onChangeDate} ranges={[queryFilters.dateState]} />
         </View>
       </Popover>

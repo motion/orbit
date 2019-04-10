@@ -6,7 +6,6 @@ import * as React from 'react'
 import { ScaleContext } from '../Scale'
 import { getSize } from '../SizedSurface'
 import { Sizes } from '../Space'
-import { View } from '../View/View'
 
 type ChildrenHlFn = (Highlights) => JSX.Element | null
 
@@ -272,7 +271,7 @@ export class Text extends React.PureComponent<TextProps> {
 
 const HTMLBlock = props => <span dangerouslySetInnerHTML={{ __html: `${props.children}` }} />
 
-const TextBlock = gloss(View, {
+const TextBlock = gloss({
   userSelect: 'none',
   wordBreak: 'break-word',
   position: 'relative',
@@ -285,13 +284,15 @@ const TextBlock = gloss(View, {
   oneLineEllipse: {
     overflow: 'hidden',
   },
-}).theme(({ ignoreColor, alpha, alphaHover, color }, theme) => {
+}).theme(({ ignoreColor, alpha, alphaHover, color, ...props }, theme) => {
   if (ignoreColor) {
     return {
+      ...props,
       color: 'inherit',
     }
   }
   return {
+    ...props,
     ...alphaColor({ color: color || theme.color }, { alpha, alphaHover }),
   }
 })

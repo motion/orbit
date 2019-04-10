@@ -4,7 +4,7 @@ import { Popover, PopoverProps } from './Popover'
 const POPOVER_PROPS = { style: { fontSize: 12 } }
 
 type TooltipProps = Partial<PopoverProps> & {
-  themeName?: string
+  popoverTheme?: string
   label: React.ReactNode | string
 }
 
@@ -16,7 +16,7 @@ const defaultOnClick = e => {
 export const Tooltip = React.forwardRef<any, TooltipProps>(
   (
     {
-      themeName = 'tooltip',
+      popoverTheme = 'tooltip',
       onClick = defaultOnClick,
       disabled = false,
       label,
@@ -43,7 +43,7 @@ export const Tooltip = React.forwardRef<any, TooltipProps>(
         ignoreSegment
         elevation={1}
         onClick={onClick}
-        themeName={themeName}
+        popoverTheme={popoverTheme}
         target={children}
         ref={ref as any}
         {...props}

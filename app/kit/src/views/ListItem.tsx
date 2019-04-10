@@ -8,6 +8,7 @@ import {
   VirtualListItemProps,
 } from '@o/ui'
 import React, { forwardRef, useCallback } from 'react'
+import { BitGenericItem } from '../bit/BitGenericItem'
 import { normalizeItem } from '../helpers/normalizeItem'
 import { useStoresSimple } from '../hooks/useStores'
 import { AppProps } from '../types/AppProps'
@@ -43,8 +44,9 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
   let itemProps: Partial<ListItemProps> = null
   let normalized: NormalItem = null
   let getItemProps = null
+  const hasItem = !!(item && item.target)
 
-  if (item && item.target) {
+  if (hasItem) {
     normalized = normalizeItem(item)
     itemProps = getNormalPropsForListItem(normalized)
 
@@ -76,11 +78,15 @@ export const ListItem = forwardRef((props: OrbitListItemProps, ref) => {
   }, [])
 
   const showPeople = !!(!hidePeople && people && people.length && people[0].data['profile'])
-  const showChildren = !!ItemView || showPeople
+  const showChildren = hasItem || showPeople
   const childrenProps = showChildren && {
     children: (
       <>
         {!!ItemView && <ItemView item={item} normalizedItem={normalized} {...itemViewProps} />}
+        {/* if syncer doesn't sync any content type, we can still show a generic preview */}
+        {hasItem && !ItemView && (
+          <BitGenericItem item={item} normalizedItem={normalized} {...itemViewProps} />
+        )}
         {showPeople && (
           <Bottom>
             <PersonRow people={people} />

@@ -2,13 +2,12 @@ import React, { useContext } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkEmoji from 'remark-emoji'
 import { HighlightText } from '../text/HighlightText'
-import { Text } from '../text/Text'
 import { ItemPropsContext, ItemsPropsContextType } from './ItemPropsContext'
 
 const ListItem = (props: any) => <HighlightText tagName="li" display="list-item" {...props} />
 
 const Code = ({ value, ...props }) => (
-  <HighlightText tagName="code" {...props}>
+  <HighlightText background={theme => theme.background.lighten(0.1)} tagName="code" {...props}>
     {value}
   </HighlightText>
 )
@@ -17,7 +16,7 @@ const markdownOptions = {
   // use this to highlight search terms more e
   plugins: [remarkEmoji],
   renderers: {
-    paragraph: HighlightText,
+    paragraph: props => <HighlightText selectable {...props} />,
     listItem: ListItem,
     code: Code,
   },
@@ -36,9 +35,5 @@ export function Markdown(rawProps: MarkdownProps) {
   if (renderText) {
     return renderText(props.source)
   }
-  return (
-    <Text>
-      <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />
-    </Text>
-  )
+  return <ReactMarkdown className={`${className} markdown`} {...markdownOptions} {...props} />
 }

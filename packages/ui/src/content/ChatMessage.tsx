@@ -1,4 +1,4 @@
-import { gloss, Row } from '@o/gloss'
+import { gloss, Row, Theme } from '@o/gloss'
 import React, { useContext } from 'react'
 import { ButtonPerson } from '../buttons/ButtonPerson'
 import { SizedSurface } from '../SizedSurface'
@@ -66,19 +66,14 @@ export function ChatMessage(rawProps: ChatMessageProps) {
   return (
     <ChatMessageFrame condensed={itemProps.condensed} {...itemProps.itemProps}>
       {!hideHeader && (
-        <Row
-          alignItems="center"
-          userSelect="none"
-          cursor="default"
-          padding={[itemProps.condensed ? 0 : 3, 0]}
-        >
+        <Row alignItems="center" cursor="default" padding={[itemProps.condensed ? 0 : 3, 0]}>
           {itemProps.beforeTitle || null}
           {!!person && <ButtonPerson background="transparent" photo={person.photo} />}
           {!itemProps.condensed && (
             <>
               <div style={{ width: 6 }} />
               {(!previousMessage || !previousWithinOneMinute) && (
-                <Text size={0.9} fontWeight={500} alpha={0.5}>
+                <Text selectable size={0.9} fontWeight={500} alpha={0.5}>
                   {<DateFormat date={new Date(message.time)} />}
                 </Text>
               )}
@@ -86,15 +81,16 @@ export function ChatMessage(rawProps: ChatMessageProps) {
           )}
         </Row>
       )}
-      <SizedSurface padding={[6, 10]} noInnerElement alt="action" sizeRadius={1}>
-        {content}
-      </SizedSurface>
+      <Theme name="action">
+        <SizedSurface padding={[6, 10]} noInnerElement sizeRadius={1}>
+          {content}
+        </SizedSurface>
+      </Theme>
     </ChatMessageFrame>
   )
 }
 
 const ChatMessageFrame = gloss(View, {
-  padding: [0, 0],
   overflow: 'hidden',
   alignItems: 'flex-start',
   condensed: {

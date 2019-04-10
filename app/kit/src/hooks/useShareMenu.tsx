@@ -19,7 +19,7 @@ const getItemShareMenu = memoize((listItem, themeStore) => {
           <Popover
             towards="right"
             // selected would otherwise override this theme
-            themeName={themeStore.isDark ? 'light' : 'dark'}
+            popoverTheme={themeStore.isDark ? 'light' : 'dark'}
             distance={5}
             width={250}
             height={300}

@@ -1,13 +1,24 @@
-import { DataColumn, guessColumns, normalizeRow, SearchableTable, SearchableTableProps, Section, SectionParentProps, SectionSpecificProps, TitleRowSpecificProps, useNodeSize, useSectionProps, useVisibility } from '@o/ui';
-import React, { useCallback, useMemo } from 'react';
-import { useStoresSimple } from '../hooks/useStores';
-
-export type TableColumns = { [key: string]: DataColumn | string }
+import {
+  DataColumnsShort,
+  guessColumns,
+  normalizeRow,
+  SearchableTable,
+  SearchableTableProps,
+  Section,
+  SectionParentProps,
+  SectionSpecificProps,
+  TitleRowSpecificProps,
+  useNodeSize,
+  useSectionProps,
+  useVisibility,
+} from '@o/ui'
+import React, { useCallback, useMemo } from 'react'
+import { useStoresSimple } from '../hooks/useStores'
 
 export type TableProps = Partial<Omit<TitleRowSpecificProps, 'title'>> &
   Omit<SearchableTableProps, 'columns' | 'selectableStore'> &
   SectionParentProps & {
-    columns?: TableColumns
+    columns?: DataColumnsShort
     searchable?: boolean
     shareable?: boolean
   }

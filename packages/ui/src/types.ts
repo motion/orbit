@@ -49,4 +49,4 @@ export type DataColumns = {
   [key: string]: DataColumn
 }
 
-export type DataColumnsShort = { [key: string]: DataColumn | string }
+export type DataColumnsShort = { [key: string]: DataColumn | string } | string[]

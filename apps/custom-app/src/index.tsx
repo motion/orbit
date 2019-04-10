@@ -10,7 +10,14 @@ function CustomApp() {
         <AppCard key="slack" title="Slack Messages" appType={Slack}>
           {({ api }) => {
             const res = api.channelsList()
-            return <Table shareable selectable="multi" rows={(res && res.channels) || {}} />
+            return (
+              <Table
+                columns={['id', 'members']}
+                shareable
+                selectable="multi"
+                rows={(res && res.channels) || {}}
+              />
+            )
           }}
         </AppCard>
       </GridLayout>

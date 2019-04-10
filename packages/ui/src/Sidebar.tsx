@@ -11,7 +11,7 @@ import * as React from 'react'
 import { BorderBottom, BorderLeft, BorderRight, BorderTop } from './Border'
 import { Interactive, InteractiveProps, ResizableSides } from './Interactive'
 
-type SidebarProps = InteractiveProps & {
+type SidebarProps = Omit<InteractiveProps, 'position'> & {
   /**
    * Toggle sidebar visibility.
    */
@@ -197,7 +197,7 @@ export class Sidebar extends React.Component<SidebarProps, SidebarState> {
         height={!horizontal ? (onResize ? height : this.state.height) : '100%'}
         resizable={resizable}
         onResize={this.onResize}
-        transition="all ease-in 100ms"
+        transition="all ease 120ms"
         opacity={hidden ? 0 : 1}
         {...getTransform(
           hidden,

@@ -1,6 +1,6 @@
 import { fromEntries } from '@o/utils'
 import sum from 'hash-sum'
-import { Context, createContext, isValidElement } from 'react'
+import { Context, createContext, isValidElement, useState } from 'react'
 
 let hasSet = false
 
@@ -8,6 +8,8 @@ type ConfigureOpts = {
   useIcon?: any
   StoreContext?: Context<any>
   getItemKey?: (item: any) => string
+  useAppState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
+  useUserState?: <A>(id: string, defaultState: A) => [A, (next: Partial<A>) => void]
 }
 
 // safe for react components
@@ -17,6 +19,10 @@ const hash = x =>
 const KeyCache = new WeakMap<Object, string>()
 
 export let Config: ConfigureOpts = {
+  // used to configure how the UI persists non-temporal state
+  useUserState: useState,
+  useAppState: useState,
+
   StoreContext: createContext(null),
   getItemKey: x => {
     if (!x) {

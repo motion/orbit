@@ -1,6 +1,6 @@
 import { PaneManagerStore, QueryStore, useActiveApps } from '@o/kit'
 import { App, Desktop, Electron } from '@o/stores'
-import { MergeContext, View, VirtualListDefaultProps } from '@o/ui'
+import { MergeContext, View } from '@o/ui'
 import { always, ensure, react, useStore } from '@o/use-store'
 import { debounce, throttle } from 'lodash'
 import * as React from 'react'
@@ -512,29 +512,20 @@ export function Menu() {
 
   return (
     <MergeContext
-      Context={VirtualListDefaultProps}
-      value={
-        {
-          /* dynamicHeight: true */
-        }
-      }
+      Context={StoreContext}
+      value={{
+        queryStore,
+        menuStore,
+        paneManagerStore,
+      }}
     >
-      <MergeContext
-        Context={StoreContext}
-        value={{
-          queryStore,
-          menuStore,
-          paneManagerStore,
-        }}
-      >
-        <BrowserDebugTray menuStore={menuStore}>
-          <MainShortcutHandler>
-            <MenuChrome>
-              <MenuLayerContent />
-            </MenuChrome>
-          </MainShortcutHandler>
-        </BrowserDebugTray>
-      </MergeContext>
+      <BrowserDebugTray menuStore={menuStore}>
+        <MainShortcutHandler>
+          <MenuChrome>
+            <MenuLayerContent />
+          </MenuChrome>
+        </MainShortcutHandler>
+      </BrowserDebugTray>
     </MergeContext>
   )
 }

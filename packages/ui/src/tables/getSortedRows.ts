@@ -19,8 +19,7 @@ export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): Table
   }
 
   let sortedRows = rows.sort((a, b) => {
-    const aVal = a.values[sortOrder.key]
-    const bVal = b.values[sortOrder.key]
+    const [aVal, bVal] = norm(a.values[sortOrder.key], b.values[sortOrder.key])
 
     if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
       return aVal === true && bVal === false ? 1 : -1
@@ -31,7 +30,7 @@ export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): Table
     } else if (aVal instanceof Date && bVal instanceof Date) {
       return aVal.getTime() - bVal.getTime()
     } else {
-      console.error('Unsure how to sort this', a, b)
+      console.error('Unsure how to sort this', sortOrder.key, aVal, bVal)
       return -1
     }
   })
@@ -46,4 +45,16 @@ export function getSortedRows(maybeSortOrder: SortOrder, rows: TableRows): Table
   })
 
   return sortedRows
+}
+
+const norm = (a: any, b: any) => [normVal(a), normVal(b)]
+
+function normVal(a: any) {
+  // normalize falsy
+  if (a === undefined) return `zzz`
+  if (a === null) return `zzz`
+  if (typeof a === 'object') return `zzz`
+  // normalize stringy numbers
+  if (typeof a === 'string' && +a === +a) return +a
+  return a
 }

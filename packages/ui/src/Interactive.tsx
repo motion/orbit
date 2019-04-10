@@ -9,6 +9,7 @@ import { isEqual } from '@o/fast-compare'
 import { gloss } from '@o/gloss'
 import { on } from '@o/utils'
 import invariant from 'invariant'
+import { pick } from 'lodash'
 import React, { createContext, createRef } from 'react'
 import { Rect } from './helpers/geometry'
 import { isRightClick } from './helpers/isRightClick'
@@ -47,7 +48,11 @@ const ALL_RESIZABLE: ResizableSides = {
   top: true,
 }
 
-export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth' | 'visibility'> & {
+export type InteractiveProps = Omit<
+  ViewProps,
+  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left'
+> & {
+  position?: string
   disabled?: boolean
   disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean
@@ -62,6 +67,7 @@ export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth' | 'visib
   siblings?: { [key: string]: Rect }
   updateCursor?: (cursor: string | void) => void
   zIndex?: number
+  right?: number
   top?: number
   left?: number
   minTop?: number
@@ -111,6 +117,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     minLeft: 0,
     minTop: 0,
     minWidth: 0,
+    maxWidth: 10000,
+    maxHeight: 10000,
   }
 
   ref = createRef<HTMLElement>()
@@ -149,6 +157,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
   onMouseDown = event => {
     if (isRightClick(event)) return
     if (!this.state.cursor) return
+    event.stopPropagation()
     this.globalMouse = true
     window.addEventListener('pointerup', this.endAction, { passive: true })
     window.addEventListener('pointermove', this.onMouseMove, { passive: true })
@@ -560,7 +569,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       cursor: newCursor,
       resizingSides: resizing,
     }
-    if (!isEqual(next, this.state)) {
+    if (!isEqual(next, pick(this.state, 'couldResize', 'cursor', 'resizingSides'))) {
       const { onCanResize } = this.props
       if (onCanResize) {
         onCanResize()
@@ -589,20 +598,31 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       width,
       disableFloatingGrabbers,
       disabled,
+      minWidth,
+      maxHeight,
+      maxWidth,
+      minHeight,
+      position,
+      right,
       ...props
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
     const style = {
+      position: position as any,
       cursor,
-      left: null,
-      top: null,
+      left,
+      top,
+      right,
+      bottom: null,
       transform: null,
-      right: null,
       width: null,
       height: null,
-      bottom: null,
+      minWidth,
+      maxHeight,
+      maxWidth,
+      minHeight,
     }
     if (movable === true || top != null || left != null) {
       if (fill === true) {
@@ -661,7 +681,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 }
 
 const InteractiveContainer = gloss(View, {
-  flex: 1,
+  width: '100%',
+  height: '100%',
   position: 'relative',
   willChange: 'transform, height, width, z-index',
 })

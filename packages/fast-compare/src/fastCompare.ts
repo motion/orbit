@@ -31,12 +31,25 @@ export function isEqual(a, b, ignoreKeys?: IgnoreKeys) {
   }
 }
 
+// const weakCache = new WeakMap<any, number>()
+// const isEqualWeak = (a: any, b: any) => {
+//   if (weakCache.has(a) && weakCache.has(b)) {
+//     const res = weakCache.get(a) === weakCache.get(b)
+//     if (res) console.log('weak cache hit', a, b)
+//     return res
+//   }
+//   weakCache.set(a, Math.random())
+//   weakCache.set(b, Math.random())
+//   return false
+// }
+
 function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
   // fast-deep-equal index.js 2.0.1
   if (a === b) return true
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
     if (a[EQUALITY_KEY] && a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
+    // if (isEqualWeak(a, b)) return true
 
     let arrA = isArray(a),
       arrB = isArray(b),
@@ -47,8 +60,8 @@ function isEqualInner(a, b, ignoreKeys?: IgnoreKeys) {
     if (arrA && arrB) {
       length = a.length
       if (length != b.length) return false
-      if (length > 500 || b.length > 500) {
-        console.warn('comparing large props! ignoring this')
+      if (length > 200 || b.length > 200) {
+        console.warn('comparing large props! ignoring this, may want to fix')
         return false
       }
       for (i = length; i-- !== 0; ) {

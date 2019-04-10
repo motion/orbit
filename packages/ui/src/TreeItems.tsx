@@ -162,7 +162,8 @@ export class TreeItems extends React.PureComponent<
     for (let i = index + 1; i < flatTreeItems.length; i++) {
       const child = flatTreeItems[i]
       if (!child) {
-        debugger
+        console.warn('empty tree items child!', index, child)
+        return null
       }
       if (child.level <= row.level) {
         break

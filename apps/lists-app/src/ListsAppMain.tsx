@@ -1,5 +1,5 @@
 import { AppMainView, AppProps, List, OrbitListItemProps, useTreeList } from '@o/kit'
-import { Button, TitleRow, TitleRowProps } from '@o/ui'
+import { TitleRow, TitleRowProps } from '@o/ui'
 import * as React from 'react'
 
 export function ListsAppMain(props: AppProps) {
@@ -36,19 +36,10 @@ function ListsAppMainFolder(props: AppProps) {
     }
   }, [selectedItem && selectedItem.id])
 
-  return (
-    <>
-      <ListAppTitle
-        title={props.title}
-        before={
-          treeList.userState.depth > 0 && (
-            <Button icon="checkron-left" onClick={treeList.actions.back}>
-              Back
-            </Button>
-          )
-        }
-      />
-      <List items={children} />
-    </>
-  )
+  // treeList.userState.depth > 0 && (
+  //   <Button icon="checkron-left" onClick={treeList.actions.back}>
+  //     Back
+  //   </Button>
+  // )
+  return <List title={props.title} items={children} />
 }

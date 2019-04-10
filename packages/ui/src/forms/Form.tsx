@@ -9,7 +9,7 @@ import { Message } from '../text/Message'
 import { FormField } from './FormField'
 import { InputType } from './Input'
 
-export type FormProps<A extends FormFields> = SectionProps & {
+export type FormProps<A extends FormFieldsObj> = SectionProps & {
   submitButton?: string | boolean
   fields?: A
   errors?: FormErrors<any>
@@ -19,15 +19,15 @@ export type FormProps<A extends FormFields> = SectionProps & {
   size?: number
 }
 
-type FormValues = { [key in keyof FormFields]: any }
-export type FormFields = { [key: string]: FormField }
+type FormValues = { [key in keyof FormFieldsObj]: any }
+export type FormFieldsObj = { [key: string]: FormField }
 export type FormErrors<A> = { [key in keyof A]: string } | string | null | true
 
 type FormField =
   | {
       name: string
-      type: InputType
-      value: any
+      type?: InputType | string
+      value?: any
       required?: boolean
       validate?: (val: any) => string
     }
@@ -43,11 +43,11 @@ type FormActions =
   | { type: 'changeField'; value: FormField }
   | { type: 'removeField'; value: string }
   | { type: 'setErrors'; value: FormErrors<any> }
-  | { type: 'setFields'; value: FormFields }
+  | { type: 'setFields'; value: FormFieldsObj }
 
 type FormState = {
   errors: FormErrors<any>
-  values: FormFields
+  values: FormFieldsObj
   globalError?: string
 }
 
@@ -88,13 +88,12 @@ function fieldsReducer(state: FormState, action: FormActions) {
 export function Form({
   children,
   use,
-  size = 1.2,
   onSubmit,
   errors,
   fields,
   submitButton,
   ...sectionProps
-}: FormProps<any>) {
+}: FormProps<FormFieldsObj>) {
   const [state, dispatch] = useReducer(fieldsReducer, { values: fields, errors: errors || null })
 
   if (fields && children) {
@@ -177,12 +176,17 @@ export function Form({
   )
 }
 
-function generateFields(fields: FormFields): React.ReactNode {
+function generateFields(fields: FormFieldsObj): React.ReactNode {
   return Object.keys(fields).map(key => {
     const field = fields[key]
-    // TODO type
     return (
-      <FormField key={key} label={field.name} type={field.type as any} defaultValue={field.value} />
+      <FormField
+        key={key}
+        label={field.name}
+        // TODO type
+        type={(field.type || 'string') as any}
+        defaultValue={field.value}
+      />
     )
   })
 }

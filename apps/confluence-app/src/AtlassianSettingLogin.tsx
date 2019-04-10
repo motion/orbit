@@ -50,23 +50,20 @@ export function AtlassianSettingLogin(props: AppProps) {
       <Form
         submitButton
         onSubmit={addApp}
-        fields={[
-          {
+        fields={{
+          Domain: {
             name: 'Domain',
-            type: 'string',
             required: true,
           },
-          {
+          Username: {
             name: 'Username',
-            type: 'string',
             required: true,
           },
-          {
+          Password: {
             name: 'Password',
-            type: 'string',
             required: true,
           },
-        ]}
+        }}
       />
     </>
   )

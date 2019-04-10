@@ -344,9 +344,7 @@ const SurfaceFrame = gloss<ThroughProps & SurfaceProps>(Col, {
   },
 }).theme((props, theme) => {
   // :hover, :focus, :active
-  if (props.alt === 'lightOrange') {
-    debugger
-  }
+
   const themeStyle = propsToThemeStyles(props, theme, true)
   const propStyles = propsToStyles(props, theme)
   const padStyle = getPadding(props)

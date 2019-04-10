@@ -1,4 +1,4 @@
-import { ensure, react, useReaction, useStore } from '@o/use-store'
+import { ensure, GET_STORE, react, useReaction, useStore } from '@o/use-store'
 import { ObservableSet } from 'mobx'
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from 'react'
 import { MergeContext } from './helpers/MergeContext'
@@ -46,7 +46,7 @@ class BreadcrumbStore {
 export function Breadcrumbs({ separator, children }: BreadcrumbsProps) {
   const store = useStore(BreadcrumbStore, { separator })
   return (
-    <MergeContext Context={Context} value={store}>
+    <MergeContext Context={Context} value={store[GET_STORE]}>
       {children}
     </MergeContext>
   )

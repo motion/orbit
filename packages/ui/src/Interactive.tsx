@@ -22,13 +22,11 @@ import { View, ViewProps } from './View/View'
 // TODO make prop
 const SIZE = 5
 
-const InteractiveContext = createContext({
-  // the deeper we go, the less natural zIndex we want
-  // so that outer panes will have their draggers "cover" inner ones
-  // think of a <Pane> with a <TableHeadCol> inside, Pane should override
-  // this achieves that by automatically tracking Interactive nesting
-  nesting: 0,
-})
+// the deeper we go, the less natural zIndex we want
+// so that outer panes will have their draggers "cover" inner ones
+// think of a <Pane> with a <TableHeadCol> inside, Pane should override
+// this achieves that by automatically tracking Interactive nesting
+const InteractiveNesting = createContext(0)
 
 type CursorState = {
   top: number
@@ -106,7 +104,7 @@ type InteractiveState = {
 
 // controlled
 export class Interactive extends React.Component<InteractiveProps, InteractiveState> {
-  static contextType = InteractiveContext
+  static contextType = InteractiveNesting
 
   static defaultProps = {
     minHeight: 0,
@@ -175,11 +173,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const { onMoveStart } = this.props
     if (onMoveStart) {
       onMoveStart()
-    }
-
-    if (this.context.os) {
-      // pause OS timers to avoid lag when dragging
-      this.context.os.timers.pause()
     }
 
     const topLpf = new LowPassFilter()
@@ -305,10 +298,6 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const { onMoveEnd } = this.props
     if (onMoveEnd) {
       onMoveEnd()
-    }
-    if (this.context.os) {
-      // resume os timers
-      this.context.os.timers.resume()
     }
     this.setState({
       cursor: undefined,
@@ -604,8 +593,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
-    const zIndex =
-      typeof props.zIndex === 'undefined' ? 10000000 - this.context.nesting : props.zIndex
+    const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
     const style = {
       cursor,
       left: null,
@@ -643,34 +631,37 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       onMouseLeave: this.onMouseLeave,
     }
     const useFloatingGrabbers = !disabled && resizable && !disableFloatingGrabbers
+
     return (
-      <InteractiveContext.Provider value={{ ...this.context, nesting: this.context.nesting + 1 }}>
-        <InteractiveContainer
-          className={this.props.className}
-          hidden={this.props.hidden}
-          ref={this.ref}
-          {...style}
-          {...listenerProps}
-          {...props}
-        >
-          {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
-          {useFloatingGrabbers && (
-            <InteractiveChrome
-              key={this.state.chromeKey}
-              parent={this.ref}
-              onMouseDown={listenerProps.onMouseDown}
-              resizingSides={resizingSides}
-              zIndex={zIndex + 1}
-            />
-          )}
-          {this.props.children}
-        </InteractiveContainer>
-      </InteractiveContext.Provider>
+      <InteractiveNesting.Provider value={this.context.nesting + 1}>
+        <div style={style}>
+          <InteractiveContainer
+            className={this.props.className}
+            hidden={this.props.hidden}
+            ref={this.ref}
+            {...listenerProps}
+            {...props}
+          >
+            {/* makes a better grabbable bar that appears above other elements and can prevent clickthrough */}
+            {useFloatingGrabbers && (
+              <InteractiveChrome
+                key={this.state.chromeKey}
+                parent={this.ref}
+                onMouseDown={listenerProps.onMouseDown}
+                resizingSides={resizingSides}
+                zIndex={zIndex + 1}
+              />
+            )}
+            {this.props.children}
+          </InteractiveContainer>
+        </div>
+      </InteractiveNesting.Provider>
     )
   }
 }
 
 const InteractiveContainer = gloss(View, {
+  flex: 1,
   position: 'relative',
   willChange: 'transform, height, width, z-index',
 })

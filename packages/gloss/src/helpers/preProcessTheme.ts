@@ -8,45 +8,61 @@ const altCache = new WeakMap<ThemeObject, { [key: string]: ThemeObject }>()
 
 export function getAlternateTheme(
   name: string | undefined,
-  theme: ThemeObject,
+  inTheme: ThemeObject,
   shouldFallback?: boolean,
 ): ThemeObject {
   if (!name || typeof name !== 'string') {
-    return theme
+    return inTheme
   }
-  if (!theme.alternates) {
-    return theme
+
+  if (!inTheme.alternates) {
+    return inTheme
   }
+
+  let theme = inTheme
+
+  // prevent nesting alternates, could work but not sure if wanted...
+  if (theme._isAlternate) {
+    theme = theme._originalTheme
+  }
+
+  // find, set, cache alt theme
   if (!altCache.has(theme)) {
     altCache.set(theme, {})
   }
   const cachedThemes = altCache.get(theme)
   if (cachedThemes) {
     const cached = cachedThemes[name]
-    if (cached) return cached
-    const next = selectIsPropStyles(theme, name, shouldFallback) as ThemeObject
+    if (cached) {
+      return cached
+    }
+    const next = createAlternateTheme(theme, name, shouldFallback)
     cachedThemes[name] = next
     return next
   }
   throw new Error('unreachable')
 }
 
-function selectIsPropStyles(theme: ThemeObject, alt: string, shouldFallback?: boolean) {
+function createAlternateTheme(theme: ThemeObject, alt: string, shouldFallback?: boolean) {
   if (!theme.alternates) {
     throw new Error('No alternates in themes')
   }
   if (!theme.alternates[alt]) {
     throw new Error(`No alternate theme found: ${alt}`)
   }
-  return {
+  return ({
     ...(shouldFallback ? theme : null),
     ...theme.alternates[alt],
-  } as unknown
+    _alternateName: alt,
+    _isAlternate: true,
+    _originalTheme: theme,
+  } as unknown) as ThemeObject
 }
 
 // Default pre process theme is:
 //   1. if is="" prop, drill down to that theme
 //   2. if themeSelect="" prop, select that subset of the theme
 
-export const preProcessTheme = (props: any, theme: ThemeObject) =>
-  selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme))
+export const preProcessTheme = (props: any, theme: ThemeObject) => {
+  return selectThemeSubset(props.themeSelect, getAlternateTheme(props.alt, theme))
+}

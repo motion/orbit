@@ -115,7 +115,7 @@ function ThemeByName({ name, children }: ThemeProps) {
     if (!allThemes || !allThemes[name]) {
       throw new Error(`No theme in context: ${name}. Themes are: ${Object.keys(allThemes)}`)
     }
-    const nextTheme = activeTheme ? proxyParentTheme(activeTheme, allThemes[name]) : allThemes[name]
+    const nextTheme = proxyParentTheme(activeTheme, allThemes[name])
     return {
       allThemes,
       activeTheme: nextTheme,
@@ -125,10 +125,15 @@ function ThemeByName({ name, children }: ThemeProps) {
   return <ThemeContext.Provider value={memoValue}>{children}</ThemeContext.Provider>
 }
 
-function proxyParentTheme(parent: ThemeObject, next: ThemeObject) {
-  return new Proxy(next, {
-    get(target, key) {
-      return Reflect.get(target, key) || Reflect.get(parent, key)
-    },
-  })
+function proxyParentTheme(parent: ThemeObject | null | undefined, next: ThemeObject) {
+  if (!parent) {
+    return next
+  }
+  return next
+  // could be an option...
+  // return new Proxy(next, {
+  //   get(target, key) {
+  //     return Reflect.get(target, key) || Reflect.get(parent, key)
+  //   },
+  // })
 }

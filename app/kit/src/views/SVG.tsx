@@ -1,4 +1,4 @@
-import { validCSSAttr } from '@o/css'
+import { px, validCSSAttr } from '@o/css'
 import { partitionObject } from '@o/utils'
 import { omit } from 'lodash'
 import React, { forwardRef } from 'react'
@@ -16,8 +16,8 @@ export const SVG = forwardRef<SVGElement, any>(function SVG(
     <SVGInline
       ref={ref}
       svg={svg}
-      width={width}
-      height={height}
+      width={px(width)}
+      height={px(height)}
       style={{ display: 'flex', width, height, ...styles, ...style }}
       {...omit(rest, 'hoverStyle', 'themeSelect')}
     />

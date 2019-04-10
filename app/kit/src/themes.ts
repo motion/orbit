@@ -185,7 +185,7 @@ const light = {
     tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
     listItemBackground: [255, 255, 255, 0],
-    listItemBorderColor: 'eee',
+    listItemBorderColor: '#eee',
     listItemBackgroundHover: [100, 100, 100, 0.024],
     listItemBackgroundActive: [100, 100, 100, 0.05],
     inputBackground: '#fff',
@@ -205,7 +205,18 @@ const darkBackground = toColor([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
 const darkAlternates: ThemeSet = {
-  ...alternates,
+  ...Object.keys(alternates).reduce((acc, key) => {
+    // for dark theme, make "light" themes translucent
+    if (key.indexOf('light') === 0) {
+      acc[key] = {
+        ...alternates[key],
+        background: alternates[key].background.alpha(0.25),
+      }
+    } else {
+      acc[key] = alternates[key]
+    }
+    return acc
+  }, {}),
   bordered: {
     ...alternates.bordered,
     ...Theme.colorize({

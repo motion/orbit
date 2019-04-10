@@ -7,5 +7,5 @@ if (process.env.NODE_ENV === 'development') {
 
   const devToolsReactNew = join(require.resolve('@o/react-devtools'), '..')
 
-  devTools = [tools.mobx /* , tools.react */, devToolsReactNew]
+  devTools = [tools.mobx, tools.react, devToolsReactNew]
 }

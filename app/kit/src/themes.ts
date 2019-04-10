@@ -9,6 +9,12 @@ const orbitActiveBg = orbitHoverBg.darken(0.05).desaturate(0.3)
 
 const colors = {
   selected: orbitColor,
+  orange: '#DC6104',
+  lightOrange: '#F6B585',
+  darkOrange: '#9F4604',
+  blue: '#1A71E3',
+  darkBlue: '#0E3D7B',
+  lightBlue: '#B0C6E3',
   red: '#c80000',
   lightRed: '#FFB0B0',
   darkRed: '#A12727',
@@ -38,6 +44,18 @@ const colorThemes: ThemeSet = {
     color: colors.darkYellow,
     iconColor: colors.darkYellow,
     background: colors.lightYellow,
+  }),
+  lightBlue: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
+    color: colors.darkBlue,
+    iconColor: colors.darkBlue,
+    background: colors.lightBlue,
+  }),
+  lightOrange: Theme.fromStyles({
+    glintColor: [255, 255, 255, 0.25],
+    color: colors.darkOrange,
+    iconColor: colors.darkOrange,
+    background: colors.lightOrange,
   }),
   red: Theme.fromStyles({
     glintColor: [255, 255, 255, 0.25],

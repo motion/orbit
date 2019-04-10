@@ -66,6 +66,7 @@ export type InteractiveProps = Omit<
   siblings?: { [key: string]: Rect }
   updateCursor?: (cursor: string | void) => void
   zIndex?: number
+  right?: number
   top?: number
   left?: number
   minTop?: number

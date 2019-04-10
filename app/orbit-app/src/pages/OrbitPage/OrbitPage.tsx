@@ -38,6 +38,7 @@ import { AppWrapper } from '../../views'
 import { Dock, DockButton } from './Dock'
 import { LoadApp } from './LoadApp'
 import { OrbitApp, OrbitAppRenderOfDefinition } from './OrbitApp'
+import { OrbitAppSettingsSidebar } from './OrbitAppSettingsSidebar'
 import { OrbitFloatingShareCard } from './OrbitFloatingShareCard'
 import { OrbitHeader } from './OrbitHeader'
 import { OrbitStore } from './OrbitStore'
@@ -172,12 +173,15 @@ const OrbitPageInner = memo(function OrbitPageInner() {
         <OrbitHeader />
 
         <Dock>
-          <DockButton icon="cog" index={0} />
+          <DockButton icon="cog" index={0} onClick={orbitStore.toggleShowAppSettings} />
           <OrbitFloatingShareCard index={1} />
         </Dock>
 
         <InnerChrome torn={orbitStore.isTorn}>
-          <OrbitContentArea>{contentArea}</OrbitContentArea>
+          <OrbitContentArea>
+            {contentArea}
+            <OrbitAppSettingsSidebar />
+          </OrbitContentArea>
         </InnerChrome>
       </MainShortcutHandler>
     </ProvideStores>

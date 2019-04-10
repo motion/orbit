@@ -19,6 +19,7 @@ function CustomApp() {
             }
             overflow="hidden"
             title="Slack Messages"
+            elevation={4}
           >
             {res && <Table shareable selectable="multi" rows={res.channels} />}
           </Card>

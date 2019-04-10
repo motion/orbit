@@ -47,7 +47,11 @@ const ALL_RESIZABLE: ResizableSides = {
   top: true,
 }
 
-export type InteractiveProps = Omit<ViewProps, 'minHeight' | 'minWidth' | 'visibility'> & {
+export type InteractiveProps = Omit<
+  ViewProps,
+  'minHeight' | 'minWidth' | 'visibility' | 'position' | 'right' | 'top' | 'left'
+> & {
+  position?: string
   disabled?: boolean
   disableFloatingGrabbers?: boolean
   isMovableAnchor?: (event: MouseEvent) => boolean
@@ -601,7 +605,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
     const cursor = this.state.cursor
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
     const style = {
-      position,
+      position: position as any,
       cursor,
       left,
       top,
@@ -645,11 +649,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
-        <div
-          style={{
-            ...style,
-          }}
-        >
+        <div style={style}>
           <InteractiveContainer
             className={this.props.className}
             hidden={this.props.hidden}

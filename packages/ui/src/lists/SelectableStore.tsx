@@ -154,23 +154,9 @@ export class SelectableStore {
   setRowActive(index: number, e?: React.MouseEvent) {
     const row = this.rows[index]
     const rowKey = key(row)
-    if ((e && e.button !== 0) || !this.props.selectable) {
-      // set active only with primary mouse button, dont interfere w/context menus
-      return
-    }
-    if (e) {
-      e.stopPropagation()
-      if (e.shiftKey) {
-        // prevent text selection
-        e.preventDefault()
-      }
-    }
     let next = []
     const { active } = this
-    this.dragStartIndex = index
-    document.addEventListener('mouseup', this.onStopDragSelecting)
     const modifiers = this.getModifiers(e)
-
     if (modifiers.option && this.props.selectable === 'multi') {
       // option select
       if (active.has(rowKey)) {
@@ -189,8 +175,24 @@ export class SelectableStore {
       // single select
       next = [rowKey]
     }
-
     this.setActive(next)
+  }
+
+  setRowMouseDown(index: number, e?: React.MouseEvent) {
+    if ((e && e.button !== 0) || !this.props.selectable) {
+      // set active only with primary mouse button, dont interfere w/context menus
+      return
+    }
+    if (e) {
+      e.stopPropagation()
+      if (e.shiftKey) {
+        // prevent text selection
+        e.preventDefault()
+      }
+    }
+    this.dragStartIndex = index
+    document.addEventListener('mouseup', this.onStopDragSelecting)
+    this.setRowActive(index, e)
   }
 
   onHoverRow(index: number) {

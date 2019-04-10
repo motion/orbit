@@ -25,7 +25,7 @@ export function SelectableGrid({ items, ...props }: SelectableGridProps<any>) {
         return props.getItem(item, {
           isSelected: store.isActiveIndex(index),
           select: () => {
-            selectableStore.setRowActive(index)
+            selectableStore.setRowMouseDown(index)
           },
         })
       }

@@ -349,7 +349,7 @@ class ManagedTableInner extends React.Component<ManagedTableProps, ManagedTableS
         columnSizes={columnSizes}
         columnKeys={columnKeys}
         columns={columns}
-        onMouseDown={e => this.selectableStore.setRowActive(index, e)}
+        onMouseDown={e => this.selectableStore.setRowMouseDown(index, e)}
         onMouseEnter={() => this.selectableStore.onHoverRow(index)}
         multiline={multiline}
         rowLineHeight={rowLineHeight}

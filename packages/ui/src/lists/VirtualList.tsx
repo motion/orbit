@@ -1,8 +1,8 @@
 import { SortableContainer, SortableContainerProps } from '@o/react-sortable-hoc'
 import { omit } from 'lodash'
-import React, { createContext, forwardRef, RefObject, useCallback, useContext, useRef } from 'react'
+import React, { forwardRef, RefObject, useCallback, useRef } from 'react'
 import { Config } from '../helpers/configure'
-import { useDefaultProps } from '../hooks/useDefaultProps'
+import { createContextualProps } from '../helpers/createContextualProps'
 import { GenericComponent, Omit } from '../types'
 import { DynamicListControlled, DynamicListProps } from './DynamicList'
 import { HandleSelection } from './ListItem'
@@ -25,9 +25,10 @@ export type VirtualListProps<A> = SelectableProps &
 
 const SortableList = SortableContainer(SelectableDynamicList, { withRef: true })
 
-export function VirtualList(rawProps: VirtualListProps<any>) {
-  const defaultProps = useContext(VirtualListDefaultProps)
-  const props = useDefaultProps(defaultProps, rawProps)
+const { useProps } = createContextualProps<Partial<VirtualListProps<any>>>()
+
+export function VirtualList(virtualProps: VirtualListProps<any>) {
+  const { pressDelay = 150, ...props } = useProps(virtualProps)
   const fallback = useRef<SelectableStore>(null)
   const selectableStoreRef = props.selectableStoreRef || fallback
   const dynamicListProps = omit(props, 'ItemView', 'onOpen', 'sortable', 'getItemProps', 'items')
@@ -36,6 +37,12 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
   const Row = useCallback(
     forwardRef<any, any>(function GetItem({ index, style }, ref) {
       const item = items[index]
+      let mouseDownTm = null
+      const itemProps = {
+        ...props.itemProps,
+        ...(getItemProps && getItemProps(item, index, items)),
+      }
+      let finishSelect = false
       return (
         <VirtualListItem
           forwardRef={ref}
@@ -45,9 +52,31 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
           onDoubleClick={useCallback(e => onOpen(index, e), [])}
           disabled={!sortable}
           {...getSeparatorProps(items, item, index)}
-          {...props.itemProps}
-          {...getItemProps && getItemProps(item, index, items)}
-          onMouseDown={useCallback(e => selectableStoreRef.current.setRowActive(index, e), [])}
+          {...itemProps}
+          onMouseUp={useCallback(e => {
+            clearTimeout(mouseDownTm)
+            if (finishSelect) {
+              finishSelect = false
+              selectableStoreRef.current.setRowActive(index, e)
+            }
+            if (itemProps.onMouseUp) {
+              itemProps.onMouseUp(e)
+            }
+          }, [])}
+          onMouseDown={useCallback(e => {
+            clearTimeout(mouseDownTm)
+            // add delay when sortable
+            const setRowActive = () => {
+              selectableStoreRef.current.setRowMouseDown(index, e)
+              finishSelect = false
+            }
+            if (props.sortable) {
+              finishSelect = true
+              mouseDownTm = setTimeout(setRowActive, pressDelay)
+            } else {
+              setRowActive()
+            }
+          }, [])}
           onMouseEnter={useCallback(() => selectableStoreRef.current.onHoverRow(index), [])}
           selectableStore={selectableStoreRef.current}
           {...item}
@@ -57,7 +86,7 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
         />
       )
     }),
-    [onSelect, onOpen, getItemProps, items, selectableStoreRef.current],
+    [props.sortable, pressDelay, onSelect, onOpen, getItemProps, items, selectableStoreRef.current],
   )
 
   return (
@@ -67,14 +96,13 @@ export function VirtualList(rawProps: VirtualListProps<any>) {
       itemData={props.items}
       shouldCancelStart={isRightClick}
       lockAxis="y"
+      pressDelay={pressDelay}
       {...dynamicListProps}
     >
       {Row as any}
     </SortableList>
   )
 }
-
-export const VirtualListDefaultProps = createContext<Partial<VirtualListProps<any>>>({})
 
 const isRightClick = e =>
   (e.buttons === 1 && e.ctrlKey === true) || // macOS trackpad ctrl click

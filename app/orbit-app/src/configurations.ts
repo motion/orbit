@@ -1,5 +1,5 @@
 import { configureGloss } from '@o/gloss'
-import { configureKit, Icon } from '@o/kit'
+import { configureKit, Icon, useAppState, useUserState } from '@o/kit'
 import { configureHotKeys, configureUI } from '@o/ui'
 import { configureUseStore } from '@o/use-store'
 import { configure as configureMobx } from 'mobx'
@@ -38,6 +38,8 @@ function configure() {
   configureUI({
     useIcon: Icon,
     StoreContext,
+    useAppState,
+    useUserState,
   })
 
   configureUseStore({

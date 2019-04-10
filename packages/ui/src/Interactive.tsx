@@ -589,20 +589,31 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       width,
       disableFloatingGrabbers,
       disabled,
+      minWidth,
+      maxHeight,
+      maxWidth,
+      minHeight,
+      position,
+      right,
       ...props
     } = this.props
     const { resizingSides } = this.state
     const cursor = this.state.cursor
     const zIndex = typeof props.zIndex === 'undefined' ? 10000000 - this.context : props.zIndex
     const style = {
+      position,
       cursor,
-      left: null,
-      top: null,
+      left,
+      top,
+      right,
+      bottom: null,
       transform: null,
-      right: null,
       width: null,
       height: null,
-      bottom: null,
+      minWidth,
+      maxHeight,
+      maxWidth,
+      minHeight,
     }
     if (movable === true || top != null || left != null) {
       if (fill === true) {
@@ -634,7 +645,11 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 
     return (
       <InteractiveNesting.Provider value={this.context.nesting + 1}>
-        <div style={style}>
+        <div
+          style={{
+            ...style,
+          }}
+        >
           <InteractiveContainer
             className={this.props.className}
             hidden={this.props.hidden}
@@ -661,7 +676,8 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
 }
 
 const InteractiveContainer = gloss(View, {
-  flex: 1,
+  width: '100%',
+  height: '100%',
   position: 'relative',
   willChange: 'transform, height, width, z-index',
 })

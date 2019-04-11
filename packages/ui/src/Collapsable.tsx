@@ -48,12 +48,22 @@ export const Collapsable = (props: CollapsableProps & { children: React.ReactNod
 export const CollapseArrow = (props: CollapsableProps) => {
   const val = selectDefined(props.collapsed, props.useToggle ? props.useToggle.val : false)
   const onClick = selectDefined(props.onCollapse, props.useToggle && props.useToggle.toggle)
-  return <Chevron onClick={onClick} name={val ? 'chevron-right' : 'chevron-down'} size={12} />
+  return (
+    <Chevron
+      onClick={onClick}
+      name="chevron-right"
+      size={12}
+      transform={{
+        rotate: val ? 0 : '90deg',
+      }}
+    />
+  )
 }
 
 const Chevron = gloss(Icon, {
   marginRight: 4,
   marginLeft: -2,
+  transition: 'all ease 200ms',
 }).theme(theme => ({
   color: theme.iconColor || theme.color,
 }))

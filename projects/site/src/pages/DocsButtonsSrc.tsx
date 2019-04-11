@@ -4,7 +4,14 @@ import React from 'react'
 import { CodeBlock } from '../views/CodeBlock'
 
 export const Source = (
-  <Card collapsable defaultCollapsed collapseOnClick title="View Source">
+  <Card
+    collapsable
+    defaultCollapsed
+    collapseOnClick
+    title="View Source"
+    maxHeight={450}
+    scrollable="y"
+  >
     <CodeBlock className="language-typescript">{ButtonSrc}</CodeBlock>
   </Card>
 )

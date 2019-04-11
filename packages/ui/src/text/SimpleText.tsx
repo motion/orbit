@@ -1,6 +1,12 @@
 import { CSSPropertySetStrict } from '@o/css'
-import { alphaColor, AlphaColorProps, gloss, propsToTextSize, TextSizeProps } from '@o/gloss'
-import { GlossProps } from '@o/gloss/_/gloss'
+import {
+  alphaColor,
+  AlphaColorProps,
+  gloss,
+  GlossProps,
+  propsToTextSize,
+  TextSizeProps,
+} from '@o/gloss'
 import React from 'react'
 import { useScale } from '../Scale'
 

@@ -36,6 +36,7 @@ function deepMergeDefined<A>(obj: A, defaults: Record<string, any>): A {
 }
 
 export function Table(tableProps: TableProps) {
+  // const focusStore = useFocusStore()
   const stores = useStoresSimple()
   const sectionProps: SectionSpecificProps = useSectionProps(tableProps)
   const {

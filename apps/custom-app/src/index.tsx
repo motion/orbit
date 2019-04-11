@@ -14,6 +14,7 @@ function CustomApp() {
               <Table
                 columns={['id', 'members']}
                 shareable
+                // focusable
                 selectable="multi"
                 rows={(res && res.channels) || {}}
               />

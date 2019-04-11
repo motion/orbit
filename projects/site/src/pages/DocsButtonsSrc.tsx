@@ -36,7 +36,7 @@ function PropsTable(props: { props: Object }) {
     acc.push({
       ...row,
       type: type.name,
-      defaultValue: defaultValue === null ? '' : defaultValue,
+      'Default Value': defaultValue === null ? '' : defaultValue,
       required,
     })
     return acc

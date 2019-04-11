@@ -43,7 +43,12 @@ export function DocsPage() {
       <View flex={1} background={x => x.background}>
         <Background>
           <HeaderSlim />
-          <Templates.MasterDetail searchable onSelect={setSelected} items={items}>
+          <Templates.MasterDetail
+            detailProps={{ flex: 3 }}
+            searchable
+            onSelect={setSelected}
+            items={items}
+          >
             {viewElement && (
               <SelectedSection
                 setTheme={setTheme}

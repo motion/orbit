@@ -12,8 +12,14 @@ export const DocsMeta = (props: { source: string; displayName: string }) => {
         collapsable
         defaultCollapsed
         collapseOnClick
-        title="View Source"
-        afterTitle={<Button icon={<Icon name="github" size={18} svg={GithubIcon} />} />}
+        title={`View ${props.displayName} Source`}
+        afterTitle={
+          <Button
+            tagName="a"
+            {...{ href: 'http://github.com' }}
+            icon={<Icon name="github" size={18} svg={GithubIcon} />}
+          />
+        }
         maxHeight={450}
         scrollable="y"
       >

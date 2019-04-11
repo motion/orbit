@@ -1,6 +1,6 @@
 import { Theme } from '@o/gloss'
-import * as React from 'react'
-import { Collapsable, CollapsableProps } from './Collapsable'
+import React from 'react'
+import { Collapsable, CollapsableProps, useCollapseToggle } from './Collapsable'
 import { ListItem, ListItemProps, useIsSelected } from './lists/ListItem'
 import { Scale } from './Scale'
 import { SizedSurface, SizedSurfaceProps } from './SizedSurface'
@@ -38,10 +38,16 @@ export function Card(props: CardProps) {
     hideSubtitle,
     space,
     flexDirection,
+    defaultCollapsed,
     ...restProps
   } = props
+  // unused props
+  defaultCollapsed
+  onCollapse
+  // end
   const isSelected = useIsSelected(props)
   const showChildren = typeof children !== 'undefined' && !props.hideBody
+  const toggle = useCollapseToggle(props)
   return (
     <Theme alternate={isSelected ? 'selected' : null}>
       <SizedSurface
@@ -57,6 +63,11 @@ export function Card(props: CardProps) {
           <ListItem
             className="grid-draggable"
             onClickLocation={onClickLocation}
+            onDoubleClick={() => {
+              if (collapsable) {
+                toggle.toggle()
+              }
+            }}
             alignItems="center"
             titleFlex={titleFlex}
             subTitleProps={subTitleProps}
@@ -77,8 +88,8 @@ export function Card(props: CardProps) {
             preview={preview}
           />
         </Scale>
-        <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
-        <Collapsable collapsable={collapsable} onCollapse={onCollapse}>
+        <Collapsable useToggle={toggle}>
+          <Space size={typeof padding === 'number' ? padding : getBetweenPad(pad)} />
           <Col
             flexDirection={flexDirection}
             space={space}

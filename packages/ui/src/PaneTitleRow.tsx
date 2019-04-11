@@ -1,6 +1,6 @@
 import { gloss, Row } from '@o/gloss'
 import React from 'react'
-import { CollapsableProps, CollapseArrow } from './Collapsable'
+import { CollapsableProps, CollapseArrow, splitCollapseProps } from './Collapsable'
 import { Space } from './Space'
 import { Text, TextProps } from './text/Text'
 import { Omit } from './types'
@@ -18,21 +18,14 @@ export type PaneTitleRowParentProps = Pick<PaneTitleRowProps, 'title'> & {
   beforeTitle?: PaneTitleRowProps['before']
 }
 
-export function PaneTitleRow({
-  collapsable,
-  collapsed,
-  onCollapse,
-  after,
-  before,
-  title,
-  ...textProps
-}: PaneTitleRowProps) {
+export function PaneTitleRow({ after, before, title, ...rest }: PaneTitleRowProps) {
+  const [collapseProps, textProps] = splitCollapseProps(rest)
   return (
-    <PanelHeader onClick={onCollapse}>
+    <PanelHeader onClick={collapseProps.onCollapse}>
       {before}
-      {collapsable && (
+      {collapseProps.collapsable && (
         <>
-          <CollapseArrow collapsed={collapsed} />
+          <CollapseArrow collapsed={collapseProps.collapsed} />
           <Space size="xs" />
         </>
       )}

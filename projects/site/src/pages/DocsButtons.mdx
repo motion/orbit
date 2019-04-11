@@ -1,8 +1,14 @@
-import { Button, Section, SubSection, Space } from '@o/ui'
+import { Card, SubSection, Button, Section, Space } from '@o/ui'
+import ButtonSrc from '!raw-loader!@o/ui/src/buttons/Button.tsx'
+import { CodeBlock } from '../views/CodeBlock'
 
-# Test
+Buttons are a simple extension of Surface.
 
-Buttons are great.
+<Card collabsable defaultCollapsed title="View Source">
+  <CodeBlock className="language-typescript">{ButtonSrc}</CodeBlock>
+</Card>
+
+hello
 
 <Section space size="md" title="Buttons">
   <Button>Hello World</Button>

@@ -27,19 +27,20 @@ export function Pane({
   flexDirection,
   ...sizablePaneProps
 }: PaneProps) {
-  const collapseToggle = useToggle(collapsed, onCollapse)
-  const collapsableProps = {
-    collapsable,
-    onCollapse: collapseToggle.toggle,
-    collapsed: collapseToggle.val,
-  }
+  const toggle = useToggle(collapsed, onCollapse)
   const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
-    <SizablePane {...sizablePaneProps} collapsed={collapsableProps.collapsed}>
+    <SizablePane {...sizablePaneProps} collapsed={toggle.val}>
       {hasTitle && (
-        <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
+        <PaneTitleRow
+          title={title}
+          after={afterTitle}
+          before={beforeTitle}
+          collapsable={collapsable}
+          {...toggle.getProps()}
+        />
       )}
-      <Collapsable {...collapsableProps}>
+      <Collapsable useToggle={toggle}>
         <Suspense fallback={<Loading />}>
           <Col
             space={space}

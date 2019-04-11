@@ -9,6 +9,9 @@ import Buttons from './DocsButtons.mdx'
 
 const views = {
   buttons: () => Buttons,
+  // sections: () => Sections,
+  // forms: () => Forms,
+  // tables: () => Tables,
 }
 
 export function DocsPage() {

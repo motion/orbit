@@ -1,6 +1,16 @@
 import { Templates } from '@o/kit'
 import '@o/nucleo'
-import { Button, gloss, Section, SubTitle, Theme, View } from '@o/ui'
+import {
+  Button,
+  gloss,
+  Section,
+  SpaceGroup,
+  SubTitle,
+  SurfacePassProps,
+  Theme,
+  useMedia,
+  View,
+} from '@o/ui'
 import React, { createElement, memo, useEffect, useState } from 'react'
 import { HeaderSlim } from '../views/HeaderSlim'
 //
@@ -18,6 +28,7 @@ export function DocsPage() {
   const [selected, setSelected] = useState(null)
   const [viewElement, setView] = useState(null)
   const [theme, setTheme] = useState('light')
+  const [showSidebar, setShowSidebar] = useState(true)
 
   useEffect(() => {
     if (!selected) return
@@ -43,21 +54,26 @@ export function DocsPage() {
       <View flex={1} background={x => x.background}>
         <Background>
           <HeaderSlim />
-          <Templates.MasterDetail
-            detailProps={{ flex: 3 }}
-            searchable
-            onSelect={setSelected}
-            items={items}
-          >
-            {viewElement && (
-              <SelectedSection
-                setTheme={setTheme}
-                theme={theme}
-                title={selected.title}
-                viewElement={viewElement}
-              />
-            )}
-          </Templates.MasterDetail>
+
+          <View flex={1} position="relative">
+            <Templates.MasterDetail
+              showSidebar={showSidebar}
+              detailProps={{ flex: 3 }}
+              searchable
+              onSelect={setSelected}
+              items={items}
+            >
+              {viewElement && (
+                <SelectedSection
+                  onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                  setTheme={setTheme}
+                  theme={theme}
+                  title={selected.title}
+                  viewElement={viewElement}
+                />
+              )}
+            </Templates.MasterDetail>
+          </View>
         </Background>
       </View>
     </Theme>
@@ -70,7 +86,8 @@ DocsPage.navigationOptions = {
   linkName: 'Orbit Docs',
 }
 
-const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
+const SelectedSection = memo(({ setTheme, theme, title, viewElement, onToggleSidebar }: any) => {
+  const isSmall = useMedia({ maxWidth: 700 })
   return (
     <Section
       pad
@@ -80,13 +97,18 @@ const SelectedSection = memo(({ setTheme, theme, title, viewElement }: any) => {
       scrollable="y"
       title={title}
       afterTitle={
-        <>
-          <Button
-            icon="moon"
-            tooltip="Toggle dark mode"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          />
-        </>
+        <SurfacePassProps iconSize={12}>
+          <SpaceGroup space="xs">
+            <Button
+              icon="moon"
+              tooltip="Toggle dark mode"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            />
+            {isSmall && (
+              <Button icon="panel-stats" tooltip="Toggle menu" onClick={onToggleSidebar} />
+            )}
+          </SpaceGroup>
+        </SurfacePassProps>
       }
     >
       {viewElement}

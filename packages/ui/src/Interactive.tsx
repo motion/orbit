@@ -623,6 +623,7 @@ export class Interactive extends React.Component<InteractiveProps, InteractiveSt
       maxHeight,
       maxWidth,
       minHeight,
+      zIndex,
     }
     if (movable === true || top != null || left != null) {
       if (fill === true) {

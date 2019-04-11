@@ -6,7 +6,7 @@ import { CommonViewProps } from './CommonViewProps'
 import { ElevatableProps, getElevation } from './elevate'
 
 // TODO this gets messy, and is incomplete
-type CommonHTMLProps = Omit<
+export type CommonHTMLProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
   | 'title'
   | 'about'

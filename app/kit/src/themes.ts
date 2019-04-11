@@ -98,9 +98,6 @@ const colorThemes: ThemeSet = {
 
 const alternates: ThemeSet = {
   ...colorThemes,
-  error: colorThemes.lightRed,
-  warn: colorThemes.lightYellow,
-  approve: colorThemes.lightGreen,
   confirm: {
     buttonFontWeight: 600,
     ...colorThemes.green,
@@ -149,7 +146,12 @@ const lightColor = '#444'
 const lightBackground = toColor('#fff')
 const lightButtonBg = linearGradient('#FCFCFC', '#F5F5F6')
 const light = {
-  alternates,
+  alternates: {
+    ...alternates,
+    error: colorThemes.lightRed,
+    warn: colorThemes.lightYellow,
+    approve: colorThemes.lightGreen,
+  },
   ...base,
   cardShadow: [0, 2, 8, [0, 0, 0, 0.038]],
   cardHoverGlow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
@@ -185,7 +187,7 @@ const light = {
     tabBorderColor: [205, 205, 205],
     tabInactiveHover: [10, 10, 10, 0.035],
     listItemBackground: [255, 255, 255, 0],
-    listItemBorderColor: 'eee',
+    listItemBorderColor: '#eee',
     listItemBackgroundHover: [100, 100, 100, 0.024],
     listItemBackgroundActive: [100, 100, 100, 0.05],
     inputBackground: '#fff',
@@ -204,8 +206,25 @@ const darkColor = [250, 250, 250]
 const darkBackground = toColor([30, 30, 30])
 const darkFadeBackground = [0, 0, 0, 0.15]
 const darkButtonBg = linearGradient([66, 66, 66, 0.8], [60, 60, 60, 0.8])
+
+const darkAltLight: ThemeSet = Object.keys(alternates).reduce((acc, key) => {
+  // for dark theme, make "light" themes translucent
+  if (key.indexOf('light') === 0) {
+    acc[key] = Theme.fromStyles({
+      background: alternates[key].background.alpha(0.25),
+      borderColor: alternates[key].borderColor.alpha(0.3),
+      color: '#fff',
+    })
+  }
+  return acc
+}, {})
+
 const darkAlternates: ThemeSet = {
   ...alternates,
+  ...darkAltLight,
+  error: darkAltLight.lightRed,
+  warn: darkAltLight.lightYellow,
+  approve: darkAltLight.lightGreen,
   bordered: {
     ...alternates.bordered,
     ...Theme.colorize({

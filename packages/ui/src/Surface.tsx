@@ -284,14 +284,17 @@ export const Surface = memoIsEqualDeep(function Surface(direct: SurfaceProps) {
   }
 
   const iconOpacity = typeof props.alpha !== 'undefined' ? +props.alpha : (props.opacity as any)
-  const iconColor = `${(props.iconProps && props.iconProps.color) || props.color || theme.color}`
-  const iconColorHover = (props.hoverStyle && props.hoverStyle.color) || theme.colorHover
+  const iconColor = `${(props.iconProps && props.iconProps.color) ||
+    props.color ||
+    theme.color ||
+    ''}`
+  const iconColorHover =
+    (props.hoverStyle && props.hoverStyle.color) || theme.colorHover || 'inherit'
 
   const iconContext = useMemo<Partial<IconProps>>(() => {
     return {
       alt,
       opacity: iconOpacity,
-      pointerEvents: 'none',
       color: iconColor,
       justifyContent: 'center',
       hoverStyle: {

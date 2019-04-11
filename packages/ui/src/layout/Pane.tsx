@@ -1,6 +1,10 @@
 import React, { Suspense } from 'react'
-import { Collapsable, CollapsableProps } from '../Collapsable'
-import { useToggle } from '../hooks/useToggle'
+import {
+  Collapsable,
+  CollapsableProps,
+  splitCollapseProps,
+  useCollapseToggle,
+} from '../Collapsable'
 import { PaneTitleRow, PaneTitleRowParentProps } from '../PaneTitleRow'
 import { Loading } from '../progress/Loading'
 import { Col, ColProps } from '../View/Col'
@@ -11,35 +15,36 @@ export type PaneProps = ColProps &
   Partial<CollapsableProps> &
   PaneTitleRowParentProps
 
-export function Pane({
-  title,
-  afterTitle,
-  beforeTitle,
-  collapsable,
-  onCollapse,
-  collapsed,
-  children,
-  pad,
-  padding,
-  scrollable,
-  space,
-  spaceAround,
-  flexDirection,
-  ...sizablePaneProps
-}: PaneProps) {
-  const collapseToggle = useToggle(collapsed, onCollapse)
-  const collapsableProps = {
-    collapsable,
-    onCollapse: collapseToggle.toggle,
-    collapsed: collapseToggle.val,
-  }
+export function Pane(props: PaneProps) {
+  const [
+    collapseProps,
+    {
+      title,
+      afterTitle,
+      beforeTitle,
+      children,
+      pad,
+      padding,
+      scrollable,
+      space,
+      spaceAround,
+      flexDirection,
+      ...sizablePaneProps
+    },
+  ] = splitCollapseProps(props)
+  const toggle = useCollapseToggle(collapseProps)
   const hasTitle = !!(title || afterTitle || beforeTitle)
   return (
-    <SizablePane {...sizablePaneProps} collapsed={collapsableProps.collapsed}>
+    <SizablePane {...sizablePaneProps} collapsed={toggle.val}>
       {hasTitle && (
-        <PaneTitleRow title={title} after={afterTitle} before={beforeTitle} {...collapsableProps} />
+        <PaneTitleRow
+          title={title}
+          after={afterTitle}
+          before={beforeTitle}
+          {...toggle.collapseProps}
+        />
       )}
-      <Collapsable {...collapsableProps}>
+      <Collapsable useToggle={toggle}>
         <Suspense fallback={<Loading />}>
           <Col
             space={space}

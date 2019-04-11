@@ -1,5 +1,5 @@
 import { ThemeSet } from '@o/css'
-import * as React from 'react'
+import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from './ThemeContext'
 
 type ThemeProvideProps = {
@@ -9,21 +9,22 @@ type ThemeProvideProps = {
 }
 
 export const ThemeProvide = ({ activeTheme, children, themes }: ThemeProvideProps) => {
+  const themeContext = useContext(ThemeContext)
+  const val = useMemo(() => {
+    const next = {
+      ...themeContext,
+      allThemes: { ...themeContext.allThemes, ...themes },
+    }
+    if (activeTheme) {
+      next.activeThemeName = activeTheme
+    }
+    return next
+  }, [themeContext, activeTheme])
+
   if (!Object.keys(themes).length) {
-    throw new Error('No themes provided')
+    console.error('No themes provided! Please provide a theme to ThemeProvide.')
+    return null
   }
-  return (
-    <ThemeContext.Consumer>
-      {themeContext => {
-        const val = {
-          ...themeContext,
-          allThemes: { ...themeContext.allThemes, ...themes },
-        }
-        if (activeTheme) {
-          val.activeThemeName = activeTheme
-        }
-        return <ThemeContext.Provider value={val as any}>{children}</ThemeContext.Provider>
-      }}
-    </ThemeContext.Consumer>
-  )
+
+  return <ThemeContext.Provider value={val as any}>{children}</ThemeContext.Provider>
 }

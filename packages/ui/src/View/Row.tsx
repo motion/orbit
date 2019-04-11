@@ -9,6 +9,7 @@ export const Row = forwardRef(function Row(
   { space = false, spaceAround, children, beforeSpace, afterSpace, ...props }: RowProps,
   ref,
 ) {
+  if (!children) return null
   return (
     <ScrollableView ref={ref} flexDirection="row" {...props}>
       <SpaceGroup
@@ -26,3 +27,6 @@ export const Row = forwardRef(function Row(
 // for gloss parents
 // @ts-ignore
 Row.ignoreAttrs = Base.ignoreAttrs
+
+// @ts-ignore
+Row.acceptsSpacing = true

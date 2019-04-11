@@ -1,23 +1,8 @@
-import { Card, SubSection, Button, Section, Space } from '@o/ui'
-import ButtonSrc from '!raw-loader!@o/ui/src/buttons/Button.tsx'
-import { CodeBlock } from '../views/CodeBlock'
+import * as Ex from './DocsButtonsSrc'
 
 Buttons are a simple extension of Surface.
 
-<Card collabsable defaultCollapsed title="View Source">
-  <CodeBlock className="language-typescript">{ButtonSrc}</CodeBlock>
-</Card>
-
-hello
-
-<Section space size="md" title="Buttons">
-  <Button>Hello World</Button>
-  <Button icon="cog">Hello World</Button>
-  <Button icon="cog" iconAfter>
-    Hello World
-  </Button>
-</Section>
-<Space />
+<Ex.Source />
 
 ```ts
 export function() {
@@ -27,46 +12,16 @@ export function() {
 
 ## Alternates
 
-<Section space size="md">
-  {['error', 'warn', 'confirm', 'bordered', 'selected'].map(alt => (
-    <Button key={alt} alt={alt} icon="cog" iconAfter>
-      Alt {alt}
-    </Button>
-  ))}
-</Section>
-<Space />
+<Ex.One />
 
 ## Sizing (Preset)
 
-<Section space size="md">
-  {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(size => (
-    <Button key={size} size={size} icon="cog" iconAfter>
-      Size {size}
-    </Button>
-  ))}
-</Section>
-<Space />
+<Ex.Two />
 
 ## Sizing (Absolute)
 
-<Section space size="md">
-  {[1, 2, 3, 4, 5].map(size => (
-    <Button key={size} size={size} icon="cog" iconAfter>
-      Size {size}
-    </Button>
-  ))}
-</Section>
-<Space />
+<Ex.Three />
 
 ## Elevation
 
-<div>
-  {[0, 1, 2, 3, 4, 5, 6].map(elevation => (
-    <SubSection title={`Elevation ${elevation}`} key={elevation}>
-      <Button key={elevation} elevation={elevation} size={2} icon="cog" iconAfter>
-        Hello World
-      </Button>
-    </SubSection>
-  ))}
-</div>
-<Space />
+<Ex.Four />

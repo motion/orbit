@@ -1,6 +1,7 @@
 import { MDXProvider } from '@mdx-js/tag'
 import { gloss, Paragraph, Space, Title } from '@o/ui'
 import React from 'react'
+import orbitComponents from '../../tmp/components.json'
 import { CodeBlock } from './CodeBlock'
 
 export const components = {
@@ -41,7 +42,20 @@ export const components = {
       <Space />
     </>
   ),
-  inlineCode: props => <InlineCode {...props} />,
+  inlineCode: ({ children, ...props }) => {
+    if (typeof children === 'string') {
+      const len = children.length
+      const end = children.slice(len - 2, len)
+      if (children[0] === '<' && end === '/>' && children.length < 100) {
+        const displayName = children.slice(1, len - 2).trim()
+        const info = orbitComponents.find(x => x.displayName === displayName)
+        if (info) {
+          return <LinkedInlineCode onClick={() => alert('hi')}>{children}</LinkedInlineCode>
+        }
+      }
+    }
+    return <InlineCode {...props}>{children}</InlineCode>
+  },
 }
 
 export function MDX({ children }: any) {
@@ -58,10 +72,18 @@ const InlineCode = gloss({
   theme.background.isDark()
     ? {
         background: '#1A71E399',
-        color: '#fff',
+        color: [255, 255, 255, 0.8],
       }
     : {
         background: '#FDFFD0',
-        color: '#444',
+        color: [0, 0, 0, 0.8],
       },
 )
+
+const LinkedInlineCode = gloss(InlineCode, {
+  cursor: 'pointer',
+}).theme((_, theme) => ({
+  '&:hover': {
+    color: theme.background.isDark() ? '#fff' : '#000',
+  },
+}))
